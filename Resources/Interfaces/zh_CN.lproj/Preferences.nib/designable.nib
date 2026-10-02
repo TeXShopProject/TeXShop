@@ -429,7 +429,7 @@ DQ
                                             </view>
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
-                                        <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="配对目标和高亮颜色" translatesAutoresizingMaskIntoConstraints="NO" id="940">
+                                        <box hidden="YES" autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="配对目标和高亮颜色" translatesAutoresizingMaskIntoConstraints="NO" id="940">
                                             <rect key="frame" x="15" y="12" width="234" height="57" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="hlb-O3-yKy">
@@ -721,7 +721,7 @@ DQ
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
-                                        <box fixedFrame="YES" title="Line Number Size" translatesAutoresizingMaskIntoConstraints="NO" id="BIr-5u-suY">
+                                        <box hidden="YES" fixedFrame="YES" title="Line Number Size" translatesAutoresizingMaskIntoConstraints="NO" id="BIr-5u-suY">
                                             <rect key="frame" x="176" y="352" width="257" height="68" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Uxf-AB-9TN">

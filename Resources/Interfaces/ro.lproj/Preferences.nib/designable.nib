@@ -420,7 +420,7 @@ DQ
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
-                                        <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Matching Target" translatesAutoresizingMaskIntoConstraints="NO" id="974">
+                                        <box hidden="YES" autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Matching Target" translatesAutoresizingMaskIntoConstraints="NO" id="974">
                                             <rect key="frame" x="12" y="22" width="241" height="57" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="v0j-gA-SUA">
@@ -636,7 +636,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Open New Windows as Tabs" translatesAutoresizingMaskIntoConstraints="NO" id="zRF-bw-M9R">
-                                            <rect key="frame" x="35" y="159" width="283" height="65" />
+                                            <rect key="frame" x="35" y="130" width="283" height="65" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="be2-Gt-jxc">
                                                 <rect key="frame" x="0.0" y="0.0" width="283" height="51"/>
