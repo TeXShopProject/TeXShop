@@ -601,8 +601,8 @@
     [self goToPage: aPage];
     
      visibleRect = [[self documentView] bounds];
-      visibleRect.origin.x = visibleRect.size.width / 2.0;
-     visibleRect.origin.y = visibleRect.size.height;
+      visibleRect.origin.x = NSMidX(visibleRect) - 5;
+     visibleRect.origin.y = self.documentView.isFlipped ? NSMinY(visibleRect) : NSMaxY(visibleRect) - 10;
     // visibleRect.origin.x = 0;
     // visibleRect.origin.y = 0;
      visibleRect.size.width = 10;
