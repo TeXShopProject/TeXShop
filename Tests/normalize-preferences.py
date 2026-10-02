@@ -23,12 +23,18 @@ for path in sorted(Path('Resources/Interfaces').glob('*/Preferences.nib/designab
         for e in items:
             setrect(e, y=number(e,'y')+height-12-top, x=number(e,'x')+max(0, 12-left))
         setrect(v, width=width,height=height)
+    # 括弧のチェック欄は標準のコントロール幅を確保する。
+    for v in root.findall('.//view'):
+        buttons=[c for c in children(v) if c.tag=='button' and c.find('buttonCell') is not None and c.find('buttonCell').get('title') in ['{ }','[ ]','( )','< >']]
+        if len(buttons)==4:
+            buttons.sort(key=lambda c:number(c,'x'))
+            for i,c in enumerate(buttons): setrect(c,x=12+i*55,y=12,width=53,height=22)
     tabs = next(t for t in root.findall('.//tabView') if len(t.findall('./tabViewItems/tabViewItem')) == 9)
     assert tabs is not None
     for nested in tabs.findall('.//tabView'):
         views = nested.findall('./tabViewItems/tabViewItem/view')
         height=max(max(number(c,'y')+number(c,'height') for c in children(v))-min(number(c,'y') for c in children(v)) for v in views)+24
-        width=max(number(v,'width') for v in views)
+        width=max(max(number(c,'x')+number(c,'width') for c in children(v))+max(0,12-min(number(c,'x') for c in children(v))) for v in views)+12
         for v in views: align(v,height,width)
         setrect(nested,height=height+46,width=width+20)
     views=tabs.findall('./tabViewItems/tabViewItem/view')

@@ -184,15 +184,15 @@
         <window title="TeXShop 환경설정" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PrefPane" animationBehavior="default" id="3">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="267" y="182" width="665" height="740" />
+            <rect key="contentRect" x="267" y="182" width="698" height="740" />
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1050"/>
             <value key="minSize" type="size" width="213.87799999999999" height="107"/>
             <view key="contentView" id="4">
-                <rect key="frame" x="0.0" y="0.0" width="665" height="740" />
+                <rect key="frame" x="0.0" y="0.0" width="698" height="740" />
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="337">
-                        <rect key="frame" x="386" y="6" width="84" height="33" />
+                        <rect key="frame" x="419" y="6" width="84" height="33" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="취소" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="338">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -206,7 +206,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="339">
-                        <rect key="frame" x="470" y="7" width="84" height="32" />
+                        <rect key="frame" x="503" y="7" width="84" height="32" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="승인" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="340">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -278,13 +278,13 @@ DQ
                         </popUpButtonCell>
                     </popUpButton>
                     <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5">
-                        <rect key="frame" x="12" y="60" width="641" height="668" />
+                        <rect key="frame" x="12" y="60" width="674" height="668" />
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="문서" identifier="Document" id="6">
                                 <view key="view" id="7">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="찾기 바꾸기 패널 (재실행 후 적용)" translatesAutoresizingMaskIntoConstraints="NO" id="8">
@@ -535,7 +535,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QCn-Ir-9rv">
-                                                        <rect key="frame" x="16" y="17" width="35" height="18"/>
+                                                        <rect key="frame" x="12" y="12" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="{ }" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Y57-CW-oBR">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -546,7 +546,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LRm-Ro-SyQ">
-                                                        <rect key="frame" x="55" y="17" width="35" height="18"/>
+                                                        <rect key="frame" x="67" y="12" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="[ ]" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="fER-sn-WBU">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -557,7 +557,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Qs-k7-LOI">
-                                                        <rect key="frame" x="93" y="17" width="36" height="18"/>
+                                                        <rect key="frame" x="122" y="12" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="( )" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Wm0-VZ-wnu">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -568,7 +568,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QtC-aE-RZv">
-                                                        <rect key="frame" x="133" y="12" width="47" height="18"/>
+                                                        <rect key="frame" x="177" y="12" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="&lt; &gt;" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="A5l-5b-L56">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -704,7 +704,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="에디터" identifier="" id="ZtK-zb-S7z">
                                 <view key="view" id="jOr-Fh-KaH">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="에디터" translatesAutoresizingMaskIntoConstraints="NO" id="24">
@@ -1218,7 +1218,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="보기" identifier="2" id="109">
                                 <view key="view" id="110">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="보기 창 위치" translatesAutoresizingMaskIntoConstraints="NO" id="111">
@@ -1635,7 +1635,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="콘솔" identifier="Console" id="163">
                                 <view key="view" id="164">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="콘솔 폰트" translatesAutoresizingMaskIntoConstraints="NO" id="165">
@@ -1805,7 +1805,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="조판" identifier="2" id="191">
                                 <view key="view" id="192">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="디폴트 스트립트" translatesAutoresizingMaskIntoConstraints="NO" id="193">
@@ -2070,7 +2070,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="엔진설정" identifier="2" id="223">
                                 <view key="view" id="224">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="pdfTeX" translatesAutoresizingMaskIntoConstraints="NO" id="225">
@@ -2388,7 +2388,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="기타1" identifier="1" id="274">
                                 <view key="view" id="275">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="칼러 맵" translatesAutoresizingMaskIntoConstraints="NO" id="276">
@@ -2597,7 +2597,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="기타2" identifier="2" id="310">
                                 <view key="view" id="311">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="사용자 스크립트" translatesAutoresizingMaskIntoConstraints="NO" id="312">
@@ -3010,7 +3010,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="테마" identifier="" id="vRH-ih-Phg">
                                 <view key="view" id="3eK-dD-Y1y">
-                                    <rect key="frame" x="10" y="33" width="621" height="622" />
+                                    <rect key="frame" x="10" y="33" width="654" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="테마" translatesAutoresizingMaskIntoConstraints="NO" id="cQl-3n-PZu">
@@ -3132,13 +3132,13 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9iM-ya-A6i">
-                                            <rect key="frame" x="209" y="12" width="397" height="598" />
+                                            <rect key="frame" x="209" y="12" width="433" height="598" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <font key="font" metaFont="system"/>
                                             <tabViewItems>
                                                 <tabViewItem label="정규 구문 색상" identifier="" id="yGF-bT-AD0">
                                                     <view key="view" id="fra-NG-3Zm">
-                                                        <rect key="frame" x="10" y="33" width="377" height="552" />
+                                                        <rect key="frame" x="10" y="33" width="413" height="552" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aPD-Ge-g4L">
@@ -3694,7 +3694,7 @@ DQ
                                                 </tabViewItem>
                                                 <tabViewItem label="확장 구문 색상" identifier="" id="gnf-oZ-6oO">
                                                     <view key="view" id="tEi-KP-C3F">
-                                                        <rect key="frame" x="10" y="33" width="377" height="552" />
+                                                        <rect key="frame" x="10" y="33" width="413" height="552" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M0Y-SR-yuP">

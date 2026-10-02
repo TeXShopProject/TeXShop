@@ -186,11 +186,11 @@
         <window title="TeXShop Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PrefPane" animationBehavior="default" id="5" userLabel="Preferences" customClass="TSPreferenceWindow">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="267" y="182" width="664" height="741" />
+            <rect key="contentRect" x="267" y="182" width="696" height="741" />
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1050"/>
             <value key="minSize" type="size" width="213.87799999999999" height="107"/>
             <view key="contentView" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="664" height="741" />
+                <rect key="frame" x="0.0" y="0.0" width="696" height="741" />
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1089">
@@ -252,7 +252,7 @@
                         </popUpButtonCell>
                     </popUpButton>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="40">
-                        <rect key="frame" x="483" y="13" width="84" height="33" />
+                        <rect key="frame" x="515" y="13" width="84" height="33" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="908">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -266,7 +266,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="39">
-                        <rect key="frame" x="567" y="14" width="84" height="32" />
+                        <rect key="frame" x="599" y="14" width="84" height="32" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="907">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -280,13 +280,13 @@ DQ
                         </connections>
                     </button>
                     <tabView fixedFrame="YES" initialItem="9" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                        <rect key="frame" x="12" y="60" width="640" height="669" />
+                        <rect key="frame" x="12" y="60" width="672" height="669" />
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Source" identifier="Document" id="9">
                                 <view key="view" id="11">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Command Completion Triggered By:" translatesAutoresizingMaskIntoConstraints="NO" id="925">
@@ -446,7 +446,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="949">
-                                                        <rect key="frame" x="16" y="17" width="35" height="18"/>
+                                                        <rect key="frame" x="12" y="12" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="{ }" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="950">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -457,7 +457,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="948">
-                                                        <rect key="frame" x="54" y="17" width="36" height="18"/>
+                                                        <rect key="frame" x="67" y="12" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="[ ]" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="951">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -468,7 +468,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="947">
-                                                        <rect key="frame" x="94" y="17" width="35" height="18"/>
+                                                        <rect key="frame" x="122" y="12" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="( )" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="952">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -479,7 +479,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="946">
-                                                        <rect key="frame" x="133" y="10" width="47" height="18"/>
+                                                        <rect key="frame" x="177" y="12" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="&lt; &gt;" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="953">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -702,7 +702,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Editor" identifier="" id="oKf-gv-Zsv">
                                 <view key="view" id="gq7-pV-IeW">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Parens Matching Settings" translatesAutoresizingMaskIntoConstraints="NO" id="935">
@@ -1219,7 +1219,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Preview" identifier="2" id="8">
                                 <view key="view" id="10">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Preview Window Position" translatesAutoresizingMaskIntoConstraints="NO" id="47">
@@ -1636,7 +1636,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Console" identifier="Console" id="705">
                                 <view key="view" id="706">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Console Font" translatesAutoresizingMaskIntoConstraints="NO" id="752">
@@ -1806,7 +1806,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Typeset" identifier="2" id="179">
                                 <view key="view" id="170">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Default Script" translatesAutoresizingMaskIntoConstraints="NO" id="188">
@@ -2071,7 +2071,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Engine" identifier="2" id="12">
                                 <view key="view" id="13">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Path settings" translatesAutoresizingMaskIntoConstraints="NO" id="215">
@@ -2389,7 +2389,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Misc1" identifier="1" id="415">
                                 <view key="view" id="400">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Image Copy Type" translatesAutoresizingMaskIntoConstraints="NO" id="386">
@@ -2598,7 +2598,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Misc2" identifier="" id="oKY-XW-zh8">
                                 <view key="view" id="e2r-eO-p5f">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="SXg-YM-OVa">
@@ -3017,7 +3017,7 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Themes" identifier="" id="cCi-AG-dLh">
                                 <view key="view" id="ZlV-mI-DdK">
-                                    <rect key="frame" x="10" y="33" width="620" height="623" />
+                                    <rect key="frame" x="10" y="33" width="652" height="623" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Themes" translatesAutoresizingMaskIntoConstraints="NO" id="7hF-dm-sw0">
@@ -3139,13 +3139,13 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qWb-pL-mS9">
-                                            <rect key="frame" x="207" y="12" width="392" height="599" />
+                                            <rect key="frame" x="207" y="12" width="433" height="599" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <font key="font" metaFont="system"/>
                                             <tabViewItems>
                                                 <tabViewItem label="Regular Colors" identifier="" id="F86-wI-vOl">
                                                     <view key="view" id="3cH-6c-fhq">
-                                                        <rect key="frame" x="10" y="33" width="372" height="553" />
+                                                        <rect key="frame" x="10" y="33" width="413" height="553" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S3x-qU-RUF">
@@ -3701,7 +3701,7 @@ DQ
                                                 </tabViewItem>
                                                 <tabViewItem label="More Colors" identifier="" id="L8F-o2-roK">
                                                     <view key="view" id="PTb-79-UFr">
-                                                        <rect key="frame" x="10" y="33" width="372" height="553" />
+                                                        <rect key="frame" x="10" y="33" width="413" height="553" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mRX-2g-H6p">
