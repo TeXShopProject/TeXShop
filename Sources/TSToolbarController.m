@@ -1,4 +1,3 @@
-#import "TSPreviewAppearance.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2005 Richard Koch
@@ -53,6 +52,7 @@
 // added by mitsu --(H) Macro menu; macroButton
 #import "TSMacroMenuController.h"
 // end addition
+#import "TSPreviewAppearance.h"  // added by Terada
 
 
 static NSString* 	kSourceToolbarIdentifier 	= @"Source Toolbar Identifier";
@@ -284,6 +284,7 @@ else
 	    [toolbarItem setMinSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
 	    [toolbarItem setMaxSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
          */
+// removed by Terada: deprecated fixed NSToolbarItem size limits.
     }
   
 	return toolbarItem;
@@ -297,6 +298,7 @@ else
     [toolbarItem setMinSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
     [toolbarItem setMaxSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
     */
+// removed by Terada: deprecated fixed NSToolbarItem size limits.
     
     return toolbarItem;
 }
@@ -367,11 +369,12 @@ else
 //
 // -----------------------------------------------------------------------------
 
+// added by Terada (from this line)
 - (void)changePreviewAppearance:(NSMenuItem *)sender
 {
     [SUD setInteger:sender.tag forKey:TSPreviewAppearanceModeKey];
 }
-
+// added by Terada (until this line)
 - (void) setupToolbar
 {
     NSWindow *tempWindow;
@@ -415,6 +418,7 @@ if (@available(macOS 11.0, *))
 	[[self pdfWindow] setToolbar: [self makeToolbar: kPDFToolbarIdentifier]];
 	[self.pdfKitWindow setToolbar: [self makeToolbar: kPDFKitToolbarIdentifier]];
     [[self fullSplitWindow] setToolbar: [self makeToolbar: kFullWindowToolbarIdentifier]];
+// added by Terada (from this line)
     for (NSString *identifier in @[kPDFKitToolbarIdentifier, kFullWindowToolbarIdentifier]) {
         NSToolbar *previewToolbar = [identifier isEqual:kPDFKitToolbarIdentifier]
             ? self.pdfKitWindow.toolbar : [self.fullSplitWindow toolbar];
@@ -427,7 +431,7 @@ if (@available(macOS 11.0, *))
             [SUD setBool:YES forKey:key];
         }
     }
-
+// added by Terada (until this line)
    [[self htmlWindow] setToolbar: [self makeToolbar: kHtmlWindowToolbarIdentifier]];
 }
 
@@ -497,9 +501,10 @@ if (@available(macOS 11.0, *))
     NSSearchToolbarItem  *mySearchToolbarItem;
 
     
+// added by Terada (from this line)
     if ([itemIdent isEqual:TSPreviewAppearanceToolbarID])
         return TSPreviewAppearanceItem(self);
-
+// added by Terada (until this line)
     if ([itemIdent isEqual: kSharingTID]) {
         [[shareButton cell] setImageScaling: NSImageAlignCenter];
         [shareButton setImage: [NSImage imageNamed: @"NSShareTemplate"]];
@@ -1465,7 +1470,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kMagnificationKKTID,
 					kGotoPageKKTID,
 					kMouseModeKKTID, // mitsu 1.29 (O)
+// added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
 					kSharingKKTID,
 					kSplitKKTID,
                     // kSplitVerticalKKTID,
@@ -1487,7 +1494,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                 kMagnificationKKTID,
                 kGotoPageKKTID,
                 kMouseModeKKTID, // mitsu 1.29 (O)
+// added by Terada (from this line)
                 TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
                  kSplitKKTID,                // NSToolbarSpaceItemIdentifier,
                 NSToolbarFlexibleSpaceItemIdentifier,
                 kSearchKKTID,
@@ -1518,7 +1527,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                      NSToolbarPrintItemIdentifier,
                      skGotoPageKKTID,
                      skMouseModeTID,
+// added by Terada (from this line)
                      TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
                      kSplitKKTID,
                      NSToolbarFlexibleSpaceItemIdentifier,
                      skSearchTID,
@@ -1542,7 +1553,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                     NSToolbarPrintItemIdentifier,
                     skGotoPageKKTID,
                     skMouseModeTID,
+// added by Terada (from this line)
                     TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
              		kSplitKKTID,
                     NSToolbarFlexibleSpaceItemIdentifier,
                     skSearchTID,
@@ -1563,7 +1576,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                      NSToolbarPrintItemIdentifier,
                      skGotoPageKKTID,
                      skMouseModeTID,
+// added by Terada (from this line)
                      TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
                      kSplitKKTID,
                      NSToolbarFlexibleSpaceItemIdentifier,
                      skSearchTID,
@@ -1588,7 +1603,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                     NSToolbarPrintItemIdentifier,
                     skGotoPageKKTID,
                     skMouseModeTID,
+// added by Terada (from this line)
                     TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
                     kSplitKKTID,
                     NSToolbarFlexibleSpaceItemIdentifier,
                     skSearchTID,
@@ -1758,7 +1775,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kGotoPageKKTID,
 					kMagnificationKKTID,
 					kMouseModeKKTID,
+// added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
 					kSyncMarksTID,
                     kSearchKKTID,
                     kSharingKKTID,
@@ -1794,7 +1813,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kGotoPageKKTID,
 					kMagnificationKKTID,
 					kMouseModeKKTID,
+// added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
 					kSyncMarksTID,
                     kSplitKKTID,
                     kToolsKKTID,
@@ -1834,7 +1855,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	                skGotoPageKKTID,
                     skMagnificationKKTID,
 					skMouseModeTID,
+// added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
                     skSearchTID,
 					kSplitKKTID,
                     skColorIndexTID,
@@ -1867,7 +1890,9 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	                skGotoPageKKTID,
                     skMagnificationKKTID,
 					skMouseModeTID,
+// added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
+// added by Terada (until this line)
                     skSearchTID,
 					kSplitKKTID,
                     skColorIndexTID,

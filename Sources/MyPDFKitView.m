@@ -1,4 +1,3 @@
-#import "TSPreviewAppearance.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2005 Richard
@@ -49,6 +48,7 @@
 #import "TSPreviewWindow.h"
 #import "TSFullSplitWindow.h"
 #import "TSColorSupport.h"
+#import "TSPreviewAppearance.h"  // added by Terada
 
 
 
@@ -396,13 +396,14 @@
 												 name: PDFViewPageChangedNotification object: self];
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(scaleChanged:)
 												 name: PDFViewScaleChangedNotification object: self];
+// added by Terada (from this line)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewZoomBoundsChanged:)
         name:NSViewBoundsDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewLiveMagnify:)
         name:NSScrollViewWillStartLiveMagnifyNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewLiveMagnify:)
         name:NSScrollViewDidEndLiveMagnifyNotification object:nil];
-
+// added by Terada (until this line)
 
     
     
@@ -602,8 +603,10 @@
     [self goToPage: aPage];
     
      visibleRect = [[self documentView] bounds];
+// changed by Terada (from this line)
       visibleRect.origin.x = NSMidX(visibleRect) - 5;
      visibleRect.origin.y = self.documentView.isFlipped ? NSMinY(visibleRect) : NSMaxY(visibleRect) - 10;
+// changed by Terada (until this line)
     // visibleRect.origin.x = 0;
     // visibleRect.origin.y = 0;
      visibleRect.size.width = 10;
@@ -1874,6 +1877,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	[super goForward:sender];
 }
 
+// added by Terada (from this line)
 - (void)previewZoomBoundsChanged:(NSNotification *)notification
 {
     if (notification.object != self.documentView.enclosingScrollView.contentView) return;
@@ -1888,8 +1892,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     resizeOption = NEW_PDF_FIT_TO_NONE;
     [self scaleChanged:nil];
 }
-
-
+// added by Terada (until this line)
 - (void) scaleChanged: (NSNotification *) notification
 {
 	CGFloat	theScale;
@@ -1898,7 +1901,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
    //  NSLog(@"scaleChange");
     
 	theScale = [self scaleFactor];
+// changed by Terada (from this line)
 	magsize = lround(theScale * 100.0);
+// changed by Terada (until this line)
 	scaleMag = magsize;
 	if (self == [self.myDocument topView]) {
 		[myScale setIntegerValue:magsize];
@@ -2297,7 +2302,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 - (double)magnification
 {
+// changed by Terada (from this line)
     return self.scaleFactor;
+// changed by Terada (until this line)
 }
 
 - (void)zoomIn: sender
@@ -2307,7 +2314,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 	NSInteger	scale;
 	
+// changed by Terada (from this line)
 	scale = lround(self.scaleFactor * 100.0);
+// changed by Terada (until this line)
 	scale = scale + 10;
 	if (scale > PDF_MAX_SCALE)
 		scale = PDF_MAX_SCALE;
@@ -2321,7 +2330,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 {
 	NSInteger	scale;
 	
+// changed by Terada (from this line)
 	scale = lround(self.scaleFactor * 100.0);
+// changed by Terada (until this line)
 	scale = scale - 10;
 	if (scale< 20)
 		scale = 20;
@@ -2369,7 +2380,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	[myStepper setIntegerValue:scale];
     [smyStepper setIntegerValue:scale];
 	[myStepper1 setIntegerValue:scale];
+// changed by Terada (from this line)
 	magSize = [myScale doubleValue] / 100.0;
+// changed by Terada (until this line)
 	[self setScaleFactor: magSize];
 	if (sender == myScale1) {
 		[NSApp endSheet: [self.myDocument magnificationPanel]];
@@ -4553,9 +4566,10 @@ if (! self.skipLinks)
             
             
             
+// added by Terada (from this line)
             if ([self documentView].isFlipped)
                 bRect.origin.y = pushUp ? mouseLocDocumentView.y - bRect.size.height : mouseLocDocumentView.y + 10;
-
+// added by Terada (until this line)
             // Now make Tristan Hubsch modification
             
             
@@ -8272,13 +8286,19 @@ else
     if (!scrollView)
         return;
 
+// changed by Terada (from this line)
     [scrollView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+// changed by Terada (until this line)
     [scrollView setContentFilters:@[]];
 #endif
 }
 
 - (void)updateDarkModeInversion
 {
+#ifdef MOJAVEORHIGHER
+// changed by Terada (from this line)
+    // The hidden DarkModeInvertPreview default is no longer consulted;
+    // the Appearance toolbar item (TSPreviewAppearanceModeKey) replaces it.
     if (!_pdfViewReady || _updatingPreviewAppearance) return;
     _updatingPreviewAppearance = YES;
     if (TSPreviewShouldInvert([SUD integerForKey:TSPreviewAppearanceModeKey], NSApp.effectiveAppearance))
@@ -8286,11 +8306,14 @@ else
     else
         [self removeDarkModeInversionFilter];
     _updatingPreviewAppearance = NO;
+// changed by Terada (until this line)
+#endif
 }
 
 
 
 
+// added by Terada (from this line)
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];
@@ -8345,5 +8368,5 @@ else
     [super viewDidChangeEffectiveAppearance];
     [self updateDarkModeInversion];
 }
-
+// added by Terada (until this line)
 @end

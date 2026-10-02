@@ -269,8 +269,9 @@ tiToolTipHtmlURLField            = "URL";
 tiLabelHtmlSearch             = "検索";
 tiPaletteLabelHtmlSearch      = "検索";
 tiToolTipHtmlSearch           = "検索";
-
+/* added by Terada (from this line) */
 "PreviewAppearanceSystem" = "システム";
 "PreviewAppearanceLight" = "ライト";
 "PreviewAppearanceDark" = "ダーク";
 "tiLabelTSPreviewAppearance" = "外観";
+/* added by Terada (until this line) */

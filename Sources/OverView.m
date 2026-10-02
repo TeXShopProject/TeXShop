@@ -10,7 +10,7 @@
 #import "OverView.h"
 
 @implementation OverView
-
+// added by Terada (from this line)
 - (BOOL)isFlipped
 {
     return self.superview ? self.superview.isFlipped : NO;
@@ -25,7 +25,7 @@
         self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     }
 }
-
+// added by Terada (until this line)
 
 /*
 - (void) dealloc
@@ -99,7 +99,9 @@
         [[NSGraphicsContext currentContext] setShouldAntialias: NO];
         [[NSColor whiteColor] set];
         NSRectFill(theSelectionRect);
+// changed by Terada (from this line)
         [self.magnifiedImage drawInRect: theSelectionRect fromRect: magnifiedRect operation: NSCompositeSourceOver fraction: 1.0 respectFlipped: YES hints: nil ]; //NSCompositeCopy NSCompositeSourceOver
+// changed by Terada (until this line)
         [[NSColor blackColor] set];
         NSFrameRect(theSelectionRect);
      //   [self unlockFocus];

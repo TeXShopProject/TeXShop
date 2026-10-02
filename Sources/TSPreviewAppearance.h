@@ -1,3 +1,4 @@
+// added by Terada (from this line)
 #pragma once
 #import <Cocoa/Cocoa.h>
 
@@ -49,3 +50,4 @@ static inline BOOL TSValidatePreviewAppearanceChoice(NSMenuItem *item, NSUserDef
         ? NSControlStateValueOn : NSControlStateValueOff;
     return YES;
 }
+// added by Terada (until this line)

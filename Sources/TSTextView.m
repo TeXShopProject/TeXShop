@@ -2049,8 +2049,10 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     {
         [self.document changeColors: YES];
         // next two lines are key
+// changed by Terada (from this line)
         [self.document.myPDFKitView updateDarkModeInversion];
         [self.document.myPDFKitView2 updateDarkModeInversion];
+// changed by Terada (until this line)
       //  [self.document.myPDFKitView updateDarkModeInversion];
       //  [self.document.myPDFKitView2 updateDarkModeInversion];
         // [self.document changeColors: NO];
@@ -2061,8 +2063,10 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     {
         [self.document changeColors: NO];
         // bext two lines are key
+// changed by Terada (from this line)
         [self.document.myPDFKitView updateDarkModeInversion];
         [self.document.myPDFKitView2 updateDarkModeInversion];
+// changed by Terada (until this line)
         // [self.document.myPDFKitView updateDarkModeInversion];
         // [self.document.myPDFKitView2 updateDarkModeInversion];
         [[TSLaTeXPanelController sharedInstance] setIconTemplate:NO];

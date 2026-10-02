@@ -270,7 +270,9 @@ tiLabelHtmlSearch             = "Search";
 tiPaletteLabelHtmlSearch      = "Search";
 tiToolTipHtmlSearch           = "Search";
 
+/* added by Terada (from this line) */
 "PreviewAppearanceSystem" = "System";
 "PreviewAppearanceLight" = "Light";
 "PreviewAppearanceDark" = "Dark";
 "tiLabelTSPreviewAppearance" = "Appearance";
+/* added by Terada (until this line) */

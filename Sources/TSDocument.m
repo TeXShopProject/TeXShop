@@ -1,4 +1,3 @@
-#import "TSPreviewAppearance.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2007 Richard Koch
@@ -60,6 +59,7 @@
 #import "NSText-Extras.h"  // Terada
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
+#import "TSPreviewAppearance.h"  // added by Terada
 
 
 #define COLORTIME  0.02
@@ -6418,9 +6418,10 @@ if (! useFullSplitWindow) {
 
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
+// added by Terada (from this line)
     if (anItem.action == NSSelectorFromString(@"changePreviewAppearance:"))
         return TSValidatePreviewAppearanceChoice(anItem, SUD);
-
+// added by Terada (until this line)
     
     if ([anItem action] == @selector(toggleSyntaxColor:))
     {

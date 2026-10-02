@@ -33,8 +33,10 @@
 
 @interface MyPDFKitView : PDFView <NSTableViewDelegate, NSWindowDelegate>
 {
+// added by Terada (from this line)
     BOOL _pdfViewReady;
     BOOL _observingPreviewAppearance, _updatingPreviewAppearance;
+// added by Terada (until this line)
                     IBOutlet	NSTextField								*currentPage0;
     // "currentPage" is a very dangerous choice, because the PDFView class has a method called 'currentPage"
     // used by our code. But the instance variable holds the 'current page textbox' Luckily, the class has no
