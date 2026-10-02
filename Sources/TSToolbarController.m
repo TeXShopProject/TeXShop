@@ -283,8 +283,6 @@ else
 	    [toolbarItem setMinSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
 	    [toolbarItem setMaxSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
          */
-        [toolbarItem setMinSize:NSMakeSize(20.0, 20.0)];
-        [toolbarItem setMaxSize:NSMakeSize(400.0, 400.0)];
     }
   
 	return toolbarItem;
@@ -298,8 +296,6 @@ else
     [toolbarItem setMinSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
     [toolbarItem setMaxSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
     */
-    [toolbarItem setMinSize:NSMakeSize(20.0, 20.0)];
-    [toolbarItem setMaxSize:NSMakeSize(400.0, 400.0)];
     
     return toolbarItem;
 }
