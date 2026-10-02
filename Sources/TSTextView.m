@@ -2049,8 +2049,8 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     {
         [self.document changeColors: YES];
         // next two lines are key
-        [self.document.myPDFKitView applyDarkModeInversionFilter];
-        [self.document.myPDFKitView2 applyDarkModeInversionFilter];
+        [self.document.myPDFKitView updateDarkModeInversion];
+        [self.document.myPDFKitView2 updateDarkModeInversion];
       //  [self.document.myPDFKitView updateDarkModeInversion];
       //  [self.document.myPDFKitView2 updateDarkModeInversion];
         // [self.document changeColors: NO];
@@ -2061,8 +2061,8 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     {
         [self.document changeColors: NO];
         // bext two lines are key
-        [self.document.myPDFKitView removeDarkModeInversionFilter];
-        [self.document.myPDFKitView2 removeDarkModeInversionFilter];
+        [self.document.myPDFKitView updateDarkModeInversion];
+        [self.document.myPDFKitView2 updateDarkModeInversion];
         // [self.document.myPDFKitView updateDarkModeInversion];
         // [self.document.myPDFKitView2 updateDarkModeInversion];
         [[TSLaTeXPanelController sharedInstance] setIconTemplate:NO];

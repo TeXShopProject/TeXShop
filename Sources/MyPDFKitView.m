@@ -1,3 +1,4 @@
+#import "TSPreviewAppearance.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2005 Richard
@@ -8271,26 +8272,20 @@ else
     if (!scrollView)
         return;
 
-    [scrollView setAppearance:nil];
+    [scrollView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
     [scrollView setContentFilters:@[]];
 #endif
 }
 
 - (void)updateDarkModeInversion
 {
-#ifdef MOJAVEORHIGHER
-    if (@available(macOS 10.14, *)) {
-        BOOL isDark = [[self effectiveAppearance]
-            bestMatchFromAppearancesWithNames:
-            @[NSAppearanceNameDarkAqua]] != nil;
-        BOOL userWants = [SUD boolForKey:DarkModeInvertPreviewKey];
-
-        if (isDark && userWants)
-            [self applyDarkModeInversionFilter];
-        else
-            [self removeDarkModeInversionFilter];
-    }
-#endif
+    if (!_pdfViewReady || _updatingPreviewAppearance) return;
+    _updatingPreviewAppearance = YES;
+    if (TSPreviewShouldInvert([SUD integerForKey:TSPreviewAppearanceModeKey], NSApp.effectiveAppearance))
+        [self applyDarkModeInversionFilter];
+    else
+        [self removeDarkModeInversionFilter];
+    _updatingPreviewAppearance = NO;
 }
 
 
@@ -8319,6 +8314,36 @@ else
         [super setScaleFactor:previousScale];
         [self scaleChanged:nil];
     }
+    [self updateDarkModeInversion];
+    __weak MyPDFKitView *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{ [weakSelf updateDarkModeInversion]; });
+}
+
+- (void)observePreviewAppearance
+{
+    if (_observingPreviewAppearance) return;
+    _observingPreviewAppearance = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+        selector:@selector(previewAppearanceDefaultsChanged:)
+        name:NSUserDefaultsDidChangeNotification object:SUD];
+}
+
+- (void)previewAppearanceDefaultsChanged:(NSNotification *)notification
+{
+    [self updateDarkModeInversion];
+}
+
+- (void)viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    [self observePreviewAppearance];
+    [self updateDarkModeInversion];
+}
+
+- (void)viewDidChangeEffectiveAppearance
+{
+    [super viewDidChangeEffectiveAppearance];
+    [self updateDarkModeInversion];
 }
 
 @end

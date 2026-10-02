@@ -1,3 +1,4 @@
+#import "TSPreviewAppearance.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2005 Richard Koch
@@ -366,6 +367,11 @@ else
 //
 // -----------------------------------------------------------------------------
 
+- (void)changePreviewAppearance:(NSMenuItem *)sender
+{
+    [SUD setInteger:sender.tag forKey:TSPreviewAppearanceModeKey];
+}
+
 - (void) setupToolbar
 {
     NSWindow *tempWindow;
@@ -409,6 +415,19 @@ if (@available(macOS 11.0, *))
 	[[self pdfWindow] setToolbar: [self makeToolbar: kPDFToolbarIdentifier]];
 	[self.pdfKitWindow setToolbar: [self makeToolbar: kPDFKitToolbarIdentifier]];
     [[self fullSplitWindow] setToolbar: [self makeToolbar: kFullWindowToolbarIdentifier]];
+    for (NSString *identifier in @[kPDFKitToolbarIdentifier, kFullWindowToolbarIdentifier]) {
+        NSToolbar *previewToolbar = [identifier isEqual:kPDFKitToolbarIdentifier]
+            ? self.pdfKitWindow.toolbar : [self.fullSplitWindow toolbar];
+        if (!previewToolbar) continue;
+        NSString *key = [@"TSPreviewAppearanceToolbarInstalled-" stringByAppendingString:identifier];
+        if (![SUD boolForKey:key]) {
+            if (![[previewToolbar.items valueForKey:@"itemIdentifier"] containsObject:TSPreviewAppearanceToolbarID])
+                [previewToolbar insertItemWithItemIdentifier:TSPreviewAppearanceToolbarID
+                    atIndex:MIN(3, previewToolbar.items.count)];
+            [SUD setBool:YES forKey:key];
+        }
+    }
+
    [[self htmlWindow] setToolbar: [self makeToolbar: kHtmlWindowToolbarIdentifier]];
 }
 
@@ -478,6 +497,9 @@ if (@available(macOS 11.0, *))
     NSSearchToolbarItem  *mySearchToolbarItem;
 
     
+    if ([itemIdent isEqual:TSPreviewAppearanceToolbarID])
+        return TSPreviewAppearanceItem(self);
+
     if ([itemIdent isEqual: kSharingTID]) {
         [[shareButton cell] setImageScaling: NSImageAlignCenter];
         [shareButton setImage: [NSImage imageNamed: @"NSShareTemplate"]];
@@ -1443,6 +1465,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kMagnificationKKTID,
 					kGotoPageKKTID,
 					kMouseModeKKTID, // mitsu 1.29 (O)
+					TSPreviewAppearanceToolbarID,
 					kSharingKKTID,
 					kSplitKKTID,
                     // kSplitVerticalKKTID,
@@ -1464,6 +1487,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                 kMagnificationKKTID,
                 kGotoPageKKTID,
                 kMouseModeKKTID, // mitsu 1.29 (O)
+                TSPreviewAppearanceToolbarID,
                  kSplitKKTID,                // NSToolbarSpaceItemIdentifier,
                 NSToolbarFlexibleSpaceItemIdentifier,
                 kSearchKKTID,
@@ -1494,6 +1518,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                      NSToolbarPrintItemIdentifier,
                      skGotoPageKKTID,
                      skMouseModeTID,
+                     TSPreviewAppearanceToolbarID,
                      kSplitKKTID,
                      NSToolbarFlexibleSpaceItemIdentifier,
                      skSearchTID,
@@ -1517,6 +1542,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                     NSToolbarPrintItemIdentifier,
                     skGotoPageKKTID,
                     skMouseModeTID,
+                    TSPreviewAppearanceToolbarID,
              		kSplitKKTID,
                     NSToolbarFlexibleSpaceItemIdentifier,
                     skSearchTID,
@@ -1537,6 +1563,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                      NSToolbarPrintItemIdentifier,
                      skGotoPageKKTID,
                      skMouseModeTID,
+                     TSPreviewAppearanceToolbarID,
                      kSplitKKTID,
                      NSToolbarFlexibleSpaceItemIdentifier,
                      skSearchTID,
@@ -1561,6 +1588,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                     NSToolbarPrintItemIdentifier,
                     skGotoPageKKTID,
                     skMouseModeTID,
+                    TSPreviewAppearanceToolbarID,
                     kSplitKKTID,
                     NSToolbarFlexibleSpaceItemIdentifier,
                     skSearchTID,
@@ -1730,6 +1758,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kGotoPageKKTID,
 					kMagnificationKKTID,
 					kMouseModeKKTID,
+					TSPreviewAppearanceToolbarID,
 					kSyncMarksTID,
                     kSearchKKTID,
                     kSharingKKTID,
@@ -1765,6 +1794,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kGotoPageKKTID,
 					kMagnificationKKTID,
 					kMouseModeKKTID,
+					TSPreviewAppearanceToolbarID,
 					kSyncMarksTID,
                     kSplitKKTID,
                     kToolsKKTID,
@@ -1804,6 +1834,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	                skGotoPageKKTID,
                     skMagnificationKKTID,
 					skMouseModeTID,
+					TSPreviewAppearanceToolbarID,
                     skSearchTID,
 					kSplitKKTID,
                     skColorIndexTID,
@@ -1836,6 +1867,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 	                skGotoPageKKTID,
                     skMagnificationKKTID,
 					skMouseModeTID,
+					TSPreviewAppearanceToolbarID,
                     skSearchTID,
 					kSplitKKTID,
                     skColorIndexTID,

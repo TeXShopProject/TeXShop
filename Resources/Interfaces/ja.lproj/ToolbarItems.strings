@@ -269,3 +269,8 @@ tiToolTipHtmlURLField            = "URL";
 tiLabelHtmlSearch             = "検索";
 tiPaletteLabelHtmlSearch      = "検索";
 tiToolTipHtmlSearch           = "検索";
+
+"PreviewAppearanceSystem" = "システム";
+"PreviewAppearanceLight" = "ライト";
+"PreviewAppearanceDark" = "ダーク";
+"tiLabelTSPreviewAppearance" = "外観";

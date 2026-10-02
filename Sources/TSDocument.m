@@ -1,3 +1,4 @@
+#import "TSPreviewAppearance.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2007 Richard Koch
@@ -6417,6 +6418,9 @@ if (! useFullSplitWindow) {
 
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
+    if (anItem.action == NSSelectorFromString(@"changePreviewAppearance:"))
+        return TSValidatePreviewAppearanceChoice(anItem, SUD);
+
     
     if ([anItem action] == @selector(toggleSyntaxColor:))
     {

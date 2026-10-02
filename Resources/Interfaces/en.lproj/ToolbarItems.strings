@@ -270,3 +270,7 @@ tiLabelHtmlSearch             = "Search";
 tiPaletteLabelHtmlSearch      = "Search";
 tiToolTipHtmlSearch           = "Search";
 
+"PreviewAppearanceSystem" = "System";
+"PreviewAppearanceLight" = "Light";
+"PreviewAppearanceDark" = "Dark";
+"tiLabelTSPreviewAppearance" = "Appearance";
