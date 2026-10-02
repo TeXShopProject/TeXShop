@@ -372,7 +372,8 @@ NSString *SameFontForMacroKey = @"SameFontForMacro";
 NSString *LinkPopupsKey = @"LinkPopups";
 NSString *MathExpressionCompletionKey = @"MathExpressionCompletion";
 NSString *BringFrontOnTypesetKey = @"BringFrontOnTypeset";
-NSString *DarkModeInvertPreviewKey = @"DarkModeInvertPreview";
+// removed by Terada: superseded by the Appearance toolbar item (TSPreviewAppearanceModeKey)
+// NSString *DarkModeInvertPreviewKey = @"DarkModeInvertPreview";
 
 
 NSString *RepeatTypesetOnError13Key = @"RepeatTypesetOnError13";

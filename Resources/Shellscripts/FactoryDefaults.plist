@@ -98,8 +98,10 @@
 	<string>NO</string>
 	<key>ConvertLF</key>
 	<string>YES</string>
+	<!-- removed by Terada: superseded by TSPreviewAppearanceMode (Appearance toolbar item)
 	<key>DarkModeInvertPreview</key>
 	<string>YES</string>
+	-->
 	<key>DefaultCommand</key>
 	<string>1</string>
 	<key>DefaultEngine</key>

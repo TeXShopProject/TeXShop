@@ -577,7 +577,8 @@ extern NSString *SameFontForMacroKey;
 extern NSString *LinkPopupsKey;
 extern NSString *MathExpressionCompletionKey;
 extern NSString *BringFrontOnTypesetKey;
-extern NSString *DarkModeInvertPreviewKey;
+// removed by Terada: superseded by the Appearance toolbar item (TSPreviewAppearanceModeKey)
+// extern NSString *DarkModeInvertPreviewKey;
 
 
 // end defaults
