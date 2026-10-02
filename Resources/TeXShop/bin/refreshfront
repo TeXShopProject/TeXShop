@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+exec osascript <<END
+tell application "TeXShop"
+  tell front document to refreshtext
+end tell
+END
+

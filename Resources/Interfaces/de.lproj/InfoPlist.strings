@@ -1,0 +1,72 @@
+ /* This is for the localized "short" name in the app menu bar */
+  CFBundleName = "TeXShop";
+ /* This is for the localized "long" name in Finder, etc. */
+  CFBundleDisplayName = "TeXShop";
+ /* Note that the "\n" is used for indicating a new line */
+  NSHumanReadableCopyright = "Copyright 2001-2025, Richard Koch \n
+  	https://pages.uoregon.edu/koch/texshop/texshop.html";
+
+ /* In the list below, the left side is the official name of a UTI and the right side is
+ 	the translation for the interface */
+
+  "TeX File" = "TeX Dokument";
+  "LaTeX File" = "LTX File";
+  "ConTeXt File" = "ctx Datei";
+  "HTML File" = "HTML File";
+  "TEXI File" = "TEXI File";
+  "mp" = "mp Datei";
+  "sty" = "sty Datei";
+  "cls" = "cls Datei";
+  "mf" = "mf Datei";
+  "bst" = "bst Datei";
+  "bib" = "bib Datei";
+  "comment" = "comment";
+  "engine" = "engine";
+  "PDF Data" = "PDF Data";
+  NSTIFFPboardType = "TIFF-Dokument";
+  "PNG image" = "PNG-Bild";
+  "jpeg" = "JPEG-Bild";
+  NSEPSPboardType = "EPS-Dokument";
+  "epsi" = "EPSI Dokument";
+  "log" = "TeX Log Datei";
+  "aux" = "TeX Aux Datei";
+  "PostscriptFile" = "Postscript-Dokument";
+  "HieroTeX File" = "HieroTeX-Dokument";
+  "Sketch File" = "Sketch-Dokument";
+  "texshop" = "texshop";
+  "dvi" = "dvi Datei";
+  "ins" = "ins Datei";
+  "dtx" = "dtx Datei";
+  "drv" = "drv Datei";
+  "def" = "def";
+  "fd" = "fd";
+  "clo" = "clo";
+  "dn" = "dn";
+  "abc" = "abc Datei";
+  "gabc" = "gabc";
+  "gtex" = "gtex";
+  "glog" = "glog";
+  "gaux" = "gaux";
+  "ly" = "ly Datei";
+  "Rnw" = "Rnw Datei";
+  "asy" = "asy Datei";
+  "Stex" = "Stex Datei";
+  "lytex" = "lytex Datei";
+  "cbx" = "cbx Datei";
+  "lbx" = "lbc Datei";
+  "bbx" = "bbx Datei";
+  "skt" = "skt Datei";
+  "py" = "py Datei";
+  NSStringPboardType = "Reines Textdokument";
+  "md" = "md Datei";
+  "Plain Text" = "Plain Text";
+  "Any File" = "Any File";
+  
+  /* Help book localization */
+  CFBundleHelpBookName = "TeXShop Help";
+  
+ 
+  
+  
+ 
+ 

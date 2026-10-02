@@ -1,0 +1,6 @@
+#!/bin/zsh
+if [ -e "/Library/TeX/Root/texmf-dist/dvipdfmx/dvipdfmx-unsafe.cfg" ]; then
+	xelatex -output-driver="xdvipdfmx -i dvipdfmx-unsafe.cfg -q -E" -file-line-error -synctex=1 "$1"
+else
+	xelatex -output-driver="xdvipdfmx -q -E" -file-line-error -synctex=1 "$1"
+fi

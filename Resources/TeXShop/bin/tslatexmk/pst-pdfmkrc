@@ -1,0 +1,3 @@
+# DO NOT EDIT OR COPY THIS FILE. TEXSHOP WILL AUTOMATICALLY UPDATE IT 
+# special latexmk settings for Herb Schulz
+$pdflatex = "$ENV{TSBIN}/pst-pdfmk.sh %B; pdflatex $TSUserCompileOptions --synctex=1 --file-line-error  %O %S";

@@ -1,0 +1,8 @@
+#!/bin/sh
+  location=$(dirname "$1")
+  basename="${1%.tex}"
+  #process
+  cd $location
+  pdflatex "$1"
+  asy "${basename}"-*.asy
+  pdflatex "$1"

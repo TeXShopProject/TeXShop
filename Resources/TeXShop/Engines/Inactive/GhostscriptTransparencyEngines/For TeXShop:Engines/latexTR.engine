@@ -1,0 +1,21 @@
+#!/bin/zsh
+simpdftexversion=`simpdftex -v | cut -c 52-60`
+minsimpdftexversion=20180924
+
+if [ ${minsimpdftexversion} -gt ${simpdftexversion} ] ; then
+	echo "You need simpdftex version ${minsimpdftexversion} or later to use this engine"
+	exit
+fi
+
+# set up correct argument for transparency for gs in zsh
+gsversionlist=( ${(s/./)$(gs --version)} )
+if [ \( ${gsversionlist[1]} -eq 9 \) -a \( ${gsversionlist[2]} -ge 51 \) ] || [ \( ${gsversionlist[1]} -ge 10 \) ] ; then
+export gstransparencyarg="-dALLOWPSTRANSPARENCY"
+else
+export gstransparencyarg="-dNOSAFER"
+fi
+
+echo ${gstransparencyarg}
+
+#simpdftex latex --maxpfb --extradvipsopts "-R0" --extratexopts "-synctex=1 -shell-escape -file-line-error" --distilleropts "-dNOSAFER" "$1"
+simpdftex latex --maxpfb --extradvipsopts "-R0" --extratexopts "-synctex=1 -shell-escape -file-line-error" --distilleropts "${gstransparencyarg}" "$1"

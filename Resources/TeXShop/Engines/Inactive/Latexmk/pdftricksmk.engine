@@ -1,0 +1,38 @@
+#!/bin/zsh
+
+# create a zsh argument list from $2
+xargarray=( ${(z)2} )
+for ((i=1; i <= $#xargarray; i++ )); do xargarray[$i]=${(Q)xargarray[$i]}; done;
+export xargarray
+#export xargs=${2}
+
+# For TeXShop 4.66+ only
+export TSBIN="$HOME/Library/TeXShop/bin/tslatexmk"
+
+#export LTMKBIN="$HOME/Library/TeXShop/bin/tslatexmk"
+whereisit="`which latexmk`"
+if [ "${whereisit}" != "latexmk not found" ] ; then
+export LTMKBIN="`dirname ${whereisit}`"
+else
+echo "sorry latexmk not found: using internal default"
+export LTMKBIN="${HOME}/Library/TeXShop/bin/tslatexmk"
+fi 
+
+export LTMKEDIT="$HOME/Library/TeXShop/bin"
+# make sure latexmkrcedit exists in bin
+if [ ! -e "${LTMKEDIT}/latexmkrcedit" ] ; then
+	cp "${TSBIN}/latexmkrcDONTedit" "${LTMKEDIT}/latexmkrcedit"
+fi
+# set up correct argument for transparency for gs in zsh
+gsversionlist=( ${(s/./)$(gs --version)} )
+if [ \( ${gsversionlist[1]} -eq 9 \) -a \( ${gsversionlist[2]} -ge 51 \) ] || [ \( ${gsversionlist[1]} -ge 10 \) ] ; then
+export gstransparencyarg="-dALLOWPSTRANSPARENCY"
+else
+export gstransparencyarg="-dNOSAFER"
+fi
+# Use local rc file platexmkrc if it exists. p = project. zsh version
+export localrc=""
+if [ -e ./platexmkrc ] ; then
+	export localrc= ( -r ./platexmkrc )
+fi
+"${LTMKBIN}"/latexmk -pdf -r "${LTMKEDIT}/latexmkrcedit" ${xargarray} -r "${TSBIN}/pdftricksmkzrc" ${localrc} "$1"

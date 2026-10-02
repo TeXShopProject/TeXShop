@@ -1,0 +1,427 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.9.17)  3 OCT 2021 12:09
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"About Sage.tex"
+(./About Sage.tex
+LaTeX2e <2021-06-01> patch level 1
+L3 programming layer <2021-08-27>
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amscls/amsart.cls
+Document Class: amsart 2020/05/29 v2.20.6
+\linespacing=\dimen138
+\normalparindent=\dimen139
+\normaltopskip=\skip47
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2021/04/20 v2.17j AMS math features
+\@mathmargin=\skip48
+
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks16
+\ex@=\dimen140
+))
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen141
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count182
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count183
+\leftroot@=\count184
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count185
+\DOTSCASE@=\count186
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box50
+\strutbox@=\box51
+\big@size=\dimen142
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count187
+\c@MaxMatrixCols=\count188
+\dotsspace@=\muskip16
+\c@parentequation=\count189
+\dspbrk@lvl=\count190
+\tag@help=\toks17
+\row@=\count191
+\column@=\count192
+\maxfields@=\count193
+\andhelp@=\toks18
+\eqnshift@=\dimen143
+\alignsep@=\dimen144
+\tagshift@=\dimen145
+\tagwidth@=\dimen146
+\totwidth@=\dimen147
+\lineht@=\dimen148
+\@envbody=\toks19
+\multlinegap=\skip49
+\multlinetaggap=\skip50
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2923.
+LaTeX Info: Redefining \] on input line 2924.
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line 397
+.
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)
+\copyins=\insert199
+\abstractbox=\box52
+\listisep=\skip51
+\c@part=\count194
+\c@section=\count195
+\c@subsection=\count196
+\c@subsubsection=\count197
+\c@paragraph=\count198
+\c@subparagraph=\count266
+\c@figure=\count267
+\c@table=\count268
+\abovecaptionskip=\skip52
+\belowcaptionskip=\skip53
+\captionindent=\dimen149
+\thm@style=\toks21
+\thm@bodyfont=\toks22
+\thm@headfont=\toks23
+\thm@notefont=\toks24
+\thm@headpunct=\toks25
+\thm@preskip=\skip54
+\thm@postskip=\skip55
+\thm@headsep=\skip56
+\dth@everypar=\toks26
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/pdfpages/pdfpages.sty
+Package: pdfpages 2021/03/06 v0.5t Insert pages of external PDF documents (AM)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count269
+\calc@Bcount=\count270
+\calc@Adimen=\dimen150
+\calc@Bdimen=\dimen151
+\calc@Askip=\skip57
+\calc@Bskip=\skip58
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count271
+\calc@Cskip=\skip59
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2020/10/14 v3.0a eso-pic (RN)
+\ESO@tempdima=\dimen152
+\ESO@tempdimb=\dimen153
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks27
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+))
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2020/12/05 v1.2c Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+)
+\Gin@req@height=\dimen154
+\Gin@req@width=\dimen155
+)
+\AM@pagewidth=\dimen156
+\AM@pageheight=\dimen157
+\AM@fboxrule=\dimen158
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/pdfpages/pppdftex.def
+File: pppdftex.def 2021/03/06 v0.5t Pdfpages driver for pdfTeX (AM)
+)
+\pdfpages@includegraphics@status=\count272
+\AM@pagebox=\box53
+\AM@global@opts=\toks28
+\AM@pagecnt=\count273
+\AM@toc@title=\toks29
+\c@AM@survey=\count274
+\AM@templatesizebox=\box54
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2021-08-04 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count275
+\l__pdf_internal_box=\box55
+)
+(./About Sage.aux)
+\openout1 = `"About Sage.aux"'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 4.
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 4.
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+(/usr/local/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count276
+\scratchdimen=\dimen159
+\scratchbox=\box56
+\nofMPsegments=\count277
+\nofMParguments=\count278
+\everyMPshowfont=\toks30
+\MPscratchCnt=\count279
+\MPscratchDim=\dimen160
+\MPnumerator=\count280
+\makeMPintoPDFobject=\count281
+\everyMPtoPDFconversion=\toks31
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+(/usr/local/texlive/2021/texmf-dist/tex/latex/pdflscape/pdflscape.sty
+Package: pdflscape 2019/12/05 v0.12 Display of landscape pages in PDF (HO)
+
+(/usr/local/texlive/2021/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2020/03/06 v1.0d TeX engine tests
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
+)
+<SageEngine.pdf, id=1, 614.295pt x 794.97pt>
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf>
+Package pdftex.def Info: SageEngine.pdf  used on input line 6.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf>
+Package pdftex.def Info: SageEngine.pdf  used on input line 6.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+<SageEngine.pdf, id=4, page=1, 614.295pt x 794.97pt>
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 1>
+Package pdftex.def Info: SageEngine.pdf , page1 used on input line 6.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 1>
+Package pdftex.def Info: SageEngine.pdf , page1 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 1>
+Package pdftex.def Info: SageEngine.pdf , page1 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 1>
+Package pdftex.def Info: SageEngine.pdf , page1 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 1>
+Package pdftex.def Info: SageEngine.pdf , page1 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [1 <./SageEngine.pdf{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap
+/pdftex.map}>]
+<SageEngine.pdf, id=71, page=2, 614.295pt x 794.97pt>
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 2>
+Package pdftex.def Info: SageEngine.pdf , page2 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 2>
+Package pdftex.def Info: SageEngine.pdf , page2 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 2>
+Package pdftex.def Info: SageEngine.pdf , page2 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [2 <./SageEngine.pdf>]
+<SageEngine.pdf, id=99, page=3, 614.295pt x 794.97pt>
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 3>
+Package pdftex.def Info: SageEngine.pdf , page3 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 3>
+Package pdftex.def Info: SageEngine.pdf , page3 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageEngine.pdf Graphic file (type pdf)
+<use SageEngine.pdf, page 3>
+Package pdftex.def Info: SageEngine.pdf , page3 used on input line 6.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [3 <./SageEngine.pdf>]
+<SageTestSource.pdf, id=103, 614.295pt x 794.97pt>
+File: SageTestSource.pdf Graphic file (type pdf)
+<use SageTestSource.pdf>
+Package pdftex.def Info: SageTestSource.pdf  used on input line 8.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: SageTestSource.pdf Graphic file (type pdf)
+<use SageTestSource.pdf>
+Package pdftex.def Info: SageTestSource.pdf  used on input line 8.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+<SageTestSource.pdf, id=106, page=1, 614.295pt x 794.97pt>
+File: SageTestSource.pdf Graphic file (type pdf)
+<use SageTestSource.pdf, page 1>
+Package pdftex.def Info: SageTestSource.pdf , page1 used on input line 8.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: SageTestSource.pdf Graphic file (type pdf)
+<use SageTestSource.pdf, page 1>
+Package pdftex.def Info: SageTestSource.pdf , page1 used on input line 8.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageTestSource.pdf Graphic file (type pdf)
+<use SageTestSource.pdf, page 1>
+Package pdftex.def Info: SageTestSource.pdf , page1 used on input line 8.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageTestSource.pdf Graphic file (type pdf)
+<use SageTestSource.pdf, page 1>
+Package pdftex.def Info: SageTestSource.pdf , page1 used on input line 8.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageTestSource.pdf Graphic file (type pdf)
+<use SageTestSource.pdf, page 1>
+Package pdftex.def Info: SageTestSource.pdf , page1 used on input line 8.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [4 <./SageTestSource.pdf>]
+<SageTest.pdf, id=126, 614.295pt x 794.97pt>
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf>
+Package pdftex.def Info: SageTest.pdf  used on input line 10.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf>
+Package pdftex.def Info: SageTest.pdf  used on input line 10.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf>
+Package pdftex.def Info: SageTest.pdf  used on input line 10.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+<SageTest.pdf, id=130, page=1, 614.295pt x 794.97pt>
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf, page 1>
+Package pdftex.def Info: SageTest.pdf , page1 used on input line 10.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf, page 1>
+Package pdftex.def Info: SageTest.pdf , page1 used on input line 10.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf, page 1>
+Package pdftex.def Info: SageTest.pdf , page1 used on input line 10.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf, page 1>
+Package pdftex.def Info: SageTest.pdf , page1 used on input line 10.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf, page 1>
+Package pdftex.def Info: SageTest.pdf , page1 used on input line 10.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+
+[5 <./SageTest.pdf>]
+<SageTest.pdf, id=172, page=2, 614.295pt x 794.97pt>
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf, page 2>
+Package pdftex.def Info: SageTest.pdf , page2 used on input line 10.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf, page 2>
+Package pdftex.def Info: SageTest.pdf , page2 used on input line 10.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: SageTest.pdf Graphic file (type pdf)
+<use SageTest.pdf, page 2>
+Package pdftex.def Info: SageTest.pdf , page2 used on input line 10.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [6 <./SageTest.pdf>] (./About Sage.aux) ) 
+Here is how much of TeX's memory you used:
+ 3777 strings out of 478599
+ 52508 string characters out of 5854086
+ 354213 words of memory out of 5000000
+ 21467 multiletter control sequences out of 15000+600000
+ 407477 words of font info for 43 fonts, out of 8000000 for 9000
+ 1302 hyphenation exceptions out of 8191
+ 72i,17n,80p,270b,429s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2021/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2021/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2021/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/font
+s/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmti10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmti9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmtt10.pfb>
+Output written on "About Sage.pdf" (6 pages, 211290 bytes).
+PDF statistics:
+ 206 PDF objects out of 1000 (max. 8388607)
+ 138 compressed objects within 2 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
+
