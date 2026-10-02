@@ -893,7 +893,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="タブでインデント" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hlo-et-iCo">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AquaKana"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="useTabPressed:" target="-2" id="Hu0-g8-Inj"/>
@@ -912,7 +912,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="HiraKakuProN-W3"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="括弧の対応チェックの詳細" translatesAutoresizingMaskIntoConstraints="NO" id="1133">
                                             <rect key="frame" x="333" y="444" width="232" height="136" />
@@ -2130,7 +2130,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="デフォルト" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1235">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="12" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="12" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="defaultEngineCall:" target="-2" id="1249"/>
@@ -2150,7 +2150,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="デフォルト" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1243">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="12" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="12" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="defaultEngineCall:" target="-2" id="1250"/>
@@ -2216,7 +2216,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="デフォルト" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1239">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="12" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="12" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="defaultEngineCall:" target="-2" id="1251"/>
@@ -2236,7 +2236,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="デフォルト" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1247">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="12" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="12" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="defaultEngineCall:" target="-2" id="1252"/>

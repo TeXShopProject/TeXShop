@@ -196,7 +196,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="취소" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="338">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" size="13" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
@@ -210,7 +210,7 @@ Gw
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="승인" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="340">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" size="13" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 DQ
 </string>
@@ -326,7 +326,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="자동 완성 키" translatesAutoresizingMaskIntoConstraints="NO" id="14">
                                             <rect key="frame" x="49" y="280" width="256" height="69" />
@@ -363,7 +363,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="폰트" translatesAutoresizingMaskIntoConstraints="NO" id="41">
                                             <rect key="frame" x="49" y="554" width="256" height="56" />
@@ -377,7 +377,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="선택..." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="43">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="changeDocumentFont:" target="-2" id="442"/>
@@ -394,7 +394,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="편집창 위치" translatesAutoresizingMaskIntoConstraints="NO" id="46">
                                             <rect key="frame" x="49" y="439" width="256" height="107" />
@@ -434,7 +434,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="현재 위치 저장" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="52">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="currentDocumentWindowPosDefault:" target="-2" id="444"/>
@@ -442,7 +442,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="실행할 때" translatesAutoresizingMaskIntoConstraints="NO" id="53">
                                             <rect key="frame" x="49" y="353" width="256" height="81" />
@@ -456,7 +456,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="빈 문서 열기" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="55">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="emptyButtonPressed:" target="-2" id="461"/>
@@ -467,7 +467,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="외부 에디터 사용" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="57">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="externalEditorButtonPressed:" target="-2" id="463"/>
@@ -475,7 +475,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="인코딩" translatesAutoresizingMaskIntoConstraints="NO" id="19">
                                             <rect key="frame" x="321" y="440" width="256" height="68" />
@@ -502,7 +502,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Dictionary" translatesAutoresizingMaskIntoConstraints="NO" id="umo-h5-U9Z">
                                             <rect key="frame" x="321" y="353" width="256" height="56" />
@@ -811,7 +811,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="탭 문자 사용" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="29">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="useTabPressed:" target="-2" id="538"/>
@@ -830,7 +830,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="숨김 문자 표시" translatesAutoresizingMaskIntoConstraints="NO" id="61">
                                             <rect key="frame" x="63" y="171" width="256" height="133" />
@@ -844,7 +844,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="스페이스" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="63">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="517"/>
@@ -855,7 +855,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="전각 스페이스 (일본어)" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="65">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="516"/>
@@ -866,7 +866,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="개행" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="67">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="515"/>
@@ -877,7 +877,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="탭" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="69">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="514"/>
@@ -1000,7 +1000,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="즉시 표시" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="87">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="showInvisibleCharacterButtonPressed:" target="-2" id="521"/>
@@ -1008,7 +1008,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="괄호 여닫기 세부 설정" translatesAutoresizingMaskIntoConstraints="NO" id="98">
                                             <rect key="frame" x="323" y="465" width="232" height="134" />
@@ -1022,7 +1022,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="괄호 여닫기 하일라이트" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="100">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="highlightChanged:" target="-2" id="505"/>
@@ -1033,7 +1033,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="홑괄호 경고음" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="102">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="highlightChanged:" target="-2" id="504"/>
@@ -1044,7 +1044,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="홑괄호 경고 색상" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="104">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="highlightChanged:" target="-2" id="503"/>
@@ -1055,7 +1055,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="이동 중에도 보이기" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="106">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="highlightChanged:" target="-2" id="502"/>
@@ -1066,7 +1066,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="대응 괄호 깜박이기" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="108">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="highlightChanged:" target="-2" id="520"/>
@@ -1074,7 +1074,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="워드랩" translatesAutoresizingMaskIntoConstraints="NO" id="6C2-ib-Qxi">
                                             <rect key="frame" x="323" y="366" width="232" height="86" />
@@ -1259,7 +1259,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="현재 위치 저장" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="117">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="currentPdfWindowPosDefault:" target="-2" id="448"/>
@@ -1267,7 +1267,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="보기 창 확대 배율" translatesAutoresizingMaskIntoConstraints="NO" id="118">
                                             <rect key="frame" x="317" y="366" width="253" height="61" />
@@ -1281,7 +1281,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="설정" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="120">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="magChanged:" target="-2" id="451"/>
@@ -1298,7 +1298,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="마우스 모드" translatesAutoresizingMaskIntoConstraints="NO" id="126">
                                             <rect key="frame" x="51" y="354" width="253" height="62" />
@@ -1329,7 +1329,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="창 리사이즈" translatesAutoresizingMaskIntoConstraints="NO" id="135">
                                             <rect key="frame" x="317" y="431" width="253" height="61" />
@@ -1358,7 +1358,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="페이지 형식" translatesAutoresizingMaskIntoConstraints="NO" id="142">
                                             <rect key="frame" x="317" y="492" width="253" height="61" />
@@ -1388,7 +1388,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="맞쪽보기" translatesAutoresizingMaskIntoConstraints="NO" id="150">
                                             <rect key="frame" x="51" y="420" width="253" height="83" />
@@ -1425,7 +1425,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="외부 에디터" translatesAutoresizingMaskIntoConstraints="NO" id="155">
                                             <rect key="frame" x="51" y="284" width="253" height="66" />
@@ -1439,7 +1439,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="보기 창 자동 갱신" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="157">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="autoPDFChanged:" target="-2" id="478"/>
@@ -1447,7 +1447,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="디스플레이" translatesAutoresizingMaskIntoConstraints="NO" id="158">
                                             <rect key="frame" x="51" y="214" width="253" height="66" />
@@ -1461,7 +1461,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="텍스트와 라인아트를 부드럽게" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="160">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="antialiasChanged:" target="-2" id="542"/>
@@ -1469,7 +1469,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="창 배치" translatesAutoresizingMaskIntoConstraints="NO" id="Z4m-QX-PVb">
                                             <rect key="frame" x="51" y="113" width="253" height="78" />
@@ -1516,7 +1516,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="스크롤하지 않음" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="125">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="scrollPressed:" target="-2" id="460"/>
@@ -1524,7 +1524,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="단일 창 모드" translatesAutoresizingMaskIntoConstraints="NO" id="6bD-xb-7iv">
                                             <rect key="frame" x="317" y="285" width="253" height="78" />
@@ -1650,7 +1650,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="설정..." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="167">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="changeConsoleFont:" target="-2" id="484"/>
@@ -1678,7 +1678,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="콘솔창 위치" translatesAutoresizingMaskIntoConstraints="NO" id="174">
                                             <rect key="frame" x="151" y="413" width="308" height="103" />
@@ -1692,7 +1692,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="현재 위치 저장" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="176">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="consoleWindowPosDefault:" target="-2" id="544"/>
@@ -1726,7 +1726,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="콘솔창 리사이즈" translatesAutoresizingMaskIntoConstraints="NO" id="181">
                                             <rect key="frame" x="151" y="324" width="308" height="75" />
@@ -1735,7 +1735,7 @@ DQ
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="63"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="182">
                                             <rect key="frame" x="176" y="335" width="147" height="38" />
@@ -1798,7 +1798,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                     </subviews>
                                 </view>
@@ -1847,7 +1847,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="기본 조판 명령" translatesAutoresizingMaskIntoConstraints="NO" id="199">
                                             <rect key="frame" x="42" y="442" width="260" height="168" />
@@ -1899,7 +1899,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="파일 저장시" translatesAutoresizingMaskIntoConstraints="NO" id="208">
                                             <rect key="frame" x="332" y="418" width="225" height="76" />
@@ -1913,7 +1913,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="관련 파일 함께 저장" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="210">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="saveRelatedButtonPressed:" target="-2" id="466"/>
@@ -1921,7 +1921,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="조판 후 동작" translatesAutoresizingMaskIntoConstraints="NO" id="211">
                                             <rect key="frame" x="332" y="514" width="225" height="96" />
@@ -1962,7 +1962,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sync 방식" translatesAutoresizingMaskIntoConstraints="NO" id="216">
                                             <rect key="frame" x="332" y="293" width="225" height="121" />
@@ -2317,7 +2317,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="명령 찾기" translatesAutoresizingMaskIntoConstraints="NO" id="264">
                                             <rect key="frame" x="60" y="195" width="491" height="80" />
@@ -2349,7 +2349,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="BibTeX 엔진" translatesAutoresizingMaskIntoConstraints="NO" id="269">
                                             <rect key="frame" x="60" y="111" width="491" height="80" />
@@ -2403,7 +2403,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="칼러 매핑 사용" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="278">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="colorMapChanged:" target="-2" id="475"/>
@@ -2413,7 +2413,7 @@ DQ
                                                         <rect key="frame" x="11" y="16" width="162" height="17"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="전경색 농도" id="283">
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
@@ -2443,7 +2443,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="복사할 이미지 형식" translatesAutoresizingMaskIntoConstraints="NO" id="298">
                                             <rect key="frame" x="144" y="551" width="323" height="59" />
@@ -2477,7 +2477,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="삽입커서" translatesAutoresizingMaskIntoConstraints="NO" id="Lbe-jt-WzC">
                                             <rect key="frame" x="144" y="159" width="323" height="229" />
@@ -2651,7 +2651,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="321">
                                             <rect key="frame" x="17" y="300" width="153" height="71" />
@@ -2732,7 +2732,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="프로젝트 루트 파일" translatesAutoresizingMaskIntoConstraints="NO" id="332">
                                             <rect key="frame" x="19" y="121" width="357" height="95" />
@@ -2746,7 +2746,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="루트 파일을 함께 열기" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="334">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="openRootFilePressed:" target="-2" id="539"/>
@@ -2757,7 +2757,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="루트 파일 창을 최소화" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="336">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="miniaturizeRootFilePressed:" target="-2" id="543"/>
@@ -2765,7 +2765,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sparkle 업데이트 관리자" translatesAutoresizingMaskIntoConstraints="NO" id="549">
                                             <rect key="frame" x="405" y="99" width="185" height="113" />
@@ -2809,7 +2809,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="업데이트를 자동으로 확인" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="556">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="sparkleAutomaticCheck:" target="-2" id="557"/>

@@ -196,7 +196,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="取消" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="908">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                            <font key="font" size="13" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
@@ -210,7 +210,7 @@ Gw
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="好" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="907">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                            <font key="font" size="13" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 DQ
 </string>
@@ -326,7 +326,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="命令补全触发键:" translatesAutoresizingMaskIntoConstraints="NO" id="925">
                                             <rect key="frame" x="55" y="271" width="256" height="69" />
@@ -363,7 +363,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="文档字体" translatesAutoresizingMaskIntoConstraints="NO" id="14">
                                             <rect key="frame" x="55" y="557" width="256" height="56" />
@@ -377,7 +377,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="设置..." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="872">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="changeDocumentFont:" target="-2" id="85"/>
@@ -394,7 +394,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="启动时" translatesAutoresizingMaskIntoConstraints="NO" id="236">
                                             <rect key="frame" x="55" y="347" width="256" height="81" />
@@ -408,7 +408,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="打开空文档" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="875">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="emptyButtonPressed:" target="-2" id="239"/>
@@ -419,7 +419,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="配置为外部编辑器" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="876">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="externalEditorButtonPressed:" target="-2" id="275"/>
@@ -427,7 +427,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="配对目标和高亮颜色" translatesAutoresizingMaskIntoConstraints="NO" id="940">
                                             <rect key="frame" x="15" y="12" width="234" height="57" />
@@ -490,7 +490,7 @@ DQ
                                                     </colorWell>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="HiraKakuProN-W3"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="编码" translatesAutoresizingMaskIntoConstraints="NO" id="262">
                                             <rect key="frame" x="319" y="437" width="257" height="68" />
@@ -517,7 +517,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="源代码窗口位置" translatesAutoresizingMaskIntoConstraints="NO" id="19">
                                             <rect key="frame" x="55" y="434" width="256" height="107" />
@@ -557,7 +557,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="设成当前位置" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="874">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="currentDocumentWindowPosDefault:" target="-2" id="86"/>
@@ -565,7 +565,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="词典" translatesAutoresizingMaskIntoConstraints="NO" id="4OR-jA-Sw6">
                                             <rect key="frame" x="319" y="368" width="257" height="56" />
@@ -907,7 +907,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="用制表符缩进菜单" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4RZ-AZ-eCe">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AquaKana"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="useTabPressed:" target="-2" id="ZBF-79-v2h"/>
@@ -926,7 +926,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="配对设置" translatesAutoresizingMaskIntoConstraints="NO" id="941">
                                             <rect key="frame" x="331" y="480" width="235" height="134" />
@@ -984,7 +984,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="闪烁高亮" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="951">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="highlightChanged:" target="-2" id="1025"/>
@@ -1146,7 +1146,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="半角空格" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1045">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="1069"/>
@@ -1157,7 +1157,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="全角空格" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1044">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="1070"/>
@@ -1168,7 +1168,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="换行符" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1043">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="1071"/>
@@ -1179,7 +1179,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="制表符" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1042">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="1072"/>
@@ -1302,7 +1302,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="默认显示" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1058">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="showInvisibleCharacterButtonPressed:" target="-2" id="1068"/>
@@ -1310,7 +1310,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                     </subviews>
                                 </view>
@@ -1358,7 +1358,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="设成当前位置" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="864">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="currentPdfWindowPosDefault:" target="-2" id="92"/>
@@ -1366,7 +1366,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="固定放大率值" translatesAutoresizingMaskIntoConstraints="NO" id="111">
                                             <rect key="frame" x="322" y="369" width="253" height="61" />
@@ -1380,7 +1380,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="设定" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="866">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="magChanged:" target="-2" id="117"/>
@@ -1397,7 +1397,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="换页按钮" translatesAutoresizingMaskIntoConstraints="NO" id="228">
                                             <rect key="frame" x="322" y="554" width="253" height="61" />
@@ -1411,7 +1411,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="不要滚动" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="867">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="scrollPressed:" target="-2" id="231"/>
@@ -1419,7 +1419,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="默认鼠标模式" translatesAutoresizingMaskIntoConstraints="NO" id="330">
                                             <rect key="frame" x="44" y="359" width="253" height="62" />
@@ -1450,7 +1450,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="放大方式" translatesAutoresizingMaskIntoConstraints="NO" id="342">
                                             <rect key="frame" x="322" y="431" width="253" height="61" />
@@ -1479,7 +1479,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="默认页面格式" translatesAutoresizingMaskIntoConstraints="NO" id="329">
                                             <rect key="frame" x="322" y="492" width="253" height="61" />
@@ -1509,7 +1509,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="双页模式" translatesAutoresizingMaskIntoConstraints="NO" id="501">
                                             <rect key="frame" x="44" y="425" width="253" height="83" />
@@ -1546,7 +1546,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="外部编辑器" translatesAutoresizingMaskIntoConstraints="NO" id="555">
                                             <rect key="frame" x="44" y="289" width="253" height="66" />
@@ -1560,7 +1560,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="自动更新预览" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="871">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="autoPDFChanged:" target="-2" id="558"/>
@@ -1568,7 +1568,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="显示" translatesAutoresizingMaskIntoConstraints="NO" id="eBt-9V-WkE">
                                             <rect key="frame" x="44" y="219" width="253" height="66" />
@@ -1582,7 +1582,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="平滑文字和线稿" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="KOp-zA-4il">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="antialiasChanged:" target="-2" id="vw5-bh-umV"/>
@@ -1590,7 +1590,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="单一窗口模式" translatesAutoresizingMaskIntoConstraints="NO" id="AvC-fI-TCh">
                                             <rect key="frame" x="44" y="131" width="253" height="78" />
@@ -1749,7 +1749,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="设置..." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="906">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="changeConsoleFont:" target="-2" id="808"/>
@@ -1777,7 +1777,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="源代码窗口位置" translatesAutoresizingMaskIntoConstraints="NO" id="Shw-3G-ymP">
                                             <rect key="frame" x="151" y="404" width="308" height="103" />
@@ -1791,7 +1791,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="设成当前位置" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="iY2-Pv-LNG">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="consoleWindowPosDefault:" target="-2" id="L5U-kc-ChK"/>
@@ -1825,7 +1825,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="控制台窗口调整" translatesAutoresizingMaskIntoConstraints="NO" id="772">
                                             <rect key="frame" x="151" y="319" width="308" height="75" />
@@ -1834,7 +1834,7 @@ DQ
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="63"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="764">
                                             <rect key="frame" x="176" y="337" width="147" height="38" />
@@ -1897,7 +1897,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                     </subviews>
                                 </view>
@@ -1946,7 +1946,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="默认指令" translatesAutoresizingMaskIntoConstraints="NO" id="183">
                                             <rect key="frame" x="30" y="447" width="260" height="168" />
@@ -1998,7 +1998,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="存储文件时" translatesAutoresizingMaskIntoConstraints="NO" id="314">
                                             <rect key="frame" x="337" y="421" width="225" height="76" />
@@ -2012,7 +2012,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="存储相关文件" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="898">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="saveRelatedButtonPressed:" target="-2" id="317"/>
@@ -2020,7 +2020,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="排版后" translatesAutoresizingMaskIntoConstraints="NO" id="675">
                                             <rect key="frame" x="337" y="527" width="225" height="88" />
@@ -2061,7 +2061,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="同步方式" translatesAutoresizingMaskIntoConstraints="NO" id="823">
                                             <rect key="frame" x="337" y="296" width="225" height="121" />
@@ -2109,7 +2109,7 @@ DQ
                                                     </matrix>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="代码同步新建窗口时" translatesAutoresizingMaskIntoConstraints="NO" id="0Rb-rg-ibC">
                                             <rect key="frame" x="337" y="187" width="225" height="94" />
@@ -2228,7 +2228,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="默认" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1087">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="12" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="12" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="defaultEngineCall:" target="-2" id="1101"/>
@@ -2248,7 +2248,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="默认" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1095">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="12" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="12" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="defaultEngineCall:" target="-2" id="1102"/>
@@ -2314,7 +2314,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="默认" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1091">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="12" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="12" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="defaultEngineCall:" target="-2" id="1103"/>
@@ -2334,7 +2334,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="默认" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1099">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" size="12" name="HiraKakuProN-W3"/>
+                                                            <font key="font" size="12" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="defaultEngineCall:" target="-2" id="1104"/>
@@ -2522,7 +2522,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="颜色映射" translatesAutoresizingMaskIntoConstraints="NO" id="447">
                                             <rect key="frame" x="143" y="433" width="323" height="107" />
@@ -2546,7 +2546,7 @@ DQ
                                                         <rect key="frame" x="11" y="16" width="162" height="17"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="前景色突出:" id="904">
-                                                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
@@ -2576,7 +2576,7 @@ DQ
                                                     </popUpButton>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="插入光标" translatesAutoresizingMaskIntoConstraints="NO" id="tdo-Ey-cnI">
                                             <rect key="frame" x="143" y="180" width="323" height="229" />
@@ -2753,7 +2753,7 @@ DQ
                                                     </textField>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="545">
                                             <rect key="frame" x="23" y="323" width="153" height="71" />
@@ -2834,7 +2834,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="HiraKakuProN-W3"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="项目根文件" translatesAutoresizingMaskIntoConstraints="NO" id="l2P-w7-iVA">
                                             <rect key="frame" x="23" y="131" width="357" height="95" />
@@ -2848,7 +2848,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="打开子文件时自动打开根文件" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="XHU-fV-Nm1">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AquaKana"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="openRootFilePressed:" target="-2" id="WkK-65-olv"/>
@@ -2859,7 +2859,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="最小化打开的根窗口" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="LXu-qO-Dft">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AquaKana"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="miniaturizeRootFilePressed:" target="-2" id="MR7-hw-BSV"/>
@@ -2867,7 +2867,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="STHeitiSC-Light"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="升级工具" translatesAutoresizingMaskIntoConstraints="NO" id="fl7-6g-EPx">
                                             <rect key="frame" x="403" y="101" width="189" height="121" />
@@ -2911,7 +2911,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="自动检查更新" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="DXw-d4-XRn">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                                                            <font key="font" size="13" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="sparkleAutomaticCheck:" target="-2" id="KHU-ew-fDn"/>
@@ -2919,7 +2919,7 @@ DQ
                                                     </button>
                                                 </subviews>
                                             </view>
-                                            <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
+                                            <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="XML 标签选择" translatesAutoresizingMaskIntoConstraints="NO" id="rZl-Dm-IhR">
                                             <rect key="frame" x="403" y="283" width="189" height="331" />
