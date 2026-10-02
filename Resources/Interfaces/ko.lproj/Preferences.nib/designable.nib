@@ -184,15 +184,15 @@
         <window title="TeXShop 환경설정" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PrefPane" animationBehavior="default" id="3">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="267" y="182" width="667" height="611"/>
+            <rect key="contentRect" x="267" y="182" width="665" height="740" />
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1050"/>
             <value key="minSize" type="size" width="213.87799999999999" height="107"/>
             <view key="contentView" id="4">
-                <rect key="frame" x="0.0" y="0.0" width="667" height="611"/>
+                <rect key="frame" x="0.0" y="0.0" width="665" height="740" />
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="337">
-                        <rect key="frame" x="388" y="6" width="84" height="33"/>
+                        <rect key="frame" x="386" y="6" width="84" height="33" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="취소" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="338">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -206,7 +206,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="339">
-                        <rect key="frame" x="472" y="7" width="84" height="32"/>
+                        <rect key="frame" x="470" y="7" width="84" height="32" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="승인" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="340">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -278,17 +278,17 @@ DQ
                         </popUpButtonCell>
                     </popUpButton>
                     <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5">
-                        <rect key="frame" x="13" y="56" width="641" height="563"/>
+                        <rect key="frame" x="12" y="60" width="641" height="668" />
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="문서" identifier="Document" id="6">
                                 <view key="view" id="7">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="찾기 바꾸기 패널 (재실행 후 적용)" translatesAutoresizingMaskIntoConstraints="NO" id="8">
-                                            <rect key="frame" x="321" y="417" width="256" height="86"/>
+                                            <rect key="frame" x="321" y="524" width="256" height="86" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="wbA-0k-K2T">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="72"/>
@@ -329,7 +329,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="자동 완성 키" translatesAutoresizingMaskIntoConstraints="NO" id="14">
-                                            <rect key="frame" x="49" y="173" width="256" height="69"/>
+                                            <rect key="frame" x="49" y="280" width="256" height="69" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="DG1-CP-Kwi">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="55"/>
@@ -366,7 +366,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="폰트" translatesAutoresizingMaskIntoConstraints="NO" id="41">
-                                            <rect key="frame" x="49" y="447" width="256" height="56"/>
+                                            <rect key="frame" x="49" y="554" width="256" height="56" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="HoH-MF-qpu">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="42"/>
@@ -397,7 +397,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="편집창 위치" translatesAutoresizingMaskIntoConstraints="NO" id="46">
-                                            <rect key="frame" x="49" y="332" width="256" height="107"/>
+                                            <rect key="frame" x="49" y="439" width="256" height="107" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="MXE-Fb-t5T">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="93"/>
@@ -445,7 +445,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="실행할 때" translatesAutoresizingMaskIntoConstraints="NO" id="53">
-                                            <rect key="frame" x="49" y="246" width="256" height="81"/>
+                                            <rect key="frame" x="49" y="353" width="256" height="81" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="BIQ-xS-dF6">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="67"/>
@@ -478,7 +478,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="인코딩" translatesAutoresizingMaskIntoConstraints="NO" id="19">
-                                            <rect key="frame" x="321" y="333" width="256" height="68"/>
+                                            <rect key="frame" x="321" y="440" width="256" height="68" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="bPo-5T-xgx">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="54"/>
@@ -505,7 +505,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="Dictionary" translatesAutoresizingMaskIntoConstraints="NO" id="umo-h5-U9Z">
-                                            <rect key="frame" x="321" y="246" width="256" height="56"/>
+                                            <rect key="frame" x="321" y="353" width="256" height="56" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="fVY-8R-bWf">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="42"/>
@@ -528,7 +528,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="괄호 여닫기 체크와 색상" translatesAutoresizingMaskIntoConstraints="NO" id="SNf-4U-Yft">
-                                            <rect key="frame" x="49" y="93" width="256" height="57"/>
+                                            <rect key="frame" x="49" y="200" width="256" height="57" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="tmt-DJ-Xwa">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="43"/>
@@ -583,7 +583,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="철자 검사" translatesAutoresizingMaskIntoConstraints="NO" id="Emu-YS-OX4">
-                                            <rect key="frame" x="321" y="99" width="256" height="110"/>
+                                            <rect key="frame" x="321" y="206" width="256" height="110" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="KTx-oM-BaI">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="96"/>
@@ -630,7 +630,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="윈도우 대신 탭에서 열기" translatesAutoresizingMaskIntoConstraints="NO" id="9CE-jV-BS0">
-                                            <rect key="frame" x="49" y="15" width="256" height="65"/>
+                                            <rect key="frame" x="49" y="122" width="256" height="65" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="9lv-yp-utM">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="51"/>
@@ -663,7 +663,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="행 번호 크기" translatesAutoresizingMaskIntoConstraints="NO" id="Pg6-FL-T4o">
-                                            <rect key="frame" x="321" y="15" width="257" height="68"/>
+                                            <rect key="frame" x="321" y="122" width="257" height="68" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="vgW-rA-haK">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="54"/>
@@ -704,11 +704,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="에디터" identifier="" id="ZtK-zb-S7z">
                                 <view key="view" id="jOr-Fh-KaH">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="에디터" translatesAutoresizingMaskIntoConstraints="NO" id="24">
-                                            <rect key="frame" x="63" y="204" width="256" height="301"/>
+                                            <rect key="frame" x="63" y="309" width="256" height="301" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Jqp-gg-4td">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="289"/>
@@ -833,7 +833,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="숨김 문자 표시" translatesAutoresizingMaskIntoConstraints="NO" id="61">
-                                            <rect key="frame" x="63" y="66" width="256" height="133"/>
+                                            <rect key="frame" x="63" y="171" width="256" height="133" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="QC2-nK-Rzw">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="121"/>
@@ -1011,7 +1011,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="괄호 여닫기 세부 설정" translatesAutoresizingMaskIntoConstraints="NO" id="98">
-                                            <rect key="frame" x="323" y="360" width="232" height="134"/>
+                                            <rect key="frame" x="323" y="465" width="232" height="134" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="rVR-58-adc">
                                                 <rect key="frame" x="0.0" y="0.0" width="232" height="122"/>
@@ -1077,7 +1077,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="워드랩" translatesAutoresizingMaskIntoConstraints="NO" id="6C2-ib-Qxi">
-                                            <rect key="frame" x="323" y="261" width="232" height="86"/>
+                                            <rect key="frame" x="323" y="366" width="232" height="86" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="7hD-9s-2xD">
                                                 <rect key="frame" x="0.0" y="0.0" width="232" height="74"/>
@@ -1118,7 +1118,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="에디터 스타일" translatesAutoresizingMaskIntoConstraints="NO" id="mu1-Sp-QbD">
-                                            <rect key="frame" x="323" y="67" width="232" height="181"/>
+                                            <rect key="frame" x="323" y="172" width="232" height="181" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="3KM-U9-aBE">
                                                 <rect key="frame" x="0.0" y="0.0" width="232" height="169"/>
@@ -1218,11 +1218,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="보기" identifier="2" id="109">
                                 <view key="view" id="110">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="보기 창 위치" translatesAutoresizingMaskIntoConstraints="NO" id="111">
-                                            <rect key="frame" x="51" y="407" width="253" height="103"/>
+                                            <rect key="frame" x="51" y="507" width="253" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="lFQ-wV-Ffw">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="91"/>
@@ -1270,7 +1270,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="보기 창 확대 배율" translatesAutoresizingMaskIntoConstraints="NO" id="118">
-                                            <rect key="frame" x="317" y="266" width="253" height="61"/>
+                                            <rect key="frame" x="317" y="366" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Vtm-TT-1m9">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1301,7 +1301,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="마우스 모드" translatesAutoresizingMaskIntoConstraints="NO" id="126">
-                                            <rect key="frame" x="51" y="254" width="253" height="62"/>
+                                            <rect key="frame" x="51" y="354" width="253" height="62" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="OsK-yS-WhW">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="50"/>
@@ -1332,7 +1332,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="창 리사이즈" translatesAutoresizingMaskIntoConstraints="NO" id="135">
-                                            <rect key="frame" x="317" y="331" width="253" height="61"/>
+                                            <rect key="frame" x="317" y="431" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="3R8-VY-Jq2">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1361,7 +1361,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="페이지 형식" translatesAutoresizingMaskIntoConstraints="NO" id="142">
-                                            <rect key="frame" x="317" y="392" width="253" height="61"/>
+                                            <rect key="frame" x="317" y="492" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="GaS-QM-3d5">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1391,7 +1391,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="맞쪽보기" translatesAutoresizingMaskIntoConstraints="NO" id="150">
-                                            <rect key="frame" x="51" y="320" width="253" height="83"/>
+                                            <rect key="frame" x="51" y="420" width="253" height="83" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="JHq-KY-oKF">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="71"/>
@@ -1428,7 +1428,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="외부 에디터" translatesAutoresizingMaskIntoConstraints="NO" id="155">
-                                            <rect key="frame" x="51" y="184" width="253" height="66"/>
+                                            <rect key="frame" x="51" y="284" width="253" height="66" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Azx-Bz-4Eg">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="54"/>
@@ -1450,7 +1450,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="디스플레이" translatesAutoresizingMaskIntoConstraints="NO" id="158">
-                                            <rect key="frame" x="51" y="114" width="253" height="66"/>
+                                            <rect key="frame" x="51" y="214" width="253" height="66" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="JLV-eP-rGE">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="54"/>
@@ -1472,7 +1472,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="창 배치" translatesAutoresizingMaskIntoConstraints="NO" id="Z4m-QX-PVb">
-                                            <rect key="frame" x="51" y="13" width="253" height="78"/>
+                                            <rect key="frame" x="51" y="113" width="253" height="78" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="FsO-dz-b0j">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="66"/>
@@ -1505,7 +1505,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="페이지 버튼" translatesAutoresizingMaskIntoConstraints="NO" id="123">
-                                            <rect key="frame" x="334" y="449" width="236" height="61"/>
+                                            <rect key="frame" x="334" y="549" width="236" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="mgc-QX-Qhw">
                                                 <rect key="frame" x="0.0" y="0.0" width="236" height="49"/>
@@ -1527,7 +1527,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="단일 창 모드" translatesAutoresizingMaskIntoConstraints="NO" id="6bD-xb-7iv">
-                                            <rect key="frame" x="317" y="185" width="253" height="78"/>
+                                            <rect key="frame" x="317" y="285" width="253" height="78" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="V5O-Zy-UV7">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="66"/>
@@ -1560,7 +1560,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="HTML 창 위치" translatesAutoresizingMaskIntoConstraints="NO" id="WTM-b9-gmo">
-                                            <rect key="frame" x="317" y="71" width="253" height="103"/>
+                                            <rect key="frame" x="317" y="171" width="253" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="B2i-VF-pPX">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="91"/>
@@ -1608,7 +1608,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="홈 URL" translatesAutoresizingMaskIntoConstraints="NO" id="Q3z-pd-oMS">
-                                            <rect key="frame" x="317" y="5" width="253" height="61"/>
+                                            <rect key="frame" x="317" y="105" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="qhm-NP-vOG">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1635,11 +1635,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="콘솔" identifier="Console" id="163">
                                 <view key="view" id="164">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="콘솔 폰트" translatesAutoresizingMaskIntoConstraints="NO" id="165">
-                                            <rect key="frame" x="151" y="426" width="308" height="82"/>
+                                            <rect key="frame" x="151" y="528" width="308" height="82" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pT9-B2-Zaf">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="70"/>
@@ -1681,7 +1681,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="콘솔창 위치" translatesAutoresizingMaskIntoConstraints="NO" id="174">
-                                            <rect key="frame" x="151" y="311" width="308" height="103"/>
+                                            <rect key="frame" x="151" y="413" width="308" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="hev-Cv-loZ">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="91"/>
@@ -1729,7 +1729,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="콘솔창 리사이즈" translatesAutoresizingMaskIntoConstraints="NO" id="181">
-                                            <rect key="frame" x="151" y="222" width="308" height="75"/>
+                                            <rect key="frame" x="151" y="324" width="308" height="75" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="iOr-Kc-0F5">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="63"/>
@@ -1738,7 +1738,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="182">
-                                            <rect key="frame" x="176" y="233" width="147" height="38"/>
+                                            <rect key="frame" x="176" y="335" width="147" height="38" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             <size key="cellSize" width="147" height="18"/>
@@ -1764,7 +1764,7 @@ DQ
                                             </connections>
                                         </matrix>
                                         <box fixedFrame="YES" title="콘솔창 보이기" translatesAutoresizingMaskIntoConstraints="NO" id="186">
-                                            <rect key="frame" x="151" y="141" width="308" height="77"/>
+                                            <rect key="frame" x="151" y="243" width="308" height="77" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="hV6-Jb-yTe">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="65"/>
@@ -1805,11 +1805,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="조판" identifier="2" id="191">
                                 <view key="view" id="192">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="디폴트 스트립트" translatesAutoresizingMaskIntoConstraints="NO" id="193">
-                                            <rect key="frame" x="42" y="230" width="260" height="99"/>
+                                            <rect key="frame" x="42" y="339" width="260" height="99" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="17h-Lj-bfk">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="87"/>
@@ -1850,7 +1850,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="기본 조판 명령" translatesAutoresizingMaskIntoConstraints="NO" id="199">
-                                            <rect key="frame" x="42" y="333" width="260" height="168"/>
+                                            <rect key="frame" x="42" y="442" width="260" height="168" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="mmy-Gk-YYU">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="156"/>
@@ -1902,7 +1902,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="파일 저장시" translatesAutoresizingMaskIntoConstraints="NO" id="208">
-                                            <rect key="frame" x="332" y="309" width="225" height="76"/>
+                                            <rect key="frame" x="332" y="418" width="225" height="76" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="OB6-Ec-GO9">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="64"/>
@@ -1924,7 +1924,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="조판 후 동작" translatesAutoresizingMaskIntoConstraints="NO" id="211">
-                                            <rect key="frame" x="332" y="405" width="225" height="96"/>
+                                            <rect key="frame" x="332" y="514" width="225" height="96" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="HfJ-9B-kwf">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="84"/>
@@ -1965,7 +1965,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sync 방식" translatesAutoresizingMaskIntoConstraints="NO" id="216">
-                                            <rect key="frame" x="332" y="184" width="225" height="121"/>
+                                            <rect key="frame" x="332" y="293" width="225" height="121" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="abA-no-Buz">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="109"/>
@@ -2013,7 +2013,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sync로 새 창을 열 때" translatesAutoresizingMaskIntoConstraints="NO" id="hA0-Kp-asP">
-                                            <rect key="frame" x="332" y="73" width="225" height="96"/>
+                                            <rect key="frame" x="332" y="182" width="225" height="96" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="T2n-JH-KDQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="84"/>
@@ -2044,7 +2044,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Ghostscript 옵션" translatesAutoresizingMaskIntoConstraints="NO" id="jsE-cO-FZ0">
-                                            <rect key="frame" x="42" y="124" width="260" height="76"/>
+                                            <rect key="frame" x="42" y="233" width="260" height="76" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="S9m-gb-IAn">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="64"/>
@@ -2070,11 +2070,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="엔진설정" identifier="2" id="223">
                                 <view key="view" id="224">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="pdfTeX" translatesAutoresizingMaskIntoConstraints="NO" id="225">
-                                            <rect key="frame" x="60" y="183" width="224" height="140"/>
+                                            <rect key="frame" x="60" y="279" width="224" height="140" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pQe-jc-ZPE">
                                                 <rect key="frame" x="0.0" y="0.0" width="224" height="128"/>
@@ -2160,7 +2160,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="TeX + dvips + distiller" translatesAutoresizingMaskIntoConstraints="NO" id="240">
-                                            <rect key="frame" x="304" y="183" width="247" height="140"/>
+                                            <rect key="frame" x="304" y="279" width="247" height="140" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="RgH-Ai-Xe4">
                                                 <rect key="frame" x="0.0" y="0.0" width="247" height="128"/>
@@ -2246,7 +2246,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="경로 설정" translatesAutoresizingMaskIntoConstraints="NO" id="255">
-                                            <rect key="frame" x="60" y="345" width="491" height="169"/>
+                                            <rect key="frame" x="60" y="441" width="491" height="169" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="9B4-So-9cz">
                                                 <rect key="frame" x="0.0" y="0.0" width="491" height="157"/>
@@ -2320,7 +2320,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="명령 찾기" translatesAutoresizingMaskIntoConstraints="NO" id="264">
-                                            <rect key="frame" x="60" y="99" width="491" height="80"/>
+                                            <rect key="frame" x="60" y="195" width="491" height="80" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gv0-Qv-78A">
                                                 <rect key="frame" x="0.0" y="0.0" width="491" height="68"/>
@@ -2352,7 +2352,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="BibTeX 엔진" translatesAutoresizingMaskIntoConstraints="NO" id="269">
-                                            <rect key="frame" x="60" y="15" width="491" height="80"/>
+                                            <rect key="frame" x="60" y="111" width="491" height="80" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="x5u-qV-mxA">
                                                 <rect key="frame" x="0.0" y="0.0" width="491" height="68"/>
@@ -2388,11 +2388,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="기타1" identifier="1" id="274">
                                 <view key="view" id="275">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="칼러 맵" translatesAutoresizingMaskIntoConstraints="NO" id="276">
-                                            <rect key="frame" x="144" y="319" width="323" height="105"/>
+                                            <rect key="frame" x="144" y="434" width="323" height="105" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="bbY-Ey-6R4">
                                                 <rect key="frame" x="0.0" y="0.0" width="323" height="93"/>
@@ -2446,7 +2446,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="복사할 이미지 형식" translatesAutoresizingMaskIntoConstraints="NO" id="298">
-                                            <rect key="frame" x="144" y="436" width="323" height="59"/>
+                                            <rect key="frame" x="144" y="551" width="323" height="59" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="FCo-Fj-nfr">
                                                 <rect key="frame" x="0.0" y="0.0" width="323" height="47"/>
@@ -2480,7 +2480,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="삽입커서" translatesAutoresizingMaskIntoConstraints="NO" id="Lbe-jt-WzC">
-                                            <rect key="frame" x="144" y="44" width="323" height="229"/>
+                                            <rect key="frame" x="144" y="159" width="323" height="229" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="LvT-ot-KHF">
                                                 <rect key="frame" x="0.0" y="0.0" width="323" height="217"/>
@@ -2597,11 +2597,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="기타2" identifier="2" id="310">
                                 <view key="view" id="311">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="사용자 스크립트" translatesAutoresizingMaskIntoConstraints="NO" id="312">
-                                            <rect key="frame" x="17" y="398" width="357" height="119"/>
+                                            <rect key="frame" x="17" y="491" width="357" height="119" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="c4y-pR-yt7">
                                                 <rect key="frame" x="0.0" y="0.0" width="357" height="107"/>
@@ -2654,7 +2654,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="321">
-                                            <rect key="frame" x="17" y="207" width="153" height="71"/>
+                                            <rect key="frame" x="17" y="300" width="153" height="71" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="AlO-AQ-fgV">
                                                 <rect key="frame" x="0.0" y="0.0" width="153" height="59"/>
@@ -2691,7 +2691,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="일본어 pTeX 지원" translatesAutoresizingMaskIntoConstraints="NO" id="326">
-                                            <rect key="frame" x="221" y="206" width="153" height="70"/>
+                                            <rect key="frame" x="221" y="299" width="153" height="70" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="jWx-dx-FA9">
                                                 <rect key="frame" x="0.0" y="0.0" width="153" height="58"/>
@@ -2713,7 +2713,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="일본어 파일 저장" translatesAutoresizingMaskIntoConstraints="NO" id="329">
-                                            <rect key="frame" x="17" y="128" width="357" height="70"/>
+                                            <rect key="frame" x="17" y="221" width="357" height="70" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="loI-8G-oKP">
                                                 <rect key="frame" x="0.0" y="0.0" width="357" height="58"/>
@@ -2735,7 +2735,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="프로젝트 루트 파일" translatesAutoresizingMaskIntoConstraints="NO" id="332">
-                                            <rect key="frame" x="19" y="28" width="357" height="95"/>
+                                            <rect key="frame" x="19" y="121" width="357" height="95" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="vbC-G7-RCY">
                                                 <rect key="frame" x="0.0" y="0.0" width="357" height="83"/>
@@ -2768,7 +2768,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sparkle 업데이트 관리자" translatesAutoresizingMaskIntoConstraints="NO" id="549">
-                                            <rect key="frame" x="405" y="6" width="185" height="113"/>
+                                            <rect key="frame" x="405" y="99" width="185" height="113" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="y0w-zA-RAX">
                                                 <rect key="frame" x="0.0" y="0.0" width="185" height="101"/>
@@ -2820,7 +2820,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="XML 테그 선택" translatesAutoresizingMaskIntoConstraints="NO" id="KVw-Fb-vzp">
-                                            <rect key="frame" x="405" y="184" width="185" height="330"/>
+                                            <rect key="frame" x="405" y="277" width="185" height="330" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="pWH-hl-g3O">
                                                 <rect key="frame" x="0.0" y="0.0" width="185" height="318"/>
@@ -2952,7 +2952,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Big Sur 및 이후 버전" translatesAutoresizingMaskIntoConstraints="NO" id="gLg-oI-JF5">
-                                            <rect key="frame" x="405" y="123" width="185" height="56"/>
+                                            <rect key="frame" x="405" y="216" width="185" height="56" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="chM-Sx-Yc7">
                                                 <rect key="frame" x="0.0" y="0.0" width="185" height="44"/>
@@ -2974,7 +2974,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="대체 엔진" translatesAutoresizingMaskIntoConstraints="NO" id="qVV-h3-8nO">
-                                            <rect key="frame" x="20" y="303" width="356" height="88"/>
+                                            <rect key="frame" x="20" y="396" width="356" height="88" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="ugC-54-p00">
                                                 <rect key="frame" x="0.0" y="0.0" width="356" height="76"/>
@@ -3010,11 +3010,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="테마" identifier="" id="vRH-ih-Phg">
                                 <view key="view" id="3eK-dD-Y1y">
-                                    <rect key="frame" x="10" y="33" width="621" height="517"/>
+                                    <rect key="frame" x="10" y="33" width="621" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="테마" translatesAutoresizingMaskIntoConstraints="NO" id="cQl-3n-PZu">
-                                            <rect key="frame" x="14" y="328" width="188" height="194"/>
+                                            <rect key="frame" x="14" y="358" width="188" height="194" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="jWT-yX-wNE">
                                                 <rect key="frame" x="0.0" y="0.0" width="188" height="180"/>
@@ -3088,7 +3088,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="작업" translatesAutoresizingMaskIntoConstraints="NO" id="Gad-Xv-pXz">
-                                            <rect key="frame" x="14" y="17" width="188" height="197"/>
+                                            <rect key="frame" x="14" y="47" width="188" height="197" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="T37-Ib-WYN">
                                                 <rect key="frame" x="0.0" y="0.0" width="188" height="183"/>
@@ -3132,17 +3132,17 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9iM-ya-A6i">
-                                            <rect key="frame" x="209" y="-18" width="397" height="540"/>
+                                            <rect key="frame" x="209" y="12" width="397" height="598" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <font key="font" metaFont="system"/>
                                             <tabViewItems>
                                                 <tabViewItem label="정규 구문 색상" identifier="" id="yGF-bT-AD0">
                                                     <view key="view" id="fra-NG-3Zm">
-                                                        <rect key="frame" x="10" y="33" width="377" height="494"/>
+                                                        <rect key="frame" x="10" y="33" width="377" height="552" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aPD-Ge-g4L">
-                                                                <rect key="frame" x="-6" y="-18" width="389" height="528"/>
+                                                                <rect key="frame" x="12" y="12" width="389" height="528" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <view key="contentView" id="K5K-Ts-BSd">
                                                                     <rect key="frame" x="0.0" y="0.0" width="389" height="514"/>
@@ -3694,11 +3694,11 @@ DQ
                                                 </tabViewItem>
                                                 <tabViewItem label="확장 구문 색상" identifier="" id="gnf-oZ-6oO">
                                                     <view key="view" id="tEi-KP-C3F">
-                                                        <rect key="frame" x="10" y="33" width="377" height="494"/>
+                                                        <rect key="frame" x="10" y="33" width="377" height="552" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M0Y-SR-yuP">
-                                                                <rect key="frame" x="-6" y="66" width="389" height="426"/>
+                                                                <rect key="frame" x="12" y="114" width="389" height="426" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <view key="contentView" id="UJh-bA-BZR">
                                                                     <rect key="frame" x="0.0" y="0.0" width="389" height="412"/>
@@ -3837,7 +3837,7 @@ DQ
                                                                 <font key="titleFont" metaFont="system"/>
                                                             </box>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LN0-KC-hcH">
-                                                                <rect key="frame" x="107" y="306" width="31" height="14"/>
+                                                                <rect key="frame" x="125" y="354" width="31" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="괄호 (" id="475-Zo-fOw">
                                                                     <font key="font" metaFont="smallSystem"/>
@@ -3846,7 +3846,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K1M-9m-y2V">
-                                                                <rect key="frame" x="199" y="306" width="31" height="14"/>
+                                                                <rect key="frame" x="217" y="354" width="31" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="괄호 {" id="CeD-FV-fR3">
                                                                     <font key="font" metaFont="smallSystem"/>
@@ -3855,7 +3855,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SsH-tz-bXC">
-                                                                <rect key="frame" x="108" y="281" width="59" height="24"/>
+                                                                <rect key="frame" x="126" y="329" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3863,7 +3863,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ozH-Oz-IvN">
-                                                                <rect key="frame" x="197" y="281" width="59" height="24"/>
+                                                                <rect key="frame" x="215" y="329" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3871,7 +3871,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QOu-gj-06u">
-                                                                <rect key="frame" x="285" y="281" width="59" height="24"/>
+                                                                <rect key="frame" x="303" y="329" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3879,7 +3879,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wV1-W7-Eyo">
-                                                                <rect key="frame" x="34" y="282" width="41" height="20"/>
+                                                                <rect key="frame" x="52" y="330" width="41" height="20" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Marker" id="E0E-4n-dKy">
                                                                     <font key="font" metaFont="message" size="11"/>
@@ -3888,7 +3888,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fmL-M1-Yrb">
-                                                                <rect key="frame" x="287" y="306" width="31" height="14"/>
+                                                                <rect key="frame" x="305" y="354" width="31" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="괄호 [" id="b9h-rH-ZuV">
                                                                     <font key="font" metaFont="smallSystem"/>

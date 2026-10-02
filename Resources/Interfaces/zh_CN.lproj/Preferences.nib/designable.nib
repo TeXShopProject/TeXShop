@@ -184,15 +184,15 @@
         <window title="TeXShop 偏好设置" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PrefPane" animationBehavior="default" id="5" userLabel="Preferences">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="267" y="174" width="678" height="610"/>
+            <rect key="contentRect" x="267" y="174" width="669" height="745" />
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1050"/>
             <value key="minSize" type="size" width="213.87799999999999" height="107"/>
             <view key="contentView" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="678" height="610"/>
+                <rect key="frame" x="0.0" y="0.0" width="669" height="745" />
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="40">
-                        <rect key="frame" x="395" y="13" width="84" height="33"/>
+                        <rect key="frame" x="386" y="13" width="84" height="33" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="取消" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="908">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -206,7 +206,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="39">
-                        <rect key="frame" x="479" y="14" width="84" height="32"/>
+                        <rect key="frame" x="470" y="14" width="84" height="32" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="好" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="907">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -278,17 +278,17 @@ DQ
                         </popUpButtonCell>
                     </popUpButton>
                     <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                        <rect key="frame" x="16" y="64" width="645" height="552"/>
+                        <rect key="frame" x="12" y="60" width="645" height="673" />
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="源代码" identifier="Document" id="9">
                                 <view key="view" id="11">
-                                    <rect key="frame" x="10" y="33" width="625" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="查找面板 (重新打开程序后生效)" translatesAutoresizingMaskIntoConstraints="NO" id="585">
-                                            <rect key="frame" x="319" y="399" width="257" height="90"/>
+                                            <rect key="frame" x="319" y="525" width="257" height="90" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="6NQ-tU-M02">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="79"/>
@@ -329,7 +329,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="命令补全触发键:" translatesAutoresizingMaskIntoConstraints="NO" id="925">
-                                            <rect key="frame" x="55" y="145" width="256" height="69"/>
+                                            <rect key="frame" x="55" y="271" width="256" height="69" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Phr-lz-jFu">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="58"/>
@@ -366,7 +366,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="文档字体" translatesAutoresizingMaskIntoConstraints="NO" id="14">
-                                            <rect key="frame" x="55" y="431" width="256" height="56"/>
+                                            <rect key="frame" x="55" y="557" width="256" height="56" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="E5N-QY-Nkt">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="45"/>
@@ -397,7 +397,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="启动时" translatesAutoresizingMaskIntoConstraints="NO" id="236">
-                                            <rect key="frame" x="55" y="221" width="256" height="81"/>
+                                            <rect key="frame" x="55" y="347" width="256" height="81" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="S9P-Yo-JWV">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="70"/>
@@ -430,7 +430,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="配对目标和高亮颜色" translatesAutoresizingMaskIntoConstraints="NO" id="940">
-                                            <rect key="frame" x="15" y="-114" width="234" height="57"/>
+                                            <rect key="frame" x="15" y="12" width="234" height="57" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="hlb-O3-yKy">
                                                 <rect key="frame" x="0.0" y="0.0" width="234" height="46"/>
@@ -493,7 +493,7 @@ DQ
                                             <font key="titleFont" size="13" name="HiraKakuProN-W3"/>
                                         </box>
                                         <box fixedFrame="YES" title="编码" translatesAutoresizingMaskIntoConstraints="NO" id="262">
-                                            <rect key="frame" x="319" y="311" width="257" height="68"/>
+                                            <rect key="frame" x="319" y="437" width="257" height="68" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="s8r-Fe-MSw">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="57"/>
@@ -520,7 +520,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="源代码窗口位置" translatesAutoresizingMaskIntoConstraints="NO" id="19">
-                                            <rect key="frame" x="55" y="308" width="256" height="107"/>
+                                            <rect key="frame" x="55" y="434" width="256" height="107" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="WN6-zq-hZw">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="96"/>
@@ -568,7 +568,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="词典" translatesAutoresizingMaskIntoConstraints="NO" id="4OR-jA-Sw6">
-                                            <rect key="frame" x="319" y="242" width="257" height="56"/>
+                                            <rect key="frame" x="319" y="368" width="257" height="56" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="dJe-QX-q0K">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="42"/>
@@ -591,7 +591,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="配对目标和高亮颜色" translatesAutoresizingMaskIntoConstraints="NO" id="gfe-7j-MWI">
-                                            <rect key="frame" x="55" y="76" width="256" height="57"/>
+                                            <rect key="frame" x="55" y="202" width="256" height="57" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="0lt-4W-Plq">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="43"/>
@@ -646,7 +646,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="拼写检查" translatesAutoresizingMaskIntoConstraints="NO" id="nOY-vf-6rw">
-                                            <rect key="frame" x="319" y="78" width="257" height="110"/>
+                                            <rect key="frame" x="319" y="204" width="257" height="110" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="v3i-gu-abQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="96"/>
@@ -693,7 +693,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="以标签页打开新窗口" translatesAutoresizingMaskIntoConstraints="NO" id="g4t-Vd-svw">
-                                            <rect key="frame" x="55" y="2" width="256" height="65"/>
+                                            <rect key="frame" x="55" y="128" width="256" height="65" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="C8s-Bv-aTh">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="51"/>
@@ -722,7 +722,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Line Number Size" translatesAutoresizingMaskIntoConstraints="NO" id="BIr-5u-suY">
-                                            <rect key="frame" x="176" y="226" width="257" height="68"/>
+                                            <rect key="frame" x="176" y="352" width="257" height="68" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Uxf-AB-9TN">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="54"/>
@@ -756,7 +756,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="行号字体大小" translatesAutoresizingMaskIntoConstraints="NO" id="lPc-Gz-lH6">
-                                            <rect key="frame" x="319" y="2" width="257" height="68"/>
+                                            <rect key="frame" x="319" y="128" width="257" height="68" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Cvn-2d-jho">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="54"/>
@@ -797,11 +797,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="编辑器" identifier="" id="kRE-Gu-AaN">
                                 <view key="view" id="GfO-1L-uXT">
-                                    <rect key="frame" x="10" y="33" width="625" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="编辑器" translatesAutoresizingMaskIntoConstraints="NO" id="63">
-                                            <rect key="frame" x="64" y="198" width="256" height="288"/>
+                                            <rect key="frame" x="64" y="327" width="256" height="288" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gwW-Ne-75A">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="276"/>
@@ -929,7 +929,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="配对设置" translatesAutoresizingMaskIntoConstraints="NO" id="941">
-                                            <rect key="frame" x="331" y="351" width="235" height="134"/>
+                                            <rect key="frame" x="331" y="480" width="235" height="134" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="3Xf-kn-EAD">
                                                 <rect key="frame" x="0.0" y="0.0" width="235" height="122"/>
@@ -995,7 +995,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="自动换行" translatesAutoresizingMaskIntoConstraints="NO" id="Nlb-hL-SzF">
-                                            <rect key="frame" x="331" y="251" width="235" height="86"/>
+                                            <rect key="frame" x="331" y="380" width="235" height="86" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="fCO-eb-iPl">
                                                 <rect key="frame" x="0.0" y="0.0" width="235" height="74"/>
@@ -1036,7 +1036,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="样式" translatesAutoresizingMaskIntoConstraints="NO" id="Kyf-DY-Ye6">
-                                            <rect key="frame" x="331" y="54" width="235" height="181"/>
+                                            <rect key="frame" x="331" y="183" width="235" height="181" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="51f-y4-FO4">
                                                 <rect key="frame" x="0.0" y="0.0" width="235" height="169"/>
@@ -1135,7 +1135,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="显示不可见字符" translatesAutoresizingMaskIntoConstraints="NO" id="1032">
-                                            <rect key="frame" x="64" y="54" width="256" height="133"/>
+                                            <rect key="frame" x="64" y="183" width="256" height="133" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="xfx-Zn-Dtu">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="121"/>
@@ -1317,11 +1317,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="预览" identifier="2" id="8">
                                 <view key="view" id="10">
-                                    <rect key="frame" x="10" y="33" width="610" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="预览窗口位置" translatesAutoresizingMaskIntoConstraints="NO" id="47">
-                                            <rect key="frame" x="44" y="391" width="253" height="103"/>
+                                            <rect key="frame" x="44" y="512" width="253" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="VD0-Gc-d5S">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="91"/>
@@ -1369,7 +1369,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="固定放大率值" translatesAutoresizingMaskIntoConstraints="NO" id="111">
-                                            <rect key="frame" x="322" y="248" width="253" height="61"/>
+                                            <rect key="frame" x="322" y="369" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="45M-lW-4pZ">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1400,7 +1400,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="换页按钮" translatesAutoresizingMaskIntoConstraints="NO" id="228">
-                                            <rect key="frame" x="322" y="433" width="253" height="61"/>
+                                            <rect key="frame" x="322" y="554" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="kxK-uJ-DUE">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1422,7 +1422,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="默认鼠标模式" translatesAutoresizingMaskIntoConstraints="NO" id="330">
-                                            <rect key="frame" x="44" y="238" width="253" height="62"/>
+                                            <rect key="frame" x="44" y="359" width="253" height="62" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="3gO-aP-WJO">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="50"/>
@@ -1453,7 +1453,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="放大方式" translatesAutoresizingMaskIntoConstraints="NO" id="342">
-                                            <rect key="frame" x="322" y="310" width="253" height="61"/>
+                                            <rect key="frame" x="322" y="431" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="qp0-Jc-ifj">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1482,7 +1482,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="默认页面格式" translatesAutoresizingMaskIntoConstraints="NO" id="329">
-                                            <rect key="frame" x="322" y="371" width="253" height="61"/>
+                                            <rect key="frame" x="322" y="492" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="5Xz-0e-rvv">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1512,7 +1512,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="双页模式" translatesAutoresizingMaskIntoConstraints="NO" id="501">
-                                            <rect key="frame" x="44" y="304" width="253" height="83"/>
+                                            <rect key="frame" x="44" y="425" width="253" height="83" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="H86-PX-EFt">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="71"/>
@@ -1549,7 +1549,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="外部编辑器" translatesAutoresizingMaskIntoConstraints="NO" id="555">
-                                            <rect key="frame" x="44" y="168" width="253" height="66"/>
+                                            <rect key="frame" x="44" y="289" width="253" height="66" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="I7W-hF-6I8">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="54"/>
@@ -1571,7 +1571,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="显示" translatesAutoresizingMaskIntoConstraints="NO" id="eBt-9V-WkE">
-                                            <rect key="frame" x="44" y="98" width="253" height="66"/>
+                                            <rect key="frame" x="44" y="219" width="253" height="66" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="yeH-dv-AMJ">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="54"/>
@@ -1593,7 +1593,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="单一窗口模式" translatesAutoresizingMaskIntoConstraints="NO" id="AvC-fI-TCh">
-                                            <rect key="frame" x="44" y="10" width="253" height="78"/>
+                                            <rect key="frame" x="44" y="131" width="253" height="78" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="x4B-5a-H8c">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="66"/>
@@ -1626,7 +1626,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="源代码和预览窗口" translatesAutoresizingMaskIntoConstraints="NO" id="Ovv-Iv-C59">
-                                            <rect key="frame" x="322" y="168" width="253" height="78"/>
+                                            <rect key="frame" x="322" y="289" width="253" height="78" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="fCK-eP-Qao">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="66"/>
@@ -1659,7 +1659,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="HTML 窗口位置" translatesAutoresizingMaskIntoConstraints="NO" id="aol-fB-Pik">
-                                            <rect key="frame" x="322" y="63" width="253" height="103"/>
+                                            <rect key="frame" x="322" y="184" width="253" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="BCg-Zi-STz">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="91"/>
@@ -1707,7 +1707,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="主页 URL" translatesAutoresizingMaskIntoConstraints="NO" id="jMj-xV-kvy">
-                                            <rect key="frame" x="322" y="6" width="253" height="63"/>
+                                            <rect key="frame" x="322" y="127" width="253" height="63" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="BM4-eo-5HP">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="51"/>
@@ -1734,11 +1734,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="控制台" identifier="Console" id="705">
                                 <view key="view" id="706">
-                                    <rect key="frame" x="10" y="33" width="610" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="控制台字体" translatesAutoresizingMaskIntoConstraints="NO" id="752">
-                                            <rect key="frame" x="151" y="388" width="308" height="88"/>
+                                            <rect key="frame" x="151" y="527" width="308" height="88" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="zV8-uY-ceg">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="76"/>
@@ -1780,7 +1780,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="源代码窗口位置" translatesAutoresizingMaskIntoConstraints="NO" id="Shw-3G-ymP">
-                                            <rect key="frame" x="151" y="265" width="308" height="103"/>
+                                            <rect key="frame" x="151" y="404" width="308" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="NAX-OF-g9j">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="91"/>
@@ -1828,7 +1828,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="控制台窗口调整" translatesAutoresizingMaskIntoConstraints="NO" id="772">
-                                            <rect key="frame" x="151" y="180" width="308" height="75"/>
+                                            <rect key="frame" x="151" y="319" width="308" height="75" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="R0w-yx-lJA">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="63"/>
@@ -1837,7 +1837,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="764">
-                                            <rect key="frame" x="176" y="198" width="147" height="38"/>
+                                            <rect key="frame" x="176" y="337" width="147" height="38" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             <size key="cellSize" width="147" height="18"/>
@@ -1863,7 +1863,7 @@ DQ
                                             </connections>
                                         </matrix>
                                         <box fixedFrame="YES" title="显示控制台" translatesAutoresizingMaskIntoConstraints="NO" id="828">
-                                            <rect key="frame" x="151" y="99" width="308" height="77"/>
+                                            <rect key="frame" x="151" y="238" width="308" height="77" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="uB7-Ts-rUB">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="65"/>
@@ -1904,11 +1904,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="排版" identifier="2" id="179">
                                 <view key="view" id="170">
-                                    <rect key="frame" x="10" y="33" width="625" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="默认脚本" translatesAutoresizingMaskIntoConstraints="NO" id="188">
-                                            <rect key="frame" x="30" y="202" width="260" height="99"/>
+                                            <rect key="frame" x="30" y="344" width="260" height="99" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="LMp-EJ-Fqs">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="87"/>
@@ -1949,7 +1949,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="默认指令" translatesAutoresizingMaskIntoConstraints="NO" id="183">
-                                            <rect key="frame" x="30" y="305" width="260" height="168"/>
+                                            <rect key="frame" x="30" y="447" width="260" height="168" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="biL-Fv-LP1">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="156"/>
@@ -2001,7 +2001,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="存储文件时" translatesAutoresizingMaskIntoConstraints="NO" id="314">
-                                            <rect key="frame" x="337" y="279" width="225" height="76"/>
+                                            <rect key="frame" x="337" y="421" width="225" height="76" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="soH-ib-waj">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="64"/>
@@ -2023,7 +2023,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="排版后" translatesAutoresizingMaskIntoConstraints="NO" id="675">
-                                            <rect key="frame" x="337" y="385" width="225" height="88"/>
+                                            <rect key="frame" x="337" y="527" width="225" height="88" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="tD1-0l-bWE">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="76"/>
@@ -2064,7 +2064,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="同步方式" translatesAutoresizingMaskIntoConstraints="NO" id="823">
-                                            <rect key="frame" x="337" y="154" width="225" height="121"/>
+                                            <rect key="frame" x="337" y="296" width="225" height="121" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="WsL-07-Twz">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="109"/>
@@ -2112,7 +2112,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="代码同步新建窗口时" translatesAutoresizingMaskIntoConstraints="NO" id="0Rb-rg-ibC">
-                                            <rect key="frame" x="337" y="45" width="225" height="94"/>
+                                            <rect key="frame" x="337" y="187" width="225" height="94" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="HIj-Nh-gKx">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="82"/>
@@ -2143,7 +2143,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Ghostscript 选项" translatesAutoresizingMaskIntoConstraints="NO" id="ne3-rZ-lYK">
-                                            <rect key="frame" x="30" y="95" width="260" height="76"/>
+                                            <rect key="frame" x="30" y="237" width="260" height="76" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="5F0-Qg-9ig">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="64"/>
@@ -2169,11 +2169,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="引擎" identifier="2" id="12">
                                 <view key="view" id="13">
-                                    <rect key="frame" x="10" y="33" width="625" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="pdfTeX" translatesAutoresizingMaskIntoConstraints="NO" id="54">
-                                            <rect key="frame" x="60" y="174" width="224" height="140"/>
+                                            <rect key="frame" x="60" y="293" width="224" height="140" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pab-Sl-SXF">
                                                 <rect key="frame" x="0.0" y="0.0" width="224" height="128"/>
@@ -2259,7 +2259,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="TeX + dvips + distiller" translatesAutoresizingMaskIntoConstraints="NO" id="200">
-                                            <rect key="frame" x="304" y="174" width="247" height="140"/>
+                                            <rect key="frame" x="304" y="293" width="247" height="140" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gAg-Cl-Xk2">
                                                 <rect key="frame" x="0.0" y="0.0" width="247" height="128"/>
@@ -2345,7 +2345,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="路径设置" translatesAutoresizingMaskIntoConstraints="NO" id="215">
-                                            <rect key="frame" x="60" y="331" width="491" height="165"/>
+                                            <rect key="frame" x="60" y="450" width="491" height="165" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="TqW-Yl-mUX">
                                                 <rect key="frame" x="0.0" y="0.0" width="491" height="153"/>
@@ -2419,7 +2419,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="搜索命令" translatesAutoresizingMaskIntoConstraints="NO" id="984">
-                                            <rect key="frame" x="60" y="90" width="491" height="80"/>
+                                            <rect key="frame" x="60" y="209" width="491" height="80" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="3b2-WO-zVb">
                                                 <rect key="frame" x="0.0" y="0.0" width="491" height="68"/>
@@ -2451,7 +2451,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="BibTeX 引擎" translatesAutoresizingMaskIntoConstraints="NO" id="985">
-                                            <rect key="frame" x="60" y="6" width="491" height="80"/>
+                                            <rect key="frame" x="60" y="125" width="491" height="80" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Ad3-4h-pMh">
                                                 <rect key="frame" x="0.0" y="0.0" width="491" height="68"/>
@@ -2487,11 +2487,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="其他1" identifier="1" id="415">
                                 <view key="view" id="400">
-                                    <rect key="frame" x="10" y="33" width="610" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="图像副本类型" translatesAutoresizingMaskIntoConstraints="NO" id="386">
-                                            <rect key="frame" x="143" y="417" width="323" height="59"/>
+                                            <rect key="frame" x="143" y="556" width="323" height="59" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="qam-eo-UMQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="323" height="47"/>
@@ -2525,7 +2525,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="颜色映射" translatesAutoresizingMaskIntoConstraints="NO" id="447">
-                                            <rect key="frame" x="143" y="294" width="323" height="107"/>
+                                            <rect key="frame" x="143" y="433" width="323" height="107" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="nkj-eF-nCu">
                                                 <rect key="frame" x="0.0" y="0.0" width="323" height="95"/>
@@ -2579,7 +2579,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="插入光标" translatesAutoresizingMaskIntoConstraints="NO" id="tdo-Ey-cnI">
-                                            <rect key="frame" x="143" y="41" width="323" height="229"/>
+                                            <rect key="frame" x="143" y="180" width="323" height="229" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="HYh-v4-RBb">
                                                 <rect key="frame" x="0.0" y="0.0" width="323" height="217"/>
@@ -2696,11 +2696,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="其他2" identifier="2" id="127">
                                 <view key="view" id="136">
-                                    <rect key="frame" x="10" y="33" width="625" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="个性化脚本" translatesAutoresizingMaskIntoConstraints="NO" id="154">
-                                            <rect key="frame" x="23" y="389" width="357" height="119"/>
+                                            <rect key="frame" x="23" y="496" width="357" height="119" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pzv-Gz-QNk">
                                                 <rect key="frame" x="0.0" y="0.0" width="357" height="107"/>
@@ -2756,7 +2756,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="545">
-                                            <rect key="frame" x="23" y="216" width="153" height="71"/>
+                                            <rect key="frame" x="23" y="323" width="153" height="71" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="QUj-GN-YgL">
                                                 <rect key="frame" x="0.0" y="0.0" width="153" height="59"/>
@@ -2793,7 +2793,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="pTeX 支持 (仅日语用户)" translatesAutoresizingMaskIntoConstraints="NO" id="574">
-                                            <rect key="frame" x="227" y="217" width="153" height="70"/>
+                                            <rect key="frame" x="227" y="324" width="153" height="70" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="ejw-U6-Os6">
                                                 <rect key="frame" x="0.0" y="0.0" width="153" height="58"/>
@@ -2815,7 +2815,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="文件存储时" translatesAutoresizingMaskIntoConstraints="NO" id="1077">
-                                            <rect key="frame" x="23" y="131" width="357" height="70"/>
+                                            <rect key="frame" x="23" y="238" width="357" height="70" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Pai-qD-obr">
                                                 <rect key="frame" x="0.0" y="0.0" width="357" height="58"/>
@@ -2837,7 +2837,7 @@ DQ
                                             <font key="titleFont" size="13" name="HiraKakuProN-W3"/>
                                         </box>
                                         <box fixedFrame="YES" title="项目根文件" translatesAutoresizingMaskIntoConstraints="NO" id="l2P-w7-iVA">
-                                            <rect key="frame" x="23" y="24" width="357" height="95"/>
+                                            <rect key="frame" x="23" y="131" width="357" height="95" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="PGQ-dr-4TI">
                                                 <rect key="frame" x="0.0" y="0.0" width="357" height="83"/>
@@ -2870,7 +2870,7 @@ DQ
                                             <font key="titleFont" size="13" name="STHeitiSC-Light"/>
                                         </box>
                                         <box fixedFrame="YES" title="升级工具" translatesAutoresizingMaskIntoConstraints="NO" id="fl7-6g-EPx">
-                                            <rect key="frame" x="403" y="-6" width="189" height="121"/>
+                                            <rect key="frame" x="403" y="101" width="189" height="121" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pAE-zn-3XH">
                                                 <rect key="frame" x="0.0" y="0.0" width="189" height="109"/>
@@ -2922,7 +2922,7 @@ DQ
                                             <font key="titleFont" size="13" name="AppleSDGothicNeo-Regular"/>
                                         </box>
                                         <box fixedFrame="YES" title="XML 标签选择" translatesAutoresizingMaskIntoConstraints="NO" id="rZl-Dm-IhR">
-                                            <rect key="frame" x="403" y="176" width="189" height="331"/>
+                                            <rect key="frame" x="403" y="283" width="189" height="331" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="QEQ-XT-hqv">
                                                 <rect key="frame" x="0.0" y="0.0" width="189" height="319"/>
@@ -3054,7 +3054,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Big Sur 及更新版本:" translatesAutoresizingMaskIntoConstraints="NO" id="lnJ-9O-Rbp">
-                                            <rect key="frame" x="403" y="113" width="189" height="57"/>
+                                            <rect key="frame" x="403" y="220" width="189" height="57" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Hl2-tA-AZL">
                                                 <rect key="frame" x="0.0" y="0.0" width="189" height="45"/>
@@ -3076,7 +3076,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="替代引擎" translatesAutoresizingMaskIntoConstraints="NO" id="eD6-Bn-RTX">
-                                            <rect key="frame" x="24" y="294" width="356" height="88"/>
+                                            <rect key="frame" x="24" y="401" width="356" height="88" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Oer-Y3-XQ1">
                                                 <rect key="frame" x="0.0" y="0.0" width="356" height="76"/>
@@ -3112,11 +3112,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="主题" identifier="" id="ILr-M7-I2L">
                                 <view key="view" id="xjp-ZG-9nv">
-                                    <rect key="frame" x="10" y="33" width="625" height="506"/>
+                                    <rect key="frame" x="10" y="33" width="625" height="627" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="主题" translatesAutoresizingMaskIntoConstraints="NO" id="ivG-GN-yoQ">
-                                            <rect key="frame" x="9" y="314" width="188" height="194"/>
+                                            <rect key="frame" x="12" y="344" width="188" height="194" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="2fL-6Y-ggb">
                                                 <rect key="frame" x="0.0" y="0.0" width="188" height="180"/>
@@ -3190,7 +3190,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="操作" translatesAutoresizingMaskIntoConstraints="NO" id="6NK-Ja-E37">
-                                            <rect key="frame" x="9" y="3" width="188" height="197"/>
+                                            <rect key="frame" x="12" y="33" width="188" height="197" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="fwZ-mw-9md">
                                                 <rect key="frame" x="0.0" y="0.0" width="188" height="183"/>
@@ -3234,17 +3234,17 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XVU-yc-EYW">
-                                            <rect key="frame" x="205" y="-13" width="395" height="527"/>
+                                            <rect key="frame" x="208" y="17" width="395" height="598" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <font key="font" metaFont="system"/>
                                             <tabViewItems>
                                                 <tabViewItem label=" 常规颜色" identifier="" id="40b-ib-0t7">
                                                     <view key="view" id="bqT-3e-8cK">
-                                                        <rect key="frame" x="10" y="33" width="375" height="481"/>
+                                                        <rect key="frame" x="10" y="33" width="375" height="552" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xgc-A8-Zxt">
-                                                                <rect key="frame" x="-7" y="-26" width="389" height="528"/>
+                                                                <rect key="frame" x="12" y="12" width="389" height="528" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <view key="contentView" id="EJd-2K-yv6">
                                                                     <rect key="frame" x="0.0" y="0.0" width="389" height="514"/>
@@ -3796,11 +3796,11 @@ DQ
                                                 </tabViewItem>
                                                 <tabViewItem label="更多颜色" identifier="" id="CQM-na-Q3L">
                                                     <view key="view" id="F86-xC-dh9">
-                                                        <rect key="frame" x="10" y="33" width="375" height="481"/>
+                                                        <rect key="frame" x="10" y="33" width="375" height="552" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vb3-KY-zX1">
-                                                                <rect key="frame" x="-7" y="5" width="389" height="481"/>
+                                                                <rect key="frame" x="12" y="59" width="389" height="481" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <view key="contentView" id="fo8-an-M6i">
                                                                     <rect key="frame" x="0.0" y="0.0" width="389" height="467"/>
@@ -3948,7 +3948,7 @@ DQ
                                                                 <font key="titleFont" metaFont="system"/>
                                                             </box>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l3R-Ig-CBo">
-                                                                <rect key="frame" x="106" y="282" width="34" height="14"/>
+                                                                <rect key="frame" x="125" y="336" width="34" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="用于 (" id="Wvq-Jt-Ith">
                                                                     <font key="font" metaFont="smallSystem"/>
@@ -3957,7 +3957,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9u8-7X-vcU">
-                                                                <rect key="frame" x="198" y="282" width="34" height="14"/>
+                                                                <rect key="frame" x="217" y="336" width="34" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="用于 {" id="Sdz-aj-ZgI">
                                                                     <font key="font" metaFont="smallSystem"/>
@@ -3966,7 +3966,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SNA-OR-kSA">
-                                                                <rect key="frame" x="107" y="257" width="59" height="24"/>
+                                                                <rect key="frame" x="126" y="311" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3974,7 +3974,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aOK-m2-gqg">
-                                                                <rect key="frame" x="196" y="257" width="59" height="24"/>
+                                                                <rect key="frame" x="215" y="311" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3982,7 +3982,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0V7-s5-gyc">
-                                                                <rect key="frame" x="284" y="257" width="59" height="24"/>
+                                                                <rect key="frame" x="303" y="311" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3990,7 +3990,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A2J-PG-G6R">
-                                                                <rect key="frame" x="33" y="258" width="41" height="20"/>
+                                                                <rect key="frame" x="52" y="312" width="41" height="20" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="标记" id="FbC-oR-N3I">
                                                                     <font key="font" metaFont="smallSystem"/>
@@ -3999,7 +3999,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="czs-xH-seq">
-                                                                <rect key="frame" x="286" y="282" width="34" height="14"/>
+                                                                <rect key="frame" x="305" y="336" width="34" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="用于 [" id="Iho-Hz-g6t">
                                                                     <font key="font" metaFont="smallSystem"/>

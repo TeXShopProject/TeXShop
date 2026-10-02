@@ -184,11 +184,11 @@
         <window title="Préférences TeXShop" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PrefPane" animationBehavior="default" id="5" userLabel="Preferences">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="267" y="180" width="757" height="620"/>
+            <rect key="contentRect" x="267" y="180" width="755" height="740" />
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1050"/>
             <value key="minSize" type="size" width="213.87799999999999" height="107"/>
             <view key="contentView" id="6">
-                <rect key="frame" x="0.0" y="0.0" width="757" height="620"/>
+                <rect key="frame" x="0.0" y="0.0" width="755" height="740" />
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1150">
@@ -250,7 +250,7 @@
                         </popUpButtonCell>
                     </popUpButton>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="40">
-                        <rect key="frame" x="459" y="13" width="90" height="33"/>
+                        <rect key="frame" x="457" y="13" width="90" height="33" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Annuler" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="949">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -264,7 +264,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="39">
-                        <rect key="frame" x="549" y="14" width="84" height="32"/>
+                        <rect key="frame" x="547" y="14" width="84" height="32" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="948">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -278,17 +278,17 @@ DQ
                         </connections>
                     </button>
                     <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7">
-                        <rect key="frame" x="13" y="55" width="731" height="571"/>
+                        <rect key="frame" x="12" y="60" width="731" height="668" />
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Document" identifier="Document" id="9">
                                 <view key="view" id="11">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Palette de recherche (après redémarrage)" translatesAutoresizingMaskIntoConstraints="NO" id="585">
-                                            <rect key="frame" x="369" y="347" width="281" height="84"/>
+                                            <rect key="frame" x="369" y="455" width="281" height="84" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="929-MW-RLQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="281" height="70"/>
@@ -329,7 +329,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Encodage" translatesAutoresizingMaskIntoConstraints="NO" id="262">
-                                            <rect key="frame" x="361" y="267" width="289" height="68"/>
+                                            <rect key="frame" x="361" y="375" width="289" height="68" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="0XP-9Y-jI1">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="54"/>
@@ -356,7 +356,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Dictionnaire" translatesAutoresizingMaskIntoConstraints="NO" id="Utr-r5-4hD">
-                                            <rect key="frame" x="369" y="206" width="281" height="56"/>
+                                            <rect key="frame" x="369" y="314" width="281" height="56" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="fnU-Bu-a9Z">
                                                 <rect key="frame" x="0.0" y="0.0" width="281" height="42"/>
@@ -379,7 +379,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Vérifier l'orthographe" translatesAutoresizingMaskIntoConstraints="NO" id="oPT-zB-2RA">
-                                            <rect key="frame" x="369" y="84" width="281" height="110"/>
+                                            <rect key="frame" x="369" y="192" width="281" height="110" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="YtX-Tc-4e5">
                                                 <rect key="frame" x="0.0" y="0.0" width="281" height="96"/>
@@ -426,7 +426,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Ouvrir les nouvelles fenêtres dans des onglets" translatesAutoresizingMaskIntoConstraints="NO" id="M8v-00-EY9">
-                                            <rect key="frame" x="45" y="14" width="305" height="65"/>
+                                            <rect key="frame" x="45" y="122" width="305" height="65" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="TzF-9X-ler">
                                                 <rect key="frame" x="0.0" y="0.0" width="305" height="51"/>
@@ -455,7 +455,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Police du document" translatesAutoresizingMaskIntoConstraints="NO" id="14">
-                                            <rect key="frame" x="45" y="446" width="335" height="56"/>
+                                            <rect key="frame" x="45" y="554" width="335" height="56" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="1Yw-D3-vj4">
                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="42"/>
@@ -486,7 +486,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Position de la fenêtre-source" translatesAutoresizingMaskIntoConstraints="NO" id="19">
-                                            <rect key="frame" x="45" y="333" width="305" height="107"/>
+                                            <rect key="frame" x="45" y="441" width="305" height="107" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="iVH-N6-Nbw">
                                                 <rect key="frame" x="0.0" y="0.0" width="305" height="93"/>
@@ -534,7 +534,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Au démarrage" translatesAutoresizingMaskIntoConstraints="NO" id="236">
-                                            <rect key="frame" x="45" y="244" width="305" height="85"/>
+                                            <rect key="frame" x="45" y="352" width="305" height="85" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="qYk-oR-9KX">
                                                 <rect key="frame" x="0.0" y="0.0" width="305" height="71"/>
@@ -567,7 +567,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Commande de complétion déclenchée par" translatesAutoresizingMaskIntoConstraints="NO" id="966">
-                                            <rect key="frame" x="45" y="165" width="305" height="69"/>
+                                            <rect key="frame" x="45" y="273" width="305" height="69" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Jbl-YG-tXL">
                                                 <rect key="frame" x="0.0" y="0.0" width="305" height="55"/>
@@ -604,7 +604,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Appariements ciblés/couleur du surlignage" translatesAutoresizingMaskIntoConstraints="NO" id="974">
-                                            <rect key="frame" x="45" y="94" width="305" height="61"/>
+                                            <rect key="frame" x="45" y="202" width="305" height="61" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="ue3-BM-LUz">
                                                 <rect key="frame" x="0.0" y="0.0" width="305" height="47"/>
@@ -659,7 +659,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Taille du numéro de ligne" translatesAutoresizingMaskIntoConstraints="NO" id="UMY-Ll-GOs">
-                                            <rect key="frame" x="369" y="14" width="281" height="68"/>
+                                            <rect key="frame" x="369" y="122" width="281" height="68" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Cfn-nN-3IU">
                                                 <rect key="frame" x="0.0" y="0.0" width="281" height="54"/>
@@ -700,11 +700,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Éditeur" identifier="" id="NRu-Ho-X2V">
                                 <view key="view" id="5ae-bX-HEZ">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Affichage des caractères invisibles" translatesAutoresizingMaskIntoConstraints="NO" id="1067">
-                                            <rect key="frame" x="47" y="76" width="289" height="133"/>
+                                            <rect key="frame" x="47" y="185" width="289" height="133" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Hyy-cw-xT6">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="121"/>
@@ -882,7 +882,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Réglages des appariements de parenthèses" translatesAutoresizingMaskIntoConstraints="NO" id="975">
-                                            <rect key="frame" x="340" y="367" width="289" height="134"/>
+                                            <rect key="frame" x="340" y="476" width="289" height="134" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="tY7-Qk-99b">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="122"/>
@@ -948,7 +948,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Éditeur" translatesAutoresizingMaskIntoConstraints="NO" id="63">
-                                            <rect key="frame" x="47" y="218" width="289" height="283"/>
+                                            <rect key="frame" x="47" y="327" width="289" height="283" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="840-wl-37B">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="271"/>
@@ -1073,7 +1073,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Enroulement des lignes" translatesAutoresizingMaskIntoConstraints="NO" id="Uwd-su-M85">
-                                            <rect key="frame" x="340" y="270" width="289" height="86"/>
+                                            <rect key="frame" x="340" y="379" width="289" height="86" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="4AO-8v-ZRI">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="74"/>
@@ -1114,7 +1114,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Style" translatesAutoresizingMaskIntoConstraints="NO" id="lAb-lN-hY8">
-                                            <rect key="frame" x="340" y="76" width="289" height="181"/>
+                                            <rect key="frame" x="340" y="185" width="289" height="181" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="ljE-8j-ZUx">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="169"/>
@@ -1217,11 +1217,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Aperçu du PDF" identifier="2" id="8">
                                 <view key="view" id="10">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Position de la fenêtre PDF" translatesAutoresizingMaskIntoConstraints="NO" id="47">
-                                            <rect key="frame" x="48" y="406" width="285" height="103"/>
+                                            <rect key="frame" x="48" y="507" width="285" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="vLS-fp-MXg">
                                                 <rect key="frame" x="0.0" y="0.0" width="285" height="91"/>
@@ -1269,7 +1269,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Agrandissement de la fenêtre" translatesAutoresizingMaskIntoConstraints="NO" id="111">
-                                            <rect key="frame" x="368" y="267" width="253" height="61"/>
+                                            <rect key="frame" x="368" y="368" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="MbZ-8K-jYQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1300,7 +1300,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Changer les boutons page" translatesAutoresizingMaskIntoConstraints="NO" id="228">
-                                            <rect key="frame" x="368" y="448" width="253" height="61"/>
+                                            <rect key="frame" x="368" y="549" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Hdg-Ye-Yg4">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1322,7 +1322,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Réglage de la souris par défaut" translatesAutoresizingMaskIntoConstraints="NO" id="330">
-                                            <rect key="frame" x="48" y="253" width="285" height="62"/>
+                                            <rect key="frame" x="48" y="354" width="285" height="62" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="9BG-tg-0Cp">
                                                 <rect key="frame" x="0.0" y="0.0" width="285" height="50"/>
@@ -1353,7 +1353,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Nouvelle taille de la fenêtre" translatesAutoresizingMaskIntoConstraints="NO" id="342">
-                                            <rect key="frame" x="368" y="328" width="253" height="61"/>
+                                            <rect key="frame" x="368" y="429" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="5mq-PR-phD">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1382,7 +1382,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Style de la page par défaut" translatesAutoresizingMaskIntoConstraints="NO" id="329">
-                                            <rect key="frame" x="368" y="391" width="253" height="61"/>
+                                            <rect key="frame" x="368" y="492" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="0nj-y4-ear">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1412,7 +1412,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Page double (variantes)" translatesAutoresizingMaskIntoConstraints="NO" id="501">
-                                            <rect key="frame" x="48" y="319" width="285" height="83"/>
+                                            <rect key="frame" x="48" y="420" width="285" height="83" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="fxa-Vq-upg">
                                                 <rect key="frame" x="0.0" y="0.0" width="285" height="71"/>
@@ -1449,7 +1449,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Éditeur externe" translatesAutoresizingMaskIntoConstraints="NO" id="555">
-                                            <rect key="frame" x="48" y="183" width="285" height="66"/>
+                                            <rect key="frame" x="48" y="284" width="285" height="66" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="UrP-XM-q66">
                                                 <rect key="frame" x="0.0" y="0.0" width="285" height="54"/>
@@ -1471,7 +1471,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Affichage du PDF" translatesAutoresizingMaskIntoConstraints="NO" id="mEg-wV-Pfg">
-                                            <rect key="frame" x="48" y="113" width="285" height="66"/>
+                                            <rect key="frame" x="48" y="214" width="285" height="66" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="chH-TR-H86">
                                                 <rect key="frame" x="0.0" y="0.0" width="285" height="54"/>
@@ -1493,7 +1493,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Ouverture de la source et de l'aperçu" translatesAutoresizingMaskIntoConstraints="NO" id="i1J-xA-Atx">
-                                            <rect key="frame" x="48" y="21" width="285" height="78"/>
+                                            <rect key="frame" x="48" y="122" width="285" height="78" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="y1E-jK-SpA">
                                                 <rect key="frame" x="0.0" y="0.0" width="285" height="66"/>
@@ -1526,7 +1526,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Mode Fenêtre seule" translatesAutoresizingMaskIntoConstraints="NO" id="yhr-kS-LYx">
-                                            <rect key="frame" x="368" y="192" width="253" height="78"/>
+                                            <rect key="frame" x="368" y="293" width="253" height="78" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="nAn-Cc-sG0">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="66"/>
@@ -1559,7 +1559,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Position de la fenêtre HTML" translatesAutoresizingMaskIntoConstraints="NO" id="7Rz-m1-KTa">
-                                            <rect key="frame" x="368" y="83" width="253" height="103"/>
+                                            <rect key="frame" x="368" y="184" width="253" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="4RA-8d-lk5">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="91"/>
@@ -1607,7 +1607,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="URL personnelle" translatesAutoresizingMaskIntoConstraints="NO" id="mhX-1W-YiC">
-                                            <rect key="frame" x="368" y="15" width="253" height="61"/>
+                                            <rect key="frame" x="368" y="116" width="253" height="61" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="3Am-DL-6aV">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="49"/>
@@ -1634,11 +1634,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Console" identifier="Console" id="705">
                                 <view key="view" id="706">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Police de la console" translatesAutoresizingMaskIntoConstraints="NO" id="752">
-                                            <rect key="frame" x="182" y="401" width="347" height="81"/>
+                                            <rect key="frame" x="182" y="529" width="347" height="81" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="dJ6-Af-sm8">
                                                 <rect key="frame" x="0.0" y="0.0" width="347" height="69"/>
@@ -1680,7 +1680,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Redimensionnement de la console" translatesAutoresizingMaskIntoConstraints="NO" id="772">
-                                            <rect key="frame" x="182" y="187" width="308" height="75"/>
+                                            <rect key="frame" x="182" y="315" width="308" height="75" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="asJ-Zf-yY3">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="63"/>
@@ -1689,7 +1689,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="764">
-                                            <rect key="frame" x="200" y="198" width="271" height="38"/>
+                                            <rect key="frame" x="200" y="326" width="271" height="38" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             <size key="cellSize" width="271" height="18"/>
@@ -1715,7 +1715,7 @@ DQ
                                             </connections>
                                         </matrix>
                                         <box fixedFrame="YES" title="Afficher la console" translatesAutoresizingMaskIntoConstraints="NO" id="828">
-                                            <rect key="frame" x="182" y="106" width="308" height="77"/>
+                                            <rect key="frame" x="182" y="234" width="308" height="77" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="VD4-7Y-6Kb">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="65"/>
@@ -1752,7 +1752,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Position de la fenêtre-console" translatesAutoresizingMaskIntoConstraints="NO" id="aS5-cr-mcb">
-                                            <rect key="frame" x="182" y="280" width="308" height="103"/>
+                                            <rect key="frame" x="182" y="408" width="308" height="103" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="16W-Pu-6hB">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="91"/>
@@ -1804,11 +1804,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Composition" identifier="2" id="179">
                                 <view key="view" id="170">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Script par défaut" translatesAutoresizingMaskIntoConstraints="NO" id="188">
-                                            <rect key="frame" x="26" y="238" width="271" height="99"/>
+                                            <rect key="frame" x="26" y="338" width="271" height="99" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pSV-jd-44V">
                                                 <rect key="frame" x="0.0" y="0.0" width="271" height="87"/>
@@ -1849,7 +1849,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Format par défaut" translatesAutoresizingMaskIntoConstraints="NO" id="183">
-                                            <rect key="frame" x="26" y="341" width="271" height="168"/>
+                                            <rect key="frame" x="26" y="441" width="271" height="168" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="k7q-Lk-KNs">
                                                 <rect key="frame" x="0.0" y="0.0" width="271" height="156"/>
@@ -1901,7 +1901,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Pendant la sauvegarde des fichiers" translatesAutoresizingMaskIntoConstraints="NO" id="314">
-                                            <rect key="frame" x="327" y="327" width="293" height="76"/>
+                                            <rect key="frame" x="327" y="427" width="293" height="76" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="v3y-DU-4aG">
                                                 <rect key="frame" x="0.0" y="0.0" width="293" height="64"/>
@@ -1923,7 +1923,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Après composition" translatesAutoresizingMaskIntoConstraints="NO" id="675">
-                                            <rect key="frame" x="327" y="420" width="293" height="90"/>
+                                            <rect key="frame" x="327" y="520" width="293" height="90" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="HsB-p8-YzU">
                                                 <rect key="frame" x="0.0" y="0.0" width="293" height="78"/>
@@ -1964,7 +1964,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Méthode de synchronisation" translatesAutoresizingMaskIntoConstraints="NO" id="823">
-                                            <rect key="frame" x="327" y="202" width="293" height="121"/>
+                                            <rect key="frame" x="327" y="302" width="293" height="121" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="5Fl-hR-DtG">
                                                 <rect key="frame" x="0.0" y="0.0" width="293" height="109"/>
@@ -2012,7 +2012,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Si la sync. ouvre une nouvelle fenêtre" translatesAutoresizingMaskIntoConstraints="NO" id="TRg-W3-17H">
-                                            <rect key="frame" x="327" y="92" width="293" height="101"/>
+                                            <rect key="frame" x="327" y="192" width="293" height="101" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Syr-0A-nBH">
                                                 <rect key="frame" x="0.0" y="0.0" width="293" height="89"/>
@@ -2043,7 +2043,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Options de Ghostscript" translatesAutoresizingMaskIntoConstraints="NO" id="rpe-D4-jCT">
-                                            <rect key="frame" x="26" y="138" width="271" height="76"/>
+                                            <rect key="frame" x="26" y="238" width="271" height="76" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="IcT-ib-HzP">
                                                 <rect key="frame" x="0.0" y="0.0" width="271" height="64"/>
@@ -2069,11 +2069,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Moteur" identifier="2" id="12">
                                 <view key="view" id="13">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="pdfTeX" translatesAutoresizingMaskIntoConstraints="NO" id="54">
-                                            <rect key="frame" x="28" y="181" width="289" height="148"/>
+                                            <rect key="frame" x="28" y="281" width="289" height="148" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gQB-pm-TRh">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="136"/>
@@ -2159,7 +2159,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="TeX + dvips + distiller" translatesAutoresizingMaskIntoConstraints="NO" id="200">
-                                            <rect key="frame" x="329" y="181" width="286" height="146"/>
+                                            <rect key="frame" x="329" y="281" width="286" height="146" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="NXO-X6-yKn">
                                                 <rect key="frame" x="0.0" y="0.0" width="286" height="134"/>
@@ -2245,7 +2245,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Réglage des chemins" translatesAutoresizingMaskIntoConstraints="NO" id="215">
-                                            <rect key="frame" x="28" y="339" width="587" height="171"/>
+                                            <rect key="frame" x="28" y="439" width="587" height="171" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Amf-I1-vbk">
                                                 <rect key="frame" x="0.0" y="0.0" width="587" height="159"/>
@@ -2321,7 +2321,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Commande pour la Recherche" translatesAutoresizingMaskIntoConstraints="NO" id="1018">
-                                            <rect key="frame" x="28" y="97" width="587" height="80"/>
+                                            <rect key="frame" x="28" y="197" width="587" height="80" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="yVw-pd-70c">
                                                 <rect key="frame" x="0.0" y="0.0" width="587" height="68"/>
@@ -2353,7 +2353,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Moteur BibTeX" translatesAutoresizingMaskIntoConstraints="NO" id="1019">
-                                            <rect key="frame" x="28" y="13" width="587" height="80"/>
+                                            <rect key="frame" x="28" y="113" width="587" height="80" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="uyQ-N9-WJQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="587" height="68"/>
@@ -2389,11 +2389,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Divers1" identifier="1" id="415">
                                 <view key="view" id="400">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Coloriage" translatesAutoresizingMaskIntoConstraints="NO" id="447">
-                                            <rect key="frame" x="132" y="324" width="399" height="108"/>
+                                            <rect key="frame" x="132" y="431" width="399" height="108" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="2AT-kW-ozX">
                                                 <rect key="frame" x="0.0" y="0.0" width="399" height="96"/>
@@ -2449,7 +2449,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Type de copie de l'image" translatesAutoresizingMaskIntoConstraints="NO" id="386">
-                                            <rect key="frame" x="132" y="444" width="399" height="59"/>
+                                            <rect key="frame" x="132" y="551" width="399" height="59" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="j0t-Ce-glU">
                                                 <rect key="frame" x="0.0" y="0.0" width="399" height="47"/>
@@ -2483,7 +2483,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Curseur d’insertion" translatesAutoresizingMaskIntoConstraints="NO" id="Ycy-Sb-7wJ">
-                                            <rect key="frame" x="132" y="60" width="399" height="229"/>
+                                            <rect key="frame" x="132" y="167" width="399" height="229" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="OkN-0S-gVg">
                                                 <rect key="frame" x="0.0" y="0.0" width="399" height="217"/>
@@ -2600,11 +2600,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Divers2" identifier="2" id="127">
                                 <view key="view" id="136">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Script personnel" translatesAutoresizingMaskIntoConstraints="NO" id="154">
-                                            <rect key="frame" x="20" y="405" width="361" height="119"/>
+                                            <rect key="frame" x="20" y="491" width="361" height="119" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="7FV-k4-FYA">
                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="107"/>
@@ -2657,7 +2657,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="545">
-                                            <rect key="frame" x="20" y="209" width="153" height="71"/>
+                                            <rect key="frame" x="20" y="295" width="153" height="71" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Tni-aG-bUA">
                                                 <rect key="frame" x="0.0" y="0.0" width="153" height="59"/>
@@ -2694,7 +2694,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Support pTeX (Japon)" translatesAutoresizingMaskIntoConstraints="NO" id="574">
-                                            <rect key="frame" x="228" y="210" width="153" height="71"/>
+                                            <rect key="frame" x="228" y="296" width="153" height="71" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="HKw-Fc-bFh">
                                                 <rect key="frame" x="0.0" y="0.0" width="153" height="59"/>
@@ -2716,7 +2716,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Pendant l’enregistrement du fichier" translatesAutoresizingMaskIntoConstraints="NO" id="1112">
-                                            <rect key="frame" x="20" y="130" width="361" height="70"/>
+                                            <rect key="frame" x="20" y="216" width="361" height="70" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="NM0-GL-eMv">
                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="58"/>
@@ -2738,7 +2738,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Fichier-maître du projet" translatesAutoresizingMaskIntoConstraints="NO" id="yrN-qf-0x9">
-                                            <rect key="frame" x="20" y="28" width="316" height="95"/>
+                                            <rect key="frame" x="20" y="114" width="316" height="95" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="8Wq-Bn-Guw">
                                                 <rect key="frame" x="0.0" y="0.0" width="316" height="83"/>
@@ -2771,7 +2771,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Mise à jour par Sparkle" translatesAutoresizingMaskIntoConstraints="NO" id="kii-Ln-8wt">
-                                            <rect key="frame" x="341" y="4" width="304" height="119"/>
+                                            <rect key="frame" x="341" y="90" width="304" height="119" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="m41-qF-ovl">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="107"/>
@@ -2823,7 +2823,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Choix d’étiquette XML" translatesAutoresizingMaskIntoConstraints="NO" id="mOR-HT-FtQ">
-                                            <rect key="frame" x="398" y="195" width="241" height="329"/>
+                                            <rect key="frame" x="398" y="281" width="241" height="329" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="erb-Xc-FKv">
                                                 <rect key="frame" x="0.0" y="0.0" width="241" height="317"/>
@@ -2955,7 +2955,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sur Big Sur et après :" translatesAutoresizingMaskIntoConstraints="NO" id="ivM-7i-tka">
-                                            <rect key="frame" x="398" y="130" width="247" height="53"/>
+                                            <rect key="frame" x="398" y="216" width="247" height="53" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="jIO-YA-Xq6">
                                                 <rect key="frame" x="0.0" y="0.0" width="247" height="41"/>
@@ -2977,7 +2977,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Moteur TeX alternatif" translatesAutoresizingMaskIntoConstraints="NO" id="19D-7w-5gD">
-                                            <rect key="frame" x="20" y="305" width="361" height="88"/>
+                                            <rect key="frame" x="20" y="391" width="361" height="88" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Ike-mg-WVf">
                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="76"/>
@@ -3013,11 +3013,11 @@ DQ
                             </tabViewItem>
                             <tabViewItem label="Thèmes" identifier="" id="vC4-9I-kap">
                                 <view key="view" id="CCE-we-CAK">
-                                    <rect key="frame" x="10" y="33" width="711" height="525"/>
+                                    <rect key="frame" x="10" y="33" width="711" height="622" />
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Thèmes" translatesAutoresizingMaskIntoConstraints="NO" id="djT-4w-Jkd">
-                                            <rect key="frame" x="27" y="329" width="188" height="194"/>
+                                            <rect key="frame" x="27" y="345" width="188" height="194" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="uZ4-Xz-V0G">
                                                 <rect key="frame" x="0.0" y="0.0" width="188" height="180"/>
@@ -3091,7 +3091,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Actions" translatesAutoresizingMaskIntoConstraints="NO" id="m7I-qL-Svs">
-                                            <rect key="frame" x="27" y="22" width="188" height="197"/>
+                                            <rect key="frame" x="27" y="38" width="188" height="197" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="bKR-gu-xiZ">
                                                 <rect key="frame" x="0.0" y="0.0" width="188" height="183"/>
@@ -3135,17 +3135,17 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <tabView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zyg-mi-UgQ">
-                                            <rect key="frame" x="261" y="-4" width="397" height="535"/>
+                                            <rect key="frame" x="261" y="12" width="397" height="598" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <font key="font" metaFont="system"/>
                                             <tabViewItems>
                                                 <tabViewItem label="Couleurs standard" identifier="" id="Gj6-fY-cV5">
                                                     <view key="view" id="f8Q-Yd-1NT">
-                                                        <rect key="frame" x="10" y="33" width="377" height="489"/>
+                                                        <rect key="frame" x="10" y="33" width="377" height="552" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jAj-bh-TNa">
-                                                                <rect key="frame" x="-6" y="-20" width="389" height="528"/>
+                                                                <rect key="frame" x="12" y="12" width="389" height="528" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <view key="contentView" id="RZR-v9-TWA">
                                                                     <rect key="frame" x="0.0" y="0.0" width="389" height="514"/>
@@ -3697,11 +3697,11 @@ DQ
                                                 </tabViewItem>
                                                 <tabViewItem label="Autres couleurs" identifier="" id="40d-fo-yPw">
                                                     <view key="view" id="kzg-ys-btS">
-                                                        <rect key="frame" x="10" y="33" width="377" height="489"/>
+                                                        <rect key="frame" x="10" y="33" width="377" height="552" />
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q2a-8B-HYf">
-                                                                <rect key="frame" x="-6" y="-34" width="389" height="528"/>
+                                                                <rect key="frame" x="12" y="12" width="389" height="528" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <view key="contentView" id="Vpv-cj-gPZ">
                                                                     <rect key="frame" x="0.0" y="0.0" width="389" height="514"/>
@@ -3840,7 +3840,7 @@ DQ
                                                                 <font key="titleFont" metaFont="system"/>
                                                             </box>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZzP-tf-bEV">
-                                                                <rect key="frame" x="99" y="291" width="39" height="14"/>
+                                                                <rect key="frame" x="117" y="337" width="39" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="pour ( " id="gZX-nH-hlY">
                                                                     <font key="font" metaFont="message" size="11"/>
@@ -3849,7 +3849,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LdS-Ga-OC6">
-                                                                <rect key="frame" x="191" y="291" width="36" height="14"/>
+                                                                <rect key="frame" x="209" y="337" width="36" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="pour {" id="No0-4l-Vru">
                                                                     <font key="font" metaFont="message" size="11"/>
@@ -3858,7 +3858,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5vE-10-0TT">
-                                                                <rect key="frame" x="100" y="266" width="59" height="24"/>
+                                                                <rect key="frame" x="118" y="312" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3866,7 +3866,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uvr-dq-ROB">
-                                                                <rect key="frame" x="189" y="266" width="59" height="24"/>
+                                                                <rect key="frame" x="207" y="312" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3874,7 +3874,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ydu-X1-6co">
-                                                                <rect key="frame" x="277" y="266" width="59" height="24"/>
+                                                                <rect key="frame" x="295" y="312" width="59" height="24" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <connections>
@@ -3882,7 +3882,7 @@ DQ
                                                                 </connections>
                                                             </colorWell>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tsE-UR-Gzy">
-                                                                <rect key="frame" x="26" y="267" width="55" height="20"/>
+                                                                <rect key="frame" x="44" y="313" width="55" height="20" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Marqueur" id="KZX-Uz-qiJ">
                                                                     <font key="font" metaFont="message" size="11"/>
@@ -3891,7 +3891,7 @@ DQ
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zoH-d4-5zH">
-                                                                <rect key="frame" x="279" y="291" width="39" height="14"/>
+                                                                <rect key="frame" x="297" y="337" width="39" height="14" />
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" title=" pour [" id="7aT-4K-SIn">
                                                                     <font key="font" metaFont="message" size="11"/>
