@@ -11,6 +11,22 @@
 
 @implementation OverView
 
+- (BOOL)isFlipped
+{
+    return self.superview ? self.superview.isFlipped : NO;
+}
+
+- (void)viewDidMoveToSuperview
+{
+    [super viewDidMoveToSuperview];
+    if (self.superview) {
+        self.frame = self.superview.bounds;
+        self.bounds = self.superview.bounds;
+        self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    }
+}
+
+
 /*
 - (void) dealloc
 {
@@ -83,7 +99,7 @@
         [[NSGraphicsContext currentContext] setShouldAntialias: NO];
         [[NSColor whiteColor] set];
         NSRectFill(theSelectionRect);
-        [self.magnifiedImage drawInRect: theSelectionRect fromRect: magnifiedRect operation: NSCompositeSourceOver fraction: 1.0 ]; //NSCompositeCopy NSCompositeSourceOver
+        [self.magnifiedImage drawInRect: theSelectionRect fromRect: magnifiedRect operation: NSCompositeSourceOver fraction: 1.0 respectFlipped: YES hints: nil ]; //NSCompositeCopy NSCompositeSourceOver
         [[NSColor blackColor] set];
         NSFrameRect(theSelectionRect);
      //   [self unlockFocus];

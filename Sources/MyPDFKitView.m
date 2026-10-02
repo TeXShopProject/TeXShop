@@ -4552,6 +4552,9 @@ if (! self.skipLinks)
             
             
             
+            if ([self documentView].isFlipped)
+                bRect.origin.y = pushUp ? mouseLocDocumentView.y - bRect.size.height : mouseLocDocumentView.y + 10;
+
             // Now make Tristan Hubsch modification
             
             
