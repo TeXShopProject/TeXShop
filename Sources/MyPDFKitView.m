@@ -8293,4 +8293,29 @@ else
 
 
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) _pdfViewReady = YES;
+    return self;
+}
+
+- (instancetype)initWithFrame:(NSRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) _pdfViewReady = YES;
+    return self;
+}
+
+- (void)setDocument:(PDFDocument *)document
+{
+    BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
+    CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
+    [super setDocument:document];
+    if (preserveZoom) {
+        [super setScaleFactor:previousScale];
+        [self scaleChanged:nil];
+    }
+}
+
 @end
