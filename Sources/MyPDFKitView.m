@@ -395,6 +395,13 @@
 												 name: PDFViewPageChangedNotification object: self];
 	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(scaleChanged:)
 												 name: PDFViewScaleChangedNotification object: self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewZoomBoundsChanged:)
+        name:NSViewBoundsDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewLiveMagnify:)
+        name:NSScrollViewWillStartLiveMagnifyNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewLiveMagnify:)
+        name:NSScrollViewDidEndLiveMagnifyNotification object:nil];
+
 
     
     
@@ -1866,6 +1873,22 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	[super goForward:sender];
 }
 
+- (void)previewZoomBoundsChanged:(NSNotification *)notification
+{
+    if (notification.object != self.documentView.enclosingScrollView.contentView) return;
+    if (scaleMag != lround(self.scaleFactor * 100.0))
+        [self scaleChanged:nil];
+}
+
+- (void)previewLiveMagnify:(NSNotification *)notification
+{
+    if (notification.object != self.documentView.enclosingScrollView) return;
+    self.autoScales = NO;
+    resizeOption = NEW_PDF_FIT_TO_NONE;
+    [self scaleChanged:nil];
+}
+
+
 - (void) scaleChanged: (NSNotification *) notification
 {
 	CGFloat	theScale;
@@ -1874,7 +1897,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
    //  NSLog(@"scaleChange");
     
 	theScale = [self scaleFactor];
-	magsize = theScale * 100;
+	magsize = lround(theScale * 100.0);
 	scaleMag = magsize;
 	if (self == [self.myDocument topView]) {
 		[myScale setIntegerValue:magsize];
@@ -2273,10 +2296,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 - (double)magnification
 {
-	double	magsize;
-
-	magsize = [myScale integerValue] / 100.0;
-	return magsize;
+    return self.scaleFactor;
 }
 
 - (void)zoomIn: sender
@@ -2286,7 +2306,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 	NSInteger	scale;
 	
-	scale = [myScale integerValue];
+	scale = lround(self.scaleFactor * 100.0);
 	scale = scale + 10;
 	if (scale > PDF_MAX_SCALE)
 		scale = PDF_MAX_SCALE;
@@ -2300,7 +2320,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 {
 	NSInteger	scale;
 	
-	scale = [myScale integerValue];
+	scale = lround(self.scaleFactor * 100.0);
 	scale = scale - 10;
 	if (scale< 20)
 		scale = 20;
@@ -2348,7 +2368,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	[myStepper setIntegerValue:scale];
     [smyStepper setIntegerValue:scale];
 	[myStepper1 setIntegerValue:scale];
-	magSize = [self magnification];
+	magSize = [myScale doubleValue] / 100.0;
 	[self setScaleFactor: magSize];
 	if (sender == myScale1) {
 		[NSApp endSheet: [self.myDocument magnificationPanel]];
