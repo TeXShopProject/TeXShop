@@ -1154,6 +1154,16 @@ withDarkColors = NO;
     
 
 	[super windowControllerDidLoadNib:aController];
+
+    // Terada: OS固有のWebKit内部ビューをnibに保存せず、実行中のOSで生成する。
+    if (self.htmlViewContainer && !self.htmlView) {
+        WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+        configuration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
+        self.htmlView = [[WKWebView alloc] initWithFrame:self.htmlViewContainer.bounds configuration:configuration];
+        self.htmlView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [self.htmlViewContainer addSubview:self.htmlView];
+    }
+
     
   
       

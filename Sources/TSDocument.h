@@ -562,6 +562,7 @@ enum RootCommand
 
 // for HTML
 @property (nonatomic, strong) IBOutlet TSHTMLWindow *htmlWindow;
+@property (nonatomic, strong) IBOutlet NSView *htmlViewContainer;
 @property (nonatomic, strong) IBOutlet WKWebView *htmlView;
 @property (nonatomic, strong) IBOutlet NSButton *EditModeCheckBox;
 @property (nonatomic, strong) IBOutlet NSButton *SaveAllCheckBox;

@@ -29,7 +29,7 @@
                 <outlet property="gotopageOutlet" destination="374" id="390"/>
                 <outlet property="gotopageOutletKK" destination="681" id="723"/>
                 <outlet property="hLog" destination="qV4-AL-8iL" id="rhr-5o-evs"/>
-                <outlet property="htmlView" destination="EZW-yW-vUR" id="IPo-OC-pst"/>
+                <outlet property="htmlViewContainer" destination="EZW-yW-vUR" id="IPo-OC-pst"/>
                 <outlet property="htmlWindow" destination="mQ0-Cb-8t5" id="Kp8-nl-PV5"/>
                 <outlet property="iLog" destination="rFb-it-G5p" id="L4Y-vE-Rcz"/>
                 <outlet property="indexColorBox" destination="923" id="924"/>
@@ -2711,14 +2711,10 @@ Gw
                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <wkWebView wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EZW-yW-vUR">
+                    <customView wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EZW-yW-vUR">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <wkWebViewConfiguration key="configuration">
-                            <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                            <wkPreferences key="preferences"/>
-                        </wkWebViewConfiguration>
-                    </wkWebView>
+                    </customView>
                 </subviews>
             </view>
             <connections>
