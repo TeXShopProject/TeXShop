@@ -11001,6 +11001,11 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 // added by Terada
 - (NSString *)fileNameExtensionForType:(NSString *)typeName saveOperation:(NSSaveOperationType)saveOperation
 {
+    // added by Terada: 未保存書類の拡張子は標準処理に委ね、macOS 27のファイル名提案に対応する。
+    if (@available(macOS 27.0, *)) {
+        if (self.fileURL == nil)
+            return [super fileNameExtensionForType:typeName saveOperation:saveOperation];
+    }
     return [[[self fileURL] path] pathExtension];
 }
 
