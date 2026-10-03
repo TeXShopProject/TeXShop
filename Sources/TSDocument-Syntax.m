@@ -232,8 +232,8 @@ static BOOL isValidOrdinaryTeXCommandChar(NSInteger c)
     // Clip the given range (call it paranoia, if you like :-).
     if (range.location >= length)
         return;
-    if (range.location + range.length > length && ![SUD boolForKey:AlwaysHighlightEnabledKey]) // modified by Terada
-        //    if (range.location + range.length > length)
+    // changed by Terada: Clamp the range to the string regardless of persistent highlighting.
+    if (range.length > length - range.location)
     {
     //    NSLog(@"fixed");
         range.length = length - range.location;
