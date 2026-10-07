@@ -92,16 +92,37 @@
 	invisibleCharactersShowing = enabled;
 }
 
-- (NSPoint)pointToDrawGlyphAtIndex:(NSUInteger)inGlyphIndex adjust:(NSSize)inSize
+// changed by Terada (from this line): Align the marker baseline with the text baseline.
+- (void)drawInvisibleCharacter:(NSString *)marker
+               atGlyphIndex:(NSUInteger)glyphIndex
+            containerOrigin:(NSPoint)containerOrigin
+                 attributes:(NSDictionary *)attributes
+                      cache:(NSMutableDictionary *)cache
 {
-    NSPoint outPoint = [self locationForGlyphAtIndex:inGlyphIndex];
-    NSRect theGlyphRect = [self lineFragmentRectForGlyphAtIndex:inGlyphIndex effectiveRange:NULL];
-	
-    outPoint.x += inSize.width;
-    outPoint.y = theGlyphRect.origin.y - inSize.height;
-	
-    return outPoint;
+    NSArray *key = @[marker, attributes[NSFontAttributeName]];
+    NSTextStorage *markerStorage = cache[key];
+    if (markerStorage == nil) {
+        markerStorage = [[NSTextStorage alloc] initWithString:marker attributes:attributes];
+        NSLayoutManager *markerLayout = [NSLayoutManager new];
+        NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(10000, 10000)];
+        container.lineFragmentPadding = 0;
+        [markerStorage addLayoutManager:markerLayout];
+        [markerLayout addTextContainer:container];
+        [markerLayout ensureLayoutForTextContainer:container];
+        cache[key] = markerStorage;
+    }
+    NSLayoutManager *markerLayout = markerStorage.layoutManagers.firstObject;
+    NSPoint textBaseline = [self locationForGlyphAtIndex:glyphIndex];
+    NSRect textLine = [self lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
+    NSPoint markerBaseline = [markerLayout locationForGlyphAtIndex:0];
+    NSRect markerLine = [markerLayout lineFragmentRectForGlyphAtIndex:0 effectiveRange:NULL];
+    NSPoint origin = NSMakePoint(containerOrigin.x + textLine.origin.x + textBaseline.x
+                                - markerLine.origin.x - markerBaseline.x,
+                                containerOrigin.y + textLine.origin.y + textBaseline.y
+                                - markerLine.origin.y - markerBaseline.y);
+    [markerLayout drawGlyphsForGlyphRange:NSMakeRange(0, markerLayout.numberOfGlyphs) atPoint:origin];
 }
+// changed by Terada (until this line)
 
 - (void)drawGlyphsForGlyphRange:(NSRange)inGlyphRange atPoint:(NSPoint)inContainerOrigin
 {
@@ -109,26 +130,8 @@
     NSUInteger theLengthToRedraw = NSMaxRange(inGlyphRange);
     NSUInteger theGlyphIndex, theCharIndex = 0;
     unichar theCharacter;
-    NSPoint thePointToDraw;
-	
-	CGFloat theInsetWidth = 0.0;
-	CGFloat theInsetHeight = 4.0;
-	NSSize theSize = NSMakeSize(theInsetWidth, theInsetHeight);
-	
-    NSFont *theFont = [[self textStorage] font];
-	
-    /*
-	CGFloat r, g, b;
-	r = [SUD floatForKey: invisibleCharRedKey];
-	g = [SUD floatForKey: invisibleCharGreenKey];
-	b = [SUD floatForKey: invisibleCharBlueKey];
-	NSColor *theColor = [NSColor colorWithDeviceRed:r green:g blue:b alpha:1];
-    // NSColor *theColor = [NSColor orangeColor];
-    */
-	
-    NSDictionary* _attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-								 theFont, NSFontAttributeName, 
-								 InvisibleColor, NSForegroundColorAttributeName,  nil];
+    // changed by Terada: Follow inline font changes and reuse marker layouts during drawing.
+    NSMutableDictionary *markerCache = [NSMutableDictionary dictionary];
 
 	BOOL showTabCharacter = (invisibleCharactersShowing && [SUD boolForKey:showTabCharacterKey]);
 	BOOL showNewLineCharacter = (invisibleCharactersShowing && [SUD boolForKey:showNewLineCharacterKey]);
@@ -139,24 +142,30 @@
     NSString *nextLineCharacter = [self.nextLineCharacters objectAtIndex:[SUD integerForKey:NewLineCharacterKindKey]];
     NSString *fullwidthSpaceCharacter = [self.fullwidthSpaceCharacters objectAtIndex:[SUD integerForKey:FullwidthSpaceCharacterKindKey]];
     NSString *spaceCharacter = [self.spaceCharacters objectAtIndex:[SUD integerForKey:SpaceCharacterKindKey]];
-	
+
 	for (theGlyphIndex = inGlyphRange.location; theGlyphIndex < theLengthToRedraw; theGlyphIndex++) {
 		theCharIndex = [self characterIndexForGlyphAtIndex:theGlyphIndex];
 		theCharacter = [theCompleteStr characterAtIndex:theCharIndex];
 		
+		NSString *marker = nil;
 		if (theCharacter == '\t' && showTabCharacter ) {
-			thePointToDraw = [self pointToDrawGlyphAtIndex:theGlyphIndex adjust:theSize];
-			[tabCharacter drawAtPoint:thePointToDraw withAttributes:_attributes];
+            marker = tabCharacter;
 		} else if (theCharacter == '\n' && showNewLineCharacter) {
-			thePointToDraw = [self pointToDrawGlyphAtIndex:theGlyphIndex adjust:theSize];
-			[nextLineCharacter drawAtPoint:thePointToDraw withAttributes:_attributes];
+            marker = nextLineCharacter;
 		} else if (theCharacter == 0x3000 && showFullwidthSpaceCharacter) { // Fullwidth-space (JP)
-			thePointToDraw = [self pointToDrawGlyphAtIndex:theGlyphIndex adjust:theSize];
-			[fullwidthSpaceCharacter drawAtPoint:thePointToDraw withAttributes:_attributes];
+            marker = fullwidthSpaceCharacter;
 		} else if (theCharacter == ' ' && showSpaceCharacter) {
-			thePointToDraw = [self pointToDrawGlyphAtIndex:theGlyphIndex adjust:theSize];
-			[spaceCharacter drawAtPoint:thePointToDraw withAttributes:_attributes];
-		}
+            marker = spaceCharacter;
+        }
+        // added by Terada: Use the drawing origin and text baseline instead of a fixed offset.
+        if (marker != nil) {
+            NSFont *font = [self.textStorage attribute:NSFontAttributeName atIndex:theCharIndex effectiveRange:NULL];
+            if (font == nil) font = [NSFont userFixedPitchFontOfSize:12];
+            NSDictionary *attributes = @{NSFontAttributeName: font,
+                                         NSForegroundColorAttributeName: InvisibleColor ?: NSColor.textColor};
+            [self drawInvisibleCharacter:marker atGlyphIndex:theGlyphIndex
+                         containerOrigin:inContainerOrigin attributes:attributes cache:markerCache];
+        }
 	}
 	[super drawGlyphsForGlyphRange:inGlyphRange atPoint:inContainerOrigin];
 }
