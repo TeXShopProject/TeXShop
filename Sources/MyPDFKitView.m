@@ -199,8 +199,12 @@
         tempDelay = 2.0;
     self.PDFFlashDelay = tempDelay;
    
+    // changed by Terada (from this line): Remove snapshot overlays when reinitializing after an invalid PDF.
+    [self.myHideView1 removeFromSuperview];
+    [self.myHideView2 removeFromSuperview];
     self.myHideView1 = nil;
     self.myHideView2 = nil;
+    // changed by Terada (until this line)
     
     self.oldUsed = NO;
     self.doScroll = YES;
