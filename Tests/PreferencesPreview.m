@@ -1,4 +1,4 @@
-// Terada: TeXShopの初期化やユーザー設定への書き込みを行わない描画検証。
+// Terada: Test rendering without initializing TeXShop or writing user preferences.
 #import <Cocoa/Cocoa.h>
 @interface TSPreferences : NSObject
 - (void)nextLanguage:(id)sender;

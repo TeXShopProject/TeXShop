@@ -7,7 +7,7 @@ trap 'rm -rf "$output"' EXIT
 extra=()
 if test -f "$root/Sources/TSATSTypesetter.m"; then extra+=("$root/Sources/TSATSTypesetter.m"); fi
 xcrun clang -fobjc-arc -framework Cocoa -I "$root/Sources" "$root/Tests/InvisibleCharacterBaseline.m" "$root/Sources/TSLayoutManager.m" "${extra[@]}" -o "$output/test"
-# 最低OS宣言によるNSString描画の互換動作にも影響されないことを確認する。
+# Verify independence from NSString drawing compatibility tied to the minimum OS declaration.
 mkdir -p "$output/Probe.app/Contents/MacOS"
 mv "$output/test" "$output/Probe.app/Contents/MacOS/Probe"
 for minimum in 10.13.0 14.6; do

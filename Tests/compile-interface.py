@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Terada: XMLとコンパイル済みnibを同時に更新し、古いOS別の派生物を残さない。
+# Terada: Update XML and compiled nibs together, removing obsolete OS-specific variants.
 from pathlib import Path
 import sys, tempfile, subprocess, shutil
 with tempfile.TemporaryDirectory() as td:

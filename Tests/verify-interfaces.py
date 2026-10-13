@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Terada: 原本から接続を失わず、WebKit内部クラスとタブの領域外配置を除去したことを検証。
+# Terada: Verify preserved connections, removal of WebKit internals, and tab content bounds.
 from pathlib import Path
 import subprocess, sys, xml.etree.ElementTree as ET
 root=Path(__file__).resolve().parents[1]

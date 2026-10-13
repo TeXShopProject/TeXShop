@@ -1155,7 +1155,7 @@ withDarkColors = NO;
 
 	[super windowControllerDidLoadNib:aController];
 
-    // Terada: OS固有のWebKit内部ビューをnibに保存せず、実行中のOSで生成する。
+    // Terada: Create WebKit views on the running OS instead of archiving OS-specific internals in nibs.
     if (self.htmlViewContainer && !self.htmlView) {
         WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
         configuration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
@@ -11001,7 +11001,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 // added by Terada
 - (NSString *)fileNameExtensionForType:(NSString *)typeName saveOperation:(NSSaveOperationType)saveOperation
 {
-    // added by Terada: 未保存書類の拡張子は標準処理に委ね、macOS 27のファイル名提案に対応する。
+    // added by Terada: Use standard extension handling for untitled documents to support macOS 27 filename suggestions.
     if (@available(macOS 27.0, *)) {
         if (self.fileURL == nil)
             return [super fileNameExtensionForType:typeName saveOperation:saveOperation];

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Terada: 接続とグループ内の相対位置を維持して、各タブを上端に揃える。
+# Terada: Top-align each tab while preserving connections and relative positions within groups.
 from pathlib import Path
 import re
 import xml.etree.ElementTree as ET
@@ -23,7 +23,7 @@ for path in sorted(Path('Resources/Interfaces').glob('*/Preferences.nib/designab
         for e in items:
             setrect(e, y=number(e,'y')+height-12-top, x=number(e,'x')+max(0, 12-left))
         setrect(v, width=width,height=height)
-    # 括弧のチェック欄は標準のコントロール幅を確保する。
+    # Allow standard control widths for bracket checkboxes.
     for v in root.findall('.//view'):
         buttons=[c for c in children(v) if c.tag=='button' and c.find('buttonCell') is not None and c.find('buttonCell').get('title') in ['{ }','[ ]','( )','< >']]
         if len(buttons)==4:
