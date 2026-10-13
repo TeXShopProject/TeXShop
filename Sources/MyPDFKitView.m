@@ -1,3 +1,4 @@
+#import "TSPDFScreenRendering.h" // added by Terada
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2005 Richard
@@ -3564,6 +3565,28 @@ TeXShop supports search through the drawer in the Preview Window using sample co
  
 */
 
+
+// added by Terada (from this line): Rasterize screen drawing on the CPU while preserving vector printing.
+- (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context
+{
+    void (^drawPage)(CGContextRef) = ^(CGContextRef target) {
+        [NSGraphicsContext saveGraphicsState];
+        @try {
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:target flipped:NO]];
+            [self drawPage:page];
+        } @finally {
+            [NSGraphicsContext restoreGraphicsState];
+        }
+    };
+    if (@available(macOS 27.0, *)) {
+        if ([NSGraphicsContext graphicsContextWithCGContext:context flipped:NO].drawingToScreen) {
+            TSDrawPDFScreenTiles(context, drawPage);
+            return;
+        }
+    }
+    drawPage(context);
+}
+// added by Terada (until this line)
 
 - (void)previewBackgroundChange: (NSNotification *)notification
 {
