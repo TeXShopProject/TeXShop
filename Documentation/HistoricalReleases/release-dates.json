@@ -203,5 +203,65 @@
     "date": "2016-07-13",
     "source": "https://web.archive.org/web/20160819023816id_/http://pages.uoregon.edu:80/koch/texshop/texshop.html",
     "note": "Selected by maintainer; an earlier snapshot states July 18. See date-conflicts.json."
+  },
+  "1.00-2001-04-29": {
+    "date": "2001-04-29",
+    "source": "https://github.com/TeXShop/TeXShop/releases/tag/v1.00-2001-04-29",
+    "note": "Inferred from the date in the upstream tag; not independently confirmed as the public release date."
+  },
+  "1.00-2001-04-07": {
+    "date": "2001-04-07",
+    "source": "https://github.com/TeXShop/TeXShop/releases/tag/v1.00-2001-04-07",
+    "note": "Inferred from the date in the upstream tag; not independently confirmed as the public release date."
+  },
+  "1.00-2001-03-19": {
+    "date": "2001-03-19",
+    "source": "https://github.com/TeXShop/TeXShop/releases/tag/v1.00-2001-03-19",
+    "note": "Inferred from the date in the upstream tag; not independently confirmed as the public release date."
+  },
+  "1.00-2001-03-18": {
+    "date": "2001-03-18",
+    "source": "https://github.com/TeXShop/TeXShop/releases/tag/v1.00-2001-03-18",
+    "note": "Inferred from the date in the upstream tag; not independently confirmed as the public release date."
+  },
+  "1.00-2001-03-15": {
+    "date": "2001-03-15",
+    "source": "https://github.com/TeXShop/TeXShop/releases/tag/v1.00-2001-03-15",
+    "note": "Inferred from the date in the upstream tag; not independently confirmed as the public release date."
+  },
+  "1.0d2": {
+    "date": "2000-08-31",
+    "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
+    "note": "Release date stated by Richard Koch, The Early Days of TeXShop, section 6."
+  },
+  "1.0d3": {
+    "date": "2000-10-07",
+    "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
+    "note": "Release date stated by Richard Koch, The Early Days of TeXShop, section 6."
+  },
+  "1.0d4": {
+    "date": "2000-11-01",
+    "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
+    "note": "Release date stated by Richard Koch, The Early Days of TeXShop, section 6."
+  },
+  "1.0d5": {
+    "date": "2000-11-24",
+    "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
+    "note": "Release date stated by Richard Koch, The Early Days of TeXShop, section 6."
+  },
+  "1.0d6": {
+    "date": "2000-12-25",
+    "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
+    "note": "Release date stated by Richard Koch, The Early Days of TeXShop, section 6."
+  },
+  "1.0": {
+    "date": "2001-03-24",
+    "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
+    "note": "Koch dates version 1.0 March 24, 2001, and also says he put it online a few days before the OS X release; the precise online release date is not stated."
+  },
+  "1.28": {
+    "date": "2003-01-29",
+    "source": "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf",
+    "note": "Contemporary TUGboat article identifies TeXShop 1.28 as dated January 29, 2003."
   }
 }
