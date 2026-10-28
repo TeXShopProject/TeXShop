@@ -1,6 +1,6 @@
 # TeXShop app icon
 
-Prepared from the TetsuTeXShop vector artwork at the maintainer's request.
+Prepared from the maintainer’s vector artwork at the maintainer's request.
 The Japanese character has been removed. The outlined TeX mark is centered
 at (512, 512) on a 1024-unit canvas, with a height of 340 units.
 The inherited gray-green gradient, white lettering, bevel, and shadow are retained.
