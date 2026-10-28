@@ -6,9 +6,9 @@ At Richard's invitation, Yusuke Terada is taking over its development and mainte
 
 ## Release status
 
-This repository contains **TeXShop 5.59 development sources**, based on TeXShop 5.58 Golden Gate. A signed application release from the new maintainership is not available here yet. The source tree uses the new TeXShopProject update feed; the version bump does not constitute a published application release.
+**TeXShop 5.59** is based on TeXShop 5.58 Golden Gate. Download the signed and notarized application from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v5.59). The application uses the TeXShopProject update feed.
 
-Application downloads and supported macOS versions will be announced with the first release. TeXShop also requires a separate TeX distribution to typeset documents; see [MacTeX](https://www.tug.org/mactex/).
+The universal application requires macOS 14.6 or later and runs on Apple Silicon and Intel. TeXShop also requires a separate TeX distribution to typeset documents; see [MacTeX](https://www.tug.org/mactex/).
 
 ## Source history
 
