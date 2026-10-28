@@ -177,7 +177,7 @@
 	BOOL			oldAutoComplete;
 	BOOL			oldBibDeskComplete;
     BOOL            oldSparkleAutomaticUpdate;
-    NSInteger       oldSparkleInterval;
+    NSTimeInterval  oldSparkleInterval;
     BOOL            oldNewToolbarIcons;
 	BOOL			magnificationTouched;
 	BOOL			externalEditorTouched;

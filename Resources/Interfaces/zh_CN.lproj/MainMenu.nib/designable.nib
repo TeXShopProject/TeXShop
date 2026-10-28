@@ -1431,7 +1431,7 @@
             </connections>
         </customObject>
         <customObject id="706" userLabel="TSMovie" customClass="TSMovie"/>
-        <customObject id="837" userLabel="SUUpdater" customClass="SUUpdater"/>
+        <customObject id="837" userLabel="SUUpdater" customClass="TSSparkleController"/>
         <window title="Tex 文档" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="854" userLabel="PackageHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>

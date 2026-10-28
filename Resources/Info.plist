@@ -1301,11 +1301,9 @@
 	<key>NSPrincipalClass</key>
 	<string>TSApplication</string>
 	<key>SUFeedURL</key>
-	<string>https://pages.uoregon.edu/koch/texshop/texshop-64/texshopappcast.xml</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
+	<string>https://texshopproject.github.io/TeXShop/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>5VHQFb0bpNLqucwJOacSQP3gz3UX99hzP7Z/MJMKVSo=</string>
+	<string>GItwOa4Q8LuY9zjGfp1n9vgprCsyiRrRqQVPq1feN/I=</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

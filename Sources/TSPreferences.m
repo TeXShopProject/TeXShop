@@ -35,7 +35,7 @@
 #import "TSDocument.h"
 #import "TSConsoleWindow.h"
 #ifdef USESPARKLE
-    #import <Sparkle/SUUpdater.h>
+    #import "TSSparkleController.h"
 #endif
 
 //#import "MyPDFView.h" // mitsu 1.29 (O)
@@ -161,6 +161,11 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	bibTeXengineTouched = NO; // added by Terada
 //	makeatletterTouched = NO; // added by Terada
     sparkleTouched = NO;
+#ifdef USESPARKLE
+    // Added by Terada: snapshot both updater settings once for Cancel.
+    oldSparkleAutomaticUpdate = [TSSparkleController sharedUpdater].automaticallyChecksForUpdates;
+    oldSparkleInterval = [TSSparkleController sharedUpdater].updateCheckInterval;
+#endif
 	// end addition
 	// prepare undo manager: forget all the old undo information and begin a new group.
 	[_undoManager removeAllActions];
@@ -1863,7 +1868,7 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 - (IBAction)sparkleAutomaticCheck:sender
 {
     sparkleTouched = YES;
-    oldSparkleAutomaticUpdate = [SUD boolForKey:SparkleAutomaticUpdateKey];
+
     
     BOOL theValue = [(NSCell *) sender state];
     
@@ -1873,14 +1878,14 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
     [SUD setBool:theValue forKey:SparkleAutomaticUpdateKey];
     
     
-    [[SUUpdater sharedUpdater] setAutomaticallyChecksForUpdates: theValue ];
+    [[TSSparkleController sharedUpdater] setAutomaticallyChecksForUpdates: theValue ];
     
 }
 
 - (IBAction)sparkleInterval:sender
 {
     sparkleTouched = YES;
-    oldSparkleInterval = [SUD integerForKey: SparkleIntervalKey];
+
     
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:SparkleIntervalKey] forKey:SparkleIntervalKey];
@@ -1889,13 +1894,13 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
     
     switch ([[sender selectedCell] tag])
     {
-        case 1: [[SUUpdater sharedUpdater] setUpdateCheckInterval: 86400];
+        case 1: [[TSSparkleController sharedUpdater] setUpdateCheckInterval: 86400];
                 break;
             
-        case 2: [[SUUpdater sharedUpdater] setUpdateCheckInterval: 604800];
+        case 2: [[TSSparkleController sharedUpdater] setUpdateCheckInterval: 604800];
             break;
             
-        case 3: [[SUUpdater sharedUpdater] setUpdateCheckInterval: 2629800];
+        case 3: [[TSSparkleController sharedUpdater] setUpdateCheckInterval: 2629800];
             break;
     }
  
@@ -1917,9 +1922,7 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:NewToolbarIconsKey] forKey:NewToolbarIconsKey];
     [SUD setBool:theValue forKey:NewToolbarIconsKey];
     
-#ifdef USESPARKLE
-    [[SUUpdater sharedUpdater] setAutomaticallyChecksForUpdates: theValue ];
-#endif
+// Corrected by Terada: toolbar appearance must not change automatic updates.
     
 }
 
@@ -2322,19 +2325,9 @@ A tag of 0 means "no", a tag of 1 means "yes".
     
 #ifdef USESPARKLE
     if (sparkleTouched) {
-        [[SUUpdater sharedUpdater] setAutomaticallyChecksForUpdates: oldSparkleAutomaticUpdate];
+        [[TSSparkleController sharedUpdater] setAutomaticallyChecksForUpdates: oldSparkleAutomaticUpdate];
         
-        switch (oldSparkleInterval)
-        {
-            case 1: [[SUUpdater sharedUpdater] setUpdateCheckInterval: 86400];
-                break;
-                
-            case 2: [[SUUpdater sharedUpdater] setUpdateCheckInterval: 604800];
-                break;
-                
-            case 3: [[SUUpdater sharedUpdater] setUpdateCheckInterval: 2629800];
-                break;
-        }
+        [[TSSparkleController sharedUpdater] setUpdateCheckInterval:oldSparkleInterval];
     }
 #endif
    
@@ -2504,6 +2497,16 @@ This method retrieves the application preferences from the defaults object and s
     [_sparkleAutomaticButton setState: [defaults boolForKey: SparkleAutomaticUpdateKey]];
     [_sparkleIntervalMatrix setEnabled: [defaults boolForKey: SparkleAutomaticUpdateKey]];
     [_sparkleIntervalMatrix selectCellWithTag: [defaults integerForKey: SparkleIntervalKey]];
+#ifdef USESPARKLE
+    // Added by Terada: reflect Sparkle's actual settings, including its consent dialog.
+    if (defaults == SUD && [TSSparkleController sharedUpdater] != nil) {
+        SPUUpdater *updater = [TSSparkleController sharedUpdater];
+        [_sparkleAutomaticButton setState:updater.automaticallyChecksForUpdates];
+        [_sparkleIntervalMatrix setEnabled:updater.automaticallyChecksForUpdates];
+        NSTimeInterval interval = updater.updateCheckInterval;
+        [_sparkleIntervalMatrix selectCellWithTag:(interval < 604800 ? 1 : (interval < 2629800 ? 2 : 3))];
+    }
+#endif
     [_useNewToolbarIconsButton setState: [defaults boolForKey: NewToolbarIconsKey]];
     [_consoleMatrix selectCellWithTag: [defaults integerForKey: ConsoleBehaviorKey]];
     [_spellCheckCommands setState:[defaults boolForKey:TurnOffCommandSpellCheckKey]];

@@ -384,6 +384,7 @@
 		52B13E5208A8183B00756E5E /* MacroEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E5108A8183B00756E5E /* MacroEditor.nib */; };
 		52B13E5408A8183B00756E5E /* matrixpanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E5308A8183B00756E5E /* matrixpanel.nib */; };
 		52E4BF8D08CA74C300726E11 /* TeXShop in Resources */ = {isa = PBXBuildFile; fileRef = 52E4BF4408CA74C300726E11 /* TeXShop */; };
+		EF5890000000000000000001 /* TSSparkleController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5890000000000000000002; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -1029,6 +1030,8 @@
 		F5ECC3160214673901DF2474 /* texicon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = texicon.tiff; sourceTree = "<group>"; };
 		F5ECC3200214678B01DF2474 /* TSToolbarController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSToolbarController.h; sourceTree = "<group>"; };
 		F5ECC3210214678B01DF2474 /* TSToolbarController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSToolbarController.m; sourceTree = "<group>"; };
+		EF5890000000000000000002 /* TSSparkleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSparkleController.m; sourceTree = "<group>"; };
+		EF5890000000000000000003 /* TSSparkleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSparkleController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1195,6 +1198,8 @@
 			isa = PBXGroup;
 			children = (
 				4068429E0405A20000000009 /* UseMitsu.h */,
+				EF5890000000000000000002 /* TSSparkleController.m */,
+				EF5890000000000000000003 /* TSSparkleController.h */,
 				40A33124293BDE8D00F82117 /* UseSparkle.h */,
 				4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */,
 				4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */,
@@ -2009,6 +2014,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF5890000000000000000001 /* TSSparkleController.m in Sources */,
 				407881790519249A006979EA /* main.m in Sources */,
 				4078817C0519249A006979EA /* TSConsoleWindow.m in Sources */,
 				4078817D0519249A006979EA /* TSTextEditorWindow.m in Sources */,

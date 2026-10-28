@@ -6,7 +6,7 @@ At Richard's invitation, Yusuke Terada is taking over its development and mainte
 
 ## Release status
 
-This repository contains **TeXShop 5.59 development sources**, based on TeXShop 5.58 Golden Gate. A signed application release from the new maintainership is not available here yet. The source tree still uses the inherited update feed; the version bump does not constitute a published application release.
+This repository contains **TeXShop 5.59 development sources**, based on TeXShop 5.58 Golden Gate. A signed application release from the new maintainership is not available here yet. The source tree uses the new TeXShopProject update feed; the version bump does not constitute a published application release.
 
 Application downloads and supported macOS versions will be announced with the first release. TeXShop also requires a separate TeX distribution to typeset documents; see [MacTeX](https://www.tug.org/mactex/).
 
@@ -29,17 +29,6 @@ xcodebuild -project TeXShop.xcodeproj -scheme TeXShop \
 The current main application target declares macOS 14.6 as its deployment target. This build setting is not a tested release support matrix. Review the project settings against the Xcode SDK you use.
 
 Tests and investigation notes are in `Tests/` and `Documentation/`. Some scripts reflect the original development environment. Launching the full application can update `~/Library/TeXShop`; use a separate test account or protect your existing configuration before testing development builds.
-
-## Website
-
-The static English/Japanese website is in `website/`. The entry page selects a language from browser preferences; `en.html` and `ja.html` remain explicit, stable language choices. The page follows the system light/dark appearance. Preview it without publishing:
-
-```sh
-python3 Scripts/build-website.py --output /tmp/texshop-site-preview
-python3 -m http.server 8000 --bind 127.0.0.1 --directory /tmp/texshop-site-preview
-```
-
-Use a new output directory on each build. The optional `--repository OWNER/REPOSITORY` argument adds GitHub links. The GitHub Pages workflow is manual-only and must not be run before publication approval.
 
 ## Reporting bugs
 

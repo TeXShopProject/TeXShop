@@ -3,3 +3,7 @@ build/
 DerivedData/
 xcuserdata/
 *.xcuserstate
+
+# Local Sparkle signing secrets (never commit private keys).
+TeXShop-private-keys/
+*-sparkle-private-key*

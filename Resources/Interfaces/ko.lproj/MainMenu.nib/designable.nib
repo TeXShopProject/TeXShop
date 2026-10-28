@@ -1432,7 +1432,7 @@
                 <outlet property="styleFileResult" destination="292" id="307"/>
             </connections>
         </customObject>
-        <customObject id="260" customClass="SUUpdater"/>
+        <customObject id="260" customClass="TSSparkleController"/>
         <window title="Texdoc" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="261" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
