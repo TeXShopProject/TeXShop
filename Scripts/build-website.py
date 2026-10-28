@@ -26,6 +26,7 @@ for name in ('index.html', 'en.html', 'ja.html'):
         source, issues = ('ソースコード', '不具合報告') if japanese else ('Source code', 'Report an issue')
         links = f'<a href="{url}">{source}</a><a href="{url}/issues">{issues}</a>'
     page = args.output / name
-    page.write_text(page.read_text().replace('@@REPOSITORY_LINKS@@', links))
+    contact = ('https://github.com/' + html.escape(args.repository, quote=True)) if args.repository else '#development'
+    page.write_text(page.read_text().replace('@@REPOSITORY_LINKS@@', links).replace('@@CONTACT_URL@@', contact))
 (args.output / '.nojekyll').touch()
 print(args.output.resolve())
