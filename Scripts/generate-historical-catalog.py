@@ -86,6 +86,6 @@ for ja in (False,True):
  assert special, 'Missing 5.58 in selected older releases'
  rows.insert(0,special.group(0))
  back='<a href="downloads-ja.html">‹ リリース履歴</a>' if ja else '<a href="downloads.html">‹ Releases</a>'
- main=f'<main class="archive-content downloads"><nav aria-label="{title}"><p>{back}</p></nav><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
+ main=f'<main class="archive-content downloads"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)
 print('Generated',len(rows),'rows per page')

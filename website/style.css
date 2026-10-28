@@ -75,3 +75,5 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 .icon-history{border-top:1px solid var(--line);margin-top:38px;padding-top:24px}.icon-history h2{margin-bottom:20px}.icon-history-list{display:grid;grid-template-columns:repeat(5,minmax(68px,1fr));gap:12px;text-align:center;overflow-x:auto}.icon-history-list figure{margin:0;max-width:none}.icon-history-list img{display:block;width:96px;height:auto;aspect-ratio:1;max-width:100%;object-fit:contain;margin:0 auto;box-shadow:none}.icon-history-list figcaption{margin:8px 0 0;color:var(--muted);font-size:14px;white-space:nowrap}@media(max-width:500px){.icon-history-list{gap:8px}.icon-history-list figcaption{font-size:12px}}
 
 .release-icon-placeholder{width:48px;height:48px;flex-shrink:0}
+
+.release-back{justify-content:flex-start;margin-bottom:18px}.release-back a{color:var(--link)}
