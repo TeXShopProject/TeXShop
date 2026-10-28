@@ -1,0 +1,10 @@
+{
+  "version": "5.59",
+  "kind": "source",
+  "filename": "TeXShop-5.59-source.zip",
+  "source_url": "https://github.com/TeXShopProject/TeXShop/archive/refs/tags/v.5.59.zip",
+  "source_commit": "5c725648016cb5231081ee0ade731675fcae1f04",
+  "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59-source.zip",
+  "sha256": "ece179ef359cf3790d05eeae4f1c15f31d7de577fab7392c1f174cec4439c85d",
+  "bytes": 179517823
+}

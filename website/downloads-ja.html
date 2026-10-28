@@ -9,6 +9,7 @@
     <link rel="alternate" hreflang="ja" href="downloads-ja.html">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="assets/texshop.png">
+<script src="downloads.js" defer></script>
 </head>
 
 <body class="japanese-typesetting">
@@ -26,47 +27,112 @@
                 href="https://pages.uoregon.edu/koch/texshop/">旧サイト</a></nav>
     </header>
     <main class="archive-content downloads">
-        <h1>リリース履歴</h1>
-        <p>TeXShop 5.59以降の各バージョンをダウンロードできます。</p>
-        <table class="download-table">
-            <thead>
-                <tr>
-                    <th>バージョン</th>
-                    <th>リリース日</th>
-                    <th>対応環境</th>
-                    <th>変更履歴</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td data-label="バージョン"><a class="version-download"
-                            href="https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59.zip"><img
-                                src="assets/texshop.png" width="56" height="56" alt=""><span>TeXShop 5.59 <svg
-                                    aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
-                                </svg><small>ZIP · Apple Silicon / Intel</small></span></a></td>
-                    <td class="release-date" data-label="リリース日"><time datetime="2026-10-28">2026年10月28日</time></td>
-                    <td data-label="動作環境">macOS 14.6以降</td>
-                    <td data-label="変更履歴"><a href="release-notes.html#v5.59" lang="en">English</a> / <a href="release-notes-ja.html#v5.59"
-                            lang="ja">日本語</a></td>
-                </tr>
-            </tbody>
-        </table>
-
+<h1>リリース履歴</h1>
+<p>TeXShopの各バージョンをダウンロードできます。</p>
+<table class="download-table">
+<thead><tr><th scope="col">バージョン</th><th scope="col">対応OS</th><th scope="col">対応CPU</th><th scope="col">App</th><th scope="col">Source</th><th scope="col">変更履歴</th></tr></thead>
+<tbody>
+<tr>
+  <td data-label="バージョン"><div class="release-version"><img src="assets/texshop.png" width="48" height="48" alt=""><div><strong>TeXShop 5.59</strong><small><time datetime="2026-10-28">2026年10月28日</time></small></div></div></td>
+  <td data-label="対応OS">macOS 14.6 Sonoma以降</td>
+  <td data-label="対応CPU">Apple Silicon<br>Intel</td>
+  <td data-label="App"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59.zip" aria-label="TeXShop 5.59 App ZIP">App</a>
+  <button class="file-button hash-copy" type="button" data-sha256="6dae5aeb36dde98972744d67080a51cefdca60ea5d051dd1a6641edf7b0f4e9e" title="6dae5aeb36dde98972744d67080a51cefdca60ea5d051dd1a6641edf7b0f4e9e" aria-label="TeXShop 5.59 AppのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+  <td data-label="Source"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59-source.zip" aria-label="TeXShop 5.59 Source ZIP">Source</a>
+  <button class="file-button hash-copy" type="button" data-sha256="ece179ef359cf3790d05eeae4f1c15f31d7de577fab7392c1f174cec4439c85d" title="ece179ef359cf3790d05eeae4f1c15f31d7de577fab7392c1f174cec4439c85d" aria-label="TeXShop 5.59 SourceのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+  <td data-label="変更履歴"><a href="release-notes.html#v5.59" lang="en">English</a><br><a href="release-notes-ja.html#v5.59" lang="ja">日本語</a></td>
+</tr>
+</tbody>
+</table>
 <section id="older-versions" aria-labelledby="older-versions-title">
 <h2 id="older-versions-title">旧バージョン</h2>
-<p>旧バージョンのアプリとソースコードをZIP形式でダウンロードできます。アプリは<a href="https://pages.uoregon.edu/koch/texshop/">Richard Koch先生の旧サイト</a>で配布されていたものを、そのまま保存しています。</p>
-<table class="download-table legacy-downloads"><thead><tr><th scope="col">バージョン</th><th scope="col">対応環境</th><th scope="col">アプリ</th><th scope="col">ソースコード</th></tr></thead><tbody>
-<tr><td data-label="バージョン">TeXShop 5.58（Golden Gate版）</td><td data-label="対応環境">macOS 14.6 Sonoma以降<small>Apple Silicon / Intel</small></td><td data-label="アプリ"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG.zip">アプリ <span class="zip-label">ZIP</span></a></td><td data-label="ソースコード"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG-Source.zip">ソース <span class="zip-label">ZIP</span></a></td></tr>
-<tr><td data-label="バージョン">TeXShop 5.57（Tahoe版）</td><td data-label="対応環境">macOS 10.13 High Sierra以降<small>Apple Silicon / Intel</small><small>Apple SiliconはmacOS 11以降</small><small>macOS 26.1 Tahoe以降推奨。</small></td><td data-label="アプリ"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshop557-tahoe.zip">アプリ <span class="zip-label">ZIP</span></a></td><td data-label="ソースコード"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshopsource557-tahoe.zip">ソース <span class="zip-label">ZIP</span></a></td></tr>
-<tr><td data-label="バージョン">TeXShop 5.57</td><td data-label="対応環境">macOS 10.13 High Sierra以降<small>Apple Silicon / Intel</small><small>Apple SiliconはmacOS 11以降</small></td><td data-label="アプリ"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.57.zip">アプリ <span class="zip-label">ZIP</span></a></td><td data-label="ソースコード"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.57-source.zip">ソース <span class="zip-label">ZIP</span></a></td></tr>
-<tr><td data-label="バージョン">TeXShop 4.79</td><td data-label="対応環境">macOS 10.12 Sierra以降<small>Apple Silicon / Intel</small><small>Apple SiliconはmacOS 11以降</small></td><td data-label="アプリ"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.79.zip">アプリ <span class="zip-label">ZIP</span></a></td><td data-label="ソースコード"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.79-source.zip">ソース <span class="zip-label">ZIP</span></a></td></tr>
-<tr><td data-label="バージョン">TeXShop 4.44</td><td data-label="対応環境">OS X 10.10 Yosemite以降<small>Intel （64ビット）</small></td><td data-label="アプリ"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.44.zip">アプリ <span class="zip-label">ZIP</span></a></td><td data-label="ソースコード"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.44-source.zip">ソース <span class="zip-label">ZIP</span></a></td></tr>
-<tr><td data-label="バージョン">TeXShop 2.47</td><td data-label="対応環境">Mac OS X 10.4 Tiger以降<small>PowerPC / Intel （32ビット）</small><small>Mac OS X 10.5以降推奨。macOS 10.15 Catalina以降は非対応。</small></td><td data-label="アプリ"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-2.47.zip">アプリ <span class="zip-label">ZIP</span></a></td><td data-label="ソースコード"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-2.47-source.zip">ソース <span class="zip-label">ZIP</span></a></td></tr>
-</tbody></table>
-<p class="archive-download-note">4.79と4.44のソースは、<a href="https://github.com/TeXShop/TeXShop">Max Horn氏のTeXShopリポジトリ</a>の対応するタグから収録しています。</p>
-<p class="archive-download-note"><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/historical-downloads-SHA256SUMS.txt">SHA-256</a></p>
+<table class="download-table legacy-downloads">
+<thead><tr><th scope="col">バージョン</th><th scope="col">対応OS</th><th scope="col">対応CPU</th><th scope="col">App</th><th scope="col">Source</th></tr></thead>
+<tbody>
+<tr>
+  <td data-label="バージョン">TeXShop 5.58<small class="release-variant">Golden Gate版</small></td>
+  <td data-label="対応OS">macOS 14.6 Sonoma以降</td>
+  <td data-label="対応CPU">Apple Silicon<br>Intel</td>
+  <td data-label="App"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG.zip" aria-label="TeXShop 5.58 Golden Gate版 App ZIP">App</a>
+  <button class="file-button hash-copy" type="button" data-sha256="a4c21d83e5db24bdf91b606f087478b8b02f9550fabec3dc6ed02fa18efd7214" title="a4c21d83e5db24bdf91b606f087478b8b02f9550fabec3dc6ed02fa18efd7214" aria-label="TeXShop 5.58 Golden Gate版 AppのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+  <td data-label="Source"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG-Source.zip" aria-label="TeXShop 5.58 Golden Gate版 Source ZIP">Source</a>
+  <button class="file-button hash-copy" type="button" data-sha256="1ba1c36b12244070e8cf0a365dfa61d98219b897f66f2a7680c130431ac5c32d" title="1ba1c36b12244070e8cf0a365dfa61d98219b897f66f2a7680c130431ac5c32d" aria-label="TeXShop 5.58 Golden Gate版 SourceのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+</tr>
+<tr>
+  <td data-label="バージョン">TeXShop 5.57<small class="release-variant">Tahoe版</small></td>
+  <td data-label="対応OS">macOS 10.13 High Sierra以降<small>Apple SiliconはmacOS 11以降</small><small>Tahoe 26.1以降推奨</small></td>
+  <td data-label="対応CPU">Apple Silicon<br>Intel</td>
+  <td data-label="App"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshop557-tahoe.zip" aria-label="TeXShop 5.57 Tahoe版 App ZIP">App</a>
+  <button class="file-button hash-copy" type="button" data-sha256="a8b42f729c90f660b5be5a33de0c1b0f5a73bb2e45c95cb78407b709b4323b79" title="a8b42f729c90f660b5be5a33de0c1b0f5a73bb2e45c95cb78407b709b4323b79" aria-label="TeXShop 5.57 Tahoe版 AppのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+  <td data-label="Source"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshopsource557-tahoe.zip" aria-label="TeXShop 5.57 Tahoe版 Source ZIP">Source</a>
+  <button class="file-button hash-copy" type="button" data-sha256="9f8538d11ab8adde4d386243c9e0cb574312e5d8fe9118988fea224ba61c0adc" title="9f8538d11ab8adde4d386243c9e0cb574312e5d8fe9118988fea224ba61c0adc" aria-label="TeXShop 5.57 Tahoe版 SourceのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+</tr>
+<tr>
+  <td data-label="バージョン">TeXShop 5.57</td>
+  <td data-label="対応OS">macOS 10.13 High Sierra以降<small>Apple SiliconはmacOS 11以降</small></td>
+  <td data-label="対応CPU">Apple Silicon<br>Intel</td>
+  <td data-label="App"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.57.zip" aria-label="TeXShop 5.57 App ZIP">App</a>
+  <button class="file-button hash-copy" type="button" data-sha256="08aa26a5dfacfa67bacedbc73d57fe07b64dcfe49e9fab34a3be1dc5372d20d4" title="08aa26a5dfacfa67bacedbc73d57fe07b64dcfe49e9fab34a3be1dc5372d20d4" aria-label="TeXShop 5.57 AppのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+  <td data-label="Source"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.57-source.zip" aria-label="TeXShop 5.57 Source ZIP">Source</a>
+  <button class="file-button hash-copy" type="button" data-sha256="37f6a9ab5f5ef78eee31243d856fd736e6135b0464a755c6d47daf44ff0d7cf6" title="37f6a9ab5f5ef78eee31243d856fd736e6135b0464a755c6d47daf44ff0d7cf6" aria-label="TeXShop 5.57 SourceのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+</tr>
+<tr>
+  <td data-label="バージョン">TeXShop 4.79</td>
+  <td data-label="対応OS">macOS 10.12 Sierra以降<small>Apple SiliconはmacOS 11以降</small></td>
+  <td data-label="対応CPU">Apple Silicon<br>Intel</td>
+  <td data-label="App"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.79.zip" aria-label="TeXShop 4.79 App ZIP">App</a>
+  <button class="file-button hash-copy" type="button" data-sha256="4630172a56cbe64334bb740a5236aaed001f494933c74e9a5b55bbc6cc518c76" title="4630172a56cbe64334bb740a5236aaed001f494933c74e9a5b55bbc6cc518c76" aria-label="TeXShop 4.79 AppのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+  <td data-label="Source"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.79-source.zip" aria-label="TeXShop 4.79 Source ZIP">Source</a>
+  <button class="file-button hash-copy" type="button" data-sha256="02e0933abb4abe86b7021a17b815f05de9310e2153725fb72716dc11b14fdb1c" title="02e0933abb4abe86b7021a17b815f05de9310e2153725fb72716dc11b14fdb1c" aria-label="TeXShop 4.79 SourceのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+</tr>
+<tr>
+  <td data-label="バージョン">TeXShop 4.44</td>
+  <td data-label="対応OS">OS X 10.10 Yosemite以降</td>
+  <td data-label="対応CPU">Intel（64ビット）</td>
+  <td data-label="App"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.44.zip" aria-label="TeXShop 4.44 App ZIP">App</a>
+  <button class="file-button hash-copy" type="button" data-sha256="67f8f1ea196209a65dd996db875e19307f947e697a5b70dad0571ed88f4fd0ad" title="67f8f1ea196209a65dd996db875e19307f947e697a5b70dad0571ed88f4fd0ad" aria-label="TeXShop 4.44 AppのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+  <td data-label="Source"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.44-source.zip" aria-label="TeXShop 4.44 Source ZIP">Source</a>
+  <button class="file-button hash-copy" type="button" data-sha256="d2a8a978e7783eb1721024f7c8737313ccba9743db3f706843707e3bbd4bff86" title="d2a8a978e7783eb1721024f7c8737313ccba9743db3f706843707e3bbd4bff86" aria-label="TeXShop 4.44 SourceのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+</tr>
+<tr>
+  <td data-label="バージョン">TeXShop 2.47</td>
+  <td data-label="対応OS">Mac OS X 10.4 Tiger～macOS 10.14 Mojave</td>
+  <td data-label="対応CPU">PowerPC<br>Intel（32ビット）</td>
+  <td data-label="App"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-2.47.zip" aria-label="TeXShop 2.47 App ZIP">App</a>
+  <button class="file-button hash-copy" type="button" data-sha256="d77b705ad64fa1179c5fad7b7abb2c6b6088cd73d94048839c3ab18457ce3a0a" title="d77b705ad64fa1179c5fad7b7abb2c6b6088cd73d94048839c3ab18457ce3a0a" aria-label="TeXShop 2.47 AppのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+  <td data-label="Source"><div class="download-actions">
+  <a class="file-button" href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-2.47-source.zip" aria-label="TeXShop 2.47 Source ZIP">Source</a>
+  <button class="file-button hash-copy" type="button" data-sha256="cd8f9fd827d9b080423da0f1d9664bdbfdfebb4525bbb7542ee54c44e2f9ce19" title="cd8f9fd827d9b080423da0f1d9664bdbfdfebb4525bbb7542ee54c44e2f9ce19" aria-label="TeXShop 2.47 SourceのSHA-256をコピー" disabled><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span></button>
+</div></td>
+</tr>
+</tbody>
+</table>
 </section>
 </main>
     <footer>
@@ -74,6 +140,7 @@
         <p class="footer-links"><a href="acknowledgments-ja.html">謝辞</a><span aria-hidden="true"> · </span><a
                 href="archive/index-ja.html">History Archive</a></p>
     </footer>
+<div class="copy-toast" role="status" aria-live="polite" aria-atomic="true"></div>
 </body>
 
 </html>

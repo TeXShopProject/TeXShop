@@ -34,3 +34,7 @@ The English and Japanese Downloads pages list 5.58 (Golden Gate), 5.57 (Tahoe), 
 The minimum OS shown on Downloads follows the original distribution’s documentation and bundle requirements. Apple Silicon binaries require at least macOS 11. The Tahoe build has a minimum of 10.13 on Intel, but Koch recommends it for Tahoe; the page preserves that distinction. Version 2.47 contains PowerPC and 32-bit Intel code, so it cannot run on macOS 10.15 or later. The 5.58 Golden Gate archive is distributed by Koch as version 5.58, although its original Info.plist retains version 5.57; that metadata is preserved unchanged.
 
 Upload the ZIPs and `historical-downloads-SHA256SUMS.txt` only after publication approval. Keep `historical-downloads` marked as a pre-release and keep 5.59 as the latest release. The checksums file covers both the existing Tahoe archives and the additional legacy archives.
+
+## Download buttons and checksums
+
+Both Downloads pages show separate OS and CPU columns. Each App and Source button has its own SHA-256 copy button, using the verified values in the legacy manifest. Version 5.59 also has a source ZIP, downloaded unchanged from the `v.5.59` tag archive and intended for storage as `TeXShop-5.59-source.zip` in the existing 5.59 release. Its source commit, hash and size are recorded in `Documentation/Releases/5.59-source.json`. The signed application ZIP, existing SHA256SUMS asset and appcast are unchanged.
