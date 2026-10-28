@@ -5582,8 +5582,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.33/texshopsource-3.33.zip",
         "sha256": "b9cff52a8ea1c34ba444546d40c62030e3fe9b11b8ecf91119a50c266387c905",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.33/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.33/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -5598,8 +5600,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.32/texshopsource-3.32.zip",
         "sha256": "40f60224f253227b310ca7f947e1579223f0bfe71b6f599c10e27ea634a20499",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.32/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.32/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -5614,8 +5618,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.31/texshopsource-3.31.zip",
         "sha256": "05a0ff13c2a34525b4994497d888433cafc6107ad898ab6783c6be1b936ffc74",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.31/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.31/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -5630,8 +5636,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.30/texshopsource-3.30.zip",
         "sha256": "9cfc776f99080290836041e074b3d4bfa4818a20ec73ab386f797e5927f1dc4a",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.30/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.30/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -5646,8 +5654,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.29/texshopsource-3.29.zip",
         "sha256": "20f3772b2f8796e0342ac67b7a02391ca2359bdb354e00d584a24b240f3358ae",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.29/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.29/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -5662,8 +5672,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.28/texshopsource-3.28.zip",
         "sha256": "e1d2c44658b782f4532ebdbb78b48ee94c1f3550f6bd377fb1bc5ab89f9d976c",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.28/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.28/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -5678,8 +5690,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.27/texshopsource-3.27.zip",
         "sha256": "5b3855d0f62f3ef6681f0f9e74b2dab6bd93ff7023a26b41f5ac2b6fc8ffc22e",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.27/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.27/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -5904,8 +5918,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.20/texshopsource-3.20.zip",
         "sha256": "59d60271c92fdb3d012e9928c4634d4ff17fac02d968b58cab89900cfbd1fb7d",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.20/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.20/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -5920,8 +5936,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.19/texshopsource-3.19.zip",
         "sha256": "5c4db702fab01f16c9c5809e88264c6c1907fc3896007739cbb8d90d4c715843",
         "status": "ok",
-        "icon_sha256": "9bb58527d5150c35bd3ead90adc5828d1a4ce11ee3dd181c8c7cbed55af606f5",
-        "icon_inferred_from": "v3.38"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.19/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.19/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },
@@ -6121,8 +6139,10 @@
         "url": "https://github.com/TeXShop/TeXShop/releases/download/v3.13/texshopsource-3.13.zip",
         "sha256": "6a0fe62be5a97d7007d6bf220976bf578a565b025205de997ccb55693b835629",
         "status": "ok",
-        "icon_sha256": "50e6e9ba5badb2989777061f4aa791a264278e9fde9ce2f3820d5ac8aea17aa9",
-        "icon_inferred_from": "v3.11"
+        "icon_png_sha256": "9bcb03aa8027b25abfd51f87f7cf9c33a2e6077fa738cf6708f125366bef769a",
+        "icon_source_path": "texshop-3.13/Icons.iconset/icon_128x128.png",
+        "icon_project_path": "texshop-3.13/TeXShop.xcodeproj/project.pbxproj",
+        "icon_bundle_name": "Icons"
       }
     ]
   },

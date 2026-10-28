@@ -49,7 +49,7 @@ for ja in (False,True):
  for r in meta:
   if not r['assets']:continue
   app=next((a for a in r['assets'] if a['name'].lower().startswith('texshop-')),None);source=next((a for a in r['assets'] if a['name'].lower().startswith('texshopsource-')),None)
-  iconasset=app or source or {}; icon=None if iconasset.get('icon_inferred_from') else iconasset.get('icon_sha256'); iconpath='assets/release-icons/history/'+icon+'.png' if icon and (root/'assets/release-icons/history'/f'{icon}.png').exists() else None
+  iconasset=app or source or {}; icon=iconasset.get('icon_png_sha256') or (None if iconasset.get('icon_inferred_from') else iconasset.get('icon_sha256')); iconpath='assets/release-icons/history/'+icon+'.png' if icon and (root/'assets/release-icons/history'/f'{icon}.png').exists() else None
   img=f'<img src="{iconpath}" width="48" height="48" alt="" loading="lazy">' if iconpath else '<span class="release-icon-placeholder" aria-hidden="true"></span>'
   requirement_app=dict(app) if app else None
   project=projects.get(r['tag'],{})
@@ -85,6 +85,7 @@ for ja in (False,True):
  special=re.search(r'<tr>\s*<td data-label="[^"]+"><div class="release-version">(?:(?!</tr>).)*?TeXShop 5\.58(?:(?!</tr>).)*?</tr>',oldmain,re.S)
  assert special, 'Missing 5.58 in selected older releases'
  rows.insert(0,special.group(0))
- main=f'<main class="archive-content downloads"><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
+ back='<a href="downloads-ja.html">‹ リリース履歴</a>' if ja else '<a href="downloads.html">‹ Releases</a>'
+ main=f'<main class="archive-content downloads"><nav aria-label="{title}"><p>{back}</p></nav><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)
 print('Generated',len(rows),'rows per page')
