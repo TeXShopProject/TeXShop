@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+    <li><a href="obtaining.html">Obtaining</a></li>
+    <li><a href="installing.html">Installing</a></li>
+    <li id="current"><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li><a href="history.html">History</a></li>
+<li><a href="collaborators.html">Collaborators</a></li>
+<li><a href="intel-arm.html">Intel and Arm</a></li>
+<li><a href="arc.html">ARC</a></li>
+<li id="mcurrent"><a href="64bits.html">64 Bits</a></li>
+<li><a href="fragilebaseclasses.html">Fragile Base Classes</a></li>
+<li><a href="autosave.html">Automatic Saving</a></li>
+
+<!--
+<li><a href="texshop-64/texshop.zip">TeXShop 3 for Lion</a></li>
+<li><a href="texshop-64/texshopsource.zip">Lion Source</a></li>
+-->
+</ul>
+</div>
+
+<!-- main content -->
+<div id="main">
+
+
+<h3>64 Bits</h3>
+
+<p> The PowerPC G5 was introduced to great fanfare at WWDC 2003. It is the last PowerPC processor before Apple switched to Intel, and it was a 64 bit processor. However, Apple only allowed programs to run in 64 bits if they made no calls to the graphic libraries, so TeXShop and almost all programs continued to run in 32 bits.
+
+<p> The initial Intel processors were 32-bit chips, but after a few months, Apple switched to 64-bit Intel chips.
+MacOS 10.5, Leopard, and macOS 10.6, Snow Leopard, could run on both 32 bit and 64 bit processors. But 
+macOS 10.7, Lion, and higher run only on 64 bit Intel chips. Around this time, Apple began seriously promoting 64 bit operation and giant WWDC banners proclaimed the slogan "64-bit Clean".
+
+<p> Apple provided a command line program which would inspect Cocoa source code, convert key portions to 64 operation, and mark questionable sections for direct programmer inspection. One summer around this time, I painfully converted TeXShop to 64 bit operation. That is long in the past, but some of those "64 bit caution signs" from the conversion script can still be found in the TeXShop code.
+So from Lion on, TeXShop runs in 64 bits, using either Intel or Arm processors. 
+
+<p> By the way, 32 bit Arm processors exist, but Apple never used them in the Macintosh. When Apple made the transition to Arm, we had one minor problem converting TeX Live binaries to Arm. One library in the distribution provided assembly code to speed up a single routine if it was being compiled on Arm, but the assembly code was 32-bit only.
+We had to comment out that "speedup" because Apple's Arm machines were too advanced for it.
+
+
+<!--
+<h4>Scroll Bars</h4>
+
+The comments in this section apply to all programs running in Lion, whether or not they have been recompiled for Lion.
+
+<p> There are two kinds of scroll bars in Lion, called "legacy scrollbars" and "overlay scroll bars". Legacy scroll bars are the old scroll bars from earlier versions of OS X. Their color in Lion is more subdued, and the arrow buttons on scroll bars have disappeared, but can be simulated by holding down the option key while scrolling. These changes are in line with Apple's goal of emphasizing content and deemphasizing tools used to manipulate content.
+
+<p> Overlay scroll bars come from the iPhone and iPad. When a window has overlay scroll bars, its contents fill the entire window to the edges. To scroll, directly push the window's contents. When that happens, scroll bars will temporarily appear on top of the contents, and it is possible to move the mouse to those bars
+and scroll in the old way. Directly move the contents for small moves, but use the bars when you want to rapidly get to another part of the document.
+
+<p>In overlay scrolling, scroll bars do not appear if you hover over the edge of the window. That wouldn't make sense because  the contents goes to the edge and you might just want to click on those contents. Scroll bars only appear if you start directly scrolling the window's contents.
+
+<p>Suppose TeXShop is running on a desktop machine with a fairly old mouse. Then pushing on the contents of the source window will select lines of text rather than scrolling the contents, so overlay scroll bars won't work in the source window. In the case of the preview window, directly scrolling the contents works if the hand tool is selected, but doesn't work if the text tool or magnify tool is selected. So in either case, overlay scroll bars won't work.
+
+<p> On the other hand, if TeXShop is running on a portable with a gesture-aware trackpad, then overlay scroll bars will work. For instance, swiping with one finger selects text in the source window, but swiping with two fingers scrolls. 
+
+<p> Scrollbar behavior on Lion is determined by the General Control Pane in Apple preferences. Users can select to always use legacy scrollbars, or always use virtual scroll bars. But the default choice is to let Apple choose based on your input devices. If you have a desktop machine with an old mouse, you get legacy scroll bars. If you have a modern portable, you get overlay scroll bars. If you have a trackpad, or a Mighty Mouse, or a mouse with a scroll wheel, I don't know. Luckily, Apple decides.
+
+<p> At WWDC I had a portable, and I noticed the TeXShop used virtual scroll bars. Later back home, I ran Lion on a desktop machine and saw legacy
+scroll bars, so I thought ``Apple changed their mind for the golden master.'' It wasn't until I watched a video from a session I missed at WWDC that
+I understood what was happening. Not too swift on the uptake.
+
+<p> 
+-->
+ </div>
+
+
+</body>
+</html>

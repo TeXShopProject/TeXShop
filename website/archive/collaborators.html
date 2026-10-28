@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Collaborators — TeXShop</title><link rel="stylesheet" href="../style.css"><link rel="icon" href="../assets/texshop.png"></head><body><header><nav><a href="../en.html">TeXShop</a><a href="https://pages.uoregon.edu/koch/texshop/">Previous website</a><a href="../acknowledgments.html">Acknowledgments</a><a href="../archive/index.html">History Archive</a></nav></header><main class="archive-content"><h1>Collaborators</h1><p class="archive-notice">Archived from Richard Koch’s TeXShop website on October 28, 2026. Original wording is preserved; version information, advice, contact details, and external links may be out of date. <a href="https://pages.uoregon.edu/koch/texshop/collaborators.html">Original page</a> · <a href="sources/collaborators.html.txt">Original HTML</a></p><p class="archive-nav"><a href="history.html">History</a> · <a href="collaborators.html">Collaborators</a> · <a href="intel-arm.html">Intel and Arm</a> · <a href="arc.html">ARC</a> · <a href="64bits.html">64 Bits</a> · <a href="fragilebaseclasses.html">Fragile Base Classes</a> · <a href="autosave.html">Automatic Saving</a> · <a href="anniversary.html">Original Version and Anniversaries</a> · <a href="changes_3.html">Changes in Versions 3–5</a> · <a href="changes_2.html">Changes in Version 2</a></p><article class="legacy" lang="en">
+<h3 id="section-1">Collaborators</h3>
+<p> As soon as the TeXShop source code was released on the internet, collaborators miraculously appeared from across the world. I have never met most of them; I wouldn't recognize them in a crowd and don't know how they make a living. These collaborators are listed under the "Extras" tab in these web pages, but the listing is misleading because a major contribution may receive only a single line. 
+
+<p> For example, consider Mitsuhiro Shishikura. He contributed essential code for the Preview Window before Apple released PDF Kit. So early versions of TeXShop supported Single Page Mode, Continuous Page Mode, Double Page Mode, a magnifying glass, and other essential features because of his work. Much of this code is no longer present because I switched to PDF Kit when Apple finally introduced it. The switch was easy because Shishikura's design was very close to Apple's eventual design. I switched to PDF Kit not because it was better, but because designing for the future requires sticking close to Apple's methods.
+
+<p> But that's not all. The entire Macro menu comes from Shishikura. This includes AppleScript support and the Macro Editor for easy creation and editing of macros. Incidentally, I have never been able to write AppleScript. I can copy what other people do, but as soon as I have to do something new, I go off the rails. Luckily, a second AppleScript expert appeared on the scene, Michael Sharpe. He wrote a help document about it, and almost all modern AppleScript additions come from him.
+
+<p> It has been years since I've corresponded with Shishikura, but a  recent active collaborator, Yusuke Terada, also lives in Japan. I  actually met him because he came to the 2016 TeX meeting at Stanford. He is young and energetic and gave a wonderful talk there. We met at an informal gathering the day before the conference began, and as we talked I glanced behind him and recognized another participant, so I said to Yusuke "do you know who that is?" It was Donald Knuth.
+
+<p> Two listed collaborators are "cleanup artists": Dirk Olmes and Max Horn. They stepped in as the code turned to spaghetti and reorganized the code, creating new source files, breaking out the code for Preferences into a separate module, etc. Working with them was frustrating because they had to break features to fix them. But TeXShop would never have survived long without their reconstruction.
+
+<p> Greg Landweber wrote the auto completion code, used often for easy entry of complicated items. For example, type
+<pre>
+   \begin{e
+</pre>
+and then push the Escape key. TeXShop will cycle through several different constructions that start this way, placing the cursor in an appropriate spot to finish the construction. Eventually TeXShop will cycle back to the initial entry.
+Here are two of these completions:
+<pre>
+   \begin{enumerate}
+   \item
+   
+   \end{enumerate}
+</pre>
+and
+<pre>
+   \begin{eqnarray}
+     
+   \end{eqnarray}
+ </pre>
+<p> TeXShop comes with a long list of such completions, and Landweber added a completion editor where the user can add their own items and revise existing items.
+Auto completion allows your typing to keep up with your brain. I have the opposite problem; my brain can't keep up with my fingers. So I don't use autocompletion and users watching me edit are puzzled that I don't use the standard features of my own program.
+
+<p> The current TeXShop icon was designed by Thiemo Gamma. He sent me the icon one day, neatly packaged for direct insertion into the code, and then vanished. We interacted for perhaps two days.  I'm proud of that simple and elegant icon because I tried to design an icon myself and discovered that icon design is impossibly difficult.
+
+<h3 id="section-2">Other Collaborations</h3>
+<p> Shortly after the initial TeXShop release, I was invited to speak at a TeX User Group Conference in Delaware. 
+I imagined perhaps 2000 users sitting in an auditorium, waiting to learn how to use TeX on the new macOS. I had learned that the TeX User Group, TUG, is housed in Portland, Oregon, only 100 miles north of my home in Eugene, where they produce TeX Live, publish the Tugboat Journal, and do a host of other tasks, and I visualized their office as an entire floor of one of the Portland skyscrapers. 
+
+<p>To my surprise, the conference had perhaps 50 participants, every one of them a speaker on the program, and there wasn't a user in sight. My communication with TUG had been with their secretary Robin Laakso, and next I learned that Robin does all the work and the TUG office is not a skyscraper floor but instead a spare room in her house.
+Eventually I gave my talk, which involved  installing TeX on the new macOS and then using TeXShop to typeset a document. In the middle of that installation, the Finder crashed, but I restarted it and continued. After the talk, a participant came up and said "I'm not interested in TeXShop, but I was really impressed that you could restart the Finder without rebooting."
+
+<p> Let me mention three important people in these early days on macOS. The first is Gerben Wierda, who created his own TeX distribution based on teTeX and wrote an installer which could install Ghostscript, that distribution, and several other useful TeX utilities. For several years his distribution was the standard one for macOS. The second is Wendy McKay, who worked for Jerrold Marsden at Cal Tech, is a Mac fanatic, and knows how to get things done. 
+I'll describe one of her accomplishments in the next paragraph. A third key player named Jonathan Kew had rewritten TeX for the original Macintosh so it could use unicode and thus typeset in all the languages of the world. In addition, his program could use standard Macintosh fonts. Shortly after the introduction of macOS, Kew revised his program so it worked on macOS, and then later so it worked on all platforms and became a standard engine in TeX Live.
+
+<p> Wendy believed we should make TeX on macOS as simple to use as possible. So she pushed our group to create an installer which would install and configure everything with one click without asking any questions. At the 2005 TUG Conference in North Carolina, she organized a lunch meeting for six Mac users, pointed to Jonathan Kew, and said "Jonathan, you make the install package." Kew had to leave the conference early the next morning, but we expected him to create an installer over the coming month. Instead, he stayed up all night and presented a finished installer to Wendy at 6:00 AM the next morning. Kew ate breakfast before departing, and at that breakfast he willed maintenance of the installer to me. 
+
+<p> Jumping way ahead, today MacTeX is maintained by Herbert Schulz in Chicago, Bruno Voisin in France, and me.
+Voisin is an expert in Ghostscript and responsible for all of the Ghostscript portions of MacTeX. Ghostscript has changed rapidly in the last few years and we would never have caught up with that development without Voisin's knowledge and influence. I met Schulz at a very early TUG conference and he has provided crucial TeXShop support ever since, answering user's questions and giving talks for users. The TeXShop support of John Collin's texmk script is entirely due to Schulz, as well as a host of other features.
+
+
+
+
+
+
+ 
+
+</p></p></p></p></p></p></p></p></p></p></p></p></p></article></main></body></html>

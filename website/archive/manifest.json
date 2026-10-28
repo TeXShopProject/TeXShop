@@ -1,0 +1,165 @@
+{
+  "snapshot_date": "2026-10-28",
+  "source_author": "Richard Koch and credited contributors",
+  "items": [
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/history.html",
+      "file": "history.html",
+      "original": "sources/history.html.txt",
+      "sha256": "27d1530b9de9ec3052c0fe2c9a7ac85603b8eaee218079eb7d0356a5f56e8e6f",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/collaborators.html",
+      "file": "collaborators.html",
+      "original": "sources/collaborators.html.txt",
+      "sha256": "7728a13c2acb30554bbfb41db415d649a90a014632aa947405b0531bebaa9aa7",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/intel-arm.html",
+      "file": "intel-arm.html",
+      "original": "sources/intel-arm.html.txt",
+      "sha256": "51931f051d77bcf332dc5e99b6d5184737660f6be1af40b3bd30120dfb9be709",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/arc.html",
+      "file": "arc.html",
+      "original": "sources/arc.html.txt",
+      "sha256": "644003efd67cf0644cb0a1013929076eb28e2ce0641792961e669ba7d6ac5623",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/64bits.html",
+      "file": "64bits.html",
+      "original": "sources/64bits.html.txt",
+      "sha256": "033c366da6a0c815193a69c58e8c758ee18bb5402e03cbca5d46de60d7fb7bef",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/fragilebaseclasses.html",
+      "file": "fragilebaseclasses.html",
+      "original": "sources/fragilebaseclasses.html.txt",
+      "sha256": "b6036ad8e04b86332f9f17c858d53a309c5aac40235667b1230236f058729bd0",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/autosave.html",
+      "file": "autosave.html",
+      "original": "sources/autosave.html.txt",
+      "sha256": "844e96aba56cd6bc6e47d64f8ef5ce5499733c9c1f3a903edeb4c118f93a6220",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/anniversary.html",
+      "file": "anniversary.html",
+      "original": "sources/anniversary.html.txt",
+      "sha256": "d51ec14154a8031d96d96271ef76a1745725651277395a1f346904e2e7ec3ca8",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/ThemeTab.png",
+      "file": "assets/2e5b5ac500-ThemeTab.png",
+      "sha256": "43153fdb4eceeede7edc42c18e208d0284a839453c286e3a22de3ce1a7600b90",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/ThemeTab.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Graphics/onewindow.png",
+      "file": "assets/7b4a9d2931-onewindow.png",
+      "sha256": "e43cf2b95b15abd78b5e340778edac2a7cd0bddc9f7eebfc807436f9cdaeb7d6",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/Graphics/onewindow.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo1.png",
+      "file": "assets/9b9c585b60-charinfo1.png",
+      "sha256": "26e35b809ae18a4365addcf2615f1ded7e92ecb2c2d412e8343d8390982622f9",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/Graphics/charinfo1.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo2.png",
+      "file": "assets/cc32863851-charinfo2.png",
+      "sha256": "5e83bc0da6a66e1183eb2b02db74d40fb70f8eeef1e1ce9bc62c9a5e22a8acf7",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/Graphics/charinfo2.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo3.png",
+      "file": "assets/0c32ecb0f4-charinfo3.png",
+      "sha256": "82311ac25bd0e195e76b079c582e8067844fb50107e60fdb6c68a244cd31fe6d",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/Graphics/charinfo3.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo4.png",
+      "file": "assets/5fa84f0bcd-charinfo4.png",
+      "sha256": "a21eb96ac839e20d3795bb35e8719550c78aa6098b6d36ecac581d72382d4260",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/Graphics/charinfo4.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo5.png",
+      "file": "assets/0e88f52d28-charinfo5.png",
+      "sha256": "376749b499e54d2b5c8d439656c6aa455914b5b01d382f8ddd3177a8708992f9",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/Graphics/charinfo5.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo6.png",
+      "file": "assets/a2ebb77bbf-charinfo6.png",
+      "sha256": "0c2a18909fa8302c6e00955291fefe0ecfdd8ee021d4162028c9ce4b09b58f8c",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/Graphics/charinfo6.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo7.png",
+      "file": "assets/084d195181-charinfo7.png",
+      "sha256": "15994775152cb1fd73d8e20b4ae83d92f3736431b8beb508933a7c8febd39ef1",
+      "type": "image",
+      "restored_from_repository": "Resources/Interfaces/en.lproj/TeXShopHelp/pgs/Graphics/charinfo7.png"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/changes_3.html",
+      "file": "changes_3.html",
+      "original": "sources/changes_3.html.txt",
+      "sha256": "388b2a7a0c7a1da9396691396bff977933ae7703ae6a741faf82ec68c599aea8",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/changes_2.html",
+      "file": "changes_2.html",
+      "original": "sources/changes_2.html.txt",
+      "sha256": "558ea66870987f84a39562388d1b397c2ec7ace097c702642288b4d1900c8fc1",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/extras.html",
+      "file": "extras.html",
+      "original": "sources/extras.html.txt",
+      "sha256": "9a86d9298ac95fc7256135504a4182316f539248ca80c7c01eba0090f73a4d1d",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/translations.html",
+      "file": "translations.html",
+      "original": "sources/translations.html.txt",
+      "sha256": "c23b5feba01bbd5659303f26ee0eccd1599c482cc8f54eb3f77a880cb98eec55",
+      "type": "page",
+      "visible_text_preserved": true
+    }
+  ]
+}

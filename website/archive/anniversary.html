@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Original Version and Anniversaries — TeXShop</title><link rel="stylesheet" href="../style.css"><link rel="icon" href="../assets/texshop.png"></head><body><header><nav><a href="../en.html">TeXShop</a><a href="https://pages.uoregon.edu/koch/texshop/">Previous website</a><a href="../acknowledgments.html">Acknowledgments</a><a href="../archive/index.html">History Archive</a></nav></header><main class="archive-content"><h1>Original Version and Anniversaries</h1><p class="archive-notice">Archived from Richard Koch’s TeXShop website on October 28, 2026. Original wording is preserved; version information, advice, contact details, and external links may be out of date. <a href="https://pages.uoregon.edu/koch/texshop/anniversary.html">Original page</a> · <a href="sources/anniversary.html.txt">Original HTML</a></p><p class="archive-nav"><a href="history.html">History</a> · <a href="collaborators.html">Collaborators</a> · <a href="intel-arm.html">Intel and Arm</a> · <a href="arc.html">ARC</a> · <a href="64bits.html">64 Bits</a> · <a href="fragilebaseclasses.html">Fragile Base Classes</a> · <a href="autosave.html">Automatic Saving</a> · <a href="anniversary.html">Original Version and Anniversaries</a> · <a href="changes_3.html">Changes in Versions 3–5</a> · <a href="changes_2.html">Changes in Version 2</a></p><article class="legacy" lang="en">
+<h3 id="section-1">Original Version of TeXShop</h3>
+
+TeXShop was  created in the spring of 2000 and first released on July 23, 2000. At that time, macOS was still in beta; the official release of macOS was March 24, 2001. Before that, Apple's PDF code had an important bug: it could not access embedded fonts in a document. So originally TeXShop could only display files written in Times Roman, and without mathematical symbols. To get around this problem, TeXShop had a preference setting to render using Ghostscript rather than Apple software, and just display the resulting bitmap. Rendering was fuzzy but symbols could be seen. When I finally got the release version of macOS a week before the official release, I was thrilled to see that the embedded font bug had been fixed, and I ripped out the Ghostscript rendering preference from TeXShop.
+
+<p> For some time, Max Horn has collected and archived versions of TeXShop source code. In 2016 he encouraged me to restart old machines and send him all older versions of the source code that I could find. In the process, I found the source code for the original TeXShop release and decided to see if it still can be compiled using the 2016 version of XCode. This was a stretch because in 2001 macOS ran on the PowerPC chip, but by 2016 the Mac had switched to Intel processors. Surprisingly, the original code  compiled. Below are the notes I made about the process, and then the program and resulting source code.
+
+<p> Now it is 2024, eight years later, and Macs mostly use Arm processors. So I decided to compile the original TeXShop again, this time on the 2024 version of XCode. The Mac has changed dramatically in the last eight years, so I ran into some problems, described in the second section below. But ultimately the 2024 XCode could compile the original TeXShop source code. At the bottom of this page you'll find the result, which is universal for both Intel and Arm and has been notarized by Apple. Yet it is exactly TeXShop as it existed in 2000, ancient icon, Ghostscript preference, and all.
+
+<h3 id="section-2">Sixteenth Anniversary</h3>
+<p> Recently I recompiled the program for 64 bit Intel code. Surprisingly, the original code compiled without errors, and the running program had only two small glitches:
+<ul>
+<li> The command to select a source line by giving its line number failed. This was a 32-64
+bit issue, fixed by changing "unsigned" to "UInt".
+<p><li> TeXShop Help failed. In the original macOS, help files were rtf files, but Apple soon switched to html help files. I fixed this by writing a very small new class to display the original rtf file.
+</li></p></li></ul>
+<p> The original version and source are available below. To typeset, you must reset the
+preference settings for the tex and latex programs, since /usr/texbin and /Library/TeX/texbin
+did not yet exist. Even Gerben's distribution of teTeX did not appear until a few months later.
+
+<p> This program was written in Cocoa. As a result, later improvements in Cocoa automatically apply to it, without code changes. For instance, if you quit the program with a file open
+and later start again, the file will be reloaded. This was not in the original, but it is present now because the change requires no new code. 
+
+<p> The program does not support automatic saving because that feature must be activated.
+Activation requires just one line of code and would be easy.
+
+<p> On Sierra, the program supports tabs because, well, that change requires no new code.
+
+<p> Here is the original program and source, recompiled for modern 64 bit Intel systems.
+<ul>
+<li> <a href="https://pages.uoregon.edu/koch/texshop/TexShop-1.zip">Original Version of TeXShop</a> for 
+Lion or higher  (136 KB)</li>
+<li> <a href="https://pages.uoregon.edu/koch/texshop/texshopsource1.zip">Source Code for Original Version (368 KB)</a></li>
+<li> <a href="https://pages.uoregon.edu/koch/texshop/TeXShop-History-Koch.pdf">Koch's Version of History (108 KB)</a></li>
+</ul>
+<h3 id="section-3">Twenty-Fourth Anniversary</h3>
+
+It is now 2024 and we are celebrating the twenty-fourth anniversary of TeXShop. A lot has changed in the last eight years, including a new processor for the Mac. The above version  contains Intel code and runs using Rosetta on modern Arm machines; and it has some bugs with this setup. So it is time to compile the TeXShop source code again on today's XCode. 
+
+<p> In 2016 I  dropped the old source code in XCode and it compiled. That is no longer the case and I ran into several problems before reaching success. For one thing, XCode now assumes that memory management is done using ARC (automatic reference counting). It is possible to turn this off in XCode, but the technique to do that is rather obscure. Eventually I found it, so this TeXShop still uses manual memory management. I did not turn on automatic saving because in 2000, automatic saving was just a dream in some Apple engineer's eye.
+
+<p> At first, typesetting crashed in the new version. Eventually I realized that by default, today's XCode creates programs which run in a sandbox and cannot access  binaries in /usr/local. After fixed that, typesetting still refused to work. The original TeXShop had a preference setting determining the location of pdflatex; the default value of this setting was /usr/local/bin/pdflatex. I changed this to /usr/local/texlive/2024/universal-darwin/pdflatex, but the program still refused to typeset. After three days following obscure leads and dead ends, I realized that the correct value for the preference item is /usr/local/texlive/2024/bin/universal-darwin/pdflatex. Aha!
+
+<p> In the beta version of NSDocument, closing the main window of a document closed all remaining windows. That is no longer the case, so when I closed the edit window of a document, its pdf window remained on the screen. Attempting to use this window in any way crashed the program. That problem is fixed in this version.
+
+<p> But gradually all the original features came back to life. Users can again enter text in an edit window, typeset it with pdftex or pdflatex, and view the result in a pdfView. That pdfView can be resized using a size bar at the bottom of the window. However, continuous mode, magnified mode, single and double page modes, and the magnifying glass were not in the original program and are not in this version. The program can print the pdf output, and it can print the source. It has a primitive help file and a very primitive icon, all original. 
+
+<p> TeXShop Preferences were originally in ~/Library/Preferences/TexShop Prefs.  This location and its contents are created when the version first runs. The folder contains a subfolder named Templates containing default templates. Other templates can be added to this location and will then appear in the Edit Window's dropdown template menu.
+The folder also contains a file named "TeXShop Preferences". This file is where the preference settings for the original version of TeXShop are stored. 
+
+<p> Note that the font and font size for the edit window can be changed, the location of the edit window when first opened can be set, the magnification of the pdf window can be changed, and the location of this window when first opened can be set. Users make the changes directly and then click a button in Preferences to indicate that the new values should be selected whenever files are opened in the future.
+
+<p> To typeset with the version below, first open Preferences (or Settings, as Apple now calls it) and change the location of the pdflatex binary. If you are using the latest TeX Live 2024, this will be "/usr/local/texlive/2024/bin/universal-darwin/pdflatex". Change the location of pdftex in the same way.
+
+<li> <a href="https://pages.uoregon.edu/koch/texshop/TeXShop-1Arm.zip">Original Version of TeXShop</a> compiled for Intel and Arm and recent versions of macOS (228 KB)</li>
+<li> <a href="https://pages.uoregon.edu/koch/texshop/texshoparmsource.zip">Source Code for Original Version compiled for Intel and Arm (322 KB)</a></li>
+</p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></article></main></body></html>

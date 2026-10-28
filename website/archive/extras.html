@@ -1,0 +1,493 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>TeXShop Contributors — TeXShop</title><link rel="stylesheet" href="../style.css"><link rel="icon" href="../assets/texshop.png"></head><body><header><nav><a href="../en.html">TeXShop</a><a href="https://pages.uoregon.edu/koch/texshop/">Previous website</a><a href="../acknowledgments.html">Acknowledgments</a><a href="../archive/index.html">History Archive</a></nav></header><main class="archive-content"><h1>TeXShop Contributors</h1><p class="archive-notice">Archived from Richard Koch’s TeXShop website on October 28, 2026. Original wording is preserved; version information, advice, contact details, and external links may be out of date. <a href="https://pages.uoregon.edu/koch/texshop/extras.html">Original page</a> · <a href="sources/extras.html.txt">Original HTML</a></p><p class="archive-nav"><a href="history.html">History</a> · <a href="collaborators.html">Collaborators</a> · <a href="intel-arm.html">Intel and Arm</a> · <a href="arc.html">ARC</a> · <a href="64bits.html">64 Bits</a> · <a href="fragilebaseclasses.html">Fragile Base Classes</a> · <a href="autosave.html">Automatic Saving</a> · <a href="anniversary.html">Original Version and Anniversaries</a> · <a href="changes_3.html">Changes in Versions 3–5</a> · <a href="changes_2.html">Changes in Version 2</a></p><article class="legacy" lang="en">
+<h2 id="section-1">TeXShop Contributors</h2>
+<p> Since its release in August, 2000, TeXShop has been improved by a number 
+of people. This is a list of some of them. If you contributed and are not on the list, please write Koch. Apologies in advance.</p>
+<h3 id="section-2">Coding:</h3>
+<ul>
+<li>Richard Koch</li>
+<li> koch@uoregon.edu
+<blockquote><p> Started the project. </p></blockquote></li>
+</ul>
+<ul>
+<li>Max Horn</li>
+<li> mhorn@mathematik.tu-darmstadt.de
+<blockquote><p>Max Horn recently reorganized the TeXShop sources, polishing the code and fixing bugs in many spots. The interface is almost unchanged, but the program runs faster, the editor can handle large source files smoothly, and syntax coloring is faster and improved. Max's new code base forms the basis of the program in the future; beta versions of TeXShop mark the switch. TeXShop's version number will shortly switch from beta to merely 2.10 as Horn's rewrite reaches maturity.</p></blockquote>
+<blockquote><p>Added code to the TeXShop-Panel interface permitting the use of
+		#SEL# and #INS# to position the cursor inside the addition and place
+		the selected text inside the new symbols. He also improved the
+		validateMenuItem code in several spots.</p></blockquote></li>
+</ul>
+<ul>
+<li>Gerben Wierda</li>
+<blockquote><p>TeXShop depends on Unix command line programs to do
+		all of the hard work. Until recently; Gerben maintained the standard
+	distribution of these programs. His current gwTeX distribution, together
+	with TUG's TeX Live, provide the TeX used on most Mac OS X machines today.
+	</p></blockquote>
+<blockquote><p>TeXShop depends on the script simpdftex by Wierda to typeset
+		using latex + ghostscript; his version of the eps2pdf script 
+		handles Macintosh line feed conventions as well as Unix line
+		feed conventions. Many features of TeXShop depend on
+		contributions of Wierda to teTeX, gwTeX, and TeX Live.</p></blockquote>
+</ul>
+<ul>
+<li>Dirk Olmes</li>
+<li> dirk@xanthippe.ping.de
+<blockquote><p>Broke out the code into the current series of multiple source
+		files. Dirk completely rewrote the preferences system to use
+		the Mac OS X defaults database. This rewrite has been 
+		enormously valuable as additional preference options were
+		added later.</p></blockquote></li>
+</ul>
+<ul>
+<li>Mitsuhiro Shishikura</li>
+<li> mitsu@kusm.kyoto-u.ac.jp
+<blockquote><p>Rewrote the code for the pdf window; wrote code for a magnifying glass in the pdf window. Wrote all
+		code for the Macro menu and Macro Editor. Modified the
+		typesetting menu and toolbar buttons so they behave in a
+		better manner. Fixed many bugs. Revised the code to offer
+		better support for users in Japan. Shishikura's contributions
+		have been crucial for version 1.27 and beyond.</p></blockquote></li>
+</ul>
+<ul>
+<li>Yusuke Terada</li>
+<li> taylorkgb@gmail.com
+<blockquote><p>Added key features requested by typesetters in the company he works with
+in Tokyo, Japan. These include better window placement code, code to show invisible
+characters, code to better indicate parentheses matching, and additional features
+starting in version 2.38. See the about notes for that version for further details.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Jérôme Laurens</li>
+<li>jerome.laurens@u-bourgogne.fr
+<blockquote><p>Designed the TeXShop icon. Recently wrote the wonderful SyncTeX, available first in
+		TeX Live 2008, and used by many front ends, including TeXShop starting in 2.18. Laurens also
+		wrote the TeX Distribution preference pane and designed, with Gerben Wierda, the associated
+		data structure allowing multiple TeX distributions on a machine.
+		When TeXShop was first created, Jérôme made many
+		suggestions for improvements. Later he spun off his own TeX front end called  iMacTeX. See</p></blockquote>
+<blockquote><p>http://www.u-bourgogne.fr/monge/j.laurens/iTeXMac
+</p></blockquote>
+<blockquote><p>Laurens worked closely with Piero D'Ancona to create pdfsync; iTeXMac was
+		the first front end to support this feature, which has recently been replaced by SyncTeX.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Martin Hairer</li>
+<li>martin@hairer.org
+<blockquote><p>
+Professor Hairer found important memory leaks in earlier versions of TeXShop and fixed them in TeXShop 3.66. Some time ago,
+TeXShop's code was converted to use ARC (automatic reference counting) in which much
+of the memory management is handled automatically. But ARC cannot detect strong reference
+cycles, in which object A points to object B and object B points to object A, so neither can be released without first releasing the other. Hairer discovered such cycles and revised the
+code to fix them. In particular, he converted a number of instance variables to class properties, whose behavior under ARC is easier to understand. 
+</p></blockquote></li>
+</ul>
+<ul>
+<li>William Adams</li>
+<li>willadams@aol.com
+<blockquote><p>Designed the new high resolution TeXShop icons, which are based on Jérôme Laurens
+original icons. This is not an easy task, as I discovered when I tried to do it myself. Thanks, William. The new icon for TeX documents contains an image of a lion in front of the
+New York City Main Library, taken by Julie Gentry. See <a href="http://www.publicdomainpictures.net/view-image.php?image=15950&amp;picture=stone-lionI">http://www.publicdomainpictures.net/view-image.php?image=15950&amp;picture=stone-lionI</a>
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Ulrich Bauer </li>
+<li>ulrich.bauer@ist.ac.at
+<blockquote><p>Wrote a key patch to the file handling routines in TeXShop required
+when loading files from a server or working with collaborators. With Bauer's patch, an open document is
+monitored for external changes to the file, and updated automatically if an external change
+occurs. Thanks very much to Ulrich Bauer for this important fix. </p></blockquote></li>
+</ul>
+<ul>
+<li>Piero D'Ancona</li>
+<li>dancona@mat.uniroma1.it
+<blockquote><p>Wrote the original pdfsync package. During typesetting with
+		pdflatex, this package outputs a file containing information linking
+		line numbers in the source file with page and location numbers
+		in the pdf output. Later D'Ancona was joined by Jérôme Laurens and
+		the two of them polished pdfsync.sty. Laurens implemented
+		pdfsync behavior in iTeXMac, the first front end implementation
+		of synchronization for Mac OS X.</p></blockquote></li>
+</ul>
+<ul>
+<li>Herbert Schulz</li>
+<li>herbs2@mac.com
+<blockquote><p>Herb maintains the latexmk engine, and answers more TeXShop questions on the
+internet than everyone else combined. In addition, he wrote the extended version of Command
+Completion introduced in TeXShop 2.30.</p></blockquote></li>
+</ul>
+<ul>
+<li>Nicola Vitacolonna</li>
+<li>nvitacolonna@gmail.com
+<blockquote><p>Wrote the ns-metapost and ns-netafun engines for MetaPost and MetaFun. These complicated engines
+greatly improve the experience of using MetaPost for illustrations, and MetaFont to examine font construction.</p></blockquote></li>
+</ul>
+<ul>
+<li>Alan Munn</li>
+<li>amunn@msu.edu
+<blockquote><p>Wrote the "Paste Spreadsheet Cells" macro, which allows users to
+copy an array of speadsheet cells and paste them into the TeX source embedded within
+appropriate TeX commands.</p></blockquote></li>
+</ul>
+<ul>
+<li>Michael Witten</li>
+<li> mfwitten@mit.edu
+<blockquote><p>Wrote the code to control soft wrapping of lines, and to hard wrap selected lines or an entire file.</p></blockquote></li>
+</ul>
+<ul>
+<li>Norman Gall</li>
+<li> www.spookyhill.net/~gall/latex/
+<blockquote><p>Wrote TeX-mdimporter, a Spotlight indexer for files with extensions
+.tex, .latex, .ltx, .ctx, and .texi. This indexer is a standalone program for all
+front ends on Mac OS X; it is included in the TeXShop application bundle, but can
+also be obtained on the web and placed directly in ~/Library/Spotlight.</p></blockquote></li>
+</ul>
+<ul>
+<li>Geoffroy Lenglin</li>
+<li> geoffroy.lenglin@m4x.org
+<blockquote><p>Lenglin constructed the Latex Panel; all of the art work, nib work, 
+		and code is his.</p></blockquote></li>
+</ul>
+<ul>
+<li>Jonas Zimmermann</li>
+<li> zimmerleut@gmx.de
+<blockquote><p>Zimmermann constructed the Matrix Panel.</p></blockquote></li>
+</ul>
+<ul>
+<li>Anton Leuski</li>
+<li>leuski@cs.umass.edu
+<blockquote><p>Completely wrote the code for configurable toolbars and for
+		AppleScript support. These are important contributions; the
+		toolbar support is heavily used by the external editor configuration
+		of TeXShop. Leuski also revised the code to create tabs for
+		\chapter, \section, \subsection, and \subsubsection.</p></blockquote></li>
+</ul>
+<ul>
+<li>Sean Luke		
+<blockquote><p>Suggested adding an option to typeset using latex + ghostscript
+		in addition to the original pdflatex. Luke provided the first script to
+		do this. That led to Gerben Wierda's current script. I consider this
+		script one of the most important changes in TeXShop since the start
+		of the project.</p></blockquote></li>
+</ul>
+<ul>
+<li>Martin Kerz</li>
+<li>martin@kerz.org
+<blockquote><p>Converted the TeXShop help system from a primitive rtf file
+		to full-fledged Macintosh html help. Added the "Check for Updates"
+		command. Designed the current TeXShop web page.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>John Nairn</li>
+<li> john@geditcom.com</li>
+<li> 	http://www.geditcom.com</li>
+<li> http://www.mse.utah.edu/~nairn	
+<blockquote><p>Added code to implement %SourceFile activation of the root
+		file, and thus defined the current TeXShop root file behavior.
+		Added code to save open \input files when typesetting.</p></blockquote></li>
+</ul>
+<ul>
+<li>Greg Landweber</li>
+<li> greg@math.uoregon.edu
+<blockquote><p>Landweber wrote the auto completion code.</p></blockquote></li>
+</ul>
+<ul>
+<li>Nicolás Ojeda Bär</li>
+<li>lojedaortiz@interlink.com.ar
+<blockquote><p>Bär wrote the code which preserves tab indents. If a line starts
+		with one or more tabs, all further lines will start with these tabs
+		until they are cancelled.</p></blockquote></li>
+</ul>
+<ul>
+<li>Ramon M. Figueroa-Centeno</li>
+<li>http://www2.hawaii.edu/~ramonf/
+<blockquote><p>Figueroa-Centeno wrote the complicated Macros to set the
+		Program, Encoding, and Root comment lines at the top of source
+		files, and the "Insert Begin/End" and "Close Begin/End" macros.</p></blockquote></li>
+</ul>
+<ul>
+<li>David Reitter</li>
+<blockquote><p>Revised the selection code to make it also select a leading backslash
+		character.</p></blockquote>
+</ul>
+<ul>
+<li>Maarten Sneep	
+<blockquote><p>Added the auto completion check box to the toolbar; explained
+		how to make the program remember window placement,
+		particularly for the console window.</p></blockquote></li>
+</ul>
+<ul>
+<li>Martin Heusse		
+<blockquote><p>Heusse wrote the code to save source files in IsoLatin format. He
+also modified Bär's code so it preserves initial spaces on previous lines. </p></blockquote></li>
+</ul>
+<ul>
+<li>Sarah Childers</li>
+<li>http://home.earthlink.net/~rainbowflight/	
+<blockquote><p>Childers wrote code fixing a bug in the Templates code. Users can modify
+the default templates provided by TeXShop by removing or renaming files in
+~/Library/TeXShop/Templates. However, this
+didn't work correctly until Childer's code was glued in.</p></blockquote></li>
+</ul>
+<ul>
+<li>Makoto Inoue		
+<blockquote><p>Inoue wrote the code to save source files in MacJapanese format.</p></blockquote></li>
+</ul>
+<ul>
+<li>Johan H. W. Basberg
+<li>johan@basberg.com		
+<blockquote><p>Contributed the toolbar icon for splitting the source and preview windows.</p></blockquote></li>
+</li></ul>
+<ul>
+<li>Seiji Zenitani</li>
+<li>zenitani@mac.com</li>
+<li>	zenitani@space.eps.s.u-tokyo.ac.jp
+<blockquote><p>Zenitani wrote the code to save source files in DOSJapanese and
+		EUC JP formats.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Isao Sonobe</li>
+<li>http://www-gauge.scphys.kyoto-u.ac.jp/~sonobe/OgreKit/
+<blockquote><p>Sonobe wrote OgreKit, the framework for the new regular expression
+		Find panel.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Paul Kim</li>
+<li>http://www.noodlesoft.com/blog/
+<blockquote><p>Kim wrote the code to provide line numbering in the source file. This code consists of two Cocoa classes
+which can be used in any Cocoa program, NoodleLineNumberMarker and NoodleLineNumberView. The classes are available
+at the indicated web site.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Ryan Cuthbertson</li>
+<li>ryan.cuthbertson@student.adelaide.edu.au
+<blockquote><p>Cuthbertson first noticed the Noodle Line code on Kim's blog and wrote the 34 lines of code needed to merge it into the TeXShop code base. He then called this wonderful development to my attention.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Andy Matuschak</li>
+<li>http://sparkle.andymatuschak.org/
+<blockquote><p>Matuschak wrote the Sparkle framework, used by "Check for updates" to update TeXShop. This open source framework is used by many programs on the Macintosh. Matuschak's web site contains wonderfully transparent instructions for adding the framework to an application code base, making it easy to adopt the framework in TeXShop.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Yu Itoh
+<blockquote><p>Itoh provided code to access unencoded glyphs in Japanese.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Koichi Inoue</li>
+<li>inoue@ma.ns.musashi-tech.ac.jp
+<blockquote><p>Inoue provided shell scripts to typeset using ptex.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Will Robertson</li>
+<li>will@guerilla.net.au
+<blockquote><p>Robertson provided the "More" templates, the column macros, the insert reference macro,
+		and the Open Quickly macros in TeXShop. He also provided  the LaTeX examples in 
+		the LaTeX Documentation section of the TeXShop web page.
+		
+		<p>Robertson redesigned the Console window in version 2.20, giving it a much more attractive appearance.
+</p></p></blockquote></li>
+</ul>
+<ul>
+<li>Claus Gerhardt</li>
+<li> gerhardt@math.uni-heidelberg.de		
+<blockquote><p>Created shell scripts and applescripts and in the process extensively influenced script support in TeXShop.</p></blockquote></li>
+</ul>
+<ul>
+<li>Sebastian Siedentopf</li>
+<li> sebastian.siedentopf@gmx.de		
+<blockquote><p>Designed the 1.35 version of the help pages, to conform to Apple
+		guidelines.</p></blockquote></li>
+</ul>
+<ul>
+<li>Sven A. Schmidt		
+<blockquote><p>Contributed code for the magnification arrows.</p></blockquote></li>
+</ul>
+<ul>
+<li>Georg Klein</li>
+<li> gklein1@mac.com		
+<blockquote><p>Added code for an extra customizable pane in the Latex Panel.</p></blockquote></li>
+</ul>
+<ul>
+<li>Kevin Ballard</li>
+<li> kevin@sb.org		
+<blockquote><p>Polished English.lproj for the Panther release.</p></blockquote></li>
+</ul>
+<ul>
+<li>Elliott Hughes</li>
+<li> enh@enh.org.uk		
+<blockquote><p>Wrote code to show an error message when
+	the TeX binaries are not found in the proper location during typesetting.</p></blockquote></li>
+</ul>
+<ul>
+<li>Stefan Walsen</li>
+<li> walsen@tzi.de		
+<blockquote><p>Fixed the applescript command to add text, adding the ability
+		to undo this action.</p></blockquote></li>
+</ul>
+<ul>
+<li>Craig Stuart Sapp</li>
+<li> craig@ccrma.stanford.edu		
+<blockquote><p>The "flip" binary in ~/Library/TeX/bin, used to convert file line feeds
+		to Windows, Macintosh 9, or Unix format, was written by Craig Sapp. See
+		http://ccrma-www.stanford.edu/~craig/utility/flip/ for details.</p></blockquote></li>
+</ul>
+<ul>
+<li>Alvise Trevisan</li>
+<li> vvvsan@gmail.com
+<blockquote><p>Add code to preserve indentation by Command Completion routines.</p></blockquote></li>
+</ul>
+<ul>
+<li>Scott Lambert</li>
+<li> slambert73	@gmail.com
+<blockquote><p>Improved the code for Comment/Uncomment and Indent/Unindent.</p></blockquote></li>
+</ul>
+<ul>
+<li>Michael Sharpe</li>
+<li> msharpe@ucsd.edu
+<blockquote><p>Fixed several applescript macros which broke due to changes in Appletalk. Wrote the document "Notes on Applescript in TeXShop" included in the TeXShop Help Menu.</p></blockquote></li>
+</ul>
+<ul>
+<li>Dirk-Willem van Guik</li>
+<li> dirkx@webweaving.org
+<blockquote><p>Added code to set a "Job Title" for print jobs.</p></blockquote></li>
+</ul>
+<ul>
+<li>Thiemo Gamma</li>
+<blockquote><p>Designed the TeXShop Icon for Yosemite. Also changed the design
+of the dialog which appears when clicking "About TeXShop" to match the Yosemite style.</p></blockquote>
+</ul>
+<ul>
+<li>Antti Knowles</li>
+<li>antti.knowles@unige.ch
+<blockquote><p>Wrote code to fix two bugs: a) After a sync from preview to source, keyboard selections retained the yellow color rather than switching to regular selection color; fixed. b) A BibTeX selection showed an entire latex label, even with spaces, but only selected the portion to the first space; fixed.</p></blockquote></li>
+</ul>
+<ul>
+<li>Neil Sims</li>
+<li>n.sims@sheffield.ac.uk
+<blockquote><p>Wrote code to add four features: a) spell checking code to remove spell checking from TeX commands and TeX comments, b) Label toolbar tool to provide a list of labels in the source, c) extend tags to entries used by beamer and Powerdot, d) added TS_CHAR environment variable accessible by engines.
+His Label code caused both Tags and Labels to be optimized, removing a major barrier to crisp TeX entry.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Bruno Voisin</li>
+<li>bvoisin@icloud.com
+<blockquote><p>Ghostscript expert; mainly responsible for TeX Fonts and features in the MacTeX Ghostscript install package. A vast source of knowledge about "the Mac way of doing things", and about finding old web pages, discussions, and code that suddenly becomes relevant again.
+</p></blockquote></li>
+</ul>
+<ul>
+<li>Jörg Christian Kirchhof</li>
+<li>kirchhof@se-rwth.de
+<blockquote><p>Fixed the TeXShop Hard Wrap code to behave correctly when wrapping TeX comments. This crucial change made the item functional instead of just barely usable.
+</p></blockquote></li>
+</ul>
+<h3 id="section-3">Localization:</h3>
+<h4>Chinese</h4>
+<ul>
+<li>Linus Yang</li>
+<li>laokongzi@gmail.com</li>
+</ul>
+<h4>Korean</h4>
+<ul>
+<li>Karnes Kim</li>
+<li>modviv2k15@gmail.com </li>
+</ul>
+<h4>Dutch</h4>
+<ul>
+<li>	Maarten Sneep	</li>
+<li>sneep@nat.vu.nl</li>
+</ul>
+<h4>French</h4>
+<ul>
+<li>Jérôme Laurens</li>
+<li>jerome.laurens@u-bourgogne.fr</li>
+</ul>
+<ul>
+<li>Hendrik Chaltin	</li>
+<li>hendrik.chaltin@univ.u-3mrs.fr</li>
+</ul>
+<ul>
+<li>Jean-Claude De Soza	</li>
+<li>jeanclaudedesoza@icloud.com</li>
+</ul>
+<h4>German</h4>
+<ul>
+<li>Keith J. Schultz	</li>
+</ul>
+<ul>
+<li>Sascha Beverungen</li>
+<li>beverungen@re.e-technik.uni-kassel.de</li>
+</ul>
+<ul>
+<li>Martin Kerz</li>
+<li>martin@kerz.org</li>
+</ul>
+<ul>
+<li>Max Horn</li>
+<li>max@quendi.de</li>
+</ul>
+<ul>
+<li>Steffen Wolfrum</li>
+<li>context@st.estfiles.de</li>
+</ul>
+<ul>
+<li>Laurent Meister</li>
+</ul>
+<ul>
+<li>Lukas Christensen</li>
+<li>lukas.christensen@icloud.com</li>
+</ul>
+<h4>Italian</h4>
+<ul>
+<li>Giuseppe Carlino</li>
+<li>g.carlino@swansea.ac.uk</li>
+</ul>
+<ul>
+<li>Nicola Vitacolonna</li>
+<li>vitacolo@dimi.uniud.it</li>
+</ul>
+<h4>Japanese</h4>
+<ul>
+<li>Seiji Zenitani</li>
+<li>zenitani@mac.com</li>
+<li> zenitani@space.eps.s.u-tokyo.ac.jp</li>
+</ul>
+<ul>
+<li>Yoshihisa Okazaki</li>
+<li>oka-zaki@air.linkclub.or.jp</li>
+</ul>
+<ul>
+<li>Yusuke Terada</li>
+<li>taylorkgb@gmail.com</li>
+</ul>
+<h4>Portuguese</h4>
+<ul>
+<li>Paulo Abreu	</li>
+<li>paulotex@yahoo.com</li>
+</ul>
+<h4>Romanian</h4>
+<ul>
+<li> Roxana Tenea Teleman</li>
+<li>Andrei Teleman	</li>
+<li>teleman@cmi-univ-mrs.fr</li>
+</ul>
+<h4>Spanish</h4>
+<ul>
+<li>Juan Luis Varona Malumbres	</li>
+<li>jvarona@dmc.unirioja.es</li>
+</ul>
+<h4>Brazilian Portuguese</h4>
+<ul>
+<li>Emerson Ribeiro de Mello</li>
+<li>emerson_mello@yahoo.com.br</li>
+</ul>
+</article></main></body></html>

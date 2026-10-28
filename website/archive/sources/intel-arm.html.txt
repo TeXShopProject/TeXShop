@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+     <li><a href="obtaining.html">Obtaining</a></li>
+    <li><a href="installing.html">Installing</a></li>
+    <li id="current"><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li><a href="history.html">History</a></li>
+<li><a href="collaborators.html">Collaborators</a></li>
+<li id="mcurrent"><a href="intel-arm.html">Intel and Arm</a></li>
+<li><a href="arc.html">ARC</a></li>
+<li><a href="64bits.html">64 Bits</a></li>
+<li><a href="fragilebaseclasses.html">Fragile Base Classes</a></li>
+<li><a href="autosave.html">Automatic Saving</a></li>
+
+<!--
+<li><a href="texshop-64/texshop.zip">TeXShop 3 for Lion</a></li>
+<li><a href="texshop-64/texshopsource.zip">Lion Source</a></li>
+-->
+</ul>
+</div>
+
+<!-- main content -->
+<div id="main">
+
+
+<h3>Intel and Arm</h3>
+
+<p> I retired from the University of Oregon in 2002, and after that I attended every Apple Developer Conference except one until 2011, the last conference before Steve Jobs died. I missed the 2005 conference because I was teaching a course for a colleague with an emergency. Shortly before that 2005 conference, the Wall Street Journal published a rumor that Apple would switch from the PowerPC to Intel processors at that conference. Switching processors is a massive undertaking and the Wall Street Journal is not a standard Apple site, so most of us dismissed the rumor, but it turned out to be true. Job's keynote address is still available on the internet, and it is one of his masterpieces.
+
+<p>Among other things, that keynote told developers how they could transition their products from PowerPC to Intel. In 2005, most Macintosh programs were written in one of two ways: using Carbon, or using Cocoa. Carbon was based on the old style used when programming the 1984 Macintosh, and many commercial programs used that approach because it was easy to transition from the old Mac to macOS. Cocoa was the object oriented approach inherited from NeXt and not yet used by many commercial products. Jobs stated that Cocoa programs could be transitioned easily, perhaps in less than a week. Carbon programs would require more effort, a month or more of solid work. Jobs announced that developers could rent an Intel Macintosh from Apple to help with the transition. Of course I ordered one of these machines. It arrived two weeks after the conference ended.
+
+<p> TeXShop is written in Cocoa. Writing a front end with the old Carbon was a very difficult job, but Cocoa provided an editing window and a pdf display window for free and made the job incredibly easier. Within two days of receiving the rented Intel machine, I had an Intel version of TeXShop, working just as well as the original PowerPC version. 
+
+<p> Jumping ahead a decade, in June of 2020 Apple announced a transition of their computers from the Intel processor to the Arm processor. Once more, they offered developers a rental Arm machine to help with the transition. Mine arrived two weeks after WWDC. Within a couple of days, I had a fully functional Arm version of TeXShop.
+Then I turned to MacTeX and the TeX binaries in this distribution. Most compiled on Arm without issue, and after a week I had a universal version of the binaries, each with an Intel and an Arm version of the code. Apple first released Arm machines in January of 2021, and on the first day we made available a universal TeXShop and universal TeX binaries. 
+
+<p>TeX Live is officially released once a year, around April, so for several months users could use universal Intel/Arm binaries, housed in a binary directory named x86_64-darwin. Then the 2021 version of TeX Live and MacTeX was released and the name of the binary directory became universal-darwin.
+
+<p> Both of these transitions were carefully planned in advance by Apple, but I'm still astonished how easily each was accomplished. And each transition was crucial. In his keynote address, Jobs clearly explained the reason for the PowerPC/Intel switch: in a nutshell, the switch made it possible to create powerful portables that did not heat up or exhaust the batteries. The Intel/Arm switch was even more astonishing to me, because those original rental Arm machines were essential equivalent to older Intel machines, but the actual production Arm machines turned out to be incredibly faster and at the same time incredibly more power-efficient than their Intel counterparts. 
+
+<p> 
+
+<!--
+<h4>Full-Screen Windows</h4>
+
+The next new feature may look somewhat strange on a desktop machine with a large monitor, but will immediately make sense if you have a portable.
+The feature allows windows to be maximized so they fill the entire screen, hiding the menu bar and in some cases the toolbar. Many programs, including TeXShop, have already implemented this type of behavior for some of their windows, but the Lion design is easier to use because you can switch out of a maximized window for other tasks without shrinking the window back to regular size.
+
+<p>Lion's design is related to the Spaces feature of earlier systems, in which the user can create multiple desktops statically using Apple's System Preferences. In Lion, these multiple desktops have a more dynamic design. I'll describe how this works on a portable using finger gestures, but the gestures can be simulated on a desktop machine using control-arrow for appropriate arrow keys.
+
+<p> On a portable, a user can move between desktops by placing three fingers on the track pad and swiping left or right. By default, the Dashboard widgets are given a screen of their own left of the main screen, so swipe left to see these widgets and right to get back to the standard desktop. Swipe up rather than left or right to get to "Mission Control" where all multiple desktops are shown at once. Desktops are shown along the top of Mission Control. If the cursor is moved to the extreme top right, a new element appears allowing you to add further desktops. 
+Mouse over a desktop to show an extra element allowing you to remove that desktop from the list. Programs can be moved from one screen to another in Mission Control. Swipe down with three fingers to return to a regular desktop.
+
+<p> In Lion, "programs" do not move into full-screen mode; instead "individual  program windows" move into this mode. Using Safari as an example, that program could be showing two web pages, one in a regular desktop window and the other in a full screen window. Windows are taken full screen by clicking on the icon with two arrows at the extreme top right of the window. When a window moves into full screen mode, an extra desktop is created dynamically and occupied by that window. Thus in the Safari example, you could swipe with three fingers to move between the regular web page and the full screen web page, or between Safari and other programs. When a window is in full screen mode, move the cursor to the top of the screen to reveal the menu bar and an icon which switches the window back to regular mode. When that happens, the dynamically created desktop for that window is removed.
+
+<p>Now turn to the TeXShop implementation of this feature. When a source editor window become full screen, the toolbar shows but the menu bar is hidden. Nothing surprising there. When a preview window become full screen, the toolbar is also hidden and the display switches into double page mode. Move the mouse to the top of the screen to reveal the menu bar and toolbar. 
+
+<p>When a full screen preview window is moved back to regular size, its old display mode returns, so if the window was originally in multipage mode before going to full screen,  it will return to that mode when it exits full screen mode.
+
+<p>When a preview window is in full screen mode, the menu is still available and a menu item can be used to switch from double page mode to any other display mode. This can be useful for beamer documents, allowing each slide to occupy a full screen rather than seeing two slides side by side. If the preview window then exits full screen mode and later reenters it, the new display mode for full screen operation will be remembered.
+
+<p>If you are working on a TeX document, you can take the preview into full screen mode and leave the source window in regular mode, or you can take both windows into full screen mode. In either case, syncTeX automatically switches to the correct screen, so it is easy to go back and forth between the source and preview windows. Similarly, after typesetting from a source window, the screen will automatically switch to the screen with the preview. 
+
+<p>One tricky issue is the handling of the console and log view windows. If these windows are open when the source window is taken to full screen mode, they will remain on the original screen. But if these windows are closed when the source window is taken to full screen mode, they will appear on that full screen during typesetting, or when the log is opened.
+
+<p>There is a menu item in the Windows menu to take the active window fullscreen. Notice that TeXShop's original full screen view of the Preview
+window is still available for now in the same menu. Eventually this item is likely to be removed.
+
+<p> In full screen Preview mode, it is possible to scroll from page to page by pushing the arrow keys, or by pushing the spacebar and shift-spacebar, or with a two finger up or down swipe gesture.
+
+<p> I investigated the possibility of taking both the source and the preview window into fullscreen mode together with a single button click, but that didn't work well, and it is not in the spirit of Apple's Design Guidelines.
+
+<p> 
+-->
+ </div>
+
+
+</body>
+</html>

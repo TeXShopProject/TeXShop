@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Automatic Saving — TeXShop</title><link rel="stylesheet" href="../style.css"><link rel="icon" href="../assets/texshop.png"></head><body><header><nav><a href="../en.html">TeXShop</a><a href="https://pages.uoregon.edu/koch/texshop/">Previous website</a><a href="../acknowledgments.html">Acknowledgments</a><a href="../archive/index.html">History Archive</a></nav></header><main class="archive-content"><h1>Automatic Saving</h1><p class="archive-notice">Archived from Richard Koch’s TeXShop website on October 28, 2026. Original wording is preserved; version information, advice, contact details, and external links may be out of date. <a href="https://pages.uoregon.edu/koch/texshop/autosave.html">Original page</a> · <a href="sources/autosave.html.txt">Original HTML</a></p><p class="archive-nav"><a href="history.html">History</a> · <a href="collaborators.html">Collaborators</a> · <a href="intel-arm.html">Intel and Arm</a> · <a href="arc.html">ARC</a> · <a href="64bits.html">64 Bits</a> · <a href="fragilebaseclasses.html">Fragile Base Classes</a> · <a href="autosave.html">Automatic Saving</a> · <a href="anniversary.html">Original Version and Anniversaries</a> · <a href="changes_3.html">Changes in Versions 3–5</a> · <a href="changes_2.html">Changes in Version 2</a></p><article class="legacy" lang="en">
+<h3 id="section-1">Automatic Saving</h3>
+<p> Saving source files to disk is an essential feature of TeXShop, and a bug which broke this operation would be fatal to the future of the program. Luckily, most steps in this crucial chain are done automatically by Cocoa;  the only spot where TeXShop code is involves comes when Cocoa asks  what data to save and we point to the string containing the full source. I would not dare modify the TeXShop "Save" or "Save As" code. 
+
+<p> However, in Lion this system was completely rewritten by Apple. The new code automatically saves files every few minutes, so it is essentially impossible to lose files you are writing. If your power goes out on a desktop without a battery, you might lose a sentence or two, but nothing more.  You do not need to save files before quitting the program, or before closing windows, because that is done automatically. In a sense, you can forget the Save operation. The system handles everything automatically.
+
+<p> A University of Oregon faculty member once called me at midnight. He was writing the final exam for a graduate analysis course to be given at 8 AM the next morning, he was almost done, but he accidentally closed the source file without saving or typesetting. He asked what he could do. The only answer I could give was "start over." This problem cannot happen on Lion or higher.
+
+<p> Saving every few minutes is not noticeable because the system does not save the complete file. It only saves the changes. So if your entire book is one gigantic source file, you will still not notice the  save operation. I'm sure this holds because automatic saving has been the norm on TeXShop for ten years and I have never received a complaint.
+
+<p> Since the Macintosh is only saving changes, it has a complete record of all the versions of the document. Theoretically, you could go back to
+earlier versions and reconstruct the document as it was yesterday, or last month. As we will see in a moment, this isn't just theoretically possible --- it is actually easy.
+
+<p> You might wonder if the file containing a document has all the old versions hidden away somewhere. Could I send someone the TeX source of a letter of recommendation which currently says ``Paul is a creative student'', but whose initial version said ``Paul hasn't had a new idea in years"? Happily,
+no. Files on disk only contain the latest version.
+
+<p> What happens if I decide to experiment , get confused, lose my way, and end up with a source document that makes no sense, and then
+discover that my crazy changes have been saved out from under me?
+You can use undo to get
+back to the original document because TeXShop's undo works even across file saves.
+
+<p> However, Apple has a much nicer solution to this problem. The TeXShop File menu has an item named
+"Revert To". Selecting this item gives a choice between two items, and one reads "Browse All Versions".
+
+<p> The Macintosh screen then switches to a Time Machine view showing the current document on the left and a receding stack of earlier views on the right. You can leaf through these earlier versions, noting the date and time that the version was created. All
+these views are alive, so you can copy and paste between versions, or restore an earlier version. 
+This works even if you have not activated Time Machine. So it is a personal Time Machine just for TeXShop source documents.
+
+<p> Additional details about Saving are in the TeXShop Manual. But perhaps this initial description is still alarming. A TeXShop preference item allows you to turn Automatic Saving off. The preference item is hidden away, but described in the manual. I really, really do not recommend using that item, and I don't know any users who now use it.
+
+<p> Automatic saving is a courageous and enormous change by Apple, made possible by the solution of the fragile base class problem. You might wonder how much TeXShop code we had to change to activate this change. It is easy to answer that question. We had to add the following lines. The top line reads the hidden preference to obtain YES if we want automatic saving and NO otherwise. The bottom lines return this answer to a Cocoa procedure which asks if we should "autosaveInPlace".
+<pre>
+   doAutoSave = [SUD boolForKey:AutoSaveEnabledKey];
+   
+   + (BOOL)autosavesInPlace
+       {
+         return doAutoSave;
+       }
+</pre>
+<p> There is one other surprise. The TeXShop source code contains a file named MainMenu.nib which displays the various menus in the program. If you compare the File menu described by this file with the actual File menu displayed by TeXShop when running, you will discover that the two menus do not agree. The running program contains several items related to Automatic Saving, including that "Revert To:" menu item mentioned earlier. That item is not mentioned in the TeXShop source code because the TeXShop menus were created long before automatic saving was even a dream in an Apple programmer's eye. But fixing the fragile base class problem allows Apple to reach into those menu objects and rewrite them on the fly whenever TeXShop starts up. That is possible because TeXShop used the default File menu items recommended by Apple long ago. Apple knows about those items, so it knows how to change them.
+
+
+
+
+
+
+</p></p></p></p></p></p></p></p></p></p></p></p></article></main></body></html>

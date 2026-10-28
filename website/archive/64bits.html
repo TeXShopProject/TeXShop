@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>64 Bits — TeXShop</title><link rel="stylesheet" href="../style.css"><link rel="icon" href="../assets/texshop.png"></head><body><header><nav><a href="../en.html">TeXShop</a><a href="https://pages.uoregon.edu/koch/texshop/">Previous website</a><a href="../acknowledgments.html">Acknowledgments</a><a href="../archive/index.html">History Archive</a></nav></header><main class="archive-content"><h1>64 Bits</h1><p class="archive-notice">Archived from Richard Koch’s TeXShop website on October 28, 2026. Original wording is preserved; version information, advice, contact details, and external links may be out of date. <a href="https://pages.uoregon.edu/koch/texshop/64bits.html">Original page</a> · <a href="sources/64bits.html.txt">Original HTML</a></p><p class="archive-nav"><a href="history.html">History</a> · <a href="collaborators.html">Collaborators</a> · <a href="intel-arm.html">Intel and Arm</a> · <a href="arc.html">ARC</a> · <a href="64bits.html">64 Bits</a> · <a href="fragilebaseclasses.html">Fragile Base Classes</a> · <a href="autosave.html">Automatic Saving</a> · <a href="anniversary.html">Original Version and Anniversaries</a> · <a href="changes_3.html">Changes in Versions 3–5</a> · <a href="changes_2.html">Changes in Version 2</a></p><article class="legacy" lang="en">
+<h3 id="section-1">64 Bits</h3>
+<p> The PowerPC G5 was introduced to great fanfare at WWDC 2003. It is the last PowerPC processor before Apple switched to Intel, and it was a 64 bit processor. However, Apple only allowed programs to run in 64 bits if they made no calls to the graphic libraries, so TeXShop and almost all programs continued to run in 32 bits.
+
+<p> The initial Intel processors were 32-bit chips, but after a few months, Apple switched to 64-bit Intel chips.
+MacOS 10.5, Leopard, and macOS 10.6, Snow Leopard, could run on both 32 bit and 64 bit processors. But 
+macOS 10.7, Lion, and higher run only on 64 bit Intel chips. Around this time, Apple began seriously promoting 64 bit operation and giant WWDC banners proclaimed the slogan "64-bit Clean".
+
+<p> Apple provided a command line program which would inspect Cocoa source code, convert key portions to 64 operation, and mark questionable sections for direct programmer inspection. One summer around this time, I painfully converted TeXShop to 64 bit operation. That is long in the past, but some of those "64 bit caution signs" from the conversion script can still be found in the TeXShop code.
+So from Lion on, TeXShop runs in 64 bits, using either Intel or Arm processors. 
+
+<p> By the way, 32 bit Arm processors exist, but Apple never used them in the Macintosh. When Apple made the transition to Arm, we had one minor problem converting TeX Live binaries to Arm. One library in the distribution provided assembly code to speed up a single routine if it was being compiled on Arm, but the assembly code was 32-bit only.
+We had to comment out that "speedup" because Apple's Arm machines were too advanced for it.
+
+
+
+</p></p></p></p></article></main></body></html>
