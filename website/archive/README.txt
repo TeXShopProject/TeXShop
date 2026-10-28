@@ -5,15 +5,18 @@ Author: Richard Koch, with contributions credited in the original pages.
 
 The 15 archived pages retain the visible text from each original #main element.
 The new wrapper replaces the old website navigation and adds provenance notices.
-Relative links to archived pages are local; other links resolve to their original
-absolute destinations. External websites and old application downloads are not mirrored.
+Links to archived pages and the 11 directly linked downloadable files are local.
+Other external websites are not mirrored; their links retain the original destinations.
+Download sources, recovery locations, sizes, and SHA-256 hashes are recorded in
+manifest.json. Large ZIP files are backed by our historical-downloads GitHub Release
+and included in the generated site.
 HTML comments and active elements are excluded from the reading pages.
 The unmodified source HTML is retained as plain-text files in sources/.
 
 The nine release-note illustrations are stored locally. Where the original image
 URL returned HTTP 404, the corresponding image from the TeXShop source distribution's
 English help was used. These substitutions are identified in manifest.json.
-The manifest records original URLs and SHA-256 hashes for all snapshots and images.
+The manifest records original URLs and SHA-256 hashes for snapshots, images, and downloads.
 
 These documents are historical records. Version numbers, advice, links, and contact
 information are not statements about the current release. The archive includes the
