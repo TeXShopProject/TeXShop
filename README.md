@@ -6,7 +6,7 @@ At Richard's invitation, Yusuke Terada is taking over its development and mainte
 
 ## Release status
 
-This repository contains development sources based on **TeXShop 5.58 Golden Gate**. A signed application release from the new maintainership is not available here yet. The source tree still contains inherited version and update-feed settings; they are not a declaration of a new released version.
+This repository contains **TeXShop 5.59 development sources**, based on TeXShop 5.58 Golden Gate. A signed application release from the new maintainership is not available here yet. The source tree still uses the inherited update feed; the version bump does not constitute a published application release.
 
 Application downloads and supported macOS versions will be announced with the first release. TeXShop also requires a separate TeX distribution to typeset documents; see [MacTeX](https://www.tug.org/mactex/).
 

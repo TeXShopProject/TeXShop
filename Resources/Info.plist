@@ -1244,7 +1244,7 @@
 	<key>CFBundleExecutable</key>
 	<string>TeXShop</string>
 	<key>CFBundleGetInfoString</key>
-	<string>5.57, Copyright 2001-2025, Richard Koch</string>
+	<string>5.59, Copyright 2001-2025, Richard Koch</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>TeXShopHelp</string>
 	<key>CFBundleHelpBookName</key>
@@ -1260,13 +1260,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>5.57</string>
+	<string>5.59</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>5.57</string>
+	<string>5.59</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
