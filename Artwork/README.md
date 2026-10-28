@@ -1,4 +1,4 @@
-# TeXShop icon proposal
+# TeXShop app icon
 
 Prepared from the TetsuTeXShop vector artwork at the maintainer's request.
 The Japanese character has been removed. The outlined TeX mark is centered
@@ -20,6 +20,6 @@ swift Artwork/generate-icon.swift
 iconutil -c icns Artwork/TeXShop.iconset -o Artwork/TeXShop.icns
 ```
 
-This proposal is not yet wired into the Xcode app-icon build settings.
-Actual macOS app-icon rendering must be checked when it is integrated.
-The website preview uses the generated legacy PNG. No GitHub avatar has been uploaded.
+The Xcode target uses `TeXShop.icon` and the app-icon name `TeXShop`.
+The root `icon.icns` retains the legacy fallback. The website uses the generated PNG,
+and the Organization avatar uses `GitHub-avatar.png`.

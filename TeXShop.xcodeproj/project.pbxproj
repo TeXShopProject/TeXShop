@@ -385,6 +385,7 @@
 		52B13E5408A8183B00756E5E /* matrixpanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E5308A8183B00756E5E /* matrixpanel.nib */; };
 		52E4BF8D08CA74C300726E11 /* TeXShop in Resources */ = {isa = PBXBuildFile; fileRef = 52E4BF4408CA74C300726E11 /* TeXShop */; };
 		EF5890000000000000000001 /* TSSparkleController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5890000000000000000002; };
+		EF5590000000000000000001 /* TeXShop.icon in Resources */ = {isa = PBXBuildFile; fileRef = EF5590000000000000000002; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -1032,6 +1033,7 @@
 		F5ECC3210214678B01DF2474 /* TSToolbarController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSToolbarController.m; sourceTree = "<group>"; };
 		EF5890000000000000000002 /* TSSparkleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSparkleController.m; sourceTree = "<group>"; };
 		EF5890000000000000000003 /* TSSparkleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSparkleController.h; sourceTree = "<group>"; };
+		EF5590000000000000000002 /* TeXShop.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.icon; path = Artwork/TeXShop.icon; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1066,6 +1068,7 @@
 				40E994542C4441710044A02F /* tools.png */,
 				40E55A8B073B2A3000860060 /* pdf.icns */,
 				4009C6D60D0BAA9C00B23013 /* hiero.icns */,
+				EF5590000000000000000002 /* TeXShop.icon */,
 				4054C5201995828C00F7D7A5 /* icon.icns */,
 				40BC8E881922D7E900F3EF2D /* IconsTeX.icns */,
 				40BC8E861922D7DD00F3EF2D /* IconsPDF.icns */,
@@ -1953,6 +1956,7 @@
 				40473F960C682727009311CF /* BinaryOperations.pdf in Resources */,
 				40473F970C682727009311CF /* Delimiters.pdf in Resources */,
 				40473F980C682727009311CF /* European.pdf in Resources */,
+				EF5590000000000000000001 /* TeXShop.icon in Resources */,
 				4054C5211995828C00F7D7A5 /* icon.icns in Resources */,
 				40473F990C682727009311CF /* HG.pdf in Resources */,
 				40473F9A0C682727009311CF /* LargeOperators.pdf in Resources */,
@@ -2611,6 +2615,7 @@
 			buildSettings = {
 				BUNDLE_VERSION = 3.14;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = TeXShop;
 				CODE_SIGN_ENTITLEMENTS = TeXShop.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -2658,6 +2663,7 @@
 			buildSettings = {
 				BUNDLE_VERSION = 3.14;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = TeXShop;
 				CODE_SIGN_ENTITLEMENTS = TeXShop.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
