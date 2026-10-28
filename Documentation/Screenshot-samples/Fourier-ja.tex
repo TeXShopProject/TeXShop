@@ -1,0 +1,79 @@
+% !TEX TS-program = lualatex
+% !TeX program = lualatex
+% !TEX encoding = UTF-8 Unicode
+% TeXShopのWebサイト用に作成したサンプル文書。
+\documentclass[11pt,a4paper]{ltjsarticle}
+\usepackage{fontspec}
+\setmainfont{lmroman10-regular.otf}[
+  BoldFont=lmroman10-bold.otf,
+  ItalicFont=lmroman10-italic.otf,
+  BoldItalicFont=lmroman10-bolditalic.otf
+]
+\usepackage[haranoaji]{luatexja-preset}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[margin=23mm]{geometry}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={波からフーリエ級数へ}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+
+\begin{document}
+\begin{center}
+  {\LARGE 波からフーリエ級数へ}\\[0.5em]
+  {\small フーリエ級数の小さなノート}
+\end{center}
+
+\section{波を重ねて関数を表す}
+複雑な信号も、単純な振動の重ね合わせとして捉えることができます。
+周期 $2\pi$ の関数に対するフーリエ級数は、次の形で表されます。
+\begin{equation}
+  f(x) \sim \frac{a_0}{2}
+  + \sum_{n=1}^{\infty}
+    \bigl(a_n\cos nx + b_n\sin nx\bigr),
+\end{equation}
+ここで、各成分の係数は次の積分で求められます。
+\begin{equation}
+  a_n = \frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\cos nx\,dx,
+  \qquad
+  b_n = \frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin nx\,dx.
+\end{equation}
+
+\section{矩形波を近似する}
+区間 $(-\pi,0)$ で $f(x)=-1$、区間 $(0,\pi)$ で $f(x)=1$ とする
+奇関数の矩形波では、余弦の項がすべて消えます。
+最初の $N$ 個の非零項を用いると、次の近似が得られます。
+\begin{equation}
+  S_N(x)=\frac{4}{\pi}\sum_{k=0}^{N-1}
+  \frac{\sin\bigl((2k+1)x\bigr)}{2k+1}.
+\end{equation}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.93\linewidth, height=6.3cm,
+  axis lines=middle, xlabel={$x$}, ylabel={$y$},
+  xmin=-3.5, xmax=3.5, ymin=-1.5, ymax=1.5,
+  xtick={-3.14159265,0,3.14159265},
+  xticklabels={$-\pi$,$0$,$\pi$}, ytick={-1,1},
+  samples=401, domain=-pi:pi,
+  legend style={at={(0.5,-0.15)}, anchor=north,
+    draw=none, legend columns=2},
+  every axis plot/.append style={thick}
+]
+\addplot[blue!75!black] {4/pi*sin(deg(x))};
+\addlegendentry{1項の近似}
+\addplot[red!80!black]
+  {4/pi*(sin(deg(x))+sin(deg(3*x))/3+sin(deg(5*x))/5
+        +sin(deg(7*x))/7+sin(deg(9*x))/9)};
+\addlegendentry{5項の近似}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+項数を増やすと、不連続点から離れた場所では近似が改善します。
+しかし、不連続点の近くでは、項数を増やしても一定の行き過ぎが残ります。
+これが\textbf{ギブズ現象}です。
+\end{document}
