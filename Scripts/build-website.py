@@ -2,6 +2,9 @@
 # added by Terada: Build a static Pages artifact without publishing it.
 import argparse
 import html
+import hashlib
+import json
+from urllib.request import urlopen
 from pathlib import Path
 import re
 import shutil
@@ -15,6 +18,28 @@ if args.repository and not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9-]*/[A-Za-z0-9_.-
 root = Path(__file__).resolve().parents[1]
 if args.output.exists():
     parser.error('Output must be a new directory')
+# added by Terada: Restore large historical files from our own release storage.
+archive = root / 'website' / 'archive'
+manifest = json.loads((archive / 'manifest.json').read_text())
+for item in manifest['items']:
+    if 'release_asset_url' not in item:
+        continue
+    local = archive / item['file']
+    if not local.exists():
+        local.parent.mkdir(parents=True, exist_ok=True)
+        temporary = local.with_suffix(local.suffix + '.partial')
+        try:
+            with urlopen(item['release_asset_url'], timeout=60) as response, temporary.open('wb') as output:
+                shutil.copyfileobj(response, output)
+            with temporary.open('rb') as source:
+                if hashlib.file_digest(source, 'sha256').hexdigest() != item['sha256']:
+                    raise ValueError('Historical download checksum mismatch: ' + item['file'])
+            temporary.replace(local)
+        finally:
+            temporary.unlink(missing_ok=True)
+    with local.open('rb') as source:
+        if hashlib.file_digest(source, 'sha256').hexdigest() != item['sha256']:
+            raise ValueError('Historical download checksum mismatch: ' + item['file'])
 shutil.copytree(root / 'website', args.output)
 for name in ('index.html', 'en.html', 'ja.html', 'release-notes.html', 'release-notes-ja.html', 'downloads.html', 'downloads-ja.html', 'contact.html', 'contact-ja.html'):
     japanese = name in ('ja.html', 'release-notes-ja.html', 'downloads-ja.html', 'contact-ja.html')

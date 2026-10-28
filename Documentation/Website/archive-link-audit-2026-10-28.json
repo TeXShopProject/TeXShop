@@ -1,0 +1,2672 @@
+{
+  "external": [
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/",
+      "pages": [
+        "64bits.html",
+        "about.html",
+        "anniversary.html",
+        "arc.html",
+        "autosave.html",
+        "changes_2.html",
+        "changes_3.html",
+        "collaborators.html",
+        "extras.html",
+        "fragilebaseclasses.html",
+        "history.html",
+        "index-ja.html",
+        "index.html",
+        "intel-arm.html",
+        "pictures.html",
+        "tahoe.html",
+        "translations.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/64bits.html",
+      "pages": [
+        "64bits.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/64bits.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/about.html",
+      "pages": [
+        "about.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/about.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/anniversary.html",
+      "pages": [
+        "anniversary.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/anniversary.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/TexShop-1.zip",
+      "pages": [
+        "anniversary.html"
+      ],
+      "status": "206",
+      "content_type": "application/zip",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/TexShop-1.zip",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/texshopsource1.zip",
+      "pages": [
+        "anniversary.html"
+      ],
+      "status": "206",
+      "content_type": "application/zip",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/texshopsource1.zip",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/TeXShop-History-Koch.pdf",
+      "pages": [
+        "anniversary.html"
+      ],
+      "status": "206",
+      "content_type": "application/pdf",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/TeXShop-History-Koch.pdf",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/TeXShop-1Arm.zip",
+      "pages": [
+        "anniversary.html"
+      ],
+      "status": "206",
+      "content_type": "application/zip",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/TeXShop-1Arm.zip",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/texshoparmsource.zip",
+      "pages": [
+        "anniversary.html"
+      ],
+      "status": "206",
+      "content_type": "application/zip",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/texshoparmsource.zip",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/arc.html",
+      "pages": [
+        "arc.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/arc.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/autosave.html",
+      "pages": [
+        "autosave.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/autosave.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/changes_2.html",
+      "pages": [
+        "changes_2.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/changes_2.html",
+      "error": ""
+    },
+    {
+      "url": "http://johnmacfarlane.net/pandoc/",
+      "pages": [
+        "changes_2.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pandoc.org/",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/changes_3.html",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/changes_3.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/",
+      "error": ""
+    },
+    {
+      "url": "https://typst.app",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://typst.app/",
+      "error": ""
+    },
+    {
+      "url": "https://github.com/TeXShop/TeXShop",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://github.com/TeXShop/TeXShop",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/texshop.html",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/texshop.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/atsol@aegean.gr",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "404",
+      "content_type": "text/html; charset=iso-8859-1",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/atsol@aegean.gr",
+      "error": ""
+    },
+    {
+      "url": "https://myria.math.aegean.gr/~atsol/newpage-en/",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://myria.math.aegean.gr/~atsol/newpage-en/",
+      "error": ""
+    },
+    {
+      "url": "https://pretextbook.org",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://pretextbook.org/",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/HumboldtTalk.pdf",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "404",
+      "content_type": "text/html; charset=iso-8859-1",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/HumboldtTalk.pdf",
+      "error": ""
+    },
+    {
+      "url": "https://draculatheme.com/texshop/",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://draculatheme.com/texshop",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/",
+      "error": ""
+    },
+    {
+      "url": "https://herbs.github.io",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://herbs.github.io/",
+      "error": ""
+    },
+    {
+      "url": "https://ethanschoonover.com/solarized/",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://ethanschoonover.com/solarized/",
+      "error": ""
+    },
+    {
+      "url": "https://github.com/altercation/solarized/issues/167",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://github.com/altercation/solarized/issues/167",
+      "error": ""
+    },
+    {
+      "url": "http://christian.manteuffel.info/blog/ia-writer-inspired-theme-for-texshop/",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "http://christian.manteuffel.info/blog/ia-writer-inspired-theme-for-texshop/",
+      "error": ""
+    },
+    {
+      "url": "https://tex.stackexchange.com/questions/94418/os-x-umlauts-in-utf8-nfd-yield-package-inputenc-error-unicode-char-u8̈-not/94420#94420",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "403",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://tex.stackexchange.com/questions/94418/os-x-umlauts-in-utf8-nfd-yield-package-inputenc-error-unicode-char-u8̈-not/94420#94420",
+      "error": ""
+    },
+    {
+      "url": "http://mathbook.pugetsound.edu/index.html",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "000",
+      "content_type": "",
+      "final_url": "http://mathbook.pugetsound.edu/index.html",
+      "error": "curl: (28) Connection timed out after 35001 milliseconds"
+    },
+    {
+      "url": "http://tidbits.com/article/17351",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "200",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://tidbits.com/2017/07/20/vote-for-your-favorite-mac-markdown-editor/",
+      "error": ""
+    },
+    {
+      "url": "http://tug.org/mactex/elcapitan.html",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "404",
+      "content_type": "text/html; charset=iso-8859-1",
+      "final_url": "https://tug.org/mactex/elcapitan.html",
+      "error": ""
+    },
+    {
+      "url": "https://dl.dropboxusercontent.com/u/3825336/TeX/index.html",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "404",
+      "content_type": "text/html",
+      "final_url": "https://dl.dropboxusercontent.com/u/3825336/TeX/index.html",
+      "error": ""
+    },
+    {
+      "url": "https://www.tug.org/fonts/getnonfreefonts/",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://www.tug.org/fonts/getnonfreefonts/",
+      "error": ""
+    },
+    {
+      "url": "https://www.tug.org/store/lucida/index.html",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "200",
+      "content_type": "text/html",
+      "final_url": "https://www.tug.org/store/lucida/index.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.pdf",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "404",
+      "content_type": "text/html; charset=iso-8859-1",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.pdf",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.tex",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "404",
+      "content_type": "text/html; charset=iso-8859-1",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.tex",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Smoothing/abI3d8.pdf",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "404",
+      "content_type": "text/html; charset=iso-8859-1",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/Smoothing/abI3d8.pdf",
+      "error": ""
+    },
+    {
+      "url": "http://cocoaspell.leuski.net/",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "000",
+      "content_type": "",
+      "final_url": "http://cocoaspell.leuski.net/",
+      "error": "curl: (6) Could not resolve host: cocoaspell.leuski.net"
+    },
+    {
+      "url": "http://unicode.org/reports/tr15/#Primary_Exclusion_List_Table",
+      "pages": [
+        "changes_3.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "http://unicode.org/reports/tr15/#Primary_Exclusion_List_Table",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/collaborators.html",
+      "pages": [
+        "collaborators.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/collaborators.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/extras.html",
+      "pages": [
+        "extras.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/extras.html",
+      "error": ""
+    },
+    {
+      "url": "http://www.publicdomainpictures.net/view-image.php?image=15950&picture=stone-lionI",
+      "pages": [
+        "extras.html"
+      ],
+      "status": "403",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "http://www.publicdomainpictures.net/view-image.php?image=15950&picture=stone-lionI",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/fragilebaseclasses.html",
+      "pages": [
+        "fragilebaseclasses.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/fragilebaseclasses.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/history.html",
+      "pages": [
+        "history.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/history.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/intel-arm.html",
+      "pages": [
+        "intel-arm.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/intel-arm.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/pictures.html",
+      "pages": [
+        "pictures.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/pictures.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/tahoe.html",
+      "pages": [
+        "tahoe.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/tahoe.html",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/texshop557-tahoe.zip",
+      "pages": [
+        "tahoe.html"
+      ],
+      "status": "206",
+      "content_type": "application/zip",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/texshop557-tahoe.zip",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/texshopsource557-tahoe.zip",
+      "pages": [
+        "tahoe.html"
+      ],
+      "status": "206",
+      "content_type": "application/zip",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/texshopsource557-tahoe.zip",
+      "error": ""
+    },
+    {
+      "url": "https://tug.org/mactex/",
+      "pages": [
+        "tahoe.html"
+      ],
+      "status": "200",
+      "content_type": "text/html",
+      "final_url": "https://tug.org/mactex/",
+      "error": ""
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/translations.html",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://pages.uoregon.edu/koch/texshop/translations.html",
+      "error": ""
+    },
+    {
+      "url": "https://chicksgold.com/blog/texshop-history",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "206",
+      "content_type": "text/html",
+      "final_url": "https://chicksgold.com/blog/texshop-history",
+      "error": ""
+    },
+    {
+      "url": "https://www.ibidem-translations.com/blog/latex-documentation-spanish.php",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "200",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://www.ibidem-translations.com/educ/latex-documentation-spanish.php",
+      "error": ""
+    },
+    {
+      "url": "https://www.eldorado.gg/translations/mokslinis-straipsnis-latex",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "206",
+      "content_type": "text/html;charset=UTF-8",
+      "final_url": "https://www.eldorado.gg/translations/mokslinis-straipsnis-latex",
+      "error": ""
+    },
+    {
+      "url": "https://www.chameleonjohn.com/translations/LaTeX-documentation-Indonesian",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "403",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://www.chameleonjohn.com/translations/LaTeX-documentation-Indonesian",
+      "error": ""
+    },
+    {
+      "url": "http://dailyanswers.net/latex-documentation",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "403",
+      "content_type": "text/html; charset=utf-8",
+      "final_url": "https://dailyanswers.net/latex-documentation",
+      "error": ""
+    },
+    {
+      "url": "https://forskningsnytt.no/latex-dokumentasjon/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "200",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://forskningsnytt.no/latex-dokumentasjon/",
+      "error": ""
+    },
+    {
+      "url": "https://lanfordeg.no/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "200",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://lanfordeg.no/",
+      "error": ""
+    },
+    {
+      "url": "https://mobilemall.pk/blog/latex-documentation/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "403",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://mobilemall.co/blog/latex-documentation/",
+      "error": ""
+    },
+    {
+      "url": "https://vpntesting.com/translations/latex-dokumentation/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "410",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://vpntesting.com/translations/latex-dokumentation/",
+      "error": ""
+    },
+    {
+      "url": "https://www.elvento.ee/documendid/latex-documentation/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "200",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://www.elvento.ee/documendid/latex-documentation/",
+      "error": ""
+    },
+    {
+      "url": "https://vpntesting.com/translations/se-latex-documentation/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "410",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://vpntesting.com/translations/se-latex-documentation/",
+      "error": ""
+    },
+    {
+      "url": "https://www.alarmsystem.no/oversettelse/texshop-oversettelse/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "000",
+      "content_type": "",
+      "final_url": "https://www.alarmsystem.no/oversettelse/texshop-oversettelse/",
+      "error": "curl: (7) Failed to connect to www.alarmsystem.no:443 after 466 ms: Could not connect to server"
+    },
+    {
+      "url": "https://www.rasklån.no",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "206",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://www.søkelån.no/",
+      "error": ""
+    },
+    {
+      "url": "https://fixgerald.com/blog/latex-dokumentatsiya",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "200",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://papersowl.com/free-plagiarism-checker",
+      "error": ""
+    },
+    {
+      "url": "https://fixgerald.com/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "200",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://papersowl.com/free-plagiarism-checker",
+      "error": ""
+    },
+    {
+      "url": "https://translatorgenie.com/translate/latex.html",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "000",
+      "content_type": "",
+      "final_url": "https://translatorgenie.com/translate/latex.html",
+      "error": "curl: (28) Connection timed out after 35001 milliseconds"
+    },
+    {
+      "url": "https://npifinder.com",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "522",
+      "content_type": "text/plain; charset=UTF-8",
+      "final_url": "https://npirecord.com/",
+      "error": ""
+    },
+    {
+      "url": "https://istruzionemessina.it/documentazione-latex/",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "404",
+      "content_type": "text/html; charset=UTF-8",
+      "final_url": "https://istruzionemessina.it/documentazione-latex/",
+      "error": ""
+    },
+    {
+      "url": "https://chicksx.com/blog/obtaining-texshop",
+      "pages": [
+        "translations.html"
+      ],
+      "status": "200",
+      "content_type": "text/html",
+      "final_url": "https://chicksx.com/blog/obtaining-texshop",
+      "error": ""
+    }
+  ],
+  "local": [
+    {
+      "page": "64bits.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "sources/64bits.html.txt",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "64bits.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "sources/about.html.txt",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "about.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "sources/anniversary.html.txt",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "anniversary.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "sources/arc.html.txt",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "arc.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "sources/autosave.html.txt",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "autosave.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "sources/changes_2.html.txt",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "changes_2.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "sources/changes_3.html.txt",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/2e5b5ac500-ThemeTab.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/7b4a9d2931-onewindow.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/9b9c585b60-charinfo1.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/cc32863851-charinfo2.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/0c32ecb0f4-charinfo3.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/5fa84f0bcd-charinfo4.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/0e88f52d28-charinfo5.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/a2ebb77bbf-charinfo6.png",
+      "exists": true
+    },
+    {
+      "page": "changes_3.html",
+      "url": "assets/084d195181-charinfo7.png",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "sources/collaborators.html.txt",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "collaborators.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "sources/extras.html.txt",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "extras.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "sources/fragilebaseclasses.html.txt",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "fragilebaseclasses.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "sources/history.html.txt",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "history.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "../ja.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "../acknowledgments-ja.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "../archive/index-ja.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "index-ja.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "index.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "sources/intel-arm.html.txt",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "intel-arm.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "sources/pictures.html.txt",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "assets/68c8e2f7f2-TeXShop-2000.jpg",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "assets/829a353b60-TeXShop-2009.jpg",
+      "exists": true
+    },
+    {
+      "page": "pictures.html",
+      "url": "assets/13866c2fea-TeXShop-2024.jpg",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "sources/tahoe.html.txt",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "changes_2.html",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "assets/3a5436e4da-originalicons.png",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "assets/09c2a48ed5-icons-Tahoejail.png",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "assets/9493b964bb-TeXShopTahoeIcon.png",
+      "exists": true
+    },
+    {
+      "page": "tahoe.html",
+      "url": "assets/af58c568b7-bug.png",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "../style.css",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "../en.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "../assets/texshop.png",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "../acknowledgments.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "../archive/index.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "sources/translations.html.txt",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "about.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "pictures.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "tahoe.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "translations.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "history.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "collaborators.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "intel-arm.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "arc.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "64bits.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "fragilebaseclasses.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "autosave.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "anniversary.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "changes_3.html",
+      "exists": true
+    },
+    {
+      "page": "translations.html",
+      "url": "changes_2.html",
+      "exists": true
+    }
+  ]
+}

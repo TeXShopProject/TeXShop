@@ -7,3 +7,8 @@ xcuserdata/
 # Local Sparkle signing secrets (never commit private keys).
 TeXShop-private-keys/
 *-sparkle-private-key*
+
+# Large historical distribution files are stored as release assets.
+/website/archive/downloads/texshop557-tahoe.zip
+/website/archive/downloads/texshopsource557-tahoe.zip
+/website/archive/downloads/*.partial

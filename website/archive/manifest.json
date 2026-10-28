@@ -226,6 +226,122 @@
       "sha256": "d5d50d3749b949d7c25834f40f2594baee98192d7b0b13517027c6787bd84841",
       "type": "page",
       "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/TeXShop-1Arm.zip",
+      "file": "downloads/TeXShop-1Arm.zip",
+      "sha256": "78c7f3e6f6b41bfaee6919745a4f73557a925792a83971f494341c837fb8b202",
+      "bytes": 227860,
+      "type": "download",
+      "referenced_by": [
+        "anniversary.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/TeXShop-History-Koch.pdf",
+      "file": "downloads/TeXShop-History-Koch.pdf",
+      "sha256": "1f8ab04699e0ee371bb1abaa1e3c76361e4071a14b20262bec8ac5a5d1c051dd",
+      "bytes": 108294,
+      "type": "download",
+      "referenced_by": [
+        "anniversary.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/TexShop-1.zip",
+      "file": "downloads/TexShop-1.zip",
+      "sha256": "07909a78837b9d603b1e027b2aa763bb8f2b56cab3256497e90eb7a7eb8403a2",
+      "bytes": 152724,
+      "type": "download",
+      "referenced_by": [
+        "anniversary.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/texshop557-tahoe.zip",
+      "file": "downloads/texshop557-tahoe.zip",
+      "sha256": "a8b42f729c90f660b5be5a33de0c1b0f5a73bb2e45c95cb78407b709b4323b79",
+      "bytes": 61184387,
+      "type": "download",
+      "referenced_by": [
+        "tahoe.html"
+      ],
+      "release_asset_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshop557-tahoe.zip"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/texshoparmsource.zip",
+      "file": "downloads/texshoparmsource.zip",
+      "sha256": "a82f44b44b6cd3ebdd3361277134c167a7296a457552490c1cee21323b43b767",
+      "bytes": 321711,
+      "type": "download",
+      "referenced_by": [
+        "anniversary.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/texshopsource1.zip",
+      "file": "downloads/texshopsource1.zip",
+      "sha256": "8441902d49afed96ef24182b7c4c04b331475e5fec233c2eb60a339ab8d61b65",
+      "bytes": 421188,
+      "type": "download",
+      "referenced_by": [
+        "anniversary.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/texshopsource557-tahoe.zip",
+      "file": "downloads/texshopsource557-tahoe.zip",
+      "sha256": "9f8538d11ab8adde4d386243c9e0cb574312e5d8fe9118988fea224ba61c0adc",
+      "bytes": 182236421,
+      "type": "download",
+      "referenced_by": [
+        "tahoe.html"
+      ],
+      "release_asset_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshopsource557-tahoe.zip"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/HumboldtTalk.pdf",
+      "original_link": "https://pages.uoregon.edu/koch/texshop/HumboldtTalk.pdf",
+      "file": "downloads/HumboldtTalk.pdf",
+      "sha256": "58188db76c210b581797856e6c4f95401706d6a4e3041ee7cf42247e8b9307d5",
+      "bytes": 3885753,
+      "type": "download",
+      "referenced_by": [
+        "changes_3.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.pdf",
+      "recovered_from": "https://web.archive.org/web/20220616031532id_/https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.pdf",
+      "file": "downloads/Smoothing/Burke.pdf",
+      "sha256": "9a6bd56dc524d407f461a425d6dfad19b5eb050924cf5463ce665762fa3564dc",
+      "bytes": 99051,
+      "type": "download",
+      "referenced_by": [
+        "changes_3.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Smoothing/abI3d8.pdf",
+      "recovered_from": "https://web.archive.org/web/20220620224209id_/https://pages.uoregon.edu/koch/texshop/Smoothing/abI3d8.pdf",
+      "file": "downloads/Smoothing/abI3d8.pdf",
+      "sha256": "e00d8b7d4f40ae719a9076697eeaade56e9ed8a62653aa760c11c5fb9e00b11c",
+      "bytes": 96167,
+      "type": "download",
+      "referenced_by": [
+        "changes_3.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.tex",
+      "recovered_from": "https://web.archive.org/web/20170919014820id_/http://pages.uoregon.edu:80/koch/texshop/Smoothing/Burke.tex",
+      "file": "downloads/Smoothing/Burke.tex",
+      "sha256": "fcc1a0efcec7037bcde3bc99121c571b189c4ffdc6896c36a63704372619f878",
+      "bytes": 261,
+      "type": "download",
+      "referenced_by": [
+        "changes_3.html"
+      ]
     }
   ]
 }
