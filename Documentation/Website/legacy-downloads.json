@@ -1,0 +1,233 @@
+{
+  "verified_on": "2026-10-28",
+  "source_pages": [
+    "https://pages.uoregon.edu/koch/texshop/obtaining.html",
+    "https://pages.uoregon.edu/koch/texshop/tahoe.html",
+    "https://pages.uoregon.edu/koch/TeXShopSource.html"
+  ],
+  "items": [
+    {
+      "id": "5.58-GG",
+      "version": "5.58",
+      "kind": "app",
+      "filename": "TeXShop-5.58-GG.zip",
+      "source_url": "https://pages.uoregon.edu/koch/TeXShop-5.58-GG.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG.zip",
+      "sha256": "a4c21d83e5db24bdf91b606f087478b8b02f9550fabec3dc6ed02fa18efd7214",
+      "bytes": 61207062,
+      "bundle_version": "5.57",
+      "bundle_minimum_os": "14.6",
+      "upstream_version_note": "Distributed as 5.58 Golden Gate; the original Info.plist retains version 5.57. Preserved unchanged.",
+      "executable_architectures": [
+        {
+          "architecture": "x86_64",
+          "minimum_os": "14.6.0"
+        },
+        {
+          "architecture": "arm64",
+          "minimum_os": "14.6.0"
+        }
+      ]
+    },
+    {
+      "id": "5.58-GG",
+      "version": "5.58",
+      "kind": "source",
+      "filename": "TeXShop-5.58-GG-Source.zip",
+      "source_url": "https://pages.uoregon.edu/koch/TeXShop-5.58-GG-Source.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG-Source.zip",
+      "sha256": "1ba1c36b12244070e8cf0a365dfa61d98219b897f66f2a7680c130431ac5c32d",
+      "bytes": 175144138,
+      "source_info_plist": "TexShop-5.58-GG-Source/Resources/Info.plist",
+      "source_bundle_version": "5.57",
+      "source_marketing_versions": [
+        "5.57"
+      ]
+    },
+    {
+      "id": "5.57-Tahoe",
+      "version": "5.57",
+      "kind": "app",
+      "filename": "texshop557-tahoe.zip",
+      "source_url": "https://pages.uoregon.edu/koch/texshop/texshop557-tahoe.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshop557-tahoe.zip",
+      "sha256": "a8b42f729c90f660b5be5a33de0c1b0f5a73bb2e45c95cb78407b709b4323b79",
+      "bytes": 61184387,
+      "bundle_version": "5.57",
+      "bundle_minimum_os": "10.13.0",
+      "executable_architectures": [
+        {
+          "architecture": "x86_64",
+          "minimum_os": "10.13.0"
+        },
+        {
+          "architecture": "arm64",
+          "minimum_os": "11.0.0"
+        }
+      ]
+    },
+    {
+      "id": "5.57-Tahoe",
+      "version": "5.57",
+      "kind": "source",
+      "filename": "texshopsource557-tahoe.zip",
+      "source_url": "https://pages.uoregon.edu/koch/texshop/texshopsource557-tahoe.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshopsource557-tahoe.zip",
+      "sha256": "9f8538d11ab8adde4d386243c9e0cb574312e5d8fe9118988fea224ba61c0adc",
+      "bytes": 182236421,
+      "source_info_plist": "TeXShop-557-Tahoe/Resources/Info.plist",
+      "source_bundle_version": "$(MARKETING_VERSION)",
+      "source_marketing_versions": [
+        "5.57"
+      ]
+    },
+    {
+      "id": "5.57",
+      "version": "5.57",
+      "kind": "app",
+      "filename": "TeXShop-5.57.zip",
+      "source_url": "https://pages.uoregon.edu/koch/texshop/texshop-64/texshop.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.57.zip",
+      "sha256": "08aa26a5dfacfa67bacedbc73d57fe07b64dcfe49e9fab34a3be1dc5372d20d4",
+      "bytes": 61134703,
+      "bundle_version": "5.57",
+      "bundle_minimum_os": "10.13.0",
+      "executable_architectures": [
+        {
+          "architecture": "x86_64",
+          "minimum_os": "10.13.0"
+        },
+        {
+          "architecture": "arm64",
+          "minimum_os": "11.0.0"
+        }
+      ]
+    },
+    {
+      "id": "5.57",
+      "version": "5.57",
+      "kind": "source",
+      "filename": "TeXShop-5.57-source.zip",
+      "source_url": "https://pages.uoregon.edu/koch/texshop/texshop-64/texshopsource.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.57-source.zip",
+      "sha256": "37f6a9ab5f5ef78eee31243d856fd736e6135b0464a755c6d47daf44ff0d7cf6",
+      "bytes": 181405663,
+      "source_info_plist": "TeXShop-5.57/Resources/Info.plist",
+      "source_bundle_version": "$(MARKETING_VERSION)",
+      "source_marketing_versions": [
+        "5.57"
+      ]
+    },
+    {
+      "id": "4.79",
+      "version": "4.79",
+      "kind": "app",
+      "filename": "TeXShop-4.79.zip",
+      "source_url": "https://pages.uoregon.edu/koch/texshop/texshop-64/texshop479.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.79.zip",
+      "sha256": "4630172a56cbe64334bb740a5236aaed001f494933c74e9a5b55bbc6cc518c76",
+      "bytes": 57296420,
+      "bundle_version": "4.79",
+      "bundle_minimum_os": "10.12.0",
+      "executable_architectures": [
+        {
+          "architecture": "x86_64",
+          "minimum_os": "10.12.0"
+        },
+        {
+          "architecture": "arm64",
+          "minimum_os": "11.0.0"
+        }
+      ]
+    },
+    {
+      "id": "4.79",
+      "version": "4.79",
+      "kind": "source",
+      "filename": "TeXShop-4.79-source.zip",
+      "source_url": "https://api.github.com/repos/TeXShop/TeXShop/zipball/refs/tags/v4.79",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.79-source.zip",
+      "sha256": "02e0933abb4abe86b7021a17b815f05de9310e2153725fb72716dc11b14fdb1c",
+      "bytes": 152510597,
+      "source_info_plist": "TeXShop-TeXShop-901f108/Resources/Info.plist",
+      "source_bundle_version": "$(MARKETING_VERSION)",
+      "source_marketing_versions": [
+        "4.79"
+      ],
+      "source_repository": "https://github.com/TeXShop/TeXShop",
+      "source_tag": "v4.79",
+      "source_commit": "901f108e499008e0882b8376dfa08af82ade6245"
+    },
+    {
+      "id": "4.44",
+      "version": "4.44",
+      "kind": "app",
+      "filename": "TeXShop-4.44.zip",
+      "source_url": "https://pages.uoregon.edu/koch/texshop/texshop-64/texshop444.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.44.zip",
+      "sha256": "67f8f1ea196209a65dd996db875e19307f947e697a5b70dad0571ed88f4fd0ad",
+      "bytes": 46475198,
+      "bundle_version": "4.44",
+      "bundle_minimum_os": "10.10.0",
+      "executable_architectures": [
+        {
+          "architecture": "x86_64",
+          "minimum_os": "10.8.0"
+        }
+      ]
+    },
+    {
+      "id": "4.44",
+      "version": "4.44",
+      "kind": "source",
+      "filename": "TeXShop-4.44-source.zip",
+      "source_url": "https://api.github.com/repos/TeXShop/TeXShop/zipball/refs/tags/v4.44",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-4.44-source.zip",
+      "sha256": "d2a8a978e7783eb1721024f7c8737313ccba9743db3f706843707e3bbd4bff86",
+      "bytes": 148328778,
+      "source_info_plist": "TeXShop-TeXShop-e5d0560/Resources/Info.plist",
+      "source_bundle_version": "4.44",
+      "source_marketing_versions": [
+        "3.14"
+      ],
+      "source_repository": "https://github.com/TeXShop/TeXShop",
+      "source_tag": "v4.44",
+      "source_commit": "e5d0560def055bdd46bd4a899f9c14a0b70c1268"
+    },
+    {
+      "id": "2.47",
+      "version": "2.47",
+      "kind": "app",
+      "filename": "TeXShop-2.47.zip",
+      "source_url": "https://pages.uoregon.edu/koch/texshop/texshop-2.47.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-2.47.zip",
+      "sha256": "d77b705ad64fa1179c5fad7b7abb2c6b6088cd73d94048839c3ab18457ce3a0a",
+      "bytes": 55036982,
+      "bundle_version": "2.47",
+      "bundle_minimum_os": "10.4.0",
+      "executable_architectures": [
+        {
+          "architecture": "ppc"
+        },
+        {
+          "architecture": "i386"
+        }
+      ]
+    },
+    {
+      "id": "2.47",
+      "version": "2.47",
+      "kind": "source",
+      "filename": "TeXShop-2.47-source.zip",
+      "source_url": "https://pages.uoregon.edu/koch/texshop/texshopsource247.zip",
+      "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-2.47-source.zip",
+      "sha256": "cd8f9fd827d9b080423da0f1d9664bdbfdfebb4525bbb7542ee54c44e2f9ce19",
+      "bytes": 75049777,
+      "source_info_plist": "texshopsource-2.47/Resources/Info.plist",
+      "source_bundle_version": "${MARKETING_VERSION}",
+      "source_marketing_versions": [
+        "2.47"
+      ]
+    }
+  ]
+}

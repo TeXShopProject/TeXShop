@@ -24,3 +24,13 @@ Mark this archival release as **not the latest release**.
 ## Link audit
 
 `archive-link-audit-2026-10-28.json` records every unique external URL and each local file reference found before mirroring, including HTTP response codes and redirect destinations. HTTP 403 and timeouts do not establish that a resource no longer exists. Unavailable third-party web pages remain historical references rather than being silently replaced with unrelated pages. Directly linked downloadable files have been recovered separately as recorded in the manifest.
+
+## Legacy releases listed on Downloads
+
+The English and Japanese Downloads pages list 5.58 (Golden Gate), 5.57 (Tahoe), 5.57, 4.79, 4.44 and 2.47, with separate application and source ZIP links. These links point directly to assets in the `historical-downloads` pre-release; these additional large files are not copied into the Pages build or committed to Git.
+
+`legacy-downloads.json` records each original URL, release asset URL, byte count, SHA-256 hash, bundle version and architecture. The 4.79 and 4.44 source ZIPs come from the matching tags in Max Horn’s TeXShop repository, which Richard Koch’s Obtaining page recommends for historical sources. The commit IDs are recorded in the manifest. All other application and source archives come directly from Richard Koch’s website. The ZIP contents are preserved unchanged.
+
+The minimum OS shown on Downloads follows the original distribution’s documentation and bundle requirements. Apple Silicon binaries require at least macOS 11. The Tahoe build has a minimum of 10.13 on Intel, but Koch recommends it for Tahoe; the page preserves that distinction. Version 2.47 contains PowerPC and 32-bit Intel code, so it cannot run on macOS 10.15 or later. The 5.58 Golden Gate archive is distributed by Koch as version 5.58, although its original Info.plist retains version 5.57; that metadata is preserved unchanged.
+
+Upload the ZIPs and `historical-downloads-SHA256SUMS.txt` only after publication approval. Keep `historical-downloads` marked as a pre-release and keep 5.59 as the latest release. The checksums file covers both the existing Tahoe archives and the additional legacy archives.
