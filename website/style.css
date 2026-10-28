@@ -4,7 +4,7 @@
 .credits p{color:var(--ink)}
 @media(prefers-color-scheme:dark){:where(:root:not([data-theme])) .credits p{color:#fff}}:where(:root[data-theme=dark]) .credits p{color:#fff}
 /* added by Terada: Quiet archive navigation and readable historical documents. */
-.footer-links{margin-top:15px}.footer-links a{color:var(--muted)}.archive-content{max-width:880px;margin:25px auto 70px;padding:0 25px;overflow-wrap:anywhere}.archive-content>h1{font-size:38px;font-weight:300;letter-spacing:0;margin:25px 0}.archive-content h2{margin-top:35px}.archive-content h3{margin-top:28px}.archive-content ul{padding-left:25px}.archive-content li{margin:5px 0}.archive-notice{padding:15px 0;border-block:1px solid var(--line);font-size:13px;color:var(--muted)}.archive-nav{font-size:12px;line-height:2}.legacy{margin-top:35px}.legacy img{max-width:100%;height:auto}.legacy pre{overflow:auto;white-space:pre-wrap}.legacy blockquote{margin:12px 0 25px 20px}.legacy table{display:block;overflow:auto}.version-list{columns:3;font-size:13px}.archive-content details{margin-block:25px}.archive-content summary{cursor:pointer;color:var(--link)}@media(max-width:650px){.archive-content>h1{font-size:29px}.version-list{columns:2}}
+.footer-links{margin-top:15px}.footer-links a{color:var(--muted)}.archive-content{max-width:880px;margin:25px auto 70px;padding:0 25px;overflow-wrap:anywhere}.archive-content>h1{font-size:38px;font-weight:300;letter-spacing:0;margin:25px 0}.archive-content h2{margin-top:35px}.archive-content h3{margin-top:28px}.archive-content ul{padding-left:25px}.archive-content li{margin:5px 0}.archive-notice{padding:15px 0;border-block:1px solid var(--line);font-size:13px;color:var(--muted)}.archive-nav{font-size:12px;line-height:2}.legacy{margin-top:35px}.legacy img{max-width:100%;height:auto}.legacy pre{overflow:auto;white-space:pre-wrap}.legacy blockquote{margin:12px 0 25px 20px}.legacy table{display:block;overflow:auto}.version-list{columns:3;font-size:13px}.archive-content details{margin-block:25px}.archive-content summary{cursor:pointer;color:var(--accordion)}.archive-content summary:hover{color:var(--accordion-hover)}.archive-content summary:focus-visible{outline:3px solid var(--link);outline-offset:4px}@media(max-width:650px){.archive-content>h1{font-size:29px}.version-list{columns:2}}
 
 /* Added by Terada: repository link in the main navigation. */
 .github-link{display:inline-flex;align-items:center;justify-content:center;min-width:28px;min-height:28px}.github-link svg{width:22px;height:22px;fill:currentColor}.github-link:hover{color:var(--ink)}
@@ -55,7 +55,19 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 .theme-toggle:focus-visible,.theme-menu button:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 .theme-toggle svg{width:20px;height:20px}
 .theme-menu{position:absolute;z-index:20;top:calc(100% + 5px);right:0;min-width:140px;padding:5px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 18px #0004}
-.theme-menu[hidden]{display:none}
+.theme-menu{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,visibility 0s linear .16s}.theme-toggle[aria-expanded=true]+.theme-menu{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .16s ease,visibility 0s}@media(prefers-reduced-motion:reduce){.theme-menu,.theme-toggle[aria-expanded=true]+.theme-menu{transition:none}}
 .theme-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:5px 9px;border:0;border-radius:4px;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}
 .theme-menu button:hover,.theme-menu button:focus-visible{background:color-mix(in srgb,var(--ink) 10%,transparent)}
 .theme-check{width:1em;text-align:center;visibility:hidden}.theme-menu [aria-checked=true] .theme-check{visibility:visible}
+
+.languages [aria-disabled=true]{color:var(--muted);opacity:.5;cursor:not-allowed}
+
+.credits .current-developer{font-size:1.15em}
+
+.theme-menu::before{content:"";position:absolute;left:0;right:0;top:-6px;height:6px}
+
+:root{--accordion:#955321;--accordion-hover:#713910}:root[data-theme=dark]{--accordion:#e1b587;--accordion-hover:#f3d2ac}@media(prefers-color-scheme:dark){:root:not([data-theme]){--accordion:#e1b587;--accordion-hover:#f3d2ac}}
+
+.archive-pagination{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:start;font-size:13px;border-block:1px solid var(--line);padding:12px 0;margin:18px 0 24px}.archive-pagination a{min-width:0;color:var(--link)}.archive-pagination a:hover{text-decoration:underline}.archive-pagination .archive-parent{text-align:center;white-space:nowrap}.archive-pagination .archive-next{text-align:right}@media(max-width:650px){.archive-pagination{grid-template-columns:1fr 1fr;gap:8px 18px}.archive-pagination .archive-parent{grid-column:1/-1;grid-row:1;text-align:left}.archive-pagination .archive-prev{grid-column:1;grid-row:2}.archive-pagination .archive-next{grid-column:2;grid-row:2}}
+
+.archive-pagination{margin-bottom:0}.archive-pagination+.archive-notice{border-top:0;margin-top:0}
