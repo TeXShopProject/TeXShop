@@ -14,7 +14,7 @@ Use the official Sparkle 2.10.1 tools from https://github.com/sparkle-project/Sp
 
 ## Prepare a release
 
-1. Build the universal Release application, sign it and all nested code with the maintainer's Developer ID, notarize it, and staple the notarization ticket. Check the release on supported macOS versions.
+1. Build the universal Release application. Run `python3 Scripts/sign-release.py /path/to/TeXShop.app --identity "Developer ID Application: Your Name (TEAMID)"` to sign nested code inside out with secure timestamps, preserving required entitlements but removing `get-task-allow`. Then notarize the ZIP with `xcrun notarytool submit /path/to/TeXShop.zip --keychain-profile TeXShop --wait` and staple the ticket with `xcrun stapler staple /path/to/TeXShop.app`. Check the release on supported macOS versions.
 2. Run `python3 Scripts/prepare-sparkle-release.py /path/to/TeXShop.app /path/to/new-staging-directory --tools /path/to/Sparkle/bin`. The script checks the application's feed, public key, code signature, Gatekeeper assessment and stapled ticket, creates the ZIP, signs and verifies it, and prepares a signed appcast preserving earlier items. It never uploads anything.
 3. Review the archive, release notes and appcast. After publication approval, create the matching GitHub release tag (`v5.59` for 5.59) and upload `TeXShop-5.59.zip` unchanged.
 4. After confirming the public archive is available, replace `website/appcast.xml` with the staged signed appcast, commit/push after review, and deploy the website. Do not edit an appcast after signing it; re-sign it after every edit.
