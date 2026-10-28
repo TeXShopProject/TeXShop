@@ -35,3 +35,8 @@ are preserved as attachments to the Golden Gate report. The standalone sample
 project is not mirrored. The additional pages participate in archive search.
 Existing archived prose has not been rewritten. The original website CSS and
 navigation images are retained in the separate local preservation snapshot.
+
+Two malformed links in the release notes (an e-mail address and the ISO website)
+are corrected in the rendered pages. The Translations page omits sixteen entries
+that pointed to unrelated commercial websites; manifest.json records both changes.
+The original HTML in sources/ is unchanged.

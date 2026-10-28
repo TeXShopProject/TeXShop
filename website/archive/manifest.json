@@ -135,7 +135,8 @@
       "original": "sources/changes_3.html.txt",
       "sha256": "388b2a7a0c7a1da9396691396bff977933ae7703ae6a741faf82ec68c599aea8",
       "type": "page",
-      "visible_text_preserved": true
+      "visible_text_preserved": true,
+      "note": "Rendered page corrects a malformed e-mail link (mailto:atsol@aegean.gr)."
     },
     {
       "source": "https://pages.uoregon.edu/koch/texshop/changes_2.html",
@@ -159,7 +160,8 @@
       "original": "sources/translations.html.txt",
       "sha256": "c23b5feba01bbd5659303f26ee0eccd1599c482cc8f54eb3f77a880cb98eec55",
       "type": "page",
-      "visible_text_preserved": true
+      "visible_text_preserved": false,
+      "note": "Rendered page omits the sixteen third-party translation entries, which pointed to unrelated commercial websites. The original HTML in sources/ is unchanged."
     },
     {
       "source": "https://pages.uoregon.edu/koch/texshop/about.html",
@@ -443,7 +445,8 @@
       "original": "sources/version.html.txt",
       "sha256": "fd5c2880742ac1b976752b516a84179de0129c7ed00f7507208a7e926227ef1d",
       "type": "page",
-      "visible_text_preserved": true
+      "visible_text_preserved": true,
+      "note": "Rendered page corrects a malformed e-mail link (mailto:atsol@aegean.gr) and the ISO website link (https://www.iso.org/)."
     },
     {
       "source": "https://pages.uoregon.edu/koch/texshop/whereisstuff.html",
