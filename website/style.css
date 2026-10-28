@@ -14,3 +14,5 @@
 
 /* Added by Terada: secondary navigation and typesetting requirement. */
 nav .previous-site{font-size:11px;white-space:nowrap}.tex-requirement{font-size:12px;color:var(--muted)}
+
+.legacy-download{font-size:13px}
