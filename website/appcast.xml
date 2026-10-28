@@ -8,7 +8,7 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
       <sparkle:version>5.59</sparkle:version>
       <sparkle:shortVersionString>5.59</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
-      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v5.59/TeXShop-5.59.zip" length="61440024" type="application/octet-stream" sparkle:edSignature="ZtxEHJPye+Q89pYAEj6yxK8SGc0EZ9mOS8I1ym3DMh0T6CFjlwLvphsx7AybRAaL+4aeXhiQ3r+Z1lLZcBv8Dg=="></enclosure>
+      <enclosure url="https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59.zip" length="61440024" type="application/octet-stream" sparkle:edSignature="ZtxEHJPye+Q89pYAEj6yxK8SGc0EZ9mOS8I1ym3DMh0T6CFjlwLvphsx7AybRAaL+4aeXhiQ3r+Z1lLZcBv8Dg=="></enclosure>
     </item>
     <title>TeXShop Updates</title>
     <link>https://texshopproject.github.io/TeXShop/</link>
@@ -16,6 +16,6 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <language>en</language>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: Y/NO4nrRYzFtzcsvtYuKXpiTVoiZhoG6Sja4gaQNJ0s1AGkkm5B8FdwrzN+AHiKxBvyJq0nhuauI/snaoBHZAg==
-length: 1168
+edSignature: xKVBvMmX4JKzuvZ/DJAumV1zhcwhf4HorZwI/ItdiBlk4/SMcu/GvuFwslYp4zAs83+SyEcnj87ie8lg6x5rBw==
+length: 1169
 -->

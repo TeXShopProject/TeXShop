@@ -55,7 +55,7 @@ def main():
                        (f'{{{SPARKLE}}}minimumSystemVersion', info['LSMinimumSystemVersion'])]:
         ET.SubElement(item, tag).text = value
     ET.SubElement(item, 'enclosure', {
-        'url': f'https://github.com/TeXShopProject/TeXShop/releases/download/v{version}/{archive.name}',
+        'url': f'https://github.com/TeXShopProject/TeXShop/releases/download/v.{version}/{archive.name}',
         'length': str(archive.stat().st_size), 'type': 'application/octet-stream',
         f'{{{SPARKLE}}}edSignature': signature})
     channel.insert(0, item)
