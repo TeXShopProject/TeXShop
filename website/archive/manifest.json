@@ -160,6 +160,72 @@
       "sha256": "c23b5feba01bbd5659303f26ee0eccd1599c482cc8f54eb3f77a880cb98eec55",
       "type": "page",
       "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/about.html",
+      "file": "about.html",
+      "original": "sources/about.html.txt",
+      "sha256": "177a8da7c7e1ab088c39863b64311868e2cb5dbac4db6509b1cd58e054b63618",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/TeXShop-2000.jpg",
+      "file": "assets/68c8e2f7f2-TeXShop-2000.jpg",
+      "sha256": "9e90a87dd6927e30155b5911727985d823cfc5ae3f9e24335d5fc16d9e3ec9f8",
+      "type": "image"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/TeXShop-2009.jpg",
+      "file": "assets/829a353b60-TeXShop-2009.jpg",
+      "sha256": "a646e9ad6555441e8af8bb5033b9bee5063d0e78c5a2df0bf7751bc6c236d004",
+      "type": "image"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/TeXShop-2024.jpg",
+      "file": "assets/13866c2fea-TeXShop-2024.jpg",
+      "sha256": "23a8a346f86edbd431ace1f45a2bd4714a8718a1d242fa73080ec1be6231cf2a",
+      "type": "image"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/pictures.html",
+      "file": "pictures.html",
+      "original": "sources/pictures.html.txt",
+      "sha256": "22daf3964a238e1760bab4e53ff720d0ffa2888df6788d75202ac83307d3cc17",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/originalicons.png",
+      "file": "assets/3a5436e4da-originalicons.png",
+      "sha256": "5fe753cc57f8b263b31c0be0a17163a22b8ca59ebd25d256a1bb286fefcfe2ea",
+      "type": "image"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/icons-Tahoejail.png",
+      "file": "assets/09c2a48ed5-icons-Tahoejail.png",
+      "sha256": "2fd2eee1264086ebd8e67e73b7c95bbee04825b3c0b9597cd5e84b142e708138",
+      "type": "image"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/TeXShopTahoeIcon.png",
+      "file": "assets/9493b964bb-TeXShopTahoeIcon.png",
+      "sha256": "c7e76bb126ba2548259a5077d68448b34dfba8f9c5d9912ac0450ebc812c6bf4",
+      "type": "image"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/bug.png",
+      "file": "assets/af58c568b7-bug.png",
+      "sha256": "7afba60a739f5e189d38036b052d2f84f468cd7fbfa85e426ed616d2bb974b6d",
+      "type": "image"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/tahoe.html",
+      "file": "tahoe.html",
+      "original": "sources/tahoe.html.txt",
+      "sha256": "d5d50d3749b949d7c25834f40f2594baee98192d7b0b13517027c6787bd84841",
+      "type": "page",
+      "visible_text_preserved": true
     }
   ]
 }

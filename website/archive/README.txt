@@ -3,7 +3,7 @@ Snapshot date: 2026-10-28
 Source: https://pages.uoregon.edu/koch/texshop/
 Author: Richard Koch, with contributions credited in the original pages.
 
-The 12 archived pages retain the visible text from each original #main element.
+The 15 archived pages retain the visible text from each original #main element.
 The new wrapper replaces the old website navigation and adds provenance notices.
 Relative links to archived pages are local; other links resolve to their original
 absolute destinations. External websites and old application downloads are not mirrored.
@@ -20,3 +20,7 @@ information are not statements about the current release. The archive includes t
 History section's seven pages, the original-version/anniversary page, the available
 version 2 and version 3–5 release notes, contributors, and translation acknowledgments.
 It does not claim a complete release-note record for every version since 2000.
+
+Added About TeXShop, Three TeXShop Versions, and Tahoe, including all inline
+images from these pages. Original and anniversary text remains in its original
+section order. The index follows the 2000–2024 evolution with the 2025 Tahoe page.

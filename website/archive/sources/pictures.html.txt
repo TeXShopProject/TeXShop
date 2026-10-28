@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li id="current"><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+    <li><a href="obtaining.html">Obtaining</a></li>
+    <li><a href="installing.html">Installing</a></li>
+      <li><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li><a href="index.html">Current Release</a></li>
+<li><a href="about.html">About TeXShop</a></li>
+<li><a href="documentation.html">Documentation</a></li>
+<li><a href="anniversary.html">Original Version of TeXShop</a></li>
+<li id="mcurrent"><a href="pictures.html">Three TeXShop Versions</a></li>
+<li><a href="translations.html">Translations</a></li>
+</ul>
+</div>
+
+
+<!-- main content -->
+<div id="main">
+
+<h3>Three TeXShop Versions</h3>
+
+TeXShop is regularly updated, so there have been many versions by 2024. Below are three samples, from 2000, 2009, and 2024. Specifically, these are versions 1.0d2, 3.11, and 5.33.
+
+<p> I wrote the 2000 version of TeXShop without collaborators, so the program is quite primitive. It gets the job done: users can enter TeX or LaTeX source, typeset, preview the image in a viewer one page at a time, and print. There is no syntax coloring, no continuous mode in the preview window, no magnifying glass, no ability to typeset with anything except pdftex or pdflatex.
+
+<h4>Picture of TeXShop 2000</h5>
+<center> <img src="TeXShop-2000.jpg" width=100% height=auto /> </center>
+
+<h3>TeXShop with Collaborators</h3>
+
+<p> By 2008, many collaborators had extended TeXShop with features we now consider essential. It had syntax coloring, synctex, vastly improved preview options, and features like Command Completion to aid text entry. 
+
+<h4>Picture of TeXShop 2009</h5>
+<center> <img src="TeXShop-2009.jpg" width=75% height=auto /> </center>
+
+<h3>TeXShop with Apple Improvements of Cocoa</h3>
+
+<p> During the second decade, TeXShop benefited from Apple's solution of the fragile base class problem. It got automatic saving, tab support, and better memory management. Notice Apple's new design for the toolbar. 
+One little known recent feature is an html preview window, so tex4ht can be used to typeset and preview TeX source code typeset directly into html output. The preview window is live on the internet, and interactive web content can be added to TeX documents. In the illustration below, Sage is used interactively to graph any equation the user desires to enter.
+
+
+<h4>Picture of TeXShop 2024</h5>
+<center> <img src="TeXShop-2024.jpg" width=100% height=auto /> </center>
+
+</div>
+</body>
+</html>

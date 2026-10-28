@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li id="current"><a href="about.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+     <li><a href="obtaining.html">Obtaining</a></li>
+    <li><a href="installing.html">Installing</a></li>
+    <li><a href="history.html">History</a></li>
+     <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li><a href="index.html">Current Release</a></li>
+<li id="mcurrent"><a href="about.html">About TeXShop</a></li>
+<li><a href="documentation.html">Documentation</a></li>
+<li><a href="anniversary.html">Original Version of TeXShop</a></li>
+<li><a href="pictures.html">Three TeXShop Versions</a></li>
+<li><a href="translations.html">Translations</a></li>
+</ul>
+
+</div>
+
+<!-- main content -->
+<div id="main">
+<h3> About TeXShop: </h3> 
+<p>TeXShop is a TeX previewer for Mac OS X, written in Cocoa. Since pdf is a native file format on OS X, TeXShop uses "pdftex" and "pdflatex" rather than "tex" and "latex" to typeset in its default configuration; these programs in the standard TeX Live distribution of TeX produce pdf output instead of dvi output.</p>
+
+<p>TeXShop uses TeX Live, a standard distribution of Tex programs maintained by the TeX Users Group (TUG) for Mac OS X, Windows, Linux, and various other Unix machines. The distribution includes tex, latex, dvips, tex fonts, cyrillic fonts, and virtually all other programs and supporting files commonly used in the TeX world. The most recent version of this distribution is available under the "Obtaining" tab.</p>
+
+<p>The latest TeXShop release requires macOS 10.14, Mojave, or higher and is universal with both Arm and Intel code. Some earlier versions are also provided on the "Obtaining" page. </p>
+
+<p> TeXShop has a "Help" menu containing various items including the complete Changes document and the TeXShop Manual. The two hundred page Manual contains a small amount of essential information at the beginning and then chapters about special features. First time users should read the beginning material and skip the rest. Later they can read chapters about features they use and skip other chapters.
+
+<p> TeXShop is distributed under the GPL public license, and thus free. </p>
+</div>
+
+</body>
+</html>

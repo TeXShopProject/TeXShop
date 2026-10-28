@@ -8,3 +8,6 @@
 
 /* Added by Terada: repository link in the main navigation. */
 .github-link{display:inline-flex;align-items:center;justify-content:center;min-width:28px;min-height:28px}.github-link svg{width:22px;height:22px;fill:currentColor}.github-link:hover{color:var(--ink)}
+
+/* Added by Terada: versioned application downloads. */
+.download-table{width:100%;border-collapse:collapse;margin:30px 0}.download-table th,.download-table td{padding:16px 20px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}.download-table th{font-size:13px;font-weight:500;color:var(--muted)}.version-download{display:flex;align-items:center;gap:14px;text-decoration:none;white-space:nowrap}.version-download img{flex-shrink:0}.version-download small{display:block;font-size:12px;color:var(--muted)}.version-download svg{vertical-align:middle}.downloads table{display:table}nav{flex-wrap:wrap}@media(max-width:650px){.downloads table{display:block;overflow-x:auto}.download-table th,.download-table td{padding:12px 10px}}
