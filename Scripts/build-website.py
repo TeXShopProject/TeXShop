@@ -41,8 +41,8 @@ for item in manifest['items']:
         if hashlib.file_digest(source, 'sha256').hexdigest() != item['sha256']:
             raise ValueError('Historical download checksum mismatch: ' + item['file'])
 shutil.copytree(root / 'website', args.output)
-for name in ('index.html', 'en.html', 'ja.html', 'release-notes.html', 'release-notes-ja.html', 'downloads.html', 'downloads-ja.html', 'contact.html', 'contact-ja.html'):
-    japanese = name in ('ja.html', 'release-notes-ja.html', 'downloads-ja.html', 'contact-ja.html')
+for name in ('index.html', 'en.html', 'ja.html', 'release-notes.html', 'release-notes-ja.html', 'downloads.html', 'downloads-ja.html', 'all-releases.html', 'all-releases-ja.html', 'contact.html', 'contact-ja.html'):
+    japanese = name in ('ja.html', 'release-notes-ja.html', 'downloads-ja.html', 'all-releases-ja.html', 'contact-ja.html')
     pending = ('GitHubリポジトリと不具合報告へのリンクは、公開時に掲載します。' if japanese else
                'The source repository and issue tracker will be linked here when published.')
     links = f'<span class="pending">{pending}</span>'

@@ -1,0 +1,10 @@
+{
+  "v2.47": {
+    "minimum_os": "10.4.3",
+    "source": "https://texshop.app/archive/original-home.html#section-21"
+  },
+  "v5.00–v5.48": {
+    "excluded_os": "10.14",
+    "source": "https://texshop.app/archive/changes_3.html#section-7"
+  }
+}
