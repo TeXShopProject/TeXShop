@@ -23,4 +23,4 @@ It does not claim a complete release-note record for every version since 2000.
 
 Added About TeXShop, Three TeXShop Versions, and Tahoe, including all inline
 images from these pages. Original and anniversary text remains in its original
-section order. The index follows the 2000–2024 evolution with the 2025 Tahoe page.
+section order. The index follows the 2000–2024 evolution with the 2025–2026 Tahoe page.
