@@ -1301,7 +1301,7 @@
 	<key>NSPrincipalClass</key>
 	<string>TSApplication</string>
 	<key>SUFeedURL</key>
-	<string>https://texshopproject.github.io/TeXShop/appcast.xml</string>
+	<string>https://texshop.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>GItwOa4Q8LuY9zjGfp1n9vgprCsyiRrRqQVPq1feN/I=</string>
 	<key>UTExportedTypeDeclarations</key>

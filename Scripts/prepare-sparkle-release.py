@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 
 SPARKLE = 'http://www.andymatuschak.org/xml-namespaces/sparkle'
 ET.register_namespace('sparkle', SPARKLE)
-FEED = 'https://texshopproject.github.io/TeXShop/appcast.xml'
+FEED = 'https://texshop.app/appcast.xml'
 KEY = 'GItwOa4Q8LuY9zjGfp1n9vgprCsyiRrRqQVPq1feN/I='
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -24,6 +24,8 @@ def main():
     parser.add_argument('app', type=Path)
     parser.add_argument('output', type=Path, help='New staging directory')
     parser.add_argument('--tools', required=True, type=Path, help='Sparkle 2.10.1 bin directory')
+    parser.add_argument('--replace-existing', action='store_true',
+                        help='Replace the existing item for this build version in the staged feed')
     args = parser.parse_args()
     app = args.app.resolve()
     info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
@@ -41,8 +43,18 @@ def main():
     channel = tree.getroot().find('channel')
     if channel is None:
         raise SystemExit('Invalid appcast')
-    if any(item.findtext(f'{{{SPARKLE}}}version') == info['CFBundleVersion'] for item in channel.findall('item')):
+    existing = [item for item in channel.findall('item')
+                if item.findtext(f'{{{SPARKLE}}}version') == info['CFBundleVersion']]
+    if existing and not args.replace_existing:
         raise SystemExit('This build version already exists in the feed')
+    if args.replace_existing:
+        if len(existing) != 1 or existing[0].findtext(f'{{{SPARKLE}}}shortVersionString') != version:
+            raise SystemExit('Expected exactly one existing item for this release and build version')
+        channel.remove(existing[0])
+    link = channel.find('link')
+    if link is None:
+        link = ET.SubElement(channel, 'link')
+    link.text = FEED.rsplit('/', 1)[0] + '/'
     args.output.mkdir(parents=True, exist_ok=False)
     archive = args.output / f'TeXShop-{version}.zip'
     run('ditto', '-c', '-k', '--sequesterRsrc', '--keepParent', app, archive)
