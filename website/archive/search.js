@@ -6,7 +6,7 @@
   const results = bar.querySelector('.archive-search-results');
   const status = bar.querySelector('[role="status"]');
   const japanese = document.documentElement.lang === 'ja';
-  const words = japanese ? ['アーカイブ内を検索', '検索中…', '件', '検索できませんでした。もう一度お試しください。'] : ['Search the archive', 'Searching…', 'matches', 'Search failed. Please try again.'];
+  const words = japanese ? ['アーカイブを検索', '検索中…', '件', '検索できませんでした。もう一度お試しください。'] : ['Search the archive', 'Searching…', 'matches', 'Search failed. Please try again.'];
   bar.querySelector('label').textContent = words[0];
   const nodes = doc => {
     const article = doc.querySelector('article.legacy');
