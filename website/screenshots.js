@@ -4,6 +4,7 @@ for (const gallery of document.querySelectorAll('.screenshot-gallery')) {
   const track = gallery.querySelector('.screenshot-track');
   const choices = [...gallery.querySelectorAll('[data-slide]')];
   const toggle = gallery.querySelector('.slideshow-toggle');
+  const japanese = document.documentElement.lang === 'ja';
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   let current = matchMedia('(prefers-color-scheme: dark)').matches ? images.length - 1 : 0;
   let paused = motion.matches, timer;
@@ -21,7 +22,7 @@ for (const gallery of document.querySelectorAll('.screenshot-gallery')) {
     if (!paused && !document.hidden && !gallery.matches(':hover') && !gallery.contains(document.activeElement)) {
       timer = setInterval(() => show((current + 1) % images.length), 5500);
     }
-    toggle.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
+    toggle.setAttribute('aria-label', paused ? (japanese ? 'スライドショーを再生' : 'Play slideshow') : (japanese ? 'スライドショーを一時停止' : 'Pause slideshow'));
     toggle.setAttribute('aria-pressed', String(paused));
     toggle.firstElementChild.textContent = paused ? '▶' : 'Ⅱ';
   }
