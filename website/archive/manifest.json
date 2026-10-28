@@ -160,8 +160,8 @@
       "original": "sources/translations.html.txt",
       "sha256": "c23b5feba01bbd5659303f26ee0eccd1599c482cc8f54eb3f77a880cb98eec55",
       "type": "page",
-      "visible_text_preserved": false,
-      "note": "Rendered page omits the sixteen third-party translation entries, which pointed to unrelated commercial websites. The original HTML in sources/ is unchanged."
+      "visible_text_preserved": true,
+      "note": "Rendered page preserves all fifteen translation acknowledgments as text; external translation links are inactive. The original HTML in sources/ is unchanged."
     },
     {
       "source": "https://pages.uoregon.edu/koch/texshop/about.html",

@@ -37,6 +37,6 @@ Existing archived prose has not been rewritten. The original website CSS and
 navigation images are retained in the separate local preservation snapshot.
 
 Two malformed links in the release notes (an e-mail address and the ISO website)
-are corrected in the rendered pages. The Translations page omits sixteen entries
-that pointed to unrelated commercial websites; manifest.json records both changes.
+are corrected in the rendered pages. The Translations page retains all fifteen acknowledgments as text,
+with external translation links inactive; manifest.json records these changes.
 The original HTML in sources/ is unchanged.
