@@ -16,11 +16,16 @@ root = Path(__file__).resolve().parents[1]
 if args.output.exists():
     parser.error('Output must be a new directory')
 shutil.copytree(root / 'website', args.output)
-links = '<span class="pending">The GitHub repository and issue tracker will be linked here when publication is ready.</span>'
-if args.repository:
-    url = 'https://github.com/' + html.escape(args.repository, quote=True)
-    links = f'<a href="{url}">Source code ↗</a><a href="{url}/issues">Report an issue ↗</a>'
-page = args.output / 'index.html'
-page.write_text(page.read_text().replace('@@REPOSITORY_LINKS@@', links))
+for name in ('index.html', 'en.html', 'ja.html'):
+    japanese = name == 'ja.html'
+    pending = ('GitHubリポジトリと不具合報告へのリンクは、公開時に掲載します。' if japanese else
+               'The source repository and issue tracker will be linked here when published.')
+    links = f'<span class="pending">{pending}</span>'
+    if args.repository:
+        url = 'https://github.com/' + html.escape(args.repository, quote=True)
+        source, issues = ('ソースコード', '不具合報告') if japanese else ('Source code', 'Report an issue')
+        links = f'<a href="{url}">{source}</a><a href="{url}/issues">{issues}</a>'
+    page = args.output / name
+    page.write_text(page.read_text().replace('@@REPOSITORY_LINKS@@', links))
 (args.output / '.nojekyll').touch()
 print(args.output.resolve())

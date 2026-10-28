@@ -32,7 +32,7 @@ Tests and investigation notes are in `Tests/` and `Documentation/`. Some scripts
 
 ## Website
 
-The static website is in `website/`. Preview it without publishing:
+The static English/Japanese website is in `website/`. The entry page selects a language from browser preferences; `en.html` and `ja.html` remain explicit, stable language choices. The page follows the system light/dark appearance. Preview it without publishing:
 
 ```sh
 python3 Scripts/build-website.py --output /tmp/texshop-site-preview
