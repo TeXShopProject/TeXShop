@@ -18,3 +18,6 @@ nav .previous-site{font-size:11px;white-space:nowrap}.tex-requirement{font-size:
 .legacy-download{font-size:13px}
 
 .release-date{font-size:13px;color:var(--muted)}.download-table .release-date{white-space:nowrap}
+
+/* Added by Terada: a separate home link on secondary pages. */
+.subpage-header{display:flex;align-items:center;justify-content:space-between;gap:24px}.site-brand{display:inline-flex;align-items:center;gap:9px;flex-shrink:0;color:var(--ink);font-size:20px;font-weight:400;text-decoration:none}.site-brand img{display:block}.subpage-header nav{flex:1;justify-content:flex-end}@media(max-width:650px){.subpage-header{flex-wrap:wrap;gap:14px}.subpage-header nav{flex-basis:100%;justify-content:flex-start}.site-brand{font-size:19px}}
