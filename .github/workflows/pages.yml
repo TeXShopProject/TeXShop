@@ -1,4 +1,5 @@
 name: Publish website
+# Registered after enabling GitHub Actions.
 # added by Terada: Manual deployment only, after review and approval.
 on:
   workflow_dispatch:
