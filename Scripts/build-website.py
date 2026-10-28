@@ -53,5 +53,12 @@ for name in ('index.html', 'en.html', 'ja.html', 'release-notes.html', 'release-
     page = args.output / name
     contact = ('https://github.com/' + html.escape(args.repository, quote=True)) if args.repository else '#development'
     page.write_text(page.read_text().replace('@@REPOSITORY_LINKS@@', links).replace('@@CONTACT_URL@@', contact))
+# Added by Terada: use a new stylesheet URL whenever its contents change.
+style_version = hashlib.sha256((args.output / 'style.css').read_bytes()).hexdigest()[:12]
+for page in args.output.rglob('*.html'):
+    source = page.read_text()
+    source = re.sub(r'''(<link\b[^>]*\bhref=["'])((?:\.\./)?style\.css)(["'])''',
+                    lambda match: match[1] + match[2] + '?v=' + style_version + match[3], source)
+    page.write_text(source)
 (args.output / '.nojekyll').touch()
 print(args.output.resolve())

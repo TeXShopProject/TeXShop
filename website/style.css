@@ -41,3 +41,6 @@ nav .previous-site{font-size:11px;white-space:nowrap}.tex-requirement{font-size:
 @media(prefers-color-scheme:dark){.file-button{background:linear-gradient(#4b4b4b,#353535);border-color:#737373;box-shadow:0 1px 2px #0006}.file-button:hover{background:linear-gradient(#575757,#414141);border-color:#999}.file-button:active{background:#303030}}
 @media(max-width:650px){.downloads .download-table td{padding:7px 0}.download-actions{display:inline-flex;flex-direction:row;vertical-align:middle}.file-button{min-width:84px}.download-table td[data-label="App"]::before,.download-table td[data-label="Source"]::before{display:none}.release-version{white-space:normal}.legacy-downloads tr{padding-top:18px}.download-table small{margin-top:2px}}
 @media(prefers-reduced-motion:reduce){.copy-toast{transition:none}}
+
+/* Added by Terada: emphasize downloads while keeping checksums secondary. */
+.download-actions a.file-button{background:var(--link);border-color:var(--link);color:var(--bg)}.download-actions a.file-button:hover{filter:brightness(1.08)}.download-actions a.file-button:active{filter:brightness(.92)}
