@@ -3,8 +3,8 @@
   "kind": "source",
   "filename": "TeXShop-5.59-source.zip",
   "source_url": "https://github.com/TeXShopProject/TeXShop/archive/refs/tags/v.5.59.zip",
-  "source_commit": "c6c8f08d45462d9a8cb3db284347db3e98ce3abb",
+  "source_commit": "1fff786245dfcfb335f6eb370451c3737427a805",
   "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59-source.zip",
-  "sha256": "69bd23af919f19bc4e3aed1d878e627f8ae3ad75beeba037cfd523dee8abdff5",
-  "bytes": 193186749
+  "sha256": "baff00e89750a0b4c993d184dda3b39585e1d7140e9c9ada49bdc0294793b88f",
+  "bytes": 193188464
 }
