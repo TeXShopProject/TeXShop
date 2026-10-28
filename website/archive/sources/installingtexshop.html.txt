@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+      <li><a href="obtaining.html">Obtaining</a></li>
+    <li id="current"><a href="installing.html">Installing</a></li>
+     <li><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li><a href="installing.html">Installing TeX Live</a></li>
+<li id="mcurrent"><a href="installingtexshop.html">Installing TeXShop</a></li>
+<li><a href="whereisstuff.html">Where's My Stuff?</a></li>
+</ul>
+</div>
+
+<!-- main content -->
+<div id="main">
+<h3>Installing TeXShop</h3> 
+
+<p> To install TeXShop, double click the zip file if it did not unzip automatically, and then drag the TeXShop icon to /Applications or /Applications/TeX, creating that TeX subfolder if necessary.</p>
+
+<p> After installing, users upgrading from an earlier version should read "About This Release", the first item in the TeXShop Help menu, to learn how to make minor configuration changes which activate new features.</p>
+
+<p> TeXShop will automatically configure itself to look for TeX binaries in /Library/TeX/texbin.
+If you are using a different TeX distribution like MikTeX, MacPorts, or Homebrew, open TeXShop Preferences (called "Settings" in the most recent macOS), select the "Engine" tab, and fill in the top item with a path to your TeX binary directory.
+
+
+
+
+</div>
+
+</body>
+</html>

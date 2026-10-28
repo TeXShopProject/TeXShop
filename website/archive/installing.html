@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>Installing TeX Live — TeXShop</title><link href="../style.css" rel="stylesheet"/><link href="../assets/texshop.png" rel="icon"/></head><body><header class="subpage-header"><a class="site-brand" href="../en.html"><img alt="" height="36" src="../assets/texshop.png" width="36"/><span>TeXShop</span></a><nav aria-label="Navigation"><a href="../downloads.html">Releases</a><a href="../contact.html">Contact</a><a aria-label="GitHub" class="github-link" href="https://github.com/TeXShopProject/TeXShop" title="TeXShop on GitHub"><svg aria-hidden="true" focusable="false" height="16" viewbox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"></path></svg></a><span class="languages"><a href="index.html" lang="en">English</a><span aria-hidden="true"> / </span><a href="index-ja.html" lang="ja">日本語</a></span><a class="previous-site" href="https://pages.uoregon.edu/koch/texshop/">Previous website</a></nav></header><main class="archive-content"><h1>Installing TeX Live</h1><section aria-label="Archive search" class="archive-search"><label for="archive-query">Search the archive</label><input aria-controls="archive-search-results" autocomplete="off" id="archive-query" type="search"/><p aria-live="polite" role="status"></p><ul class="archive-search-results" id="archive-search-results"></ul></section><p class="archive-notice">Archived from Richard Koch’s TeXShop website on October 28, 2026. Original wording is preserved; version information, advice, contact details, and external links may be out of date. <a href="https://pages.uoregon.edu/koch/texshop/installing.html">Original page</a> · <a href="sources/installing.html.txt">Original HTML</a></p><p class="archive-nav"><a href="index.html">History Archive</a></p><article class="legacy" lang="en">
+<h3 id="section-1">Installing TeX Live</h3>
+<p> If you downloaded MacTeX as recommended under the "Obtaining" tab, double click MacTeX to begin the installation process. 
+Follow the same procedure if instead you obtained BasicTeX. 
+
+
+<h3 id="section-2">Some History</h3>
+<p> Users interacting with TeX using a front end program are sometimes unaware of the vast support machinery acting invisibly behind the scene. This machinery consists of Donald Knuth's command line program, which does the actual typesetting, and of an enormous number of fonts, macro packages like LaTeX and ConTeXt, style files, documentation, configuration files, and the like. The enormous collection of programs and support files is called a TeX Distribution.  
+
+<p> For a number of years, the standard TeX distribution on Mac OS X and GNU/Linux was teTeX, maintained by Thomas Esser. On the Macintosh, this distribution was enhanced by Gerben Wierda, who wrote a program called i-Installer to download his enhanced version from the network, to configure it, and to upgrade it periodically.
+
+<p> Several years ago the TeX Users Group introduced an even more extensive distribution called TeX Live, for Mac OS X, Windows, GNU/Linux, and various BSD Unix systems; the principal authors are Sebastian Rahtz, Karl Berry, and Staszek Wawrykiewicz. 
+ In May, 2006, Thomas Esser announced that he would no longer support teTeX, and suggested that users move to TeX Live. Shortly afterward, Gerben Wierda stopped
+ updating his system. Today, TeX Live (which MacTeX installs) is the standard TeX distribution on the Macintosh.
+ 
+<h3 id="section-3">Multiple Distribution Support</h3>
+<p> When a new version of TeX Live is installed by MacTeX, the new version does not overwrite the previous version. This makes it possible for users in the middle of an
+important project to safely update, because they can switch back to the earlier version if they run into trouble. Switching back requires only a single
+button click due to a feature explained below.
+
+<p> Gerben Wierda and Jerome Laurens  designed a data structure to support multiple TeX distributions on a machine. This data structure is installed by the BasicTeX and MacTeX. The data structure is placed in /Library/TeX and consists of some carefully designed symbolic links to installed distributions.
+Using this structure, BasicTeX and MacTeX distributions from multiple years easily coexist on a machine. 
+
+
+<p> The data structure is ingenious; it does not modify TeX distributions in any way. A new link, /Library/TeX/texbin, is created which indirectly points to the binary directory of the active TeX distribution. TeXShop, BibDesk,  LaTeXiT, and TeX Live Utility all use /Library/TeX/texbin automatically.
+Other GUI applications need to be reconfigured to look for TeX at this spot, but after they are configured once, they automatically work without modification in the future.
+
+<p> The program TeX Live Utility, installed in /Applications/TeX, can be used to switch the active distribution.
+In this program's "Configure" menu, select the item "Change Default TeX Live Version". A dialog appears listing all installed TeX distributions; selected the distribution which should become active. When ''Done" is clicked, all GUI applications are reconfigured automatically, and PATH and MAN variables are reset for command line interaction with the new active distribution.
+
+<p> One word of warning. The data structure is a complicated tangle of mostly empty directories with links pointing to other links. The main /Library/TeX/texbin link is not changed when selecting a new active distribution; instead a link deeper in the structure is changed. Some users who know the command line start with the link /Library/TeX/texbin
+and try to trace it backward to find the actual binaries; this is not a good idea. Instead read the page "Where's My Stuff?" linked on the left side of this page to discover where we install TeX Live, Ghostscript, and other pieces of MacTeX.
+
+</p></p></p></p></p></p></p></p></p></article></main><script src="search.js"></script></body></html>

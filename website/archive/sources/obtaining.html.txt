@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+    <li id="current"><a href="obtaining.html">Obtaining</a></li>
+    <li><a href="installing.html">Installing</a></li>
+      <li><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li id="mcurrent"><a href="obtaining.html">Obtaining TeXShop and TeX Live</a></li>
+</ul>
+</div>
+
+<!-- main content -->
+<div id="main">
+
+<h3>Obtaining TeXShop</h3>
+
+
+<p> If you just want to upgrade to the latest TeXShop, get</p>
+<ul>
+<li><a href="texshop-64/texshop.zip"> Latest TeXShop, Version 5.57</a> for 
+Intel and Arm on High Sierra and higher  (71.3 MB)</li>
+<li> <a href="texshop-64/texshop479.zip"> Version 4.79</a> for 
+Sierra or higher (55 MB)</li>
+<li> <a href="texshop-64/texshop444.zip"> Version 4.44</a> for 
+Yosemite or higher (46.5 MB)</li>
+<li> <a href="texshop-64/texshopsource.zip">Source Code for  Version 5.57</a>  (requires XCode 14 or later) </li>
+</ul>
+
+
+<p> Below is a list of changes made in the latest version of TeXShop. </p>
+
+<ul>
+<li> <a href="changes_3.html">Changes in Versions 3 through 5</a></li>
+</ul>
+
+<p> TeXShop is just a front end to TeX. You also need a TeX distribution. 
+<!--
+<h3> TeXShop on macOS 26, Tahoe</h3>
+
+<p> The current version of TeXShop runs fine on Tahoe, an upcoming system which Apple released to developers in June and will officially release to everyone this fall. When the current TeXShop  runs on Tahoe, it does not display Liquid Glass features.
+
+<p> The current source code can also be compiled on Tahoe using XCode 16.24 beta, which requires Tahoe. This operation adds Liquid Glass features to TeXShop. The original release of Tahoe had several bugs running with this configuration, but a second beta of Tahoe released on June 23  fixes several of these bugs.
+
+<p> A slightly modified version of TeXShop 5.53 available below contains Liquid Glass and requires Tahoe.
+Please notify us of any  bugs in this version. We know of minor problems when splitting the Source or Preview windows. These features work, but with minor glitches. 
+
+<p> To try the Tahoe version, download 
+<ul><li><a href="texshop-64/texshop553beta.zip"> Latest TeXShop with Liquid Glass, Version 5.53</a> for 
+Intel and Arm on Tahoe beta </li></ul>
+-->
+
+
+
+<h3>Shortcut for New Users Who Want To Test Drive TeX</h3>
+
+<p> TeXShop is a front end to TeX and LaTeX, but when TeXShop typesets, it calls command line programs in an underlying TeX distribution. This distribution
+ must be obtained separately. The TeX distribution contains the actual typesetting programs by Knuth and others,  various fonts used by
+TeX, and a vast array of support style files and other auxiliary files.
+
+<p> A small distribution adequate for beginners is available by going to <a href="https://tug.org/mactex/morepackages.html">https://tug.org/mactex/morepackages.html</a>. Click on the link titled "BasicTeX.pkg" to download. The result will be an Apple install package which will install BasicTeX when
+double clicked. 
+Obtain TeXShop separately. No further configuration is needed, so run TeXShop and try some simple examples from the internet or the TeXShop Help Menu.
+
+
+ 
+<h3> TeXShop and TeX Live</h3>
+
+<p> The standard TeX distribution on the Macintosh is called TeX Live. BasicTeX is a small subset of TeX Live, but anyone serious about TeX should obtain the full distribution. The MacTeX Working Group from the Tex User Group (TUG) constructed an install package which installs  TeX Live and everything else needed to run TeX on Mac OS X in one step.  This package is free, and uses Apple's standard installer; installation takes eight to ten minutes and is automatic. The package installs TeX Live, the complete reference edition of TeX produced in cooperation by TeX User Groups across the world. It also installs Ghostscript and several GUI utilities for TeX including  TeXShop, so it is not necessary to get the front end separately. One of the GUI programs it installs is "TeX Live Utility," which  can keep TeX Live  up to date. Everything is completely configured and ready to use once the installer finishes its job.
+
+<p> MacTeX is a large download, about six gigabytes. To obtain it, click on the following link: <a href="https://mirror.ctan.org/systems/mac/mactex/MacTeX.pkg">MacTeX.pkg</a>.
+
+<h3> TeXShop with Homebrew and MacPorts</h3>
+
+<p> Some users obtain their TeX Distribution using <em>homebrew</em>; see
+<a href="https://brew.sh">https://brew.sh</a> for details. Users who install this way are familiar with
+the Unix command line, so this section has technicalities that other users can avoid.
+Most of the packages installed by Homebrew are standard programs and utilities from the Unix and open source worlds. On Apple Silicon, homebrew files are symlinked into /opt/homebrew and its executable binaries are symlinked
+into /opt/homebrew/bin. 
+
+<p> Both BasicTeX and MacTeX create a symbolic link to their binaries called /Library/TeX/texbin. This link points to /Library/TeX/Distributions/Programs/texbin and through them to an array of further links before reaching the actual binaries in the distribution, but this complicated structure can be ignored by most users. GUI programs for TeX and LaTeX in the Macintosh world are often configured to find the TeX distribution using /Library/TeX/texbin; this includes TeX Live Utility, BibDesk, LaTeXiT and others. So rewriting the link reconfigures them as well.
+
+<p> The easiest way to reconfigure TeXShop for Homebrew is to rewrite the /Library/TeX/texbin symbolic link,
+assuming that you  have root access and can use sudo. 
+Note that /Library is the system-wide folder, not the folder ~/Library in a user's home directory. It may be
+necessary to create the subfolder TeX if it does not already exist. 
+Then run the following code using Apple's Terminal program or some other shell:
+<pre>
+	cd /Library/TeX
+	sudo ln -s /opt/homebrew/bin texbin
+</pre>
+
+<p> Users without root permission can open TeXShop Settings, go to the Engine tab, and change "/Library/TeX/texbin" at the top to the location of their TeX binaries. Then TeX and LaTeX will work fine. For more obscure typesetting methods, note that TeXShop "Engine files" sometimes set PATH and need to be modified.
+
+<p> Similar remarks holds for MacPorts, another way to install Unix programs and utilities on the Mac. MacPorts users can easily adopt the above configuration for their systems.
+
+
+
+<h3> Summary</h3>
+
+
+<p> Let's summarize. To use TeX on Mac OS X, it suffices to install TeXShop and BasicTeX. For a more complete installation, install MacTeX.  
+
+
+<h3> About MacTeX and TeX Live</h3>
+
+<p> For more details about MacTeX, go to the MacTeX web page, <a href="https://tug.org/mactex">https://tug.org/mactex</a>. 
+
+<p> TeX Live runs on almost all modern operating systems, including Mac OS X, Windows, GNU/Linux, and various forms of BSD Unix. The distribution is the same on all of these systems; nothing has been added, subtracted, or modified to make it work on OS X. The distribution contains essentially every TeX tool in common use today: Plain TeX, LaTeX, AMS-TeX, ConTeXt, XeTeX, and others, as well as  a complete array of packages,  style files, and fonts.
+For details, see <a href="https://tug.org/">https://tug.org/</a>.
+
+<!--
+
+<p> Another way to get MacTeX is to join TUG; the package is on the DVD sent immediately to new members and once a year to continuing members.
+This DVD contains extra front-ends for Mac OS X and many other useful TeX utilities. It also
+contains complete TeX distributions for Windows, GNU/Linux, and other Unix systems. 
+
+<p>TUG membership benefits include three issues of TUGBoat, the journal of the organization, and additional CD's containing the CTAN TeX archive of style files, packages, fonts, documentation, etc. For details on joining, see
+<a href="http://www.tug.org">http://www.tug.org</a>.
+-->
+
+
+<h3> Max Horn Git Repository</h3> 
+
+With great effort, Max Horn created a git repository based on an almost complete set of TeXShop sources.
+See <a href="https://github.com/TeXShop/TeXShop">https://github.com/TeXShop/TeXShop</a>.
+
+
+<h3> Other Versions of TeXShop</h3>
+
+<p> This page used to provide  older versions of TeXShop, but since the three versions listed at the top of the page cover the last ten versions of macOS,  older versions are no longer needed. If you desperately need an older version, consult the Max Horn web site or write me directly. 
+
+<p> For the sake of history, here is a truly ancient version:
+<ul>
+<li> <a href="texshop-2.47.zip">TeXShop Version 2.47</a> for systems 10.4, 10.5, 10.6, 10.7, 10.8 (50.7 MB, system 10.5 or higher recommended)</li>
+<li> <a href="texshopsource247.zip">Source Code for  Version 2.47</a></li>
+<li> <a href="changes_2.html">Changes in Version 2.47</a></li>
+</ul>
+
+
+<!--
+<p> From time to time, users have asked for other particular versions of TeXShop. Below, in no particular order, are some of these requested versions.</p>
+<ul>
+<li> <a href="texshop-64/texshop415.zip"> TeXShop Version 4.15</a> for 
+Yosemite or higher  (50.7 MB)</li>
+<li> <a href="texshop-64/texshop401.zip">TeXShop Version 4.01</a> for 
+Mavericks through El Capitan (50.7 MB)</li>
+<li> <a href="texshop368.zip">TeXShop 3.68</a>; release just before 3.70</li>
+<li> <a href="texshop365.zip">TeXShop 3.65</a>; last version to run on Lion</li>
+<li> <a href="texshop362.zip">TeXShop 3.62</a>; last version to show help movies on Lion and Mountain Lion</li>
+<li> <a href="texshop359.zip">TeXShop 3.59</a>; last version to write CREATOR and TYPE, temporarily available for Alpha users until that program is upgraded (39.9 MB)</li>
+<li> <a href="texshop337.zip">TeXShop 3.37</a>; for a few who cannot update past Lion (69 MB)</li>
+<li> <a href="texshop_1.43.dmg">TeXShop 1.43</a> for systems 10.2 and 1.3 (8 MB)</li>
+<li> <a href="texshop_1.35e.dmg">TeXShop 1.35e</a> for systems 10.2 and 1.3 (8 MB), provided for a few users who had trouble running 1.43 on system 10.2</li>
+<li> <a href="texshop_1.19.dmg">TeXShop 1.19</a> for system 10.1.5 and lower (1.1 MB)</li>
+</ul> 
+-->
+
+<p>
+<p>
+</div>
+
+
+</body>
+</html>

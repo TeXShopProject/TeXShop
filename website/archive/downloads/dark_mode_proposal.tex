@@ -1,0 +1,458 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{microtype}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    urlcolor=blue!70!black,
+    citecolor=blue!70!black,
+}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries\color{blue!70!black},
+    commentstyle=\itshape\color{green!50!black},
+    stringstyle=\color{red!60!black},
+    breaklines=true,
+    frame=single,
+    framerule=0.4pt,
+    rulecolor=\color{black!30},
+    backgroundcolor=\color{black!3},
+    xleftmargin=1em,
+    xrightmargin=1em,
+    aboveskip=1em,
+    belowskip=1em,
+    showstringspaces=false,
+    tabsize=4,
+    language=[Objective]C,
+    morekeywords={NSArray,NSMutableArray,CIFilter,CIVector,NSScrollView,
+        NSAppearance,NSUserDefaults,NSNumber,BOOL,YES,NO,nil,CGFloat,
+        NSString,NSMenuItem,NSLocalizedString,PDFView,NSView,
+        NSAppearanceNameDarkAqua,NSAppearanceNameAqua,NSOnState,NSOffState},
+}
+
+\title{\textbf{Proposal: Luminosity-Inverting Dark Mode\\for the TeXShop PDF Preview}}
+\author{}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+
+\section{Summary}
+
+This document proposes adding an optional luminosity-inverting dark mode to
+TeXShop's built-in PDF preview. When macOS dark mode is active and the user
+enables this feature, the PDF preview would display with inverted luminosity ---
+white pages become dark, black text becomes light --- while preserving the hue
+of coloured content such as figures and diagrams.
+
+The proposed implementation follows the approach used by Skim, applying
+\texttt{CIFilter} objects via \texttt{NSView.contentFilters} to the PDF scroll
+view. This is non-invasive: it does not modify the PDF data, does not interfere
+with text selection, annotations, or search highlighting, and requires changes
+to only a small number of existing TeXShop source files.
+
+\section{Motivation}
+
+TeXShop~5.x supports macOS dark mode for its editor chrome (menus, toolbars,
+source editor background) but renders PDF content exactly as authored --- white
+pages on a dark UI. This creates a sharp brightness contrast that is visually
+uncomfortable, particularly during extended editing sessions in low-light
+environments.
+
+Users currently work around this by using an external previewer such as Skim,
+which supports luminosity inversion in dark mode. A native solution within
+TeXShop would preserve the integrated edit--preview workflow that is one of
+TeXShop's key strengths.
+
+\section{Technical approach}
+
+\subsection{Why \texttt{contentFilters}?}
+
+Apple's \texttt{PDFKit} provides no built-in API for dark mode rendering of PDF
+page content. The \texttt{PDFView.backgroundColor} property only controls the
+area around pages, not the page content itself. Four approaches were evaluated:
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{\texttt{NSView.contentFilters}} --- an array of
+        \texttt{CIFilter} objects applied to a view's rendered output.
+        Non-invasive, works with all PDFKit features. \emph{Recommended.}
+    \item \textbf{\texttt{CALayer.filters}} --- modifying the backing layer
+        directly. Officially unsupported since macOS~10.13; undefined behaviour.
+    \item \textbf{\texttt{PDFPage} subclass with custom drawing} --- override
+        \texttt{draw(with:to:)} to manipulate the \texttt{CGContext}. Fragile
+        across macOS versions; interferes with annotation rendering.
+    \item \textbf{Render to bitmap, apply filter, display as image} --- loses
+        all interactivity (selection, links, search). Not practical.
+\end{enumerate}
+
+Approach~(a) is the same one used by Skim, where it has been stable across
+macOS~10.14 through macOS~15. It uses only built-in \texttt{CIFilter} types
+(\texttt{CIGammaAdjust}, \texttt{CIColorMatrix}), which continue to work
+reliably even though custom \texttt{CIFilter} kernels on \texttt{CALayer} have
+been broken since macOS~11.
+
+\subsection{Luminosity inversion vs.\ naive RGB inversion}
+
+A naive RGB inversion (\texttt{CIColorInvert}) maps each channel $c$ to $1-c$.
+This turns red to cyan, blue to yellow, and so on --- unacceptable for coloured
+figures. Luminosity inversion instead computes the perceived luminance
+\[
+    L = 0.2126\,R + 0.7152\,G + 0.0722\,B
+\]
+using the ITU-R BT.709 coefficients and inverts only the luminance component,
+preserving hue. The transformation is:
+\[
+    \begin{pmatrix} R' \\ G' \\ B' \end{pmatrix}
+    =
+    \begin{pmatrix}
+        1 - f L_R & -f L_G & -f L_B \\
+        -f L_R & 1 - f L_G & -f L_B \\
+        -f L_R & -f L_G & 1 - f L_B
+    \end{pmatrix}
+    \begin{pmatrix} R \\ G \\ B \end{pmatrix}
+    +
+    \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}
+\]
+where $L_R = 0.2126$, $L_G = 0.7152$, $L_B = 0.0722$, and $f \approx 1.90$ is
+a tuning factor. With $f = 1.8972$, pure white maps to approximately
+\texttt{\#1E1E1E} (the standard macOS dark-mode background), not pure black.
+This avoids excessive contrast. When the system accessibility setting
+``Increase contrast'' is active, Skim uses $f = 1.9337$.
+
+The inversion is performed in linear colour space by bracketing the colour
+matrix with gamma adjustments:
+\begin{enumerate}
+    \item \texttt{CIGammaAdjust} with power $0.625$ (linearise),
+    \item \texttt{CIColorMatrix} (luminosity inversion),
+    \item \texttt{CIGammaAdjust} with power $1.6$ (re-apply gamma).
+\end{enumerate}
+
+\subsection{Appearance forcing}
+
+When the inversion filter is active, the scroll view's
+\texttt{NSAppearance} must be forced to \texttt{NSAppearanceNameAqua} (light
+mode). This ensures the PDF renders with a white background \emph{before} the
+filter inverts it. Without this, the system would render a dark background
+which, after inversion, would become white --- the opposite of the desired
+effect.
+
+\subsection{Limitation}
+
+The filter is applied to the entire view. Coloured images and figures are
+inverted along with the text. While the luminosity-preserving approach keeps
+hues recognisable, images will appear with altered brightness. This is the same
+limitation present in Skim. The commercial application Texifier addresses this
+by offering three modes (full inversion, images excluded, or none), but the
+``images excluded'' mode requires a more complex rendering pipeline that
+identifies and masks image regions.
+
+For a first implementation, the all-or-nothing approach is appropriate and
+matches user expectations from Skim.
+
+\section{Proposed changes to TeXShop}
+
+The implementation touches 8~files with minimal modifications to each. It
+follows existing TeXShop patterns: the toggle menu item pattern from
+\texttt{toggleLinkPopups:}, the preference pattern from \texttt{PdfColorMapKey},
+and the dark mode detection pattern from \texttt{TSTextView}'s
+\texttt{viewDidChangeEffectiveAppearance}.
+
+\subsection{Overview of files}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{File} & \textbf{Class / Area} & \textbf{Change} \\
+\midrule
+\texttt{globals.h}           & Global constants     & Add preference key declaration \\
+\texttt{globals.m}           & Global constants     & Add preference key definition \\
+\texttt{FactoryDefaults.plist} & Default preferences & Add default value \\
+\texttt{MyPDFKitView.h}      & \texttt{MyPDFKitView} & Add 3 method declarations \\
+\texttt{MyPDFKitView.m}      & \texttt{MyPDFKitView} & Add filter methods + hook into setup \\
+\texttt{TSTextView.m}        & \texttt{TSTextView}  & Trigger filter update on appearance change \\
+\texttt{TSPreviewWindow.h}   & \texttt{TSPreviewWindow} & Add toggle method declaration \\
+\texttt{TSPreviewWindow.m}   & \texttt{TSPreviewWindow} & Add toggle + menu validation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Step 1: Preference key}
+
+\paragraph{\texttt{Sources/globals.h}} Add after
+\texttt{BringFrontOnTypesetKey}:
+
+\begin{lstlisting}
+extern NSString *DarkModeInvertPreviewKey;
+\end{lstlisting}
+
+\paragraph{\texttt{Sources/globals.m}} Add near
+\texttt{DefaultDarkThemeKey}:
+
+\begin{lstlisting}
+NSString *DarkModeInvertPreviewKey = @"DarkModeInvertPreview";
+\end{lstlisting}
+
+\paragraph{\texttt{Resources/FactoryDefaults.plist}} Add within the root
+\texttt{<dict>}:
+
+\begin{lstlisting}[language=XML]
+<key>DarkModeInvertPreview</key>
+<string>YES</string>
+\end{lstlisting}
+
+\subsection{Step 2: Core filter methods in \texttt{MyPDFKitView}}
+
+\paragraph{\texttt{Sources/MyPDFKitView.h}} Add after
+\texttt{fixWhiteDisplay}:
+
+\begin{lstlisting}
+- (void)applyDarkModeInversionFilter;
+- (void)removeDarkModeInversionFilter;
+- (void)updateDarkModeInversion;
+\end{lstlisting}
+
+\paragraph{\texttt{Sources/MyPDFKitView.m}} Add before \texttt{@end}:
+
+\begin{lstlisting}
+#pragma mark - Dark Mode Luminosity Inversion
+
+#define LR 0.2126
+#define LG 0.7152
+#define LB 0.0722
+
+- (void)applyDarkModeInversionFilter
+{
+#ifdef MOJAVEORHIGHER
+    NSScrollView *scrollView =
+        [[self documentView] enclosingScrollView];
+    if (!scrollView)
+        return;
+
+    // Force light appearance so the PDF renders with
+    // a white background before we invert
+    [scrollView setAppearance:
+        [NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+
+    NSMutableArray *filters = [NSMutableArray array];
+    CIFilter *filter;
+
+    // Step 1: Linearise (gamma pre-correction)
+    filter = [CIFilter filterWithName:@"CIGammaAdjust"
+        keysAndValues:@"inputPower",
+        [NSNumber numberWithDouble:0.625], nil];
+    if (filter) [filters addObject:filter];
+
+    // Step 2: Luminosity inversion via colour matrix
+    // Tuning factor: white -> ~#1E1E1E
+    CGFloat f = [[NSWorkspace sharedWorkspace]
+        accessibilityDisplayShouldIncreaseContrast]
+        ? 1.9337 : 1.8972;
+
+    filter = [CIFilter filterWithName:@"CIColorMatrix"
+        keysAndValues:
+        @"inputRVector",
+            [CIVector vectorWithX:1.0-LR*f
+                                Y:-LG*f
+                                Z:-LB*f W:0.0],
+        @"inputGVector",
+            [CIVector vectorWithX:-LR*f
+                                Y:1.0-LG*f
+                                Z:-LB*f W:0.0],
+        @"inputBVector",
+            [CIVector vectorWithX:-LR*f
+                                Y:-LG*f
+                                Z:1.0-LB*f W:0.0],
+        @"inputAVector",
+            [CIVector vectorWithX:0.0 Y:0.0
+                                Z:0.0 W:1.0],
+        @"inputBiasVector",
+            [CIVector vectorWithX:1.0 Y:1.0
+                                Z:1.0 W:0.0],
+        nil];
+    if (filter) [filters addObject:filter];
+
+    // Step 3: Re-apply gamma
+    filter = [CIFilter filterWithName:@"CIGammaAdjust"
+        keysAndValues:@"inputPower",
+        [NSNumber numberWithDouble:1.6], nil];
+    if (filter) [filters addObject:filter];
+
+    [scrollView setContentFilters:filters];
+#endif
+}
+
+- (void)removeDarkModeInversionFilter
+{
+#ifdef MOJAVEORHIGHER
+    NSScrollView *scrollView =
+        [[self documentView] enclosingScrollView];
+    if (!scrollView)
+        return;
+
+    [scrollView setAppearance:nil];
+    [scrollView setContentFilters:@[]];
+#endif
+}
+
+- (void)updateDarkModeInversion
+{
+#ifdef MOJAVEORHIGHER
+    if (@available(macOS 10.14, *)) {
+        BOOL isDark = [[self effectiveAppearance]
+            bestMatchFromAppearancesWithNames:
+            @[NSAppearanceNameDarkAqua]] != nil;
+        BOOL userWants =
+            [SUD boolForKey:DarkModeInvertPreviewKey];
+
+        if (isDark && userWants)
+            [self applyDarkModeInversionFilter];
+        else
+            [self removeDarkModeInversionFilter];
+    }
+#endif
+}
+\end{lstlisting}
+
+\paragraph{Hook into existing setup methods.} In the \texttt{setup} method
+(after \texttt{initializeDisplay}) and in \texttt{showForSecond} (after
+\texttt{initializeDisplay}), add:
+
+\begin{lstlisting}
+[self updateDarkModeInversion];
+\end{lstlisting}
+
+\subsection{Step 3: Respond to system appearance changes}
+
+\paragraph{\texttt{Sources/TSTextView.m}} In
+\texttt{viewDidChangeEffectiveAppearance}, after each
+\texttt{[self.document changeColors:]} call, add:
+
+\begin{lstlisting}
+[self.document.myPDFKitView updateDarkModeInversion];
+[self.document.myPDFKitView2 updateDarkModeInversion];
+\end{lstlisting}
+
+This ensures the filter is applied or removed when the user switches between
+light and dark mode at the system level.
+
+\subsection{Step 4: Menu toggle}
+
+\paragraph{\texttt{Sources/TSPreviewWindow.h}} Add after
+\texttt{toggleLinkPopups:}:
+
+\begin{lstlisting}
+- (void)toggleDarkModeInversion:(id)sender;
+\end{lstlisting}
+
+\paragraph{\texttt{Sources/TSPreviewWindow.m}} Add the toggle action (following
+the \texttt{toggleLinkPopups:} pattern):
+
+\begin{lstlisting}
+- (void)toggleDarkModeInversion:(id)sender
+{
+    BOOL current = [SUD boolForKey:DarkModeInvertPreviewKey];
+    [SUD setBool:!current forKey:DarkModeInvertPreviewKey];
+    [SUD synchronize];
+
+    MyPDFKitView *view1 = self.myPDFKitView;
+    MyPDFKitView *view2 = self.myPDFKitView2;
+    [view1 updateDarkModeInversion];
+    [view2 updateDarkModeInversion];
+}
+\end{lstlisting}
+
+In \texttt{validateMenuItem:}, add after the \texttt{toggleLinkPopups:} block:
+
+\begin{lstlisting}
+if ([anItem action] ==
+    @selector(toggleDarkModeInversion:)) {
+    if ([SUD boolForKey:DarkModeInvertPreviewKey])
+        [anItem setState:NSOnState];
+    else
+        [anItem setState:NSOffState];
+    return YES;
+}
+\end{lstlisting}
+
+\paragraph{Menu item.} The simplest approach is to add the item
+programmatically in \texttt{TSAppDelegate.m} within
+\texttt{applicationDidFinishLaunching:}, after the existing Copy Format menu
+setup:
+
+\begin{lstlisting}
+NSMenuItem *darkInvertItem = [[NSMenuItem alloc]
+    initWithTitle:NSLocalizedString(
+        @"Invert Preview Colors",
+        @"Invert Preview Colors")
+    action:@selector(toggleDarkModeInversion:)
+    keyEquivalent:@""];
+[darkInvertItem setTarget:nil];
+// Insert into Preview menu at appropriate index
+\end{lstlisting}
+
+This avoids editing the 12+ localised MainMenu nib files.
+
+\section{Skim source reference}
+
+Skim's implementation, which this proposal follows, is open source and available
+at \url{https://github.com/scris/skim-pdf}. The relevant files are:
+
+\begin{itemize}
+    \item \texttt{NSGraphics\_SKExtensions.m} --- the
+        \texttt{SKColorEffectFilters()} function containing the full filter
+        chain.
+    \item \texttt{SKBasePDFView.m} --- where \texttt{contentFilters} is applied
+        to the scroll view, appearance is forced, and
+        \texttt{viewDidChangeEffectiveAppearance} is handled.
+\end{itemize}
+
+\section{Testing considerations}
+
+\begin{enumerate}
+    \item Verify inversion activates only when both macOS dark mode is on
+        \emph{and} the preference is enabled.
+    \item Verify toggling the menu item applies/removes the filter immediately.
+    \item Verify switching between light and dark mode at the system level
+        updates the preview correctly.
+    \item Verify text selection, search highlighting, and link clicking work
+        normally with the filter active.
+    \item Verify split-view mode (both \texttt{myPDFKitView} and
+        \texttt{myPDFKitView2}) inverts correctly.
+    \item Verify coloured figures are recognisable (hues preserved, luminosity
+        inverted).
+    \item Test across macOS versions: 10.14 (Mojave) through the current
+        release.
+    \item Verify the ``Increase contrast'' accessibility setting produces a
+        slightly stronger inversion.
+\end{enumerate}
+
+\section{Future enhancements}
+
+\begin{itemize}
+    \item \textbf{Sepia tone and white point adjustment.} Skim also supports
+        sepia tone (\texttt{CISepiaTone}) and white point adjustment
+        (\texttt{CIWhitePointAdjust}) as additional filters. These could be
+        exposed as preferences for users who prefer a warm-tinted preview.
+    \item \textbf{Image exclusion.} A more advanced implementation could
+        identify image regions in the PDF and exclude them from inversion,
+        similar to Texifier's ``images excluded'' mode. This would require
+        parsing the PDF content stream to locate image XObjects and masking
+        those regions from the filter --- significantly more complex but
+        achievable.
+    \item \textbf{Keyboard shortcut.} Assign a default key equivalent (e.g.,
+        \texttt{Cmd+Shift+I}) for quick toggling.
+\end{itemize}
+
+\end{document}

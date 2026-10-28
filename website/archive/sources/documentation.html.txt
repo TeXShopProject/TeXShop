@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li id="current"><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+     <li><a href="obtaining.html">Obtaining</a></li>
+    <li><a href="installing.html">Installing</a></li>
+    <li><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li><a href="index.html">Current Release</a></li>
+<li><a href="about.html">About TeXShop</a></li>
+<li id="mcurrent"><a href="documentation.html">Documentation</a></li>
+<li><a href="anniversary.html">Original Version of TeXShop</a></li>
+<li><a href="pictures.html">Three TeXShop Versions</a></li>
+<li><a href="translations.html">Translations</a></li>
+</ul>
+</div>
+
+<!-- main content -->
+<div id="main">
+<h3>LaTeX Documentation</h3> 
+
+
+
+<p> TeX is a typesetting program by Donald Knuth, used extensively in mathematics, computer science, physics, economics, and other fields.  For a history of the development of TeX,
+see <a href="http://www.tug.org/whatis.html">Just What Is TeX</a>. Consult the <a href="http://www.tug.org/">TeX Users Group Web Site</a> for additional information.</p>
+
+
+<p> To use TeXShop, you need to learn TeX or LaTeX. The following books are
+recommended. The first, by the author of LaTeX, is short, and the other three are detailed and comprehensive.</p>
+
+<ul>
+<li> <i>LaTeX, A Document Preparation System (Second Edition)</i> by Leslie Lamport, Addison-Wesley </li>
+<p><li> <i>More Math Into LaTeX (Fifth Edition)</i> by
+George Gratzer, Springer</li>
+<p><li> <i>Guide to LaTeX, Tools and Techniques for Computer Typesetting (Fourth Edition)</i> by
+Helmut Kopka and Patrick W. Daly, Addison-Wesley</li>
+<p><li> <i>The LaTeX Companion, Parts I & II (Third Edition)</i> by
+Frank Mittelbach and Ulrike Fischer, Addison-Wesley</li>
+</ul> 
+
+<p> A number of free guides to LaTeX are available. Two of the most useful are</p>
+<ul>
+<li><a href="http://www.ctan.org/tex-archive/info/lshort/english/lshort.pdf">The Not So Short Introduction to LaTeX2e</a>, by Tobias Oetiker</li>
+
+<p><li><a href="https://www.learnlatex.org/en/">
+LaTeX Tutorials</a> from Learn LaTeX.org</li>
+</ul>
+
+<p> The previous links give English versions of the guides, but versions are available in many  languages using the alternate links below:
+<ul>
+<li><a href="https://ctan.org/pkg/lshort">The Not So Short Introduction to LaTeX2e</a>, by Tobias Oetiker</li>
+
+<p><li><a href="https://www.learnlatex.org/">
+LaTeX Tutorials</a> from Learn LaTeX.org</li>
+</ul>
+
+
+
+<!--
+<p> Will Robertson wrote the following  <a href="LatexExamples.zip">short LaTeX files</a> showing how to perform common tasks. These examples may suffice for many TeX beginners.</p>
+-->
+</div>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>TeXShop on macOS Golden Gate — TeXShop</title><link href="../style.css" rel="stylesheet"/><link href="../assets/texshop.png" rel="icon"/></head><body><header class="subpage-header"><a class="site-brand" href="../en.html"><img alt="" height="36" src="../assets/texshop.png" width="36"/><span>TeXShop</span></a><nav aria-label="Navigation"><a href="../downloads.html">Releases</a><a href="../contact.html">Contact</a><a aria-label="GitHub" class="github-link" href="https://github.com/TeXShopProject/TeXShop" title="TeXShop on GitHub"><svg aria-hidden="true" focusable="false" height="16" viewbox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"></path></svg></a><span class="languages"><a href="index.html" lang="en">English</a><span aria-hidden="true"> / </span><a href="index-ja.html" lang="ja">日本語</a></span><a class="previous-site" href="https://pages.uoregon.edu/koch/texshop/">Previous website</a></nav></header><main class="archive-content"><h1>TeXShop on macOS Golden Gate</h1><section aria-label="Archive search" class="archive-search"><label for="archive-query">Search the archive</label><input aria-controls="archive-search-results" autocomplete="off" id="archive-query" type="search"/><p aria-live="polite" role="status"></p><ul class="archive-search-results" id="archive-search-results"></ul></section><p class="archive-notice">Archived from Richard Koch’s TeXShop website on October 28, 2026. Original wording is preserved; version information, advice, contact details, and external links may be out of date. <a href="https://pages.uoregon.edu/koch/TeXShopSource.html">Original page</a> · <a href="sources/golden-gate.html.txt">Original HTML</a></p><p class="archive-nav"><a href="index.html">History Archive</a></p><article class="legacy" lang="en">
+<center><h2 id="section-1">TeXShop on macOS Golden Gate</h2></center>
+<h3 id="section-2">Compiling TeXShop on Golden Gate</h3>
+
+Compiling code on Golden Gate requires a new version of XCode, version 27.0 beta. That version automatically adds the latest version of Liquid Glass to the program. A couple of days ago,
+Apple released macOS 27.3, the latest beta. This document describes that release,  and compiling code on it using XCode 27.3 beta.
+
+
+<p>Initially the Tahoe source code for TeXShop 5.57 refused to compile on Golden Gate.
+The first bug reported was that the minimal version of macOS which the code would support was Sonoma rather than the previously supported Big Sur and higher. The latest XCode
+only supports Sonoma, Sequoia, Tahoe, and Golden Gate. So this item was reset to Sonoma.
+
+<p> After that, a long list of errors were reported, all related to calls to various forms
+of [customView frame]. The problem was that many different classes defined such
+a frame element and XCode couldn't determine which should be called. This problem was
+fixed by revising a few lines of code in TSToolbarController.m. In makeToolbarItemWithItemIdentifier,
+the change was
+
+<pre>
+
+else {
+        /*
+	[toolbarItem setMinSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
+	[toolbarItem setMaxSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
+         */
+        [toolbarItem setMinSize:NSMakeSize(20.0, 20.0)];
+        [toolbarItem setMaxSize:NSMakeSize(400.0, 400.0)];
+    }
+
+	return toolbarItem;
+   }
+</pre>
+
+and in makeToolbarItemFixedWithItemIdentifier the similar change was 
+
+<pre>
+{
+    NSToolbarItem*    toolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemKey];
+    [toolbarItem setView: customView];
+    /*
+    [toolbarItem setMinSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
+    [toolbarItem setMaxSize:NSMakeSize(NSWidth([customView frame]), NSHeight([customView frame]))];
+    */
+    [toolbarItem setMinSize:NSMakeSize(20.0, 20.0)];
+    [toolbarItem setMaxSize:NSMakeSize(400.0, 400.0)];
+    
+    return toolbarItem;
+}
+</pre>
+
+After these changes, only one error remained, in TSDocument.RootFile. See lines 186 - 195.
+In the routine CheckRootFile, a number of lines had to be commented out, as shown below.
+
+<pre>
+} else if (task == RootForOpening) {
+			// added by Terada (from this line) // This was moved here for version 2.40
+			/*
+             if([SUD integerForKey:DocumentWindowPosModeKey] == DocumentWindowPosSave){
+				NSRect activeWindowFrame = [[obj textWindow] frame];
+				NSScreen *screen = [NSScreen mainScreen];
+				CGFloat minX = 20 + ((NSMinX(activeWindowFrame) 
+					+ NSWidth(activeWindowFrame) 
+				+ 20 &gt; NSWidth([screen frame])) ? 0 : NSMinX(activeWindowFrame));
+				CGFloat minY = (NSMinY(activeWindowFrame) 
+				+ NSHeight([screen visibleFrame]) 
+         			- NSHeight([screen frame]) + 20 &lt; 0) ? NSHeight([screen frame]) : 
+				NSMinY(activeWindowFrame) - 20;
+				NSRect newFrame = NSMakeRect(minX, minY, NSWidth(activeWindowFrame),
+		 		NSHeight(activeWindowFrame));
+				[[obj textWindow] setFrame:newFrame display:YES];
+			}
+             */
+</pre>
+<h3 id="section-3">Martin Hairer</h3>
+<p> On the first day of the developer conference,
+before I even downloaded the 27.0 release, Martin Hairer (martin.hairer@epfl.ch) reported
+that TeXShop jumps a page each time it typesets on Golden Gate. He also reported that he could fix
+this by going to line 1526 in MyPDFKitView.m and commenting out the line "visibleRet.size.height = 3;".
+How he found this is mysterious to me; he has debugging skills that are beyond me! Removing this line
+does not break any of the systems supported by Golden Gate and completely fixes the stability program,
+so after typesetting a user is exactly at the same spot as before.
+
+<p>Following these changes, TeXShop 5.57 compiles and runs on macOS Golden Gate. Apple notarized
+it to produce a regular program with both Intel and Arm code which runs on
+Sonoma, Sequoia, Tahoe, and Golden Gate. Additional Inactive Engines were added to the code,
+which is now called TeXShop 5.58. TeXShop 5.58 is currently based on macOS 27.3.
+
+
+<h3 id="section-4">Running TeXShop 5.58 on macOS Golden Gate</h3>
+<p> After making these code changes, TeXShop 5.58 runs fine on Golden Gate. There are many features
+to check, of course, but most work as always. In macOS 27.3, there are only two known
+TeXShop bugs. The first is rather trivial; when a pdf document is first opened, the document is scrolled to the last page rather than opening on the first page. 
+
+<p> The second bug is more serious. Both magnifying glasses draw nothing on the screen. The tool which selects a region by drawing a boundary around it also draws nothing. Finally, in a table of contents, the tool which briefly shows the item referenced by an item draws nothing. All of these items work the same way, by creating an invisible screen over the regular screen and drawing into that invisible screen. So there are three items, but only one bug.
+
+<p> However, the selection tool shows that the code almost works. If you hold down the mouse and
+select a region, a boundary is supposed to be drawn on the screen, but it is missing.
+However, if you then click inside this boundary to drag the contents, that task works just as before. 
+
+
+<p> Luckily, I have both a machine running Tahoe and a second machine running Golden Gate. So I copied
+TeXShop 5.58 from Golden Gate to Tahoe and ran it there. To my delight, the magnifying glasses and
+selection tool now worked correctly! This means that the problem is not in my code and not in
+XCode 27.3, but solely a bug in the preview releases of Golden Gate. I've reported the bug to Apple.
+
+
+<h3 id="section-5">Albert Guillen i Fabregas</h3> <albert.guillen@eng.cam.ac.uk>
+<p> Several weeks before the developer conference, I got an astonishing email from 
+Albert Guillen i Fabregas (albert.guillen@eng.cam.ac.uk). Albert was a fan of dark mode,
+and had configured TeXShop to use Skim for previewing because that program has the
+amazing ability to convert preview images from black text on white to white text on black
+without changing the essential color of illustrations. But Albert wondered if this
+feature could be added directly to TeXShop. In these days when Artificial Intelligence
+is all the rage, he didn't just wonder but found the Skim source code and then asked Claude
+to produce code for the corresponding TeXShop feature. He mailed me the report from Claude,
+which was a TeX source file and related pdf document dated April, 2026.
+
+<p> This Claude report started by discussing several methods to convert images
+before explaining the advantages of the approach used by Skim. The report then carefully
+explained the basic method used by Skim, including tricky points. 
+
+<p> This was followed with a section called "Proposed changes in TeXShop" containing actual
+lines of code to be added to globals.h, globals.m, FactoryDefaults.plist, MyPDFKitView.h,
+MyPDFKitView.m, TSTextView.m, TSPreviewWindow.h, and TSPreviewWindow.m. Many were minor
+additions, but MyPDFKitView.m now contained the essential code from Skim to apply a DarkMode
+InversionFilter covering the preview image. 
+
+<p> The report ended with a description of areas that might need further testing, and then
+section noting that Skim is open source and listing the key source files describing the
+required filter. 
+
+<p> Albert soon discovered that some of the code samples did not directly compile in
+TeXShop, so he found the required modifications and soon had the feature working. He sent me a 
+diff file for my own attempts.
+
+<p> I should warn that my attempts to make this work were at first not as successful as
+those 
+of Albert. The cause is explained in a later section below. Incidentally, Skim works fine on Golden Gate, even in key areas where my initial code had problems.
+
+If you are interested in the AI report from Claude, here are links to the LaTeX source it produced,
+and the corresponding pdf output file:
+
+<ul>
+<li><a href="downloads/dark_mode_proposal.tex">dark_mode_proposal.tex</a>. </li>
+<li><a href="downloads/dark_mode_proposal.pdf">dark_mode_proposal.pdf</a>. </li>
+</ul>
+<h3 id="section-6">Skim, by Christiaan Hofman, Adam Maxwell, Michael McCracken</h3>
+<p>Now we come to the big guns, the guys who actually wrote the filter switching black and white 
+in a pdf file displayed in dark mode, while simultaneously keeping the color of illustrations
+intact. Please do not forget the people who contributed this fantastic idea to the pdf world!
+
+<p> In TeXShop-5.58, we implement this technique in a very minimalist way. using the AI code
+which copied the filter from Skim source. When the display switches to dark mode, the Skim filter is
+added to the Preview Window. When the display switches back to light mode, the
+filter is removed. In Skim, users can choose whether to use the filter, but in TeXShop 5.58
+it happens automatically.
+
+<p> In Skim, the dark mode filter gives the screen a rich black and white texture, while in the
+original version of TeXShop 5.58, the texture was gray rather than deep black. On the other hand, the magnifying
+glasses in TeXShop 5.58 did produce that deep black and white texture used by Skim. 
+
+<p> To turn dark mode on and observe the new filter, use the standard Macintosh technique: open
+System Settings and activate the Appearance Module. Click on provided icons to select Dark mode
+or Light Mode. 
+
+<p> However, there is a much easier way to make this choice. In Apple's App Store, download the
+free application named Nightfall. Install this program in your Applications folder. Click it to
+activate. The program adds a small circular icon to the system toolbar, half black and half white.
+Click this circle to switch from Light mode to Dark mode. Click again to switch from Dark mode to
+Light mode. The application thus allows you to easily switch without dealing with System Settings,
+and thus to quickly test the new TeXShop feature.
+
+
+<p> We have not tested the program running on Sonoma and Sequoia, the other two versions of macOS
+supported by programs compiled on Golden Gate.
+
+<h3 id="section-7">New Development on June 25</h3>
+<p> Earlier I explained that the
+dark mode filter in Skim gives a rich black and white texture, while originally in TeXShop it gave a gray
+appearance. 
+
+<p> Shortly after originally posting this page, I got a response from Martin Hairer. He pointed out that
+the Themes section of TeXShop Preferences has an option which sets the background color
+of the Preview Window. This can be done in both Light mode and Dark mode. 
+
+<p> Hairer suggested that the gray appearance
+of the Skim filter inside TeXShop is due to this setting rather than to any code from Skim.
+So I commented out the line of code which can set the background color of the TeXShop Preview window. This immediately gave the rich black and white texture of Skim without changing
+any Skim code in TeXShop. Hairer strikes again! 
+
+<p> Therefore TeXShop-5.58-GG available below produces the correct rich black and white
+texture used by Skim.
+
+<p> Just to be clear, the program TeXShop-5.58-GG has two current bugs on macOS 27.3,
+but if the program is simply copied to Tahoe, macOS 26, the bugs vanish and all of the features including the magnifying glasses and dark mode work correctly.
+
+         
+<h3 id="section-8">Downloading TeXShop 5.58 and Its Golden Gate Source Code</h3>
+<p>Below are links to version 5.58 of TeXShop, and its source code when compiled on macOS 27.3.
+A link is also provided to a folder named ShortSample, which contains a short one page
+TeXShop project. Drag Sample.tex from this folder and drop it on TeXShop. TeXShop will open
+a source window showing Sample.tex, a preview window showing Sample.pdf, and two illustrations.
+The new macOS Golden Gate will actually display magnified images for this short project,
+but the images are drawn in incorrect spots.
+
+
+<ul>
+<li><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG.zip">TeXShop-5.58-GG.zip</a>. </li>
+<li><a href="https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG-Source.zip">TeXShop-5.58-GG-Source.zip</a>. </li>
+</ul>
+<ul>
+<li><a href="https://pages.uoregon.edu/koch/TeXShop-5.58-GG-ShortSample.zip">TeXShop-5.58-GG-ShortSample.zip</a>. </li>
+</ul>
+<br/>
+<br/>
+<br/>
+</p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></albert.guillen@eng.cam.ac.uk></p></p></p></p></p></p></p></p></article></main><script src="search.js"></script></body></html>

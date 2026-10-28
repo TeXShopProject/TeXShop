@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+     <li><a href="obtaining.html">Obtaining</a></li>
+    <li><a href="installing.html">Installing</a></li>
+      <li><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li id="current"><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li id="mcurrent"><a href="links.html">Links</a></li>
+<li> <a href="version.html">Version History</a></li>
+<!--
+ <li> <a href="texshop-64/texshopsource.zip">TeXShop Version 3 Source Code</a></li>
+ <li> <a href="texshopsource.zip">TeXShop Version 2 Source Code</a></li>
+ <li> <a href="texshopsource_1.43.zip">TeXShop 1.43 Source Code</a></li>
+<li> <a href="usercontributions.html">User Contributions</a></li>
+-->
+</ul>
+</div>
+
+<!-- main content -->
+<div id="main">
+
+<p> Here are links to two optional spell checkers:</p>
+
+<ul>
+<li> <a href="http://excalibur.sourceforge.net/">Excalibur Spell Checker</a></li>
+<p><li> <a href="https://people.ict.usc.edu/~leuski/cocoaspell/home.php">cocoAspell Spell Checker</a></li>
+</ul>
+
+<p> The following helper programs are extremely useful:</p>
+
+<ul>
+<li> <a href="http://amaxwell.github.io/tlutility/">TeX Live Utility</a></li>
+<p><li> <a href="http://bibdesk.sourceforge.net/">BibDesk</a></li>
+<p><li> <a href="https://www.chachatelier.fr/latexit/latexit-downloads.php">LaTeXiT</a></li>
+</ul>
+
+<!--
+<p> There is even a free iPhone application by Ken Lee for TeX users:</p>
+
+<ul>
+<li> <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=307772257&mt=8">LaTeX Help</a></li>
+</ul>
+-->
+
+</div>
+
+</body>
+</html>

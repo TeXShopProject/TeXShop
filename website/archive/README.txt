@@ -3,9 +3,9 @@ Snapshot date: 2026-10-28
 Source: https://pages.uoregon.edu/koch/texshop/
 Author: Richard Koch, with contributions credited in the original pages.
 
-The 15 archived pages retain the visible text from each original #main element.
+The 25 archived pages retain the visible text from each original #main element.
 The new wrapper replaces the old website navigation and adds provenance notices.
-Links to archived pages and the 11 directly linked downloadable files are local.
+Links to archived pages and the 13 directly linked downloadable files are local.
 Other external websites are not mirrored; their links retain the original destinations.
 Download sources, recovery locations, sizes, and SHA-256 hashes are recorded in
 manifest.json. Large ZIP files are backed by our historical-downloads GitHub Release
@@ -27,3 +27,11 @@ It does not claim a complete release-note record for every version since 2000.
 Added About TeXShop, Three TeXShop Versions, and Tahoe, including all inline
 images from these pages. Original and anniversary text remains in its original
 section order. The index follows the 2000–2024 evolution with the 2025–2026 Tahoe page.
+
+The preservation audit added the combined 2.19–5.57 release notes, including
+previously omitted early 2.x and 3.x records, the Golden Gate development report,
+and the previous home page and documentation. The two dark-mode proposal files
+are preserved as attachments to the Golden Gate report. The standalone sample
+project is not mirrored. The additional pages participate in archive search.
+Existing archived prose has not been rewritten. The original website CSS and
+navigation images are retained in the separate local preservation snapshot.

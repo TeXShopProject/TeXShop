@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+      <li><a href="obtaining.html">Obtaining</a></li>
+    <li id="current"><a href="installing.html">Installing</a></li>
+    	<li><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li id="mcurrent"><a href="installing.html">Installing TeX Live</a></li>
+<li><a href="installingtexshop.html">Installing TeXShop</a></li>
+<li><a href="whereisstuff.html">Where's My Stuff?</a></li>
+</ul>
+</div>
+
+<!-- main content -->
+<div id="main">
+<h3>Installing TeX Live</h3> 
+
+<p> If you downloaded MacTeX as recommended under the "Obtaining" tab, double click MacTeX to begin the installation process. 
+Follow the same procedure if instead you obtained BasicTeX. 
+
+
+<h3>Some History</h3>
+
+<p> Users interacting with TeX using a front end program are sometimes unaware of the vast support machinery acting invisibly behind the scene. This machinery consists of Donald Knuth's command line program, which does the actual typesetting, and of an enormous number of fonts, macro packages like LaTeX and ConTeXt, style files, documentation, configuration files, and the like. The enormous collection of programs and support files is called a TeX Distribution.  
+
+<p> For a number of years, the standard TeX distribution on Mac OS X and GNU/Linux was teTeX, maintained by Thomas Esser. On the Macintosh, this distribution was enhanced by Gerben Wierda, who wrote a program called i-Installer to download his enhanced version from the network, to configure it, and to upgrade it periodically.
+
+<p> Several years ago the TeX Users Group introduced an even more extensive distribution called TeX Live, for Mac OS X, Windows, GNU/Linux, and various BSD Unix systems; the principal authors are Sebastian Rahtz, Karl Berry, and Staszek Wawrykiewicz. 
+ In May, 2006, Thomas Esser announced that he would no longer support teTeX, and suggested that users move to TeX Live. Shortly afterward, Gerben Wierda stopped
+ updating his system. Today, TeX Live (which MacTeX installs) is the standard TeX distribution on the Macintosh.
+ 
+<h3>Multiple Distribution Support</h3>
+
+<p> When a new version of TeX Live is installed by MacTeX, the new version does not overwrite the previous version. This makes it possible for users in the middle of an
+important project to safely update, because they can switch back to the earlier version if they run into trouble. Switching back requires only a single
+button click due to a feature explained below.
+
+<p> Gerben Wierda and Jerome Laurens  designed a data structure to support multiple TeX distributions on a machine. This data structure is installed by the BasicTeX and MacTeX. The data structure is placed in /Library/TeX and consists of some carefully designed symbolic links to installed distributions.
+Using this structure, BasicTeX and MacTeX distributions from multiple years easily coexist on a machine. 
+
+
+<p> The data structure is ingenious; it does not modify TeX distributions in any way. A new link, /Library/TeX/texbin, is created which indirectly points to the binary directory of the active TeX distribution. TeXShop, BibDesk,  LaTeXiT, and TeX Live Utility all use /Library/TeX/texbin automatically.
+Other GUI applications need to be reconfigured to look for TeX at this spot, but after they are configured once, they automatically work without modification in the future.
+
+<p> The program TeX Live Utility, installed in /Applications/TeX, can be used to switch the active distribution.
+In this program's "Configure" menu, select the item "Change Default TeX Live Version". A dialog appears listing all installed TeX distributions; selected the distribution which should become active. When ''Done" is clicked, all GUI applications are reconfigured automatically, and PATH and MAN variables are reset for command line interaction with the new active distribution.
+
+<p> One word of warning. The data structure is a complicated tangle of mostly empty directories with links pointing to other links. The main /Library/TeX/texbin link is not changed when selecting a new active distribution; instead a link deeper in the structure is changed. Some users who know the command line start with the link /Library/TeX/texbin
+and try to trace it backward to find the actual binaries; this is not a good idea. Instead read the page "Where's My Stuff?" linked on the left side of this page to discover where we install TeX Live, Ghostscript, and other pieces of MacTeX.
+
+</div>
+
+</body>
+</html>

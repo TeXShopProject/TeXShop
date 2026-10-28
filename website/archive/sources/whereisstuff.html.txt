@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TeXShop</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css" media="screen">@import "v1.css";</style>
+</head>
+
+<body>
+
+<!-- title and menu -->
+<div id="header">
+  <ul>
+  <li class="titel"><img alt="Logo" src="logo_klein.png" />TeXShop</li>
+  <li><a href="index.html">About</a></li>
+  <li><a href="tahoe.html">Tahoe</a></li>
+     <li><a href="obtaining.html">Obtaining</a></li>
+    <li id="current"><a href="installing.html">Installing</a></li>
+      <li><a href="history.html">History</a></li>
+    <li><a href="extras.html">Extras</a></li>
+    <li><a href="links.html">Links</a></li>
+  </ul>
+</div>
+
+<!-- gutter with download links -->
+<div id="subheader">
+<center> [ Direct Download: <a href="texshop-64/texshop.zip">Latest TeXShop</a> | <a href="texshop-64//texshopsource.zip">Latest TeXShop Source</a> ] [ <a href="mailto:koch@uoregon.edu">Contact</a> ] </center> 
+</div>
+
+<!-- links on the left -->
+<div id="menulinks">
+<ul>
+<li><a href="installing.html">Installing TeX Live</a></li>
+<li><a href="installingtexshop.html">Installing TeXShop</a></li>
+<li id="mcurrent"><a href="whereisstuff.html">Where's My Stuff?</a></li>
+</ul>
+</div>
+
+<!-- main content -->
+<div id="main">
+<h3>Where's My Stuff?</h3> 
+
+<p> The GUI applications used to interact with TeX are installed in /Applications/TeX. These applications are BibDesk, LaTeXiT, TeX Live Utility, and TeXShop. This location contains a file named "READ ME FIRST" which explains
+how to get started using TeX and LaTeX with TeXShop. 
+<!--
+An additional document, "What Is Installed'", explains in detail exactly what was installed by MacTeX.
+For most users, the GUI apps will suffice and it will not be necessary to directly examine TeX Live.
+-->
+
+<p> MacTeX installs TeX Live  in /usr/local/texlive, a standard Unix location for additions to the system. In particular, TeX Live is placed in
+/usr/local/texlive/2024 and BasicTeX is in /usr/local/texlive/2024basic. Obviously the year, here "2024", will change with each new release.
+
+<p> These locations are not visible in the Finder by default. A symbolic link to the currently active distribution is in /Library/TeX/Root. Users can use this location to examine files in their active distribution. There are a lot of files!
+Users can also access the Finder's "Go" menu and select the item "Go To Folder". Fill in the location "/usr/local/texlive/2024". 
+
+<p> Personal files should be stored in ~/Library/texmf. (Recall that ~/Library is the library folder in your home directory, while /Library is a system folder analogous to /Applications.) You will have to create the subfolder "texmf." This is a spot for style and class files from publishers and other files not in TeX Live. When TeX needs to open a file, it searches ~/Library/texmf first, so if you place a standard TeX Live file in ~/Library/texmf, that  copy will be used even if TeX Live later provides a bug fix for its file.  So putting standard files in ~/Library/texmf is usually a bad idea.</p>
+
+<p> The folder structure inside ~/Library/texmf should mimic that of the texmf trees in your TeX distribution. This is easier than it appears. TeX will locate any file in ~/Library/texmf/tex or in a subfolder of this folder; LaTeX will locate any file in ~/Library/texmf/tex/latex or a subfolder of this folder. Bibtex will locate any .bib file in ~/Library/texmf/bibtex/bib or in a subfolder of this folder, and any .bst file in ~/Library/texmf/bibtex/bst or in a subfolder of this folder. Etc.  </p>
+
+<p> Ghostscript is installed in /usr/local/bin and /usr/local/share/ghostscript. We compile two versions of Ghostscript, one named gs-X11 with X11 support and one named gs-noX11 without this support. At install time, MacTeX checks to see if XQuartz is installed on your Macintosh. If so, it creates a symbolic link gs --> gs-X11 in /usr/local/bin. Otherwise it creates a symbolic link gs --> gs-noX11.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+{
+  "audit_date": "2026-10-28",
+  "roots": [
+    "https://pages.uoregon.edu/koch/texshop/",
+    "https://pages.uoregon.edu/koch/TeXShopSource.html"
+  ],
+  "urls_checked": 75,
+  "urls_with_saved_content": 71,
+  "raw_files_saved": 70,
+  "raw_bytes_saved": 968202313,
+  "html_urls_saved": 27,
+  "unique_html_documents": 25,
+  "additional_archive_pages": [
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/",
+      "file": "original-home.html",
+      "original": "sources/original-home.html.txt",
+      "sha256": "c89714285d1001f0453a4f1e2dfaad4af074fdd3a0ff313da60727bda8e7b89e"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/documentation.html",
+      "file": "documentation.html",
+      "original": "sources/documentation.html.txt",
+      "sha256": "356843b393a903d4a1f615d00d49cf69ef9ef1635fa03c8f41e655535c0265e9"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/installing.html",
+      "file": "installing.html",
+      "original": "sources/installing.html.txt",
+      "sha256": "429321bc973b505120f2884cf86c1dd68689fe2fe89964b1eb5206c0c5232c03"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/links.html",
+      "file": "links.html",
+      "original": "sources/links.html.txt",
+      "sha256": "3d3f98e38274883dfeb0a6e95de74e4c9272aff7fb4a07da555b600cf8396652"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/obtaining.html",
+      "file": "obtaining.html",
+      "original": "sources/obtaining.html.txt",
+      "sha256": "09b93790d1f8dfb5614cea3a367bbac0f29064a648b28a561200a885bcc36eda"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/bugreports.html",
+      "file": "bugreports.html",
+      "original": "sources/bugreports.html.txt",
+      "sha256": "65ab3f190b8480ee7206468f35f4127e4bfdbd641324bc6008086dd34ac86575"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/installingtexshop.html",
+      "file": "installingtexshop.html",
+      "original": "sources/installingtexshop.html.txt",
+      "sha256": "e62f8461ef9ebbbc7f8ad4911600dfc19b5079d58d56d79a38baf7f54d8aa234"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/version.html",
+      "file": "version.html",
+      "original": "sources/version.html.txt",
+      "sha256": "fd5c2880742ac1b976752b516a84179de0129c7ed00f7507208a7e926227ef1d"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/whereisstuff.html",
+      "file": "whereisstuff.html",
+      "original": "sources/whereisstuff.html.txt",
+      "sha256": "828f864e3371d9dd3c5f361dc73254242ca8f1241f66ed946f071536259df17a"
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/TeXShopSource.html",
+      "file": "golden-gate.html",
+      "original": "sources/golden-gate.html.txt",
+      "sha256": "a3155fd0a9818b93439a8367b8dc82ca7b98e082d403308800dff97eadbc7432"
+    }
+  ],
+  "additional_release_note_headings": [
+    "TeXShop Changes 3.06",
+    "TeXShop Changes 3.05",
+    "TeXShop Changes 3.04",
+    "TeXShop Changes 3.03",
+    "TeXShop Changes 3.02",
+    "TeXShop Changes 3.00 and 3.01",
+    "TeXShop Changes 2.41",
+    "TeXShop Changes 2.40",
+    "TeXShop Changes 2.39",
+    "TeXShop Changes 2.38",
+    "TeXShop Changes 2.37",
+    "TeXShop Changes 2.35 and 2.36",
+    "TeXShop Changes 2.34",
+    "TeXShop Changes 2.32 and 2.33",
+    "TeXShop Changes2.31",
+    "TeXShop Changes2.30",
+    "TeXShop Changes 2.27 - 2.29",
+    "TeXShop Changes 2.26",
+    "TeXShop Changes 2.21 - 2.25",
+    "TeXShop Changes 2.19 - 2.20",
+    "For Users of Previous Versions"
+  ],
+  "additional_attachments": [
+    "dark_mode_proposal.pdf",
+    "dark_mode_proposal.tex"
+  ],
+  "omitted_sample": "https://pages.uoregon.edu/koch/TeXShop-5.58-GG-ShortSample.zip",
+  "unavailable_original_urls": [
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo1.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo2.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo3.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo4.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo5.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo6.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Graphics/charinfo7.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Graphics/onewindow.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/HumboldtTalk.pdf",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.pdf",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Smoothing/Burke.tex",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/Smoothing/abI3d8.pdf",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/ThemeTab.png",
+      "status": 404,
+      "saved_from_recovery": true
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/atsol@aegean.gr",
+      "status": 404,
+      "saved_from_recovery": false
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/texshop.zip",
+      "status": 404,
+      "saved_from_recovery": false
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/texshop/texshopsource.zip",
+      "status": 404,
+      "saved_from_recovery": false
+    },
+    {
+      "url": "https://pages.uoregon.edu/koch/v1.css",
+      "status": 404,
+      "saved_from_recovery": false
+    }
+  ],
+  "scope_note": "This audit follows links reachable from the TeXShop home page and Golden Gate report. Unlinked server files and third-party websites are outside this audit. Duplicate home-page URLs share one archived document. Original CSS and navigation-only graphics are retained in the local snapshot; modern archive pages use the existing site wrapper. The 15 previously archived reading pages are unchanged."
+}

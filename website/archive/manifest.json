@@ -342,6 +342,124 @@
       "referenced_by": [
         "changes_3.html"
       ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/picture1.png",
+      "file": "assets/b70e425084-picture1.png",
+      "type": "image",
+      "sha256": "f88ea43b6d07a42080d5b6bf83cd9e0e0e39c04105c499ce175f4b7a8e042bcf",
+      "bytes": 593946
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/universal.gif",
+      "file": "assets/7af23b2252-universal.gif",
+      "type": "image",
+      "sha256": "cbd9d24fbd98bbeedaf9817eb2c008ce0f272936ded0793680090ef49d9bfa74",
+      "bytes": 2496
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/dark_mode_proposal.pdf",
+      "file": "downloads/dark_mode_proposal.pdf",
+      "type": "download",
+      "sha256": "c52cd4a6bcadde358b64ad5b61571f6f164092dd9436d1407df12837a7737a31",
+      "bytes": 188868,
+      "referenced_by": [
+        "golden-gate.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/dark_mode_proposal.tex",
+      "file": "downloads/dark_mode_proposal.tex",
+      "type": "download",
+      "sha256": "3ff7dc601bfa15106eaa77a9a941a59a96c5f08aa231f6eade7690ede04008a4",
+      "bytes": 16410,
+      "referenced_by": [
+        "golden-gate.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/",
+      "file": "original-home.html",
+      "original": "sources/original-home.html.txt",
+      "sha256": "c89714285d1001f0453a4f1e2dfaad4af074fdd3a0ff313da60727bda8e7b89e",
+      "type": "page",
+      "visible_text_preserved": true,
+      "source_aliases": [
+        "https://pages.uoregon.edu/koch/texshop/index.html",
+        "https://pages.uoregon.edu/koch/texshop/texshop.html"
+      ]
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/documentation.html",
+      "file": "documentation.html",
+      "original": "sources/documentation.html.txt",
+      "sha256": "356843b393a903d4a1f615d00d49cf69ef9ef1635fa03c8f41e655535c0265e9",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/installing.html",
+      "file": "installing.html",
+      "original": "sources/installing.html.txt",
+      "sha256": "429321bc973b505120f2884cf86c1dd68689fe2fe89964b1eb5206c0c5232c03",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/links.html",
+      "file": "links.html",
+      "original": "sources/links.html.txt",
+      "sha256": "3d3f98e38274883dfeb0a6e95de74e4c9272aff7fb4a07da555b600cf8396652",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/obtaining.html",
+      "file": "obtaining.html",
+      "original": "sources/obtaining.html.txt",
+      "sha256": "09b93790d1f8dfb5614cea3a367bbac0f29064a648b28a561200a885bcc36eda",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/bugreports.html",
+      "file": "bugreports.html",
+      "original": "sources/bugreports.html.txt",
+      "sha256": "65ab3f190b8480ee7206468f35f4127e4bfdbd641324bc6008086dd34ac86575",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/installingtexshop.html",
+      "file": "installingtexshop.html",
+      "original": "sources/installingtexshop.html.txt",
+      "sha256": "e62f8461ef9ebbbc7f8ad4911600dfc19b5079d58d56d79a38baf7f54d8aa234",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/version.html",
+      "file": "version.html",
+      "original": "sources/version.html.txt",
+      "sha256": "fd5c2880742ac1b976752b516a84179de0129c7ed00f7507208a7e926227ef1d",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/texshop/whereisstuff.html",
+      "file": "whereisstuff.html",
+      "original": "sources/whereisstuff.html.txt",
+      "sha256": "828f864e3371d9dd3c5f361dc73254242ca8f1241f66ed946f071536259df17a",
+      "type": "page",
+      "visible_text_preserved": true
+    },
+    {
+      "source": "https://pages.uoregon.edu/koch/TeXShopSource.html",
+      "file": "golden-gate.html",
+      "original": "sources/golden-gate.html.txt",
+      "sha256": "a3155fd0a9818b93439a8367b8dc82ca7b98e082d403308800dff97eadbc7432",
+      "type": "page",
+      "visible_text_preserved": true
     }
   ]
 }
