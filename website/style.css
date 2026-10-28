@@ -5,3 +5,6 @@
 @media(prefers-color-scheme:dark){.credits p{color:#fff}}
 /* added by Terada: Quiet archive navigation and readable historical documents. */
 .footer-links{margin-top:15px}.footer-links a{color:var(--muted)}.archive-content{max-width:880px;margin:25px auto 70px;padding:0 25px;overflow-wrap:anywhere}.archive-content>h1{font-size:38px;font-weight:300;letter-spacing:0;margin:25px 0}.archive-content h2{margin-top:35px}.archive-content h3{margin-top:28px}.archive-content ul{padding-left:25px}.archive-content li{margin:5px 0}.archive-notice{padding:15px 0;border-block:1px solid var(--line);font-size:13px;color:var(--muted)}.archive-nav{font-size:12px;line-height:2}.legacy{margin-top:35px}.legacy img{max-width:100%;height:auto}.legacy pre{overflow:auto;white-space:pre-wrap}.legacy blockquote{margin:12px 0 25px 20px}.legacy table{display:block;overflow:auto}.version-list{columns:3;font-size:13px}.archive-content details{margin-block:25px}.archive-content summary{cursor:pointer;color:var(--link)}@media(max-width:650px){.archive-content>h1{font-size:29px}.version-list{columns:2}}
+
+/* Added by Terada: repository link in the main navigation. */
+.github-link{display:inline-flex;align-items:center;justify-content:center;min-width:28px;min-height:28px}.github-link svg{width:22px;height:22px;fill:currentColor}.github-link:hover{color:var(--ink)}
