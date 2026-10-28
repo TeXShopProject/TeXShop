@@ -1,0 +1,11 @@
+{
+  "version": "5.59",
+  "kind": "app",
+  "filename": "TeXShop-5.59.zip",
+  "source_commit": "c6c8f08d45462d9a8cb3db284347db3e98ce3abb",
+  "release_url": "https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59.zip",
+  "sha256": "a4c3f90c978aa228c80aae1390192a1529dec762a5b9cb7c21b4ea55cb6f1589",
+  "bytes": 61443759,
+  "feed_url": "https://texshop.app/appcast.xml",
+  "notarization_id": "480de651-0c2c-4f8f-87ba-3b1c6aed5859"
+}
