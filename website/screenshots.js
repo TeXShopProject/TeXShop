@@ -1,6 +1,7 @@
 /* Added by Terada: accessible screenshot slideshow with reduced-motion support. */
 for (const gallery of document.querySelectorAll('.screenshot-gallery')) {
   const images = [...gallery.querySelectorAll('.screenshot-frame img')];
+  const track = gallery.querySelector('.screenshot-track');
   const choices = [...gallery.querySelectorAll('[data-slide]')];
   const toggle = gallery.querySelector('.slideshow-toggle');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -8,6 +9,7 @@ for (const gallery of document.querySelectorAll('.screenshot-gallery')) {
   let paused = motion.matches, timer;
   function show(index) {
     current = index;
+    track.style.transform = `translateX(${-100 * index}%)`;
     images.forEach((image, i) => {
       image.classList.toggle('is-current', i === index);
       image.setAttribute('aria-hidden', String(i !== index));
