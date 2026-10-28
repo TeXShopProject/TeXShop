@@ -16,3 +16,5 @@
 nav .previous-site{font-size:11px;white-space:nowrap}.tex-requirement{font-size:12px;color:var(--muted)}
 
 .legacy-download{font-size:13px}
+
+.release-date{font-size:13px;color:var(--muted)}.download-table .release-date{white-space:nowrap}
