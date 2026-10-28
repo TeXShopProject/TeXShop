@@ -1,0 +1,2589 @@
+[
+  {
+    "tag": "v3.40",
+    "zip": "texshopsource-3.40.zip",
+    "project": "texshop-3.40/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.40/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "icon",
+        "bundle_version": "3.40"
+      }
+    ]
+  },
+  {
+    "tag": "v3.37",
+    "zip": "texshopsource-3.37.zip",
+    "project": "texshop-3.37/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.37/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons.icns",
+        "bundle_version": "3.37"
+      }
+    ]
+  },
+  {
+    "tag": "v3.33",
+    "zip": "texshopsource-3.33.zip",
+    "project": "texshop-3.33/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.33/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.33"
+      }
+    ]
+  },
+  {
+    "tag": "v3.32",
+    "zip": "texshopsource-3.32.zip",
+    "project": "texshop-3.32/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.32/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.32"
+      }
+    ]
+  },
+  {
+    "tag": "v3.31",
+    "zip": "texshopsource-3.31.zip",
+    "project": "texshop-3.31/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.31/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.31"
+      }
+    ]
+  },
+  {
+    "tag": "v3.30",
+    "zip": "texshopsource-3.30.zip",
+    "project": "texshop-3.30/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.30/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.30"
+      }
+    ]
+  },
+  {
+    "tag": "v3.29",
+    "zip": "texshopsource-3.29.zip",
+    "project": "texshop-3.29/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.29/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.29"
+      }
+    ]
+  },
+  {
+    "tag": "v3.28",
+    "zip": "texshopsource-3.28.zip",
+    "project": "texshop-3.28/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.28/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.28"
+      }
+    ]
+  },
+  {
+    "tag": "v3.27",
+    "zip": "texshopsource-3.27.zip",
+    "project": "texshop-3.27/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "YES"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.27/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.27"
+      }
+    ]
+  },
+  {
+    "tag": "v3.20",
+    "zip": "texshopsource-3.20.zip",
+    "project": "texshop-3.20/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.20/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.20"
+      }
+    ]
+  },
+  {
+    "tag": "v3.19",
+    "zip": "texshopsource-3.19.zip",
+    "project": "texshop-3.19/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.19/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.19"
+      }
+    ]
+  },
+  {
+    "tag": "v3.13",
+    "zip": "texshopsource-3.13.zip",
+    "project": "texshop-3.13/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.13/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.13"
+      }
+    ]
+  },
+  {
+    "tag": "v3.12",
+    "zip": "texshopsource-3.12.zip",
+    "project": "texshop-3.12/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.12/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons",
+        "bundle_version": "3.12"
+      }
+    ]
+  },
+  {
+    "tag": "v2.44",
+    "zip": "texshopsource-2.44.zip",
+    "project": "texshop2.44/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "4.0"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.44/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v3.02",
+    "zip": "texshopsource-3.02.zip",
+    "project": "texshop-3.02/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-3.02/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons.icns",
+        "bundle_version": "3.02"
+      }
+    ]
+  },
+  {
+    "tag": "v3.00",
+    "zip": "texshopsource-3.00.zip",
+    "project": "texshop64-3.00/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.7",
+          "SDKROOT": "macosx",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0",
+          "ONLY_ACTIVE_ARCH": "NO"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop64-3.00/Resources/Info.plist",
+        "min": "10.7.0",
+        "icon": "Icons.icns",
+        "bundle_version": "3.00"
+      }
+    ]
+  },
+  {
+    "tag": "v2.41",
+    "zip": "texshopsource-2.41-generated.zip",
+    "project": "TeXShop-2.41/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "4.0"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "TeXShop-2.41/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.35",
+    "zip": "texshopsource-2.35.zip",
+    "project": "texshop2.35/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.5",
+          "SDKROOT": "macosx10.5",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.5",
+          "SDKROOT": "macosx10.5",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvm.clang.1_0"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.35/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.32",
+    "zip": "texshopsource-2.32.zip",
+    "project": "texshop2.32-64/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.6",
+          "SDKROOT": "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": ""
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.6",
+          "SDKROOT": "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": ""
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.32-64/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.28",
+    "zip": "texshopsource-2.28.zip",
+    "project": "texshop2.28/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.28/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.16",
+    "zip": "texshopsource-2.16.zip",
+    "project": "texshop2.16/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.16/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.27",
+    "zip": "texshopsource-2.27.zip",
+    "project": "texshop2.27/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.6",
+          "SDKROOT": "",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvmgcc42"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "ARCHS": "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)",
+          "MACOSX_DEPLOYMENT_TARGET": "10.6",
+          "SDKROOT": "",
+          "INFOPLIST_FILE": "Resources/Info.plist",
+          "GCC_VERSION": "com.apple.compilers.llvmgcc42"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.27/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.14",
+    "zip": "texshopsource-2.14.zip",
+    "project": "texshop2.14/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.14/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.24",
+    "zip": "texshopsource-2.24.zip",
+    "project": "texshop2.24/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.24/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.18",
+    "zip": "texshopsource-2.18.zip",
+    "project": "texshop2.18/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.18/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.23",
+    "zip": "texshopsource-2.23.zip",
+    "project": "texshop2.23/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.23/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.22",
+    "zip": "texshopsource-2.22.zip",
+    "project": "texshop2.22/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.22/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.21",
+    "zip": "texshopsource-2.21.zip",
+    "project": "texshop2.21/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.21/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.20",
+    "zip": "texshopsource-2.20.zip",
+    "project": "texshop2.20/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.20/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.19",
+    "zip": "texshopsource-2.19.zip",
+    "project": "texshop2.19/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.19/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.17",
+    "zip": "texshopsource-2.17.zip",
+    "project": "texshop2.17/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop2.17/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.10beta2",
+    "zip": "texshopsource-2.10beta2.zip",
+    "project": "texshop-2.10beta2_source/TeXShop.xcodeproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "project",
+        "name": "Debug",
+        "settings": {
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "project",
+        "name": "Release",
+        "settings": {
+          "ARCHS": [
+            "ppc",
+            "i386"
+          ],
+          "MACOSX_DEPLOYMENT_TARGET": "10.4",
+          "SDKROOT": "/Developer/SDKs/MacOSX10.4u.sdk"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Debug",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      },
+      {
+        "origin": "target",
+        "name": "Release",
+        "settings": {
+          "INFOPLIST_FILE": "Resources/Info.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshop-2.10beta2_source/Resources/Info.plist",
+        "min": "10.4.0",
+        "icon": "Icons.icns",
+        "bundle_version": "${MARKETING_VERSION}"
+      }
+    ]
+  },
+  {
+    "tag": "v2.09b",
+    "zip": "texshopsource-2.09b.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist",
+          "MACOSX_DEPLOYMENT_TARGET": "10.4"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v2.09a",
+    "zip": "texshopsource-2.09a.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist",
+          "MACOSX_DEPLOYMENT_TARGET": "10.4"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v2.04",
+    "zip": "texshopsource-2.04.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist",
+          "MACOSX_DEPLOYMENT_TARGET": "10.4"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v2.09",
+    "zip": "texshopsource-2.09.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist",
+          "MACOSX_DEPLOYMENT_TARGET": "10.4"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.43",
+    "zip": "texshopsource-1.43.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v2.05",
+    "zip": "texshopsource-2.05.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist",
+          "MACOSX_DEPLOYMENT_TARGET": "10.4"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.42",
+    "zip": "texshopsource-1.42.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.41",
+    "zip": "texshopsource-1.41.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v2.03",
+    "zip": "texshopsource-2.03.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist",
+          "MACOSX_DEPLOYMENT_TARGET": ""
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.40",
+    "zip": "texshopsource-1.40.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v2.02",
+    "zip": "texshopsource-2.02.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist",
+          "MACOSX_DEPLOYMENT_TARGET": ""
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.39",
+    "zip": "texshopsource-1.39.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v2.00",
+    "zip": "texshopsource-2.00.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist",
+          "MACOSX_DEPLOYMENT_TARGET": ""
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.37",
+    "zip": "texshopsource-1.37.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.35f",
+    "zip": "texshopsource-1.35f.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.35c",
+    "zip": "texshopsource-1.35c.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.34",
+    "zip": "texshopsource-1.34.zip",
+    "project": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.33",
+    "zip": "texshopsource-1.33.zip",
+    "project": "texshopsource133/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource133/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.32",
+    "zip": "texshopsource-1.32.zip",
+    "project": "texshopsource132/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource132/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.31",
+    "zip": "texshopsource-1.31.zip",
+    "project": "texshopsource131/TeXShop.xcode/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {
+          "INFOPLIST_FILE": "Info-TeXShop__Upgraded_.plist"
+        }
+      }
+    ],
+    "plists": [
+      {
+        "path": "texshopsource131/Info-TeXShop__Upgraded_.plist",
+        "min": null,
+        "icon": "Icons.icns",
+        "bundle_version": "TeXShop"
+      }
+    ]
+  },
+  {
+    "tag": "v1.30",
+    "zip": "texshopsource-1.30.zip",
+    "project": "texshopsource130/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.29",
+    "zip": "texshopsource-1.29.zip",
+    "project": "texshopsource129/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.28",
+    "zip": "texshopsource-1.28.zip",
+    "project": "texshopsource128/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.27",
+    "zip": "texshopsource-1.27.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.26",
+    "zip": "texshopsource-1.26.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.25",
+    "zip": "texshopsource-1.25.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.24",
+    "zip": "texshopsource-1.24.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.23",
+    "zip": "texshopsource-1.23.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.22",
+    "zip": "texshopsource-1.22.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.21",
+    "zip": "texshopsource-1.21.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.20",
+    "zip": "texshopsource-1.20.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.19",
+    "zip": "texshopsource-1.19.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.18",
+    "zip": "texshopsource-1.18.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.17",
+    "zip": "texshopsource-1.17.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.15",
+    "zip": "texshopsource-1.15.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.14",
+    "zip": "texshopsource-1.14.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.13c",
+    "zip": "texshopsource-1.13c.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.12",
+    "zip": "texshopsource-1.12.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.11a",
+    "zip": "texshopsource-1.11a.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.11",
+    "zip": "texshopsource-1.11.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.1",
+    "zip": "texshopsource-1.1.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.00-2001-04-29",
+    "zip": "texshopsource-1.00-2001-04-29.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.00-2001-04-07",
+    "zip": "texshopsource-1.00-2001-04-07.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.00-2001-03-19",
+    "zip": "texshopsource-1.00-2001-03-19.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.00-2001-03-18",
+    "zip": "texshopsource-1.00-2001-03-18.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.00-2001-03-15",
+    "zip": "texshopsource-1.00-2001-03-15.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 1,
+    "configs": [
+      {
+        "origin": "target",
+        "name": "Legacy",
+        "settings": {}
+      }
+    ]
+  },
+  {
+    "tag": "v1.0",
+    "zip": "texshopsource-1.0.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 0,
+    "configs": []
+  },
+  {
+    "tag": "v1.0d6",
+    "zip": "texshopsource-1.0d6.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 0,
+    "configs": []
+  },
+  {
+    "tag": "v1.0d5-Dirk",
+    "zip": "texshopsource-1.0d5-Dirk.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 0,
+    "configs": []
+  },
+  {
+    "tag": "v1.0d5",
+    "zip": "texshopsource-1.0d5.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 0,
+    "configs": []
+  },
+  {
+    "tag": "v1.0d4",
+    "zip": "texshopsource-1.0d4.zip",
+    "project": "texshopsource/TeXShop.pbproj/project.pbxproj",
+    "targets": 0,
+    "configs": []
+  },
+  {
+    "tag": "v1.0d3",
+    "zip": "texshopsource-1.0d3.zip",
+    "project": "texshopsource/TexShop.pbproj/project.pbxproj",
+    "targets": 0,
+    "configs": []
+  },
+  {
+    "tag": "v1.0d2-later",
+    "zip": "texshopsource-1.0d2-later.zip",
+    "project": "texshopsource/TexShop.pbproj/project.pbxproj",
+    "targets": 0,
+    "configs": []
+  },
+  {
+    "tag": "v1.0d2",
+    "zip": "texshopsource-1.0d2.zip",
+    "project": "texshopsource/TexShop.pbproj/project.pbxproj",
+    "targets": 0,
+    "configs": []
+  }
+]

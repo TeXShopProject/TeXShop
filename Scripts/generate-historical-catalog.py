@@ -4,6 +4,7 @@ from datetime import date
 repo=Path(__file__).resolve().parents[1];root=repo/'website';meta=json.loads((repo/'Documentation/HistoricalReleases/manifest.json').read_text())
 dates=json.loads((repo/'Documentation/HistoricalReleases/release-dates.json').read_text())
 overrides=json.loads((repo/'Documentation/HistoricalReleases/requirements-overrides.json').read_text())
+projects={x['tag']:x for x in json.loads((repo/'Documentation/HistoricalReleases/project-settings-audit.json').read_text())}
 assert all(a['status']=='ok' for r in meta for a in r['assets']), 'archives incomplete'
 svg='<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span>'
 def order(r):
@@ -21,12 +22,13 @@ def norm(v):
  except Exception:return None
 
 def details(app,ja):
- if not app:return ('不明' if ja else 'Unknown','不明' if ja else 'Unknown')
- arches=app.get('architectures',[]);cpus=[x.get('cpu') for x in arches];cpus.sort(key=lambda c: {'arm64':0,'x86_64':1,'i386':2,'ppc':3,'ppc64':4}.get(c,5));names={'arm64':'Apple Silicon','x86_64':'Intel（64ビット）' if ja else 'Intel (64-bit)','i386':'Intel（32ビット）' if ja else 'Intel (32-bit)','ppc':'PowerPC','ppc64':'PowerPC (64-bit)'}
+ if app is None:return ('不明' if ja else 'Unknown','不明' if ja else 'Unknown')
+ arches=app.get('architectures',[]);cpus=[x.get('cpu') for x in arches];cpus.sort(key=lambda c: {'arm64':0,'x86_64':1,'i386':2,'ppc':3,'ppc64':4}.get(c,5));names={'arm64':'Apple Silicon','x86_64':'Intel（64ビット）' if ja else 'Intel (64-bit)','i386':'Intel（32ビット）' if ja else 'Intel (32-bit)','ppc':'PowerPC（32ビット）' if ja else 'PowerPC (32-bit)','ppc64':'PowerPC（64ビット）' if ja else 'PowerPC (64-bit)'}
  cpu='<br>'.join(names.get(c,html.escape(str(c))) for c in cpus) or ('不明' if ja else 'Unknown')
  minimum=norm(app.get('plist_min')); archmins=[norm(a.get('min_os')) for a in arches if norm(a.get('min_os'))]
- if not minimum and archmins:
-  minimum=min(archmins,key=lambda x:tuple(map(int,x.split('.'))))
+ if archmins:
+  archminimum=min(archmins,key=lambda x:tuple(map(int,x.split('.'))))
+  if not minimum or tuple(map(int,archminimum.split('.'))) > tuple(map(int,minimum.split('.'))): minimum=archminimum
  if not minimum:os='不明' if ja else 'Unknown'
  else:
   parts=tuple(map(int,minimum.split('.'))); family=('Mac OS X' if parts[:1]==(10,) and parts[1]<8 else 'OS X' if parts[:1]==(10,) and parts[1]<12 else 'macOS')
@@ -47,9 +49,26 @@ for ja in (False,True):
  for r in meta:
   if not r['assets']:continue
   app=next((a for a in r['assets'] if a['name'].lower().startswith('texshop-')),None);source=next((a for a in r['assets'] if a['name'].lower().startswith('texshopsource-')),None)
-  icon=(app or source or {}).get('icon_sha256'); iconpath='assets/release-icons/history/'+icon+'.png' if icon and (root/'assets/release-icons/history'/f'{icon}.png').exists() else None
+  iconasset=app or source or {}; icon=None if iconasset.get('icon_inferred_from') else iconasset.get('icon_sha256'); iconpath='assets/release-icons/history/'+icon+'.png' if icon and (root/'assets/release-icons/history'/f'{icon}.png').exists() else None
   img=f'<img src="{iconpath}" width="48" height="48" alt="" loading="lazy">' if iconpath else '<span class="release-icon-placeholder" aria-hidden="true"></span>'
   requirement_app=dict(app) if app else None
+  project=projects.get(r['tag'],{})
+  release_settings=[c['settings'] for c in project.get('configs',[]) if c.get('name')=='Release']
+  if not release_settings: release_settings=[c['settings'] for c in project.get('configs',[]) if c.get('name')=='Legacy']
+  if not app and source:
+   embedded=source.get('embedded_application')
+   requirement_app=dict(embedded) if embedded else {}
+  if requirement_app is not None:
+   for config in release_settings:
+    minimum=config.get('MACOSX_DEPLOYMENT_TARGET')
+    current=requirement_app.get('plist_min')
+    if minimum and (not current or (not app and tuple(map(int,str(minimum).split('.'))) > tuple(map(int,str(current).split('.'))))):
+     requirement_app['plist_min']=str(minimum)
+   if not requirement_app.get('architectures') and release_settings:
+    arch=next((c['ARCHS'] for c in reversed(release_settings) if c.get('ARCHS')),None)
+    if arch == '$(ARCHS_STANDARD_32_64_BIT)': arch=['i386','x86_64']
+    if isinstance(arch,list) and all(x in ('i386','x86_64','ppc','ppc64','arm64') for x in arch):
+     requirement_app['architectures']=[{'cpu':x} for x in arch]
   override=overrides.get(r['tag'],{})
   if requirement_app and 'minimum_os' in override: requirement_app['plist_min']=override['minimum_os']
   os,cpu=details(requirement_app,ja);version=esc(r['tag'][1:]); dateinfo=dates.get(r['tag'][1:]); stamp=''
@@ -63,6 +82,9 @@ for ja in (False,True):
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
  note=('過去のバージョンをダウンロードできます。' if ja else 'Download previous versions of TeXShop.')
  heading=''.join('<th scope="col">'+esc(x)+'</th>' for x in labels)
+ special=re.search(r'<tr>\s*<td data-label="[^"]+"><div class="release-version">(?:(?!</tr>).)*?TeXShop 5\.58(?:(?!</tr>).)*?</tr>',oldmain,re.S)
+ assert special, 'Missing 5.58 in selected older releases'
+ rows.insert(0,special.group(0))
  main=f'<main class="archive-content downloads"><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)
 print('Generated',len(rows),'rows per page')
