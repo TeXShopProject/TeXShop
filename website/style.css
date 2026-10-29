@@ -87,8 +87,10 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 .download-table small.icon-transition-note,.download-table small.release-milestone-note{color:var(--accordion);font-weight:500}
 
 /* CPU labels and compact release details. */
-.release-version>div{min-width:0}.download-table small.icon-transition-note{white-space:normal;overflow-wrap:normal;max-width:15em}
+.release-version>div{min-width:0}.download-table small.icon-transition-note,.download-table small.release-milestone-note{white-space:normal;overflow-wrap:normal;max-width:15em}
 .cpu-tags{display:inline-flex;flex-direction:column;align-items:flex-start;gap:5px;vertical-align:middle}.cpu-tag{display:inline-block;border-radius:5px;padding:2px 7px;font-size:11px;line-height:1.5;font-weight:500;white-space:nowrap}.cpu-tag--arm64{background:#e0f1e5;color:#225f38}.cpu-tag--x86_64{background:#e0edfa;color:#205781}.cpu-tag--i386{background:#ede6f7;color:#603e80}.cpu-tag--ppc{background:#faedcf;color:#765018}.cpu-tag--ppc64{background:#f9e4e4;color:#8a3939}
 :root[data-theme=dark] .cpu-tag--arm64{background:#254c33;color:#d4f3dd}:root[data-theme=dark] .cpu-tag--x86_64{background:#22435b;color:#d5ebfa}:root[data-theme=dark] .cpu-tag--i386{background:#49345e;color:#e9dbf6}:root[data-theme=dark] .cpu-tag--ppc{background:#584321;color:#f9e8bd}:root[data-theme=dark] .cpu-tag--ppc64{background:#5c3232;color:#f7dede}
 
 @media(prefers-color-scheme:dark){:root:not([data-theme]) .cpu-tag--arm64{background:#254c33;color:#d4f3dd}:root:not([data-theme]) .cpu-tag--x86_64{background:#22435b;color:#d5ebfa}:root:not([data-theme]) .cpu-tag--i386{background:#49345e;color:#e9dbf6}:root:not([data-theme]) .cpu-tag--ppc{background:#584321;color:#f9e8bd}:root:not([data-theme]) .cpu-tag--ppc64{background:#5c3232;color:#f7dede}}
+
+.estimate-mark{font-size:11px;color:var(--muted);font-weight:400}

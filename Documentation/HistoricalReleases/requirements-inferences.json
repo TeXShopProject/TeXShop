@@ -1,0 +1,104 @@
+{
+  "v3.27": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The immediately surrounding 3.26 and 3.34 standalone applications contain x86_64; this source-only version has no explicit architecture setting. Architectures may differ in unreleased builds."
+  },
+  "v3.28": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The immediately surrounding 3.26 and 3.34 standalone applications contain x86_64; this source-only version has no explicit architecture setting. Architectures may differ in unreleased builds."
+  },
+  "v3.29": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The immediately surrounding 3.26 and 3.34 standalone applications contain x86_64; this source-only version has no explicit architecture setting. Architectures may differ in unreleased builds."
+  },
+  "v3.30": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The immediately surrounding 3.26 and 3.34 standalone applications contain x86_64; this source-only version has no explicit architecture setting. Architectures may differ in unreleased builds."
+  },
+  "v3.31": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The immediately surrounding 3.26 and 3.34 standalone applications contain x86_64; this source-only version has no explicit architecture setting. Architectures may differ in unreleased builds."
+  },
+  "v3.32": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The immediately surrounding 3.26 and 3.34 standalone applications contain x86_64; this source-only version has no explicit architecture setting. Architectures may differ in unreleased builds."
+  },
+  "v3.33": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The immediately surrounding 3.26 and 3.34 standalone applications contain x86_64; this source-only version has no explicit architecture setting. Architectures may differ in unreleased builds."
+  },
+  "v3.37": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The 3.36.2 and 3.38 standalone applications contain x86_64; the intervening source has no explicit architecture setting."
+  },
+  "v3.40": {
+    "architectures": [
+      "x86_64"
+    ],
+    "cpu_inferred": true,
+    "basis": "The 3.39 and 3.41 standalone applications contain x86_64; the intervening source has no explicit architecture setting."
+  },
+  "v1.1": {
+    "architectures": [
+      "ppc"
+    ],
+    "cpu_inferred": true,
+    "basis": "The neighboring 1.00-2001-04-29 and 1.11 applications both contain 32-bit PowerPC; no matching application exists in this source archive."
+  },
+  "v2.27": {
+    "architectures": [
+      "ppc",
+      "i386"
+    ],
+    "cpu_inferred": true,
+    "basis": "Normal 2.26 and 2.28 application distributions contain PowerPC and 32-bit Intel. The 2.27 source project also has a 64-bit-targeting configuration, so the list reflects only an estimated normal distribution, not a verified 2.27 binary."
+  },
+  "v2.00": {
+    "minimum_os": "10.4",
+    "os_inferred": false,
+    "source": "https://texshop.app/archive/version.html#changes-2-00-and-1-37",
+    "basis": "The official 2.00 change log explicitly says it requires Mac OS X Tiger (10.4)."
+  },
+  "v2.02": {
+    "minimum_os": "10.4",
+    "os_inferred": true,
+    "source": "https://texshop.app/archive/version.html#changes-2-00-and-1-37",
+    "basis": "Bracketed by the 2.00 notes requiring 10.4 and the 2.04 application plist requiring 10.4."
+  },
+  "v2.03": {
+    "minimum_os": "10.4",
+    "os_inferred": true,
+    "source": "https://texshop.app/archive/version.html#changes-2-00-and-1-37",
+    "basis": "Bracketed by the 2.00 notes requiring 10.4 and the 2.04 application plist requiring 10.4."
+  },
+  "v1.14": {
+    "minimum_os": "10.1",
+    "os_inferred": false,
+    "source": "https://texshop.app/archive/version.html#changes-1-14",
+    "basis": "The 1.14 change log explicitly requires system 10.1 or higher."
+  }
+}

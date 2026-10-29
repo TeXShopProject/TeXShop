@@ -23,3 +23,5 @@ The icon-history illustration for 3.14–3.38 uses the icon from the 3.14 applic
 `icon-transition-notes.json` records the historical sources behind the short explanations of icon changes. The date associated with the earliest triangular-icon snapshot is inferred from its archive tag, not independently established as the first public appearance.
 
 `cpu-transition-notes.json` records the change-log evidence for Intel, 64-bit and Apple Silicon milestones. An earlier unreleased 2.32 64-bit build is distinguished from the 3.00 official transition.
+
+`requirements-inferences.json` documents estimated CPU/OS values and their bounding evidence; inferred values are identified as estimates in the catalog. The 2.32 source archive contains a matching 64-bit x86_64 application under `texshop2.32-64/build/Release/TeXShop.app`; adjacent official 2.31 and 2.33 applications are 32-bit PowerPC/Intel, but those architectures are not claimed for the distinct 2.32 source archive. Some early minimum OS versions remain unknown where historical requirements conflict or lack bounding evidence.

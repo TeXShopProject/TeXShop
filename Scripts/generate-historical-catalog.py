@@ -10,6 +10,7 @@ changelogs=json.loads((repo/'Documentation/HistoricalReleases/changelog-links.js
 first_release=json.loads((repo/'Documentation/HistoricalReleases/first-release.json').read_text())
 icon_notes=json.loads((repo/'Documentation/HistoricalReleases/icon-transition-notes.json').read_text())
 cpu_notes=json.loads((repo/'Documentation/HistoricalReleases/cpu-transition-notes.json').read_text())
+requirements=json.loads((repo/'Documentation/HistoricalReleases/requirements-inferences.json').read_text())
 assert all(a['status']=='ok' for r in meta for a in r['assets']), 'archives incomplete'
 svg='<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span>'
 def order(r):
@@ -78,7 +79,17 @@ for ja in (False,True):
      requirement_app['architectures']=[{'cpu':x} for x in arch]
   override=overrides.get(r['tag'],{})
   if requirement_app and 'minimum_os' in override: requirement_app['plist_min']=override['minimum_os']
-  os,cpu=details(requirement_app,ja);version=esc(r['tag'][1:]); dateinfo=dates.get(r['tag'][1:]); stamp=''
+  inferred=requirements.get(r['tag'],{}); cpu_inferred=False; os_inferred=False
+  if requirement_app is not None:
+   if not requirement_app.get('architectures') and inferred.get('architectures'):
+    requirement_app['architectures']=[{'cpu':x} for x in inferred['architectures']]; cpu_inferred=inferred.get('cpu_inferred',False)
+   if not requirement_app.get('plist_min') and inferred.get('minimum_os'):
+    requirement_app['plist_min']=inferred['minimum_os']; os_inferred=inferred.get('os_inferred',False)
+  os,cpu=details(requirement_app,ja)
+  if os_inferred: marker=' <span class="estimate-mark">（推定）</span>' if ja else ' <span class="estimate-mark">(estimated)</span>'; os=os.replace('<small>',marker+'<small>',1) if '<small>' in os else os+marker
+  if cpu_inferred: cpu+='<small class="estimate-mark">推定</small>' if ja else '<small class="estimate-mark">Estimated</small>'
+  if r['tag']=='v2.27': os+=('<small>同梱プロジェクトの設定</small>' if ja else '<small>Setting in the included project</small>')
+  version=esc(r['tag'][1:]); dateinfo=dates.get(r['tag'][1:]); stamp=''
   match=re.fullmatch(r'v5\.(\d+)',r['tag'])
   if app and match and int(match.group(1))<=48:
    os+=('<small>macOS 10.14 Mojaveでは起動不可</small>' if ja else '<small>Does not run on macOS 10.14 Mojave</small>')
