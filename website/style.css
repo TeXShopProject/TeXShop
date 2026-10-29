@@ -84,7 +84,7 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 
 .release-status.first-official{color:var(--accordion);font-weight:500}
 
-.download-table small.icon-transition-note{color:var(--accordion);font-weight:500}
+.download-table small.icon-transition-note,.download-table small.release-milestone-note{color:var(--accordion);font-weight:500}
 
 /* CPU labels and compact release details. */
 .release-version>div{min-width:0}.download-table small.icon-transition-note{white-space:normal;overflow-wrap:normal;max-width:15em}

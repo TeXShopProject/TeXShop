@@ -19,5 +19,11 @@
     "ja": "アイコンをTahoe以降に対応",
     "en": "Icon updated for macOS Tahoe and later",
     "source": "https://texshop.app/release-notes.html#v5.59"
+  },
+  "v3.12": {
+    "ja": "ベータ版の暫定アイコン",
+    "en": "Provisional icon in beta",
+    "source": "https://texshop.app/archive/changes_3.html#section-174",
+    "note": "The matching bundled beta application specifies an icon distinct from the surrounding official releases. The notes describe icon experiments but do not identify its designer."
   }
 }

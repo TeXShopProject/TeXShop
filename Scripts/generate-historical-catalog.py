@@ -9,6 +9,7 @@ statuses=json.loads((repo/'Documentation/HistoricalReleases/release-status.json'
 changelogs=json.loads((repo/'Documentation/HistoricalReleases/changelog-links.json').read_text())
 first_release=json.loads((repo/'Documentation/HistoricalReleases/first-release.json').read_text())
 icon_notes=json.loads((repo/'Documentation/HistoricalReleases/icon-transition-notes.json').read_text())
+cpu_notes=json.loads((repo/'Documentation/HistoricalReleases/cpu-transition-notes.json').read_text())
 assert all(a['status']=='ok' for r in meta for a in r['assets']), 'archives incomplete'
 svg='<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span>'
 def order(r):
@@ -95,6 +96,9 @@ for ja in (False,True):
   icon_note=icon_notes.get(r['tag'])
   if icon_note:
    version_contents += f'<small class="icon-transition-note">{html.escape(icon_note["ja" if ja else "en"])}</small>'; version_class='release-version first-release-version'
+  cpu_note=cpu_notes.get(r['tag'])
+  if cpu_note:
+   version_contents += f'<small class="release-milestone-note">{html.escape(cpu_note["ja" if ja else "en"])}</small>'; version_class='release-version first-release-version'
   tds=[f'<div class="{version_class}">{img}<div>{version_contents}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
  first=first_release; first_os,first_cpu=details(first['app'],ja)

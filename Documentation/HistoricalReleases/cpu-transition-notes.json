@@ -1,0 +1,20 @@
+{
+  "v2.05": {
+    "ja": "Intel（32ビット）に初対応",
+    "en": "First Intel (32-bit) support",
+    "source": "https://texshop.app/archive/version.html#changes-1-42",
+    "note": "The 2.05 notes announce a Universal Binary; the archived Xcode project specifies ppc and i386."
+  },
+  "v3.00": {
+    "ja": "正式版を64ビット化",
+    "en": "Official release moves to 64-bit",
+    "source": "https://texshop.app/archive/version.html#section-185",
+    "note": "Earlier internal 2.32 source also contains a 64-bit build, so this is not described as the first 64-bit build."
+  },
+  "v4.50": {
+    "ja": "Apple Siliconに初対応",
+    "en": "First Apple Silicon support",
+    "source": "https://texshop.app/archive/version.html#section-69",
+    "note": "The 4.50 release notes state it runs natively on Arm; the archived app is a universal binary."
+  }
+}
