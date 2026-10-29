@@ -6,6 +6,7 @@ dates=json.loads((repo/'Documentation/HistoricalReleases/release-dates.json').re
 overrides=json.loads((repo/'Documentation/HistoricalReleases/requirements-overrides.json').read_text())
 projects={x['tag']:x for x in json.loads((repo/'Documentation/HistoricalReleases/project-settings-audit.json').read_text())}
 statuses=json.loads((repo/'Documentation/HistoricalReleases/release-status.json').read_text())
+changelogs=json.loads((repo/'Documentation/HistoricalReleases/changelog-links.json').read_text())
 assert all(a['status']=='ok' for r in meta for a in r['assets']), 'archives incomplete'
 svg='<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span>'
 def order(r):
@@ -81,14 +82,17 @@ for ja in (False,True):
    stamp=f'<small><time datetime="{d.isoformat()}">{label}</time></small>'
   status=statuses.get(r['tag'],{}); state=status.get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development')}.get(state); badge=''
   if label:
-   href=html.escape(status['archive_link'],quote=True); label_text=f'（{label[0]}）' if ja else f'({label[1]})'; badge=f' <a class="release-status" href="{href}">{label_text}</a>'
-  tds=[f'<div class="release-version">{img}<div>TeXShop {version}{badge}{stamp}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
+   label_text=f'（{label[0]}）' if ja else f'({label[1]})'; badge=f' <span class="release-status">{label_text}</span>'
+  changelog=html.escape(changelogs[r['tag']]['path'],quote=True); version_link=f'<a href="{changelog}">TeXShop {version}</a>'
+  tds=[f'<div class="release-version">{img}<div>{version_link}{badge}{stamp}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
  note=('過去のバージョンをダウンロードできます。' if ja else 'Download previous versions of TeXShop.')
  heading=''.join('<th scope="col">'+esc(x)+'</th>' for x in labels)
  special=re.search(r'<tr>\s*<td data-label="[^"]+"><div class="release-version">(?:(?!</tr>).)*?TeXShop 5\.58(?:(?!</tr>).)*?</tr>',oldmain,re.S)
  assert special, 'Missing 5.58 in selected older releases'
- rows.insert(0,special.group(0))
+ special_row=special.group(0).replace('TeXShop 5.58<small', '<a href="archive/golden-gate.html#section-4">TeXShop 5.58</a><small')
+ assert special_row!=special.group(0), 'Missing 5.58 version label'
+ rows.insert(0,special_row)
  back='<a href="downloads-ja.html">‹ リリース履歴</a>' if ja else '<a href="downloads.html">‹ Releases</a>'
  main=f'<main class="archive-content downloads"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)

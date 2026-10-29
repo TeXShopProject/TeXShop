@@ -15,3 +15,5 @@ Version 3.12’s source ZIP includes a TeXShop.app with matching version. Its In
 The icon-history illustration for 3.14–3.38 uses the icon from the 3.14 application. The 3.38 application uses a different ICNS encoding of the same visual design; individual releases are displayed using their own extracted icons.
 
 `release-status.json` records the status of beta, development, unreleased and experimental versions and the evidence used for the labels. A final release is not labeled experimental merely because an earlier experimental build shared its version number; 2.15 was eventually made official.
+
+`changelog-links.json` maps release tags to relevant archived change notes; dated 1.00 snapshots and letter-suffixed variants may link to their shared base-version notes. When the old change log lacks an individual entry for the earliest development builds, the links use Koch’s historical account instead.
