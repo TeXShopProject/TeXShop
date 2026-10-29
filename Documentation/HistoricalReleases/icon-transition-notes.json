@@ -1,0 +1,23 @@
+{
+  "v1.00-2001-03-19": {
+    "ja": "Jérôme Laurensのデザイン",
+    "en": "Icon designed by Jérôme Laurens",
+    "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf#page=8",
+    "note": "First dated archived snapshot in the catalog with the triangular icon; the 1.0 release also uses it."
+  },
+  "v3.14": {
+    "ja": "Retina対応で高解像度化",
+    "en": "Redrawn for Retina displays",
+    "source": "https://texshop.app/archive/changes_3.html#section-174"
+  },
+  "v3.39": {
+    "ja": "Yosemite向けに刷新",
+    "en": "Redesigned for Yosemite",
+    "source": "https://texshop.app/archive/changes_3.html#section-157"
+  },
+  "v5.59": {
+    "ja": "Tahoe以降のアイコンに対応",
+    "en": "Updated for macOS Tahoe and later",
+    "source": "https://texshop.app/release-notes.html#v5.59"
+  }
+}

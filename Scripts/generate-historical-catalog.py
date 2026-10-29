@@ -8,6 +8,7 @@ projects={x['tag']:x for x in json.loads((repo/'Documentation/HistoricalReleases
 statuses=json.loads((repo/'Documentation/HistoricalReleases/release-status.json').read_text())
 changelogs=json.loads((repo/'Documentation/HistoricalReleases/changelog-links.json').read_text())
 first_release=json.loads((repo/'Documentation/HistoricalReleases/first-release.json').read_text())
+icon_notes=json.loads((repo/'Documentation/HistoricalReleases/icon-transition-notes.json').read_text())
 assert all(a['status']=='ok' for r in meta for a in r['assets']), 'archives incomplete'
 svg='<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span>'
 def order(r):
@@ -85,12 +86,16 @@ for ja in (False,True):
    stamp=f'<small><time datetime="{d.isoformat()}">{label}</time></small>'
   status=statuses.get(r['tag'],{}); state=status.get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development'),'first_official':('初公式リリース','first official release')}.get(state); badge=''
   if label:
-   label_text=f'（{label[0]}）' if ja else f'({label[1]})'; badge=f' <span class="release-status{" first-official" if state=="first_official" else ""}">{label_text}</span>'
+   label_text=(label[0] if ja else label[1]) if state=='first_official' else (f'（{label[0]}）' if ja else f'({label[1]})'); badge=f' <span class="release-status{" first-official" if state=="first_official" else ""}">{label_text}</span>'
   changelog=html.escape(changelogs[r['tag']]['path'],quote=True); version_link=f'<a href="{changelog}">TeXShop {version}</a>'
   if state=='first_official':
    badge=f'<small class="release-status first-official">{label_text}</small>'; version_contents=version_link+stamp+badge; version_class='release-version first-release-version'
   else:
    version_contents=version_link+badge+stamp; version_class='release-version'
+  icon_note=icon_notes.get(r['tag'])
+  if icon_note:
+   if not stamp: version_contents += '<small>公開日不明</small>' if ja else '<small>Release date unknown</small>'
+   version_contents += f'<small class="icon-transition-note">{html.escape(icon_note["ja" if ja else "en"])}</small>'; version_class='release-version first-release-version'
   tds=[f'<div class="{version_class}">{img}<div>{version_contents}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
  first=first_release; first_os,first_cpu=details(first['app'],ja)

@@ -19,3 +19,5 @@ The icon-history illustration for 3.14–3.38 uses the icon from the 3.14 applic
 `changelog-links.json` maps release tags to relevant archived change notes; dated 1.00 snapshots and letter-suffixed variants may link to their shared base-version notes. When the old change log lacks an individual entry for the earliest development builds, the links use Koch’s historical account instead.
 
 `first-release.json` records version 1.0d1’s original 2000 release date and separately identifies the app and source as the 2024 recompilation, with compatibility and hashes checked from the preserved archives. These files are not the original 2000 distribution.
+
+`icon-transition-notes.json` records the historical sources behind the short explanations of icon changes. The date associated with the earliest triangular-icon snapshot is inferred from its archive tag, not independently established as the first public appearance.
