@@ -18,7 +18,7 @@
     "note": "The 4.50 release notes state it runs natively on Arm; the archived app is a universal binary."
   },
   "v2.32": {
-    "ja": "Intel（64ビット）対応実験版",
+    "ja": "Intel（64ビット）対応の実験版",
     "en": "Experimental version with Intel (64-bit) support",
     "source": "https://texshop.app/archive/version.html#section-197",
     "note": "The source ZIP root is texshop2.32-64. Its matching embedded release application is x86_64; 2.32 was never publicly released. Earlier and later normal releases contain ppc/i386, but those architectures are not asserted for this archive."
