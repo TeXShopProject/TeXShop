@@ -6,8 +6,8 @@
     "note": "The 2.05 notes announce a Universal Binary; the archived Xcode project specifies ppc and i386."
   },
   "v3.00": {
-    "ja": "64ビット対応の正式版",
-    "en": "Official release with 64-bit support",
+    "ja": "Intel（64ビット）対応の正式版",
+    "en": "Official release with Intel (64-bit) support",
     "source": "https://texshop.app/archive/version.html#section-185",
     "note": "Earlier internal 2.32 source also contains a 64-bit build, so this is not described as the first 64-bit build."
   },
@@ -18,9 +18,15 @@
     "note": "The 4.50 release notes state it runs natively on Arm; the archived app is a universal binary."
   },
   "v2.32": {
-    "ja": "64ビット対応実験版",
-    "en": "Experimental 64-bit version",
+    "ja": "Intel（64ビット）対応実験版",
+    "en": "Experimental version with Intel (64-bit) support",
     "source": "https://texshop.app/archive/version.html#section-197",
     "note": "The source ZIP root is texshop2.32-64. Its matching embedded release application is x86_64; 2.32 was never publicly released. Earlier and later normal releases contain ppc/i386, but those architectures are not asserted for this archive."
+  },
+  "v3.24": {
+    "ja": "Intel（32ビット）サポートを終了",
+    "en": "Intel (32-bit) support discontinued",
+    "source": "https://texshop.app/archive/version.html#section-167",
+    "note": "The archived 3.23 app contains i386 and x86_64; the archived 3.24 app contains x86_64 only."
   }
 }
