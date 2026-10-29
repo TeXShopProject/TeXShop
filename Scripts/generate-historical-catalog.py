@@ -7,6 +7,7 @@ overrides=json.loads((repo/'Documentation/HistoricalReleases/requirements-overri
 projects={x['tag']:x for x in json.loads((repo/'Documentation/HistoricalReleases/project-settings-audit.json').read_text())}
 statuses=json.loads((repo/'Documentation/HistoricalReleases/release-status.json').read_text())
 changelogs=json.loads((repo/'Documentation/HistoricalReleases/changelog-links.json').read_text())
+first_release=json.loads((repo/'Documentation/HistoricalReleases/first-release.json').read_text())
 assert all(a['status']=='ok' for r in meta for a in r['assets']), 'archives incomplete'
 svg='<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span>'
 def order(r):
@@ -14,7 +15,7 @@ def order(r):
 meta.sort(key=order,reverse=True)
 def cell(a,role,tag,ja):
  if not a:return '<span class="not-available">—</span>'
- path='https://github.com/TeXShopProject/TeXShop/releases/download/historical-archive/'+urllib.parse.quote(a['name']);name=f'TeXShop {tag[1:]} {role}';desc=f'{name}のSHA-256をコピー' if ja else f'Copy SHA-256 for {name}';sha=a['sha256']
+ path=a.get('download_url') or 'https://github.com/TeXShopProject/TeXShop/releases/download/historical-archive/'+urllib.parse.quote(a['name']);name=f'TeXShop {tag[1:]} {role}';desc=f'{name}のSHA-256をコピー' if ja else f'Copy SHA-256 for {name}';sha=a['sha256']
  return f'<div class="download-actions"><a class="file-button" href="{html.escape(path,quote=True)}" aria-label="{html.escape(name)} ZIP">{role}</a><button class="file-button hash-copy" type="button" data-sha256="{sha}" title="{sha}" aria-label="{html.escape(desc)}" disabled>{svg}</button></div>'
 def norm(v):
  if not v:return None
@@ -86,6 +87,13 @@ for ja in (False,True):
   changelog=html.escape(changelogs[r['tag']]['path'],quote=True); version_link=f'<a href="{changelog}">TeXShop {version}</a>'
   tds=[f'<div class="release-version">{img}<div>{version_link}{badge}{stamp}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
+ first=first_release; first_os,first_cpu=details(first['app'],ja)
+ first_stamp='2000年7月23日' if ja else 'July 23, 2000'
+ first_variant='2024年再コンパイル版' if ja else 'Recompiled in 2024'
+ first_name=f'<a href="{html.escape(first["history"],quote=True)}">TeXShop 1.0d1</a> <span class="release-status">（開発版）</span>' if ja else f'<a href="{html.escape(first["history"],quote=True)}">TeXShop 1.0d1</a> <span class="release-status">(development)</span>'
+ first_version=f'<div class="release-version"><img src="{html.escape(first["icon"],quote=True)}" width="48" height="48" alt="" loading="lazy"><div>{first_name}<small><time datetime="{first["release_date"]}">{first_stamp}</time></small><small>{first_variant}</small></div></div>'
+ first_cells=[first_version,first_os,first_cpu,cell(first['app'],'App',first['tag'],ja),cell(first['source'],'Source',first['tag'],ja)]
+ rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(first_cells))+'</tr>')
  note=('過去のバージョンをダウンロードできます。' if ja else 'Download previous versions of TeXShop.')
  heading=''.join('<th scope="col">'+esc(x)+'</th>' for x in labels)
  special=re.search(r'<tr>\s*<td data-label="[^"]+"><div class="release-version">(?:(?!</tr>).)*?TeXShop 5\.58(?:(?!</tr>).)*?</tr>',oldmain,re.S)

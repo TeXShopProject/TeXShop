@@ -1,0 +1,29 @@
+{
+  "tag": "v1.0d1",
+  "release_date": "2000-07-23",
+  "release_date_source": "archive/downloads/TeXShop-History-Koch.pdf#page=6",
+  "history": "archive/anniversary.html",
+  "distribution_note": "Recompiled in 2024 from the original source; not the original 2000 binary.",
+  "icon": "assets/release-icons/TeXShop-1.0.png",
+  "app": {
+    "name": "TeXShop-1Arm.zip",
+    "download_url": "archive/downloads/TeXShop-1Arm.zip",
+    "sha256": "78c7f3e6f6b41bfaee6919745a4f73557a925792a83971f494341c837fb8b202",
+    "plist_min": "14.0",
+    "architectures": [
+      {
+        "cpu": "arm64",
+        "min_os": "14.0"
+      },
+      {
+        "cpu": "x86_64",
+        "min_os": "14.0"
+      }
+    ]
+  },
+  "source": {
+    "name": "texshoparmsource.zip",
+    "download_url": "archive/downloads/texshoparmsource.zip",
+    "sha256": "a82f44b44b6cd3ebdd3361277134c167a7296a457552490c1cee21323b43b767"
+  }
+}
