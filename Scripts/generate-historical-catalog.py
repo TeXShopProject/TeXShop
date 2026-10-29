@@ -91,7 +91,7 @@ for ja in (False,True):
  first_stamp='2000年7月23日' if ja else 'July 23, 2000'
  first_variant='2024年再コンパイル版' if ja else 'Recompiled in 2024'
  first_name=f'<a href="{html.escape(first["history"],quote=True)}">TeXShop 1.0d1</a> <span class="release-status">（開発版）</span>' if ja else f'<a href="{html.escape(first["history"],quote=True)}">TeXShop 1.0d1</a> <span class="release-status">(development)</span>'
- first_version=f'<div class="release-version"><img src="{html.escape(first["icon"],quote=True)}" width="48" height="48" alt="" loading="lazy"><div>{first_name}<small><time datetime="{first["release_date"]}">{first_stamp}</time></small><small>{first_variant}</small></div></div>'
+ first_version=f'<div class="release-version first-release-version"><img src="{html.escape(first["icon"],quote=True)}" width="48" height="48" alt="" loading="lazy"><div>{first_name}<small><time datetime="{first["release_date"]}">{first_stamp}</time></small><small class="recompiled-note">{first_variant}</small></div></div>'
  first_cells=[first_version,first_os,first_cpu,cell(first['app'],'App',first['tag'],ja),cell(first['source'],'Source',first['tag'],ja)]
  rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(first_cells))+'</tr>')
  note=('過去のバージョンをダウンロードできます。' if ja else 'Download previous versions of TeXShop.')
