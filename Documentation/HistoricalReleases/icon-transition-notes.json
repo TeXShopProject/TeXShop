@@ -6,8 +6,8 @@
     "note": "First dated archived snapshot in the catalog with the triangular icon; the 1.0 release also uses it."
   },
   "v3.14": {
-    "ja": "アイコンをRetina向けに高解像度化",
-    "en": "Icon redrawn for Retina displays",
+    "ja": "Retina向け高解像度アイコンを搭載した正式版",
+    "en": "Official release with a high-resolution Retina icon",
     "source": "https://texshop.app/archive/changes_3.html#section-174"
   },
   "v3.39": {
@@ -25,5 +25,10 @@
     "en": "Provisional icon in beta",
     "source": "https://texshop.app/archive/changes_3.html#section-174",
     "note": "The matching bundled beta application specifies an icon distinct from the surrounding official releases. The notes describe icon experiments but do not identify its designer."
+  },
+  "v3.13": {
+    "ja": "Retina対応の実験版",
+    "en": "Experimental Retina support",
+    "source": "https://texshop.app/archive/changes_3.html#section-174"
   }
 }
