@@ -5,6 +5,7 @@ repo=Path(__file__).resolve().parents[1];root=repo/'website';meta=json.loads((re
 dates=json.loads((repo/'Documentation/HistoricalReleases/release-dates.json').read_text())
 overrides=json.loads((repo/'Documentation/HistoricalReleases/requirements-overrides.json').read_text())
 projects={x['tag']:x for x in json.loads((repo/'Documentation/HistoricalReleases/project-settings-audit.json').read_text())}
+statuses=json.loads((repo/'Documentation/HistoricalReleases/release-status.json').read_text())
 assert all(a['status']=='ok' for r in meta for a in r['assets']), 'archives incomplete'
 svg='<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span>'
 def order(r):
@@ -78,7 +79,8 @@ for ja in (False,True):
   if dateinfo:
    d=date.fromisoformat(dateinfo['date']);label=f'{d.year}年{d.month}月{d.day}日' if ja else d.strftime('%B')+f' {d.day}, {d.year}'
    stamp=f'<small><time datetime="{d.isoformat()}">{label}</time></small>'
-  tds=[f'<div class="release-version">{img}<div>TeXShop {version}{stamp}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
+  state=statuses.get(r['tag'],{}).get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development')}.get(state); badge=f' <span class="release-status">（{label[0]}）</span>' if label and ja else f' <span class="release-status">({label[1]})</span>' if label else ''
+  tds=[f'<div class="release-version">{img}<div>TeXShop {version}{badge}{stamp}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
  note=('過去のバージョンをダウンロードできます。' if ja else 'Download previous versions of TeXShop.')
  heading=''.join('<th scope="col">'+esc(x)+'</th>' for x in labels)

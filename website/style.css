@@ -77,3 +77,5 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 .release-icon-placeholder{width:48px;height:48px;flex-shrink:0}
 
 .release-back{justify-content:flex-start;margin-bottom:18px}.release-back a{color:var(--link)}
+
+.release-status{font-size:.8em;font-weight:400;color:var(--muted)}

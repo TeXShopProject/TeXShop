@@ -13,3 +13,5 @@ The version 5.49 notes state that versions 5.00–5.48 crashed on Mojave; the ca
 Version 3.12’s source ZIP includes a TeXShop.app with matching version. Its Info.plist sets `CFBundleIconFile` to `Icons`, which identifies `TeXShop.app/Contents/Resources/Icons.icns`; document types use distinct icon settings. This is the icon shown in the catalog.
 
 The icon-history illustration for 3.14–3.38 uses the icon from the 3.14 application. The 3.38 application uses a different ICNS encoding of the same visual design; individual releases are displayed using their own extracted icons.
+
+`release-status.json` records the status of beta, development, unreleased and experimental versions and the evidence used for the labels. A final release is not labeled experimental merely because an earlier experimental build shared its version number; 2.15 was eventually made official.
