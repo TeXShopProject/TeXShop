@@ -94,7 +94,6 @@ for ja in (False,True):
    version_contents=version_link+badge+stamp; version_class='release-version'
   icon_note=icon_notes.get(r['tag'])
   if icon_note:
-   if not stamp: version_contents += '<small>公開日不明</small>' if ja else '<small>Release date unknown</small>'
    version_contents += f'<small class="icon-transition-note">{html.escape(icon_note["ja" if ja else "en"])}</small>'; version_class='release-version first-release-version'
   tds=[f'<div class="{version_class}">{img}<div>{version_contents}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
