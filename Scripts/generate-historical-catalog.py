@@ -30,7 +30,7 @@ def norm(v):
 def details(app,ja):
  if app is None:return ('不明' if ja else 'Unknown','不明' if ja else 'Unknown')
  arches=app.get('architectures',[]);cpus=[x.get('cpu') for x in arches];cpus.sort(key=lambda c: {'arm64':0,'x86_64':1,'i386':2,'ppc':3,'ppc64':4}.get(c,5));names={'arm64':'Apple Silicon','x86_64':'Intel（64ビット）' if ja else 'Intel (64-bit)','i386':'Intel（32ビット）' if ja else 'Intel (32-bit)','ppc':'PowerPC（32ビット）' if ja else 'PowerPC (32-bit)','ppc64':'PowerPC（64ビット）' if ja else 'PowerPC (64-bit)'}
- cpu='<br>'.join(names.get(c,html.escape(str(c))) for c in cpus) or ('不明' if ja else 'Unknown')
+ cpu='<span class="cpu-tags">'+''.join(f'<span class="cpu-tag cpu-tag--{html.escape(c,quote=True)}">{html.escape(names.get(c,str(c)))}</span>' for c in cpus)+'</span>' if cpus else ('不明' if ja else 'Unknown')
  minimum=norm(app.get('plist_min')); archmins=[norm(a.get('min_os')) for a in arches if norm(a.get('min_os'))]
  if archmins:
   archminimum=min(archmins,key=lambda x:tuple(map(int,x.split('.'))))
