@@ -79,7 +79,9 @@ for ja in (False,True):
   if dateinfo:
    d=date.fromisoformat(dateinfo['date']);label=f'{d.year}年{d.month}月{d.day}日' if ja else d.strftime('%B')+f' {d.day}, {d.year}'
    stamp=f'<small><time datetime="{d.isoformat()}">{label}</time></small>'
-  state=statuses.get(r['tag'],{}).get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development')}.get(state); badge=f' <span class="release-status">（{label[0]}）</span>' if label and ja else f' <span class="release-status">({label[1]})</span>' if label else ''
+  status=statuses.get(r['tag'],{}); state=status.get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development')}.get(state); badge=''
+  if label:
+   href=html.escape(status['archive_link'],quote=True); label_text=f'（{label[0]}）' if ja else f'({label[1]})'; badge=f' <a class="release-status" href="{href}">{label_text}</a>'
   tds=[f'<div class="release-version">{img}<div>TeXShop {version}{badge}{stamp}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
  note=('過去のバージョンをダウンロードできます。' if ja else 'Download previous versions of TeXShop.')

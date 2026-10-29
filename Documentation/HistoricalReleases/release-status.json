@@ -2,136 +2,163 @@
   "v3.12": {
     "status": "beta",
     "source": "https://texshop.app/archive/changes_3.html#section-174",
-    "note": "Not formally released; beta copies were distributed."
+    "note": "Not formally released; beta copies were distributed.",
+    "archive_link": "archive/changes_3.html#section-174"
   },
   "v3.13": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-174",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-174"
   },
   "v3.19": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-169",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-169"
   },
   "v3.20": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-169",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-169"
   },
   "v3.27": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-164",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-164"
   },
   "v3.28": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-164",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-164"
   },
   "v3.29": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-164",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-164"
   },
   "v3.30": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-164",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-164"
   },
   "v3.31": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-164",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-164"
   },
   "v3.33": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-164",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-164"
   },
   "v3.32": {
     "status": "experimental",
     "source": "https://texshop.app/archive/changes_3.html#section-164",
-    "note": "Experimental version distributed to a limited audience."
+    "note": "Experimental version distributed to a limited audience.",
+    "archive_link": "archive/changes_3.html#section-164"
   },
   "v3.40": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/changes_3.html#section-156",
-    "note": "Not released."
+    "note": "Not released.",
+    "archive_link": "archive/changes_3.html#section-156"
   },
   "v2.35": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/version.html#section-195",
-    "note": "Internal version, never publicly released."
+    "note": "Internal version, never publicly released.",
+    "archive_link": "archive/version.html#section-195"
   },
   "v2.32": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/version.html#section-197",
-    "note": "Internal version, never publicly released."
+    "note": "Internal version, never publicly released.",
+    "archive_link": "archive/version.html#section-197"
   },
   "v2.21": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/version.html#section-202",
-    "note": "Internal builds, never released."
+    "note": "Internal builds, never released.",
+    "archive_link": "archive/version.html#section-202"
   },
   "v2.22": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/version.html#section-202",
-    "note": "Internal builds, never released."
+    "note": "Internal builds, never released.",
+    "archive_link": "archive/version.html#section-202"
   },
   "v2.23": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/version.html#section-202",
-    "note": "Internal builds, never released."
+    "note": "Internal builds, never released.",
+    "archive_link": "archive/version.html#section-202"
   },
   "v2.24": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/version.html#section-202",
-    "note": "Internal builds, never released."
+    "note": "Internal builds, never released.",
+    "archive_link": "archive/version.html#section-202"
   },
   "v2.19": {
     "status": "unreleased",
     "source": "https://texshop.app/archive/version.html#section-203",
-    "note": "Internal version, never released."
+    "note": "Internal version, never released.",
+    "archive_link": "archive/version.html#section-203"
   },
   "v2.10beta2": {
     "status": "beta",
     "source": "https://github.com/TeXShop/TeXShop/releases/tag/v2.10beta2",
-    "note": "Beta designation in archived release tag."
+    "note": "Beta designation in archived release tag.",
+    "archive_link": "archive/version.html#changes-2-10-beta"
   },
   "v1.0d2": {
     "status": "development",
     "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
-    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies."
+    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies.",
+    "archive_link": "archive/downloads/TeXShop-History-Koch.pdf#page=6"
   },
   "v1.0d2-later": {
     "status": "development",
     "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
-    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies."
+    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies.",
+    "archive_link": "archive/downloads/TeXShop-History-Koch.pdf#page=6"
   },
   "v1.0d3": {
     "status": "development",
     "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
-    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies."
+    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies.",
+    "archive_link": "archive/downloads/TeXShop-History-Koch.pdf#page=6"
   },
   "v1.0d4": {
     "status": "development",
     "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
-    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies."
+    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies.",
+    "archive_link": "archive/downloads/TeXShop-History-Koch.pdf#page=7"
   },
   "v1.0d5": {
     "status": "development",
     "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
-    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies."
+    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies.",
+    "archive_link": "archive/downloads/TeXShop-History-Koch.pdf#page=7"
   },
   "v1.0d5-Dirk": {
     "status": "development",
     "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
-    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies."
+    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies.",
+    "archive_link": "archive/downloads/TeXShop-History-Koch.pdf#page=7"
   },
   "v1.0d6": {
     "status": "development",
     "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
-    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies."
+    "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies.",
+    "archive_link": "archive/downloads/TeXShop-History-Koch.pdf#page=7"
   }
 }
