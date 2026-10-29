@@ -11,7 +11,9 @@ first_release=json.loads((repo/'Documentation/HistoricalReleases/first-release.j
 assert all(a['status']=='ok' for r in meta for a in r['assets']), 'archives incomplete'
 svg='<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg><span>SHA-256</span>'
 def order(r):
- t=r['tag'];m=re.match(r'v(\d+)\.(\d+)(?:\.(\d+))?',t); nums=tuple(int(n or 0) for n in m.groups()) if m else (0,0,0);return nums, (not bool(re.search(r'(?:beta|d\d)',t,re.I))),t
+ t=r['tag'];m=re.match(r'v(\d+)\.(\d+)(?:\.(\d+))?',t); nums=tuple(int(n or 0) for n in m.groups()) if m else (0,0,0)
+ chronological=dates.get(t[1:],{}).get('date','') if nums==(1,0,0) else ''
+ return nums, (not bool(re.search(r'(?:beta|d\d)',t,re.I))),chronological,t
 meta.sort(key=order,reverse=True)
 def cell(a,role,tag,ja):
  if not a:return '<span class="not-available">—</span>'
