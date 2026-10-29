@@ -54,7 +54,7 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 .theme-toggle:hover,.theme-toggle[aria-expanded=true]{color:var(--ink);background:color-mix(in srgb,var(--ink) 10%,transparent)}
 .theme-toggle:focus-visible,.theme-menu button:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 .theme-toggle svg{width:20px;height:20px}
-.theme-menu{position:absolute;z-index:20;top:calc(100% + 5px);right:0;min-width:140px;padding:5px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 18px #0004}
+.theme-menu{position:absolute;z-index:20;top:calc(100% + 5px);left:0;min-width:140px;padding:5px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 18px #0004}
 .theme-menu{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,visibility 0s linear .16s}.theme-toggle[aria-expanded=true]+.theme-menu{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .16s ease,visibility 0s}@media(prefers-reduced-motion:reduce){.theme-menu,.theme-toggle[aria-expanded=true]+.theme-menu{transition:none}}
 .theme-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:5px 9px;border:0;border-radius:4px;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}
 .theme-menu button:hover,.theme-menu button:focus-visible{background:color-mix(in srgb,var(--ink) 10%,transparent)}
