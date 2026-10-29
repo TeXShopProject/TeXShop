@@ -160,5 +160,10 @@
     "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
     "note": "Koch describes these versions as development releases before 1.0; variant tags identify archived copies.",
     "archive_link": "archive/downloads/TeXShop-History-Koch.pdf#page=7"
+  },
+  "v1.0": {
+    "status": "first_official",
+    "source": "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf#page=8",
+    "note": "Koch describes 1.0 as the release following development versions, for the first non-beta release of Mac OS X."
   }
 }

@@ -81,3 +81,5 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 .release-status{font-size:.8em;font-weight:400;color:var(--muted)}
 
 .first-release-version{line-height:1.3}.first-release-version small{line-height:1.3;margin-top:2px}.first-release-version .recompiled-note{color:var(--accordion);font-weight:500}
+
+.release-status.first-official{color:var(--accordion);font-weight:500}

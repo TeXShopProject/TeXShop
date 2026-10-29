@@ -81,9 +81,9 @@ for ja in (False,True):
   if dateinfo:
    d=date.fromisoformat(dateinfo['date']);label=f'{d.year}年{d.month}月{d.day}日' if ja else d.strftime('%B')+f' {d.day}, {d.year}'
    stamp=f'<small><time datetime="{d.isoformat()}">{label}</time></small>'
-  status=statuses.get(r['tag'],{}); state=status.get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development')}.get(state); badge=''
+  status=statuses.get(r['tag'],{}); state=status.get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development'),'first_official':('初公式リリース','first official release')}.get(state); badge=''
   if label:
-   label_text=f'（{label[0]}）' if ja else f'({label[1]})'; badge=f' <span class="release-status">{label_text}</span>'
+   label_text=f'（{label[0]}）' if ja else f'({label[1]})'; badge=f' <span class="release-status{" first-official" if state=="first_official" else ""}">{label_text}</span>'
   changelog=html.escape(changelogs[r['tag']]['path'],quote=True); version_link=f'<a href="{changelog}">TeXShop {version}</a>'
   tds=[f'<div class="release-version">{img}<div>{version_link}{badge}{stamp}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
