@@ -87,7 +87,11 @@ for ja in (False,True):
   if label:
    label_text=f'（{label[0]}）' if ja else f'({label[1]})'; badge=f' <span class="release-status{" first-official" if state=="first_official" else ""}">{label_text}</span>'
   changelog=html.escape(changelogs[r['tag']]['path'],quote=True); version_link=f'<a href="{changelog}">TeXShop {version}</a>'
-  tds=[f'<div class="release-version">{img}<div>{version_link}{badge}{stamp}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
+  if state=='first_official':
+   badge=f'<small class="release-status first-official">{label_text}</small>'; version_contents=version_link+stamp+badge; version_class='release-version first-release-version'
+  else:
+   version_contents=version_link+badge+stamp; version_class='release-version'
+  tds=[f'<div class="{version_class}">{img}<div>{version_contents}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
   rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
  first=first_release; first_os,first_cpu=details(first['app'],ja)
  first_stamp='2000年7月23日' if ja else 'July 23, 2000'
