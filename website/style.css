@@ -92,5 +92,3 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 :root[data-theme=dark] .cpu-tag--arm64{background:#254c33;color:#d4f3dd}:root[data-theme=dark] .cpu-tag--x86_64{background:#22435b;color:#d5ebfa}:root[data-theme=dark] .cpu-tag--i386{background:#49345e;color:#e9dbf6}:root[data-theme=dark] .cpu-tag--ppc{background:#584321;color:#f9e8bd}:root[data-theme=dark] .cpu-tag--ppc64{background:#5c3232;color:#f7dede}
 
 @media(prefers-color-scheme:dark){:root:not([data-theme]) .cpu-tag--arm64{background:#254c33;color:#d4f3dd}:root:not([data-theme]) .cpu-tag--x86_64{background:#22435b;color:#d5ebfa}:root:not([data-theme]) .cpu-tag--i386{background:#49345e;color:#e9dbf6}:root:not([data-theme]) .cpu-tag--ppc{background:#584321;color:#f9e8bd}:root:not([data-theme]) .cpu-tag--ppc64{background:#5c3232;color:#f7dede}}
-
-.estimate-mark{font-size:11px;color:var(--muted);font-weight:400}

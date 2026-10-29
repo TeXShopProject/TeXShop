@@ -79,16 +79,13 @@ for ja in (False,True):
      requirement_app['architectures']=[{'cpu':x} for x in arch]
   override=overrides.get(r['tag'],{})
   if requirement_app and 'minimum_os' in override: requirement_app['plist_min']=override['minimum_os']
-  inferred=requirements.get(r['tag'],{}); cpu_inferred=False; os_inferred=False
+  inferred=requirements.get(r['tag'],{})
   if requirement_app is not None:
    if not requirement_app.get('architectures') and inferred.get('architectures'):
-    requirement_app['architectures']=[{'cpu':x} for x in inferred['architectures']]; cpu_inferred=inferred.get('cpu_inferred',False)
+    requirement_app['architectures']=[{'cpu':x} for x in inferred['architectures']]
    if not requirement_app.get('plist_min') and inferred.get('minimum_os'):
-    requirement_app['plist_min']=inferred['minimum_os']; os_inferred=inferred.get('os_inferred',False)
+    requirement_app['plist_min']=inferred['minimum_os']
   os,cpu=details(requirement_app,ja)
-  if os_inferred: marker=' <span class="estimate-mark">（推定）</span>' if ja else ' <span class="estimate-mark">(estimated)</span>'; os=os.replace('<small>',marker+'<small>',1) if '<small>' in os else os+marker
-  if cpu_inferred: cpu+='<small class="estimate-mark">推定</small>' if ja else '<small class="estimate-mark">Estimated</small>'
-  if r['tag']=='v2.27': os+=('<small>同梱プロジェクトの設定</small>' if ja else '<small>Setting in the included project</small>')
   version=esc(r['tag'][1:]); dateinfo=dates.get(r['tag'][1:]); stamp=''
   match=re.fullmatch(r'v5\.(\d+)',r['tag'])
   if app and match and int(match.group(1))<=48:
