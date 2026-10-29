@@ -6,18 +6,18 @@
     "note": "First dated archived snapshot in the catalog with the triangular icon; the 1.0 release also uses it."
   },
   "v3.14": {
-    "ja": "Retina対応で高解像度化",
-    "en": "Redrawn for Retina displays",
+    "ja": "アイコンをRetina向けに高解像度化",
+    "en": "Icon redrawn for Retina displays",
     "source": "https://texshop.app/archive/changes_3.html#section-174"
   },
   "v3.39": {
-    "ja": "Yosemite向けに刷新",
-    "en": "Redesigned for Yosemite",
+    "ja": "アイコンをYosemite向けに刷新",
+    "en": "Icon redesigned for Yosemite",
     "source": "https://texshop.app/archive/changes_3.html#section-157"
   },
   "v5.59": {
-    "ja": "Tahoe以降のアイコンに対応",
-    "en": "Updated for macOS Tahoe and later",
+    "ja": "アイコンをTahoe以降に対応",
+    "en": "Icon updated for macOS Tahoe and later",
     "source": "https://texshop.app/release-notes.html#v5.59"
   }
 }
