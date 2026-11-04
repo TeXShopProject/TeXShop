@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>TeXShop 맞춤법 검사</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>TeXShop 맞춤법 검사</h1>
+
+<p>TeXShop의 맞춤법 검사는 TeX를 이해합니다. 주석, 수식, 명령, 그리고 <code>\label</code>, <code>\ref</code>, <code>\cite</code>, <code>\usepackage</code> 같은 명령의 인수는 건너뛰고 나머지 텍스트를 검사합니다. 표준 ‘맞춤법 및 문법’ 패널을 사용하므로 다른 Mac 프로그램과 같은 방식으로 작동합니다.</p>
+
+<h2>문서 검사하기</h2>
+<ul>
+<li><b>편집 &gt; 맞춤법 및 문법 &gt; 맞춤법 및 문법 보기</b>(&#8984;:)를 선택하여 패널을 엽니다. 삽입점 뒤의 첫 번째 맞춤법 오류 단어로 이동합니다.</li>
+<li>패널에서 <b>다음 찾기</b>를 클릭하거나 <b>지금 문서 검사</b>(&#8984;;)를 선택하면 다음 단어로 이동합니다. 단어가 문서에서 선택되고, 해당 줄이 가운데 오도록 윈도우가 스크롤됩니다.</li>
+<li>패널에서 <b>변경</b>은 단어를 선택한 제안(또는 패널의 단어 입력란에 입력한 내용)으로 바꾸고, <b>무시</b>는 이 문서에서 해당 단어를 무시하며, <b>학습</b>은 현재 언어의 사전에 추가합니다.</li>
+<li><b>입력하는 동안 맞춤법 검사</b>가 켜져 있으면 입력하는 동안 철자가 틀린 단어에 밑줄이 표시되지만, 건너뛰는 소스 부분에는 표시되지 않습니다.</li>
+</ul>
+
+<p>직접 정의한 매크로（<code>\newcommand</code>, <code>\def</code> 등）는 문서에서 읽어 들이며, 정의에서 <code>\ref</code>나 수식 등에 그대로 넘기기만 하는 인수도 건너뜁니다.</p>
+
+<p><code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> 등으로 다른 언어로 표시된 텍스트는 그 언어로 검사되지만, 입력하는 동안에는 밑줄이 표시되지 않습니다.</p>
+
+<p>패널의 <b>모두 변경</b>은 표시된 맞춤법 오류 단어를 문서 전체(건너뛰는 텍스트 제외)에서 선택한 제안 또는 단어 입력란에 입력한 내용으로 바꿉니다. <b>편집 &gt; 실행 취소</b>로 한 번에 되돌릴 수 있습니다.</p>
+
+<h2>원래 동작</h2>
+<p>맞춤법 및 문법 보기나 지금 문서 검사를 선택할 때, 또는 다음 찾기를 클릭할 때 <b>Option 키</b>를 누르고 있으면 아무것도 건너뛰지 않는 시스템 기본 검색이 사용됩니다.</p>
+
+<h2>학습한 단어 삭제</h2>
+<p><b>편집 &gt; 맞춤법 및 문법 &gt; 학습한 단어 삭제&#8230;</b>는 맨 앞 문서에 있는, 현재 언어로 학습한 단어를 목록으로 보여 줍니다. 하나 이상을 선택(Shift 키 또는 Command 키를 누른 채 클릭)하고 <b>선택 항목 삭제</b>를 클릭하면 사전에서 제거됩니다. 문서에 나타나는 학습한 단어만 표시됩니다.</p>
+
+<h2>건너뛰는 내용 변경하기</h2>
+<p><b>편집 &gt; 맞춤법 및 문법 &gt; 맞춤법 제외 항목 편집&#8230;</b>은 <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> 파일을 텍스트 편집기에서 엽니다. 이 파일에는 건너뛸 내용이 한 줄에 규칙 하나씩 적혀 있으며, 맨 위에 형식 설명이 있습니다(영어). 변경 사항은 다음 검사부터 적용되며 다시 시작할 필요가 없습니다. 예를 들어 직접 정의한 명령의 인수를 건너뛰려면 다음과 같은 줄을 추가하십시오.</p>
+<pre>skip-args  1  mycommand</pre>
+<p>환경의 내부를 건너뛰려면 다음과 같이 합니다.</p>
+<pre>skip-body  proof</pre>
+<p>파일을 삭제하면 TeXShop이 다음에 시작할 때 기본 규칙의 새 사본을 다시 만듭니다. 아무것도 건너뛰지 않으려면 내용을 주석만으로 바꾸십시오.</p>
+
+</body>
+</html>

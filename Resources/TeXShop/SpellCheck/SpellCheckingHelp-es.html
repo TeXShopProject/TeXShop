@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Revisión ortográfica en TeXShop</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Revisión ortográfica en TeXShop</h1>
+
+<p>La revisión ortográfica de TeXShop conoce TeX. Omite los comentarios, las fórmulas, los comandos y los argumentos de comandos como <code>\label</code>, <code>\ref</code>, <code>\cite</code> y <code>\usepackage</code>, y revisa el resto del texto. Usa el panel estándar de Ortografía y gramática, por lo que funciona como la revisión ortográfica de otros programas del Mac.</p>
+
+<h2>Revisar un documento</h2>
+<ul>
+<li>Elija <b>Edición &gt; Ortografía y gramática &gt; Mostrar ortografía y gramática</b> (&#8984;:) para abrir el panel. Va a la primera palabra mal escrita después del cursor.</li>
+<li>Pulse <b>Siguiente</b> en el panel, o elija <b>Revisar documento ahora</b> (&#8984;;), para pasar a la siguiente. La palabra se selecciona en el documento y la ventana se desplaza para que su línea quede en el centro.</li>
+<li>En el panel, <b>Cambiar</b> sustituye la palabra por la sugerencia elegida (o por lo que escriba en el campo de palabra del panel), <b>Ignorar</b> ignora la palabra en este documento y <b>Aprender</b> la añade al diccionario del idioma actual.</li>
+<li>Con <b>Revisar ortografía al escribir</b> activado, las palabras mal escritas se subrayan mientras escribe, pero no en las partes del código fuente que se omiten.</li>
+</ul>
+
+<p>Las macros que usted define (<code>\newcommand</code>, <code>\def</code> &hellip;) se leen del documento, y un argumento que la definici&oacute;n solo pasa a <code>\ref</code>, a una f&oacute;rmula o similar tambi&eacute;n se omite.</p>
+
+<p>El texto marcado como otro idioma con <code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> y similares se revisa en ese idioma, pero no se subraya mientras escribe.</p>
+
+<p>En el panel, <b>Cambiar todo</b> sustituye la palabra mal escrita que muestra, en todo el documento (fuera del texto que se omite), por la sugerencia elegida o por el texto que escriba en su campo de palabra; <b>Edición &gt; Deshacer</b> lo revierte de una vez.</p>
+
+<h2>El comportamiento original</h2>
+<p>Mantenga pulsada la tecla <b>Opción</b> al elegir Mostrar ortografía y gramática o Revisar documento ahora, o al pulsar Siguiente, para usar la búsqueda del sistema, que no omite nada.</p>
+
+<h2>Olvidar palabras aprendidas</h2>
+<p><b>Edición &gt; Ortografía y gramática &gt; Olvidar palabras aprendidas&#8230;</b> muestra las palabras del documento en primer plano que ha aprendido para el idioma actual. Seleccione una o varias (con Mayúsculas o Comando al hacer clic) y pulse <b>Olvidar selección</b> para quitarlas del diccionario. Solo se muestran las palabras aprendidas que aparecen en el documento.</p>
+
+<h2>Cambiar lo que se omite</h2>
+<p><b>Edición &gt; Ortografía y gramática &gt; Editar excepciones de ortografía&#8230;</b> abre el archivo <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> en un editor de texto. Enumera lo que se omite, una regla por línea, y explica su formato al principio (en inglés). Los cambios se aplican en la siguiente revisión; no hace falta reiniciar. Por ejemplo, para omitir el argumento de un comando que haya definido, añada una línea como esta:</p>
+<pre>skip-args  1  mycommand</pre>
+<p>y para omitir el interior de un entorno:</p>
+<pre>skip-body  proof</pre>
+<p>Si elimina el archivo, TeXShop vuelve a crear una copia nueva de las reglas predeterminadas la próxima vez que se inicie. Para no omitir nada, sustituya su contenido por solo comentarios.</p>
+
+</body>
+</html>

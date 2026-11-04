@@ -38,6 +38,8 @@
 #import "TSLayoutManager.h" // added by Terada
 #import "GlobalData.h"
 #import "TSColorSupport.h"
+#import "TSSpellExclusions.h"
+#import "TSSpellSupport.h"
 
 @protocol BDSKCompletionProtocol <NSObject>
 - (NSArray *)completionsForString:(NSString *)searchString;
@@ -188,6 +190,93 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 - (void)paste: (id)sender;
 {
     [self pasteAsPlainText: sender];
+}
+
+
+// ---- TeX-aware spell checking -------------------------------------------------
+// What is ignored is not built in: it comes from SpellingExclusions.txt
+// (see TSSpellExclusions). The standard Spelling and Grammar panel is used for
+// the review; only the search for the next misspelled word is TeX-aware.
+
+// The panel's Find Next and Edit > Spelling and Grammar > Check Document Now
+// (Command-;) end up here. Holding Option gives the original system behaviour.
+- (void)checkSpelling:(id)sender
+{
+    if ([NSEvent modifierFlags] & NSEventModifierFlagOption) {
+        [super checkSpelling:sender];
+        return;
+    }
+    [TSSpellSupport findNextMisspellingInTextView:self mask:[self freshSpellMask]];
+}
+
+// Edit > Spelling and Grammar > Show Spelling and Grammar (Command-:) opens the
+// panel, and the system then runs its own search at once, without going through
+// -checkSpelling:. Replace that search with the TeX-aware one. Holding Option
+// gives the original behaviour.
+- (void)showGuessPanel:(id)sender
+{
+    if ([NSEvent modifierFlags] & NSEventModifierFlagOption) {
+        [super showGuessPanel:sender];
+        return;
+    }
+    [TSSpellSupport showSpellingPanelForTextView:self mask:[self freshSpellMask] openPanel:^{
+        [super showGuessPanel:sender];
+    }];
+}
+
+// The masked form of the text. It keeps markup out of the review above and out
+// of the continuous ("check while typing") spell checking. Made on demand, and
+// dropped whenever the text or the rules file changes.
+- (TSSpellMask *)spellMask
+{
+    TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
+    if ([exclusions reloadIfChanged])
+        _spellMask = nil;
+    if (_spellMask == nil || _spellMaskLength != [[self string] length]) {
+        [self showSpellingRulesProblems:exclusions.problems];
+        _spellMask = [exclusions maskForText:[self string]];
+    }
+    _spellMaskLength = [[self string] length];
+    return _spellMask;
+}
+
+// The review is run on a mask made afresh from the text as it is now: making it
+// takes a few tens of milliseconds even for a long document, and it cannot then be
+// out of date, however the text was changed since the cached one was made.
+- (TSSpellMask *)freshSpellMask
+{
+    _spellMask = nil;
+    return [self spellMask];
+}
+
+// Tell the user once about mistakes in the rules file.
+- (void)showSpellingRulesProblems:(NSString *)problems
+{
+    static NSString *lastShown;
+    if (problems == nil || [problems isEqualToString:lastShown]) return;
+    lastShown = [problems copy];
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = NSLocalizedString(@"Problems in the spelling exclusions file", @"");
+    alert.informativeText = [NSString stringWithFormat:@"%@\n\n%@", [TSSpellExclusions userRulesPath], problems];
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
+    [alert runModal];
+}
+
+- (void)invalidateSpellMask
+{
+    _spellMask = nil;
+}
+
+- (void)didChangeText
+{
+    [self invalidateSpellMask];
+    [super didChangeText];
+}
+
+- (void)setString:(NSString *)string
+{
+    [self invalidateSpellMask];
+    [super setString:string];
 }
 
 

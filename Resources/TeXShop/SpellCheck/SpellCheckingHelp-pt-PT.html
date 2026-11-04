@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<title>Verificação ortográfica no TeXShop</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Verificação ortográfica no TeXShop</h1>
+
+<p>A verificação ortográfica do TeXShop conhece TeX. Ela ignora comentários, fórmulas, comandos e os argumentos de comandos como <code>\label</code>, <code>\ref</code>, <code>\cite</code> e <code>\usepackage</code>, e verifica o resto do texto. Ela usa o painel padrão de Ortografia e gramática, portanto funciona como em outros programas do Mac.</p>
+
+<h2>Verificar um documento</h2>
+<ul>
+<li>Escolha <b>Editar &gt; Ortografia e gramática &gt; Mostrar ortografia e gramática</b> (&#8984;:) para abrir o painel. Ele vai para a primeira palavra escrita errada depois do cursor.</li>
+<li>Clique em <b>Próxima</b> no painel, ou escolha <b>Verificar documento agora</b> (&#8984;;), para ir à seguinte. A palavra é selecionada no documento e a janela rola para que a linha fique no meio.</li>
+<li>No painel, <b>Alterar</b> substitui a palavra pela sugestão escolhida (ou pelo que escrever no campo de palavra do painel), <b>Ignorar</b> ignora a palavra neste documento e <b>Aprender</b> a adiciona ao dicionário do idioma atual.</li>
+<li>Com <b>Verificar ortografia ao escrever</b> ativado, as palavras erradas são sublinhadas enquanto escreve, mas não nas partes do código-fonte que são ignoradas.</li>
+</ul>
+
+<p>As macros que define (<code>\newcommand</code>, <code>\def</code> &hellip;) s&atilde;o lidas do documento, e um argumento que a defini&ccedil;&atilde;o apenas passa a <code>\ref</code>, a uma f&oacute;rmula ou algo semelhante tamb&eacute;m &eacute; ignorado.</p>
+
+<p>O texto marcado como outro idioma com <code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> e semelhantes &eacute; verificado nesse idioma, mas n&atilde;o &eacute; sublinhado enquanto escreve.</p>
+
+<p>No painel, <b>Alterar tudo</b> substitui a palavra errada mostrada em todo o documento (fora do texto ignorado) pela sugestão escolhida ou pelo texto que escrever no campo de palavra; <b>Editar &gt; Desfazer</b> reverte tudo de uma vez.</p>
+
+<h2>O comportamento original</h2>
+<p>Mantenha a tecla <b>Option</b> pressionada ao escolher Mostrar ortografia e gramática ou Verificar documento agora, ou ao clicar em Próxima, para usar a busca do sistema, que não ignora nada.</p>
+
+<h2>Esquecer palavras aprendidas</h2>
+<p><b>Editar &gt; Ortografia e gramática &gt; Esquecer palavras aprendidas&#8230;</b> mostra as palavras do documento em primeiro plano que aprendeu para o idioma atual. Selecione uma ou várias (clicando com Shift ou Comando) e clique em <b>Esquecer selecionadas</b> para removê-las do dicionário. Somente as palavras aprendidas que aparecem no documento são mostradas.</p>
+
+<h2>Alterar o que é ignorado</h2>
+<p><b>Editar &gt; Ortografia e gramática &gt; Editar exceções de ortografia&#8230;</b> abre o ficheiro <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> em um editor de texto. Ele lista o que é ignorado, uma regra por linha, e explica seu formato no início (em inglês). As alterações valem a partir da próxima verificação; não é preciso reiniciar. Por exemplo, para ignorar o argumento de um comando que você definiu, adicione uma linha como esta:</p>
+<pre>skip-args  1  mycommand</pre>
+<p>e para ignorar o interior de um ambiente:</p>
+<pre>skip-body  proof</pre>
+<p>Se apagar o ficheiro, o TeXShop cria de novo uma cópia nova das regras padrão na próxima vez que iniciar. Para não ignorar nada, substitua o conteúdo por apenas comentários.</p>
+
+</body>
+</html>

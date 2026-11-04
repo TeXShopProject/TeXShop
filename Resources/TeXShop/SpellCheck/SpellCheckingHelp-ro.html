@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>Verificarea ortografiei în TeXShop</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Verificarea ortografiei în TeXShop</h1>
+
+<p>Verificarea ortografiei din TeXShop cunoaște TeX. Ea omite comentariile, formulele, comenzile și argumentele comenzilor precum <code>\label</code>, <code>\ref</code>, <code>\cite</code> și <code>\usepackage</code> și verifică restul textului. Folosește panoul standard Ortografie și gramatică, deci funcționează ca în alte programe Mac.</p>
+
+<h2>Verificarea unui document</h2>
+<ul>
+<li>Alegeți <b>Editare &gt; Ortografie și gramatică &gt; Afișează ortografia și gramatica</b> (&#8984;:) pentru a deschide panoul. Merge la primul cuvânt scris greșit după cursor.</li>
+<li>Faceți clic pe <b>Găsește următorul</b> în panou sau alegeți <b>Verifică documentul acum</b> (&#8984;;) pentru a trece la următorul. Cuvântul este selectat în document, iar fereastra derulează astfel încât linia lui să fie la mijloc.</li>
+<li>În panou, <b>Schimbă</b> înlocuiește cuvântul cu sugestia aleasă (sau cu ce tastați în câmpul de cuvânt al panoului), <b>Ignoră</b> ignoră cuvântul în acest document, iar <b>Învață</b> îl adaugă în dicționarul limbii curente.</li>
+<li>Cu <b>Verifică ortografia în timp ce tastezi</b> activat, cuvintele scrise greșit sunt subliniate pe măsură ce tastați, dar nu în părțile sursei care sunt omise.</li>
+</ul>
+
+<p>Macrocomenzile pe care le defini&#539;i (<code>\newcommand</code>, <code>\def</code> &hellip;) sunt citite din document, iar un argument pe care defini&#539;ia doar &icirc;l transmite c&#259;tre <code>\ref</code>, c&#259;tre o formul&#259; sau ceva similar este &#537;i el omis.</p>
+
+<p>Textul marcat ca fiind &icirc;n alt&#259; limb&#259; cu <code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> &#537;i altele asem&#259;n&#259;toare este verificat &icirc;n acea limb&#259;, dar nu este subliniat &icirc;n timp ce tasta&#539;i.</p>
+
+<p>În panou, <b>Schimbă tot</b> înlocuiește cuvântul scris greșit afișat în tot documentul (în afara textului omis) cu sugestia aleasă sau cu textul tastat în câmpul de cuvânt; <b>Editare &gt; Anulează</b> revine asupra schimbării dintr-o dată.</p>
+
+<h2>Comportamentul inițial</h2>
+<p>Țineți apăsată tasta <b>Option</b> când alegeți Afișează ortografia și gramatica sau Verifică documentul acum, sau când faceți clic pe Găsește următorul, pentru a folosi căutarea sistemului, care nu omite nimic.</p>
+
+<h2>Uitarea cuvintelor învățate</h2>
+<p><b>Editare &gt; Ortografie și gramatică &gt; Uită cuvintele învățate&#8230;</b> afișează cuvintele din documentul din prim-plan pe care le-ați învățat pentru limba curentă. Selectați unul sau mai multe (clic cu Shift sau Command) și faceți clic pe <b>Uită selecția</b> pentru a le elimina din dicționar. Sunt afișate doar cuvintele învățate care apar în document.</p>
+
+<h2>Schimbarea a ceea ce este omis</h2>
+<p><b>Editare &gt; Ortografie și gramatică &gt; Editează excepțiile de ortografie&#8230;</b> deschide fișierul <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> într-un editor de text. Acesta enumeră ce este omis, o regulă pe linie, și își explică formatul la început (în engleză). Modificările se aplică la următoarea verificare; nu este nevoie de repornire. De exemplu, pentru a omite argumentul unei comenzi definite de dumneavoastră, adăugați o linie ca aceasta:</p>
+<pre>skip-args  1  mycommand</pre>
+<p>iar pentru a omite interiorul unui mediu:</p>
+<pre>skip-body  proof</pre>
+<p>Dacă ștergeți fișierul, TeXShop creează din nou o copie nouă a regulilor implicite la următoarea pornire. Pentru a nu omite nimic, înlocuiți conținutul cu doar comentarii.</p>
+
+</body>
+</html>

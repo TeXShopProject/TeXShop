@@ -50,6 +50,7 @@
 #import "TSToolbarController.h"
 #import "TSAppDelegate.h"
 #import "TSTextView.h"
+#import "TSSpellSupport.h"
 #import "TSEncodingSupport.h"
 #import "TSMacroMenuController.h"
 #import "TSDocumentController.h"
@@ -5511,6 +5512,24 @@ preference change is cancelled. "*/
 	}
 	braceHighlighting = YES;
 }
+
+// TeX-aware spell checking. The system asks before it underlines a word;
+// words in text that SpellingExclusions.txt says to ignore (maths, commands,
+// arguments of \label and \cite, comments, ...) are not underlined.
+- (NSInteger)textView:(NSTextView *)aTextView shouldSetSpellingState:(NSInteger)value range:(NSRange)affectedCharRange
+{
+    if (value == 0 || ![aTextView isKindOfClass:[TSTextView class]])
+        return value;
+    TSSpellMask *mask = [(TSTextView *)aTextView spellMask];
+    if (mask && ([mask rangeTouchesExclusion:affectedCharRange] || [mask rangeIsNextToAccent:affectedCharRange]))
+        return 0;
+    // Text in another language than the document's (\foreignlanguage, ...) is
+    // checked by the review, in its own language, but not underlined here.
+    if (mask && [TSSpellSupport rangeIsInOtherLanguage:affectedCharRange mask:mask])
+        return 0;
+    return value;
+}
+
 
 // added by Terada (- (void)textViewDidChangeSelection:(NSNotification *)inNotification)
 - (void)textViewDidChangeSelection:(NSNotification *)inNotification

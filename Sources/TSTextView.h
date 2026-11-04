@@ -22,6 +22,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TSDocument.h"
+#import "TSSpellExclusions.h"
 
 @interface TSTextView : NSTextView <NSTextFinderClient>
 {
@@ -35,6 +36,9 @@
     NSUInteger replaceLocation; // completion started here
     NSUInteger completionListLocation; // location to start search in the list
     NSUInteger textLocation; // location of insertion point
+    // TeX-aware spell checking: cached masked text (see TSSpellExclusions)
+    TSSpellMask *_spellMask;
+    NSUInteger _spellMaskLength;
     // end variables for Command Completion
 
 }
@@ -60,6 +64,9 @@
 - (void)moveBackwardTo$$:(id)sender;
 - (void)paste: (id)sender;
 - (void)updateInsertionPointStateAndRestartTimer:(BOOL)restartFlag;
+- (TSSpellMask *)spellMask;
+- (TSSpellMask *)freshSpellMask;
+- (void)invalidateSpellMask;
 // - (void)drawInsertionPointInRect:(NSRect)rect color:(NSColor *)color turnedOn:(BOOL)flag;
 // -(void)_drawInsertionPointInRect:(NSRect)arg1 color:(NSColor *)color turnedOn:(BOOL)flag;
 

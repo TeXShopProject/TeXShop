@@ -113,3 +113,20 @@
 "Source" = "Source";
 "Syntax Color expl3 Code" = "Coloration syntaxique du code expl3";
 "PDF File Has No Annotations" = "Fichier PDF sans annotations";
+
+/* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
+"Forget Learned Words…" = "Oublier des mots appris…";
+"Edit Spelling Exclusions…" = "Modifier les exclusions orthographiques…";
+"Spell Checking Help" = "Aide sur la vérification orthographique";
+"Forget learned words" = "Oublier des mots appris";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Ces mots de ce document ont été appris pour %@. Sélectionnez ceux à oublier. Majuscule-clic ou Commande-clic en sélectionne plusieurs.";
+"Forget Selected" = "Oublier la sélection";
+"Forgot %lu word." = "%lu mot oublié.";
+"Forgot %lu words." = "%lu mots oubliés.";
+"No learned words in this document" = "Aucun mot appris dans ce document";
+"None of the words in this document have been learned for %@." = "Aucun des mots de ce document n’a été appris pour %@.";
+"The spell checking help could not be found" = "L’aide sur la vérification orthographique est introuvable";
+"Problems in the spelling exclusions file" = "Problèmes dans le fichier des exclusions orthographiques";
+"OK" = "OK";
+/* Button added to the Spelling and Grammar panel */
+"Change All" = "Tout remplacer";
