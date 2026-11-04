@@ -204,7 +204,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 // and ordinary text documents until the new spelling UI is ready for release.
 - (BOOL)usesTeXAwareSpellChecking
 {
-    return [SUD boolForKey:@"TeXAwareSpellChecking"] && self.document.documentType == isTeX && g_texChar == '\\';
+    return [SUD boolForKey:@"TeXAwareSpellChecking"] && self.document && self.document.documentType == isTeX && g_texChar == '\\';
 }
 
 - (void)checkSpelling:(id)sender
@@ -236,10 +236,19 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 // dropped whenever the text or the rules file changes.
 - (TSSpellMask *)spellMask
 {
+    // added by Terada: observe the shared storage, including edits in another pane
+    // and external reloads. Unchanged checks must not compare the entire document.
+    if (_spellMaskStorage != self.textStorage) {
+        if (_spellMaskStorage) [[NSNotificationCenter defaultCenter] removeObserver:self
+            name:NSTextStorageDidProcessEditingNotification object:_spellMaskStorage];
+        _spellMaskStorage = self.textStorage;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(spellStorageEdited:)
+            name:NSTextStorageDidProcessEditingNotification object:_spellMaskStorage];
+        _spellMask = nil;
+    }
     TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
     [exclusions reloadIfChanged];
-    if (_spellMask == nil || _spellRulesGeneration != exclusions.generation ||
-        ![_spellMaskText isEqualToString:self.string]) {
+    if (_spellMask == nil || _spellRulesGeneration != exclusions.generation) {
         [self showSpellingRulesProblems:exclusions.problems];
         _spellMaskText = [self.string copy];
         _spellRulesGeneration = exclusions.generation;
@@ -247,6 +256,12 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
     }
     _spellMaskLength = [[self string] length];
     return _spellMask;
+}
+
+- (void)spellStorageEdited:(NSNotification *)notification
+{
+    if ([(NSTextStorage *)notification.object editedMask] & NSTextStorageEditedCharacters)
+        [self invalidateSpellMask];
 }
 
 // The review is run on a mask made afresh from the text as it is now: making it

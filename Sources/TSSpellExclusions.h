@@ -1,5 +1,7 @@
 /*
  * TeXShop - TeX editor for Mac OS
+ * Copyright (C) 2026 Ralph Martin and Yusuke Terada
+ * SPDX-License-Identifier: GPL-2.0-or-later
  * TeX-aware spelling implementation by Ralph Martin.
  *
  * Which parts of a TeX source file the spell checker must ignore is not built

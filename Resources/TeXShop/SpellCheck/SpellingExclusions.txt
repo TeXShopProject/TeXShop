@@ -24,7 +24,6 @@
 #   skip-args N COMMAND...        ignore the arguments of these commands: any [..]
 #                                 options plus the first N {..} arguments
 #   skip-args-matching N REGEX    same, for every command whose whole name matches
-#                                 the regular expression (ICU syntax)
 #   skip-pattern PATTERN COMMAND...  ignore the groups after these commands, in
 #                                 the order given by PATTERN, which is made of {} [] and ():
 #                                 a [..] or (..) in the pattern is skipped if it is there,
@@ -117,7 +116,6 @@ skip-args  3  NewDocumentCommand RenewDocumentCommand ProvideDocumentCommand Dec
 skip-args  4  NewDocumentEnvironment RenewDocumentEnvironment ProvideDocumentEnvironment DeclareDocumentEnvironment
 
 # Counters, lengths, boxes and font selection, and the commands TeXShop's own
-# syntax colouring has always treated this way (it also reads these lists, and
 # excludes the first parameters of each command listed here when it colours).
 skip-args  1  alpha arabic fnsymbol roman stepcounter usecounter value
 skip-args  1  enlargethispage addvspace usebox parbox raisebox sbox savebox
@@ -148,7 +146,6 @@ skip-args  0  hyperref
 # check-args lists commands whose arguments must be checked even though a
 # skip-args-matching rule would exclude them, for example:
 # check-args  prefix
-# TeXShop's syntax colouring also reads this list: when it is set to exclude the
 # parameters of every command except a list, these are the exceptions.
 check-args  emph verbatim
 

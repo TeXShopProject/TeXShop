@@ -130,3 +130,9 @@
 "OK" = "OK";
 /* Button added to the Spelling and Grammar panel */
 "Change All" = "すべて変更";
+
+"Replacement for Change All" = "すべて変更する置換語";
+
+"Return to the word and choose Find Next before replacing." = "対象の単語に戻り、「次を検索」で確認し直してください。";
+
+"Enter a different replacement in the Change All field." = "「すべて変更」の専用欄に別の置換語を入力してください。";

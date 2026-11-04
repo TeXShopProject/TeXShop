@@ -127,3 +127,9 @@
 "OK" = "好";
 /* Button added to the Spelling and Grammar panel */
 "Change All" = "全部更改";
+
+"Replacement for Change All" = "全部更改的替换词";
+
+"Return to the word and choose Find Next before replacing." = "请回到该词，并再次查找下一个错误后再替换。";
+
+"Enter a different replacement in the Change All field." = "请在全部更改的专用输入栏中输入不同的替换词。";

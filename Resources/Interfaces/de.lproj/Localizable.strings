@@ -130,3 +130,9 @@
 "OK" = "OK";
 /* Button added to the Spelling and Grammar panel */
 "Change All" = "Alle ändern";
+
+"Replacement for Change All" = "Ersatz für Alle ändern";
+
+"Return to the word and choose Find Next before replacing." = "Zum Wort zurückkehren und erneut Weitersuchen wählen.";
+
+"Enter a different replacement in the Change All field." = "Einen anderen Ersatz im Feld für Alle ändern eingeben.";

@@ -113,3 +113,9 @@
 "Source" = "Source";
 "Syntax Color expl3 Code" = "Syntax Color expl3 Code";
 "PDF File Has No Annotations" = "PDF File Has No Annotations";
+
+"Replacement for Change All" = "Replacement for Change All";
+
+"Return to the word and choose Find Next before replacing." = "Return to the word and choose Find Next before replacing.";
+
+"Enter a different replacement in the Change All field." = "Enter a different replacement in the Change All field.";

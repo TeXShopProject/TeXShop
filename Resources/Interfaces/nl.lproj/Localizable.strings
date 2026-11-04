@@ -127,3 +127,9 @@
 "OK" = "OK";
 /* Button added to the Spelling and Grammar panel */
 "Change All" = "Wijzig alles";
+
+"Replacement for Change All" = "Vervanging voor Wijzig alles";
+
+"Return to the word and choose Find Next before replacing." = "Ga terug naar het woord en zoek opnieuw het volgende woord.";
+
+"Enter a different replacement in the Change All field." = "Voer een andere vervanging in het aparte veld in.";

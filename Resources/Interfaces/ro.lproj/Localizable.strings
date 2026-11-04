@@ -130,3 +130,9 @@
 "OK" = "OK";
 /* Button added to the Spelling and Grammar panel */
 "Change All" = "Schimbă tot";
+
+"Replacement for Change All" = "Înlocuire pentru Schimbă tot";
+
+"Return to the word and choose Find Next before replacing." = "Reveniți la cuvânt și căutați următorul înainte de înlocuire.";
+
+"Enter a different replacement in the Change All field." = "Introduceți altă înlocuire în câmpul pentru Schimbă tot.";

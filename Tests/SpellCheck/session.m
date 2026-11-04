@@ -1,7 +1,26 @@
 // added by Terada: never learns, ignores or removes dictionary entries.
 #import <Cocoa/Cocoa.h>
+#import <objc/runtime.h>
 #import "TSSpellSupport.h"
 #import "TSSpellExclusions.h"
+// An inert public-API checker prevents panel-frame and personal-dictionary writes.
+#import "SessionChecker.h"
+@implementation SessionChecker
++ (instancetype)sharedSpellChecker { static SessionChecker *checker; if(!checker) checker=[self new]; return checker; }
+- (BOOL)hasLearnedWord:(NSString *)word { abort(); }
+- (void)unlearnWord:(NSString *)word { abort(); }
+- (NSString *)language { return @"en"; }
+- (NSArray *)availableLanguages { return @[@"en"]; }
+- (void)updateSpellingPanelWithMisspelledWord:(NSString *)word {}
+- (NSRange)checkSpellingOfString:(NSString *)s startingAt:(NSInteger)start language:(NSString *)language
+                          wrap:(BOOL)wrap inSpellDocumentWithTag:(NSInteger)tag wordCount:(NSInteger *)count {
+    return [s rangeOfString:@"zzqqa" options:0 range:NSMakeRange(start,s.length-start)];
+}
+@end
+@interface SessionTextView : NSTextView @end
+@implementation SessionTextView
+- (void)showFindIndicatorForRange:(NSRange)range {}
+@end
 @interface SessionApplication : NSApplication
 @property NSWindow *reviewWindow;
 @end
@@ -16,13 +35,14 @@ static NSTextView *View(NSString *text) {
     SessionWindow *window = [[SessionWindow alloc] initWithContentRect:NSMakeRect(-20000,-20000,500,300)
         styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     window.releasedWhenClosed = NO;
-    NSTextView *view = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,500,300)];
+    NSTextView *view = [[SessionTextView alloc] initWithFrame:NSMakeRect(0,0,500,300)];
     window.contentView = view; view.string = text; view.allowsUndo = YES;
-    [window orderBack:nil]; [window makeMainWindow]; [window makeFirstResponder:view];
+    view.continuousSpellCheckingEnabled=NO;view.grammarCheckingEnabled=NO;view.automaticSpellingCorrectionEnabled=NO;
+    [window makeMainWindow]; [window makeFirstResponder:view];
     return view;
 }
 static NSTextField *Replacement(void) {
-    for (NSView *view in NSSpellChecker.sharedSpellChecker.accessoryView.subviews)
+    for (NSView *view in SessionChecker.sharedSpellChecker.accessoryView.subviews)
         if ([view isKindOfClass:NSTextField.class]) return (NSTextField *)view;
     abort();
 }
@@ -38,8 +58,16 @@ int main(void) {@autoreleasepool {
     Review(a); [(SessionApplication *)NSApp setReviewWindow:b.window]; [b.window makeMainWindow]; [b.window makeFirstResponder:b];
     [TSSpellSupport changeAll:nil];
     NSCAssert([a.string isEqual:@"zzqqa zzqqa"] && [b.string isEqual:@"zzqqb zzqqb"], @"switch must invalidate replacement");
-    Review(a); [a.textStorage replaceCharactersInRange:NSMakeRange(0,1) withString:@"x"];
-    [TSSpellSupport changeAll:nil]; NSCAssert([a.string isEqual:@"xzqqa zzqqa"], @"edit must invalidate replacement");
+    Review(a); [a.textStorage replaceCharactersInRange:NSMakeRange(6,1) withString:@"x"];
+    [TSSpellSupport changeAll:nil]; NSCAssert([a.string isEqual:@"zzqqa xzqqa"], @"edit must invalidate replacement");
+    a.string=@"zzqqa zzqqa"; Review(a); a.selectedRange=NSMakeRange(6,5);
+    [TSSpellSupport changeAll:nil];
+    NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"selection-only change must invalidate replacement");
+    Review(a); NSTextView *split=[[SessionTextView alloc] initWithFrame:NSMakeRect(0,0,10,10)];
+    [a.window.contentView addSubview:split]; [a.window makeFirstResponder:split];
+    [TSSpellSupport changeAll:nil];
+    NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"first-responder-only change must invalidate replacement");
+    [split removeFromSuperview];
     a.string=@"zzqqa zzqqa"; Review(a); [TSSpellSupport changeAll:nil];
     NSCAssert([a.string isEqual:@"fixed fixed"], @"current review must replace both words");
     [a.undoManager undo]; NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"single undo must restore original");

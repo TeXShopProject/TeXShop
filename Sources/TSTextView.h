@@ -40,6 +40,7 @@
     TSSpellMask *_spellMask;
     NSUInteger _spellMaskLength, _spellRulesGeneration;
     NSString *_spellMaskText;
+    __weak NSTextStorage *_spellMaskStorage;
     // end variables for Command Completion
 
 }

@@ -1,5 +1,7 @@
 /*
  * TeXShop - TeX editor for Mac OS
+ * Copyright (C) 2026 Ralph Martin and Yusuke Terada
+ * SPDX-License-Identifier: GPL-2.0-or-later
  * TeX-aware spelling implementation by Ralph Martin.
  *
  * See TSSpellSupport.h.
@@ -141,6 +143,7 @@ static NSString *sReviewWord;
 static NSString *sReviewText;
 static NSRange sReviewSelection;
 static NSTextField *sReplacementField;
+static NSTextField *sReplacementStatus;
 
 static BOOL ReviewIsCurrent(NSTextView *view)
 {
@@ -184,10 +187,15 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     NSTextView *tv = sReviewView;
     NSString *word = sReviewWord;
     NSString *replacement = [sReplacementField.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (!ReviewIsCurrent(tv) || [word length] == 0 || [replacement length] == 0 || [replacement isEqualToString:word]) {
-        NSBeep();
-        return;
+    if (!ReviewIsCurrent(tv) || word.length == 0) {
+        sReplacementStatus.stringValue = NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @"");
+        NSBeep(); return;
     }
+    if (replacement.length == 0 || [replacement isEqualToString:word]) {
+        sReplacementStatus.stringValue = NSLocalizedString(@"Enter a different replacement in the Change All field.", @"");
+        NSBeep(); return;
+    }
+    sReplacementStatus.stringValue = @"";
     TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
     [exclusions reloadIfChanged];
     TSSpellMask *mask = [exclusions maskForText:tv.string];
@@ -227,14 +235,22 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
 + (void)installChangeAllButton
 {
     if (sReplacementField) return;
-    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 36)];
-    sReplacementField = [[NSTextField alloc] initWithFrame:NSMakeRect(8, 7, 290, 22)];
+    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 76)];
+    sReplacementField = [[NSTextField alloc] initWithFrame:NSMakeRect(8, 47, 290, 22)];
     sReplacementField.placeholderString = NSLocalizedString(@"Replacement for Change All", @"");
     sReplacementField.autoresizingMask = NSViewWidthSizable;
+    sReplacementField.target = self;
+    sReplacementField.action = @selector(changeAll:);
     [accessory addSubview:sReplacementField];
+    sReplacementStatus = [NSTextField wrappingLabelWithString:@""];
+    sReplacementStatus.frame = NSMakeRect(8, 3, 415, 38);
+    sReplacementStatus.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    sReplacementStatus.textColor = NSColor.secondaryLabelColor;
+    sReplacementStatus.autoresizingMask = NSViewWidthSizable;
+    [accessory addSubview:sReplacementStatus];
     NSButton *button = [NSButton buttonWithTitle:NSLocalizedString(@"Change All", @"")
                                         target:self action:@selector(changeAll:)];
-    button.frame = NSMakeRect(307, 5, 116, 26);
+    button.frame = NSMakeRect(307, 45, 116, 26);
     button.autoresizingMask = NSViewMinXMargin;
     [accessory addSubview:button];
     [NSSpellChecker sharedSpellChecker].accessoryView = accessory;
@@ -250,6 +266,7 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     sReviewWord = nil;
     sReviewText = nil;
     sReplacementField.stringValue = @"";
+    sReplacementStatus.stringValue = @"";
     NSUInteger startMasked = [mask maskedIndexForOriginalIndex:NSMaxRange(tv.selectedRange)];
 
     // Look from the end of the selection, then wrap round to the top.

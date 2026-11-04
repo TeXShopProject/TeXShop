@@ -10,7 +10,7 @@ methods=methods.replace('TSTextView *weakView', 'ProbeView *weakView')
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import "TSSpellExclusions.h"
-@interface ProbeView:NSTextView { TSSpellMask *_spellMask; NSUInteger _spellMaskLength, _spellRulesGeneration; NSString *_spellMaskText; }
+@interface ProbeView:NSTextView { TSSpellMask *_spellMask; NSUInteger _spellMaskLength, _spellRulesGeneration; NSString *_spellMaskText; __weak NSTextStorage *_spellMaskStorage; }
 - (TSSpellMask *)spellMask;
 - (TSSpellMask *)freshSpellMask;
 - (void)invalidateSpellMask;
@@ -38,14 +38,27 @@ int main(int argc,char **argv) { @autoreleasepool {
  cached=[b spellMask].masked;fresh=[b freshSpellMask].masked;
  printf("rules reload seen by another view: cached=%s fresh=%s equal=%d\n",cached.UTF8String,fresh.UTF8String,[cached isEqualToString:fresh]);
  if(![cached isEqualToString:fresh]) return 3;
+ NSMutableString *large=[NSMutableString string];
+ while(large.length<1000000) [large appendString:@"ordinary text "];
+ [s.mutableString setString:large];[b spellMask];
+ CFAbsoluteTime start=CFAbsoluteTimeGetCurrent();
+ for(int i=0;i<120;i++) [b spellMask];
+ printf("120 cached checks / 1M characters: %.3f ms\n",(CFAbsoluteTimeGetCurrent()-start)*1000);
+ [s.mutableString replaceCharactersInRange:NSMakeRange(0,5) withString:@"other"];
+ cached=[b spellMask].masked;fresh=[b freshSpellMask].masked;
+ if(![cached isEqualToString:fresh]) return 4;
+ NSTextStorage *replacement=[[NSTextStorage alloc] initWithString:@"replacement"];
+ [b.layoutManager replaceTextStorage:replacement];
+ cached=[b spellMask].masked;fresh=[b freshSpellMask].masked;
+ if(![cached isEqualToString:fresh]) return 5;
  puts("PASS: shared text-storage edits and rule generations invalidate both caches.");
 }return 0;}
 '''.replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='ts-spell-review-') as td:
  p=Path(td);(p/'test.m').write_text(program);rules=p/'rules.txt';rules.write_text('command-names yes\nskip-args 1 label\n')
  subprocess.run(['xcrun','clang','-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),'-framework','Cocoa',str(p/'test.m'),str(root/'Sources/TSSpellExclusions.m'),'-o',str(p/'test')],check=True)
- subprocess.run([str(p/'test')],env=dict(os.environ,TSSPELL_RULES=str(rules),CFFIXED_USER_HOME=str(p/'home')),check=True)
+ subprocess.run([str(p/'test')],env=dict(os.environ,TSSPELL_RULES=str(rules)),check=True)
  subprocess.run(['xcrun','clang','-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),'-framework','Foundation',str(root/'Tests/SpellCheck/mask.m'),str(root/'Sources/TSSpellExclusions.m'),'-o',str(p/'mask')],check=True)
  result=subprocess.check_output([str(p/'mask'),str(root/'Resources/TeXShop/SpellCheck/SpellingExclusions.txt'),str(root/'Tests/SpellCheck/cases.tex')])
- assert result==(root/'Tests/SpellCheck/cases.expected.txt').read_bytes()
+ if result!=(root/'Tests/SpellCheck/cases.expected.txt').read_bytes(): raise SystemExit('FAIL: masking fixture')
  print('PASS: submitted masking-engine fixture')
