@@ -2570,7 +2570,7 @@ in other code when an external editor is being used. */
     sourceFileMonitor = [[TSFileChangeMonitor alloc] initWithPath:path reload:^BOOL {
         TSDocument *document = weakSelf;
         if (!document || ![document.fileURL.path.stringByStandardizingPath isEqualToString:path]) return YES;
-        if (document->sourceSaving || [document hasUnautosavedChanges]) return NO;
+        if (document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges]) return NO;
         NSError *error = nil;
         NSData *data = [NSData dataWithContentsOfURL:document.fileURL options:0 error:&error];
         if (!data) return NO;
