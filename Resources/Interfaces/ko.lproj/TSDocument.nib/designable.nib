@@ -1066,12 +1066,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="184">
                     <rect key="frame" x="831" y="52" width="71" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Tags" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="187" id="185">
+                    <popUpButtonCell key="cell" type="push" title="태그" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="187" id="185">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="186">
                             <items>
-                                <menuItem title="Tags" hidden="YES" id="187"/>
+                                <menuItem title="태그" hidden="YES" id="187"/>
                             </items>
                         </menu>
                     </popUpButtonCell>

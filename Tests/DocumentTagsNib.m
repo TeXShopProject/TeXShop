@@ -31,6 +31,8 @@ int main(int argc,char **argv) { @autoreleasepool {
   for(NSString *key in @[@"tags",@"stags"]) {
    NSPopUpButton *button=[owner valueForKey:key];
    if(!button) { fprintf(stderr,"Missing outlet %s\n",key.UTF8String); return 2; }
+   NSString *expected=@(getenv("TS_EXPECT_TAGS"));
+   if(![button.title isEqual:expected] || ![button.itemArray.firstObject.title isEqual:expected]) return 3;
    printf("%s %s title=%s first=%s\n",argv[i],key.UTF8String,button.title.UTF8String,button.itemArray.firstObject.title.UTF8String);
   }
   for(id object in objects) if([object isKindOfClass:NSWindow.class]) [object orderOut:nil];
