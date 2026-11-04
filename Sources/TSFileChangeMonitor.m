@@ -5,6 +5,26 @@
 #import <fcntl.h>
 #import <unistd.h>
 
+#import <CommonCrypto/CommonDigest.h>
+
+NSData *TSSourceFingerprint(NSData *data)
+{
+    if (!data) return nil;
+    CC_SHA256_CTX context;
+    CC_SHA256_Init(&context);
+    const unsigned char *bytes = data.bytes;
+    NSUInteger remaining = data.length;
+    while (remaining) {
+        CC_LONG count = (CC_LONG)MIN(remaining, (NSUInteger)UINT32_MAX);
+        CC_SHA256_Update(&context, bytes, count);
+        bytes += count;
+        remaining -= count;
+    }
+    unsigned char digest[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256_Final(digest, &context);
+    return [NSData dataWithBytes:digest length:sizeof(digest)];
+}
+
 static NSString *TSFileStamp(NSString *path)
 {
     struct stat s;

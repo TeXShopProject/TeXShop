@@ -381,6 +381,8 @@ enum RootCommand
 // end addition
 // ULRICH BAUER PATCH
    TSFileChangeMonitor *sourceFileMonitor; // added by Terada
+   NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData;
+   BOOL sourceSaving;
 // END PATCH
     
 // NSDate              *_pdfLastModDate;

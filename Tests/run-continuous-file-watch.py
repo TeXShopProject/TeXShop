@@ -13,7 +13,7 @@ watch_methods = s[a:b]
 a = s.index('- (BOOL)revertToContentsOfURL:')
 b = s.index('//ULRICH BAUER PATCH\n- (void)revertDocumentToSaved:', a)
 revert_method = s[a:b]
-assert s.index('[self watchFile:([self fileURL] ?: absoluteURL).path]') < s.index('myData = [NSData dataWithContentsOfURL:absoluteURL options:')
+assert s.index('[self watchFile:([self fileURL] ?: absoluteURL).path]') < s.index('myData = sourceReloadData ?: [NSData dataWithContentsOfURL:absoluteURL options:')
 assert '[self cancelWatchFile]' not in s[s.index('- (BOOL)writeToURL:'):s.index('// zenitani 2.10 (A) -- decode utf.sty', s.index('- (BOOL)writeToURL:'))]
 assert '[self cancelWatchFile]' in s[s.index('- (void)close\n'):s.index('[super close]', s.index('- (void)close\n'))]
 program = r'''
@@ -32,6 +32,8 @@ static void Write(NSString *path, NSString *mode, NSString *value) {
 }
 @interface TSDocument : NSDocument {
  TSFileChangeMonitor *sourceFileMonitor;
+ NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData;
+ BOOL sourceSaving;
  NSView *textView;
 }
 @property NSString *observed, *injectMode;
@@ -50,9 +52,10 @@ REVERT
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)type error:(NSError **)error {
  [self watchFile:(self.fileURL ?: url).path];
  if (self.failRead) return NO;
- NSData *data=[NSData dataWithContentsOfURL:url];
+ NSData *data=sourceReloadData ?: [NSData dataWithContentsOfURL:url];
  if (!data) return NO;
  if(self.injectMode) {NSString *mode=self.injectMode;self.injectMode=nil;Write(url.path,mode,@"complete");}
+ sourceAcceptedFingerprint=TSSourceFingerprint(data);
  self.observed=[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];self.reads++;
  return YES;
 }

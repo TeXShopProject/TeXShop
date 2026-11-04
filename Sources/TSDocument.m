@@ -2123,10 +2123,18 @@ in other code when an external editor is being used. */
 }
 
 
-// NOTE "data of Type" is actually never called!
+// Source serialization is also used by NSDocument safe saves.
     
 // - (NSData *)dataRepresentationOfType:(NSString *)aType {
-- (NSData *)dataOfType: (NSString *)typeName error: (NSError **)outError {
+// added by Terada: record exactly the bytes supplied to a successful safe save.
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
+{
+    NSData *data = [self serializedSourceOfType:typeName error:outError];
+    if (sourceSaving) sourceWrittenFingerprint = TSSourceFingerprint(data);
+    return data;
+}
+
+- (NSData *)serializedSourceOfType:(NSString *)typeName error:(NSError **)outError {
 	NSRange             encodingRange, newEncodingRange, myRange, theRange;
 	NSUInteger            length;
 	NSString            *encodingString, *text, *testString;
@@ -2562,9 +2570,17 @@ in other code when an external editor is being used. */
     sourceFileMonitor = [[TSFileChangeMonitor alloc] initWithPath:path reload:^BOOL {
         TSDocument *document = weakSelf;
         if (!document || ![document.fileURL.path.stringByStandardizingPath isEqualToString:path]) return YES;
-        if ([document hasUnautosavedChanges]) return NO;
+        if (document->sourceSaving || [document hasUnautosavedChanges]) return NO;
         NSError *error = nil;
-        return [document revertToContentsOfURL:document.fileURL ofType:document.fileType error:&error];
+        NSData *data = [NSData dataWithContentsOfURL:document.fileURL options:0 error:&error];
+        if (!data) return NO;
+        if ([TSSourceFingerprint(data) isEqual:document->sourceAcceptedFingerprint]) return YES;
+        // Revert consumes this exact snapshot. A later write remains queued in
+        // the monitor and cannot be mistaken for our own save or this read.
+        document->sourceReloadData = data;
+        BOOL result = [document revertToContentsOfURL:document.fileURL ofType:document.fileType error:&error];
+        document->sourceReloadData = nil;
+        return result;
     }];
 }
 
@@ -2578,6 +2594,27 @@ in other code when an external editor is being used. */
 {
     [super setFileURL:url];
     [self watchFile:url.isFileURL ? url.path : nil];
+}
+
+// added by Terada: never acknowledge the current disk state after saving;
+// another process may already have replaced it. Accept only our serialized bytes.
+- (BOOL)writeSafelyToURL:(NSURL *)url ofType:(NSString *)typeName
+      forSaveOperation:(NSSaveOperationType)operation error:(NSError **)error
+{
+    sourceSaving = YES;
+    sourceWrittenFingerprint = nil;
+    BOOL result = NO;
+    @try {
+        result = [super writeSafelyToURL:url ofType:typeName forSaveOperation:operation error:error];
+        if (result && (operation == NSSaveOperation || operation == NSSaveAsOperation ||
+                       operation == NSAutosaveInPlaceOperation)) {
+            sourceAcceptedFingerprint = sourceWrittenFingerprint;
+        }
+    } @finally {
+        sourceSaving = NO;
+        sourceWrittenFingerprint = nil;
+    }
+    return result;
 }
 
 //END PATCH
@@ -2643,7 +2680,7 @@ in other code when an external editor is being used. */
 		return YES;
 
     [self watchFile:([self fileURL] ?: absoluteURL).path]; // added by Terada: register before reading.
-	myData = [NSData dataWithContentsOfURL:absoluteURL options:0 error:outError];
+	myData = sourceReloadData ?: [NSData dataWithContentsOfURL:absoluteURL options:0 error:outError];
     if (!myData) return NO;
 	_encoding = _tempencoding = [self dataEncoding: myData];
     
@@ -2733,6 +2770,7 @@ in other code when an external editor is being used. */
 			}
 		
 		[[_textStorage mutableString] setString:content];
+        sourceAcceptedFingerprint = TSSourceFingerprint(myData); // added by Terada
 	
 		return YES;
 	}

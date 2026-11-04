@@ -8,3 +8,6 @@
 - (instancetype)initWithPath:(NSString *)path reload:(BOOL (^)(void))reload;
 - (void)stop;
 @end
+
+// added by Terada: fingerprint bytes already read or serialized, without polling content.
+FOUNDATION_EXPORT NSData *TSSourceFingerprint(NSData *data);
