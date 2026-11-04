@@ -36,6 +36,8 @@
 #import "CustomModalWindowController.h"
 #import "TSColorSupport.h"
 
+@class TSFileChangeMonitor; // added by Terada
+
 #define NUMBEROFERRORS	20
 
 /*" Symbolic constants for the default Typeset program to use. "*/
@@ -378,9 +380,7 @@ enum RootCommand
 
 // end addition
 // ULRICH BAUER PATCH
-   dispatch_source_t dispatch_source;
-   NSString *watchedFileSignature; // size and modification date of the file just before it was last read
-   NSUInteger watchReloadGeneration; // restarts the wait before an external change is reloaded
+   TSFileChangeMonitor *sourceFileMonitor; // added by Terada
 // END PATCH
     
 // NSDate              *_pdfLastModDate;

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = AABB05910000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		346FA9FD1309961900DAA25D /* TSLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 346FA9FB1309961900DAA25D /* TSLayoutManager.h */; };
 		346FA9FE1309961900DAA25D /* TSLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 346FA9FC1309961900DAA25D /* TSLayoutManager.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40008E6B055436A5005D78AB /* mptopdfwrap in Resources */ = {isa = PBXBuildFile; fileRef = 40008E6A055436A5005D78AB /* mptopdfwrap */; };
@@ -436,6 +437,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AABB05910000000000000003 /* TSFileChangeMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSFileChangeMonitor.h; sourceTree = "<group>"; };
+		AABB05910000000000000002 /* TSFileChangeMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSFileChangeMonitor.m; sourceTree = "<group>"; };
 		00CFF0E9000ACFC67F000001 /* TSConsoleWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSConsoleWindow.h; sourceTree = "<group>"; };
 		00CFF0EB000ACFFC7F000001 /* TSConsoleWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSConsoleWindow.m; sourceTree = "<group>"; };
 		00CFF0ED000AD0B87F000001 /* TSTextEditorWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSTextEditorWindow.h; sourceTree = "<group>"; };
@@ -1418,6 +1421,8 @@
 				40E76BF0292FDD0C00CBE5F9 /* CustomModalWindowController.m */,
 				2A37F4AEFDCFA73011CA2CEA /* TSDocument.h */,
 				407F694D11E65D4F00FD4359 /* TSDocument.m */,
+				AABB05910000000000000002 /* TSFileChangeMonitor.m */,
+				AABB05910000000000000003 /* TSFileChangeMonitor.h */,
 				403F25E90F20770F001031A0 /* TSDocument-Console.m */,
 				4011FC391C1F9DDB00470B7F /* TSDocument-FileAssociations.m */,
 				40770A9E195F1AB700A67050 /* TSDocument-Scrap.m */,
@@ -2078,6 +2083,7 @@
 				403F25EA0F20770F001031A0 /* TSDocument-Console.m in Sources */,
 				408B6DD10F3D516C0098CCED /* TSLogWindow.m in Sources */,
 				407F694E11E65D4F00FD4359 /* TSDocument.m in Sources */,
+				AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */,
 				40A56E1F11E67546002BEED6 /* TSStationery.m in Sources */,
 				346FA9FE1309961900DAA25D /* TSLayoutManager.m in Sources */,
 				40DE48221FDC4C04003E1D9A /* HideView.m in Sources */,
