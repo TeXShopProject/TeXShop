@@ -16,7 +16,7 @@ int main(int argc,char **argv) { @autoreleasepool {
         for(int page=0;page<25;page++) { @autoreleasepool {
             NSMutableData *pixels=[NSMutableData dataWithLength:2000*2000*3];arc4random_buf(pixels.mutableBytes,pixels.length);
             CGDataProviderRef provider=CGDataProviderCreateWithCFData((__bridge CFDataRef)pixels);
-            CGImageRef image=CGImageCreate(2000,2000,8,24,6000,rgb,kCGImageAlphaNone,provider,NULL,NO,kCGRenderingIntentDefault);
+            CGImageRef image=CGImageCreate(2000,2000,8,24,6000,rgb,(CGBitmapInfo)kCGImageAlphaNone,provider,NULL,NO,kCGRenderingIntentDefault);
             CGPDFContextBeginPage(pdf,NULL);CGContextDrawImage(pdf,box,image);CGPDFContextEndPage(pdf);
             CGImageRelease(image);CGDataProviderRelease(provider);
         }}
