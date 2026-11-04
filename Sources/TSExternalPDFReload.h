@@ -1,0 +1,75 @@
+// added by Terada: Stable PDF snapshots and page-relative viewport restoration.
+#import <Cocoa/Cocoa.h>
+#import <PDFKit/PDFKit.h>
+#include <sys/stat.h>
+
+static NSString *TSExternalPDFSignature(NSString *path)
+{
+    struct stat info;
+    if (!path || stat(path.fileSystemRepresentation, &info) || !S_ISREG(info.st_mode)) return nil;
+    return [NSString stringWithFormat:@"%@:%llu:%llu:%lld:%lld:%ld:%lld:%ld", path,
+            (unsigned long long)info.st_dev, (unsigned long long)info.st_ino,
+            (long long)info.st_size, (long long)info.st_mtimespec.tv_sec, info.st_mtimespec.tv_nsec,
+            (long long)info.st_ctimespec.tv_sec, info.st_ctimespec.tv_nsec];
+}
+
+static PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature)
+{
+    // A copied buffer decouples PDFKit's lazy parsing from subsequent writes to the file.
+    NSData *data = [NSData dataWithContentsOfFile:path options:0 error:NULL];
+    if (!data.length || ![signature isEqualToString:TSExternalPDFSignature(path)]) return nil;
+    NSData *end = [@"%%EOF" dataUsingEncoding:NSASCIIStringEncoding];
+    NSUInteger start = data.length > 1024 ? data.length - 1024 : 0;
+    NSRange marker = [data rangeOfData:end options:NSDataSearchBackwards range:NSMakeRange(start, data.length-start)];
+    if (marker.location == NSNotFound) return nil;
+    const unsigned char *bytes = data.bytes;
+    for (NSUInteger i = NSMaxRange(marker); i < data.length; i++)
+        if (bytes[i] != 0 && bytes[i] != 9 && bytes[i] != 10 && bytes[i] != 12 && bytes[i] != 13 && bytes[i] != 32)
+            return nil;
+    PDFDocument *document = [[PDFDocument alloc] initWithData:data];
+    if (!document.pageCount || document.isLocked) return nil;
+    return document;
+}
+
+typedef struct {
+    BOOL valid, autoScales;
+    NSUInteger pageIndex;
+    NSPoint pagePoint;
+    CGFloat scale;
+} TSExternalPDFPosition;
+
+static TSExternalPDFPosition TSExternalPDFCapture(PDFView *view)
+{
+    TSExternalPDFPosition position = {0};
+    NSClipView *clip = view.documentView.enclosingScrollView.contentView;
+    if (!view.document.pageCount || !clip || NSIsEmptyRect(clip.bounds)) return position;
+    NSPoint center = [view convertPoint:NSMakePoint(NSMidX(clip.bounds), NSMidY(clip.bounds)) fromView:clip];
+    PDFPage *page = [view pageForPoint:center nearest:YES];
+    if (!page) return position;
+    position.valid = YES;
+    position.pageIndex = [view.document indexForPage:page];
+    position.pagePoint = [view convertPoint:center toPage:page];
+    position.scale = view.scaleFactor;
+    position.autoScales = view.autoScales;
+    return position;
+}
+
+static void TSExternalPDFRestore(PDFView *view, TSExternalPDFPosition position)
+{
+    if (!position.valid || !view.document.pageCount) return;
+    if (view.autoScales != position.autoScales) view.autoScales = position.autoScales;
+    if (!position.autoScales) view.scaleFactor = position.scale;
+    PDFPage *page = [view.document pageAtIndex:MIN(position.pageIndex, view.document.pageCount-1)];
+    [view goToPage:page];
+    [view layoutDocumentView];
+    [view layoutSubtreeIfNeeded];
+    NSView *documentView = view.documentView;
+    NSScrollView *scroll = documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    NSPoint point = [documentView convertPoint:[view convertPoint:position.pagePoint fromPage:page] fromView:view];
+    NSRect target = clip.bounds;
+    target.origin = NSMakePoint(point.x-target.size.width/2, point.y-target.size.height/2);
+    target = [clip constrainBoundsRect:target];
+    [clip scrollToPoint:target.origin];
+    [scroll reflectScrolledClipView:clip];
+}

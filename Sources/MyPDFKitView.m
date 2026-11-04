@@ -41,6 +41,7 @@
 
 
 #import "MyPDFKitView.h"
+#import "TSExternalPDFReload.h" // added by Terada
 #import "MyPDFView.h"
 #import "globals.h"
 #import "TSDocument.h"
@@ -533,6 +534,7 @@
 - (void) showWithPath: (NSString *)imagePath
 {
 
+    NSString *loadedSignature = TSExternalPDFSignature(imagePath); // added by Terada
     PDFDocument	*pdfDoc;
 	NSData	*theData;
     PDFPage        *aPage;
@@ -550,7 +552,8 @@
 	mouseMode = [SUD integerForKey: PdfKitMouseModeKey];
 	
 	// if ([SUD boolForKey:ReleaseDocumentClassesKey]) {
-	if ([self doReleaseDocument]) {
+	// added by Terada: A watched PDF must survive an in-place overwrite of its file.
+	if ([self doReleaseDocument] && !self.myDocument.pdfRefreshTimer) {
 		pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
 		[self setDocument: pdfDoc];
 		// [pdfDoc release];
@@ -562,6 +565,7 @@
     
     
     
+    [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature]; // added by Terada
 	[self setup];
 	totalPages = [[self document] pageCount];
 	[totalPage setIntegerValue:totalPages];
@@ -1271,10 +1275,23 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 
 
 
-- (void) reShowWithPath: (NSString *)imagePath
+// added by Terada: External reloads supply one validated, immutable PDF snapshot.
+- (void)reShowWithPath:(NSString *)imagePath
+{
+    NSString *loadedSignature = TSExternalPDFSignature(imagePath);
+    PDFDocument *pdfDoc;
+    if ([self doReleaseDocument] && !self.myDocument.pdfRefreshTimer)
+        pdfDoc = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:imagePath]];
+    else
+        pdfDoc = [[PDFDocument alloc] initWithData:[NSData dataWithContentsOfFile:imagePath]];
+    [self reShowWithDocument:pdfDoc];
+    [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature];
+}
+
+- (void)reShowWithDocument:(PDFDocument *)pdfDoc
 {
     
-    PDFDocument            *pdfDoc, *oldDoc, *aDoc;
+    PDFDocument            *oldDoc, *aDoc;
     PDFPage                *aPage, *fixingPage;
     NSInteger            theindex, fixingindex;
     NSInteger           theindexold, totalpagesold;
@@ -1300,18 +1317,9 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
             _searchResults = NULL;
         }
         
-        if ([self doReleaseDocument]) {
-            pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
-            [self setDocument: pdfDoc];
-       } else {
-            oldDoc = [self document];
-            theData = [NSData dataWithContentsOfURL: [NSURL fileURLWithPath: imagePath]];
-            pdfDoc = [[PDFDocument alloc] initWithData: theData];
-            [self setDocument: pdfDoc];
-            if (oldDoc != NULL) {
-                [oldDoc setDelegate: NULL];
-            }
-        }
+        oldDoc = self.document;
+        [self setDocument:pdfDoc];
+        if (oldDoc != pdfDoc) oldDoc.delegate = nil;
 
         totalPages = [[self document] pageCount];
         [totalPage setIntegerValue:totalPages];
@@ -1354,50 +1362,7 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
         
     }
     
-    /*
-    
-    if (self.myPDFWindow.previewClosed) {
-         self.myPDFWindow.previewClosed = NO;
-        
-        if ([[self document] isFinding])
-            [[self document] cancelFindString];
-        if (_searchResults != NULL) {
-            [_searchResults removeAllObjects];
-            [_searchTable reloadData];
-            _searchResults = NULL;
-        }
-        
-        if ([self doReleaseDocument]) {
-            pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
-            [self setDocument: pdfDoc];
-       } else {
-            oldDoc = [self document];
-            theData = [NSData dataWithContentsOfURL: [NSURL fileURLWithPath: imagePath]];
-            pdfDoc = [[PDFDocument alloc] initWithData: theData];
-            [self setDocument: pdfDoc];
-            if (oldDoc != NULL) {
-                [oldDoc setDelegate: NULL];
-            }
-        }
 
-        totalPages = [[self document] pageCount];
-        [totalPage setIntegerValue:totalPages];
-        [stotalPage setIntegerValue:totalPages];
-        [totalPage1 setIntegerValue:totalPages];
-        [totalPage display];
-        [stotalPage display];
-        [totalPage1 display];
-        
-        if (self.sourceFiles != nil)
-            self.sourceFiles = nil;
-        
-        aPage = [[self document] pageAtIndex: 0];
-        [self goToPage: aPage];
-        
-        return;
-        
-    }
-     */
 
     
     theScale = [self scaleFactor];
@@ -1470,18 +1435,9 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
         [myView addSubview: self.myHideView1];
    }
 
-    if ([self doReleaseDocument]) {
-        pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
-        [self setDocument: pdfDoc];
-   } else {
-        oldDoc = [self document];
-        theData = [NSData dataWithContentsOfURL: [NSURL fileURLWithPath: imagePath]];
-        pdfDoc = [[PDFDocument alloc] initWithData: theData];
-        [self setDocument: pdfDoc];
-        if (oldDoc != NULL) {
-            [oldDoc setDelegate: NULL];
-        }
-    }
+    oldDoc = self.document;
+    [self setDocument:pdfDoc];
+    if (oldDoc != pdfDoc) oldDoc.delegate = nil;
     
   
 

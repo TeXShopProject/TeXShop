@@ -5,11 +5,12 @@ import subprocess, tempfile, sys
 root=Path(__file__).resolve().parents[1]
 s=(root/'Sources/MyPDFKitView.m').read_bytes().decode('utf-8', errors='replace')
 def method(signature):
-    start=s.index(signature);return s[start:s.index('\n}',start)+2]
-methods='\n'.join(method(x) for x in ['- (void) reShowWithPath:', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
+    start=s.rindex(signature);return s[start:s.index('\n}',start)+2]
+methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
+#import "TSExternalPDFReload.h"
 static BOOL atLeastHighSierra=YES,atLeastMojave=YES,BuggyHighSierra=NO;
 #define SUD NSUserDefaults.standardUserDefaults
 #define FlashFixKey @"flash"
@@ -38,8 +39,10 @@ static NSInteger screenUpdates=0;
 @property NSInteger stringWindowAlignment;
 @property NSInteger numberingCorrection;
 @property TestWindow *pdfKitWindow;
+@property NSTimer *pdfRefreshTimer;
 @end
 @implementation TestDocument
+- (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature {}
 @end
 @interface RecoveryView:PDFView {
     BOOL _editMode,protectFind,downOverLink,showSync,fromTypesetOrQuit,firstTimeSave;
@@ -71,6 +74,7 @@ static NSInteger screenUpdates=0;
 -(void)fixWhiteDisplay;
 -(NSImage*)screenCacheImageForView:(NSView*)v;
 -(void)reShowWithPath:(NSString*)path;
+-(void)reShowWithDocument:(PDFDocument*)document;
 -(void)prepareSecond;
 -(void)reShowForSecond;
 @end
