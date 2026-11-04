@@ -442,7 +442,6 @@
 		ED0C00000000000000000004 = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/DockIcons; sourceTree = SOURCE_ROOT; };
 		ED0C00000000000000000006 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSDockIcon.h; sourceTree = SOURCE_ROOT; };
 		ED0C00000000000000000007 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSDockIconController.h; sourceTree = SOURCE_ROOT; };
-		ED0C00000000000000000008 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/DockIconPlugin/TSDockIconPlugin.m; sourceTree = SOURCE_ROOT; };
 		00CFF0E9000ACFC67F000001 /* TSConsoleWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSConsoleWindow.h; sourceTree = "<group>"; };
 		00CFF0EB000ACFFC7F000001 /* TSConsoleWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSConsoleWindow.m; sourceTree = "<group>"; };
 		00CFF0ED000AD0B87F000001 /* TSTextEditorWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSTextEditorWindow.h; sourceTree = "<group>"; };
@@ -1401,7 +1400,6 @@
 				ED0C00000000000000000002,
 				ED0C00000000000000000006,
 				ED0C00000000000000000007,
-				ED0C00000000000000000008,
 				2A37F4ABFDCFA73011CA2CEA /* classes */,
 				52F59A6A08A4E6A000D66FBB /* Document Classes */,
 				52F59AB708A4EA4F00D66FBB /* Text */,
@@ -1703,7 +1701,6 @@
 				407881770519249A006979EA /* Sources */,
 				407881910519249A006979EA /* Frameworks */,
 				407881940519249A006979EA /* Rez */,
-				ED0C00000000000000000005 /* Dock Icon Plug-in */,
 				40C894C306080105000B55B4 /* CopyFiles */,
 				522BC4C20A2A007A007CAB82 /* CopyFiles */,
 				40C889D10F1A803E00B5B8A9 /* CopyFiles */,
@@ -2028,17 +2025,6 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-        ED0C00000000000000000005 /* Dock Icon Plug-in */ = {
-            isa = PBXShellScriptBuildPhase;
-            buildActionMask = 2147483647;
-            files = ();
-            inputPaths = ("$(SRCROOT)/Sources/DockIconPlugin/TSDockIconPlugin.m", "$(SRCROOT)/Sources/TSDockIcon.h", "$(SRCROOT)/Scripts/build-dock-icon-plugin.sh");
-            outputPaths = ("$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/PlugIns/TeXShopDockIcon.docktileplugin/Contents/MacOS/TeXShopDockIcon", "$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/PlugIns/TeXShopDockIcon.docktileplugin/Contents/Info.plist");
-            name = "Dock Icon Plug-in";
-            runOnlyForDeploymentPostprocessing = 0;
-            shellPath = /bin/sh;
-            shellScript = "sh \"$SRCROOT/Scripts/build-dock-icon-plugin.sh\"";
-        };
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */

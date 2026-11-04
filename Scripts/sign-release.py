@@ -20,7 +20,7 @@ for directory, folders, files in os.walk(app, followlinks=False):
     base = Path(directory)
     for name in folders:
         p = base / name
-        if not p.is_symlink() and p.suffix in {'.app', '.xpc', '.framework', '.mdimporter', '.docktileplugin'}:
+        if not p.is_symlink() and p.suffix in {'.app', '.xpc', '.framework', '.mdimporter'}:
             paths.add(p)
     for name in files:
         p = base / name

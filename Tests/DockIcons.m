@@ -1,4 +1,4 @@
-// added by Terada: Isolated native preference and Dock plug-in checks.
+// added by Terada: Isolated native preference and running-app Dock checks.
 #import <Cocoa/Cocoa.h>
 #import "../Sources/TSDockIconController.h"
 #import "../Sources/TSDockIcon.h"
@@ -32,6 +32,7 @@ static void Require(BOOL condition, NSString *message) { if (!condition) { NSLog
 - (void)cancel:(id)sender { [self.controller cancelEditing]; [NSApp terminate:nil]; }
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)app { return YES; }
 @end
+#import "PreferenceCancel.h"
 int main(int argc,char **argv) { @autoreleasepool {
     [NSApplication sharedApplication];
     NSString *domain = NSBundle.mainBundle.bundleIdentifier;
@@ -90,50 +91,21 @@ int main(int argc,char **argv) { @autoreleasepool {
         }
         [buttons[0] performClick:nil]; [controller cancelEditing];
         Require([[defaults stringForKey:TSDockIconKey] isEqual:@"current"] && NSApp.dockTile.contentView == nil, @"Cancel preserves saved icon");
-        // Match Preferences' undo-before-cancel order after restoring defaults.
-        [defaults setObject:@"round" forKey:TSDockIconKey];
-        [controller beginEditing];
-        [defaults removeObjectForKey:TSDockIconKey];
-        [controller restoreSavedIcon];
-        Require(NSApp.dockTile.contentView == nil, @"Reset previews the default");
-        [defaults setObject:@"round" forKey:TSDockIconKey]; // Preferences undo
-        [controller cancelEditing];
-        Require([[controller valueForKey:@"selection"] isEqual:@"round"] && NSApp.dockTile.contentView != nil, @"Cancel restores the undone saved preference");
         [defaults setObject:@"current" forKey:TSDockIconKey];
         [controller beginEditing]; [buttons[2] performClick:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowWillCloseNotification object:window];
         Require(NSApp.dockTile.contentView == nil, @"Window-close cancels preview");
         [defaults setObject:@"invalid-style" forKey:TSDockIconKey]; [controller restoreSavedIcon];
         Require(NSApp.dockTile.contentView == nil, @"Unknown preference falls back");
-        NSBundle *plugin = [NSBundle bundleWithPath:[bundle.builtInPlugInsPath stringByAppendingPathComponent:@"TeXShopDockIcon.docktileplugin"]];
-        id<NSDockTilePlugIn> instance = [[plugin.principalClass alloc] init];
-        Require(instance != nil, @"Load real compiled plug-in");
+        Require([bundle objectForInfoDictionaryKey:@"NSDockTilePlugIn"] == nil, @"No resident Dock plug-in");
         DockProbe *probe = [DockProbe new]; probe.size = NSMakeSize(128,128); probe.badgeLabel = @"7";
-        for (NSString *name in TSDockIconNames()) {
-            [defaults setObject:name forKey:TSDockIconKey]; [defaults synchronize];
-            [instance setDockTile:(id)probe];
-            Require((probe.contentView != nil) == ![name isEqual:@"current"], @"Plug-in reads application domain, not Dock defaults");
-            [instance setDockTile:nil];
-        }
-        [defaults setObject:@"round" forKey:TSDockIconKey]; [defaults synchronize];
-        [instance setDockTile:(id)probe];
-        [defaults setObject:@"current" forKey:TSDockIconKey]; [defaults synchronize];
-        [[NSDistributedNotificationCenter defaultCenter] postNotificationName:TSDockIconChanged object:domain userInfo:nil deliverImmediately:YES];
-        NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:2];
-        while (probe.contentView && deadline.timeIntervalSinceNow > 0)
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
-        Require(probe.contentView == nil, @"Plug-in receives saved selection notification");
-        // Simulate Sparkle removing the original installation after loading.
-        [defaults setObject:@"round" forKey:TSDockIconKey]; [defaults synchronize];
-        NSString *images=[bundle.resourcePath stringByAppendingPathComponent:@"DockIcons"];
-        NSString *moved=[images stringByAppendingString:@".moved"];
-        Require([[NSFileManager defaultManager] moveItemAtPath:images toPath:moved error:NULL], @"Temporarily remove icon source");
-        [instance performSelector:@selector(refresh:) withObject:nil];
-        Require(probe.contentView != nil, @"Cached image survives removed original bundle resources");
-        Require([[NSFileManager defaultManager] moveItemAtPath:moved toPath:images error:NULL], @"Restore test resources");
-        [instance setDockTile:nil];
+        TSApplyDockIcon((id)probe,bundle,@"round");
+        Require(probe.contentView != nil && [probe.badgeLabel isEqual:@"7"], @"Custom drawing does not alter badges");
+        TSApplyDockIcon((id)probe,bundle,@"current");
+        Require(probe.contentView == nil && [probe.badgeLabel isEqual:@"7"], @"Reset does not alter badges");
+        CheckPreferenceCancel();
         [defaults removePersistentDomainForName:domain];
-        puts("PASS: nib, five assets, preview, save, restore, cancel, close, fallback, plug-in lifecycle and shared preference domain");
+        puts("PASS: nib, five assets, preview, save, restore, cancel, close, fallback, badge property and production Cancel prefix");
         return 0;
     }
     if (snapshot) {

@@ -3,7 +3,6 @@
 #import <Cocoa/Cocoa.h>
 
 static NSString * const TSDockIconKey = @"DockIconStyle";
-static NSString * const TSDockIconChanged = @"TeXShopDockIconChanged";
 static NSArray<NSString *> *TSDockIconNames(void) {
     return @[@"original", @"triangle", @"retina", @"round", @"current"];
 }

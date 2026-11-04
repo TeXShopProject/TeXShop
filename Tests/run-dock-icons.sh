@@ -8,9 +8,13 @@ domain="org.texshop.DockLab.$(basename "$build" | tr . -)"
 cleanup() {
     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$app" >/dev/null 2>&1 || true
     defaults delete "$domain" >/dev/null 2>&1 || true
+    rm -f "$HOME/Library/Preferences/$domain.plist"
     rm -rf "$build"
 }
-trap cleanup EXIT HUP INT TERM
+trap cleanup EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp -R "$root/Resources/DockIcons" "$app/Contents/Resources/"
 cp "$root/Artwork/TeXShop.icns" "$app/Contents/Resources/TeXShop.icns"
@@ -23,12 +27,10 @@ cat > "$app/Contents/Info.plist" <<PLIST
 <key>CFBundleName</key><string>DockLab</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleIconFile</key><string>TeXShop</string>
-<key>NSDockTilePlugIn</key><string>TeXShopDockIcon.docktileplugin</string>
 </dict></plist>
 PLIST
-xcrun clang -fobjc-arc -fmodules -framework Cocoa "$root/Tests/DockIcons.m" "$root/Sources/TSDockIconController.m" -o "$app/Contents/MacOS/DockLab"
-SRCROOT="$root" TARGET_BUILD_DIR="$build" CONTENTS_FOLDER_PATH=DockLab.app/Contents TARGET_TEMP_DIR="$build/intermediate" ARCHS="$(uname -m)" SDKROOT="$(xcrun --show-sdk-path)" MACOSX_DEPLOYMENT_TARGET=14.6 sh "$root/Scripts/build-dock-icon-plugin.sh"
-codesign --force --sign - "$app/Contents/PlugIns/TeXShopDockIcon.docktileplugin"
+python3 "$root/Tests/extract-dock-preferences.py" "$build/PreferenceCancel.h"
+xcrun clang -I"$build" -fobjc-arc -fmodules -framework Cocoa "$root/Tests/DockIcons.m" "$root/Sources/TSDockIconController.m" -o "$app/Contents/MacOS/DockLab"
 codesign --force --sign - "$app"
 if [ "${1:-}" = --snapshot ]; then
     "$app/Contents/MacOS/DockLab" "$root/Resources/Interfaces/${2:-ja}.lproj/Preferences.nib" --snapshot "$3" -AppleLanguages "(${2:-ja})"

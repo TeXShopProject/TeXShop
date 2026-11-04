@@ -60,6 +60,7 @@
     NSBox *group = [[NSBox alloc] initWithFrame:NSMakeRect(NSMinX(lower), bottom, width, height)];
     group.title = [self text:@"Dock Icon"];
     group.identifier = @"DockIconChoices";
+    group.toolTip = [self text:@"Applies while TeXShop is running. The standard icon returns after quitting."];
     group.autoresizingMask = NSViewMinYMargin;
     [themes addSubview:group];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesClosed:) name:NSWindowWillCloseNotification object:tabs.window];
@@ -70,7 +71,7 @@
     for (NSInteger index = 0; index < 5; index++) {
         CGFloat center = (index + 0.5) * cellWidth;
         NSString *label = [self text:titles[index]];
-        NSString *tip = [NSString stringWithFormat:@"%@ — %@", label, [self text:details[index]]];
+        NSString *tip = [NSString stringWithFormat:@"%@ — %@\n%@", label, [self text:details[index]], group.toolTip];
         NSButton *button = [NSButton radioButtonWithTitle:@"" target:self action:@selector(chooseIcon:)];
         button.tag = index;
         button.frame = NSMakeRect(center - 10, 3, 20, 22);
@@ -92,7 +93,6 @@
     if (!self.editing) return;
     [self.defaults setObject:self.selection forKey:TSDockIconKey];
     [self.defaults synchronize];
-    [[NSDistributedNotificationCenter defaultCenter] postNotificationName:TSDockIconChanged object:self.bundle.bundleIdentifier userInfo:nil deliverImmediately:YES];
     self.editing = NO;
 }
 - (void)cancelEditing { self.editing = NO; [self restoreSavedIcon]; }
