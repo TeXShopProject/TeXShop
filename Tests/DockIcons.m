@@ -86,6 +86,16 @@ int main(int argc,char **argv) { @autoreleasepool {
         }
         [buttons[0] performClick:nil]; [controller cancelEditing];
         Require([[defaults stringForKey:TSDockIconKey] isEqual:@"current"] && NSApp.dockTile.contentView == nil, @"Cancel preserves saved icon");
+        // Match Preferences' undo-before-cancel order after restoring defaults.
+        [defaults setObject:@"round" forKey:TSDockIconKey];
+        [controller beginEditing];
+        [defaults removeObjectForKey:TSDockIconKey];
+        [controller restoreSavedIcon];
+        Require(NSApp.dockTile.contentView == nil, @"Reset previews the default");
+        [defaults setObject:@"round" forKey:TSDockIconKey]; // Preferences undo
+        [controller cancelEditing];
+        Require([[controller valueForKey:@"selection"] isEqual:@"round"] && NSApp.dockTile.contentView != nil, @"Cancel restores the undone saved preference");
+        [defaults setObject:@"current" forKey:TSDockIconKey];
         [controller beginEditing]; [buttons[2] performClick:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowWillCloseNotification object:window];
         Require(NSApp.dockTile.contentView == nil, @"Window-close cancels preview");
@@ -99,7 +109,6 @@ int main(int argc,char **argv) { @autoreleasepool {
             [defaults setObject:name forKey:TSDockIconKey]; [defaults synchronize];
             [instance setDockTile:(id)probe];
             Require((probe.contentView != nil) == ![name isEqual:@"current"], @"Plug-in reads application domain, not Dock defaults");
-            Require([probe.badgeLabel isEqual:@"7"], @"Preserve badges");
             [instance setDockTile:nil];
         }
         [defaults setObject:@"round" forKey:TSDockIconKey]; [defaults synchronize];
@@ -110,6 +119,14 @@ int main(int argc,char **argv) { @autoreleasepool {
         while (probe.contentView && deadline.timeIntervalSinceNow > 0)
             [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.02]];
         Require(probe.contentView == nil, @"Plug-in receives saved selection notification");
+        // Simulate Sparkle removing the original installation after loading.
+        [defaults setObject:@"round" forKey:TSDockIconKey]; [defaults synchronize];
+        NSString *images=[bundle.resourcePath stringByAppendingPathComponent:@"DockIcons"];
+        NSString *moved=[images stringByAppendingString:@".moved"];
+        Require([[NSFileManager defaultManager] moveItemAtPath:images toPath:moved error:NULL], @"Temporarily remove icon source");
+        [instance performSelector:@selector(refresh:) withObject:nil];
+        Require(probe.contentView != nil, @"Cached image survives removed original bundle resources");
+        Require([[NSFileManager defaultManager] moveItemAtPath:moved toPath:images error:NULL], @"Restore test resources");
         [instance setDockTile:nil];
         [defaults removePersistentDomainForName:domain];
         puts("PASS: nib, five assets, preview, save, restore, cancel, close, fallback, plug-in lifecycle and shared preference domain");

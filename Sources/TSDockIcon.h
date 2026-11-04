@@ -14,11 +14,8 @@ static NSImage *TSDockIconImage(NSBundle *bundle, NSString *name) {
     NSString *path = [bundle pathForResource:TSDockIconName(name) ofType:@"png" inDirectory:@"DockIcons"];
     return path ? [[NSImage alloc] initWithContentsOfFile:path] : nil;
 }
-static void TSApplyDockIcon(NSDockTile *tile, NSBundle *bundle, NSString *name) {
+static void TSApplyDockImage(NSDockTile *tile, NSImage *image) {
     if (!tile) return;
-    name = TSDockIconName(name);
-    // Returning to the bundled icon restores the system's normal rendering.
-    NSImage *image = [name isEqualToString:@"current"] ? nil : TSDockIconImage(bundle, name);
     if (image) {
         NSImageView *view = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, tile.size.width, tile.size.height)];
         view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
@@ -29,4 +26,9 @@ static void TSApplyDockIcon(NSDockTile *tile, NSBundle *bundle, NSString *name) 
         tile.contentView = nil;
     }
     [tile display];
+}
+
+static void TSApplyDockIcon(NSDockTile *tile, NSBundle *bundle, NSString *name) {
+    name = TSDockIconName(name);
+    TSApplyDockImage(tile, [name isEqualToString:@"current"] ? nil : TSDockIconImage(bundle, name));
 }

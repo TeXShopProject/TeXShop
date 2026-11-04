@@ -4,14 +4,22 @@ set -eu
 root=$(cd "$(dirname "$0")/.." && pwd)
 build=$(mktemp -d /tmp/TeXShop-DockLab.XXXXXX)
 app="$build/DockLab.app"
+domain="org.texshop.DockLab.$(basename "$build" | tr . -)"
+cleanup() {
+    /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$app" >/dev/null 2>&1 || true
+    defaults delete "$domain" >/dev/null 2>&1 || true
+    rm -rf "$build"
+}
+trap cleanup EXIT HUP INT TERM
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp -R "$root/Resources/DockIcons" "$app/Contents/Resources/"
 cp "$root/Artwork/TeXShop.icns" "$app/Contents/Resources/TeXShop.icns"
-cat > "$app/Contents/Info.plist" <<'PLIST'
+cat > "$app/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0"><dict>
-<key>CFBundleIdentifier</key><string>org.texshop.DockLab</string>
+<key>CFBundleIdentifier</key><string>$domain</string>
 <key>CFBundleExecutable</key><string>DockLab</string>
+<key>LSUIElement</key><true/>
 <key>CFBundleName</key><string>DockLab</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleIconFile</key><string>TeXShop</string>

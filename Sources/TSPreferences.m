@@ -2272,11 +2272,11 @@ A tag of 0 means "no", a tag of 1 means "yes".
 "*/
 - (IBAction)cancelButtonPressed:sender
 {
-    [[TSDockIconController sharedController] cancelEditing];
     [self cancelForColor];
     // undo everyting
 	[_undoManager endUndoGrouping];
 	[_undoManager undo];
+    [[TSDockIconController sharedController] cancelEditing];
 
      [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] setHidden:( ![SUD boolForKey:TagMenuInMenuBarKey])];
 	// close the window
