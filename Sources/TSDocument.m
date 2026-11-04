@@ -72,6 +72,10 @@
 @property (copy) NSString *externalPDFLoadedSignature;
 @property (copy) NSString *externalPDFPendingSignature;
 @property (copy) NSString *externalPDFFailedSignature;
+@property NSTimeInterval externalPDFFailedRetryTime;
+@property BOOL externalPDFObservationClosed;
+- (void)configureExternalPDFObservation;
+- (void)stopExternalPDFObservation;
 - (BOOL)externalPDFObservationEnabled;
 - (void)externalPDFSettingsChanged:(NSNotification *)notification;
 - (NSString *)externalPDFPath;
@@ -1520,11 +1524,6 @@ if (! skipTextWindow) {
     
     
 	[pdfView setImageType: self.documentType];
-    // added by Terada: Also observe PDFs belonging to the built-in source editor.
-    if (fileIsTex || [fileExtension.lowercaseString isEqualToString:@"pdf"])
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(externalPDFSettingsChanged:)
-                                                 name:NSUserDefaultsDidChangeNotification object:SUD];
-    [self startExternalPDFObservation];
 
 	if (!fileIsTex) {
 		imageFound = NO;
@@ -1542,6 +1541,7 @@ if (! skipTextWindow) {
 			// [pdfWindow setRepresentedFilename: [self fileName]]; //mitsu July4;
 			// supposed to allow command click of window title to lead to file, but doesn't
 			self.documentType = isPDF;
+            [self configureExternalPDFObservation];
 		} else if (([fileExtension isEqualToString: @"jpg"]) ||
 				 ([fileExtension isEqualToString: @"jpeg"]) ||
 				 ([fileExtension isEqualToString: @"JPG"])) {
@@ -1706,6 +1706,7 @@ if (! skipTextWindow) {
 		return;
 	if ([self checkRootFile_forTask: RootForOpening])
 		return;
+    [self configureExternalPDFObservation];
 
  
     
@@ -2982,6 +2983,7 @@ else {
 
 - (void)close
 {
+    [self stopExternalPDFObservation];
     if (self.annotationsExist)
         {
         self.annotationsExist = NO;
@@ -7079,9 +7081,34 @@ if (! useFullSplitWindow) {
 // PDF-only documents additionally retain the PdfFileRefresh opt-out.
 - (BOOL)externalPDFObservationEnabled
 {
+    if (self.externalPDFObservationClosed ||
+        (self.documentType != isTeX && self.documentType != isPDF)) return NO;
     id override = [SUD objectForKey:@"AutoReloadExternalPDF"];
     return [SUD boolForKey:PdfRefreshKey] && (!override || [override boolValue]) &&
         (self.documentType != isPDF || [SUD boolForKey:PdfFileRefreshKey]);
+}
+
+// added by Terada: Register only after the document kind and root are resolved.
+- (void)configureExternalPDFObservation
+{
+    if (self.externalPDFObservationClosed ||
+        (self.documentType != isTeX && self.documentType != isPDF)) return;
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+        name:NSUserDefaultsDidChangeNotification object:SUD];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(externalPDFSettingsChanged:)
+        name:NSUserDefaultsDidChangeNotification object:SUD];
+    [self startExternalPDFObservation];
+}
+
+- (void)stopExternalPDFObservation
+{
+    self.externalPDFObservationClosed = YES;
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+        name:NSUserDefaultsDidChangeNotification object:SUD];
+    [self.pdfRefreshTimer invalidate];
+    self.pdfRefreshTimer = nil;
+    if (self.pdfActivity) [[NSProcessInfo processInfo] endActivity:self.pdfActivity];
+    self.pdfActivity = nil;
 }
 
 - (void)externalPDFSettingsChanged:(NSNotification *)notification
@@ -7103,7 +7130,7 @@ if (! useFullSplitWindow) {
     if (![self externalPDFObservationEnabled]) return;
     if (!self.externalPDFLoadedSignature)
         self.externalPDFLoadedSignature = TSExternalPDFSignature([self externalPDFPath]);
-    self.pdfActivity = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiated
+    self.pdfActivity = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiatedAllowingIdleSystemSleep
                                                                    reason:@"Watch externally updated PDF"];
     __weak TSDocument *weakSelf = self;
     NSTimeInterval interval = MAX(0.5, [SUD doubleForKey:RefreshTimeKey]);
@@ -7136,7 +7163,8 @@ if (! useFullSplitWindow) {
     NSString *path = [self externalPDFPath];
     NSString *signature = TSExternalPDFSignature(path);
     if (!signature || [signature isEqualToString:self.externalPDFLoadedSignature] ||
-        [signature isEqualToString:self.externalPDFFailedSignature]) {
+        ([signature isEqualToString:self.externalPDFFailedSignature] &&
+         NSDate.timeIntervalSinceReferenceDate < self.externalPDFFailedRetryTime)) {
         self.externalPDFPendingSignature = nil;
         return;
     }
@@ -7147,9 +7175,10 @@ if (! useFullSplitWindow) {
     }
     PDFDocument *replacement = TSExternalPDFSnapshot(path, signature);
     if (!replacement) {
-        // Keep the last valid display. Retry only after another file change,
-        // never parse an unchanged invalid/locked PDF on every timer tick.
+        // Back off repeated invalid files, but retry even when coarse filesystem
+        // timestamps cannot distinguish a completed write from its partial file.
         self.externalPDFFailedSignature = signature;
+        self.externalPDFFailedRetryTime = NSDate.timeIntervalSinceReferenceDate + 30;
         return;
     }
     self.externalPDFFailedSignature = nil;
@@ -7167,7 +7196,10 @@ if (! useFullSplitWindow) {
     self.externalPDFPendingSignature = nil;
     self.pdfLastModDate = [[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL]
                           objectForKey:NSFileModificationDate];
-    if (!_externalEditor && self.documentType != isPDF) [self allocateSyncScanner];
+    if (!_externalEditor && self.documentType != isPDF) {
+        if (self.useOldSyncParser) [self allocateSyncScannerOld];
+        else if (!self.useConTeXtSyncParser) [self allocateSyncScanner];
+    }
     [self.pdfKitWindow setRepresentedFilename:path];
     [self.pdfKitWindow setTitle:path.lastPathComponent];
     [self fillLogWindowIfVisible];

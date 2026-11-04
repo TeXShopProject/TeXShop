@@ -13,18 +13,7 @@ static inline NSString *TSExternalPDFSignature(NSString *path)
             (long long)info.st_ctimespec.tv_sec, info.st_ctimespec.tv_nsec];
 }
 
-static inline PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature)
-{
-    // A copied buffer decouples PDFKit's lazy parsing from subsequent writes to the file.
-    NSData *data = [NSData dataWithContentsOfFile:path options:0 error:NULL];
-    if (!data.length || ![signature isEqualToString:TSExternalPDFSignature(path)]) return nil;
-    // PDFKit also accepts files with trailing padding or no final EOF marker.
-    // Stable metadata and a successful parse, not a stricter home-grown parser,
-    // determine whether a replacement is usable.
-    PDFDocument *document = [[PDFDocument alloc] initWithData:data];
-    if (!document.pageCount || document.isLocked) return nil;
-    return document;
-}
+PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature);
 
 typedef struct {
     BOOL valid, autoScales;

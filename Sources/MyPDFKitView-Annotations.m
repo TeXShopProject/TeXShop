@@ -1024,19 +1024,6 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
     filePath = [[self.myDocument fileURL] path];
     theExtension = [filePath pathExtension];
     
-    if (
-        ([theExtension isEqualToString:@"pdf"]) ||
-        ([theExtension isEqualToString:@"tex"]) ||
-        ([theExtension isEqualToString:@"ltx"]) ||
-        ([theExtension isEqualToString:@"lua"]) ||
-        ([theExtension isEqualToString:@"ctx"])
-        )
-        ;
-    else
-        return;
-    
-    
-    
     // now we bring up the panel
     
     
@@ -1101,7 +1088,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
             [alert setMessageText:NSLocalizedString(@"PDF File Has No Annotations",@"PDF File Has No Annotations")];
             [alert setAlertStyle:NSAlertStyleInformational];
             if ([alert runModal] == NSAlertFirstButtonReturn) {
-                // OK clicked, delete the record
+                self.myDocument.annotationsExist = NO;
                 return;
             }
         }
@@ -1111,7 +1098,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
         {
             if ([panel runModal] == NSModalResponseOK)
             {
-                if ([theDocument writeToURL:[panel URL]] && doFullSave)
+                if ([theDocument writeToURL:[panel URL]])
                     self.myDocument.annotationsExist = NO;
                 nameValue = [panel nameFieldStringValue];
                 locationURL = [panel directoryURL];

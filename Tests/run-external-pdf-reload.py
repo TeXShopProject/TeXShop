@@ -15,7 +15,7 @@ methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reSh
 fixture=fixture.replace('METHODS',methods)
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (BOOL)isVisible { return YES; }\n- (void)makeKeyAndOrderFront:(id)sender {}')
 s=(root/'Sources/TSDocument.m').read_text()
-controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)refreshPDFWindow:'])
+controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)configureExternalPDFObservation','- (void)stopExternalPDFObservation','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)refreshPDFWindow:'])
 controller=controller.replace('TSExternalPDFSnapshot(', 'CountedSnapshot(')
 program=fixture+r'''
 #import "TSExternalPDFReload.h"
@@ -24,6 +24,7 @@ static PDFDocument *CountedSnapshot(NSString *p, NSString *s) { snapshotCount++;
 #define PdfRefreshKey @"PdfRefresh"
 #define PdfFileRefreshKey @"PdfFileRefresh"
 #define isPDF 2
+#define isTeX 0
 #define RefreshTimeKey @"RefreshTime"
 #define BringPdfFrontOnAutomaticUpdateKey @"BringPdfFrontOnAutomaticUpdate"
 @interface TSDocument:NSObject { @public BOOL taskDone,_externalEditor,PDFfromKit; }
@@ -31,17 +32,20 @@ static PDFDocument *CountedSnapshot(NSString *p, NSString *s) { snapshotCount++;
 @property RecoveryView *myPDFKitView,*myPDFKitView2;
 @property TestWindow *pdfKitWindow;
 @property NSTask *texTask;
-@property BOOL annotationsExist;
+@property BOOL annotationsExist, useOldSyncParser, useConTeXtSyncParser;
 @property NSInteger documentType;
 @property NSString *externalPDFLoadedSignature,*externalPDFPendingSignature;
 @property NSTimer *pdfRefreshTimer;
 @property NSDate *pdfLastModDate;
 @property id pdfActivity;
 @property NSString *externalPDFFailedSignature;
+@property NSTimeInterval externalPDFFailedRetryTime;
+@property BOOL externalPDFObservationClosed;
 - (void)refreshPDFWindow:(NSTimer*)timer;
 @end
 @implementation TSDocument
 - (void)allocateSyncScanner {}
+- (void)allocateSyncScannerOld {}
 - (void)fillLogWindowIfVisible {}
 CONTROLLER
 @end
@@ -84,7 +88,11 @@ int main(int argc,char **argv){@autoreleasepool{
  [SUD setVolatileDomain:@{@"PdfRefresh":@NO} forName:NSArgumentDomain];
  [d startExternalPDFObservation];Check(d.pdfRefreshTimer==nil && d.pdfActivity==nil,@"Disabled observation has no timer/activity");
  [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@NO,@"RefreshTime":@0.5} forName:NSArgumentDomain];
- d.documentType=isPDF; Check(![d externalPDFObservationEnabled],@"PDF-only opt-out respected");
+ d.documentType=isPDF; [d configureExternalPDFObservation];
+ Check(!d.pdfRefreshTimer && !d.pdfActivity,@"PDF-only opt-out prevents startup");
+ d.documentType=3;[d configureExternalPDFObservation];[d startExternalPDFObservation];
+ Check(!d.pdfRefreshTimer && !d.pdfActivity,@"Image document cannot observe a sibling PDF");
+ d.documentType=isPDF;
  [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} forName:NSArgumentDomain];
  [d startExternalPDFObservation];Check([[d externalPDFPath]isEqualToString:path],@"Uppercase PDF path");
  [d.pdfRefreshTimer invalidate];
@@ -125,12 +133,15 @@ int main(int argc,char **argv){@autoreleasepool{
  old=d.myPDFKitView.document;[d notePDFLoadedAtPath:path signature:TSExternalPDFSignature(path)];
  StablePoll(d);Check(d.myPDFKitView.document==old,@"Do not repeat an acknowledged application reload");
  Check(screenUpdates==0,@"Screen updates balanced");
- if(d.pdfActivity) [[NSProcessInfo processInfo] endActivity:d.pdfActivity];
+ [d stopExternalPDFObservation];
+ [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:SUD];
+ [d externalPDFSettingsChanged:nil];[d configureExternalPDFObservation];
+ Check(!d.pdfRefreshTimer && !d.pdfActivity,@"Closed document cannot restart observation");
  [window close];printf("PASS autoScale=%d mode=%ld: viewport, zoom, atomic save, partial/deleted/recreated PDF, annotations, typesetting, independent writer + timer\n",fit.boolValue,(long)mode.integerValue);
  }
 }}
 '''.replace('CONTROLLER',controller)
 with tempfile.TemporaryDirectory(prefix='texshop-external-pdf-') as td:
  p=Path(td);(p/'home').mkdir();(p/'test.m').write_text(program)
- subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test'),td],env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)
