@@ -59,6 +59,10 @@ int main(int argc,char **argv) { @autoreleasepool {
     NSBox *iconGroup;
     for (NSView *view in themeView.subviews) if ([view.identifier isEqual:@"DockIconChoices"]) iconGroup = (id)view;
     Require(iconGroup != nil, @"Direct icon choices on Themes");
+    if (snapshot) {
+        BOOL japanese = [[@(argv[1]) stringByDeletingLastPathComponent].lastPathComponent isEqual:@"ja.lproj"];
+        Require([iconGroup.title isEqual:japanese ? @"Dockアイコン" : @"Dock Icon"], @"Snapshot title matches requested language");
+    }
     for (NSView *view in themeView.subviews)
         if (view != iconGroup) Require(!NSIntersectsRect(iconGroup.frame, view.frame), [NSString stringWithFormat:@"No overlap with existing controls: %@ vs %@", NSStringFromRect(iconGroup.frame), NSStringFromRect(view.frame)]);
     for (NSView *view in iconGroup.contentView.subviews)
@@ -135,6 +139,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     if (snapshot) {
         window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
         [window.contentView layoutSubtreeIfNeeded];
+        [window display];
         NSView *view = tabs.tabViewItems.lastObject.view;
         for (NSView *child in view.subviews) if ([child.identifier isEqual:@"DockIconChoices"]) {
             [child layoutSubtreeIfNeeded];
