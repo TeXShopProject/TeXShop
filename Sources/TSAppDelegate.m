@@ -23,6 +23,7 @@
  */
 
 #import "TSAppDelegate.h"
+#import "TSDockIconController.h"
 
 #import "globals.h"
 
@@ -227,6 +228,7 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
+    [[TSDockIconController sharedController] restoreSavedIcon];
     
     // NSLog(@"the system is %f", NSAppKitVersionNumber);
     

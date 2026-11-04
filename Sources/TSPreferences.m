@@ -27,6 +27,7 @@
 #import "UseSparkle.h"
 
 #import "TSPreferences.h"
+#import "TSDockIconController.h"
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
@@ -122,6 +123,8 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 
 	[SUD synchronize];
 
+    [[TSDockIconController sharedController] installInPreferences:_tabView];
+    [[TSDockIconController sharedController] beginEditing];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
     
@@ -2224,6 +2227,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
 "*/
 - (IBAction)okButtonPressed:sender
 {
+    [[TSDockIconController sharedController] acceptEditing];
 	// save everything to the user defaults
 
     [self okForColor];
@@ -2268,6 +2272,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
 "*/
 - (IBAction)cancelButtonPressed:sender
 {
+    [[TSDockIconController sharedController] cancelEditing];
     [self cancelForColor];
     // undo everyting
 	[_undoManager endUndoGrouping];
