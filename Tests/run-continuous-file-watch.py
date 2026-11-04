@@ -32,7 +32,8 @@ static void Write(NSString *path, NSString *mode, NSString *value) {
 }
 @interface TSDocument : NSDocument {
  TSFileChangeMonitor *sourceFileMonitor;
- NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData;
+ NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData, *sourceReloadFingerprint;
+ NSUInteger sourceIOGeneration;
  BOOL sourceSaving;
  NSView *textView;
 }
@@ -55,7 +56,7 @@ REVERT
  NSData *data=sourceReloadData ?: [NSData dataWithContentsOfURL:url];
  if (!data) return NO;
  if(self.injectMode) {NSString *mode=self.injectMode;self.injectMode=nil;Write(url.path,mode,@"complete");}
- sourceAcceptedFingerprint=TSSourceFingerprint(data);
+ sourceAcceptedFingerprint=sourceReloadFingerprint ?: TSSourceFingerprint(data); ++sourceIOGeneration;
  self.observed=[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];self.reads++;
  return YES;
 }
@@ -74,7 +75,7 @@ int main(int argc,char **argv) {@autoreleasepool {
  [d readFromURL:d.fileURL ofType:d.fileType error:NULL];
  Pump(.3);
  if([mode isEqualToString:@"initial"]) {
-  Check([d.observed isEqual:@"complete"],@"synchronous registration before initial read");
+  Check([d.observed isEqual:@"complete"],@"initial comparison closes asynchronous registration gap");
  } else if([mode isEqualToString:@"preserved"] || [mode isEqualToString:@"atomic"]) {
   d.injectMode=mode;Write(path,@"plain",@"partial!");Pump(.6);
   Check([d.observed isEqual:@"complete"],@"update during reload");
@@ -127,7 +128,7 @@ int main(int argc,char **argv) {@autoreleasepool {
   [d cancelWatchFile];
   __weak TSFileChangeMonitor *weak;
   @autoreleasepool {
-   TSFileChangeMonitor *monitor=[[TSFileChangeMonitor alloc] initWithPath:path reload:^BOOL{return YES;}];
+   TSFileChangeMonitor *monitor=[[TSFileChangeMonitor alloc] initWithPath:path prepare:^NSNumber *{return @0;} accept:^BOOL(NSData *d,NSData *f,NSNumber *g){return YES;}];
    weak=monitor;monitor=nil;
   }
   Pump(.3);Check(weak==nil,@"no watcher retain cycle");

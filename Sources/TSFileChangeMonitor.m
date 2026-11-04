@@ -35,58 +35,112 @@ static NSString *TSFileStamp(NSString *path)
             (long long)s.st_ctimespec.tv_sec, s.st_ctimespec.tv_nsec];
 }
 
+@class TSFileWatchWorker;
+@interface TSFileChangeMonitor ()
+- (void)prepareWorker:(TSFileWatchWorker *)worker;
+- (BOOL)acceptData:(NSData *)data fingerprint:(NSData *)fingerprint generation:(NSNumber *)generation;
+@end
+
+@interface TSFileWatchWorker : NSObject
+@property (nonatomic, copy) NSString *path;
+@property (nonatomic, weak) TSFileChangeMonitor *owner;
+@property (nonatomic, strong) dispatch_queue_t queue;
+- (void)start;
+- (void)stop;
+- (void)readGeneration:(NSNumber *)generation;
+@end
+
 @implementation TSFileChangeMonitor {
+    TSFileWatchWorker *_worker;
+    NSNumber *(^_prepare)(void);
+    BOOL (^_accept)(NSData *, NSData *, NSNumber *);
+    BOOL _stopped;
+}
+- (instancetype)initWithPath:(NSString *)path prepare:(NSNumber *(^)(void))prepare
+                     accept:(BOOL (^)(NSData *, NSData *, NSNumber *))accept
+{
+    NSAssert(NSThread.isMainThread, @"Start monitoring on the main thread");
+    if (!(self = [super init])) return nil;
+    _path = [path.stringByStandardizingPath copy];
+    _prepare = [prepare copy]; _accept = [accept copy];
+    TSFileWatchWorker *worker = [TSFileWatchWorker new];
+    worker.path = _path; worker.owner = self;
+    worker.queue = dispatch_queue_create("org.texshop.source-watch", DISPATCH_QUEUE_SERIAL);
+    _worker = worker;
+    dispatch_async(worker.queue, ^{ [worker start]; });
+    return self;
+}
+- (void)prepareWorker:(TSFileWatchWorker *)worker
+{
+    NSNumber *generation = !_stopped && _prepare ? _prepare() : nil;
+    dispatch_async(worker.queue, ^{ [worker readGeneration:generation]; });
+}
+- (BOOL)acceptData:(NSData *)data fingerprint:(NSData *)fingerprint generation:(NSNumber *)generation
+{
+    return !_stopped && _accept ? _accept(data, fingerprint, generation) : NO;
+}
+- (void)stop
+{
+    if (_stopped) return;
+    _stopped = YES; _prepare = nil; _accept = nil;
+    TSFileWatchWorker *worker = _worker; _worker = nil;
+    if (worker) dispatch_async(worker.queue, ^{ [worker stop]; });
+}
+- (void)dealloc { [self stop]; }
+@end
+
+@implementation TSFileWatchWorker {
     int _queueFD, _fileFD, _directoryFD;
     dispatch_source_t _events, _poll, _debounce;
-    BOOL _stopped, _pending;
+    BOOL _stopped, _pending, _inFlight;
+    NSUInteger _changeGeneration, _readingGeneration;
+    NSTimeInterval _retryAfter, _retryDelay;
     NSString *_stamp;
-    BOOL (^_reload)(void);
 }
-
-- (instancetype)initWithPath:(NSString *)path reload:(BOOL (^)(void))reload
+- (instancetype)init
 {
-    NSAssert([NSThread isMainThread], @"File monitoring must start on the main thread");
-    self = [super init];
-    if (!self) return nil;
-    _queueFD = _fileFD = _directoryFD = -1;
-    _path = [path.stringByStandardizingPath copy];
-    _reload = [reload copy];
+    if ((self = [super init])) _queueFD = _fileFD = _directoryFD = -1;
+    return self;
+}
+- (void)start
+{
     _queueFD = kqueue();
-    if (_queueFD < 0) return nil;
-    fcntl(_queueFD, F_SETFD, FD_CLOEXEC);
-    // kevent installs filters synchronously. dispatch_resume alone does not
-    // guarantee that a vnode source is registered before the first file read.
-    [self attachPath:_path.stringByDeletingLastPathComponent descriptor:&_directoryFD];
-    [self attachPath:_path descriptor:&_fileFD];
+    if (_queueFD >= 0) {
+        fcntl(_queueFD, F_SETFD, FD_CLOEXEC);
+        [self attachPath:_path.stringByDeletingLastPathComponent descriptor:&_directoryFD];
+        [self attachPath:_path descriptor:&_fileFD];
+    }
     _stamp = TSFileStamp(_path);
-    __weak TSFileChangeMonitor *weakSelf = self;
-    _events = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, _queueFD, 0, dispatch_get_main_queue());
-    dispatch_source_set_event_handler(_events, ^{ [weakSelf consumeEvents]; });
-    int queueFD = _queueFD;
-    dispatch_source_set_cancel_handler(_events, ^{ close(queueFD); });
-    dispatch_resume(_events);
-    _debounce = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    __weak TSFileWatchWorker *weakSelf = self;
+    if (_queueFD >= 0) {
+        _events = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ, _queueFD, 0, _queue);
+        dispatch_source_set_event_handler(_events, ^{ [weakSelf consumeEvents]; });
+        int fd = _queueFD;
+        dispatch_source_set_cancel_handler(_events, ^{ close(fd); });
+        dispatch_resume(_events);
+    }
+    _debounce = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _queue);
     dispatch_source_set_timer(_debounce, DISPATCH_TIME_FOREVER, DISPATCH_TIME_FOREVER, 0);
     dispatch_source_set_event_handler(_debounce, ^{ [weakSelf attemptReload]; });
     dispatch_resume(_debounce);
-    // This fallback reads metadata only, even for very large documents. It also
-    // reconnects after a parent directory disappears and retries deferred reads.
-    _poll = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    _poll = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _queue);
     dispatch_source_set_timer(_poll, dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC),
                              2 * NSEC_PER_SEC, NSEC_PER_SEC / 5);
     dispatch_source_set_event_handler(_poll, ^{
-        TSFileChangeMonitor *monitor = weakSelf;
-        if (!monitor || monitor->_stopped) return;
-        BOOL changed = [monitor refresh];
-        if (changed) [monitor markChanged];
-        else if (monitor->_pending) [monitor attemptReload];
+        TSFileWatchWorker *worker = weakSelf;
+        if (!worker || worker->_stopped) return;
+        if ([worker refresh]) [worker markChanged];
+        else if (worker->_pending) [worker attemptReload];
     });
     dispatch_resume(_poll);
-    return self;
+    // Registration is asynchronous. Always compare once against the bytes the
+    // document accepted, covering changes before the filters were installed.
+    [self markChanged];
 }
 
 - (void)attachPath:(NSString *)path descriptor:(int *)descriptor
 {
+    if (_queueFD < 0) return;
     struct stat current, watched;
     if (stat(path.fileSystemRepresentation, &current) != 0) return;
     if (*descriptor >= 0 && fstat(*descriptor, &watched) == 0 &&
@@ -125,6 +179,7 @@ static NSString *TSFileStamp(NSString *path)
     BOOL fileChanged = NO;
     // Bound each drain so a continuously active writer cannot monopolize the UI.
     for (int batch = 0; batch < 8 &&
+         _queueFD >= 0 &&
          (count = kevent(_queueFD, NULL, 0, events, 16, &immediate)) > 0; ++batch) {
         for (int i = 0; i < count; ++i) {
             if (events[i].ident == (uintptr_t)_fileFD) fileChanged = YES;
@@ -138,23 +193,51 @@ static NSString *TSFileStamp(NSString *path)
 
 - (void)markChanged
 {
-    _pending = YES;
+    _pending = YES; ++_changeGeneration;
+    _retryAfter = 0; _retryDelay = 0;
     dispatch_source_set_timer(_debounce, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / 10),
                              DISPATCH_TIME_FOREVER, NSEC_PER_MSEC * 10);
 }
 
 - (void)attemptReload
 {
-    if (_stopped || !_pending) return;
+    if (_stopped || !_pending || _inFlight) return;
     if ([self refresh]) { [self markChanged]; return; }
-    if (!_stamp) return; // Keep the document and wait for a replacement.
-    _pending = NO;
-    BOOL (^reload)(void) = _reload;
-    if (reload && !reload() && !_stopped) _pending = YES;
-    // Filters stay registered while reload executes. Events queued during the
-    // read are consumed afterwards, including writes that restore timestamps.
+    if (!_stamp || [NSDate timeIntervalSinceReferenceDate] < _retryAfter) return;
+    _inFlight = YES; _readingGeneration = _changeGeneration;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        TSFileChangeMonitor *owner = self.owner;
+        if (owner) [owner prepareWorker:self];
+        else dispatch_async(self.queue, ^{ [self stop]; });
+    });
 }
-
+- (void)readGeneration:(NSNumber *)generation
+{
+    if (_stopped) return;
+    if (!generation) { _inFlight = NO; return; }
+    @autoreleasepool {
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:_path] options:0 error:NULL];
+        NSData *fingerprint = TSSourceFingerprint(data);
+        if (!data) {
+            _inFlight = NO;
+            _retryDelay = MIN(30, MAX(2, _retryDelay * 2));
+            _retryAfter = [NSDate timeIntervalSinceReferenceDate] + _retryDelay;
+            return;
+        }
+        _retryDelay = 0; _retryAfter = 0;
+        NSUInteger readingGeneration = _readingGeneration;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            BOOL accepted = [self.owner acceptData:data fingerprint:fingerprint generation:generation];
+            dispatch_async(self.queue, ^{
+                if (self->_stopped) return;
+                self->_inFlight = NO;
+                if (accepted && readingGeneration == self->_changeGeneration) self->_pending = NO;
+                // Queued vnode writes are consumed even when metadata was restored.
+                [self consumeEvents];
+            });
+        });
+    }
+}
 - (void)stop
 {
     if (_stopped) return;
@@ -167,8 +250,5 @@ static NSString *TSFileStamp(NSString *path)
     if (_directoryFD >= 0) close(_directoryFD);
     _queueFD = _fileFD = _directoryFD = -1;
     _poll = _debounce = _events = nil;
-    _reload = nil;
 }
-
-- (void)dealloc { [self stop]; }
 @end

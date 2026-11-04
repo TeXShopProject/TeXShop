@@ -2567,25 +2567,35 @@ in other code when an external editor is being used. */
     if ([sourceFileMonitor.path isEqualToString:path]) return;
     [self cancelWatchFile];
     __weak TSDocument *weakSelf = self;
-    sourceFileMonitor = [[TSFileChangeMonitor alloc] initWithPath:path reload:^BOOL {
+    sourceFileMonitor = [[TSFileChangeMonitor alloc] initWithPath:path prepare:^NSNumber *{
         TSDocument *document = weakSelf;
-        if (!document || ![document.fileURL.path.stringByStandardizingPath isEqualToString:path]) return YES;
-        if (document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges]) return NO;
-        NSError *error = nil;
-        NSData *data = [NSData dataWithContentsOfURL:document.fileURL options:0 error:&error];
-        if (!data) return NO;
-        if ([TSSourceFingerprint(data) isEqual:document->sourceAcceptedFingerprint]) return YES;
-        // Revert consumes this exact snapshot. A later write remains queued in
-        // the monitor and cannot be mistaken for our own save or this read.
+        if (!document || ![document.fileURL.path.stringByStandardizingPath isEqualToString:path]) return nil;
+        if (document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges]) return nil;
+        return @(document->sourceIOGeneration);
+    } accept:^BOOL(NSData *data, NSData *fingerprint, NSNumber *generation) {
+        TSDocument *document = weakSelf;
+        if (!document || ![document.fileURL.path.stringByStandardizingPath isEqualToString:path]) return NO;
+        // A save/read/path change during background I/O invalidates this snapshot,
+        // even when the document has become clean again by the time it arrives.
+        if (generation.unsignedIntegerValue != document->sourceIOGeneration ||
+            document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges]) return NO;
+        if ([fingerprint isEqual:document->sourceAcceptedFingerprint]) return YES;
         document->sourceReloadData = data;
-        BOOL result = [document revertToContentsOfURL:document.fileURL ofType:document.fileType error:&error];
-        document->sourceReloadData = nil;
+        document->sourceReloadFingerprint = fingerprint;
+        BOOL result;
+        @try {
+            result = [document revertToContentsOfURL:document.fileURL ofType:document.fileType error:NULL];
+        } @finally {
+            document->sourceReloadData = nil;
+            document->sourceReloadFingerprint = nil;
+        }
         return result;
     }];
 }
 
 - (void)cancelWatchFile
 {
+    ++sourceIOGeneration;
     [sourceFileMonitor stop];
     sourceFileMonitor = nil;
 }
@@ -2601,6 +2611,7 @@ in other code when an external editor is being used. */
 - (BOOL)writeSafelyToURL:(NSURL *)url ofType:(NSString *)typeName
       forSaveOperation:(NSSaveOperationType)operation error:(NSError **)error
 {
+    ++sourceIOGeneration;
     sourceSaving = YES;
     sourceWrittenFingerprint = nil;
     BOOL result = NO;
@@ -2770,7 +2781,8 @@ in other code when an external editor is being used. */
 			}
 		
 		[[_textStorage mutableString] setString:content];
-        sourceAcceptedFingerprint = TSSourceFingerprint(myData); // added by Terada
+        sourceAcceptedFingerprint = sourceReloadFingerprint ?: TSSourceFingerprint(myData); // added by Terada
+        ++sourceIOGeneration;
 	
 		return YES;
 	}

@@ -1,13 +1,15 @@
-// added by Terada: continuous monitoring across reads and atomic replacements.
+// added by Terada: asynchronous monitoring across reads and atomic replacements.
 #import <Foundation/Foundation.h>
 
-// All methods and the reload block run on the main thread. Return NO from the
-// block to retain a pending change (for example, while the document is dirty).
+// Public methods and both callbacks run on the main thread. The prepare callback
+// returns a document generation, or nil to defer while dirty. The accept callback
+// must reject a stale generation. All monitoring I/O and snapshot hashing use a
+// private serial queue; stop never waits for a stalled filesystem call.
 @interface TSFileChangeMonitor : NSObject
 @property (nonatomic, readonly, copy) NSString *path;
-- (instancetype)initWithPath:(NSString *)path reload:(BOOL (^)(void))reload;
+- (instancetype)initWithPath:(NSString *)path
+                    prepare:(NSNumber *(^)(void))prepare
+                     accept:(BOOL (^)(NSData *, NSData *, NSNumber *))accept;
 - (void)stop;
 @end
-
-// added by Terada: fingerprint bytes already read or serialized, without polling content.
 FOUNDATION_EXPORT NSData *TSSourceFingerprint(NSData *data);

@@ -8,7 +8,7 @@ import argparse, os, re, subprocess, tempfile
 from pathlib import Path
 parser = argparse.ArgumentParser()
 parser.add_argument('--revision')
-parser.add_argument('--mutation', choices=['read-baseline', 'write-baseline', 'disk-baseline'])
+parser.add_argument('--mutation', choices=['read-baseline', 'write-baseline', 'disk-baseline', 'generation'])
 parser.add_argument('modes', nargs='*')
 args = parser.parse_args()
 REPO = Path(__file__).resolve().parents[1]
@@ -18,11 +18,18 @@ def show(rev, path):
     text = (subprocess.check_output(['git', 'show', f'{rev}:{path}'], cwd=REPO, text=True)
             if rev else (REPO / path).read_text())
     if path == 'Sources/TSDocument.m':
-        if args.mutation == 'read-baseline':
-            text = text.replace('sourceAcceptedFingerprint = TSSourceFingerprint(myData);', '')
+        if args.mutation == 'generation':
+            text, count = re.subn(r'generation.unsignedIntegerValue != document->sourceIOGeneration \|\|', '', text)
+            if count != 1: raise SystemExit('generation replacement count')
+        elif args.mutation == 'read-baseline':
+            text, count = re.subn(r'sourceAcceptedFingerprint = (?:sourceReloadFingerprint \?: )?TSSourceFingerprint\(myData\);', '', text)
+            if count != 1: raise SystemExit('read-baseline replacement count')
         elif args.mutation == 'write-baseline':
-            text = text.replace('sourceWrittenFingerprint = TSSourceFingerprint(data);', '')
+            old = 'sourceWrittenFingerprint = TSSourceFingerprint(data);'
+            if text.count(old) != 1: raise SystemExit('write-baseline replacement count')
+            text = text.replace(old, '')
         elif args.mutation == 'disk-baseline':
+            if text.count('sourceAcceptedFingerprint = sourceWrittenFingerprint;') != 1: raise SystemExit('disk-baseline replacement count')
             text = text.replace('sourceAcceptedFingerprint = sourceWrittenFingerprint;',
                 'sourceAcceptedFingerprint = TSSourceFingerprint([NSData dataWithContentsOfURL:url]);')
     return text
@@ -51,15 +58,25 @@ PROGRAM = r'''
 #import <sys/xattr.h>
 #import <sys/stat.h>
 #import <sys/time.h>
+#import <stdatomic.h>
 #ifdef V5
 #import "TSFileChangeMonitor.h"
 #endif
 BOOL activateBauerPatch=YES;
 #define NSISOLatin9StringEncoding NSISOLatin1StringEncoding
 static NSString *WatchServerKey=@"watch", *ConvertLFKey=@"convlf", *ptexUtfOutputEnabledKey=@"ptexutf", *UseOldHeadingCommandsKey=@"old";
-static unsigned long gContentReads=0; static double gMaxStall=0;
+static _Atomic(unsigned long) gContentReads=0; static double gMaxStall=0;
 static int gInjectOnRead=0; static NSString *gInjectText=nil; static int gInjectHow=0;
 static BOOL gInjectBeforeReturn=NO;
+static _Atomic(int) gSlowRead=0, gReadStarted=0, gReleaseRead=0;
+static _Atomic(int) gSlowStat=0, gStatStarted=0, gReleaseStat=0, gMainMonitorIO=0;
+int TSProbeStat(const char *p,struct stat *s) {
+ if(NSThread.isMainThread)gMainMonitorIO++;
+ if(atomic_exchange(&gSlowStat,0)){gStatStarted=1;while(!gReleaseStat)usleep(10000);}
+ return stat(p,s);
+}
+int TSProbeFstat(int fd,struct stat *s){if(NSThread.isMainThread)gMainMonitorIO++;return fstat(fd,s);}
+int TSProbeOpen(const char*p,int flags){if(NSThread.isMainThread)gMainMonitorIO++;return open(p,flags);}
 static int gInjectAfterSave=0; static NSString *gPath=nil;
 static void Pump(double s){NSDate *t=[NSDate dateWithTimeIntervalSinceNow:s];while(t.timeIntervalSinceNow>0){CFAbsoluteTime a=CFAbsoluteTimeGetCurrent();[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]];double d=CFAbsoluteTimeGetCurrent()-a-.01; if(d>gMaxStall)gMaxStall=d;}}
 @interface Preferences : NSObject
@@ -97,7 +114,8 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  TSFileChangeMonitor *sourceFileMonitor;
 #endif
 #ifdef V6
- NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData;
+ NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData, *sourceReloadFingerprint;
+ NSUInteger sourceIOGeneration;
  BOOL sourceSaving;
 #endif
  NSTextView *textView;
@@ -157,7 +175,15 @@ static NSString *gInjectBeforeSetURLPath=nil;
 }
 @end
 static id (*origDWCOU)(id,SEL,NSURL*,NSDataReadingOptions,NSError**);
-static id countingDWCOU(id c,SEL s,NSURL *u,NSDataReadingOptions o,NSError **e){ gContentReads++; return origDWCOU(c,s,u,o,e); }
+static id countingDWCOU(id c,SEL s,NSURL *u,NSDataReadingOptions o,NSError **e){
+ gContentReads++;
+ id data=origDWCOU(c,s,u,o,e);
+ if(!NSThread.isMainThread && atomic_exchange(&gSlowRead,0)) {
+  gReadStarted=1;
+  while(!gReleaseRead) usleep(10000);
+ }
+ return data;
+}
 static BOOL Save(TSDocument *d, NSURL *u, NSSaveOperationType op){
  __block BOOL done=NO; __block NSError *err=nil;
  [d saveToURL:u ofType:d.fileType forSaveOperation:op completionHandler:^(NSError *e){err=e;done=YES;}];
@@ -192,7 +218,31 @@ int main(int argc,char **argv){@autoreleasepool{
  NSUInteger r0=d.reads; unsigned long c0=gContentReads; gMaxStall=0;
  #define EXTRA (unsigned long)(d.reads-r0)
  #define CREADS (gContentReads-c0)
- if([mode isEqualToString:@"save"]||[mode isEqualToString:@"autosave"]){
+ if([mode isEqual:@"slow-stat"]){
+  gSlowStat=1;utimes(path.fileSystemRepresentation,NULL);
+  for(int i=0;i<300&&!gStatStarted;i++) Pump(.01);
+  if(!gStatStarted){fprintf(stderr,"No background stat started\n");return 3;}
+  double begin=CFAbsoluteTimeGetCurrent();Pump(.3);[d cancelWatchFile];
+  BOOL responsive=CFAbsoluteTimeGetCurrent()-begin<.8;gReleaseStat=1;Pump(.5);
+  printf("slow-stat responsive=%d mainIO=%d\n",responsive,gMainMonitorIO);
+ } else if([mode hasPrefix:@"slow-"]){
+  gSlowRead=1;ExtWrite(path,@"background old",1);
+  for(int i=0;i<100&&!gReadStarted;i++) Pump(.01);
+  if(!gReadStarted){fprintf(stderr,"No background snapshot started\n");return 3;}
+  double begin=CFAbsoluteTimeGetCurrent();Pump(.3);
+  BOOL responsive=CFAbsoluteTimeGetCurrent()-begin<.8;
+  BOOL saved=YES;
+  if([mode isEqual:@"slow-edit"]) [d edit:@"local edit"];
+  if([mode isEqual:@"slow-save"] || [mode isEqual:@"slow-saveas"]) {
+   [d edit:@"saved while reading"];d.fileModificationDate=[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL][NSFileModificationDate];
+   NSURL *dest=[mode isEqual:@"slow-saveas"] ? [NSURL fileURLWithPath:[path stringByAppendingString:@".new"]] : url;
+   saved=Save(d,dest,[mode isEqual:@"slow-saveas"]?NSSaveAsOperation:NSSaveOperation);
+  }
+  if([mode isEqual:@"slow-stop"]) {double t=CFAbsoluteTimeGetCurrent();[d cancelWatchFile];responsive &= CFAbsoluteTimeGetCurrent()-t<.1;}
+  if([mode isEqual:@"slow-replace"]) ExtWrite(path,@"background new",2);
+  gReleaseRead=1;Pump(4.5);
+  printf("%s responsive=%d saved=%d extraReads=%lu text=%s\n",mode.UTF8String,responsive,saved,EXTRA,d.storage.string.UTF8String);
+ } else if([mode isEqualToString:@"save"]||[mode isEqualToString:@"autosave"]){
   [d edit:@"edited by user"];
   BOOL ok=Save(d,url,[mode isEqualToString:@"save"]?NSSaveOperation:NSAutosaveInPlaceOperation);
   BOOL undoBefore=d.undoManager.canUndo;
@@ -355,10 +405,16 @@ int main(int argc,char **argv){@autoreleasepool{
   Pump(.5); int mid=CountFDs(); [d cancelWatchFile]; Pump(.5); int after=CountFDs();
   printf("%s fdsBefore=%d after300Rewatch=%d afterCancel=%d\n",mode.UTF8String,before,mid,after);
  }
- [d cancelWatchFile]; return 0;
+ [d cancelWatchFile]; if(gMainMonitorIO){fprintf(stderr,"Monitor I/O ran on main thread\n");return 4;}return 0;
 }}
 '''
 checks = {
+ 'slow-stat': ['responsive=1 mainIO=0'],
+ 'slow-edit': ['responsive=1 saved=1 extraReads=0 text=local edit'],
+ 'slow-save': ['responsive=1 saved=1 extraReads=0 text=saved while reading'],
+ 'slow-saveas': ['responsive=1 saved=1 extraReads=0 text=saved while reading'],
+ 'slow-stop': ['responsive=1 saved=1 extraReads=0 text=initial!'],
+ 'slow-replace': ['responsive=1 saved=1', 'text=background new'],
  'save': ['saved=1 extraReads=0', 'canUndoAfterSave=1 canUndoNow=1', 'text=edited by user'],
  'autosave': ['saved=1 extraReads=0', 'canUndoAfterSave=1 canUndoNow=1'],
  'saveas': ['saved=1 readsAfterSaveAs=0 canUndo=1 oldPathWriteReads=0', 'text=new path write'],
@@ -379,6 +435,8 @@ checks = {
      'autosaved=1 unautosavedAfter=0 editor=user edit disk=external content extraReads=0 edited=1'],
  'elsewhere-then-external': ['autosaved=1 editor=user edit disk=external content extraReads=0 edited=1 autosaveFileAfter=1'],
  'typeset-autosave': ['canUndo=1 editor=user edit disk=user edit extraReads=0'],
+ 'dirty-external-undo': ['editor=external content disk=external content'],
+ 'saveto': ['saved=1 extraReads=0', 'text=exported'],
  'fdleak': [],
 }
 modes = args.modes or list(checks)
@@ -387,7 +445,12 @@ for mode in modes:
 rev = args.revision
 m = OUT / 'probe.m'; m.write_text(PROGRAM.replace('METHODS', methods(rev, 'watch')))
 for suffix in ['m', 'h']:
-    (OUT / ('TSFileChangeMonitor.' + suffix)).write_text(show(rev, 'Sources/TSFileChangeMonitor.' + suffix))
+    content = show(rev, 'Sources/TSFileChangeMonitor.' + suffix)
+    if suffix == 'm':
+        content = content.replace('#import <unistd.h>', '#import <unistd.h>\nextern int TSProbeStat(const char *, struct stat *);\nextern int TSProbeFstat(int, struct stat *);\nextern int TSProbeOpen(const char *, int);')
+        for name in ['stat', 'fstat', 'open']:
+            content = re.sub(r'\b'+name+r'\(', 'TSProbe'+name.capitalize()+'(', content)
+    (OUT / ('TSFileChangeMonitor.' + suffix)).write_text(content)
 exe = OUT / 'probe'
 subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I'+str(OUT),
                 '-DV5', '-DV6', str(m), str(OUT/'TSFileChangeMonitor.m'), '-o', str(exe)], check=True)
