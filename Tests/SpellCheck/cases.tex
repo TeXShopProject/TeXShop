@@ -1,0 +1,36 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\newcommand{\foo}[1]{\textbf{#1}}
+\def\bar#1{baz #1}
+\begin{document}
+\section*{Introduction}\label{sec:intro}
+Hello wrld, see \ref{sec:intro}, \eqref{eq:1} and \cite[p.~3]{smith2020,jones}.% a commentt
+Escaped \% percent and \$ dollar and 5\% of \& more \_ text.
+Inline $x_{ij} = \alpha\beta$ then \(a+b\) and $$ \sum_i fooo_i $$ done.
+\[ E = mc^2 \]
+\begin{equation}\label{eq:1}
+  a = b + c
+\end{equation}
+\begin{align*}
+  x &= y \\[2pt]
+  z &= w
+\end{align*}
+Text before\\[3pt]more text after break.
+\begin{tabular}{|l|c|r|}
+ cellone & celltwo & cellthree \\ \hline
+\end{tabular}
+\begin{figure}[htbp]
+\includegraphics[width=3cm]{figg}
+\caption{A cation with a typo.}
+\end{figure}
+\begin{verbatim}
+zzzzz qqqq \notacommand $ unmatched
+\end{verbatim}
+\verb|raw text| and \verb+more raw+ then prose.
+M\"unchen and caf\'e and na\"{\i}ve and \ss{} and \o{}ster \`a la \'{E}cole.
+\textbf{bold wrd} and \emph{emphasised wrd}.
+\hyperref[sec:intro]{checked text here} and \autoref{sec:intro} \pageref{x}
+\textcolor{red}{coloured wrd} \hspace{1cm} \vspace*{2mm}
+\footnote{A footnote with wrd.}
+\item[label wrd] item text
+\end{document}

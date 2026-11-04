@@ -1,0 +1,16 @@
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\todo}[1]{\textbf{#1}}
+\newcommand{\eqn}[2]{$#1$ where #2}
+\newcommand{\opt}[2][zzdefault]{\ref{#2} and #1}
+\newcommand\both[1]{\secref{#1}}
+\def\lbl#1{\label{#1}}
+\NewDocumentCommand{\xref}{m o m}{\ref{#1} #3}
+\newenvironment{eqnarray2}{\begin{align}}{\end{align}}
+\newenvironment{plain}{\begin{quote}}{\end{quote}}
+\begin{document}
+See \secref{zzsecone} and \todo{zzvisiblea} and \eqn{zzmaths}{zzvisibleb}.
+Also \opt{zzlabela} and \opt[zzoptional]{zzlabelb} and \both{zzlabelc}.
+\lbl{zzlabeld} \xref{zzlabele}[zzoptb]{zzvisiblec}
+\begin{eqnarray2} zzbodya \end{eqnarray2}
+\begin{plain} zzvisibled \end{plain}
+\end{document}
