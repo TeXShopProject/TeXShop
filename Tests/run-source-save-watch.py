@@ -61,7 +61,7 @@ static NSString *WatchServerKey=@"watch";
 @end
 @implementation TSDocument
 + (BOOL)autosavesInPlace { return YES; }
-+ (BOOL)preservesVersions { return NO; } // Versions ストアへの書込みを避けるため
++ (BOOL)preservesVersions { return NO; } // Avoid writing to the Versions store
 + (NSArray *)readableTypes { return @[@"public.plain-text"]; }
 + (NSArray *)writableTypes { return @[@"public.plain-text"]; }
 + (BOOL)isNativeType:(NSString *)t { return YES; }
@@ -102,7 +102,7 @@ int main(int argc,char **argv){@autoreleasepool{
  TSDocument *d=nil; NSError *e=nil;
  if([mode isEqualToString:@"initial-gap"]){
   d=[TSDocument alloc]; d=[d init]; d.injectOnce=YES; d.fileType=@"public.plain-text";
-  // initWithContentsOfURL: 相当の順序 (read -> setFileURL)
+  // Match initWithContentsOfURL: ordering (read -> setFileURL)
   [d readFromURL:url ofType:d.fileType error:&e]; d.fileURL=url;
   Pump(2.6);
   printf("%s reads=%lu text=%s\n",mode.UTF8String,(unsigned long)d.reads,d.storage.string.UTF8String);
@@ -140,7 +140,7 @@ int main(int argc,char **argv){@autoreleasepool{
   [@"external content" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL]; Pump(2.6);
   printf("%s extraReads=%lu text=%s\n",mode.UTF8String,(unsigned long)(d.reads-r0),d.storage.string.UTF8String);
  } else if([mode isEqualToString:@"dirty-external-autosave"]){
-  // 未保存編集中に外部変更 -> その後 TeXShop の自動保存 -> 外部内容はどうなるか
+  // External modification during unsaved editing, followed by TeXShop autosave
   [d edit:@"user edit"]; Pump(.1);
   [@"external content" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL]; Pump(.6);
   NSString *t1=d.storage.string;
