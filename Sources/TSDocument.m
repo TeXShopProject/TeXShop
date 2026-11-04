@@ -71,6 +71,9 @@
 // added by Terada: Keep external PDF observation independent of source-file watching.
 @property (copy) NSString *externalPDFLoadedSignature;
 @property (copy) NSString *externalPDFPendingSignature;
+@property (copy) NSString *externalPDFFailedSignature;
+- (BOOL)externalPDFObservationEnabled;
+- (void)externalPDFSettingsChanged:(NSNotification *)notification;
 - (NSString *)externalPDFPath;
 - (void)startExternalPDFObservation;
 
@@ -1519,7 +1522,9 @@ if (! skipTextWindow) {
 	[pdfView setImageType: self.documentType];
     // added by Terada: Also observe PDFs belonging to the built-in source editor.
     if (fileIsTex || [fileExtension.lowercaseString isEqualToString:@"pdf"])
-        [self startExternalPDFObservation];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(externalPDFSettingsChanged:)
+                                                 name:NSUserDefaultsDidChangeNotification object:SUD];
+    [self startExternalPDFObservation];
 
 	if (!fileIsTex) {
 		imageFound = NO;
@@ -7070,17 +7075,43 @@ if (! useFullSplitWindow) {
     return [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
 }
 
+// added by Terada: use the existing Auto Update preference for all editors;
+// PDF-only documents additionally retain the PdfFileRefresh opt-out.
+- (BOOL)externalPDFObservationEnabled
+{
+    id override = [SUD objectForKey:@"AutoReloadExternalPDF"];
+    return [SUD boolForKey:PdfRefreshKey] && (!override || [override boolValue]) &&
+        (self.documentType != isPDF || [SUD boolForKey:PdfFileRefreshKey]);
+}
+
+- (void)externalPDFSettingsChanged:(NSNotification *)notification
+{
+    NSTimeInterval interval = MAX(0.5, [SUD doubleForKey:RefreshTimeKey]);
+    if ([self externalPDFObservationEnabled] != (self.pdfRefreshTimer != nil) ||
+        (self.pdfRefreshTimer && self.pdfRefreshTimer.timeInterval != interval))
+        [self startExternalPDFObservation];
+}
+
 - (void)startExternalPDFObservation
 {
     [self.pdfRefreshTimer invalidate];
-    self.externalPDFLoadedSignature = TSExternalPDFSignature([self externalPDFPath]);
+    self.pdfRefreshTimer = nil;
+    if (self.pdfActivity) [[NSProcessInfo processInfo] endActivity:self.pdfActivity];
+    self.pdfActivity = nil;
     self.externalPDFPendingSignature = nil;
+    self.externalPDFFailedSignature = nil;
+    if (![self externalPDFObservationEnabled]) return;
+    if (!self.externalPDFLoadedSignature)
+        self.externalPDFLoadedSignature = TSExternalPDFSignature([self externalPDFPath]);
+    self.pdfActivity = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiated
+                                                                   reason:@"Watch externally updated PDF"];
     __weak TSDocument *weakSelf = self;
-    self.pdfRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:YES block:^(NSTimer *timer) {
+    NSTimeInterval interval = MAX(0.5, [SUD doubleForKey:RefreshTimeKey]);
+    self.pdfRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:interval repeats:YES block:^(NSTimer *timer) {
         if (weakSelf) [weakSelf refreshPDFWindow:timer];
         else [timer invalidate];
     }];
-    self.pdfRefreshTimer.tolerance = 0.1;
+    self.pdfRefreshTimer.tolerance = MIN(0.1, interval / 5);
 }
 
 // added by Terada: Do not repeat a reload already completed by TeXShop itself.
@@ -7096,18 +7127,16 @@ if (! useFullSplitWindow) {
 - (void)refreshPDFWindow:(NSTimer *)timer
 {
     // Do not compete with typesetting or discard locally edited PDF annotations.
-    id enabled = [SUD objectForKey:@"AutoReloadExternalPDF"];
-    if ((enabled && ![enabled boolValue]) || !taskDone || self.texTask.running ||
+    if (![self externalPDFObservationEnabled] || !taskDone || self.texTask.running ||
         self.annotationsExist || self.myPDFKitView.document.isFinding ||
-        self.myPDFKitView2.document.isFinding || self.pdfKitWindow.previewClosed ||
-        (self.documentType == isPDF && ![SUD boolForKey:PdfFileRefreshKey]) ||
-        (_externalEditor && ![SUD boolForKey:PdfRefreshKey])) {
+        self.myPDFKitView2.document.isFinding || (self.pdfKitWindow.previewClosed && !_externalEditor)) {
         self.externalPDFPendingSignature = nil;
         return;
     }
     NSString *path = [self externalPDFPath];
     NSString *signature = TSExternalPDFSignature(path);
-    if (!signature || [signature isEqualToString:self.externalPDFLoadedSignature]) {
+    if (!signature || [signature isEqualToString:self.externalPDFLoadedSignature] ||
+        [signature isEqualToString:self.externalPDFFailedSignature]) {
         self.externalPDFPendingSignature = nil;
         return;
     }
@@ -7117,7 +7146,13 @@ if (! useFullSplitWindow) {
         return;
     }
     PDFDocument *replacement = TSExternalPDFSnapshot(path, signature);
-    if (!replacement) return; // Keep the last valid document while a writer is active.
+    if (!replacement) {
+        // Keep the last valid display. Retry only after another file change,
+        // never parse an unchanged invalid/locked PDF on every timer tick.
+        self.externalPDFFailedSignature = signature;
+        return;
+    }
+    self.externalPDFFailedSignature = nil;
 
     PDFfromKit = YES;
     TSExternalPDFPosition first = TSExternalPDFCapture(self.myPDFKitView);
@@ -7132,7 +7167,14 @@ if (! useFullSplitWindow) {
     self.externalPDFPendingSignature = nil;
     self.pdfLastModDate = [[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL]
                           objectForKey:NSFileModificationDate];
-    // Do not activate the application or reopen a closed preview on external changes.
+    if (!_externalEditor && self.documentType != isPDF) [self allocateSyncScanner];
+    [self.pdfKitWindow setRepresentedFilename:path];
+    [self.pdfKitWindow setTitle:path.lastPathComponent];
+    [self fillLogWindowIfVisible];
+    if (_externalEditor && ([SUD boolForKey:BringPdfFrontOnAutomaticUpdateKey] || !self.pdfKitWindow.isVisible)) {
+        [NSApp activateIgnoringOtherApps:YES];
+        [self.pdfKitWindow makeKeyAndOrderFront:self];
+    }
 }
 
 

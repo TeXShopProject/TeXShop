@@ -3,7 +3,7 @@
 #import <PDFKit/PDFKit.h>
 #include <sys/stat.h>
 
-static NSString *TSExternalPDFSignature(NSString *path)
+static inline NSString *TSExternalPDFSignature(NSString *path)
 {
     struct stat info;
     if (!path || stat(path.fileSystemRepresentation, &info) || !S_ISREG(info.st_mode)) return nil;
@@ -13,19 +13,14 @@ static NSString *TSExternalPDFSignature(NSString *path)
             (long long)info.st_ctimespec.tv_sec, info.st_ctimespec.tv_nsec];
 }
 
-static PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature)
+static inline PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature)
 {
     // A copied buffer decouples PDFKit's lazy parsing from subsequent writes to the file.
     NSData *data = [NSData dataWithContentsOfFile:path options:0 error:NULL];
     if (!data.length || ![signature isEqualToString:TSExternalPDFSignature(path)]) return nil;
-    NSData *end = [@"%%EOF" dataUsingEncoding:NSASCIIStringEncoding];
-    NSUInteger start = data.length > 1024 ? data.length - 1024 : 0;
-    NSRange marker = [data rangeOfData:end options:NSDataSearchBackwards range:NSMakeRange(start, data.length-start)];
-    if (marker.location == NSNotFound) return nil;
-    const unsigned char *bytes = data.bytes;
-    for (NSUInteger i = NSMaxRange(marker); i < data.length; i++)
-        if (bytes[i] != 0 && bytes[i] != 9 && bytes[i] != 10 && bytes[i] != 12 && bytes[i] != 13 && bytes[i] != 32)
-            return nil;
+    // PDFKit also accepts files with trailing padding or no final EOF marker.
+    // Stable metadata and a successful parse, not a stricter home-grown parser,
+    // determine whether a replacement is usable.
     PDFDocument *document = [[PDFDocument alloc] initWithData:data];
     if (!document.pageCount || document.isLocked) return nil;
     return document;
@@ -38,7 +33,7 @@ typedef struct {
     CGFloat scale;
 } TSExternalPDFPosition;
 
-static TSExternalPDFPosition TSExternalPDFCapture(PDFView *view)
+static inline TSExternalPDFPosition TSExternalPDFCapture(PDFView *view)
 {
     TSExternalPDFPosition position = {0};
     NSClipView *clip = view.documentView.enclosingScrollView.contentView;
@@ -54,7 +49,7 @@ static TSExternalPDFPosition TSExternalPDFCapture(PDFView *view)
     return position;
 }
 
-static void TSExternalPDFRestore(PDFView *view, TSExternalPDFPosition position)
+static inline void TSExternalPDFRestore(PDFView *view, TSExternalPDFPosition position)
 {
     if (!position.valid || !view.document.pageCount) return;
     if (view.autoScales != position.autoScales) view.autoScales = position.autoScales;

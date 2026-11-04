@@ -1015,7 +1015,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
      
     annotationsFound = NO;
     
-    self.myDocument.annotationsExist = NO;
+    // added by Terada: retain unsaved annotations if the panel is cancelled.
     
     [self setEditModeInternal: NO andClosePanels:NO];
     
@@ -1111,7 +1111,8 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
         {
             if ([panel runModal] == NSModalResponseOK)
             {
-                [theDocument writeToURL: [panel URL]];
+                if ([theDocument writeToURL:[panel URL]] && doFullSave)
+                    self.myDocument.annotationsExist = NO;
                 nameValue = [panel nameFieldStringValue];
                 locationURL = [panel directoryURL];
            }

@@ -13,13 +13,19 @@ def method(s, signature):
     a=s.rindex(signature); return s[a:s.index('\n}',a)+2]
 methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
 fixture=fixture.replace('METHODS',methods)
+fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (BOOL)isVisible { return YES; }\n- (void)makeKeyAndOrderFront:(id)sender {}')
 s=(root/'Sources/TSDocument.m').read_text()
-controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)refreshPDFWindow:'])
+controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)refreshPDFWindow:'])
+controller=controller.replace('TSExternalPDFSnapshot(', 'CountedSnapshot(')
 program=fixture+r'''
 #import "TSExternalPDFReload.h"
+static NSUInteger snapshotCount;
+static PDFDocument *CountedSnapshot(NSString *p, NSString *s) { snapshotCount++; return TSExternalPDFSnapshot(p,s); }
 #define PdfRefreshKey @"PdfRefresh"
 #define PdfFileRefreshKey @"PdfFileRefresh"
 #define isPDF 2
+#define RefreshTimeKey @"RefreshTime"
+#define BringPdfFrontOnAutomaticUpdateKey @"BringPdfFrontOnAutomaticUpdate"
 @interface TSDocument:NSObject { @public BOOL taskDone,_externalEditor,PDFfromKit; }
 @property NSURL *fileURL;
 @property RecoveryView *myPDFKitView,*myPDFKitView2;
@@ -30,9 +36,13 @@ program=fixture+r'''
 @property NSString *externalPDFLoadedSignature,*externalPDFPendingSignature;
 @property NSTimer *pdfRefreshTimer;
 @property NSDate *pdfLastModDate;
+@property id pdfActivity;
+@property NSString *externalPDFFailedSignature;
 - (void)refreshPDFWindow:(NSTimer*)timer;
 @end
 @implementation TSDocument
+- (void)allocateSyncScanner {}
+- (void)fillLogWindowIfVisible {}
 CONTROLLER
 @end
 static void Check(BOOL ok,NSString *message){if(!ok){NSLog(@"FAIL: %@",message);exit(1);}}
@@ -56,6 +66,7 @@ int main(int argc,char **argv){@autoreleasepool{
    return 0;
  }
  [NSApplication sharedApplication];
+ [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} forName:NSArgumentDomain];
  NSString *path=[@(argv[1]) stringByAppendingPathComponent:@"test.PDF"];
  NSData *first=PDF(12,1),*changed=PDF(12,2);
  for(NSNumber *fit in @[@NO,@YES]) for(NSNumber *mode in @[@(kPDFDisplaySinglePage),@(kPDFDisplaySinglePageContinuous),@(kPDFDisplayTwoUp),@(kPDFDisplayTwoUpContinuous)]) {
@@ -70,6 +81,11 @@ int main(int argc,char **argv){@autoreleasepool{
  [v goToDestination:[[PDFDestination alloc]initWithPage:[v.document pageAtIndex:(v==d.myPDFKitView?4:8)] atPoint:NSMakePoint(170,520)]];
  }
  Pump(.1);
+ [SUD setVolatileDomain:@{@"PdfRefresh":@NO} forName:NSArgumentDomain];
+ [d startExternalPDFObservation];Check(d.pdfRefreshTimer==nil && d.pdfActivity==nil,@"Disabled observation has no timer/activity");
+ [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@NO,@"RefreshTime":@0.5} forName:NSArgumentDomain];
+ d.documentType=isPDF; Check(![d externalPDFObservationEnabled],@"PDF-only opt-out respected");
+ [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} forName:NSArgumentDomain];
  [d startExternalPDFObservation];Check([[d externalPDFPath]isEqualToString:path],@"Uppercase PDF path");
  [d.pdfRefreshTimer invalidate];
  TSExternalPDFPosition one=TSExternalPDFCapture(d.myPDFKitView),two=TSExternalPDFCapture(d.myPDFKitView2);
@@ -77,9 +93,18 @@ int main(int argc,char **argv){@autoreleasepool{
  [changed writeToFile:path atomically:YES];[d refreshPDFWindow:nil];Check(d.myPDFKitView.document==old,@"Wait for stable observation");
  [d refreshPDFWindow:nil];Pump(.15);Check(d.myPDFKitView.document!=old,@"Atomic replacement reload");SamePosition(d.myPDFKitView,one,@"primary");SamePosition(d.myPDFKitView2,two,@"secondary");
  old=d.myPDFKitView.document;[[changed subdataWithRange:NSMakeRange(0,changed.length/2)]writeToFile:path atomically:NO];StablePoll(d);Check(d.myPDFKitView.document==old,@"Partial PDF retains good display");
+ NSUInteger attempts=snapshotCount;for(int retry=0;retry<10;retry++)[d refreshPDFWindow:nil];
+ Check(snapshotCount==attempts,@"Unchanged rejected PDF is not reparsed");
+ NSMutableData *padded=[changed mutableCopy];[padded appendData:[@"\nTrailing text\n" dataUsingEncoding:NSUTF8StringEncoding]];
+ [padded writeToFile:path atomically:YES];StablePoll(d);Check(d.myPDFKitView.document!=old,@"PDFKit-compatible trailing data accepted");
+ old=d.myPDFKitView.document;
+
  [first writeToFile:path atomically:NO];StablePoll(d);Check(d.myPDFKitView.document!=old,@"Partial to valid recovery");SamePosition(d.myPDFKitView,one,@"recovered");
  old=d.myPDFKitView.document;[[NSFileManager defaultManager]removeItemAtPath:path error:NULL];StablePoll(d);Check(d.myPDFKitView.document==old,@"Deleted PDF retains display");[changed writeToFile:path atomically:YES];StablePoll(d);Check(d.myPDFKitView.document!=old,@"Recreation reload");
  old=d.myPDFKitView.document;d.annotationsExist=YES;[first writeToFile:path atomically:YES];StablePoll(d);Check(d.myPDFKitView.document==old,@"Protect annotations");d.annotationsExist=NO;
+ NSTask *job=[NSTask new];job.executableURL=[NSURL fileURLWithPath:@"/bin/sleep"];job.arguments=@[@"3"];
+ [job launchAndReturnError:NULL];d.texTask=job;StablePoll(d);Check(d.myPDFKitView.document==old,@"Real running typesetter blocks reload");
+ [job terminate];[job waitUntilExit];d.texTask=nil;
  d->taskDone=NO;StablePoll(d);Check(d.myPDFKitView.document==old,@"Defer during typesetting");d->taskDone=YES;
  d.pdfKitWindow.previewClosed=YES;StablePoll(d);Check(d.myPDFKitView.document==old,@"Do not reopen preview");d.pdfKitWindow.previewClosed=NO;StablePoll(d);Check(d.myPDFKitView.document!=old,@"Resume after gates");
  // Exercise the actual timer, rather than only calling its action.
@@ -100,6 +125,7 @@ int main(int argc,char **argv){@autoreleasepool{
  old=d.myPDFKitView.document;[d notePDFLoadedAtPath:path signature:TSExternalPDFSignature(path)];
  StablePoll(d);Check(d.myPDFKitView.document==old,@"Do not repeat an acknowledged application reload");
  Check(screenUpdates==0,@"Screen updates balanced");
+ if(d.pdfActivity) [[NSProcessInfo processInfo] endActivity:d.pdfActivity];
  [window close];printf("PASS autoScale=%d mode=%ld: viewport, zoom, atomic save, partial/deleted/recreated PDF, annotations, typesetting, independent writer + timer\n",fit.boolValue,(long)mode.integerValue);
  }
 }}
