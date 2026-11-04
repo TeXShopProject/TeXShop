@@ -128,7 +128,7 @@
                             <menuItem isSeparatorItem="YES" id="79">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Konsole einblenden" id="794">
+                            <menuItem title="Konsole einblenden" id="794" keyEquivalent="0">
                                 <connections>
                                     <action selector="displayConsole:" target="-1" id="797"/>
                                 </connections>
