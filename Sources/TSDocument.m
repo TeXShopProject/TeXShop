@@ -2546,6 +2546,33 @@ in other code when an external editor is being used. */
 */
 
 
+// The size and modification date of the file at path, or nil. Equal signatures mean the file did not change in between.
+- (NSString *)fileSignatureAtPath:(NSString *)path
+{
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    if (attributes == nil)
+        return nil;
+    return [NSString stringWithFormat:@"%llu/%.6f", [attributes fileSize],
+            [[attributes fileModificationDate] timeIntervalSinceReferenceDate]];
+}
+
+// Reload the file once it has stopped changing for a short time. A tool that saves in several steps would otherwise
+// make us read a half-written file, so every new call restarts the wait.
+- (void)scheduleWatchedFileReload
+{
+    NSUInteger generation = ++watchReloadGeneration;
+    __weak TSDocument *weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        TSDocument *strongSelf = weakSelf;
+        if (strongSelf == nil || generation != strongSelf->watchReloadGeneration)
+            return;
+        if (strongSelf->dispatch_source == NULL || [strongSelf hasUnautosavedChanges])
+            return;
+        NSError *outError = NULL;
+        [strongSelf revertToContentsOfURL:[strongSelf fileURL] ofType:[strongSelf fileType] error:&outError];
+    });
+}
+
 - (void)watchFile:(NSString*)fileName {
     
       if (! activateBauerPatch)
@@ -2561,6 +2588,8 @@ in other code when an external editor is being used. */
         int fildes = open([fileName UTF8String], O_EVTONLY);
     
         [self cancelWatchFile];
+        if (fildes < 0)
+            return;
     
         dispatch_source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE,fildes,
                                             DISPATCH_VNODE_DELETE | DISPATCH_VNODE_WRITE | DISPATCH_VNODE_REVOKE,
@@ -2573,8 +2602,7 @@ in other code when an external editor is being used. */
                     } else {
                             unsigned long flags = dispatch_source_get_data(dispatch_source);
                             if (flags & (DISPATCH_VNODE_WRITE)) {
-                                   NSError *outError = NULL;
-                                    [blockSelf revertToContentsOfURL:[blockSelf fileURL] ofType:[blockSelf fileType] error:&outError];
+                                   [blockSelf scheduleWatchedFileReload];
                                 } else if (flags & (DISPATCH_VNODE_DELETE)) {
                                         sleep(1); // added by Martin Hairer;
                                         if ([[NSFileManager defaultManager] isReadableFileAtPath: [[blockSelf fileURL] path]]) {
@@ -2668,6 +2696,8 @@ in other code when an external editor is being used. */
 	NSData				*myData;
 	NSUInteger		theLength;
 	
+	watchedFileSignature = [self fileSignatureAtPath:[absoluteURL path]];
+
 	if ([self doNotReadSource])
 		return YES;
 
@@ -2813,10 +2843,15 @@ else {
     
 	BOOL	value;
 
+	++watchReloadGeneration; // a reload that was still waiting is now redundant
 	value = [super revertToContentsOfURL:absoluteURL ofType:typeName error:outError];
 	if (value) {
 		[self setupTags];
 		[self colorizeAll];
+		// A write that ends after we read the file, but before the watch started again, sends no event.
+		NSString *currentSignature = [self fileSignatureAtPath:[absoluteURL path]];
+		if (dispatch_source != NULL && currentSignature != nil && ![currentSignature isEqualToString:watchedFileSignature])
+			[self scheduleWatchedFileReload];
 	}
 	
 	// FIXME: Is the following even needed? Changin the textstorage should trigger a redraw anyway,

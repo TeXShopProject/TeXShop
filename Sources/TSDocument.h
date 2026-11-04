@@ -379,6 +379,8 @@ enum RootCommand
 // end addition
 // ULRICH BAUER PATCH
    dispatch_source_t dispatch_source;
+   NSString *watchedFileSignature; // size and modification date of the file just before it was last read
+   NSUInteger watchReloadGeneration; // restarts the wait before an external change is reloaded
 // END PATCH
     
 // NSDate              *_pdfLastModDate;
