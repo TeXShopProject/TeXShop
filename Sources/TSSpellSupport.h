@@ -1,5 +1,6 @@
 /*
  * TeXShop - TeX editor for Mac OS
+ * TeX-aware spelling implementation by Ralph Martin.
  *
  * TeX-aware spell checking, working through the standard Spelling and Grammar
  * panel: the panel's Find Next (and Check Document Now, Command-;) finds the

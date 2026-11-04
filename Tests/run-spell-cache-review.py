@@ -6,10 +6,11 @@ root=Path(__file__).resolve().parents[1]
 s=(root/'Sources/TSTextView.m').read_text()
 a=s.index('- (TSSpellMask *)spellMask');b=s.index('- (void)pasteAsComment:',a)
 methods=s[a:b]
+methods=methods.replace('TSTextView *weakView', 'ProbeView *weakView')
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import "TSSpellExclusions.h"
-@interface ProbeView:NSTextView { TSSpellMask *_spellMask; NSUInteger _spellMaskLength; }
+@interface ProbeView:NSTextView { TSSpellMask *_spellMask; NSUInteger _spellMaskLength, _spellRulesGeneration; NSString *_spellMaskText; }
 - (TSSpellMask *)spellMask;
 - (TSSpellMask *)freshSpellMask;
 - (void)invalidateSpellMask;
@@ -30,14 +31,14 @@ int main(int argc,char **argv) { @autoreleasepool {
  [a didChangeText];
  NSString *cached=[b spellMask].masked,*fresh=[b freshSpellMask].masked;
  printf("shared storage, same-length edit: cached=%s fresh=%s equal=%d\n",cached.UTF8String,fresh.UTF8String,[cached isEqualToString:fresh]);
- if([cached isEqualToString:fresh]) return 2;
+ if(![cached isEqualToString:fresh]) return 2;
  [a setString:@"\\label{zzbad}"];[a spellMask];[b freshSpellMask];
  [@"command-names yes\ncheck-args label\n" writeToFile:@(getenv("TSSPELL_RULES")) atomically:YES encoding:NSUTF8StringEncoding error:NULL];
- [a spellMask];
+ [NSThread sleepForTimeInterval:1.1]; [a spellMask];
  cached=[b spellMask].masked;fresh=[b freshSpellMask].masked;
  printf("rules reload seen by another view: cached=%s fresh=%s equal=%d\n",cached.UTF8String,fresh.UTF8String,[cached isEqualToString:fresh]);
- if([cached isEqualToString:fresh]) return 3;
- puts("CONFIRMED: both cases leave the submitted cache stale.");
+ if(![cached isEqualToString:fresh]) return 3;
+ puts("PASS: shared text-storage edits and rule generations invalidate both caches.");
 }return 0;}
 '''.replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='ts-spell-review-') as td:

@@ -1,5 +1,6 @@
 /*
  * TeXShop - TeX editor for Mac OS
+ * TeX-aware spelling implementation by Ralph Martin.
  *
  * Reads the spelling-exclusion rules from a file and masks TeX source text
  * accordingly. See TSSpellExclusions.h and Resources/TeXShop/SpellCheck/
@@ -1115,6 +1116,9 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
     TSSpellRules *_rules;
     NSDate *_loadedModificationDate;
     NSNumber *_loadedSize;
+    NSTimeInterval _lastCheck;
+    NSUInteger _generation;
+    NSString *_loadProblems;
 }
 
 + (NSString *)userRulesPath
@@ -1173,7 +1177,7 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
 
 - (NSString *)problems
 {
-    @synchronized (self) { return _rules.problems; }
+    @synchronized (self) { return _loadProblems ?: _rules.problems; }
 }
 
 - (void)load
@@ -1190,17 +1194,24 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
         rules.problems = [NSString stringWithFormat:@"Could not read %@\n", _path];
     }
     @synchronized (self) {
-        _rules = rules;
+        _loadProblems = rules.problems;
+        if (!_rules || !rules.problems.length) {
+            _rules = rules;
+            _generation++;
+        }
         _loadedModificationDate = attrs[NSFileModificationDate];
         _loadedSize = attrs[NSFileSize];
     }
-#ifndef TSSPELL_STANDALONE_TEST
-    [self publishLegacyLists];
-#endif
+
 }
+
+- (NSUInteger)generation { return _generation; }
 
 - (BOOL)reloadIfChanged
 {
+    NSTimeInterval now = NSProcessInfo.processInfo.systemUptime;
+    if (now - _lastCheck < 1) return NO;
+    _lastCheck = now;
     if (!_path) return NO;
     NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:_path error:NULL];
     NSDate *date = attrs[NSFileModificationDate];
@@ -1214,26 +1225,6 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
     [self load];
     return YES;
 }
-
-#ifndef TSSPELL_STANDALONE_TEST
-// TeXShop's syntax colouring (TSDocument-Syntax.m) consults two lists of command
-// names, written with the backslash, when it colours the parameters of commands
-// whose parameters are not spell checked. They used to be written out in
-// TSAppDelegate.m; they now come from the rules file (skip-args and check-args).
-// The user's own extra lists (userCommandsToSpellCheck and friends, from the
-// preferences) are not touched.
-- (void)publishLegacyLists
-{
-    NSMutableArray *notChecked = [NSMutableArray array];
-    for (NSString *name in [self commandsWithExcludedArguments])
-        [notChecked addObject:[@"\\" stringByAppendingString:name]];
-    NSMutableArray *checked = [NSMutableArray array];
-    for (NSString *name in [self commandsWithCheckedArguments])
-        [checked addObject:[@"\\" stringByAppendingString:name]];
-    commandsNotToSpellCheck = notChecked;
-    commandsToSpellCheck = checked;
-}
-#endif
 
 - (NSArray<NSString *> *)commandsWithExcludedArguments
 {

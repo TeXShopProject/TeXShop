@@ -225,8 +225,10 @@
 // file the first time) and add the extra items to Edit > Spelling and Grammar.
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [TSSpellExclusions sharedExclusions];
-    [TSSpellSupport installMenuItems];
+    if ([SUD boolForKey:@"TeXAwareSpellChecking"]) {
+        [TSSpellExclusions sharedExclusions];
+        [TSSpellSupport installMenuItems];
+    }
 }
 
 
@@ -724,11 +726,25 @@
                       @"adoc",
                        nil];
     
-    // The lists of commands whose parameters are, or are not, spell checked used
-    // to be written out here. They now come from SpellingExclusions.txt: reading
-    // the rules fills commandsToSpellCheck and commandsNotToSpellCheck. (The user's
-    // own extra lists, from the preferences, are set below as before.)
-    [TSSpellExclusions sharedExclusions];
+    commandsToSpellCheck = [[NSArray alloc] initWithObjects:
+                    @"\\emph",
+                    @"\\verbatim",
+                    nil];
+    
+    commandsNotToSpellCheck = [[NSArray alloc] initWithObjects:
+                    @"\\addtocounter", @"\\addtolength", @"\\alpha", @"\\arabic", @"\\fnsymbol", @"\\roman", @"\\stepcounter", @"\\setcounter",
+                               @"\\usecounter", @"\\value", @"\\newcounter", @"\\label", @"\\pageref", @"\\ref", @"\\newcommand", @"\\renewcommand",
+                               @"\\newenvironment", @"\\renewenvironment", @"\\newtheorem", @"\\newfont", @"\\documentclass", @"\\usepackage",
+                               @"\\begin", @"\\end", @"\\setlength", @"\\setwidth", @"\\settodepth", @"\\settoheight", @"\\enlargethispage",
+                               @"\\hyphenation", @"\\pagenumbering", @"\\pagestyle", @"\\addvspace", @"\\framebox", @"\\hspace", @"\\vspace",
+                               @"\\makebox", @"\\parbox", @"\\raisebox", @"\\rule", @"\\sbox", @"\\savebox",
+                               @"\\usebox", @"\\include", @"\\includeonly",
+                               @"\\input", @"\\addcontentsline", @"\\\\addtocontents", @"fontencoding", @"\\fontfamily", @"\\fontseries",
+                               @"\\fontshape", @"\\fontsize", @"\\usefont", @"\\documentstyle", @"\\cite", @"\\nocite",
+                               @"\\psfig", @"\\selectlanguage",
+                               @"\\includegraphics", @"\\bibitem", @"\\geometry",
+                    nil];
+                               
     
     userCommandsToSpellCheck = [SUD stringArrayForKey: ExtraCommandsToCheckParametersKey];
     

@@ -5518,7 +5518,8 @@ preference change is cancelled. "*/
 // arguments of \label and \cite, comments, ...) are not underlined.
 - (NSInteger)textView:(NSTextView *)aTextView shouldSetSpellingState:(NSInteger)value range:(NSRange)affectedCharRange
 {
-    if (value == 0 || ![aTextView isKindOfClass:[TSTextView class]])
+    if (value == 0 || ![aTextView isKindOfClass:[TSTextView class]] ||
+        ![(TSTextView *)aTextView usesTeXAwareSpellChecking])
         return value;
     TSSpellMask *mask = [(TSTextView *)aTextView spellMask];
     if (mask && ([mask rangeTouchesExclusion:affectedCharRange] || [mask rangeIsNextToAccent:affectedCharRange]))

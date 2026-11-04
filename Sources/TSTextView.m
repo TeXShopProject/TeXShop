@@ -200,9 +200,16 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 // The panel's Find Next and Edit > Spelling and Grammar > Check Document Now
 // (Command-;) end up here. Holding Option gives the original system behaviour.
+// added by Terada: explicit experimental opt-in; preserve legacy preferences
+// and ordinary text documents until the new spelling UI is ready for release.
+- (BOOL)usesTeXAwareSpellChecking
+{
+    return [SUD boolForKey:@"TeXAwareSpellChecking"] && self.document.documentType == isTeX && g_texChar == '\\';
+}
+
 - (void)checkSpelling:(id)sender
 {
-    if ([NSEvent modifierFlags] & NSEventModifierFlagOption) {
+    if (![self usesTeXAwareSpellChecking] || ([NSEvent modifierFlags] & NSEventModifierFlagOption)) {
         [super checkSpelling:sender];
         return;
     }
@@ -215,7 +222,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 // gives the original behaviour.
 - (void)showGuessPanel:(id)sender
 {
-    if ([NSEvent modifierFlags] & NSEventModifierFlagOption) {
+    if (![self usesTeXAwareSpellChecking] || ([NSEvent modifierFlags] & NSEventModifierFlagOption)) {
         [super showGuessPanel:sender];
         return;
     }
@@ -230,11 +237,13 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 - (TSSpellMask *)spellMask
 {
     TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
-    if ([exclusions reloadIfChanged])
-        _spellMask = nil;
-    if (_spellMask == nil || _spellMaskLength != [[self string] length]) {
+    [exclusions reloadIfChanged];
+    if (_spellMask == nil || _spellRulesGeneration != exclusions.generation ||
+        ![_spellMaskText isEqualToString:self.string]) {
         [self showSpellingRulesProblems:exclusions.problems];
-        _spellMask = [exclusions maskForText:[self string]];
+        _spellMaskText = [self.string copy];
+        _spellRulesGeneration = exclusions.generation;
+        _spellMask = [exclusions maskForText:_spellMaskText];
     }
     _spellMaskLength = [[self string] length];
     return _spellMask;
@@ -259,7 +268,11 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
     alert.messageText = NSLocalizedString(@"Problems in the spelling exclusions file", @"");
     alert.informativeText = [NSString stringWithFormat:@"%@\n\n%@", [TSSpellExclusions userRulesPath], problems];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
-    [alert runModal];
+    __weak TSTextView *weakView = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSWindow *window = weakView.window;
+        if (window && !window.attachedSheet) [alert beginSheetModalForWindow:window completionHandler:nil];
+    });
 }
 
 - (void)invalidateSpellMask

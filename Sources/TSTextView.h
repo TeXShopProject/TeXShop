@@ -38,7 +38,8 @@
     NSUInteger textLocation; // location of insertion point
     // TeX-aware spell checking: cached masked text (see TSSpellExclusions)
     TSSpellMask *_spellMask;
-    NSUInteger _spellMaskLength;
+    NSUInteger _spellMaskLength, _spellRulesGeneration;
+    NSString *_spellMaskText;
     // end variables for Command Completion
 
 }
@@ -64,6 +65,7 @@
 - (void)moveBackwardTo$$:(id)sender;
 - (void)paste: (id)sender;
 - (void)updateInsertionPointStateAndRestartTimer:(BOOL)restartFlag;
+- (BOOL)usesTeXAwareSpellChecking;
 - (TSSpellMask *)spellMask;
 - (TSSpellMask *)freshSpellMask;
 - (void)invalidateSpellMask;

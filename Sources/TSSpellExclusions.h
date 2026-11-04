@@ -1,5 +1,6 @@
 /*
  * TeXShop - TeX editor for Mac OS
+ * TeX-aware spelling implementation by Ralph Martin.
  *
  * Which parts of a TeX source file the spell checker must ignore is not built
  * into TeXShop; it is read from ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt
@@ -88,6 +89,7 @@
 
 /*" Re-read the rules file if it changed. Returns YES if it was re-read. "*/
 - (BOOL)reloadIfChanged;
+@property (nonatomic, readonly) NSUInteger generation;
 
 /*" Problems found while reading the rules (unknown directives, bad regular
     expressions), one per line; nil if there were none. "*/

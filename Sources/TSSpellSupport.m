@@ -1,5 +1,6 @@
 /*
  * TeXShop - TeX editor for Mac OS
+ * TeX-aware spelling implementation by Ralph Martin.
  *
  * See TSSpellSupport.h.
  *
@@ -19,34 +20,6 @@
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)column row:(NSInteger)row
 {
     return self.words[(NSUInteger)row];
-}
-@end
-
-// Keeps Change All directly under the panel's Change button. The panel lays its
-// own buttons out again whenever it likes (when it is resized, when it is given a
-// new word), putting Find Next straight back where it was, so this watches the
-// frames of the buttons and puts things back: Find Next one step lower, Change All
-// in the place Find Next leaves.
-@interface TSChangeAllPlacement : NSObject
-@property (weak) NSButton *change, *findNext, *changeAll;
-@property BOOL flipped, placing;
-@property CGFloat step;
-- (void)place:(NSNotification *)note;
-@end
-@implementation TSChangeAllPlacement
-- (void)place:(NSNotification *)note
-{
-    if (self.placing || !self.change || !self.findNext || !self.changeAll) return;
-    self.placing = YES;
-    CGFloat sign = self.flipped ? 1 : -1;
-    NSRect change = self.change.frame;
-    CGFloat step = _step;
-    NSRect all = change, next = change;
-    all.origin.y = change.origin.y + sign * step;
-    next.origin.y = change.origin.y + 2 * sign * step;
-    if (!NSEqualRects(self.changeAll.frame, all)) self.changeAll.frame = all;
-    if (!NSEqualRects(self.findNext.frame, next)) self.findNext.frame = next;
-    self.placing = NO;
 }
 @end
 
@@ -164,46 +137,17 @@
 static __weak NSTextView *sReviewView;
 static NSString *sReviewWord;
 
-// The panel's editable field: the correction that Change would use. It holds the
-// misspelled word until the user types, or picks a suggestion from the list.
-static NSTextField *CorrectionField(NSView *view)
-{
-    if ([view isKindOfClass:[NSTextField class]] && ((NSTextField *)view).isEditable) return (NSTextField *)view;
-    for (NSView *sub in view.subviews) {
-        NSTextField *found = CorrectionField(sub);
-        if (found) return found;
-    }
-    return nil;
-}
+// added by Terada: bind replacement to the document and snapshot reviewed.
+static NSString *sReviewText;
+static NSRange sReviewSelection;
+static NSTextField *sReplacementField;
 
-static NSTableView *SuggestionsTable(NSView *view)
+static BOOL ReviewIsCurrent(NSTextView *view)
 {
-    if ([view isKindOfClass:[NSTableView class]]) return (NSTableView *)view;
-    for (NSView *sub in view.subviews) {
-        NSTableView *found = SuggestionsTable(sub);
-        if (found) return found;
-    }
-    return nil;
-}
-
-// What Change All replaces the word with: the panel's correction field if it holds
-// something other than the misspelled word (the user typed it, or picked a
-// suggestion, which the panel copies there); otherwise the suggestion selected in
-// the list or, if none is, the first one: what Change itself would use.
-static NSString *ReplacementFromPanel(NSString *word)
-{
-    NSView *content = [[NSSpellChecker sharedSpellChecker] spellingPanel].contentView;
-    NSString *typed = [[CorrectionField(content) stringValue]
-                       stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([typed length] && ![typed isEqualToString:word]) return typed;
-    NSTableView *table = SuggestionsTable(content);
-    if (!table || table.numberOfRows == 0 || table.tableColumns.count == 0) return nil;
-    NSInteger row = table.selectedRow >= 0 ? table.selectedRow : 0;
-    id source = table.dataSource;
-    id value = nil;
-    if ([source respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)])
-        value = [source tableView:table objectValueForTableColumn:table.tableColumns[0] row:row];
-    return [value isKindOfClass:[NSString class]] ? value : nil;
+    return view && view.window && view.window == NSApp.mainWindow &&
+        view.window.firstResponder == view &&
+        [view.string isEqualToString:sReviewText] &&
+        NSEqualRanges(view.selectedRange, sReviewSelection);
 }
 
 static BOOL IsWordCharacter(NSString *s, NSUInteger i)
@@ -239,8 +183,8 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
 {
     NSTextView *tv = sReviewView;
     NSString *word = sReviewWord;
-    NSString *replacement = [ReplacementFromPanel(word) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (!tv || [word length] == 0 || [replacement length] == 0 || [replacement isEqualToString:word]) {
+    NSString *replacement = [sReplacementField.stringValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (!ReviewIsCurrent(tv) || [word length] == 0 || [replacement length] == 0 || [replacement isEqualToString:word]) {
         NSBeep();
         return;
     }
@@ -278,76 +222,22 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     [self findNextMisspellingInTextView:tv mask:fresh];
 }
 
-static void CollectButtons(NSView *view, NSMutableArray<NSButton *> *buttons)
-{
-    if ([view isKindOfClass:[NSButton class]]) [buttons addObject:(NSButton *)view];
-    for (NSView *sub in view.subviews) CollectButtons(sub, buttons);
-}
-
-
-// Put a "Change All" button in the panel (it has none of its own), directly under
-// its Change button: the column of buttons at the right of the panel is Change,
-// Find Next, (a gap), Ignore, Learn ..., so Find Next is moved down into the gap
-// and Change All takes its place. The buttons are found by their positions, not by
-// their titles, which are translated. If the panel does not look like that (a
-// different layout in another system version), the button goes under the language
-// pop-up instead, as the panel's accessory view. Done once.
+// added by Terada: use the documented accessoryView, without inspecting or
+// moving AppKit's private panel controls. The replacement is explicitly entered.
 + (void)installChangeAllButton
 {
-    static BOOL installed;
-    static TSChangeAllPlacement *placement;      // kept for as long as the panel
-    if (installed) return;
-    installed = YES;
-    NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
-    NSString *title = NSLocalizedString(@"Change All", @"");
-
-    NSView *content = [checker spellingPanel].contentView;
-    NSMutableArray<NSButton *> *buttons = [NSMutableArray array];
-    CollectButtons(content, buttons);
-    // The column of buttons: those at the right-most x, top to bottom.
-    CGFloat right = -1;
-    for (NSButton *b in buttons) right = MAX(right, b.frame.origin.x);
-    NSMutableArray<NSButton *> *column = [NSMutableArray array];
-    for (NSButton *b in buttons)
-        if (fabs(b.frame.origin.x - right) < 1 && b.superview == content) [column addObject:b];
-    BOOL flipped = content.isFlipped;
-    [column sortUsingComparator:^NSComparisonResult(NSButton *x, NSButton *y) {
-        CGFloat a = x.frame.origin.y, c = y.frame.origin.y;
-        if (a == c) return NSOrderedSame;
-        return (a > c) != flipped ? NSOrderedAscending : NSOrderedDescending;     // top first
-    }];
-    if ([column count] >= 5) {
-        NSButton *change = column[0], *findNext = column[1], *third = column[2];
-        CGFloat step = fabs(change.frame.origin.y - findNext.frame.origin.y);
-        CGFloat gap = fabs(findNext.frame.origin.y - third.frame.origin.y);
-        if (step > 0 && gap >= 2 * step) {
-            NSButton *button = [NSButton buttonWithTitle:title target:self action:@selector(changeAll:)];
-            button.bezelStyle = change.bezelStyle;
-            button.controlSize = change.controlSize;
-            button.font = change.font;
-            button.autoresizingMask = change.autoresizingMask;
-            [content addSubview:button];
-            placement = [[TSChangeAllPlacement alloc] init];
-            placement.change = change;
-            placement.findNext = findNext;
-            placement.changeAll = button;
-            placement.flipped = flipped;
-            placement.step = step;
-            for (NSView *v in @[change, findNext, content]) {
-                v.postsFrameChangedNotifications = YES;
-                [[NSNotificationCenter defaultCenter] addObserver:placement selector:@selector(place:)
-                                                             name:NSViewFrameDidChangeNotification object:v];
-            }
-            [placement place:nil];
-            return;
-        }
-    }
-    NSButton *button = [NSButton buttonWithTitle:title target:self action:@selector(changeAll:)];
-    button.frame = NSMakeRect(309.5, 3, 101.5, 22);
+    if (sReplacementField) return;
+    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 36)];
+    sReplacementField = [[NSTextField alloc] initWithFrame:NSMakeRect(8, 7, 290, 22)];
+    sReplacementField.placeholderString = NSLocalizedString(@"Replacement for Change All", @"");
+    sReplacementField.autoresizingMask = NSViewWidthSizable;
+    [accessory addSubview:sReplacementField];
+    NSButton *button = [NSButton buttonWithTitle:NSLocalizedString(@"Change All", @"")
+                                        target:self action:@selector(changeAll:)];
+    button.frame = NSMakeRect(307, 5, 116, 26);
     button.autoresizingMask = NSViewMinXMargin;
-    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 28)];
     [accessory addSubview:button];
-    [checker setAccessoryView:accessory];
+    [NSSpellChecker sharedSpellChecker].accessoryView = accessory;
 }
 
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)tv mask:(TSSpellMask *)mask
@@ -358,6 +248,8 @@ static void CollectButtons(NSView *view, NSMutableArray<NSButton *> *buttons)
     NSInteger tag = tv.spellCheckerDocumentTag;
     sReviewView = tv;
     sReviewWord = nil;
+    sReviewText = nil;
+    sReplacementField.stringValue = @"";
     NSUInteger startMasked = [mask maskedIndexForOriginalIndex:NSMaxRange(tv.selectedRange)];
 
     // Look from the end of the selection, then wrap round to the top.
@@ -378,6 +270,8 @@ static void CollectButtons(NSView *view, NSMutableArray<NSButton *> *buttons)
     // The panel looks up the suggestions and fills in its word field.
     NSString *word = [masked substringWithRange:bad];
     sReviewWord = word;
+    sReviewText = [tv.string copy];
+    sReviewSelection = tv.selectedRange;
     [checker updateSpellingPanelWithMisspelledWord:word];
     return word;
 }
@@ -390,25 +284,9 @@ static void CollectButtons(NSView *view, NSMutableArray<NSButton *> *buttons)
     tv.selectedRange = before;          // undo that markup-blind search
     NSString *word = [self findNextMisspellingInTextView:tv mask:mask];
 
-    // If the system's own search was slow to finish (the first time the panel is
-    // shown, or in a long document) it may select its word after ours. Look again
-    // shortly afterwards, and if the selection has moved into text the rules
-    // exclude, do our search again.
-    NSRange chosen = tv.selectedRange;
-    __weak NSTextView *weakView = tv;
-    for (NSNumber *delay in @[@0.15, @0.6]) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([delay doubleValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSTextView *view = weakView;
-            if (!view) return;
-            NSRange now = view.selectedRange;
-            if (!NSEqualRanges(now, chosen) && now.length > 0 && [mask rangeTouchesExclusion:now]) {
-                view.selectedRange = before;
-                [self findNextMisspellingInTextView:view mask:mask];
-            } else if (NSEqualRanges(now, chosen) && word) {
-                [[NSSpellChecker sharedSpellChecker] updateSpellingPanelWithMisspelledWord:word];   // the panel may still show the system's word
-            }
-        });
-    }
+    // Do not schedule another search with a captured mask: the document or
+    // selection can change before it executes. Find Next starts a fresh review.
+    (void)word;
 }
 
 #pragma mark - Menu items
