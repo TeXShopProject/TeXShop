@@ -392,7 +392,6 @@ withDarkColors = NO;
         self.syncWithOvals = 1;
     else
         self.syncWithOvals = 0;
-    self.activateVoiceOverFix = [SUD boolForKey: FixVoiceOverKey];
     self.annotationsExist = NO;
     
  	tagLine = NO;
@@ -904,11 +903,6 @@ withDarkColors = NO;
             [scrollView2 setVerticalRulerView:self.lineNumberView2];
             [self.logScrollView setVerticalRulerView:self.logLineNumberView];
             
-// FIX RULER SCROÒL
-            [self.lineNumberView1 setDocument:self]; // added by Terada (for Lion bug)
-            [self.lineNumberView2 setDocument:self]; // added by Terada (for Lion bug)
-            [self.logLineNumberView setDocument:self]; // added by Terada (for Lion bug)
-// END FIX RULER SCROLL
 			
 			[scrollView setHasVerticalRuler:YES];
 			[scrollView setHasHorizontalRuler:NO];
@@ -1358,9 +1352,6 @@ if (! skipTextWindow) {
  
     
     
-    // Terada: Stop bouncing scrolling on Yosemite
-    // May 27, 2018; Koch turned off elasticity for everyone
- //    if (! [SUD boolForKey: SourceScrollElasticityKey])
     
 
 
@@ -1403,11 +1394,6 @@ if (! skipTextWindow) {
 			 [scrollView2 setVerticalRulerView:self.lineNumberView2];
 			 [self.logScrollView setVerticalRulerView: self.logLineNumberView];
             
-// FIX RULER SCROLL
-            [self.lineNumberView1 setDocument:self]; // added by Terada (for Lion bug)
-            [self.lineNumberView2 setDocument:self]; // added by Terada (for Lion bug)
-            [self.logLineNumberView setDocument:self]; // added by Terada (for Lion bug)
-// END FIX RULER SCROLL
 			
 			 [scrollView setHasVerticalRuler:YES];
 			 [scrollView setHasHorizontalRuler:NO];
@@ -1425,7 +1411,6 @@ if (! skipTextWindow) {
     
     // Terada: Stop bouncing scrolling on Yosemite
     // May 27, 2018; Koch turned off elasticity for everyone
-    //    if (! [SUD boolForKey: SourceScrollElasticityKey])
 
     {
         scrollView.horizontalScrollElasticity = NSScrollElasticityNone;
@@ -1819,26 +1804,6 @@ if (! skipTextWindow) {
     
     }
     
-// Koch 2022 The following is a fix for Voice Over in the Preview Window on Monterey and Higher
-   
-    if (self.activateVoiceOverFix)
-    {
-        SEL fixSelector = @selector(voiceOverFix);
-        [self performSelector: fixSelector withObject: self afterDelay: 1];
-    }
-
-    
-}
-
-- (void)voiceOverFix
-{
-    MyPDFKitView *theView;
-    
-    
-     if ([self fromKit])
-        [[self pdfKitView] nextPage: self];
-    if ([self fromKit])
-        [[self pdfKitView] previousPage: self];
 }
 
 
@@ -1863,71 +1828,6 @@ if (! skipTextWindow) {
 {
     [[self textWindow] orderOut: self];
 }
-
-// FIX RULER SCROLL
-- (void) redrawLineNumbers: sender // added by Terada (for Lion bug)
-{
-  
-    return; // Fix jiggling at top and bottom of scroll; Koch Oct 12, 2018
-    
-    if(!lineNumbersShowing) return;
-    
-	NSSize		newSize;
-	NSRect		theFrame;
-    
-
-    if ((sender == textView1) && ([scrollView scrollerStyle] == NSScrollerStyleOverlay)) {
-    
-    NSRect currentRect = [scrollView documentVisibleRect];
-    
-    if(!NSEqualRects(currentRect, lastDocumentVisibleRect)){
-        theFrame = [scrollView frame];
-        newSize.width = theFrame.size.width;
-        newSize.height = theFrame.size.height+1;
-        [scrollView setFrameSize:newSize];
-        newSize.height = theFrame.size.height;
-        [scrollView setFrameSize:newSize];
-        lastDocumentVisibleRect = currentRect;
-    }
-        
-    }
-    
-    if ((sender == textView2) && ([scrollView2 scrollerStyle] == NSScrollerStyleOverlay)) {
-    
-    if (windowIsSplit) {
-        NSRect currentRect2 = [scrollView2 documentVisibleRect];
-        
-        if(!NSEqualRects(currentRect2, lastDocumentVisibleRect2)){
-            theFrame = [scrollView2 frame];
-            newSize.width = theFrame.size.width;
-            newSize.height = theFrame.size.height+1;
-            [scrollView2 setFrameSize:newSize];
-            newSize.height = theFrame.size.height;
-            [scrollView2 setFrameSize:newSize];
-            lastDocumentVisibleRect2 = currentRect2;
-        }
-    }
-        
-    }
-    
-    if ((sender == self.logTextView) && ([self.logScrollView scrollerStyle] == NSScrollerStyleOverlay)) {
-    
-    NSRect currentRectConsole = [self.logScrollView documentVisibleRect];
-    if(!NSEqualRects(currentRectConsole, lastDocumentVisibleRectConsole)){
-        theFrame = [self.logScrollView frame];
-        newSize.width = theFrame.size.width;
-        newSize.height = theFrame.size.height+1;
-        [self.logScrollView setFrameSize:newSize];
-        newSize.height = theFrame.size.height;
-        [self.logScrollView setFrameSize:newSize];
-        lastDocumentVisibleRectConsole = currentRectConsole;
-    }
-        
-    }
-    
-    
-}
-// END FIX RULER SCROLL
 
 - (void)showWindows
 {
@@ -3993,27 +3893,13 @@ if ( ! skipTextWindow) {
 
 - (void)setLogWindowFontFromPreferences:(NSNotification *)notification
 {
-	NSData	*fontData;
-	NSFont 	*font, *theFont;
+	NSFont 	*theFont;
     
-    if (! [SUD boolForKey:ScreenFontForLogAndConsoleKey])
-    {
-      //  [self.logTextView setFontSafely:[NSFont screenFontWithRenderingMode:NSFontDefaultRenderingMode]];
-        
-        theFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
+    theFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
      
-        // change below requested by Claudio Beccari on Dec 25, 2020
-        // [self.logTextView setFontSafely: [NSFont userFontOfSize:12.0]];
-        [self.logTextView setFontSafely: theFont];
-        return;
-    }
-    
-	fontData = [SUD objectForKey:DocumentFontKey];
-	if (fontData != nil)
-        {
-		font = [NSUnarchiver unarchiveObjectWithData:fontData];
-        [self.logTextView setFontSafely: font];
-        }
+    // change below requested by Claudio Beccari on Dec 25, 2020
+    // [self.logTextView setFontSafely: [NSFont userFontOfSize:12.0]];
+    [self.logTextView setFontSafely: theFont];
 }
 
 
@@ -4023,10 +3909,7 @@ if ( ! skipTextWindow) {
 
 	theFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
     
-    if ([SUD boolForKey:ScreenFontForLogAndConsoleKey])
-        [outputText setFontSafely: [theFont screenFontWithRenderingMode:NSFontDefaultRenderingMode]];
-    else
-        [outputText setFontSafely: theFont];
+    [outputText setFontSafely: theFont];
     
     [self setLogWindowFontFromPreferences:notification];
 }
@@ -4238,10 +4121,6 @@ preference change is cancelled. "*/
         font = [NSUnarchiver unarchiveObjectWithData:self.previousFontData];
         [textView1 setFontSafely:font];
         [textView2 setFontSafely:font];
-        /*
-         if (! [SUD boolForKey:ScreenFontForLogAndConsoleKey])
-         [self.logTextView setFontSafely:font];
-         */
     }
     
     
@@ -4265,16 +4144,6 @@ preference change is cancelled. "*/
         {
              [textViewContent addAttributes: fontAttributes range: area];
         }
-    
-        /*
-         if (! [SUD boolForKey:ScreenFontForLogAndConsoleKey])
-         {
-             NSTextStorage* logStorage = [self.logTextView textStorage];
-             area = NSMakeRange(0, [logStorage length]);
-             [logStorage invalidateAttributesInRange:area];
-             [logStorage addAttributes: fontAttributes range: area];
-         }
-         */
      }
     
     else
@@ -4282,15 +4151,6 @@ preference change is cancelled. "*/
     
     
 	[self fixUpTabs];
-    
-     if (! [SUD boolForKey:ScreenFontForLogAndConsoleKey])
-         return;
-    
-    if (self.previousFontData != nil)
-    {
-       font = [NSUnarchiver unarchiveObjectWithData:self.previousFontData];
-        [self.logTextView setFontSafely:font];
-    }
     
 }
 
@@ -6703,10 +6563,7 @@ if (! useFullSplitWindow) {
 	if (syncMethod == SYNCTEXFIRST) {
         [(MyPDFKitView *)self.pdfKitWindow.activeView setOldSync: NO];
 		result = [self doPreviewSyncTeXWithFilename: fileName andLine:line andCharacterIndex:idx andTextView:aTextView];
-		if ((result) || ([SUD boolForKey: SyncTeXOnlyKey]))
-			return;
-		else
-            return; // 3.53 change
+		return; // 3.53 change
 			// syncMethod = SEARCHONLY;
 		}
     

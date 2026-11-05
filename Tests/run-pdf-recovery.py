@@ -11,7 +11,7 @@ program=r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
 #import "TSExternalPDFReload.h"
-static BOOL atLeastHighSierra=YES,atLeastMojave=YES,BuggyHighSierra=NO;
+static BOOL atLeastHighSierra=YES,atLeastMojave=YES;
 #define SUD NSUserDefaults.standardUserDefaults
 #define FlashFixKey @"flash"
 #define FlashDelayKey @"delay"
@@ -20,7 +20,6 @@ static BOOL atLeastHighSierra=YES,atLeastMojave=YES,BuggyHighSierra=NO;
 #define PdfPageStyleKey @"pageStyle"
 #define PdfFirstPageStyleKey @"firstPage"
 #define PdfKitFitSizeKey @"fit"
-#define continuousHighSierraFixKey @"hsfix"
 #define NEW_PDF_FIT_TO_WIDTH 2
 #define NEW_PDF_FIT_TO_HEIGHT 3
 #define PDF_FIT_TO_WINDOW 4
@@ -57,7 +56,6 @@ static NSInteger screenUpdates=0;
 @property BOOL firstTime,oldUsed,doScroll,skipLinks,globalLongTerm;
 @property NSInteger handlingLink,timerNumber,stringAlignment;
 @property NSString *oneOffSearchString;
-@property NSTimer *updatePageNumberTimer;
 @property TestWindow *myPDFWindow;
 @property TestDocument *myDocument;
 @property id sourceFiles;
@@ -71,7 +69,6 @@ static NSInteger screenUpdates=0;
 -(void)setupOutline;
 -(void)initializeDisplay;
 -(void)cleanupMarquee:(BOOL)b;
--(void)fixWhiteDisplay;
 -(NSImage*)screenCacheImageForView:(NSView*)v;
 -(void)reShowWithPath:(NSString*)path;
 -(void)reShowWithDocument:(PDFDocument*)document;
@@ -86,7 +83,6 @@ static NSInteger screenUpdates=0;
 -(void)setupOutline{}
 
 -(void)cleanupMarquee:(BOOL)b{}
--(void)fixWhiteDisplay{}
 -(NSImage*)screenCacheImageForView:(NSView*)v{
  NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[NSColor.grayColor setFill];NSRectFill(v.bounds);[image unlockFocus];return image;
 }

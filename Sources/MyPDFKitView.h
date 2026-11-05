@@ -169,7 +169,6 @@
 @property           NSInteger                       handlingLink; // 0 = NO, 1 = Possible, 2 = ShowingLink
 @property           NSInteger                       timerNumber; // 0 <= timerNumber <= 100
 @property           NSRect                          olderVisibleRect;
-@property (retain)  NSTimer                         *updatePageNumberTimer;
 @property (retain)  HideView                        *myHideView1;
 @property (retain)  HideView                        *myHideView2;
 @property BOOL                                      PDFFlashFix;
@@ -312,7 +311,6 @@
 // - (void) setOverView:(OverView *)theOveView;
 // - (OverView *)overView;
 // - (BOOL)resignFirstResponder;
-- (void)fixWhiteDisplay;
 - (void)applyDarkModeInversionFilter;
 - (void)removeDarkModeInversionFilter;
 - (void)updateDarkModeInversion;

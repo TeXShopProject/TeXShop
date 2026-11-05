@@ -325,9 +325,6 @@
 #endif
 */
 
-    BuggyHighSierra = NO;
-    if ((floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_12) && (NSAppKitVersionNumber < 1561.3)) // 10_13_3 = 1561.2 and 10_13_4 = 1561.4
-        BuggyHighSierra = YES;
     // NSLog(@"The app kit version number is %lf", NSAppKitVersionNumber);
     
     

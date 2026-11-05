@@ -300,8 +300,6 @@
 	<string>YES</string>
 	<key>SyncMethod</key>
 	<string>3</string>
-	<key>SyncTeXOnly</key>
-	<string>NO</string>
 	<key>syncWithRedOvals</key>
 	<string>NO</string>
 	<key>SyntaxColoringEnabled</key>
@@ -336,8 +334,6 @@
 	<string>1</string>
 	<key>AutoSave</key>
 	<string>NO</string>
-	<key>FixLineNumberScroll</key>
-	<string>YES</string>
 	<key>RightJustifyIfAny</key>
 	<string>NO</string>
 	<key>AutoSaveEnabled</key>
@@ -346,8 +342,6 @@
 	<string>2</string>
 	<key>fullscreenResizeOption</key>
 	<string>3</string>
-	<key>ScreenFontForLogAndConsole</key>
-	<string>NO</string>
 	<key>WatchServer</key>
 	<string>YES</string>
 	<key>SourceInterlineSpace</key>
@@ -372,10 +366,6 @@
 	<false/>
 	<key>SwitchSides</key>
 	<false/>
-	<key>SourceScrollElasticity</key>
-	<false/>
-	<key>FixPreviewBlur</key>
-	<false/>
 	<key>InterpolationValue</key>
 	<integer>3</integer>
 	<key>YosemiteScrollBug</key>
@@ -392,8 +382,6 @@
 	<string>0.00</string>
 	<key>AutomaticSpellingCorrectionEnabled</key>
 	<false/>
-	<key>FixSplitBlankPages</key>
-	<true/>
 	<key>IndexColorStart</key>
 	<false/>
 	<key>SpellingLanguageDefault</key>
@@ -402,8 +390,6 @@
 	<true/>
 	<key>OriginalSpelling</key>
 	<false/>
-	<key>ContinuousHighSierraFix</key>
-	<true/>
 	<key>TabsAlsoForInputFiles</key>
 	<false/>
 	<key>FlashFix</key>
@@ -499,8 +485,6 @@
 	<key>OpenAsTabs</key>
 	<integer>0</integer>
 	<key>SyntaxColorEntryLine</key>
-	<false/>
-	<key>FixVoiceOver</key>
 	<false/>
 	<key>DisplayAsBook</key>
 	<true/>

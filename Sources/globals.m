@@ -169,7 +169,6 @@ NSString *RevisePathKey = @"RevisePath"; // NO or YES
 NSString *OtherTeXExtensionsKey = @"OtherTeXExtensions";
 NSString *ReleaseDocumentOnLeopardKey = @"ReleaseDocumentOnLeopard";
 NSString *BibDeskCompletionKey = @"BibDeskCompletion";
-NSString *SyncTeXOnlyKey = @"SyncTeXOnly";
 NSString *ConsoleBackgroundColor_RKey = @"ConsoleBackgroundColor_R";
 NSString *ConsoleBackgroundColor_GKey = @"ConsoleBackgroundColor_G";
 NSString *ConsoleBackgroundColor_BKey = @"ConsoleBackgroundColor_B";
@@ -216,12 +215,10 @@ NSString *invisibleCharBlueKey = @"invisibleCharBlue"; //Koch
 NSString *brieflyFlashYellowForMatchKey = @"brieflyFlashYellowForMatch"; //Koch
 NSString *syncWithRedOvalsKey = @"syncWithRedOvals";
 NSString *AutoSaveKey = @"AutoSave"; // inactive
-NSString *FixLineNumberScrollKey = @"FixLineNumberScroll";
 NSString *RightJustifyIfAnyKey = @"RightJustifyIfAny";
 NSString *AutoSaveEnabledKey = @"AutoSaveEnabled";
 NSString *fullscreenPageStyleKey = @"fullscreenPageStyle";
 NSString *fullscreenResizeOptionKey = @"fullscreenResizeOption";
-NSString *ScreenFontForLogAndConsoleKey = @"ScreenFontForLogAndConsole";
 NSString *WatchServerKey = @"WatchServer";
 NSString *SourceInterlineSpaceKey = @"SourceInterlineSpace";
 NSString *SpellingLanguageKey = @"SpellingLanguage";
@@ -232,8 +229,6 @@ NSString *SourceAndPreviewInSameWindowKey = @"SourceAndPreviewInSameWindow";
 NSString *DocumentSplitWindowPositionKey = @"DocumentSplitWindowPosition";
 NSString *TabIndentKey = @"TabIndent";
 NSString *SwitchSidesKey = @"SwitchSides";
-NSString *SourceScrollElasticityKey = @"SourceScrollElasticity";
-NSString *FixPreviewBlurKey = @"FixPreviewBlur";
 NSString *InterpolationValueKey = @"InterpolationValue";
 NSString *ConsoleWindowFixedPosKey = @"ConsoleWindowFixedPos";
 NSString *ConsoleWindowPosModeKey = @"ConsoleWindowPosMode";
@@ -244,12 +239,10 @@ NSString *reverseSyncRedKey = @"ReverseSyncRed";
 NSString *reverseSyncGreenKey = @"ReverseSyncGreen";
 NSString *reverseSyncBlueKey = @"ReverseSyncBlue";
 NSString *AutomaticSpellingCorrectionEnabledKey = @"AutomaticSpellingCorrectionEnabled";
-NSString *FixSplitBlankPagesKey = @"FixSplitBlankPages";
 NSString *IndexColorStartKey = @"IndexColorStart";
 NSString *spellingLanguageDefaultKey = @"SpellingLanguageDefault";
 NSString *spellingAutomaticDefaultKey = @"SpellingAutomaticDefault";
 NSString *originalSpellingKey = @"OriginalSpelling";
-NSString *continuousHighSierraFixKey = @"ContinuousHighSierraFix";
 NSString *tabsAlsoForInputFilesKey = @"TabsAlsoForInputFiles";
 NSString *FlashFixKey = @"FlashFix";
 NSString *FlashDelayKey = @"FlashDelay";
@@ -353,7 +346,6 @@ NSString *AltPathKey = @"AltPath";
 NSString *IgnoreStartOnRebootKey = @"IgnoreStartOnReboot";
 NSString *OpenAsTabsKey = @"OpenAsTabs";
 NSString *SyntaxColorEntryLineKey = @"SyntaxColorEntryLine";
-NSString *FixVoiceOverKey = @"FixVoiceOver";
 NSString *DisplayAsBookKey = @"DisplayAsBook";
 NSString *AlternateEngineKey = @"AlternateEngine";
 NSString *HtmlWindowNameKey = @"HtmlWindowName";
@@ -414,7 +406,6 @@ BOOL                atLeastMonterey;
 BOOL                atLeastVentura;
 BOOL                atLeastSonoma;
 BOOL                atLeastSequoia;
-BOOL                BuggyHighSierra;
 BOOL                editorCanAddBrackets; // this preference is a global since it is accessed after each keystroke in the editor
 
 // Encodings
