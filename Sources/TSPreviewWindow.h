@@ -122,7 +122,6 @@
 - (void)changePDFViewSize: (id)sender; // mitsu 1.29 (O)
 - (void)saveSelectionToFile: (id)sender; // mitsu 1.29 (O)
 #endif
-//- (void)configurePaperSize: sender;
 - (void) splitPdfKitWindow: (id)sender; 
 - (void)toggleLinkPopups: (id)sender;
 - (void)toggleApplicationMenu: (id)sender;

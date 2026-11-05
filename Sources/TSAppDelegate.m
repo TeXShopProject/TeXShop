@@ -1563,22 +1563,6 @@
 	}
 }
 
-#pragma mark implementation of NSUserNotificationCenterDelegate protocol
-- (void)userNotificationCenter:(NSUserNotificationCenter *)center didDeliverNotification:(NSUserNotification *)notification
-{
-    
-}
-
-- (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification
-{
-    
-}
-
-- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification
-{
-    return YES;
-}
-
 
 
 @end
