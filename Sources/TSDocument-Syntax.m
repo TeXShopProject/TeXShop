@@ -137,6 +137,19 @@ static BOOL isValidOrdinaryTeXCommandChar(NSInteger c)
 }
     
 // Notice the code below to avoid recoloring when the file is first opened!
+// YES when the paragraph containing location already has the given alignment.
+// Natural alignment counts as left alignment, which it is for these lines.
+static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location, NSTextAlignment alignment)
+{
+    if (location >= [storage length])
+        return NO;
+    NSParagraphStyle *style = [storage attribute:NSParagraphStyleAttributeName atIndex:location effectiveRange:NULL];
+    NSTextAlignment current = style ? [style alignment] : NSTextAlignmentNatural;
+    if (current == NSTextAlignmentNatural)
+        current = NSLeftTextAlignment;
+    return current == alignment;
+}
+
 - (void)colorizeText:(NSTextView *)aTextView range:(NSRange)range
 {
     NSLayoutManager *layoutManager;
@@ -275,10 +288,12 @@ static BOOL isValidOrdinaryTeXCommandChar(NSInteger c)
             }
             theLine = [textString substringWithRange:selectedLineRange];
             testRange = [theLine rangeOfCharacterFromSet: middleEastSet];
-            if (testRange.location == NSNotFound)
-                [aTextView setAlignment: NSLeftTextAlignment range: selectedLineRange];
-            else
-                [aTextView setAlignment: NSRightTextAlignment range: selectedLineRange];
+            NSTextAlignment wanted = (testRange.location == NSNotFound) ? NSLeftTextAlignment : NSRightTextAlignment;
+            // Setting the alignment edits the text storage, which relays out the
+            // paragraph, resizes the view and colors the visible area again. Only
+            // change it when it differs, so that coloring does not feed itself.
+            if (! TSParagraphHasAlignment([aTextView textStorage], start, wanted))
+                [aTextView setAlignment: wanted range: selectedLineRange];
         }
     }
     
