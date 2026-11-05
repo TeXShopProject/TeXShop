@@ -1,5 +1,42 @@
 [
   {
+    "tag": "v5.59",
+    "name": "5.59",
+    "assets": [
+      {
+        "kind": "app",
+        "name": "TeXShop-5.59.zip",
+        "size": 61445206,
+        "url": "https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59.zip",
+        "download_url": "https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59.zip",
+        "sha256": "7ce63abb6346ffaa95d71b7d45506d94cab69676d7e8fd04b51a12f4b57eb711",
+        "status": "ok",
+        "plist_min": "14.6",
+        "bundle_version": "5.59",
+        "architectures": [
+          {
+            "cpu": "x86_64",
+            "min_os": "14.6"
+          },
+          {
+            "cpu": "arm64",
+            "min_os": "14.6"
+          }
+        ],
+        "icon_png_sha256": "c6dba4ec87ba921f13d41adb0ed83caf7973d2a6beb9d5bc70b52607297428e9"
+      },
+      {
+        "kind": "source",
+        "name": "TeXShop-5.59-source.zip",
+        "size": 193188464,
+        "url": "https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59-source.zip",
+        "download_url": "https://github.com/TeXShopProject/TeXShop/releases/download/v.5.59/TeXShop-5.59-source.zip",
+        "sha256": "baff00e89750a0b4c993d184dda3b39585e1d7140e9c9ada49bdc0294793b88f",
+        "status": "ok"
+      }
+    ]
+  },
+  {
     "tag": "v5.57",
     "name": "5.57",
     "published_at": "2025-10-06T21:54:20Z",

@@ -847,5 +847,9 @@
   },
   "v1.1": {
     "path": "archive/version.html#changes-1-1"
+  },
+  "v5.59": {
+    "path": "release-notes.html#v5.59",
+    "path_ja": "release-notes-ja.html#v5.59"
   }
 }

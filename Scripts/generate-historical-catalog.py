@@ -44,7 +44,7 @@ def details(app,ja):
  if 'i386' in cpus and 'x86_64' not in cpus and 'arm64' not in cpus:
   os+=('<small>32ビットIntelはmacOS 10.14まで</small>' if ja else '<small>32-bit Intel: through macOS 10.14</small>')
  if 'ppc' in cpus:os+=('<small>PowerPCはMac OS X 10.6まで</small>' if ja else '<small>PowerPC: through Mac OS X 10.6</small>')
- if 'arm64' in cpus:os+=('<small>Apple SiliconはmacOS 11以降</small>' if ja else '<small>Apple Silicon requires macOS 11 or later</small>')
+ if 'arm64' in cpus and (not minimum or tuple(map(int,minimum.split('.'))) < (11,0)):os+=('<small>Apple SiliconはmacOS 11以降</small>' if ja else '<small>Apple Silicon requires macOS 11 or later</small>')
  return os,cpu
 for ja in (False,True):
  filename='downloads-ja.html' if ja else 'downloads.html';text=(root/filename).read_text();pre,rest=text.split('<main class="archive-content downloads">',1); oldmain,post=rest.split('</main>',1)
@@ -56,7 +56,7 @@ for ja in (False,True):
  rows=[]
  for r in meta:
   if not r['assets']:continue
-  app=next((a for a in r['assets'] if a['name'].lower().startswith('texshop-')),None);source=next((a for a in r['assets'] if a['name'].lower().startswith('texshopsource-')),None)
+  app=next((a for a in r['assets'] if a.get('kind') == 'app' or (not a.get('kind') and a['name'].lower().startswith('texshop-'))),None);source=next((a for a in r['assets'] if a.get('kind') == 'source' or (not a.get('kind') and a['name'].lower().startswith('texshopsource-'))),None)
   iconasset=app or source or {}; icon=iconasset.get('icon_png_sha256') or (None if iconasset.get('icon_inferred_from') else iconasset.get('icon_sha256')); iconpath='assets/release-icons/history/'+icon+'.png' if icon and (root/'assets/release-icons/history'/f'{icon}.png').exists() else None
   img=f'<img src="{iconpath}" width="48" height="48" alt="" loading="lazy">' if iconpath else '<span class="release-icon-placeholder" aria-hidden="true"></span>'
   requirement_app=dict(app) if app else None
@@ -96,7 +96,7 @@ for ja in (False,True):
   status=statuses.get(r['tag'],{}); state=status.get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development'),'first_official':('初公式リリース','first official release')}.get(state); badge=''
   if label:
    label_text=(label[0] if ja else label[1]) if state=='first_official' else (f'（{label[0]}）' if ja else f'({label[1]})'); badge=f' <span class="release-status{" first-official" if state=="first_official" else ""}">{label_text}</span>'
-  changelog=html.escape(changelogs[r['tag']]['path'],quote=True); version_link=f'<a href="{changelog}">TeXShop {version}</a>'
+  changelog=html.escape(changelogs[r['tag']].get('path_ja' if ja else 'path',changelogs[r['tag']]['path']),quote=True); version_link=f'<a href="{changelog}">TeXShop {version}</a>'
   if state=='first_official':
    badge=f'<small class="release-status first-official">{label_text}</small>'; version_contents=version_link+stamp+badge; version_class='release-version first-release-version'
   else:
@@ -122,7 +122,8 @@ for ja in (False,True):
  assert special, 'Missing 5.58 in selected older releases'
  special_row=special.group(0).replace('TeXShop 5.58<small', '<a href="archive/golden-gate.html#section-4">TeXShop 5.58</a><small')
  assert special_row!=special.group(0), 'Missing 5.58 version label'
- rows.insert(0,special_row)
+ special_index=sum(bool(r['assets']) and order(r)>order({'tag':'v5.58'}) for r in meta)
+ rows.insert(special_index,special_row)
  back='<a href="downloads-ja.html">‹ リリース履歴</a>' if ja else '<a href="downloads.html">‹ Releases</a>'
  main=f'<main class="archive-content downloads"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)
