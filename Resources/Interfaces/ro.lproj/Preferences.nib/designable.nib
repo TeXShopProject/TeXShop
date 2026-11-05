@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="F2K-Ru-3Iv" id="FsJ-eM-j1z"/>
                 <outlet property="ConsoleAlphaColorWell" destination="3bU-bC-dKs" id="mNS-Gl-6cz"/>
                 <outlet property="ConsoleBackgroundColorWell" destination="Hqv-45-3NX" id="ABn-2A-UjU"/>
@@ -588,12 +589,30 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Spell Checking" translatesAutoresizingMaskIntoConstraints="NO" id="78f-0d-IXp">
-                                            <rect key="frame" x="338" y="278" width="258" height="90" />
+                                            <rect key="frame" x="338" y="218" width="258" height="150"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="FSF-dj-Nlz">
-                                                <rect key="frame" x="0.0" y="0.0" width="258" height="76" />
+                                                <rect key="frame" x="0" y="0" width="258" height="136"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Folosește reguli de excludere pentru documentele TeX. Dezactivați pentru a folosi opțiunile anterioare de mai jos. Nu schimbă verificarea ortografiei în timpul tastării." id="ts-aware-spelling">
+                                                        <rect key="frame" x="17" y="105" width="231" height="22"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="Verificare ortografică TeX" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ts-aware-spelling-cell">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="texAwareSpellCheckPressed:" target="-2" id="ts-aware-spelling-action"/></connections>
+                                                    </button>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Editează regulile de excludere pentru verificarea ortografică TeX." id="ts-edit-spelling">
+                                                        <rect key="frame" x="17" y="77" width="231" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="push" title="Editează excluderile TeX…" bezelStyle="rounded" borderStyle="border" alignment="center" inset="2" id="ts-edit-spelling-cell">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="editSpellingExclusions:" target="-2" id="ts-edit-spelling-action"/></connections>
+                                                    </button>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0hC-fl-duK">
                                                         <rect key="frame" x="17" y="9" width="238" height="58" />
                                                         <autoresizingMask key="autoresizingMask"/>
@@ -664,7 +683,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Line Number Size" translatesAutoresizingMaskIntoConstraints="NO" id="cBs-WQ-okS">
-                                            <rect key="frame" x="338" y="196" width="258" height="70" />
+                                            <rect key="frame" x="338" y="136" width="258" height="70"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="UHS-PI-hBb">
                                                 <rect key="frame" x="0.0" y="0.0" width="258" height="56" />

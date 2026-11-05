@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="o46-e7-of5" id="vfM-VY-zDr"/>
                 <outlet property="ConsoleAlphaColorWell" destination="jd6-K9-lsD" id="UNC-Ad-LTy"/>
                 <outlet property="ConsoleBackgroundColorWell" destination="hnc-V6-ZUl" id="Uae-Ja-c1P"/>
@@ -582,12 +583,30 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="철자 검사" translatesAutoresizingMaskIntoConstraints="NO" id="Emu-YS-OX4">
-                                            <rect key="frame" x="321" y="278" width="256" height="90" />
+                                            <rect key="frame" x="321" y="218" width="256" height="150"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="KTx-oM-BaI">
-                                                <rect key="frame" x="0.0" y="0.0" width="256" height="76" />
+                                                <rect key="frame" x="0" y="0" width="256" height="136"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="TeX 문서에 제외 규칙을 사용합니다. 끄면 아래의 기존 옵션을 사용합니다. 입력 중 맞춤법 검사 설정은 변경하지 않습니다." id="ts-aware-spelling">
+                                                        <rect key="frame" x="17" y="105" width="229" height="22"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="TeX 인식 맞춤법 검사" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ts-aware-spelling-cell">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="texAwareSpellCheckPressed:" target="-2" id="ts-aware-spelling-action"/></connections>
+                                                    </button>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="TeX 맞춤법 검사에 사용하는 제외 규칙을 편집합니다." id="ts-edit-spelling">
+                                                        <rect key="frame" x="17" y="77" width="229" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="push" title="TeX 제외 규칙 편집…" bezelStyle="rounded" borderStyle="border" alignment="center" inset="2" id="ts-edit-spelling-cell">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="editSpellingExclusions:" target="-2" id="ts-edit-spelling-action"/></connections>
+                                                    </button>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w9C-zr-STr">
                                                         <rect key="frame" x="17" y="9" width="238" height="58" />
                                                         <autoresizingMask key="autoresizingMask"/>
@@ -662,7 +681,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="행 번호 크기" translatesAutoresizingMaskIntoConstraints="NO" id="Pg6-FL-T4o">
-                                            <rect key="frame" x="321" y="196" width="256" height="70" />
+                                            <rect key="frame" x="321" y="136" width="256" height="70"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="vgW-rA-haK">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="56" />

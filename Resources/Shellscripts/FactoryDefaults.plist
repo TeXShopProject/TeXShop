@@ -442,6 +442,8 @@
 	<true/>
 	<key>UseNewTagsAndLabels</key>
 	<true/>
+	<key>TeXAwareSpellChecking</key>
+	<true/>
 	<key>TurnOffCommandSpellCheck</key>
 	<false/>
 	<key>TurnOffCommentSpellCheck</key>

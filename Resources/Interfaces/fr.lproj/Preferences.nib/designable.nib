@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="3jh-DN-ejZ" id="XQb-Q0-R19"/>
                 <outlet property="ConsoleAlphaColorWell" destination="SUR-wp-DJx" id="TVq-3s-uLw"/>
                 <outlet property="ConsoleBackgroundColorWell" destination="IPn-Gl-81C" id="s0w-G3-jVt"/>
@@ -378,12 +379,30 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Vérifier l'orthographe" translatesAutoresizingMaskIntoConstraints="NO" id="oPT-zB-2RA">
-                                            <rect key="frame" x="369" y="208" width="281" height="90" />
+                                            <rect key="frame" x="369" y="148" width="281" height="150"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="YtX-Tc-4e5">
-                                                <rect key="frame" x="0.0" y="0.0" width="281" height="76" />
+                                                <rect key="frame" x="0" y="0" width="281" height="136"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Utiliser les règles d’exclusion pour les documents TeX. Désactivez cette option pour utiliser les anciennes options ci-dessous. La vérification pendant la frappe reste inchangée." id="ts-aware-spelling">
+                                                        <rect key="frame" x="17" y="105" width="254" height="22"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="Vérification adaptée à TeX" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ts-aware-spelling-cell">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="texAwareSpellCheckPressed:" target="-2" id="ts-aware-spelling-action"/></connections>
+                                                    </button>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Modifier les règles d’exclusion de la vérification orthographique adaptée à TeX." id="ts-edit-spelling">
+                                                        <rect key="frame" x="17" y="77" width="254" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="push" title="Modifier les exclusions TeX…" bezelStyle="rounded" borderStyle="border" alignment="center" inset="2" id="ts-edit-spelling-cell">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="editSpellingExclusions:" target="-2" id="ts-edit-spelling-action"/></connections>
+                                                    </button>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Ls-sP-oib">
                                                         <rect key="frame" x="17" y="9" width="238" height="58" />
                                                         <autoresizingMask key="autoresizingMask"/>
@@ -658,7 +677,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Taille du numéro de ligne" translatesAutoresizingMaskIntoConstraints="NO" id="UMY-Ll-GOs">
-                                            <rect key="frame" x="369" y="126" width="281" height="70" />
+                                            <rect key="frame" x="369" y="66" width="281" height="70"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Cfn-nN-3IU">
                                                 <rect key="frame" x="0.0" y="0.0" width="281" height="56" />

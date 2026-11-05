@@ -25,6 +25,7 @@
     the Spelling and Grammar panel, which offers its suggestions, Change,
     Ignore and Learn as usual. Beeps if there is none. Returns the word found
     (as the panel was given it), or nil. "*/
++ (void)preferencesDidChange;
 + (void)changeAll:(id)sender;
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)textView mask:(TSSpellMask *)mask;
 

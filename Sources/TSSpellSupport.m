@@ -603,6 +603,37 @@ static NSMenuItem *FindMenuItemWithAction(NSMenu *menu, SEL action)
     return nil;
 }
 
+// A mode change invalidates the review and its replacement field. Only remove
+// our own accessory; AppKit or another component may have installed one.
++ (void)preferencesDidChange
+{
+    sReviewView = nil;
+    sReviewWord = nil;
+    sReviewText = nil;
+    if (sReplacementField) {
+        NSView *accessory = sReplacementField.superview;
+        NSSpellChecker *checker = NSSpellChecker.sharedSpellChecker;
+        if (checker.accessoryView == accessory) checker.accessoryView = nil;
+        sReplacementField = nil;
+        sReplacementStatus = nil;
+    }
+    for (NSWindow *window in NSApp.windows)
+        [self refreshSpellingInView:window.contentView];
+}
+
++ (void)refreshSpellingInView:(NSView *)view
+{
+    if ([view isKindOfClass:NSTextView.class] &&
+        [view respondsToSelector:@selector(usesTeXAwareSpellChecking)]) {
+        NSTextView *textView = (NSTextView *)view;
+        NSRange range = NSMakeRange(0, textView.string.length);
+        [textView setSpellingState:0 range:range];
+        if (textView.continuousSpellCheckingEnabled && range.length)
+            [textView checkTextInRange:range types:NSTextCheckingTypeSpelling options:@{}];
+    }
+    for (NSView *child in view.subviews) [self refreshSpellingInView:child];
+}
+
 + (void)installMenuItems
 {
     NSMenuItem *check = FindMenuItemWithAction([NSApp mainMenu], @selector(checkSpelling:));

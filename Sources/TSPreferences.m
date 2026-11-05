@@ -28,6 +28,7 @@
 
 #import "TSPreferences.h"
 #import "TSDockIconController.h"
+#import "TSSpellSupport.h"
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
@@ -201,9 +202,12 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (void)undoDefaultPrefs:(NSDictionary *)oldDefaults;
 //-----------------------------------
 {
+    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
 	[SUD setPersistentDomain:oldDefaults forName:TSPreferencesDomainName()];
 	[SUD synchronize];
 	[self updateControlsFromUserDefaults:SUD];
+    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
+        [TSSpellSupport preferencesDidChange];
     
     // KOCH
     // Here is the spot where we need to redraw the document and console with the remembered fonts
@@ -214,6 +218,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 
 - (IBAction)setDefaults:sender
 {
+    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
 
 	NSString *fileName;
 	NSDictionary *factoryDefaults, *oldDefaults;
@@ -260,6 +265,8 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	[SUD synchronize];
 
 	[self updateControlsFromUserDefaults:SUD];
+    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
+        [TSSpellSupport preferencesDidChange];
     
     // KOCH
     [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontRememberNotification object:self];
@@ -2082,6 +2089,29 @@ person script. See also: DefaultTypesetMode.
     [SUD setBool:[(NSButton *)sender state] forKey:MiniaturizeRootFileKey];
 }
 
+- (void)updateSpellingControlsFromDefaults:(NSUserDefaults *)defaults
+{
+    BOOL enabled = [defaults boolForKey:@"TeXAwareSpellChecking"];
+    _texAwareSpellCheckButton.state = enabled ? NSControlStateValueOn : NSControlStateValueOff;
+    _spellCheckCommands.enabled = !enabled;
+    _spellCheckParameters.enabled = !enabled;
+    _spellCheckComments.enabled = !enabled;
+}
+
+- (IBAction)texAwareSpellCheckPressed:(NSButton *)sender
+{
+    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:@"TeXAwareSpellChecking"]
+                                                   forKey:@"TeXAwareSpellChecking"];
+    [SUD setBool:(sender.state == NSControlStateValueOn) forKey:@"TeXAwareSpellChecking"];
+    [self updateSpellingControlsFromDefaults:SUD];
+    [TSSpellSupport preferencesDidChange];
+}
+
+- (IBAction)editSpellingExclusions:(id)sender
+{
+    [TSSpellSupport editSpellingExclusions:sender];
+}
+
 - (IBAction)spellCheckCommandPressed:sender
 {
     // register the undo message first
@@ -2269,10 +2299,13 @@ A tag of 0 means "no", a tag of 1 means "yes".
 "*/
 - (IBAction)cancelButtonPressed:sender
 {
+    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
     [self cancelForColor];
     // undo everyting
 	[_undoManager endUndoGrouping];
 	[_undoManager undo];
+    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
+        [TSSpellSupport preferencesDidChange];
     [[TSDockIconController sharedController] cancelEditing];
 
      [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] setHidden:( ![SUD boolForKey:TagMenuInMenuBarKey])];
@@ -2513,6 +2546,7 @@ This method retrieves the application preferences from the defaults object and s
     [_spellCheckCommands setState:[defaults boolForKey:TurnOffCommandSpellCheckKey]];
     [_spellCheckParameters setState:[defaults boolForKey:TurnOffParameterSpellCheckKey]];
     [_spellCheckComments setState:[defaults boolForKey:TurnOffCommentSpellCheckKey]];
+    [self updateSpellingControlsFromDefaults:defaults];
 
     [dictionaryPopup addItemWithTitle: @"Automatic Language"];
     NSArray *theLanguages = [[NSSpellChecker sharedSpellChecker] availableLanguages];
