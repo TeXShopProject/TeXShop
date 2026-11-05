@@ -192,7 +192,7 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="337">
-                        <rect key="frame" x="419" y="6" width="84" height="33" />
+                        <rect key="frame" x="499" y="19" width="84" height="32" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="취소" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="338">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -206,7 +206,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="339">
-                        <rect key="frame" x="503" y="7" width="84" height="32" />
+                        <rect key="frame" x="595" y="19" width="84" height="32" />
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="승인" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="340">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -220,7 +220,7 @@ DQ
                         </connections>
                     </button>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="341">
-                        <rect key="frame" x="17" y="11" width="161" height="26"/>
+                        <rect key="frame" x="19" y="22" width="161" height="26" />
                         <autoresizingMask key="autoresizingMask"/>
                         <popUpButtonCell key="cell" type="push" title="설정 프로파일" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="344" id="342">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
