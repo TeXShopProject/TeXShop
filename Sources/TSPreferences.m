@@ -2835,7 +2835,13 @@ This method retrieves the application preferences from the defaults object and s
 	if ([defaults integerForKey:DefaultCommandKey] == 2)
 		[_engineTextField setEditable: YES];
 	[_defaultScriptMatrix selectCellWithTag:[defaults integerForKey:DefaultScriptKey]];
-	[_syncMatrix selectCellWithTag:[defaults integerForKey:SyncMethodKey]];
+	// The Pdf Sync method (PDFSYNC) no longer has a button. If it is still set,
+	// select no button rather than leaving a stale selection.
+	if (! [_syncMatrix selectCellWithTag:[defaults integerForKey:SyncMethodKey]]) {
+		[_syncMatrix setAllowsEmptySelection: YES];
+		[_syncMatrix deselectAllCells];
+		[_syncMatrix setAllowsEmptySelection: NO];
+	}
 	[_saveRelatedButton setState:[defaults boolForKey:SaveRelatedKey]];
     [_useTransparencyButton setState:[defaults boolForKey:UseTransparencyKey]];
     [_syncTabButton setState:[defaults boolForKey:SyncUseTabsKey]];

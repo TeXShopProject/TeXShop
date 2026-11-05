@@ -1964,14 +1964,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Art der Synchronisierung" translatesAutoresizingMaskIntoConstraints="NO" id="823">
-                                            <rect key="frame" x="334" y="336" width="305" height="110" />
+                                            <rect key="frame" x="334" y="356" width="305" height="90" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="bsJ-4C-CiW">
-                                                <rect key="frame" x="0.0" y="0.0" width="305" height="98" />
+                                                <rect key="frame" x="0.0" y="0.0" width="305" height="78" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="782">
-                                                        <rect key="frame" x="17" y="9" width="162" height="78" />
+                                                        <rect key="frame" x="17" y="9" width="162" height="58" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="162" height="18"/>
@@ -1982,10 +1982,6 @@ DQ
                                                         </buttonCell>
                                                         <cells>
                                                             <column>
-                                                                <buttonCell type="radio" title="Pdf Sync (TeX &lt; 2010)" imagePosition="left" alignment="left" state="on" inset="2" id="784">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
                                                                 <buttonCell type="radio" title="Suche" imagePosition="left" alignment="left" tag="1" inset="2" id="785">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
@@ -1997,7 +1993,7 @@ DQ
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
                                                                 </buttonCell>
-                                                                <buttonCell type="radio" title="SyncTeX (TeX ≥ 2010)" imagePosition="left" alignment="left" tag="3" inset="2" id="786">
+                                                                <buttonCell type="radio" title="SyncTeX (TeX ≥ 2010)" imagePosition="left" alignment="left" state="on" tag="3" inset="2" id="786">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
                                                                 </buttonCell>
@@ -2012,7 +2008,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Wenn Sync ein neues Fenster öffnet" translatesAutoresizingMaskIntoConstraints="NO" id="P6l-yD-GRo">
-                                            <rect key="frame" x="334" y="250" width="305" height="74" />
+                                            <rect key="frame" x="334" y="270" width="305" height="74" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="5Qy-h1-8hR">
                                                 <rect key="frame" x="0.0" y="0.0" width="305" height="62" />
