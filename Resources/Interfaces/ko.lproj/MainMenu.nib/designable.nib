@@ -131,7 +131,7 @@
                             <menuItem isSeparatorItem="YES" id="28">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="콘솔 보이기" id="29">
+                            <menuItem title="콘솔 보이기" id="29" keyEquivalent="0">
                                 <connections>
                                     <action selector="displayConsole:" target="-1" id="419"/>
                                 </connections>
