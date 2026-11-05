@@ -209,19 +209,28 @@
 		}
 		return YES;
 	} else {
-        NSString *msg = NSLocalizedString(@"The source LaTeX document cannot be found.", @"The source LaTeX document cannot be found.");
-        if(NSClassFromString(@"NSUserNotification")){
-            NSUserNotification *notification = [[NSUserNotification alloc] init];
-            [notification setTitle:NSLocalizedString(@"Error", @"Error")];
-            [notification setSubtitle:msg];
-            [notification setInformativeText:nameString];
-            [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:(TSAppDelegate*)[NSApp delegate]];
-            [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
-        }else{
-            NSBeginAlertSheet(msg,nil,nil,nil,nil,nil,nil,nil,nil,@"Path Name: %@",nameString);
-        }
+		[self reportMissingRootFile: nameString forTask: task];
 	}
         return YES;
+}
+
+// The root file named by "% !TEX root =" does not exist. NSUserNotification is no
+// longer displayed on current macOS, so tell the user with a sheet on the document
+// window instead; otherwise typesetting silently does nothing. Opening a document
+// whose root file is missing stays quiet.
+- (void)reportMissingRootFile: (NSString *)nameString forTask:(NSInteger)task
+{
+	if (task == RootForOpening)
+		return;
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.alertStyle = NSAlertStyleWarning;
+	alert.messageText = NSLocalizedString(@"The source LaTeX document cannot be found.", @"The source LaTeX document cannot be found.");
+	alert.informativeText = nameString ?: @"";
+	NSWindow *window = [self windowForSheet];
+	if (window && !window.attachedSheet)
+		[alert beginSheetModalForWindow: window completionHandler: nil];
+	else
+		[alert runModal];
 }
 
 /*
