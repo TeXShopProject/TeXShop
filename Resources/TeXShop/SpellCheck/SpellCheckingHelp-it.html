@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Controllo ortografico in TeXShop</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Controllo ortografico in TeXShop</h1>
+
+<p>Il controllo ortografico di TeXShop conosce TeX. Salta commenti, formule, comandi e gli argomenti di comandi come <code>\label</code>, <code>\ref</code>, <code>\cite</code> e <code>\usepackage</code>, e controlla il resto del testo. Usa il pannello standard Ortografia e grammatica, quindi funziona come negli altri programmi del Mac.</p>
+
+<h2>Controllare un documento</h2>
+<ul>
+<li>Scegli <b>Modifica &gt; Ortografia e grammatica &gt; Mostra ortografia e grammatica</b> (&#8984;:) per aprire il pannello. Va alla prima parola scritta in modo errato dopo il cursore.</li>
+<li>Fai clic su <b>Trova successivo</b> nel pannello, oppure scegli <b>Controlla il documento adesso</b> (&#8984;;), per passare alla successiva. La parola viene selezionata nel documento e la finestra scorre in modo che la sua riga sia al centro.</li>
+<li>Nel pannello, <b>Cambia</b> sostituisce la parola con il suggerimento scelto (o con ciò che scrivi nel campo della parola del pannello), <b>Ignora</b> ignora la parola in questo documento e <b>Impara</b> la aggiunge al dizionario della lingua corrente.</li>
+<li>Con <b>Controlla ortografia durante la digitazione</b> attivo, le parole errate vengono sottolineate mentre scrivi, ma non nelle parti del sorgente che vengono saltate.</li>
+</ul>
+
+<p>Le macro che definisci (<code>\newcommand</code>, <code>\def</code> &hellip;) vengono lette dal documento, e anche un argomento che la definizione si limita a passare a <code>\ref</code>, a una formula o simili viene saltato.</p>
+
+<p>Il testo indicato come in un'altra lingua con <code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> e simili viene controllato in quella lingua, ma non viene sottolineato durante la digitazione.</p>
+
+<p>Inserisci la sostituzione nel campo separato <b>Sostituzione per Cambia tutto</b>, poi fai clic su <b>Cambia tutto</b> o premi Invio. Selezionare un suggerimento di sistema non compila questo campo. La sostituzione riguarda il documento controllato, escluse le parti ignorate, ed è annullabile in un solo passaggio. Dopo aver cambiato documento o selezione, cerca nuovamente la parola successiva.</p>
+
+<h2>Il comportamento originale</h2>
+<p>Tieni premuto il tasto <b>Opzione</b> quando scegli Mostra ortografia e grammatica o Controlla il documento adesso, o quando fai clic su Trova successivo, per usare la ricerca del sistema, che non salta nulla.</p>
+
+<h2>Dimenticare parole apprese</h2>
+<p><b>Modifica &gt; Ortografia e grammatica &gt; Dimentica parole apprese&#8230;</b> elenca le parole del documento in primo piano che hai appreso per la lingua corrente. Selezionane una o più (clic con Maiuscole o Comando) e fai clic su <b>Dimentica selezione</b> per rimuoverle dal dizionario. Vengono mostrate solo le parole apprese presenti nel documento.</p>
+
+<h2>Cambiare ciò che viene saltato</h2>
+<p><b>Modifica &gt; Ortografia e grammatica &gt; Modifica esclusioni ortografia&#8230;</b> apre il file <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> in un editor di testo. Elenca ciò che viene saltato, una regola per riga, e ne spiega il formato in cima (in inglese). Le modifiche valgono dal controllo successivo; non serve riavviare. Per esempio, per saltare l’argomento di un comando che hai definito, aggiungi una riga come questa:</p>
+<pre>skip-args  1  mycommand</pre>
+<p>e per saltare l’interno di un ambiente:</p>
+<pre>skip-body  proof</pre>
+<p>Se elimini il file, TeXShop ne ricrea una copia nuova con le regole predefinite al successivo avvio. Per non saltare più nulla, sostituisci il contenuto con soli commenti.</p>
+
+</body>
+</html>

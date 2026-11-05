@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Rechtschreibprüfung in TeXShop</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Rechtschreibprüfung in TeXShop</h1>
+
+<p>Die Rechtschreibprüfung von TeXShop kennt TeX. Sie überspringt Kommentare, Formeln, Befehle und die Argumente von Befehlen wie <code>\label</code>, <code>\ref</code>, <code>\cite</code> und <code>\usepackage</code> und prüft den übrigen Text. Sie verwendet das Standardfenster „Rechtschreibung und Grammatik“ und funktioniert daher wie in anderen Mac-Programmen.</p>
+
+<h2>Ein Dokument prüfen</h2>
+<ul>
+<li>Wählen Sie <b>Bearbeiten &gt; Rechtschreibung und Grammatik &gt; Rechtschreibung und Grammatik einblenden</b> (&#8984;:), um das Fenster zu öffnen. Es springt zum ersten falsch geschriebenen Wort nach der Einfügemarke.</li>
+<li>Klicken Sie im Fenster auf <b>Weitersuchen</b> oder wählen Sie <b>Dokument jetzt prüfen</b> (&#8984;;), um zum nächsten Wort zu gelangen. Das Wort wird in Ihrem Dokument markiert, und das Fenster scrollt so, dass die Zeile in der Mitte steht.</li>
+<li>Im Fenster ersetzt <b>Ändern</b> das Wort durch den gewählten Vorschlag (oder durch den Text, den Sie im Wortfeld des Fensters eingeben), <b>Ignorieren</b> ignoriert das Wort in diesem Dokument, und <b>Lernen</b> fügt es dem Wörterbuch für die aktuelle Sprache hinzu.</li>
+<li>Ist <b>Rechtschreibung während der Texteingabe prüfen</b> eingeschaltet, werden falsch geschriebene Wörter beim Tippen unterstrichen, aber nicht in den übersprungenen Teilen des Quelltexts.</li>
+</ul>
+
+<p>Selbst definierte Makros (<code>\newcommand</code>, <code>\def</code> &hellip;) werden aus dem Dokument gelesen; ein Argument, das die Definition nur an <code>\ref</code>, an eine Formel o.&nbsp;&Auml;. weitergibt, wird ebenfalls &uuml;bersprungen.</p>
+
+<p>Text, der mit <code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> u.&nbsp;&auml;. als andere Sprache markiert ist, wird in dieser Sprache gepr&uuml;ft, beim Tippen aber nicht unterstrichen.</p>
+
+<p>Geben Sie den Ersatz im separaten Feld <b>Ersatz für Alle ändern</b> ein und klicken Sie auf <b>Alle ändern</b> oder drücken Sie Return. Die Auswahl eines Systemvorschlags füllt dieses Feld nicht aus. Ersetzt wird im geprüften Dokument außerhalb der ausgeschlossenen Bereiche; ein Widerruf macht alles rückgängig. Nach Änderungen am Dokument oder an der Auswahl wählen Sie erneut <b>Weitersuchen</b>.</p>
+
+<h2>Das ursprüngliche Verhalten</h2>
+<p>Halten Sie die <b>Wahltaste</b> gedrückt, wenn Sie „Rechtschreibung und Grammatik einblenden“ oder „Dokument jetzt prüfen“ wählen oder auf „Weitersuchen“ klicken, um die Suche des Systems zu verwenden, die nichts überspringt.</p>
+
+<h2>Gelernte Wörter vergessen</h2>
+<p><b>Bearbeiten &gt; Rechtschreibung und Grammatik &gt; Gelernte Wörter vergessen&#8230;</b> listet die Wörter im vordersten Dokument auf, die Sie für die aktuelle Sprache gelernt haben. Wählen Sie eines oder mehrere aus (mit Umschalt- oder Befehlstaste klicken) und klicken Sie auf <b>Auswahl vergessen</b>, um sie aus dem Wörterbuch zu entfernen. Es werden nur gelernte Wörter angezeigt, die im Dokument vorkommen.</p>
+
+<h2>Festlegen, was übersprungen wird</h2>
+<p><b>Bearbeiten &gt; Rechtschreibung und Grammatik &gt; Rechtschreib-Ausnahmen bearbeiten&#8230;</b> öffnet die Datei <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> in einem Texteditor. Sie listet auf, was übersprungen wird, eine Regel pro Zeile, und erklärt oben ihr Format (auf Englisch). Änderungen gelten bei der nächsten Prüfung; ein Neustart ist nicht nötig. Um zum Beispiel das Argument eines selbst definierten Befehls zu überspringen, fügen Sie eine Zeile wie diese hinzu:</p>
+<pre>skip-args  1  mycommand</pre>
+<p>Und um das Innere einer Umgebung zu überspringen:</p>
+<pre>skip-body  proof</pre>
+<p>Wenn Sie die Datei löschen, legt TeXShop beim nächsten Start wieder eine neue Kopie der Standardregeln an. Um nichts mehr zu überspringen, ersetzen Sie ihren Inhalt durch reine Kommentare.</p>
+
+</body>
+</html>

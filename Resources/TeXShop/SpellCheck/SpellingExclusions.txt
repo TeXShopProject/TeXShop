@@ -1,0 +1,206 @@
+# TeXShop spelling exclusions
+#
+# This file says which parts of a TeX source file the spell checker must
+# ignore: the continuous "check while typing" underlining and the review
+# panel (Edit > Spelling and Grammar > Check Document Now, Cmd-;) both use it.
+# Nothing is built into TeXShop: if a pattern is not listed here, the text it
+# matches is spell checked. Edit this file and save it; TeXShop picks up the
+# changes the next time it spell checks, with no restart. To start again from
+# the default, delete the file and TeXShop will put a fresh copy back.
+#
+# Format: one directive per line, words separated by spaces or tabs. A '#'
+# starts a comment. Names are case-sensitive, and commands and environments
+# are written without the backslash.
+#
+#   comments yes|no               ignore from an unescaped % to the end of the line
+#   command-names yes|no          ignore control sequences themselves (\section, \textbf ...)
+#   accents yes|no                read \"u \'e \ss ... as the letters they stand for
+#   line-break-options yes|no     ignore the [2pt] after \\
+#   env-options yes|no            ignore the [htbp] right after \begin{env}
+#   delimited OPEN CLOSE          ignore everything from OPEN to CLOSE (e.g. maths);
+#                                 if CLOSE is missing, the paragraph end ends it
+#   skip-body ENV...              ignore the whole body of these environments
+#   skip-env-args N ENV...        ignore the first N {..} arguments after \begin{env}
+#   skip-args N COMMAND...        ignore the arguments of these commands: any [..]
+#                                 options plus the first N {..} arguments
+#   skip-args-matching N REGEX    same, for every command whose whole name matches
+#   skip-pattern PATTERN COMMAND...  ignore the groups after these commands, in
+#                                 the order given by PATTERN, which is made of {} [] and ():
+#                                 a [..] or (..) in the pattern is skipped if it is there,
+#                                 a {..} must be there (the pattern stops at a missing one).
+#                                 For commands like \newcounter{a}[b] or \cmidrule[w](lr){2-5}.
+#                                 A skip-pattern takes precedence over skip-args.
+#   check-args COMMAND...         exceptions: these commands' arguments ARE checked,
+#                                 even if skip-args-matching would exclude them
+#   skip-definition COMMAND...    ignore \def-style definitions: the macro name and
+#                                 the {..} body that follows
+#   skip-verb COMMAND...          \verb-style commands: ignore up to the matching
+#                                 delimiter character
+#   auto-macros yes|no            read the macros and environments defined in the
+#                                 document itself (\newcommand, \renewcommand,
+#                                 \providecommand, \def, \NewDocumentCommand,
+#                                 \newenvironment, ...) and skip the arguments of a
+#                                 macro whose definition only passes that argument
+#                                 on to something that is skipped: to \label or \ref,
+#                                 into maths, to another such macro, and so on. For
+#                                 example, after \newcommand{\secref}[1]{Section~\ref{#1}}
+#                                 the argument of \secref is skipped, while after
+#                                 \newcommand{\todo}[1]{\textbf{#1}} it is checked.
+#                                 A command named in skip-args, skip-pattern or
+#                                 check-args keeps the treatment given there.
+#                                 An environment whose \newenvironment begins another
+#                                 skipped environment (\begin{align}) is skipped too.
+#
+# Text in other languages. Spelling is checked in the language chosen in the
+# Spelling and Grammar panel, but a document can mark passages as being in
+# another language, and these are then checked in that language (or not at all,
+# if the system has no spell checker for it). Check While Typing does not
+# underline such passages.
+#   language-map NAME CODE        the language NAME as babel or polyglossia call it
+#                                 (german, ngerman, french ...) is the system
+#                                 language CODE (de, fr, pt_BR ...). CODE with no
+#                                 region (en) matches any region of that language.
+#   language-command COMMAND...   \foreignlanguage[opts]{language}{text}: the text is
+#                                 in that language
+#   language-switch COMMAND...    \selectlanguage{language}: everything from here to
+#                                 the end of the enclosing group or environment
+#                                 is in that language
+#   language-env ENV...           \begin{otherlanguage}[opts]{language} ... \end{..}
+#   language-names yes|no         \textLANG{text} and \begin{LANG} ... \end{LANG},
+#                                 where LANG is a language name from language-map
+
+comments          yes
+command-names     yes
+accents           yes
+line-break-options yes
+env-options       yes
+auto-macros       yes
+language-names    yes
+
+# Maths and other delimited spans. Longer openers are tried first, so $$ wins
+# over $.
+delimited  $$   $$
+delimited  $    $
+delimited  \[   \]
+delimited  \(   \)
+
+# Environments whose contents are not prose.
+skip-body  verbatim Verbatim BVerbatim LVerbatim lstlisting minted comment alltt filecontents
+skip-body  equation align alignat gather multline eqnarray displaymath math flalign split
+skip-body  array cases matrix pmatrix bmatrix vmatrix tikzpicture pgfpicture
+
+# Environments that take a specification argument, such as column formats.
+skip-env-args  1  tabular tabularx tabulary longtable minipage multicols wrapfigure wraptable tabu
+
+# \verb|...|
+skip-verb  verb
+
+# \def\name#1{...} and similar.
+skip-definition  def gdef edef xdef let newlength newbox
+
+# Commands whose {..} arguments are keys, file names, lengths or settings.
+skip-args  0  makebox framebox
+skip-args  1  label url path input include includeonly includegraphics graphicspath
+skip-args  1  usepackage RequirePackage documentclass bibliography bibliographystyle addbibresource
+skip-args  1  usetikzlibrary usetheme usecolortheme newtheorem theoremstyle newcounter newif
+skip-args  1  hspace vspace color textcolor colorbox
+skip-args  1  pagestyle thispagestyle pagenumbering bibitem nocite index glossary
+skip-args  1  href hypersetup geometry lstset lstinputlisting scalebox rotatebox
+skip-args  1  setmainfont setsansfont setmonofont hyphenation hyphenchar setkeys captionsetup
+skip-args  1  titleformat tikzset cline includepdf
+skip-args  2  newcommand renewcommand providecommand DeclareMathOperator
+skip-args  2  numberwithin setcounter addtocounter setlength addtolength
+skip-args  2  fontsize multicolumn resizebox rule newfontfamily pdfbookmark
+skip-args  3  definecolor newenvironment renewenvironment titlespacing
+skip-args  3  NewDocumentCommand RenewDocumentCommand ProvideDocumentCommand DeclareDocumentCommand
+skip-args  4  NewDocumentEnvironment RenewDocumentEnvironment ProvideDocumentEnvironment DeclareDocumentEnvironment
+
+# Counters, lengths, boxes and font selection, and the commands TeXShop's own
+# excludes the first parameters of each command listed here when it colours).
+skip-args  1  alpha arabic fnsymbol roman stepcounter usecounter value
+skip-args  1  enlargethispage addvspace usebox parbox raisebox sbox savebox
+skip-args  1  fontencoding fontfamily fontseries fontshape documentstyle psfig selectlanguage addtocontents
+skip-args  1  ref pageref cite begin end
+skip-args  2  setwidth settodepth settoheight newfont
+skip-args  3  addcontentsline
+skip-args  4  usefont
+
+# Commands whose arguments follow a fixed pattern, including options after the
+# {..} (\newcounter{new}[old]) and booktabs' (..) trimming options
+# (\cmidrule[width](lr){2-5}).
+skip-pattern  {}[]  newcounter
+skip-pattern  {}{}  PassOptionsToPackage
+skip-pattern  [](){}  cmidrule
+skip-pattern  {}{}{}  specialrule
+skip-pattern  []  addlinespace toprule midrule bottomrule
+
+# Citation and cross-reference families: \cite \citep \citet \Cite \autocite ...
+# and \ref \eqref \pageref \autoref \cref \Cref \vref \nameref ...
+skip-args-matching  1  [A-Za-z]*(cite|Cite)[A-Za-z]*
+skip-args-matching  1  [A-Za-z]*(ref|Ref)
+
+# \hyperref[label]{text}: the [label] is not prose but {text} is. (A command
+# listed in skip-args wins over skip-args-matching; N = 0 skips only [..] options.)
+skip-args  0  hyperref
+
+# check-args lists commands whose arguments must be checked even though a
+# skip-args-matching rule would exclude them, for example:
+# check-args  prefix
+# parameters of every command except a list, these are the exceptions.
+check-args  emph verbatim
+
+# Languages other than the document's. A passage in a language the system has no
+# spell checker for is not checked at all. Names are those of babel and
+# polyglossia; add your own, or change a code (for example to make "english"
+# mean en_GB rather than any English).
+language-command  foreignlanguage
+language-switch   selectlanguage
+language-env      otherlanguage
+
+language-map  english en
+language-map  british en_GB
+language-map  UKenglish en_GB
+language-map  american en_US
+language-map  USenglish en_US
+language-map  australian en_AU
+language-map  canadian en_CA
+language-map  german de
+language-map  ngerman de
+language-map  austrian de_AT
+language-map  naustrian de_AT
+language-map  swissgerman de_CH
+language-map  nswissgerman de_CH
+language-map  french fr
+language-map  francais fr
+language-map  spanish es
+language-map  italian it
+language-map  dutch nl
+language-map  portuguese pt_PT
+language-map  portuges pt_PT
+language-map  brazilian pt_BR
+language-map  brazil pt_BR
+language-map  catalan ca
+language-map  danish da
+language-map  swedish sv
+language-map  norsk nb
+language-map  norwegian nb
+language-map  nynorsk nn
+language-map  finnish fi
+language-map  polish pl
+language-map  czech cs
+language-map  slovak sk
+language-map  slovene sl
+language-map  croatian hr
+language-map  hungarian hu
+language-map  romanian ro
+language-map  bulgarian bg
+language-map  russian ru
+language-map  ukrainian uk
+language-map  greek el
+language-map  turkish tr
+language-map  hebrew he
+language-map  arabic ar
+language-map  latin la
+language-map  japanese ja
+language-map  korean ko
+language-map  chinese zh

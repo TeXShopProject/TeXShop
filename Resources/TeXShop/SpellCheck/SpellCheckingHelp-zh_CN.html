@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<title>TeXShop 中的拼写检查</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>TeXShop 中的拼写检查</h1>
+
+<p>TeXShop 的拼写检查了解 TeX。它会跳过注释、公式、命令，以及 <code>\label</code>、<code>\ref</code>、<code>\cite</code> 和 <code>\usepackage</code> 等命令的参数，并检查其余文本。它使用标准的“拼写和语法”面板，因此与其他 Mac 程序中的拼写检查用法相同。</p>
+
+<h2>检查文稿</h2>
+<ul>
+<li>选取<b>编辑 &gt; 拼写和语法 &gt; 显示拼写和语法</b>（&#8984;:）以打开面板。它会转到光标之后第一个拼写错误的单词。</li>
+<li>在面板中点按<b>查找下一个</b>，或选取<b>立即检查文稿</b>（&#8984;;），即可转到下一个。该单词会在文稿中被选中，窗口会滚动，使其所在行位于中间。</li>
+<li>在面板中，<b>更改</b>会用所选建议（或您在面板的单词栏中输入的内容）替换该单词，<b>忽略</b>会在此文稿中忽略该单词，<b>学习</b>会将其添加到当前语言的词典中。</li>
+<li>打开<b>键入时检查拼写</b>后，拼写错误的单词会在您键入时加下划线，但被跳过的源代码部分不会。</li>
+</ul>
+
+<p>您自己定义的宏（<code>\newcommand</code>, <code>\def</code> 等）会从文稿中读取，定义中只是传给 <code>\ref</code>、公式等的参数也会被跳过。</p>
+
+<p>用 <code>\foreignlanguage</code>、<code>\selectlanguage</code>、<code>\begin{otherlanguage}</code> 等标记为其他语言的文本，会按该语言检查，但键入时不会加下划线。</p>
+
+<p>在单独的<b>全部更改的替换词</b>输入栏中输入替换词，然后点击<b>全部更改</b>或按 Return。仅选择系统建议不会填入此栏。替换适用于正在检查的整个文稿（排除部分除外），可一次撤销。更改文稿或选区后，请再次查找下一个错误。</p>
+
+<h2>原来的行为</h2>
+<p>选取“显示拼写和语法”或“立即检查文稿”，或点按“查找下一个”时，按住 <b>Option 键</b>，即可使用系统自带的搜索，它不会跳过任何内容。</p>
+
+<h2>忘记已学习的单词</h2>
+<p><b>编辑 &gt; 拼写和语法 &gt; 忘记已学习的单词&#8230;</b>会列出最前面文稿中您已为当前语言学习的单词。选择一个或多个（按住 Shift 或 Command 键点按），然后点按<b>忘记所选单词</b>，即可将它们从词典中移除。仅列出出现在文稿中的已学习单词。</p>
+
+<h2>更改被跳过的内容</h2>
+<p><b>编辑 &gt; 拼写和语法 &gt; 编辑拼写例外&#8230;</b>会在文本编辑器中打开文件 <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code>。该文件列出被跳过的内容，每行一条规则，并在开头说明其格式（英文）。更改在下次检查时生效，无需重新启动。例如，要跳过您自己定义的命令的参数，请添加如下一行：</p>
+<pre>skip-args  1  mycommand</pre>
+<p>要跳过某个环境的内部：</p>
+<pre>skip-body  proof</pre>
+<p>如果删除该文件，TeXShop 会在下次启动时重新创建默认规则的新副本。若要不再跳过任何内容，请将其内容替换为仅含注释。</p>
+
+</body>
+</html>

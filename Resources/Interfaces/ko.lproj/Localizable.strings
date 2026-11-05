@@ -113,3 +113,26 @@
 "Source" = "소스";
 "Syntax Color expl3 Code" = "expl3 구문 강조";
 "PDF File Has No Annotations" = "PDF 주석 없음";
+
+/* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
+"Forget Learned Words…" = "학습한 단어 삭제…";
+"Edit Spelling Exclusions…" = "맞춤법 제외 항목 편집…";
+"Spell Checking Help" = "맞춤법 검사 도움말";
+"Forget learned words" = "학습한 단어 삭제";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "이 문서의 다음 단어는 %@에 대해 학습되었습니다. 삭제할 단어를 선택하십시오. Shift 키 또는 Command 키를 누른 채 클릭하면 여러 개를 선택할 수 있습니다.";
+"Forget Selected" = "선택 항목 삭제";
+"Forgot %lu word." = "단어 %lu개를 삭제했습니다.";
+"Forgot %lu words." = "단어 %lu개를 삭제했습니다.";
+"No learned words in this document" = "이 문서에 학습한 단어가 없습니다";
+"None of the words in this document have been learned for %@." = "이 문서의 단어 중 %@에 대해 학습된 단어가 없습니다.";
+"The spell checking help could not be found" = "맞춤법 검사 도움말을 찾을 수 없습니다";
+"Problems in the spelling exclusions file" = "맞춤법 제외 파일의 문제";
+"OK" = "확인";
+/* Button added to the Spelling and Grammar panel */
+"Change All" = "모두 변경";
+
+"Replacement for Change All" = "모두 변경할 대체 단어";
+
+"Return to the word and choose Find Next before replacing." = "단어로 돌아가 다음 찾기로 다시 확인하십시오.";
+
+"Enter a different replacement in the Change All field." = "모두 변경 전용 입력란에 다른 대체 단어를 입력하십시오.";

@@ -113,3 +113,26 @@
 "Source" = "Source";
 "Syntax Color expl3 Code" = "Sintaxă Cod expl culoare";
 "PDF File Has No Annotations" = "PDF File Has No Annotations";
+
+/* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
+"Forget Learned Words…" = "Uită cuvintele învățate…";
+"Edit Spelling Exclusions…" = "Editează excepțiile de ortografie…";
+"Spell Checking Help" = "Ajutor pentru verificarea ortografiei";
+"Forget learned words" = "Uită cuvintele învățate";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Aceste cuvinte din acest document au fost învățate pentru %@. Selectați cuvintele de uitat. Clic cu Shift sau Command selectează mai multe.";
+"Forget Selected" = "Uită selecția";
+"Forgot %lu word." = "S-a uitat %lu cuvânt.";
+"Forgot %lu words." = "S-au uitat %lu cuvinte.";
+"No learned words in this document" = "Niciun cuvânt învățat în acest document";
+"None of the words in this document have been learned for %@." = "Niciunul dintre cuvintele din acest document nu a fost învățat pentru %@.";
+"The spell checking help could not be found" = "Ajutorul pentru verificarea ortografiei nu a fost găsit";
+"Problems in the spelling exclusions file" = "Probleme în fișierul cu excepții de ortografie";
+"OK" = "OK";
+/* Button added to the Spelling and Grammar panel */
+"Change All" = "Schimbă tot";
+
+"Replacement for Change All" = "Înlocuire pentru Schimbă tot";
+
+"Return to the word and choose Find Next before replacing." = "Reveniți la cuvânt și căutați următorul înainte de înlocuire.";
+
+"Enter a different replacement in the Change All field." = "Introduceți altă înlocuire în câmpul pentru Schimbă tot.";

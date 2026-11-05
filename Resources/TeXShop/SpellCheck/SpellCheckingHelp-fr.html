@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Vérification orthographique dans TeXShop</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Vérification orthographique dans TeXShop</h1>
+
+<p>La vérification orthographique de TeXShop connaît TeX. Elle ignore les commentaires, les formules, les commandes et les arguments de commandes telles que <code>\label</code>, <code>\ref</code>, <code>\cite</code> et <code>\usepackage</code>, et vérifie le reste du texte. Elle utilise le panneau standard Orthographe et grammaire ; elle fonctionne donc comme dans les autres programmes du Mac.</p>
+
+<h2>Vérifier un document</h2>
+<ul>
+<li>Choisissez <b>Édition &gt; Orthographe et grammaire &gt; Afficher l’orthographe et la grammaire</b> (&#8984;:) pour ouvrir le panneau. Il se place sur le premier mot mal orthographié après le point d’insertion.</li>
+<li>Cliquez sur <b>Suivant</b> dans le panneau, ou choisissez <b>Vérifier le document maintenant</b> (&#8984;;), pour passer au suivant. Le mot est sélectionné dans votre document et la fenêtre défile pour que sa ligne soit au milieu.</li>
+<li>Dans le panneau, <b>Corriger</b> remplace le mot par la suggestion choisie (ou par ce que vous saisissez dans le champ du mot du panneau), <b>Ignorer</b> ignore le mot dans ce document et <b>Apprendre</b> l’ajoute au dictionnaire de la langue actuelle.</li>
+<li>Si <b>Vérifier l’orthographe pendant la frappe</b> est activé, les mots mal orthographiés sont soulignés au fur et à mesure, mais pas dans les parties du source qui sont ignorées.</li>
+</ul>
+
+<p>Les macros que vous d&eacute;finissez (<code>\newcommand</code>, <code>\def</code> &hellip;) sont lues dans le document, et un argument que la d&eacute;finition ne fait que transmettre &agrave; <code>\ref</code>, &agrave; une formule ou &agrave; un &eacute;l&eacute;ment semblable est lui aussi ignor&eacute;.</p>
+
+<p>Le texte signal&eacute; comme &eacute;tant dans une autre langue par <code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> et similaires est v&eacute;rifi&eacute; dans cette langue, mais n&rsquo;est pas soulign&eacute; pendant la frappe.</p>
+
+<p>Saisissez le remplacement dans le champ séparé <b>Remplacement pour Tout remplacer</b>, puis cliquez sur <b>Tout remplacer</b> ou appuyez sur Retour. Choisir une suggestion du système ne remplit pas ce champ. Le remplacement porte sur le document vérifié, hors des zones exclues, et peut être annulé en une seule fois. Après avoir changé le document ou la sélection, recherchez de nouveau le mot suivant.</p>
+
+<h2>Le comportement d’origine</h2>
+<p>Maintenez la touche <b>Option</b> enfoncée en choisissant Afficher l’orthographe et la grammaire ou Vérifier le document maintenant, ou en cliquant sur Suivant, pour utiliser la recherche du système, qui n’ignore rien.</p>
+
+<h2>Oublier des mots appris</h2>
+<p><b>Édition &gt; Orthographe et grammaire &gt; Oublier des mots appris&#8230;</b> affiche les mots du document au premier plan que vous avez appris pour la langue actuelle. Sélectionnez-en un ou plusieurs (clic avec Majuscule ou Commande) puis cliquez sur <b>Oublier la sélection</b> pour les retirer du dictionnaire. Seuls les mots appris qui figurent dans le document sont proposés.</p>
+
+<h2>Modifier ce qui est ignoré</h2>
+<p><b>Édition &gt; Orthographe et grammaire &gt; Modifier les exclusions orthographiques&#8230;</b> ouvre le fichier <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> dans un éditeur de texte. Il énumère ce qui est ignoré, une règle par ligne, et explique son format en tête de fichier (en anglais). Les modifications sont prises en compte à la vérification suivante ; il n’est pas nécessaire de redémarrer. Par exemple, pour ignorer l’argument d’une commande que vous avez définie, ajoutez une ligne comme celle-ci :</p>
+<pre>skip-args  1  mycommand</pre>
+<p>et pour ignorer l’intérieur d’un environnement :</p>
+<pre>skip-body  proof</pre>
+<p>Si vous supprimez le fichier, TeXShop en recrée une copie neuve des règles par défaut au prochain démarrage. Pour ne plus rien ignorer, remplacez son contenu par des commentaires uniquement.</p>
+
+</body>
+</html>

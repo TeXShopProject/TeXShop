@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Spellingcontrole in TeXShop</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Spellingcontrole in TeXShop</h1>
+
+<p>De spellingcontrole van TeXShop kent TeX. Ze slaat commentaar, formules, commando’s en de argumenten van commando’s zoals <code>\label</code>, <code>\ref</code>, <code>\cite</code> en <code>\usepackage</code> over en controleert de rest van de tekst. Ze gebruikt het standaardpaneel Spelling en grammatica en werkt dus zoals in andere Mac-programma’s.</p>
+
+<h2>Een document controleren</h2>
+<ul>
+<li>Kies <b>Wijzig &gt; Spelling en grammatica &gt; Toon spelling en grammatica</b> (&#8984;:) om het paneel te openen. Het gaat naar het eerste verkeerd gespelde woord na de invoegpositie.</li>
+<li>Klik in het paneel op <b>Zoek volgende</b>, of kies <b>Controleer document nu</b> (&#8984;;), om naar het volgende te gaan. Het woord wordt in uw document geselecteerd en het venster scrolt zodat de regel in het midden staat.</li>
+<li>In het paneel vervangt <b>Wijzig</b> het woord door de gekozen suggestie (of door wat u in het woordveld van het paneel typt), negeert <b>Negeer</b> het woord in dit document en voegt <b>Leer</b> het toe aan het woordenboek voor de huidige taal.</li>
+<li>Als <b>Controleer spelling tijdens typen</b> aanstaat, worden verkeerd gespelde woorden tijdens het typen onderstreept, maar niet in de delen van de bron die worden overgeslagen.</li>
+</ul>
+
+<p>Macro&rsquo;s die u zelf defini&euml;ert (<code>\newcommand</code>, <code>\def</code> &hellip;) worden uit het document gelezen, en een argument dat de definitie alleen doorgeeft aan <code>\ref</code>, aan een formule of iets dergelijks wordt ook overgeslagen.</p>
+
+<p>Tekst die met <code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> en dergelijke als een andere taal is gemarkeerd, wordt in die taal gecontroleerd, maar tijdens het typen niet onderstreept.</p>
+
+<p>Typ de vervanging in het aparte veld <b>Vervanging voor Wijzig alles</b> en klik op <b>Wijzig alles</b> of druk op Return. Een systeemsuggestie kiezen vult dit veld niet in. De vervanging geldt voor het gecontroleerde document, behalve de uitgesloten tekst, en kan in één keer ongedaan worden gemaakt. Zoek na een wijziging van het document of de selectie opnieuw het volgende woord.</p>
+
+<h2>Het oorspronkelijke gedrag</h2>
+<p>Houd de <b>Option-toets</b> ingedrukt wanneer u Toon spelling en grammatica of Controleer document nu kiest, of wanneer u op Zoek volgende klikt, om de zoekfunctie van het systeem te gebruiken, die niets overslaat.</p>
+
+<h2>Geleerde woorden vergeten</h2>
+<p><b>Wijzig &gt; Spelling en grammatica &gt; Geleerde woorden vergeten&#8230;</b> toont de woorden in het voorste document die u voor de huidige taal hebt geleerd. Selecteer er een of meer (klik met Shift of Command) en klik op <b>Selectie vergeten</b> om ze uit het woordenboek te verwijderen. Alleen geleerde woorden die in het document voorkomen worden getoond.</p>
+
+<h2>Wijzigen wat wordt overgeslagen</h2>
+<p><b>Wijzig &gt; Spelling en grammatica &gt; Spellinguitzonderingen bewerken&#8230;</b> opent het bestand <code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> in een teksteditor. Het somt op wat wordt overgeslagen, één regel per regel, en legt bovenaan zijn indeling uit (in het Engels). Wijzigingen gelden bij de volgende controle; herstarten is niet nodig. Om bijvoorbeeld het argument van een zelf gedefinieerd commando over te slaan, voegt u een regel als deze toe:</p>
+<pre>skip-args  1  mycommand</pre>
+<p>en om de binnenkant van een omgeving over te slaan:</p>
+<pre>skip-body  proof</pre>
+<p>Als u het bestand verwijdert, maakt TeXShop bij de volgende start opnieuw een verse kopie van de standaardregels. Om niets meer over te slaan, vervangt u de inhoud door alleen commentaar.</p>
+
+</body>
+</html>

@@ -113,3 +113,26 @@
 "Source" = "ソース";
 "Syntax Color expl3 Code" = "expl3コードをハイライト";
 "PDF File Has No Annotations" = "PDFファイルに注釈が含まれません";
+
+/* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
+"Forget Learned Words…" = "学習した単語を削除…";
+"Edit Spelling Exclusions…" = "スペルチェックの除外設定を編集…";
+"Spell Checking Help" = "スペルチェックのヘルプ";
+"Forget learned words" = "学習した単語を削除";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "この書類内の次の単語は%@用に学習されています。削除する単語を選択してください。Shiftキーまたはcommandキーを押しながらクリックすると複数選択できます。";
+"Forget Selected" = "選択した単語を削除";
+"Forgot %lu word." = "%lu個の単語を削除しました。";
+"Forgot %lu words." = "%lu個の単語を削除しました。";
+"No learned words in this document" = "この書類には学習した単語がありません";
+"None of the words in this document have been learned for %@." = "この書類内の単語は%@用に学習されていません。";
+"The spell checking help could not be found" = "スペルチェックのヘルプが見つかりません";
+"Problems in the spelling exclusions file" = "スペルチェック除外ファイルの問題";
+"OK" = "OK";
+/* Button added to the Spelling and Grammar panel */
+"Change All" = "すべて変更";
+
+"Replacement for Change All" = "すべて変更する置換語";
+
+"Return to the word and choose Find Next before replacing." = "対象の単語に戻り、「次を検索」で確認し直してください。";
+
+"Enter a different replacement in the Change All field." = "「すべて変更」の専用欄に別の置換語を入力してください。";

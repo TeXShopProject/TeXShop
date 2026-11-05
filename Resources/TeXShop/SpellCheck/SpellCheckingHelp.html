@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Spell Checking Help</title>
+<style>
+body { font-family: -apple-system, Helvetica, sans-serif; font-size: 13px; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; margin-top: 18px; }
+code, pre { font-family: Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>Spell Checking in TeXShop</h1>
+
+<p>TeXShop's spell checking knows about TeX. It skips comments, maths, commands, and the
+arguments of commands such as <code>\label</code>, <code>\ref</code>, <code>\cite</code> and
+<code>\usepackage</code>, and checks the rest of your text. It uses the standard
+Spelling and Grammar panel, so it works the way spell checking works in other Mac programs.</p>
+
+<h2>Checking a document</h2>
+<ul>
+<li>Choose <b>Edit &gt; Spelling and Grammar &gt; Show Spelling and Grammar</b> (&#8984;:)
+to open the panel. It goes to the first misspelled word after the cursor.</li>
+<li>Press <b>Find Next</b> in the panel, or choose <b>Check Document Now</b> (&#8984;;),
+to move to the next one. The word is selected in your document, and the window scrolls
+so that its line is in the middle.</li>
+<li>In the panel, <b>Change</b> replaces the word with the chosen suggestion (or with what
+you type in the panel's word field), <b>Ignore</b> ignores the word in this document, and
+<b>Learn</b> adds it to the dictionary for the current language.</li>
+<li>With <b>Check Spelling While Typing</b> turned on, misspelled words are underlined as you
+type, but not in the parts of the source that are skipped.</li>
+</ul>
+
+<p>Macros you define yourself (<code>\newcommand</code>, <code>\def</code> &hellip;) are read from the document, and an argument that the definition only passes on to <code>\ref</code>, to maths or the like is skipped too.</p>
+
+<p>Text marked as another language with <code>\foreignlanguage</code>, <code>\selectlanguage</code>, <code>\begin{otherlanguage}</code> and the like is checked in that language, but is not underlined while you type.</p>
+
+<p>Enter the replacement in the separate <b>Replacement for Change All</b> field, then click <b>Change All</b> or press Return. Selecting a system suggestion alone does not fill this field. The replacement applies throughout the reviewed document, excluding skipped text, and can be undone in one step. After changing the document or selection, use <b>Find Next</b> again before replacing.</p>
+
+<h2>The original behaviour</h2>
+<p>Hold the <b>Option</b> key when you choose Show Spelling and Grammar or Check Document Now,
+or when you click Find Next, to use the system's own search, which does not skip any markup.</p>
+
+<h2>Forgetting learned words</h2>
+<p><b>Edit &gt; Spelling and Grammar &gt; Forget Learned Words&#8230;</b> lists the words in
+the document in front that you have learned for the current language. Select one or
+several (Shift-click or Command-click) and click <b>Forget Selected</b> to remove them from
+the dictionary. Only learned words that occur in the document are listed.</p>
+
+<h2>Changing what is skipped</h2>
+<p><b>Edit &gt; Spelling and Grammar &gt; Edit Spelling Exclusions&#8230;</b> opens the file
+<code>~/Library/TeXShop/SpellCheck/SpellingExclusions.txt</code> in a text editor. It lists
+what is skipped, one rule per line, and explains its own format at the top. Changes take effect
+the next time you spell check; no restart is needed. For example, to skip the argument of a
+command you have defined, add a line such as</p>
+<pre>skip-args  1  mycommand</pre>
+<p>and to skip the inside of an environment:</p>
+<pre>skip-body  proof</pre>
+<p>If you delete the file, TeXShop puts back a fresh copy of the default the next time it
+starts. To stop skipping anything, replace its contents with comments only.</p>
+
+</body>
+</html>

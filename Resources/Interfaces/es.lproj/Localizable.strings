@@ -113,3 +113,26 @@
 "Source" = "Código";
 "Syntax Color expl3 Code" = "Sintaxis de código expl3";
 "PDF File Has No Annotations" = "El archivo PDF no tiene anotaciones";
+
+/* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
+"Forget Learned Words…" = "Olvidar palabras aprendidas…";
+"Edit Spelling Exclusions…" = "Editar excepciones de ortografía…";
+"Spell Checking Help" = "Ayuda de la revisión ortográfica";
+"Forget learned words" = "Olvidar palabras aprendidas";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Estas palabras de este documento se han aprendido para %@. Seleccione las que desea olvidar. Con Mayúsculas o Comando se seleccionan varias.";
+"Forget Selected" = "Olvidar selección";
+"Forgot %lu word." = "Se ha olvidado %lu palabra.";
+"Forgot %lu words." = "Se han olvidado %lu palabras.";
+"No learned words in this document" = "No hay palabras aprendidas en este documento";
+"None of the words in this document have been learned for %@." = "Ninguna de las palabras de este documento se ha aprendido para %@.";
+"The spell checking help could not be found" = "No se encontró la ayuda de la revisión ortográfica";
+"Problems in the spelling exclusions file" = "Problemas en el archivo de excepciones de ortografía";
+"OK" = "OK";
+/* Button added to the Spelling and Grammar panel */
+"Change All" = "Cambiar todo";
+
+"Replacement for Change All" = "Reemplazo para Cambiar todo";
+
+"Return to the word and choose Find Next before replacing." = "Vuelva a la palabra y busque la siguiente antes de reemplazar.";
+
+"Enter a different replacement in the Change All field." = "Introduzca otro reemplazo en el campo de Cambiar todo.";

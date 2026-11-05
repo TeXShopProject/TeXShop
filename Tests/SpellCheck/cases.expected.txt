@@ -1,0 +1,36 @@
+                             
+                           
+                                 
+                  
+                
+         {Introduction}                 
+Hello wrld, see                ,              and                             .            
+Escaped    percent and    dollar and 5   of    more    text.
+Inline                        then         and                     done.
+              
+                            
+           
+              
+              
+                
+        
+            
+Text before       more text after break.
+                        
+ cellone & celltwo & cellthree          
+             
+                    
+                                 
+        {A cation with a typo.}
+            
+                
+                                   
+              
+                and                 then prose.
+München and café and na  {i}ve and ß{} and ø{}ster à la École.
+       {bold wrd} and      {emphasised wrd}.
+                    {checked text here} and                                
+               {coloured wrd}                           
+         {A footnote with wrd.}
+     [label wrd] item text
+              

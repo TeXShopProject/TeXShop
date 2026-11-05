@@ -113,3 +113,26 @@
 "Source" = "Quelltext";
 "Syntax Color expl3 Code" = "expl3-Syntax farblich hervorheben";
 "PDF File Has No Annotations" = "PDF-Datei hat keine Anmerkungen";
+
+/* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
+"Forget Learned Words…" = "Gelernte Wörter vergessen…";
+"Edit Spelling Exclusions…" = "Rechtschreib-Ausnahmen bearbeiten…";
+"Spell Checking Help" = "Hilfe zur Rechtschreibprüfung";
+"Forget learned words" = "Gelernte Wörter vergessen";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Diese Wörter in diesem Dokument wurden für %@ gelernt. Wählen Sie die Wörter aus, die vergessen werden sollen. Mit Umschalttaste oder Befehlstaste klicken wählt mehrere aus.";
+"Forget Selected" = "Auswahl vergessen";
+"Forgot %lu word." = "%lu Wort vergessen.";
+"Forgot %lu words." = "%lu Wörter vergessen.";
+"No learned words in this document" = "Keine gelernten Wörter in diesem Dokument";
+"None of the words in this document have been learned for %@." = "Keines der Wörter in diesem Dokument wurde für %@ gelernt.";
+"The spell checking help could not be found" = "Die Hilfe zur Rechtschreibprüfung wurde nicht gefunden";
+"Problems in the spelling exclusions file" = "Probleme in der Datei mit den Rechtschreib-Ausnahmen";
+"OK" = "OK";
+/* Button added to the Spelling and Grammar panel */
+"Change All" = "Alle ändern";
+
+"Replacement for Change All" = "Ersatz für Alle ändern";
+
+"Return to the word and choose Find Next before replacing." = "Zum Wort zurückkehren und erneut Weitersuchen wählen.";
+
+"Enter a different replacement in the Change All field." = "Einen anderen Ersatz im Feld für Alle ändern eingeben.";

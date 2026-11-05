@@ -110,3 +110,26 @@
 "Source" = "Bron";
 "Syntax Color expl3 Code" = "Syntaxis Kleur expl3-code";
 "PDF File Has No Annotations" = "PDF File Has No Annotations";
+
+/* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
+"Forget Learned Words…" = "Geleerde woorden vergeten…";
+"Edit Spelling Exclusions…" = "Spellinguitzonderingen bewerken…";
+"Spell Checking Help" = "Help bij spellingcontrole";
+"Forget learned words" = "Geleerde woorden vergeten";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "Deze woorden in dit document zijn geleerd voor %@. Selecteer de woorden die u wilt vergeten. Met Shift of Command ingedrukt klikken selecteert er meerdere.";
+"Forget Selected" = "Selectie vergeten";
+"Forgot %lu word." = "%lu woord vergeten.";
+"Forgot %lu words." = "%lu woorden vergeten.";
+"No learned words in this document" = "Geen geleerde woorden in dit document";
+"None of the words in this document have been learned for %@." = "Geen van de woorden in dit document is geleerd voor %@.";
+"The spell checking help could not be found" = "De help bij spellingcontrole is niet gevonden";
+"Problems in the spelling exclusions file" = "Problemen in het bestand met spellinguitzonderingen";
+"OK" = "OK";
+/* Button added to the Spelling and Grammar panel */
+"Change All" = "Wijzig alles";
+
+"Replacement for Change All" = "Vervanging voor Wijzig alles";
+
+"Return to the word and choose Find Next before replacing." = "Ga terug naar het woord en zoek opnieuw het volgende woord.";
+
+"Enter a different replacement in the Change All field." = "Voer een andere vervanging in het aparte veld in.";

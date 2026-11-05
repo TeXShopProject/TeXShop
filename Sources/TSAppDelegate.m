@@ -40,6 +40,8 @@
 #import "GlobalData.h"
 #import "TSColorSupport.h"
 #import "TSExternalPDFReload.h"
+#import "TSSpellExclusions.h"
+#import "TSSpellSupport.h"
 
 
 
@@ -218,6 +220,17 @@
 			[fileManager removeItemAtPath:[folderPath stringByAppendingPathComponent:
                                            filename] error: NULL];
 	}
+}
+
+
+// TeX-aware spell checking: read the exclusion rules (installing the default
+// file the first time) and add the extra items to Edit > Spelling and Grammar.
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+    if ([SUD boolForKey:@"TeXAwareSpellChecking"]) {
+        [TSSpellExclusions sharedExclusions];
+        [TSSpellSupport installMenuItems];
+    }
 }
 
 
