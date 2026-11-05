@@ -1,4 +1,4 @@
-// added by Terada: Isolated native preference and running-app Dock checks.
+// Isolated native preference and running-app Dock checks.
 #import <Cocoa/Cocoa.h>
 #import "../Sources/TSDockIconController.h"
 #import "../Sources/TSDockIcon.h"

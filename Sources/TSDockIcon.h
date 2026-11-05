@@ -1,4 +1,4 @@
-// added by Terada: Shared drawing for the application and its Dock plug-in.
+// Shared drawing for the application and its Dock plug-in.
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import <Cocoa/Cocoa.h>
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# added by Terada: Never start TeXShop or use its production preference domain.
+# Never start TeXShop or use its production preference domain.
 set -eu
 root=$(cd "$(dirname "$0")/.." && pwd)
 build=$(mktemp -d /tmp/TeXShop-DockLab.XXXXXX)

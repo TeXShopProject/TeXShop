@@ -1,4 +1,4 @@
-// added by Terada: Dock appearance is independent of editor color themes.
+// Dock appearance is independent of editor color themes.
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSDockIconController.h"
 #import "TSDockIcon.h"
