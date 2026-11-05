@@ -425,7 +425,8 @@ for(NSString *key in enu)
 				}
 				else if ([myString characterAtIndex:0] == '"') {
 					pos = [myString length] - 1;
-					if ([myString characterAtIndex:pos] == '"') {
+					// A lone '"' opens a quoted argument; it cannot also close it.
+					if (([myString length] >= 2) && ([myString characterAtIndex:pos] == '"')) {
 						aRange.location = 1;
 						aRange.length = [myString length] - 2;
 						myString = [myString substringWithRange: aRange];
@@ -968,7 +969,11 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 	if ((! done) && ([SUD boolForKey:UseOldHeadingCommandsKey])) {
 		myRange.length = 1;
 		myRange.location = 0;
-		[theSource getLineStart:&mystart end: &myend contentsEnd: nil forRange:myRange];
+		mystart = 0;
+		myend = 0;
+		// The range {0, 1} is out of bounds for an empty document.
+		if ([theSource length] > 0)
+			[theSource getLineStart:&mystart end: &myend contentsEnd: nil forRange:myRange];
 		if (myend > (mystart + 2)) {
 			myRange.location = 0;
 			myRange.length = myend - mystart - 1;
