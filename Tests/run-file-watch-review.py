@@ -4,8 +4,8 @@ from pathlib import Path
 import subprocess,tempfile,os
 root=Path(__file__).resolve().parents[1]
 base=subprocess.check_output(['git','show','46df39d:Sources/TSDocument.m'],cwd=root,text=True)
-# Preserve the original PR comparison after subsequent watcher experiments.
-patched=subprocess.check_output(['git','show','efbf028:Sources/TSDocument.m'],cwd=root,text=True)
+# Compare the baseline with the merged PR #1 commit, not with later watcher changes.
+patched=subprocess.check_output(['git','show','00c5f12:Sources/TSDocument.m'],cwd=root,text=True)
 def methods(s,pr):
  start=s.index('- (NSString *)fileSignatureAtPath:') if pr else s.index('- (void)watchFile:')
  watch=s[start:s.index('//END PATCH',start)]
