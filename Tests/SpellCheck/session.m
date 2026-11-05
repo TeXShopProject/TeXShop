@@ -75,5 +75,17 @@ int main(void) {@autoreleasepool {
     NSDate *until=[NSDate dateWithTimeIntervalSinceNow:.8];
     while(until.timeIntervalSinceNow>0) [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
     NSCAssert(NSEqualRanges(a.selectedRange,NSMakeRange(1,0)), @"no stale delayed selection");
-    puts("PASS: switched/edited documents protected; current Change All and Undo work");
+    Review(a);
+    [TSSpellSupport preferencesDidChange];
+    NSCAssert(SessionChecker.sharedSpellChecker.accessoryView == nil, @"mode change removes our replacement field");
+    [TSSpellSupport changeAll:nil];
+    NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"mode change invalidates the pending replacement");
+    Review(a);
+    [TSSpellSupport changeAll:nil];
+    NSCAssert([a.string isEqual:@"fixed fixed"], @"review works again after a mode change");
+    NSView *otherAccessory = [NSView new];
+    SessionChecker.sharedSpellChecker.accessoryView = otherAccessory;
+    [TSSpellSupport preferencesDidChange];
+    NSCAssert(SessionChecker.sharedSpellChecker.accessoryView == otherAccessory, @"do not remove someone else's accessory");
+    puts("PASS: switched/edited documents and mode changes protected; current Change All and Undo work");
 }return 0;}

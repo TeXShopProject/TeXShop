@@ -46,6 +46,8 @@
 @property (retain) NSString     *originalString;
 @property (retain) NSString     *currentString;
 
+- (BOOL)usesTeXAwareSpellChecking;
+
 - (NSRange)selectionRangeForProposedRange:(NSRange)proposedSelRange granularity:(NSSelectionGranularity)granularity;
 
 // - (void)setDocument: (TSDocument *)doc;

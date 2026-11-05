@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="IdK-rt-sNX" id="aea-eX-yg4"/>
                 <outlet property="ConsoleAlphaColorWell" destination="jmu-ci-gc4" id="vNn-5G-wH9"/>
                 <outlet property="ConsoleBackgroundColorWell" destination="xFJ-OG-r1a" id="b4C-ac-fY1"/>
@@ -645,12 +646,30 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="拼写检查" translatesAutoresizingMaskIntoConstraints="NO" id="nOY-vf-6rw">
-                                            <rect key="frame" x="319" y="283" width="257" height="90" />
+                                            <rect key="frame" x="319" y="223" width="257" height="150" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="v3i-gu-abQ">
-                                                <rect key="frame" x="0.0" y="0.0" width="257" height="76" />
+                                                <rect key="frame" x="0.0" y="0.0" width="257" height="136" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Use the exclusion rules file for TeX documents. Turn off to use the legacy options below. This does not turn on Check Spelling While Typing." id="ts-aware-spelling">
+                                                        <rect key="frame" x="13" y="105" width="231" height="22"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="识别 TeX 的拼写检查" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ts-aware-spelling-cell">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system" size="12"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="texAwareSpellCheckPressed:" target="-2" id="ts-aware-spelling-action"/></connections>
+                                                    </button>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Use the exclusion rules file for TeX documents. Turn off to use the legacy options below. This does not turn on Check Spelling While Typing." id="ts-edit-spelling">
+                                                        <rect key="frame" x="13" y="77" width="231" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="push" title="编辑 TeX 排除规则…" bezelStyle="rounded" imagePosition="overlaps" alignment="center" inset="2" id="ts-edit-spelling-cell">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system" size="12"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="editSpellingExclusions:" target="-2" id="ts-edit-spelling-action"/></connections>
+                                                    </button>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kmE-lm-M6c">
                                                         <rect key="frame" x="13" y="9" width="238" height="58" />
                                                         <autoresizingMask key="autoresizingMask"/>
@@ -755,7 +774,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="行号字体大小" translatesAutoresizingMaskIntoConstraints="NO" id="lPc-Gz-lH6">
-                                            <rect key="frame" x="319" y="201" width="257" height="70" />
+                                            <rect key="frame" x="319" y="141" width="257" height="70" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Cvn-2d-jho">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="56" />

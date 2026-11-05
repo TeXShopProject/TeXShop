@@ -149,6 +149,7 @@
     
     IBOutlet NSButton  *_useNewToolbarButton;
     
+    IBOutlet NSButton *_texAwareSpellCheckButton;
     IBOutlet NSButtonCell   *_spellCheckCommands;
     IBOutlet NSButtonCell   *_spellCheckParameters;
     IBOutlet NSButtonCell   *_spellCheckComments;
@@ -401,6 +402,9 @@
 - (IBAction)sparkleInterval:sender;
 
 
+- (IBAction)texAwareSpellCheckPressed:(NSButton *)sender;
+- (IBAction)editSpellingExclusions:(id)sender;
+- (void)updateSpellingControlsFromDefaults:(NSUserDefaults *)defaults;
 - (IBAction)spellCheckCommandPressed:sender;
 - (IBAction)spellCheckParameterPressed:sender;
 - (IBAction)spellCheckCommentPressed:sender;

@@ -14,6 +14,8 @@ code, pre { font-family: Menlo, monospace; font-size: 12px; }
 
 <h1>Spell Checking in TeXShop</h1>
 
+<p><b>Settings &gt; Source &gt; TeX-aware spell checking</b> selects this mode, enabled by default in TeXShop 5.60. Turn it off to use the legacy exclusion options below the checkbox. Your previous options are retained. The new rules apply to TeX source files; other file types keep their previous behavior. This setting does not turn on <b>Check Spelling While Typing</b>. Use <b>Edit TeX exclusion rules…</b> to customize what is skipped.</p>
+
 <p>TeXShop's spell checking knows about TeX. It skips comments, maths, commands, and the
 arguments of commands such as <code>\label</code>, <code>\ref</code>, <code>\cite</code> and
 <code>\usepackage</code>, and checks the rest of your text. It uses the standard

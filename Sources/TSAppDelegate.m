@@ -230,8 +230,9 @@
 {
     if ([SUD boolForKey:@"TeXAwareSpellChecking"]) {
         [TSSpellExclusions sharedExclusions];
-        [TSSpellSupport installMenuItems];
     }
+    // Rule editing and spelling help remain accessible in either spelling mode.
+    [TSSpellSupport installMenuItems];
 }
 
 

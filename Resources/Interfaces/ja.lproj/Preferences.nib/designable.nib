@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="bGG-lm-bPK" id="v4V-Qo-VIN"/>
                 <outlet property="ConsoleAlphaColorWell" destination="FX4-Zp-ZHi" id="EOm-sn-lmx"/>
                 <outlet property="ConsoleBackgroundColorWell" destination="iHm-Dp-7a2" id="eh2-Aq-44S"/>
@@ -582,12 +583,30 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="スペルチェック" translatesAutoresizingMaskIntoConstraints="NO" id="gYL-Ff-Rga">
-                                            <rect key="frame" x="320" y="278" width="257" height="90" />
+                                            <rect key="frame" x="320" y="218" width="257" height="150" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="B7O-uO-08g">
-                                                <rect key="frame" x="0.0" y="0.0" width="257" height="76" />
+                                                <rect key="frame" x="0.0" y="0.0" width="257" height="136" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="TeX文書では除外規則ファイルを使います。OFFにすると下の従来の除外設定に戻ります。入力中のスペルチェックのON/OFFは変更しません。" id="ts-aware-spelling">
+                                                        <rect key="frame" x="13" y="105" width="231" height="22"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="TeX対応のスペルチェック" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ts-aware-spelling-cell">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system" size="12"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="texAwareSpellCheckPressed:" target="-2" id="ts-aware-spelling-action"/></connections>
+                                                    </button>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="TeX文書では除外規則ファイルを使います。OFFにすると下の従来の除外設定に戻ります。入力中のスペルチェックのON/OFFは変更しません。" id="ts-edit-spelling">
+                                                        <rect key="frame" x="13" y="77" width="231" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="push" title="TeXの除外規則を編集…" bezelStyle="rounded" imagePosition="overlaps" alignment="center" inset="2" id="ts-edit-spelling-cell">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system" size="12"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="editSpellingExclusions:" target="-2" id="ts-edit-spelling-action"/></connections>
+                                                    </button>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YGy-QL-IO9">
                                                         <rect key="frame" x="13" y="9" width="238" height="58" />
                                                         <autoresizingMask key="autoresizingMask"/>
@@ -658,7 +677,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="行番号の文字サイズ" translatesAutoresizingMaskIntoConstraints="NO" id="zPd-fU-Ohr">
-                                            <rect key="frame" x="320" y="196" width="257" height="70" />
+                                            <rect key="frame" x="320" y="136" width="257" height="70" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="6I4-ev-fDt">
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="56" />
