@@ -234,6 +234,12 @@ static NSString *TSFileStamp(NSString *path)
                 if (accepted && readingGeneration == self->_changeGeneration) self->_pending = NO;
                 // Queued vnode writes are consumed even when metadata was restored.
                 [self consumeEvents];
+                // A debounce may have fired while this read was in flight.
+                // Re-arm only for a newer change, not for a rejected/dirty read.
+                if (self->_pending && readingGeneration != self->_changeGeneration)
+                    dispatch_source_set_timer(self->_debounce,
+                        dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / 10),
+                        DISPATCH_TIME_FOREVER, NSEC_PER_MSEC * 10);
             });
         });
     }
