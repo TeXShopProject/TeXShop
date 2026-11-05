@@ -2374,11 +2374,15 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                 if ((self.startDate == nil) || ! [self.startDate isEqualToDate: endDate]) {
                     alreadyFound = YES;
                     PDFfromKit = YES;
-                    [self.myPDFKitView2 prepareSecond];
+                    BOOL split = self.pdfKitWindow.windowIsSplit;
+                    if (split)
+                        [self.myPDFKitView2 prepareSecond];
                     [self.myPDFKitView reShowWithPath: imagePath];
                     // [[self.myPDFKitView document] retain];
-                    [self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
-                    [self.myPDFKitView2 reShowForSecond];
+                    if (split) {
+                        [self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
+                        [self.myPDFKitView2 reShowForSecond];
+                    }
                     if (! useFullSplitWindow) {
                         [self.pdfKitWindow setRepresentedFilename: imagePath];
                         //[pdfKitWindow setTitle: [imagePath lastPathComponent]]; // removed by Terada
@@ -2632,11 +2636,15 @@ else
 				if ((self.startDate == nil) || ! [self.startDate isEqualToDate: endDate]) {
 					alreadyFound = YES;
 					PDFfromKit = YES;
-					[self.myPDFKitView2 prepareSecond];
+					BOOL split = self.pdfKitWindow.windowIsSplit;
+					if (split)
+						[self.myPDFKitView2 prepareSecond];
 					[self.myPDFKitView reShowWithPath: imagePath];
 					// [[self.myPDFKitView document] retain];
-					[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
-					[self.myPDFKitView2 reShowForSecond];
+					if (split) {
+						[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
+						[self.myPDFKitView2 reShowForSecond];
+					}
                     if (! useFullSplitWindow) {
                         [self.pdfKitWindow setRepresentedFilename: imagePath];
                         //[pdfKitWindow setTitle: [imagePath lastPathComponent]]; // removed by Terada

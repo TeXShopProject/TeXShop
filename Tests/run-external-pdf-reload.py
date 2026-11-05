@@ -140,6 +140,8 @@ int main(int argc,char **argv){@autoreleasepool{
  NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,900,600) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
  window.releasedWhenClosed=NO;
  TSDocument *d=[TSDocument new];d.fileURL=[NSURL fileURLWithPath:path];d->taskDone=YES;d.pdfKitWindow=[TestWindow new];
+ // Both panes are shown: the preview is split.
+ d.pdfKitWindow.windowIsSplit=YES;
  d.myPDFKitView=[[RecoveryView alloc] initWithFrame:NSMakeRect(0,0,450,600)];d.myPDFKitView2=[[RecoveryView alloc] initWithFrame:NSMakeRect(450,0,450,600)];
  for(RecoveryView *v in @[d.myPDFKitView,d.myPDFKitView2]) {
  v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=d.pdfKitWindow;v.myDocument.myPDFKitView2=d.myPDFKitView2;
@@ -213,6 +215,8 @@ int main(int argc,char **argv){@autoreleasepool{
  v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=d.pdfKitWindow;v.myDocument.myPDFKitView2=d.myPDFKitView2;
  [window.contentView addSubview:v];v.document=[[PDFDocument alloc]initWithData:first];
  }
+ // An unsplit preview gives the second view no document.
+ d.myPDFKitView2.document=nil;
  [d startExternalPDFObservation];[d.pdfRefreshTimer invalidate];
  PDFDocument *old=d.myPDFKitView.document;
 
@@ -229,6 +233,7 @@ int main(int argc,char **argv){@autoreleasepool{
  base=Padded(base,size);edit=Padded(edit,size);Check(![base isEqualToData:edit] && base.length==edit.length,@"Different PDFs of one size");
  // Displayed from a snapshot clone after an external reload.
  [base writeToFile:path atomically:YES];StablePoll(d);Check(d.myPDFKitView.document!=old,@"Reload before same-size checks");
+ Check(!d.myPDFKitView2.document,@"Unsplit preview: reload leaves the second view without a document");
  old=d.myPDFKitView.document;attempts=snapshotCount;digests=TSTestDigests;
  SetAttribute(path);StablePoll(d);StablePoll(d);
  Expect(d.myPDFKitView.document==old && snapshotCount==attempts && TSTestDigests>digests,@"Snapshot: metadata-only change is compared and not reloaded");
