@@ -59,6 +59,7 @@
 #import "NSText-Extras.h"  // Terada
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
+#import "TSFileChangeMonitor.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 
 
@@ -450,7 +451,7 @@ withDarkColors = NO;
 	_textStorage = [[NSTextStorage alloc] init];
     
 //ULRICH BAUER PATCH
-    dispatch_source = NULL;
+    sourceFileMonitor = nil;
 //END PATCH
     
 
@@ -459,6 +460,7 @@ withDarkColors = NO;
 
 - (void)dealloc
 {
+    [sourceFileMonitor stop];
 	NSInteger	i;
     
     if (scanner != NULL)
@@ -2121,10 +2123,18 @@ in other code when an external editor is being used. */
 }
 
 
-// NOTE "data of Type" is actually never called!
+// Source serialization is also used by NSDocument safe saves.
     
 // - (NSData *)dataRepresentationOfType:(NSString *)aType {
-- (NSData *)dataOfType: (NSString *)typeName error: (NSError **)outError {
+// Record exactly the bytes supplied to a successful safe save.
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
+{
+    NSData *data = [self serializedSourceOfType:typeName error:outError];
+    if (sourceSaving) sourceWrittenFingerprint = TSSourceFingerprint(data);
+    return data;
+}
+
+- (NSData *)serializedSourceOfType:(NSString *)typeName error:(NSError **)outError {
 	NSRange             encodingRange, newEncodingRange, myRange, theRange;
 	NSUInteger            length;
 	NSString            *encodingString, *text, *testString;
@@ -2546,97 +2556,85 @@ in other code when an external editor is being used. */
 */
 
 
-// The size and modification date of the file at path, or nil. Equal signatures mean the file did not change in between.
-- (NSString *)fileSignatureAtPath:(NSString *)path
+// Keep monitoring active during reads, writes, and reverts.
+- (void)watchFile:(NSString *)fileName
 {
-    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
-    if (attributes == nil)
-        return nil;
-    return [NSString stringWithFormat:@"%llu/%.6f", [attributes fileSize],
-            [[attributes fileModificationDate] timeIntervalSinceReferenceDate]];
-}
-
-// Reload the file once it has stopped changing for a short time. A tool that saves in several steps would otherwise
-// make us read a half-written file, so every new call restarts the wait.
-- (void)scheduleWatchedFileReload
-{
-    NSUInteger generation = ++watchReloadGeneration;
-    __weak TSDocument *weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        TSDocument *strongSelf = weakSelf;
-        if (strongSelf == nil || generation != strongSelf->watchReloadGeneration)
-            return;
-        if (strongSelf->dispatch_source == NULL || [strongSelf hasUnautosavedChanges])
-            return;
-        NSError *outError = NULL;
-        [strongSelf revertToContentsOfURL:[strongSelf fileURL] ofType:[strongSelf fileType] error:&outError];
-    });
-}
-
-- (void)watchFile:(NSString*)fileName {
-    
-      if (! activateBauerPatch)
-          return;
-    
-     //   if ( ! [SUD boolForKey:WatchServerKey] )
-     //       return;
-    
-     // if (![[self class] autosavesInPlace])
-     //      return;
-    
-        dispatch_queue_t queue = dispatch_get_main_queue();
-        int fildes = open([fileName UTF8String], O_EVTONLY);
-    
+    if (!activateBauerPatch || !fileName || [self doNotReadSource]) {
         [self cancelWatchFile];
-        if (fildes < 0)
-            return;
-    
-        dispatch_source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE,fildes,
-                                            DISPATCH_VNODE_DELETE | DISPATCH_VNODE_WRITE | DISPATCH_VNODE_REVOKE,
-                                            queue);
-        __block TSDocument *blockSelf = self;
-    
-       dispatch_source_set_event_handler(dispatch_source, ^ {
-                if ([blockSelf hasUnautosavedChanges]) {
-                        [blockSelf cancelWatchFile];
-                    } else {
-                            unsigned long flags = dispatch_source_get_data(dispatch_source);
-                            if (flags & (DISPATCH_VNODE_WRITE)) {
-                                   [blockSelf scheduleWatchedFileReload];
-                                } else if (flags & (DISPATCH_VNODE_DELETE)) {
-                                        sleep(1); // added by Martin Hairer;
-                                        if ([[NSFileManager defaultManager] isReadableFileAtPath: [[blockSelf fileURL] path]]) {
-                                                NSError *outError = NULL;
-                                                if (![blockSelf revertToContentsOfURL:[blockSelf fileURL] ofType:[blockSelf fileType] error:&outError])
-                                                        [blockSelf close];
-                                            } else {
-                                                    [blockSelf close];
-                                                }
-                                    } else if (flags & (DISPATCH_VNODE_REVOKE)) {
-                                            [blockSelf close];
-                                       }
-                        }
-        
-           });
-        
-        dispatch_source_set_cancel_handler(dispatch_source, ^ {
-                close(fildes);
-            });
-        
-        dispatch_resume(dispatch_source);
+        return;
     }
+    NSString *path = fileName.stringByStandardizingPath;
+    if ([sourceFileMonitor.path isEqualToString:path]) return;
+    [self cancelWatchFile];
+    __weak TSDocument *weakSelf = self;
+    sourceFileMonitor = [[TSFileChangeMonitor alloc] initWithPath:path prepare:^NSNumber *{
+        TSDocument *document = weakSelf;
+        if (!document || ![document.fileURL.path.stringByStandardizingPath isEqualToString:path]) return nil;
+        if (document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges]) return nil;
+        return @(document->sourceIOGeneration);
+    } accept:^BOOL(NSData *data, NSData *fingerprint, NSNumber *generation) {
+        TSDocument *document = weakSelf;
+        if (!document || ![document.fileURL.path.stringByStandardizingPath isEqualToString:path]) return NO;
+        // A save/read/path change during background I/O invalidates this snapshot,
+        // even when the document has become clean again by the time it arrives.
+        if (generation.unsignedIntegerValue != document->sourceIOGeneration ||
+            document->sourceSaving || [document isDocumentEdited] || [document hasUnautosavedChanges]) return NO;
+        if ([fingerprint isEqual:document->sourceAcceptedFingerprint]) return YES;
+        document->sourceReloadData = data;
+        document->sourceReloadFingerprint = fingerprint;
+        BOOL result = NO;
+        // This runs from a main-queue block; an escaping exception would
+        // terminate the application. Report the reload as rejected instead,
+        // so that the monitor retries and keeps watching.
+        @try {
+            result = [document revertToContentsOfURL:document.fileURL ofType:document.fileType error:NULL];
+        } @catch (NSException *exception) {
+            NSLog(@"Automatic reload of %@ failed: %@", path, exception);
+            result = NO;
+        } @finally {
+            document->sourceReloadData = nil;
+            document->sourceReloadFingerprint = nil;
+        }
+        return result;
+    }];
+}
 
-- (void)cancelWatchFile {
-    
-        if ( ! [SUD boolForKey:WatchServerKey] )
-            return;
-    
-        if (dispatch_source != NULL) {
-                dispatch_source_cancel(dispatch_source);
-              //  dispatch_release(dispatch_source);
-                dispatch_source = NULL;
-            }
+- (void)cancelWatchFile
+{
+    ++sourceIOGeneration;
+    [sourceFileMonitor stop];
+    sourceFileMonitor = nil;
+}
+
+- (void)setFileURL:(NSURL *)url
+{
+    [super setFileURL:url];
+    [self watchFile:url.isFileURL ? url.path : nil];
+}
+
+// Never acknowledge the current disk state after saving;
+// another process may already have replaced it. Accept only our serialized bytes.
+- (BOOL)writeSafelyToURL:(NSURL *)url ofType:(NSString *)typeName
+      forSaveOperation:(NSSaveOperationType)operation error:(NSError **)error
+{
+    ++sourceIOGeneration;
+    sourceSaving = YES;
+    sourceWrittenFingerprint = nil;
+    BOOL result = NO;
+    @try {
+        result = [super writeSafelyToURL:url ofType:typeName forSaveOperation:operation error:error];
+        // These operations make the written file the document's file. Save To
+        // and Autosave Elsewhere write copies and leave the baseline unchanged.
+        if (result && (operation == NSSaveOperation || operation == NSSaveAsOperation ||
+                       operation == NSAutosaveInPlaceOperation || operation == NSAutosaveAsOperation)) {
+            sourceAcceptedFingerprint = sourceWrittenFingerprint;
+        }
+    } @finally {
+        sourceSaving = NO;
+        sourceWrittenFingerprint = nil;
     }
+    return result;
+}
 
 //END PATCH
 
@@ -2696,12 +2694,13 @@ in other code when an external editor is being used. */
 	NSData				*myData;
 	NSUInteger		theLength;
 	
-	watchedFileSignature = [self fileSignatureAtPath:[absoluteURL path]];
 
 	if ([self doNotReadSource])
 		return YES;
 
-	myData = [NSData dataWithContentsOfURL:absoluteURL];
+    [self watchFile:([self fileURL] ?: absoluteURL).path]; // Register before reading.
+	myData = sourceReloadData ?: [NSData dataWithContentsOfURL:absoluteURL options:0 error:outError];
+    if (!myData) return NO;
 	_encoding = _tempencoding = [self dataEncoding: myData];
     
 /*
@@ -2754,9 +2753,7 @@ in other code when an external editor is being used. */
 	
 */
 
-//ULRICH BAUER PATCH
-    [self watchFile: [absoluteURL path]];
-//END PATCH
+
 
 	NSString *content;
 	content = [[NSString alloc] initWithData:myData encoding:_encoding] ;
@@ -2792,6 +2789,8 @@ in other code when an external editor is being used. */
 			}
 		
 		[[_textStorage mutableString] setString:content];
+        sourceAcceptedFingerprint = sourceReloadFingerprint ?: TSSourceFingerprint(myData);
+        ++sourceIOGeneration;
 	
 		return YES;
 	}
@@ -2802,10 +2801,7 @@ else {
 
 - (BOOL)writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
-//ULRICH BAUER PATCH
-    [self cancelWatchFile];
-//END PATCH
-    
+
 	BOOL		result;
 
 	result = [super writeToURL: absoluteURL ofType:typeName error:outError];
@@ -2816,11 +2812,7 @@ else {
 		// dirty tricks to get acceptable behavior.
 		[textView breakUndoCoalescing];
 	}
-    
-//ULRICH BAUER PATCH
-    [self watchFile: [absoluteURL path]];
-//EMD PATCH
-    
+
 	return result;
 }
 
@@ -2836,22 +2828,14 @@ else {
 
 - (BOOL)revertToContentsOfURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
-    
-//ULRICH BAUER PATCH
-    [self cancelWatchFile];
-//END PATCH
-    
+
 	BOOL	value;
 
-	++watchReloadGeneration; // a reload that was still waiting is now redundant
 	value = [super revertToContentsOfURL:absoluteURL ofType:typeName error:outError];
 	if (value) {
 		[self setupTags];
 		[self colorizeAll];
-		// A write that ends after we read the file, but before the watch started again, sends no event.
-		NSString *currentSignature = [self fileSignatureAtPath:[absoluteURL path]];
-		if (dispatch_source != NULL && currentSignature != nil && ![currentSignature isEqualToString:watchedFileSignature])
-			[self scheduleWatchedFileReload];
+
 	}
 	
 	// FIXME: Is the following even needed? Changin the textstorage should trigger a redraw anyway,
@@ -3017,6 +3001,7 @@ else {
 
 - (void)close
 {
+    [self cancelWatchFile];
     if (self.annotationsExist)
         {
         self.annotationsExist = NO;
@@ -3063,9 +3048,7 @@ else {
 		g_canRegisterCommandCompletion = YES;
  	// end mitsu 1.29
     
-//ULRICH BAUER PATCH
-    [self cancelWatchFile];
-//END PATCH
+
 
 	[super close];
 }
