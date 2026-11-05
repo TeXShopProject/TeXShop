@@ -26,8 +26,8 @@ for op in operations {
 }
 // Preserve the classic lettering size, with a small optical correction to the right.
 // The fallback canvas insets the artwork by 100 pixels and scales it to 824 pixels.
-// Eight fallback pixels equal one pixel at a 128-pixel display size.
-let opticalOffsetX:CGFloat = 8
+// Four fallback pixels equal half a pixel at a 128-pixel display size.
+let opticalOffsetX:CGFloat = 4
 var classicTransform=CGAffineTransform(a:1024/824,b:0,c:0,d:1024/824,tx:(-100+opticalOffsetX)*1024/824,ty:-100*1024/824)
 let word=tex.copy(using:&classicTransform)!
 func svgPath(_ p:CGPath)->String {
