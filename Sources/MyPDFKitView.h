@@ -203,6 +203,7 @@
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent;
 - (void) showWithPath: (NSString *)imagePath;
 - (void) reShowWithPath: (NSString *)imagePath;
+- (void)reShowWithDocument:(PDFDocument *)document;
 - (void) showForSecond;
 - (void) prepareSecond;
 - (void) reShowForSecond;

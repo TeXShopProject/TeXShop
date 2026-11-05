@@ -714,6 +714,7 @@ enum RootCommand
 - (void)fixUpTabs;
 - (BOOL) externalEditor;
 - (void) refreshPDFAndBringFront: (BOOL)front;
+- (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime;
 - (void) refreshTEXT;
 - (NSString *)displayName;
 - (BOOL) isTexExtension: (NSString *)extension;  //needed?
