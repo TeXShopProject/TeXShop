@@ -669,6 +669,10 @@ for(NSString *key in enu)
 	NSData          *myData;
     BOOL            fromAlternateTemp;
     
+    // This method runs as the completion of NSDocument's save and autosave;
+    // an exception escaping from here would leave the document unable to
+    // save or close.
+    @try {
     [self RescanMagicComments: self];
     if (self.automaticCorrection)
         {
@@ -1098,6 +1102,12 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 	}
 
 	[self completeSaveFinished];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Typesetting stopped by an exception: %@: %@", [exception name], [exception reason]);
+        useTempEngine = NO;
+        fromMenu = NO;
+    }
 }
 
 -(void)repeatTypeset

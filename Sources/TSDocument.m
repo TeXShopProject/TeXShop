@@ -3192,7 +3192,13 @@ else {
 
 - (void)saveForStatistics: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo
 {
-	[self showStatistics:self];
+	// Runs as the completion of NSDocument's save; no exception may escape.
+	@try {
+		[self showStatistics:self];
+	}
+	@catch (NSException *exception) {
+		NSLog(@"Statistics stopped by an exception: %@: %@", [exception name], [exception reason]);
+	}
 }
 
 - (void)updateStatistics: sender
