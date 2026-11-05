@@ -2249,8 +2249,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="932">
                                                             <font key="font" metaFont="message" size="11"/>
-                                                            <string key="title">Distiller (por omissão: /usr/local/bin)
-</string>
+                                                            <string key="title">Distiller (por omissão: /usr/local/bin)</string>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
@@ -2284,8 +2283,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="930">
                                                             <font key="font" metaFont="message" size="11"/>
-                                                            <string key="title">(pdf)TeX (por omissão: /Library/TeX/texbin OR /usr/texbin)
-</string>
+                                                            <string key="title">(pdf)TeX (por omissão: /Library/TeX/texbin OR /usr/texbin)</string>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
@@ -2606,7 +2604,7 @@ DQ
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="153">
                                                         <rect key="frame" x="14" y="33.5" width="222" height="16" />
                                                         <autoresizingMask key="autoresizingMask"/>
-                                                        <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Latex Program (no Programa LaTeX (nenhum por omissão):)" id="935">
+                                                        <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="Programa LaTeX (nenhum por omissão):" id="935">
                                                             <font key="font" metaFont="message" size="11"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2629,8 +2627,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" id="933">
                                                             <font key="font" metaFont="message" size="11"/>
-                                                            <string key="title">Programa TeX (nenhum por omissão):
-</string>
+                                                            <string key="title">Programa TeX (nenhum por omissão):</string>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>

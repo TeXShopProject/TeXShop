@@ -2771,8 +2771,7 @@ DQ
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" id="974">
                                                             <font key="font" metaFont="message" size="11"/>
-                                                            <string key="title">Programma Tex (no default)
-</string>
+                                                            <string key="title">Programma Tex (no default)</string>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
