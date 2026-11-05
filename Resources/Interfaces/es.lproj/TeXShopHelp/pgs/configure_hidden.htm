@@ -2,9 +2,9 @@
 
 <HEAD>
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Preferencias ocultas</TITLE>
+		<TITLE>Ajustes ocultos</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="preferencias ocultas; colores para sintaxis; color de fondo; copia de respaldo; backup file; x11; matrices; .aux; sincronizaci&oacute;n; marcas; transparencia">
+		<META NAME="description" CONTENT="ajustes ocultos; colores para sintaxis; color de fondo; copia de respaldo; backup file; x11; matrices; .aux; sincronizaci&oacute;n; marcas; transparencia">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 
@@ -14,7 +14,7 @@
 		<dl>
 			<dd>defaults write TeXShop TagSections NO
 		</dl>
-<p>Los usuarios de ConTeXt pueden querer que algunas palabras adicionales sean autom&aacute;ticamente reconocidas y a&ntilde;adidas al men&uacute; Marcas. Con la siguiente preferencia se logra a&ntilde;adir las palabras \subsubsubsection, \subsubsubsubsection, \part, \title,
+<p>Los usuarios de ConTeXt pueden querer que algunas palabras adicionales sean autom&aacute;ticamente reconocidas y a&ntilde;adidas al men&uacute; Marcas. Con el siguiente ajuste se logra a&ntilde;adir las palabras \subsubsubsection, \subsubsubsubsection, \part, \title,
 \subject, \subsubject, \subsubsubject, \subsubsubsubject y \subsubsubsubsubject:
 </p>
 		<dl>
@@ -45,14 +45,14 @@
 			<dd>defaults write TeXShop insertionpoint_G 0.39
 			<dd>defaults write TeXShop insertionpoint_B 0.77
 		</dl>
-<p>Usando los tres conjuntos de preferencias anteriores de manera simult&aacute;nea, se puede escribir texto blanco sobre fondo negro, o usar en el editor cualquier otra combinaci&oacute;n de colores.</p> 
+<p>Usando los tres conjuntos de ajustes anteriores de manera simult&aacute;nea, se puede escribir texto blanco sobre fondo negro, o usar en el editor cualquier otra combinaci&oacute;n de colores.</p> 
 	<p>Podemos cambiar el color de fondo de la ventana con el pdf previsto. Por ejmplo, para ponerle el fondo con color (r, g, b) = (.42, .39, .77), ejecuta lo que sigue en el Terminal. Es posible que los documentos de TeX coloreados se vean mejor sobre fondo gris. Este color de fondo no afecta a lo que se obtiene al imprimir.</p>
 		<dl>
 			<dd>defaults write TeXShop Pdfbackground_R 0.42
 			<dd>defaults write TeXShop Pdfbackground_G 0.39
 			<dd>defaults write TeXShop Pdfbackground_B 0.77
 		</dl>
-<p>Hay unas preferencias ocultas para asignar transparencia a las ventanas con el c&oacute;digo, el pdf previsto, y la consola. Por ejmplo:</p>
+<p>Hay unos ajustes ocultos para asignar transparencia a las ventanas con el c&oacute;digo, el pdf previsto, y la consola. Por ejmplo:</p>
 		<dl>
 			<dd>defaults write TeXShop ConsoleWindowAlpha 0.75
 			<dd>defaults write TeXShop SourceWindowAlpha 0.75
@@ -92,7 +92,7 @@ Se puede hacer que &eacute;ste sea el comportamiento predeterminado de &laquo;Bo
 
 <p>El refresco autom&aacute;tico del pdf previsto es &uacute;til si hemos configurado TeXShop para usarlo con un editor externo, o si hemos abierto un fichero tex con &laquo;Abrir para previsualizar...&raquo;.
 En estos casos, se abre un archivo .tex, pero TeXShop s&oacute;lo muestra el archivo pdf asociado. TeXShop tambi&eacute;n permite abrir archivos pdf directamente; esto es &uacute;til para echar un vistazo a las ilustraciones antes de incluirlas en un documento TeX. Si quieres que los archivos pdf abiertos con un editor externo se refresquen autom&aacute;ticamente, pero que TeXShop deje tranquilos los archivos pdf abiertos para echar un vistazo, ejecuta el Terminal y teclea el siguiente comando.
-El valor por defecto de esta preferencia es YES.
+El valor por defecto de este ajuste es YES.
 </p>
 		<dl>
 			<dd>defaults write TeXShop PdfFileRefresh NO
@@ -104,7 +104,7 @@ El valor por defecto de esta preferencia es YES.
 			<dd>defaults write TeXShop ExternalEditorTypesetAtStart NO
 		</dl>
 
-<p>Hay una preferencia oculta para asignar un tama&ntilde;o predeterminado a las matrices que crea el Panel matrices. Para cambiar el valor que viene por defecto, usa, por ejemplo,</p>
+<p>Hay un ajuste oculto para asignar un tama&ntilde;o predeterminado a las matrices que crea el Panel matrices. Para cambiar el valor que viene por defecto, usa, por ejemplo,</p>
 		<dl>
 			<dd> defaults write TeXShop matrixsize 12
 		</dl> 
@@ -128,11 +128,11 @@ Esta sintaxis no era adecuada, y se ha cambiado (la nueva se explica en otra par
 		<dl>
 			<dd>defaults write TeXShop UseOldHeadingCommands YES
 		</dl>
-<p>Las teclas de cursor izquierda y derecha hacen que el contenido de la ventana con el pdf previsto se desplace hacia los lados si la ventana es m&aacute;s estrecha que el tama&ntilde;o de la p&aacute;gina; en otro caso, el desplazamiento es vertical. Hay una preferencia oculta para cambiar esto, y conseguir que las teclas de cursor izquierda y derecha sirvan siempre para cambiar de p&aacute;gina:</p>
+<p>Las teclas de cursor izquierda y derecha hacen que el contenido de la ventana con el pdf previsto se desplace hacia los lados si la ventana es m&aacute;s estrecha que el tama&ntilde;o de la p&aacute;gina; en otro caso, el desplazamiento es vertical. Hay un ajuste oculto para cambiar esto, y conseguir que las teclas de cursor izquierda y derecha sirvan siempre para cambiar de p&aacute;gina:</p>
 		<dl>
 			<dd>defaults write TeXShop LeftRightArrowsAlwaysPage YES
 		</dl>
-<p>La consola de texto en la que aparecen tanto los mensajes que nos env&iacute;a TeX al componer p&aacute;ginas como los errores muestra el texto en negro. Se puede conseguir que el texto sea rojo a partir del primer error con una preferencia oculta:</p>
+<p>La consola de texto en la que aparecen tanto los mensajes que nos env&iacute;a TeX al componer p&aacute;ginas como los errores muestra el texto en negro. Se puede conseguir que el texto sea rojo a partir del primer error con un ajuste oculto:</p>
 		<dl>
 			<dd> defaults write TeXShop RedConsoleAfterError YES
 		</dl>
@@ -141,7 +141,7 @@ Esta sintaxis no era adecuada, y se ha cambiado (la nueva se explica en otra par
 		<dl>
 			<dd>defaults write TeXShop LineBreakMode 1
 		</dl>
-<p>Cuando la ventana con el pdf previsto aparece por primera vez, su caj&oacute;n est&aacute; oculto. Hay una preferencia oculta para lograr que el caj&oacute;n sea visible la primera vez que aparece la ventana con el pdf:
+<p>Cuando la ventana con el pdf previsto aparece por primera vez, su caj&oacute;n est&aacute; oculto. Hay un ajuste oculto para lograr que el caj&oacute;n sea visible la primera vez que aparece la ventana con el pdf:
 </p>
 		<dl>
 			<dd>defaults write TeXShop PreviewDrawerOpen YES
@@ -149,7 +149,7 @@ Esta sintaxis no era adecuada, y se ha cambiado (la nueva se explica en otra par
 
 <p>Cuando se lanz&oacute; TeXShop para Tiger (Mac OS X 10.4), los usuarios notaron un molesto bug que hac&iacute;a que el funcionamiento del programa fuera cada vez m&aacute;s lento, hasta llegar a ser pr&aacute;cticamente inusable tras varios procesos de componer p&aacute;ginas. Este bug fue solucionado un par de d&iacute;as despu&eacute;s del lanzamiento. El problema ocurr&iacute;a cuando un nuevo pdf era cargado en el PdfKitView de la ventana con el pdf.
 Seg&uacute;n la documentaci&oacute;n de Apple, esto deber&iacute;a haber liberado de la memoria las estructuras de datos previas. La liberaci&oacute;n ocurr&iacute;a, pero ocasionaba que el programa se hiciera m&aacute;s lento. As&iacute; que el m&eacute;todo de fijar el bug consiti&oacute; en puentear al sistema haci&eacute;ndole creer que esas estructuras de datos todav&iacute;a esaban siendo usadas, as&iacute; que el sistema no las liberaba.</p>
-<p>Investigaciones posteriores parec&iacute;an mostrar que este bug no era tan severo en Tiger 10.4.4. Como consecuencia, se a&ntilde;adi&oacute; una preferencia oculta para liberar los datos si as&iacute; lo dese&aacute;bamos. Los valores de esta preferencia son</p>
+<p>Investigaciones posteriores parec&iacute;an mostrar que este bug no era tan severo en Tiger 10.4.4. Como consecuencia, se a&ntilde;adi&oacute; un ajuste oculto para liberar los datos si as&iacute; lo dese&aacute;bamos. Los valores de este ajuste son</p>
 		<dl>
 			<dd> 0 para liberar los datos en el sistema 10.4.3 o superior
 			<dd> 1 para no liberar nunca los datos
@@ -160,31 +160,31 @@ Seg&uacute;n la documentaci&oacute;n de Apple, esto deber&iacute;a haber liberad
 			<dd>defaults write TeXShop ReleaseDocumentClasses 1
 		</dl>
 <p> Afortunadamente, Apple solucion&oacute; este bug en Leopard (Mac OS X 10.5). Cuando TeXShop arranca, primero comprueba si se est&aacute; ejecutando Leopard.
-Si &eacute;se es el caso, TeXShop ignora la preferencia que acabamos de describir, y tampoco usa el truco que permit&iacute;a contrarrestrar el fallo.
+Si &eacute;se es el caso, TeXShop ignora el ajuste que acabamos de describir, y tampoco usa el truco que permit&iacute;a contrarrestrar el fallo.
 Como consecuencia, TeXShop libera correctamente la memoria en Leopard.</p>
 
 
 <p> TeXShop soporta SyncTeX. Los detalles est&aacute;n descritos en la secci&oacute;n sobre sincronizaci&oacute;n de la ayuda avanzada. Si synctex falla, TeXShop intenta en m&eacute;todo
-de sincronizaci&oacute;n basado en b&uacute;squedas. Para los usuarios que quieran experimentar con synctex en s&iacute; mismo, existe una preferencia oculta para lograr que TeXShop use exclusivamente synctex:</p>
+de sincronizaci&oacute;n basado en b&uacute;squedas. Para los usuarios que quieran experimentar con synctex en s&iacute; mismo, existe un ajuste oculto para lograr que TeXShop use exclusivamente synctex:</p>
 <dl>
 <dd>
 					defaults write TeXShop SyncTeXOnly YES
 			</dl>
-<p> Por defecto, esta preferencia tiene el valor NO.</p>
+<p> Por defecto, este ajuste tiene el valor NO.</p>
 
 </div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">&iquest;C&oacute;mo configuro TeXShop?</div><div id="header_title">Preferencias ocultas</div>
+<div id="header_chapter">&iquest;C&oacute;mo configuro TeXShop?</div><div id="header_title">Ajustes ocultos</div>
 		<div id="menu_border">
 		<UL>
 			<LI><a href="configure_preliminaries.htm">Preliminares</a>
 			<LI><a href="configure_correctinstall.htm">&iquest;Has instalado TeXShop correctamente?</a>
-			<LI><a href="configure_prefchanges.htm">Recomendaciones de cambios en las preferencias</a>
+			<LI><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
 			<LI><a href="configure_convertgraphics.htm">Conversi&oacute;n autom&aacute;tica de formatos gr&aacute;ficos</a>
-			<LI><a href="configure_defaults.htm">Preferencias predeterminadas</a>
+			<LI><a href="configure_defaults.htm">Ajustes predeterminados</a>
 			<LI><a href="configure_latextemplate.htm">Plantilla LaTeX predeterminada</a>
-			<li><a href="configure_hidden.htm">Preferencias ocultas</a>
+			<li><a href="configure_hidden.htm">Ajustes ocultos</a>
 			<li><a href="configure_plist.htm">Archivos .plist</a>
 			<li><a href="configure_panel.htm">Modificaci&oacute;n del panel LaTeX</a>
 			<li><a href="configure_autocompletion.htm">Modificaci&oacute;n de la autocompleci&oacute;n</a>
