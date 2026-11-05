@@ -1030,11 +1030,6 @@ enum RootCommand
 
 @end
 
-@interface TSDocument (FileAssociations)
-
-
-@end
-
 @interface TSDocument (Scrap)
 - (void) tryScrap:(id)sender;
 - (IBAction) typesetScrap:(id)sender;
