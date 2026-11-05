@@ -49,7 +49,6 @@ static NSString *TSPreferencesDomainName(void)
 }
 
 
-
 @implementation TSPreferences
 /*"
 Format of the original prefs file:
@@ -217,7 +216,10 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	NSDictionary *factoryDefaults, *oldDefaults;
     NSStringEncoding theEncoding;
 
-	oldDefaults = [SUD dictionaryRepresentation];
+	// Remember only TeXShop's own persistent domain. dictionaryRepresentation also
+	// contains NSGlobalDomain and the registered defaults, which Cancel (through
+	// undoDefaultPrefs:) then wrote into TeXShop's domain.
+	oldDefaults = [SUD persistentDomainForName:TSPreferencesDomainName()] ?: @{};
 	[_undoManager registerUndoWithTarget:self selector:@selector(undoDefaultPrefs:) object:oldDefaults];
 
 	// register defaults
