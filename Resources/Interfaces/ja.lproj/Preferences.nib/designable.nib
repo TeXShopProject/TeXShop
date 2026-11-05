@@ -1965,14 +1965,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sync 方式" translatesAutoresizingMaskIntoConstraints="NO" id="823">
-                                            <rect key="frame" x="318" y="354" width="286" height="92" />
+                                            <rect key="frame" x="318" y="375" width="286" height="71"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="yQJ-rD-XfP">
-                                                <rect key="frame" x="0.0" y="0.0" width="286" height="80" />
+                                                <rect key="frame" x="0" y="0" width="286" height="59"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="782">
-                                                        <rect key="frame" x="17" y="9" width="202" height="61" />
+                                                        <rect key="frame" x="17" y="9" width="202" height="40"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="202" height="19"/>
@@ -1990,10 +1990,6 @@ DQ
                                                                         <action selector="syncChanged:" target="-2" id="821"/>
                                                                     </connections>
                                                                 </buttonCell>
-                                                                <buttonCell type="radio" title="併用" imagePosition="left" alignment="left" tag="2" inset="2" id="783">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
                                                                 <buttonCell type="radio" title="SyncTeX（TeXLive2010以降）" imagePosition="left" alignment="left" state="on" tag="3" inset="2" id="786">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
@@ -2009,7 +2005,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sync で新ドキュメントが開くとき" translatesAutoresizingMaskIntoConstraints="NO" id="ZSD-eD-62N">
-                                            <rect key="frame" x="318" y="268" width="286" height="74" />
+                                            <rect key="frame" x="318" y="289" width="286" height="74"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="KOT-0y-Dth">
                                                 <rect key="frame" x="0.0" y="0.0" width="286" height="62" />
