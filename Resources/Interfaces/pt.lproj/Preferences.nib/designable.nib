@@ -3024,7 +3024,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QrI-a7-tMf">
-                                                        <rect key="frame" x="18" y="52" width="160" height="25" />
+                                                        <rect key="frame" x="17" y="52" width="161" height="25" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="B7F-cG-fMI">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -3075,7 +3075,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QJ8-Px-Inu">
-                                                        <rect key="frame" x="19" y="94" width="159" height="25" />
+                                                        <rect key="frame" x="17" y="94" width="161" height="25" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="mBf-SV-le7">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
