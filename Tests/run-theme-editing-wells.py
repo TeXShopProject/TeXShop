@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """The bracket and expl3 color wells in the Themes tab show the theme being
-edited, and a SyntaxMarker change refreshes only the bracket wells that inherit it."""
+edited, a SyntaxMarker change refreshes only the bracket wells that inherit it,
+and a change ignored because no relevant window is key leaves the edited theme
+untouched."""
 from pathlib import Path
 import re, subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -43,6 +45,11 @@ elif mutation == 'refresh-stores-keys':
     helpers = mutate(helpers, 'markerParenColorWell.color = [self editingColorForKey: @"SyntaxMarkerParen"];',
                      'markerParenColorWell.color = [self editingColorForKey: @"SyntaxMarkerParen"]; '
                      '[[TSColorSupport sharedInstance] changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarkerParen" fromColorWell: markerParenColorWell];')
+elif mutation == 'guard-falls-through':
+    actions = mutate(actions, '        return;\n    }\n', '    }\n')
+elif mutation == 'guard-restores-raw-key':
+    actions = [re.sub(r'\[self editingColorForKey: (@"\w+")\];\n        return;',
+                      r'[[TSColorSupport sharedInstance] colorFromDictionary: EditingColors andKey: \1];\n        return;', a) for a in actions]
 elif mutation:
     raise SystemExit('unknown mutation ' + mutation)
 
@@ -157,6 +164,30 @@ int main(int argc, char **argv) { @autoreleasepool {
             }
             if (![p->EditingColors isEqual:theme]) { printf("FAIL: %s %s filling the wells changed the edited theme\n", mode, [t[0] UTF8String]); failures++; }
 
+            // A change arriving while neither the Preferences window nor the color panel is key is ignored.
+            for (NSString *key in allKeys) {
+                Prefs *g = MakePrefs(theme, dark);
+                [g fillDark:dark];
+                g->_prefsWindow.keyWindow = NO; colorPanel.keyWindow = NO; colorPanel.closed = 0;
+                Well *w = WellsByKey(g)[key];
+                w.color = Color(userPick);
+                [g performSelector:NSSelectorFromString(ActionsByKey()[key]) withObject:w];
+                if (![g->EditingColors isEqual:theme]) { printf("FAIL: %s %s ignored change of %s modified the edited theme: %s\n", mode, [t[0] UTF8String], key.UTF8String, [[g->EditingColors description] UTF8String]); failures++; }
+                if (!Same(w.color, expected[key])) { printf("FAIL: %s %s ignored change of %s left the well at %s\n", mode, [t[0] UTF8String], key.UTF8String, Describe(w.color).UTF8String); failures++; }
+                if (colorPanel.closed != 1) { printf("FAIL: %s ignored change of %s did not close the color panel\n", mode, key.UTF8String); failures++; }
+            }
+            // The same change with the Preferences window key is stored.
+            for (NSString *key in allKeys) {
+                Prefs *k = MakePrefs(theme, dark);
+                [k fillDark:dark];
+                Well *w = WellsByKey(k)[key];
+                w.color = Color(userPick);
+                [k performSelector:NSSelectorFromString(ActionsByKey()[key]) withObject:w];
+                NSMutableDictionary *want = [theme mutableCopy]; want[key] = userPick;
+                if (!(k->EditingColors[key] && Same(Color(k->EditingColors[key]), userPick)) || ![[NSSet setWithArray:k->EditingColors.allKeys] isEqual:[NSSet setWithArray:want.allKeys]]) {
+                    printf("FAIL: %s %s change of %s was not stored\n", mode, [t[0] UTF8String], key.UTF8String); failures++;
+                }
+            }
         }
 
         // A SyntaxMarker change refreshes the bracket wells that inherit it, without storing bracket keys.
@@ -193,4 +224,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-theme-') as tmp:
         if r.returncode == 0: raise SystemExit('FAIL: mutation %s was not detected' % mutation)
         print('detected mutation', mutation)
     elif r.returncode: raise SystemExit(r.stderr or 'FAIL')
-    else: print('PASS: theme color wells follow the edited theme and the marker color')
+    else: print('PASS: theme color wells follow the edited theme, the marker color and ignored changes')
