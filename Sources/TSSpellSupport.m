@@ -12,6 +12,7 @@
 
 #import "TSSpellSupport.h"
 #import "TSSpellExclusions.h"
+#import <objc/runtime.h>
 
 // Data for the list of learned words in the "Forget Learned Words" sheet.
 @interface TSLearnedWordsList : NSObject <NSTableViewDataSource>
@@ -130,6 +131,14 @@
     BOOL isDocument;
     [self checkerLanguageForCode:code isDocumentLanguage:&isDocument];
     return !isDocument;
+}
+
++ (BOOL)mask:(TSSpellMask *)mask excludesSpellingInRange:(NSRange)range
+{
+    if ([mask rangeTouchesExclusion:range] || [mask rangeIsNextToAccent:range]) return YES;
+    // Text in another language than the document's (\foreignlanguage, ...) is
+    // checked by the review, in its own language, but not marked while typing.
+    return [self rangeIsInOtherLanguage:range mask:mask];
 }
 
 #pragma mark - Change All
@@ -532,6 +541,175 @@ static NSMenuItem *FindMenuItemWithAction(NSMenu *menu, SEL action)
         help.target = self;
         NSInteger index = anchor ? [helpMenu indexOfItem:anchor] + 1 : (NSInteger)helpMenu.numberOfItems;
         [helpMenu insertItem:help atIndex:index];
+    }
+}
+
+@end
+
+
+#pragma mark - Mask cache
+
+// Text views that can check spelling TeX-aware (TSTextView).
+@protocol TSTeXAwareTextView
+- (BOOL)usesTeXAwareSpellChecking;
+@end
+
+@implementation TSSpellMaskCache {
+    __weak NSTextStorage *_storage;
+    TSSpellMask *_mask;                         // nil when the text or the rules changed since it was made
+    NSUInteger _rulesGeneration;                // of the rules _mask was made with
+    NSUInteger _edits;                          // changes to the characters so far
+    NSTimeInterval _lastEdit;
+    NSUInteger _job;                            // number of the latest masking started
+    BOOL _waiting;                              // a long text is to be masked when editing pauses
+    NSMutableArray<NSValue *> *_unmasked;       // ranges checked while there was no mask
+}
+
+static char sCacheKey;
+static NSUInteger sDeferredLength = 200000;
+static NSTimeInterval sPauseDelay = 0.5;
+
++ (NSUInteger)deferredLength { return sDeferredLength; }
++ (void)setDeferredLength:(NSUInteger)length { sDeferredLength = length; }
++ (NSTimeInterval)pauseDelay { return sPauseDelay; }
++ (void)setPauseDelay:(NSTimeInterval)delay { sPauseDelay = delay; }
+
++ (TSSpellMaskCache *)cacheForTextStorage:(NSTextStorage *)storage
+{
+    if (!storage) return nil;
+    TSSpellMaskCache *cache = objc_getAssociatedObject(storage, &sCacheKey);
+    if (!cache) {
+        cache = [[self alloc] initWithTextStorage:storage];
+        objc_setAssociatedObject(storage, &sCacheKey, cache, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return cache;
+}
+
+- (instancetype)initWithTextStorage:(NSTextStorage *)storage
+{
+    if ((self = [super init])) {
+        _storage = storage;
+        _unmasked = [NSMutableArray array];
+        // Edits in any pane, undo and reloads all go through the storage.
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(storageEdited:)
+                                                     name:NSTextStorageDidProcessEditingNotification object:storage];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)storageEdited:(NSNotification *)notification
+{
+    NSTextStorage *storage = notification.object;
+    if (!(storage.editedMask & NSTextStorageEditedCharacters)) return;
+    _edits++;
+    _lastEdit = NSProcessInfo.processInfo.systemUptime;
+    _mask = nil;
+    // Keep the ranges waiting for a mask in step with the text; those the edit
+    // touches are checked again by the system anyway.
+    NSRange edited = storage.editedRange;
+    NSInteger delta = storage.changeInLength;
+    NSUInteger replacedEnd = (NSUInteger)((NSInteger)NSMaxRange(edited) - delta);
+    NSMutableArray<NSValue *> *kept = [NSMutableArray arrayWithCapacity:_unmasked.count];
+    for (NSValue *value in _unmasked) {
+        NSRange r = value.rangeValue;
+        if (NSMaxRange(r) < edited.location) [kept addObject:value];
+        else if (r.location > replacedEnd) [kept addObject:[NSValue valueWithRange:NSMakeRange((NSUInteger)((NSInteger)r.location + delta), r.length)]];
+    }
+    _unmasked = kept;
+    if (_waiting) [self scheduleMasking];
+}
+
+- (void)invalidate
+{
+    _mask = nil;
+}
+
+- (TSSpellMask *)maskForCheckingRange:(NSRange)range
+{
+    NSTextStorage *storage = _storage;
+    if (!storage) return nil;
+    TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
+    [exclusions reloadIfChanged];
+    if (_mask && _rulesGeneration == exclusions.generation) return _mask;
+    if (storage.length < sDeferredLength) return [self freshMask];
+    if (range.location != NSNotFound) [_unmasked addObject:[NSValue valueWithRange:range]];
+    if (!_waiting) {
+        _waiting = YES;
+        [self scheduleMasking];
+    }
+    return nil;
+}
+
+- (TSSpellMask *)freshMask
+{
+    NSTextStorage *storage = _storage;
+    if (!storage) return nil;
+    TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
+    [exclusions reloadIfChanged];
+    NSUInteger generation = exclusions.generation;
+    _job++;                                     // any masking under way is out of date
+    TSSpellMask *mask = [exclusions maskForText:[storage.string copy]];
+    [self installMask:mask rulesGeneration:generation];
+    return mask;
+}
+
+// Mask the text once editing has paused.
+- (void)scheduleMasking
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startMasking) object:nil];
+    NSTimeInterval delay = MAX(0, _lastEdit + sPauseDelay - NSProcessInfo.processInfo.systemUptime);
+    [self performSelector:@selector(startMasking) withObject:nil afterDelay:delay inModes:@[NSRunLoopCommonModes]];
+}
+
+// Mask a copy of the text off the main thread. The result is used only if the
+// text has not changed in the meantime; if it has, the edit has scheduled
+// another masking.
+- (void)startMasking
+{
+    NSTextStorage *storage = _storage;
+    if (!storage || !_waiting) return;
+    TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
+    NSString *text = [storage.string copy];
+    NSUInteger edits = _edits, generation = exclusions.generation, job = ++_job;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        TSSpellMask *mask = [exclusions maskForText:text];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (job != self->_job || edits != self->_edits) return;
+            [self installMask:mask rulesGeneration:generation];
+        });
+    });
+}
+
+// Make `mask` the current one, and remove the marks the check while typing set,
+// while there was no mask, where the mask excludes the text.
+- (void)installMask:(TSSpellMask *)mask rulesGeneration:(NSUInteger)generation
+{
+    _mask = mask;
+    _rulesGeneration = generation;
+    _waiting = NO;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startMasking) object:nil];
+    NSArray<NSValue *> *ranges = _unmasked;
+    _unmasked = [NSMutableArray array];
+    NSTextStorage *storage = _storage;
+    if (!storage || ranges.count == 0) return;
+    NSMutableArray<NSTextView *> *views = [NSMutableArray array];
+    for (NSLayoutManager *layoutManager in storage.layoutManagers)
+        for (NSTextContainer *container in layoutManager.textContainers) {
+            NSTextView *view = container.textView;
+            if ([view respondsToSelector:@selector(usesTeXAwareSpellChecking)] &&
+                [(id<TSTeXAwareTextView>)view usesTeXAwareSpellChecking])
+                [views addObject:view];
+        }
+    for (NSValue *value in ranges) {
+        NSRange r = value.rangeValue;
+        if (r.length == 0 || NSMaxRange(r) > storage.length) continue;
+        if (![TSSpellSupport mask:mask excludesSpellingInRange:r]) continue;
+        for (NSTextView *view in views) [view setSpellingState:0 range:r];
     }
 }
 

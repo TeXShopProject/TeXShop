@@ -41,6 +41,11 @@
 + (void)showSpellCheckingHelp:(id)sender;
 + (NSString *)checkerLanguageForCode:(NSString *)code isDocumentLanguage:(BOOL *)isDocument;
 + (BOOL)rangeIsInOtherLanguage:(NSRange)range mask:(TSSpellMask *)mask;
+
+/*" YES if the check while typing is not to mark a misspelling at `range`: the
+    range touches text that `mask` excludes, is next to an accent command, or is
+    in another language than the document's. "*/
++ (BOOL)mask:(TSSpellMask *)mask excludesSpellingInRange:(NSRange)range;
 + (NSString *)helpPathInDirectory:(NSString *)directory forLanguages:(NSArray<NSString *> *)languages;
 
 /*" The words in `text` that have been learned (Learn in the Spelling panel) for
@@ -62,5 +67,36 @@
     to the Help menu (after "TeXShop Help"/"Getting Started", found by its
     action). "*/
 + (void)installMenuItems;
+
+@end
+
+
+/*" The mask of the text in one text storage, shared by all the text views that
+    show it (the panes of a split window), and made again only after the text or
+    the rules have changed. "*/
+@interface TSSpellMaskCache : NSObject
+
+/*" The cache of `storage`, made on first use; nil if `storage` is nil. "*/
++ (TSSpellMaskCache *)cacheForTextStorage:(NSTextStorage *)storage;
+
+/*" A text at least this long (default 200000 characters) is not masked again
+    after each change: once editing has paused for `pauseDelay` seconds (default
+    0.5), it is masked off the main thread. "*/
+@property (class, nonatomic) NSUInteger deferredLength;
+@property (class, nonatomic) NSTimeInterval pauseDelay;
+
+/*" The mask of the text as it is now, for the check while typing; made now if
+    needed. For a text of at least deferredLength characters that has changed
+    since its mask was made, nil instead: the check then works as it does
+    without TeX-aware spelling until the new mask is there, and `range` (where
+    the check is about to mark a misspelling) has its mark removed at that point
+    if the new mask excludes it. A location of NSNotFound records nothing. "*/
+- (TSSpellMask *)maskForCheckingRange:(NSRange)range;
+
+/*" A mask made now from the text as it is, which is kept as the current one. "*/
+- (TSSpellMask *)freshMask;
+
+/*" Forget the mask. "*/
+- (void)invalidate;
 
 @end

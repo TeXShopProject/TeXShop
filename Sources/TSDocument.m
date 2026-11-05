@@ -5521,12 +5521,10 @@ preference change is cancelled. "*/
     if (value == 0 || ![aTextView isKindOfClass:[TSTextView class]] ||
         ![(TSTextView *)aTextView usesTeXAwareSpellChecking])
         return value;
-    TSSpellMask *mask = [(TSTextView *)aTextView spellMask];
-    if (mask && ([mask rangeTouchesExclusion:affectedCharRange] || [mask rangeIsNextToAccent:affectedCharRange]))
-        return 0;
-    // Text in another language than the document's (\foreignlanguage, ...) is
-    // checked by the review, in its own language, but not underlined here.
-    if (mask && [TSSpellSupport rangeIsInOtherLanguage:affectedCharRange mask:mask])
+    // No mask while a long text that has just been edited is masked again: the
+    // mark is then set as usual, and removed once the mask is there if need be.
+    TSSpellMask *mask = [(TSTextView *)aTextView spellMaskForCheckingRange:affectedCharRange];
+    if (mask && [TSSpellSupport mask:mask excludesSpellingInRange:affectedCharRange])
         return 0;
     return value;
 }

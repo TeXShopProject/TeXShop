@@ -232,36 +232,21 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 }
 
 // The masked form of the text. It keeps markup out of the review above and out
-// of the continuous ("check while typing") spell checking. Made on demand, and
-// dropped whenever the text or the rules file changes.
+// of the continuous ("check while typing") spell checking. It is shared by the
+// panes showing the same text, and made again after the text or the rules file
+// has changed (see TSSpellMaskCache).
 - (TSSpellMask *)spellMask
 {
-    // Observe the shared storage, including edits in another pane
-    // and external reloads. Unchanged checks must not compare the entire document.
-    if (_spellMaskStorage != self.textStorage) {
-        if (_spellMaskStorage) [[NSNotificationCenter defaultCenter] removeObserver:self
-            name:NSTextStorageDidProcessEditingNotification object:_spellMaskStorage];
-        _spellMaskStorage = self.textStorage;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(spellStorageEdited:)
-            name:NSTextStorageDidProcessEditingNotification object:_spellMaskStorage];
-        _spellMask = nil;
-    }
-    TSSpellExclusions *exclusions = [TSSpellExclusions sharedExclusions];
-    [exclusions reloadIfChanged];
-    if (_spellMask == nil || _spellRulesGeneration != exclusions.generation) {
-        [self showSpellingRulesProblems:exclusions.problems];
-        _spellMaskText = [self.string copy];
-        _spellRulesGeneration = exclusions.generation;
-        _spellMask = [exclusions maskForText:_spellMaskText];
-    }
-    _spellMaskLength = [[self string] length];
-    return _spellMask;
+    return [self spellMaskForCheckingRange:NSMakeRange(NSNotFound, 0)];
 }
 
-- (void)spellStorageEdited:(NSNotification *)notification
+// The mask for the check while typing, which is about to mark `range`. nil
+// while a long text that has just been edited is being masked again.
+- (TSSpellMask *)spellMaskForCheckingRange:(NSRange)range
 {
-    if ([(NSTextStorage *)notification.object editedMask] & NSTextStorageEditedCharacters)
-        [self invalidateSpellMask];
+    TSSpellMask *mask = [[TSSpellMaskCache cacheForTextStorage:self.textStorage] maskForCheckingRange:range];
+    [self noteSpellMask:mask];
+    return mask;
 }
 
 // The review is run on a mask made afresh from the text as it is now: making it
@@ -269,8 +254,17 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 // out of date, however the text was changed since the cached one was made.
 - (TSSpellMask *)freshSpellMask
 {
-    _spellMask = nil;
-    return [self spellMask];
+    TSSpellMask *mask = [[TSSpellMaskCache cacheForTextStorage:self.textStorage] freshMask];
+    [self noteSpellMask:mask];
+    return mask;
+}
+
+// A mask made with rules read anew is the time to report mistakes in the rules.
+- (void)noteSpellMask:(TSSpellMask *)mask
+{
+    if (!mask || mask == _spellMask) return;
+    _spellMask = mask;
+    [self showSpellingRulesProblems:[TSSpellExclusions sharedExclusions].problems];
 }
 
 // Tell the user once about mistakes in the rules file.
@@ -278,33 +272,25 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 {
     static NSString *lastShown;
     if (problems == nil || [problems isEqualToString:lastShown]) return;
-    lastShown = [problems copy];
-    NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = NSLocalizedString(@"Problems in the spelling exclusions file", @"");
-    alert.informativeText = [NSString stringWithFormat:@"%@\n\n%@", [TSSpellExclusions userRulesPath], problems];
-    [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
+    NSString *shown = [problems copy];
     __weak TSTextView *weakView = self;
     dispatch_async(dispatch_get_main_queue(), ^{
+        // Recorded only once the sheet is up, so that a window that is busy with
+        // another sheet (or not on screen) gets the warning the next time.
         NSWindow *window = weakView.window;
-        if (window && !window.attachedSheet) [alert beginSheetModalForWindow:window completionHandler:nil];
+        if (!window || window.attachedSheet || [shown isEqualToString:lastShown]) return;
+        lastShown = shown;
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = NSLocalizedString(@"Problems in the spelling exclusions file", @"");
+        alert.informativeText = [NSString stringWithFormat:@"%@\n\n%@", [TSSpellExclusions userRulesPath], shown];
+        [alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
+        [alert beginSheetModalForWindow:window completionHandler:nil];
     });
 }
 
 - (void)invalidateSpellMask
 {
-    _spellMask = nil;
-}
-
-- (void)didChangeText
-{
-    [self invalidateSpellMask];
-    [super didChangeText];
-}
-
-- (void)setString:(NSString *)string
-{
-    [self invalidateSpellMask];
-    [super setString:string];
+    [[TSSpellMaskCache cacheForTextStorage:self.textStorage] invalidate];
 }
 
 
