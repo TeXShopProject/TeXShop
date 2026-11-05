@@ -17,6 +17,12 @@ def method(path, signature):
     return source[start:end]
 methods = '\n'.join(method('Sources/TSPreferences.m', signature) for signature in [
     '- (void)updateSpellingControlsFromDefaults:', '- (IBAction)texAwareSpellCheckPressed:'])
+# Exercise the production Cancel path through the spelling refresh, before Dock/UI work.
+preferences_source = (root / 'Sources/TSPreferences.m').read_text()
+cancel = preferences_source[preferences_source.index('- (IBAction)cancelButtonPressed:'):]
+methods += '\n' + cancel.split('[[TSDockIconController sharedController] cancelEditing]')[0] + '}'
+restore = method('Sources/TSPreferences.m', '- (void)undoDefaultPrefs:')
+methods += '\n' + restore.split('// KOCH')[0] + '}'
 scope = method('Sources/TSTextView.m', '- (BOOL)usesTeXAwareSpellChecking')
 for p in (root / 'Resources/Shellscripts').glob('*Defaults*.plist'):
     assert plistlib.loads(p.read_bytes())['TeXAwareSpellChecking'] is True, p
@@ -29,9 +35,12 @@ program = r'''
 @implementation MemoryDefaults
 - (BOOL)boolForKey:(NSString *)key { return self.values[key] ? [self.values[key] boolValue] : YES; }
 - (void)setBool:(BOOL)value forKey:(NSString *)key { self.values[key] = @(value); }
+- (void)setPersistentDomain:(NSDictionary *)domain forName:(NSString *)name { self.values = [domain mutableCopy]; }
+- (BOOL)synchronize { return YES; }
 @end
 static MemoryDefaults *settings;
 #define SUD settings
+static NSString *TSPreferencesDomainName(void) { return @"test.memory"; }
 static int refreshes;
 @interface TSSpellSupport:NSObject
 + (void)preferencesDidChange;
@@ -47,6 +56,8 @@ static int refreshes;
 }
 @end
 @implementation PreferenceProbe
+- (void)cancelForColor {}
+- (void)updateControlsFromUserDefaults:(NSUserDefaults *)defaults { [self updateSpellingControlsFromDefaults:defaults]; }
 METHODS
 @end
 static int isTeX = 1;
@@ -91,6 +102,29 @@ int main(void) { @autoreleasepool {
         REQUIRE(![settings boolForKey:@"SpellCheckEnabled"]);
     }
     REQUIRE(refreshes == 2);
+    for (NSNumber *initial in @[@YES, @NO]) {
+        for (NSNumber *changed in @[@NO, @YES]) {
+            [settings setBool:initial.boolValue forKey:@"TeXAwareSpellChecking"];
+            int before = refreshes;
+            [p->_undoManager beginUndoGrouping];
+            if (changed.boolValue) {
+                [[p->_undoManager prepareWithInvocationTarget:settings] setBool:initial.boolValue forKey:@"TeXAwareSpellChecking"];
+                [settings setBool:!initial.boolValue forKey:@"TeXAwareSpellChecking"];
+            }
+            [p cancelButtonPressed:nil];
+            REQUIRE([settings boolForKey:@"TeXAwareSpellChecking"] == initial.boolValue);
+            REQUIRE(refreshes == before + changed.boolValue);
+        }
+        for (NSDictionary *domain in @[@{}, @{@"TeXAwareSpellChecking": @YES}, @{@"TeXAwareSpellChecking": @NO}]) {
+            [settings setBool:initial.boolValue forKey:@"TeXAwareSpellChecking"];
+            int before = refreshes;
+            BOOL expected = domain[@"TeXAwareSpellChecking"] ? [domain[@"TeXAwareSpellChecking"] boolValue] : YES;
+            [p undoDefaultPrefs:domain];
+            REQUIRE(refreshes == before + (initial.boolValue != expected));
+            REQUIRE(p->_texAwareSpellCheckButton.state == expected);
+        }
+    }
+    puts("PASS: unchanged Cancel/restore preserves spelling state; changed settings refresh");
     ViewProbe *v = [ViewProbe new];
     [settings setBool:YES forKey:@"TeXAwareSpellChecking"];
     REQUIRE(![v usesTeXAwareSpellChecking]);

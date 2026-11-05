@@ -652,21 +652,21 @@ DQ
                                                 <rect key="frame" x="0.0" y="0.0" width="257" height="136" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Use the exclusion rules file for TeX documents. Turn off to use the legacy options below. This does not turn on Check Spelling While Typing." id="ts-aware-spelling">
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="对 TeX 文档使用排除规则。关闭后使用下方的原有选项。不改变键入时检查拼写的设置。" id="ts-aware-spelling">
                                                         <rect key="frame" x="13" y="105" width="231" height="22"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="识别 TeX 的拼写检查" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ts-aware-spelling-cell">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system" size="12"/>
+                                                            <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections><action selector="texAwareSpellCheckPressed:" target="-2" id="ts-aware-spelling-action"/></connections>
                                                     </button>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Use the exclusion rules file for TeX documents. Turn off to use the legacy options below. This does not turn on Check Spelling While Typing." id="ts-edit-spelling">
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="编辑 TeX 拼写检查使用的排除规则。" id="ts-edit-spelling">
                                                         <rect key="frame" x="13" y="77" width="231" height="24"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <buttonCell key="cell" type="push" title="编辑 TeX 排除规则…" bezelStyle="rounded" imagePosition="overlaps" alignment="center" inset="2" id="ts-edit-spelling-cell">
+                                                        <buttonCell key="cell" type="push" title="编辑 TeX 排除规则…" bezelStyle="rounded" borderStyle="border" alignment="center" inset="2" id="ts-edit-spelling-cell">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system" size="12"/>
+                                                            <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections><action selector="editSpellingExclusions:" target="-2" id="ts-edit-spelling-action"/></connections>
                                                     </button>

@@ -202,10 +202,12 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (void)undoDefaultPrefs:(NSDictionary *)oldDefaults;
 //-----------------------------------
 {
+    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
 	[SUD setPersistentDomain:oldDefaults forName:TSPreferencesDomainName()];
 	[SUD synchronize];
 	[self updateControlsFromUserDefaults:SUD];
-    [TSSpellSupport preferencesDidChange];
+    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
+        [TSSpellSupport preferencesDidChange];
     
     // KOCH
     // Here is the spot where we need to redraw the document and console with the remembered fonts
@@ -216,6 +218,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 
 - (IBAction)setDefaults:sender
 {
+    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
 
 	NSString *fileName;
 	NSDictionary *factoryDefaults, *oldDefaults;
@@ -262,7 +265,8 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	[SUD synchronize];
 
 	[self updateControlsFromUserDefaults:SUD];
-    [TSSpellSupport preferencesDidChange];
+    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
+        [TSSpellSupport preferencesDidChange];
     
     // KOCH
     [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontRememberNotification object:self];
@@ -2295,11 +2299,13 @@ A tag of 0 means "no", a tag of 1 means "yes".
 "*/
 - (IBAction)cancelButtonPressed:sender
 {
+    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
     [self cancelForColor];
     // undo everyting
 	[_undoManager endUndoGrouping];
 	[_undoManager undo];
-    [TSSpellSupport preferencesDidChange];
+    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
+        [TSSpellSupport preferencesDidChange];
     [[TSDockIconController sharedController] cancelEditing];
 
      [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] setHidden:( ![SUD boolForKey:TagMenuInMenuBarKey])];

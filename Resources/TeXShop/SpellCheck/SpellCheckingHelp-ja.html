@@ -15,6 +15,7 @@ code, pre { font-family: Menlo, monospace; font-size: 12px; }
 <h1>TeXShopのスペルチェック</h1>
 
 <p><b>設定 &gt; ソース &gt; TeX対応のスペルチェック</b>で切り替えます。TeXShop 5.60では初期設定でONです。OFFにすると、チェックボックスの下にある従来の除外設定を使います。以前の設定は保持されます。新しい規則はTeXソースに適用され、その他の形式の書類は従来の動作を保ちます。「入力中のスペルチェック」のON/OFFは変更しません。除外する内容は<b>TeXの除外規則を編集…</b>から変更できます。</p>
+<p>新しい規則は未保存のTeX文書と、拡張子が<code>tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx, lbx</code>のファイルに適用されます。Sweave（Rnw）など他の言語を含む形式や、ctxなどその他の拡張子では、従来の動作を保ちます。</p>
 
 <p>TeXShopのスペルチェックはTeXを理解します。コメント、数式、コマンド、および<code>\label</code>、<code>\ref</code>、<code>\cite</code>、<code>\usepackage</code>などのコマンドの引数をスキップし、残りのテキストをチェックします。標準の「スペルと文法」パネルを使うため、他のMacアプリケーションと同じように動作します。</p>
 

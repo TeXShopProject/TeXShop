@@ -2,6 +2,13 @@
 #import <Cocoa/Cocoa.h>
 #import "../Sources/TSDockIconController.h"
 #import "../Sources/TSDockIcon.h"
+#define SUD NSUserDefaults.standardUserDefaults
+@interface TSSpellSupport : NSObject
++ (void)preferencesDidChange;
+@end
+@implementation TSSpellSupport
++ (void)preferencesDidChange {}
+@end
 @interface TSPreferences : NSObject @end
 @implementation TSPreferences
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {}

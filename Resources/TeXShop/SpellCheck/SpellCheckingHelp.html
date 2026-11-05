@@ -15,6 +15,7 @@ code, pre { font-family: Menlo, monospace; font-size: 12px; }
 <h1>Spell Checking in TeXShop</h1>
 
 <p><b>Settings &gt; Source &gt; TeX-aware spell checking</b> selects this mode, enabled by default in TeXShop 5.60. Turn it off to use the legacy exclusion options below the checkbox. Your previous options are retained. The new rules apply to TeX source files; other file types keep their previous behavior. This setting does not turn on <b>Check Spelling While Typing</b>. Use <b>Edit TeX exclusion rules…</b> to customize what is skipped.</p>
+<p>The new rules apply to unsaved TeX documents and files with the extensions <code>tex, ltx, latex, dtx, ins, sty, cls, clo, bbx, cbx, lbx</code>. Mixed-source formats such as Sweave (Rnw), and other extensions including ctx, retain the legacy behavior.</p>
 
 <p>TeXShop's spell checking knows about TeX. It skips comments, maths, commands, and the
 arguments of commands such as <code>\label</code>, <code>\ref</code>, <code>\cite</code> and
