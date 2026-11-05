@@ -207,7 +207,7 @@
 	NSString			*packageString;
 	NSMutableArray		*args;
 	NSMutableDictionary	*env;
-	NSString		*path, *enginePath;
+	NSString		*path, *enginePath, *binPath;
 	NSInteger					result;
     
 	result = [NSApp runModalForWindow: packageHelpPanel];
@@ -229,22 +229,27 @@
         return;
 	
 	if (displayPackageHelpTask != nil) {
-		[displayPackageHelpTask terminate];
+		if ([displayPackageHelpTask isRunning])
+			[displayPackageHelpTask terminate];
 		myDate = [NSDate date];
-		while (([displayPackageHelpTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+		while (([displayPackageHelpTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+		if (([displayPackageHelpTask isRunning]) && ([displayPackageHelpTask processIdentifier] > 0))
+			kill([displayPackageHelpTask processIdentifier], SIGKILL);
 	//	[displayPackageHelpTask release];
 		displayPackageHelpTask = nil;
 	}
 	
-	enginePath = [[NSString stringWithString:[SUD stringForKey:TetexBinPath]] stringByExpandingTildeInPath];
-	enginePath = [enginePath stringByAppendingString:@"/texdoc"];
-	
+	binPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
+	if ([binPath length] == 0)
+		return;
+	enginePath = [binPath stringByAppendingString:@"/texdoc"];
+
 	// get copy of environment and add the preferences paths
 	env = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
-	path = [NSString stringWithString: [env objectForKey:@"PATH"]];
+	path = [env objectForKey:@"PATH"] ?: @"/usr/bin:/bin:/usr/sbin:/sbin";
 	path = [path stringByAppendingString:@":"];
 	// [path appendString:[SUD stringForKey:TetexBinPath]];
-	path = [path stringByAppendingString:[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath]];
+	path = [path stringByAppendingString:binPath];
  	[env setObject: path forKey: @"PATH"];
 	
 	

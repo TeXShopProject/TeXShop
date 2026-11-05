@@ -91,9 +91,12 @@
 
          
     if (self.backwardSyncTask != nil) {
-        [self.backwardSyncTask terminate];
+        if ([self.backwardSyncTask isRunning])
+            [self.backwardSyncTask terminate];
         myDate = [NSDate date];
-        while (([self.backwardSyncTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+        while (([self.backwardSyncTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+        if (([self.backwardSyncTask isRunning]) && ([self.backwardSyncTask processIdentifier] > 0))
+            kill([self.backwardSyncTask processIdentifier], SIGKILL);
         self.backwardSyncTask = nil;
         self.backwardSyncTask = nil;
     }
@@ -318,9 +321,12 @@
 
          
         if (self.forwardSyncTask != nil) {
-            [self.forwardSyncTask terminate];
+            if ([self.forwardSyncTask isRunning])
+                [self.forwardSyncTask terminate];
             myDate = [NSDate date];
-            while (([self.forwardSyncTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+            while (([self.forwardSyncTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+            if (([self.forwardSyncTask isRunning]) && ([self.forwardSyncTask processIdentifier] > 0))
+                kill([self.forwardSyncTask processIdentifier], SIGKILL);
             self.forwardSyncTask = nil;
             self.forwardSyncTask = nil;
         }
@@ -400,9 +406,12 @@
  //   NSLog (outputString);
     
     if (self.forwardSyncTask != nil) {
-    [self.forwardSyncTask terminate];
+    if ([self.forwardSyncTask isRunning])
+        [self.forwardSyncTask terminate];
     NSDate *myDate = [NSDate date];
-    while (([self.forwardSyncTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+    while (([self.forwardSyncTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+    if (([self.forwardSyncTask isRunning]) && ([self.forwardSyncTask processIdentifier] > 0))
+        kill([self.forwardSyncTask processIdentifier], SIGKILL);
     self.forwardSyncTask = nil;
     self.forwardSyncPipe = nil;
     }

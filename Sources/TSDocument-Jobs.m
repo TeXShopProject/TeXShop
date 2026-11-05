@@ -24,6 +24,8 @@
 
 #import "UseMitsu.h"
 
+#import <objc/runtime.h>
+
 #import "TSDocument.h"
 
 #import "MyPDFView.h"
@@ -95,12 +97,21 @@ for(NSString *key in enu)
  */
     
 	// Customize 'PATH'
+	// PATH is absent when the app is started without a login environment,
+	// and the preference paths may be unset; never pass nil to the string methods.
 	NSMutableString *path;
-	path = [NSMutableString stringWithString: [env objectForKey:@"PATH"]];
-	[path appendString:@":"];
-	[path appendString:[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath]];
-	[path appendString:@":"];
-	[path appendString:[SUD stringForKey:GSBinPath]];
+	NSString *extraPath;
+	path = [NSMutableString stringWithString: ([env objectForKey:@"PATH"] ?: @"/usr/bin:/bin:/usr/sbin:/sbin")];
+	extraPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
+	if ([extraPath length] > 0) {
+		[path appendString:@":"];
+		[path appendString:extraPath];
+	}
+	extraPath = [SUD stringForKey:GSBinPath];
+	if ([extraPath length] > 0) {
+		[path appendString:@":"];
+		[path appendString:extraPath];
+	}
 	[env setObject: path forKey: @"PATH"];
     
 //    enu = [dict keyEnumerator]; for(NSString *key in enu) {         NSLog(@"key : %@",key);         NSLog(@"value : %@",[[dic // //valueForKey:keystring]);  }
@@ -146,9 +157,61 @@ for(NSString *key in enu)
     
 
 
-- (void)killRunningTasks
+// NSTask starts each job in a process group of its own, led by the task.
+// That group is recorded on the task when it is launched, so that stopping
+// the job also stops the processes it started, even after the task itself
+// has exited. The record is removed once the task has been cleaned up, since
+// the group id may be reused after the group is gone.
+
+- (void)recordProcessGroupOfTask: (NSTask *)task
+{
+	pid_t	pid, group;
+
+	pid = [task processIdentifier];
+	if (pid <= 1)
+		return;
+	group = getpgid(pid);
+	// Only a group led by the task itself, and never TeXShop's own group.
+	if ((group == pid) && (group != getpgrp()))
+		objc_setAssociatedObject(task, @selector(recordProcessGroupOfTask:), @(group), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)forgetProcessGroupOfTask: (NSTask *)task
+{
+	if (task != nil)
+		objc_setAssociatedObject(task, @selector(recordProcessGroupOfTask:), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+// Send SIGTERM to the task (to its recorded process group if there is one),
+// wait up to 0.5 seconds for the task and its group to exit, and then send
+// SIGKILL to whatever remains. An unlaunched task has process identifier 0,
+// and kill(0, ...) would signal TeXShop's own process group; only running
+// tasks and recorded groups other than TeXShop's own are signalled.
+- (void)stopJobTask: (NSTask *)task
 {
 	NSDate	*myDate;
+	pid_t	group;
+
+	group = [objc_getAssociatedObject(task, @selector(recordProcessGroupOfTask:)) intValue];
+	if ((group <= 1) || (group == getpgrp()) || (kill(-group, 0) != 0))
+		group = 0;
+
+	if (group > 0)
+		kill(-group, SIGTERM);
+	else if ([task isRunning])
+		[task terminate];
+	myDate = [NSDate date];
+	while ((([task isRunning]) || ((group > 0) && (kill(-group, 0) == 0))) && ([myDate timeIntervalSinceNow] > -0.5))
+		;
+	if ((group > 0) && (kill(-group, 0) == 0))
+		kill(-group, SIGKILL);
+	if (([task isRunning]) && ([task processIdentifier] > 0))
+		kill([task processIdentifier], SIGKILL);
+	[self forgetProcessGroupOfTask: task];
+}
+
+- (void)killRunningTasks
+{
     BOOL    MainLogs;
     
     //MainLogs = [SUD boolForKey: DisplayLogInfoKey];
@@ -156,7 +219,7 @@ for(NSString *key in enu)
     MainLogs = NO;
     
     if (MainLogs)
-     //   NSLog(@"killRunningTasks");
+        NSLog(@"killRunningTasks");
     
 	/* The lines of code below kill previously running tasks. This is
 		necessary because otherwise the source file will be open when the
@@ -164,41 +227,25 @@ for(NSString *key in enu)
 		NSDocument makes a backup in /tmp which is never removed. */
 
 	if (self.texTask != nil) {
-		if (theScript == kTypesetViaGhostScript) {
-			kill( -[self.texTask processIdentifier], SIGTERM);
-		} else {
-			[self.texTask terminate];
-			}
-		myDate = [NSDate date];
-		while (([self.texTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5))
-			;
+		[self stopJobTask: self.texTask];
 	//	[self.texTask release];
 		self.texTask = nil;
 	}
 
 	if (self.bibTask != nil) {
-		[self.bibTask terminate];
-		myDate = [NSDate date];
-		while (([self.bibTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5))
-			;
+		[self stopJobTask: self.bibTask];
 	//	[self.bibTask release];
 		self.bibTask = nil;
 	}
 
 	if (self.indexTask != nil) {
-		[self.indexTask terminate];
-		myDate = [NSDate date];
-		while (([self.indexTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5))
-			;
+		[self stopJobTask: self.indexTask];
 	//	[self.indexTask release];
 		self.indexTask = nil;
 	}
 
 	if (self.metaFontTask != nil) {
-		[self.metaFontTask terminate];
-		myDate = [NSDate date];
-		while (([self.metaFontTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5))
-			;
+		[self stopJobTask: self.metaFontTask];
 	//	[self.metaFontTask release];
 		self.metaFontTask = nil;
 	}
@@ -401,7 +448,8 @@ for(NSString *key in enu)
 				}
 				else if ([myString characterAtIndex:0] == '"') {
 					pos = [myString length] - 1;
-					if ([myString characterAtIndex:pos] == '"') {
+					// A lone '"' opens a quoted argument; it cannot also close it.
+					if (([myString length] >= 2) && ([myString characterAtIndex:pos] == '"')) {
 						aRange.location = 1;
 						aRange.length = [myString length] - 2;
 						myString = [myString substringWithRange: aRange];
@@ -644,6 +692,10 @@ for(NSString *key in enu)
 	NSData          *myData;
     BOOL            fromAlternateTemp;
     
+    // This method runs as the completion of NSDocument's save and autosave;
+    // an exception escaping from here would leave the document unable to
+    // save or close.
+    @try {
     [self RescanMagicComments: self];
     if (self.automaticCorrection)
         {
@@ -944,7 +996,11 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 	if ((! done) && ([SUD boolForKey:UseOldHeadingCommandsKey])) {
 		myRange.length = 1;
 		myRange.location = 0;
-		[theSource getLineStart:&mystart end: &myend contentsEnd: nil forRange:myRange];
+		mystart = 0;
+		myend = 0;
+		// The range {0, 1} is out of bounds for an empty document.
+		if ([theSource length] > 0)
+			[theSource getLineStart:&mystart end: &myend contentsEnd: nil forRange:myRange];
 		if (myend > (mystart + 2)) {
 			myRange.location = 0;
 			myRange.length = myend - mystart - 1;
@@ -1069,6 +1125,12 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 	}
 
 	[self completeSaveFinished];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Typesetting stopped by an exception: %@: %@", [exception name], [exception reason]);
+        useTempEngine = NO;
+        fromMenu = NO;
+    }
 }
 
 -(void)repeatTypeset
@@ -1266,6 +1328,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     };
     }
         
+    NSString *failureReason = nil;
+    result = NO;
+    @try {
 #ifdef HIGHSIERRAORHIGHER
     if (atLeastHighSierra) // && (task != self.indexTask))
         {
@@ -1276,6 +1341,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
             if (DisplayLogs)
                 NSLog(@"Start task");
             result = [task launchAndReturnError:&error];
+            if (! result)
+                failureReason = [error localizedDescription];
         }
     else
 #endif
@@ -1283,7 +1350,32 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
             [task setLaunchPath: filename];
             [task setCurrentDirectoryPath: [sourcePath stringByDeletingLastPathComponent]];
             [task launch];
+            result = YES;
         }
+    }
+    @catch (NSException *exception) {
+        result = NO;
+        failureReason = [exception reason];
+    }
+
+    // A task that failed to launch must not stay referenced: terminating
+    // an unlaunched NSTask raises an exception.
+    if (! result) {
+        NSString *failureMessage = [NSString stringWithFormat: @"\nFailed executing: %@\n%@\n", filename, (failureReason ?: @"")];
+        NSLog(@"%@", failureMessage);
+        [outputText replaceCharactersInRange: [outputText selectedRange] withString: failureMessage];
+        [outputText scrollRangeToVisible: [outputText selectedRange]];
+        if (task == self.texTask)
+            self.texTask = nil;
+        else if (task == self.bibTask)
+            self.bibTask = nil;
+        else if (task == self.indexTask)
+            self.indexTask = nil;
+        else if (task == self.metaFontTask)
+            self.metaFontTask = nil;
+        return FALSE;
+    }
+    [self recordProcessGroupOfTask: task];
         return TRUE;
 }
 
@@ -1409,7 +1501,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 					[args addObject: [NSString stringWithString:@"--keep-psfile"]];
 */			
 			if (self.texTask != nil) {
-				[self.texTask terminate];
+				if ([self.texTask isRunning])
+					[self.texTask terminate];
 		//		[self.texTask release];
 				self.texTask = nil;
 			}
@@ -1644,7 +1737,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 				 [args addObject: [bibPath lastPathComponent]];
 				 
 				 if (self.bibTask != nil) {
-					 [self.bibTask terminate];
+					 if ([self.bibTask isRunning])
+					     [self.bibTask terminate];
 			//		 [self.bibTask release];
 					 self.bibTask = nil;
 				 }
@@ -1688,7 +1782,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                      
                      
                      self.bibTask = [[NSTask alloc] init];
-                     [self startTask: self.bibTask running: bibtexEngineString withArgs: bibtexArgs inDirectoryContaining: sourcePath withEngine:whichEngineLocal];
+                     if ([self startTask: self.bibTask running: bibtexEngineString withArgs: bibtexArgs inDirectoryContaining: sourcePath withEngine:whichEngineLocal] == FALSE)
+                         self.bibTask = nil;
                  }
              
         
@@ -1712,12 +1807,14 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                  [args addObject: [[indexPath lastPathComponent] stringByAppendingPathExtension: @"idx"]];
 				 
 				 if (self.indexTask != nil) {
-					 [self.indexTask terminate];
+					 if ([self.indexTask isRunning])
+					     [self.indexTask terminate];
 			//		 [self.indexTask release];
 					 self.indexTask = nil;
 				 }
 				 self.indexTask = [[NSTask alloc] init];
-				 [self startTask: self.indexTask running: @"makeindex" withArgs: args inDirectoryContaining: sourcePath withEngine:whichEngineLocal];
+				 if ([self startTask: self.indexTask running: @"makeindex" withArgs: args inDirectoryContaining: sourcePath withEngine:whichEngineLocal] == FALSE)
+					 self.indexTask = nil;
 			  } else if (whichEngineLocal >= UserEngine) {
 				 NSString* userEngineName = [[[programButton itemAtIndex:(whichEngineLocal - 1)] title] stringByAppendingString:@".engine"];
 				 NSString* userEnginePath = [[EnginePath stringByAppendingString:@"/"] stringByAppendingString: userEngineName];
@@ -1758,7 +1855,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 
 				 
 				 if (self.texTask != nil) {
-					 [self.texTask terminate];
+					 if ([self.texTask isRunning])
+					     [self.texTask terminate];
 		//			 [self.texTask release];
 					 self.texTask = nil;
 				 }
@@ -2179,6 +2277,10 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     
     if (MainLogs)
         NSLog(@"checkATaskStatusFromTerminationRoutine");
+
+    // The task has exited and is being cleaned up; its process group must
+    // not be signalled later.
+    [self forgetProcessGroupOfTask: theTask];
     if (theTask != nil){
         if (MainLogs)
             NSLog(theTask.launchPath);
@@ -2213,15 +2315,18 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
             self.inputPipe = 0;
         }
             if (theTask == self.bibTask) {
-                [self.bibTask terminate];
+                if ([self.bibTask isRunning])
+                    [self.bibTask terminate];
                 //            [self.bibTask release];
                 self.bibTask = nil;
             } else if (theTask == self.indexTask) {
-                [self.indexTask terminate];
+                if ([self.indexTask isRunning])
+                    [self.indexTask terminate];
                 //            [self.indexTask release];
                 self.indexTask = nil;
             } else if (theTask == self.metaFontTask) {
-                [self.metaFontTask terminate];
+                if ([self.metaFontTask isRunning])
+                    [self.metaFontTask terminate];
                 //            [self.metaFontTask release];
                 self.metaFontTask = nil;
             }
@@ -2410,7 +2515,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
  
                     
             
-            [self.texTask terminate];
+            if ([self.texTask isRunning])
+                [self.texTask terminate];
             //        [self.texTask release];
         }
         

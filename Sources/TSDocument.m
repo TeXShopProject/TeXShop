@@ -3150,9 +3150,12 @@ else {
 		}
 	
 	if (self.detexTask != nil) {
-		[self.detexTask terminate];
+		if ([self.detexTask isRunning])
+			[self.detexTask terminate];
 		myDate = [NSDate date];
-		while (([self.detexTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+		while (([self.detexTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+		if (([self.detexTask isRunning]) && ([self.detexTask processIdentifier] > 0))
+			kill([self.detexTask processIdentifier], SIGKILL);
 //		[self.detexTask release];
 //		[self.detexPipe release];
 		self.detexTask = nil;
@@ -3189,7 +3192,13 @@ else {
 
 - (void)saveForStatistics: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo
 {
-	[self showStatistics:self];
+	// Runs as the completion of NSDocument's save; no exception may escape.
+	@try {
+		[self showStatistics:self];
+	}
+	@catch (NSException *exception) {
+		NSLog(@"Statistics stopped by an exception: %@: %@", [exception name], [exception reason]);
+	}
 }
 
 - (void)updateStatistics: sender
@@ -10422,9 +10431,12 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                 if (!errorFlag)
                     [self.logTextView setString:@""];
                 if (self.texloganalyserTask != nil) {
-                    [self.texloganalyserTask terminate];
+                    if ([self.texloganalyserTask isRunning])
+                        [self.texloganalyserTask terminate];
                     myDate = [NSDate date];
-                    while (([self.texloganalyserTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+                    while (([self.texloganalyserTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+                    if (([self.texloganalyserTask isRunning]) && ([self.texloganalyserTask processIdentifier] > 0))
+                        kill([self.texloganalyserTask processIdentifier], SIGKILL);
                     self.texloganalyserTask = nil;
                     self.texloganalyserPipe = nil;
                     }

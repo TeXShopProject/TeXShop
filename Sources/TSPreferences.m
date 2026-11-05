@@ -1782,7 +1782,7 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
     NSString *newValue;
     
     // register the undo messages first
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:HtmlHomeKey]                 forKey:TetexBinPath];
+    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:HtmlHomeKey]                 forKey:HtmlHomeKey];
 
     newValue = [[_HtmlHomeField stringValue] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [SUD setObject: newValue forKey:HtmlHomeKey];

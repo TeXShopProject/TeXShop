@@ -200,11 +200,18 @@
 	// Customize 'PATH'
     NSMutableString *inputs;
     NSMutableString *path;
-	path = [NSMutableString stringWithString: [env objectForKey:@"PATH"]];
-	[path appendString:@":"];
-	[path appendString:[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath]];
-	[path appendString:@":"];
-	[path appendString:[SUD stringForKey:GSBinPath]];
+    NSString *extraPath;
+	path = [NSMutableString stringWithString: ([env objectForKey:@"PATH"] ?: @"/usr/bin:/bin:/usr/sbin:/sbin")];
+	extraPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
+	if ([extraPath length] > 0) {
+		[path appendString:@":"];
+		[path appendString:extraPath];
+	}
+	extraPath = [SUD stringForKey:GSBinPath];
+	if ([extraPath length] > 0) {
+		[path appendString:@":"];
+		[path appendString:extraPath];
+	}
     [path appendString:@":"];
     [path appendString:additionalPath];
 	[env setObject: path forKey: @"PATH"];

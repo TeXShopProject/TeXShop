@@ -795,9 +795,12 @@
 
 	
 	if (self.synctexTask != nil) {
-		[self.synctexTask terminate];
+		if ([self.synctexTask isRunning])
+			[self.synctexTask terminate];
 		myDate = [NSDate date];
-		while (([self.synctexTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+		while (([self.synctexTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+		if (([self.synctexTask isRunning]) && ([self.synctexTask processIdentifier] > 0))
+			kill([self.synctexTask processIdentifier], SIGKILL);
 	//	[self.synctexTask release];
 	//	[self.synctexPipe release];
 		self.synctexTask = nil;
@@ -901,9 +904,12 @@
 	NSString *outputString = [[NSString alloc] initWithData: myData encoding: NSASCIIStringEncoding];
 	
 	if (self.synctexTask != nil) {
-		[self.synctexTask terminate];
+		if ([self.synctexTask isRunning])
+			[self.synctexTask terminate];
 		myDate = [NSDate date];
-		while (([self.synctexTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+		while (([self.synctexTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+		if (([self.synctexTask isRunning]) && ([self.synctexTask processIdentifier] > 0))
+			kill([self.synctexTask processIdentifier], SIGKILL);
 	//	[self.synctexTask release];
 	//	[self.synctexPipe release];
 		self.synctexTask = nil;
@@ -1580,9 +1586,12 @@
 	
 	
 	if (self.synctexTask != nil) {
-		[self.synctexTask terminate];
+		if ([self.synctexTask isRunning])
+			[self.synctexTask terminate];
 		myDate = [NSDate date];
-		while (([self.synctexTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+		while (([self.synctexTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+		if (([self.synctexTask isRunning]) && ([self.synctexTask processIdentifier] > 0))
+			kill([self.synctexTask processIdentifier], SIGKILL);
 	//	[self.synctexTask release];
 	//	[self.synctexPipe release];
 		self.synctexTask = nil;
@@ -1645,9 +1654,12 @@
 	NSString *outputString = [[NSString alloc] initWithData: myData encoding: NSASCIIStringEncoding];
 	
 	if (self.synctexTask != nil) {
-		[self.synctexTask terminate];
+		if ([self.synctexTask isRunning])
+			[self.synctexTask terminate];
 		myDate = [NSDate date];
-		while (([self.synctexTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+		while (([self.synctexTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+		if (([self.synctexTask isRunning]) && ([self.synctexTask processIdentifier] > 0))
+			kill([self.synctexTask processIdentifier], SIGKILL);
 	//	[self.synctexTask release];
 	//	[self.synctexPipe release];
 		self.synctexTask = nil;
