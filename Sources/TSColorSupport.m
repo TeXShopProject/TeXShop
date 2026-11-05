@@ -93,6 +93,12 @@ static id sharedColorSupport = nil;
 - (NSColor *) colorFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
     NSArray *theColorArray = [theDictionary objectForKey: theKey];
+    // Themes made before brackets had their own colors only define SyntaxMarker.
+    if ((theColorArray == nil) &&
+        ([theKey isEqualToString: @"SyntaxMarkerParen"] ||
+         [theKey isEqualToString: @"SyntaxMarkerCurly"] ||
+         [theKey isEqualToString: @"SyntaxMarkerSquare"]))
+        theColorArray = [theDictionary objectForKey: @"SyntaxMarker"];
     if (theColorArray == nil)
         return nil;
     NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha:1.00];
