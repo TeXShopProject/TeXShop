@@ -3,7 +3,7 @@
 // and print controls that overlap or touch, that run over a box title or out of their
 // box or are cut off by it, or whose text does not fit.
 // Usage: PreferencesOverlaps Resources/Interfaces/<lang>.lproj/Preferences.nib ...
-// Each tab also prints a STAT line with the number of controls checked and how many of
+// The controls around the tabs are checked too. Each tab also prints a STAT line with the number of controls checked and how many of
 // them drew nothing, so a change in how controls draw cannot make the check vacuous.
 #import <Cocoa/Cocoa.h>
 @interface TSPreferences : NSObject @end
@@ -26,9 +26,10 @@ static NSString *Name(NSView *v) {
     if (s.length > 22) s = [[s substringToIndex:22] stringByAppendingString:@"…"];
     return [NSString stringWithFormat:@"%@[%@]\"%@\"", NSStringFromClass(v.class), v.identifier ?: @"", s ?: @""];
 }
+static NSView *gSkip; // A subtree Collect leaves out.
 static void Collect(NSView *v, NSMutableArray *out, NSMutableArray *boxes) {
     for (NSView *c in v.subviews) {
-        if (c.hiddenOrHasHiddenAncestor) continue;
+        if (c.hiddenOrHasHiddenAncestor || c == gSkip) continue;
         if ([c isKindOfClass:NSControl.class] || [c isKindOfClass:NSImageView.class]) [out addObject:c];
         else {
             if ([c isKindOfClass:NSBox.class]) [boxes addObject:c];
@@ -86,8 +87,19 @@ static void CheckFit(NSString *where, NSView *c, NSMutableString *report) {
         return;
     }
     if ([c isKindOfClass:NSPopUpButton.class]) {
+        // Any item can be the one shown once it is chosen, so every item must fit.
+        // A pull-down menu always shows its first item.
         NSPopUpButton *p = (NSPopUpButton *)c;
-        Fit(where, c, p.cell, p.titleOfSelectedItem, p.bounds, report);
+        if (p.pullsDown) { Fit(where, c, p.cell, p.itemArray.firstObject.title, p.bounds, report); return; }
+        // The room for the title depends on the item shown, so show each in turn.
+        NSInteger selected = p.indexOfSelectedItem;
+        for (NSInteger i = 0; i < p.numberOfItems; i++) {
+            NSMenuItem *item = [p itemAtIndex:i];
+            if (item.isSeparatorItem || item.isHidden) continue;
+            [p selectItemAtIndex:i];
+            Fit(where, c, p.cell, item.title, p.bounds, report);
+        }
+        [p selectItemAtIndex:selected];
     } else if ([c isKindOfClass:NSButton.class]) {
         NSButton *bt = (NSButton *)c;
         if (bt.imagePosition != NSImageOnly) Fit(where, c, bt.cell, bt.title, bt.bounds, report);
@@ -223,6 +235,10 @@ int main(int argc, char **argv) { @autoreleasepool {
                         Check([NSString stringWithFormat:@"%@\t%@\t%@", lang, mode, tag], w.contentView, tv, report);
                     }
                 }
+                // The controls around the tabs (settings profile, Cancel, OK).
+                gSkip = tabs;
+                Check([NSString stringWithFormat:@"%@\t%@\tbar", lang, mode], w.contentView, w.contentView, report);
+                gSkip = nil;
                 [w close];
             }
         }
