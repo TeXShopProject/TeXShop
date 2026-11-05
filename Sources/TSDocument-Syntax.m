@@ -138,15 +138,24 @@ static BOOL isValidOrdinaryTeXCommandChar(NSInteger c)
     
 // Notice the code below to avoid recoloring when the file is first opened!
 // YES when the paragraph containing location already has the given alignment.
-// Natural alignment counts as left alignment, which it is for these lines.
+// Natural alignment counts as left alignment only in a left-to-right paragraph;
+// in a right-to-left one it lays the line out on the right, so report NO.
 static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location, NSTextAlignment alignment)
 {
     if (location >= [storage length])
         return NO;
     NSParagraphStyle *style = [storage attribute:NSParagraphStyleAttributeName atIndex:location effectiveRange:NULL];
-    NSTextAlignment current = style ? [style alignment] : NSTextAlignmentNatural;
-    if (current == NSTextAlignmentNatural)
+    if (! style)
+        style = [NSParagraphStyle defaultParagraphStyle];
+    NSTextAlignment current = [style alignment];
+    if (current == NSTextAlignmentNatural) {
+        NSWritingDirection direction = [style baseWritingDirection];
+        if (direction == NSWritingDirectionNatural)
+            direction = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
+        if (direction != NSWritingDirectionLeftToRight)
+            return NO;
         current = NSLeftTextAlignment;
+    }
     return current == alignment;
 }
 

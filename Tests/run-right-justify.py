@@ -11,6 +11,8 @@ block = source[block_start:source.index('    // NSLog(@"after Hebrew");', block_
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 if mutation == 'always-set':
     block = block.replace('if (! TSParagraphHasAlignment([aTextView textStorage], start, wanted))', 'if (YES)')
+elif mutation == 'natural-is-left':
+    helper = helper.replace('if (direction != NSWritingDirectionLeftToRight)', 'if (NO)')
 program = r'''
 #import <Cocoa/Cocoa.h>
 static NSString *RightJustifyKey = @"RightJustify", *RightJustifyIfAnyKey = @"RightJustifyIfAny";
@@ -58,6 +60,23 @@ int main(void) { @autoreleasepool {
     edits = 0; Justify(tv, 0, tv.textStorage.length);
     NSParagraphStyle *ps = [tv.textStorage attribute:NSParagraphStyleAttributeName atIndex:third effectiveRange:NULL];
     if (!ps || ps.alignment != NSTextAlignmentRight || edits == 0) { printf("FAIL: changed line not right aligned\n"); failures++; }
+    // In an explicitly right-to-left paragraph natural alignment lays the line out on
+    // the right, so a line that does not start with Hebrew must still be set left.
+    NSTextView *rtl = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 600, 200)];
+    [rtl.textStorage replaceCharactersInRange:NSMakeRange(0, 0) withString:@"    שלום עולם\n"];
+    NSMutableParagraphStyle *natural = [NSMutableParagraphStyle new];
+    natural.alignment = NSTextAlignmentNatural; natural.baseWritingDirection = NSWritingDirectionRightToLeft;
+    [rtl.textStorage addAttribute:NSParagraphStyleAttributeName value:natural range:NSMakeRange(0, rtl.textStorage.length)];
+    Justify(rtl, 0, rtl.textStorage.length);
+    ps = [rtl.textStorage attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
+    [rtl.layoutManager ensureLayoutForTextContainer:rtl.textContainer];
+    NSRange glyphs = [rtl.layoutManager glyphRangeForCharacterRange:NSMakeRange(4, 4) actualCharacterRange:NULL];
+    CGFloat x = [rtl.layoutManager boundingRectForGlyphRange:glyphs inTextContainer:rtl.textContainer].origin.x;
+    if (!ps || ps.alignment != NSTextAlignmentLeft || x > 100) { printf("FAIL: right-to-left line laid out at x=%.2f, expected left\n", x); failures++; }
+    edits = 0;
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSTextStorageDidProcessEditingNotification object:rtl.textStorage queue:nil usingBlock:^(NSNotification *n) { edits++; }];
+    Justify(rtl, 0, rtl.textStorage.length);
+    if (edits != 0) { printf("FAIL: repeated coloring edited the right-to-left line %lu times\n", (unsigned long)edits); failures++; }
     return failures ? 1 : 0;
 } }
 '''.replace('HELPER', helper).replace('BLOCK', block)
@@ -71,4 +90,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-justify-') as tmp:
         if r.returncode == 0: raise SystemExit('FAIL: mutation %s was not detected' % mutation)
         print('detected mutation', mutation)
     elif r.returncode: raise SystemExit(r.stderr or 'FAIL')
-    else: print('PASS: right justification is applied once and repeated coloring leaves the text untouched')
+    else: print('PASS: right justification is applied once, honors right-to-left paragraphs, and repeated coloring leaves the text untouched')
