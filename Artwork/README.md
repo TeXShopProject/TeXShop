@@ -2,7 +2,9 @@
 
 Prepared from the maintainer’s vector artwork at the maintainer's request.
 The Japanese character has been removed. The outlined TeX mark is centered
-at (512, 512) on a 1024-unit canvas, with a height of 340 units.
+at (512, 512) on a 1024-unit canvas. The mark is fitted to a height of
+390 units, then expanded by 4 units along its contour to improve legibility
+at small sizes. The resulting outline is shared by the SVG and raster assets.
 The inherited gray-green gradient, white lettering, bevel, and shadow are retained.
 
 - `TeXShop.icon`: Icon Composer source. The background fills the entire canvas;

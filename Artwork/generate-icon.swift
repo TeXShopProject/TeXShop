@@ -23,7 +23,10 @@ for op in operations {
     default: fatalError("Unsupported outline operation")
     }
 }
-let word=fit(tex.normalized(using: .winding),height:340,centerX:512,bottom:342)
+// Larger lettering and a small outline expansion improve recognition at Dock sizes.
+let enlargedWord=fit(tex.normalized(using: .winding),height:390,centerX:512,bottom:317)
+let outline=enlargedWord.copy(strokingWithWidth:8,lineCap:.round,lineJoin:.round,miterLimit:10)
+let word=enlargedWord.union(outline,using:.winding)
 func svgPath(_ p:CGPath)->String {
     var s="";func n(_ v:CGFloat)->String {String(format:"%.3f",Double(v))}
     p.applyWithBlock { q in let e=q.pointee;let a=e.points
