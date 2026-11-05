@@ -14,6 +14,7 @@ static inline NSString *TSExternalPDFSignature(NSString *path)
 }
 
 PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature);
+PDFDocument *TSInitialPDFSnapshot(NSString *path, NSString *signature);
 
 typedef struct {
     BOOL valid, autoScales;

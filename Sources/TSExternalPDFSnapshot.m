@@ -31,7 +31,7 @@ static void TSRemovePDFSnapshot(NSString *path)
 }
 @end
 
-PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature)
+static PDFDocument *TSPDFSnapshot(NSString *path, NSString *signature, BOOL allowLocked)
 {
     if (!signature || ![signature isEqualToString:TSExternalPDFSignature(path)]) return nil;
     NSFileManager *files = [NSFileManager defaultManager];
@@ -64,6 +64,17 @@ PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature)
                                      initWithURL:[NSURL fileURLWithPath:snapshot]];
     if (!document) { TSRemovePDFSnapshot(directory); return nil; }
     document.snapshotDirectory = directory;
-    if (!document.pageCount || document.isLocked) return nil;
+    if (document.isLocked ? !allowLocked : !document.pageCount) return nil;
     return document;
+}
+
+PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature)
+{
+    return TSPDFSnapshot(path, signature, NO);
+}
+
+// Initial/explicit loads must let PDFKit show its password entry field.
+PDFDocument *TSInitialPDFSnapshot(NSString *path, NSString *signature)
+{
+    return TSPDFSnapshot(path, signature, YES);
 }

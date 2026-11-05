@@ -554,7 +554,7 @@
 	// if ([SUD boolForKey:ReleaseDocumentClassesKey]) {
 	// added by Terada: A watched PDF must survive an in-place overwrite of its file.
 	if (self.myDocument.pdfRefreshTimer) {
-        pdfDoc = TSExternalPDFSnapshot(imagePath, loadedSignature);
+        pdfDoc = TSInitialPDFSnapshot(imagePath, loadedSignature);
         [self setDocument:pdfDoc];
     } else if ([self doReleaseDocument]) {
 		pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
@@ -1284,7 +1284,7 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
     NSString *loadedSignature = TSExternalPDFSignature(imagePath);
     PDFDocument *pdfDoc;
     if (self.myDocument.pdfRefreshTimer)
-        pdfDoc = TSExternalPDFSnapshot(imagePath, loadedSignature);
+        pdfDoc = TSInitialPDFSnapshot(imagePath, loadedSignature);
     else if ([self doReleaseDocument])
         pdfDoc = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:imagePath]];
     else
