@@ -148,7 +148,6 @@
     IBOutlet NSMatrix  *_sparkleIntervalMatrix;
     
     IBOutlet NSButton  *_useNewToolbarButton;
-    IBOutlet NSButton  *_useNewToolbarIconsButton;
     
     IBOutlet NSButtonCell   *_spellCheckCommands;
     IBOutlet NSButtonCell   *_spellCheckParameters;
@@ -178,7 +177,6 @@
 	BOOL			oldBibDeskComplete;
     BOOL            oldSparkleAutomaticUpdate;
     NSTimeInterval  oldSparkleInterval;
-    BOOL            oldNewToolbarIcons;
 	BOOL			magnificationTouched;
 	BOOL			externalEditorTouched;
 	BOOL			encodingTouched;
@@ -189,7 +187,6 @@
 	BOOL            bibTeXengineTouched; // added by Terada
 //	BOOL            makeatletterTouched; // added by Terada
     BOOL            sparkleTouched;
-    BOOL            newToolbarIconsTouched;
     BOOL            xmlTagsTouched;
    
     IBOutlet NSPopUpButton  *dictionaryPopup;
@@ -403,7 +400,6 @@
 - (IBAction)sparkleAutomaticCheck:sender;
 - (IBAction)sparkleInterval:sender;
 
-- (IBAction)NewToolbarIconsCheck:sender;
 
 - (IBAction)spellCheckCommandPressed:sender;
 - (IBAction)spellCheckParameterPressed:sender;

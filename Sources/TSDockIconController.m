@@ -52,7 +52,7 @@
         if ([view isKindOfClass:NSBox.class] && NSMidX(view.frame) < middle && (!column || NSMinY(view.frame) < NSMinY(column.frame)))
             column = (NSBox *)view;
     if (!column) return;
-    CGFloat left = NSMinX(column.frame), top = NSMinY(column.frame) - 6, bottom = 4;
+    CGFloat left = NSMinX(column.frame), top = NSMinY(column.frame) - 12, bottom = 4;
     CGFloat right = NSMaxX(column.frame);
     for (NSView *view in misc.subviews)
         if (NSMidX(view.frame) >= middle && NSMinY(view.frame) < top)

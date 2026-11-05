@@ -1925,20 +1925,6 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 
 
 
-- (IBAction)NewToolbarIconsCheck:sender;
-{
-    newToolbarIconsTouched = YES;
-    oldNewToolbarIcons = [SUD boolForKey:NewToolbarIconsKey];
-    
-    BOOL theValue = [(NSCell *) sender state];
-    
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:NewToolbarIconsKey] forKey:NewToolbarIconsKey];
-    [SUD setBool:theValue forKey:NewToolbarIconsKey];
-    
-// Corrected by Terada: toolbar appearance must not change automatic updates.
-    
-}
 
 
 
@@ -2523,7 +2509,6 @@ This method retrieves the application preferences from the defaults object and s
         [_sparkleIntervalMatrix selectCellWithTag:(interval < 604800 ? 1 : (interval < 2629800 ? 2 : 3))];
     }
 #endif
-    [_useNewToolbarIconsButton setState: [defaults boolForKey: NewToolbarIconsKey]];
     [_consoleMatrix selectCellWithTag: [defaults integerForKey: ConsoleBehaviorKey]];
     [_spellCheckCommands setState:[defaults boolForKey:TurnOffCommandSpellCheckKey]];
     [_spellCheckParameters setState:[defaults boolForKey:TurnOffParameterSpellCheckKey]];
