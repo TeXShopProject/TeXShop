@@ -23,6 +23,7 @@
  */
 
 #import "TSAppDelegate.h"
+#import "TSDockIconController.h"
 
 #import "globals.h"
 
@@ -232,6 +233,7 @@
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
         TSRemoveStalePDFSnapshots(NSTemporaryDirectory());
     });
+    [[TSDockIconController sharedController] restoreSavedIcon];
     
     // NSLog(@"the system is %f", NSAppKitVersionNumber);
     

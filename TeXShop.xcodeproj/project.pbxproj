@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = AABB05910000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		ED0C00000000000000000001 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		ED0C00000000000000000003 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000004; };
 		346FA9FD1309961900DAA25D /* TSLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 346FA9FB1309961900DAA25D /* TSLayoutManager.h */; };
 		346FA9FE1309961900DAA25D /* TSLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 346FA9FC1309961900DAA25D /* TSLayoutManager.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40008E6B055436A5005D78AB /* mptopdfwrap in Resources */ = {isa = PBXBuildFile; fileRef = 40008E6A055436A5005D78AB /* mptopdfwrap */; };
@@ -440,6 +442,10 @@
 /* Begin PBXFileReference section */
 		AABB05910000000000000003 /* TSFileChangeMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSFileChangeMonitor.h; sourceTree = "<group>"; };
 		AABB05910000000000000002 /* TSFileChangeMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSFileChangeMonitor.m; sourceTree = "<group>"; };
+		ED0C00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSDockIconController.m; sourceTree = SOURCE_ROOT; };
+		ED0C00000000000000000004 = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/DockIcons; sourceTree = SOURCE_ROOT; };
+		ED0C00000000000000000006 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSDockIcon.h; sourceTree = SOURCE_ROOT; };
+		ED0C00000000000000000007 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSDockIconController.h; sourceTree = SOURCE_ROOT; };
 		00CFF0E9000ACFC67F000001 /* TSConsoleWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSConsoleWindow.h; sourceTree = "<group>"; };
 		00CFF0EB000ACFFC7F000001 /* TSConsoleWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSConsoleWindow.m; sourceTree = "<group>"; };
 		00CFF0ED000AD0B87F000001 /* TSTextEditorWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSTextEditorWindow.h; sourceTree = "<group>"; };
@@ -1271,6 +1277,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				ED0C00000000000000000004,
 				027B3F65000AD8447F000001 /* Interfaces */,
 				403E76BD218E7008006975A8 /* TeXShop.scriptSuite */,
 				40C889DA0F1A852E00B5B8A9 /* dsa_pub.pem */,
@@ -1395,6 +1402,9 @@
 		5288888E089D06B50095E82D /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				ED0C00000000000000000002,
+				ED0C00000000000000000006,
+				ED0C00000000000000000007,
 				2A37F4ABFDCFA73011CA2CEA /* classes */,
 				52F59A6A08A4E6A000D66FBB /* Document Classes */,
 				52F59AB708A4EA4F00D66FBB /* Text */,
@@ -1772,6 +1782,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED0C00000000000000000003,
 				40E81A6929A0788D0014D82A /* Manual.pdf in Resources */,
 				4078807D0519249A006979EA /* Credits.rtf in Resources */,
 				52B13E4808A8182F00756E5E /* MainMenu.nib in Resources */,
@@ -2021,11 +2032,15 @@
 		};
 /* End PBXRezBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		407881770519249A006979EA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED0C00000000000000000001,
 				EF5890000000000000000001 /* TSSparkleController.m in Sources */,
 				407881790519249A006979EA /* main.m in Sources */,
 				4078817C0519249A006979EA /* TSConsoleWindow.m in Sources */,
