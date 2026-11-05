@@ -90,15 +90,21 @@ static id sharedColorSupport = nil;
 }
 
 
-- (NSColor *) colorFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
+// Themes made before brackets had their own colors only define SyntaxMarker.
+- (NSArray *) colorArrayFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
     NSArray *theColorArray = [theDictionary objectForKey: theKey];
-    // Themes made before brackets had their own colors only define SyntaxMarker.
     if ((theColorArray == nil) &&
         ([theKey isEqualToString: @"SyntaxMarkerParen"] ||
          [theKey isEqualToString: @"SyntaxMarkerCurly"] ||
          [theKey isEqualToString: @"SyntaxMarkerSquare"]))
         theColorArray = [theDictionary objectForKey: @"SyntaxMarker"];
+    return theColorArray;
+}
+
+- (NSColor *) colorFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
+{
+    NSArray *theColorArray = [self colorArrayFromDictionary: theDictionary andKey: theKey];
     if (theColorArray == nil)
         return nil;
     NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha:1.00];
@@ -254,7 +260,7 @@ static id sharedColorSupport = nil;
          theDictionary = liteColors;
         
     
-    NSArray *theColorArray = [theDictionary objectForKey: theKey];
+    NSArray *theColorArray = [self colorArrayFromDictionary: theDictionary andKey: theKey];
     if (theColorArray != nil)
         {
             theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: [theColorArray[3] doubleValue]];
