@@ -38,6 +38,7 @@ static NSString *TSFileStamp(NSString *path)
 @interface TSFileChangeMonitor ()
 - (void)prepareWorker:(TSFileWatchWorker *)worker;
 - (BOOL)acceptData:(NSData *)data fingerprint:(NSData *)fingerprint generation:(NSNumber *)generation;
+- (void)stopMonitoring;
 @end
 
 @interface TSFileWatchWorker : NSObject
@@ -58,8 +59,11 @@ static NSString *TSFileStamp(NSString *path)
 - (instancetype)initWithPath:(NSString *)path prepare:(NSNumber *(^)(void))prepare
                      accept:(BOOL (^)(NSData *, NSData *, NSNumber *))accept
 {
-    NSAssert(NSThread.isMainThread, @"Start monitoring on the main thread");
     if (!(self = [super init])) return nil;
+    // Construction touches no main-thread state and both callbacks are always
+    // delivered on the main queue, so an off-main caller is reported, not fatal.
+    if (!NSThread.isMainThread)
+        NSLog(@"Source file monitoring for %@ was started off the main thread", path);
     _path = [path.stringByStandardizingPath copy];
     _prepare = [prepare copy]; _accept = [accept copy];
     TSFileWatchWorker *worker = [TSFileWatchWorker new];
@@ -71,7 +75,15 @@ static NSString *TSFileStamp(NSString *path)
 }
 - (void)prepareWorker:(TSFileWatchWorker *)worker
 {
-    NSNumber *generation = !_stopped && _prepare ? _prepare() : nil;
+    NSNumber *generation = nil;
+    // An exception here must not terminate the application from a main-queue
+    // block, nor leave the worker waiting; treat it as a deferred read.
+    @try {
+        generation = !_stopped && _prepare ? _prepare() : nil;
+    } @catch (NSException *exception) {
+        NSLog(@"Source file monitoring for %@ could not prepare a read: %@", _path, exception);
+        generation = nil;
+    }
     dispatch_async(worker.queue, ^{ [worker readGeneration:generation]; });
 }
 - (BOOL)acceptData:(NSData *)data fingerprint:(NSData *)fingerprint generation:(NSNumber *)generation
@@ -80,12 +92,22 @@ static NSString *TSFileStamp(NSString *path)
 }
 - (void)stop
 {
+    // Callback state is confined to the main thread.
+    if (!NSThread.isMainThread) {
+        dispatch_async(dispatch_get_main_queue(), ^{ [self stopMonitoring]; });
+        return;
+    }
+    [self stopMonitoring];
+}
+- (void)stopMonitoring
+{
     if (_stopped) return;
     _stopped = YES; _prepare = nil; _accept = nil;
     TSFileWatchWorker *worker = _worker; _worker = nil;
     if (worker) dispatch_async(worker.queue, ^{ [worker stop]; });
 }
-- (void)dealloc { [self stop]; }
+// No callback can reach a deallocating monitor, so stop in place.
+- (void)dealloc { [self stopMonitoring]; }
 @end
 
 @implementation TSFileWatchWorker {
@@ -226,7 +248,16 @@ static NSString *TSFileStamp(NSString *path)
         _retryDelay = 0; _retryAfter = 0;
         NSUInteger readingGeneration = _readingGeneration;
         dispatch_async(dispatch_get_main_queue(), ^{
-            BOOL accepted = [self.owner acceptData:data fingerprint:fingerprint generation:generation];
+            BOOL accepted = NO;
+            // An exception must not terminate the application from this
+            // main-queue block, and the read must still complete below so that
+            // monitoring continues; treat it as a rejected read.
+            @try {
+                accepted = [self.owner acceptData:data fingerprint:fingerprint generation:generation];
+            } @catch (NSException *exception) {
+                NSLog(@"Source file monitoring for %@ could not accept a read: %@", self.path, exception);
+                accepted = NO;
+            }
             dispatch_async(self.queue, ^{
                 if (self->_stopped) return;
                 self->_inFlight = NO;

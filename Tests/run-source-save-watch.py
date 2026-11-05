@@ -8,7 +8,7 @@ import argparse, os, re, subprocess, tempfile
 from pathlib import Path
 parser = argparse.ArgumentParser()
 parser.add_argument('--revision')
-parser.add_argument('--mutation', choices=['read-baseline', 'write-baseline', 'disk-baseline', 'generation'])
+parser.add_argument('--mutation', choices=['read-baseline', 'write-baseline', 'disk-baseline', 'generation', 'reload-catch', 'autosave-as-baseline'])
 parser.add_argument('modes', nargs='*')
 args = parser.parse_args()
 REPO = Path(__file__).resolve().parents[1]
@@ -32,6 +32,13 @@ def show(rev, path):
             if text.count('sourceAcceptedFingerprint = sourceWrittenFingerprint;') != 1: raise SystemExit('disk-baseline replacement count')
             text = text.replace('sourceAcceptedFingerprint = sourceWrittenFingerprint;',
                 'sourceAcceptedFingerprint = TSSourceFingerprint([NSData dataWithContentsOfURL:url]);')
+        elif args.mutation == 'reload-catch':
+            text, count = re.subn(r'\} @catch \(NSException \*exception\) \{\n\s*NSLog\(@"Automatic reload of %@ failed: %@", path, exception\);\n\s*result = NO;\n', '', text)
+            if count != 1: raise SystemExit('reload-catch replacement count')
+        elif args.mutation == 'autosave-as-baseline':
+            old = ' || operation == NSAutosaveAsOperation'
+            if text.count(old) != 1: raise SystemExit('autosave-as-baseline replacement count')
+            text = text.replace(old, '')
     return text
 def cut(s, start, end):
     a = s.index(start); b = s.index(end, a); return s[a:b]
@@ -68,6 +75,7 @@ static NSString *WatchServerKey=@"watch", *ConvertLFKey=@"convlf", *ptexUtfOutpu
 static _Atomic(unsigned long) gContentReads=0; static double gMaxStall=0;
 static int gInjectOnRead=0; static NSString *gInjectText=nil; static int gInjectHow=0;
 static BOOL gInjectBeforeReturn=NO;
+static int gThrowOnColorize=0, gThrown=0, gAcceptAfterThrow=-1;
 static _Atomic(int) gSlowRead=0, gReadStarted=0, gReleaseRead=0;
 static _Atomic(int) gSlowStat=0, gStatStarted=0, gReleaseStat=0, gMainMonitorIO=0;
 int TSProbeStat(const char *p,struct stat *s) {
@@ -138,7 +146,7 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 - (instancetype)init { if((self=[super init])){ _textStorage=[NSTextStorage new]; _encoding=NSUTF8StringEncoding; _ops=[NSMutableArray new]; } return self; }
 - (NSTextStorage *)storage { return _textStorage; }
 - (void)setupTags {}
-- (void)colorizeAll {}
+- (void)colorizeAll { if(gThrowOnColorize>0 && --gThrowOnColorize==0){ gThrown++; [NSException raise:@"TSProbeException" format:@"colorize"]; } }
 - (BOOL)doNotReadSource { return NO; }
 - (NSStringEncoding)dataEncoding:(NSData *)d {
  self.reads++;
@@ -184,6 +192,13 @@ static id countingDWCOU(id c,SEL s,NSURL *u,NSDataReadingOptions o,NSError **e){
  }
  return data;
 }
+// Record what the document's accept callback returned when it raised internally.
+static BOOL (*origAccept)(id,SEL,NSData*,NSData*,NSNumber*);
+static BOOL recordingAccept(id m,SEL s,NSData *d,NSData *f,NSNumber *g){
+ int before=gThrown; BOOL r=origAccept(m,s,d,f,g);
+ if(gThrown!=before) gAcceptAfterThrow=r;
+ return r;
+}
 static BOOL Save(TSDocument *d, NSURL *u, NSSaveOperationType op){
  __block BOOL done=NO; __block NSError *err=nil;
  [d saveToURL:u ofType:d.fileType forSaveOperation:op completionHandler:^(NSError *e){err=e;done=YES;}];
@@ -198,6 +213,8 @@ int main(int argc,char **argv){@autoreleasepool{
  [NSApplication sharedApplication];
  Method m=class_getClassMethod([NSData class],@selector(dataWithContentsOfURL:options:error:));
  origDWCOU=(void*)method_getImplementation(m); method_setImplementation(m,(IMP)countingDWCOU);
+ Method am=class_getInstanceMethod([TSFileChangeMonitor class],NSSelectorFromString(@"acceptData:fingerprint:generation:"));
+ origAccept=(void*)method_getImplementation(am); method_setImplementation(am,(IMP)recordingAccept);
  NSString *path=@(argv[1]),*mode=@(argv[2]); gPath=path; long mb=argc>3? atol(argv[3]):0;
  NSString *initial=@"initial!";
  if(mb>0){ NSMutableString *b=[NSMutableString stringWithCapacity:mb<<20]; NSString *line=@"\\section{x} 0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJ\n"; while(b.length<(NSUInteger)(mb<<20)) [b appendString:line]; initial=b; }
@@ -309,6 +326,19 @@ int main(int argc,char **argv){@autoreleasepool{
   CFAbsoluteTime a=CFAbsoluteTimeGetCurrent(); BOOL ok=Save(d,url,NSAutosaveInPlaceOperation); double st=CFAbsoluteTimeGetCurrent()-a;
   gMaxStall=0; Pump(3.0);
   printf("%s MB=%ld saved=%d saveMs=%.0f extraReads=%lu contentReadsAfterSave=%lu maxStallAfterSaveMs=%.1f canUndo=%d\n",mode.UTF8String,mb,ok,st*1000,EXTRA,CREADS,gMaxStall*1000,d.undoManager.canUndo);
+ } else if([mode isEqualToString:@"revert-throws"]){
+  gThrowOnColorize=1; ExtWrite(path,@"first external",1);
+  for(int i=0;i<300&&!gThrown;i++) Pump(.01);
+  Pump(2.6); NSUInteger r1=d.reads;
+  ExtWrite(path,@"second external",1); Pump(2.6);
+  printf("%s thrown=%d acceptAfterThrow=%d readsAfterThrow=%lu text=%s\n",mode.UTF8String,gThrown,gAcceptAfterThrow,(unsigned long)(d.reads-r1),d.storage.string.UTF8String);
+ } else if([mode isEqualToString:@"autosave-as"]){
+  TSDocument *u=[[TSDocProbe alloc] initWithType:@"public.plain-text" error:&e];
+  [u edit:@"untitled text"];
+  NSURL *nu=[NSURL fileURLWithPath:[path stringByAppendingString:@".untitled.tex"]];
+  BOOL ok=Save(u,nu,NSAutosaveAsOperation); Pump(3.0);
+  printf("%s saved=%d reads=%lu canUndo=%d edited=%d fileURL=%s text=%s disk=%s\n",mode.UTF8String,ok,(unsigned long)u.reads,u.undoManager.canUndo,u.isDocumentEdited,u.fileURL.lastPathComponent.UTF8String,u.storage.string.UTF8String,Disk(nu.path).UTF8String);
+  [u cancelWatchFile];
  } else if([mode isEqualToString:@"external"]){
   ExtWrite(path,@"external content",1); Pump(2.6);
   printf("%s extraReads=%lu text=%s\n",mode.UTF8String,EXTRA,d.storage.string.UTF8String);
@@ -437,6 +467,8 @@ checks = {
  'typeset-autosave': ['canUndo=1 editor=user edit disk=user edit extraReads=0'],
  'dirty-external-undo': ['editor=external content disk=external content'],
  'saveto': ['saved=1 extraReads=0', 'text=exported'],
+ 'revert-throws': ['thrown=1 acceptAfterThrow=0 readsAfterThrow=1 text=second external'],
+ 'autosave-as': ['saved=1 reads=0 canUndo=1', 'text=untitled text disk=untitled text'],
  'fdleak': [],
 }
 modes = args.modes or list(checks)

@@ -2582,9 +2582,15 @@ in other code when an external editor is being used. */
         if ([fingerprint isEqual:document->sourceAcceptedFingerprint]) return YES;
         document->sourceReloadData = data;
         document->sourceReloadFingerprint = fingerprint;
-        BOOL result;
+        BOOL result = NO;
+        // This runs from a main-queue block; an escaping exception would
+        // terminate the application. Report the reload as rejected instead,
+        // so that the monitor retries and keeps watching.
         @try {
             result = [document revertToContentsOfURL:document.fileURL ofType:document.fileType error:NULL];
+        } @catch (NSException *exception) {
+            NSLog(@"Automatic reload of %@ failed: %@", path, exception);
+            result = NO;
         } @finally {
             document->sourceReloadData = nil;
             document->sourceReloadFingerprint = nil;
@@ -2617,8 +2623,10 @@ in other code when an external editor is being used. */
     BOOL result = NO;
     @try {
         result = [super writeSafelyToURL:url ofType:typeName forSaveOperation:operation error:error];
+        // These operations make the written file the document's file. Save To
+        // and Autosave Elsewhere write copies and leave the baseline unchanged.
         if (result && (operation == NSSaveOperation || operation == NSSaveAsOperation ||
-                       operation == NSAutosaveInPlaceOperation)) {
+                       operation == NSAutosaveInPlaceOperation || operation == NSAutosaveAsOperation)) {
             sourceAcceptedFingerprint = sourceWrittenFingerprint;
         }
     } @finally {
