@@ -72,6 +72,12 @@
 	[self.myDocument displayConsole: sender];
 }
 
+- (void)resignKeyWindow
+{
+	[super resignKeyWindow];
+	[self.myDocument consoleDidResignKey];
+}
+
 - (void)associatedWindow: (id)sender
 {
     

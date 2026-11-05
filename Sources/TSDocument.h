@@ -505,6 +505,7 @@ enum RootCommand
 @property (retain)  IBOutlet    MyPDFKitView				*myPDFKitView;
 @property (retain)  IBOutlet    MyPDFKitView				*myPDFKitView2;
 @property (retain)  IBOutlet    TSPreviewWindow				*pdfKitWindow;
+@property (weak)    NSWindow                    *consoleReturnWindow;
 
 @property (retain)   MySelection         *mSelection;
 @property (retain)   NSTextStorage       *textStorage;
@@ -746,6 +747,8 @@ enum RootCommand
 - (void) fullscreen: (id)sender;
 - (void) endFullScreen;
 - (void)displayConsole: (id)sender;
+- (void)returnFromConsole;
+- (void)consoleDidResignKey;
 - (void)displayLog: (id)sender;
 - (void)checkLogFile;
 - (void)reDisplayLog;

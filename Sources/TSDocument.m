@@ -10237,12 +10237,38 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 {
 	NSString	*theSource;
 	
+	// Show Console in the console itself returns to the window it was shown from.
+	if ([outputWindow isKeyWindow]) {
+		[self returnFromConsole];
+		return;
+	}
 	theSource = [_textStorage string];
 	if ([self checkMasterFile: theSource forTask:RootForConsole])
 		return;
 	if ([self checkRootFile_forTask: RootForConsole])
 		return;	
+	NSWindow *origin = [NSApp keyWindow];
+	self.consoleReturnWindow = (origin == outputWindow) ? nil : origin;
 	[outputWindow makeKeyAndOrderFront: self];
+}
+
+- (void)returnFromConsole
+{
+	NSWindow *target = self.consoleReturnWindow;
+	self.consoleReturnWindow = nil;
+	if (!target || !(target.isVisible || target.isMiniaturized)) {
+		// Without a window to return to, use the source window.
+		target = (useFullSplitWindow && fullSplitWindow) ? fullSplitWindow : textWindow;
+		if (!target.isVisible && self.pdfKitWindow.isVisible)
+			target = self.pdfKitWindow;
+	}
+	[target makeKeyAndOrderFront: self];
+}
+
+- (void)consoleDidResignKey
+{
+	// The return target is only meaningful while the console stays key.
+	self.consoleReturnWindow = nil;
 }
 
 - (void)fillLogWindowIfVisible
