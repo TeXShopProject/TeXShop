@@ -24,6 +24,8 @@
 
 #import "UseMitsu.h"
 
+#import <objc/runtime.h>
+
 #import "TSDocument.h"
 
 #import "MyPDFView.h"
@@ -155,9 +157,61 @@ for(NSString *key in enu)
     
 
 
-- (void)killRunningTasks
+// NSTask starts each job in a process group of its own, led by the task.
+// That group is recorded on the task when it is launched, so that stopping
+// the job also stops the processes it started, even after the task itself
+// has exited. The record is removed once the task has been cleaned up, since
+// the group id may be reused after the group is gone.
+
+- (void)recordProcessGroupOfTask: (NSTask *)task
+{
+	pid_t	pid, group;
+
+	pid = [task processIdentifier];
+	if (pid <= 1)
+		return;
+	group = getpgid(pid);
+	// Only a group led by the task itself, and never TeXShop's own group.
+	if ((group == pid) && (group != getpgrp()))
+		objc_setAssociatedObject(task, @selector(recordProcessGroupOfTask:), @(group), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)forgetProcessGroupOfTask: (NSTask *)task
+{
+	if (task != nil)
+		objc_setAssociatedObject(task, @selector(recordProcessGroupOfTask:), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+// Send SIGTERM to the task (to its recorded process group if there is one),
+// wait up to 0.5 seconds for the task and its group to exit, and then send
+// SIGKILL to whatever remains. An unlaunched task has process identifier 0,
+// and kill(0, ...) would signal TeXShop's own process group; only running
+// tasks and recorded groups other than TeXShop's own are signalled.
+- (void)stopJobTask: (NSTask *)task
 {
 	NSDate	*myDate;
+	pid_t	group;
+
+	group = [objc_getAssociatedObject(task, @selector(recordProcessGroupOfTask:)) intValue];
+	if ((group <= 1) || (group == getpgrp()) || (kill(-group, 0) != 0))
+		group = 0;
+
+	if (group > 0)
+		kill(-group, SIGTERM);
+	else if ([task isRunning])
+		[task terminate];
+	myDate = [NSDate date];
+	while ((([task isRunning]) || ((group > 0) && (kill(-group, 0) == 0))) && ([myDate timeIntervalSinceNow] > -0.5))
+		;
+	if ((group > 0) && (kill(-group, 0) == 0))
+		kill(-group, SIGKILL);
+	if (([task isRunning]) && ([task processIdentifier] > 0))
+		kill([task processIdentifier], SIGKILL);
+	[self forgetProcessGroupOfTask: task];
+}
+
+- (void)killRunningTasks
+{
     BOOL    MainLogs;
     
     //MainLogs = [SUD boolForKey: DisplayLogInfoKey];
@@ -172,57 +226,26 @@ for(NSString *key in enu)
 		system tries to save a new version. If the source file is open,
 		NSDocument makes a backup in /tmp which is never removed. */
 
-	// An unlaunched task has process identifier 0, and kill(0, ...) would signal
-	// TeXShop's own process group; only signal tasks that are running.
 	if (self.texTask != nil) {
-		if ([self.texTask isRunning]) {
-			if ((theScript == kTypesetViaGhostScript) && ([self.texTask processIdentifier] > 0)) {
-				kill( -[self.texTask processIdentifier], SIGTERM);
-			} else {
-				[self.texTask terminate];
-				}
-			}
-		myDate = [NSDate date];
-		while (([self.texTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5))
-			;
-		if (([self.texTask isRunning]) && ([self.texTask processIdentifier] > 0))
-			kill([self.texTask processIdentifier], SIGKILL);
+		[self stopJobTask: self.texTask];
 	//	[self.texTask release];
 		self.texTask = nil;
 	}
 
 	if (self.bibTask != nil) {
-		if ([self.bibTask isRunning])
-			[self.bibTask terminate];
-		myDate = [NSDate date];
-		while (([self.bibTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5))
-			;
-		if (([self.bibTask isRunning]) && ([self.bibTask processIdentifier] > 0))
-			kill([self.bibTask processIdentifier], SIGKILL);
+		[self stopJobTask: self.bibTask];
 	//	[self.bibTask release];
 		self.bibTask = nil;
 	}
 
 	if (self.indexTask != nil) {
-		if ([self.indexTask isRunning])
-			[self.indexTask terminate];
-		myDate = [NSDate date];
-		while (([self.indexTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5))
-			;
-		if (([self.indexTask isRunning]) && ([self.indexTask processIdentifier] > 0))
-			kill([self.indexTask processIdentifier], SIGKILL);
+		[self stopJobTask: self.indexTask];
 	//	[self.indexTask release];
 		self.indexTask = nil;
 	}
 
 	if (self.metaFontTask != nil) {
-		if ([self.metaFontTask isRunning])
-			[self.metaFontTask terminate];
-		myDate = [NSDate date];
-		while (([self.metaFontTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5))
-			;
-		if (([self.metaFontTask isRunning]) && ([self.metaFontTask processIdentifier] > 0))
-			kill([self.metaFontTask processIdentifier], SIGKILL);
+		[self stopJobTask: self.metaFontTask];
 	//	[self.metaFontTask release];
 		self.metaFontTask = nil;
 	}
@@ -1352,6 +1375,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
             self.metaFontTask = nil;
         return FALSE;
     }
+    [self recordProcessGroupOfTask: task];
         return TRUE;
 }
 
@@ -2253,6 +2277,10 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     
     if (MainLogs)
         NSLog(@"checkATaskStatusFromTerminationRoutine");
+
+    // The task has exited and is being cleaned up; its process group must
+    // not be signalled later.
+    [self forgetProcessGroupOfTask: theTask];
     if (theTask != nil){
         if (MainLogs)
             NSLog(theTask.launchPath);
