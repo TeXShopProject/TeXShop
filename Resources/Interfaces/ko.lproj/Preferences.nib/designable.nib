@@ -153,7 +153,6 @@
                 <outlet property="_texCommandTextField" destination="228" id="438"/>
                 <outlet property="_texGSCommandTextField" destination="241" id="439"/>
                 <outlet property="_texScriptCommandTextField" destination="315" id="440"/>
-                <outlet property="_useNewToolbarIconsButton" destination="Xjt-zv-LDq" id="Eic-xm-mCG"/>
                 <outlet property="_useTransparencyButton" destination="spY-u2-wgo" id="cvp-DA-iY8"/>
                 <outlet property="_wrapMatrix" destination="VmO-ot-69C" id="YzM-jB-uN1"/>
                 <outlet property="dictionaryPopup" destination="h4B-dx-Vp0" id="h7E-9V-Upx"/>
@@ -2768,7 +2767,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sparkle 업데이트 관리자" translatesAutoresizingMaskIntoConstraints="NO" id="549">
-                                            <rect key="frame" x="405" y="101" width="185" height="108" />
+                                            <rect key="frame" x="405" y="163" width="185" height="108" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="y0w-zA-RAX">
                                                 <rect key="frame" x="0.0" y="0.0" width="185" height="96" />
@@ -2945,28 +2944,6 @@ DQ
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="XMLIntroductionButtonChanged:" target="-2" id="36r-77-JxF"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                            </view>
-                                            <font key="titleFont" metaFont="system"/>
-                                        </box>
-                                        <box fixedFrame="YES" title="Big Sur 및 이후 버전" translatesAutoresizingMaskIntoConstraints="NO" id="gLg-oI-JF5">
-                                            <rect key="frame" x="405" y="221" width="185" height="50" />
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <view key="contentView" id="chM-Sx-Yc7">
-                                                <rect key="frame" x="0.0" y="0.0" width="185" height="38" />
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xjt-zv-LDq">
-                                                        <rect key="frame" x="12" y="9" width="127" height="18"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <buttonCell key="cell" type="check" title="새 툴바 아이콘 사용" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="V5R-gk-Ba6">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="NewToolbarIconsCheck:" target="-2" id="IZL-eJ-kYz"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>

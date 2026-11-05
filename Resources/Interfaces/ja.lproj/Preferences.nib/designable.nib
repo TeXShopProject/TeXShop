@@ -154,7 +154,6 @@
                 <outlet property="_texCommandTextField" destination="51" id="98"/>
                 <outlet property="_texGSCommandTextField" destination="202" id="205"/>
                 <outlet property="_texScriptCommandTextField" destination="156" id="209"/>
-                <outlet property="_useNewToolbarIconsButton" destination="8Bo-7s-d0a" id="ulU-MQ-w7O"/>
                 <outlet property="_useTransparencyButton" destination="217-aa-RyX" id="tVQ-so-IH4"/>
                 <outlet property="dictionaryPopup" destination="OZM-Tw-x8R" id="gm0-XW-NdD"/>
                 <outlet property="explFunctionColorWell" destination="1LD-lf-4ZI" id="oPq-pG-Wbk"/>
@@ -2900,28 +2899,6 @@ DQ
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
-                                        <box fixedFrame="YES" title="Big Sur以降:" translatesAutoresizingMaskIntoConstraints="NO" id="aPW-1k-Af5">
-                                            <rect key="frame" x="416" y="224" width="201" height="50" />
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <view key="contentView" id="RGm-rt-9g9">
-                                                <rect key="frame" x="0.0" y="0.0" width="201" height="38" />
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Bo-7s-d0a">
-                                                        <rect key="frame" x="6" y="9" width="186" height="18" />
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <buttonCell key="cell" type="check" title="新ツールバーアイコン使用" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="6HS-Sy-LQt">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="NewToolbarIconsCheck:" target="-2" id="gdW-Rq-pKb"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                            </view>
-                                            <font key="titleFont" metaFont="system"/>
-                                        </box>
                                         <box fixedFrame="YES" title=" 代替エンジン" translatesAutoresizingMaskIntoConstraints="NO" id="3DU-iw-3h2">
                                             <rect key="frame" x="24" y="415" width="370" height="69" />
                                             <autoresizingMask key="autoresizingMask"/>
@@ -2955,7 +2932,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="アップデート" translatesAutoresizingMaskIntoConstraints="NO" id="Bpy-yL-nu1">
-                                            <rect key="frame" x="392" y="102" width="225" height="110" />
+                                            <rect key="frame" x="392" y="164" width="225" height="110" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Fpm-bq-Tx3">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="98" />

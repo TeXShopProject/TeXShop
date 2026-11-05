@@ -153,7 +153,6 @@
                 <outlet property="_texCommandTextField" destination="51" id="98"/>
                 <outlet property="_texGSCommandTextField" destination="202" id="205"/>
                 <outlet property="_texScriptCommandTextField" destination="156" id="209"/>
-                <outlet property="_useNewToolbarIconsButton" destination="7as-aq-Qg3" id="AgA-Yb-iQb"/>
                 <outlet property="_useTransparencyButton" destination="vfV-Si-Or4" id="oxF-QD-FJd"/>
                 <outlet property="dictionaryPopup" destination="gxR-eu-zrg" id="VBh-Ls-2MW"/>
                 <outlet property="explFunctionColorWell" destination="Rel-hC-EH7" id="Drl-ie-OoC"/>
@@ -2729,7 +2728,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Atualizando TeXShop por meio do Sparkle" translatesAutoresizingMaskIntoConstraints="NO" id="rof-1v-m3L">
-                                            <rect key="frame" x="322" y="104" width="325" height="105" />
+                                            <rect key="frame" x="322" y="140" width="325" height="105" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="JN4-Oi-aPf">
                                                 <rect key="frame" x="0.0" y="0.0" width="325" height="93" />
@@ -2963,28 +2962,6 @@ DQ
                                                             <action selector="latexScriptProgramChanged:" target="-2" id="208"/>
                                                         </connections>
                                                     </textField>
-                                                </subviews>
-                                            </view>
-                                            <font key="titleFont" metaFont="system"/>
-                                        </box>
-                                        <box fixedFrame="YES" title="No Big Sur e posterior" translatesAutoresizingMaskIntoConstraints="NO" id="okK-qa-q5S">
-                                            <rect key="frame" x="447" y="221" width="205" height="50" />
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <view key="contentView" id="uKD-iC-5TF">
-                                                <rect key="frame" x="0.0" y="0.0" width="205" height="38" />
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7as-aq-Qg3">
-                                                        <rect key="frame" x="6" y="9" width="185" height="18" />
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <buttonCell key="cell" type="check" title="Usar nova barra de ícones" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="nv0-OS-E10">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="NewToolbarIconsCheck:" target="-2" id="0xi-6G-LcX"/>
-                                                        </connections>
-                                                    </button>
                                                 </subviews>
                                             </view>
                                             <font key="titleFont" metaFont="system"/>

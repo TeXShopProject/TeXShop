@@ -154,7 +154,6 @@
                 <outlet property="_texCommandTextField" destination="51" id="98"/>
                 <outlet property="_texGSCommandTextField" destination="202" id="205"/>
                 <outlet property="_texScriptCommandTextField" destination="156" id="209"/>
-                <outlet property="_useNewToolbarIconsButton" destination="GoC-LQ-7au" id="Fan-3a-DbH"/>
                 <outlet property="_useTransparencyButton" destination="DJ6-yg-ILr" id="6Yb-LU-kXs"/>
                 <outlet property="_wrapMatrix" destination="Qzy-7h-XKH" id="kUc-eH-437"/>
                 <outlet property="dictionaryPopup" destination="C0D-rV-YSZ" id="Dry-Om-l2U"/>
@@ -2747,7 +2746,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Actualizador Sparkle" translatesAutoresizingMaskIntoConstraints="NO" id="nr0-PQ-CTC">
-                                            <rect key="frame" x="319" y="100" width="293" height="109" />
+                                            <rect key="frame" x="319" y="150" width="293" height="109" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="aoK-WN-5AP">
                                                 <rect key="frame" x="0.0" y="0.0" width="293" height="97" />
@@ -2946,28 +2945,6 @@ DQ
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="XMLIntroductionButtonChanged:" target="-2" id="wbR-Li-CPh"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                            </view>
-                                            <font key="titleFont" metaFont="system"/>
-                                        </box>
-                                        <box fixedFrame="YES" title="En Big Sur y posterior:" translatesAutoresizingMaskIntoConstraints="NO" id="y34-LT-Tg8">
-                                            <rect key="frame" x="395" y="221" width="217" height="50" />
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <view key="contentView" id="taS-tW-GA1">
-                                                <rect key="frame" x="0.0" y="0.0" width="217" height="38" />
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GoC-LQ-7au">
-                                                        <rect key="frame" x="12" y="9" width="192" height="18"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <buttonCell key="cell" type="check" title="Usar nueva barra de iconos" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="BwZ-6N-Tv0">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="NewToolbarIconsCheck:" target="-2" id="eC1-4a-c8L"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
