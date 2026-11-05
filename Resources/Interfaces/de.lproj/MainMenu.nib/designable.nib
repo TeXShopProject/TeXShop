@@ -1239,13 +1239,13 @@
                 <menuItem title="Hilfe" id="136">
                     <menu key="submenu" title="Hilfe" id="137">
                         <items>
-                            <menuItem title="Über diese Version (englisch)" id="834">
+                            <menuItem title="Über diese Version (Englisch)" id="834">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayThisRelease:" target="673" id="836"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Änderungen" id="bNZ-Ty-EF5">
+                            <menuItem title="Änderungen (Englisch)" id="bNZ-Ty-EF5">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChanges:" target="673" id="lxA-Tj-SGj"/>
@@ -1254,7 +1254,7 @@
                             <menuItem isSeparatorItem="YES" id="CBB-zO-bLg">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeX Live-Dokumentation" id="ncU-cl-8SA">
+                            <menuItem title="TeX Live-Dokumentation (Englisch)" id="ncU-cl-8SA">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXLiveDocumentation:" target="673" id="Shd-eT-hbh"/>
@@ -1281,7 +1281,7 @@
                             <menuItem title="TeXShop Demos" id="666">
                                 <menu key="submenu" title="TeXShop Demos" id="667"/>
                             </menuItem>
-                            <menuItem title="TeXShop Handbuch" id="CRK-3a-GMz">
+                            <menuItem title="TeXShop Handbuch (Englisch)" id="CRK-3a-GMz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayManual:" target="673" id="8v6-SC-0Lc"/>
@@ -1305,19 +1305,19 @@
                                     <action selector="displayFileEncoding:" target="673" id="HQU-fj-5Ca"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Tipps und Tricks" id="899">
+                            <menuItem title="TeXShop Tipps und Tricks (Englisch)" id="899">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="673" id="900"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Funktionsbeschreibung" id="Glp-qE-oWU">
+                            <menuItem title="TeXShop Funktionsbeschreibung (Englisch)" id="Glp-qE-oWU">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXShopConfusion:" target="673" id="aFJ-Dh-c0M"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Kommentarzeilen und versteckte Einstellungen" id="Pd3-3g-ohn">
+                            <menuItem title="Kommentarzeilen und versteckte Einstellungen (Englisch)" id="Pd3-3g-ohn">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="673" id="CFl-w0-VOy"/>
