@@ -1204,6 +1204,10 @@ extern NSPanel *pageNumberWindow;
          [self.pdfKitSplitView adjustSubviews];
         [(MyPDFKitView *)self.myPDFKitView restoreLocationLimited];
         
+        // The second view holds the document only while the preview is split;
+        // give it the document before its display parameters are set.
+        [self.myPDFKitView2 setDocument:[self.myPDFKitView document]];
+        
         // ADJUST DISPLAY PARAMETERS
         
         [(MyPDFKitView *)self.myPDFKitView2 setPageStyle:[(MyPDFKitView *)self.myPDFKitView pageStyle]];
@@ -1217,9 +1221,6 @@ extern NSPanel *pageNumberWindow;
         [(MyPDFKitView *)self.myPDFKitView2 setupPageStyle];
        //  [(MyPDFKitView *)self.myPDFKitView2 setupMagnificationStyle];
 
-        if ([self.myPDFKitView2 document] == nil)
-             [self.myPDFKitView2 setDocument:[self.myPDFKitView document]];
-                   
         [(MyPDFKitView *)self.myPDFKitView2 moveSplitToCorrectSpot:[(MyPDFKitView *)self.myPDFKitView index]];
     }
 
@@ -1342,6 +1343,11 @@ extern NSPanel *pageNumberWindow;
             
         }
     }
+    
+    // Otherwise each reload would replace the shared document's rendering
+    // properties while PDFKit draws it in the first view.
+    if (! self.windowIsSplit)
+        [self.myPDFKitView2 setDocument:nil];
 }
 
 

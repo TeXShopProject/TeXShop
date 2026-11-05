@@ -1579,7 +1579,8 @@ if (! skipTextWindow) {
 				[self.myPDFKitView showWithPath: imagePath];
   				// [myPDFKitView2 prepareSecond];
 				// [[myPDFKitView document] retain];
-				[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
+				if (self.pdfKitWindow.windowIsSplit)
+					[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
 				[self.myPDFKitView2 showForSecond];
 				[self.pdfKitWindow setRepresentedFilename: imagePath];
 				[self.pdfKitWindow setTitle: [imagePath lastPathComponent]];
@@ -1727,7 +1728,8 @@ if (! skipTextWindow) {
         
  		// [myPDFKitView2 prepareSecond];
 		// [[myPDFKitView document] retain];
-		[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
+		if (self.pdfKitWindow.windowIsSplit)
+			[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
 		[self.myPDFKitView2 showForSecond];
 		
 		[self.pdfKitWindow setRepresentedFilename: imagePath];
@@ -7220,13 +7222,18 @@ if (! useFullSplitWindow) {
 
     PDFfromKit = YES;
     TSExternalPDFPosition first = TSExternalPDFCapture(self.myPDFKitView);
+    BOOL split = self.pdfKitWindow.windowIsSplit;
     TSExternalPDFPosition second = TSExternalPDFCapture(self.myPDFKitView2);
-    [self.myPDFKitView2 prepareSecond];
+    if (split)
+        [self.myPDFKitView2 prepareSecond];
     [self.myPDFKitView reShowWithDocument:replacement];
-    [self.myPDFKitView2 setDocument:self.myPDFKitView.document];
-    [self.myPDFKitView2 reShowForSecond];
+    if (split) {
+        [self.myPDFKitView2 setDocument:self.myPDFKitView.document];
+        [self.myPDFKitView2 reShowForSecond];
+    }
     TSExternalPDFRestore(self.myPDFKitView, first);
-    TSExternalPDFRestore(self.myPDFKitView2, second);
+    if (split)
+        TSExternalPDFRestore(self.myPDFKitView2, second);
     [self acceptExternalPDFAtPath:path signature:signature changeTime:changeTime document:replacement];
     self.externalPDFPendingSignature = nil;
     self.pdfLastModDate = modified;
@@ -7261,11 +7268,15 @@ if (! useFullSplitWindow) {
 			_pdfRefreshTryAgain = YES;
 		} else {
 			PDFfromKit = YES;
+			BOOL split = self.pdfKitWindow.windowIsSplit;
+			if (split)
+				[self.myPDFKitView2 prepareSecond];
 			[self.myPDFKitView reShowWithPath: pdfPath];
-			[self.myPDFKitView2 prepareSecond];
 			// [[self.myPDFKitView document] retain];
-			[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
-			[self.myPDFKitView2 reShowForSecond];
+			if (split) {
+				[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
+				[self.myPDFKitView2 reShowForSecond];
+			}
 			[self.pdfKitWindow setRepresentedFilename: pdfPath];
 			[self.pdfKitWindow setTitle: [pdfPath lastPathComponent]];
 				[self fillLogWindowIfVisible];

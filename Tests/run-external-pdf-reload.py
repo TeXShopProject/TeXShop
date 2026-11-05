@@ -13,7 +13,7 @@ fixture = fixture.replace('-(void)reShowWithPath:(NSString*)path;', '-(void)reSh
 s=(root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
 def method(s, signature):
     a=s.rindex(signature); return s[a:s.index('\n}',a)+2]
-methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
+methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
 fixture=fixture.replace('METHODS',methods)
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (BOOL)isVisible { return YES; }\n- (void)makeKeyAndOrderFront:(id)sender {}')
 s=(root/'Sources/TSDocument.m').read_text()
@@ -140,9 +140,11 @@ int main(int argc,char **argv){@autoreleasepool{
  NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,900,600) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
  window.releasedWhenClosed=NO;
  TSDocument *d=[TSDocument new];d.fileURL=[NSURL fileURLWithPath:path];d->taskDone=YES;d.pdfKitWindow=[TestWindow new];
+ // Both panes are shown: the preview is split.
+ d.pdfKitWindow.windowIsSplit=YES;
  d.myPDFKitView=[[RecoveryView alloc] initWithFrame:NSMakeRect(0,0,450,600)];d.myPDFKitView2=[[RecoveryView alloc] initWithFrame:NSMakeRect(450,0,450,600)];
  for(RecoveryView *v in @[d.myPDFKitView,d.myPDFKitView2]) {
- v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=d.pdfKitWindow;
+ v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=d.pdfKitWindow;v.myDocument.myPDFKitView2=d.myPDFKitView2;
  [window.contentView addSubview:v];v.document=[[PDFDocument alloc]initWithData:first];v.displayMode=mode.integerValue;v.autoScales=fit.boolValue;if(!fit.boolValue)v.scaleFactor=1.6;
  [v goToDestination:[[PDFDestination alloc]initWithPage:[v.document pageAtIndex:(v==d.myPDFKitView?4:8)] atPoint:NSMakePoint(170,520)]];
  }
@@ -210,9 +212,11 @@ int main(int argc,char **argv){@autoreleasepool{
  TSDocument *d=[TSDocument new];d.fileURL=[NSURL fileURLWithPath:path];d->taskDone=YES;d.pdfKitWindow=[TestWindow new];d.documentType=isPDF;
  d.myPDFKitView=[[RecoveryView alloc] initWithFrame:NSMakeRect(0,0,450,600)];d.myPDFKitView2=[[RecoveryView alloc] initWithFrame:NSMakeRect(450,0,450,600)];
  for(RecoveryView *v in @[d.myPDFKitView,d.myPDFKitView2]) {
- v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=d.pdfKitWindow;
+ v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=d.pdfKitWindow;v.myDocument.myPDFKitView2=d.myPDFKitView2;
  [window.contentView addSubview:v];v.document=[[PDFDocument alloc]initWithData:first];
  }
+ // An unsplit preview gives the second view no document.
+ d.myPDFKitView2.document=nil;
  [d startExternalPDFObservation];[d.pdfRefreshTimer invalidate];
  PDFDocument *old=d.myPDFKitView.document;
 
@@ -229,6 +233,7 @@ int main(int argc,char **argv){@autoreleasepool{
  base=Padded(base,size);edit=Padded(edit,size);Check(![base isEqualToData:edit] && base.length==edit.length,@"Different PDFs of one size");
  // Displayed from a snapshot clone after an external reload.
  [base writeToFile:path atomically:YES];StablePoll(d);Check(d.myPDFKitView.document!=old,@"Reload before same-size checks");
+ Check(!d.myPDFKitView2.document,@"Unsplit preview: reload leaves the second view without a document");
  old=d.myPDFKitView.document;attempts=snapshotCount;digests=TSTestDigests;
  SetAttribute(path);StablePoll(d);StablePoll(d);
  Expect(d.myPDFKitView.document==old && snapshotCount==attempts && TSTestDigests>digests,@"Snapshot: metadata-only change is compared and not reloaded");
