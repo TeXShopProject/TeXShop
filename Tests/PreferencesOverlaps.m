@@ -142,6 +142,32 @@ static NSRect ContentRect(NSView *c) {
     CGFloat y = [c isKindOfClass:NSTextField.class] ? (c.isFlipped ? 0 : b.size.height - n.height) : (b.size.height - n.height) / 2;
     return NSMakeRect(NSMinX(b) + x, NSMinY(b) + y, n.width, n.height);
 }
+// The kind of control, for checking that controls of a kind line up: toggles
+// (checkboxes and radio buttons, alone or in a matrix), popup menus, push buttons,
+// text fields that take input, labels and color wells.
+static NSString *Kind(NSView *c) {
+    if ([c isKindOfClass:NSPopUpButton.class]) return @"popup";
+    if ([c isKindOfClass:NSMatrix.class]) {
+        NSCell *cell = [(NSMatrix *)c cells].firstObject;
+        return [cell isKindOfClass:NSButtonCell.class] ? @"toggle" : nil;
+    }
+    if ([c isKindOfClass:NSButton.class]) {
+        NSButton *b = (NSButton *)c;
+        if (b.imagePosition == NSImageOnly && !b.title.length) return nil;
+        if (b.bezelStyle == NSBezelStyleRegularSquare || b.bezelStyle == 0) return @"toggle";
+        if (b.bezelStyle == NSBezelStyleRounded) return @"push";
+        return nil;
+    }
+    if ([c isKindOfClass:NSColorWell.class]) return @"well";
+    if ([c isKindOfClass:NSTextField.class]) {
+        NSTextField *f = (NSTextField *)c;
+        if (f.isEditable || f.isBezeled) return @"field";
+        // Only left-aligned labels share a left edge; centered ones need not.
+        NSTextAlignment a = f.alignment;
+        return (a == NSTextAlignmentLeft || a == NSTextAlignmentNatural || a == NSTextAlignmentJustified) ? @"label" : nil;
+    }
+    return nil;
+}
 static void Check(NSString *where, NSView *root, NSView *tv, NSMutableString *report) {
     Render(root); // The first rendering after a tab switch can still differ (tab bar).
     NSBitmapImageRep *base = Render(root);
@@ -183,6 +209,29 @@ static void Check(NSString *where, NSView *root, NSView *tv, NSMutableString *re
             else if (vov > 0 && hgap >= 0 && hgap < 2) [report appendFormat:@"%@\tTIGHT-H gap=%.1f\t%@ %@\t%@ %@\n", where, hgap, Name(leaves[i]), NSStringFromRect(a), Name(leaves[j]), NSStringFromRect(b)];
         }
     }
+    // Controls of a kind stacked in the same view should line up: frames whose
+    // left edges (and, for popups, push buttons, fields and wells, right edges)
+    // differ by up to 5pt are taken for a misalignment. Frames are compared, as
+    // what a label draws also depends on the shape of its first letter.
+    for (NSUInteger i = 0; i < leaves.count; i++) for (NSUInteger j = i + 1; j < leaves.count; j++) {
+        NSView *a = leaves[i], *b = leaves[j];
+        NSString *ka = Kind(a);
+        if (!ka || a.superview != b.superview || ![ka isEqualToString:Kind(b)]) continue;
+        if ([ka isEqualToString:@"push"] && [(NSButton *)a controlSize] != [(NSButton *)b controlSize]) continue;
+        NSRect ra = a.frame, rb = b.frame;
+        CGFloat hov = MIN(NSMaxX(ra), NSMaxX(rb)) - MAX(NSMinX(ra), NSMinX(rb));
+        if (hov < 0.3 * MIN(ra.size.width, rb.size.width)) continue;   // not stacked
+        CGFloat dl = fabs(NSMinX(ra) - NSMinX(rb)), dr = fabs(NSMaxX(ra) - NSMaxX(rb));
+        BOOL rightToo = ![ka isEqualToString:@"toggle"] && ![ka isEqualToString:@"label"];
+        if (dl > 0.4 && dl <= 5)
+            [report appendFormat:@"%@\tALIGN-L %.1f\t%@ %@\t%@ %@\n", where, dl, Name(a), NSStringFromRect(ra), Name(b), NSStringFromRect(rb)];
+        if (rightToo && dr > 0.4 && dr <= 5)
+            [report appendFormat:@"%@\tALIGN-R %.1f\t%@ %@\t%@ %@\n", where, dr, Name(a), NSStringFromRect(ra), Name(b), NSStringFromRect(rb)];
+    }
+    // A left-aligned label starting with spaces looks indented.
+    for (NSView *c in leaves)
+        if ([Kind(c) isEqualToString:@"label"] && [((NSTextField *)c).stringValue hasPrefix:@" "])
+            [report appendFormat:@"%@\tLEADING-SPACE\t%@\n", where, Name(c)];
     // Box titles and borders: a control must not run over the title of any box, nor
     // out of the border of the box it is in.
     for (NSBox *box in boxes) {

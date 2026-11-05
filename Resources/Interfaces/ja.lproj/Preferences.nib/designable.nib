@@ -1187,7 +1187,7 @@ DQ
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I2o-7p-w54">
                                                         <rect key="frame" x="24" y="4" width="106" height="26" />
                                                         <autoresizingMask key="autoresizingMask"/>
-                                                        <textFieldCell key="cell" selectable="YES" title=" 行間スペース" id="9Yg-GJ-NGP">
+                                                        <textFieldCell key="cell" selectable="YES" title="行間スペース" id="9Yg-GJ-NGP">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2308,9 +2308,9 @@ DQ
                                                         </connections>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mch-JL-FAA">
-                                                        <rect key="frame" x="16" y="36" width="424" height="14" />
+                                                        <rect key="frame" x="15" y="36" width="424" height="14" />
                                                         <autoresizingMask key="autoresizingMask"/>
-                                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title=" 別のパス (デフォルト:  ~/bin/context/tex/texmf-osx-arm64/bin)" id="jgQ-Ci-iCq">
+                                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="別のパス (デフォルト:  ~/bin/context/tex/texmf-osx-arm64/bin)" id="jgQ-Ci-iCq">
                                                             <font key="font" metaFont="message" size="11"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2630,7 +2630,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="156">
-                                                        <rect key="frame" x="18" y="56" width="329" height="21" />
+                                                        <rect key="frame" x="19" y="56" width="329" height="21" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="1042">
                                                             <font key="font" metaFont="system"/>
@@ -2651,7 +2651,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="152">
-                                                        <rect key="frame" x="19" y="11" width="328" height="21" />
+                                                        <rect key="frame" x="19" y="11" width="329" height="21" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="1040">
                                                             <font key="font" metaFont="system"/>
@@ -3260,7 +3260,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lhc-Ju-DvO">
-                                                                            <rect key="frame" x="202" y="401" width="59" height="24"/>
+                                                                            <rect key="frame" x="203" y="401" width="59" height="24"/>
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3268,7 +3268,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="moc-D4-iZS">
-                                                                            <rect key="frame" x="202" y="369" width="59" height="24"/>
+                                                                            <rect key="frame" x="203" y="369" width="59" height="24"/>
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3303,7 +3303,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FOd-Fx-bIh">
-                                                                            <rect key="frame" x="36" y="186" width="49" height="14"/>
+                                                                            <rect key="frame" x="32" y="186" width="49" height="14"/>
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="SyncTeX" id="Hba-US-XZo">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3312,7 +3312,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X8n-0j-lkb">
-                                                                            <rect key="frame" x="37" y="142" width="55" height="14"/>
+                                                                            <rect key="frame" x="32" y="142" width="55" height="14"/>
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="画像コピー" id="dgH-0n-rOp">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3321,7 +3321,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B9u-et-vEA">
-                                                                            <rect key="frame" x="36" y="102" width="45" height="14"/>
+                                                                            <rect key="frame" x="32" y="102" width="45" height="14"/>
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="強調表示" id="AUJ-rl-Oge">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3339,7 +3339,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SwX-8W-pCX">
-                                                                            <rect key="frame" x="199" y="122" width="65" height="14" />
+                                                                            <rect key="frame" x="201" y="122" width="65" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="囲まれた中身" id="Doh-dS-oDP">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3393,7 +3393,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uew-Hy-L8y">
-                                                                            <rect key="frame" x="205" y="253" width="25" height="14" />
+                                                                            <rect key="frame" x="201" y="253" width="25" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="索引" id="VQp-vI-OsQ">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3450,7 +3450,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PN7-fT-1bG">
-                                                                            <rect key="frame" x="202" y="210.5" width="45" height="14" />
+                                                                            <rect key="frame" x="201" y="210.5" width="45" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="ソース上" id="6ho-Qa-x7h">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3501,7 +3501,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tnp-tY-NAX">
-                                                                            <rect key="frame" x="201" y="97" width="59" height="24"/>
+                                                                            <rect key="frame" x="203" y="97" width="59" height="24"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3534,7 +3534,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JoW-bM-bK5">
-                                                                            <rect key="frame" x="205" y="345" width="55" height="14" />
+                                                                            <rect key="frame" x="201" y="345" width="55" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="背景の点滅" id="m5h-k5-9Kt">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3543,7 +3543,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xp4-Uk-P5j">
-                                                                            <rect key="frame" x="292" y="298" width="24" height="14" />
+                                                                            <rect key="frame" x="294" y="298" width="24" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="脚注" id="2Si-h1-EkY">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3568,7 +3568,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v28-GY-nH2">
-                                                                            <rect key="frame" x="202" y="52" width="59" height="24"/>
+                                                                            <rect key="frame" x="203" y="52" width="59" height="24"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3584,7 +3584,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q6A-SU-Phw">
-                                                                            <rect key="frame" x="36" y="60" width="51" height="14"/>
+                                                                            <rect key="frame" x="32" y="60" width="51" height="14"/>
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="XML構文" id="2hg-Tf-ZFo">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3593,7 +3593,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PPm-xm-ngz">
-                                                                            <rect key="frame" x="207" y="77" width="27" height="14" />
+                                                                            <rect key="frame" x="201" y="77" width="27" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="タグ" id="MmZ-Np-7y7">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -3602,7 +3602,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e0Q-qf-QKr">
-                                                                            <rect key="frame" x="115" y="76.5" width="55" height="14" />
+                                                                            <rect key="frame" x="111" y="76.5" width="55" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="コメント" id="ufp-L1-rAz">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -3611,7 +3611,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zg0-Cw-1aH">
-                                                                            <rect key="frame" x="205" y="35" width="16" height="14" />
+                                                                            <rect key="frame" x="201" y="35" width="16" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="値" id="uiy-hc-usN">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -3620,7 +3620,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cdz-Gr-Ial">
-                                                                            <rect key="frame" x="115" y="35" width="27" height="14" />
+                                                                            <rect key="frame" x="111" y="35" width="27" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="属性" id="cDf-1y-OKy">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -3637,7 +3637,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aWb-fc-sKb">
-                                                                            <rect key="frame" x="201" y="10" width="59" height="24"/>
+                                                                            <rect key="frame" x="203" y="10" width="59" height="24"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3654,7 +3654,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mPD-1M-vjP">
-                                                                            <rect key="frame" x="286" y="253" width="69" height="14" />
+                                                                            <rect key="frame" x="288" y="253" width="69" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="現在の行" id="QhW-6i-5cC">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -3663,7 +3663,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dl3-aa-Pcl">
-                                                                            <rect key="frame" x="288" y="228" width="59" height="24"/>
+                                                                            <rect key="frame" x="290" y="228" width="59" height="24"/>
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3690,7 +3690,7 @@ DQ
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0yd-gB-xlR">
-                                                                            <rect key="frame" x="31" y="184" width="54" height="14" />
+                                                                            <rect key="frame" x="36" y="184" width="54" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="charWrapping" title="expl3" id="W5O-jd-Vbc">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3699,7 +3699,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eZB-6l-bjj">
-                                                                            <rect key="frame" x="114" y="119.5" width="27" height="14" />
+                                                                            <rect key="frame" x="113" y="119.5" width="27" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="msg" id="Y2d-jW-dxc">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3735,7 +3735,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kgy-aB-esh">
-                                                                            <rect key="frame" x="205" y="157.5" width="58" height="14" />
+                                                                            <rect key="frame" x="202" y="157.5" width="58" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="__Variable" id="tBs-cy-ZhN">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3784,7 +3784,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pUO-Wh-7Ca">
-                                                                            <rect key="frame" x="292" y="203.5" width="23" height="14" />
+                                                                            <rect key="frame" x="291" y="203.5" width="23" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="key" id="QZk-0j-C9d">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3793,7 +3793,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mPN-pN-gaE">
-                                                                            <rect key="frame" x="290" y="177" width="59" height="24" />
+                                                                            <rect key="frame" x="288" y="177" width="59" height="24" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3818,7 +3818,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z19-GJ-T9P">
-                                                                            <rect key="frame" x="109" y="36" width="9" height="14" />
+                                                                            <rect key="frame" x="113" y="36" width="9" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="(" id="baF-Q7-PwS">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3827,7 +3827,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3q9-iP-6u1">
-                                                                            <rect key="frame" x="201" y="36" width="9" height="14" />
+                                                                            <rect key="frame" x="202" y="36" width="9" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="{" id="uW0-Ay-XwH">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3836,7 +3836,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ebA-zi-lLO">
-                                                                            <rect key="frame" x="110" y="10" width="59" height="24" />
+                                                                            <rect key="frame" x="113" y="10" width="59" height="24" />
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3844,7 +3844,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FTd-qj-Fms">
-                                                                            <rect key="frame" x="199" y="10" width="59" height="24" />
+                                                                            <rect key="frame" x="203" y="10" width="59" height="24" />
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3852,7 +3852,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HR1-sN-He0">
-                                                                            <rect key="frame" x="287" y="10" width="59" height="24" />
+                                                                            <rect key="frame" x="288" y="10" width="59" height="24" />
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
@@ -3862,14 +3862,14 @@ DQ
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Ls-ml-B7S">
                                                                             <rect key="frame" x="36" y="9" width="41" height="20" />
                                                                             <autoresizingMask key="autoresizingMask"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="clipping" title=" 括弧類" id="j0w-hS-yI0">
+                                                                            <textFieldCell key="cell" lineBreakMode="clipping" title="括弧類" id="j0w-hS-yI0">
                                                                                 <font key="font" metaFont="message" size="11"/>
                                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8es-Mv-1Yl">
-                                                                            <rect key="frame" x="289" y="36" width="9" height="14" />
+                                                                            <rect key="frame" x="291" y="36" width="9" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="[" id="hbp-os-kqj">
                                                                                 <font key="font" metaFont="message" size="11"/>
