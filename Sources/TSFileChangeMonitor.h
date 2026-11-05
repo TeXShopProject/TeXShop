@@ -1,4 +1,4 @@
-// added by Terada: asynchronous monitoring across reads and atomic replacements.
+// Asynchronous monitoring across reads and atomic replacements.
 #import <Foundation/Foundation.h>
 
 // Public methods and both callbacks run on the main thread. The prepare callback

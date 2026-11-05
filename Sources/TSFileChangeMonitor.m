@@ -1,4 +1,3 @@
-// added by Terada
 #import "TSFileChangeMonitor.h"
 #import <sys/event.h>
 #import <sys/stat.h>

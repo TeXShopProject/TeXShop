@@ -59,7 +59,7 @@
 #import "NSText-Extras.h"  // Terada
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
-#import "TSFileChangeMonitor.h" // added by Terada
+#import "TSFileChangeMonitor.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 
 
@@ -460,7 +460,7 @@ withDarkColors = NO;
 
 - (void)dealloc
 {
-    [sourceFileMonitor stop]; // added by Terada
+    [sourceFileMonitor stop];
 	NSInteger	i;
     
     if (scanner != NULL)
@@ -2126,7 +2126,7 @@ in other code when an external editor is being used. */
 // Source serialization is also used by NSDocument safe saves.
     
 // - (NSData *)dataRepresentationOfType:(NSString *)aType {
-// added by Terada: record exactly the bytes supplied to a successful safe save.
+// Record exactly the bytes supplied to a successful safe save.
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
 {
     NSData *data = [self serializedSourceOfType:typeName error:outError];
@@ -2556,7 +2556,7 @@ in other code when an external editor is being used. */
 */
 
 
-// added by Terada: keep monitoring active during reads, writes, and reverts.
+// Keep monitoring active during reads, writes, and reverts.
 - (void)watchFile:(NSString *)fileName
 {
     if (!activateBauerPatch || !fileName || [self doNotReadSource]) {
@@ -2606,7 +2606,7 @@ in other code when an external editor is being used. */
     [self watchFile:url.isFileURL ? url.path : nil];
 }
 
-// added by Terada: never acknowledge the current disk state after saving;
+// Never acknowledge the current disk state after saving;
 // another process may already have replaced it. Accept only our serialized bytes.
 - (BOOL)writeSafelyToURL:(NSURL *)url ofType:(NSString *)typeName
       forSaveOperation:(NSSaveOperationType)operation error:(NSError **)error
@@ -2690,7 +2690,7 @@ in other code when an external editor is being used. */
 	if ([self doNotReadSource])
 		return YES;
 
-    [self watchFile:([self fileURL] ?: absoluteURL).path]; // added by Terada: register before reading.
+    [self watchFile:([self fileURL] ?: absoluteURL).path]; // Register before reading.
 	myData = sourceReloadData ?: [NSData dataWithContentsOfURL:absoluteURL options:0 error:outError];
     if (!myData) return NO;
 	_encoding = _tempencoding = [self dataEncoding: myData];
@@ -2781,7 +2781,7 @@ in other code when an external editor is being used. */
 			}
 		
 		[[_textStorage mutableString] setString:content];
-        sourceAcceptedFingerprint = sourceReloadFingerprint ?: TSSourceFingerprint(myData); // added by Terada
+        sourceAcceptedFingerprint = sourceReloadFingerprint ?: TSSourceFingerprint(myData);
         ++sourceIOGeneration;
 	
 		return YES;
@@ -2993,7 +2993,7 @@ else {
 
 - (void)close
 {
-    [self cancelWatchFile]; // added by Terada
+    [self cancelWatchFile];
     if (self.annotationsExist)
         {
         self.annotationsExist = NO;

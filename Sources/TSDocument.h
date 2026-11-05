@@ -36,7 +36,7 @@
 #import "CustomModalWindowController.h"
 #import "TSColorSupport.h"
 
-@class TSFileChangeMonitor; // added by Terada
+@class TSFileChangeMonitor;
 
 #define NUMBEROFERRORS	20
 
@@ -380,7 +380,7 @@ enum RootCommand
 
 // end addition
 // ULRICH BAUER PATCH
-   TSFileChangeMonitor *sourceFileMonitor; // added by Terada
+   TSFileChangeMonitor *sourceFileMonitor;
    NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData, *sourceReloadFingerprint;
    NSUInteger sourceIOGeneration;
    BOOL sourceSaving;
