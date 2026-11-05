@@ -17,15 +17,19 @@ methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reSh
 fixture=fixture.replace('METHODS',methods)
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (BOOL)isVisible { return YES; }\n- (void)makeKeyAndOrderFront:(id)sender {}')
 s=(root/'Sources/TSDocument.m').read_text()
-controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)configureExternalPDFObservation','- (void)stopExternalPDFObservation','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (BOOL)externalPDFReloadBlocked'])
+controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)configureExternalPDFObservation','- (void)stopExternalPDFObservation','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)acceptExternalPDFAtPath:', '- (void)prepareExternalPDFContent', '- (BOOL)externalPDFReloadBlocked'])
 # Count and optionally stall the file checks made by the polling path only.
-controller+='\n'+method(s,'- (void)refreshPDFWindow:').replace('TSExternalPDFSignature(', 'CheckedSignature(')
+controller+='\n'+method(s,'- (void)refreshPDFWindow:').replace('TSExternalPDFState(', 'CheckedState(')
 controller+='\n'+'\n'.join(method(s,x) for x in ['- (void)finishExternalPDFCheck:', '- (void)applyExternalPDFPath:'])
 controller=controller.replace('TSExternalPDFSnapshot(', 'CountedSnapshot(')
 mutations={
  'inline': ('dispatch_async(self.externalPDFQueue, ^{', 'RunInline(^{'),
  'generation': ('generation == self.externalPDFGeneration && ', ''),
  'taskdone': ('return ![self externalPDFObservationEnabled] || ', 'return ![self externalPDFObservationEnabled] || !taskDone || '),
+ # Ignore a new ctime when the cheap signature is unchanged, as before content comparison.
+ 'nohash': ('if (changeTime && loadedChangeTime && ![changeTime isEqualToString:loadedChangeTime]) {', 'if (0) {'),
+ # Digest a file read in place on the main thread.
+ 'mainhash': ('dispatch_async(self.externalPDFQueue, ^{ [content prepareDigest]; });', '[content prepareDigest];'),
 }
 if mutation in mutations:
     old,new=mutations[mutation]; assert old in controller; controller=controller.replace(old,new)
@@ -33,15 +37,18 @@ program=fixture+r'''
 #import "TSExternalPDFReload.h"
 #include <stdatomic.h>
 #include <sys/xattr.h>
+#include <fcntl.h>
 static atomic_ulong snapshotCount, mainSnapshots, mainSignatures, workerSignatures, stallEntries;
+// Counted by the instrumented copy of TSExternalPDFSnapshot.m.
+atomic_ulong TSTestDigests, TSTestMainDigests;
 static atomic_bool stallChecks;
 static dispatch_semaphore_t stallRelease;
 static PDFDocument *CountedSnapshot(NSString *p, NSString *s) { snapshotCount++; if(NSThread.isMainThread) mainSnapshots++; return TSExternalPDFSnapshot(p,s); }
 // Simulates a stalled network volume or an online-only file being fetched.
-static NSString *CheckedSignature(NSString *p) {
+static NSString *CheckedState(NSString *p, NSString **changeTime) {
  if(NSThread.isMainThread) mainSignatures++; else workerSignatures++;
  if(stallChecks){stallEntries++;dispatch_semaphore_wait(stallRelease,dispatch_time(DISPATCH_TIME_NOW,3*NSEC_PER_SEC));}
- return TSExternalPDFSignature(p);
+ return TSExternalPDFState(p,changeTime);
 }
 static void RunInline(dispatch_block_t block) { block(); }
 #define PdfRefreshKey @"PdfRefresh"
@@ -57,7 +64,8 @@ static void RunInline(dispatch_block_t block) { block(); }
 @property NSTask *texTask;
 @property BOOL annotationsExist, useOldSyncParser, useConTeXtSyncParser;
 @property NSInteger documentType;
-@property NSString *externalPDFLoadedSignature,*externalPDFPendingSignature;
+@property NSString *externalPDFLoadedSignature,*externalPDFPendingSignature,*externalPDFLoadedChangeTime;
+@property TSExternalPDFContent *externalPDFLoadedContent;
 @property NSTimer *pdfRefreshTimer;
 @property NSDate *pdfLastModDate;
 @property id pdfActivity;
@@ -68,6 +76,7 @@ static void RunInline(dispatch_block_t block) { block(); }
 @property NSUInteger externalPDFGeneration;
 @property BOOL externalPDFCheckRunning;
 - (void)refreshPDFWindow:(NSTimer*)timer;
+- (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime;
 @end
 @implementation TSDocument
 - (void)allocateSyncScanner {}
@@ -90,6 +99,27 @@ static NSData *PDF(NSInteger pages,NSInteger revision) {
 static void WaitIdle(TSDocument *d){NSDate *end=[NSDate dateWithTimeIntervalSinceNow:5];while(d.externalPDFCheckRunning && end.timeIntervalSinceNow>0)Pump(.01);Check(!d.externalPDFCheckRunning,@"Background check finished");}
 static void Poll(TSDocument *d){[d refreshPDFWindow:nil];WaitIdle(d);}
 static void StablePoll(TSDocument *d){Poll(d);Poll(d);Pump(.15);}
+// Records an application load of the file's current state.
+static void NoteLoaded(TSDocument *d,NSString *path){NSString *t=nil,*s=TSExternalPDFState(path,&t);[d notePDFLoadedAtPath:path signature:s changeTime:t];}
+static BOOL SameTime(struct timespec a,struct timespec b){return a.tv_sec==b.tv_sec && a.tv_nsec==b.tv_nsec;}
+// Sync clients and Finder set extended attributes after typesetting; only ctime changes.
+static void SetAttribute(NSString *path){
+ static uint8_t value;struct stat before,after;Check(stat(path.fileSystemRepresentation,&before)==0,@"stat");usleep(20000);
+ uint8_t used[16]={++value,2,3};Check(setxattr(path.fileSystemRepresentation,"com.apple.lastuseddate#PS",used,sizeof used,0,0)==0,@"Set extended attribute");
+ Check(stat(path.fileSystemRepresentation,&after)==0 && !SameTime(after.st_ctimespec,before.st_ctimespec) && SameTime(after.st_mtimespec,before.st_mtimespec),
+  @"Extended attribute changes ctime but not mtime");
+}
+// Overwrites in place with bytes of the same size and restores the modification
+// time to the nanosecond, so only ctime reveals the write.
+static void OverwriteKeepingTimes(NSString *path,NSData *data){
+ struct stat before,after;Check(stat(path.fileSystemRepresentation,&before)==0,@"stat");usleep(20000);
+ Check([data writeToFile:path atomically:NO],@"Overwrite in place");
+ struct timespec times[2]={before.st_atimespec,before.st_mtimespec};
+ Check(utimensat(AT_FDCWD,path.fileSystemRepresentation,times,0)==0,@"Restore modification time");
+ Check(stat(path.fileSystemRepresentation,&after)==0 && after.st_dev==before.st_dev && after.st_ino==before.st_ino && after.st_size==before.st_size &&
+  SameTime(after.st_mtimespec,before.st_mtimespec) && !SameTime(after.st_ctimespec,before.st_ctimespec),@"Overwrite keeps inode, size and mtime; ctime changes");
+}
+static NSData *Padded(NSData *data,NSUInteger size){NSMutableData *m=[data mutableCopy];while(m.length<size)[m appendBytes:" " length:1];return m;}
 static void SamePosition(RecoveryView *v,TSExternalPDFPosition old,NSString *label){
  TSExternalPDFPosition now=TSExternalPDFCapture(v);
  CGFloat delta=hypot(now.pagePoint.x-old.pagePoint.x,now.pagePoint.y-old.pagePoint.y);
@@ -164,7 +194,7 @@ int main(int argc,char **argv){@autoreleasepool{
  [PDF(2,3)writeToFile:path atomically:YES];StablePoll(d);Check(d.myPDFKitView.document.pageCount==2 && d.myPDFKitView.currentPage!=nil,@"Fewer pages clamp");
  [first writeToFile:path atomically:YES];StablePoll(d);
  Check([d.myPDFKitView.document indexForPage:d.myPDFKitView.visiblePages.firstObject]<=1,@"Short-to-long PDF keeps original first spread visible within scroll bounds");
- old=d.myPDFKitView.document;[d notePDFLoadedAtPath:path signature:TSExternalPDFSignature(path)];
+ old=d.myPDFKitView.document;NoteLoaded(d,path);
  StablePoll(d);Check(d.myPDFKitView.document==old,@"Do not repeat an acknowledged application reload");
  Check(screenUpdates==0,@"Screen updates balanced");
  [d stopExternalPDFObservation];
@@ -186,13 +216,36 @@ int main(int argc,char **argv){@autoreleasepool{
  [d startExternalPDFObservation];[d.pdfRefreshTimer invalidate];
  PDFDocument *old=d.myPDFKitView.document;
 
- // Sync clients and Finder set extended attributes after typesetting; only ctime changes.
- struct stat before,after;Check(stat(path.fileSystemRepresentation,&before)==0,@"stat");usleep(20000);
- uint8_t used[16]={1,2,3};Check(setxattr(path.fileSystemRepresentation,"com.apple.lastuseddate#PS",used,sizeof used,0,0)==0,@"Set extended attribute");
- Check(stat(path.fileSystemRepresentation,&after)==0 && (after.st_ctimespec.tv_sec!=before.st_ctimespec.tv_sec || after.st_ctimespec.tv_nsec!=before.st_ctimespec.tv_nsec) &&
-  after.st_mtimespec.tv_sec==before.st_mtimespec.tv_sec && after.st_mtimespec.tv_nsec==before.st_mtimespec.tv_nsec,@"Extended attribute changes ctime but not mtime");
+ // The PDF was read in place: its digest is taken in the background before any check.
+ SetAttribute(path);
  NSUInteger attempts=snapshotCount;StablePoll(d);StablePoll(d);
  Expect(d.myPDFKitView.document==old && snapshotCount==attempts,@"Metadata-only change does not reload the PDF");
+ NSUInteger digests=TSTestDigests;StablePoll(d);
+ Expect(TSTestDigests==digests,@"Content is compared only once for a new change time");
+
+ // Same-size PDFs with different bytes; writing one over the other in place and
+ // restoring mtime leaves path, device, inode, size and mtime unchanged.
+ NSData *base=PDF(12,6),*edit=PDF(12,7);NSUInteger size=MAX(base.length,edit.length)+128;
+ base=Padded(base,size);edit=Padded(edit,size);Check(![base isEqualToData:edit] && base.length==edit.length,@"Different PDFs of one size");
+ // Displayed from a snapshot clone after an external reload.
+ [base writeToFile:path atomically:YES];StablePoll(d);Check(d.myPDFKitView.document!=old,@"Reload before same-size checks");
+ old=d.myPDFKitView.document;attempts=snapshotCount;digests=TSTestDigests;
+ SetAttribute(path);StablePoll(d);StablePoll(d);
+ Expect(d.myPDFKitView.document==old && snapshotCount==attempts && TSTestDigests>digests,@"Snapshot: metadata-only change is compared and not reloaded");
+ digests=TSTestDigests;StablePoll(d);Expect(TSTestDigests==digests,@"Snapshot: same content is not compared again");
+ NSString *signature=TSExternalPDFSignature(path);
+ OverwriteKeepingTimes(path,edit);Expect([signature isEqualToString:TSExternalPDFSignature(path)],@"Overwrite keeps the cheap signature");
+ StablePoll(d);StablePoll(d);
+ Expect(d.myPDFKitView.document!=old && snapshotCount==attempts+1,@"Snapshot: same-size overwrite with restored mtime reloads");
+ // Displayed from data read by the application itself.
+ [base writeToFile:path atomically:YES];
+ for(RecoveryView *v in @[d.myPDFKitView,d.myPDFKitView2])v.document=[[PDFDocument alloc]initWithData:base];
+ NoteLoaded(d,path);old=d.myPDFKitView.document;attempts=snapshotCount;
+ SetAttribute(path);StablePoll(d);StablePoll(d);
+ Expect(d.myPDFKitView.document==old && snapshotCount==attempts,@"Application load: metadata-only change does not reload");
+ OverwriteKeepingTimes(path,edit);StablePoll(d);StablePoll(d);
+ Expect(d.myPDFKitView.document!=old && snapshotCount==attempts+1,@"Application load: same-size overwrite with restored mtime reloads");
+ old=d.myPDFKitView.document;
 
  // Polling stats and snapshots never run on the main thread.
  mainSignatures=workerSignatures=mainSnapshots=0;attempts=snapshotCount;
@@ -216,7 +269,7 @@ int main(int argc,char **argv){@autoreleasepool{
  // Results superseded while the check was running are dropped.
  old=d.myPDFKitView.document;[changed writeToFile:path atomically:YES];Poll(d);
  attempts=snapshotCount;stallChecks=YES;[d refreshPDFWindow:nil];Pump(.05);
- [d notePDFLoadedAtPath:path signature:TSExternalPDFSignature(path)];
+ NoteLoaded(d,path);
  stallChecks=NO;dispatch_semaphore_signal(stallRelease);WaitIdle(d);Pump(.1);
  Expect(snapshotCount==attempts+1 && d.myPDFKitView.document==old,@"Result superseded by an application reload is dropped");
  old=d.myPDFKitView.document;[first writeToFile:path atomically:YES];Poll(d);
@@ -240,19 +293,25 @@ int main(int argc,char **argv){@autoreleasepool{
  Expect(weakDocument==nil,@"Background check does not retain the document");
  stallChecks=NO;dispatch_semaphore_signal(stallRelease);Pump(.2);
  [window close];
+ Expect(TSTestDigests>0 && TSTestMainDigests==0,[NSString stringWithFormat:@"Content digests run off the main thread (%lu of %lu on main)",(unsigned long)TSTestMainDigests,(unsigned long)TSTestDigests]);
  if(failures) exit(1);
- printf("PASS: metadata-only changes, background checks, stalled access, stale results\n");
+ printf("PASS: metadata-only changes, same-size overwrites with restored mtime, background checks and digests, stalled access, stale results\n");
 }}
 '''.replace('CONTROLLER',controller)
 with tempfile.TemporaryDirectory(prefix='texshop-external-pdf-') as td:
  p=Path(td);(p/'home').mkdir();(p/'test.m').write_text(program)
- snapshot=root/'Sources/TSExternalPDFSnapshot.m'
+ # Count content digests, and the ones made on the main thread.
+ text=(root/'Sources/TSExternalPDFSnapshot.m').read_text()
+ digest='static NSData *TSPDFDigest(NSString *path, NSString *signature, NSString *changeTime)\n{\n'
+ assert text.count(digest)==1
+ text=text.replace(digest,'#include <stdatomic.h>\nextern atomic_ulong TSTestDigests, TSTestMainDigests;\n'+digest+'    TSTestDigests++; if (NSThread.isMainThread) TSTestMainDigests++;\n')
+ snapshot=p/'TSExternalPDFSnapshot.m';snapshot.write_text(text)
  if mutation=='ctime':
-  # The quoted include resolves beside each source file, so copy both.
+  # Put ctime back into the signature; the quoted include then resolves to this copy.
   header=(root/'Sources/TSExternalPDFReload.h').read_text()
-  old='info.st_mtimespec.tv_nsec];'
-  assert old in header
-  (p/'TSExternalPDFReload.h').write_text(header.replace(old,'info.st_mtimespec.tv_nsec, (long long)info.st_ctimespec.tv_sec, info.st_ctimespec.tv_nsec];').replace('%lld:%ld", path','%lld:%ld:%lld:%ld", path'))
-  snapshot=shutil.copy(snapshot,p)
+  old='info->st_mtimespec.tv_nsec];'
+  assert header.count(old)==1 and header.count('%lld:%ld", path')==1
+  (p/'TSExternalPDFReload.h').write_text(header.replace(old,'info->st_mtimespec.tv_nsec, (long long)info->st_ctimespec.tv_sec, info->st_ctimespec.tv_nsec];').replace('%lld:%ld", path','%lld:%ld:%lld:%ld", path'))
+ elif mutation and mutation not in mutations: raise SystemExit('unknown mutation')
  subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(snapshot),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test'),td],env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)

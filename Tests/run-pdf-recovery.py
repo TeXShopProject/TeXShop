@@ -42,7 +42,7 @@ static NSInteger screenUpdates=0;
 @property NSTimer *pdfRefreshTimer;
 @end
 @implementation TestDocument
-- (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature {}
+- (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime {}
 @end
 @interface RecoveryView:PDFView {
     BOOL _editMode,protectFind,downOverLink,showSync,fromTypesetOrQuit,firstTimeSave;

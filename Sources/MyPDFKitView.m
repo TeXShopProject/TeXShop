@@ -534,7 +534,8 @@
 - (void) showWithPath: (NSString *)imagePath
 {
 
-    NSString *loadedSignature = TSExternalPDFSignature(imagePath);
+    NSString *loadedChangeTime = nil;
+    NSString *loadedSignature = TSExternalPDFState(imagePath, &loadedChangeTime);
     PDFDocument	*pdfDoc;
 	NSData	*theData;
     PDFPage        *aPage;
@@ -569,7 +570,7 @@
     
     
     
-    [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature];
+    [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature changeTime:loadedChangeTime];
 	[self setup];
 	totalPages = [[self document] pageCount];
 	[totalPage setIntegerValue:totalPages];
@@ -1282,7 +1283,8 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 // External reloads supply one validated, immutable PDF snapshot.
 - (void)reShowWithPath:(NSString *)imagePath
 {
-    NSString *loadedSignature = TSExternalPDFSignature(imagePath);
+    NSString *loadedChangeTime = nil;
+    NSString *loadedSignature = TSExternalPDFState(imagePath, &loadedChangeTime);
     PDFDocument *pdfDoc = self.myDocument.pdfRefreshTimer ? TSInitialPDFSnapshot(imagePath, loadedSignature) : nil;
     // If no snapshot can be made, load the file as when it is not watched.
     if (!pdfDoc && [self doReleaseDocument])
@@ -1290,7 +1292,7 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
     else if (!pdfDoc)
         pdfDoc = [[PDFDocument alloc] initWithData:[NSData dataWithContentsOfFile:imagePath]];
     [self reShowWithDocument:pdfDoc];
-    [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature];
+    [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature changeTime:loadedChangeTime];
 }
 
 - (void)reShowWithDocument:(PDFDocument *)pdfDoc

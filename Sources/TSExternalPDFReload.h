@@ -3,22 +3,51 @@
 #import <PDFKit/PDFKit.h>
 #include <sys/stat.h>
 
-// Content identity only: ctime also changes for metadata such as extended
-// attributes set by sync clients or Finder. Dataless (online-only) files have
-// no signature, so observing them never triggers a download.
-static inline NSString *TSExternalPDFSignature(NSString *path)
+// Cheap content identity: ctime is reported separately because it also changes
+// for metadata such as extended attributes set by sync clients or Finder; a new
+// ctime alone only prompts a background content comparison. Dataless
+// (online-only) files have no signature, so observing them never triggers a download.
+static inline NSString *TSExternalPDFStateFromInfo(NSString *path, const struct stat *info, NSString **changeTime)
+{
+    if (changeTime) *changeTime = nil;
+    if (!path || !S_ISREG(info->st_mode) || (info->st_flags & SF_DATALESS)) return nil;
+    if (changeTime) *changeTime = [NSString stringWithFormat:@"%lld.%09ld",
+                                   (long long)info->st_ctimespec.tv_sec, info->st_ctimespec.tv_nsec];
+    return [NSString stringWithFormat:@"%@:%llu:%llu:%lld:%lld:%ld", path,
+            (unsigned long long)info->st_dev, (unsigned long long)info->st_ino,
+            (long long)info->st_size, (long long)info->st_mtimespec.tv_sec, info->st_mtimespec.tv_nsec];
+}
+
+static inline NSString *TSExternalPDFState(NSString *path, NSString **changeTime)
 {
     struct stat info;
-    if (!path || stat(path.fileSystemRepresentation, &info) || !S_ISREG(info.st_mode) ||
-        (info.st_flags & SF_DATALESS)) return nil;
-    return [NSString stringWithFormat:@"%@:%llu:%llu:%lld:%lld:%ld", path,
-            (unsigned long long)info.st_dev, (unsigned long long)info.st_ino,
-            (long long)info.st_size, (long long)info.st_mtimespec.tv_sec, info.st_mtimespec.tv_nsec];
+    if (changeTime) *changeTime = nil;
+    if (!path || stat(path.fileSystemRepresentation, &info)) return nil;
+    return TSExternalPDFStateFromInfo(path, &info, changeTime);
+}
+
+static inline NSString *TSExternalPDFSignature(NSString *path)
+{
+    return TSExternalPDFState(path, NULL);
 }
 
 PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature);
 PDFDocument *TSInitialPDFSnapshot(NSString *path, NSString *signature);
 void TSRemoveStalePDFSnapshots(NSString *parent);
+
+// The PDF content on display, identified by a SHA-256 digest so that an in-place
+// overwrite keeping size and modification time can be told apart from a change
+// of metadata alone. Digests stream the file and must be computed off the main
+// thread: -prepareDigest and -matchesFileAtPath:... read files.
+@interface TSExternalPDFContent : NSObject
+- (instancetype)initWithDocument:(PDFDocument *)document path:(NSString *)path
+                       signature:(NSString *)signature changeTime:(NSString *)changeTime;
+// Digests a file read in place now, while it still matches the recorded state.
+// Snapshot clones are immutable and are digested only when first compared.
+- (void)prepareDigest;
+// YES only if the file still has this state and the same digest as the content.
+- (BOOL)matchesFileAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime;
+@end
 
 typedef struct {
     BOOL valid, autoScales;

@@ -1,12 +1,16 @@
 // Immutable file-backed snapshots avoid two full PDF data copies.
 #import "TSExternalPDFReload.h"
+#include <CommonCrypto/CommonDigest.h>
 #include <copyfile.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <signal.h>
+#include <sys/resource.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 static NSString * const TSSnapshotPrefix = @"TeXShop-PDF-";
+static NSString * const TSSnapshotName = @"snapshot.pdf";
 
 // Track only this process's private directories, including documents retained at exit.
 static NSMutableSet<NSString *> *TSSnapshotDirectories;
@@ -137,7 +141,7 @@ static PDFDocument *TSPDFSnapshot(NSString *path, NSString *signature, BOOL allo
     // Never fall back to a full data copy, which can be slow or fill the volume.
     NSString *directory = TSCreateSnapshotDirectory(resolvedPath, info.st_dev);
     if (directory) {
-        NSString *snapshot = [directory stringByAppendingPathComponent:@"snapshot.pdf"];
+        NSString *snapshot = [directory stringByAppendingPathComponent:TSSnapshotName];
         BOOL cloned = copyfile(resolvedPath.fileSystemRepresentation, snapshot.fileSystemRepresentation,
                                NULL, COPYFILE_CLONE_FORCE) == 0;
         if (cloned) {
@@ -166,3 +170,88 @@ PDFDocument *TSInitialPDFSnapshot(NSString *path, NSString *signature)
 {
     return TSPDFSnapshot(path, signature, YES);
 }
+
+// Streams a regular file through SHA-256; dataless files are never downloaded.
+// With a signature, the digest is returned only if the open file had that state,
+// including its change time, both before and after it was read.
+static NSData *TSPDFDigest(NSString *path, NSString *signature, NSString *changeTime)
+{
+    int policy = getiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD);
+    setiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD,
+                   IOPOL_MATERIALIZE_DATALESS_FILES_OFF);
+    NSData *digest = nil;
+    int file = open(path.fileSystemRepresentation, O_RDONLY | O_CLOEXEC);
+    struct stat info;
+    NSString *time = nil;
+    if (file >= 0 && !fstat(file, &info) && S_ISREG(info.st_mode) && !(info.st_flags & SF_DATALESS) &&
+        (!signature || ([signature isEqualToString:TSExternalPDFStateFromInfo(path, &info, &time)] &&
+                        [changeTime isEqualToString:time]))) {
+        CC_SHA256_CTX context;
+        CC_SHA256_Init(&context);
+        const size_t length = 1 << 20;
+        uint8_t *buffer = malloc(length);
+        BOOL complete = NO;
+        while (buffer) {
+            ssize_t count = read(file, buffer, length);
+            if (count > 0) CC_SHA256_Update(&context, buffer, (CC_LONG)count);
+            else if (count == 0) { complete = YES; break; }
+            else if (errno != EINTR) break;
+        }
+        free(buffer);
+        unsigned char bytes[CC_SHA256_DIGEST_LENGTH];
+        CC_SHA256_Final(bytes, &context);
+        if (complete && (!signature || (!fstat(file, &info) &&
+                                        [signature isEqualToString:TSExternalPDFStateFromInfo(path, &info, &time)] &&
+                                        [changeTime isEqualToString:time])))
+            digest = [NSData dataWithBytes:bytes length:sizeof bytes];
+    }
+    if (file >= 0) close(file);
+    if (policy >= 0) setiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD, policy);
+    return digest;
+}
+
+@implementation TSExternalPDFContent {
+    NSString *_path, *_signature, *_changeTime, *_snapshotFile;
+    NSData *_digest;
+    BOOL _digested;
+}
+
+- (instancetype)initWithDocument:(PDFDocument *)document path:(NSString *)path
+                       signature:(NSString *)signature changeTime:(NSString *)changeTime
+{
+    if ((self = [super init])) {
+        _path = [path copy];
+        _signature = [signature copy];
+        _changeTime = [changeTime copy];
+        // Only the path is kept, so the document is never released off the main thread.
+        NSString *directory = [document isKindOfClass:TSExternalPDFDocument.class] ?
+            ((TSExternalPDFDocument *)document).snapshotDirectory : nil;
+        _snapshotFile = [directory stringByAppendingPathComponent:TSSnapshotName];
+    }
+    return self;
+}
+
+// A file read in place is digested only while it still has the recorded state;
+// otherwise the digest stays unknown and any later change time counts as a change.
+- (NSData *)digest
+{
+    @synchronized (self) {
+        if (!_digested) {
+            _digested = YES;
+            _digest = _snapshotFile ? TSPDFDigest(_snapshotFile, nil, nil) : TSPDFDigest(_path, _signature, _changeTime);
+        }
+        return _digest;
+    }
+}
+
+- (void)prepareDigest
+{
+    if (!_snapshotFile) [self digest];
+}
+
+- (BOOL)matchesFileAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime
+{
+    NSData *digest = [self digest];
+    return digest && signature && changeTime && [digest isEqualToData:TSPDFDigest(path, signature, changeTime)];
+}
+@end
