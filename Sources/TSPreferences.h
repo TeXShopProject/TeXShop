@@ -431,8 +431,6 @@
 
 - (void)PrepareColorPane:(NSUserDefaults *)defaults;
 
-- (IBAction)LiteStyleChoice:sender;
-- (IBAction)DarkStyleChoice:sender;
 - (IBAction)EditingStyleChoice:sender;
 - (IBAction)SaveEditedStyle:sender;
 - (IBAction)SaveNewStyle:sender;

@@ -3009,9 +3009,6 @@ DQ
                                                             <font key="font" metaFont="system" size="10"/>
                                                             <menu key="menu" id="IlE-Oj-YBi"/>
                                                         </popUpButtonCell>
-                                                        <connections>
-                                                            <action selector="DarkStyleChoice:" target="-2" id="VIy-pg-ORn"/>
-                                                        </connections>
                                                     </popUpButton>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6PJ-wo-NNa">
                                                         <rect key="frame" x="17" y="9" width="161" height="25" />

@@ -3023,9 +3023,6 @@ DQ
                                                             <font key="font" metaFont="system" size="10"/>
                                                             <menu key="menu" id="fMC-nQ-g8g"/>
                                                         </popUpButtonCell>
-                                                        <connections>
-                                                            <action selector="DarkStyleChoice:" target="-2" id="lpZ-k3-F1g"/>
-                                                        </connections>
                                                     </popUpButton>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Elz-eo-l5i">
                                                         <rect key="frame" x="17" y="9" width="161" height="25" />
@@ -3074,9 +3071,6 @@ DQ
                                                             <font key="font" metaFont="system" size="10"/>
                                                             <menu key="menu" id="O7b-sC-mpL"/>
                                                         </popUpButtonCell>
-                                                        <connections>
-                                                            <action selector="LiteStyleChoice:" target="-2" id="dGB-gp-L37"/>
-                                                        </connections>
                                                     </popUpButton>
                                                 </subviews>
                                             </view>

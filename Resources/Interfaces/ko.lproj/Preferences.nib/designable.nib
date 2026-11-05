@@ -3017,9 +3017,6 @@ DQ
                                                             <font key="font" metaFont="system" size="10"/>
                                                             <menu key="menu" id="JOb-RU-Tsj"/>
                                                         </popUpButtonCell>
-                                                        <connections>
-                                                            <action selector="DarkStyleChoice:" target="-2" id="ahB-xo-8gH"/>
-                                                        </connections>
                                                     </popUpButton>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YZj-Ts-lPN">
                                                         <rect key="frame" x="17" y="9" width="161" height="25" />
@@ -3068,9 +3065,6 @@ DQ
                                                             <font key="font" metaFont="system" size="10"/>
                                                             <menu key="menu" id="Ejh-gW-HGM"/>
                                                         </popUpButtonCell>
-                                                        <connections>
-                                                            <action selector="LiteStyleChoice:" target="-2" id="J3d-x1-fWy"/>
-                                                        </connections>
                                                     </popUpButton>
                                                 </subviews>
                                             </view>

@@ -131,20 +131,6 @@ NSInteger stringSort(id s1, id s2, void *context)
   
 }
 
-- (IBAction)LiteStyleChoice:sender
-{
-    
-    // Make choice temporarily, but don't activate it until OK
-    // Thus there is nothing to do here
-    
-}
-
-- (IBAction)DarkStyleChoice:sender
-{
-    // Make choice temporarily, but don't activate it until OK
-    // Thus there is nothing to do here
-}
-
 - (void)FillInColorWells
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
