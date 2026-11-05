@@ -23,6 +23,7 @@
  */
 
 #import "TSAppDelegate.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import "TSDockIconController.h"
 
 #import "globals.h"
@@ -1458,9 +1459,38 @@
 
 - (void)makeDefaultEditor:(id)sender;
 {
-    
-    LSSetDefaultRoleHandlerForContentType ( CFSTR("edu.uo.texshop.tex"), kLSRolesAll, CFSTR("TeXShop") );
-    
+    // Make this application the default for every content type that the system
+    // associates with the .tex extension. TeXShop does not declare a type of its
+    // own for .tex files, so the type actually used depends on what is installed.
+    NSMutableOrderedSet<UTType *> *types = [NSMutableOrderedSet orderedSet];
+    UTType *preferred = [UTType typeWithFilenameExtension: @"tex"];
+    if (preferred)
+        [types addObject: preferred];
+    [types addObjectsFromArray: [UTType typesWithTag: @"tex" tagClass: UTTagClassFilenameExtension conformingToType: nil]];
+
+    NSURL *application = [[NSBundle mainBundle] bundleURL];
+    NSMutableArray<NSError *> *errors = [NSMutableArray array];
+    dispatch_group_t group = dispatch_group_create();
+    for (UTType *type in types) {
+        dispatch_group_enter(group);
+        [[NSWorkspace sharedWorkspace] setDefaultApplicationAtURL: application toOpenContentType: type completionHandler: ^(NSError *error) {
+            if (error) {
+                @synchronized (errors) {
+                    [errors addObject: error];
+                }
+            }
+            dispatch_group_leave(group);
+        }];
+    }
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        for (NSError *error in errors) {
+            // The user declined the system's confirmation.
+            if ([error.domain isEqualToString: NSCocoaErrorDomain] && error.code == NSUserCancelledError)
+                continue;
+            [NSApp presentError: error];
+            break;
+        }
+    });
 }
 
 
@@ -1561,22 +1591,6 @@
 			
 		}
 	}
-}
-
-#pragma mark implementation of NSUserNotificationCenterDelegate protocol
-- (void)userNotificationCenter:(NSUserNotificationCenter *)center didDeliverNotification:(NSUserNotification *)notification
-{
-    
-}
-
-- (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification
-{
-    
-}
-
-- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification
-{
-    return YES;
 }
 
 
