@@ -145,6 +145,21 @@ NSInteger stringSort(id s1, id s2, void *context)
     // Thus there is nothing to do here
 }
 
+// Bracket and expl3 wells show the theme being edited, resolved the way documents resolve it.
+- (NSColor *)editingColorForKey: (NSString *)theKey
+{
+    BOOL withDarkColors;
+    
+#ifdef MOJAVEORHIGHER
+    if ((atLeastMojave) && (_prefsWindow.effectiveAppearance.name == NSAppearanceNameDarkAqua))
+        withDarkColors = YES;
+    else
+#endif
+        withDarkColors = NO;
+    
+    return [[TSColorSupport sharedInstance] colorForKey: theKey fromDictionary: EditingColors isWindowDark: withDarkColors];
+}
+
 - (void)FillInColorWells
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
@@ -177,19 +192,19 @@ NSInteger stringSort(id s1, id s2, void *context)
     //markerParenColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarkerParen"];
     //markerCurlyColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarkerCurly"];
     //markerSquareColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarkerSquare"];
-    markerParenColorWell.color = [colorSupport colorForKey: @"SyntaxMarkerParen" isWindowDark: withDarkColors];
-    markerCurlyColorWell.color = [colorSupport colorForKey: @"SyntaxMarkerCurly" isWindowDark: withDarkColors];
-    markerSquareColorWell.color = [colorSupport colorForKey: @"SyntaxMarkerSquare" isWindowDark: withDarkColors];
+    markerParenColorWell.color = [self editingColorForKey: @"SyntaxMarkerParen"];
+    markerCurlyColorWell.color = [self editingColorForKey: @"SyntaxMarkerCurly"];
+    markerSquareColorWell.color = [self editingColorForKey: @"SyntaxMarkerSquare"];
     
     
         
-    explFunctionColorWell.color = [colorSupport colorForKey: @"explFunction" isWindowDark: withDarkColors];
-    explVariableColorWell.color = [colorSupport colorForKey: @"explVariable" isWindowDark: withDarkColors];
-    explIntenseFunctionColorWell.color = [colorSupport colorForKey: @"explIntenseFunction" isWindowDark: withDarkColors];
-    explIntenseVariableColorWell.color = [colorSupport colorForKey: @"explIntenseVariable" isWindowDark: withDarkColors];
-    explmykeyColorWell.color = [colorSupport colorForKey: @"explmykey" isWindowDark: withDarkColors];
-    explmykeyArgumentColorWell.color = [colorSupport colorForKey: @"explmykeyArgument" isWindowDark: withDarkColors];
-    explmsgColorWell.color = [colorSupport colorForKey: @"explmsg" isWindowDark: withDarkColors];
+    explFunctionColorWell.color = [self editingColorForKey: @"explFunction"];
+    explVariableColorWell.color = [self editingColorForKey: @"explVariable"];
+    explIntenseFunctionColorWell.color = [self editingColorForKey: @"explIntenseFunction"];
+    explIntenseVariableColorWell.color = [self editingColorForKey: @"explIntenseVariable"];
+    explmykeyColorWell.color = [self editingColorForKey: @"explmykey"];
+    explmykeyArgumentColorWell.color = [self editingColorForKey: @"explmykeyArgument"];
+    explmsgColorWell.color = [self editingColorForKey: @"explmsg"];
    
     
     EditorHighlightBracesColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorHighlightBraces"];

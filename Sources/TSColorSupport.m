@@ -249,16 +249,10 @@ static id sharedColorSupport = nil;
       return [self darkColorWithKey: theKey];
 }
 
-- (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode
+// Resolves a color from any theme dictionary, falling back to the built-in default for the given mode.
+- (NSColor *)colorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
 {
     NSColor *theColor;
-    NSDictionary *theDictionary;
-    
-    if (mode)
-        theDictionary = darkColors;
-     else
-         theDictionary = liteColors;
-        
     
     NSArray *theColorArray = [self colorArrayFromDictionary: theDictionary andKey: theKey];
     if (theColorArray != nil)
@@ -270,6 +264,18 @@ static id sharedColorSupport = nil;
         return [self darkColorWithKey: theKey];
     else
         return [self liteColorWithKey: theKey];
+}
+
+- (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode
+{
+    NSDictionary *theDictionary;
+    
+    if (mode)
+        theDictionary = darkColors;
+     else
+         theDictionary = liteColors;
+    
+    return [self colorForKey: theKey fromDictionary: theDictionary isWindowDark: mode];
 }
 
 

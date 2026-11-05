@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Bracket colors fall back to the marker color, then to the built-in default,
-in both the document and the Preferences color wells."""
+in both the document and the Preferences color wells, which show the theme
+being edited rather than the applied one."""
 from pathlib import Path
 import plistlib, re, subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -13,14 +14,16 @@ support = (root / 'Sources/TSColorSupport.m').read_text(encoding='latin-1')
 signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:',
               '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
               '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
-              '- (NSColor *)colorForKey:']
+              '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:',
+              '- (NSColor *)colorForKey: (NSString *)theKey isWindowDark:']
 methods = [method(support, s) for s in signatures if s in support]
 document = (root / 'Sources/TSDocument-Color.m').read_text(encoding='latin-1')
 start = document.index('mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerParen"];')
 end = document.index('\n', document.index('self.markerColorSquareAttribute =', start)) + 1
 document = document[start:end]
 prefs = (root / 'Sources/TSPreferences-Color.m').read_text(encoding='latin-1')
-wells = re.search(r'^[ \t]*markerParenColorWell\.color = .*?^[ \t]*markerSquareColorWell\.color = [^\n]*\n', prefs, re.M | re.S).group(0)
+helper = method(prefs, '- (NSColor *)editingColorForKey:') if '- (NSColor *)editingColorForKey:' in prefs else ''
+wells = re.search(r'^[ \t]*markerParenColorWell\.color = .*?^[ \t]*markerSquareColorWell\.color = [^\n]*\n', method(prefs, '- (void)FillInColorWells'), re.M | re.S).group(0)
 
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 if mutation == 'no-fallback':
@@ -28,6 +31,9 @@ if mutation == 'no-fallback':
 elif mutation == 'no-well-fallback':
     methods = [m.replace('[self colorArrayFromDictionary: theDictionary andKey: theKey]', '[theDictionary objectForKey: theKey]')
                if m.startswith('- (NSColor *)colorForKey:') else m for m in methods]
+elif mutation == 'wells-read-applied-theme':
+    assert 'fromDictionary: EditingColors' in helper
+    helper = helper.replace('fromDictionary: EditingColors', 'fromDictionary: (withDarkColors ? darkColors : liteColors)')
 elif mutation == 'no-default':
     document = document.replace('if (mySyntaxColor == nil)', 'if (0)')
 elif mutation:
@@ -35,7 +41,13 @@ elif mutation:
 
 program = r'''
 #import <Cocoa/Cocoa.h>
+#define MOJAVEORHIGHER
 NSDictionary *liteColors, *darkColors;
+BOOL atLeastMojave = YES;
+@interface FakeAppearance : NSObject @property NSAppearanceName name; @end
+@implementation FakeAppearance @end
+@interface FakeWindow : NSObject @property BOOL keyWindow; @property FakeAppearance *effectiveAppearance; @end
+@implementation FakeWindow @end
 @interface TSColorSupport : NSObject @end
 @implementation TSColorSupport
 + (id)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
@@ -53,9 +65,10 @@ METHODS
 DOCUMENT
 }
 @end
-@interface Prefs : NSObject { @public Well *markerParenColorWell, *markerCurlyColorWell, *markerSquareColorWell; NSMutableDictionary *EditingColors; }
+@interface Prefs : NSObject { @public Well *markerParenColorWell, *markerCurlyColorWell, *markerSquareColorWell; NSMutableDictionary *EditingColors; FakeWindow *_prefsWindow; }
 @end
 @implementation Prefs
+HELPER
 - (void)fillDark:(BOOL)withDarkColors
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
@@ -87,16 +100,19 @@ int main(int argc, char **argv) { @autoreleasepool {
                 [doc applyDictionary:theme dark:dark];
                 NSDictionary *attrs = @{@"SyntaxMarkerParen": doc.markerColorParenAttribute ?: @{}, @"SyntaxMarkerCurly": doc.markerColorCurlyAttribute ?: @{}, @"SyntaxMarkerSquare": doc.markerColorSquareAttribute ?: @{}};
                 NSColor *docColor = attrs[key][NSForegroundColorAttributeName];
-                // The bracket wells show the applied theme for the current appearance, not the one being edited.
-                liteColors = dark ? decoyTheme : theme; darkColors = dark ? theme : decoyTheme;
+                // The bracket wells show the theme being edited, not the applied ones.
+                liteColors = darkColors = decoyTheme;
                 Prefs *prefs = [Prefs new];
-                prefs->EditingColors = [decoyTheme mutableCopy];
+                prefs->_prefsWindow = [FakeWindow new]; prefs->_prefsWindow.effectiveAppearance = [FakeAppearance new];
+                prefs->_prefsWindow.effectiveAppearance.name = dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua;
+                prefs->EditingColors = [theme mutableCopy];
                 prefs->markerParenColorWell = [Well new]; prefs->markerCurlyColorWell = [Well new]; prefs->markerSquareColorWell = [Well new];
                 [prefs fillDark:dark];
                 NSDictionary *wellsByKey = @{@"SyntaxMarkerParen": prefs->markerParenColorWell, @"SyntaxMarkerCurly": prefs->markerCurlyColorWell, @"SyntaxMarkerSquare": prefs->markerSquareColorWell};
                 NSColor *wellColor = [wellsByKey[key] color];
                 if (!Same(docColor, expected)) { printf("FAIL: document %s %s %s: %s\n", mode, key.UTF8String, [c[0] UTF8String], Describe(docColor).UTF8String); failures++; }
                 if (!Same(wellColor, expected)) { printf("FAIL: color well %s %s %s: %s\n", mode, key.UTF8String, [c[0] UTF8String], Describe(wellColor).UTF8String); failures++; }
+                if (![prefs->EditingColors isEqual:theme]) { printf("FAIL: filling the wells changed the edited theme (%s %s %s)\n", mode, key.UTF8String, [c[0] UTF8String]); failures++; }
             }
         }
         liteColors = darkColors = @{@"SyntaxMarker": marker};
@@ -112,7 +128,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     }
     return failures ? 1 : 0;
 } }
-'''.replace('METHODS', '\n'.join(methods)).replace('DOCUMENT', document).replace('WELLS', wells)
+'''.replace('METHODS', '\n'.join(methods)).replace('DOCUMENT', document).replace('HELPER', helper).replace('WELLS', wells)
 with tempfile.TemporaryDirectory(prefix='texshop-theme-') as tmp:
     tmp = Path(tmp)
     legacy = tmp / 'Legacy.plist'
@@ -126,4 +142,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-theme-') as tmp:
         if r.returncode == 0: raise SystemExit('FAIL: mutation %s was not detected' % mutation)
         print('detected mutation', mutation)
     elif r.returncode: raise SystemExit(r.stderr or 'FAIL')
-    else: print('PASS: document and color wells use the bracket key, then SyntaxMarker, then the built-in default')
+    else: print('PASS: document and color wells use the edited bracket key, then SyntaxMarker, then the built-in default')

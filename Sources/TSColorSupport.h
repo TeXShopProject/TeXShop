@@ -26,6 +26,7 @@
 - (NSColor *)liteColorAndAlphaWithKey: (NSString *)theKey;
 - (NSColor *)darkColorAndAlphaWithKey: (NSString *)theKey;
 
+- (NSColor *)colorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode;
 - (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode;
 
 // - (NSColor *)colorForKey: (NSString *)theKey  whiledark: (BOOL)mode;
