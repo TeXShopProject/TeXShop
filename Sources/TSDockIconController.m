@@ -60,7 +60,7 @@
     CGFloat height = MIN(top - bottom, 96);
     if (height < 80 || right - left < 200) return;
     NSBox *group = [[NSBox alloc] initWithFrame:NSMakeRect(left, top - height, right - left, height)];
-    group.title = [self text:@"Dock Icon"];
+    group.title = [self text:@"Dock Icon While Running"];
     group.identifier = @"DockIconChoices";
     group.toolTip = [self text:@"Applies while TeXShop is running. The standard icon returns after quitting."];
     group.autoresizingMask = NSViewMinYMargin;

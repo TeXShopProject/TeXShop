@@ -62,7 +62,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     Require(iconGroup != nil, @"Direct icon choices on Misc2");
     if (snapshot) {
         BOOL japanese = [[@(argv[1]) stringByDeletingLastPathComponent].lastPathComponent isEqual:@"ja.lproj"];
-        Require([iconGroup.title isEqual:japanese ? @"Dockアイコン" : @"Dock Icon"], @"Snapshot title matches requested language");
+        Require([iconGroup.title isEqual:japanese ? @"起動中のDockアイコン" : @"Dock Icon While Running"], @"Snapshot title matches requested language");
     }
     for (NSView *view in themeView.subviews)
         if (view != iconGroup) Require(!NSIntersectsRect(iconGroup.frame, view.frame), [NSString stringWithFormat:@"No overlap with existing controls: %@ vs %@", NSStringFromRect(iconGroup.frame), NSStringFromRect(view.frame)]);
