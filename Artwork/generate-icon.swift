@@ -59,6 +59,19 @@ let svg="""
 </g></svg>
 """
 try svg.write(to:asset.appendingPathComponent("Lettering.svg"),atomically:true,encoding:.utf8)
+// The white rim belongs to the artwork; Icon Composer still supplies the outer mask.
+let frameSVG="""
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<defs>
+<linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF"/><stop offset="0.38" stop-color="#F5F6F6"/><stop offset="1" stop-color="#CCD1D2"/></linearGradient>
+<linearGradient id="field" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#B4C7CF"/><stop offset="1" stop-color="#4A6669"/></linearGradient>
+</defs>
+<rect width="1024" height="1024" fill="url(#rim)"/>
+<rect x="48" y="48" width="928" height="928" rx="182" fill="url(#field)" stroke="#526A70" stroke-opacity="0.20" stroke-width="2"/>
+<rect x="3" y="3" width="1018" height="1018" rx="227" fill="none" stroke="white" stroke-opacity="0.6" stroke-width="2"/>
+</svg>
+"""
+try frameSVG.write(to:asset.appendingPathComponent("Frame.svg"),atomically:true,encoding:.utf8)
 let iconset=root.appendingPathComponent("Artwork/TeXShop.iconset")
 try FileManager.default.createDirectory(at:iconset,withIntermediateDirectories:true)
 func png(_ pixels:Int, fullBleed:Bool = false)->Data {
@@ -67,9 +80,21 @@ func png(_ pixels:Int, fullBleed:Bool = false)->Data {
     ctx.scaleBy(x:CGFloat(pixels)/1024,y:CGFloat(pixels)/1024)
     let shape=fullBleed ? CGPath(rect:CGRect(x:0,y:0,width:1024,height:1024),transform:nil) : CGPath(roundedRect:CGRect(x:100,y:100,width:824,height:824),cornerWidth:185,cornerHeight:185,transform:nil)
     ctx.saveGState();ctx.addPath(shape);ctx.clip()
+    if !fullBleed { ctx.translateBy(x:100,y:100);ctx.scaleBy(x:824/1024,y:824/1024) }
+    let space=CGColorSpace(name:CGColorSpace.sRGB)!
+    let rimColors=[CGColor(srgbRed:1,green:1,blue:1,alpha:1),CGColor(srgbRed:245/255,green:246/255,blue:246/255,alpha:1),CGColor(srgbRed:204/255,green:209/255,blue:210/255,alpha:1)]
+    let rim=CGGradient(colorsSpace:space,colors:rimColors as CFArray,locations:[0,0.38,1])!
+    ctx.drawLinearGradient(rim,start:CGPoint(x:512,y:1024),end:CGPoint(x:512,y:0),options:[])
+    let field=CGPath(roundedRect:CGRect(x:48,y:48,width:928,height:928),cornerWidth:182,cornerHeight:182,transform:nil)
+    ctx.saveGState();ctx.addPath(field);ctx.clip()
     let colors=[CGColor(srgbRed:180/255,green:199/255,blue:207/255,alpha:1),CGColor(srgbRed:74/255,green:102/255,blue:105/255,alpha:1)]
-    let gr=CGGradient(colorsSpace:CGColorSpace(name:CGColorSpace.sRGB),colors:colors as CFArray,locations:[0,1])!
-    ctx.drawLinearGradient(gr,start:CGPoint(x:512,y:fullBleed ? 1024 : 924),end:CGPoint(x:512,y:fullBleed ? 0 : 100),options:[]);ctx.restoreGState()
+    let gr=CGGradient(colorsSpace:space,colors:colors as CFArray,locations:[0,1])!
+    ctx.drawLinearGradient(gr,start:CGPoint(x:512,y:976),end:CGPoint(x:512,y:48),options:[]);ctx.restoreGState()
+    ctx.setStrokeColor(CGColor(srgbRed:82/255,green:106/255,blue:112/255,alpha:0.20))
+    ctx.setLineWidth(2);ctx.addPath(field);ctx.strokePath()
+    let rimHighlight=CGPath(roundedRect:CGRect(x:3,y:3,width:1018,height:1018),cornerWidth:227,cornerHeight:227,transform:nil)
+    ctx.setStrokeColor(CGColor(srgbRed:1,green:1,blue:1,alpha:0.6));ctx.addPath(rimHighlight);ctx.strokePath()
+    ctx.restoreGState()
     if !fullBleed { ctx.translateBy(x:100,y:100);ctx.scaleBy(x:824/1024,y:824/1024) }
     func color(_ r:CGFloat,_ g:CGFloat,_ b:CGFloat,_ a:CGFloat=1)->CGColor {
         CGColor(srgbRed:r/255,green:g/255,blue:b/255,alpha:a)

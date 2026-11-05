@@ -6,6 +6,9 @@ at (512, 512) on a 1024-unit canvas. The mark is fitted to a height of
 390 units, then expanded by 4 units along its contour to improve legibility
 at small sizes. The resulting outline is shared by the SVG and raster assets.
 The inherited gray-green gradient, white lettering, bevel, and shadow are retained.
+A 48-unit white rim recalls the classic circular icon, following the rounded-square
+outline. Its white-to-silver gradient gives the edge subtle depth without reducing
+the enlarged lettering. `Frame.svg` supplies the rim and inset background.
 
 - `TeXShop.icon`: Icon Composer source. The background fills the entire canvas;
   macOS supplies the app-icon mask. There is no circle inside an additional tile.
