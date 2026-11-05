@@ -2008,7 +2008,7 @@ DQ
                                                                         <action selector="syncChanged:" target="-2" id="489"/>
                                                                     </connections>
                                                                 </buttonCell>
-                                                                <buttonCell type="radio" title="SyncTeX (TeX ≥ 2010)" imagePosition="left" alignment="left" state="on" tag="3" inset="2" id="222">
+                                                                <buttonCell type="radio" title="SyncTeX" imagePosition="left" alignment="left" state="on" tag="3" inset="2" id="222">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
                                                                 </buttonCell>
