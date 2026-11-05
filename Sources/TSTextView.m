@@ -100,6 +100,10 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
     [super awakeFromNib];
     
 	TSLayoutManager *layoutManager = [[TSLayoutManager alloc] init];
+	// Lay out only the text that is displayed or asked for, so that long documents
+	// open and scroll without laying out everything before the visible part.
+	// The ContiguousTextLayout default restores full layout.
+	layoutManager.allowsNonContiguousLayout = ![SUD boolForKey:@"ContiguousTextLayout"];
 	[[self textContainer] replaceLayoutManager:layoutManager];
 	
 	[self setSmartInsertDeleteEnabled:[SUD boolForKey:SmartInsertDeleteKey]];
