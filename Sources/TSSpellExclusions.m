@@ -357,8 +357,69 @@ static BOOL MatchesAt(const unichar *src, NSUInteger n, NSUInteger i, const unic
     return YES;
 }
 
-// Index just past the group opening at src[i], or NSNotFound.
-static NSUInteger BalancedEnd(const unichar *src, NSUInteger n, NSUInteger i, unichar open, unichar close)
+#ifdef TSSPELL_STANDALONE_TEST
+// Test builds can use the direct scans throughout, as a reference for the
+// indexed lookups below (TSSpellTestReferenceScans), or use the indexes from
+// the start (TSSpellTestIndexBudget = 0).
+BOOL TSSpellTestReferenceScans = NO;
+NSInteger TSSpellTestIndexBudget = -1;
+#endif
+
+// Lookups of the end of a group or a scope, for one text.
+//
+// In ordinary text the end of a group or a scope is found by a short scan. With
+// unbalanced or deeply nested markup each scan can run on to the end of the text,
+// so that masking takes time proportional to the square of its length. The direct
+// scans are therefore only used while their total length stays below a few times
+// the length of the text; after that each kind of lookup is answered from an index
+// built in one pass over the text. The indexes give the same answers as the scans.
+typedef struct {
+    const unichar *src;
+    NSUInteger n;
+    NSInteger budget;               // characters the direct scans may still look at
+    uint32_t *groupEnd[3];          // for {}, [] and (); see GroupIndex
+    uint32_t *scopeBraceEnd;        // see ScopeIndex
+    uint32_t *scopeEnvEnd;
+    int32_t *scopeBraceLevel;
+    int32_t *scopeEnvLevel;
+    NSUInteger lastCloseBrace;      // index of the last '}' (NSNotFound if none)
+} ScanIndex;
+
+static void InitScanIndex(ScanIndex *x, const unichar *src, NSUInteger n)
+{
+    memset(x, 0, sizeof(*x));
+    x->src = src;
+    x->n = n;
+    // The indexes hold 32-bit positions.
+    x->budget = (n < (NSUInteger)INT32_MAX - 8) ? (NSInteger)(4 * n + 4096) : NSIntegerMax;
+    x->lastCloseBrace = NSNotFound;
+    for (NSUInteger k = n; k-- > 0; )
+        if (src[k] == '}') { x->lastCloseBrace = k; break; }
+#ifdef TSSPELL_STANDALONE_TEST
+    if (TSSpellTestIndexBudget >= 0 && x->budget != NSIntegerMax) x->budget = TSSpellTestIndexBudget;
+    if (TSSpellTestReferenceScans) { x->budget = NSIntegerMax; x->lastCloseBrace = NSUIntegerMax - 1; }
+#endif
+}
+
+static void FreeScanIndex(ScanIndex *x)
+{
+    for (int k = 0; k < 3; k++) free(x->groupEnd[k]);
+    free(x->scopeBraceEnd); free(x->scopeEnvEnd); free(x->scopeBraceLevel); free(x->scopeEnvLevel);
+}
+
+// YES if there is no '}' at or after `from`.
+static inline BOOL NoCloseBraceFrom(const ScanIndex *x, NSUInteger from)
+{
+    return x->lastCloseBrace == NSNotFound || from > x->lastCloseBrace;
+}
+
+static inline void ChargeScan(ScanIndex *x, NSUInteger length)
+{
+    if (x->budget != NSIntegerMax) x->budget -= (NSInteger)MIN(length, (NSUInteger)NSIntegerMax / 2);
+}
+
+// Index just past the group opening at src[i], or NSNotFound: a direct scan.
+static NSUInteger ScanBalancedEnd(const unichar *src, NSUInteger n, NSUInteger i, unichar open, unichar close)
 {
     NSInteger depth = 0;
     while (i < n) {
@@ -369,6 +430,49 @@ static NSUInteger BalancedEnd(const unichar *src, NSUInteger n, NSUInteger i, un
         i++;
     }
     return NSNotFound;
+}
+
+// For each position p: where the scan above, started at p with depth 0, meets
+// a `close` at depth 0 (the end of the group that contains p), or n. The scan
+// moves on by two characters after a backslash, so the index is filled from the
+// end: t[p] follows from t[p + 1] or t[p + 2], and for an `open` at p from the
+// position after the end of its own group.
+static uint32_t *GroupIndex(ScanIndex *x, unichar open, unichar close)
+{
+    int k = (open == '{') ? 0 : (open == '[') ? 1 : (open == '(') ? 2 : -1;
+    if (k < 0) return NULL;
+    if (x->groupEnd[k]) return x->groupEnd[k];
+    const unichar *src = x->src;
+    NSUInteger n = x->n;
+    uint32_t *t = malloc((n + 1) * sizeof(uint32_t));
+    if (!t) return NULL;
+    t[n] = (uint32_t)n;
+    for (NSUInteger p = n; p-- > 0; ) {
+        unichar c = src[p];
+        if (c == '\\') t[p] = (p + 2 <= n) ? t[p + 2] : (uint32_t)n;
+        else if (c == close) t[p] = (uint32_t)p;
+        else if (c == open) { uint32_t m = t[p + 1]; t[p] = (m >= n) ? (uint32_t)n : t[m + 1]; }
+        else t[p] = t[p + 1];
+    }
+    x->groupEnd[k] = t;
+    return t;
+}
+
+// Index just past the group opening at src[i], or NSNotFound.
+static NSUInteger BalancedEnd(ScanIndex *x, NSUInteger i, unichar open, unichar close)
+{
+    const unichar *src = x->src;
+    NSUInteger n = x->n;
+    uint32_t *t = NULL;
+    if (x->budget <= 0 && i < n && src[i] == open) t = GroupIndex(x, open, close);
+    if (!t) {
+        NSUInteger end = ScanBalancedEnd(src, n, i, open, close);
+        if (i < n) ChargeScan(x, (end == NSNotFound ? n : end) - i);
+        return end;
+    }
+    // The group opens at i, so it ends where the group containing i + 1 does.
+    uint32_t m = t[i + 1];
+    return (m >= n) ? NSNotFound : (NSUInteger)m + 1;
 }
 
 // YES if src[i] is a newline that ends a paragraph (only blanks, then another
@@ -435,6 +539,10 @@ typedef struct {
     __unsafe_unretained NSMutableArray<NSString *> *languageNames;
     __unsafe_unretained NSDictionary<NSString *, TSSpellMacro *> *macros;      // macros defined in the text
     __unsafe_unretained NSSet<NSString *> *skipBodyEnvs;                        // environments defined in the text
+    ScanIndex *index;          // ends of groups and scopes in src
+    __unsafe_unretained NSMutableDictionary<NSString *, id> *environmentEnds;   // see EnvironmentEnd
+    struct LanguageSpan *spans;    // language changes not yet applied to `language`; see SetLanguage
+    NSUInteger spanCount, spanCapacity, spanTotal;
 } MaskState;
 
 static void Blank(MaskState *m, NSUInteger i, NSUInteger j)
@@ -464,9 +572,9 @@ static NSUInteger SkipArgs(MaskState *m, NSUInteger pos, NSInteger mandatory)
         while (j < m->n && (m->src[j] == ' ' || m->src[j] == '\t')) j++;
         NSUInteger end;
         if (j < m->n && m->src[j] == '[') {
-            end = BalancedEnd(m->src, m->n, j, '[', ']');
+            end = BalancedEnd(m->index, j, '[', ']');
         } else if (j < m->n && m->src[j] == '{' && remaining > 0) {
-            end = BalancedEnd(m->src, m->n, j, '{', '}');
+            end = BalancedEnd(m->index, j, '{', '}');
             if (end != NSNotFound) remaining--;
         } else {
             break;
@@ -481,7 +589,7 @@ static NSUInteger SkipArgs(MaskState *m, NSUInteger pos, NSInteger mandatory)
 static NSUInteger SkipOptional(MaskState *m, NSUInteger pos)
 {
     if (pos < m->n && m->src[pos] == '[') {
-        NSUInteger end = BalancedEnd(m->src, m->n, pos, '[', ']');
+        NSUInteger end = BalancedEnd(m->index, pos, '[', ']');
         if (end != NSNotFound) { Blank(m, pos, end); return end; }
     }
     return pos;
@@ -498,7 +606,7 @@ static NSUInteger SkipPattern(MaskState *m, NSUInteger pos, NSString *pattern)
         NSUInteger j = pos;
         while (j < m->n && (m->src[j] == ' ' || m->src[j] == '\t')) j++;
         NSUInteger end = NSNotFound;
-        if (j < m->n && m->src[j] == open) end = BalancedEnd(m->src, m->n, j, open, close);
+        if (j < m->n && m->src[j] == open) end = BalancedEnd(m->index, j, open, close);
         if (end == NSNotFound) {
             if (open == '{') break;      // a required argument is missing: stop
             continue;                    // an optional group is absent: try the next
@@ -542,15 +650,20 @@ static void ApplyMacro(MaskState *m, NSUInteger pos, TSSpellMacro *macro)
             if (kind == 'o') continue;      // an optional argument that is not there
             return;                         // a missing argument: stop
         }
-        NSUInteger end = BalancedEnd(m->src, m->n, p, open, close);
+        NSUInteger end = BalancedEnd(m->index, p, open, close);
         if (end == NSNotFound) return;
         if (skip) Blank(m, p, end);
         pos = end;
     }
 }
 
+// A stretch of text in one language, recorded by SetLanguage.
+struct LanguageSpan { NSUInteger from, to; uint8_t language; };
+
 // Mark src[from..to) as being in the language that rules.languageMap gives for
-// `name` (a babel or polyglossia language name).
+// `name` (a babel or polyglossia language name). The stretches are written into
+// m->language by ApplyLanguageSpans once the scan is done, each over the ones
+// recorded before it.
 static void SetLanguage(MaskState *m, TSSpellRules *rules, NSString *name, NSUInteger from, NSUInteger to)
 {
     // A language that is not in the map ("und") is one nothing can be checked in.
@@ -562,14 +675,64 @@ static void SetLanguage(MaskState *m, TSSpellRules *rules, NSString *name, NSUIn
         index = [m->languageNames count] - 1;
     }
     if (to > m->n) to = m->n;
-    for (NSUInteger k = from; k < to; k++) m->language[k] = (uint8_t)(index + 1);
+    if (from >= to) return;
+#ifdef TSSPELL_STANDALONE_TEST
+    if (TSSpellTestReferenceScans) {
+        for (NSUInteger k = from; k < to; k++) m->language[k] = (uint8_t)(index + 1);
+        return;
+    }
+#endif
+    if (m->spanCount == m->spanCapacity) {
+        NSUInteger capacity = m->spanCapacity ? 2 * m->spanCapacity : 16;
+        struct LanguageSpan *spans = realloc(m->spans, capacity * sizeof(struct LanguageSpan));
+        if (!spans) return;
+        m->spans = spans;
+        m->spanCapacity = capacity;
+    }
+    m->spans[m->spanCount++] = (struct LanguageSpan){ from, to, (uint8_t)(index + 1) };
+    m->spanTotal += to - from;
+}
+
+// The first position at or after k not yet written to (see ApplyLanguageSpans).
+static NSUInteger NextUnwritten(uint32_t *next, NSUInteger k)
+{
+    NSUInteger root = k;
+    while (next[root] != root) root = next[root];
+    while (next[k] != root) { NSUInteger up = next[k]; next[k] = (uint32_t)root; k = up; }
+    return root;
+}
+
+// Write the recorded language stretches into m->language, later ones over
+// earlier ones. Nested or unterminated language markup can give stretches whose
+// total length is far more than the text's; they are then written from the last
+// to the first, each character only once.
+static void ApplyLanguageSpans(MaskState *m)
+{
+    NSUInteger n = m->n;
+    if (m->spanCount == 0) return;
+    uint32_t *next = (m->spanTotal > 2 * n + 64 && n < UINT32_MAX) ? malloc((n + 1) * sizeof(uint32_t)) : NULL;
+    if (!next) {
+        for (NSUInteger s = 0; s < m->spanCount; s++)
+            for (NSUInteger k = m->spans[s].from; k < m->spans[s].to; k++) m->language[k] = m->spans[s].language;
+        return;
+    }
+    for (NSUInteger k = 0; k <= n; k++) next[k] = (uint32_t)k;
+    for (NSUInteger s = m->spanCount; s-- > 0; ) {
+        struct LanguageSpan span = m->spans[s];
+        for (NSUInteger k = NextUnwritten(next, span.from); k < span.to; k = NextUnwritten(next, k + 1)) {
+            m->language[k] = span.language;
+            next[k] = (uint32_t)(k + 1);
+        }
+    }
+    free(next);
 }
 
 // The end of the group or environment that contains position `from`: the first
 // } or \end{..} that has no opening in between, or the end of the text. A later
 // language switch in the same group or environment ends it too, since that switch
 // takes over from there (this also keeps a long run of top-level switches linear).
-static NSUInteger ScopeEnd(MaskState *m, TSSpellRules *rules, NSUInteger from)
+// This is the direct scan; see ScopeEnd.
+static NSUInteger ScanScopeEnd(MaskState *m, TSSpellRules *rules, NSUInteger from)
 {
     const unichar *src = m->src;
     NSUInteger n = m->n, j = from;
@@ -598,13 +761,137 @@ static NSUInteger ScopeEnd(MaskState *m, TSSpellRules *rules, NSUInteger from)
     return n;
 }
 
+// Index for ScopeEnd. The scan above visits the same positions whatever its
+// counts are (outside braces and environments it steps over a command name at
+// once, inside them a letter at a time, and letters are of no interest to it), so
+// from any position p it takes a fixed path, on which:
+//   scopeBraceEnd[p]  is the first } that has no { between p and it (n if none),
+//   scopeEnvEnd[p]    is the first \end{ that has no \begin{ between (n if none),
+//   level[p] - level[q], for a later q on that path, is the number of { (or of
+//                     \begin{) opened and not yet closed when the scan reaches q.
+// Each is filled from the end of the text, from the entry of the position that
+// the scan goes to next, or, at an opening, from the one after its closing.
+static BOOL ScopeIndex(ScanIndex *x)
+{
+    if (x->scopeBraceEnd) return YES;
+    const unichar *src = x->src;
+    NSUInteger n = x->n;
+    uint32_t *braceEnd = malloc((n + 1) * sizeof(uint32_t)), *envEnd = malloc((n + 1) * sizeof(uint32_t));
+    int32_t *braceLevel = malloc((n + 1) * sizeof(int32_t)), *envLevel = malloc((n + 1) * sizeof(int32_t));
+    if (!braceEnd || !envEnd || !braceLevel || !envLevel) {
+        free(braceEnd); free(envEnd); free(braceLevel); free(envLevel);
+        return NO;
+    }
+    braceEnd[n] = envEnd[n] = (uint32_t)n;
+    braceLevel[n] = envLevel[n] = 0;
+    NSUInteger newline = n;     // the first newline after p
+    NSUInteger letters = n;     // the first non-letter after p
+    for (NSUInteger p = n; p-- > 0; ) {
+        unichar c = src[p];
+        NSUInteger next = p + 1;
+        int brace = 0, env = 0;
+        if (c == '%') next = newline;
+        else if (c == '\\') {
+            if (HasPrefixAt(src, n, p, @"\\begin{")) { next = p + 2; env = 1; }
+            else if (HasPrefixAt(src, n, p, @"\\end{")) { next = p + 2; env = -1; }
+            else if (p + 1 < n && IsLetter(src[p + 1])) next = letters;
+            else next = p + 2;
+        }
+        else if (c == '{') brace = 1;
+        else if (c == '}') brace = -1;
+        if (next > n) next = n;
+
+        if (brace < 0) braceEnd[p] = (uint32_t)p;
+        else if (brace > 0) braceEnd[p] = (braceEnd[next] >= n) ? (uint32_t)n : braceEnd[braceEnd[next] + 1];
+        else braceEnd[p] = braceEnd[next];
+        if (env < 0) envEnd[p] = (uint32_t)p;
+        else if (env > 0) envEnd[p] = (envEnd[next] >= n) ? (uint32_t)n : envEnd[envEnd[next] + 2];
+        else envEnd[p] = envEnd[next];
+        braceLevel[p] = braceLevel[next] + brace;
+        envLevel[p] = envLevel[next] + env;
+
+        if (IsNewline(c)) newline = p;
+        if (!IsLetter(c)) letters = p;
+    }
+    x->scopeBraceEnd = braceEnd; x->scopeEnvEnd = envEnd;
+    x->scopeBraceLevel = braceLevel; x->scopeEnvLevel = envLevel;
+    return YES;
+}
+
+// ScanScopeEnd, answered from the index: groups and environments that close
+// again are passed over in one step, and while the scan is inside a group or an
+// environment (where a switch does not end the scope) it goes straight to the
+// next closing that takes it out of one.
+static NSUInteger IndexedScopeEnd(MaskState *m, TSSpellRules *rules, NSUInteger from)
+{
+    ScanIndex *x = m->index;
+    const unichar *src = x->src;
+    NSUInteger n = x->n, j = from;
+    const uint32_t *braceEnd = x->scopeBraceEnd, *envEnd = x->scopeEnvEnd;
+    const int32_t *braceLevel = x->scopeBraceLevel, *envLevel = x->scopeEnvLevel;
+    while (j < n) {
+        int32_t braces = braceLevel[from] - braceLevel[j], envs = envLevel[from] - envLevel[j];
+        if (braces != 0 || envs != 0) {
+            NSUInteger closeBrace = braceEnd[j], closeEnv = envEnd[j];
+            if (closeBrace >= n && closeEnv >= n) return n;
+            if (closeBrace < closeEnv) {
+                if (braces == 0) return closeBrace;
+                j = closeBrace + 1;
+            } else {
+                if (envs == 0) return closeEnv;
+                j = closeEnv + 2;
+            }
+            continue;
+        }
+        unichar c = src[j];
+        if (c == '%') { while (j < n && !IsNewline(src[j])) j++; continue; }
+        if (c == '}') return j;
+        if (c == '{') {
+            NSUInteger close = braceEnd[j + 1];
+            if (envEnd[j] < close || close >= n) return envEnd[j];
+            j = close + 1;
+            continue;
+        }
+        if (c == '\\') {
+            if (HasPrefixAt(src, n, j, @"\\begin{")) {
+                NSUInteger close = envEnd[j + 2];
+                if (braceEnd[j] < close || close >= n) return braceEnd[j];
+                j = close + 2;
+                continue;
+            }
+            if (HasPrefixAt(src, n, j, @"\\end{")) return j;
+            if (j + 1 < n && IsLetter(src[j + 1])) {
+                NSUInteger e = j + 1;
+                while (e < n && IsLetter(src[e])) e++;
+                if ([rules.languageSwitches containsObject:[NSString stringWithCharacters:src + j + 1 length:e - j - 1]])
+                    return j;
+                j = e;
+                continue;
+            }
+            j += 2;
+            continue;
+        }
+        j++;
+    }
+    return n;
+}
+
+static NSUInteger ScopeEnd(MaskState *m, TSSpellRules *rules, NSUInteger from)
+{
+    ScanIndex *x = m->index;
+    if (x->budget <= 0 && from < m->n && ScopeIndex(x)) return IndexedScopeEnd(m, rules, from);
+    NSUInteger end = ScanScopeEnd(m, rules, from);
+    if (end > from) ChargeScan(x, end - from);
+    return end;
+}
+
 // Blank any [..] groups at pos; returns the position after them.
 static NSUInteger BlankOptionals(MaskState *m, NSUInteger pos)
 {
     for (;;) {
         NSUInteger p = SkipBlanks(m->src, m->n, pos);
         if (p >= m->n || m->src[p] != '[') return pos;
-        NSUInteger end = BalancedEnd(m->src, m->n, p, '[', ']');
+        NSUInteger end = BalancedEnd(m->index, p, '[', ']');
         if (end == NSNotFound) return pos;
         Blank(m, p, end);
         pos = end;
@@ -634,7 +921,7 @@ static NSUInteger HandleLanguageCommand(MaskState *m, TSSpellRules *rules, NSStr
     if (kind != 3) {
         NSUInteger q = SkipBlanks(src, n, p);
         if (q >= n || src[q] != '{') return p;
-        NSUInteger end = BalancedEnd(src, n, q, '{', '}');
+        NSUInteger end = BalancedEnd(m->index, q, '{', '}');
         if (end == NSNotFound) return p;
         language = [NSString stringWithCharacters:src + q + 1 length:end - q - 2];
         Blank(m, q, end);
@@ -646,14 +933,23 @@ static NSUInteger HandleLanguageCommand(MaskState *m, TSSpellRules *rules, NSStr
     }
     NSUInteger q = SkipBlanks(src, n, p);
     if (q < n && src[q] == '{') {
-        NSUInteger end = BalancedEnd(src, n, q, '{', '}');
+        NSUInteger end = BalancedEnd(m->index, q, '{', '}');
         if (end != NSNotFound) SetLanguage(m, rules, language, q + 1, end - 1);
     }
     return p;
 }
 
-// Index just past \end{env} (or \end{env*}) at or after pos; n if there is none.
-static NSUInteger EnvironmentEnd(MaskState *m, NSUInteger pos, NSString *env)
+// The last answer of EnvironmentEnd for one environment name: \end{name} was
+// found at `at` (n: nowhere) by a search from `from`, and `end` is just past it.
+@interface TSSpellEnvironmentEnd : NSObject
+@property NSUInteger from, at, end;
+@end
+@implementation TSSpellEnvironmentEnd
+@end
+
+#ifdef TSSPELL_STANDALONE_TEST
+// EnvironmentEnd as a direct scan, as a reference for the tests.
+static NSUInteger ScanEnvironmentEnd(MaskState *m, NSUInteger pos, NSString *env)
 {
     NSUInteger n = m->n;
     for (NSUInteger i = pos; i < n; i++) {
@@ -670,6 +966,81 @@ static NSUInteger EnvironmentEnd(MaskState *m, NSUInteger pos, NSString *env)
         if ([name isEqualToString:env]) return k + 1;
     }
     return n;
+}
+#endif
+
+static NSCharacterSet *WhitespaceSet(void)
+{
+    static NSCharacterSet *set;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ set = [NSCharacterSet whitespaceCharacterSet]; });
+    return set;
+}
+
+// The first \end{env} (or \end{env*}, with blanks allowed around the name) at or
+// after pos: sets *at to its position and returns the index just past it, or sets
+// *at to n and returns n if there is none. Every \end{ that is not followed by a
+// } ends at the same } as the one before it, so each } is looked for only once,
+// and a name is only compared when its length fits.
+static NSUInteger FindEnvironmentEnd(MaskState *m, NSUInteger pos, NSString *env, NSUInteger *at)
+{
+    const unichar *src = m->src;
+    NSUInteger n = m->n, length = [env length];
+    NSCharacterSet *white = WhitespaceSet();
+    NSUInteger closeFrom = NSNotFound, close = 0;   // the first } at or after closeFrom
+    NSUInteger trimmedClose = NSNotFound, trimmedEnd = 0;   // end of the name before trimmedClose, without blanks
+    *at = n;
+    for (NSUInteger i = pos; i < n; i++) {
+        if (src[i] != '\\' || !HasPrefixAt(src, n, i, @"\\end")) continue;
+        NSUInteger j = i + 4;
+        while (j < n && (src[j] == ' ' || src[j] == '\t' || IsNewline(src[j]))) j++;
+        if (j >= n || src[j] != '{') continue;
+        if (NoCloseBraceFrom(m->index, j + 1)) return n;         // and none after any later \end{ either
+        NSUInteger k;
+        if (closeFrom != NSNotFound && j + 1 >= closeFrom && j + 1 <= close) k = close;
+        else {
+            k = j + 1;
+            while (k < n && src[k] != '}') k++;
+            closeFrom = j + 1;
+            close = k;
+        }
+        if (k >= n) return n;
+        NSUInteger first = j + 1;
+        while (first < k && [white characterIsMember:src[first]]) first++;
+        if (trimmedClose != k) {
+            trimmedEnd = k;
+            while (trimmedEnd > j + 1 && [white characterIsMember:src[trimmedEnd - 1]]) trimmedEnd--;
+            trimmedClose = k;
+        }
+        NSUInteger last = MAX(first, trimmedEnd);
+        if (last - first != length && last - first != length + 1) continue;
+        NSString *name = [NSString stringWithCharacters:src + j + 1 length:k - j - 1];
+        name = [name stringByTrimmingCharactersInSet:white];
+        if ([name hasSuffix:@"*"]) name = [name substringToIndex:[name length] - 1];
+        if ([name isEqualToString:env]) { *at = i; return k + 1; }
+    }
+    return n;
+}
+
+// Index just past \end{env} (or \end{env*}) at or after pos; n if there is none.
+// The scan goes on from pos, so the last answer for each name is kept: it holds
+// for any later pos up to where that \end was found.
+static NSUInteger EnvironmentEnd(MaskState *m, NSUInteger pos, NSString *env)
+{
+#ifdef TSSPELL_STANDALONE_TEST
+    if (TSSpellTestReferenceScans) return ScanEnvironmentEnd(m, pos, env);
+#endif
+    TSSpellEnvironmentEnd *last = m->environmentEnds[env];
+    if (last && pos >= last.from && pos <= last.at) return last.end;
+    if (!last) {
+        last = [[TSSpellEnvironmentEnd alloc] init];
+        m->environmentEnds[env] = last;
+    }
+    NSUInteger at, end = FindEnvironmentEnd(m, pos, env, &at);
+    last.from = pos;
+    last.at = at;
+    last.end = end;
+    return end;
 }
 
 // Handle a delimited span starting at i if one of the rules' openers is there.
@@ -707,7 +1078,9 @@ static NSUInteger HandleBackslash(MaskState *m, TSSpellRules *rules, NSUInteger 
         NSUInteger j = i + (isBegin ? 6 : 4);
         while (j < n && (src[j] == ' ' || src[j] == '\t' || IsNewline(src[j]))) j++;
         if (j < n && src[j] == '{') {
-            NSUInteger k = j + 1;
+            // The scan goes on after the }, so it is looked for only once,
+            // unless there is none at all.
+            NSUInteger k = NoCloseBraceFrom(m->index, j + 1) ? n : j + 1;
             while (k < n && src[k] != '}') k++;
             if (k < n) {
                 NSString *env = [[NSString stringWithCharacters:src + j + 1 length:k - j - 1]
@@ -726,7 +1099,7 @@ static NSUInteger HandleBackslash(MaskState *m, TSSpellRules *rules, NSUInteger 
                     NSUInteger p = BlankOptionals(m, pos);
                     NSUInteger q = SkipBlanks(src, n, p);
                     if (q < n && src[q] == '{') {
-                        NSUInteger end = BalancedEnd(src, n, q, '{', '}');
+                        NSUInteger end = BalancedEnd(m->index, q, '{', '}');
                         if (end != NSNotFound) {
                             NSString *language = [NSString stringWithCharacters:src + q + 1 length:end - q - 2];
                             Blank(m, q, end);
@@ -782,7 +1155,7 @@ static NSUInteger HandleBackslash(MaskState *m, TSSpellRules *rules, NSUInteger 
             while (j < n && src[j] != '{' && !IsNewline(src[j])) j++;
             NSUInteger end = j;
             if (j < n && src[j] == '{') {
-                NSUInteger b = BalancedEnd(src, n, j, '{', '}');
+                NSUInteger b = BalancedEnd(m->index, j, '{', '}');
                 if (b != NSNotFound) end = b;
             }
             Blank(m, pos, end);
@@ -895,9 +1268,15 @@ static NSData *ExcludedFlags(TSSpellRules *rules, NSDictionary<NSString *, TSSpe
     memcpy(out, src, n * sizeof(unichar));
     NSMutableDictionary<NSString *, NSNumber *> *cache = [NSMutableDictionary dictionary];
     NSMutableArray<NSString *> *names = [NSMutableArray array];
-    MaskState m = { src, out, deleted, excluded, accent, language, n, cache, names, macros, envs };
+    NSMutableDictionary<NSString *, id> *environmentEnds = [NSMutableDictionary dictionary];
+    ScanIndex index;
+    InitScanIndex(&index, src, n);
+    MaskState m = { src, out, deleted, excluded, accent, language, n, cache, names, macros, envs, &index, environmentEnds,
+                    NULL, 0, 0, 0 };
     RunMask(&m, rules);
     NSData *flags = [NSData dataWithBytes:excluded length:n];
+    FreeScanIndex(&index);
+    free(m.spans);
     free(src); free(out); free(deleted); free(excluded); free(accent); free(language);
     return flags;
 }
@@ -971,11 +1350,13 @@ static NSString *ReadMacroName(const unichar *src, NSUInteger n, NSUInteger *p)
 }
 
 // The {..} group at p (after blanks): its content; moves p past it.
-static NSString *ReadGroup(const unichar *src, NSUInteger n, NSUInteger *p)
+static NSString *ReadGroup(ScanIndex *x, NSUInteger *p)
 {
+    const unichar *src = x->src;
+    NSUInteger n = x->n;
     NSUInteger q = SkipBlanks(src, n, *p);
     if (q >= n || src[q] != '{') return nil;
-    NSUInteger end = BalancedEnd(src, n, q, '{', '}');
+    NSUInteger end = BalancedEnd(x, q, '{', '}');
     if (end == NSNotFound) return nil;
     *p = end;
     return [NSString stringWithCharacters:src + q + 1 length:end - q - 2];
@@ -1002,7 +1383,7 @@ static void RegisterEnvironment(TSSpellRules *rules, NSMutableSet<NSString *> *e
 
 // Read the definitions of macros and environments in the text, so that the
 // arguments of the macros that only pass them on to non-prose can be skipped.
-static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger n,
+static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
                             NSMutableDictionary<NSString *, TSSpellMacro *> *macros, NSMutableSet<NSString *> *envs)
 {
     static NSSet<NSString *> *commandDefiners, *documentDefiners, *defDefiners, *envDefiners, *documentEnvDefiners;
@@ -1016,6 +1397,8 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
         documentEnvDefiners = [NSSet setWithObjects:@"NewDocumentEnvironment", @"RenewDocumentEnvironment",
                                @"ProvideDocumentEnvironment", @"DeclareDocumentEnvironment", nil];
     });
+    const unichar *src = x->src;
+    NSUInteger n = x->n;
     NSUInteger i = 0;
     while (i < n) {
         unichar c = src[i];
@@ -1034,20 +1417,20 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
 
         if (isEnv || isDocumentEnv) {
             // {name}[n][default]{begin}{end}   or   {name}{spec}{begin}{end}
-            NSString *envName = ReadGroup(src, n, &p);
+            NSString *envName = ReadGroup(x, &p);
             if (!envName) continue;
             if (isEnv) {
                 NSUInteger q = SkipBlanks(src, n, p);
                 while (q < n && src[q] == '[') {
-                    NSUInteger end = BalancedEnd(src, n, q, '[', ']');
+                    NSUInteger end = BalancedEnd(x, q, '[', ']');
                     if (end == NSNotFound) break;
                     p = end;
                     q = SkipBlanks(src, n, p);
                 }
             } else {
-                if (!ReadGroup(src, n, &p)) continue;
+                if (!ReadGroup(x, &p)) continue;
             }
-            NSString *begin = ReadGroup(src, n, &p);
+            NSString *begin = ReadGroup(x, &p);
             if (!begin) continue;
             RegisterEnvironment(rules, envs, [envName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]], begin);
             i = p;
@@ -1063,13 +1446,13 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
             NSInteger count = 0;
             BOOL hasDefault = NO;
             if (q < n && src[q] == '[') {
-                NSUInteger end = BalancedEnd(src, n, q, '[', ']');
+                NSUInteger end = BalancedEnd(x, q, '[', ']');
                 if (end == NSNotFound) continue;
                 count = [[NSString stringWithCharacters:src + q + 1 length:end - q - 2] integerValue];
                 p = end;
                 q = SkipBlanks(src, n, p);
                 if (q < n && src[q] == '[') {
-                    end = BalancedEnd(src, n, q, '[', ']');
+                    end = BalancedEnd(x, q, '[', ']');
                     if (end == NSNotFound) continue;
                     hasDefault = YES;
                     p = end;
@@ -1078,7 +1461,7 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
             if (count < 0 || count > 9) continue;
             for (NSInteger k = 0; k < count; k++) [kinds appendString:(k == 0 && hasDefault) ? @"o" : @"m"];
         } else if (isDocument) {
-            NSString *spec = ReadGroup(src, n, &p);
+            NSString *spec = ReadGroup(x, &p);
             if (!spec) continue;
             for (NSUInteger k = 0; k < [spec length] && supported; k++) {
                 unichar t = [spec characterAtIndex:k];
@@ -1104,7 +1487,7 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
             if (p >= n || src[p] != '{') supported = NO;
         }
         if (!supported) continue;
-        NSString *body = ReadGroup(src, n, &p);
+        NSString *body = ReadGroup(x, &p);
         if (!body) continue;
         RegisterMacro(rules, macros, envs, name, kinds, body);
         i = p;
@@ -1261,9 +1644,16 @@ static void ScanDefinitions(TSSpellRules *rules, const unichar *src, NSUInteger 
     NSMutableArray<NSString *> *languageNames = [NSMutableArray array];
     NSMutableDictionary<NSString *, TSSpellMacro *> *macros = [NSMutableDictionary dictionary];
     NSMutableSet<NSString *> *envs = [NSMutableSet set];
-    if (rules.autoMacros) ScanDefinitions(rules, src, n, macros, envs);
-    MaskState m = { src, out, deleted, excluded, accent, language, n, argCountCache, languageNames, macros, envs };
+    NSMutableDictionary<NSString *, id> *environmentEnds = [NSMutableDictionary dictionary];
+    ScanIndex index;
+    InitScanIndex(&index, src, n);
+    if (rules.autoMacros) ScanDefinitions(rules, &index, macros, envs);
+    MaskState m = { src, out, deleted, excluded, accent, language, n, argCountCache, languageNames, macros, envs,
+                    &index, environmentEnds, NULL, 0, 0, 0 };
     RunMask(&m, rules);
+    ApplyLanguageSpans(&m);
+    free(m.spans);
+    FreeScanIndex(&index);
 
     NSUInteger keep = 0;
     for (NSUInteger k = 0; k < n; k++) if (!deleted[k]) keep++;
