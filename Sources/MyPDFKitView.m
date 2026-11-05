@@ -553,8 +553,9 @@
 	
 	// if ([SUD boolForKey:ReleaseDocumentClassesKey]) {
 	// A watched PDF must survive an in-place overwrite of its file.
-	if (self.myDocument.pdfRefreshTimer) {
-        pdfDoc = TSInitialPDFSnapshot(imagePath, loadedSignature);
+	// If no snapshot can be made, load the file as when it is not watched.
+	pdfDoc = self.myDocument.pdfRefreshTimer ? TSInitialPDFSnapshot(imagePath, loadedSignature) : nil;
+	if (pdfDoc) {
         [self setDocument:pdfDoc];
     } else if ([self doReleaseDocument]) {
 		pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
@@ -1282,12 +1283,11 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 - (void)reShowWithPath:(NSString *)imagePath
 {
     NSString *loadedSignature = TSExternalPDFSignature(imagePath);
-    PDFDocument *pdfDoc;
-    if (self.myDocument.pdfRefreshTimer)
-        pdfDoc = TSInitialPDFSnapshot(imagePath, loadedSignature);
-    else if ([self doReleaseDocument])
+    PDFDocument *pdfDoc = self.myDocument.pdfRefreshTimer ? TSInitialPDFSnapshot(imagePath, loadedSignature) : nil;
+    // If no snapshot can be made, load the file as when it is not watched.
+    if (!pdfDoc && [self doReleaseDocument])
         pdfDoc = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:imagePath]];
-    else
+    else if (!pdfDoc)
         pdfDoc = [[PDFDocument alloc] initWithData:[NSData dataWithContentsOfFile:imagePath]];
     [self reShowWithDocument:pdfDoc];
     [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature];

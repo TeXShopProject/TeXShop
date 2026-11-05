@@ -38,6 +38,7 @@
 #import "TSFullSplitWindow.h"
 #import "GlobalData.h"
 #import "TSColorSupport.h"
+#import "TSExternalPDFReload.h"
 
 
 
@@ -227,6 +228,10 @@
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification
 {
+    // Remove PDF snapshots of earlier processes that ended without cleanup.
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        TSRemoveStalePDFSnapshots(NSTemporaryDirectory());
+    });
     
     // NSLog(@"the system is %f", NSAppKitVersionNumber);
     

@@ -3,18 +3,22 @@
 #import <PDFKit/PDFKit.h>
 #include <sys/stat.h>
 
+// Content identity only: ctime also changes for metadata such as extended
+// attributes set by sync clients or Finder. Dataless (online-only) files have
+// no signature, so observing them never triggers a download.
 static inline NSString *TSExternalPDFSignature(NSString *path)
 {
     struct stat info;
-    if (!path || stat(path.fileSystemRepresentation, &info) || !S_ISREG(info.st_mode)) return nil;
-    return [NSString stringWithFormat:@"%@:%llu:%llu:%lld:%lld:%ld:%lld:%ld", path,
+    if (!path || stat(path.fileSystemRepresentation, &info) || !S_ISREG(info.st_mode) ||
+        (info.st_flags & SF_DATALESS)) return nil;
+    return [NSString stringWithFormat:@"%@:%llu:%llu:%lld:%lld:%ld", path,
             (unsigned long long)info.st_dev, (unsigned long long)info.st_ino,
-            (long long)info.st_size, (long long)info.st_mtimespec.tv_sec, info.st_mtimespec.tv_nsec,
-            (long long)info.st_ctimespec.tv_sec, info.st_ctimespec.tv_nsec];
+            (long long)info.st_size, (long long)info.st_mtimespec.tv_sec, info.st_mtimespec.tv_nsec];
 }
 
 PDFDocument *TSExternalPDFSnapshot(NSString *path, NSString *signature);
 PDFDocument *TSInitialPDFSnapshot(NSString *path, NSString *signature);
+void TSRemoveStalePDFSnapshots(NSString *parent);
 
 typedef struct {
     BOOL valid, autoScales;

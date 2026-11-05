@@ -74,6 +74,10 @@
 @property (copy) NSString *externalPDFFailedSignature;
 @property NSTimeInterval externalPDFFailedRetryTime;
 @property BOOL externalPDFObservationClosed;
+// File checks and snapshots run on a serial queue; results carry a generation.
+@property (strong) dispatch_queue_t externalPDFQueue;
+@property NSUInteger externalPDFGeneration;
+@property BOOL externalPDFCheckRunning;
 - (void)configureExternalPDFObservation;
 - (void)stopExternalPDFObservation;
 - (BOOL)externalPDFObservationEnabled;
@@ -7103,6 +7107,7 @@ if (! useFullSplitWindow) {
 - (void)stopExternalPDFObservation
 {
     self.externalPDFObservationClosed = YES;
+    self.externalPDFGeneration++;
     [[NSNotificationCenter defaultCenter] removeObserver:self
         name:NSUserDefaultsDidChangeNotification object:SUD];
     [self.pdfRefreshTimer invalidate];
@@ -7125,6 +7130,7 @@ if (! useFullSplitWindow) {
     self.pdfRefreshTimer = nil;
     if (self.pdfActivity) [[NSProcessInfo processInfo] endActivity:self.pdfActivity];
     self.pdfActivity = nil;
+    self.externalPDFGeneration++;
     self.externalPDFPendingSignature = nil;
     self.externalPDFFailedSignature = nil;
     if (![self externalPDFObservationEnabled]) return;
@@ -7148,32 +7154,77 @@ if (! useFullSplitWindow) {
         self.myPDFKitView.document.pageCount && [signature isEqualToString:TSExternalPDFSignature(path)]) {
         self.externalPDFLoadedSignature = signature;
         self.externalPDFPendingSignature = nil;
+        self.externalPDFGeneration++;
     }
+}
+
+// Do not compete with typesetting or discard locally edited PDF annotations.
+// taskDone can stay NO after an AppleScript command that starts no job.
+- (BOOL)externalPDFReloadBlocked
+{
+    return ![self externalPDFObservationEnabled] || self.texTask.running ||
+        self.annotationsExist || self.myPDFKitView.document.isFinding ||
+        self.myPDFKitView2.document.isFinding || (self.pdfKitWindow.previewClosed && !_externalEditor);
 }
 
 - (void)refreshPDFWindow:(NSTimer *)timer
 {
-    // Do not compete with typesetting or discard locally edited PDF annotations.
-    if (![self externalPDFObservationEnabled] || !taskDone || self.texTask.running ||
-        self.annotationsExist || self.myPDFKitView.document.isFinding ||
-        self.myPDFKitView2.document.isFinding || (self.pdfKitWindow.previewClosed && !_externalEditor)) {
+    if ([self externalPDFReloadBlocked]) {
+        self.externalPDFPendingSignature = nil;
+        self.externalPDFGeneration++;
+        return;
+    }
+    // Skip ticks while a check is running, e.g. on a stalled volume, so checks
+    // never pile up and observations stay at least one interval apart.
+    if (self.externalPDFCheckRunning) return;
+    if (!self.externalPDFQueue)
+        self.externalPDFQueue = dispatch_queue_create("org.texshop.external-pdf", DISPATCH_QUEUE_SERIAL);
+    self.externalPDFCheckRunning = YES;
+    NSUInteger generation = ++self.externalPDFGeneration;
+    NSString *path = [self externalPDFPath], *loaded = self.externalPDFLoadedSignature;
+    NSString *pending = self.externalPDFPendingSignature;
+    NSString *failed = NSDate.timeIntervalSinceReferenceDate < self.externalPDFFailedRetryTime ?
+        self.externalPDFFailedSignature : nil;
+    // The worker never touches the document; only this main-queue block does.
+    __weak TSDocument *weakSelf = self;
+    void (^finish)(NSString *, BOOL, PDFDocument *, NSDate *) =
+        ^(NSString *signature, BOOL attempted, PDFDocument *replacement, NSDate *modified) {
+            [weakSelf finishExternalPDFCheck:generation path:path signature:signature attempted:attempted
+                                 replacement:replacement modified:modified];
+        };
+    dispatch_async(self.externalPDFQueue, ^{
+        NSString *signature = TSExternalPDFSignature(path);
+        if (!signature || [signature isEqualToString:loaded] || [signature isEqualToString:failed])
+            signature = nil;
+        // Two unchanged observations avoid loading each chunk of a writer's output.
+        BOOL attempted = [signature isEqualToString:pending];
+        PDFDocument *replacement = attempted ? TSExternalPDFSnapshot(path, signature) : nil;
+        NSDate *modified = replacement ? [[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL]
+                                          objectForKey:NSFileModificationDate] : nil;
+        dispatch_async(dispatch_get_main_queue(), ^{ finish(signature, attempted, replacement, modified); });
+    });
+}
+
+// Apply a check only if nothing has superseded it and reloading is still allowed.
+- (void)finishExternalPDFCheck:(NSUInteger)generation path:(NSString *)path signature:(NSString *)signature
+                     attempted:(BOOL)attempted replacement:(PDFDocument *)replacement modified:(NSDate *)modified
+{
+    self.externalPDFCheckRunning = NO;
+    if (generation == self.externalPDFGeneration && [path isEqualToString:[self externalPDFPath]])
+        [self applyExternalPDFPath:path signature:signature attempted:attempted replacement:replacement modified:modified];
+}
+
+- (void)applyExternalPDFPath:(NSString *)path signature:(NSString *)signature attempted:(BOOL)attempted
+                 replacement:(PDFDocument *)replacement modified:(NSDate *)modified
+{
+    if (!signature || [self externalPDFReloadBlocked]) {
         self.externalPDFPendingSignature = nil;
         return;
     }
-    NSString *path = [self externalPDFPath];
-    NSString *signature = TSExternalPDFSignature(path);
-    if (!signature || [signature isEqualToString:self.externalPDFLoadedSignature] ||
-        ([signature isEqualToString:self.externalPDFFailedSignature] &&
-         NSDate.timeIntervalSinceReferenceDate < self.externalPDFFailedRetryTime)) {
-        self.externalPDFPendingSignature = nil;
-        return;
-    }
-    // Two unchanged observations avoid loading each chunk of a writer's output.
-    if (![signature isEqualToString:self.externalPDFPendingSignature]) {
+    if (!attempted) {
         self.externalPDFPendingSignature = signature;
         return;
     }
-    PDFDocument *replacement = TSExternalPDFSnapshot(path, signature);
     if (!replacement) {
         // Back off repeated invalid files, but retry even when coarse filesystem
         // timestamps cannot distinguish a completed write from its partial file.
@@ -7194,8 +7245,7 @@ if (! useFullSplitWindow) {
     TSExternalPDFRestore(self.myPDFKitView2, second);
     self.externalPDFLoadedSignature = signature;
     self.externalPDFPendingSignature = nil;
-    self.pdfLastModDate = [[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL]
-                          objectForKey:NSFileModificationDate];
+    self.pdfLastModDate = modified;
     if (!_externalEditor && self.documentType != isPDF) {
         if (self.useOldSyncParser) [self allocateSyncScannerOld];
         else if (!self.useConTeXtSyncParser) [self allocateSyncScanner];
