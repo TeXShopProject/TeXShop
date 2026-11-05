@@ -139,7 +139,7 @@
 static __weak NSTextView *sReviewView;
 static NSString *sReviewWord;
 
-// added by Terada: bind replacement to the document and snapshot reviewed.
+// Bind replacement to the document and snapshot reviewed.
 static NSString *sReviewText;
 static NSRange sReviewSelection;
 static NSTextField *sReplacementField;
@@ -230,7 +230,7 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     [self findNextMisspellingInTextView:tv mask:fresh];
 }
 
-// added by Terada: use the documented accessoryView, without inspecting or
+// Use the documented accessoryView, without inspecting or
 // moving AppKit's private panel controls. The replacement is explicitly entered.
 + (void)installChangeAllButton
 {

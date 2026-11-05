@@ -1,4 +1,4 @@
-// added by Terada: never learns, ignores or removes dictionary entries.
+// Never learns, ignores or removes dictionary entries.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 #import "TSSpellSupport.h"

@@ -1,4 +1,4 @@
-// added by Terada: Probe delayed panel updates after switching to another document.
+// Probe delayed panel updates after switching to another document.
 #import <Cocoa/Cocoa.h>
 #import "TSSpellExclusions.h"
 #import "TSSpellSupport.h"

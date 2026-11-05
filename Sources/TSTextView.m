@@ -200,7 +200,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 // The panel's Find Next and Edit > Spelling and Grammar > Check Document Now
 // (Command-;) end up here. Holding Option gives the original system behaviour.
-// added by Terada: explicit experimental opt-in; preserve legacy preferences
+// Explicit experimental opt-in; preserve legacy preferences
 // and ordinary text documents until the new spelling UI is ready for release.
 - (BOOL)usesTeXAwareSpellChecking
 {
@@ -236,7 +236,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 // dropped whenever the text or the rules file changes.
 - (TSSpellMask *)spellMask
 {
-    // added by Terada: observe the shared storage, including edits in another pane
+    // Observe the shared storage, including edits in another pane
     // and external reloads. Unchanged checks must not compare the entire document.
     if (_spellMaskStorage != self.textStorage) {
         if (_spellMaskStorage) [[NSNotificationCenter defaultCenter] removeObserver:self
