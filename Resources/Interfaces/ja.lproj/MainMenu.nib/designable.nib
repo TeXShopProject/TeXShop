@@ -29,7 +29,7 @@
                                     <action selector="checkForUpdates:" target="803" id="804"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="環境設定..." keyEquivalent="," id="612">
+                            <menuItem title="設定…" keyEquivalent="," id="612">
                                 <connections>
                                     <action selector="showPreferences:" target="380" id="626"/>
                                 </connections>

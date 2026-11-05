@@ -28,7 +28,7 @@
                                     <action selector="checkForUpdates:" target="803" id="804"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Preferințe" keyEquivalent="," id="225">
+                            <menuItem title="Configurări…" keyEquivalent="," id="225">
                                 <connections>
                                     <action selector="showPreferences:" target="380" id="381"/>
                                 </connections>
@@ -1317,7 +1317,7 @@
                                     <action selector="displayTeXShopConfusion:" target="690" id="qrE-Fc-RtY"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Comment Lines and Hidden Preferences" id="Ojz-or-SBx">
+                            <menuItem title="Comment Lines and Hidden Settings" id="Ojz-or-SBx">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="690" id="dkw-7h-AFN"/>

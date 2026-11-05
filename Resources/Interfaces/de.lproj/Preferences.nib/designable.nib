@@ -3108,7 +3108,7 @@ DQ
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yVp-Ds-j3f">
                                                         <rect key="frame" x="13" y="6" width="206" height="32" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <buttonCell key="cell" type="push" title="Neu aus Einstellunge" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rgQ-lZ-3cx">
+                                                        <buttonCell key="cell" type="push" title="Neu aus Einstellungen" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rgQ-lZ-3cx">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="message" size="11"/>
                                                         </buttonCell>

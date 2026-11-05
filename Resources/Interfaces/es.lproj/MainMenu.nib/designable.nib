@@ -28,7 +28,7 @@
                                     <action selector="checkForUpdates:" target="806" id="807"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Preferencias..." keyEquivalent="," id="225">
+                            <menuItem title="Ajustes…" keyEquivalent="," id="225">
                                 <connections>
                                     <action selector="showPreferences:" target="380" id="381"/>
                                 </connections>
@@ -1328,7 +1328,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem id="4ow-mg-Xv9">
-                                <string key="title">Líneas mágicas y preferencias ocultas
+                                <string key="title">Líneas mágicas y ajustes ocultos
 </string>
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

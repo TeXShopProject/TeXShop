@@ -28,7 +28,7 @@
                                     <action selector="checkForUpdates:" target="809" id="810"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Préférences..." keyEquivalent="," id="225">
+                            <menuItem title="Réglages…" keyEquivalent="," id="225">
                                 <connections>
                                     <action selector="showPreferences:" target="380" id="381"/>
                                 </connections>
@@ -1319,7 +1319,7 @@
                                     <action selector="displayTeXShopConfusion:" target="675" id="0fI-Or-DRs"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Commentaires spéciaux et préférences cachées" id="xP0-7K-Pgd">
+                            <menuItem title="Commentaires spéciaux et réglages cachés" id="xP0-7K-Pgd">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="675" id="nHA-jg-pqD"/>
