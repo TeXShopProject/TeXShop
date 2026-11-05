@@ -21,7 +21,7 @@
 		Files with extensions &quot;.jpg&quot;, &quot;.tif&quot;, &quot;.eps&quot;, or &quot;.pdf&quot; are opened as graphic files.</P>
 		<p>TeXShop can also open &quot;.dvi&quot; and &quot;.ps&quot; files. In these cases, it converts the file to pdf and displays this pdf file.</p>
 <h2>Other file types</h2>
-<p>It is not a good idea to use TeXShop as a general editor. TeXShop can read files written in UniCode and other formats, but it saves files in the format chosen in Preferences. Consequently, information may be lost if TeXShop is used to edit files which really aren't related to TeX.  </p>
+<p>It is not a good idea to use TeXShop as a general editor. TeXShop can read files written in UniCode and other formats, but it saves files in the format chosen in Settings. Consequently, information may be lost if TeXShop is used to edit files which really aren't related to TeX.  </p>
 
 <p> If TeXShop opens a file with an unusual extension, and later saves the file, the saved file will have the same  extension. Thus if TeXShop opens, edits, and saves an "akt" file, the saved file will still have extension "akt."</p>
 
@@ -29,7 +29,7 @@
 
 <p>But the TeXShop "Save Panel" includes a drop down menu named "File Format". Choose a format in this menu to initially save a new file with a nonstandard extension.</p>
 <h2>Adding to the list of file types</h2>
-<p>There is a hidden preference to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax coloring when editing TeX files with non-standard extensions. For example,</p>
+<p>There is a hidden setting to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax coloring when editing TeX files with non-standard extensions. For example,</p>
 		<dl>
 			<dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
 		</dl>

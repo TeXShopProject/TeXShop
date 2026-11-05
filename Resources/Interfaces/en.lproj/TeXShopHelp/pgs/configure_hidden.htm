@@ -2,10 +2,10 @@
 	<HEAD>
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
 		<TITLE>
-			Hidden Preference Items
+			Hidden Settings
 		</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="hidden preference; syntax coloring; background color; backup file">
+		<META NAME="description" CONTENT="hidden setting; syntax coloring; background color; backup file">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 	<BODY>
@@ -14,7 +14,7 @@
 			<p> On Mavericks, the Preview display of text was slightly blurry on many
 			screens. This was probably caused by changes Apple added to support the
 			Retina display. Many work arounds for the problem has been suggested. Terada Yusuke 			added code which improved the display for many. His
-			code is activated by a hidden preference 
+			code is activated by a hidden setting 
 			<dl>
 			<dd> defaults write TeXShop FixPreviewBlur YES 
 			</dl>
@@ -22,10 +22,10 @@
 			<p> Apple improved the pdf display in Yosemite, and again in El Capitan.
 			But some users still see traces of the old blur. Terada Yusuke has modified
 			his code for El Capitan, and users unsatisfied with the Preview output should
-			activate the above hidden preference.
+			activate the above hidden setting.
 		
 			<p> By default, AutoSaving is on. This feature can be turned off using the
-			hidden preference
+			hidden setting
 			<dl>
 			<dd> defaults write TeXShop AutoSaveEnabled NO 
 			</dl>
@@ -58,11 +58,11 @@
 			
 			<P>
 				The previous fix does not alter the display of the Monoco font when used in the log
-				window or the console. Another hidden preference can fix Monoco
-				in these windows. This preference causes TeXShop to call the font routine 
+				window or the console. Another hidden setting can fix Monoco
+				in these windows. This setting causes TeXShop to call the font routine 
 				[font screenFontWithRenderingMode:NSFontDefaultRenderingMode] and pass the resulting
 				font to an AppKit object, although Apple's documentation says not to do this. So this
-				hidden preference should only be used if you cannot tolerate the Monoco
+				hidden setting should only be used if you cannot tolerate the Monoco
 				font's default rendering.
 			</P>
 			<dl>
@@ -81,7 +81,7 @@
 					defaults write TeXShop TagSections NO
 			</dl>
 <p> ConTeXt users may want additional words to be recognized and added to the Tag menu. The
-following preferences adds the words \subsubsubsection, \subsubsubsubsection, \part, \title,
+following settings add the words \subsubsubsection, \subsubsubsubsection, \part, \title,
 \subject, \subsubject, \subsubsubject, \subsubsubsubject, and \subsubsubsubsubject. 
 </p>
 <dl>
@@ -211,7 +211,7 @@ following preferences adds the words \subsubsubsection, \subsubsubsubsection, \p
 					defaults write TeXShop RefreshTime 1.00
 			</dl>
 			<p>
-				Automatic refresh for pdf views is useful if TeXShop is configured to use an external editor, or if a tex file is opened by "Open For Preview...". In these cases, a .tex file is opened, but TeXShop only shows the associated pdf file. TeXShop also allows pdf files to be opened directly; this is useful for a brief glance at illustrations before embedding them in a TeX document. If you want pdf files opened for an external editor to be refreshed automatically, but pdf files opened for a brief glance to be left alone, run Terminal and type the following command. The default value of this preference is YES.
+				Automatic refresh for pdf views is useful if TeXShop is configured to use an external editor, or if a tex file is opened by "Open For Preview...". In these cases, a .tex file is opened, but TeXShop only shows the associated pdf file. TeXShop also allows pdf files to be opened directly; this is useful for a brief glance at illustrations before embedding them in a TeX document. If you want pdf files opened for an external editor to be refreshed automatically, but pdf files opened for a brief glance to be left alone, run Terminal and type the following command. The default value of this setting is YES.
 			</p>
 			<dl>
 				<dd>
@@ -225,7 +225,7 @@ following preferences adds the words \subsubsubsection, \subsubsubsubsection, \p
 					defaults write TeXShop ExternalEditorTypesetAtStart NO
 			</dl>
 			<p>
-				There is a hidden preference to set the default size of the matrix in the Matrix Panel:
+				There is a hidden setting to set the default size of the matrix in the Matrix Panel:
 			</p>
 			<dl>
 				<dd>
@@ -246,14 +246,14 @@ following preferences adds the words \subsubsubsection, \subsubsubsubsection, \p
 					defaults write TeXShop BringPdfFrontOnAutomaticUpdate NO
 			</dl>
 			<p>
-				TeXShop used to support a different set of source commands to determine the typesetting engine, file encoding, and root file; examples are %&latex, %&encoding= UTF-8 Unicode, %SourceDoc ../Main.tex. This syntax was a poor choice on my part and has been changed. If you have a lot of old documents, you can temporarily turn this choice back on using the command below. If you do so, the new commands will be recognized, but the old commands will also work. This preference change should only be made in an emergency.
+				TeXShop used to support a different set of source commands to determine the typesetting engine, file encoding, and root file; examples are %&latex, %&encoding= UTF-8 Unicode, %SourceDoc ../Main.tex. This syntax was a poor choice on my part and has been changed. If you have a lot of old documents, you can temporarily turn this choice back on using the command below. If you do so, the new commands will be recognized, but the old commands will also work. This setting should only be changed in an emergency.
 			</p>
 			<dl>
 				<dd>
 					defaults write TeXShop UseOldHeadingCommands YES
 			</dl>
 			<p> The left and right arrow keys scroll left and right if the preview page is narrower
-	than the total page width, but otherwise they page up and down. A hidden preference changes
+	than the total page width, but otherwise they page up and down. A hidden setting changes
 this behavior so the left and right arrow keys always page.
 </p>
 <dl>
@@ -261,7 +261,7 @@ this behavior so the left and right arrow keys always page.
 					defaults write TeXShop LeftRightArrowsAlwaysPage YES
 			</dl>
 <p> The console text reporting typesetting behavior and errors shows black text. The text can
-be made to switch to red after the first error with a hidden preference.
+be made to switch to red after the first error with a hidden setting.
 </p>
 <dl>
 	<dd> defaults write TeXShop RedConsoleAfterError YES
@@ -273,14 +273,14 @@ changed to "no line break" = 0, "line break after words" = 1, or "line break aft
 <dd>
 					defaults write TeXShop LineBreakMode 1
 			</dl>
-<p> When the Preview window first appears, its drawer is hidden. A hidden preference changes this behavior so the drawer is visible when the Preview window first appears.
+<p> When the Preview window first appears, its drawer is hidden. A hidden setting changes this behavior so the drawer is visible when the Preview window first appears.
 </p>
 <dl>
 <dd>
 					defaults write TeXShop PreviewDrawerOpen YES
 			</dl>
 			
-<p> TeXShop now supports SyncTeX. See the synchronization section in Advanced Help for details. If synctex fails, TeXShop falls back on the Search synchronization method. For users who would like to experiment with synctex by itself, there is a hidden preference to turn off this fallback behavior:</p>
+<p> TeXShop now supports SyncTeX. See the synchronization section in Advanced Help for details. If synctex fails, TeXShop falls back on the Search synchronization method. For users who would like to experiment with synctex by itself, there is a hidden setting to turn off this fallback behavior:</p>
 
 <dl>
 <dd>
@@ -291,9 +291,9 @@ changed to "no line break" = 0, "line break after words" = 1, or "line break aft
 
 <p> Since jumping to the next or previous mark is a common operation, TeXShop also allows users to type option-escape to get to the next mark and control-escape to get to the previous mark.</p>
 
-<p> A Preference Panel item allows users to use "tab" instead of "escape" as the key which triggers command completion. In that case, the shortcuts which jump from mark to mark become option-tab and control-tab.</p>
+<p> An item in the Settings window allows users to use "tab" instead of "escape" as the key which triggers command completion. In that case, the shortcuts which jump from mark to mark become option-tab and control-tab.</p>
 
-<p> Occasionally, third party utilities make use of option-escape, control-escape, option-tab, and control-tab for other purposes. If TeXShop's use of these shortcuts interferes with these utilities, you can turn off these particular TeXShop shortcuts with a hidden preference:
+<p> Occasionally, third party utilities make use of option-escape, control-escape, option-tab, and control-tab for other purposes. If TeXShop's use of these shortcuts interferes with these utilities, you can turn off these particular TeXShop shortcuts with a hidden setting:
 
 
 <dl>
@@ -311,8 +311,8 @@ in style files would only be partly colored. This is fixed in version 2.38. In t
 </dl>
 
 <p> Version 2.38 of TeXShop introduced new parenthesis matching code and the ability to display invisible characters. The new code employs three colors:
-a temporary color assigned to parenthesis pairs (magenta), a temporary color assigned to the background of the text between these parenthesis pairs (yellow), and the color of invisible characters (orange). The first of these colors can be changed in the Preference Panel. The other two colors are controlled
-by hidden preference items:
+a temporary color assigned to parenthesis pairs (magenta), a temporary color assigned to the background of the text between these parenthesis pairs (yellow), and the color of invisible characters (orange). The first of these colors can be changed in the Settings window. The other two colors are controlled
+by hidden settings:
 <dl>
 <dd> defaults write TeXShop highlightContentRed 1.00
 <dd> defaults write TeXShop highlightContentGreen 1.00
@@ -333,7 +333,7 @@ by hidden preference items:
 <p> There is a significant bug in Tiger, explained in the remaining paragraphs of this page. TeXShop has a workaround for the bug. The bug is fixed in Leopard and the workaround is ignored on that system. The bug is important, so users should upgrade to Leopard if possible.</p>
 
 <p> When TeXShop was first released on Tiger, users ran into an annoying bug which caused the program to gradually slow to a crawl after several typesetting actions. This bug was fixed a couple of days after the release. The problem occurred when a new pdf file was loaded into the PdfKitView in the Preview window. According to Apple documentation, this should have released the previous data structure from memory. The release did occur, but it caused the program slowdown. So the bug fix consisted of tricking the system into believing that the data structures were still being used so the system didn't try to release them.</p>
-<p>  Later a hidden preference was added to release the data if desired. The values of this preference are</p>
+<p>  Later a hidden setting was added to release the data if desired. The values of this setting are</p>
 <dl>
 <dd> 0 to release the data on system 10.4.3 or higher (experiments suggested that the bug was not as severe on 10.4.3)
 <dd> 1 to never release the data
@@ -344,7 +344,7 @@ by hidden preference items:
 <dd>
 					defaults write TeXShop ReleaseDocumentClasses 1
 			</dl>
-<p> When TeXShop runs on Leopard, it ignores this preference setting and bypasses the bug fix. Thus memory is correctly released on Leopard.</p>
+<p> When TeXShop runs on Leopard, it ignores this setting and bypasses the bug fix. Thus memory is correctly released on Leopard.</p>
 
 
 
@@ -359,17 +359,17 @@ by hidden preference items:
 			How do I configure TeXShop?
 		</div>
 		<div id="header_title">
-			Hidden Preference Items
+			Hidden Settings
 		</div>
 		<div id="menu_border">
 			<ul>
 			<LI><a href="configure_preliminaries.htm">Preliminaries</a>
-			<LI><a href="configure_prefchanges.htm">Recommended Preference Changes</a>
+			<LI><a href="configure_prefchanges.htm">Recommended Changes to Settings</a>
 			<LI><a href="configure_correctinstall.htm">Obtaining New Library Items</a>
 			<LI><a href="configure_convertgraphics.htm">Converting Graphic Formats Automatically</a>
-			<LI><a href="configure_defaults.htm">TeX Command Line Preferences </a>
+			<LI><a href="configure_defaults.htm">TeX Command Line Settings </a>
 			<LI><a href="configure_latextemplate.htm">Default Latex Template</a>
-			<li><a href="configure_hidden.htm">Hidden Preference Items</a>
+			<li><a href="configure_hidden.htm">Hidden Settings</a>
 			<li><a href="configure_plist.htm">.plist Files</a>
 			<li><a href="configure_panel.htm">Modifying the Latex Panel</a>
 			<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a>
