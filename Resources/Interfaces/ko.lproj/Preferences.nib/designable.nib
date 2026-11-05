@@ -294,7 +294,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9">
-                                                        <rect key="frame" x="11" y="9" width="139" height="58" />
+                                                        <rect key="frame" x="17" y="9" width="139" height="58" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="139" height="18"/>
@@ -335,7 +335,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="15">
-                                                        <rect key="frame" x="11" y="9" width="107" height="38" />
+                                                        <rect key="frame" x="17" y="9" width="107" height="38" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="107" height="18"/>
@@ -383,7 +383,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="44">
-                                                        <rect key="frame" x="89" y="16" width="324" height="17" />
+                                                        <rect key="frame" x="95" y="16" width="324" height="17" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Helvetica 12" id="45">
                                                             <font key="font" metaFont="system"/>
@@ -403,7 +403,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="47">
-                                                        <rect key="frame" x="7" y="43" width="238" height="37" />
+                                                        <rect key="frame" x="17" y="43" width="238" height="37" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="238" height="18"/>
@@ -429,7 +429,7 @@ DQ
                                                         </connections>
                                                     </matrix>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="51">
-                                                        <rect key="frame" x="28" y="6" width="195" height="32" />
+                                                        <rect key="frame" x="38" y="6" width="195" height="32" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="현재 위치 저장" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="52">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -484,7 +484,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="20">
-                                                        <rect key="frame" x="8" y="9" width="203" height="26" />
+                                                        <rect key="frame" x="17" y="9" width="203" height="26" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <popUpButtonCell key="cell" type="push" title="-- DO NOT LOCALIZE THIS! --" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="23" id="21">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -534,7 +534,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QCn-Ir-9rv">
-                                                        <rect key="frame" x="12" y="7" width="53" height="22" />
+                                                        <rect key="frame" x="17" y="7" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="{ }" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Y57-CW-oBR">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -545,7 +545,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LRm-Ro-SyQ">
-                                                        <rect key="frame" x="67" y="7" width="53" height="22" />
+                                                        <rect key="frame" x="72" y="7" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="[ ]" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="fER-sn-WBU">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -556,7 +556,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Qs-k7-LOI">
-                                                        <rect key="frame" x="122" y="7" width="53" height="22" />
+                                                        <rect key="frame" x="127" y="7" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="( )" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Wm0-VZ-wnu">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -567,7 +567,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QtC-aE-RZv">
-                                                        <rect key="frame" x="177" y="7" width="53" height="22" />
+                                                        <rect key="frame" x="182" y="7" width="53" height="22" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="&lt; &gt;" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="A5l-5b-L56">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -589,7 +589,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w9C-zr-STr">
-                                                        <rect key="frame" x="13" y="9" width="238" height="58" />
+                                                        <rect key="frame" x="17" y="9" width="238" height="58" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="238" height="18"/>
@@ -707,10 +707,10 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="에디터" translatesAutoresizingMaskIntoConstraints="NO" id="24">
-                                            <rect key="frame" x="63" y="315" width="256" height="295" />
+                                            <rect key="frame" x="63" y="320" width="256" height="290" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Jqp-gg-4td">
-                                                <rect key="frame" x="0.0" y="0.0" width="256" height="283" />
+                                                <rect key="frame" x="0.0" y="0.0" width="256" height="278" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="30">
@@ -806,7 +806,7 @@ DQ
                                                         </connections>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="28">
-                                                        <rect key="frame" x="25" y="256" width="87" height="18" />
+                                                        <rect key="frame" x="26" y="251" width="87" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="탭 문자 사용" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="29">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -817,7 +817,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M4H-oQ-6aF">
-                                                        <rect key="frame" x="26" y="233" width="203" height="20" />
+                                                        <rect key="frame" x="26" y="230" width="203" height="20" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="현재 줄 강조" bezelStyle="regularSquare" imagePosition="left" inset="2" id="vqZ-PU-oUb">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -832,14 +832,14 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="숨김 문자 표시" translatesAutoresizingMaskIntoConstraints="NO" id="61">
-                                            <rect key="frame" x="63" y="173" width="256" height="130" />
+                                            <rect key="frame" x="63" y="170" width="256" height="138" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="QC2-nK-Rzw">
-                                                <rect key="frame" x="0.0" y="0.0" width="256" height="118" />
+                                                <rect key="frame" x="0.0" y="0.0" width="256" height="126" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="62">
-                                                        <rect key="frame" x="16" y="91" width="141" height="18" />
+                                                        <rect key="frame" x="16" y="99" width="141" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="스페이스" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="63">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -850,7 +850,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="64">
-                                                        <rect key="frame" x="16" y="71" width="148" height="18" />
+                                                        <rect key="frame" x="16" y="77" width="148" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="전각 스페이스 (일본어)" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="65">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -861,7 +861,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="66">
-                                                        <rect key="frame" x="16" y="51" width="139" height="18" />
+                                                        <rect key="frame" x="16" y="55" width="139" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="개행" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="67">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -872,7 +872,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="68">
-                                                        <rect key="frame" x="16" y="31" width="111" height="18" />
+                                                        <rect key="frame" x="16" y="33" width="111" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="탭" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="69">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -883,7 +883,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="70">
-                                                        <rect key="frame" x="171" y="90" width="74" height="18" />
+                                                        <rect key="frame" x="171" y="98" width="74" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="35" height="18"/>
@@ -911,7 +911,7 @@ DQ
                                                         </connections>
                                                     </matrix>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="74">
-                                                        <rect key="frame" x="171" y="70" width="74" height="18" />
+                                                        <rect key="frame" x="171" y="76" width="74" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="35" height="18"/>
@@ -939,7 +939,7 @@ DQ
                                                         </connections>
                                                     </matrix>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="78">
-                                                        <rect key="frame" x="171" y="49" width="74" height="18" />
+                                                        <rect key="frame" x="171" y="53" width="74" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="35" height="18"/>
@@ -967,7 +967,7 @@ DQ
                                                         </connections>
                                                     </matrix>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="82">
-                                                        <rect key="frame" x="171" y="28" width="74" height="18" />
+                                                        <rect key="frame" x="171" y="30" width="74" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="35" height="18"/>
@@ -1010,14 +1010,14 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="괄호 여닫기 세부 설정" translatesAutoresizingMaskIntoConstraints="NO" id="98">
-                                            <rect key="frame" x="323" y="480" width="232" height="130" />
+                                            <rect key="frame" x="323" y="472" width="232" height="138" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="rVR-58-adc">
-                                                <rect key="frame" x="0.0" y="0.0" width="232" height="118" />
+                                                <rect key="frame" x="0.0" y="0.0" width="232" height="126" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="99">
-                                                        <rect key="frame" x="9" y="91" width="220" height="18" />
+                                                        <rect key="frame" x="17" y="99" width="220" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="괄호 여닫기 하일라이트" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="100">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1028,7 +1028,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="101">
-                                                        <rect key="frame" x="9" y="31" width="180" height="18" />
+                                                        <rect key="frame" x="17" y="33" width="180" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="홑괄호 경고음" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="102">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1039,7 +1039,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="103">
-                                                        <rect key="frame" x="9" y="11" width="261" height="18" />
+                                                        <rect key="frame" x="17" y="11" width="261" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="홑괄호 경고 색상" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="104">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1050,7 +1050,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="105">
-                                                        <rect key="frame" x="9" y="71" width="182" height="18" />
+                                                        <rect key="frame" x="17" y="77" width="182" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="이동 중에도 보이기" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="106">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1061,7 +1061,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="107">
-                                                        <rect key="frame" x="9" y="51" width="182" height="18" />
+                                                        <rect key="frame" x="17" y="55" width="182" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="대응 괄호 깜박이기" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="108">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1076,7 +1076,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="워드랩" translatesAutoresizingMaskIntoConstraints="NO" id="6C2-ib-Qxi">
-                                            <rect key="frame" x="323" y="378" width="232" height="90" />
+                                            <rect key="frame" x="323" y="370" width="232" height="90" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="7hD-9s-2xD">
                                                 <rect key="frame" x="0.0" y="0.0" width="232" height="78" />
@@ -1117,7 +1117,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="에디터 스타일" translatesAutoresizingMaskIntoConstraints="NO" id="mu1-Sp-QbD">
-                                            <rect key="frame" x="323" y="200" width="232" height="166" />
+                                            <rect key="frame" x="323" y="192" width="232" height="166" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="3KM-U9-aBE">
                                                 <rect key="frame" x="0.0" y="0.0" width="232" height="154" />
@@ -1228,7 +1228,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="112">
-                                                        <rect key="frame" x="5" y="42" width="238" height="37" />
+                                                        <rect key="frame" x="17" y="42" width="238" height="37" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="238" height="18"/>
@@ -1254,7 +1254,7 @@ DQ
                                                         </connections>
                                                     </matrix>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="116">
-                                                        <rect key="frame" x="27" y="6" width="195" height="32" />
+                                                        <rect key="frame" x="39" y="6" width="195" height="32" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="현재 위치 저장" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="117">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1276,7 +1276,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="119">
-                                                        <rect key="frame" x="108" y="6" width="81" height="32" />
+                                                        <rect key="frame" x="115" y="6" width="81" height="32" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="설정" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="120">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1338,7 +1338,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton tag="1" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="136">
-                                                        <rect key="frame" x="13" y="9" width="163" height="26" />
+                                                        <rect key="frame" x="17" y="9" width="163" height="26" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <popUpButtonCell key="cell" type="push" title="창에 맞추기" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="3" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="141" id="137">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1367,7 +1367,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="143">
-                                                        <rect key="frame" x="9" y="9" width="164" height="26" />
+                                                        <rect key="frame" x="17" y="9" width="164" height="26" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <popUpButtonCell key="cell" type="push" title="연속 페이지 맞쪽보기" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="4" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="149" id="144">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1566,7 +1566,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ox3-RD-Yil">
-                                                        <rect key="frame" x="5" y="42" width="238" height="37" />
+                                                        <rect key="frame" x="17" y="42" width="238" height="37" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="238" height="18"/>
@@ -1592,7 +1592,7 @@ DQ
                                                         </connections>
                                                     </matrix>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uPV-cT-36G">
-                                                        <rect key="frame" x="27" y="6" width="195" height="32" />
+                                                        <rect key="frame" x="39" y="6" width="195" height="32" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="현재 위치 저장" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="10R-1F-PXc">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1614,7 +1614,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r1m-uA-MIT">
-                                                        <rect key="frame" x="8" y="13" width="228" height="21" />
+                                                        <rect key="frame" x="18" y="13" width="224" height="21" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="HJi-8j-bgI">
                                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1638,14 +1638,14 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="콘솔 폰트" translatesAutoresizingMaskIntoConstraints="NO" id="165">
-                                            <rect key="frame" x="151" y="539" width="308" height="71" />
+                                            <rect key="frame" x="151" y="530" width="308" height="80" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pT9-B2-Zaf">
-                                                <rect key="frame" x="0.0" y="0.0" width="308" height="59" />
+                                                <rect key="frame" x="0.0" y="0.0" width="308" height="68" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="166">
-                                                        <rect key="frame" x="14" y="19" width="76" height="32" />
+                                                        <rect key="frame" x="14" y="28" width="76" height="32" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="push" title="설정..." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="167">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1656,7 +1656,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="168">
-                                                        <rect key="frame" x="89" y="29" width="324" height="17" />
+                                                        <rect key="frame" x="95" y="38" width="324" height="17" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Helvetica 12" id="169">
                                                             <font key="font" metaFont="system"/>
@@ -1680,7 +1680,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="콘솔창 위치" translatesAutoresizingMaskIntoConstraints="NO" id="174">
-                                            <rect key="frame" x="151" y="428" width="308" height="99" />
+                                            <rect key="frame" x="151" y="419" width="308" height="99" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="hev-Cv-loZ">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="87" />
@@ -1728,7 +1728,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="콘솔창 리사이즈" translatesAutoresizingMaskIntoConstraints="NO" id="181">
-                                            <rect key="frame" x="151" y="346" width="308" height="70" />
+                                            <rect key="frame" x="151" y="337" width="308" height="70" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="iOr-Kc-0F5">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="58" />
@@ -1737,7 +1737,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="182">
-                                            <rect key="frame" x="176" y="355" width="147" height="38" />
+                                            <rect key="frame" x="176" y="346" width="147" height="38" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             <size key="cellSize" width="147" height="18"/>
@@ -1763,7 +1763,7 @@ DQ
                                             </connections>
                                         </matrix>
                                         <box fixedFrame="YES" title="콘솔창 보이기" translatesAutoresizingMaskIntoConstraints="NO" id="186">
-                                            <rect key="frame" x="151" y="265" width="308" height="69" />
+                                            <rect key="frame" x="151" y="256" width="308" height="69" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="hV6-Jb-yTe">
                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="57" />
@@ -1808,14 +1808,14 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="디폴트 스트립트" translatesAutoresizingMaskIntoConstraints="NO" id="193">
-                                            <rect key="frame" x="42" y="387" width="260" height="93" />
+                                            <rect key="frame" x="42" y="387" width="264" height="93" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="17h-Lj-bfk">
-                                                <rect key="frame" x="0.0" y="0.0" width="260" height="81" />
+                                                <rect key="frame" x="0.0" y="0.0" width="264" height="81" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="194">
-                                                        <rect key="frame" x="7" y="9" width="171" height="61"/>
+                                                        <rect key="frame" x="17" y="9" width="171" height="61" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="171" height="19"/>
@@ -1849,10 +1849,10 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="기본 조판 명령" translatesAutoresizingMaskIntoConstraints="NO" id="199">
-                                            <rect key="frame" x="42" y="492" width="260" height="118" />
+                                            <rect key="frame" x="42" y="492" width="264" height="118" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="mmy-Gk-YYU">
-                                                <rect key="frame" x="0.0" y="0.0" width="260" height="106" />
+                                                <rect key="frame" x="0.0" y="0.0" width="264" height="106" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="200">
@@ -1964,14 +1964,14 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sync 방식" translatesAutoresizingMaskIntoConstraints="NO" id="216">
-                                            <rect key="frame" x="332" y="333" width="225" height="113" />
+                                            <rect key="frame" x="332" y="375" width="225" height="71"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="abA-no-Buz">
-                                                <rect key="frame" x="0.0" y="0.0" width="225" height="101" />
+                                                <rect key="frame" x="0" y="0" width="225" height="59"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="217">
-                                                        <rect key="frame" x="12" y="9" width="202" height="82"/>
+                                                        <rect key="frame" x="17" y="9" width="202" height="40"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="202" height="19"/>
@@ -1982,20 +1982,12 @@ DQ
                                                         </buttonCell>
                                                         <cells>
                                                             <column>
-                                                                <buttonCell type="radio" title="Pdf Sync (TeX &lt; 2010)" imagePosition="left" alignment="left" inset="2" id="219">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
                                                                 <buttonCell type="radio" title="pdf 검색" imagePosition="left" alignment="left" tag="1" inset="2" id="220">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
                                                                     <connections>
                                                                         <action selector="syncChanged:" target="-2" id="489"/>
                                                                     </connections>
-                                                                </buttonCell>
-                                                                <buttonCell type="radio" title="pdf sync와 검색 동시 사용" imagePosition="left" alignment="left" tag="2" inset="2" id="221">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
                                                                 </buttonCell>
                                                                 <buttonCell type="radio" title="SyncTeX (TeX ≥ 2010)" imagePosition="left" alignment="left" state="on" tag="3" inset="2" id="222">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2012,7 +2004,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sync로 새 창을 열 때" translatesAutoresizingMaskIntoConstraints="NO" id="hA0-Kp-asP">
-                                            <rect key="frame" x="332" y="245" width="225" height="76" />
+                                            <rect key="frame" x="332" y="287" width="225" height="76"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="T2n-JH-KDQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="225" height="64" />
@@ -2043,14 +2035,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Ghostscript 옵션" translatesAutoresizingMaskIntoConstraints="NO" id="jsE-cO-FZ0">
-                                            <rect key="frame" x="42" y="325" width="260" height="50" />
+                                            <rect key="frame" x="42" y="325" width="264" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="S9m-gb-IAn">
-                                                <rect key="frame" x="0.0" y="0.0" width="260" height="38" />
+                                                <rect key="frame" x="0.0" y="0.0" width="264" height="38" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="spY-u2-wgo">
-                                                        <rect key="frame" x="6" y="11" width="242" height="18" />
+                                                        <rect key="frame" x="17" y="11" width="242" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="-dALLOWPSTRANSPARENCY 활성화" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Ryl-up-bpU">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2073,14 +2065,14 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="pdfTeX" translatesAutoresizingMaskIntoConstraints="NO" id="225">
-                                            <rect key="frame" x="60" y="283" width="224" height="150" />
+                                            <rect key="frame" x="60" y="265" width="224" height="167.5" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pQe-jc-ZPE">
-                                                <rect key="frame" x="0.0" y="0.0" width="224" height="138" />
+                                                <rect key="frame" x="0.0" y="0.0" width="224" height="155.5" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="226">
-                                                        <rect key="frame" x="14" y="55" width="36" height="18" />
+                                                        <rect key="frame" x="14" y="57.5" width="36" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Latex " id="227">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2089,7 +2081,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="228">
-                                                        <rect key="frame" x="17" y="77" width="186" height="21" />
+                                                        <rect key="frame" x="17" y="92" width="186" height="21" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="229">
                                                             <font key="font" metaFont="system"/>
@@ -2101,7 +2093,7 @@ DQ
                                                         </connections>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="230">
-                                                        <rect key="frame" x="14" y="99" width="30" height="18" />
+                                                        <rect key="frame" x="14" y="116.5" width="30" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Tex" id="231">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2133,7 +2125,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="236">
-                                                        <rect key="frame" x="49" y="107" width="56" height="19" />
+                                                        <rect key="frame" x="49" y="124.5" width="56" height="19" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="Default" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="237">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2144,7 +2136,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button tag="1" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="238">
-                                                        <rect key="frame" x="49" y="63" width="56" height="19" />
+                                                        <rect key="frame" x="52" y="65.5" width="56" height="19" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="Default" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="239">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2159,14 +2151,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="TeX + dvips + distiller" translatesAutoresizingMaskIntoConstraints="NO" id="240">
-                                            <rect key="frame" x="304" y="283" width="247" height="150" />
+                                            <rect key="frame" x="304" y="265" width="247" height="167.5" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="RgH-Ai-Xe4">
-                                                <rect key="frame" x="0.0" y="0.0" width="247" height="138" />
+                                                <rect key="frame" x="0.0" y="0.0" width="247" height="155.5" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="241">
-                                                        <rect key="frame" x="12" y="77" width="211" height="21" />
+                                                        <rect key="frame" x="19" y="92" width="211" height="21" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="242">
                                                             <font key="font" metaFont="system"/>
@@ -2178,7 +2170,7 @@ DQ
                                                         </connections>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="243">
-                                                        <rect key="frame" x="12" y="31" width="211" height="21" />
+                                                        <rect key="frame" x="19" y="33" width="211" height="21" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="244">
                                                             <font key="font" metaFont="system"/>
@@ -2190,7 +2182,7 @@ DQ
                                                         </connections>
                                                     </textField>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="245">
-                                                        <rect key="frame" x="10" y="9" width="143" height="18" />
+                                                        <rect key="frame" x="17" y="9" width="143" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="ps 파일 저장" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="246">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2201,7 +2193,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="247">
-                                                        <rect key="frame" x="14" y="99" width="30" height="18" />
+                                                        <rect key="frame" x="21" y="116.5" width="30" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Tex" id="248">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2210,7 +2202,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <button tag="2" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="249">
-                                                        <rect key="frame" x="50" y="107" width="56" height="19" />
+                                                        <rect key="frame" x="57" y="124.5" width="56" height="19" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="Default" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="250">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2221,7 +2213,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="251">
-                                                        <rect key="frame" x="14" y="54" width="36" height="18" />
+                                                        <rect key="frame" x="21" y="57.5" width="36" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Latex " id="252">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2230,7 +2222,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <button tag="3" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="253">
-                                                        <rect key="frame" x="50" y="62" width="56" height="19" />
+                                                        <rect key="frame" x="59" y="65.5" width="56" height="19" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="roundRect" title="Default" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="254">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2245,14 +2237,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="경로 설정" translatesAutoresizingMaskIntoConstraints="NO" id="255">
-                                            <rect key="frame" x="60" y="445" width="491" height="165" />
+                                            <rect key="frame" x="60" y="444.5" width="491" height="165.5" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="9B4-So-9cz">
-                                                <rect key="frame" x="0.0" y="0.0" width="491" height="153" />
+                                                <rect key="frame" x="0.0" y="0.0" width="491" height="153.5" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="256">
-                                                        <rect key="frame" x="15" y="83" width="424" height="14" />
+                                                        <rect key="frame" x="15" y="83.5" width="424" height="14" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Distiller (ghostscript) (default: /usr/local/bin)" id="257">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2273,7 +2265,7 @@ DQ
                                                         </connections>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="260">
-                                                        <rect key="frame" x="15" y="130" width="424" height="14" />
+                                                        <rect key="frame" x="15" y="130.5" width="424" height="14" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)" id="261">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2319,14 +2311,14 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="명령 찾기" translatesAutoresizingMaskIntoConstraints="NO" id="264">
-                                            <rect key="frame" x="60" y="199" width="491" height="72" />
+                                            <rect key="frame" x="60" y="181" width="491" height="72" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gv0-Qv-78A">
                                                 <rect key="frame" x="0.0" y="0.0" width="491" height="60" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="265">
-                                                        <rect key="frame" x="8" y="22" width="478" height="28" />
+                                                        <rect key="frame" x="15" y="22" width="478" height="28" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="kpsetool (default: kpsetool -w -n latex tex)" id="266">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2335,7 +2327,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="267">
-                                                        <rect key="frame" x="11" y="11" width="437" height="22" />
+                                                        <rect key="frame" x="18" y="11" width="437" height="22" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="268">
                                                             <font key="font" metaFont="system"/>
@@ -2351,14 +2343,14 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="BibTeX 엔진" translatesAutoresizingMaskIntoConstraints="NO" id="269">
-                                            <rect key="frame" x="60" y="115" width="491" height="72" />
+                                            <rect key="frame" x="60" y="97" width="491" height="72" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="x5u-qV-mxA">
                                                 <rect key="frame" x="0.0" y="0.0" width="491" height="60" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="270">
-                                                        <rect key="frame" x="8" y="22" width="478" height="28" />
+                                                        <rect key="frame" x="15" y="22" width="478" height="28" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="default: bibtex" id="271">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2367,7 +2359,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="272">
-                                                        <rect key="frame" x="11" y="11" width="437" height="22" />
+                                                        <rect key="frame" x="18" y="11" width="437" height="22" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="273">
                                                             <font key="font" metaFont="system"/>
@@ -2398,7 +2390,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button toolTip="Check if you want to map black and white to different colors" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="277">
-                                                        <rect key="frame" x="11" y="46" width="98" height="18" />
+                                                        <rect key="frame" x="17" y="46" width="98" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="칼러 매핑 사용" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="278">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2409,7 +2401,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="282">
-                                                        <rect key="frame" x="11" y="15" width="162" height="17" />
+                                                        <rect key="frame" x="17" y="15" width="162" height="17" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="전경색 농도" id="283">
                                                             <font key="font" size="13" metaFont="system"/>
@@ -2418,7 +2410,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <popUpButton toolTip="Higher value emphasizes forecolor. No effect for PDF or EPS formats." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="284">
-                                                        <rect key="frame" x="181" y="9" width="127" height="26" />
+                                                        <rect key="frame" x="187" y="9" width="126" height="26" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <popUpButtonCell key="cell" type="push" title="0 (표준)" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="289" id="285">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -2600,14 +2592,14 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="사용자 스크립트" translatesAutoresizingMaskIntoConstraints="NO" id="312">
-                                            <rect key="frame" x="17" y="496" width="357" height="114" />
+                                            <rect key="frame" x="17" y="494" width="357" height="116" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="c4y-pR-yt7">
-                                                <rect key="frame" x="0.0" y="0.0" width="357" height="102" />
+                                                <rect key="frame" x="0.0" y="0.0" width="357" height="104" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="313">
-                                                        <rect key="frame" x="9" y="29" width="153" height="18" />
+                                                        <rect key="frame" x="15" y="31" width="153" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="LaTeX 프로그램 (기본값없음)" id="314">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2616,7 +2608,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="315">
-                                                        <rect key="frame" x="12" y="56" width="329" height="21" />
+                                                        <rect key="frame" x="18" y="56" width="328" height="21" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="316">
                                                             <font key="font" metaFont="system"/>
@@ -2628,7 +2620,7 @@ DQ
                                                         </connections>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="317">
-                                                        <rect key="frame" x="8" y="74" width="142" height="18" />
+                                                        <rect key="frame" x="14" y="76" width="142" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="TeX 프로그램 (기본값없음)" id="318">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2637,7 +2629,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="319">
-                                                        <rect key="frame" x="13" y="11" width="328" height="21" />
+                                                        <rect key="frame" x="19" y="11" width="327" height="21" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="320">
                                                             <font key="font" metaFont="system"/>
@@ -2653,14 +2645,14 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="321">
-                                            <rect key="frame" x="17" y="333" width="153" height="70" />
+                                            <rect key="frame" x="17" y="329" width="153" height="70" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="AlO-AQ-fgV">
                                                 <rect key="frame" x="0.0" y="0.0" width="153" height="58" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="322">
-                                                        <rect key="frame" x="10" y="9" width="130" height="38" />
+                                                        <rect key="frame" x="17" y="9" width="130" height="38" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="130" height="18"/>
@@ -2690,7 +2682,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="일본어 pTeX 지원" translatesAutoresizingMaskIntoConstraints="NO" id="326">
-                                            <rect key="frame" x="221" y="353" width="153" height="50" />
+                                            <rect key="frame" x="221" y="349" width="153" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="jWx-dx-FA9">
                                                 <rect key="frame" x="0.0" y="0.0" width="153" height="38" />
@@ -2712,7 +2704,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="일본어 파일 저장" translatesAutoresizingMaskIntoConstraints="NO" id="329">
-                                            <rect key="frame" x="17" y="271" width="357" height="50" />
+                                            <rect key="frame" x="17" y="267" width="357" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="loI-8G-oKP">
                                                 <rect key="frame" x="0.0" y="0.0" width="357" height="38" />
@@ -2734,7 +2726,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="프로젝트 루트 파일" translatesAutoresizingMaskIntoConstraints="NO" id="332">
-                                            <rect key="frame" x="17" y="184" width="357" height="75" />
+                                            <rect key="frame" x="17" y="180" width="357" height="75" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="vbC-G7-RCY">
                                                 <rect key="frame" x="0.0" y="0.0" width="357" height="63" />
@@ -2767,14 +2759,14 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Sparkle 업데이트 관리자" translatesAutoresizingMaskIntoConstraints="NO" id="549">
-                                            <rect key="frame" x="405" y="163" width="185" height="108" />
+                                            <rect key="frame" x="405" y="159" width="185" height="112" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="y0w-zA-RAX">
-                                                <rect key="frame" x="0.0" y="0.0" width="185" height="96" />
+                                                <rect key="frame" x="0.0" y="0.0" width="185" height="100" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autorecalculatesCellSize="YES" translatesAutoresizingMaskIntoConstraints="NO" id="551">
-                                                        <rect key="frame" x="40" y="11" width="79" height="58" />
+                                                        <rect key="frame" x="45" y="11" width="79" height="58" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="45" height="18"/>
@@ -2804,7 +2796,7 @@ DQ
                                                         </connections>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="550">
-                                                        <rect key="frame" x="12" y="67" width="157" height="18" />
+                                                        <rect key="frame" x="17" y="71" width="157" height="18" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <buttonCell key="cell" type="check" title="업데이트를 자동으로 확인" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="556">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2837,7 +2829,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SLj-5g-d2F">
-                                                        <rect key="frame" x="27" y="259" width="108" height="26" />
+                                                        <rect key="frame" x="27" y="256.5" width="108" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="section" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="6hI-jU-hM1">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2848,7 +2840,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pc7-je-0Wr">
-                                                        <rect key="frame" x="27" y="231" width="108" height="26" />
+                                                        <rect key="frame" x="27" y="228.5" width="108" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="subsection" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="0Va-os-dHB">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2859,7 +2851,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h57-sr-Vld">
-                                                        <rect key="frame" x="27" y="203" width="115" height="26" />
+                                                        <rect key="frame" x="27" y="201" width="115" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="subsubsection " bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="oAS-of-vTL">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2870,7 +2862,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Go7-cH-XGX">
-                                                        <rect key="frame" x="27" y="147" width="108" height="26" />
+                                                        <rect key="frame" x="27" y="145.5" width="108" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="conclusion" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Sga-RS-DGK">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2881,7 +2873,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4oq-4d-6nL">
-                                                        <rect key="frame" x="27" y="119" width="108" height="26" />
+                                                        <rect key="frame" x="27" y="118" width="108" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="exercises" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="UR2-SN-x4l">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2892,7 +2884,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2KP-2a-FfU">
-                                                        <rect key="frame" x="27" y="91" width="108" height="26" />
+                                                        <rect key="frame" x="27" y="90" width="108" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="project" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="5Pg-Qc-j7B">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2903,7 +2895,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ifh-Le-w5b">
-                                                        <rect key="frame" x="27" y="63" width="108" height="26" />
+                                                        <rect key="frame" x="27" y="62.5" width="108" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="figure" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="bCi-A9-f7f">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2914,7 +2906,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dy3-fn-2a0">
-                                                        <rect key="frame" x="27" y="35" width="108" height="26" />
+                                                        <rect key="frame" x="27" y="34.5" width="108" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="table" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="83k-rn-xoi">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2936,7 +2928,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hw1-TC-HEI">
-                                                        <rect key="frame" x="27" y="175" width="108" height="26" />
+                                                        <rect key="frame" x="27" y="173" width="108" height="26" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="introduction" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="jmo-za-uS1">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2951,14 +2943,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="대체 엔진" translatesAutoresizingMaskIntoConstraints="NO" id="qVV-h3-8nO">
-                                            <rect key="frame" x="17" y="415" width="357" height="69" />
+                                            <rect key="frame" x="17" y="411" width="357" height="71" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="ugC-54-p00">
-                                                <rect key="frame" x="0.0" y="0.0" width="357" height="57" />
+                                                <rect key="frame" x="0.0" y="0.0" width="357" height="59" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ln-bQ-svH">
-                                                        <rect key="frame" x="8" y="31" width="127" height="16" />
+                                                        <rect key="frame" x="16" y="33" width="127" height="16" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="(default: pdflatexmk)" id="ueQ-cC-Jgb">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2967,7 +2959,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1TW-eF-Sk2">
-                                                        <rect key="frame" x="10" y="11" width="330" height="21" />
+                                                        <rect key="frame" x="18" y="11" width="328" height="21" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="fsd-T0-eKv">
                                                             <font key="font" metaFont="system"/>
@@ -2991,14 +2983,14 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="테마" translatesAutoresizingMaskIntoConstraints="NO" id="cQl-3n-PZu">
-                                            <rect key="frame" x="14" y="461" width="188" height="149" />
+                                            <rect key="frame" x="14" y="454.5" width="188" height="155.5" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="jWT-yX-wNE">
-                                                <rect key="frame" x="0.0" y="0.0" width="188" height="135" />
+                                                <rect key="frame" x="0.0" y="0.0" width="188" height="141.5" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KQy-aO-wjC">
-                                                        <rect key="frame" x="7" y="52" width="166" height="25" />
+                                                        <rect key="frame" x="18" y="52" width="160" height="25" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="DRW-eZ-9GQ">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -3010,7 +3002,7 @@ DQ
                                                         </connections>
                                                     </popUpButton>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YZj-Ts-lPN">
-                                                        <rect key="frame" x="6" y="9" width="167" height="25" />
+                                                        <rect key="frame" x="17" y="9" width="161" height="25" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="5qO-kG-yPl">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -3022,7 +3014,7 @@ DQ
                                                         </connections>
                                                     </popUpButton>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0MK-ri-ka2">
-                                                        <rect key="frame" x="8" y="113" width="46" height="14" />
+                                                        <rect key="frame" x="19" y="119.5" width="46" height="14" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="밝은 테마" id="e8Z-Sl-9nN">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -3031,7 +3023,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oNc-ha-3yw">
-                                                        <rect key="frame" x="8" y="68" width="55" height="14" />
+                                                        <rect key="frame" x="19" y="77.5" width="55" height="14" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="아두운 테마" id="Di1-Pp-wLH">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -3040,7 +3032,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UH4-ln-ETX">
-                                                        <rect key="frame" x="8" y="26" width="78" height="14" />
+                                                        <rect key="frame" x="19" y="34" width="78" height="14" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Theme to Edit" id="xdO-sw-3Xd">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -3049,7 +3041,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p8S-s9-WPM">
-                                                        <rect key="frame" x="8" y="94" width="165" height="25" />
+                                                        <rect key="frame" x="19" y="94" width="159" height="25" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="kcz-46-G1a">
                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -3065,14 +3057,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="작업" translatesAutoresizingMaskIntoConstraints="NO" id="Gad-Xv-pXz">
-                                            <rect key="frame" x="14" y="325" width="188" height="124" />
+                                            <rect key="frame" x="14" y="318.5" width="188" height="124" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="T37-Ib-WYN">
                                                 <rect key="frame" x="0.0" y="0.0" width="188" height="110" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="avg-fe-Y85">
-                                                        <rect key="frame" x="2" y="72" width="171" height="32" />
+                                                        <rect key="frame" x="17" y="72" width="154" height="32" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="push" title="편집 테마 저장" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zzB-ZI-fNU">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -3083,7 +3075,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H4l-zu-b1M">
-                                                        <rect key="frame" x="2" y="39" width="171" height="32" />
+                                                        <rect key="frame" x="17" y="39" width="154" height="32" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="push" title="새 테마" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MrP-lS-9ZJ">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -3094,7 +3086,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tVZ-pK-GOf">
-                                                        <rect key="frame" x="2" y="6" width="171" height="32" />
+                                                        <rect key="frame" x="17" y="6" width="154" height="32" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="push" title="설정에서 새 테마" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sGU-c7-HWY">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -3119,10 +3111,10 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box titlePosition="noTitle" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aPD-Ge-g4L">
-                                                                <rect key="frame" x="12" y="12" width="389" height="495" />
+                                                                <rect key="frame" x="12" y="11" width="389" height="496" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <view key="contentView" id="K5K-Ts-BSd">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="389" height="495" />
+                                                                    <rect key="frame" x="0.0" y="0.0" width="389" height="496" />
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QF6-Qa-1er">
@@ -3158,7 +3150,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8fe-c1-UPV">
-                                                                            <rect key="frame" x="129" y="473" width="33" height="14" />
+                                                                            <rect key="frame" x="129" y="474" width="33" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="텍스트" id="b5A-Hw-CNT">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3167,7 +3159,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2lC-e2-9fm">
-                                                                            <rect key="frame" x="201" y="473" width="33" height="14" />
+                                                                            <rect key="frame" x="201" y="474" width="33" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="배경색" id="S7L-zw-6JS">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3176,7 +3168,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yeU-V5-ITq">
-                                                                            <rect key="frame" x="295" y="473" width="34" height="14" />
+                                                                            <rect key="frame" x="295" y="474" width="34" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Alpha" id="Fz5-Mk-YjG">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3322,7 +3314,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7fU-dg-4Z2">
-                                                                            <rect key="frame" x="117" y="112" width="47" height="14" />
+                                                                            <rect key="frame" x="117" y="115.5" width="47" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Invisible" id="IZO-QB-YuG">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3331,7 +3323,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Y5i-Az-cbj">
-                                                                            <rect key="frame" x="205" y="112" width="52" height="14" />
+                                                                            <rect key="frame" x="205" y="115.5" width="52" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Enclosed" id="dSd-Q5-b0u">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3340,7 +3332,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fho-BQ-2hC">
-                                                                            <rect key="frame" x="117" y="153" width="33" height="14" />
+                                                                            <rect key="frame" x="117" y="157" width="33" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="전경색" id="61l-6x-Pb1">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3349,7 +3341,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Var-x1-XGL">
-                                                                            <rect key="frame" x="106" y="196" width="93" height="14" />
+                                                                            <rect key="frame" x="106" y="200" width="93" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="소스에서 보기창으로" id="DjL-bZ-Dja">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3358,7 +3350,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WRN-xJ-5Yk">
-                                                                            <rect key="frame" x="117" y="283" width="33" height="14" />
+                                                                            <rect key="frame" x="117" y="284" width="33" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="주석문" id="MW0-Z8-0jC">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3367,7 +3359,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UwB-AX-Smc">
-                                                                            <rect key="frame" x="205" y="283" width="33" height="14" />
+                                                                            <rect key="frame" x="205" y="284" width="33" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="명령어" id="sHB-7e-zTN">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3376,7 +3368,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q8C-A8-L7p">
-                                                                            <rect key="frame" x="119" y="239" width="24" height="14" />
+                                                                            <rect key="frame" x="119" y="240" width="24" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="마커" id="9eU-e9-isU">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3385,7 +3377,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TxA-ta-jqi">
-                                                                            <rect key="frame" x="204" y="239" width="33" height="14" />
+                                                                            <rect key="frame" x="204" y="240" width="33" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="인덱스" id="aMP-N6-BIa">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3451,7 +3443,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r63-L1-ux5">
-                                                                            <rect key="frame" x="209" y="197" width="84" height="14" />
+                                                                            <rect key="frame" x="209" y="200" width="84" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="보기창에서 소스로" id="IjT-nm-L0O">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3484,7 +3476,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="O06-hq-bIf">
-                                                                            <rect key="frame" x="201" y="153" width="33" height="14" />
+                                                                            <rect key="frame" x="201" y="157" width="33" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="배경색" id="Hm0-vw-ha8">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3493,7 +3485,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RYk-6g-phg">
-                                                                            <rect key="frame" x="293" y="112" width="41" height="14" />
+                                                                            <rect key="frame" x="293" y="114.5" width="41" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Braces" id="3FB-um-YrK">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3535,7 +3527,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="keQ-SE-gkN">
-                                                                            <rect key="frame" x="292" y="283" width="24" height="14" />
+                                                                            <rect key="frame" x="292" y="284" width="24" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="각주" id="jrQ-GK-Oop">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3585,7 +3577,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c88-Mg-UYb">
-                                                                            <rect key="frame" x="208" y="71" width="24" height="14" />
+                                                                            <rect key="frame" x="208" y="75" width="24" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="태그" id="KZs-FS-m2y">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3594,7 +3586,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7g5-Qb-II3">
-                                                                            <rect key="frame" x="116" y="72" width="55" height="14" />
+                                                                            <rect key="frame" x="116" y="75" width="55" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="주석" id="q4f-aO-7PJ">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3603,7 +3595,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J8i-Zp-O5k">
-                                                                            <rect key="frame" x="206" y="31" width="14" height="14" />
+                                                                            <rect key="frame" x="206" y="35" width="14" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="값" id="Bmx-Wr-pKg">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3612,7 +3604,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kdz-It-kCK">
-                                                                            <rect key="frame" x="115" y="32" width="24" height="14" />
+                                                                            <rect key="frame" x="115" y="35" width="24" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="속성" id="A1F-pg-InT">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3637,7 +3629,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="APh-80-rr0">
-                                                                            <rect key="frame" x="296" y="71" width="52" height="14" />
+                                                                            <rect key="frame" x="296" y="75" width="52" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="에스케이프" id="O7x-2d-b18">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3646,7 +3638,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tnj-w1-Qh1">
-                                                                            <rect key="frame" x="288" y="239" width="69" height="14" />
+                                                                            <rect key="frame" x="288" y="240" width="69" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="현재 줄" id="EM4-SG-RUf">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -3675,10 +3667,10 @@ DQ
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
                                                             <box titlePosition="noTitle" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M0Y-SR-yuP">
-                                                                <rect key="frame" x="12" y="314" width="389" height="193" />
+                                                                <rect key="frame" x="12" y="311.5" width="389" height="195.5" />
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                 <view key="contentView" id="UJh-bA-BZR">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="389" height="193" />
+                                                                    <rect key="frame" x="0.0" y="0.0" width="389" height="195.5" />
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jRs-fs-ASE">
@@ -3691,7 +3683,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="20B-9A-NBp">
-                                                                            <rect key="frame" x="112" y="171" width="50" height="14" />
+                                                                            <rect key="frame" x="112" y="174" width="50" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Function" id="ofD-i5-M2C">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3700,7 +3692,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BZX-NW-L1Q">
-                                                                            <rect key="frame" x="200" y="171" width="63" height="14" />
+                                                                            <rect key="frame" x="200" y="173.5" width="63" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="__Function" id="pxf-nJ-XAP">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3709,7 +3701,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rfx-bR-Vf6">
-                                                                            <rect key="frame" x="114" y="127" width="47" height="14" />
+                                                                            <rect key="frame" x="114" y="127.5" width="47" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Variable" id="QIU-vD-Hq8">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3718,7 +3710,7 @@ DQ
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KYD-m3-JWZ">
-                                                                            <rect key="frame" x="111" y="84" width="27" height="14" />
+                                                                            <rect key="frame" x="111" y="86.5" width="27" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="msg" id="c1K-yU-Y6t">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3759,7 +3751,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vot-lj-VCa">
-                                                                            <rect key="frame" x="287" y="171" width="23" height="14" />
+                                                                            <rect key="frame" x="287" y="173.5" width="23" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="key" id="8h0-LH-aag">
                                                                                 <font key="font" metaFont="message" size="11"/>
@@ -3776,7 +3768,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tDH-f4-bcX">
-                                                                            <rect key="frame" x="288" y="127" width="60" height="14" />
+                                                                            <rect key="frame" x="288" y="129.5" width="60" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="argument" id="va4-qX-Ovy">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -3801,7 +3793,7 @@ DQ
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rR5-J9-04V">
-                                                                            <rect key="frame" x="201" y="127" width="58" height="14" />
+                                                                            <rect key="frame" x="201" y="128.5" width="58" height="14" />
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <textFieldCell key="cell" lineBreakMode="clipping" title="__Variable" id="TtF-8e-jeC">
                                                                                 <font key="font" metaFont="message" size="11"/>
