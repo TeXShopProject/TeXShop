@@ -230,6 +230,10 @@
             mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarker"];
     }
     */
+    // A theme without any marker color uses the built-in default.
+    if (mySyntaxColor == nil)
+        mySyntaxColor = withDarkColors ? [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarkerParen"]
+                                       : [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarkerParen"];
     self.markerColorParenAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
     
     mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerCurly"];
@@ -241,6 +245,10 @@
             mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarker"];
     }
     */
+    // A theme without any marker color uses the built-in default.
+    if (mySyntaxColor == nil)
+        mySyntaxColor = withDarkColors ? [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarkerCurly"]
+                                       : [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarkerCurly"];
     self.markerColorCurlyAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
     
     mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerSquare"];
@@ -252,6 +260,10 @@
             mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarker"];
     }
     */
+    // A theme without any marker color uses the built-in default.
+    if (mySyntaxColor == nil)
+        mySyntaxColor = withDarkColors ? [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarkerSquare"]
+                                       : [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarkerSquare"];
     self.markerColorSquareAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
     
     
