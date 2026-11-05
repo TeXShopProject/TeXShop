@@ -1,4 +1,4 @@
-// Dock appearance is independent of editor color themes.
+// Dock appearance is independent of editor color themes, so the choices live on Misc2.
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSDockIconController.h"
 #import "TSDockIcon.h"
@@ -42,32 +42,35 @@
     [self updatePreview];
 }
 - (void)installInPreferences:(NSTabView *)tabs {
-    if (self.buttons.count) return;
-    NSView *themes = tabs.tabViewItems.lastObject.view;
-    NSMutableArray<NSBox *> *boxes = [NSMutableArray array];
-    for (NSView *view in themes.subviews) if ([view isKindOfClass:NSBox.class]) [boxes addObject:(NSBox *)view];
-    if (boxes.count < 2) return;
-    [boxes sortUsingComparator:^NSComparisonResult(NSBox *a, NSBox *b) {
-        return NSMinY(a.frame) < NSMinY(b.frame) ? NSOrderedAscending : NSOrderedDescending;
-    }];
-    NSRect lower = boxes[0].frame, upper = boxes[1].frame;
-    CGFloat bottom = NSMaxY(lower) + 4, height = NSMinY(upper) - bottom - 4;
-    if (height < 98) return;
-    // Use the existing gap between the Themes and Actions groups in every nib.
-    CGFloat width = NSWidth(lower);
-    for (NSView *view in themes.subviews)
-        if ([view isKindOfClass:NSTabView.class]) width = MIN(width, NSMinX(view.frame) - NSMinX(lower) - 4);
-    NSBox *group = [[NSBox alloc] initWithFrame:NSMakeRect(NSMinX(lower), bottom, width, height)];
+    if (self.buttons.count || tabs.numberOfTabViewItems < 2) return;
+    // The second-to-last tab is Misc2 in every localization. Its lower-left corner
+    // is free below the left column, which leaves room for more choices later.
+    NSView *misc = tabs.tabViewItems[tabs.numberOfTabViewItems - 2].view;
+    CGFloat middle = NSMidX(misc.bounds);
+    NSBox *column = nil;
+    for (NSView *view in misc.subviews)
+        if ([view isKindOfClass:NSBox.class] && NSMidX(view.frame) < middle && (!column || NSMinY(view.frame) < NSMinY(column.frame)))
+            column = (NSBox *)view;
+    if (!column) return;
+    CGFloat left = NSMinX(column.frame), top = NSMinY(column.frame) - 6, bottom = 4;
+    CGFloat right = NSMaxX(column.frame);
+    for (NSView *view in misc.subviews)
+        if (NSMidX(view.frame) >= middle && NSMinY(view.frame) < top)
+            right = MIN(right, NSMinX(view.frame) - 8);
+    CGFloat height = MIN(top - bottom, 96);
+    if (height < 80 || right - left < 200) return;
+    NSBox *group = [[NSBox alloc] initWithFrame:NSMakeRect(left, top - height, right - left, height)];
     group.title = [self text:@"Dock Icon"];
     group.identifier = @"DockIconChoices";
     group.toolTip = [self text:@"Applies while TeXShop is running. The standard icon returns after quitting."];
     group.autoresizingMask = NSViewMinYMargin;
-    [themes addSubview:group];
+    [misc addSubview:group];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesClosed:) name:NSWindowWillCloseNotification object:tabs.window];
     NSView *panel = group.contentView;
     NSArray *titles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
-    NSArray *details = @[@"High-resolution reconstruction", @"High-resolution reconstruction", @"3.14–3.38", @"3.39–5.58", @"5.59–"];
-    CGFloat cellWidth = panel.bounds.size.width / 5;
+    NSArray *details = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.59–"];
+    CGFloat cellWidth = MIN(panel.bounds.size.width / 5, 72);
+    CGFloat iconHeight = MIN(38, NSHeight(panel.bounds) - 32);
     for (NSInteger index = 0; index < 5; index++) {
         CGFloat center = (index + 0.5) * cellWidth;
         NSString *label = [self text:titles[index]];
@@ -80,7 +83,7 @@
         [panel addSubview:button]; [self.buttons addObject:button];
         NSButton *image = [NSButton buttonWithImage:TSDockIconImage(self.bundle, TSDockIconNames()[index]) target:self action:@selector(chooseIcon:)];
         image.tag = index;
-        image.frame = NSMakeRect(center - 16, 28, 32, 38);
+        image.frame = NSMakeRect(center - 16, 28, 32, iconHeight);
         image.bordered = NO;
         image.imageScaling = NSImageScaleProportionallyUpOrDown;
         image.accessibilityLabel = label;

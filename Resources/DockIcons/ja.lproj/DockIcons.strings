@@ -4,7 +4,7 @@
 "Retina Triangle" = "Retina版三角アイコン";
 "Classic Circle" = "丸形アイコン";
 "Current (Default)" = "現在のアイコン（標準）";
-"High-resolution reconstruction" = "高解像度復刻の試作";
+"Before 1.0" = "1.0 以前";
 "Changes the Dock icon only. Click OK to keep your choice." = "Dockのアイコンを変更します。「OK」で選択を保存します。";
 
 "Applies while TeXShop is running. The standard icon returns after quitting." = "TeXShopの起動中に適用します。終了後は標準アイコンに戻ります。";

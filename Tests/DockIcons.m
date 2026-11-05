@@ -56,10 +56,10 @@ int main(int argc,char **argv) { @autoreleasepool {
     NSTabView *nested = Tabs(tabs.tabViewItems.lastObject.view);
     Require(nested.numberOfTabViewItems == 2, @"No extra preference sub-tab");
     [tabs selectLastTabViewItem:nil]; [nested selectLastTabViewItem:nil];
-    NSView *themeView = tabs.tabViewItems.lastObject.view;
+    NSView *themeView = tabs.tabViewItems[tabs.numberOfTabViewItems - 2].view;
     NSBox *iconGroup;
     for (NSView *view in themeView.subviews) if ([view.identifier isEqual:@"DockIconChoices"]) iconGroup = (id)view;
-    Require(iconGroup != nil, @"Direct icon choices on Themes");
+    Require(iconGroup != nil, @"Direct icon choices on Misc2");
     if (snapshot) {
         BOOL japanese = [[@(argv[1]) stringByDeletingLastPathComponent].lastPathComponent isEqual:@"ja.lproj"];
         Require([iconGroup.title isEqual:japanese ? @"Dockアイコン" : @"Dock Icon"], @"Snapshot title matches requested language");
@@ -112,7 +112,8 @@ int main(int argc,char **argv) { @autoreleasepool {
         window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
         [window.contentView layoutSubtreeIfNeeded];
         [window display];
-        NSView *view = tabs.tabViewItems.lastObject.view;
+        [tabs selectTabViewItemAtIndex:tabs.numberOfTabViewItems - 2]; [window display];
+        NSView *view = tabs.tabViewItems[tabs.numberOfTabViewItems - 2].view;
         for (NSView *child in view.subviews) if ([child.identifier isEqual:@"DockIconChoices"]) {
             [child layoutSubtreeIfNeeded];
             NSBitmapImageRep *rep = [child bitmapImageRepForCachingDisplayInRect:child.bounds];
@@ -123,7 +124,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     }
     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
     PreviewDelegate *delegate = [PreviewDelegate new]; delegate.controller = controller; NSApp.delegate = delegate;
-    [tabs selectLastTabViewItem:nil]; [nested selectLastTabViewItem:nil];
+    [tabs selectTabViewItemAtIndex:tabs.numberOfTabViewItems - 2];
     // Disable the original unrelated controls; keep this harness from changing TeXShop preferences.
     for (NSView *v in window.contentView.subviews) if ([v isKindOfClass:NSButton.class]) {
         NSButton *b = (id)v; b.enabled = NO;
