@@ -5,14 +5,15 @@ import AppKit
 import CoreText
 let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
 let asset = root.appendingPathComponent("Artwork/TeXShop.icon/Assets")
+let whiteFrame = !CommandLine.arguments.contains("--no-frame")
 func fit(_ path:CGPath, height:CGFloat, centerX:CGFloat, bottom:CGFloat)->CGPath {
     let b=path.boundingBoxOfPath, scale=height/b.height
     var tr=CGAffineTransform(a:scale,b:0,c:0,d:scale,tx:centerX-b.midX*scale,ty:bottom-b.minY*scale)
     return path.copy(using:&tr)!
 }
 let tex=CGMutablePath()
-// Outlined from page 2 (Latin Modern Roman Bold) of the user-provided PDF.
-let operations = try JSONSerialization.jsonObject(with: Data(contentsOf:root.appendingPathComponent("Artwork/TeX-logo-outline.json"))) as! [[Any]]
+// Traced from the classic round icon. Coordinates retain its 1024-pixel canvas.
+let operations = try JSONSerialization.jsonObject(with: Data(contentsOf:root.appendingPathComponent("Artwork/Classic-TeX-outline.json"))) as! [[Any]]
 for op in operations {
     let points=(op[1] as! [[Double]]).map { CGPoint(x:$0[0],y:$0[1]) }
     switch op[0] as! String {
@@ -23,10 +24,10 @@ for op in operations {
     default: fatalError("Unsupported outline operation")
     }
 }
-// Larger lettering and a small outline expansion improve recognition at Dock sizes.
-let enlargedWord=fit(tex.normalized(using: .winding),height:390,centerX:512,bottom:317)
-let outline=enlargedWord.copy(strokingWithWidth:8,lineCap:.round,lineJoin:.round,miterLimit:10)
-let word=enlargedWord.union(outline,using:.winding)
+// Match the classic lettering size and placement in the legacy 1024-pixel icon.
+// The fallback canvas insets the artwork by 100 pixels and scales it to 824 pixels.
+var classicTransform=CGAffineTransform(a:1024/824,b:0,c:0,d:1024/824,tx:-100*1024/824,ty:-100*1024/824)
+let word=tex.copy(using:&classicTransform)!
 func svgPath(_ p:CGPath)->String {
     var s="";func n(_ v:CGFloat)->String {String(format:"%.3f",Double(v))}
     p.applyWithBlock { q in let e=q.pointee;let a=e.points
@@ -81,6 +82,7 @@ func png(_ pixels:Int, fullBleed:Bool = false)->Data {
     let shape=fullBleed ? CGPath(rect:CGRect(x:0,y:0,width:1024,height:1024),transform:nil) : CGPath(roundedRect:CGRect(x:100,y:100,width:824,height:824),cornerWidth:185,cornerHeight:185,transform:nil)
     ctx.saveGState();ctx.addPath(shape);ctx.clip()
     if !fullBleed { ctx.translateBy(x:100,y:100);ctx.scaleBy(x:824/1024,y:824/1024) }
+    if whiteFrame {
     let space=CGColorSpace(name:CGColorSpace.sRGB)!
     let rimColors=[CGColor(srgbRed:1,green:1,blue:1,alpha:1),CGColor(srgbRed:245/255,green:246/255,blue:246/255,alpha:1),CGColor(srgbRed:204/255,green:209/255,blue:210/255,alpha:1)]
     let rim=CGGradient(colorsSpace:space,colors:rimColors as CFArray,locations:[0,0.38,1])!
@@ -94,6 +96,11 @@ func png(_ pixels:Int, fullBleed:Bool = false)->Data {
     ctx.setLineWidth(2);ctx.addPath(field);ctx.strokePath()
     let rimHighlight=CGPath(roundedRect:CGRect(x:3,y:3,width:1018,height:1018),cornerWidth:227,cornerHeight:227,transform:nil)
     ctx.setStrokeColor(CGColor(srgbRed:1,green:1,blue:1,alpha:0.6));ctx.addPath(rimHighlight);ctx.strokePath()
+    } else {
+        let colors=[CGColor(srgbRed:180/255,green:199/255,blue:207/255,alpha:1),CGColor(srgbRed:74/255,green:102/255,blue:105/255,alpha:1)]
+        let gradient=CGGradient(colorsSpace:CGColorSpace(name:CGColorSpace.sRGB),colors:colors as CFArray,locations:[0,1])!
+        ctx.drawLinearGradient(gradient,start:CGPoint(x:512,y:1024),end:CGPoint(x:512,y:0),options:[])
+    }
     ctx.restoreGState()
     if !fullBleed { ctx.translateBy(x:100,y:100);ctx.scaleBy(x:824/1024,y:824/1024) }
     func color(_ r:CGFloat,_ g:CGFloat,_ b:CGFloat,_ a:CGFloat=1)->CGColor {
@@ -124,3 +131,12 @@ for size in [16,32,128,256,512] {
 try png(1024).write(to:root.appendingPathComponent("Artwork/Icon-preview.png"))
 try png(1024,fullBleed:true).write(to:root.appendingPathComponent("Artwork/GitHub-avatar.png"))
 print("Centered TeX outline; Icon Composer layers, legacy PNGs, and web avatar generated.")
+
+let composerURL=root.appendingPathComponent("Artwork/TeXShop.icon/icon.json")
+var composer=try JSONSerialization.jsonObject(with:Data(contentsOf:composerURL)) as! [String:Any]
+var groups=composer["groups"] as! [[String:Any]]
+var layers=(groups[0]["layers"] as! [[String:Any]]).filter { $0["image-name"] as? String != "Frame.svg" }
+if whiteFrame { layers.insert(["image-name":"Frame.svg","name":"White rim and gray-green field","glass":false],at:0) }
+groups[0]["layers"]=layers;composer["groups"]=groups
+composer["fill"]=["linear-gradient":whiteFrame ? ["srgb:1,1,1,1","srgb:0.8,0.819608,0.823529,1"] : ["srgb:0.705882,0.780392,0.811765,1","srgb:0.290196,0.4,0.411765,1"]]
+try JSONSerialization.data(withJSONObject:composer,options:[.prettyPrinted,.sortedKeys]).write(to:composerURL)

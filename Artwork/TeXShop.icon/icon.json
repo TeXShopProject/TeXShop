@@ -1,38 +1,38 @@
 {
-  "fill": {
-    "linear-gradient": [
+  "fill" : {
+    "linear-gradient" : [
       "srgb:1,1,1,1",
       "srgb:0.8,0.819608,0.823529,1"
     ]
   },
-  "groups": [
+  "groups" : [
     {
-      "name": "TeX",
-      "layers": [
+      "layers" : [
         {
-          "image-name": "Frame.svg",
-          "name": "White rim and gray-green field",
-          "glass": false
+          "glass" : false,
+          "image-name" : "Frame.svg",
+          "name" : "White rim and gray-green field"
         },
         {
-          "image-name": "Lettering.svg",
-          "name": "TeX",
-          "glass": false
+          "glass" : false,
+          "image-name" : "Lettering.svg",
+          "name" : "TeX"
         }
       ],
-      "shadow": {
-        "kind": "none",
-        "opacity": 0
+      "name" : "TeX",
+      "shadow" : {
+        "kind" : "none",
+        "opacity" : 0
       },
-      "translucency": {
-        "enabled": false,
-        "value": 0
-      },
-      "specular": false
+      "specular" : false,
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0
+      }
     }
   ],
-  "supported-platforms": {
-    "squares": [
+  "supported-platforms" : {
+    "squares" : [
       "macOS"
     ]
   }

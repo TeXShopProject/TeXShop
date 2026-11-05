@@ -1,30 +1,40 @@
 # TeXShop app icon
 
-Prepared from the maintainer’s vector artwork at the maintainer's request.
-The Japanese character has been removed. The outlined TeX mark is centered
-at (512, 512) on a 1024-unit canvas. The mark is fitted to a height of
-390 units, then expanded by 4 units along its contour to improve legibility
-at small sizes. The resulting outline is shared by the SVG and raster assets.
-The inherited gray-green gradient, white lettering, bevel, and shadow are retained.
-A 48-unit white rim recalls the classic circular icon, following the rounded-square
-outline. Its white-to-silver gradient gives the edge subtle depth without reducing
-the enlarged lettering. `Frame.svg` supplies the rim and inset background.
+The gray-green background and subtle relief continue the existing artwork.
+The lettering is traced from the classic round icon in
+`Resources/DockIcons/round.png`, retaining its glyph shapes rather than
+substituting a different font. No additional weight expansion is applied.
+On the 1024-pixel fallback canvas, the lettering occupies approximately
+663 × 343 pixels at the original position, matching the classic icon.
 
-- `TeXShop.icon`: Icon Composer source. The background fills the entire canvas;
-  macOS supplies the app-icon mask. There is no circle inside an additional tile.
+The white-frame design (C) adds a 48-unit rim on the full-bleed artwork canvas.
+Its white-to-silver gradient gives the edge subtle depth. On the fallback
+canvas, approximately 41 pixels separate the lettering from the inner edge
+of the frame at the left and right. The unframed design (B) uses the same
+lettering and placement.
+
+- `TeXShop.icon`: Icon Composer source; macOS supplies the outer mask.
 - `TeXShop.icns`: Legacy rounded-square fallback.
-- `Icon-preview.png`: Preview of that fallback, including standard icon padding.
-- `GitHub-avatar.png`: Full-bleed 1024-pixel square for the Organization/repository avatar.
-- `TeXShop.iconset`: Legacy raster sizes, also used for the website icon.
-- `TeX-logo-outline.json`: Font-independent outlines inherited from the company artwork.
+- `Icon-preview.png`: Fallback preview including standard icon padding.
+- `GitHub-avatar.png`: Full-bleed square avatar.
+- `TeXShop.iconset`: Legacy raster sizes.
+- `Classic-TeX-outline.json`: Traced classic lettering, in original canvas coordinates.
+- `TeX-logo-outline.json`: Earlier lettering from the maintainer’s vector artwork,
+  retained for provenance but no longer used by the generator.
 
-Regenerate on macOS 13 or later from the repository root:
+Regenerate the white-frame design on macOS 13 or later from the repository root:
 
 ```sh
 swift Artwork/generate-icon.swift
 iconutil -c icns Artwork/TeXShop.iconset -o Artwork/TeXShop.icns
 ```
 
+Add `--no-frame` to the Swift command to generate B instead. The command also
+updates the Icon Composer layer selection. To retrace the lettering, use
+`python3 Artwork/trace-classic-lettering.py`; its dependencies are documented
+in the script. Ordinary regeneration uses the stored outlines and needs no
+tracing dependencies.
+
 The Xcode target uses `TeXShop.icon` and the app-icon name `TeXShop`.
-The root `icon.icns` retains the legacy fallback. The website uses the generated PNG,
-and the Organization avatar uses `GitHub-avatar.png`.
+The root `icon.icns` and `Resources/DockIcons/current.png` are copies of the
+chosen fallback. Website and published avatar updates are separate.
