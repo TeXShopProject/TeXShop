@@ -5569,6 +5569,38 @@ preference change is cancelled. "*/
 }
 
 
+// Searches from origin in direction inc (+1 or -1) for the partner of the brace
+// at origin. Returns its index, kTSBraceSearchNotFound when the text ends first, or
+// kTSBraceSearchGaveUp after limit characters, so that a far or missing partner
+// does not stall cursor movement in long documents.
+static const NSInteger kTSBraceSearchLimit = 2000000;
+static const NSInteger kTSBraceSearchNotFound = -1;
+static const NSInteger kTSBraceSearchGaveUp = -2;
+static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar brace, unichar partner,
+                                     NSInteger inc, unichar escape, NSInteger limit)
+{
+	NSInteger length = text.length, nesting = 0, location = origin;
+	CFStringInlineBuffer buffer;
+	CFStringInitInlineBuffer((__bridge CFStringRef)text, &buffer, CFRangeMake(0, length));
+	while ((location += inc) >= 0 && location < length) {
+		if (ABS(location - origin) > limit)
+			return kTSBraceSearchGaveUp;
+		unichar c = CFStringGetCharacterFromInlineBuffer(&buffer, location);
+		if (c != partner && c != brace)
+			continue;
+		BOOL escaped = (location > 0) && (CFStringGetCharacterFromInlineBuffer(&buffer, location - 1) == escape);
+		if (escaped)
+			continue;
+		if (c == partner) {
+			if (nesting == 0)
+				return location;
+			nesting--;
+		} else
+			nesting++;
+	}
+	return kTSBraceSearchNotFound;
+}
+
 // added by Terada (- (void)textViewDidChangeSelection:(NSNotification *)inNotification)
 - (void)textViewDidChangeSelection:(NSNotification *)inNotification
 {
@@ -5673,15 +5705,13 @@ preference change is cancelled. "*/
     } else {
         return;
     }
-    NSUInteger theSkipMatchingBrace = 0;
     theCurChar = theUnichar;
 	
-	
-    while ((theLocation += inc) >= 0 && (theLocation < theStringLength)) {
-        theUnichar = [theString characterAtIndex:theLocation];
-		notCS = (((theLocation > 0) ? [theString characterAtIndex:theLocation-1] : 0) != g_texChar);
-        if (theUnichar == theBraceChar && notCS) {
-            if (!theSkipMatchingBrace) {
+	NSInteger theMatch = TSFindMatchingBrace(theString, originalLocation, theCurChar, theBraceChar, inc, g_texChar, kTSBraceSearchLimit);
+	if (theMatch == kTSBraceSearchGaveUp)
+		return;
+	if (theMatch >= 0) {
+		theLocation = theMatch;
 				[self performSelector:@selector(highlightBracesAt:)
 						   withObject:[NSArray arrayWithObjects:
 									   [NSNumber numberWithInteger:theLocation],
@@ -5708,12 +5738,6 @@ preference change is cancelled. "*/
 				}
 				
                 return;
-            } else {
-                theSkipMatchingBrace += inc;
-            }
-        } else if (theUnichar == theCurChar && notCS) {
-            theSkipMatchingBrace -= inc;
-        }
     }
 	
     if(beep) NSBeep();
