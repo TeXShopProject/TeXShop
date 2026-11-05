@@ -95,12 +95,21 @@ for(NSString *key in enu)
  */
     
 	// Customize 'PATH'
+	// PATH is absent when the app is started without a login environment,
+	// and the preference paths may be unset; never pass nil to the string methods.
 	NSMutableString *path;
-	path = [NSMutableString stringWithString: [env objectForKey:@"PATH"]];
-	[path appendString:@":"];
-	[path appendString:[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath]];
-	[path appendString:@":"];
-	[path appendString:[SUD stringForKey:GSBinPath]];
+	NSString *extraPath;
+	path = [NSMutableString stringWithString: ([env objectForKey:@"PATH"] ?: @"/usr/bin:/bin:/usr/sbin:/sbin")];
+	extraPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
+	if ([extraPath length] > 0) {
+		[path appendString:@":"];
+		[path appendString:extraPath];
+	}
+	extraPath = [SUD stringForKey:GSBinPath];
+	if ([extraPath length] > 0) {
+		[path appendString:@":"];
+		[path appendString:extraPath];
+	}
 	[env setObject: path forKey: @"PATH"];
     
 //    enu = [dict keyEnumerator]; for(NSString *key in enu) {         NSLog(@"key : %@",key);         NSLog(@"value : %@",[[dic // //valueForKey:keystring]);  }
