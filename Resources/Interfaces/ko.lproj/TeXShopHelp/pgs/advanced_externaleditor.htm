@@ -18,8 +18,8 @@
 </P>
 
 <P>The preview window can be configured to contain a typesetting button. If such a button is not there, use "Customize Toolbar..." in the Windows menu to add one.</P>
-		<p>For users who prefer external editors most of the time, there is a preference item called &quot;Configure for External Editor.&quot; When this preference is chosen, the &quot;Open&quot; and &quot;Open Recent...&quot; menus open tex source files in the above manner for editing with an external editor. Moreover, the  &quot;Open for Preview...&quot; menu becomes &quot;Open for Editing...&quot; and opens the source file in TeXShop's internal editor for those rare occasions when the internal editor is desired. The &quot;Open&quot; and &quot;Open Recent...&quot; menus can also open jpg, tiff, ps, pdf, dvi, log, and other files; selecting the new preference does not change this behavior.</p>
-		<p>Some editors are able to call Unix typesetting commands directly. A new preference item, "Automatic Preview Update", has been added to improve your experience with these editors. When this item is active and a .tex file is opened using "Open for Preview", the pdf preview display automatically updates whenever the pdf file is rewritten. Thus you can typeset with an external editor and the preview window will automatically show changes. The preference also applies to .pdf files opened in TeXShop, and if TeXShop is configured to use an external editor, the preference applies to .tex files opened with "Open".
+		<p>For users who prefer external editors most of the time, there is a setting called &quot;Configure for External Editor.&quot; When this setting is chosen, the &quot;Open&quot; and &quot;Open Recent...&quot; menus open tex source files in the above manner for editing with an external editor. Moreover, the  &quot;Open for Preview...&quot; menu becomes &quot;Open for Editing...&quot; and opens the source file in TeXShop's internal editor for those rare occasions when the internal editor is desired. The &quot;Open&quot; and &quot;Open Recent...&quot; menus can also open jpg, tiff, ps, pdf, dvi, log, and other files; selecting the new setting does not change this behavior.</p>
+		<p>Some editors are able to call Unix typesetting commands directly. A new setting, "Automatic Preview Update", has been added to improve your experience with these editors. When this item is active and a .tex file is opened using "Open for Preview", the pdf preview display automatically updates whenever the pdf file is rewritten. Thus you can typeset with an external editor and the preview window will automatically show changes. The setting also applies to .pdf files opened in TeXShop, and if TeXShop is configured to use an external editor, the setting applies to .tex files opened with "Open".
  </p>
 <p> The following applescript commands have been added to
 TeXShop so editors can call TeXShop directly:
@@ -38,7 +38,7 @@ TeXShop so editors can call TeXShop directly:
 The first seven commands activate TeXShop typesetting commands. Applescript will return immediately
 after these calls without waiting for typesetting to complete. The "taskdone" call can be used to
 test completion; it returns NO while typesetting is being done, and YES when it is finished. Each of
-these calls refreshes the preview window at the end of typesetting. If your editor calls TeXShop to typeset, the "Automatic Preview Update" preference can be turned off.
+these calls refreshes the preview window at the end of typesetting. If your editor calls TeXShop to typeset, the "Automatic Preview Update" setting can be turned off.
 </p>
 <p>If the external editor modifies the pdf output directly, it can call "refreshpdf" to refresh the pdf display. This is only needed if "Automatic Preview Update" is off. Finally "open_for_externaleditor" opens a tex file by calling "Open for Preview".
  </p>
