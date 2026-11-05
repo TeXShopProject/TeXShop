@@ -20,7 +20,7 @@ static PDFDocument *MaybeSnapshot(NSString *p,NSString *s){return failSnapshots?
 fixture=fixture.replace('#define FlashFixKey', '#define PdfKitMouseModeKey @"mouse"\n#define PreviewDrawerOpenKey @"drawer"\n#define FlashFixKey')
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)makeKeyAndOrderFront:(id)sender {}')
 fixture=fixture.replace('-(void)setup{', '-(void)toggleDrawer:(id)sender {}\n-(void)setup{')
-methods='\n'.join(method(x) for x in ['- (void) showWithPath:', '- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
+methods='\n'.join(method(x) for x in ['- (void) showWithPath:', '- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
 methods=methods.replace('TSInitialPDFSnapshot(','MaybeSnapshot(')
 # --mutation=nofallback restores loading only the snapshot while the PDF is watched.
 if '--mutation=nofallback' in sys.argv:

@@ -570,6 +570,7 @@
     
     
     
+    [self shareDocumentWithSecondView];
     [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature changeTime:loadedChangeTime];
 	[self setup];
 	totalPages = [[self document] pageCount];
@@ -1280,6 +1281,18 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 
 
 
+// PDFView's setDocument: replaces the document's rendering properties without
+// synchronization, while PDFKit draws the pages of a displayed document on
+// background queues; a concurrent read can then crash. Give the second view the
+// shared document before this view scrolls and draws it; the caller's later
+// setDocument: then finds the same document and does nothing.
+- (void)shareDocumentWithSecondView
+{
+    PDFView *second = self.myDocument.myPDFKitView2;
+    if (second && second != self)
+        [second setDocument:[self document]];
+}
+
 // External reloads supply one validated, immutable PDF snapshot.
 - (void)reShowWithPath:(NSString *)imagePath
 {
@@ -1327,6 +1340,7 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
         oldDoc = self.document;
         [self setDocument:pdfDoc];
         if (oldDoc != pdfDoc) oldDoc.delegate = nil;
+        [self shareDocumentWithSecondView];
 
         totalPages = [[self document] pageCount];
         [totalPage setIntegerValue:totalPages];
@@ -1445,6 +1459,7 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
     oldDoc = self.document;
     [self setDocument:pdfDoc];
     if (oldDoc != pdfDoc) oldDoc.delegate = nil;
+    [self shareDocumentWithSecondView];
     
   
 

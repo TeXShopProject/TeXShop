@@ -7404,8 +7404,8 @@ if (! useFullSplitWindow) {
 			_pdfRefreshTryAgain = YES;
 		} else {
 			PDFfromKit = YES;
-			[self.myPDFKitView reShowWithPath: pdfPath];
 			[self.myPDFKitView2 prepareSecond];
+			[self.myPDFKitView reShowWithPath: pdfPath];
 			// [[self.myPDFKitView document] retain];
 			[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
 			[self.myPDFKitView2 reShowForSecond];

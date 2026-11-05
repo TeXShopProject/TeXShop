@@ -2374,8 +2374,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
                 if ((self.startDate == nil) || ! [self.startDate isEqualToDate: endDate]) {
                     alreadyFound = YES;
                     PDFfromKit = YES;
-                    [self.myPDFKitView reShowWithPath: imagePath];
                     [self.myPDFKitView2 prepareSecond];
+                    [self.myPDFKitView reShowWithPath: imagePath];
                     // [[self.myPDFKitView document] retain];
                     [self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
                     [self.myPDFKitView2 reShowForSecond];
@@ -2632,8 +2632,8 @@ else
 				if ((self.startDate == nil) || ! [self.startDate isEqualToDate: endDate]) {
 					alreadyFound = YES;
 					PDFfromKit = YES;
-					[self.myPDFKitView reShowWithPath: imagePath];
 					[self.myPDFKitView2 prepareSecond];
+					[self.myPDFKitView reShowWithPath: imagePath];
 					// [[self.myPDFKitView document] retain];
 					[self.myPDFKitView2 setDocument: [self.myPDFKitView document]];
 					[self.myPDFKitView2 reShowForSecond];

@@ -6,7 +6,7 @@ root=Path(__file__).resolve().parents[1]
 s=(root/'Sources/MyPDFKitView.m').read_bytes().decode('utf-8', errors='replace')
 def method(signature):
     start=s.rindex(signature);return s[start:s.index('\n}',start)+2]
-methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
+methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
@@ -40,6 +40,7 @@ static NSInteger screenUpdates=0;
 @property NSInteger numberingCorrection;
 @property TestWindow *pdfKitWindow;
 @property NSTimer *pdfRefreshTimer;
+@property PDFView *myPDFKitView2;
 @end
 @implementation TestDocument
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime {}
