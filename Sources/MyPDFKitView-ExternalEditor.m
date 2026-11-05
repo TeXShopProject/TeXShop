@@ -286,9 +286,12 @@
         newFile = [[[[[self.myDocument fileURL] path] stringByDeletingLastPathComponent] stringByAppendingPathComponent: foundFileName] stringByStandardizingPath];
     
      if (self.myDocument.backwardSyncTaskExternal != nil) {
-        [self.myDocument.backwardSyncTaskExternal terminate];
+        if ([self.myDocument.backwardSyncTaskExternal isRunning])
+            [self.myDocument.backwardSyncTaskExternal terminate];
         myDate = [NSDate date];
-        while (([self.myDocument.backwardSyncTaskExternal isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+        while (([self.myDocument.backwardSyncTaskExternal isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+        if (([self.myDocument.backwardSyncTaskExternal isRunning]) && ([self.myDocument.backwardSyncTaskExternal processIdentifier] > 0))
+            kill([self.myDocument.backwardSyncTaskExternal processIdentifier], SIGKILL);
         self.myDocument.backwardSyncTaskExternal = nil;
         self.myDocument.backwardSyncTaskExternal = nil;
     }

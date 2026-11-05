@@ -229,9 +229,12 @@
         return;
 	
 	if (displayPackageHelpTask != nil) {
-		[displayPackageHelpTask terminate];
+		if ([displayPackageHelpTask isRunning])
+			[displayPackageHelpTask terminate];
 		myDate = [NSDate date];
-		while (([displayPackageHelpTask isRunning]) && ([myDate timeIntervalSinceDate:myDate] < 0.5)) ;
+		while (([displayPackageHelpTask isRunning]) && ([myDate timeIntervalSinceNow] > -0.5)) ;
+		if (([displayPackageHelpTask isRunning]) && ([displayPackageHelpTask processIdentifier] > 0))
+			kill([displayPackageHelpTask processIdentifier], SIGKILL);
 	//	[displayPackageHelpTask release];
 		displayPackageHelpTask = nil;
 	}
