@@ -160,6 +160,17 @@ NSInteger stringSort(id s1, id s2, void *context)
     return [[TSColorSupport sharedInstance] colorForKey: theKey fromDictionary: EditingColors isWindowDark: withDarkColors];
 }
 
+// Bracket wells without their own color in the edited theme follow SyntaxMarker.
+- (void)refreshInheritedBracketColorWells
+{
+    if ([EditingColors objectForKey: @"SyntaxMarkerParen"] == nil)
+        markerParenColorWell.color = [self editingColorForKey: @"SyntaxMarkerParen"];
+    if ([EditingColors objectForKey: @"SyntaxMarkerCurly"] == nil)
+        markerCurlyColorWell.color = [self editingColorForKey: @"SyntaxMarkerCurly"];
+    if ([EditingColors objectForKey: @"SyntaxMarkerSquare"] == nil)
+        markerSquareColorWell.color = [self editingColorForKey: @"SyntaxMarkerSquare"];
+}
+
 - (void)FillInColorWells
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
@@ -651,6 +662,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         ((NSColorWell *)sender).color = oldColor;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarker" fromColorWell:sender];
+    [self refreshInheritedBracketColorWells];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
     
 }

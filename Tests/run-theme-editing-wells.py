@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """The bracket and expl3 color wells in the Themes tab show the theme being
-edited rather than the applied one."""
+edited, and a SyntaxMarker change refreshes only the bracket wells that inherit it."""
 from pathlib import Path
 import re, subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -37,6 +37,12 @@ if mutation == 'wells-read-applied-theme':
     helpers = mutate(helpers, 'fromDictionary: EditingColors', 'fromDictionary: (withDarkColors ? darkColors : liteColors)')
 elif mutation == 'default-ignores-appearance':
     helpers = mutate(helpers, 'isWindowDark: withDarkColors]', 'isWindowDark: NO]')
+elif mutation == 'no-marker-refresh':
+    actions = mutate(actions, '[self refreshInheritedBracketColorWells];', ';')
+elif mutation == 'refresh-stores-keys':
+    helpers = mutate(helpers, 'markerParenColorWell.color = [self editingColorForKey: @"SyntaxMarkerParen"];',
+                     'markerParenColorWell.color = [self editingColorForKey: @"SyntaxMarkerParen"]; '
+                     '[[TSColorSupport sharedInstance] changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarkerParen" fromColorWell: markerParenColorWell];')
 elif mutation:
     raise SystemExit('unknown mutation ' + mutation)
 
@@ -153,6 +159,26 @@ int main(int argc, char **argv) { @autoreleasepool {
 
         }
 
+        // A SyntaxMarker change refreshes the bracket wells that inherit it, without storing bracket keys.
+        NSArray *markerThemes = @[@{@"SyntaxMarker": marker},
+                                  @{@"SyntaxMarker": marker, @"SyntaxMarkerCurly": explicitTheme[@"SyntaxMarkerCurly"]},
+                                  @{@"SyntaxMarker": marker, @"SyntaxMarkerParen": explicitTheme[@"SyntaxMarkerParen"],
+                                    @"SyntaxMarkerCurly": explicitTheme[@"SyntaxMarkerCurly"], @"SyntaxMarkerSquare": explicitTheme[@"SyntaxMarkerSquare"]}];
+        for (NSDictionary *theme in markerThemes) {
+            Prefs *m = MakePrefs(theme, dark);
+            [m fillDark:dark];
+            m->SyntaxMarkerColorWell.color = Color(newMarker);
+            [m SyntaxMarkerColorChanged:m->SyntaxMarkerColorWell];
+            if (!Same(Color(m->EditingColors[@"SyntaxMarker"]), newMarker)) { printf("FAIL: %s SyntaxMarker change not stored\n", mode); failures++; }
+            if (![[NSSet setWithArray:m->EditingColors.allKeys] isEqual:[NSSet setWithArray:theme.allKeys]]) {
+                printf("FAIL: %s SyntaxMarker change added keys: %s\n", mode, [[m->EditingColors.allKeys description] UTF8String]); failures++;
+            }
+            for (NSString *key in bracketKeys) {
+                NSArray *want = theme[key] ?: newMarker;
+                NSColor *c = [WellsByKey(m)[key] color];
+                if (!Same(c, want)) { printf("FAIL: %s after SyntaxMarker change %s well (%s) is %s\n", mode, key.UTF8String, theme[key] ? "explicit" : "inherited", Describe(c).UTF8String); failures++; }
+            }
+        }
     }
     return failures ? 1 : 0;
 } }
@@ -167,4 +193,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-theme-') as tmp:
         if r.returncode == 0: raise SystemExit('FAIL: mutation %s was not detected' % mutation)
         print('detected mutation', mutation)
     elif r.returncode: raise SystemExit(r.stderr or 'FAIL')
-    else: print('PASS: theme color wells follow the edited theme')
+    else: print('PASS: theme color wells follow the edited theme and the marker color')
