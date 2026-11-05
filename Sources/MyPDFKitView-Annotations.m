@@ -1015,7 +1015,7 @@ static NSRect RectPlusScale (NSRect aRect, float scale)
      
     annotationsFound = NO;
     
-    // added by Terada: retain unsaved annotations if the panel is cancelled.
+    // Retain unsaved annotations if the panel is cancelled.
     
     [self setEditModeInternal: NO andClosePanels:NO];
     

@@ -1,4 +1,4 @@
-// added by Terada: Immutable file-backed snapshots avoid two full PDF data copies.
+// Immutable file-backed snapshots avoid two full PDF data copies.
 #import "TSExternalPDFReload.h"
 #include <copyfile.h>
 #include <stdlib.h>

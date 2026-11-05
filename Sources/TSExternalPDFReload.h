@@ -1,4 +1,4 @@
-// added by Terada: Stable PDF snapshots and page-relative viewport restoration.
+// Stable PDF snapshots and page-relative viewport restoration.
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
 #include <sys/stat.h>

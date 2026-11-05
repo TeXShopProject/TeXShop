@@ -1,4 +1,4 @@
-// Terada: measure file-backed snapshots and validate their lifetime in isolation.
+// Measure file-backed snapshots and validate their lifetime in isolation.
 #import "TSExternalPDFReload.h"
 #import <mach/mach.h>
 static double Footprint(void) {

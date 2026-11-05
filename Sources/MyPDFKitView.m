@@ -41,7 +41,7 @@
 
 
 #import "MyPDFKitView.h"
-#import "TSExternalPDFReload.h" // added by Terada
+#import "TSExternalPDFReload.h"
 #import "MyPDFView.h"
 #import "globals.h"
 #import "TSDocument.h"
@@ -534,7 +534,7 @@
 - (void) showWithPath: (NSString *)imagePath
 {
 
-    NSString *loadedSignature = TSExternalPDFSignature(imagePath); // added by Terada
+    NSString *loadedSignature = TSExternalPDFSignature(imagePath);
     PDFDocument	*pdfDoc;
 	NSData	*theData;
     PDFPage        *aPage;
@@ -552,7 +552,7 @@
 	mouseMode = [SUD integerForKey: PdfKitMouseModeKey];
 	
 	// if ([SUD boolForKey:ReleaseDocumentClassesKey]) {
-	// added by Terada: A watched PDF must survive an in-place overwrite of its file.
+	// A watched PDF must survive an in-place overwrite of its file.
 	if (self.myDocument.pdfRefreshTimer) {
         pdfDoc = TSInitialPDFSnapshot(imagePath, loadedSignature);
         [self setDocument:pdfDoc];
@@ -568,7 +568,7 @@
     
     
     
-    [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature]; // added by Terada
+    [self.myDocument notePDFLoadedAtPath:imagePath signature:loadedSignature];
 	[self setup];
 	totalPages = [[self document] pageCount];
 	[totalPage setIntegerValue:totalPages];
@@ -1278,7 +1278,7 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 
 
 
-// added by Terada: External reloads supply one validated, immutable PDF snapshot.
+// External reloads supply one validated, immutable PDF snapshot.
 - (void)reShowWithPath:(NSString *)imagePath
 {
     NSString *loadedSignature = TSExternalPDFSignature(imagePath);

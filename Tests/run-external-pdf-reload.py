@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Terada: Exercise production PDF reload methods with real PDFKit views in isolation."""
+"""Exercise production PDF reload methods with real PDFKit views in isolation."""
 from pathlib import Path
 import ast, os, subprocess, tempfile
 root = Path(__file__).resolve().parents[1]

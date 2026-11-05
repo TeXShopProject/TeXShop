@@ -1,4 +1,4 @@
-// Terada: symlinks must produce a private regular file, never another symlink.
+// Symlinks must produce a private regular file, never another symlink.
 #import "TSExternalPDFReload.h"
 #include <unistd.h>
 static void Check(BOOL ok, NSString *message) { if(!ok){NSLog(@"FAIL: %@",message);exit(1);} }

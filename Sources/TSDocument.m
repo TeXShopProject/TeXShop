@@ -59,7 +59,7 @@
 #import "NSText-Extras.h"  // Terada
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
-#import "TSExternalPDFReload.h" // added by Terada
+#import "TSExternalPDFReload.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 
 
@@ -68,7 +68,7 @@
 #define MAXNUMOFTABS 20
 
 @interface TSDocument ()
-// added by Terada: Keep external PDF observation independent of source-file watching.
+// Keep external PDF observation independent of source-file watching.
 @property (copy) NSString *externalPDFLoadedSignature;
 @property (copy) NSString *externalPDFPendingSignature;
 @property (copy) NSString *externalPDFFailedSignature;
@@ -7069,7 +7069,7 @@ if (! useFullSplitWindow) {
 // nofification methods
 //=============================================================================
 
-// added by Terada: Poll the path rather than an inode, so atomic saves and recreation work.
+// Poll the path rather than an inode, so atomic saves and recreation work.
 - (NSString *)externalPDFPath
 {
     NSString *path = self.fileURL.path;
@@ -7077,7 +7077,7 @@ if (! useFullSplitWindow) {
     return [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
 }
 
-// added by Terada: use the existing Auto Update preference for all editors;
+// Use the existing Auto Update preference for all editors;
 // PDF-only documents additionally retain the PdfFileRefresh opt-out.
 - (BOOL)externalPDFObservationEnabled
 {
@@ -7088,7 +7088,7 @@ if (! useFullSplitWindow) {
         (self.documentType != isPDF || [SUD boolForKey:PdfFileRefreshKey]);
 }
 
-// added by Terada: Register only after the document kind and root are resolved.
+// Register only after the document kind and root are resolved.
 - (void)configureExternalPDFObservation
 {
     if (self.externalPDFObservationClosed ||
@@ -7141,7 +7141,7 @@ if (! useFullSplitWindow) {
     self.pdfRefreshTimer.tolerance = MIN(0.1, interval / 5);
 }
 
-// added by Terada: Do not repeat a reload already completed by TeXShop itself.
+// Do not repeat a reload already completed by TeXShop itself.
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature
 {
     if (signature && [path isEqualToString:[self externalPDFPath]] &&
