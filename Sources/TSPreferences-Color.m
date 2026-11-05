@@ -145,6 +145,32 @@ NSInteger stringSort(id s1, id s2, void *context)
     // Thus there is nothing to do here
 }
 
+// Bracket and expl3 wells show the theme being edited, resolved the way documents resolve it.
+- (NSColor *)editingColorForKey: (NSString *)theKey
+{
+    BOOL withDarkColors;
+    
+#ifdef MOJAVEORHIGHER
+    if ((atLeastMojave) && (_prefsWindow.effectiveAppearance.name == NSAppearanceNameDarkAqua))
+        withDarkColors = YES;
+    else
+#endif
+        withDarkColors = NO;
+    
+    return [[TSColorSupport sharedInstance] colorForKey: theKey fromDictionary: EditingColors isWindowDark: withDarkColors];
+}
+
+// Bracket wells without their own color in the edited theme follow SyntaxMarker.
+- (void)refreshInheritedBracketColorWells
+{
+    if ([EditingColors objectForKey: @"SyntaxMarkerParen"] == nil)
+        markerParenColorWell.color = [self editingColorForKey: @"SyntaxMarkerParen"];
+    if ([EditingColors objectForKey: @"SyntaxMarkerCurly"] == nil)
+        markerCurlyColorWell.color = [self editingColorForKey: @"SyntaxMarkerCurly"];
+    if ([EditingColors objectForKey: @"SyntaxMarkerSquare"] == nil)
+        markerSquareColorWell.color = [self editingColorForKey: @"SyntaxMarkerSquare"];
+}
+
 - (void)FillInColorWells
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
@@ -177,19 +203,19 @@ NSInteger stringSort(id s1, id s2, void *context)
     //markerParenColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarkerParen"];
     //markerCurlyColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarkerCurly"];
     //markerSquareColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SyntaxMarkerSquare"];
-    markerParenColorWell.color = [colorSupport colorForKey: @"SyntaxMarkerParen" isWindowDark: withDarkColors];
-    markerCurlyColorWell.color = [colorSupport colorForKey: @"SyntaxMarkerCurly" isWindowDark: withDarkColors];
-    markerSquareColorWell.color = [colorSupport colorForKey: @"SyntaxMarkerSquare" isWindowDark: withDarkColors];
+    markerParenColorWell.color = [self editingColorForKey: @"SyntaxMarkerParen"];
+    markerCurlyColorWell.color = [self editingColorForKey: @"SyntaxMarkerCurly"];
+    markerSquareColorWell.color = [self editingColorForKey: @"SyntaxMarkerSquare"];
     
     
         
-    explFunctionColorWell.color = [colorSupport colorForKey: @"explFunction" isWindowDark: withDarkColors];
-    explVariableColorWell.color = [colorSupport colorForKey: @"explVariable" isWindowDark: withDarkColors];
-    explIntenseFunctionColorWell.color = [colorSupport colorForKey: @"explIntenseFunction" isWindowDark: withDarkColors];
-    explIntenseVariableColorWell.color = [colorSupport colorForKey: @"explIntenseVariable" isWindowDark: withDarkColors];
-    explmykeyColorWell.color = [colorSupport colorForKey: @"explmykey" isWindowDark: withDarkColors];
-    explmykeyArgumentColorWell.color = [colorSupport colorForKey: @"explmykeyArgument" isWindowDark: withDarkColors];
-    explmsgColorWell.color = [colorSupport colorForKey: @"explmsg" isWindowDark: withDarkColors];
+    explFunctionColorWell.color = [self editingColorForKey: @"explFunction"];
+    explVariableColorWell.color = [self editingColorForKey: @"explVariable"];
+    explIntenseFunctionColorWell.color = [self editingColorForKey: @"explIntenseFunction"];
+    explIntenseVariableColorWell.color = [self editingColorForKey: @"explIntenseVariable"];
+    explmykeyColorWell.color = [self editingColorForKey: @"explmykey"];
+    explmykeyArgumentColorWell.color = [self editingColorForKey: @"explmykeyArgument"];
+    explmsgColorWell.color = [self editingColorForKey: @"explmsg"];
    
     
     EditorHighlightBracesColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorHighlightBraces"];
@@ -636,6 +662,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         ((NSColorWell *)sender).color = oldColor;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarker" fromColorWell:sender];
+    [self refreshInheritedBracketColorWells];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
     
 }
@@ -938,8 +965,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"explFunction"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"explFunction"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explFunction" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -953,8 +981,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxMarkerParen"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"SyntaxMarkerParen"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarkerParen" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -969,8 +998,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxMarkerCurly"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"SyntaxMarkerCurly"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarkerCurly" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -985,8 +1015,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxMarkerSquare"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"SyntaxMarkerSquare"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarkerSquare" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -1002,8 +1033,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"explVariable"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"explVariable"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explVariable" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -1017,8 +1049,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"explIntenseFunction"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"explIntenseFunction"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explIntenseFunction" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -1032,8 +1065,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"explIntenseVariable"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"explIntenseVariable"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explIntenseVariable" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -1047,8 +1081,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"explmykey"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"explmykey"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explmykey" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -1062,8 +1097,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"explmykeyArgument"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"explmykeyArgument"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explmykeyArgument" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
@@ -1077,8 +1113,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
     {
         [[NSColorPanel sharedColorPanel] close];
-        NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"explmsg"];
-        ((NSColorWell *)sender).color = oldColor;
+        // Restore the well without storing its color, so a missing key stays missing.
+        ((NSColorWell *)sender).color = [self editingColorForKey: @"explmsg"];
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explmsg" fromColorWell:sender];
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];

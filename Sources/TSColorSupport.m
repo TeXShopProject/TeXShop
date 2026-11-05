@@ -90,15 +90,21 @@ static id sharedColorSupport = nil;
 }
 
 
-- (NSColor *) colorFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
+// Themes made before brackets had their own colors only define SyntaxMarker.
+- (NSArray *) colorArrayFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
 {
     NSArray *theColorArray = [theDictionary objectForKey: theKey];
-    // Themes made before brackets had their own colors only define SyntaxMarker.
     if ((theColorArray == nil) &&
         ([theKey isEqualToString: @"SyntaxMarkerParen"] ||
          [theKey isEqualToString: @"SyntaxMarkerCurly"] ||
          [theKey isEqualToString: @"SyntaxMarkerSquare"]))
         theColorArray = [theDictionary objectForKey: @"SyntaxMarker"];
+    return theColorArray;
+}
+
+- (NSColor *) colorFromDictionary:(NSDictionary *)theDictionary andKey: (NSString *)theKey
+{
+    NSArray *theColorArray = [self colorArrayFromDictionary: theDictionary andKey: theKey];
     if (theColorArray == nil)
         return nil;
     NSColor *theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha:1.00];
@@ -243,18 +249,12 @@ static id sharedColorSupport = nil;
       return [self darkColorWithKey: theKey];
 }
 
-- (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode
+// Resolves a color from any theme dictionary, falling back to the built-in default for the given mode.
+- (NSColor *)colorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
 {
     NSColor *theColor;
-    NSDictionary *theDictionary;
     
-    if (mode)
-        theDictionary = darkColors;
-     else
-         theDictionary = liteColors;
-        
-    
-    NSArray *theColorArray = [theDictionary objectForKey: theKey];
+    NSArray *theColorArray = [self colorArrayFromDictionary: theDictionary andKey: theKey];
     if (theColorArray != nil)
         {
             theColor = [NSColor colorWithRed: [theColorArray[0] doubleValue]  green: [theColorArray[1] doubleValue]  blue: [theColorArray[2] doubleValue]  alpha: [theColorArray[3] doubleValue]];
@@ -264,6 +264,18 @@ static id sharedColorSupport = nil;
         return [self darkColorWithKey: theKey];
     else
         return [self liteColorWithKey: theKey];
+}
+
+- (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode
+{
+    NSDictionary *theDictionary;
+    
+    if (mode)
+        theDictionary = darkColors;
+     else
+         theDictionary = liteColors;
+    
+    return [self colorForKey: theKey fromDictionary: theDictionary isWindowDark: mode];
 }
 
 
