@@ -1,4 +1,4 @@
-// added by Terada: Check the shipped localized menus using AppKit's key-equivalent dispatch.
+// Check the shipped localized menus using AppKit's key-equivalent dispatch.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 static void IgnoreOutlet(id self,SEL cmd,id value,NSString *key) {}

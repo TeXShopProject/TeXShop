@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Terada: verify all compiled menu variants using the responder chain."""
+"""Verify all compiled menu variants using the responder chain."""
 from pathlib import Path
 import subprocess,tempfile
 root=Path(__file__).resolve().parents[1]
