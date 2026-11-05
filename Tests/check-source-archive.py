@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Terada: verify real Git ZIP extraction, including modes and symbolic links."""
+"""Verify real Git ZIP extraction, including modes and symbolic links."""
 from pathlib import Path
 import os, subprocess, tempfile
 def require(condition, detail):
