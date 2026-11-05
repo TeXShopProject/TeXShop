@@ -24,9 +24,11 @@ for op in operations {
     default: fatalError("Unsupported outline operation")
     }
 }
-// Match the classic lettering size and placement in the legacy 1024-pixel icon.
+// Preserve the classic lettering size, with a small optical correction to the right.
 // The fallback canvas insets the artwork by 100 pixels and scales it to 824 pixels.
-var classicTransform=CGAffineTransform(a:1024/824,b:0,c:0,d:1024/824,tx:-100*1024/824,ty:-100*1024/824)
+// Eight fallback pixels equal one pixel at a 128-pixel display size.
+let opticalOffsetX:CGFloat = 8
+var classicTransform=CGAffineTransform(a:1024/824,b:0,c:0,d:1024/824,tx:(-100+opticalOffsetX)*1024/824,ty:-100*1024/824)
 let word=tex.copy(using:&classicTransform)!
 func svgPath(_ p:CGPath)->String {
     var s="";func n(_ v:CGFloat)->String {String(format:"%.3f",Double(v))}
@@ -130,7 +132,7 @@ for size in [16,32,128,256,512] {
 }
 try png(1024).write(to:root.appendingPathComponent("Artwork/Icon-preview.png"))
 try png(1024,fullBleed:true).write(to:root.appendingPathComponent("Artwork/GitHub-avatar.png"))
-print("Centered TeX outline; Icon Composer layers, legacy PNGs, and web avatar generated.")
+print("Optically centered TeX outline; Icon Composer layers, legacy PNGs, and web avatar generated.")
 
 let composerURL=root.appendingPathComponent("Artwork/TeXShop.icon/icon.json")
 var composer=try JSONSerialization.jsonObject(with:Data(contentsOf:composerURL)) as! [String:Any]

@@ -5,12 +5,14 @@ The lettering is traced from the classic round icon in
 `Resources/DockIcons/round.png`, retaining its glyph shapes rather than
 substituting a different font. No additional weight expansion is applied.
 On the 1024-pixel fallback canvas, the lettering occupies approximately
-663 × 343 pixels at the original position, matching the classic icon.
+663 × 343 pixels, matching the classic icon. It is shifted 8 pixels to the
+right for optical centering (1 pixel at a 128-pixel display size); its vertical
+position is unchanged.
 
 The white-frame design (C) adds a 48-unit rim on the full-bleed artwork canvas.
 Its white-to-silver gradient gives the edge subtle depth. On the fallback
-canvas, approximately 41 pixels separate the lettering from the inner edge
-of the frame at the left and right. The unframed design (B) uses the same
+canvas, approximately 49 pixels on the left and 33 pixels on the right separate
+the lettering from the inner edge of the frame. The unframed design (B) uses the same
 lettering and placement.
 
 - `TeXShop.icon`: Icon Composer source; macOS supplies the outer mask.
