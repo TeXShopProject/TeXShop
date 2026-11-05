@@ -1064,12 +1064,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PJT-Of-PkH">
                     <rect key="frame" x="816" y="57" width="71" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Tags" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="WQV-3R-574" id="GRP-ox-pV4">
+                    <popUpButtonCell key="cell" type="push" title="Marcas" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="WQV-3R-574" id="GRP-ox-pV4">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="Sbg-ua-sqG">
                             <items>
-                                <menuItem title="Tags" hidden="YES" id="WQV-3R-574"/>
+                                <menuItem title="Marcas" hidden="YES" id="WQV-3R-574"/>
                             </items>
                         </menu>
                     </popUpButtonCell>

@@ -1062,12 +1062,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u6Y-Uk-Y6O">
                     <rect key="frame" x="876" y="87" width="71" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Tags" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Xlm-0w-OlV" id="zWV-bw-Yji">
+                    <popUpButtonCell key="cell" type="push" title="Markeringen" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Xlm-0w-OlV" id="zWV-bw-Yji">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="7mX-7p-ZWR">
                             <items>
-                                <menuItem title="Tags" hidden="YES" id="Xlm-0w-OlV"/>
+                                <menuItem title="Markeringen" hidden="YES" id="Xlm-0w-OlV"/>
                             </items>
                         </menu>
                     </popUpButtonCell>

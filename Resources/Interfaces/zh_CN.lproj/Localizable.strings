@@ -57,7 +57,7 @@
     ShowFullPath = "\U663e\U793a\U5b8c\U6574\U8def\U5f84";
     Sync = "\U540c\U6b65";
     "Sync Marks" = "\U540c\U6b65\U6807\U8bb0";
-    Tags = "\U6807\U7b7e";
+    Tags = "标签";
     "TeXShop Demos" = "TeXShop \U6f14\U793a";
     Template = "\U6a21\U677f";
     "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "\U8be5\U6587\U4ef6\U65e0\U6cd5\U4ee5 %@ \U7f16\U7801\U6253\U5f00\Uff0c\U56e0\U4e3a\U5b83\U5e76\U672a\U5b58\U50a8\U4e3a\U6b64\U7f16\U7801\U3002\U5982\U679c\U60a8\U60f3\U4ee5\U5176\U4ed6\U7f16\U7801\U6253\U5f00\Uff0c\U8bf7\U5173\U95ed\U7a97\U53e3\U518d\U6253\U5f00\U3002";

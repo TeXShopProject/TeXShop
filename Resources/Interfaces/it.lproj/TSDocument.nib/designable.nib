@@ -1024,12 +1024,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="357">
                     <rect key="frame" x="17" y="177" width="71" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Tags" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="359" id="3842">
+                    <popUpButtonCell key="cell" type="push" title="Etichette" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="359" id="3842">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="358">
                             <items>
-                                <menuItem title="Tags" state="on" hidden="YES" id="359"/>
+                                <menuItem title="Etichette" state="on" hidden="YES" id="359"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -1080,12 +1080,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KKh-4u-2lh">
                     <rect key="frame" x="822" y="42" width="71" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Tags" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="wp5-Iy-WDt" id="zgn-Sl-AAc">
+                    <popUpButtonCell key="cell" type="push" title="Etichette" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="wp5-Iy-WDt" id="zgn-Sl-AAc">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="osx-Xh-QZT">
                             <items>
-                                <menuItem title="Tags" hidden="YES" id="wp5-Iy-WDt"/>
+                                <menuItem title="Etichette" hidden="YES" id="wp5-Iy-WDt"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
