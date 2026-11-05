@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Rewrite a .tex file in 20480-byte chunks, like an external tool that saves in several steps.
 Usage: external-writer.py FILE [chunks=5] [delay_ms=5] [rounds=20]
-Open FILE in TeXShop first, then run this. After each round, the editor must show as many characters as `wc -c FILE`.
-See Documentation/File-watch-reload.md."""
+Open FILE in TeXShop first, then run this. After each round, the editor must show as many characters as `wc -c FILE`."""
 import os, sys, time
 
 path = sys.argv[1]
