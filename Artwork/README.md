@@ -15,7 +15,9 @@ canvas, approximately 46 pixels on the left and 38 pixels on the right separate
 the lettering from the inner edge of the frame. The unframed design (B) uses the same
 lettering and placement.
 
-- `TeXShop.icon`: Icon Composer source; macOS supplies the outer mask.
+- `TeXShop.icon`: Icon Composer source; macOS supplies the outer mask. Its
+  layer list runs front to back: lettering first, opaque frame last. Verify
+  the built app’s `Contents/Resources/TeXShop.icns` as well as the PNG preview.
 - `TeXShop.icns`: Legacy rounded-square fallback.
 - `Icon-preview.png`: Fallback preview including standard icon padding.
 - `GitHub-avatar.png`: Full-bleed square avatar.

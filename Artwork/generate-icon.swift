@@ -138,7 +138,8 @@ let composerURL=root.appendingPathComponent("Artwork/TeXShop.icon/icon.json")
 var composer=try JSONSerialization.jsonObject(with:Data(contentsOf:composerURL)) as! [String:Any]
 var groups=composer["groups"] as! [[String:Any]]
 var layers=(groups[0]["layers"] as! [[String:Any]]).filter { $0["image-name"] as? String != "Frame.svg" }
-if whiteFrame { layers.insert(["image-name":"Frame.svg","name":"White rim and gray-green field","glass":false],at:0) }
+// Icon Composer lists foreground layers first; the opaque frame must be behind the lettering.
+if whiteFrame { layers.append(["image-name":"Frame.svg","name":"White rim and gray-green field","glass":false]) }
 groups[0]["layers"]=layers;composer["groups"]=groups
 composer["fill"]=["linear-gradient":whiteFrame ? ["srgb:1,1,1,1","srgb:0.8,0.819608,0.823529,1"] : ["srgb:0.705882,0.780392,0.811765,1","srgb:0.290196,0.4,0.411765,1"]]
 try JSONSerialization.data(withJSONObject:composer,options:[.prettyPrinted,.sortedKeys]).write(to:composerURL)
