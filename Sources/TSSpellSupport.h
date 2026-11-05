@@ -54,9 +54,18 @@
     -hasLearnedWord:. "*/
 + (NSArray<NSString *> *)learnedWordsInText:(NSString *)text;
 
+/*" The same, without waiting: the words of `text` (of its masked form if
+    `masked`) are found off the main thread and looked up with -hasLearnedWord:
+    a batch at a time on the main thread, which goes on handling events in
+    between. `completion` is called on the main thread. "*/
++ (void)findLearnedWordsInText:(NSString *)text masked:(BOOL)masked completion:(void (^)(NSArray<NSString *> *words))completion;
+
 /*" The sheet behind Forget Learned Words…: lists the learned words that occur in
-    the given document text and forgets the ones the user selects. "*/
+    the given document text (in its masked form if `masked`, which is what the
+    TeX-aware spell checking checks) and forgets the ones the user selects. The
+    sheet appears once the words have been looked up. "*/
 + (void)forgetLearnedWordsFoundInText:(NSString *)text;
++ (void)forgetLearnedWordsFoundInText:(NSString *)text masked:(BOOL)masked;
 
 /*" Make the spell checker forget these words for its current language. Returns
     how many had been learned. "*/

@@ -14,6 +14,11 @@
 #import "TSSpellExclusions.h"
 #import <objc/runtime.h>
 
+// Text views that can check spelling TeX-aware (TSTextView).
+@protocol TSTeXAwareTextView
+- (BOOL)usesTeXAwareSpellChecking;
+@end
+
 // Data for the list of learned words in the "Forget Learned Words" sheet.
 @interface TSLearnedWordsList : NSObject <NSTableViewDataSource>
 @property (nonatomic, copy) NSArray<NSString *> *words;
@@ -37,14 +42,14 @@
     NSScrollView *sv = tv.enclosingScrollView;
     if (!sv) { [tv scrollRangeToVisible:range]; return; }
     NSLayoutManager *lm = tv.layoutManager;
-    [lm ensureLayoutForTextContainer:tv.textContainer];
+    // Lay out only as much as is needed to place the range, not the whole text.
+    [lm ensureLayoutForCharacterRange:range];
     NSRange glyphs = [lm glyphRangeForCharacterRange:range actualCharacterRange:NULL];
     NSRect r = [lm boundingRectForGlyphRange:glyphs inTextContainer:tv.textContainer];
     CGFloat midY = NSMidY(r) + tv.textContainerOrigin.y;
     NSClipView *clip = sv.contentView;
     CGFloat viewH = clip.bounds.size.height;
-    CGFloat docH = MAX(tv.frame.size.height,
-                       [lm usedRectForTextContainer:tv.textContainer].size.height + 2 * tv.textContainerOrigin.y);
+    CGFloat docH = MAX(tv.frame.size.height, NSMaxY(r) + 2 * tv.textContainerOrigin.y);
     CGFloat topY = midY - viewH / 2;
     topY = MAX(0, MIN(topY, MAX(docH - viewH, 0)));
     [clip scrollToPoint:NSMakePoint(clip.bounds.origin.x, topY)];
@@ -101,21 +106,41 @@
         return [checker checkSpellingOfString:masked startingAt:(NSInteger)from language:nil wrap:NO
                        inSpellDocumentWithTag:tag wordCount:NULL];
     }
-    for (TSSpellLanguageSegment *segment in segments) {
-        if (NSMaxRange(segment.range) <= from) continue;
+    // The checker is called once for each run of segments that are checked in
+    // the same language. Segments without a letter or digit (blanks, and the
+    // braces left between language commands) have no words to check; they are
+    // left out, and the runs on either side of one can join.
+    NSCharacterSet *wordCharacters = [NSCharacterSet alphanumericCharacterSet];
+    NSRange run = NSMakeRange(NSNotFound, 0);
+    NSString *runLanguage = nil;
+    for (NSUInteger k = 0; k <= [segments count]; k++) {
+        TSSpellLanguageSegment *segment = (k < [segments count]) ? segments[k] : nil;
         NSString *language = nil;
-        if (segment.language) {
-            BOOL isDocument;
-            language = [self checkerLanguageForCode:segment.language isDocumentLanguage:&isDocument];
-            if (!isDocument && !language) continue;         // no checker for this language
-            if (isDocument) language = nil;
+        BOOL checked = YES;
+        if (segment) {
+            if (NSMaxRange(segment.range) <= from) continue;
+            if ([masked rangeOfCharacterFromSet:wordCharacters options:NSLiteralSearch range:segment.range].location == NSNotFound) continue;
+            if (segment.language) {
+                BOOL isDocument;
+                language = [self checkerLanguageForCode:segment.language isDocumentLanguage:&isDocument];
+                if (!isDocument && !language) checked = NO;     // no checker for this language
+                if (isDocument) language = nil;
+            }
+            if (checked && run.location != NSNotFound && (language == runLanguage || [language isEqualToString:runLanguage])) {
+                run.length = NSMaxRange(segment.range) - run.location;
+                continue;
+            }
         }
-        NSString *text = [masked substringWithRange:segment.range];
-        NSUInteger offset = from > segment.range.location ? from - segment.range.location : 0;
-        NSRange bad = [checker checkSpellingOfString:text startingAt:(NSInteger)offset language:language wrap:NO
-                              inSpellDocumentWithTag:tag wordCount:NULL];
-        if (bad.location != NSNotFound && bad.length > 0)
-            return NSMakeRange(bad.location + segment.range.location, bad.length);
+        if (run.location != NSNotFound) {
+            NSString *text = [masked substringWithRange:run];
+            NSUInteger offset = from > run.location ? from - run.location : 0;
+            NSRange bad = [checker checkSpellingOfString:text startingAt:(NSInteger)offset language:runLanguage wrap:NO
+                                  inSpellDocumentWithTag:tag wordCount:NULL];
+            if (bad.location != NSNotFound && bad.length > 0)
+                return NSMakeRange(bad.location + run.location, bad.length);
+        }
+        run = (segment && checked) ? segment.range : NSMakeRange(NSNotFound, 0);
+        runLanguage = language;
     }
     return NSMakeRange(NSNotFound, 0);
 }
@@ -317,9 +342,9 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
 
 #pragma mark - Menu items
 
-+ (NSArray<NSString *> *)learnedWordsInText:(NSString *)text
+// The different words of `text` that are longer than one letter.
+static NSArray<NSString *> *CandidateWords(NSString *text)
 {
-    NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
     NSMutableSet<NSString *> *candidates = [NSMutableSet set];
     if ([text length]) {
         [text enumerateSubstringsInRange:NSMakeRange(0, [text length])
@@ -328,13 +353,55 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
             if ([w length] > 1) [candidates addObject:w];
         }];
     }
-    NSMutableArray<NSString *> *learned = [NSMutableArray array];
-    for (NSString *w in candidates)
-        if ([checker hasLearnedWord:w]) [learned addObject:w];
-    [learned sortUsingComparator:^NSComparisonResult(NSString *a, NSString *b) {
+    return [candidates allObjects];
+}
+
+static void SortWords(NSMutableArray<NSString *> *words)
+{
+    [words sortUsingComparator:^NSComparisonResult(NSString *a, NSString *b) {
         return [a localizedCaseInsensitiveCompare:b];
     }];
+}
+
++ (NSArray<NSString *> *)learnedWordsInText:(NSString *)text
+{
+    NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
+    NSMutableArray<NSString *> *learned = [NSMutableArray array];
+    for (NSString *w in CandidateWords(text))
+        if ([checker hasLearnedWord:w]) [learned addObject:w];
+    SortWords(learned);
     return learned;
+}
+
+// Look up words[start...] a batch at a time, letting the main run loop handle
+// events between batches.
++ (void)lookUpWords:(NSArray<NSString *> *)words from:(NSUInteger)start learned:(NSMutableArray<NSString *> *)learned
+         completion:(void (^)(NSArray<NSString *> *))completion
+{
+    NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
+    NSUInteger end = MIN([words count], start + 200);
+    for (NSUInteger k = start; k < end; k++)
+        if ([checker hasLearnedWord:words[k]]) [learned addObject:words[k]];
+    if (end < [words count]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self lookUpWords:words from:end learned:learned completion:completion];
+        });
+        return;
+    }
+    SortWords(learned);
+    completion(learned);
+}
+
++ (void)findLearnedWordsInText:(NSString *)text masked:(BOOL)masked completion:(void (^)(NSArray<NSString *> *))completion
+{
+    NSString *copy = [text copy];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        NSString *checked = (masked && copy) ? [[TSSpellExclusions sharedExclusions] maskForText:copy].masked : copy;
+        NSArray<NSString *> *words = CandidateWords(checked);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self lookUpWords:words from:0 learned:[NSMutableArray array] completion:completion];
+        });
+    });
 }
 
 + (NSUInteger)forgetWords:(NSArray<NSString *> *)words
@@ -348,8 +415,8 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     return forgotten;
 }
 
-// The text of the document being edited, for finding learned words in it.
-static NSString *FrontDocumentText(void)
+// The text view of the document being edited, for finding learned words in it.
+static NSTextView *FrontTextView(void)
 {
     NSTextView *tv = nil;
     NSWindow *window = NSApp.mainWindow ?: NSApp.keyWindow;
@@ -358,19 +425,41 @@ static NSString *FrontDocumentText(void)
         @try { tv = [[[NSDocumentController sharedDocumentController] currentDocument] valueForKey:@"textView"]; }
         @catch (NSException *e) { tv = nil; }
     }
-    return [tv isKindOfClass:[NSTextView class]] ? tv.string : nil;
+    return [tv isKindOfClass:[NSTextView class]] ? tv : nil;
 }
 
 + (void)forgetLearnedWords:(id)sender
 {
-    [self forgetLearnedWordsFoundInText:FrontDocumentText()];
+    NSTextView *tv = FrontTextView();
+    // Only the words the spell checker is given can have been learned from
+    // this document: with TeX-aware spelling, those of the masked text.
+    BOOL masked = [tv respondsToSelector:@selector(usesTeXAwareSpellChecking)] &&
+                  [(id<TSTeXAwareTextView>)tv usesTeXAwareSpellChecking];
+    [self forgetLearnedWordsFoundInText:tv.string masked:masked];
 }
 
 + (void)forgetLearnedWordsFoundInText:(NSString *)text
 {
+    [self forgetLearnedWordsFoundInText:text masked:NO];
+}
+
++ (void)forgetLearnedWordsFoundInText:(NSString *)text masked:(BOOL)masked
+{
+    // The words are looked up without blocking the application; a second
+    // request while that is going on is ignored.
+    static BOOL looking;
+    if (looking) { NSBeep(); return; }
+    looking = YES;
+    [self findLearnedWordsInText:text masked:masked completion:^(NSArray<NSString *> *words) {
+        looking = NO;
+        [self showLearnedWords:words];
+    }];
+}
+
++ (void)showLearnedWords:(NSArray<NSString *> *)words
+{
     NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
     NSString *language = checker.language ?: @"";
-    NSArray<NSString *> *words = [self learnedWordsInText:text];
 
     NSAlert *alert = [[NSAlert alloc] init];
     if ([words count] == 0) {
@@ -548,11 +637,6 @@ static NSMenuItem *FindMenuItemWithAction(NSMenu *menu, SEL action)
 
 
 #pragma mark - Mask cache
-
-// Text views that can check spelling TeX-aware (TSTextView).
-@protocol TSTeXAwareTextView
-- (BOOL)usesTeXAwareSpellChecking;
-@end
 
 @implementation TSSpellMaskCache {
     __weak NSTextStorage *_storage;
