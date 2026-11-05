@@ -8,6 +8,10 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="markerSquareColorWell" destination="Tqp-s5-9ey" id="d0P-bf-xR6"/>
+                <outlet property="markerCurlyColorWell" destination="JF9-z0-d14" id="o8Q-RU-aU0"/>
+                <outlet property="markerParenColorWell" destination="nvl-ye-KAt" id="uHP-VX-jXx"/>
+                <outlet property="styleTitle" destination="aOK-d3-8oB" id="BV5-Ju-AYk"/>
                 <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="_editSpellingExclusionsButton" destination="ts-edit-spelling" id="ts-edit-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="W9F-QO-nMb" id="5Nq-av-dsl"/>
@@ -1201,9 +1205,6 @@ DQ
                                                                 </buttonCell>
                                                             </column>
                                                         </cells>
-                                                        <connections>
-                                                            <action selector="autoSaveButtonPressed:" target="-2" id="1144"/>
-                                                        </connections>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzW-4R-Qrj">
                                                         <rect key="frame" x="19" y="251" width="191" height="18" />
@@ -3469,7 +3470,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyForeColorChanged:" target="-2" id="TkY-YN-CEF"/>
+                                                                                <action selector="ImageForegroundChanged:" target="-2" id="TkY-YN-CEF"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SLj-FQ-SG3">
@@ -3477,7 +3478,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyBackColorChanged:" target="-2" id="3Xo-MZ-lSa"/>
+                                                                                <action selector="ImageBackgroundChanged:" target="-2" id="3Xo-MZ-lSa"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ggG-VX-40I">
@@ -3828,16 +3829,25 @@ DQ
                                                                             <rect key="frame" x="113" y="10" width="59" height="24" />
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                            <connections>
+                                                                                <action selector="markerParenColorChanged:" target="-2" id="fLZ-qo-YQX"/>
+                                                                            </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JF9-z0-d14">
                                                                             <rect key="frame" x="206" y="10" width="59" height="24" />
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                            <connections>
+                                                                                <action selector="markerCurlyColorChanged:" target="-2" id="IVK-Gu-Xkh"/>
+                                                                            </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tqp-s5-9ey">
                                                                             <rect key="frame" x="290" y="10" width="59" height="24" />
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                            <connections>
+                                                                                <action selector="markerSquareColorChanged:" target="-2" id="x7D-9X-RtW"/>
+                                                                            </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QEk-zm-54Z">
                                                                             <rect key="frame" x="117" y="36" width="30" height="14" />

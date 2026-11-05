@@ -8,6 +8,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="XMLsubsection" destination="gDt-SY-kno" id="zcf-xD-Mbn"/>
+                <outlet property="interlineSpacingField" destination="Qx2-Hz-ia2" id="5hn-r8-ikt"/>
                 <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="_editSpellingExclusionsButton" destination="ts-edit-spelling" id="ts-edit-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="IdK-rt-sNX" id="aea-eX-yg4"/>
@@ -54,7 +56,6 @@
                 <outlet property="XMLsection" destination="r7t-DX-pna" id="eqG-Sc-KYD"/>
                 <outlet property="XMLsubsubsection" destination="PZk-L3-AWj" id="DYh-IJ-9gn"/>
                 <outlet property="XMLtable" destination="3qf-Zy-234" id="ToD-rd-uag"/>
-                <outlet property="_CommandCompletionMatrix" destination="926" id="931"/>
                 <outlet property="_FullwidthSpaceCharacterKindMatrix" destination="1036" id="1065"/>
                 <outlet property="_HtmlHomeField" destination="BWo-iv-OPd" id="lOU-A5-ITE"/>
                 <outlet property="_NewLineCharacterKindMatrix" destination="1035" id="1066"/>
@@ -170,7 +171,7 @@
                 <outlet property="markerCurlyColorWell" destination="aOK-m2-gqg" id="GJO-Jh-Uon"/>
                 <outlet property="markerParenColorWell" destination="SNA-OR-kSA" id="KX7-fB-ILP"/>
                 <outlet property="markerSquareColorWell" destination="0V7-s5-gyc" id="tz7-ex-Hmn"/>
-                <outlet property="remainingParagraphIndentField" destination="Qx2-Hz-ia2" id="pXZ-5W-elJ"/>
+                <outlet property="remainingParagraphIndentField" destination="Ybv-UQ-dV8" id="pXZ-5W-elJ"/>
                 <outlet property="stylePanel" destination="yMy-Au-MuT" id="c9F-up-9hf"/>
                 <outlet property="styleTitle" destination="Dbc-EH-dZO" id="Do0-OW-hRu"/>
                 <outlet property="tabIndentField" destination="P7X-cn-LMw" id="yBI-JL-JbY"/>
@@ -426,69 +427,6 @@ DQ
                                                             <action selector="externalEditorButtonPressed:" target="-2" id="275"/>
                                                         </connections>
                                                     </button>
-                                                </subviews>
-                                            </view>
-                                            <font key="titleFont" size="13" metaFont="system"/>
-                                        </box>
-                                        <box hidden="YES" autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="配对目标和高亮颜色" translatesAutoresizingMaskIntoConstraints="NO" id="940">
-                                            <rect key="frame" x="15" y="12" width="234" height="57" />
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <view key="contentView" id="hlb-O3-yKy">
-                                                <rect key="frame" x="0.0" y="0.0" width="234" height="46"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="952">
-                                                        <rect key="frame" x="12" y="12" width="53" height="22" />
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <buttonCell key="cell" type="check" title="{ }" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="959">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="highlightChanged:" target="-2" id="1028"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="953">
-                                                        <rect key="frame" x="67" y="12" width="53" height="22" />
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <buttonCell key="cell" type="check" title="[ ]" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="958">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="highlightChanged:" target="-2" id="1029"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="954">
-                                                        <rect key="frame" x="122" y="12" width="53" height="22" />
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <buttonCell key="cell" type="check" title="( )" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="957">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="highlightChanged:" target="-2" id="1030"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="955">
-                                                        <rect key="frame" x="177" y="12" width="53" height="22" />
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <buttonCell key="cell" type="check" title="&lt; &gt;" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="956">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="highlightChanged:" target="-2" id="1031"/>
-                                                        </connections>
-                                                    </button>
-                                                    <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1082">
-                                                        <rect key="frame" x="185" y="17" width="35" height="23"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <connections>
-                                                            <action selector="setHighlightBracesColor:" target="-2" id="1084"/>
-                                                        </connections>
-                                                    </colorWell>
                                                 </subviews>
                                             </view>
                                             <font key="titleFont" size="13" metaFont="system"/>
@@ -917,9 +855,6 @@ DQ
                                                                 </buttonCell>
                                                             </column>
                                                         </cells>
-                                                        <connections>
-                                                            <action selector="autoSaveButtonPressed:" target="-2" id="1108"/>
-                                                        </connections>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P4v-Lw-RHd">
                                                         <rect key="frame" x="28" y="251" width="126" height="18" />
@@ -3578,7 +3513,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyForeColorChanged:" target="-2" id="kUJ-N5-WXS"/>
+                                                                                <action selector="ImageForegroundChanged:" target="-2" id="kUJ-N5-WXS"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NDH-SC-Sp6">
@@ -3586,7 +3521,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyBackColorChanged:" target="-2" id="Wd8-bR-XGK"/>
+                                                                                <action selector="ImageBackgroundChanged:" target="-2" id="Wd8-bR-XGK"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4s9-xv-rpC">

@@ -185,8 +185,6 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 
 	[_prefsWindow makeKeyAndOrderFront:self];
     
-    [_tabsTextField setEnabled:NO]; // prevent _tabsTextField from sourceTextColoranding too long
-    [_tabsTextField setEnabled:YES];
 
 }
 
@@ -763,25 +761,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 }
 
 
-/*" Change tab size "*/
-- (IBAction)tabsChanged:sender
-{
-	NSInteger		value;
-
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:tabsKey] forKey:tabsKey];
-
-	value = [_tabsTextField integerValue];
-	if (value < 2) {
-		value = 2;
-		[_tabsTextField setIntegerValue:2];
-	} else if (value > 50) {
-		value = 50;
-		[_tabsTextField setIntegerValue:50];
-	}
-
-	[SUD setInteger:value forKey:tabsKey];
-}
-
 - (IBAction)tabIndentPressed:(id)sender
 {
     NSInteger        value;
@@ -1009,141 +988,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 }
 
 
-
-/*" This method is connected to the source window background color well.
-"*/
-- (IBAction)setSourceBackgroundColor:sender
-{
-    /*
-	NSColor *newColor = [[NSColorPanel sharedColorPanel] color];
-
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:background_RKey] forKey:background_RKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:background_GKey] forKey:background_GKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:background_BKey] forKey:background_BKey];
-	
-	[SUD setFloat: [newColor redComponent] forKey:background_RKey];
-	[SUD setFloat: [newColor greenComponent] forKey:background_GKey];
-	[SUD setFloat: [newColor blueComponent] forKey:background_BKey];
-	
-	sourceBackgroundColorTouched = YES;
-	[[NSNotificationCenter defaultCenter] postNotificationName:SourceBackgroundColorChangedNotification object:self];
-     */
-}
-
-/*" This method is connected to the source window background color well.
- "*/
-- (IBAction)setSourceTextColor:sender
-{
-    /*
-	NSColor *newColor = [[NSColorPanel sharedColorPanel] color];
-    
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:foreground_RKey] forKey:foreground_RKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:foreground_GKey] forKey:foreground_GKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:foreground_BKey] forKey:foreground_BKey];
-    
-    [[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:insertionpoint_RKey] forKey:insertionpoint_RKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:insertionpoint_GKey] forKey:insertionpoint_GKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:insertionpoint_BKey] forKey:insertionpoint_BKey];
-	
-	[SUD setFloat: [newColor redComponent] forKey:foreground_RKey];
-	[SUD setFloat: [newColor greenComponent] forKey:foreground_GKey];
-	[SUD setFloat: [newColor blueComponent] forKey: foreground_BKey];
-    
-    [SUD setFloat: [newColor redComponent] forKey:insertionpoint_RKey];
-	[SUD setFloat: [newColor greenComponent] forKey:insertionpoint_GKey];
-	[SUD setFloat: [newColor blueComponent] forKey: insertionpoint_BKey];
-
-	
-	sourceTextColorTouched = YES;
-	[[NSNotificationCenter defaultCenter] postNotificationName:SourceTextColorChangedNotification object:self];
-    */
-}
-
-
-/*" This method is connected to the preview window background color well.
-"*/
-- (IBAction)setPreviewBackgroundColor:sender
-{
-    /*
-	NSColor *newColor = [[NSColorPanel sharedColorPanel] color];
-
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfPageBack_RKey] forKey:PdfPageBack_RKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfPageBack_GKey] forKey:PdfPageBack_GKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfPageBack_BKey] forKey:PdfPageBack_BKey];
-	
-	[SUD setFloat: [newColor redComponent] forKey:PdfPageBack_RKey];
-	[SUD setFloat: [newColor greenComponent] forKey:PdfPageBack_GKey];
-	[SUD setFloat: [newColor blueComponent] forKey:PdfPageBack_BKey];
-	
-	previewBackgroundColorTouched = YES;
-	
-//	[PreviewBackgroundColor release];
-	PreviewBackgroundColor = [NSColor colorWithCalibratedRed: [newColor redComponent]
-													   green: [newColor greenComponent] blue: [newColor blueComponent]
-													   alpha: 1];
-//	[PreviewBackgroundColor retain];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:PreviewBackgroundColorChangedNotification object:self];
-    */
-}
-
-/*" This method is connected to the highlight Braces color well.
- "*/
-- (IBAction)setHighlightBracesColor:sender
-{
-    /*
-	NSColor *newColor = [[NSColorPanel sharedColorPanel] color];
-	
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:highlightBracesRedKey] forKey:highlightBracesRedKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:highlightBracesGreenKey] forKey:highlightBracesGreenKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:highlightBracesBlueKey] forKey:highlightBracesBlueKey];
-	
-	[SUD setFloat: [newColor redComponent] forKey:highlightBracesRedKey];
-	[SUD setFloat: [newColor greenComponent] forKey:highlightBracesGreenKey];
-	[SUD setFloat: [newColor blueComponent] forKey:highlightBracesBlueKey];
-     */
-}
-
-
-/*" This method is connected to the console window background color well.
-"*/
-- (IBAction)setConsoleBackgroundColor:sender
-{
-	/*
-     NSColor *newColor = [[NSColorPanel sharedColorPanel] color];
-
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:ConsoleBackgroundColor_RKey] forKey:ConsoleBackgroundColor_RKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:ConsoleBackgroundColor_GKey] forKey:ConsoleBackgroundColor_GKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:ConsoleBackgroundColor_BKey] forKey:ConsoleBackgroundColor_BKey];
-	
-	[SUD setFloat: [newColor redComponent] forKey:ConsoleBackgroundColor_RKey];
-	[SUD setFloat: [newColor greenComponent] forKey:ConsoleBackgroundColor_GKey];
-	[SUD setFloat: [newColor blueComponent] forKey:ConsoleBackgroundColor_BKey];
-	
-	consoleBackgroundColorTouched = YES;
-	[[NSNotificationCenter defaultCenter] postNotificationName:ConsoleBackgroundColorChangedNotification object:self];
-     */
-}
-
-/*" This method is connected to the console window background color well.
- "*/
-- (IBAction)setConsoleForegroundColor:sender
-{
-    /*
-	NSColor *newColor = [[NSColorPanel sharedColorPanel] color];
-	
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:ConsoleForegroundColor_RKey] forKey:ConsoleForegroundColor_RKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:ConsoleForegroundColor_GKey] forKey:ConsoleForegroundColor_GKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:ConsoleForegroundColor_BKey] forKey:ConsoleForegroundColor_BKey];
-	
-	[SUD setFloat: [newColor redComponent] forKey:ConsoleForegroundColor_RKey];
-	[SUD setFloat: [newColor greenComponent] forKey:ConsoleForegroundColor_GKey];
-	[SUD setFloat: [newColor blueComponent] forKey:ConsoleForegroundColor_BKey];
-	
-	consoleForegroundColorTouched = YES;
-	[[NSNotificationCenter defaultCenter] postNotificationName:ConsoleForegroundColorChangedNotification object:self];
-     */
-}
 
 /*" This method is connected to the "Source Window Position" Matrix.
  
@@ -1402,15 +1246,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:RightJustifyKey];
 }
 
-/*" This method is connected to the 'AutoSave' checkbox.
- "*/
-- (IBAction)autoSaveButtonPressed:sender
-{
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AutoSaveKey] forKey:AutoSaveKey];
-	
-	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:AutoSaveKey];
-}
 
 
 
@@ -1726,36 +1561,6 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD integerForKey:PdfColorMapKey] forKey:PdfColorMapKey];
 
 	[SUD setBool:([(NSCell *)sender state]==NSOnState) forKey:PdfColorMapKey];
-}
-
-/*" This method is connected to default mouse mode popup button. "*/
-- (IBAction)copyForeColorChanged:sender
-{
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfFore_RKey] forKey:PdfFore_RKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfFore_GKey] forKey:PdfFore_GKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfFore_BKey] forKey:PdfFore_BKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfFore_AKey] forKey:PdfFore_AKey];
-
-	NSColor *aColor = [[sender color] colorUsingColorSpace: NSColorSpace.genericRGBColorSpace];
-	[SUD setFloat:[aColor redComponent] forKey:PdfFore_RKey];
-	[SUD setFloat:[aColor greenComponent] forKey:PdfFore_GKey];
-	[SUD setFloat:[aColor blueComponent] forKey:PdfFore_BKey];
-	[SUD setFloat:[aColor alphaComponent] forKey:PdfFore_AKey];
-}
-
-/*" This method is connected to default mouse mode popup button. "*/
-- (IBAction)copyBackColorChanged:sender
-{
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfBack_RKey] forKey:PdfBack_RKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfBack_GKey] forKey:PdfBack_GKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfBack_BKey] forKey:PdfBack_BKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfBack_AKey] forKey:PdfBack_AKey];
-
-	NSColor *aColor = [[sender color] colorUsingColorSpace: NSColorSpace.genericRGBColorSpace];
-	[SUD setFloat:[aColor redComponent] forKey:PdfBack_RKey];
-	[SUD setFloat:[aColor greenComponent] forKey:PdfBack_GKey];
-	[SUD setFloat:[aColor blueComponent] forKey:PdfBack_BKey];
-	[SUD setFloat:[aColor alphaComponent] forKey:PdfBack_AKey];
 }
 
 - (IBAction)colorParam1Changed:sender
@@ -2519,12 +2324,10 @@ This method retrieves the application preferences from the defaults object and s
     [_tagMenuButton setState:[defaults boolForKey:TagMenuInMenuBarKey]];
 	[_showInvisibleCharactersButton setState:[defaults boolForKey:ShowInvisibleCharactersEnabledKey]];
 	[_midEastButton setState:[defaults boolForKey:RightJustifyKey]];
-    [_autoSaveButton setState:[defaults boolForKey:AutoSaveKey]];
 	[_autoCompleteButton setState:[defaults boolForKey:AutoCompleteEnabledKey]];
 	[_bibDeskCompleteButton setState:[defaults boolForKey:BibDeskCompletionKey]];
 	[_autoPDFButton setState:[defaults boolForKey:PdfRefreshKey]];
     [_antialiasButton setState:[defaults boolForKey:AntiAliasKey]];
-    [oneWindowButton setState:[defaults boolForKey:SourceAndPreviewInSameWindowKey]];
 	[_openEmptyButton setState:[defaults boolForKey:MakeEmptyDocumentKey]];
 	[_externalEditorButton setState:[defaults boolForKey:UseExternalEditorKey]];
 	[_ptexUtfOutputButton setState:[defaults boolForKey:ptexUtfOutputEnabledKey]]; // zenitani 1.35 (C)
@@ -2829,8 +2632,6 @@ This method retrieves the application preferences from the defaults object and s
 
 	tabSize = [defaults integerForKey: tabsKey];
 	myNumber = [NSNumber numberWithInteger:tabSize];
-	[_tabsTextField setStringValue:[myNumber stringValue]];
-	// [_tabsTextField setIntValue: tabSize];
     [tabIndentField setStringValue:[myNumber stringValue]];
     
     // [firstParagraphIndentField setStringValue:[defaults stringForKey: SourceFirstLineHeadIndentKey]];

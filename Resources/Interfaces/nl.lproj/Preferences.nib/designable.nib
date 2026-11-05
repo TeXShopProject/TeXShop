@@ -8,6 +8,11 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="_wrapMatrix" destination="uKf-jU-dLD" id="yHx-gT-Pxp"/>
+                <outlet property="_showTabCharacterButton" destination="1085" id="m9g-G4-NqW"/>
+                <outlet property="_showNewLineCharacterButton" destination="1084" id="wsI-b0-7zC"/>
+                <outlet property="_showFullwidthSpaceCharacterButton" destination="1083" id="09r-Uw-5Kw"/>
+                <outlet property="_showSpaceCharacterButton" destination="1082" id="eME-nt-aEG"/>
                 <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="_editSpellingExclusionsButton" destination="ts-edit-spelling" id="ts-edit-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="6bf-jo-JSn" id="IpR-F5-cFx"/>
@@ -624,14 +629,14 @@ DQ
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
                                                                     <connections>
-                                                                        <action selector="spellCheckCommentPressed:" target="-2" id="CoY-J8-Yd3"/>
+                                                                        <action selector="spellCheckParameterPressed:" target="-2" id="CoY-J8-Yd3"/>
                                                                     </connections>
                                                                 </buttonCell>
                                                                 <buttonCell type="check" title="Do not check comments" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="2" inset="2" id="XBa-Ou-jFh">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
                                                                     <connections>
-                                                                        <action selector="spellCheckParameterPressed:" target="-2" id="Ehb-gq-m1I"/>
+                                                                        <action selector="spellCheckCommentPressed:" target="-2" id="Ehb-gq-m1I"/>
                                                                     </connections>
                                                                 </buttonCell>
                                                             </column>
@@ -3437,7 +3442,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="syntaxColorPressed:" target="-2" id="FU6-KT-dsy"/>
+                                                                                <action selector="SyntaxCommandColorChanged:" target="-2" id="FU6-KT-dsy"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FFJ-Kl-Fgw">
@@ -3470,7 +3475,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyForeColorChanged:" target="-2" id="xDR-9K-d72"/>
+                                                                                <action selector="ImageForegroundChanged:" target="-2" id="xDR-9K-d72"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCc-ED-zW6">
@@ -3478,7 +3483,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyBackColorChanged:" target="-2" id="Wl0-Mq-ouR"/>
+                                                                                <action selector="ImageBackgroundChanged:" target="-2" id="Wl0-Mq-ouR"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yiN-ue-yZo">

@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="_sparkleIntervalMatrix" destination="K99-Y4-7Uv" id="5s3-UX-EwR"/>
                 <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="_editSpellingExclusionsButton" destination="ts-edit-spelling" id="ts-edit-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="3jh-DN-ejZ" id="XQb-Q0-R19"/>
@@ -372,7 +373,7 @@ DQ
                                                             <menu key="menu" id="VvD-rs-ig4"/>
                                                         </popUpButtonCell>
                                                         <connections>
-                                                            <action selector="dctionaryPressed:" target="-2" id="Sjh-sI-ICX"/>
+                                                            <action selector="dictionaryPressed:" target="-2" id="Sjh-sI-ICX"/>
                                                         </connections>
                                                     </popUpButton>
                                                 </subviews>
@@ -3479,7 +3480,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyForeColorChanged:" target="-2" id="fmN-GD-3Rn"/>
+                                                                                <action selector="ImageForegroundChanged:" target="-2" id="fmN-GD-3Rn"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xMn-JK-gEQ">
@@ -3487,7 +3488,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyBackColorChanged:" target="-2" id="Z22-jH-TmJ"/>
+                                                                                <action selector="ImageBackgroundChanged:" target="-2" id="Z22-jH-TmJ"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fxw-77-eb2">

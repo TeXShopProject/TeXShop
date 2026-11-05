@@ -8,12 +8,14 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
+                <outlet property="_wrapMatrix" destination="UUn-ZS-FTx" id="DSJ-ES-CPz"/>
+                <outlet property="FootnoteColorWell" destination="sfd-NE-Kxe" id="OBg-Es-oIb"/>
                 <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
                 <outlet property="_editSpellingExclusionsButton" destination="ts-edit-spelling" id="ts-edit-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="9Le-Zr-ZNN" id="sYy-5I-AXj"/>
                 <outlet property="ConsoleAlphaColorWell" destination="MTe-Hp-DQb" id="8aX-ci-Khj"/>
                 <outlet property="ConsoleBackgroundColorWell" destination="wDi-bW-pfY" id="DoG-KK-VwC"/>
-                <outlet property="ConsoleTextColorWell" destination="wDi-bW-pfY" id="CV9-If-A2X"/>
+                <outlet property="ConsoleTextColorWell" destination="hZY-3l-fD2" id="CV9-If-A2X"/>
                 <outlet property="DarkStyle" destination="QrI-a7-tMf" id="Shu-qe-vrs"/>
                 <outlet property="EditingStyle" destination="9gm-fZ-2Xm" id="Kys-Zm-HbI"/>
                 <outlet property="EditorFlashColorWell" destination="dLb-ZK-gog" id="8dE-j9-gXa"/>
@@ -819,9 +821,6 @@ DQ
                                                                 </buttonCell>
                                                             </column>
                                                         </cells>
-                                                        <connections>
-                                                            <action selector="autoSaveButtonPressed:" target="-2" id="1142"/>
-                                                        </connections>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rsl-HO-9FW">
                                                         <rect key="frame" x="25" y="238.5" width="189" height="20" />
@@ -1620,7 +1619,7 @@ DQ
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
-                                                            <action selector="currentPdfWindowPosDefault:" target="-2" id="VPL-gl-oTB"/>
+                                                            <action selector="currentHtmlWindowPosDefault:" target="-2" id="VPL-gl-oTB"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -3492,7 +3491,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyForeColorChanged:" target="-2" id="fpl-TN-Anu"/>
+                                                                                <action selector="ImageForegroundChanged:" target="-2" id="fpl-TN-Anu"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="urs-4X-c3I">
@@ -3500,7 +3499,7 @@ DQ
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <connections>
-                                                                                <action selector="copyBackColorChanged:" target="-2" id="YLX-uh-Rfv"/>
+                                                                                <action selector="ImageBackgroundChanged:" target="-2" id="YLX-uh-Rfv"/>
                                                                             </connections>
                                                                         </colorWell>
                                                                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AYr-mX-tC0">

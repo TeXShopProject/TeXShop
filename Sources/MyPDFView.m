@@ -3175,7 +3175,11 @@ failed. If you change the code below, be sure to test carefully!
 		if (bitmap && [SUD boolForKey:PdfColorMapKey])
 		{
 			NSColor *foreColor, *backColor;
-			if ([SUD stringForKey:PdfFore_RKey])
+			// The theme's image colors, which the Settings window edits; the older
+			// separate settings only when the theme has none.
+			if (ImageForegroundColor)
+				foreColor = ImageForegroundColor;
+			else if ([SUD stringForKey:PdfFore_RKey])
 			{
 				foreColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:PdfFore_RKey]
 					green: [SUD floatForKey:PdfFore_GKey] blue: [SUD floatForKey:PdfFore_BKey]
@@ -3183,7 +3187,9 @@ failed. If you change the code below, be sure to test carefully!
 			}
 			else
 				foreColor = [NSColor colorWithCalibratedRed:0 green:0 blue:0 alpha:1];
-			if ([SUD stringForKey:PdfBack_RKey])
+			if (ImageBackgroundColor)
+				backColor = ImageBackgroundColor;
+			else if ([SUD stringForKey:PdfBack_RKey])
 			{
 				backColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:PdfBack_RKey]
 					green: [SUD floatForKey:PdfBack_GKey] blue: [SUD floatForKey:PdfBack_BKey]
