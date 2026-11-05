@@ -63,7 +63,6 @@
 	IBOutlet NSButtonCell	*_lineNumberButton;			/*" connected to Line Number "*/
     IBOutlet NSButtonCell	*_tagMenuButton;			/*" connected to Line Number "*/
 	IBOutlet NSButtonCell	*_midEastButton; /*" connected to Arabic, Persian, Hebrew "*/
-    IBOutlet NSButtonCell   *_autoSaveButton; /*" connected to AutoSave "*/
 	IBOutlet NSButton		*_openEmptyButton;		/*" open empty document on start "*/
 	IBOutlet NSButton		*_externalEditorButton;		/*" use external editor "*/
 	IBOutlet NSPopUpButton	*_defaultEncodeMatrix;		/*" text encoding "*/
@@ -73,7 +72,6 @@
     IBOutlet NSMatrix    *_htmlWindowPosMatrix;        /*" connected to "HTML Window Position" "*/
     IBOutlet NSButton    *_htmlWindowPosButton;        /* connected to current position button */
     IBOutlet NSButton       *_antialiasButton;      /* connect to antialias checkbox */
-    IBOutlet NSButton       *oneWindowButton;
 	IBOutlet NSTextField	*_magTextField;			/*" connected to magnification text field "*/
 	IBOutlet NSButton	*_scrollButton;			/*" connected to scroll button "*/
 	IBOutlet NSTextField	*_texCommandTextField;		/*" connected to "TeX program" "*/
@@ -96,7 +94,6 @@
 	IBOutlet NSTextField    *_engineTextField;
 	IBOutlet NSMatrix       *_distillerMatrix;              /*" connected to "Distiller" "*/
 	IBOutlet NSMatrix	*_consoleMatrix;		/*" connected to "Show Console" "*/
-	IBOutlet NSFormCell	*_tabsTextField;		/*" connected to tab size text field "*/
     IBOutlet NSTextField *tabIndentField;
     IBOutlet NSTextField *firstParagraphIndentField;
     IBOutlet NSTextField *remainingParagraphIndentField;
@@ -149,6 +146,8 @@
     
     IBOutlet NSButton  *_useNewToolbarButton;
     
+    IBOutlet NSButton *_texAwareSpellCheckButton;
+    IBOutlet NSButton *_editSpellingExclusionsButton;
     IBOutlet NSButtonCell   *_spellCheckCommands;
     IBOutlet NSButtonCell   *_spellCheckParameters;
     IBOutlet NSButtonCell   *_spellCheckComments;
@@ -304,12 +303,10 @@
 - (IBAction)tagMenuButtonPressed:sender;
 - (IBAction)showInvisibleCharacterButtonPressed:sender; // added by Terada
 - (IBAction)midEastButtonPressed:sender;
-- (IBAction)autoSaveButtonPressed:sender;
 - (IBAction)emptyButtonPressed:sender;
 - (IBAction)externalEditorButtonPressed:sender;
 - (IBAction)encodingChanged:sender;
 - (IBAction)openAsTabsChanged:sender;
-- (IBAction)tabsChanged:sender;
 - (IBAction)useTabPressed:sender;
 - (IBAction)tabIndentPressed:sender;
 - (IBAction)firstParagraphIndentPressed:sender;
@@ -359,12 +356,6 @@
 - (IBAction)openRootFilePressed:sender;
 - (IBAction)miniaturizeRootFilePressed:sender;
 - (IBAction)afterTypesettingChanged:sender;
-- (IBAction)setSourceBackgroundColor:sender;
- - (IBAction)setSourceTextColor:sender;
- - (IBAction)setPreviewBackgroundColor:sender;
-- (IBAction)setHighlightBracesColor:sender;
- - (IBAction)setConsoleBackgroundColor:sender;
- - (IBAction)setConsoleForegroundColor:sender;
 - (IBAction)changeConsoleResize:sender;
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender;
 - (IBAction)sourceOnLeftChanged:sender;
@@ -380,8 +371,6 @@
 - (NSPopUpButton *)imageCopyTypePopup; // mitsu 1.29b
 - (IBAction)mouseModeChanged:sender; // mitsu 1.29 (O)
 - (IBAction)colorMapChanged:sender; // mitsu 1.29 (O)
-- (IBAction)copyForeColorChanged:sender; // mitsu 1.29 (O)
-- (IBAction)copyBackColorChanged:sender; // mitsu 1.29 (O)
 - (IBAction)colorParam1Changed:sender; // mitsu 1.29 (O)
 #endif
 
@@ -401,6 +390,9 @@
 - (IBAction)sparkleInterval:sender;
 
 
+- (IBAction)texAwareSpellCheckPressed:(NSButton *)sender;
+- (IBAction)editSpellingExclusions:(id)sender;
+- (void)updateSpellingControlsFromDefaults:(NSUserDefaults *)defaults;
 - (IBAction)spellCheckCommandPressed:sender;
 - (IBAction)spellCheckParameterPressed:sender;
 - (IBAction)spellCheckCommentPressed:sender;
@@ -426,8 +418,6 @@
 
 - (void)PrepareColorPane:(NSUserDefaults *)defaults;
 
-- (IBAction)LiteStyleChoice:sender;
-- (IBAction)DarkStyleChoice:sender;
 - (IBAction)EditingStyleChoice:sender;
 - (IBAction)SaveEditedStyle:sender;
 - (IBAction)SaveNewStyle:sender;

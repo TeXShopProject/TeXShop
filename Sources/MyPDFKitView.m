@@ -258,10 +258,6 @@
 		alpha: 1];
 	*/
     
-    if ((BuggyHighSierra) && ([SUD boolForKey:continuousHighSierraFixKey]))
-     self.updatePageNumberTimer = [NSTimer scheduledTimerWithTimeInterval: 1
-                       target:self selector:@selector(pageChangedNew:) userInfo:nil repeats:YES];
-    
     fromTypesetOrQuit = NO; // NO if SaveAnnotationsCalledDirectly
     firstTimeSave = YES;
 
@@ -471,66 +467,6 @@
     return YES;
 }
 
-- (void)fixWhiteDisplay
-{
-    BOOL fixWhitePage = [SUD boolForKey: FixSplitBlankPagesKey];
-    if (! fixWhitePage)
-        return;
-                         
-    if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_10_Max)
-        return;
-    
-    
-    /*
-    BOOL autoScales = self.autoScales;
-    if (! autoScales)
-       return;
-    if ( [self displayMode] != kPDFDisplaySinglePageContinuous)
-        return;
-    */
-    TSDocument *myDocument = self.myDocument;
-    TSPreviewWindow *myWindow = myDocument.pdfKitWindow;
-        if (! myWindow.windowIsSplit)
-        return;
-    
-   
-    [self removeBlurringByResettingMagnification];
-}
-
-// added by Terada for the blurring bug of Yosemite and El Capitan
-- (void) changeScaleFactorForRemovingBlurringWithParameters:(NSArray*)parameters
-{
-    float originalScale = [(NSNumber*)(parameters[0]) floatValue];
-    BOOL autoScales = [(NSNumber*)(parameters[1]) boolValue];
-    BOOL first = [(NSNumber*)(parameters[2]) boolValue];
-    
-    if (first) {
-        [self setScaleFactor:originalScale + 0.01];
-        [self performSelector:@selector(changeScaleFactorForRemovingBlurringWithParameters:)
-                   withObject:@[@(originalScale), @(autoScales), @(NO)]
-                   afterDelay:0];
-    } else {
-        [self setScaleFactor:originalScale];
-        if (autoScales) {
-            [self setAutoScales: YES];
-        }
-    }
-}
-
-// added by Terada for the blurring bug of Yosemite and El Capitan
-- (void) removeBlurringByResettingMagnification
-{
-    
-    
-    
-    float originalScale = self.magnification;
-    BOOL autoScales = self.autoScales;
-    [self performSelector:@selector(changeScaleFactorForRemovingBlurringWithParameters:)
-               withObject:@[@(originalScale), @(autoScales), @(YES)]
-               afterDelay:0];
-}
-
-
 - (void) showWithPath: (NSString *)imagePath
 {
 
@@ -607,8 +543,6 @@
 	
    
     [self.myPDFWindow makeKeyAndOrderFront: self];
-   // if ([SUD boolForKey: FixPreviewBlurKey])
-   //     [self removeBlurringByResettingMagnification]; // for Yosemite's bug
 	if ([SUD boolForKey:PreviewDrawerOpenKey])
 		[self toggleDrawer: self];
    
@@ -1009,12 +943,8 @@
     if ((floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_10_Max) || ( ! [self.myDocument externalEditor]))
         NSEnableScreenUpdates();
     
-   // [self removeBlurringByResettingMagnification];
-   [self fixWhiteDisplay];
     
 //	[self display]; //this is needed outside disableFlushWindow when the user does not bring the window forward
-//    if ([SUD boolForKey: FixPreviewBlurKey])
-//        [self removeBlurringByResettingMagnification]; // for Yosemite's bug
  
 if ((atLeastHighSierra) && (self.PDFFlashFix))
 // if ((atLeastHighSierra) && self.PDFFlashFix && ((pageStyle == PDF_MULTI_PAGE_STYLE) || (pageStyle == PDF_DOUBLE_MULTI_PAGE_STYLE)))
@@ -1210,7 +1140,6 @@ if ((atLeastHighSierra) && (self.PDFFlashFix))
     if ((floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_10_Max) || ( ! [self.myDocument externalEditor]))
         NSEnableScreenUpdates();
     
-   [self fixWhiteDisplay];
     
 if ((atLeastHighSierra) && (self.PDFFlashFix))
     {
@@ -1544,7 +1473,6 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
     if ((floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_10_Max) || ( ! [self.myDocument externalEditor]))
         NSEnableScreenUpdates();
     
-   [self fixWhiteDisplay];
     
 if ((atLeastHighSierra) && (self.PDFFlashFix))
     {
@@ -1756,8 +1684,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         [[self window] enableFlushWindow];
     //[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:1]];
     [self display]; //this is needed outside disableFlushWindow when the user does not bring the window forward
-   // [self removeBlurringByResettingMagnification];
-   [self fixWhiteDisplay];
 
 
 if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.windowIsSplit) && (self.PDFFlashFix))
@@ -1884,69 +1810,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 		}
 }
 
-
-
-
-/* This routine and the next one are only active in High Sierra < 10.13.4, to fix a pageNumber bug */
-- (void) pageChangedNewer
-{
-    PDFPage     *aPage;
-    NSInteger   pageNumber;
-    
-    NSRect      visRect;
-    NSPoint     thePoint;
-    
-    
-    if (! [[self window] isKeyWindow])
-        return;
-    
-    if ((pageStyle != PDF_MULTI_PAGE_STYLE) && (pageStyle != PDF_DOUBLE_MULTI_PAGE_STYLE))
-        return;
-    
-      visRect = [self visibleRect];
-     thePoint = visRect.origin;
-     // use the center of page, but left for double page situations
-     thePoint.x += (visRect.size.width)/4.0;
-     thePoint.y += (visRect.size.height)/2.0;
-     aPage = [self pageForPoint: thePoint nearest: YES];
-     pageNumber = [[self document] indexForPage: aPage];
-     [self makePageChanges: pageNumber];
-}
-
-
-
-- (void) pageChangedNew: (NSNotification *) notification
-{
-    PDFPage     *aPage;
-    NSInteger   pageNumber;
-    
-    NSArray     *myVisiblePages;
-    NSInteger   numberOfPages;
-    
-   
-    if (! [[self window] isKeyWindow])
-          return;
-    
-    if ((pageStyle != PDF_MULTI_PAGE_STYLE) && (pageStyle != PDF_DOUBLE_MULTI_PAGE_STYLE))
-        return;
-    
-     if (([self.myPDFWindow firstResponder] != self) && ([[self.myDocument fullSplitWindow] firstResponder] != self))
-        return;
-    
-    myVisiblePages = [self visiblePages];
-    numberOfPages = [myVisiblePages count];
-    if (numberOfPages > 0)
-    {
-        aPage = (PDFPage *)[self visiblePages][0];
-        pageNumber = [[self document] indexForPage: aPage];
-        [self makePageChanges: pageNumber];
-        return;
-    }
-    else
-        return;
-    
-   
-}
 
 
 
@@ -3962,12 +3825,6 @@ if (self.myDocument.useConTeXtSyncParser)
     
     if ([self annotationMouseDown: theEvent])
         return;
-    
-    if ((BuggyHighSierra) && (! [SUD boolForKey:continuousHighSierraFixKey]))
-        {
-        if ((pageStyle == PDF_MULTI_PAGE_STYLE) || (pageStyle == PDF_DOUBLE_MULTI_PAGE_STYLE))
-            [self pageChangedNewer];
-        }
     
     if (drawMark) {
 		[self setDrawMark: NO];
@@ -7110,10 +6967,7 @@ else
 	
 	if (syncMethod == SYNCTEXFIRST) {
 		result = [self doSyncTeX: thePoint];
-		if ((result) || ([SUD boolForKey: SyncTeXOnlyKey]))
-			return;
-		else
-            return; // 3.53 change!
+		return; // 3.53 change!
 			// syncMethod = SEARCHONLY;
 		}
 	

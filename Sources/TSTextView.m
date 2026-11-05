@@ -204,11 +204,15 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 // The panel's Find Next and Edit > Spelling and Grammar > Check Document Now
 // (Command-;) end up here. Holding Option gives the original system behaviour.
-// Explicit experimental opt-in; preserve legacy preferences
-// and ordinary text documents until the new spelling UI is ready for release.
+// TeXShop's isTeX category also includes scripts and plain text. Only apply
+// TeX exclusion rules to TeX source formats and new, unsaved TeX documents.
 - (BOOL)usesTeXAwareSpellChecking
 {
-    return [SUD boolForKey:@"TeXAwareSpellChecking"] && self.document && self.document.documentType == isTeX && g_texChar == '\\';
+    if (![SUD boolForKey:@"TeXAwareSpellChecking"] || !self.document ||
+        self.document.documentType != isTeX || g_texChar != '\\') return NO;
+    NSString *extension = self.document.fileURL.pathExtension.lowercaseString;
+    if (!self.document.fileURL) return YES;
+    return [@[@"tex", @"ltx", @"latex", @"dtx", @"ins", @"sty", @"cls", @"clo", @"bbx", @"cbx", @"lbx"] containsObject:extension];
 }
 
 - (void)checkSpelling:(id)sender

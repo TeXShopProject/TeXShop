@@ -12,7 +12,7 @@
 %SetFonts
 
 
-\title{Special Comment Lines; Hidden Preferences}
+\title{Special Comment Lines; Hidden Settings}
 % \author{The Author}
 \date{}							% Activate to display a given date or no date
 
@@ -86,7 +86,7 @@ These Special Comment lines fix the encoding used to read and write a source fil
   
  The special comment ``root'' is explained elsewhere in the TeXShop Help Panel, and used when a project is divided into a commanding root file and included chapter files. 
  
- Since macOS Sierra, the Macintosh has supported tabbed windows. See the documentation of Sierra for  instruction on creating these tabs using only the Finder. 
+ macOS supports tabbed windows; see the macOS documentation for creating tabs without TeXShop.
   
  TeXShop has three special comment commands to extend this build-in system support for tabs. 
  
@@ -103,7 +103,7 @@ These Special Comment lines fix the encoding used to read and write a source fil
  
  The last four lines describe a more general method of creating tabbed views. This method requires more
  information from the user, but produces more flexible tabs. The ``useTabsWithFiles'' line introduces the method, which then produces a tabbed window for each ``tabbedFile'' line. This line contains a partial or full path to the file in curly brackets. The tabs will be named using these paths, but this can create long tab names, so it is possible to provide  shorter names for the tabs inside round brackets. These
- shorter names are optional. Optional names are only available in High Sierra and above.
+ shorter names are optional.
  
  \newpage
  \section{More Examples}
@@ -169,62 +169,69 @@ TeXShop needs to be reconfigured to use this distribution rather than TeX Live. 
 
 In ``double page'' and ``double multi-page'' modes, the Preview window shows the first page by itself and then shows a series of double pages. By convention, there are an odd number of pages in a book before the actual content begins, so this causes the left and right pages to appear as they would if a user opened the actual book.  These magic lines allow users to change this behavior on a document-by-document basis. The first magic line causes the first page to appear by itself, and the second causes it to appear as a pair with the second page.
 
- In Japan, text can be either vertical or horizontal, and vertical text pages should appear from right to left.  The last two lines set this preference on a document by document basis.
+ In Japan, text can be either vertical or horizontal, and vertical text pages should appear from right to left.  The last two lines set this on a document by document basis.
 
 
  
-\section{Hidden Preferences}
-TeXShop has a large number of Preference Settings which make it possible for users to customize the behavior of the program to their liking. The most important settings are made visible by TeXShop Preferences, but more obscure settings are hidden and only available through the Terminal in /Applications/Utilities. To apply such a preference, it is important to quit TeXShop, then enter the setting in Terminal and push RETURN, and then restart TeXShop. 
+\section{Hidden Settings}
+TeXShop has a large number of settings which make it possible for users to customize the behavior of the program to their liking. The most important ones are in TeXShop Settings, but more obscure settings are hidden and only available through the Terminal in /Applications/Utilities. To change such a setting, quit TeXShop, enter the command in Terminal and push RETURN, and then restart TeXShop. To return to the default, use for example
+\begin{verbatim}
+     defaults delete TeXShop FlashDelay
+\end{verbatim}
 
-This document lists all hidden preferences mentioned in the Changes document covering TeXShop 3.07 and later.  version 3.07. A complete list of hidden preferences is given in the TeXShop Manual.
-
-
-
-\newpage
-{\em TeXShop Versions Before 4.08}
-\begin{itemize}
-\item defaults write MakeatletterEnabled YES
-\item defaults write TeXShop NSFontDefaultScreenFontSubstitutionEnabled -bool YES
-\item defaults write TeXShop SyncTeXOnly YES
-\item defaults write TeXShop ScreenFontForLogAndConsole -bool YES
-\item defaults write TeXShop WatchServer NO
-\item defaults write TeXShop AutoSaveEnabled NO
-\item defaults write TeXShop SourceInterlineSpace 1.0
-\item defaults write TeXShop ResetSourceTextColorEachTime YES
-\item defaults write TeXShop SwitchSides YES
-\item defaults write TeXShop InterpolationValue 3
-\item defaults write TeXShop FixPreviewBlur YES
-\item defaults write TeXShop FixLineNumberScroll NO
-\item defaults write TeXShop SourceScrollElasticity NO
-\item defaults write TeXShop YosemiteScrollBug NO
-\item defaults write TeXShop ReverseSyncRed 1.00 
-\item defaults write TeXShop ReverseSyncGreen 1.00 
-\item defaults write TeXShop ReverseSyncBlue 0.00
-\item defaults write TeXShop FixSplitBlankPages NO
-\item defaults write TeXShop IndexColorStart YES
-\item defaults write TeXShop OriginalSpelling YES
-\item defaults write TeXShop ContinuousHighSierraFix NO
-\item defaults write TeXShop TabsAlsoForInputFiles YES
-\item defaults write TeXShop FlashFix NO
-\item defaults write TeXShop FlashDelay 0.25
-\end{itemize}
+Each command below changes a setting from its default. A complete list of hidden settings is given in the TeXShop Manual.
 
 \newpage
-{\em Version 4.08}
-\begin{itemize}
-\item defaults write ColorImmediately YES
-\item defaults write OpenWithSourceInFront NO
-\end{itemize}
-\vspace{.2in}
-{\em Remark:}  The first item is obsolete. If the second item is YES, the source window opens in front of the preview window when a document is first opened. 
+{\em Editing}
+\begin{description}
+\item[\texttt{defaults write TeXShop MakeatletterEnabled NO}] \hfill \\
+Do not color @ as a letter in command names.
+\item[\texttt{defaults write TeXShop ColorImmediately NO}] \hfill \\
+Do not color the syntax of a long file (over 100,000 characters) while it is being opened.
+\item[\texttt{defaults write TeXShop ResetSourceTextColorEachTime YES}] \hfill \\
+Set the source text color again whenever a source window becomes active; this helps with Japanese input methods and dark backgrounds.
+\item[\texttt{defaults write TeXShop IndexColorStart YES}] \hfill \\
+Start with the index coloring tool on.
+\item[\texttt{defaults write TeXShop OriginalSpelling YES}] \hfill \\
+Use the standard Apple spell checking language handling instead of switching the dictionary for each document.
+\item[\texttt{defaults write TeXShop ContiguousTextLayout YES}] \hfill \\
+Lay out the whole text of a source window at once instead of only the visible part. Long documents then open and scroll more slowly.
+\item[\texttt{defaults write TeXShop RightJustifyIfAny YES}] \hfill \\
+When right justification is on, right justify a line if it contains any right-to-left character, rather than only when its first characters are right-to-left.
+\item[\texttt{defaults write TeXShop ExtraCommandsNotToCheckParameters -array '\textbackslash mycite'}] \hfill \\
+With TeX-aware spell checking off and the option not to check parameters on, do not check the spelling of the parameters of these commands either. Each name includes its backslash.
+\item[\texttt{defaults write TeXShop ExtraCommandsToCheckParameters -array '\textbackslash mycaption'}] \hfill \\
+The same, but for the commands whose parameters are checked when ExceptionListExcludesParameters is YES.
+\end{description}
 
+{\em Preview}
+\begin{description}
+\item[\texttt{defaults write TeXShop DisplayAsBook NO}] \hfill \\
+In the double page modes, show the first page as a pair with the second page instead of by itself. The magic lines bookDisplay and standardDisplay change this for a single document.
+\item[\texttt{defaults write TeXShop InterpolationValue 4}] \hfill \\
+The image interpolation used to draw the Preview window when antialiasing is on: 0 (system default), 1 (none), 2 (low), 4 (medium) or 3 (high, the default).
+\item[\texttt{defaults write TeXShop FlashFix NO}] \hfill \\
+Do not cover the Preview window briefly while a new version of the PDF is loaded; the cover prevents flashing.
+\item[\texttt{defaults write TeXShop FlashDelay 0.25}] \hfill \\
+How long, in seconds, the cover stays; the default is 0.5.
+\item[\texttt{defaults write TeXShop YosemiteScrollBug NO}] \hfill \\
+In single page and double page modes, let the arrow, page and space keys behave as PDFKit makes them, rather than moving to the next or previous page at the end of a page.
+\item[\texttt{defaults write TeXShop AutoReloadExternalPDF NO}] \hfill \\
+With Automatic Preview Update on, do not reload a PDF changed by another program.
+\item[\texttt{defaults write TeXShop UseOutline NO}] \hfill \\
+Do not build the PDF outline in the Preview drawer.
+\end{description}
 
-\vspace{.3in}
-{\em Version 4.76 and Later}
-
-\begin{itemize}
-\item defaults write TeXShop FixVoiceOver NO
-\item defaults write TeXShop DisplayAsBook YES
-\end{itemize}
+{\em Windows and Files}
+\begin{description}
+\item[\texttt{defaults write TeXShop OpenWithSourceInFront YES}] \hfill \\
+When a document is opened, bring the source window in front of the Preview window.
+\item[\texttt{defaults write TeXShop TabsAlsoForInputFiles YES}] \hfill \\
+Make the magic line useTabs also put the files of \verb|\input| commands in tabs.
+\item[\texttt{defaults write TeXShop AutoSaveEnabled NO}] \hfill \\
+Turn off autosaving.
+\item[\texttt{defaults write TeXShop WatchServer NO}] \hfill \\
+Do not watch for changes made by other programs to source files on a server. TeXShop watches only while autosaving is on.
+\end{description}
 
 \end{document}  

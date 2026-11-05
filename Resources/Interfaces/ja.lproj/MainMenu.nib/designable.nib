@@ -29,7 +29,7 @@
                                     <action selector="checkForUpdates:" target="803" id="804"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="環境設定..." keyEquivalent="," id="612">
+                            <menuItem title="設定…" keyEquivalent="," id="612">
                                 <connections>
                                     <action selector="showPreferences:" target="380" id="626"/>
                                 </connections>
@@ -1241,13 +1241,13 @@
                 <menuItem title="ヘルプ" id="136">
                     <menu key="submenu" title="ヘルプ" id="137">
                         <items>
-                            <menuItem title="このリリースについて" id="848">
+                            <menuItem title="このリリースについて（英語）" id="848">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayThisRelease:" target="690" id="850"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="更新履歴" id="VyZ-Mf-nep">
+                            <menuItem title="更新履歴（英語）" id="VyZ-Mf-nep">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChanges:" target="690" id="lvn-pF-N49"/>
@@ -1256,7 +1256,7 @@
                             <menuItem isSeparatorItem="YES" id="bIK-Md-xsk">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeXLiveドキュメント" id="8YC-Wr-7Pb">
+                            <menuItem title="TeXLiveドキュメント（英語）" id="8YC-Wr-7Pb">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXLiveDocumentation:" target="690" id="7Ue-Ba-Bsk"/>
@@ -1284,7 +1284,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="TeXShop デモ" id="684"/>
                             </menuItem>
-                            <menuItem title="TeXShopマニュアル" id="b5r-ty-w98">
+                            <menuItem title="TeXShopマニュアル（英語）" id="b5r-ty-w98">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayManual:" target="690" id="3ej-8V-htg"/>
@@ -1320,7 +1320,7 @@
                                     <action selector="displayTeXShopConfusion:" target="690" id="GlT-Bd-pji"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="マジックコメントと隠し設定" id="tRI-xD-Rf1">
+                            <menuItem title="マジックコメントと隠し設定（英語）" id="tRI-xD-Rf1">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="690" id="j9N-BE-7YM"/>
@@ -1364,7 +1364,7 @@
                                     <action selector="supplementsToDesktop:" target="690" id="759"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="記号一覧" id="796">
+                            <menuItem title="記号一覧（英語）" id="796">
                                 <connections>
                                     <action selector="displayTables:" target="690" id="797"/>
                                 </connections>

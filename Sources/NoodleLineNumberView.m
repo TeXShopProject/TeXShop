@@ -416,15 +416,6 @@
     return ceil(MAX(DEFAULT_THICKNESS, stringSize.width + RULER_MARGIN * 2));
 }
 
-// FIX RULER SCROLL
-/*
-- (void)setDocument:(TSDocument*)document  // added by Terada (for Lion bug)
-{
-    _document = document;    
-}
-*/
-// END FIX RULER SCROLL
-
 - (void)drawHashMarksAndLabelsInRect:(NSRect)aRect
 {
     id			view;
@@ -433,11 +424,6 @@
     
  	bounds = [self bounds];
     view = [self clientView];
-
-// FIX RULER SCROLL
-    if ([SUD boolForKey:FixLineNumberScrollKey])
-        [self.document redrawLineNumbers:view];
-// END FIX RULER SCROLL
 
 	if (_backgroundColor != nil)
 	{

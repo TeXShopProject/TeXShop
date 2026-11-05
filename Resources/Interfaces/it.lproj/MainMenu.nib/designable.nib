@@ -28,7 +28,7 @@
                                     <action selector="checkForUpdates:" target="786" id="787"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Preferenze..." keyEquivalent="," id="225">
+                            <menuItem title="Impostazioni…" keyEquivalent="," id="225">
                                 <connections>
                                     <action selector="showPreferences:" target="380" id="381"/>
                                 </connections>
@@ -1316,7 +1316,7 @@
                                     <action selector="displayTeXShopConfusion:" target="672" id="2yB-qO-gWf"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Linee di commento e preferenze nascoste" id="gZc-7d-YbF">
+                            <menuItem title="Linee di commento e impostazioni nascoste" id="gZc-7d-YbF">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="672" id="w2Y-9c-SVw"/>

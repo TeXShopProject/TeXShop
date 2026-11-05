@@ -97,6 +97,18 @@ int main(void)
         NSArray *expected = @[@"-:one{two}three{", @"de:vier}{}{fuenf", @"-:}sixzzbad"];
         if (![word isEqualToString:@"zzbad"] || ![sChecked isEqualToArray:expected]) { puts("FAIL: Find Next runs"); failures++; }
 
+        // Editing the exclusion rules is offered only while TeX-aware spell checking is on.
+        // The setting is given in the argument domain, which is not saved.
+        NSMenuItem *edit = [[NSMenuItem alloc] initWithTitle:@"" action:@selector(editSpellingExclusions:) keyEquivalent:@""];
+        NSMenuItem *forget = [[NSMenuItem alloc] initWithTitle:@"" action:@selector(forgetLearnedWords:) keyEquivalent:@""];
+        for (NSNumber *on in @[@NO, @YES]) {
+            [[NSUserDefaults standardUserDefaults] setVolatileDomain:@{@"TeXAwareSpellChecking": on} forName:NSArgumentDomain];
+            if ([TSSpellSupport validateMenuItem:edit] != on.boolValue || ![TSSpellSupport validateMenuItem:forget]) {
+                printf("FAIL: Edit Spelling Exclusions menu item with TeX-aware spell checking %s\n", on.boolValue ? "on" : "off");
+                failures++;
+            }
+        }
+
         if (failures) return 1;
         puts("PASS: learned words looked up among the checked words without blocking; Find Next checks one run per language.");
     }

@@ -28,7 +28,7 @@
                                     <action selector="checkForUpdates:" target="784" id="785"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Preferências..." keyEquivalent="," id="225">
+                            <menuItem title="Definições…" keyEquivalent="," id="225">
                                 <connections>
                                     <action selector="showPreferences:" target="380" id="381"/>
                                 </connections>
@@ -1317,7 +1317,7 @@
                                     <action selector="displayTeXShopConfusion:" target="671" id="Tds-cJ-p5w"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Comment Lines and Hidden Preferences" id="no4-PK-1TO">
+                            <menuItem title="Comment Lines and Hidden Settings" id="no4-PK-1TO">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="671" id="NUG-jA-DdW"/>

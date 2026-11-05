@@ -372,12 +372,6 @@ enum RootCommand
 	NSLineBreakMode		lineBreakMode;
 	// end witten
     
-// FIX RULER SCROLL
-    NSRect lastDocumentVisibleRect;  // added by Terada (for Lion bug)
-    NSRect lastDocumentVisibleRect2;  // added by Terada (for Lion bug)
-    NSRect lastDocumentVisibleRectConsole; // added by Koch (for Lion bug)
-// END FIX RULER SCROLL
-
 // end addition
 // ULRICH BAUER PATCH
    TSFileChangeMonitor *sourceFileMonitor;
@@ -562,10 +556,6 @@ enum RootCommand
 
 
 
-// for Voice Over fix
-
-@property           BOOL        activateVoiceOverFix;
-
 // for HTML
 @property (nonatomic, strong) IBOutlet TSHTMLWindow *htmlWindow;
 @property (nonatomic, strong) IBOutlet NSView *htmlViewContainer;
@@ -595,10 +585,6 @@ enum RootCommand
 - (void)restoreStateWithCoder:(NSCoder *)coder;
 - (void)encodeRestorableStateWithCoder:(NSCoder *)coder;
 
-
-// FIX RULER SCROLL
-- (void) redrawLineNumbers: sender;
-// END FIX RULER SCROLL
 
 - (IBAction)reFillLog: sender;
 
@@ -787,7 +773,6 @@ enum RootCommand
 - (NSTextView *)textView2;
 - (void)switchFrontWindow;
 - (void)activateFrontWindow;
-- (void)voiceOverFix;
 - (void)readExplColors;
 - (void)showStringWindow;
 - (void)setStringWindowString: (NSString *)theString;

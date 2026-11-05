@@ -427,7 +427,6 @@ extern NSString *RevisePathKey;
 extern NSString *OtherTeXExtensionsKey;
 extern NSString *ReleaseDocumentOnLeopardKey;
 extern NSString *BibDeskCompletionKey;
-extern NSString *SyncTeXOnlyKey;
 extern NSString *ConsoleBackgroundColor_RKey;
 extern NSString *ConsoleBackgroundColor_GKey;
 extern NSString *ConsoleBackgroundColor_BKey;
@@ -476,12 +475,10 @@ extern NSString *invisibleCharBlueKey; //Koch
 extern NSString *brieflyFlashYellowForMatchKey; //Koch
 extern NSString *syncWithRedOvalsKey;
 extern NSString *AutoSaveKey;
-extern NSString *FixLineNumberScrollKey;
 extern NSString *RightJustifyIfAnyKey; //Koch; right justify lines containing Persian anywhere in the line
 extern NSString *AutoSaveEnabledKey;
 extern NSString *fullscreenPageStyleKey;
 extern NSString *fullscreenResizeOptionKey;
-extern NSString *ScreenFontForLogAndConsoleKey;
 extern NSString *WatchServerKey;
 extern NSString *SourceInterlineSpaceKey;
 extern NSString *SpellingLanguageKey;
@@ -492,8 +489,6 @@ extern NSString *SourceAndPreviewInSameWindowKey;
 extern NSString *DocumentSplitWindowPositionKey;
 extern NSString *TabIndentKey;
 extern NSString *SwitchSidesKey;
-extern NSString *SourceScrollElasticityKey;
-extern NSString *FixPreviewBlurKey;
 extern NSString *InterpolationValueKey;
 extern NSString *ConsoleWindowFixedPosKey;
 extern NSString *ConsoleWindowPosModeKey;
@@ -504,12 +499,10 @@ extern NSString *reverseSyncRedKey;
 extern NSString *reverseSyncGreenKey;
 extern NSString *reverseSyncBlueKey;
 extern NSString *AutomaticSpellingCorrectionEnabledKey;
-extern NSString *FixSplitBlankPagesKey;
 extern NSString *IndexColorStartKey;
 extern NSString *spellingLanguageDefaultKey;
 extern NSString *spellingAutomaticDefaultKey;
 extern NSString *originalSpellingKey;
-extern NSString *continuousHighSierraFixKey;
 extern NSString *tabsAlsoForInputFilesKey;
 extern NSString *FlashFixKey;
 extern NSString *FlashDelayKey;
@@ -558,7 +551,6 @@ extern NSString *AltPathKey;
 extern NSString *IgnoreStartOnRebootKey;
 extern NSString *OpenAsTabsKey;
 extern NSString *SyntaxColorEntryLineKey;
-extern NSString *FixVoiceOverKey;
 extern NSString *DisplayAsBookKey;
 extern NSString *AlternateEngineKey;
 extern NSString *HtmlWindowNameKey;
@@ -675,7 +667,6 @@ extern BOOL             atLeastMonterey;
 extern BOOL             atLeastVentura;
 extern BOOL             atLeastSonoma;
 extern BOOL             atLeastSequoia;
-extern BOOL             BuggyHighSierra;
 extern BOOL             editorCanAddBrackets;
 
 // Command completion

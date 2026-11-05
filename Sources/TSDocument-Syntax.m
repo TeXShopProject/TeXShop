@@ -189,9 +189,11 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     
     colorExpl3 = self.useExplColor; // [SUD boolForKey:expl3SyntaxColoringKey];
     
-    TurnOffCommandSpellChecking = [SUD boolForKey:TurnOffCommandSpellCheckKey];
-    TurnOffCommentSpellChecking = [SUD boolForKey:TurnOffCommentSpellCheckKey];
-    TurnOffParameterSpellChecking = [SUD boolForKey:TurnOffParameterSpellCheckKey];
+    // New rules and legacy exclusions are alternative spelling modes.
+    BOOL texAwareSpelling = [self.textView usesTeXAwareSpellChecking];
+    TurnOffCommandSpellChecking = !texAwareSpelling && [SUD boolForKey:TurnOffCommandSpellCheckKey];
+    TurnOffCommentSpellChecking = !texAwareSpelling && [SUD boolForKey:TurnOffCommentSpellCheckKey];
+    TurnOffParameterSpellChecking = !texAwareSpelling && [SUD boolForKey:TurnOffParameterSpellCheckKey];
     ListHasWordsWhoseParametersShouldBeChecked = [SUD boolForKey:ExceptionListExcludesParametersKey];
     
     

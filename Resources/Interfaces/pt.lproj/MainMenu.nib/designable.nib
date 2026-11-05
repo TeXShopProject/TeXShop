@@ -28,7 +28,7 @@
                                     <action selector="checkForUpdates:" target="784" id="785"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Preferências..." keyEquivalent="," id="225">
+                            <menuItem title="Ajustes…" keyEquivalent="," id="225">
                                 <connections>
                                     <action selector="showPreferences:" target="380" id="381"/>
                                 </connections>
@@ -1319,7 +1319,7 @@
                                     <action selector="displayTeXShopConfusion:" target="671" id="qLv-HC-5ko"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Linhas Especiais e Preferências Ocultas" id="cXe-ak-NvY">
+                            <menuItem title="Linhas Especiais e Ajustes Ocultos" id="cXe-ak-NvY">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="671" id="Hbi-0z-ma8"/>

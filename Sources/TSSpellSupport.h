@@ -25,6 +25,7 @@
     the Spelling and Grammar panel, which offers its suggestions, Change,
     Ignore and Learn as usual. Beeps if there is none. Returns the word found
     (as the panel was given it), or nil. "*/
++ (void)preferencesDidChange;
 + (void)changeAll:(id)sender;
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)textView mask:(TSSpellMask *)mask;
 
@@ -39,6 +40,9 @@
 + (void)forgetLearnedWords:(id)sender;
 + (void)editSpellingExclusions:(id)sender;
 + (void)showSpellCheckingHelp:(id)sender;
+/*" Whether a menu item of these commands is available: Edit Spelling Exclusions
+    only while TeX-aware spell checking is on. "*/
++ (BOOL)validateMenuItem:(NSMenuItem *)item;
 + (NSString *)checkerLanguageForCode:(NSString *)code isDocumentLanguage:(BOOL *)isDocument;
 + (BOOL)rangeIsInOtherLanguage:(NSRange)range mask:(TSSpellMask *)mask;
 
