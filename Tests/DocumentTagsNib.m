@@ -1,4 +1,4 @@
-// added by Terada: Inspect actual compiled nibs without starting TeXShop or loading its preferences.
+// Inspect actual compiled nibs without starting TeXShop or loading its preferences.
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
 #import <objc/runtime.h>

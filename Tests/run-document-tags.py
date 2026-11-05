@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Terada: compare every compiled popup with its runtime localization."""
+"""Compare every compiled popup with its runtime localization."""
 from pathlib import Path
 import os,subprocess,tempfile
 root=Path(__file__).resolve().parents[1]

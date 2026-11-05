@@ -1,4 +1,4 @@
-// Terada: verify runtime Tags lookup in each compiled MainMenu.
+// Verify runtime Tags lookup in each compiled MainMenu.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 static void IgnoreOutlet(id self,SEL cmd,id value,NSString *key) {}
