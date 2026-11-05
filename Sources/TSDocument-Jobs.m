@@ -165,7 +165,7 @@ for(NSString *key in enu)
     MainLogs = NO;
     
     if (MainLogs)
-     //   NSLog(@"killRunningTasks");
+        NSLog(@"killRunningTasks");
     
 	/* The lines of code below kill previously running tasks. This is
 		necessary because otherwise the source file will be open when the

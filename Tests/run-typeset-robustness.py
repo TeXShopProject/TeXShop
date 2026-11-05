@@ -317,6 +317,25 @@ int main(int argc, char **argv) {
                 ok = p.bibTask == nil && p.indexTask == nil && p.metaFontTask == nil && killCalls.count == 0;
             });
 
+            // killRunningTasks must stop a running TeX task (Abort, new typesetting job).
+            CHECK(@"killRunningTasks stops a running TeX task", {
+                NSTask *child = [NSTask new];
+                child.launchPath = @"/bin/sleep";
+                child.arguments = @[@"30"];
+                [child launch];
+                ownChild = child.processIdentifier;
+                p->theScript = kTypesetViaPDFTeX;
+                p.texTask = child;
+                NSDate *start = [NSDate date];
+                [p killRunningTasks];
+                [child waitUntilExit];
+                NSTimeInterval elapsed = -[start timeIntervalSinceNow];
+                ok = p.texTask == nil && !child.isRunning && elapsed < 2.0;
+                detail = [NSString stringWithFormat:@"texTask=%@ running=%d elapsed %.2f s",
+                          p.texTask, child.isRunning, elapsed];
+                ownChild = -1;
+            });
+
             // Bounded wait (A4): a child that ignores SIGTERM is killed after the deadline.
             CHECK(@"killRunningTasks stops waiting for a task that ignores SIGTERM", {
                 NSTask *child = [NSTask new];
