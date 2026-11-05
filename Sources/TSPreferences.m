@@ -2093,6 +2093,8 @@ person script. See also: DefaultTypesetMode.
 {
     BOOL enabled = [defaults boolForKey:@"TeXAwareSpellChecking"];
     _texAwareSpellCheckButton.state = enabled ? NSControlStateValueOn : NSControlStateValueOff;
+    // The exclusion rules apply only to TeX-aware spell checking.
+    _editSpellingExclusionsButton.enabled = enabled;
     _spellCheckCommands.enabled = !enabled;
     _spellCheckParameters.enabled = !enabled;
     _spellCheckComments.enabled = !enabled;

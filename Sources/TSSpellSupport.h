@@ -40,6 +40,9 @@
 + (void)forgetLearnedWords:(id)sender;
 + (void)editSpellingExclusions:(id)sender;
 + (void)showSpellCheckingHelp:(id)sender;
+/*" Whether a menu item of these commands is available: Edit Spelling Exclusions
+    only while TeX-aware spell checking is on. "*/
++ (BOOL)validateMenuItem:(NSMenuItem *)item;
 + (NSString *)checkerLanguageForCode:(NSString *)code isDocumentLanguage:(BOOL *)isDocument;
 + (BOOL)rangeIsInOtherLanguage:(NSRange)range mask:(TSSpellMask *)mask;
 

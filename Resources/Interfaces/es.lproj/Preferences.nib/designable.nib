@@ -9,6 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="TSPreferences">
             <connections>
                 <outlet property="_texAwareSpellCheckButton" destination="ts-aware-spelling" id="ts-aware-spelling-outlet"/>
+                <outlet property="_editSpellingExclusionsButton" destination="ts-edit-spelling" id="ts-edit-spelling-outlet"/>
                 <outlet property="BlockCursorColorWell" destination="W9F-QO-nMb" id="5Nq-av-dsl"/>
                 <outlet property="ConsoleAlphaColorWell" destination="Ijy-4X-Yzi" id="Lpg-wz-3a1"/>
                 <outlet property="ConsoleBackgroundColorWell" destination="EbP-JH-Iv3" id="lqT-V1-WTy"/>

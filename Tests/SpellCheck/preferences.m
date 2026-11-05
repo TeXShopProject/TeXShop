@@ -1,6 +1,6 @@
 // Load compiled preferences without starting TeXShop or writing its settings.
 #import <Cocoa/Cocoa.h>
-@interface TSPreferences:NSObject { @public NSButton *_texAwareSpellCheckButton; }
+@interface TSPreferences:NSObject { @public NSButton *_texAwareSpellCheckButton, *_editSpellingExclusionsButton; }
 @property NSUInteger clicks;
 @end
 @implementation TSPreferences
@@ -38,6 +38,7 @@ int main(int argc,char **argv){@autoreleasepool{
   [b.cell setNextState]; [NSApp sendAction:b.action to:b.target from:b];if(b.state!=NSControlStateValueOff || owner.clicks!=2)return 5;
   NSButton *edit = EditButton(b.superview);
   if (!edit || !edit.bordered || edit.bezelStyle != NSBezelStyleRounded) return 8;
+  if (owner->_editSpellingExclusionsButton != edit) return 11;
   if (fabs(b.font.pointSize - NSFont.systemFontSize) > .01 || fabs(edit.font.pointSize - NSFont.systemFontSize) > .01) return 9;
   CGFloat titleWidth = [edit.title sizeWithAttributes:@{NSFontAttributeName:edit.font}].width;
   CGFloat available = [edit.cell titleRectForBounds:edit.bounds].size.width;

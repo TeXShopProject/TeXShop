@@ -51,7 +51,7 @@ static int refreshes;
 @interface PreferenceProbe:NSObject {
 @public
     NSUndoManager *_undoManager;
-    NSButton *_texAwareSpellCheckButton;
+    NSButton *_texAwareSpellCheckButton, *_editSpellingExclusionsButton;
     NSButtonCell *_spellCheckCommands, *_spellCheckParameters, *_spellCheckComments;
 }
 @end
@@ -79,12 +79,14 @@ int main(void) { @autoreleasepool {
     PreferenceProbe *p = [PreferenceProbe new];
     p->_undoManager = [NSUndoManager new]; p->_undoManager.groupsByEvent = NO;
     p->_texAwareSpellCheckButton = [NSButton new];
+    p->_editSpellingExclusionsButton = [NSButton new];
     p->_spellCheckCommands = [NSButtonCell new];
     p->_spellCheckParameters = [NSButtonCell new];
     p->_spellCheckComments = [NSButtonCell new];
     [p updateSpellingControlsFromDefaults:settings];
     REQUIRE(p->_texAwareSpellCheckButton.state == NSControlStateValueOn);
     REQUIRE(!p->_spellCheckComments.enabled);
+    REQUIRE(p->_editSpellingExclusionsButton.enabled);
     [settings setBool:NO forKey:@"SpellCheckEnabled"];
     for (NSNumber *initial in @[@YES, @NO]) {
         [settings setBool:initial.boolValue forKey:@"TeXAwareSpellChecking"];
@@ -95,6 +97,7 @@ int main(void) { @autoreleasepool {
         REQUIRE(p->_spellCheckCommands.enabled == initial.boolValue);
         REQUIRE(p->_spellCheckParameters.enabled == initial.boolValue);
         REQUIRE(p->_spellCheckComments.enabled == initial.boolValue);
+        REQUIRE(p->_editSpellingExclusionsButton.enabled == !initial.boolValue);
         [p->_undoManager endUndoGrouping]; [p->_undoManager undo];
         [p updateSpellingControlsFromDefaults:settings];
         REQUIRE([settings boolForKey:@"TeXAwareSpellChecking"] == initial.boolValue);

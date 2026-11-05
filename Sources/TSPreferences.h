@@ -150,6 +150,7 @@
     IBOutlet NSButton  *_useNewToolbarButton;
     
     IBOutlet NSButton *_texAwareSpellCheckButton;
+    IBOutlet NSButton *_editSpellingExclusionsButton;
     IBOutlet NSButtonCell   *_spellCheckCommands;
     IBOutlet NSButtonCell   *_spellCheckParameters;
     IBOutlet NSButtonCell   *_spellCheckComments;

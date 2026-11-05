@@ -505,6 +505,15 @@ static NSTextView *FrontTextView(void)
     [done runModal];
 }
 
+// The exclusion rules apply only to TeX-aware spell checking, so they can be
+// edited only while it is on.
++ (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+    if (item.action == @selector(editSpellingExclusions:))
+        return [[NSUserDefaults standardUserDefaults] boolForKey:@"TeXAwareSpellChecking"];
+    return YES;
+}
+
 + (void)editSpellingExclusions:(id)sender
 {
     [TSSpellExclusions installDefaultRulesIfNeeded];
