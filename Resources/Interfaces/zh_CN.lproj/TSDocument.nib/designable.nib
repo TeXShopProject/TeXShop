@@ -807,7 +807,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="440">
                     <rect key="frame" x="254" y="189" width="113" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="自动更正" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
+                    <buttonCell key="cell" type="check" title="按键绑定" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3858">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" size="13" name="STHeitiSC-Light"/>
                     </buttonCell>
