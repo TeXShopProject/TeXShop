@@ -3,7 +3,13 @@
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 output="$(mktemp -d /tmp/texshop-invisible.XXXXXX)"
-trap 'rm -rf "$output"' EXIT
+cleanup() {
+    if [ -d "$output/Probe.app" ]; then
+        /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$output/Probe.app" >/dev/null 2>&1 || true
+    fi
+    rm -rf "$output"
+}
+trap cleanup EXIT
 # Use the real preference key definitions rather than aliases in the fixture.
 python3 - "$root" "$output" <<'KEYS'
 from pathlib import Path

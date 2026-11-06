@@ -72,6 +72,17 @@ int main(int argc,char **argv){@autoreleasepool{
     [owner->_undoManager undo];[owner updateInvisibleCharacterControls:settings];
     Check(p.selectedTag==1 && [settings integerForKey:keys[i]]==1,@"cancel/undo restores prior choice");
    }
+   // Switching back from an extended marker must remove the extended value.
+   for(NSInteger added=2;added<p.numberOfItems;added++) for(NSInteger legacy=0;legacy<2;legacy++){
+    [owner->_undoManager beginUndoGrouping];
+    [p selectItemAtIndex:added];[NSApp sendAction:p.action to:p.target from:p];
+    [p selectItemAtIndex:legacy];[NSApp sendAction:p.action to:p.target from:p];
+    [owner->_undoManager endUndoGrouping];
+    Check([settings objectForKey:TSInvisibleExtendedKey(keys[i])]==nil,@"returning to a legacy choice removes the extended key");
+    [owner reloadControls:settings];Check(p.selectedTag==legacy,@"legacy choice survives reload after extended choice");
+    [owner->_undoManager undo];[owner reloadControls:settings];
+    Check(p.selectedTag==1 && [settings objectForKey:TSInvisibleExtendedKey(keys[i])]==nil,@"Cancel restores the choice before multiple changes");
+   }
    [owner->_undoManager beginUndoGrouping];b.state=NSControlStateValueOff;[NSApp sendAction:b.action to:b.target from:b];[owner->_undoManager endUndoGrouping];
    Check(!p.enabled && p.selectedTag==1,@"disabled row retains selection");
    [owner->_undoManager undo];b.state=NSControlStateValueOn;[owner updateInvisibleCharacterControls:settings];Check(p.enabled,@"undo restores enabled state");
