@@ -13,11 +13,14 @@
 \usepackage[colorlinks=true, pdfstartview=FitV, linkcolor=blue, 
             citecolor=blue, urlcolor=blue]{hyperref}
             
-\usepackage{url}
+\usepackage{xurl}
+\setlength{\emergencystretch}{3em}
+\hfuzz=2pt
 
 
-\title{About TeXShop 5.57}
-\author{Richard Koch}
+\title{About TeXShop 5.60}
+\author{Richard Koch and Yusuke Terada}
+\date{Release preparation}
 %\date{}                                           % Activate to display a given date or no date
 
 \begin{document}
@@ -32,10 +35,34 @@
 
 If you are a new TeXShop user, you can skip this document and begin using the program.
 
-The default behavior of TeXShop can be modified in two ways: by making Preference changes, and by editing files in $\sim$/Library/TeXShop. Here $\sim$/Library is the Library folder in your home directory. 
+The default behavior of TeXShop can be modified in two ways: by changing Settings, and by editing files in $\sim$/Library/TeXShop. Here $\sim$/Library is the Library folder in your home directory.
 
 New versions of TeXShop generally do not change these user modifications because users don't like changes made behind their backs. But sometimes, new features require a few modifications. This paper explains what to do.
 Please read this document each time you upgrade; each release of TeXShop will contain a new version.
+
+\section{Changes in 5.60}
+
+No engine, macro, or template files need to be replaced to use the new features in this release. You do not need to remove your existing TeXShop settings or your Library/TeXShop folder.
+
+TeX-aware spell checking is enabled by default. It checks prose while skipping TeX commands, comments, mathematics, and selected arguments. To change this behavior, open Settings, select Source, and use ``TeX-aware spell checking'' or ``Edit TeX exclusion rules...''.
+
+Files without an encoding magic comment are now checked for their encoding when opened. An explicit encoding magic comment remains authoritative. If the detected encoding is unsuitable for a particular file, select the intended encoding in the Open dialog. Files with Windows or classic Mac line endings are converted to LF when opened; a notice explains this change before you save. The notice can be suppressed for that file.
+
+Settings now exposes several formerly hidden options: autosave and Versions, backup files when autosave is off, and the encoding menu in the Save dialog (Misc1); syntax coloring of command names containing @ and of expl3 code (Editor); and showing a cover page alone in two-page PDF layouts (Preview).
+
+The PDF preview can follow updates made by other applications when Auto Update is enabled. Unsaved PDF annotations are protected. The new Page Layout and Two-Page Arrangement toolbar menus affect the current document; choose Restore Document Settings to return to its settings and magic comments.
+
+Settings, Misc2 offers five Dock icons. A selected historical icon is used only while TeXShop is running. Quitting restores the standard Dock icon, and the Finder icon does not change.
+
+For the complete list of improvements, choose ``Changes'' in the Help menu, or visit \url{https://texshop.app/release-notes.html}. The ``Comment Lines and Hidden Settings'' document in the Help menu describes the remaining hidden settings.
+
+\section{Changes in 5.58 and 5.59}
+
+TeXShop 5.59 was the first release maintained by Yusuke Terada, based on Richard Koch's 5.58 Golden Gate sources. These releases require macOS 14.6 or later. The current website is \url{https://texshop.app/}.
+
+Users upgrading from TeXShop 5.58 or earlier need to install a version from the new website manually once. TeXShop 5.59 and later use the new update feed for subsequent automatic updates. Older versions remain available on the website for older systems.
+
+The material below retains the upgrade instructions for earlier releases by Richard Koch.
 
 \section{Changes in 5.50 - 5.57}
 
@@ -508,7 +535,7 @@ the new versions by quitting TeXshop, going to $\sim$/Library/TeXShop and moving
 folder to the desktop, and then restarting TeXShop. A new version of the Macros file will be
 created. If all is well, the old Macros folder can be thrown away.
 
-Otherwise, find the files InsertReference-OpenQuickly.plist and NewTabular-NewArray.plist
+Otherwise, find the files \path{InsertReference-OpenQuickly.plist} and \path{NewTabular-NewArray.plist}
 in $\sim$/Library/TeXShop/New. In the Macros menu select ``Open Macro Editor''. Then
 select ``Add macros from file...'' and add the macros from both of these files. The
 new macros will appear at the bottom of the Macro List. Use the Macro Editor to
