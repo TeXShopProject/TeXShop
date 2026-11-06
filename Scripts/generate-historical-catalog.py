@@ -48,7 +48,7 @@ def details(app,ja):
  return os,cpu
 for ja in (False,True):
  filename='downloads-ja.html' if ja else 'downloads.html';text=(root/filename).read_text();pre,rest=text.split('<main class="archive-content downloads">',1); oldmain,post=rest.split('</main>',1)
- title='全バージョン' if ja else 'All Versions';pre=re.sub(r'<title>.*?</title>',f'<title>{title} — TeXShop</title>',pre,count=1)
+ title='リリース履歴' if ja else 'Release History';pre=re.sub(r'<title>.*?</title>',f'<title>{title} — TeXShop</title>',pre,count=1)
  if ja:pre=pre.replace('href="downloads.html" lang="en"','href="all-releases.html" lang="en"')
  else:pre=pre.replace('href="downloads-ja.html" lang="ja"','href="all-releases-ja.html" lang="ja"')
  pre=pre.replace('hreflang="en" href="downloads.html"','hreflang="en" href="all-releases.html"').replace('hreflang="ja" href="downloads-ja.html"','hreflang="ja" href="all-releases-ja.html"')
