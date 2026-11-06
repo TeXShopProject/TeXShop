@@ -53,6 +53,31 @@
   v->resizeOption=3; [v setupMagnificationStyle]; [d changePreviewLayout:Choice(@selector(changePreviewLayout:),1)]; Pump(); CGFloat s1=v.scaleFactor;
   [d changePreviewLayout:Choice(@selector(changePreviewLayout:),2)]; Pump(); CGFloat s2=v.scaleFactor;
   AUDIT(v.autoScales && s2<s1,([NSString stringWithFormat:@"(D) auto-fit recomputed single %.3f -> two-up %.3f",s1,s2]));
+  // (E/F) Source reload is a no-op; real changes retain the point on the current page.
+  int unchangedCases=0, pointCases=0;
+  for(int style=1;style<=4;style++) for(int k=0;k<3;k++) for(int where=0;where<2;where++) {
+   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)]; [d comments:@""];
+   v.document=PDF(); [d changePreviewLayout:Choice(@selector(changePreviewLayout:),style)];
+   v->resizeOption=2; v.scaleFactor=(k==0?.6:(k==1?1.5:2.5)); Pump();
+   PDFPage *p=[v.document pageAtIndex:3];
+   [v goToDestination:[[PDFDestination alloc]initWithPage:p atPoint:NSMakePoint(120,where?40:330)]]; Pump();
+   NSClipView *clip=v.documentView.enclosingScrollView.contentView;
+   NSRect before=clip.bounds; PDFPage *current=v.currentPage;
+   [d comments:@""]; Pump();
+   Check(NSEqualRects(before,clip.bounds) && v.currentPage==current,@"Unchanged source reload preserves exact viewport and page"); unchangedCases++;
+  }
+  for(int style=1;style<=4;style++) for(int op=0;op<2;op++) {
+   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)]; [d comments:@""];
+   v.document=PDF(); [d changePreviewLayout:Choice(@selector(changePreviewLayout:),style)];
+   v->resizeOption=2; v.scaleFactor=2.5; Pump();
+   [v goToDestination:[[PDFDestination alloc]initWithPage:[v.document pageAtIndex:3] atPoint:NSMakePoint(120,200)]]; Pump();
+   PDFDestination *before=v.currentDestination; PDFPage *current=v.currentPage;
+   Check(before.page==current,@"High-zoom fixture is on the current page");
+   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),op?3:2)]; Pump();
+   PDFDestination *after=v.currentDestination;
+   Check(after.page==before.page && v.currentPage==current && fabs(after.point.x-before.point.x)<1 && fabs(after.point.y-before.point.y)<1,@"Arrangement preserves within-page position"); pointCases++;
+  }
+  printf("PASS: unchanged reload %d cases; high-zoom arrangement %d cases\n",unchangedCases,pointCases);
   Check(auditFail==0,@"Arrangement and last-page regression cases");
   #undef AUDIT
  }

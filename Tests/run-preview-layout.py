@@ -22,6 +22,7 @@ program=r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
 #import "TSPreviewLayout.h"
+#import "MemoryDefaults.h"
 static NSUserDefaults *defaults;
 #define SUD defaults
 static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
@@ -88,7 +89,10 @@ PARSE
 - (BOOL)validateMenuItem:(NSMenuItem *)item {return [self validatePreviewLayoutItem:item];}
 @end
 @interface TSPreferenceWindow:NSWindow @end
-@implementation TSPreferenceWindow @end
+@implementation TSPreferenceWindow
+- (BOOL)setFrameAutosaveName:(NSString *)name { return NO; }
+- (void)saveFrameUsingName:(NSString *)name {}
+@end
 @interface TSPreferences : NSObject { @public NSUndoManager *_undoManager; NSButton *_displayAsBookButton; }
 @property NSMutableDictionary *outlets;
 @end
@@ -130,7 +134,7 @@ static TSDocument *MakeDocument(void){
  d.myPDFKitView->resizeOption=2;d.myPDFKitView2->resizeOption=2;
  d.myPDFKitView.scaleFactor=.8;d.myPDFKitView2.scaleFactor=.7;
  NSToolbar *bar=[[NSToolbar alloc]initWithIdentifier:NSUUID.UUID.UUIDString];bar.delegate=d;bar.displayMode=NSToolbarDisplayModeIconAndLabel;d.pdfKitWindow.toolbar=bar;
- [d.pdfKitWindow orderFront:nil];Pump();return d;
+ Pump();return d;
 }
 static NSTabView *Tabs(NSView *v){if([v isKindOfClass:NSTabView.class])return (id)v;for(NSView *c in v.subviews){NSTabView *t=Tabs(c);if(t)return t;}return nil;}
 static void Snapshot(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:image.TIFFRepresentation];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
@@ -138,7 +142,7 @@ int main(int argc,char **argv){@autoreleasepool{
  [NSApplication sharedApplication];
  NSString *domain=NSBundle.mainBundle.bundleIdentifier;
  Check([domain hasPrefix:@"org.texshop.LayoutTest."],@"Isolated test preferences");
- defaults=NSUserDefaults.standardUserDefaults;[defaults registerDefaults:@{DisplayAsBookKey:@NO,PdfFirstPageStyleKey:@1,PdfMagnificationKey:@1}];
+ defaults=[TSMemoryDefaults new];[defaults registerDefaults:@{DisplayAsBookKey:@NO,PdfFirstPageStyleKey:@1,PdfMagnificationKey:@1}];
  TSDocument *d=MakeDocument(),*other=MakeDocument();
  PDFDocument *rtlPDF=DirectedPDF(@"/ViewerPreferences << /Direction /R2L >>"), *ltrPDF=DirectedPDF(@"/ViewerPreferences << /Direction /L2R >>");
  Check(rtlPDF && ltrPDF,@"Valid direction fixtures");
@@ -231,7 +235,6 @@ int main(int argc,char **argv){@autoreleasepool{
  Check([defaults boolForKey:DisplayAsBookKey],@"Cover preference saved");[owner->_undoManager undo];Check(![defaults boolForKey:DisplayAsBookKey],@"Cancel restores cover preference");
  for(id o in objects)if([o isKindOfClass:NSWindow.class]){NSWindow *w=o;NSTabView *tabs=Tabs(w.contentView);if(tabs.numberOfTabViewItems!=9)continue;[tabs selectTabViewItemAtIndex:2];w.appearance=[NSAppearance appearanceNamed:NSAppearanceNameAqua];[w orderOut:nil];[w.contentView layoutSubtreeIfNeeded];[w displayIfNeeded];if(argc>2 && strcmp(argv[2],"-")!=0){Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(cover.superview.superview,[@(argv[2]) stringByAppendingPathComponent:@"arrangement-settings.png"]);}[w orderOut:nil];}
  d.myPDFKitView.document=nil;Check(![d validatePreviewLayoutItem:Choice(@selector(changePreviewLayout:),1)],@"No PDF disables actions");
- [defaults removePersistentDomainForName:domain];
  NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, preferences undo");
 }}
 '''
@@ -244,7 +247,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  for l in ('en','ja'):
   res=app/f'Contents/Resources/{l}.lproj';res.mkdir(parents=True);shutil.copy(root/f'Resources/Interfaces/{l}.lproj/ToolbarItems.strings',res)
  source=Path(tmp)/'Test.m';source.write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules','-I'+str(root/'Sources'),'-framework','Cocoa','-framework','PDFKit',str(source),'-o',str(mac/'LayoutTest')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules','-I'+str(root/'Sources'),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','PDFKit',str(source),'-o',str(mac/'LayoutTest')],check=True)
  nib=root/f'Resources/Interfaces/{"Base" if lang=="en" else lang}.lproj/Preferences.nib'
  snapshot=next((a.split('=',1)[1] for a in sys.argv if a.startswith('--snapshots=')),None)
  args=[str(mac/'LayoutTest'),str(nib)]
@@ -257,5 +260,4 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
   home=Path(tmp)/'Home';home.mkdir()
   subprocess.run(args,check=True,env={**os.environ,'CFFIXED_USER_HOME':str(home)})
  finally:
-  domain=plistlib.loads((app/'Contents/Info.plist').read_bytes())['CFBundleIdentifier']
   subprocess.run(['/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister','-u',str(app)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)

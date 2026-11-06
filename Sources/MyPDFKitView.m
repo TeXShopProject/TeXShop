@@ -2346,7 +2346,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 {
     PDFPage *page = self.currentPage;
     PDFDestination *destination = self.currentDestination;
-    BOOL wasBook = self.displaysAsBook;
     NSInteger savedResizeOption = resizeOption;
     CGFloat scale = self.scaleFactor;
     change();
@@ -2361,8 +2360,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     if (page && [self.document indexForPage:page] != NSNotFound) {
         // currentDestination can belong to the previous page at the bottom of
         // a continuous view or to the left page of a spread.
-        BOOL continuous = self.displayMode == kPDFDisplaySinglePageContinuous || self.displayMode == kPDFDisplayTwoUpContinuous;
-        if (continuous && wasBook == self.displaysAsBook && destination.page == page)
+        if (destination.page == page)
             [self goToDestination:destination];
         else
             [self goToPage:page];
@@ -2373,6 +2371,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (void)applyPreviewArrangement
 {
     if (!self.document) return;
+    // A source reload with unchanged comments must not scroll the PDF.
+    if (self.displaysAsBook == self.myDocument.previewDisplaysAsBook &&
+        self.displaysRTL == self.myDocument.previewDisplaysRTL) return;
     [self performPreviewLayoutChange:^{ [self setupPageStyle]; }];
 }
 
