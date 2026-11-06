@@ -4,7 +4,7 @@
  This file is part of the __SyncTeX__ package.
  
  [//]: # (Latest Revision: Fri Jul 14 16:20:41 UTC 2017)
- [//]: # (Version: 1.19)
+ [//]: # (Version: 1.21)
  
  See `synctex_parser_readme.md` for more details
  
@@ -48,7 +48,6 @@
 
 #include <limits.h>
 #include <ctype.h>
-#include <string.h>
 
 #include <sys/stat.h>
 
@@ -60,7 +59,7 @@
 #define SYNCTEX_OS2 1
 #endif
 
-#ifdef _WIN32_WINNT_WINXP
+#if defined(_WIN32)
 #define SYNCTEX_RECENT_WINDOWS 1
 #endif
 
@@ -83,9 +82,12 @@ void _synctex_free(void * ptr) {
     }
 }
 
+#if !defined(_WIN32)
 #   include <syslog.h>
+#endif
 
-int _synctex_log(int level, const char * prompt, const char * reason,va_list arg) {
+SYNCTEX_ATTRIBUTE_FORMAT_PRINTF(3, 0)
+static int _synctex_log(int level, const char * prompt, const char * reason,va_list arg) {
 	int result;
 #	ifdef SYNCTEX_RECENT_WINDOWS
 	{/*	This code is contributed by William Blum.
@@ -131,20 +133,30 @@ int _synctex_log(int level, const char * prompt, const char * reason,va_list arg
 	return result;
 }
 
+SYNCTEX_ATTRIBUTE_FORMAT_PRINTF(1, 2)
 int _synctex_error(const char * reason,...) {
     va_list arg;
     int result;
     va_start (arg, reason);
+#if defined(SYNCTEX_RECENT_WINDOWS) /* LOG_ERR is not used */
+    result = _synctex_log(0, "! SyncTeX Error : ", reason, arg);
+#else
     result = _synctex_log(LOG_ERR, "! SyncTeX Error : ", reason, arg);
+#endif
     va_end (arg);
     return result;
 }
 
+SYNCTEX_ATTRIBUTE_FORMAT_PRINTF(1, 2)
 int _synctex_debug(const char * reason,...) {
     va_list arg;
     int result;
     va_start (arg, reason);
+#if defined(SYNCTEX_RECENT_WINDOWS) /* LOG_DEBUG is not used */
+    result = _synctex_log(0, "! SyncTeX Error : ", reason, arg);
+#else
     result = _synctex_log(LOG_DEBUG, "! SyncTeX Error : ", reason, arg);
+#endif
     va_end (arg);
     return result;
 }
@@ -291,7 +303,7 @@ int _synctex_copy_with_quoting_last_path_component(const char * src, char ** des
   if(src && dest_ref) {
       const char * lpc;
 #		define dest (*dest_ref)
-		dest = NULL;	/*	Default behavior: no change and sucess. */
+		dest = NULL;	/*	Default behavior: no change and success. */
 		lpc = _synctex_last_path_component(src);
 		if(strlen(lpc)) {
 			if(strchr(lpc,' ') && lpc[0]!='"' && lpc[strlen(lpc)-1]!='"') {
@@ -341,6 +353,7 @@ char * _synctex_merge_strings(const char * first,...) {
 		size_t len = strlen(temp);
 		if(UINT_MAX-len<size) {
 			_synctex_error("!  _synctex_merge_strings: Capacity exceeded.");
+			va_end(arg);
 			return NULL;
 		}
 		size+=len;
@@ -361,6 +374,7 @@ char * _synctex_merge_strings(const char * first,...) {
 						_synctex_error("!  _synctex_merge_strings: Copy problem");
 						free(result);
 						result = NULL;
+						va_end(arg);
 						return NULL;
 					}
 					dest += size;
@@ -378,7 +392,7 @@ char * _synctex_merge_strings(const char * first,...) {
 
 /*  The purpose of _synctex_get_name is to find the name of the synctex file.
  *  There is a list of possible filenames from which we return the most recent one and try to remove all the others.
- *  With two runs of pdftex or xetex we are sure the the synctex file is really the most appropriate.
+ *  With two runs of pdftex or xetex we are sure the synctex file is really the most appropriate.
  */
 int _synctex_get_name(const char * output, const char * build_directory, char ** synctex_name_ref, synctex_io_mode_t * io_mode_ref)
 {

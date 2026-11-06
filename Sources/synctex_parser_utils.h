@@ -4,7 +4,7 @@
  This file is part of the __SyncTeX__ package.
  
  [//]: # (Latest Revision: Fri Jul 14 16:20:41 UTC 2017)
- [//]: # (Version: 1.19)
+ [//]: # (Version: 1.21)
  
  See `synctex_parser_readme.md` for more details
  
@@ -38,10 +38,15 @@ authorization from the copyright holder.
 
 */
 
+#ifndef SYNCTEX_PARSER_UTILS_H
+#define SYNCTEX_PARSER_UTILS_H
+
 /*  The utilities declared here are subject to conditional implementation.
  *  All the operating system special stuff goes here.
  *  The problem mainly comes from file name management: path separator, encoding...
  */
+
+#include "synctex_version.h"
 
 typedef int synctex_bool_t;
 #	define synctex_YES (0==0)
@@ -79,6 +84,12 @@ extern "C" {
 #		define SYNCTEX_ARE_PATH_CHARACTERS_EQUAL(left,right) (left != right)
 #	else
 #		define SYNCTEX_ARE_PATH_CHARACTERS_EQUAL(left,right) (toupper(left) != toupper(right))
+#	endif
+
+#	if defined(_MSC_VER)
+#		define SYNCTEX_ATTRIBUTE_FORMAT_PRINTF(STRING_INDEX, FIRST_TO_CHECK) ATTRIBUTE_FORMAT_PRINTF(STRING_INDEX, FIRST_TO_CHECK)
+#	else
+#		define SYNCTEX_ATTRIBUTE_FORMAT_PRINTF(STRING_INDEX, FIRST_TO_CHECK) __attribute__((__format__ (__printf__, (STRING_INDEX), (FIRST_TO_CHECK))))
 #	endif
     
 /*  This custom malloc functions initializes to 0 the newly allocated memory.
@@ -155,3 +166,4 @@ synctex_bool_t synctex_ignore_leading_dot_slash_in_path(const char ** name);
 #endif
 
 #endif
+#endif /* SYNCTEX_PARSER_UTILS_H */
