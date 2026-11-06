@@ -122,10 +122,10 @@
 	IBOutlet NSButton *_showSpaceCharacterButton; // added by Terada
 	IBOutlet NSButton *_showNewLineCharacterButton; // added by Terada
 	IBOutlet NSButton *_showFullwidthSpaceCharacterButton; // added by Terada
-	IBOutlet NSMatrix *_TabCharacterKindMatrix; // added by Terada
-	IBOutlet NSMatrix *_SpaceCharacterKindMatrix; // added by Terada
-	IBOutlet NSMatrix *_NewLineCharacterKindMatrix; // added by Terada
-	IBOutlet NSMatrix *_FullwidthSpaceCharacterKindMatrix; // added by Terada
+	IBOutlet NSPopUpButton *_TabCharacterKindPopup; // added by Terada
+	IBOutlet NSPopUpButton *_SpaceCharacterKindPopup; // added by Terada
+	IBOutlet NSPopUpButton *_NewLineCharacterKindPopup; // added by Terada
+	IBOutlet NSPopUpButton *_FullwidthSpaceCharacterKindPopup; // added by Terada
 	IBOutlet NSButton *_alwaysHighlightButton; // added by Terada
 	IBOutlet NSButton *_highlightContentButton; // added by Terada
 	IBOutlet NSButton *_showIndicatorForMoveButton; // added by Terada
