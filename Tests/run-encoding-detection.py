@@ -9,7 +9,7 @@ also choose that very encoding. The user's languages are set for the test proces
 (-AppleLanguages), so no preferences are written. --mutation=NAME removes one rule to show
 that the checks fail. The rules for runs of accented letters, mixed scripts in a word,
 Serbian in Latin letters, the first candidate without a guess and Windows encodings for C1
-characters are checked on real documents instead; the files used are listed in the audit notes.
+characters are checked by hand on real documents instead.
 A declaration to inputenc decides between one-byte encodings that read a file alike, unless
 its reading is clearly worse."""
 from pathlib import Path
