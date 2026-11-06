@@ -67,7 +67,8 @@ int main(int argc, char **argv) { @autoreleasepool {
     // Characters split between pieces of output.
     check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\xE3\x81") encoding:utf8] == 2, @"UTF-8: two bytes of a three-byte character are kept");
     check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:aiuUTF8 encoding:utf8] == 0, @"UTF-8: complete output keeps nothing");
-    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\x82") encoding:sjis] == 1, @"Shift JIS: a lead byte is kept");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\x82") encoding:sjis] == 3, @"Shift JIS: an unfinished line with bytes beyond ASCII is kept whole");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("x\x82\x60\nab") encoding:sjis] == 0, @"Shift JIS: an unfinished line of ASCII is not kept");
     check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("a\xFF\xFE b") encoding:utf8] == 0, @"broken bytes inside the output are not kept");
     // Output split at every byte reads back whole when carried as TeXShop does.
     NSData *whole = [@"\u65e5\u672c\u8a9e: \u5b8c\u74a7\u306a\u725b\u4e3c\n" dataUsingEncoding:utf8];

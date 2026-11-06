@@ -7538,38 +7538,10 @@ if (! useFullSplitWindow) {
     
  
 
-- (void) writeTexOutput: (NSNotification *)aNotification
+// Show a piece of TeX output in the console and look in it for errors.
+- (void)showConsoleOutputData: (NSData *)myData
 {
-    NSString        *detexString, *texloganalyserString;
-    NSData        *detexData, *texloganalyserData;
-    NSInteger  charCount;
-    NSInteger                 lineCount, wordCount;
-    BOOL                result;
-
-    NSFileHandle *myFileHandle = [aNotification object];
-    if (myFileHandle == self.readHandle) {
-        // NSData* myData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
-        NSData* myData = [self availableDataOrError: myFileHandle];
-//        myData = [myFileHandle availableData];
-        // A character can be split between two pieces of output; keep its start for the next one.
-        if (_consoleCarryHandle != myFileHandle)
-            _consoleCarry = nil;
-        _consoleCarryHandle = myFileHandle;
-        BOOL atEnd = (myData.length == 0);
-        if (_consoleCarry.length) {
-            NSMutableData *joined = [_consoleCarry mutableCopy];
-            if (myData)
-                [joined appendData: myData];
-            myData = joined;
-        }
-        _consoleCarry = nil;
-        NSUInteger incomplete = atEnd ? 0 : [TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData: myData encoding: _encoding];
-        if (incomplete) {
-            _consoleCarry = [myData subdataWithRange: NSMakeRange(myData.length - incomplete, incomplete)];
-            myData = [myData subdataWithRange: NSMakeRange(0, myData.length - incomplete)];
-        }
-        if ([myData length]) {
-            dispatch_async(process_queue, ^{
+    dispatch_async(process_queue, ^{
                 NSString        *newOutput, *numberOutput, *searchString, *tempString, *loopString;
                 NSRange        myRange, lineRange, searchRange, testRange, errorRange, pathRange, searchDotsRange, mainRange;
                 NSInteger      error, mainOffset;
@@ -7692,10 +7664,53 @@ if (! useFullSplitWindow) {
                 });
     //        [newOutput release];
             });
-            // [self.readHandle readInBackgroundAndNotify];
-            if (! atEnd)
-                [self.readHandle waitForDataInBackgroundAndNotify];
-            }
+}
+
+- (void) writeTexOutput: (NSNotification *)aNotification
+{
+    NSString        *detexString, *texloganalyserString;
+    NSData        *detexData, *texloganalyserData;
+    NSInteger  charCount;
+    NSInteger                 lineCount, wordCount;
+    BOOL                result;
+
+    NSFileHandle *myFileHandle = [aNotification object];
+    if (myFileHandle == self.readHandle) {
+        // NSData* myData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
+        NSData* myData = [self availableDataOrError: myFileHandle];
+//        myData = [myFileHandle availableData];
+        // A character can be split between two pieces of output; keep its start for the next one.
+        if (_consoleCarryHandle != myFileHandle)
+            _consoleCarry = nil;
+        _consoleCarryHandle = myFileHandle;
+        BOOL atEnd = (myData.length == 0);
+        if (_consoleCarry.length) {
+            NSMutableData *joined = [_consoleCarry mutableCopy];
+            if (myData)
+                [joined appendData: myData];
+            myData = joined;
+        }
+        _consoleCarry = nil;
+        NSUInteger generation = ++_consoleCarryGeneration;
+        NSUInteger incomplete = atEnd ? 0 : [TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData: myData encoding: _encoding];
+        if (incomplete) {
+            _consoleCarry = [myData subdataWithRange: NSMakeRange(myData.length - incomplete, incomplete)];
+            myData = [myData subdataWithRange: NSMakeRange(0, myData.length - incomplete)];
+            // Show what is kept if nothing more comes soon, as when TeX waits for input.
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (generation == self->_consoleCarryGeneration && self->_consoleCarryHandle == myFileHandle
+                    && self.readHandle == myFileHandle && self->_consoleCarry.length) {
+                    NSData *kept = self->_consoleCarry;
+                    self->_consoleCarry = nil;
+                    [self showConsoleOutputData: kept];
+                }
+            });
+        }
+        if ([myData length])
+            [self showConsoleOutputData: myData];
+        // Wait for more output even when all of this piece was kept for the next one.
+        if (! atEnd)
+            [self.readHandle waitForDataInBackgroundAndNotify];
     }
     else if (myFileHandle == self.texloganalyserHandle) {
         texloganalyserData = [self availableDataOrError: myFileHandle];
