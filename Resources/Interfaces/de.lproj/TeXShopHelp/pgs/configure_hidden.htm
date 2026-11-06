@@ -15,54 +15,8 @@
 		<dl>
 			<dd>defaults write TeXShop TagSections NO
 		</dl>
-		<p>Wenn die Syntaxf&auml;rbung eingeschaltet ist, werden Kommentare rot , Befehle blau und die Symbole &bdquo;$&ldquo;, &bdquo;{&ldquo; und &bdquo;}&ldquo; dunkelgr&uuml;n eingef&auml;rbt. Diese Farben k&ouml;nnen ge&auml;ndert werden. Eine Farbe wird durch ihre Rot-, Gr&uuml;n- und Blauanteile festgelegt. Jeder dieser Anteile wird durch eine Zahl zwischen 0.00 und 1.00 dargestellt. Um die Farbe f&uuml;r &bdquo;$&ldquo;, &bdquo;{&ldquo; und &bdquo;}&ldquo; auf hellgr&uuml;n zu &auml;ndern, geben Sie folgende Befehle im Terminal ein:</p>
-		<dl>
-			<dd>defaults write TeXShop markerred 0.0
-			<dd>defaults write TeXShop markergreen 1.0
-			<dd>defaults write TeXShop markerblue 0.0
-		</dl>
-		<p>Um die Kommentarfarbe zu &auml;ndern ersetzen Sie &bdquo;marker&ldquo; durch &bdquo;comment&ldquo; und um die Befehlsfarbe zu &auml;ndern ersetzen Sie &bdquo;marker&ldquo; durch &bdquo;command&ldquo;. </p>
-		<p>Die Hintergrundfarbe des Quelltext-Fensters kann ge&auml;ndert werden. Zum Beispiel m&uuml;ssen, um den Hintergrund auf die Farbwerte (r, g, b) = (.42, .39, .77) zu setzen, folgende Befehle im Terminal eingegeben werden:</p>
-			<dl>
-			<dd>defaults write TeXShop background_R 0.42
-			<dd>defaults write TeXShop background_G 0.39
-			
-				<dd>defaults write TeXShop background_B 0.77
-		
-			</dl>
-			<p>Auch die Texfarbe des Quelltext-Fensters kann ge&auml;ndert werden. Hierf&uuml;r muss allerdings die Syntx-F&auml;rbung eingschaltet sein. Zum Beispiel m&uuml;ssen, um die Vordergrund-/Textfarbe  auf die Farbwerte (r, g, b) = (.42, .39, .77) zu setzen, folgende Befehle im Terminal eingegeben werden:</p>
-			<dl>
-				<dd>defaults write TeXShop foreground_R 0.42
-				<dd>defaults write TeXShop foreground_G 0.39
-				<dd>defaults write TeXShop foreground_B 0.77
-			</dl>
-			<p>Sie k&ouml;nnen auch die Farbe des Einf&uuml;gepunktes &auml;ndern. Um diesen Einf&uuml;gepunkt zum Beispiel auf (r, g, b) = (.42, .39, .77), zu setzen, m&uuml;ssen Sie folgendes im Terminal eingeben:</p>
-		<dl>
-			<dd>defaults write TeXShop insertionpoint_R 0.42
-			<dd>defaults write TeXShop insertionpoint_G 0.39
-			<dd>defaults write TeXShop insertionpoint_B 0.77
-		</dl>
-			<p>Indem man die Einstellungen f&uuml;r Vorder- und Hintergrund kombiniert, kann man sich zum Beispiel wei&szlig;en Text auf schwarzem Hintergrund oder andere Farbschemata anzeigen lassen.</p>
-			<p>Auch der Hintergrund des Vorschau-Fensters kann ge&auml;ndert werden. Um diesen Hintergrund auf die Werte (r, g, b) = (.42, .39, .77) zu setzen, m&uuml;ssen Sie die folgenden Befehle im Terminal eingeben. Wenn Sie die Werte wieder auf &bdquo;1&ldquo; setzen, erhalten Sie wieder einen wei&szlig;en Hintergrund. Manchmal kann man farbige TeX-Dokumente auf grauem Hintergrund besser erkennen. Die Hintergrundfarbe hat keinen Einfluss auf den sp&auml;teren Ausdruck.</p>
-			<dl>
-			<dd>defaults write TeXShop Pdfbackground_R 0.42
-			<dd>defaults write TeXShop Pdfbackground_G 0.39
-			
-				<dd>defaults write TeXShop Pdfbackground_B 0.77
-		
-			</dl>
-			<p>Die Transparenz des Vorschau-, Quelltext- und Konsolenfensters k&ouml;nnen ge&auml;ndert werden. Zum Beispiel:</p>
-			<dl>
-				<dd>defaults write TeXShop ConsoleWindowAlpha 0.75
-				<dd>defaults write TeXShop SourceWindowAlpha 0.75
-				<dd>defaults write TeXShop PreviewWindowAlpha 0.75
-			</dl>
-			<p>Hierbei bedeutet ein Alphawert von 0.00 vollst&auml;ndige Transparenz und 1.00 vollst&auml;ndig deckend. Sie sollten diese Einstellungen nur mit Vorsicht ver&auml;ndern.</p>
-			<p>Man kann TeXShop so konfigurieren, dass es eine Sicherungskopie bei jedem Satzvorgang anlegt. Um diese Funktion einzuschalten, geben Sie folgende Befehle im Terminal-Fenster ein (ersetzen Sie &bdquo;YES&ldquo; durch &bdquo;NO&ldquo; um die Funktion auszuschalten):</p>
-			<dl>
-			<dd>defaults write TeXShop KeepBackup YES
-		</dl>
-			<p>Es kann vorkommen, dass w&auml;hrend des Setzens &bdquo;.aux&ldquo;, &bdquo;.log&ldquo; und andere Dateien die automaitsch von TeX erstellt werden, besch&auml;digt werden und entfernt werden m&uuml;ssen.  TeXShop bietet diese M&ouml;glichkeit mit dem Men&uuml;pukt &bdquo;AUX-Dateien l&ouml;schen&ldquo; und dem Knopf im Konsolenfenster. W&auml;hlt man diese Funktion aus, werden alle Dateien, die in ihrem Namen den selben Namen wie die Quelldatei und eine der folgenden Dateiendungen haben, in den Papierkorb verschoben: .aux, .bbl, .blg, .brf, .glo, .idx, .ilg, .ind, .ioa, .log, .log, .lot, .mtc, .mlf, .out, .pdfsync und .toc. Andere Dateiendungen k&ouml;nnen zus&auml;tzlich gel&ouml;scht werden. Um z.B. &bdquo;.dvi&ldquo;-Dateien mit aufzunehmen m&uuml;ssen Sie folgendes Kommando ausf&uuml;hren:</p>
+		<p>Die Farben des Quelltext-, Vorschau- und Konsolenfensters (etwa die Farben der Syntaxf&auml;rbung, die Hintergrund- und Textfarbe, die Farbe des Einf&uuml;gepunktes und der Hintergrund des Vorschau-Fensters) sowie die Transparenz dieser Fenster werden jetzt unter der Registerkarte &bdquo;Themes&ldquo; der Einstellungen festgelegt.</p>
+			<p>Es kann vorkommen, dass w&auml;hrend des Setzens &bdquo;.aux&ldquo;, &bdquo;.log&ldquo; und andere Dateien die automaitsch von TeX erstellt werden, besch&auml;digt werden und entfernt werden m&uuml;ssen.  TeXShop bietet diese M&ouml;glichkeit mit dem Men&uuml;pukt &bdquo;AUX-Dateien l&ouml;schen&ldquo; und dem Knopf im Konsolenfenster. W&auml;hlt man diese Funktion aus, werden alle Dateien, die in ihrem Namen den selben Namen wie die Quelldatei und eine der folgenden Dateiendungen haben, in den Papierkorb verschoben: .aux, .bcf, .blg, .brf, .css, .ent, .fdb_latexmk, .fff, .fls, .gaux, .glo, .glog, .gtex, .idv, .idx, .ilg, .ind, .lg, .loa, .lof, .log, .lot, .mlf, .mtc, .out, .pdfsync, .run.xml, .synctex, .synctex.gz, .synctex(busy), .toc, .ttt, .wrm, .xref, .4ct und .4tc. Andere Dateiendungen k&ouml;nnen zus&auml;tzlich gel&ouml;scht werden. Um z.B. &bdquo;.dvi&ldquo;-Dateien mit aufzunehmen m&uuml;ssen Sie folgendes Kommando ausf&uuml;hren:</p>
 			<dl>
 				<dd>defaults write TeXShop OtherTrashExtensions -array-add &quot;dvi&quot;
 			</dl>
@@ -70,7 +24,7 @@
 			<dl>
 				<dd>defaults write TeXShop OtherTrashExtensions -array
 			</dl>
-			<p>Manchmal soll etwas gr&uuml;ndlicher aufger&auml;umt werden. Wird die Wahltaste gedr&uuml;ckt, w&auml;hrend man den Befehl &bdquo;AUX-Dateien l&ouml;schen&ldquo; ausf&uuml;hrt. TeXShop benutzt dann %&amp;SourceDoc und den &bdquo;Hauptdatei-Mechanisms&ldquo; um die Hauptdatei zu finden. Daraufhin werden alle Dateien mit den entsprechenden Endungen, unabh&auml;ngig von deren Namen, rekursiv in allen Unterverzeichnissen in den Papierkorb geschoben. Dies kann auch als Standardfunktion festgelegt werden. F&uuml;hren Sie hierzu folgendes Kommando aus:</p>
+			<p>Manchmal soll etwas gr&uuml;ndlicher aufger&auml;umt werden. Wird die Wahltaste gedr&uuml;ckt, w&auml;hrend man den Befehl &bdquo;AUX-Dateien l&ouml;schen&ldquo; ausf&uuml;hrt. TeXShop benutzt dann &bdquo;% !TEX root = ...&ldquo; und den &bdquo;Hauptdatei-Mechanismus&ldquo;, um die Hauptdatei zu finden. Daraufhin werden alle Dateien mit den entsprechenden Endungen, unabh&auml;ngig von deren Namen, rekursiv in allen Unterverzeichnissen in den Papierkorb geschoben. Dies kann auch als Standardfunktion festgelegt werden. F&uuml;hren Sie hierzu folgendes Kommando aus:</p>
 			<dl>
 				<dd>defaults write TeXShop AggressiveTrashAUX YES
 			</dl>
@@ -87,7 +41,7 @@
 			<dd>defaults write TeXShop ExternalEditorTypesetAtStart NO
 		</dl>
 				<dd>
-				<p>Die Standardgr&ouml;&szlig;e von Matizen der Matrix-Palette kann folgenderma&szlig;en ge&auml;ndert werden:</p>
+				<p>Die maximale Gr&ouml;&szlig;e (Zeilen- und Spaltenzahl) von Matrizen der Matrix-Palette kann folgenderma&szlig;en ge&auml;ndert werden:</p>
 				<dl>
 					<dd>defaults write TeXShop matrixsize 12
 				</dl>
