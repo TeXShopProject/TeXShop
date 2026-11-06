@@ -58,6 +58,7 @@ static int refreshes;
 @end
 @implementation PreferenceProbe
 - (void)cancelForColor {}
+- (void)cancelEnginePathDiscovery {}
 - (void)updateControlsFromUserDefaults:(NSUserDefaults *)defaults { [self updateSpellingControlsFromDefaults:defaults]; }
 METHODS
 @end
