@@ -79,7 +79,7 @@
             
 \usepackage[all]{hypcap}  % For well-positioned anchors for floats
 
-\title{TeXShop Manual \\ Version 1.4.7}
+\title{TeXShop Manual \\ Version 1.4.8}
 \author{Richard Koch}
 %\date{}							% Activate to display a given date or no date
 
@@ -95,6 +95,8 @@ In  August, 2023, Uwe Schmock added reference numbers to illustrations, reworded
 In January 2024 he contributed \cref{PresentingWithTeXShopChapter} to this manual. Thanks! I asked for permission to include his email address; it is \href{mailto:schmock@fam.tuwien.ac.at}{schmock@fam.tuwien.ac.at}.
 
 The version number of the manual  increases when changes are made. Small changes are made with most new TeXShop releases, including additional chapters from time to time.
+
+Version 1.4.8 updates the manual for TeXShop 5.60. Starting with TeXShop 5.59, TeXShop is maintained by Yusuke Terada; the passages written in the first person are by Richard Koch.
 
  \newpage
 \pdfbookmark{Table of Contents}{ContentsLabel}
@@ -577,7 +579,7 @@ syntax colored, but a menu item can toggle this behavior for the active window. 
 {\bf Check Spelling} When selected, misspelled words are underlined in light red.
 
 {\bf Show Invisible Characters} When selected, invisible characters like spaces, newlines, and tabs are shown.
-The preference allows users to pick which characters are shown and by what symbol. The final  {\bf On by default} item is usually left unchecked, so these characters are not shown when a window is first opened. If puzzling behavior later develops, it can be turned on using a menu item.
+The preference allows users to pick which characters are shown and by what symbol. Starting with TeXShop 5.60, the symbol for spaces, Japanese spaces, newlines, and tabs is chosen from a pop-up menu next to each item. The final  {\bf On by default} item is usually left unchecked, so these characters are not shown when a window is first opened. If puzzling behavior later develops, it can be turned on using a menu item.
 
 
 
@@ -606,6 +608,10 @@ in which the hero loses a programming girlfriend because she uses spaces rather 
 {\bf Select on Activate} When checked, a click in the Source Window both selects the window and moves the cursor to that spot in the source. When unchecked, a click selects the window, but does not move the cursor.
 
 {\bf Correct Spelling} When selected, the Macintosh will not just underline misspelled words. It will also correct the spelling, and sometimes even change the wording. This item is present so the user can turn it off! We explain. A global preference turns correct spelling on or off for all applications. If this global preference turns it on, the {\bf Correct Spelling} item can turn it back off in TeXShop while leaving it on in other applications. 
+
+{\bf @ as Part of Command Names} When selected, syntax coloring treats the character @ as part of command names, as \LaTeX\ macro authors do. It is on by default. Before TeXShop 5.60, this was the hidden preference MakeatletterEnabled.
+
+{\bf Color expl3 Code by Default} When selected, expl3 syntax coloring is on when a document is first opened. See \cref{expl3Chapter}. Before TeXShop 5.60, this was the hidden preference expl3SyntaxColoring.
 
 The remaining items in the first column and the first block of items in the second column will be explained later in the manual.
 
@@ -722,7 +728,7 @@ Unicode does not define a  standard method to read and write Unicode to a file. 
 Because there is no standard way to write Unicode to disk, every routine in macOS to read or write text requires an {\em encoding parameter}, which describes the type of encoding to be used by the operation. 
 If this parameter is UTF-8, then the contents of the editor will be completely preserved. If the parameter is IsoLatin9, then ASCII and Western European characters will be preserved, but Chinese, Arabic, Cyrillic, etc. characters will be lost.
 
-There is one crucial difference between most of the encodings and UTF-8. Since most encodings just define characters for the bytes between 128 and 255, any random stream of bytes is an acceptable file. But  UTF-8 files use coded input, so  random streams  will contain illegal bytes and a computer asked to read such a stream will reject the entire file. If that happens, TeXShop will put up an error dialog, and then open the file in IsoLatin9.
+There is one crucial difference between most of the encodings and UTF-8. Since most encodings just define characters for the bytes between 128 and 255, any random stream of bytes is an acceptable file. But  UTF-8 files use coded input, so  random streams  will contain illegal bytes and a computer asked to read such a stream will reject the entire file. If TeXShop is told to read such a file as UTF-8, for instance by a magic comment line, it will put up an error dialog, and then open the file in IsoLatin9. If you save the file without changing its encoding magic comment line, TeXShop writes it back in IsoLatin9, so the bytes of the original file are kept.
 
 Until recently, IsoLatin9 was the default encoding assumed by \LaTeX. It could accept files encoded in other ways, but then a command in the source had to state the encoding. Two years ago, \LaTeX\ switched to using UTF-8 as the standard encoding. 
 
@@ -733,22 +739,33 @@ But people who have been using \TeX\ for a number of years are going to have fil
 
 TeXShop has several features to help  users deal with encoding issues. 
 
-{\bf Open Dialog} If the {\em Open...} item is used to open a file, a dialog appears allowing users to navigate to the file. At the bottom of this dialog, a pull-down menu can select the encoding used to read the file. By default, this will be the encoding selected in TeXShop Preferences, but it can be changed. In Ventura, a button named {\em Options}  must be pushed to display the pull-down menu.
+{\bf Automatic Detection} Starting with TeXShop 5.60, when a file without an encoding magic comment line is opened, TeXShop checks which encoding the file uses. A byte order mark identifies UTF-8 and UTF-16 files. A file containing only ASCII characters is read in the encoding selected in TeXShop Settings. Otherwise TeXShop tries UTF-8, and then the encodings used for your languages and for the default encoding, such as the Japanese, Chinese, Korean, Cyrillic, and Western European encodings. An encoding declared in the source with a line like
+\begin{verbatim}
+     \usepackage[latin1]{inputenc}
+\end{verbatim}
+is also used as a hint. Detection is a guess, and works best for files containing a reasonable amount of text. If it chooses the wrong encoding for a file, select the correct encoding in the Open dialog, and then add an encoding magic comment line to the file as explained below. Detection can be turned off with a hidden setting:
+\begin{verbatim}
+     defaults write TeXShop EncodingAutoDetection NO
+\end{verbatim}
+Then files without a magic comment line are read in the encoding selected in TeXShop Settings, as in earlier versions.
+
+{\bf Open Dialog} If the {\em Open...} item is used to open a file, a dialog appears allowing users to navigate to the file. At the bottom of this dialog, a pull-down menu can select the encoding used to read the file. By default, this will be the encoding selected in TeXShop Settings, and then the encoding of each file is detected as explained above. If a different encoding is selected, it is used for the files opened by this dialog, but only for this opening; it is not used later, for instance when a file is reloaded after an external change. An encoding magic comment line in the file still takes precedence. In Ventura, a button named {\em Options}  must be pushed to display the pull-down menu.
 
 {\bf Magic Comment Line} A comment line can be added to top of a source file listing the encoding that should be used to read and write that file. This line has the following form
 \begin{verbatim}
 % !TEX encoding = UTF-8 Unicode
 \end{verbatim}
 The line overrides all other methods used to determine the encoding. If you have a source written in an unusual encoding, you can insure that TeXShop always uses the correct encoding for that particular file. The magic line must be in one of the first 20 lines in the source file, must start at the left margin, and  have exactly the form shown above. For instance, there must be exactly one space on both sides of the equal sign, and the name of the encoding must be exactly that used by TeXShop, including capitalization. Luckily, there is an easy way to achieve all of these conditions. In the TeXShop {\em Macro} menu, there is an item named {\bf Encoding}.
-Select it and a list of known encodings will appear. Select the one you want, and the magic line will be added to the top of the source file.
+Select it and a list of known encodings will appear. Select the one you want, and the magic line will be added to the top of the source file. If the magic line names an encoding that TeXShop does not know, TeXShop reads the file as UTF-8 and says so.
 
 {\bf Save Dialog} Versions of TeXShop before 5.04 had an encoding menu in the Save Dialog, allowing users to select the encoding used to write the file. By default, this was the encoding used when the file was opened, so the menu was not needed in most cases. To avoid misuse, the menu was removed in TeXShop 5.04.
-If you updated from an earlier version of TeXShop and routinely used the menu, you can restore it using a hidden preference item. Open Terminal in /Applications/Utilities and type the following line:
-\begin{verbatim}
-     defaults write TeXShop EncodingMenuInSaveDialog YES
-\end{verbatim}
+If you updated from an earlier version of TeXShop and routinely used the menu, you can restore it. Starting with TeXShop 5.60, this is done with the item {\bf Show Encoding in Save Dialog} under the Misc1 tab of TeXShop Settings; earlier versions used the hidden preference EncodingMenuInSaveDialog. The encoding selected in the menu is used to save the file. If the source contains an encoding magic comment line, the menu shows that encoding and cannot be changed; edit the magic comment line instead.
 
-I do not recommend this. See the following section for details.
+I do not recommend using the menu to change encodings. See the following sections for details.
+
+{\bf Byte Order Marks} Some programs begin UTF-8 files with a byte order mark, and UTF-16 files always begin with one. Starting with TeXShop 5.60, TeXShop keeps the byte order mark of a UTF-8 file and the byte order of a UTF-16 file when it saves the file. Encoding magic comment lines are also recognized in UTF-16 files.
+
+{\bf Line Endings} Files written on Windows end lines with a carriage return and a line feed, and files written on very old Macintosh systems end lines with a carriage return. TeXShop converts these line endings to the line feeds used by macOS when a file is opened. Starting with TeXShop 5.60, a notice tells you when this happens, since the file will be saved with the new line endings. The notice has a check box to stop showing it for that file.
 
 
 
@@ -757,11 +774,11 @@ I do not recommend this. See the following section for details.
 Recall that I live in the US, where ASCII is often sufficient. Rather than using this manual, it is best to ask \TeX\ experts in your area about encoding matters.
 
 
-But I can give a minor piece of advice. Many people in the U.S. and Western Europe have used either UTF-8 or IsoLatin9. If you have a mixture of such files, one way to proceed is to switch the default encoding to UTF-8. If TeXShop opens an old document without complaint, then either it is UTF-8 or it is standard ASCII, and at any rate the encoding is correct. Otherwise TeXShop will complain and open the document in IsoLatin9. But then you know for sure that it is encoded in IsoLatin9. So use the TeXShop Macro menu's ``Encoding''  item to insert the magic line
+But I can give a minor piece of advice. Many people in the U.S. and Western Europe have used either UTF-8 or IsoLatin9. If you have a mixture of such files, one way to proceed is to switch the default encoding to UTF-8. Starting with TeXShop 5.60, an old document without a magic comment line is then opened in the encoding TeXShop detects, which is usually correct. (With automatic detection turned off, TeXShop instead complains about a document that is not UTF-8 and opens it in IsoLatin9.) Once you know for sure that a document is encoded in IsoLatin9, use the TeXShop Macro menu's ``Encoding''  item to insert the magic line
 \begin{verbatim}
      % !TEX encoding = IsoLatin9
 \end{verbatim}
-at the top of the file. From then on, the file will open without complaints, and you will know for sure what encoding was used.
+at the top of the file. From then on, the file will open in the correct encoding without guessing, and you will know for sure what encoding was used.
 Since LaTeX nowadays uses UTF-8 by default, the following lines should be added to the header of such IsoLatin9 documents:
 \begin{verbatim}
      \usepackage[T1]{fontenc}   
@@ -2379,11 +2396,10 @@ What happens if you decide to experiment, get confused, end up with a source doc
 When I give talks about TeXShop at TeX User Group Conferences, users of Linux and Windows like to make fun of features of the Macintosh. So when I talked about Automatic Saving, I was sure the Linux users would warn about the danger of losing data. To my surprise, their actual comment was ``we've had that for years!''
 A user has never complained to me about losing data due to automatic saving and  I cannot imagine living without it.
 
-Just in case, TeXShop has a hidden feature to turn AutoSave off. The hidden preference is
-\begin{verbatim}
-   defaults write TeXShop AutoSaveEnabled NO
-\end{verbatim}
-Using this preference is strongly discouraged. I never test TeXShop with AutoSave disabled.
+Just in case, TeXShop has a way to turn AutoSave off. Starting with TeXShop 5.60, this is the item {\bf Enable Autosave and Versions} under the Misc1 tab of TeXShop Settings; it takes effect after TeXShop restarts. In earlier versions it was the hidden preference AutoSaveEnabled.
+Turning AutoSave off is strongly discouraged. I never test TeXShop with AutoSave disabled.
+
+When AutoSave is off, the item {\bf Keep the previous file as ``name\textasciitilde'' when saving}, just below it, makes TeXShop keep the previous version of a file as a backup each time the file is saved. The backup has the name of the file followed by a tilde. This item replaces the hidden preference KeepBackup.
 
 \section{Lock}
 
@@ -2464,11 +2480,8 @@ As usual, items in TeXShop Preferences under the Preview tab select the behavior
 The  modes showing two pages side by side are controlled by a TeXShop Preference item under the Preview tab, which allows users to select ``Pages Flow from Left to Right'' or
 ``Pages Flow from Right to Left''. Select the first item for languages written from left to right and the second one for languages written from right to left, that is,  Arabic, Hebrew, and Persian. By default, the first page is shown by itself, followed by pairs of double pages. This is called {\em Book Mode} by Apple because most books start with an odd number of preliminary pages, followed by the regularly numbered pages. Therefore the pairs of numbered pages correspond to the pairs of visible pages when a book is opened at random.
 
-There is a hidden preference item for those very rare users who do not want that isolated starting page. To activate it, open Terminal and type
-\begin{verbatim}
-     defaults write TeXShop DisplayAsBook NO
-\end{verbatim}
-In addition, two new special comment lines are provided so the property can be set on a document by document basis. These overrule the defaults and turn book display mode on or off for that document:
+Starting with TeXShop 5.60, the item {\bf Show first page alone as cover} under the Preview tab of TeXShop Settings selects whether the first page is shown by itself. Earlier versions used the hidden preference DisplayAsBook for those very rare users who do not want that isolated starting page. The Settings items apply to documents opened later.
+In addition, two special comment lines are provided so the property can be set on a document by document basis. These overrule the Settings and turn book display mode on or off for that document:
 \begin{verbatim}
      % !TEX bookDisplay
      % !TEX standardDisplay
@@ -2478,6 +2491,9 @@ In Japan, text can be written horizontally or vertically. When it is written ver
      % !TEX PageDirectionL2R
      % !TEX PageDirectionR2L
 \end{verbatim}
+If a document has no such comment line, TeXShop 5.60 and later follow the reading direction recorded in the pdf file, when the file records one.
+
+TeXShop 5.60 also adds two menus that can be placed in the Preview window's toolbar. {\bf Page Layout} selects the display mode of the current document, like the corresponding items in the Preview menu. {\bf Two-Page Arrangement} selects, for the current document only, the direction in which pages flow and whether the first page is shown alone. When these are changed, the page being viewed and the magnification are kept. The arrangement lasts until the document is closed, or until {\bf Restore Document Settings} is chosen in the Two-Page Arrangement menu, which returns to the Settings and the magic comment lines of the document. If the menus are not in the toolbar, use ``Customize Toolbar...'' to add them.
 
 \section{Magnification}
 
@@ -2661,6 +2677,10 @@ A final setting controls the placement of the console. One possibility is for it
 When console output temporarily stops, as it does when the console reports an error, it is not possible to
 copy console text. But after typesetting ends, it is possible to copy sections of console text and paste it elsewhere, like an email document asking for help. It is not possible, of course,
 to edit text in the console. 
+
+Starting with TeXShop 5.60, the menu item {\bf Show Console} has the keyboard shortcut \cmdkey-0. It brings forward the console of the active document. Pressing \cmdkey-0 again in the console returns to the source or preview window from which the console was called, or to the source window if there is no such window. This is similar to \cmdkey-1, which switches between the source and preview windows.
+
+Console output and log files sometimes mix encodings, for instance when a document in a Japanese encoding uses packages written in UTF-8, or contain broken characters. TeXShop 5.60 reads such output line by line, trying UTF-8 first and then the encoding of the document, with IsoLatin9 as a last resort, so that unreadable data in one line does not spoil the other lines. When \TeX\ breaks a long line in the middle of a UTF-8 character, TeXShop joins the pieces again.
 
 
 \chapter{HTML, Interactive TeX4ht, PreTeXt}
@@ -3194,6 +3214,10 @@ For users who prefer external editors most of the time, there is a preference it
 
 Some editors are able to call Unix typesetting commands directly. A new preference item, ``Automatic Preview Update'', has been added to improve your experience with these editors. When this item is active and a .tex file is opened using ``Open for Preview'', the pdf preview display automatically updates whenever the pdf file is rewritten. Thus you can typeset with an external editor and the preview window will automatically show changes. The preference also applies to .pdf files opened in TeXShop, and if TeXShop is configured to use an external editor, the preference applies to .tex files opened with ``Open''.
 
+Starting with TeXShop 5.60, the ``Automatic Preview Update'' preference also applies to source files opened in TeXShop's own editor: when the pdf file is rewritten by another application, for instance by latexmk running in Terminal, the preview is reloaded, keeping the page being viewed and the magnification. If the preview contains annotations which have not been saved, it is not reloaded, so the annotations are not lost. If the other application is still writing the pdf file, TeXShop waits and tries again.
+
+TeXShop also watches source files open in its editor. When a source file is changed by another editor, TeXShop reloads it, and keeps watching it even when the other editor saves by replacing the file. If the source in TeXShop has unsaved changes, TeXShop does not reload it, so these changes are not lost.
+
 The following AppleScript commands have been added to TeXShop so editors can call TeXShop directly:
 \begin{verbatim}
    typesetinteractive
@@ -3575,7 +3599,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  Before then, round parentheses were not colored, and the pairs \{ \}, [ ], and symbols \& and \$  were all given the same coloring. Starting in September, 2025, only \& and \$ are given the standard ``marker''
  color, and three new colors are provided for the three pairs ( ), \{ \}, and [ ].
  
- \chapter{expl3 Syntax Coloring}
+ \chapter{expl3 Syntax Coloring}\label{expl3Chapter}
  
  \section{Latex3 and expl3}
  
@@ -3590,10 +3614,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  \newpage
  Like most TeXShop menus, ``Syntax Color expl3 Code'' applies to individual document source windows rather than to all windows at once. For a discussion of this philosophy, see \cref{MenuDesign}. Thus expl3 coloring can be active in one source window and inactive in a second source window.
  
- When source windows are first opened, expl3 coloring is off. This design was selected because most \LaTeX\ programmers will use, but not write, \LaTeX\ macros. If you are an exception and want expl3 coloring to be on when documents are first selected, you can set a hidden preference to make this happen. The preference is
- \begin{verbatim}
-     defaults write TeXShop expl3SyntaxColoring YES
- \end{verbatim}
+ When source windows are first opened, expl3 coloring is off. This design was selected because most \LaTeX\ programmers will use, but not write, \LaTeX\ macros. If you are an exception and want expl3 coloring to be on when documents are first opened, select the item {\bf Color expl3 Code by Default} under the Editor tab of TeXShop Settings. In versions before 5.60, this was the hidden preference expl3SyntaxColoring.
  
  \section{expl3 Coloring Rules}
  
@@ -4211,7 +4232,7 @@ The TeXShop Editor is fully Unicode capable, so unusual scripts can be entered a
 
 \section{Show Invisible}
 
-The Source menu has an item labeled ``Show Invisible Characters''. The specific invisible characters shown is determined by a setting in the Editor tab of TeXShop Preferences. \Cref{fig:invisible} shows a short section of source code with this item applied to it.
+The Source menu has an item labeled ``Show Invisible Characters''. The specific invisible characters shown, and the symbols used for them, are determined by settings in the Editor tab of TeXShop Preferences. \Cref{fig:invisible} shows a short section of source code with this item applied to it.
 
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
@@ -4381,6 +4402,33 @@ A second way to spell check is to activate the menu item {\em Correct Spelling A
 
 The final way to spell check is to use the menu item {\em Check Spelling While Typing}.  This item underlines misspelled words as they are typed, and the user can then go back and correct these words. This is how I spell check in TeXShop. 
 
+\section{TeX-aware Spell Checking}
+
+TeXShop 5.60 adds TeX-aware spell checking, based on an implementation proposed by Ralph Martin. It is on by default, and can be turned off with the item {\bf TeX-aware spell checking} under the Source tab of TeXShop Settings. The item does not turn on {\em Check Spelling While Typing}.
+
+TeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
+
+Choose {\em Show Spelling and Grammar} in the Edit menu to open the panel. It goes to the first misspelled word after the cursor. Press {\em Find Next} in the panel, or choose {\em Check Document Now} (\cmdkey-;), to move to the next one. The word is selected and the window scrolls so that its line is in the middle. Hold down the Option key when choosing these items or pressing {\em Find Next} to use the system's own search, which does not skip any markup.
+
+Macros defined in the document with \verb|\newcommand|, \verb|\def|, and similar commands are read, so an argument that a definition only passes on to \verb|\ref|, to mathematics, and the like is skipped too. Text marked as another language with \verb|\foreignlanguage|, \verb|\selectlanguage|, the \verb|otherlanguage| environment, and the like is checked in that language, but is not underlined while typing.
+
+The panel has an additional field, {\em Replacement for Change All}, with a button {\em Change All}. Type a replacement there, or select a suggestion in the panel's list by clicking it or with the arrow keys, which copies the suggestion into the field. The document changes only when {\em Change All} is pressed; then every occurrence of the word in the text being checked is replaced, and the whole change can be undone in one step.
+
+The item {\em Forget Learned Words...} in the Spelling and Grammar submenu of the Edit menu lists the words in the active document which were learned for the current language. Selected words can be removed from the dictionary.
+
+What is skipped is described by rules in the file
+\begin{verbatim}
+     ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt
+\end{verbatim}
+Open it with {\em Edit Spelling Exclusions...} in the Spelling and Grammar submenu, or with the button {\bf Edit TeX exclusion rules...} in TeXShop Settings. The file explains its format at the top, and changes take effect the next time you spell check. For example, the following lines skip the first argument of a command \verb|\mycommand| and the contents of the \verb|proof| environment:
+\begin{verbatim}
+     skip-args  1  mycommand
+     skip-body  proof
+\end{verbatim}
+If the file is deleted, TeXShop creates a fresh copy of the default file the next time it starts.
+
+The following sections describe the methods used before TeXShop 5.60. They still apply when TeX-aware spell checking is turned off, and to files that are not TeX source files.
+
 \section{Dictionaries}
 
 The Macintosh has many dictionaries; special commands choose the active dictionary.
@@ -4416,7 +4464,7 @@ What is the mechanism Sims uses to turn off spell checking? I wish I had thought
 
 %Note that cocoAspell uses more sophisticated methods and operates at the optimal moment when the system is actually checking spelling, rather than at an earlier syntax coloring moment. So if you use cocoAspell, you will want to turn all the "Spell Checking" preferences off.
 
-In TeXShop Preferences under the Source tab, there is a box of selections labeled {\em Spell Checking}. These items are off by default. Leave them off if you use cocoAspell or any spell checking method except ``Check Spelling While Typing.''
+In TeXShop Preferences under the Source tab, there is a box of selections labeled {\em Spell Checking}. These items are off by default. Leave them off if you use cocoAspell or any spell checking method except ``Check Spelling While Typing.'' Starting with TeXShop 5.60, these items are used only when TeX-aware spell checking is turned off.
 
 The first spell checking item turns off spell checking for all TeX command words like: 
 \begin{verbatim}
@@ -4436,8 +4484,8 @@ This internal list, incidentally, is exactly the list marked for special handlin
 
 There is a hidden preference setting to extend the list of specialized TeX commands. The first command below adds one more element to the existing array of user supplied exceptions. The second command erases the array so the user can start over. Note that neither command affects TeXShop's default list of special commands.
 \begin{verbatim}
-defaults write TeXShop UserCommandsWithoutParameterSpellCheck -array-add "\\verbatim"
-defaults write TeXShop UserCommandsWithoutParameterSpellCheck -array
+defaults write TeXShop ExtraCommandsNotToCheckParameters -array-add "\\verbatim"
+defaults write TeXShop ExtraCommandsNotToCheckParameters -array
 \end{verbatim}
 
 There are some minor glitches with Sim's method. When a document is first opened, all TeX commands will be marked as misspelled. But a single click in the edit window will fix this problem. Similarly, while source is being typed, some commands may be marked as misspelled, but the mark will be removed when RETURN is pressed.
@@ -5916,11 +5964,13 @@ Luckily, Donald Knuth had not hardwired the backslash character into TeX, but ha
 Because of the strong input from Japan, TeXShop has a few Preference items which only affect users in Japan. I do not understand these items. For instance, the list of invisible characters which can be shown contains a ``Japanese space''. The Misc2 tab has an item about pTeX (for Japan), and an item labeled ``Automatic UTF-8-Mac to UTF-8 Conversion''. The TeX Live Ghostscript installer also installs a few special files for CJK users.
 Other users can ignore these items.
 
+Starting with TeXShop 5.60, when a file is saved in a Japanese encoding, the backslash and the tilde are always written as the bytes 0x5C and 0x7E which \TeX\ expects. Before, a backslash or tilde typed in a file using the MacJapanese or Shift JIS X0213 encoding could be saved as a full-width character or as the byte 0x80, and a yen sign typed as a backslash in a file using Windows Shift JIS, EUC-JP, or ISO-2022-JP could be saved as a question mark.
+
 
 
 \chapter{Updating TeXShop}
 
-TeXShop can be updated using the Sparkle mechanism described at the end of chapter 20. It can also be updated by going to the TeXShop web site, \url{https://pages.uoregon.edu/koch/texshop/texshop.html}. Finally, the latest version of TeXShop is available on CTAN, \url{https://ctan.org}. On the main page, search for ``texshop'' and go to the ``package texshop''. 
+TeXShop can be updated using the Sparkle mechanism described at the end of chapter 20. It can also be updated by going to the TeXShop web site, \url{https://texshop.app/}. Users of TeXShop 5.58 and earlier, whose updates came from Richard Koch's former web site \url{https://pages.uoregon.edu/koch/texshop/texshop.html}, must install a version from the new web site once by hand; later versions are then updated automatically. CTAN, \url{https://ctan.org}, has the versions of TeXShop released by Richard Koch; on the main page, search for ``texshop'' and go to the ``package texshop''.
 
 After updating, there are occasionally final steps that only a user can do. If an active engine is updated, TeXShop cannot automatically update it because the user may have modified that  engine. If new macros are introduced, TeXShop cannot add it to the Macros list because the user may have edited that list.
 
@@ -5928,7 +5978,10 @@ There is a document at the top of the TeXShop Help menu named {\em About This Re
 
 The second item in the TeXShop Help menu is {\em Changes}, which lists all changes in the new update, and in previous updates. Read the top of this document to learn of new features after updating. This document is also on the TeXShop web site if you'd prefer to read about changes before updating.
 
-Note that the TeXShop web site contains the complete TeXShop source code.
+The complete TeXShop source code is available on GitHub:
+\begin{verbatim}
+     https://github.com/TeXShopProject/TeXShop
+\end{verbatim}
 
 On very rare occasions, users will update and the new version will be unresponsive, or have massive bugs.
 If this happens, it is useful to reboot your machine and then try the update. This often fixes all problems. If not, the problem is almost always caused by a glitch in TeXShop Preferences; this can happen when new items are added to Preferences. (Even then, the vast majority of users have no problems.)
@@ -6327,6 +6380,10 @@ There is a way to discover all TeXShop Preferences and their current values. In 
      defaults read TeXShop
 \end{verbatim}
 
+The document ``Comment Lines and Hidden Settings'' in the TeXShop Help menu lists all hidden settings which work in the current version of TeXShop, with the command to change each one. This chapter describes many of them in more detail, together with their history.
+
+TeXShop 5.60 moved several hidden preferences into TeXShop Settings: AutoSaveEnabled and KeepBackup (Automatic Saving), EncodingMenuInSaveDialog (the encoding menu in the Save dialog), MakeatletterEnabled and expl3SyntaxColoring (syntax coloring), and DisplayAsBook (showing the first page alone). The sections below say where to find them. TeXShop 5.60 also stopped reading a number of hidden preferences which no longer had any effect. These are listed with the obsolete preferences at the end of this chapter.
+
 %The following list of hidden preferences was created by leafing through the old TeXShop Help Panel and the newer Changes document and listing preference settings. Items that can be set in the TeXShop Preferences Panel are not listed.
 
 \newpage
@@ -6409,15 +6466,9 @@ When the Preview window first appears, its drawer is hidden. A hidden preference
 \end{verbatim}
 
 \subsubsection{<Preferences for Automatic Saving>}
-By default, automatic saving is on. I strongly recommend leaving it on, but it can be turned off via
-\begin{verbatim}
-   defaults write TeXShop AutoSaveEnabled NO
-\end{verbatim}
+By default, automatic saving is on. I strongly recommend leaving it on, but it can be turned off. Starting with TeXShop 5.60, use the item {\bf Enable Autosave and Versions} under the Misc1 tab of TeXShop Settings instead of the former hidden preference AutoSaveEnabled.
 
-Before the days of Automatic Saving, TeXShop could be configured to save a backup file whenever it saves or typesets a source file. To turn this on, type the following command. Change YES to NO to turn it off.
-\begin{verbatim}
-   defaults write TeXShop KeepBackup YES
-\end{verbatim}
+Before the days of Automatic Saving, TeXShop could be configured to save a backup file whenever it saves or typesets a source file. Starting with TeXShop 5.60, this is the item {\bf Keep the previous file as ``name\textasciitilde'' when saving} under the Misc1 tab, which replaces the former hidden preference KeepBackup.
 
 
 \subsubsection{<Preferences for the Matrix Panel>}
@@ -6495,14 +6546,8 @@ In recent versions of TeXShop, the syntax coloring code was turning off while th
 \end{verbatim}
 
 
-TeXShop gives a Command color to symbols beginning with a backslash and continuing with 'a' - 'z' or 'A' - 'Z'. These are the typical commands used by Latex authors. Latex Macro authors also use '@' in commands. A special hidden preference setting adds those to characters receiving a Command color:
-\begin{verbatim}
-   defaults write TeXShop MakeatletterEnabled YES
-\end{verbatim}
-Latex3 programmers use '\_', ':' and '@' in their commands. A special hidden preference setting adds all of these to characters receiving a Command Color:
-\begin{verbatim}
-   defaults write TeXShop expl3SyntaxColoring YES
-\end{verbatim}
+TeXShop gives a Command color to symbols beginning with a backslash and continuing with 'a' - 'z' or 'A' - 'Z'. These are the typical commands used by Latex authors. Latex Macro authors also use '@' in commands. The item {\bf @ as Part of Command Names} under the Editor tab of TeXShop Settings adds those to characters receiving a Command color; before TeXShop 5.60, this was the hidden preference MakeatletterEnabled.
+Latex3 programmers use '\_', ':' and '@' in their commands. The item {\bf Color expl3 Code by Default} under the Editor tab turns on expl3 coloring, which adds all of these, when documents are first opened; before TeXShop 5.60, this was the hidden preference expl3SyntaxColoring.
          
          
          
@@ -6510,12 +6555,12 @@ Latex3 programmers use '\_', ':' and '@' in their commands. A special hidden pre
 
 \subsubsection{<Preferences to Control Spell Checking>}
 
-TeXShop Preferences under the Source tab at bottom left has an item for Spell Checking. This item is explained in the main part of this Manual. There are some hidden preferences to fine tune this behavior.
+TeXShop Preferences under the Source tab at bottom left has an item for Spell Checking. This item is explained in the main part of this Manual. There are some hidden preferences to fine tune this behavior. Starting with TeXShop 5.60, they are used only when TeX-aware spell checking is turned off; TeX-aware spell checking is configured with the file SpellingExclusions.txt instead.
 
 The list of specialized TeX commands can be extended.. The first command below adds one more element to the existing array of user supplied exceptions. The second command erases the array so the user can start over. Note that neither command affects TeXShop's default list of special commands.
 \begin{verbatim}
-defaults write TeXShop UserCommandsWithoutParameterSpellCheck -array-add "\\verbatim"
-defaults write TeXShop UserCommandsWithoutParameterSpellCheck -array
+defaults write TeXShop ExtraCommandsNotToCheckParameters -array-add "\\verbatim"
+defaults write TeXShop ExtraCommandsNotToCheckParameters -array
 \end{verbatim}
 The second series of hidden preferences is related to an earlier experiment with spelling and TeX command parameters. Originally I thought it might be better to turn off spell checking the first two parameters for all TeX commands, and then have a list of special commands whose parameters should be checked. This is the opposite of the current logic. It is possible to test this idea:
 \begin{verbatim}
@@ -6527,8 +6572,8 @@ In this case there is a very small list of exceptions, mainly containing
 \end{verbatim}
 but users can again add exceptions of their own:
 \begin{verbatim}
-defaults write TeXShop ExtraCommandsNotToCheckParameter -array-add "\\emph"
-defaults write TeXShop ExtraCommandsNotToCheckParameter -array
+defaults write TeXShop ExtraCommandsToCheckParameters -array-add "\\emph"
+defaults write TeXShop ExtraCommandsToCheckParameters -array
 \end{verbatim}
 
 
@@ -6564,18 +6609,12 @@ TeXShop has two magic comment lines for tabs, ``useTabs'' and ``useTabsWithFiles
 
 \subsubsection{<Preferences for Save Dialog>}
 
-The optional menu to select the encoding was removed from the Save Dialog. To get it back
-\begin{verbatim}  
-   defaults write TeXShop EncodingMenuInSaveDialog YES
-\end{verbatim}
+The optional menu to select the encoding was removed from the Save Dialog. Starting with TeXShop 5.60, it can be brought back with the item {\bf Show Encoding in Save Dialog} under the Misc1 tab of TeXShop Settings, which replaces the former hidden preference EncodingMenuInSaveDialog.
 
 
 \subsubsection{<Preferences for the Preview Window>}
 
-In double page mode, the initial page is shown by itself and then pages are shown side by side. This is called Book Mode. A hidden preference setting turns it off
-\begin{verbatim}
-    defaults write TeXShop DisplayAsBook NO
-\end{verbatim}
+In double page mode, the initial page is shown by itself and then pages are shown side by side. This is called Book Mode. Starting with TeXShop 5.60, it is turned off with the item {\bf Show first page alone as cover} under the Preview tab of TeXShop Settings, which replaces the former hidden preference DisplayAsBook.
 
 Some users select very high magnification in the Preview Window, and then use a magnifying glass. This can dangerously deplete memory, so TeXShop does not allow the magnifying glass to work when the Preview magnification is above 250. While not recommended, this limit can be raised
 \begin{verbatim}
@@ -6603,10 +6642,7 @@ When syncTeX syncs from the source window to the preview window, it highlights t
 Voice Over is technology for those with limited sight; it reads the screen while the user controls the computer with keyboard commands.  A user reported that Voice Over works in the TeXShop Source Window, but not in the Preview Window. This bug was in Monterey, and fixed in Ventura.
 
 Further experiments revealed that Voice Over could be tricked into working in the Preview Window by issuing the menu commands ``Next Page'' and then ``Previous Page''. The trick requires that documents contain at least two pages. Add a blank page to one page documents to make the trick work for them.
-This trick is off by default, but can be turned on to work automatically using
-\begin{verbatim}
-   defaults write TeXShop FixVoiceOver Yes
-\end{verbatim}
+This trick was off by default, but could be turned on to work automatically with the hidden preference FixVoiceOver. Since TeXShop 5.59 requires macOS 14.6 or later, where the bug is fixed, TeXShop 5.60 no longer reads this preference.
 
 \subsubsection{<Preferences for Apple Intelligence>}
 
@@ -6629,6 +6665,8 @@ NSTextInputTraitTypeDefault. Both of these choices turn the feature on. Setting 
 
 These settings work around bugs that were later permanently fixed, or were created for
 older versions of the program and no longer do anything.
+
+TeXShop 5.60 no longer reads the following preferences in this section, so setting them has no effect: DoNotFixTeXCrash, DisplayLogInfo, UseTerminationHandler, RepeatTypesetOnError13, SourceScrollElasticity, FixLineNumberScroll, YosemiteScrollBug, FixSplitBlankPages, ContinuousHighSierraFix, ScreenFontForLogAndConsole, SyncTeXOnly, ReleaseDocumentClasses, and FixPreviewBlur.
 
 \subsubsection{<Obsolete Preferences Introduced To Fix a Bug>}
 
@@ -6683,7 +6721,7 @@ hidden preferences were introduced to deal with this problem. The problem no lon
 
 In Yosemite, there was a problem scrolling with left and right arrows in the Preview Window. We provided a work-around, which could later be removed if Apple fixed the problem, as they eventually did:
 \begin{verbatim}
-   defaults write defaults write TeXShop YosemiteScrollBug NO
+   defaults write TeXShop YosemiteScrollBug NO
 \end{verbatim}
 
 
@@ -6755,10 +6793,7 @@ TeXShop  supports SyncTeX. If synctex fails, TeXShop falls back on the Search sy
 \begin{verbatim}
    \ifx\@@input\@undefined\let\@@input\input\fi
 \end{verbatim}
-If you prefer the original method
-\begin{verbatim}
-   defaults write TeXShop MakeatletterEnabled NO
-\end{verbatim}
+If you prefer the original method, turn off the item {\bf @ as Part of Command Names} under the Editor tab of TeXShop Settings (before TeXShop 5.60, the hidden preference MakeatletterEnabled).
 
 \subsubsection{<Other Obsolete Items>}
 
@@ -6916,6 +6951,8 @@ Localization must be done by native speakers. Nine languages including English a
 \subsubsection{Icon}
 
 The TeXShop program icon is by Thiemo Gamma. Designing icons is the most difficult task a programmer can face; I've never been able to come close. Thiemo's icon showed up in my mailbox one day and I immediately switched to it.  I know that Apple's current style is square with rounded corners, but Thiemo's icon will remain.
+
+Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the Misc2 tab of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
 
 
 \end{document}  
