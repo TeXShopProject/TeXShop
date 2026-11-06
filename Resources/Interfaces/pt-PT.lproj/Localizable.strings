@@ -142,3 +142,12 @@
 "This document uses classic Mac line endings (CR)." = "Este documento usa fins de linha do Mac clássico (CR).";
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "O TeXShop converteu todos os fins de linha para LF. Ao guardar o documento, o ficheiro terá fins de linha LF.";
 "Don’t show again for this document" = "Não voltar a mostrar para este documento";
+
+/* Engine path discovery */
+"Set Up TeX Engine Paths" = "Configurar caminhos dos motores TeX";
+"Detected Engine Paths" = "Caminhos dos motores encontrados";
+"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "A instalação mais recente encontrada está selecionada. Pode escolher outra abaixo. Os comandos dos motores personalizados e o caminho alternativo permanecem inalterados.";
+"Not found (current setting will be kept)" = "Não encontrado (a definição atual será mantida)";
+"Version unavailable" = "Desconhecida";
+"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instale uma distribuição TeX e execute a configuração automática em Definições > Motor.";
+"Use These Paths" = "Usar estes caminhos";

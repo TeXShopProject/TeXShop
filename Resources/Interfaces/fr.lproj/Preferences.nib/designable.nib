@@ -2064,7 +2064,7 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="pdfTeX" translatesAutoresizingMaskIntoConstraints="NO" id="54">
-                                            <rect key="frame" x="28" y="265.5" width="289" height="168" />
+                                            <rect key="frame" x="28" y="229.5" width="289" height="168" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gQB-pm-TRh">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="156" />
@@ -2150,7 +2150,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="TeX + dvips + distiller" translatesAutoresizingMaskIntoConstraints="NO" id="200">
-                                            <rect key="frame" x="329" y="265" width="286" height="168.5" />
+                                            <rect key="frame" x="329" y="229.0" width="286" height="168.5" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="NXO-X6-yKn">
                                                 <rect key="frame" x="0.0" y="0.0" width="286" height="156.5" />
@@ -2236,14 +2236,23 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Réglage des chemins" translatesAutoresizingMaskIntoConstraints="NO" id="215">
-                                            <rect key="frame" x="28" y="445.5" width="587" height="164.5" />
+                                            <rect key="frame" x="28" y="409.5" width="587" height="200.5" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Amf-I1-vbk">
-                                                <rect key="frame" x="0.0" y="0.0" width="587" height="152.5" />
+                                                <rect key="frame" x="0.0" y="0.0" width="587" height="188.5" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
+                                                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="engine-auto-button">
+                                                        <rect key="frame" x="18" y="8" width="250" height="28"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <buttonCell key="cell" type="push" title="Configuration automatique…" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="engine-auto-cell">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections><action selector="discoverEnginePaths:" target="-2" id="engine-auto-action"/></connections>
+                                                    </button>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="256">
-                                                        <rect key="frame" x="14" y="78.5" width="424" height="17" />
+                                                        <rect key="frame" x="14" y="114.5" width="424" height="17" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Distiller (ghostscript) (par défaut: /usr/local/bin)" id="932">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2252,7 +2261,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="217">
-                                                        <rect key="frame" x="17" y="103" width="549" height="22"/>
+                                                        <rect key="frame" x="17" y="139.0" width="549" height="22" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="929">
                                                             <font key="font" metaFont="system"/>
@@ -2264,7 +2273,7 @@ DQ
                                                         </connections>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="218">
-                                                        <rect key="frame" x="14" y="114.5" width="424" height="28" />
+                                                        <rect key="frame" x="14" y="150.5" width="424" height="28" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="930">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2274,7 +2283,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="255">
-                                                        <rect key="frame" x="17" y="56" width="549" height="22"/>
+                                                        <rect key="frame" x="17" y="92.0" width="549" height="22" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="931">
                                                             <font key="font" metaFont="system"/>
@@ -2286,7 +2295,7 @@ DQ
                                                         </connections>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Rq-f0-GOC">
-                                                        <rect key="frame" x="14" y="36" width="424" height="14"/>
+                                                        <rect key="frame" x="14" y="72.0" width="424" height="14" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Chemin alternatif (par défaut : ~/bin/context/tex/texmf-osx-arm64/bin)" id="VhU-ve-1E6">
                                                             <font key="font" metaFont="message" size="11"/>
@@ -2295,7 +2304,7 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YHa-6v-GhU">
-                                                        <rect key="frame" x="17" y="11" width="549" height="22"/>
+                                                        <rect key="frame" x="17" y="47.0" width="549" height="22" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="9rN-x5-5p0">
                                                             <font key="font" metaFont="system"/>
@@ -2311,7 +2320,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Commande pour la Recherche" translatesAutoresizingMaskIntoConstraints="NO" id="1018">
-                                            <rect key="frame" x="28" y="181" width="587" height="72" />
+                                            <rect key="frame" x="28" y="145.0" width="587" height="72" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="yVw-pd-70c">
                                                 <rect key="frame" x="0.0" y="0.0" width="587" height="60" />
@@ -2343,7 +2352,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Moteur BibTeX" translatesAutoresizingMaskIntoConstraints="NO" id="1019">
-                                            <rect key="frame" x="28" y="97" width="587" height="72" />
+                                            <rect key="frame" x="28" y="61.0" width="587" height="72" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="uyQ-N9-WJQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="587" height="60" />

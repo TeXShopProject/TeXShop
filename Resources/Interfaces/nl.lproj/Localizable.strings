@@ -140,3 +140,12 @@
 "This document uses classic Mac line endings (CR)." = "Dit document gebruikt klassieke Mac-regeleinden (CR).";
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop heeft alle regeleinden omgezet naar LF. Als je het document bewaart, krijgt het bestand LF-regeleinden.";
 "Don’t show again for this document" = "Niet meer tonen voor dit document";
+
+/* Engine path discovery */
+"Set Up TeX Engine Paths" = "TeX-enginepaden instellen";
+"Detected Engine Paths" = "Gevonden enginepaden";
+"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "De nieuwste gevonden installatie is geselecteerd. U kunt hieronder een andere kiezen. Aangepaste enginecommando’s en het alternatieve pad blijven ongewijzigd.";
+"Not found (current setting will be kept)" = "Niet gevonden (de huidige instelling blijft behouden)";
+"Version unavailable" = "Onbekend";
+"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Installeer een TeX-distributie en start daarna de automatische configuratie via Instellingen > Engine.";
+"Use These Paths" = "Deze paden gebruiken";

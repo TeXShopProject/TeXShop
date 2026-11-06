@@ -21,6 +21,7 @@ out='''
 @implementation DockPreferencesProbe
 - (instancetype)init { if((self=[super init])) { _undoManager=[NSUndoManager new]; _undoManager.groupsByEvent=NO; } return self; }
 - (void)cancelForColor {}
+- (void)cancelEnginePathDiscovery {}
 - (void)setDockStyle:(NSString *)style {
     NSString *previous=[NSUserDefaults.standardUserDefaults stringForKey:TSDockIconKey];
     [[_undoManager prepareWithInvocationTarget:self] setDockStyle:previous];

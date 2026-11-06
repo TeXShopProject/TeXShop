@@ -143,3 +143,17 @@
 "This document uses classic Mac line endings (CR)." = "この書類の改行コードは旧 Mac 形式（CR）です。";
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop はすべての改行を LF に揃えました。書類を保存すると、ファイルの改行コードは LF になります。";
 "Don’t show again for this document" = "この書類では今後表示しない";
+
+"Set Up TeX Engine Paths" = "TeXエンジンのパス設定";
+
+"Detected Engine Paths" = "エンジンの検出結果";
+
+"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "検出した中で最も新しい環境を選択しています。以下の候補から別の環境も選べます。エンジンのコマンドと「別のパス」は変更しません。";
+
+"Not found (current setting will be kept)" = "見つかりませんでした（現在の設定を保持します）";
+
+"Version unavailable" = "不明";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "TeX環境をインストールしてから、設定の「内部設定」で「自動設定」を実行してください。";
+
+"Use These Paths" = "この設定を使用";

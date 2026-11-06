@@ -143,3 +143,12 @@
 "This document uses classic Mac line endings (CR)." = "Dieses Dokument verwendet klassische Mac-Zeilenenden (CR).";
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop hat alle Zeilenenden in LF umgewandelt. Beim Sichern erhält die Datei LF-Zeilenenden.";
 "Don’t show again for this document" = "Für dieses Dokument nicht mehr anzeigen";
+
+/* Engine path discovery */
+"Set Up TeX Engine Paths" = "TeX-Programmpfade einrichten";
+"Detected Engine Paths" = "Gefundene Programmpfade";
+"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "Die neueste gefundene Installation ist ausgewählt. Sie können unten eine andere auswählen. Eigene Programmbefehle und der alternative Pfad bleiben unverändert.";
+"Not found (current setting will be kept)" = "Nicht gefunden (die aktuelle Einstellung bleibt erhalten)";
+"Version unavailable" = "Unbekannt";
+"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Installieren Sie eine TeX-Distribution und starten Sie dann die automatische Einrichtung unter Einstellungen > Programme.";
+"Use These Paths" = "Diese Pfade verwenden";

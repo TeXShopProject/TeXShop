@@ -287,6 +287,8 @@
 // target/action methods
 //------------------------------------------------------------------------------
 - (IBAction)showPreferences:sender;
+- (IBAction)discoverEnginePaths:(id)sender;
+- (void)discoverInitialEnginePaths;
 
 - (IBAction)changeDocumentFont:sender;
 - (IBAction)changeConsoleFont:sender;
