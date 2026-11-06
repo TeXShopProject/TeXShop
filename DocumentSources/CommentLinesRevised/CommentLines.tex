@@ -205,9 +205,15 @@ The same, but for the commands whose parameters are checked when ExceptionListEx
 \end{description}
 
 {\em Preview}
+
+The default page direction and whether to show the first page alone as a cover
+can be selected in Settings $\rightarrow$ Preview. The PDF preview toolbar
+also provides page layout and two-page arrangement menus for the current document.
+Magic comments override PDF reading direction, which overrides the application
+setting. A temporary toolbar choice takes precedence until restored to the
+document settings or the document is closed.
+
 \begin{description}
-\item[\texttt{defaults write TeXShop DisplayAsBook NO}] \hfill \\
-In the double page modes, show the first page as a pair with the second page instead of by itself. The magic lines bookDisplay and standardDisplay change this for a single document.
 \item[\texttt{defaults write TeXShop InterpolationValue 4}] \hfill \\
 The image interpolation used to draw the Preview window when antialiasing is on: 0 (system default), 1 (none), 2 (low), 4 (medium) or 3 (high, the default).
 \item[\texttt{defaults write TeXShop FlashFix NO}] \hfill \\

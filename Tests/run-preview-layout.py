@@ -11,7 +11,12 @@ doc=(root/'Sources/TSDocument.m').read_text()
 prefs=(root/'Sources/TSPreferences.m').read_text()
 controller='\n'.join(method(toolbar,s) for s in ['- (BOOL)previewDisplaysAsBook','- (BOOL)previewDisplaysRTL','- (void)changePreviewLayout:', '- (void)changePreviewArrangement:', '- (BOOL)validatePreviewLayoutItem:', '- (void)updatePreviewLayoutControls'])
 viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle', '- (void)setDocument:(PDFDocument *)document'])
-parse=doc[doc.index('        parserRange = [testString rangeOfString:@"% !TEX bookDisplay"]'):doc.index('       // parserRange = [testString rangeOfString:@"% !TEX numberingCorrection Automatic"]')]
+parse=method(doc,'- (void)readPreviewArrangementFromData:')
+# Guard the production call paths as well as exercising the production parser.
+assert '[self readPreviewArrangementFromData:myData];' in method(doc, '- (BOOL)readFromURL:')
+assert all(name not in method(doc, '- (NSStringEncoding)dataEncoding:') for name in ('bookDisplay', 'RTLDisplay', 'previewHasDirectionComment'))
+assert 'readPreviewArrangementFromData' not in method(doc, '- (void) doTemplate:')
+
 initialize=doc[doc.index('    self.bookDisplay = [SUD boolForKey:DisplayAsBookKey];'):doc.index('    self.previewInitialRTLDisplay = self.RTLDisplay;')+len('    self.previewInitialRTLDisplay = self.RTLDisplay;')]
 program=r'''
 #import <Cocoa/Cocoa.h>
@@ -19,6 +24,7 @@ program=r'''
 #import "TSPreviewLayout.h"
 static NSUserDefaults *defaults;
 #define SUD defaults
+static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
 #define DisplayAsBookKey @"DisplayAsBook"
 #define PdfFirstPageStyleKey @"PdfFirstPageStyle"
 #define PdfMagnificationKey @"PdfMagnification"
@@ -70,15 +76,11 @@ VIEWMETHODS
 @end
 @implementation TSDocument
 - (instancetype)init { if((self=[super init])) { INITIALIZE } return self; }
-- (MyPDFKitView *)pdfKitView {return self.pdfKitWindow.activeView ?: self.myPDFKitView;}
+- (MyPDFKitView *)pdfKitView {return self.pdfKitWindow.activeView;}
 CONTROLLER
+PARSE
 - (void)comments:(NSString *)source {
- self.bookDisplay=self.previewInitialBookDisplay; self.RTLDisplay=self.previewInitialRTLDisplay; self.previewHasDirectionComment=NO;
- NSArray *lines=[source componentsSeparatedByString:@"\n"];
- for(NSString *testString in [lines subarrayWithRange:NSMakeRange(0,MIN(20,lines.count))]) {
- NSRange parserRange;
- PARSE
- }
+ [self readPreviewArrangementFromData:[source dataUsingEncoding:NSUTF8StringEncoding]];
 }
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)ident willBeInsertedIntoToolbar:(BOOL)b {return TSPreviewLayoutItem(self,ident);}
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {return @[TSPreviewLayoutToolbarID,TSPreviewArrangementToolbarID];}
@@ -124,7 +126,7 @@ static TSDocument *MakeDocument(void){
  d.myPDFKitView=[[MyPDFKitView alloc]initWithFrame:NSMakeRect(0,0,850,650)]; d.myPDFKitView.myDocument=d;
  d.myPDFKitView2=[[MyPDFKitView alloc]initWithFrame:NSMakeRect(0,0,400,400)];d.myPDFKitView2.myDocument=d;
  d.pdfKitWindow.contentView=d.myPDFKitView;d.pdfKitWindow.activeView=d.myPDFKitView;
- d.myPDFKitView.document=PDF();d.myPDFKitView2.document=d.myPDFKitView.document;
+ d.myPDFKitView.document=PDF();
  d.myPDFKitView->resizeOption=2;d.myPDFKitView2->resizeOption=2;
  d.myPDFKitView.scaleFactor=.8;d.myPDFKitView2.scaleFactor=.7;
  NSToolbar *bar=[[NSToolbar alloc]initWithIdentifier:NSUUID.UUID.UUIDString];bar.delegate=d;bar.displayMode=NSToolbarDisplayModeIconAndLabel;d.pdfKitWindow.toolbar=bar;
@@ -193,6 +195,9 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  Check(!other.previewDisplaysAsBook && !other.previewDisplaysRTL,@"Other documents unaffected");
  // Select the second pane; layout is pane-local but arrangement is document-wide.
+ Check(d.myPDFKitView2.document==nil,@"Unsplit secondary pane has no document");
+ d.myPDFKitView2.document=d.myPDFKitView.document;[d.myPDFKitView2 setupPageStyle];
+ Check(d.myPDFKitView2.displaysRTL==d.previewDisplaysRTL && d.myPDFKitView2.displaysAsBook==d.previewDisplaysAsBook,@"Splitting inherits earlier arrangement");
  NSInteger first=d.myPDFKitView.pageStyle;d.pdfKitWindow.activeView=d.myPDFKitView2;
  [d changePreviewLayout:Choice(@selector(changePreviewLayout:),2)];
  Check(d.myPDFKitView2.pageStyle==2 && d.myPDFKitView.pageStyle==first,@"Active split pane");
@@ -215,6 +220,7 @@ int main(int argc,char **argv){@autoreleasepool{
  Check(d.myPDFKitView.autoScales && d.myPDFKitView->resizeOption==3,@"Auto fit retained");
  d.pdfKitWindow.title=@"TeXShop — PDF Layout Controls";
  if(argc>2 && strcmp(argv[2],"-")!=0)Snapshot(d.pdfKitWindow.contentView.superview,[@(argv[2]) stringByAppendingPathComponent:@"pdf-layout.png"]);
+ REGRESSION
  // Nib + actual preferences action, without loading TeXShop or its user settings.
  TSPreferences *owner=[TSPreferences new];owner.outlets=[NSMutableDictionary new];owner->_undoManager=[NSUndoManager new];owner->_undoManager.groupsByEvent=NO;
  NSString *nibFile=[@(argv[1]) stringByAppendingPathComponent:@"keyedobjects-101300.nib"];if(![NSFileManager.defaultManager fileExistsAtPath:nibFile])nibFile=[@(argv[1]) stringByAppendingPathComponent:@"keyedobjects.nib"];
@@ -229,7 +235,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, preferences undo");
 }}
 '''
-for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:'))]:program=program.replace(key,value)
+for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('REGRESSION',(root/'Tests/PreviewLayoutRegression.inc').read_text()),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:'))]:program=program.replace(key,value)
 lang=next((a for a in sys.argv[1:] if a in ('en','ja')),'en')
 with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  app=Path(tmp)/'LayoutTest.app';mac=app/'Contents/MacOS';mac.mkdir(parents=True)
@@ -247,8 +253,9 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  args += [a for a in sys.argv[1:] if a.startswith("--sample=")]
  args+=['-AppleLanguages',f'({lang})']
  try:
-  subprocess.run(args,check=True)
+  import os
+  home=Path(tmp)/'Home';home.mkdir()
+  subprocess.run(args,check=True,env={**os.environ,'CFFIXED_USER_HOME':str(home)})
  finally:
   domain=plistlib.loads((app/'Contents/Info.plist').read_bytes())['CFBundleIdentifier']
-  subprocess.run(['defaults','delete',domain],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
   subprocess.run(['/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister','-u',str(app)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)

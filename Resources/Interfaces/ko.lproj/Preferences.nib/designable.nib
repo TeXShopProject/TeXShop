@@ -1433,7 +1433,7 @@ DQ
  <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-note">
  <rect key="frame" x="14" y="8" width="225" height="28"/>
  <autoresizingMask key="autoresizingMask"/>
- <textFieldCell key="cell" title="For newly opened documents.&#10;Magic comments take precedence." id="preview-cover-note-cell">
+ <textFieldCell key="cell" title="For new documents. Magic comments and&#10;PDF reading direction take precedence." id="preview-cover-note-cell">
  <font key="font" metaFont="system" size="10"/>
  <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

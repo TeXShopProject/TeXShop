@@ -265,61 +265,17 @@
 
 - (void) setupPageStyle
 {
-    
-	switch (pageStyle) {
-		case PDF_SINGLE_PAGE_STYLE:			[self setDisplayMode: kPDFDisplaySinglePage];
-											[self setDisplaysPageBreaks: NO];
-											break;
-
-		case PDF_TWO_PAGE_STYLE:			 if (atLeastHighSierra)
-                                                {
-                                                self.displaysAsBook = self.myDocument.previewDisplaysAsBook;
-                                                self.displaysRTL = self.myDocument.previewDisplaysRTL;
-                                                 }
-                                            else
-                                                {
-                                                switch(firstPageStyle)
-                                                    {
-                                                    case PDF_FIRST_LEFT:    [self setDisplaysAsBook: NO];
-                                                                            break;
-                                                            
-                                                    case PDF_FIRST_RIGHT:   [self setDisplaysAsBook: YES];
-                                                                            break;
-                                                    }
-                                                }
-                                                [self setDisplayMode: kPDFDisplayTwoUp];
-                                                [self setDisplaysPageBreaks: YES];
-                
-                                               
-                                            break;
-            
-		case PDF_MULTI_PAGE_STYLE:			[self setDisplayMode: kPDFDisplaySinglePageContinuous];
-											[self setDisplaysPageBreaks: YES];
-											break;
-
-		case PDF_DOUBLE_MULTI_PAGE_STYLE:	if (atLeastHighSierra)
-                                                {
-                                                self.displaysAsBook = self.myDocument.previewDisplaysAsBook;
-                                                self.displaysRTL = self.myDocument.previewDisplaysRTL;
-                                                     
-                                                }
-                                            else
-                                                {
-                                                switch(firstPageStyle)
-                                                    {
-                                                    case PDF_FIRST_LEFT:    [self setDisplaysAsBook: NO];
-                                                                            break;
-                                                            
-                                                    case PDF_FIRST_RIGHT:   [self setDisplaysAsBook: YES];
-                                                                            break;
-                                                    }
-                                                }
-                                                [self setDisplayMode: kPDFDisplayTwoUpContinuous];
-                                                [self setDisplaysPageBreaks: YES];
-                
-                                                
-                                            break;
-                }
+    // Keep the resolved arrangement ready even in single-page modes, including
+    // later switches made by PDFKit's own context menu.
+    self.displaysAsBook = self.myDocument.previewDisplaysAsBook;
+    self.displaysRTL = self.myDocument.previewDisplaysRTL;
+    switch (pageStyle) {
+        case PDF_SINGLE_PAGE_STYLE: [self setDisplayMode:kPDFDisplaySinglePage]; break;
+        case PDF_TWO_PAGE_STYLE: [self setDisplayMode:kPDFDisplayTwoUp]; break;
+        case PDF_MULTI_PAGE_STYLE: [self setDisplayMode:kPDFDisplaySinglePageContinuous]; break;
+        case PDF_DOUBLE_MULTI_PAGE_STYLE: [self setDisplayMode:kPDFDisplayTwoUpContinuous]; break;
+    }
+    [self setDisplaysPageBreaks:pageStyle != PDF_SINGLE_PAGE_STYLE];
 }
 
 - (void) setupMagnificationStyle
@@ -2388,7 +2344,9 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 - (void)performPreviewLayoutChange:(void (^)(void))change
 {
+    PDFPage *page = self.currentPage;
     PDFDestination *destination = self.currentDestination;
+    BOOL wasBook = self.displaysAsBook;
     NSInteger savedResizeOption = resizeOption;
     CGFloat scale = self.scaleFactor;
     change();
@@ -2400,8 +2358,15 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         [self setupMagnificationStyle];
     }
     resizeOption = savedResizeOption;
-    if (destination.page && [self.document indexForPage:destination.page] != NSNotFound)
-        [self goToDestination:destination];
+    if (page && [self.document indexForPage:page] != NSNotFound) {
+        // currentDestination can belong to the previous page at the bottom of
+        // a continuous view or to the left page of a spread.
+        BOOL continuous = self.displayMode == kPDFDisplaySinglePageContinuous || self.displayMode == kPDFDisplayTwoUpContinuous;
+        if (continuous && wasBook == self.displaysAsBook && destination.page == page)
+            [self goToDestination:destination];
+        else
+            [self goToPage:page];
+    }
     [self.myDocument updatePreviewLayoutControls];
 }
 
@@ -8088,7 +8053,10 @@ else
     [super setDocument:document];
     // Apply the resolved direction after PDFKit has installed the new catalog.
     // Explicit source comments and toolbar choices take precedence over the PDF.
-    if (document && self.myDocument) self.displaysRTL = self.myDocument.previewDisplaysRTL;
+    if (document && self.myDocument) {
+        self.displaysAsBook = self.myDocument.previewDisplaysAsBook;
+        self.displaysRTL = self.myDocument.previewDisplaysRTL;
+    }
     [self.myDocument updatePreviewLayoutControls];
     if (preserveZoom) {
         [super setScaleFactor:previousScale];

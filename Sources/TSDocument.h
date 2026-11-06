@@ -886,6 +886,7 @@ enum RootCommand
 
 - (NSString *)filterBackslashes:(NSString *)aString;
 - (NSStringEncoding)dataEncoding:(NSData *)theData;
+- (void)readPreviewArrangementFromData:(NSData *)data;
 - (void)annotationPanelWillClose:(NSNotification *)notification;
 
 

@@ -1402,7 +1402,7 @@ DQ
  <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-note">
  <rect key="frame" x="14" y="8" width="261" height="28"/>
  <autoresizingMask key="autoresizingMask"/>
- <textFieldCell key="cell" title="新しく開く文書に適用します。&#10;マジックコメントを優先します。" id="preview-cover-note-cell">
+ <textFieldCell key="cell" title="新規文書用。マジックコメントと&#10;PDF内の表示方向を優先します。" id="preview-cover-note-cell">
  <font key="font" metaFont="system" size="10"/>
  <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

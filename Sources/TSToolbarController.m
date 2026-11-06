@@ -2118,11 +2118,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // this is based on validateMenuItem
 
 - (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {
-    if ([toolbarItem.itemIdentifier isEqual:TSPreviewLayoutToolbarID] ||
-        [toolbarItem.itemIdentifier isEqual:TSPreviewArrangementToolbarID]) {
-        [self updatePreviewLayoutControls];
-        return [[self pdfKitView] document] != nil;
-    }
+    // Actionless NSMenuToolbarItems are updated explicitly on document, layout
+    // and active-pane changes; NSToolbar does not validate them here.
 	// Optional method   self message is sent to us since we are the target of some toolbar item actions
 	// (for example:  of the save items action)
     
