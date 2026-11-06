@@ -232,7 +232,6 @@ NSString *SwitchSidesKey = @"SwitchSides";
 NSString *InterpolationValueKey = @"InterpolationValue";
 NSString *ConsoleWindowFixedPosKey = @"ConsoleWindowFixedPos";
 NSString *ConsoleWindowPosModeKey = @"ConsoleWindowPosMode";
-NSString *YosemiteScrollBugKey = @"YosemiteScrollBug";
 NSString *SparkleAutomaticUpdateKey = @"SparkleAutomaticUpdate";
 NSString *SparkleIntervalKey = @"SparkleInterval";
 NSString *reverseSyncRedKey = @"ReverseSyncRed";
