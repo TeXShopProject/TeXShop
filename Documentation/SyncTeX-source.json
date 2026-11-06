@@ -1,0 +1,41 @@
+{
+  "version": "1.21",
+  "repository": "https://github.com/TeX-Live/texlive-source",
+  "commit": "a399fb5f3f02441b040ad34c7aed3a1af8ffdc39",
+  "directory": "texk/web2c/synctexdir",
+  "local_modifications": false,
+  "files": {
+    "synctex_parser.c": {
+      "sha256": "dbbd2c62c01afe420959a0c8950128751680a0ca0d638c452c18dc680da04bf1",
+      "bytes": 341438
+    },
+    "synctex_parser.h": {
+      "sha256": "ac9fbbef013962d79f1f1fb40eec642103e152a471c5feed964515292ae6cb2c",
+      "bytes": 19251
+    },
+    "synctex_parser_advanced.h": {
+      "sha256": "edcad2c96f1c5e48fbd20923bf2dd3868914e566ccab82bfffc520f802345dd8",
+      "bytes": 20535
+    },
+    "synctex_parser_utils.c": {
+      "sha256": "01330fbb682ca18c044af8d831de03874726dda53172f892d40d6fa0a330cf25",
+      "bytes": 19481
+    },
+    "synctex_parser_utils.h": {
+      "sha256": "474ac7145eb5c415a875f1050646576fd66274654111de245ebc46dcbd405561",
+      "bytes": 6385
+    },
+    "synctex_parser_version.txt": {
+      "sha256": "884a674fc1fd4c5bfae787085c0abe6016fd3dfa110262f22d85f0748532a31d",
+      "bytes": 5
+    },
+    "synctex_version.h": {
+      "sha256": "02762a33566a97b189b9f5f824e53a5d9e13265008c84cceef74f4924cc62c45",
+      "bytes": 2072
+    },
+    "synctex_parser_readme.md": {
+      "sha256": "19f3623a6263b5eab78ed201baba4ddad723e4926093b2c6d1f41aca1e2d2b16",
+      "bytes": 12073
+    }
+  }
+}
