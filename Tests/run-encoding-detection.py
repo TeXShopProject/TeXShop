@@ -36,6 +36,7 @@ mutations = {
     'byte-order-mark': ('if (encoding == NSUTF8StringEncoding && mark == TSUTF8ByteOrderMark) {', 'if (0) {'),
     'inputenc': ('if (declared && guess && declared != guess && available(declared)) {', 'if (0) {'),
     'inputenc-always': ('if (declaredScore >= guessScore - MAX(2.0, 0.1 * fabs(guessScore)))', 'if (1)'),
+    'ascii-compatible': ('? preferred : NSUTF8StringEncoding;', '? preferred : preferred;'),
 }
 if mutation:
     old, new = mutations[mutation]; assert old in code, mutation; code = code.replace(old, new)
@@ -79,6 +80,8 @@ samples = {
     'pl-latin2-declared': ('\\documentclass{article}\n\\usepackage[T1]{fontenc}\n\\usepackage[latin2]{inputenc}\n\\begin{document}\nM\u0119\u017cczyzna \u0142owi\u0142 ryby, \u017c\u00f3\u0142w pe\u0142z\u0142 w\u00f3wczas po pla\u017cy.\n\\end{document}\n', 'iso8859_2'),
     'pl-cp1250-declared': ('\\documentclass{article}\n\\usepackage[cp1250]{inputenc}\n\\begin{document}\nM\u0119\u017cczyzna \u0142owi\u0142 ryby, \u017c\u00f3\u0142w pe\u0142z\u0142 w\u00f3wczas po pla\u017cy.\n\\end{document}\n', 'cp1250'),
     'fr-latin9-declared': ('\\documentclass{article}\n\\usepackage[latin9]{inputenc}\n\\begin{document}\nLa th\u00e9orie des cat\u00e9gories \u00e9tudie les structures, o\u00f9 l\u2019\u00e9l\u00e8ve apprend.\n\\end{document}\n'.replace('\u2019', "'"), 'iso8859_15'),
+    # ASCII files with an even and an odd number of bytes, and an empty file.
+    'ascii-even': ('\\section{Hello}\n', 'ascii'), 'ascii-odd': ('\\section{Hi!}\n', 'ascii'), 'empty': (b'', None),
     # A wrong declaration does not win over a clearly better reading.
     'ru-koi8-declared-latin1': ('\\documentclass{article}\n\\usepackage[latin1]{inputenc}\n' + ru.split('\n', 1)[1], 'koi8_r'),
 }
@@ -126,6 +129,9 @@ cases = [
     ('accent-utf8', 'ja', 'DOSJapanese', 'UTF8', 0, None),
     ('pl-latin2-declared', 'pl', 'UTF8', 'ISOLatin2', 1, None), ('pl-cp1250-declared', 'pl', 'UTF8', 'WindowsLatin2', 1, None),
     ('fr-latin9-declared', 'fr', 'UTF8', 'ISOLatin9', 1, None), ('ru-koi8-declared-latin1', 'ru', 'UTF8', 'KOI8_R', 1, None),
+    # UTF-16 does not write ASCII as ASCII, so a UTF-16 default does not read ASCII files.
+    ('ascii-even', 'en', 'UTF16', 'UTF8', 1, None), ('ascii-odd', 'en', 'UTF16', 'UTF8', 1, None), ('empty', 'en', 'UTF16', 'UTF8', 1, None),
+    ('ascii-even', 'ja', 'ShiftJIS_X0213', 'ShiftJIS_X0213', 1, None),
 ]
 program = r'''
 #import <Foundation/Foundation.h>

@@ -753,8 +753,13 @@ static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 		if (bytes[i] == 0x1B && i + 2 < length && bytes[i + 1] == '$' && (bytes[i + 2] == 'B' || bytes[i + 2] == '@'))
 			kanjiEscape = YES;
 	}
-	if (sevenBit)
-		return (kanjiEscape && TSDataDecodes(data, NSISO2022JPStringEncoding)) ? NSISO2022JPStringEncoding : preferred;
+	if (sevenBit) {
+		if (kanjiEscape && TSDataDecodes(data, NSISO2022JPStringEncoding))
+			return NSISO2022JPStringEncoding;
+		// The default encoding is kept if it writes ASCII letters as ASCII; UTF-16 does not.
+		NSData *sample = [@"Az09{}%" dataUsingEncoding:preferred];
+		return [sample isEqualToData:[NSData dataWithBytes:"Az09{}%" length:7]] ? preferred : NSUTF8StringEncoding;
+	}
 
 	// The encoding recorded by the application that wrote the file.
 	NSStringEncoding recorded = TSRecordedEncoding(url);

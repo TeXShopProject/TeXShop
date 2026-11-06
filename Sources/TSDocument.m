@@ -2655,8 +2655,11 @@ in other code when an external editor is being used. */
     if (!myData) return NO;
 	_encoding = _tempencoding = [self dataEncoding: myData];
 	// An encoding chosen in the Open dialog is used once, for this file; a magic comment still wins.
+	// Reading a document again, as for a reload, is not the opening it was chosen for.
 	NSStringEncoding chosenEncoding;
 	BOOL encodingWasChosen = [[TSDocumentController sharedDocumentController] takeEncoding: &chosenEncoding chosenForURL: absoluteURL];
+	if (_hasReadSource)
+		encodingWasChosen = NO;
 	if (! _encodingFromMagicComment)
 		_encoding = _tempencoding = encodingWasChosen ? chosenEncoding : [self encodingForUnmarkedData: myData URL: absoluteURL];
     
@@ -3252,18 +3255,54 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 	}];
 }
 
+// The window that shows the source on screen, where the notices about the opened file go: the
+// combined window when the source is in it, otherwise the source window. Nil while it is not
+// on screen or shows another sheet; the notices then wait.
+- (NSWindow *)windowForOpeningNotices
+{
+	NSWindow *window = useFullSplitWindow ? fullSplitWindow : textWindow;
+	return (window.isVisible && ! window.attachedSheet) ? window : nil;
+}
+
+- (void)tryOpeningNotices
+{
+	[self tryBadEncodingDialog: nil];
+}
+
+- (void)tryOpeningNoticesLater
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget: self selector: @selector(tryOpeningNotices) object: nil];
+	[self performSelector: @selector(tryOpeningNotices) withObject: nil afterDelay: 0.5];
+}
+
+// The window passed in is the one that asks; the notices go to windowForOpeningNotices.
 - (void)tryBadEncodingDialog: (NSWindow *)theWindow
 {
+	if (! showBadEncodingDialog && ! _lineEndingNotice)
+		return;
+	NSWindow *window = [self windowForOpeningNotices];
+	if (! window) {
+		// Wait for the window while it is coming on screen (or, without a limit, while it
+		// shows another sheet), for at most ten seconds otherwise.
+		NSWindow *shown = useFullSplitWindow ? fullSplitWindow : textWindow;
+		if ((shown.isVisible && shown.attachedSheet) || _openingNoticeAttempts++ < 20)
+			[self tryOpeningNoticesLater];
+		return;
+	}
+	_openingNoticeAttempts = 0;
 	if (showBadEncodingDialog) {
 		NSString *theEncoding = [[TSEncodingSupport sharedInstance] localizedNameForStringEncoding: _badEncoding];
 		NSBeginAlertSheet(NSLocalizedString(@"This file was opened with IsoLatin9 encoding.", @"This file was opened with IsoLatin9 encoding."),
-						  nil, nil, nil, theWindow, nil, nil, nil, nil,
+						  nil, nil, nil, window, nil, nil, nil, nil,
 						  NSLocalizedString(@"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again.",
 											@"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again."), theEncoding);
+		showBadEncodingDialog = FALSE;
+		// A line ending notice follows when this sheet is closed.
+		if (_lineEndingNotice)
+			[self tryOpeningNoticesLater];
 	}
 	else
-		[self tryLineEndingNotice: theWindow];
-	showBadEncodingDialog = FALSE;
+		[self tryLineEndingNotice: window];
 
 }
 
