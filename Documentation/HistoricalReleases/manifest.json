@@ -9266,5 +9266,85 @@
         "status": "ok"
       }
     ]
+  },
+  {
+    "tag": "v5.58",
+    "name": "5.58",
+    "display_version": "5.58",
+    "variant": {
+      "ja": "Golden Gate版",
+      "en": "Golden Gate"
+    },
+    "assets": [
+      {
+        "kind": "app",
+        "name": "TeXShop-5.58-GG.zip",
+        "url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG.zip",
+        "download_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG.zip",
+        "sha256": "a4c21d83e5db24bdf91b606f087478b8b02f9550fabec3dc6ed02fa18efd7214",
+        "status": "ok",
+        "plist_min": "14.6",
+        "architectures": [
+          {
+            "cpu": "arm64"
+          },
+          {
+            "cpu": "x86_64"
+          }
+        ],
+        "icon_png_sha256": "800f8df72d5cb99adebeda41a734da0d2c254c7507031287b0a2cd1d464a33ab"
+      },
+      {
+        "kind": "source",
+        "name": "TeXShop-5.58-GG-Source.zip",
+        "url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG-Source.zip",
+        "download_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG-Source.zip",
+        "sha256": "1ba1c36b12244070e8cf0a365dfa61d98219b897f66f2a7680c130431ac5c32d",
+        "status": "ok"
+      }
+    ]
+  },
+  {
+    "tag": "v5.57-tahoe",
+    "name": "5.57",
+    "display_version": "5.57",
+    "variant": {
+      "ja": "Tahoe版（Liquid Glass対応）",
+      "en": "Tahoe build (Liquid Glass)"
+    },
+    "assets": [
+      {
+        "kind": "app",
+        "name": "texshop557-tahoe.zip",
+        "url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshop557-tahoe.zip",
+        "download_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshop557-tahoe.zip",
+        "sha256": "a8b42f729c90f660b5be5a33de0c1b0f5a73bb2e45c95cb78407b709b4323b79",
+        "status": "ok",
+        "size": 61184387,
+        "plist_min": "10.13",
+        "architectures": [
+          {
+            "cpu": "arm64"
+          },
+          {
+            "cpu": "x86_64"
+          }
+        ],
+        "icon_png_sha256": "800f8df72d5cb99adebeda41a734da0d2c254c7507031287b0a2cd1d464a33ab"
+      },
+      {
+        "kind": "source",
+        "name": "texshopsource557-tahoe.zip",
+        "url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshopsource557-tahoe.zip",
+        "download_url": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/texshopsource557-tahoe.zip",
+        "sha256": "9f8538d11ab8adde4d386243c9e0cb574312e5d8fe9118988fea224ba61c0adc",
+        "status": "ok",
+        "size": 182236421
+      }
+    ],
+    "os_note": {
+      "ja": "Tahoe 26.1以降推奨",
+      "en": "Tahoe 26.1 or later recommended"
+    }
   }
 ]

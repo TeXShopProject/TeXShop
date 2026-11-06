@@ -851,5 +851,11 @@
   "v5.59": {
     "path": "release-notes.html#v5.59",
     "path_ja": "release-notes-ja.html#v5.59"
+  },
+  "v5.58": {
+    "path": "archive/golden-gate.html#section-4"
+  },
+  "v5.57-tahoe": {
+    "path": "archive/tahoe.html#section-2"
   }
 }

@@ -86,7 +86,8 @@ for ja in (False,True):
    if not requirement_app.get('plist_min') and inferred.get('minimum_os'):
     requirement_app['plist_min']=inferred['minimum_os']
   os,cpu=details(requirement_app,ja)
-  version=esc(r['tag'][1:]); dateinfo=dates.get(r['tag'][1:]); stamp=''
+  if r.get('os_note'): os += '<small>'+html.escape(r['os_note']['ja' if ja else 'en'])+'</small>'
+  version=esc(r.get('display_version',r['tag'][1:])); dateinfo=dates.get(r['tag'][1:]); stamp=''
   match=re.fullmatch(r'v5\.(\d+)',r['tag'])
   if app and match and int(match.group(1))<=48:
    os+=('<small>macOS 10.14 Mojaveでは起動不可</small>' if ja else '<small>Does not run on macOS 10.14 Mojave</small>')
@@ -101,6 +102,7 @@ for ja in (False,True):
    badge=f'<small class="release-status first-official">{label_text}</small>'; version_contents=version_link+stamp+badge; version_class='release-version first-release-version'
   else:
    version_contents=version_link+badge+stamp; version_class='release-version'
+  if r.get('variant'): version_contents += '<small class="release-variant">'+html.escape(r['variant']['ja' if ja else 'en'])+'</small>'
   icon_note=icon_notes.get(r['tag'])
   if icon_note:
    version_contents += f'<small class="icon-transition-note">{html.escape(icon_note["ja" if ja else "en"])}</small>'; version_class='release-version first-release-version'
@@ -118,12 +120,6 @@ for ja in (False,True):
  rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(first_cells))+'</tr>')
  note=('過去のバージョンをダウンロードできます。' if ja else 'Download previous versions of TeXShop.')
  heading=''.join('<th scope="col">'+esc(x)+'</th>' for x in labels)
- special=re.search(r'<tr>\s*<td data-label="[^"]+"><div class="release-version">(?:(?!</tr>).)*?TeXShop 5\.58(?:(?!</tr>).)*?</tr>',oldmain,re.S)
- assert special, 'Missing 5.58 in selected older releases'
- special_row=special.group(0).replace('TeXShop 5.58<small', '<a href="archive/golden-gate.html#section-4">TeXShop 5.58</a><small')
- assert special_row!=special.group(0), 'Missing 5.58 version label'
- special_index=sum(bool(r['assets']) and order(r)>order({'tag':'v5.58'}) for r in meta)
- rows.insert(special_index,special_row)
  back='<a href="downloads-ja.html">‹ リリース履歴</a>' if ja else '<a href="downloads.html">‹ Releases</a>'
  main=f'<main class="archive-content downloads"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)
