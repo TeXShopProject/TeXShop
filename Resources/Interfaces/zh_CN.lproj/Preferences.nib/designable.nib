@@ -149,6 +149,7 @@
                 <outlet property="_syncMatrix" destination="782" id="820"/>
                 <outlet property="_syncTabButton" destination="DK3-nI-ugS" id="aEd-SZ-Xp7"/>
                 <outlet property="_syntaxColorButton" destination="839" id="847"/>
+                <outlet property="_makeatletterButton" destination="xCO-2R-MtT" id="u0R-dx-In9"/>
                 <outlet property="_syntaxColorLineButton" destination="9zW-5t-3xn" id="kkO-I1-ZH7"/>
                 <outlet property="_tabIndentButton" destination="P4v-Lw-RHd" id="eYv-hj-YBM"/>
                 <outlet property="_tabView" destination="7" id="Hss-H1-qJz"/>
@@ -758,14 +759,14 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="编辑器" translatesAutoresizingMaskIntoConstraints="NO" id="63">
-                                            <rect key="frame" x="64" y="325" width="256" height="290" />
+                                            <rect key="frame" x="64" y="305" width="256" height="310" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gwW-Ne-75A">
-                                                <rect key="frame" x="0.0" y="0.0" width="256" height="278" />
+                                                <rect key="frame" x="0.0" y="0.0" width="256" height="298" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="621">
-                                                        <rect key="frame" x="28" y="9" width="252" height="218" />
+                                                        <rect key="frame" x="28" y="9" width="252" height="238" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="252" height="18"/>
@@ -781,6 +782,13 @@ DQ
                                                                     <font key="font" metaFont="system"/>
                                                                     <connections>
                                                                         <action selector="syntaxColorPressed:" target="-2" id="848"/>
+                                                                    </connections>
+                                                                </buttonCell>
+                                                                <buttonCell type="check" title="将 @ 视为命令名的一部分" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="xCO-2R-MtT">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <connections>
+                                                                        <action selector="makeatletterChanged:" target="-2" id="trW-hc-5WM"/>
                                                                     </connections>
                                                                 </buttonCell>
                                                                 <buttonCell type="check" title="配对括号" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="1" inset="2" id="840">
@@ -857,7 +865,7 @@ DQ
                                                         </cells>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P4v-Lw-RHd">
-                                                        <rect key="frame" x="28" y="251" width="126" height="18" />
+                                                        <rect key="frame" x="28" y="271" width="126" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="用制表符缩进菜单" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4RZ-AZ-eCe">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -868,7 +876,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9zW-5t-3xn">
-                                                        <rect key="frame" x="28" y="231" width="203" height="18" />
+                                                        <rect key="frame" x="28" y="251" width="203" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="高亮当前行" bezelStyle="regularSquare" imagePosition="left" inset="2" id="W2X-GZ-WvK">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1089,7 +1097,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="显示不可见字符" translatesAutoresizingMaskIntoConstraints="NO" id="1032">
-                                            <rect key="frame" x="64" y="175" width="256" height="138" />
+                                            <rect key="frame" x="64" y="155" width="256" height="138" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="xfx-Zn-Dtu">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="126" />

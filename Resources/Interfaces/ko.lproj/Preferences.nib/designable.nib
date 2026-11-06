@@ -149,6 +149,7 @@
                 <outlet property="_syncMatrix" destination="217" id="431"/>
                 <outlet property="_syncTabButton" destination="KT1-Ag-NwE" id="gHe-VG-gEs"/>
                 <outlet property="_syntaxColorButton" destination="32" id="432"/>
+                <outlet property="_makeatletterButton" destination="BdV-X1-ril" id="mjT-Ty-wLx"/>
                 <outlet property="_syntaxColorLineButton" destination="M4H-oQ-6aF" id="X5F-df-A3p"/>
                 <outlet property="_tabIndentButton" destination="28" id="433"/>
                 <outlet property="_tabView" destination="5" id="434"/>
@@ -729,14 +730,14 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="에디터" translatesAutoresizingMaskIntoConstraints="NO" id="24">
-                                            <rect key="frame" x="63" y="320" width="256" height="290" />
+                                            <rect key="frame" x="63" y="300" width="256" height="310" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Jqp-gg-4td">
-                                                <rect key="frame" x="0.0" y="0.0" width="256" height="278" />
+                                                <rect key="frame" x="0.0" y="0.0" width="256" height="298" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="30">
-                                                        <rect key="frame" x="26" y="9" width="252" height="218" />
+                                                        <rect key="frame" x="26" y="9" width="252" height="238" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="252" height="18"/>
@@ -752,6 +753,13 @@ DQ
                                                                     <font key="font" metaFont="system"/>
                                                                     <connections>
                                                                         <action selector="syntaxColorPressed:" target="-2" id="493"/>
+                                                                    </connections>
+                                                                </buttonCell>
+                                                                <buttonCell type="check" title="@를 명령 이름의 일부로 취급" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="BdV-X1-ril">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <connections>
+                                                                        <action selector="makeatletterChanged:" target="-2" id="V75-RW-7r9"/>
                                                                     </connections>
                                                                 </buttonCell>
                                                                 <buttonCell type="check" title="괄호 여닫기 체크" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="1" inset="2" id="33">
@@ -828,7 +836,7 @@ DQ
                                                         </cells>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="28">
-                                                        <rect key="frame" x="26" y="251" width="87" height="18" />
+                                                        <rect key="frame" x="26" y="271" width="87" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="탭 문자 사용" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="29">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -839,7 +847,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M4H-oQ-6aF">
-                                                        <rect key="frame" x="26" y="230" width="203" height="20" />
+                                                        <rect key="frame" x="26" y="250" width="203" height="20" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="현재 줄 강조" bezelStyle="regularSquare" imagePosition="left" inset="2" id="vqZ-PU-oUb">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -854,7 +862,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="숨김 문자 표시" translatesAutoresizingMaskIntoConstraints="NO" id="61">
-                                            <rect key="frame" x="63" y="170" width="256" height="138" />
+                                            <rect key="frame" x="63" y="150" width="256" height="138" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="QC2-nK-Rzw">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="126" />

@@ -171,7 +171,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	invisibleCharacterTouched = NO; // added by Terada
 	kpsetoolTouched = NO; // added by Terada
 	bibTeXengineTouched = NO; // added by Terada
-//	makeatletterTouched = NO; // added by Terada
+	makeatletterTouched = NO; // added by Terada
     sparkleTouched = NO;
 #ifdef USESPARKLE
     // Added by Terada: snapshot both updater settings once for Cancel.
@@ -607,7 +607,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 }
 
 // added by Terada( - (IBAction)makeatletterChanged: )
-/* Commented out by Koch
 - (IBAction)makeatletterChanged:(id)sender
 {
 	// register the undo message first
@@ -617,7 +616,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	makeatletterTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 }
-*/
 
 // added by Terada( - (IBAction)kpsetoolChanged: )
 - (IBAction)kpsetoolChanged:sender
@@ -2182,9 +2180,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"CommandCompletionCharNotification" object: self];
 	}
 	// added by Terada
-	// third test removed by Koch
-	// if (highlightTouched || invisibleCharacterTouched || makeatletterTouched) {
-	if (highlightTouched || invisibleCharacterTouched) {
+	if (highlightTouched || invisibleCharacterTouched || makeatletterTouched) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 	}
     
@@ -2400,7 +2396,7 @@ This method retrieves the application preferences from the defaults object and s
 	[_FullwidthSpaceCharacterKindMatrix selectCellWithTag:[defaults integerForKey:FullwidthSpaceCharacterKindKey]]; // added by Terada
 	[_NewLineCharacterKindMatrix selectCellWithTag:[defaults integerForKey:NewLineCharacterKindKey]]; // added by Terada
 	[_TabCharacterKindMatrix selectCellWithTag:[defaults integerForKey:TabCharacterKindKey]]; // added by Terada
-//	[_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]]; // added by Terada
+	[_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]]; // added by Terada
 
 	NSString *kpsetool = [defaults objectForKey:KpsetoolKey];
 	if (!kpsetool || [kpsetool isEqualToString:@""]) {

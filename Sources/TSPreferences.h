@@ -137,7 +137,7 @@
 	IBOutlet NSButton *_checkParenButton; // added by Terada
 	IBOutlet NSTextField *_kpsetoolField; // added by Terada
 	IBOutlet NSTextField *_bibTeXengineField; // added by Terada
-//	IBOutlet NSButton *_makeatletterButton; // added by Terada
+	IBOutlet NSButtonCell *_makeatletterButton; // added by Terada
     
     IBOutlet NSTextField *_HtmlHomeField;
     
@@ -184,7 +184,7 @@
 	BOOL            highlightTouched; // added by Terada
 	BOOL            kpsetoolTouched; // added by Terada
 	BOOL            bibTeXengineTouched; // added by Terada
-//	BOOL            makeatletterTouched; // added by Terada
+	BOOL            makeatletterTouched; // added by Terada
     BOOL            sparkleTouched;
     BOOL            xmlTagsTouched;
    
@@ -382,7 +382,7 @@
 - (IBAction)invisibleCharacterChanged:sender; // added by Terada
 - (IBAction)kpsetoolChanged:sender; // added by Terada
 - (IBAction)bibTeXengineChanged:sender; // added by Terada
-// - (IBAction)makeatletterChanged:sender; // added by Terada
+- (IBAction)makeatletterChanged:sender; // added by Terada
 
 - (IBAction)HtmlHomeChanged:sender;
 
