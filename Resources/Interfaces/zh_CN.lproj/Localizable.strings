@@ -140,3 +140,12 @@
 "This document uses classic Mac line endings (CR)." = "此文稿使用经典 Mac 换行符（CR）。";
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop 已将所有换行符转换为 LF。存储文稿时，文件将使用 LF 换行符。";
 "Don’t show again for this document" = "对此文稿不再显示";
+
+/* Engine path discovery */
+"Set Up TeX Engine Paths" = "设置 TeX 引擎路径";
+"Detected Engine Paths" = "检测到的引擎路径";
+"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "已选中检测到的最新版本。您可以在下方选择其他候选项。自定义引擎命令和备用路径保持不变。";
+"Not found (current setting will be kept)" = "未找到（将保留当前设置）";
+"Version unavailable" = "未知";
+"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "请先安装 TeX 发行版，然后在“设置 > 引擎”中运行自动设置。";
+"Use These Paths" = "使用这些路径";

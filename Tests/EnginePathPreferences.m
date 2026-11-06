@@ -1,6 +1,18 @@
 #import <Cocoa/Cocoa.h>
 
-static NSUserDefaults *defaults;
+@interface MemoryDefaults : NSObject
+@property NSMutableDictionary *values;
+- (NSString *)stringForKey:(NSString *)key;
+- (void)setObject:(id)value forKey:(NSString *)key;
+@end
+@implementation MemoryDefaults
+- (instancetype)init { if ((self = [super init])) _values = [NSMutableDictionary dictionary]; return self; }
+- (NSString *)stringForKey:(NSString *)key { return self.values[key]; }
+- (void)setObject:(id)value forKey:(NSString *)key { self.values[key] = value; }
+@end
+static MemoryDefaults *defaults;
+static NSModalResponse modalResponse = NSAlertSecondButtonReturn;
+static NSUInteger modalCount;
 #define SUD defaults
 static NSString *TetexBinPath = @"TetexBinPath", *GSBinPath = @"GSBinPath";
 static NSDictionary *results;
@@ -25,11 +37,15 @@ static TestAlert *shown;
 - (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse))handler {
     self.completion = handler; shown = self;
 }
-- (NSModalResponse)runModal { shown = self; return NSAlertSecondButtonReturn; }
+- (NSModalResponse)runModal { shown = self; modalCount++; return modalResponse; }
 @end
-@interface TestWindow : NSWindow @end
+@interface TestWindow : NSWindow
+@property BOOL testVisible;
+@property NSUInteger frontCount;
+@end
 @implementation TestWindow
-- (BOOL)isVisible { return YES; }
+- (BOOL)isVisible { return self.testVisible; }
+- (void)makeKeyAndOrderFront:(id)sender { self.frontCount++; self.testVisible = YES; }
 @end
 @interface PreferencesProbe : NSObject {
 @public
@@ -37,6 +53,7 @@ static TestAlert *shown;
     NSTextField *_tetexBinPathField, *_gsBinPathField;
     NSUndoManager *_undoManager;
 }
+@property BOOL initialEnginePathSearchPending;
 @property NSUInteger enginePathSearchGeneration;
 @property (weak) NSButton *enginePathSearchButton;
 @end
@@ -61,23 +78,26 @@ static void finish(NSModalResponse response) {
 int main(void) { @autoreleasepool {
     [NSApplication sharedApplication];
     [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
-    NSString *suite = [@"org.texshop.tests.discovery." stringByAppendingString:NSUUID.UUID.UUIDString];
-    defaults = [[NSUserDefaults alloc] initWithSuiteName:suite];
+    defaults = [MemoryDefaults new];
     [defaults setObject:@"/old/tex" forKey:TetexBinPath];
     [defaults setObject:@"/old/gs" forKey:GSBinPath];
-    results = @{@"TeX":@[candidate(@"/new/tex",@"TeX Live 2026"),candidate(@"/old/tex",@"TeX Live 2025")],
-                @"Ghostscript":@[candidate(@"/new/gs",@"10.10.0"),candidate(@"/old/gs",@"10.9.0")]};
+    results = @{@"TeX":@[candidate(@"/new/tex",@"TeX Live 2026"),candidate(@"/old/tex",@"TeX Live 2025"),candidate(@"/unknown/tex",@"")],
+                @"Ghostscript":@[candidate(@"/new/gs",@"10.10.0"),candidate(@"/old/gs",@"10.9.0"),candidate(@"/unknown/gs",@"")]};
     PreferencesProbe *p = [PreferencesProbe new];
     p->_prefsWindow = [[TestWindow alloc] initWithContentRect:NSMakeRect(0,0,800,800) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+    ((TestWindow *)p->_prefsWindow).testVisible = YES;
     p->_tetexBinPathField = [NSTextField new]; p->_tetexBinPathField.stringValue = @"/old/tex";
     p->_gsBinPathField = [NSTextField new]; p->_gsBinPathField.stringValue = @"/old/gs";
     p->_undoManager = [NSUndoManager new]; p->_undoManager.groupsByEvent = NO;
     [p->_undoManager beginUndoGrouping];
     NSButton *button = [NSButton new];
     [p discoverEnginePaths:button]; spin();
+    check(shown.buttons.count == 2 && [shown.buttons[1].title isEqual:@"Cancel"], @"candidate dialog offers Cancel");
     check(shown != nil && button.enabled, @"asynchronous results presented");
     check(matrices().count == 2 && matrices()[0].selectedRow == 0 && matrices()[1].selectedRow == 0, @"newest preselected for both lists");
-    check(matrices()[0].numberOfRows == 2 && matrices()[1].numberOfRows == 2, @"all alternatives selectable");
+    check(matrices()[0].numberOfRows == 3 && matrices()[1].numberOfRows == 3, @"all alternatives selectable");
+    check([[[matrices()[0] cellAtRow:2 column:0] title] isEqual:@"Version unavailable\n/unknown/tex"] &&
+          [[[matrices()[1] cellAtRow:2 column:0] title] isEqual:@"Version unavailable\n/unknown/gs"], @"unknown version displayed explicitly with path in both lists");
     [matrices()[0] selectCellAtRow:1 column:0];
     finish(NSAlertFirstButtonReturn);
     check([[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"] && [[defaults stringForKey:GSBinPath] isEqual:@"/new/gs"], @"user can choose older TeX with newer Ghostscript");
@@ -94,8 +114,37 @@ int main(void) { @autoreleasepool {
     p->_tetexBinPathField.stringValue = @"/old/tex";
     shown = nil; [p discoverEnginePaths:button]; [p cancelEnginePathDiscovery]; spin();
     check(shown == nil && button.enabled, @"closing Settings discards pending discovery");
+    ((TestWindow *)p->_prefsWindow).testVisible = NO;
     [p discoverInitialEnginePaths]; spin();
-    check(shown != nil && [[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"], @"initial setup Cancel is non-destructive");
+    check(shown != nil && modalCount == 1 && [[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"], @"initial modal Cancel is non-destructive");
+    [p->_undoManager removeAllActions];
+    modalResponse = NSAlertFirstButtonReturn;
+    [p discoverInitialEnginePaths]; spin();
+    check(modalCount == 2 && [[defaults stringForKey:TetexBinPath] isEqual:@"/new/tex"] &&
+          [[defaults stringForKey:GSBinPath] isEqual:@"/new/gs"] && !p->_undoManager.canUndo,
+          @"initial modal confirmation applies without Settings undo group");
+    [defaults setObject:@"/old/tex" forKey:TetexBinPath];
+    [defaults setObject:@"/old/gs" forKey:GSBinPath];
+    [p->_undoManager beginUndoGrouping];
+    shown = nil;
+    [p discoverInitialEnginePaths];
+    NSUInteger generation = p.enginePathSearchGeneration;
+    [p showPreferences:nil];
+    check(p.initialEnginePathSearchPending && p.enginePathSearchGeneration == generation, @"opening Settings preserves initial discovery");
+    spin();
+    check(shown.completion != nil && modalCount == 2, @"initial result becomes sheet when Settings opens");
+    finish(NSAlertFirstButtonReturn);
+    check([p->_tetexBinPathField.stringValue isEqual:@"/new/tex"], @"initial result refreshes open Settings");
+    [p->_undoManager endUndoGrouping]; [p->_undoManager undo];
+    check([[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"] && [[defaults stringForKey:GSBinPath] isEqual:@"/old/gs"], @"Settings Cancel undoes initial result applied in sheet");
+    p->_tetexBinPathField.stringValue = @"/old/tex";
+    p->_gsBinPathField.stringValue = @"/old/gs";
+    shown = nil; [p discoverEnginePaths:button];
+    generation = p.enginePathSearchGeneration;
+    [p showPreferences:nil];
+    check(p.enginePathSearchGeneration == generation && !button.enabled, @"reselecting open Settings does not cancel discovery");
+    spin(); check(shown != nil, @"discovery survives reselecting Settings");
+    finish(NSAlertSecondButtonReturn);
     [p discoverEnginePaths:button]; spin(); validPaths = NO; finish(NSAlertFirstButtonReturn);
     check([[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"], @"removed installation not applied");
     validPaths = YES;
@@ -103,6 +152,5 @@ int main(void) { @autoreleasepool {
     [p discoverEnginePaths:button]; spin();
     check(matrices().count == 0 && shown.buttons.count == 1, @"nothing found gives informational dialog");
     finish(NSAlertFirstButtonReturn);
-    [defaults removePersistentDomainForName:suite];
     NSLog(@"PASS: candidate selection, Cancel/undo, stale results, initial setup, removed and missing tools");
 } return 0; }

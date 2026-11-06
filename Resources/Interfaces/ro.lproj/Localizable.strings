@@ -143,3 +143,12 @@
 "This document uses classic Mac line endings (CR)." = "Acest document folosește terminații de linie Mac clasic (CR).";
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop a convertit toate terminațiile de linie în LF. Când salvați documentul, fișierul va avea terminații de linie LF.";
 "Don’t show again for this document" = "Nu mai afișa pentru acest document";
+
+/* Engine path discovery */
+"Set Up TeX Engine Paths" = "Configurarea căilor motoarelor TeX";
+"Detected Engine Paths" = "Căi ale motoarelor detectate";
+"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "Este selectată cea mai nouă instalare detectată. Puteți alege alta din lista de mai jos. Comenzile motoarelor personalizate și calea alternativă rămân neschimbate.";
+"Not found (current setting will be kept)" = "Nu a fost găsit (se păstrează configurarea actuală)";
+"Version unavailable" = "Necunoscută";
+"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instalați o distribuție TeX, apoi porniți configurarea automată din Configurări > Motor.";
+"Use These Paths" = "Folosește aceste căi";

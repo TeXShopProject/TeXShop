@@ -55,6 +55,7 @@ static NSString *TSPreferencesDomainName(void)
 
 @interface TSPreferences ()
 @property NSUInteger enginePathSearchGeneration;
+@property BOOL initialEnginePathSearchPending;
 @property (weak) NSButton *enginePathSearchButton;
 - (void)searchEnginePathsForInitialSetup:(BOOL)initial sender:(NSButton *)sender;
 @end
@@ -127,7 +128,11 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 "*/
 - (IBAction)showPreferences:sender
 {
-    [self cancelEnginePathDiscovery];
+    if (_prefsWindow.visible) {
+        [_prefsWindow makeKeyAndOrderFront:sender];
+        return;
+    }
+    if (!self.initialEnginePathSearchPending) [self cancelEnginePathDiscovery];
 	if (_prefsWindow == nil) {
 		// we need to load the nib
 		if ([NSBundle loadNibNamed:@"Preferences" owner:self] == NO) {
@@ -1655,6 +1660,7 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 - (void)cancelEnginePathDiscovery
 {
     self.enginePathSearchGeneration++;
+    self.initialEnginePathSearchPending = NO;
     self.enginePathSearchButton.enabled = YES;
     self.enginePathSearchButton = nil;
 }
@@ -1682,6 +1688,7 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 {
     [self cancelEnginePathDiscovery];
     NSUInteger generation = self.enginePathSearchGeneration;
+    self.initialEnginePathSearchPending = initial;
     self.enginePathSearchButton = sender;
     sender.enabled = NO;
     NSArray *snapshot = @[[SUD stringForKey:TetexBinPath] ?: @"", [SUD stringForKey:GSBinPath] ?: @""];
@@ -1690,8 +1697,11 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
                                                   currentTeX:snapshot[0] currentGhostscript:snapshot[1]];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (generation != self.enginePathSearchGeneration) return;
+            self.initialEnginePathSearchPending = NO;
             sender.enabled = YES;
-            if ((!initial && !self->_prefsWindow.visible) || ![self enginePathSnapshotMatches:snapshot initial:initial]) return;
+            // If Settings opened during the initial search, use its sheet and undo group.
+            BOOL applyInitial = initial && !self->_prefsWindow.visible;
+            if ((!initial && !self->_prefsWindow.visible) || ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
             NSAlert *alert = [NSAlert new];
             alert.messageText = NSLocalizedString(initial ? @"Set Up TeX Engine Paths" : @"Detected Engine Paths", @"");
             BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
@@ -1750,7 +1760,8 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
             if (hasPaths) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
             void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
                 if (response != NSAlertFirstButtonReturn || !hasPaths || generation != self.enginePathSearchGeneration ||
-                    ![self enginePathSnapshotMatches:snapshot initial:initial]) return;
+                    (!applyInitial && !self->_prefsWindow.visible) ||
+                    ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
                 NSArray *keys = @[TetexBinPath, GSBinPath];
                 NSArray *names = @[@"TeX", @"Ghostscript"];
                 NSArray *required = @[@[@"tex", @"latex", @"pdftex", @"pdflatex"], @[@"gs"]];
@@ -1758,15 +1769,15 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
                     NSMatrix *matrix = matrices[names[i]];
                     NSString *path = matrix ? found[names[i]][matrix.selectedRow][@"path"] : nil;
                     if (!path || ![TSEnginePathDiscovery directory:path containsPrograms:required[i]]) continue;
-                    if (!initial) [[self->_undoManager prepareWithInvocationTarget:SUD] setObject:snapshot[i] forKey:keys[i]];
+                    if (!applyInitial) [[self->_undoManager prepareWithInvocationTarget:SUD] setObject:snapshot[i] forKey:keys[i]];
                     [SUD setObject:path forKey:keys[i]];
                 }
-                if (!initial) {
+                if (!applyInitial) {
                     self->_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath];
                     self->_gsBinPathField.stringValue = [SUD stringForKey:GSBinPath];
                 }
             };
-            if (initial) finish([alert runModal]);
+            if (applyInitial) finish([alert runModal]);
             else [alert beginSheetModalForWindow:self->_prefsWindow completionHandler:finish];
         });
     });
