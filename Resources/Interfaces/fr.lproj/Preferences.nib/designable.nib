@@ -56,11 +56,11 @@
                 <outlet property="XMLsubsection" destination="VBX-Dz-eZs" id="CBr-RG-llv"/>
                 <outlet property="XMLsubsubsection" destination="74x-2W-cRJ" id="dNI-Un-3Tm"/>
                 <outlet property="XMLtable" destination="1H0-G4-Woo" id="vbe-Dq-f0Y"/>
-                <outlet property="_FullwidthSpaceCharacterKindMatrix" destination="1071" id="1109"/>
+                <outlet property="_FullwidthSpaceCharacterKindPopup" destination="1071" id="1109"/>
                 <outlet property="_HtmlHomeField" destination="4Cf-Ok-xxp" id="6vs-dD-bOl"/>
-                <outlet property="_NewLineCharacterKindMatrix" destination="1070" id="1110"/>
-                <outlet property="_SpaceCharacterKindMatrix" destination="1072" id="1108"/>
-                <outlet property="_TabCharacterKindMatrix" destination="1069" id="1111"/>
+                <outlet property="_NewLineCharacterKindPopup" destination="1070" id="1110"/>
+                <outlet property="_SpaceCharacterKindPopup" destination="1072" id="1108"/>
+                <outlet property="_TabCharacterKindPopup" destination="1069" id="1111"/>
                 <outlet property="_afterTypesettingMatrix" destination="678" id="682"/>
                 <outlet property="_altPathField" destination="YHa-6v-GhU" id="aGz-m2-I8f"/>
                 <outlet property="_alternateEngineTextField" destination="pfa-HV-MlK" id="bPR-b0-PNp"/>
@@ -725,14 +725,14 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Affichage des caractères invisibles" translatesAutoresizingMaskIntoConstraints="NO" id="1067">
-                                            <rect key="frame" x="47" y="170" width="289" height="138" />
+                                            <rect key="frame" x="47" y="150" width="289" height="158" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Hyy-cw-xT6">
-                                                <rect key="frame" x="0.0" y="0.0" width="289" height="126" />
+                                                <rect key="frame" x="0.0" y="0.0" width="289" height="146" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1073">
-                                                        <rect key="frame" x="16" y="99" width="141" height="18" />
+                                                        <rect key="frame" x="16" y="119" width="141" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Espace usuel" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1080">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -743,7 +743,7 @@ DQ
                                                         </buttonCell>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1074">
-                                                        <rect key="frame" x="16" y="77" width="148" height="18" />
+                                                        <rect key="frame" x="16" y="93" width="148" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Espace japonais" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1079">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -754,7 +754,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1075">
-                                                        <rect key="frame" x="16" y="55" width="139" height="18" />
+                                                        <rect key="frame" x="16" y="67" width="139" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Retour à la ligne" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1078">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -765,7 +765,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1076">
-                                                        <rect key="frame" x="16" y="33" width="111" height="18" />
+                                                        <rect key="frame" x="16" y="41" width="111" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Tabulation" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1077">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -775,118 +775,61 @@ DQ
                                                             <action selector="invisibleCharacterChanged:" target="-2" id="1097"/>
                                                         </connections>
                                                     </button>
-                                                    <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1072">
-                                                        <rect key="frame" x="187" y="97" width="74" height="18" />
+                                                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1072">
+                                                        <rect key="frame" x="187" y="115" width="74" height="26"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="cellSize" width="35" height="18"/>
-                                                        <size key="intercellSpacing" width="4" height="2"/>
-                                                        <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="1082">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <cells>
-                                                            <column>
-                                                                <buttonCell type="radio" title="␣" imagePosition="left" alignment="left" state="on" inset="2" id="1081">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </column>
-                                                            <column>
-                                                                <buttonCell type="radio" title="·" imagePosition="left" alignment="left" tag="1" inset="2" id="1083">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </column>
-                                                        </cells>
-                                                        <connections>
-                                                            <action selector="invisibleCharacterChanged:" target="-2" id="1098"/>
-                                                        </connections>
-                                                    </matrix>
-                                                    <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1071">
-                                                        <rect key="frame" x="187" y="75" width="74" height="18" />
+                                                        <popUpButtonCell key="cell" type="push" title="␣" bezelStyle="rounded" alignment="center" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="inv-1072-item-0" id="inv-1072-cell">
+                                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system" size="15"/>
+                                                            <menu key="menu" title="" id="inv-1072-menu"><items>
+                                                            <menuItem title="␣" tag="0" id="inv-1072-item-0"/>
+                                                            <menuItem title="·" tag="1" id="inv-1072-item-1"/>
+                                                            </items></menu>
+                                                        </popUpButtonCell>
+                                                        <connections><action selector="invisibleCharacterChanged:" target="-2" id="inv-1072-action"/></connections>
+                                                    </popUpButton>
+                                                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1071">
+                                                        <rect key="frame" x="187" y="89" width="74" height="26"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="cellSize" width="35" height="18"/>
-                                                        <size key="intercellSpacing" width="4" height="2"/>
-                                                        <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="1085">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <cells>
-                                                            <column>
-                                                                <buttonCell type="radio" title="□" imagePosition="left" alignment="left" state="on" inset="2" id="1086">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </column>
-                                                            <column>
-                                                                <buttonCell type="radio" title="■" imagePosition="left" alignment="left" tag="1" inset="2" id="1084">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </column>
-                                                        </cells>
-                                                        <connections>
-                                                            <action selector="invisibleCharacterChanged:" target="-2" id="1099"/>
-                                                        </connections>
-                                                    </matrix>
-                                                    <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1070">
-                                                        <rect key="frame" x="187" y="53" width="74" height="18" />
+                                                        <popUpButtonCell key="cell" type="push" title="□" bezelStyle="rounded" alignment="center" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="inv-1071-item-0" id="inv-1071-cell">
+                                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system" size="15"/>
+                                                            <menu key="menu" title="" id="inv-1071-menu"><items>
+                                                            <menuItem title="□" tag="0" id="inv-1071-item-0"/>
+                                                            <menuItem title="■" tag="1" id="inv-1071-item-1"/>
+                                                            </items></menu>
+                                                        </popUpButtonCell>
+                                                        <connections><action selector="invisibleCharacterChanged:" target="-2" id="inv-1071-action"/></connections>
+                                                    </popUpButton>
+                                                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1070">
+                                                        <rect key="frame" x="187" y="63" width="74" height="26"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="cellSize" width="35" height="18"/>
-                                                        <size key="intercellSpacing" width="4" height="2"/>
-                                                        <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="1088">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <cells>
-                                                            <column>
-                                                                <buttonCell type="radio" title="↵" imagePosition="left" alignment="left" state="on" inset="2" id="1087">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </column>
-                                                            <column>
-                                                                <buttonCell type="radio" title="¶" imagePosition="left" alignment="left" tag="1" inset="2" id="1089">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </column>
-                                                        </cells>
-                                                        <connections>
-                                                            <action selector="invisibleCharacterChanged:" target="-2" id="1100"/>
-                                                        </connections>
-                                                    </matrix>
-                                                    <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1069">
-                                                        <rect key="frame" x="187" y="31" width="74" height="18" />
+                                                        <popUpButtonCell key="cell" type="push" title="↵" bezelStyle="rounded" alignment="center" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="inv-1070-item-0" id="inv-1070-cell">
+                                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system" size="15"/>
+                                                            <menu key="menu" title="" id="inv-1070-menu"><items>
+                                                            <menuItem title="↵" tag="0" id="inv-1070-item-0"/>
+                                                            <menuItem title="¶" tag="1" id="inv-1070-item-1"/>
+                                                            <menuItem title="↩" tag="2" id="inv-1070-item-2"/>
+                                                            <menuItem title="⏎" tag="3" id="inv-1070-item-3"/>
+                                                            </items></menu>
+                                                        </popUpButtonCell>
+                                                        <connections><action selector="invisibleCharacterChanged:" target="-2" id="inv-1070-action"/></connections>
+                                                    </popUpButton>
+                                                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1069">
+                                                        <rect key="frame" x="187" y="37" width="74" height="26"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="cellSize" width="35" height="18"/>
-                                                        <size key="intercellSpacing" width="4" height="2"/>
-                                                        <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="1091">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <cells>
-                                                            <column>
-                                                                <buttonCell type="radio" title="‣" imagePosition="left" alignment="left" state="on" inset="2" id="1092">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </column>
-                                                            <column>
-                                                                <buttonCell type="radio" title="▹" imagePosition="left" alignment="left" tag="1" inset="2" id="1090">
-                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                    <font key="font" metaFont="system"/>
-                                                                </buttonCell>
-                                                            </column>
-                                                        </cells>
-                                                        <connections>
-                                                            <action selector="invisibleCharacterChanged:" target="-2" id="1101"/>
-                                                        </connections>
-                                                    </matrix>
+                                                        <popUpButtonCell key="cell" type="push" title="‣" bezelStyle="rounded" alignment="center" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="inv-1069-item-0" id="inv-1069-cell">
+                                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system" size="15"/>
+                                                            <menu key="menu" title="" id="inv-1069-menu"><items>
+                                                            <menuItem title="‣" tag="0" id="inv-1069-item-0"/>
+                                                            <menuItem title="▹" tag="1" id="inv-1069-item-1"/>
+                                                            <menuItem title="⇥" tag="2" id="inv-1069-item-2"/>
+                                                            </items></menu>
+                                                        </popUpButtonCell>
+                                                        <connections><action selector="invisibleCharacterChanged:" target="-2" id="inv-1069-action"/></connections>
+                                                    </popUpButton>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1068">
                                                         <rect key="frame" x="16" y="11" width="171" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>

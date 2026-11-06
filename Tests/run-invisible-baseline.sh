@@ -3,10 +3,24 @@
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 output="$(mktemp -d /tmp/texshop-invisible.XXXXXX)"
-trap 'rm -rf "$output"' EXIT
-extra=()
-if test -f "$root/Sources/TSATSTypesetter.m"; then extra+=("$root/Sources/TSATSTypesetter.m"); fi
-xcrun clang -fobjc-arc -framework Cocoa -I "$root/Sources" "$root/Tests/InvisibleCharacterBaseline.m" "$root/Sources/TSLayoutManager.m" "${extra[@]}" -o "$output/test"
+cleanup() {
+    if [ -d "$output/Probe.app" ]; then
+        /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$output/Probe.app" >/dev/null 2>&1 || true
+    fi
+    rm -rf "$output"
+}
+trap cleanup EXIT
+# Use the real preference key definitions rather than aliases in the fixture.
+python3 - "$root" "$output" <<'KEYS'
+from pathlib import Path
+import re, sys
+source = (Path(sys.argv[1]) / 'Sources/globals.m').read_text(encoding='latin1')
+keys = re.findall(r'^NSString \*(?:show(?:Space|FullwidthSpace|Tab|NewLine)CharacterKey|(?:Space|FullwidthSpace|Tab|NewLine)CharacterKindKey)\s*=.*?;', source, re.M)
+assert len(keys) == 8
+(Path(sys.argv[2]) / 'MarkerKeys.h').write_text('\n'.join(keys))
+KEYS
+set -- "${1:?Specify an output PNG path}"
+xcrun clang -fobjc-arc -framework Cocoa -I "$root/Sources" -I "$output" "$root/Tests/InvisibleCharacterBaseline.m" "$root/Sources/TSLayoutManager.m" -o "$output/test"
 # Verify independence from NSString drawing compatibility tied to the minimum OS declaration.
 mkdir -p "$output/Probe.app/Contents/MacOS"
 mv "$output/test" "$output/Probe.app/Contents/MacOS/Probe"

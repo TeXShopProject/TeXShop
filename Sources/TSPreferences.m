@@ -27,6 +27,7 @@
 #import "UseSparkle.h"
 
 #import "TSPreferences.h"
+#import "TSInvisibleCharacters.h"
 #import "TSDockIconController.h"
 #import "TSSpellSupport.h"
 #import "TSWindowManager.h"
@@ -573,6 +574,33 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 }
 
+- (void)updateInvisibleCharacterControls:(NSUserDefaults *)defaults
+{
+    NSArray *popups = @[_SpaceCharacterKindPopup, _FullwidthSpaceCharacterKindPopup,
+                        _NewLineCharacterKindPopup, _TabCharacterKindPopup];
+    NSArray *buttons = @[_showSpaceCharacterButton, _showFullwidthSpaceCharacterButton,
+                         _showNewLineCharacterButton, _showTabCharacterButton];
+    NSArray *keys = @[SpaceCharacterKindKey, FullwidthSpaceCharacterKindKey,
+                      NewLineCharacterKindKey, TabCharacterKindKey];
+    NSArray *showKeys = @[showSpaceCharacterKey, showFullwidthSpaceCharacterKey,
+                          showNewLineCharacterKey, showTabCharacterKey];
+    for (NSUInteger n = 0; n < popups.count; n++) {
+        NSPopUpButton *popup = popups[n];
+        NSButton *button = buttons[n];
+        NSArray<NSString *> *markers = TSInvisibleMarkers(keys[n]);
+        if (![popup.itemTitles isEqual:markers]) {
+            [popup removeAllItems];
+            [popup addItemsWithTitles:markers];
+        }
+        for (NSInteger i = 0; i < popup.numberOfItems; i++) [popup itemAtIndex:i].tag = i;
+        popup.font = [NSFont systemFontOfSize:15];
+        popup.menu.font = popup.font;
+        popup.accessibilityLabel = button.title;
+        [popup selectItemAtIndex:TSInvisibleStoredIndex(defaults, keys[n])];
+        popup.enabled = [defaults boolForKey:showKeys[n]];
+    }
+}
+
 // added by Terada( - (IBAction)invisibleCharacterChanged: )
 - (IBAction)invisibleCharacterChanged:(id)sender
 {
@@ -589,18 +617,15 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:showNewLineCharacterKey] forKey:showNewLineCharacterKey];
 	[SUD setBool:[_showNewLineCharacterButton state] forKey:showNewLineCharacterKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:SpaceCharacterKindKey] forKey:SpaceCharacterKindKey];
-	[SUD setInteger:[_SpaceCharacterKindMatrix selectedTag] forKey:SpaceCharacterKindKey];
+	TSSetInvisibleIndex(SUD, SpaceCharacterKindKey, [_SpaceCharacterKindPopup selectedItem].tag, _undoManager);
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:FullwidthSpaceCharacterKindKey] forKey:FullwidthSpaceCharacterKindKey];
-	[SUD setInteger:[_FullwidthSpaceCharacterKindMatrix selectedTag] forKey:FullwidthSpaceCharacterKindKey];
+	TSSetInvisibleIndex(SUD, FullwidthSpaceCharacterKindKey, [_FullwidthSpaceCharacterKindPopup selectedItem].tag, _undoManager);
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:NewLineCharacterKindKey] forKey:NewLineCharacterKindKey];
-	[SUD setInteger:[_NewLineCharacterKindMatrix selectedTag] forKey:NewLineCharacterKindKey];
+	TSSetInvisibleIndex(SUD, NewLineCharacterKindKey, [_NewLineCharacterKindPopup selectedItem].tag, _undoManager);
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:TabCharacterKindKey] forKey:TabCharacterKindKey];
-	[SUD setInteger:[_TabCharacterKindMatrix selectedTag] forKey:TabCharacterKindKey];
+	TSSetInvisibleIndex(SUD, TabCharacterKindKey, [_TabCharacterKindPopup selectedItem].tag, _undoManager);
 	
+    [self updateInvisibleCharacterControls:SUD];
 	invisibleCharacterTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 	
@@ -2402,10 +2427,7 @@ This method retrieves the application preferences from the defaults object and s
 	[_showSpaceCharacterButton setState:[defaults boolForKey:showSpaceCharacterKey]]; // added by Terada
 	[_showFullwidthSpaceCharacterButton setState:[defaults boolForKey:showFullwidthSpaceCharacterKey]]; // added by Terada
 	[_showNewLineCharacterButton setState:[defaults boolForKey:showNewLineCharacterKey]]; // added by Terada
-	[_SpaceCharacterKindMatrix selectCellWithTag:[defaults integerForKey:SpaceCharacterKindKey]]; // added by Terada
-	[_FullwidthSpaceCharacterKindMatrix selectCellWithTag:[defaults integerForKey:FullwidthSpaceCharacterKindKey]]; // added by Terada
-	[_NewLineCharacterKindMatrix selectCellWithTag:[defaults integerForKey:NewLineCharacterKindKey]]; // added by Terada
-	[_TabCharacterKindMatrix selectCellWithTag:[defaults integerForKey:TabCharacterKindKey]]; // added by Terada
+    [self updateInvisibleCharacterControls:defaults];
 //	[_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]]; // added by Terada
 
 	NSString *kpsetool = [defaults objectForKey:KpsetoolKey];

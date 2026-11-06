@@ -35,55 +35,16 @@
 
 #import "globals.h"
 #import "TSLayoutManager.h"
+#import "TSInvisibleCharacters.h"
 
 @implementation TSLayoutManager
 - (id)init
 {
 	self = [super init];
-	unichar _tabCharacter0 = 0x2023;
-	unichar _tabCharacter1 = 0x25B9;
-//	unichar _tabCharacter2 = 0x21E5;
-//	unichar _tabCharacter3 = 0x00AC;
-	unichar _newLineCharacter0 = 0x21B5;
-	unichar _newLineCharacter1 = 0x00B6;
-//	unichar _newLineCharacter2 = 0x21A9;
-//	unichar _newLineCharacter3 = 0x23CE;
-	unichar _fullwidthSpaceCharacter0 = 0x25A1;
-	unichar _fullwidthSpaceCharacter1 = 0x25A0;
-//	unichar _fullwidthSpaceCharacter2 = 0x2022;
-//	unichar _fullwidthSpaceCharacter3 = 0x22A0;
-	unichar _spaceCharacter0 = 0x2423;
-	unichar _spaceCharacter1 = 0x00B7;
-//	unichar _spaceCharacter2 = 0x02D0;
-//	unichar _spaceCharacter3 = 0x00B0;
-	self.tabCharacters = [NSArray arrayWithObjects:
-					 [NSString stringWithCharacters:&_tabCharacter0 length:1],
-					 [NSString stringWithCharacters:&_tabCharacter1 length:1],
-//					 [NSString stringWithCharacters:&_tabCharacter2 length:1],
-//					 [NSString stringWithCharacters:&_tabCharacter3 length:1],
-					 nil
-                    ];
-	self.nextLineCharacters = [NSArray arrayWithObjects:
-					 [NSString stringWithCharacters:&_newLineCharacter0 length:1],
-					 [NSString stringWithCharacters:&_newLineCharacter1 length:1],
-//					 [NSString stringWithCharacters:&_newLineCharacter2 length:1],
-//					 [NSString stringWithCharacters:&_newLineCharacter3 length:1],
-					 nil
-                    ];
-    self.fullwidthSpaceCharacters = [NSArray arrayWithObjects:
-								[NSString stringWithCharacters:&_fullwidthSpaceCharacter0 length:1],
-								[NSString stringWithCharacters:&_fullwidthSpaceCharacter1 length:1],
-//								[NSString stringWithCharacters:&_fullwidthSpaceCharacter2 length:1],
-//								[NSString stringWithCharacters:&_fullwidthSpaceCharacter3 length:1],
-								nil
-                                ];
-	self.spaceCharacters = [NSArray arrayWithObjects:
-					   [NSString stringWithCharacters:&_spaceCharacter0 length:1],
-					   [NSString stringWithCharacters:&_spaceCharacter1 length:1],
-//					   [NSString stringWithCharacters:&_spaceCharacter2 length:1],
-//					   [NSString stringWithCharacters:&_spaceCharacter3 length:1],
-					   nil
-                        ];
+    self.tabCharacters = TSInvisibleMarkers(TabCharacterKindKey);
+    self.nextLineCharacters = TSInvisibleMarkers(NewLineCharacterKindKey);
+    self.fullwidthSpaceCharacters = TSInvisibleMarkers(FullwidthSpaceCharacterKindKey);
+    self.spaceCharacters = TSInvisibleMarkers(SpaceCharacterKindKey);
 	return self;
 }
 
@@ -99,6 +60,7 @@
                  attributes:(NSDictionary *)attributes
                       cache:(NSMutableDictionary *)cache
 {
+    if (marker.length == 0) return;
     NSArray *key = @[marker, attributes[NSFontAttributeName]];
     NSTextStorage *markerStorage = cache[key];
     if (markerStorage == nil) {
@@ -138,10 +100,10 @@
 	BOOL showFullwidthSpaceCharacter = (invisibleCharactersShowing && [SUD boolForKey:showFullwidthSpaceCharacterKey]);
 	BOOL showSpaceCharacter = (invisibleCharactersShowing && [SUD boolForKey:showSpaceCharacterKey]);
 
-	NSString *tabCharacter = [self.tabCharacters objectAtIndex:[SUD integerForKey:TabCharacterKindKey]];
-    NSString *nextLineCharacter = [self.nextLineCharacters objectAtIndex:[SUD integerForKey:NewLineCharacterKindKey]];
-    NSString *fullwidthSpaceCharacter = [self.fullwidthSpaceCharacters objectAtIndex:[SUD integerForKey:FullwidthSpaceCharacterKindKey]];
-    NSString *spaceCharacter = [self.spaceCharacters objectAtIndex:[SUD integerForKey:SpaceCharacterKindKey]];
+	NSString *tabCharacter = TSInvisibleMarker(self.tabCharacters, TSInvisibleStoredIndex(SUD, TabCharacterKindKey));
+    NSString *nextLineCharacter = TSInvisibleMarker(self.nextLineCharacters, TSInvisibleStoredIndex(SUD, NewLineCharacterKindKey));
+    NSString *fullwidthSpaceCharacter = TSInvisibleMarker(self.fullwidthSpaceCharacters, TSInvisibleStoredIndex(SUD, FullwidthSpaceCharacterKindKey));
+    NSString *spaceCharacter = TSInvisibleMarker(self.spaceCharacters, TSInvisibleStoredIndex(SUD, SpaceCharacterKindKey));
 
 	for (theGlyphIndex = inGlyphRange.location; theGlyphIndex < theLengthToRedraw; theGlyphIndex++) {
 		theCharIndex = [self characterIndexForGlyphAtIndex:theGlyphIndex];
