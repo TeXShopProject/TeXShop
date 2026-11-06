@@ -4599,7 +4599,8 @@ preference change is cancelled. "*/
 		project = [[[[self fileURL] path] stringByDeletingPathExtension]
 			stringByAppendingString: @".texshop"];
 		if ([[NSFileManager defaultManager] fileExistsAtPath: project]) {
-			nameString = [NSString stringWithContentsOfFile: project usedEncoding: &theEncoding error:NULL];
+			nameString = [NSString stringWithContentsOfFile: project usedEncoding: &theEncoding error:NULL]
+				?: [NSString stringWithContentsOfFile: project encoding: NSISOLatin1StringEncoding error: NULL]; // written in Latin 1 before
 			[projectName setStringValue: nameString];
 		}
 		else
@@ -4610,7 +4611,7 @@ preference change is cancelled. "*/
 		if (result == 0) {
 			nameString = [projectName stringValue];
 			//            if ([nameString isAbsolutePath])
-			[nameString writeToFile: project atomically: YES encoding:NSISOLatin1StringEncoding error:NULL];
+			[nameString writeToFile: project atomically: YES encoding:NSUTF8StringEncoding error:NULL];
 			//           else {
 			//                anotherString = [[self fileName] stringByDeletingLastPathComponent];
 			//                anotherString = [[anotherString stringByAppendingString:@"/"]
@@ -7541,9 +7542,8 @@ if (! useFullSplitWindow) {
     
     NSString    *myPath = [[self fileURL] path];
     NSString    *logPath = [[myPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"log"];
-    NSString    *logContents = [NSString stringWithContentsOfFile:logPath encoding:theEncoding error:&error];
-    if (logContents == nil)
-        logContents = [NSString stringWithContentsOfFile:logPath encoding:NSISOLatin9StringEncoding error:&error];
+    NSData      *logData = [NSData dataWithContentsOfFile:logPath];
+    NSString    *logContents = logData ? [TSEncodingSupport displayStringForData:logData encoding:theEncoding] : nil;
     if (logContents == nil)
         return;
     
@@ -7580,21 +7580,10 @@ if (! useFullSplitWindow) {
     
  
 
-- (void) writeTexOutput: (NSNotification *)aNotification
+// Show a piece of TeX output in the console and look in it for errors.
+- (void)showConsoleOutputData: (NSData *)myData
 {
-    NSString        *detexString, *texloganalyserString;
-    NSData        *detexData, *texloganalyserData;
-    NSInteger  charCount;
-    NSInteger                 lineCount, wordCount;
-    BOOL                result;
-
-    NSFileHandle *myFileHandle = [aNotification object];
-    if (myFileHandle == self.readHandle) {
-        // NSData* myData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
-        NSData* myData = [self availableDataOrError: myFileHandle];
-//        myData = [myFileHandle availableData];
-        if ([myData length]) {
-            dispatch_async(process_queue, ^{
+    dispatch_async(process_queue, ^{
                 NSString        *newOutput, *numberOutput, *searchString, *tempString, *loopString;
                 NSRange        myRange, lineRange, searchRange, testRange, errorRange, pathRange, searchDotsRange, mainRange;
                 NSInteger      error, mainOffset;
@@ -7610,12 +7599,8 @@ if (! useFullSplitWindow) {
 
                 // theEncoding = [[TSEncodingSupport sharedInstance] defaultEncoding];
             theEncoding = _encoding;
-            newOutput = [[NSString alloc] initWithData: myData encoding: theEncoding];
-            
-            // 1.35 (F) fix --- suggested by Kino-san
-            if (newOutput == nil) {
-                newOutput = [[NSString alloc] initWithData: myData encoding: NSISOLatin9StringEncoding];
-            }
+            // 1.35 (F) fix --- suggested by Kino-san: output that is not in the document's encoding
+            newOutput = [TSEncodingSupport displayStringForData: myData encoding: theEncoding];
             
                 loopString = newOutput;
             
@@ -7721,15 +7706,62 @@ if (! useFullSplitWindow) {
                 });
     //        [newOutput release];
             });
-            // [self.readHandle readInBackgroundAndNotify];
+}
+
+- (void) writeTexOutput: (NSNotification *)aNotification
+{
+    NSString        *detexString, *texloganalyserString;
+    NSData        *detexData, *texloganalyserData;
+    NSInteger  charCount;
+    NSInteger                 lineCount, wordCount;
+    BOOL                result;
+
+    NSFileHandle *myFileHandle = [aNotification object];
+    if (myFileHandle == self.readHandle) {
+        // NSData* myData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
+        NSData* myData = [self availableDataOrError: myFileHandle];
+//        myData = [myFileHandle availableData];
+        // A character can be split between two pieces of output; keep its start for the next one.
+        if (_consoleCarryHandle != myFileHandle)
+            _consoleCarry = nil;
+        _consoleCarryHandle = myFileHandle;
+        BOOL atEnd = (myData.length == 0);
+        if (_consoleCarry.length) {
+            NSMutableData *joined = [_consoleCarry mutableCopy];
+            if (myData)
+                [joined appendData: myData];
+            myData = joined;
+        }
+        _consoleCarry = nil;
+        NSUInteger generation = ++_consoleCarryGeneration;
+        NSUInteger incomplete = atEnd ? 0 : [TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData: myData encoding: _encoding];
+        if (incomplete) {
+            _consoleCarry = [myData subdataWithRange: NSMakeRange(myData.length - incomplete, incomplete)];
+            myData = [myData subdataWithRange: NSMakeRange(0, myData.length - incomplete)];
+            // Show what is kept if nothing more comes soon, as when TeX waits for input, but go on
+            // keeping the start of a character, so that it can still join the rest of it.
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (generation == self->_consoleCarryGeneration && self->_consoleCarryHandle == myFileHandle
+                    && self.readHandle == myFileHandle && self->_consoleCarry.length) {
+                    NSData *kept = self->_consoleCarry;
+                    NSUInteger unfinished = [TSEncodingSupport lengthOfUnfinishedCharacterAtEndOfData: kept encoding: self->_encoding];
+                    self->_consoleCarry = unfinished ? [kept subdataWithRange: NSMakeRange(kept.length - unfinished, unfinished)] : nil;
+                    if (kept.length > unfinished)
+                        [self showConsoleOutputData: [kept subdataWithRange: NSMakeRange(0, kept.length - unfinished)]];
+                }
+            });
+        }
+        if ([myData length])
+            [self showConsoleOutputData: myData];
+        // Wait for more output even when all of this piece was kept for the next one.
+        if (! atEnd)
             [self.readHandle waitForDataInBackgroundAndNotify];
-            }
     }
     else if (myFileHandle == self.texloganalyserHandle) {
         texloganalyserData = [self availableDataOrError: myFileHandle];
         // texloganalyserData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
         if ([texloganalyserData length]) {
-            texloganalyserString = [[NSString alloc] initWithData: texloganalyserData encoding: NSISOLatin9StringEncoding];
+            texloganalyserString = [TSEncodingSupport displayStringForData: texloganalyserData encoding: _encoding];
             // NSLog(texloganalyserString);
             
             // [self.logTextView insertText: texloganalyserString];
@@ -7756,7 +7788,7 @@ if (! useFullSplitWindow) {
         // detexData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
         detexData = [self availableDataOrError: myFileHandle];
         if ([detexData length]) {
-            detexString = [[NSString alloc] initWithData: detexData encoding: NSISOLatin9StringEncoding];
+            detexString = [TSEncodingSupport displayStringForData: detexData encoding: _encoding];
             NSScanner *myScanner = [NSScanner scannerWithString:detexString];
             result = [myScanner scanInteger:&lineCount];
             if (result)
@@ -10479,7 +10511,6 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	NSString			*logPath;
 	NSString			*content;
 	NSData				*logData;
-    NSStringEncoding    defaultEncoding;
 	NSStringEncoding	theEncoding;
     NSString            *flags;
     BOOL                errorFlag;
@@ -10490,7 +10521,6 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
  
 
 	// theEncoding = NSISOLatin9StringEncoding;
-    defaultEncoding = NSISOLatin9StringEncoding;
     theEncoding = _encoding;
 	// logPath = [[[self fileName] stringByDeletingPathExtension] stringByAppendingPathExtension:@"log"];
 	if (self.logExtension == nil)
@@ -10502,9 +10532,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 			logData = [[NSFileManager defaultManager] contentsAtPath:logPath];
 			if (!logData)
 				return NO;
-			content = [[NSString alloc] initWithData:logData encoding:theEncoding] ;
-            if (!content)
-                content = [[NSString alloc] initWithData:logData encoding:defaultEncoding] ;
+			content = [TSEncodingSupport displayStringForData:logData encoding:theEncoding] ;
             if (!content) 
                 return NO;
             

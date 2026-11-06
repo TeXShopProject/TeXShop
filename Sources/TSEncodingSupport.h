@@ -68,6 +68,20 @@ typedef NS_ENUM(NSInteger, TSByteOrderMark) {
 - (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark;
 - (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding;
 
+// A string for showing output or a log that may not be in encoding. Output that is not all in
+// the encoding is read line by line: UTF-8, then the encoding, then UTF-8 with the bytes that
+// are not UTF-8 replaced by U+FFFD when most of the line is UTF-8, and only otherwise Latin 9.
+// A line break that TeX put inside a UTF-8 character is moved to before the character.
++ (NSString *)displayStringForData:(NSData *)data encoding:(NSStringEncoding)encoding;
+// The number of bytes at the end of data that start a character the data does not finish,
+// with the line break TeX may have put inside it, to be read with the next piece of output.
++ (NSUInteger)lengthOfIncompleteCharacterAtEndOfData:(NSData *)data encoding:(NSStringEncoding)encoding;
+// Of those bytes, the ones that are still kept when no more output comes for a while: the start
+// of a character, with the line break TeX may have put inside it, but not an unfinished line.
++ (NSUInteger)lengthOfUnfinishedCharacterAtEndOfData:(NSData *)data encoding:(NSStringEncoding)encoding;
+// A source file read for finding text in it, in its encoding when the whole file reads in it.
++ (NSString *)stringForSourceData:(NSData *)data encoding:(NSStringEncoding)encoding;
+
 
 - (BOOL)ptexUtfOutputCheck: (NSString *)dataString withEncoding: (NSStringEncoding)enc;
 - (NSData *)ptexUtfOutput: (NSTextView *)dataView withEncoding: (NSStringEncoding)enc;
