@@ -4,7 +4,7 @@
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
 		<TITLE>Ajustes ocultos</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="ajustes ocultos; colores para sintaxis; color de fondo; copia de respaldo; backup file; x11; matrices; .aux; sincronizaci&oacute;n; marcas; transparencia">
+		<META NAME="description" CONTENT="ajustes ocultos; colores para sintaxis; color de fondo; x11; matrices; .aux; sincronizaci&oacute;n; marcas; transparencia">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 
@@ -20,51 +20,7 @@
 		<dl>
 			<dd>defaults write TeXShop ConTeXtTags YES
 		</dl>
-		<p>Cuando los colores para sintaxis est&aacute;n activados, en la ventana de c&oacute;digo fuente, los comentarios se colorean en rojo, los comandos en azul, y los s&iacute;mbolos $, {, y } en verde oscuro. Se pueden cambiar estos colores. Cada color se determina por sus componentes rojo, verde y azul (esto es, en RGB); estas componentes son n&uacute;meros reales entre 0.00 y 1.00. Para cambiar el color de $, {, y } a un verde muy intenso, ejecuta los siguientes comandos en el Terminal:</p>
-		<dl>
-			<dd>defaults write TeXShop markerred 0.0
-			<dd>defaults write TeXShop markergreen 1.0
-			<dd>defaults write TeXShop markerblue 0.0
-		</dl>
-		<p>Para cambiar el color de los comentarios, reemplaza &laquo;marker&raquo; con &laquo;comment&raquo;; para cambiar el color de los comandos, reemplaza &laquo;marker&raquo; con &laquo;command&raquo;. </p>
-                <p>Se puede cambiar el color de fondo de la ventana en la que se escribe el c&oacute;digo TeX. Por ejemplo, para asignar (r, g, b) = (.42, .39, .77) como color de fondo, ejecuta en el Terminal los siguientes comandos:</p>
-		<dl>
-			<dd>defaults write TeXShop background_R 0.42
-			<dd>defaults write TeXShop background_G 0.39
-			<dd>defaults write TeXShop background_B 0.77
-		</dl>
-<p>As&iacute; mismo, se puede configurar el color del texto en la ventana con el c&oacute;digo fuente. Aunque esto s&oacute;lo tiene efecto si los colores para sintaxis est&aacute;n activados. Para asignar al texto el color (r, g, b) = (.42, .39, .77), ejecuta en el Terminal los siguientes comandos:</p>
-		<dl>
-			<dd>defaults write TeXShop foreground_R 0.42
-			<dd>defaults write TeXShop foreground_G 0.39
-			<dd>defaults write TeXShop foreground_B 0.77
-		</dl>
-<p>Y tambi&eacute;n se puede modificar el color del punto de inserci&oacute;n de la ventana de c&oacute;digo. Por ejemplo, para asignar al punto de inserci&oacute;n el color (r, g, b) = (.42, .39, .77), ejecuta en el Terminal los siguientes comandos:</p>
-		<dl>
-			<dd>defaults write TeXShop insertionpoint_R 0.42
-			<dd>defaults write TeXShop insertionpoint_G 0.39
-			<dd>defaults write TeXShop insertionpoint_B 0.77
-		</dl>
-<p>Usando los tres conjuntos de ajustes anteriores de manera simult&aacute;nea, se puede escribir texto blanco sobre fondo negro, o usar en el editor cualquier otra combinaci&oacute;n de colores.</p> 
-	<p>Podemos cambiar el color de fondo de la ventana con el pdf previsto. Por ejmplo, para ponerle el fondo con color (r, g, b) = (.42, .39, .77), ejecuta lo que sigue en el Terminal. Es posible que los documentos de TeX coloreados se vean mejor sobre fondo gris. Este color de fondo no afecta a lo que se obtiene al imprimir.</p>
-		<dl>
-			<dd>defaults write TeXShop Pdfbackground_R 0.42
-			<dd>defaults write TeXShop Pdfbackground_G 0.39
-			<dd>defaults write TeXShop Pdfbackground_B 0.77
-		</dl>
-<p>Hay unos ajustes ocultos para asignar transparencia a las ventanas con el c&oacute;digo, el pdf previsto, y la consola. Por ejmplo:</p>
-		<dl>
-			<dd>defaults write TeXShop ConsoleWindowAlpha 0.75
-			<dd>defaults write TeXShop SourceWindowAlpha 0.75
-			<dd>defaults write TeXShop PreviewWindowAlpha 0.75
-		</dl>
-<p>Aqu&iacute;, un valor alpha 0.00 significa completamente transparente, y un valor alpha 1.00 es completamente opcaco. &iexcl;Usa estos comandos con precauci&oacute;n!</p>
-
-<p>Podemos configurar TeXShop para que guarde una copia de respaldo (&lsquo;backup file&rsquo;) cada vez que componemos o guardamos un archivo con c&oacute;digo fuente. Para activar esto, abre el Terminal y ejecuta el siguiente comando. Cambia YES por NO para desactivarlo.
-</p>
-		<dl>
-			<dd>defaults write TeXShop KeepBackup YES
-		</dl>
+		<p>Los colores de las ventanas de c&oacute;digo, del pdf previsto y de la consola (los colores para sintaxis, los colores de fondo y del texto, el del punto de inserci&oacute;n y el fondo de la ventana con el pdf), as&iacute; como la transparencia de estas ventanas, se configuran ahora en la solapa &laquo;Modos&raquo; de los Ajustes.</p>
 
 <p>Ocasionalmente, al componer p&aacute;ginas, los archivos .aux, .log, y otros que TeX crea autom&aacute;ticamente, se corrompen y hay que borrarlos. TeXShop tiene un men&uacute;
 &laquo;Borrar archivos aux&raquo;, y un bot&oacute;n en la Consola con la misma funci&oacute;n. Al usar cualquiera de los dos, TeXShop pone en la papelera todos los ficheros con el mismo nombre (descartada la extensi&oacute;n), y situados en la misma carpeta, que el archivo con el c&oacute;digo fuente, siempre que su extensi&oacute;n sea .aux, .bbl, .blg, .brf, .glo, .idx, .ilg, .ind, .ioa, .log, .log, .lot, .mtc, .mlf, .out, .pdfsync, .toc, .ttt, .wrm, .xref, .4ct o .4tc.
@@ -104,7 +60,7 @@ El valor por defecto de este ajuste es YES.
 			<dd>defaults write TeXShop ExternalEditorTypesetAtStart NO
 		</dl>
 
-<p>Hay un ajuste oculto para asignar un tama&ntilde;o predeterminado a las matrices que crea el Panel matrices. Para cambiar el valor que viene por defecto, usa, por ejemplo,</p>
+<p>Hay un ajuste oculto para asignar el tama&ntilde;o m&aacute;ximo (n&uacute;mero de filas y columnas) de las matrices que crea el Panel matrices. Para cambiar el valor que viene por defecto, usa, por ejemplo,</p>
 		<dl>
 			<dd> defaults write TeXShop matrixsize 12
 		</dl> 
@@ -136,41 +92,12 @@ Esta sintaxis no era adecuada, y se ha cambiado (la nueva se explica en otra par
 		<dl>
 			<dd> defaults write TeXShop RedConsoleAfterError YES
 		</dl>
-<p>En la ventana de edici&oacute;n, los ajustes de l&iacute;nea din&aacute;micos (es decir, la introducci&oacute;n de cambios de l&iacute;nea que s&oacute;lo aparecen en la ventana, pero no son reales) se produce siempre al final de las palabras. Este comportamiento puede cambiarse a &laquo;ninguno&raquo; = 0, &laquo;por palabras&raquo; = 1 o &laquo;por caracteres&raquo; = 2:
-</p>
-		<dl>
-			<dd>defaults write TeXShop LineBreakMode 1
-		</dl>
 <p>Cuando la ventana con el pdf previsto aparece por primera vez, su caj&oacute;n est&aacute; oculto. Hay un ajuste oculto para lograr que el caj&oacute;n sea visible la primera vez que aparece la ventana con el pdf:
 </p>
 		<dl>
 			<dd>defaults write TeXShop PreviewDrawerOpen YES
 		</dl>
 
-<p>Cuando se lanz&oacute; TeXShop para Tiger (Mac OS X 10.4), los usuarios notaron un molesto bug que hac&iacute;a que el funcionamiento del programa fuera cada vez m&aacute;s lento, hasta llegar a ser pr&aacute;cticamente inusable tras varios procesos de componer p&aacute;ginas. Este bug fue solucionado un par de d&iacute;as despu&eacute;s del lanzamiento. El problema ocurr&iacute;a cuando un nuevo pdf era cargado en el PdfKitView de la ventana con el pdf.
-Seg&uacute;n la documentaci&oacute;n de Apple, esto deber&iacute;a haber liberado de la memoria las estructuras de datos previas. La liberaci&oacute;n ocurr&iacute;a, pero ocasionaba que el programa se hiciera m&aacute;s lento. As&iacute; que el m&eacute;todo de fijar el bug consiti&oacute; en puentear al sistema haci&eacute;ndole creer que esas estructuras de datos todav&iacute;a esaban siendo usadas, as&iacute; que el sistema no las liberaba.</p>
-<p>Investigaciones posteriores parec&iacute;an mostrar que este bug no era tan severo en Tiger 10.4.4. Como consecuencia, se a&ntilde;adi&oacute; un ajuste oculto para liberar los datos si as&iacute; lo dese&aacute;bamos. Los valores de este ajuste son</p>
-		<dl>
-			<dd> 0 para liberar los datos en el sistema 10.4.3 o superior
-			<dd> 1 para no liberar nunca los datos
-			<dd> 2 para liberar siempre los datos
-		</dl>
-<p>El valor por defecto es 1, lo que causa que el programa se comporte tal como lo hac&iacute;an las versiones anteriores:</p>
-		<dl>
-			<dd>defaults write TeXShop ReleaseDocumentClasses 1
-		</dl>
-<p> Afortunadamente, Apple solucion&oacute; este bug en Leopard (Mac OS X 10.5). Cuando TeXShop arranca, primero comprueba si se est&aacute; ejecutando Leopard.
-Si &eacute;se es el caso, TeXShop ignora el ajuste que acabamos de describir, y tampoco usa el truco que permit&iacute;a contrarrestrar el fallo.
-Como consecuencia, TeXShop libera correctamente la memoria en Leopard.</p>
-
-
-<p> TeXShop soporta SyncTeX. Los detalles est&aacute;n descritos en la secci&oacute;n sobre sincronizaci&oacute;n de la ayuda avanzada. Si synctex falla, TeXShop intenta en m&eacute;todo
-de sincronizaci&oacute;n basado en b&uacute;squedas. Para los usuarios que quieran experimentar con synctex en s&iacute; mismo, existe un ajuste oculto para lograr que TeXShop use exclusivamente synctex:</p>
-<dl>
-<dd>
-					defaults write TeXShop SyncTeXOnly YES
-			</dl>
-<p> Por defecto, este ajuste tiene el valor NO.</p>
 
 </div>
 <div id="header_background"></div>
