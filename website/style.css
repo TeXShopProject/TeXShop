@@ -95,3 +95,5 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 
 /* GitHub links on the contact page. */
 .contact-github svg,.repo-links svg{display:inline-block;width:1em;height:1em;margin-right:.4em;vertical-align:-.1em;fill:currentColor}
+
+.download[aria-disabled="true"]{cursor:default;pointer-events:none;opacity:.65}
