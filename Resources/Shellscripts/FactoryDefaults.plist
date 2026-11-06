@@ -376,8 +376,6 @@
 	<false/>
 	<key>InterpolationValue</key>
 	<integer>3</integer>
-	<key>YosemiteScrollBug</key>
-	<true/>
 	<key>SparkleAutomaticUpdate</key>
 	<false/>
 	<key>SparkleInterval</key>
