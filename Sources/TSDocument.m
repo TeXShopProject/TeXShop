@@ -2189,6 +2189,7 @@ in other code when an external editor is being used. */
     
     // theEncoding = [[TSEncodingSupport sharedInstance] defaultEncoding]; this error broke the encoding menu in the save panel
 	theEncoding = _encoding;
+	_encodingFromMagicComment = NO;
 	firstBytes = [[NSString alloc] initWithData:theData encoding:NSISOLatin9StringEncoding];
 	
 	// First check for new spelling language
@@ -2431,6 +2432,7 @@ in other code when an external editor is being used. */
 					encodingString = [[testString substringWithRange: newEncodingRange]
 						stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 					theEncoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
+					_encodingFromMagicComment = YES;
 				}
 			} else if ([SUD boolForKey:UseOldHeadingCommandsKey]) {
 				encodingRange = [testString rangeOfString:@"%&encoding="];
@@ -2442,6 +2444,7 @@ in other code when an external editor is being used. */
 						encodingString = [[testString substringWithRange: newEncodingRange]
 							stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 						theEncoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
+						_encodingFromMagicComment = YES;
 					}
 				}
 			}
@@ -2606,6 +2609,18 @@ in other code when an external editor is being used. */
         self.automaticCorrection = YES;
 }
 
+// The encoding of a file without an encoding magic comment. When the file is read again,
+// its current encoding is kept as long as it reads the file.
+- (NSStringEncoding)encodingForUnmarkedData: (NSData *)data URL: (NSURL *)url
+{
+	if (_hasReadSource && [[NSString alloc] initWithData: data encoding: _encoding])
+		return _encoding;
+	if ([SUD objectForKey: EncodingAutoDetectionKey] && ! [SUD boolForKey: EncodingAutoDetectionKey])
+		return _encoding;
+	return [[TSEncodingSupport sharedInstance] detectedEncodingForData: data fileURL: url
+		preferredEncoding: [[TSEncodingSupport sharedInstance] defaultEncoding]];
+}
+
 - (BOOL)readFromURL: (NSURL *)absoluteURL ofType: (NSString *)typeName error: (NSError **)outError {
 // - (BOOL)readFromFile:(NSString *)fileName ofType:(NSString *)type {
 	NSData				*myData;
@@ -2619,6 +2634,11 @@ in other code when an external editor is being used. */
 	myData = sourceReloadData ?: [NSData dataWithContentsOfURL:absoluteURL options:0 error:outError];
     if (!myData) return NO;
 	_encoding = _tempencoding = [self dataEncoding: myData];
+	// An encoding chosen in the Open dialog is used once, for this file; a magic comment still wins.
+	NSStringEncoding chosenEncoding;
+	BOOL encodingWasChosen = [[TSDocumentController sharedDocumentController] takeEncoding: &chosenEncoding chosenForURL: absoluteURL];
+	if (! _encodingFromMagicComment)
+		_encoding = _tempencoding = encodingWasChosen ? chosenEncoding : [self encodingForUnmarkedData: myData URL: absoluteURL];
     
 /*
 
@@ -2708,7 +2728,7 @@ in other code when an external editor is being used. */
 		[[_textStorage mutableString] setString:content];
         sourceAcceptedFingerprint = sourceReloadFingerprint ?: TSSourceFingerprint(myData);
         ++sourceIOGeneration;
-	
+		_hasReadSource = YES;
 		return YES;
 	}
 else {

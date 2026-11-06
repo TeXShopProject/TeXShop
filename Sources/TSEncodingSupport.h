@@ -50,6 +50,11 @@
 // will equal the corresponding NSStringEncoding.
 - (void)addEncodingsToMenu:(NSMenu *)menu withTarget:(id)aTarget action:(SEL)anAction;
 
+// Choose the encoding of a file that has no encoding magic comment: a byte order mark,
+// 7-bit text, an encoding recorded by another application, UTF-8, the preferred encoding,
+// then the encodings of the user's languages. Only encodings in TeXShop's list are chosen.
+- (NSStringEncoding)detectedEncodingForData:(NSData *)data fileURL:(NSURL *)url preferredEncoding:(NSStringEncoding)preferred;
+
 
 - (BOOL)ptexUtfOutputCheck: (NSString *)dataString withEncoding: (NSStringEncoding)enc;
 - (NSData *)ptexUtfOutput: (NSTextView *)dataView withEncoding: (NSStringEncoding)enc;

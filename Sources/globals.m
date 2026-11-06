@@ -40,6 +40,7 @@ NSString *LatexPanelNameKey = @"LatexPanel";
 NSString *MakeEmptyDocumentKey = @"MakeEmptyDocument";
 NSString *UseExternalEditorKey = @"UseExternalEditor";
 NSString *EncodingKey = @"Encoding";
+NSString *EncodingAutoDetectionKey = @"EncodingAutoDetection";
 NSString *LineBreakModeKey = @"LineBreakMode";
 NSString *TagSectionsKey = @"TagSections";
 NSString *LPanelOutlinesKey = @"LPanelOutlines";

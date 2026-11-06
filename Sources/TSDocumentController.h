@@ -30,12 +30,16 @@
 	NSPopUpButton		*encodingMenu;
 	NSStringEncoding	_encoding;
 	BOOL				doList;
+	NSStringEncoding	_chosenEncoding;
+	NSMutableSet		*_chosenEncodingURLs;
 }
 - (IBAction)openDocument:(id)sender;
 - (IBAction)newDocumentFromStationery: (id)sender;
 - (void)initializeEncoding;
 - (NSInteger)runModalOpenPanel:(NSOpenPanel *)openPanel forTypes:(NSArray *)extensions;
 - (NSStringEncoding)encoding;
+// The encoding chosen in the Open dialog for url, if one was chosen; it is used once.
+- (BOOL)takeEncoding:(NSStringEncoding *)encoding chosenForURL:(NSURL *)url;
 - (void)noteNewRecentDocument:(NSDocument *)aDocument;
 - (void)listDocument:(BOOL)value;
 // - (id)openDocumentWithContentsOfURL:(NSURL *)absoluteURL display:(BOOL)displayDocument error:(NSError **)outError; // Support Stationery bit?

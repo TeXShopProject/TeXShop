@@ -96,8 +96,27 @@
 	result = [super runModalOpenPanel: openPanel forTypes: extensions];
 	if (result == YES) {
 		_encoding = [[encodingMenu selectedCell] tag];
+		// An encoding other than the default is the user's choice for these files;
+		// with the default, the encoding of each file is detected.
+		_chosenEncoding = _encoding;
+		_chosenEncodingURLs = nil;
+		if (_encoding != [[TSEncodingSupport sharedInstance] defaultEncoding]) {
+			_chosenEncodingURLs = [NSMutableSet set];
+			for (NSURL *url in openPanel.URLs)
+				[_chosenEncodingURLs addObject: url.URLByStandardizingPath];
+		}
 	}
 	return result;
+}
+
+- (BOOL)takeEncoding:(NSStringEncoding *)encoding chosenForURL:(NSURL *)url
+{
+	NSURL *key = url.URLByStandardizingPath;
+	if (! key || ! [_chosenEncodingURLs containsObject: key])
+		return NO;
+	[_chosenEncodingURLs removeObject: key];
+	*encoding = _chosenEncoding;
+	return YES;
 }
 
 - (void)noteNewRecentDocument:(NSDocument *)aDocument

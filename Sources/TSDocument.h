@@ -350,6 +350,8 @@ enum RootCommand
 	BOOL                realEngine;
 //	NSWindow            *callingWindow;
 	NSStringEncoding	_badEncoding;
+	BOOL                _encodingFromMagicComment;
+	BOOL                _hasReadSource;
 	BOOL                showBadEncodingDialog;
 	BOOL				PDFfromKit;
 	NSUInteger		pdfCharacterIndex;
