@@ -1854,6 +1854,18 @@ if (! skipTextWindow) {
 }
 
 
+// A magic comment decides the encoding the file is saved in, so the menu shows that
+// encoding and cannot be changed.
+- (void)setUpEncodingMenuInSavePanel: (NSPopUpButton *)menu
+{
+	NSString *name = [self encodingNameInMagicComment];
+	BOOL fixed = (name != nil) && [[TSEncodingSupport sharedInstance] knowsEncodingKey: name];
+	if (fixed)
+		_tempencoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: name];
+	[menu selectItemWithTag: _tempencoding];
+	menu.enabled = ! fixed;
+}
+
 - (BOOL)prepareSavePanel:(NSSavePanel *)savePanel
 {
     
@@ -1873,7 +1885,7 @@ if (! skipTextWindow) {
         openSaveBox.action = @selector(chooseTempEncoding:);
         
         // Select active encoding
-        [openSaveBox selectItemWithTag: _encoding];
+        [self setUpEncodingMenuInSavePanel: openSaveBox];
         
         // Get the active accessory view.
         oldAccessoryView = [savePanel accessoryView];
@@ -1900,7 +1912,7 @@ if (! skipTextWindow) {
 	[[TSEncodingSupport sharedInstance] addEncodingsToMenu:[openSaveBoxHS menu] withTarget:0 action:0];
 
 	// Select active encoding
-	[openSaveBoxHS selectItemWithTag: _encoding];
+	[self setUpEncodingMenuInSavePanel: openSaveBoxHS];
 
 
 	// Get the active accessory view.
@@ -2051,62 +2063,60 @@ in other code when an external editor is being used. */
     return data;
 }
 
-- (NSData *)serializedSourceOfType:(NSString *)typeName error:(NSError **)outError {
+// The encoding named by "% !TEX encoding =" (or "%&encoding=" with UseOldHeadingCommands)
+// in the first 20 lines of the source, or nil if there is none.
+- (NSString *)encodingNameInMagicComment
+{
 	NSRange             encodingRange, newEncodingRange, myRange, theRange;
 	NSUInteger            length;
-	NSString            *encodingString, *text, *testString;
-	BOOL                done;
+	NSString            *text, *testString;
 	NSInteger                 linesTested, offset;
 	NSUInteger            start, end;
-    
+
+	text = [_textStorage string];
+	length = [text length];
+	linesTested = 0;
+	myRange.location = 0;
+	myRange.length = 1;
+
+	while ((myRange.location < length) && (linesTested < 20)) {
+		[text getLineStart: &start end: &end contentsEnd: nil forRange: myRange];
+		myRange.location = end;
+		myRange.length = 1;
+		linesTested++;
+
+		theRange.location = start; theRange.length = (end - start);
+		testString = [text substringWithRange: theRange];
+		encodingRange = [testString rangeOfString:@"%!TEX encoding ="];
+		offset = 16;
+		if (encodingRange.location == NSNotFound) {
+			encodingRange = [testString rangeOfString:@"% !TEX encoding ="];
+			offset = 17;
+			}
+		if ((encodingRange.location == NSNotFound) && [SUD boolForKey:UseOldHeadingCommandsKey]) {
+			encodingRange = [testString rangeOfString:@"%&encoding="];
+			offset = 11;
+			}
+		if (encodingRange.location != NSNotFound) {
+			newEncodingRange.location = encodingRange.location + offset;
+			newEncodingRange.length = [testString length] - newEncodingRange.location;
+			if (newEncodingRange.length == 0)
+				return nil;
+			return [[testString substringWithRange: newEncodingRange]
+				stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		}
+	}
+	return nil;
+}
+
+- (NSData *)serializedSourceOfType:(NSString *)typeName error:(NSError **)outError {
+	NSString            *encodingString;
+
 	// FIXME: Unify this with the code in readFromFile:
 	if ((GetCurrentKeyModifiers() & optionKey) == 0) {
-		text = [_textStorage string];
-		length = [text length];
-        
-		done = NO;
-		linesTested = 0;
-		myRange.location = 0;
-		myRange.length = 1;
-
-		while ((myRange.location < length) && (!done) && (linesTested < 20)) {
-			[text getLineStart: &start end: &end contentsEnd: nil forRange: myRange];
-			myRange.location = end;
-			myRange.length = 1;
-			linesTested++;
-
-			// FIXME: Simplify the following code
-			theRange.location = start; theRange.length = (end - start);
-			testString = [text substringWithRange: theRange];
-      		encodingRange = [testString rangeOfString:@"%!TEX encoding ="];
-			offset = 16;
-			if (encodingRange.location == NSNotFound) {
-				encodingRange = [testString rangeOfString:@"% !TEX encoding ="];
-				offset = 17;
-				}
-			if (encodingRange.location != NSNotFound) {
-				done = YES;
-				newEncodingRange.location = encodingRange.location + offset;
-				newEncodingRange.length = [testString length] - newEncodingRange.location;
-				if (newEncodingRange.length > 0) {
-					encodingString = [[testString substringWithRange: newEncodingRange]
-						stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
- 					_encoding = _tempencoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
-				}
-			} else if ([SUD boolForKey:UseOldHeadingCommandsKey]) {
-				encodingRange = [testString rangeOfString:@"%&encoding="];
-				if (encodingRange.location != NSNotFound) {
-					done = YES;
-					newEncodingRange.location = encodingRange.location + 11;
-					newEncodingRange.length = [testString length] - newEncodingRange.location;
-					if (newEncodingRange.length > 0) {
-						encodingString = [[testString substringWithRange: newEncodingRange]
-							stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-						_encoding = _tempencoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
-					}
-				}
-			}
-		}
+		encodingString = [self encodingNameInMagicComment];
+		if (encodingString != nil)
+			_encoding = _tempencoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
 	}
 
 

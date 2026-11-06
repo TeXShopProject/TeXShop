@@ -151,6 +151,7 @@
                 <outlet property="_makeatletterButton" destination="OC0-aB-ZY8" id="8vY-Yk-37G"/>
                 <outlet property="_autoSaveEnabledButton" destination="wIh-RA-9rf" id="KvB-kq-8Iu"/>
                 <outlet property="_keepBackupButton" destination="Gqj-sa-RkC" id="3Nr-7E-gkZ"/>
+                <outlet property="_saveEncodingMenuButton" destination="C5V-Sb-TZY" id="HsM-Ym-2n8"/>
                 <outlet property="_syntaxColorLineButton" destination="51J-Sk-RFM" id="hA3-lp-gS3"/>
                 <outlet property="_tabIndentButton" destination="9LA-f1-8Al" id="ojF-8g-YjD"/>
                 <outlet property="_tabView" destination="7" id="9Mm-DD-gg4"/>
@@ -2501,14 +2502,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Dokumente sichern" translatesAutoresizingMaskIntoConstraints="NO" id="E6V-q7-SUR">
-                                            <rect key="frame" x="124" y="110" width="427" height="106" />
+                                            <rect key="frame" x="124" y="86" width="427" height="130" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="j4o-np-q2i">
-                                                <rect key="frame" x="0.0" y="0.0" width="427" height="94" />
+                                                <rect key="frame" x="0.0" y="0.0" width="427" height="118" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wIh-RA-9rf">
-                                                        <rect key="frame" x="28" y="68" width="391" height="18" />
+                                                        <rect key="frame" x="28" y="92" width="391" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Automatisch sichern und Versionen aktivieren" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Nb7-hL-Xta">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2519,7 +2520,7 @@ DQ
                                                         </buttonCell>
                                                     </button>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4fg-DV-w3S">
-                                                        <rect key="frame" x="44" y="36" width="369" height="30" />
+                                                        <rect key="frame" x="44" y="60" width="369" height="30" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Eine macOS-Funktion, die die Datei beim Bearbeiten automatisch überschreibt. Wirkt nach einem Neustart von TeXShop." id="O1I-eG-HGk">
                                                             <font key="font" metaFont="smallSystem"/>
@@ -2528,13 +2529,24 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gqj-sa-RkC">
-                                                        <rect key="frame" x="46" y="10" width="373" height="18" />
+                                                        <rect key="frame" x="46" y="34" width="373" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Beim Sichern die vorherige Datei als „Name~“ behalten" bezelStyle="regularSquare" imagePosition="left" inset="2" id="d7E-Eg-9RJ">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                             <connections>
                                                                 <action selector="keepBackupPressed:" target="-2" id="Wy6-Wu-DK7"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C5V-Sb-TZY">
+                                                        <rect key="frame" x="28" y="10" width="391" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="Kodierung im Sichern-Dialog anzeigen" bezelStyle="regularSquare" imagePosition="left" inset="2" id="XsL-yK-yvH">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="saveEncodingMenuPressed:" target="-2" id="uP6-Yn-K0K"/>
                                                             </connections>
                                                         </buttonCell>
                                                     </button>

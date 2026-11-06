@@ -140,6 +140,7 @@
 	IBOutlet NSButtonCell *_makeatletterButton; // added by Terada
 	IBOutlet NSButton *_autoSaveEnabledButton;
 	IBOutlet NSButton *_keepBackupButton;
+	IBOutlet NSButton *_saveEncodingMenuButton;
     
     IBOutlet NSTextField *_HtmlHomeField;
     
@@ -387,6 +388,7 @@
 - (IBAction)makeatletterChanged:sender; // added by Terada
 - (IBAction)autoSaveEnabledPressed:sender;
 - (IBAction)keepBackupPressed:sender;
+- (IBAction)saveEncodingMenuPressed:sender;
 
 - (IBAction)HtmlHomeChanged:sender;
 

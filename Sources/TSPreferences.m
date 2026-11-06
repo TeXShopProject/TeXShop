@@ -634,6 +634,13 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setBool:(_keepBackupButton.state == NSControlStateValueOn) forKey:KeepBackupKey];
 }
 
+- (IBAction)saveEncodingMenuPressed:sender
+{
+	// register the undo message first
+	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:EncodingMenuInSaveDialogKey] forKey:EncodingMenuInSaveDialogKey];
+	[SUD setBool:(_saveEncodingMenuButton.state == NSControlStateValueOn) forKey:EncodingMenuInSaveDialogKey];
+}
+
 // added by Terada( - (IBAction)kpsetoolChanged: )
 - (IBAction)kpsetoolChanged:sender
 {
@@ -2417,6 +2424,7 @@ This method retrieves the application preferences from the defaults object and s
 	[_autoSaveEnabledButton setState:[defaults boolForKey:AutoSaveEnabledKey]];
 	[_keepBackupButton setState:[defaults boolForKey:KeepBackupKey]];
 	_keepBackupButton.enabled = ![defaults boolForKey:AutoSaveEnabledKey];
+	[_saveEncodingMenuButton setState:[defaults boolForKey:EncodingMenuInSaveDialogKey]];
 
 	NSString *kpsetool = [defaults objectForKey:KpsetoolKey];
 	if (!kpsetool || [kpsetool isEqualToString:@""]) {

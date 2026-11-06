@@ -152,6 +152,7 @@
                 <outlet property="_makeatletterButton" destination="xCO-2R-MtT" id="u0R-dx-In9"/>
                 <outlet property="_autoSaveEnabledButton" destination="0jA-t9-vhR" id="orn-S6-qDH"/>
                 <outlet property="_keepBackupButton" destination="DZ8-kD-eXq" id="KY3-sr-IGn"/>
+                <outlet property="_saveEncodingMenuButton" destination="pad-n8-1cL" id="dQa-Xz-yeF"/>
                 <outlet property="_syntaxColorLineButton" destination="9zW-5t-3xn" id="kkO-I1-ZH7"/>
                 <outlet property="_tabIndentButton" destination="P4v-Lw-RHd" id="eYv-hj-YBM"/>
                 <outlet property="_tabView" destination="7" id="Hss-H1-qJz"/>
@@ -2535,14 +2536,14 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="存储文稿" translatesAutoresizingMaskIntoConstraints="NO" id="BLI-0w-GVE">
-                                            <rect key="frame" x="123" y="118" width="363" height="106" />
+                                            <rect key="frame" x="123" y="94" width="363" height="130" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="cgU-qw-LwZ">
-                                                <rect key="frame" x="0.0" y="0.0" width="363" height="94" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="118" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0jA-t9-vhR">
-                                                        <rect key="frame" x="28" y="68" width="327" height="18" />
+                                                        <rect key="frame" x="28" y="92" width="327" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="启用自动保存和版本" bezelStyle="regularSquare" imagePosition="left" inset="2" id="1FB-Ok-de5">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2553,7 +2554,7 @@ DQ
                                                         </buttonCell>
                                                     </button>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L4L-xs-x3B">
-                                                        <rect key="frame" x="44" y="36" width="305" height="30" />
+                                                        <rect key="frame" x="44" y="60" width="305" height="30" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" lineBreakMode="wordWrapping" title="编辑时自动覆盖文件的 macOS 功能。重新启动 TeXShop 后生效。" id="2dA-bf-BI3">
                                                             <font key="font" metaFont="smallSystem"/>
@@ -2562,13 +2563,24 @@ DQ
                                                         </textFieldCell>
                                                     </textField>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DZ8-kD-eXq">
-                                                        <rect key="frame" x="46" y="10" width="309" height="18" />
+                                                        <rect key="frame" x="46" y="34" width="309" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="存储时将之前的文件保留为“名称~”" bezelStyle="regularSquare" imagePosition="left" inset="2" id="pDW-p7-fnL">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                             <connections>
                                                                 <action selector="keepBackupPressed:" target="-2" id="nAy-yM-kHt"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pad-n8-1cL">
+                                                        <rect key="frame" x="28" y="10" width="327" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="在存储对话框中显示编码" bezelStyle="regularSquare" imagePosition="left" inset="2" id="jR6-II-sPz">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="saveEncodingMenuPressed:" target="-2" id="Nhc-0L-DxV"/>
                                                             </connections>
                                                         </buttonCell>
                                                     </button>
