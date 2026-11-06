@@ -29,6 +29,7 @@ A ``Magic Comment Line'' is a command in the source which is interpreted by TeXS
 \item \% !TEX program =
 \item \% !TEX encoding =
 \item \% !TEX root =
+\item \% !TEX projectfile =
 \item	\% !TEX numberingCorrection = 
 \item \% !TEX useTabs
 \item \% !TEX useTabsWithFiles
@@ -46,6 +47,8 @@ A ``Magic Comment Line'' is a command in the source which is interpreted by TeXS
 \item	\% !TEX PageDirectionR2L
 
 \end{itemize}
+
+The older forms ``\% !TEX TS-program ='' and ``\% !TEX TS-parameter ='' are also accepted.
 
 \section{Program Examples}
 
@@ -121,7 +124,7 @@ TeXShop uses this information to synchronize the PageNumber box on the toolbar w
   \begin{verbatim}
       % !TEX spellcheck = German
  \end{verbatim}
- This command causes the Spelling and Grammer panel to use the German dictionary when the document is active, even if by default another dictionary is generally used.
+ This command causes the Spelling and Grammar panel to use the German dictionary when the document is active, even if by default another dictionary is generally used.
  
   \begin{verbatim}
       % !BIB program = biber
@@ -156,7 +159,13 @@ One consequence of this development is that Hans can  modify sync code if he wis
  
  This organization works for most TeX binaries. ConTeXt is an exception because Hans Hagen updates it regularly and often. Luckily, there is an easy way to install and update ConTeXt, supported by a beautiful series of web pages called the "ConTeXt Garden." See https://wiki.contextgarden.net/Main\_Page. Notice the link on this page titled "Install ConTeXt and start typesetting." This link downloads and installs everything needed to typeset using ConTeXt, placing it in a location of the user's choice. One typical place is $\sim$/bin/context. 
  
-TeXShop needs to be reconfigured to use this distribution rather than TeX Live. This is easy for someone who always typesets with ConTeXt, but troublesome for users who write some documents in LaTeX and some in ConTeXt. TeXShop now has a Preference setting in the Engine tab called "Alternate Path" where users can insert the full path to their ConTeXt distribution. The special command line "useAlternatePath" can then be added to the top of a ConTeXt document to use that path to ConTeXt rather than the standard path to TeX Live.
+TeXShop needs to be reconfigured to use this distribution rather than TeX Live. This is easy for someone who always typesets with ConTeXt, but troublesome for users who write some documents in LaTeX and some in ConTeXt. The Engine tab of TeXShop Settings has a setting called "Alternate Path" where users can insert the full path to their ConTeXt distribution. The special command line "useAlternatePath" can then be added to the top of a ConTeXt document to use that path to ConTeXt rather than the standard path to TeX Live.
+
+\begin{verbatim}
+       % !TEX projectfile = chapter2.tex
+\end{verbatim}
+
+When there is no SyncTeX information, TeXShop synchronizes by searching for text. To find the file for a spot in the Preview window, it searches the files named in the include and input commands of the root file. ConTeXt includes files differently, so list the files of such a project with these lines in the root file, one per line. A name is a full path or a path relative to the root file. Unlike the other magic lines, these lines may occur anywhere in the root file.
 
 \newpage
 \begin{verbatim}
@@ -179,7 +188,7 @@ TeXShop has a large number of settings which make it possible for users to custo
      defaults delete TeXShop FlashDelay
 \end{verbatim}
 
-Each command below changes a setting from its default. A complete list of hidden settings is given in the TeXShop Manual.
+Each command below changes a setting from its default. These are all the hidden settings of this version of TeXShop.
 
 \newpage
 {\em Editing}
@@ -192,16 +201,64 @@ Do not color the syntax of a long file (over 100,000 characters) while it is bei
 Set the source text color again whenever a source window becomes active; this helps with Japanese input methods and dark backgrounds.
 \item[\texttt{defaults write TeXShop IndexColorStart YES}] \hfill \\
 Start with the index coloring tool on.
-\item[\texttt{defaults write TeXShop OriginalSpelling YES}] \hfill \\
-Use the standard Apple spell checking language handling instead of switching the dictionary for each document.
+\item[\texttt{defaults write TeXShop expl3SyntaxColoring YES}] \hfill \\
+Start each document with Syntax Color expl3 Code on, so that names containing \_ and : are colored as single commands. The Source menu turns this on and off for a single document.
+\item[\texttt{defaults write TeXShop SyntaxColorFootnote NO}] \hfill \\
+Do not color the argument of \textbackslash footnote, \textbackslash autocite, \textbackslash footcite and the \textbackslash cite commands.
+\item[\texttt{defaults write TeXShop brieflyFlashYellowForMatch NO}] \hfill \\
+When a closing bracket is typed and bracket matching is on, briefly select the matching bracket instead of flashing it in yellow.
 \item[\texttt{defaults write TeXShop ContiguousTextLayout YES}] \hfill \\
 Lay out the whole text of a source window at once instead of only the visible part. Long documents then open and scroll more slowly.
 \item[\texttt{defaults write TeXShop RightJustifyIfAny YES}] \hfill \\
 When right justification is on, right justify a line if it contains any right-to-left character, rather than only when its first characters are right-to-left.
+\item[\texttt{defaults write TeXShop ConvertLF NO}] \hfill \\
+Keep carriage returns in the text. By default, line endings in files that are opened and in text that is typed or inserted are changed to line feeds.
+\item[\texttt{defaults write TeXShop IncrementalSearch NO}] \hfill \\
+Do not search incrementally in the Find Bar. This applies only when the Find Bar is chosen in TeXShop Settings.
+\item[\texttt{defaults write TeXShop CommandCompletionAlternateMarkShortcut NO}] \hfill \\
+Turn off the shortcuts that move to the next and previous completion marks: Option and Control with the command completion key (Escape or Tab). The value must be written as NO, as shown.
+\item[\texttt{defaults write TeXShop MathExpressionCompletion 1}] \hfill \\
+Show the results of math expressions while typing (macOS 15 and later). 0 turns this off (the default), 1 turns it on and 2 follows the system setting. It applies to windows opened afterwards.
+\end{description}
+
+{\em Spell Checking}
+\begin{description}
+\item[\texttt{defaults write TeXShop OriginalSpelling YES}] \hfill \\
+Use the standard Apple spell checking language handling instead of switching the dictionary for each document.
 \item[\texttt{defaults write TeXShop ExtraCommandsNotToCheckParameters -array '\textbackslash mycite'}] \hfill \\
 With TeX-aware spell checking off and the option not to check parameters on, do not check the spelling of the parameters of these commands either. Each name includes its backslash.
+\item[\texttt{defaults write TeXShop ExceptionListExcludesParameters YES}] \hfill \\
+With TeX-aware spell checking off and the option not to check parameters on, check no parameters except those of \textbackslash emph, \textbackslash verbatim and the commands in ExtraCommandsToCheckParameters.
 \item[\texttt{defaults write TeXShop ExtraCommandsToCheckParameters -array '\textbackslash mycaption'}] \hfill \\
-The same, but for the commands whose parameters are checked when ExceptionListExcludesParameters is YES.
+The commands whose parameters are still checked when ExceptionListExcludesParameters is YES.
+\end{description}
+
+{\em Tags and Labels}
+\begin{description}
+\item[\texttt{defaults write TeXShop TagSections NO}] \hfill \\
+Do not list \textbackslash chapter, \textbackslash section and the like in the Tags menu; only the lines marked as tags are listed.
+\item[\texttt{defaults write TeXShop ConTeXtTags YES}] \hfill \\
+List the ConTeXt section commands, such as \textbackslash title and \textbackslash subject, in the Tags menu instead of the LaTeX ones.
+\item[\texttt{defaults write TeXShop CreateTagList NO}] \hfill \\
+Leave the Tags menu empty.
+\item[\texttt{defaults write TeXShop CreateLabelList NO}] \hfill \\
+Leave the Labels menu empty.
+\item[\texttt{defaults write TeXShop UseNewTagsAndLabels NO}] \hfill \\
+Rebuild the Tags and Labels menus shortly after each change to the text, as older versions did, instead of when the menu is opened.
+\end{description}
+
+{\em Typesetting and Files}
+\begin{description}
+\item[\texttt{defaults write TeXShop UseOldHeadingCommands YES}] \hfill \\
+Also accept the old first line forms of the magic lines: \%\&pdflatex and similar lines and \%\&program= for the typesetting program, \%\&encoding= for the encoding and \%SourceDoc for the root file.
+\item[\texttt{defaults write TeXShop RedConsoleAfterError YES}] \hfill \\
+Show text typed in the console to answer a TeX error, and all later output of that run, in red.
+\item[\texttt{defaults write TeXShop OtherTeXExtensions -array 'mkiv'}] \hfill \\
+Treat files with these extensions as TeX sources, so that they can be typeset and are syntax colored. Give the extensions without the dot.
+\item[\texttt{defaults write TeXShop AggressiveTrashAUX YES}] \hfill \\
+Make Trash Aux Files always work as when Option is held down: it removes the auxiliary files in the folder of the root file and its subfolders, whatever their names.
+\item[\texttt{defaults write TeXShop OtherTrashExtensions -array 'nav' 'snm'}] \hfill \\
+Also remove files with these extensions in Trash Aux Files. Give the extensions without the dot.
 \end{description}
 
 {\em Preview}
@@ -214,13 +271,41 @@ The image interpolation used to draw the Preview window when antialiasing is on:
 Do not cover the Preview window briefly while a new version of the PDF is loaded; the cover prevents flashing.
 \item[\texttt{defaults write TeXShop FlashDelay 0.25}] \hfill \\
 How long, in seconds, the cover stays; the default is 0.5.
-\item[\texttt{defaults write TeXShop AutoReloadExternalPDF NO}] \hfill \\
-With Automatic Preview Update on, do not reload a PDF changed by another program.
 \item[\texttt{defaults write TeXShop UseOutline NO}] \hfill \\
 Do not build the PDF outline in the Preview drawer.
+\item[\texttt{defaults write TeXShop PreviewDrawerOpen YES}] \hfill \\
+Open the Preview drawer when a Preview window first appears.
+\item[\texttt{defaults write TeXShop LinkPopups NO}] \hfill \\
+Start each Preview window with link popups off. The Preview menu turns them on and off for a window.
+\item[\texttt{defaults write TeXShop LeftRightArrowsAlwaysPage YES}] \hfill \\
+Make the left and right arrow keys always move to the previous or next page, even when the page can be scrolled sideways.
+\item[\texttt{defaults write TeXShop GlassMaxMagnification 400}] \hfill \\
+The magnifying glass works only while the Preview is shown at no more than this magnification, in percent; the default is 250.
+\item[\texttt{defaults write TeXShop syncWithRedOvals YES}] \hfill \\
+When syncing from the source to the Preview window, circle the text in red instead of highlighting it.
+\item[\texttt{defaults write TeXShop ShowSyncMarks YES}] \hfill \\
+Start with the Sync Marks tool on. Marks are shown only for documents typeset with the old pdfsync package.
 \end{description}
 
-{\em Windows and Files}
+{\em External Editors and PDF Updates}
+\begin{description}
+\item[\texttt{defaults write TeXShop AutoReloadExternalPDF NO}] \hfill \\
+With Automatic Preview Update on, do not reload a PDF changed by another program.
+\item[\texttt{defaults write TeXShop PdfFileRefresh NO}] \hfill \\
+Do not update a PDF file opened by itself in TeXShop when it changes. The PDF of a TeX document is still updated.
+\item[\texttt{defaults write TeXShop RefreshTime 2}] \hfill \\
+How often, in seconds, TeXShop checks whether a PDF has changed; the default is 1 and the minimum 0.5.
+\item[\texttt{defaults write TeXShop BringPdfFrontOnAutomaticUpdate NO}] \hfill \\
+When an external editor is used, do not bring the Preview window to the front when the PDF is updated.
+\item[\texttt{defaults write TeXShop ExternalEditorTypesetAtStart NO}] \hfill \\
+When an external editor is used, do not typeset a document when it is opened, even if its PDF is missing or older than the source.
+\item[\texttt{defaults write TeXShop TextMateSync YES}] \hfill \\
+When an external editor is used, sync from the Preview window and go to errors in TextMate, using /usr/local/bin/mate.
+\item[\texttt{defaults write TeXShop OtherEditorSync YES}] \hfill \\
+The same with any editor, using a script /usr/local/bin/othereditor that you provide; it is called with the line number and the file. This takes precedence over TextMateSync.
+\end{description}
+
+{\em Windows and Saving}
 \begin{description}
 \item[\texttt{defaults write TeXShop OpenWithSourceInFront YES}] \hfill \\
 When a document is opened, bring the source window in front of the Preview window.
@@ -228,8 +313,20 @@ When a document is opened, bring the source window in front of the Preview windo
 Make the magic line useTabs also put the files of \verb|\input| commands in tabs.
 \item[\texttt{defaults write TeXShop AutoSaveEnabled NO}] \hfill \\
 Turn off autosaving.
+\item[\texttt{defaults write TeXShop KeepBackup YES}] \hfill \\
+Keep the previous version of a file as a backup when it is saved. This works only with autosaving turned off.
 \item[\texttt{defaults write TeXShop WatchServer NO}] \hfill \\
 Do not watch for changes made by other programs to source files on a server. TeXShop watches only while autosaving is on.
+\item[\texttt{defaults write TeXShop IgnoreStartOnReboot YES}] \hfill \\
+Do not reopen TeXShop automatically when you log in, even if it was running when you logged out.
+\end{description}
+
+{\em Panels}
+\begin{description}
+\item[\texttt{defaults write TeXShop matrixsize 20}] \hfill \\
+The largest number of rows and columns in the Matrix Panel, from 2 to 100; the default is 12.
+\item[\texttt{defaults write TeXShop LPanelOutlines NO}] \hfill \\
+Always draw the outlines of the buttons in the LaTeX Panel, not only when the pointer is over them.
 \end{description}
 
 \end{document}  
