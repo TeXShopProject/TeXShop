@@ -40,6 +40,7 @@ program = r'''
 @end
 static MemoryDefaults *settings;
 #define SUD settings
+#define MakeatletterEnabledKey @"MakeatletterEnabled"
 static NSString *TSPreferencesDomainName(void) { return @"test.memory"; }
 static int refreshes;
 @interface TSSpellSupport:NSObject

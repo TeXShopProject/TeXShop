@@ -201,11 +201,15 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 //-----------------------------------
 {
     BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
+    BOOL oldMakeatletter = [SUD boolForKey:MakeatletterEnabledKey];
 	[SUD setPersistentDomain:oldDefaults forName:TSPreferencesDomainName()];
 	[SUD synchronize];
 	[self updateControlsFromUserDefaults:SUD];
     if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
         [TSSpellSupport preferencesDidChange];
+    // Open documents color commands again when @ is no longer, or now, part of their names.
+    if (oldMakeatletter != [SUD boolForKey:MakeatletterEnabledKey])
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object:self];
     
     // KOCH
     // Here is the spot where we need to redraw the document and console with the remembered fonts
@@ -217,6 +221,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (IBAction)setDefaults:sender
 {
     BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
+    BOOL oldMakeatletter = [SUD boolForKey:MakeatletterEnabledKey];
 
 	NSString *fileName;
 	NSDictionary *factoryDefaults, *oldDefaults;
@@ -265,6 +270,8 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	[self updateControlsFromUserDefaults:SUD];
     if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
         [TSSpellSupport preferencesDidChange];
+    if (oldMakeatletter != [SUD boolForKey:MakeatletterEnabledKey])
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object:self];
     
     // KOCH
     [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontRememberNotification object:self];
