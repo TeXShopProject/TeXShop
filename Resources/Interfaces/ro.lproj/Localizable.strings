@@ -136,3 +136,10 @@
 "Return to the word and choose Find Next before replacing." = "Reveniți la cuvânt și căutați următorul înainte de înlocuire.";
 
 "Enter a different replacement in the Change All field." = "Introduceți altă înlocuire în câmpul pentru Schimbă tot.";
+
+/* Notice after line endings were converted to LF when a document was opened */
+"This document mixes different line endings." = "Acest document amestecă terminații de linie diferite.";
+"This document uses Windows line endings (CRLF)." = "Acest document folosește terminații de linie Windows (CRLF).";
+"This document uses classic Mac line endings (CR)." = "Acest document folosește terminații de linie Mac clasic (CR).";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop a convertit toate terminațiile de linie în LF. Când salvați documentul, fișierul va avea terminații de linie LF.";
+"Don’t show again for this document" = "Nu mai afișa pentru acest document";

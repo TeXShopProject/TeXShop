@@ -24,6 +24,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef NS_ENUM(NSInteger, TSByteOrderMark) {
+	TSNoByteOrderMark = 0,
+	TSUTF8ByteOrderMark,
+	TSUTF16BigEndianByteOrderMark,
+	TSUTF16LittleEndianByteOrderMark
+};
+
 @interface TSEncodingSupport : NSObject {
   
 }
@@ -54,6 +61,10 @@
 // 7-bit text, an encoding recorded by another application, UTF-8, the preferred encoding,
 // then the encodings of the user's languages. Only encodings in TeXShop's list are chosen.
 - (NSStringEncoding)detectedEncodingForData:(NSData *)data fileURL:(NSURL *)url preferredEncoding:(NSStringEncoding)preferred;
+
+// A byte order mark found at the start of a file, and the data of a text with the same mark.
++ (TSByteOrderMark)byteOrderMarkOfData:(NSData *)data;
+- (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark;
 
 
 - (BOOL)ptexUtfOutputCheck: (NSString *)dataString withEncoding: (NSStringEncoding)enc;

@@ -133,3 +133,10 @@
 "Return to the word and choose Find Next before replacing." = "Ga terug naar het woord en zoek opnieuw het volgende woord.";
 
 "Enter a different replacement in the Change All field." = "Voer een andere vervanging in het aparte veld in.";
+
+/* Notice after line endings were converted to LF when a document was opened */
+"This document mixes different line endings." = "Dit document bevat verschillende regeleinden.";
+"This document uses Windows line endings (CRLF)." = "Dit document gebruikt Windows-regeleinden (CRLF).";
+"This document uses classic Mac line endings (CR)." = "Dit document gebruikt klassieke Mac-regeleinden (CR).";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop heeft alle regeleinden omgezet naar LF. Als je het document bewaart, krijgt het bestand LF-regeleinden.";
+"Don’t show again for this document" = "Niet meer tonen voor dit document";

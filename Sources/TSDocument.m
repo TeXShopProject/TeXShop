@@ -29,6 +29,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSDocument.h"
+#include <sys/xattr.h>
 #import <OgreKit/OgreKit.h> // zenitani 1.35 (A)
 
 #if 0
@@ -2117,14 +2118,16 @@ in other code when an external editor is being used. */
 				[[TSEncodingSupport sharedInstance] ptexUtfOutputCheck: [[_textStorage string] normalizedStringWithModifiedNFC] withEncoding: _encoding] ) { // modified by Terada
 			return [[TSEncodingSupport sharedInstance] ptexUtfOutput: textView withEncoding: _encoding];
 		} else 
-			return [[[_textStorage string] normalizedStringWithModifiedNFC] dataUsingEncoding: _encoding allowLossyConversion:YES]; // modified by Terada
+			return [[TSEncodingSupport sharedInstance] dataForText: [[_textStorage string] normalizedStringWithModifiedNFC] encoding: _encoding
+				byteOrderMark: (_encoding == _sourceMarkEncoding) ? _sourceByteOrderMark : TSNoByteOrderMark]; // modified by Terada
 		}
 	else {
 		if( [SUD boolForKey:ptexUtfOutputEnabledKey] &&
 		   [[TSEncodingSupport sharedInstance] ptexUtfOutputCheck: [_textStorage string]  withEncoding: _encoding] ) { // original code
 				return [[TSEncodingSupport sharedInstance] ptexUtfOutput: textView withEncoding: _encoding];
 		} else 
-			return [[_textStorage string]  dataUsingEncoding: _encoding allowLossyConversion:YES]; // original code
+			return [[TSEncodingSupport sharedInstance] dataForText: [_textStorage string] encoding: _encoding
+				byteOrderMark: (_encoding == _sourceMarkEncoding) ? _sourceByteOrderMark : TSNoByteOrderMark]; // original code
 	}
 }
 
@@ -2190,7 +2193,14 @@ in other code when an external editor is being used. */
     // theEncoding = [[TSEncodingSupport sharedInstance] defaultEncoding]; this error broke the encoding menu in the save panel
 	theEncoding = _encoding;
 	_encodingFromMagicComment = NO;
-	firstBytes = [[NSString alloc] initWithData:theData encoding:NSISOLatin9StringEncoding];
+	// A UTF-16 file is scanned for magic comments in UTF-16; other files byte by byte.
+	TSByteOrderMark mark = [TSEncodingSupport byteOrderMarkOfData: theData];
+	if (mark == TSUTF16BigEndianByteOrderMark || mark == TSUTF16LittleEndianByteOrderMark)
+		firstBytes = [[NSString alloc] initWithData:theData encoding:NSUnicodeStringEncoding];
+	else
+		firstBytes = nil;
+	if (! firstBytes)
+		firstBytes = [[NSString alloc] initWithData:theData encoding:NSISOLatin9StringEncoding];
 	
 	// First check for new spelling language
 	
@@ -2698,7 +2708,11 @@ in other code when an external editor is being used. */
 		_badEncoding = _encoding;
 		showBadEncodingDialog = YES;
 		content = [[NSString alloc] initWithData:myData encoding:NSISOLatin9StringEncoding] ;
+		// The text is Latin 9 now; saving it in the old encoding would garble the whole file.
+		_encoding = _tempencoding = NSISOLatin9StringEncoding;
     }
+	_sourceByteOrderMark = [TSEncodingSupport byteOrderMarkOfData: myData];
+	_sourceMarkEncoding = _encoding;
     
         if (content)
         {
@@ -2706,6 +2720,9 @@ in other code when an external editor is being used. */
     
 		// zenitani 1.35 (A) -- normalizing newline character for regular expression
 		if ([SUD boolForKey:ConvertLFKey]) {
+			// Tell the user, once, when a file that was just opened had other line endings.
+			if (! _hasReadSource)
+				_lineEndingNotice = [self lineEndingNoticeForText: content URL: absoluteURL];
 			content = [OGRegularExpression replaceNewlineCharactersInString:content
 															  withCharacter:OgreLfNewlineCharacter];
 		}
@@ -3174,6 +3191,53 @@ else {
     return _tempencoding;
 }
 
+// Line endings of a file before they are converted to LF: 0 when all are LF or the user
+// asked not to be told again for this file, 1 for CRLF, 2 for CR, 3 for a mixture.
+static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice-off";
+
+- (NSInteger)lineEndingNoticeForText: (NSString *)text URL: (NSURL *)url
+{
+	NSUInteger length = text.length, lf = 0, crlf = 0, cr = 0;
+	for (NSUInteger i = 0; i < length; i++) {
+		unichar c = [text characterAtIndex: i];
+		if (c == '\r') {
+			if (i + 1 < length && [text characterAtIndex: i + 1] == '\n') { crlf++; i++; }
+			else cr++;
+		} else if (c == '\n')
+			lf++;
+	}
+	if (crlf == 0 && cr == 0)
+		return 0;
+	if (url.isFileURL && getxattr(url.fileSystemRepresentation, TSLineEndingNoticeAttribute, NULL, 0, 0, 0) >= 0)
+		return 0;
+	if ((lf > 0) + (crlf > 0) + (cr > 0) > 1)
+		return 3;
+	return crlf ? 1 : 2;
+}
+
+- (void)tryLineEndingNotice: (NSWindow *)theWindow
+{
+	NSInteger notice = _lineEndingNotice;
+	_lineEndingNotice = 0;
+	if (! notice || ! theWindow)
+		return;
+	NSAlert *alert = [[NSAlert alloc] init];
+	if (notice == 3)
+		alert.messageText = NSLocalizedString(@"This document mixes different line endings.", @"Line ending notice: mixed");
+	else if (notice == 1)
+		alert.messageText = NSLocalizedString(@"This document uses Windows line endings (CRLF).", @"Line ending notice: CRLF");
+	else
+		alert.messageText = NSLocalizedString(@"This document uses classic Mac line endings (CR).", @"Line ending notice: CR");
+	alert.informativeText = NSLocalizedString(@"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings.", @"Line ending notice: explanation");
+	alert.showsSuppressionButton = YES;
+	alert.suppressionButton.title = NSLocalizedString(@"Don\u2019t show again for this document", @"Line ending notice: suppression check box");
+	NSURL *url = self.fileURL;
+	[alert beginSheetModalForWindow: theWindow completionHandler: ^(NSModalResponse response) {
+		if (alert.suppressionButton.state == NSControlStateValueOn && url.isFileURL)
+			setxattr(url.fileSystemRepresentation, TSLineEndingNoticeAttribute, "1", 1, 0, 0);
+	}];
+}
+
 - (void)tryBadEncodingDialog: (NSWindow *)theWindow
 {
 	if (showBadEncodingDialog) {
@@ -3183,6 +3247,8 @@ else {
 						  NSLocalizedString(@"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again.",
 											@"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again."), theEncoding);
 	}
+	else
+		[self tryLineEndingNotice: theWindow];
 	showBadEncodingDialog = FALSE;
 
 }

@@ -114,6 +114,13 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  write(fd,d.bytes,d.length); close(fd);
  if(how==2){struct timeval tv[2]; TIMESPEC_TO_TIMEVAL(&tv[0],&st.st_atimespec); TIMESPEC_TO_TIMEVAL(&tv[1],&st.st_mtimespec); utimes(path.fileSystemRepresentation,tv);}
 }
+// Byte order marks are not used in these tests.
+@interface TSEncodingSupport : NSObject
++ (NSInteger)byteOrderMarkOfData:(NSData *)data;
+@end
+@implementation TSEncodingSupport
++ (NSInteger)byteOrderMarkOfData:(NSData *)data { return 0; }
+@end
 // No encoding is chosen in an Open dialog in these tests.
 @interface TSDocumentController : NSDocumentController
 - (BOOL)takeEncoding:(NSStringEncoding *)encoding chosenForURL:(NSURL *)url;
@@ -141,6 +148,8 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  NSStringEncoding _encoding, _tempencoding, _badEncoding;
  BOOL showBadEncodingDialog, isLoading, firstTime;
  BOOL _encodingFromMagicComment, _hasReadSource;
+ NSInteger _sourceByteOrderMark, _lineEndingNotice;
+ NSStringEncoding _sourceMarkEncoding;
 }
 @property NSUInteger reads;
 @property (readonly) NSTextStorage *storage;
@@ -160,6 +169,7 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 - (void)colorizeAll { if(gThrowOnColorize>0 && --gThrowOnColorize==0){ gThrown++; [NSException raise:@"TSProbeException" format:@"colorize"]; } }
 - (BOOL)doNotReadSource { return NO; }
 - (NSStringEncoding)encodingForUnmarkedData:(NSData *)d URL:(NSURL *)u { return _encoding; }
+- (NSInteger)lineEndingNoticeForText:(NSString *)text URL:(NSURL *)url { return 0; }
 - (NSStringEncoding)dataEncoding:(NSData *)d {
  self.reads++;
  if(gInjectOnRead>0 && --gInjectOnRead==0) ExtWrite(gPath, gInjectText, gInjectHow);

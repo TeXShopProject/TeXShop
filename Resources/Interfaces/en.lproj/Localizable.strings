@@ -119,3 +119,10 @@
 "Return to the word and choose Find Next before replacing." = "Return to the word and choose Find Next before replacing.";
 
 "Enter a different replacement in the Change All field." = "Enter a different replacement in the Change All field.";
+
+/* Notice after line endings were converted to LF when a document was opened */
+"This document mixes different line endings." = "This document mixes different line endings.";
+"This document uses Windows line endings (CRLF)." = "This document uses Windows line endings (CRLF).";
+"This document uses classic Mac line endings (CR)." = "This document uses classic Mac line endings (CR).";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings.";
+"Don’t show again for this document" = "Don’t show again for this document";

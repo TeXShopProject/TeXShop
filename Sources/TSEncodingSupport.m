@@ -74,7 +74,7 @@ static TSEncoding _availableEncodings[] = {
 	{ 0, kCFStringEncodingDOSChineseTrad}, //		@"DOS Chinese Traditional" },
 	{ 0, kCFStringEncodingDOSChineseSimplif}, //	@"DOS Chinese Simplified" },
 	{ 0, kCFStringEncodingGBK_95}, //				@"GBK" },
-	{ 0, kCFStringEncodingGB_2312_80}, //			@"GB 2312" },
+	{ 0, kCFStringEncodingEUC_CN}, //				@"GB 2312" }, // kCFStringEncodingGB_2312_80 is the bare character set and does not read ASCII
 	{ 0, kCFStringEncodingGB_18030_2000}, //		@"GB 18030" },
     { 0, kCFStringEncodingASCII}, //
 };
@@ -482,6 +482,14 @@ static BOOL TSDataDecodes(NSData *data, NSStringEncoding encoding)
 	return [[NSString alloc] initWithData:data encoding:encoding] != nil;
 }
 
+// Whether data decodes in encoding and encodes back to the same bytes, so that saving
+// the file unchanged writes the same file.
+static BOOL TSDataRoundTrips(NSData *data, NSStringEncoding encoding)
+{
+	NSString *text = [[NSString alloc] initWithData:data encoding:encoding];
+	return text && [[text dataUsingEncoding:encoding allowLossyConversion:NO] isEqualToData:data];
+}
+
 // The encoding that TextEdit and other applications record in com.apple.TextEncoding,
 // for example "utf-8;134217984" (an IANA name and a CFStringEncoding).
 static NSStringEncoding TSRecordedEncoding(NSURL *url)
@@ -507,44 +515,66 @@ static NSStringEncoding TSRecordedEncoding(NSURL *url)
 	return CFStringConvertEncodingToNSStringEncoding(cfEncoding);
 }
 
-static NSArray *TSEncodingFamily(NSString *family)
+static NSArray *TSEncodingList(const CFStringEncoding *list, NSInteger count)
 {
-	CFStringEncoding japanese[] = {kCFStringEncodingEUC_JP, kCFStringEncodingDOSJapanese, kCFStringEncodingShiftJIS_X0213_00, kCFStringEncodingMacJapanese};
-	CFStringEncoding korean[] = {kCFStringEncodingDOSKorean, kCFStringEncodingMacKorean};
-	CFStringEncoding simplified[] = {kCFStringEncodingGB_18030_2000, kCFStringEncodingMacChineseSimp};
-	CFStringEncoding traditional[] = {kCFStringEncodingDOSChineseTrad, kCFStringEncodingMacChineseTrad};
-	CFStringEncoding cyrillic[] = {kCFStringEncodingWindowsCyrillic, kCFStringEncodingKOI8_R, kCFStringEncodingMacCyrillic};
-	CFStringEncoding central[] = {kCFStringEncodingWindowsLatin2, kCFStringEncodingISOLatin2, kCFStringEncodingMacCentralEurRoman};
-	CFStringEncoding greek[] = {kCFStringEncodingISOLatinGreek};
-	CFStringEncoding turkish[] = {kCFStringEncodingISOLatin5};
-	CFStringEncoding western[] = {kCFStringEncodingWindowsLatin1, kCFStringEncodingMacRoman};
-	CFStringEncoding *list = western; NSInteger count = 2;
-	if ([family isEqualToString:@"ja"]) { list = japanese; count = 4; }
-	else if ([family isEqualToString:@"ko"]) { list = korean; count = 2; }
-	else if ([family isEqualToString:@"zh-Hans"]) { list = simplified; count = 2; }
-	else if ([family isEqualToString:@"zh-Hant"]) { list = traditional; count = 2; }
-	else if ([family isEqualToString:@"cyrillic"]) { list = cyrillic; count = 3; }
-	else if ([family isEqualToString:@"central"]) { list = central; count = 3; }
-	else if ([family isEqualToString:@"el"]) { list = greek; count = 1; }
-	else if ([family isEqualToString:@"tr"]) { list = turkish; count = 1; }
 	NSMutableArray *result = [NSMutableArray array];
 	for (NSInteger i = 0; i < count; i++)
 		[result addObject:@(CFStringConvertEncodingToNSStringEncoding(list[i]))];
 	return result;
 }
 
-static NSString *TSFamilyForLanguage(NSString *language)
+#define TSLIST(...) ({ static const CFStringEncoding list[] = {__VA_ARGS__}; TSEncodingList(list, sizeof(list) / sizeof(list[0])); })
+
+// The encodings of a group of languages, most likely first.
+static NSArray *TSEncodingFamily(NSString *family)
+{
+	if ([family isEqualToString:@"ja"])
+		return TSLIST(kCFStringEncodingEUC_JP, kCFStringEncodingDOSJapanese, kCFStringEncodingMacJapanese, kCFStringEncodingShiftJIS_X0213_00);
+	if ([family isEqualToString:@"ko"])
+		return TSLIST(kCFStringEncodingDOSKorean, kCFStringEncodingMacKorean);
+	if ([family isEqualToString:@"zh-Hans"])
+		return TSLIST(kCFStringEncodingGB_18030_2000, kCFStringEncodingMacChineseSimp);
+	if ([family isEqualToString:@"zh-Hant"])
+		return TSLIST(kCFStringEncodingDOSChineseTrad, kCFStringEncodingMacChineseTrad);
+	if ([family isEqualToString:@"cyrillic"])
+		return TSLIST(kCFStringEncodingWindowsCyrillic, kCFStringEncodingKOI8_R, kCFStringEncodingMacCyrillic, kCFStringEncodingDOSRussian, kCFStringEncodingDOSCyrillic);
+	if ([family isEqualToString:@"central"])
+		return TSLIST(kCFStringEncodingWindowsLatin2, kCFStringEncodingISOLatin2, kCFStringEncodingMacCentralEurRoman);
+	if ([family isEqualToString:@"el"])
+		return TSLIST(kCFStringEncodingISOLatinGreek);
+	if ([family isEqualToString:@"tr"])
+		return TSLIST(kCFStringEncodingISOLatin5);
+	return TSLIST(kCFStringEncodingWindowsLatin1, kCFStringEncodingISOLatin1, kCFStringEncodingISOLatin9, kCFStringEncodingMacRoman);
+}
+
+// Encodings that read the same text from the same bytes except for a few characters.
+static NSArray *TSEncodingVariants(NSStringEncoding encoding)
+{
+	NSArray *groups = @[TSLIST(kCFStringEncodingDOSJapanese, kCFStringEncodingShiftJIS_X0213_00, kCFStringEncodingMacJapanese),
+						TSLIST(kCFStringEncodingGB_18030_2000, kCFStringEncodingGBK_95, kCFStringEncodingEUC_CN, kCFStringEncodingDOSChineseSimplif, kCFStringEncodingMacChineseSimp),
+						TSLIST(kCFStringEncodingDOSChineseTrad, kCFStringEncodingMacChineseTrad),
+						TSLIST(kCFStringEncodingDOSKorean, kCFStringEncodingMacKorean)];
+	for (NSArray *group in groups)
+		if ([group containsObject:@(encoding)])
+			return group;
+	return @[];
+}
+
+static NSArray *TSFamiliesForLanguage(NSString *language)
 {
 	NSString *code = [[language componentsSeparatedByString:@"-"] firstObject];
 	if ([code isEqualToString:@"ja"] || [code isEqualToString:@"ko"] || [code isEqualToString:@"el"] || [code isEqualToString:@"tr"])
-		return code;
+		return @[code];
 	if ([code isEqualToString:@"zh"])
-		return ([language containsString:@"Hant"] || [language hasSuffix:@"-TW"] || [language hasSuffix:@"-HK"] || [language hasSuffix:@"-MO"]) ? @"zh-Hant" : @"zh-Hans";
-	if ([@[@"ru", @"uk", @"be", @"bg", @"sr", @"mk", @"kk"] containsObject:code])
-		return @"cyrillic";
-	if ([@[@"cs", @"pl", @"hu", @"sk", @"sl", @"hr", @"ro", @"bs"] containsObject:code])
-		return @"central";
-	return nil;
+		return @[([language containsString:@"Hant"] || [language hasSuffix:@"-TW"] || [language hasSuffix:@"-HK"] || [language hasSuffix:@"-MO"]) ? @"zh-Hant" : @"zh-Hans"];
+	// Serbian and Bosnian are written in Cyrillic and in Latin letters.
+	if ([code isEqualToString:@"sr"] || [code isEqualToString:@"bs"])
+		return @[@"cyrillic", @"central"];
+	if ([@[@"ru", @"uk", @"be", @"bg", @"mk", @"kk"] containsObject:code])
+		return @[@"cyrillic"];
+	if ([@[@"cs", @"pl", @"hu", @"sk", @"sl", @"hr", @"ro"] containsObject:code])
+		return @[@"central"];
+	return @[];
 }
 
 // How much a decoded text looks like Japanese. Bytes that are valid in two Japanese
@@ -587,10 +617,13 @@ static TSJapaneseScore TSScoreJapanese(NSString *text)
 	return result;
 }
 
-// The most plausible Japanese reading of data, among the Japanese encodings in TeXShop's list.
+// The most plausible Japanese reading of data. Encodings that write the file back unchanged
+// win over those that do not; on a tie the earlier encoding of the family wins, so the
+// Windows variant of Shift JIS, which TeX's Japanese engines read, is preferred.
 static NSStringEncoding TSBestJapaneseEncoding(NSData *data, TSJapaneseScore *best, BOOL (^available)(NSStringEncoding))
 {
 	NSStringEncoding result = 0;
+	BOOL resultRoundTrips = NO;
 	for (NSNumber *candidate in TSEncodingFamily(@"ja")) {
 		NSStringEncoding encoding = candidate.unsignedIntegerValue;
 		if (! available(encoding))
@@ -598,18 +631,83 @@ static NSStringEncoding TSBestJapaneseEncoding(NSData *data, TSJapaneseScore *be
 		NSString *text = [[NSString alloc] initWithData:data encoding:encoding];
 		if (! text)
 			continue;
+		BOOL roundTrips = [[text dataUsingEncoding:encoding allowLossyConversion:NO] isEqualToData:data];
 		TSJapaneseScore score = TSScoreJapanese(text);
-		if (! result || score.score > best->score) {
+		if (! result || (roundTrips && ! resultRoundTrips) || (roundTrips == resultRoundTrips && score.score > best->score)) {
 			result = encoding;
+			resultRoundTrips = roundTrips;
 			*best = score;
 		}
 	}
 	return result;
 }
 
+// How much a text decoded with a one-byte encoding looks like words: lower-case letters
+// count for it, an upper-case letter starting a word a little, and an upper-case letter
+// inside a lower-case word against it, as do C1 control characters, box drawing and
+// other symbols. Common punctuation and currency signs are neutral.
+typedef struct { double score; NSUInteger suspicious; } TSAlphabeticScore;
+
+static TSAlphabeticScore TSScoreAlphabetic(NSString *text)
+{
+	NSCharacterSet *lower = [NSCharacterSet lowercaseLetterCharacterSet];
+	NSCharacterSet *upper = [NSCharacterSet uppercaseLetterCharacterSet];
+	NSCharacterSet *letters = [NSCharacterSet letterCharacterSet];
+	NSString *neutral = @"\u00A0\u00AB\u00BB\u201E\u201C\u201D\u2018\u2019\u201A\u2013\u2014\u2026\u20AC\u00A7\u00B0\u00A9\u00AE\u00B7\u00BF\u00A1\u00A2\u00A3\u00A4\u00A5\u2116";
+	TSAlphabeticScore result = {0, 0};
+	unichar previous = ' ';
+	NSUInteger length = text.length, examined = 0;
+	for (NSUInteger i = 0; i < length && examined < 20000; i++) {
+		unichar c = [text characterAtIndex:i];
+		BOOL asciiLetter = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+		BOOL previousAsciiLetter = (previous >= 'A' && previous <= 'Z') || (previous >= 'a' && previous <= 'z');
+		BOOL greekOrCyrillic = c >= 0x0370 && c < 0x0530;
+		BOOL previousGreekOrCyrillic = previous >= 0x0370 && previous < 0x0530;
+		if (c < 0x80) {
+			// An ASCII capital right after an accented lower-case letter is inside a word,
+			// and a Latin letter right after a Greek or Cyrillic one mixes scripts in a word.
+			if ((c >= 'A' && c <= 'Z' && previous >= 0x80 && [lower characterIsMember:previous])
+					|| (asciiLetter && previousGreekOrCyrillic)) {
+				result.score -= 1; result.suspicious++;
+			}
+			previous = c;
+			continue;
+		}
+		examined++;
+		if (greekOrCyrillic && previousAsciiLetter && [letters characterIsMember:c]) {
+			result.score -= 1; result.suspicious++;
+			previous = c;
+			continue;
+		}
+		// Accented Latin letters seldom follow each other in words, while Cyrillic and Greek
+		// letters do; a run of them is what Cyrillic bytes read as Latin look like.
+		if (c >= 0x00C0 && c < 0x0250 && previous >= 0x00C0 && previous < 0x0250 && [letters characterIsMember:c] && [letters characterIsMember:previous]) {
+			result.score -= 1;
+			previous = c;
+			continue;
+		}
+		if ([lower characterIsMember:c])
+			result.score += 1;
+		else if ([upper characterIsMember:c]) {
+			if ([lower characterIsMember:previous]) { result.score -= 1; result.suspicious++; }
+			else result.score += 0.5;
+		} else if ([letters characterIsMember:c])
+			result.score += 0.5;
+		else if ([neutral rangeOfString:[NSString stringWithCharacters:&c length:1]].location == NSNotFound) {
+			result.score -= 2; result.suspicious++;
+		}
+		previous = c;
+	}
+	return result;
+}
+
+// Whether encoding is one of the one-byte encodings of TeXShop's list.
 static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 {
-	return CFStringGetMaximumSizeForEncoding(1, CFStringConvertNSStringEncodingToEncoding(encoding)) == 1;
+	for (NSString *family in @[@"western", @"cyrillic", @"central", @"el", @"tr"])
+		if ([TSEncodingFamily(family) containsObject:@(encoding)])
+			return YES;
+	return encoding == NSASCIIStringEncoding;
 }
 
 - (NSStringEncoding)detectedEncodingForData:(NSData *)data fileURL:(NSURL *)url preferredEncoding:(NSStringEncoding)preferred
@@ -644,18 +742,19 @@ static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 	if (TSDataDecodes(data, NSUTF8StringEncoding))
 		return NSUTF8StringEncoding;
 
-	// Candidates: the preferred encoding, the encodings of its language and of the user's
-	// languages, then the rest of TeXShop's list.
+	// The language groups of the preferred encoding and of the user's languages.
 	NSMutableArray *families = [NSMutableArray array];
 	for (NSString *family in @[@"ja", @"ko", @"zh-Hans", @"zh-Hant", @"cyrillic", @"central", @"el", @"tr"])
 		if ([TSEncodingFamily(family) containsObject:@(preferred)])
 			[families addObject:family];
-	for (NSString *language in [NSLocale preferredLanguages]) {
-		NSString *family = TSFamilyForLanguage(language);
-		if (family && ! [families containsObject:family])
-			[families addObject:family];
-	}
+	for (NSString *language in [NSLocale preferredLanguages])
+		for (NSString *family in TSFamiliesForLanguage(language))
+			if (! [families containsObject:family])
+				[families addObject:family];
 	[families addObject:@"western"];
+
+	// Candidates: the preferred encoding, the encodings of those groups, then the rest of
+	// TeXShop's list.
 	NSMutableOrderedSet *candidates = [NSMutableOrderedSet orderedSetWithObject:@(preferred)];
 	for (NSString *family in families)
 		[candidates addObjectsFromArray:TSEncodingFamily(family)];
@@ -666,6 +765,7 @@ static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 	for (NSNumber *candidate in candidates)
 		if ([self isAvailableEncoding:candidate.unsignedIntegerValue])
 			[suggested addObject:candidate];
+	BOOL (^available)(NSStringEncoding) = ^BOOL(NSStringEncoding encoding) { return [self isAvailableEncoding:encoding]; };
 
 	// Let Foundation weigh the candidates by how plausible the decoded text is.
 	NSString *language = [[[[NSLocale preferredLanguages] firstObject] componentsSeparatedByString:@"-"] firstObject];
@@ -678,37 +778,113 @@ static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 	BOOL lossy = NO;
 	NSStringEncoding guess = [NSString stringEncodingForData:data encodingOptions:options convertedString:&converted usedLossyConversion:&lossy];
 	// For very short data the guess may not even read the file.
-	if (guess && ! TSDataDecodes(data, guess))
+	if (lossy || (guess && ! (available(guess) && TSDataDecodes(data, guess))))
 		guess = 0;
 
-	BOOL (^available)(NSStringEncoding) = ^BOOL(NSStringEncoding encoding) { return [self isAvailableEncoding:encoding]; };
+	// Among the Japanese encodings, choose the reading that looks most like Japanese.
 	TSJapaneseScore japanese = {0, 0, 0, 0};
 	NSStringEncoding bestJapanese = TSBestJapaneseEncoding(data, &japanese, available);
-	// Among the Japanese encodings, choose the reading that looks most like Japanese; on a tie
-	// the earlier one in the family wins, so the Windows variant of Shift JIS, which TeX's
-	// Japanese engines read, is preferred to the other Shift JIS variants.
 	if (guess && [TSEncodingFamily(@"ja") containsObject:@(guess)] && bestJapanese)
 		guess = bestJapanese;
-	// A Western guess, or none, gives way when the Japanese reading is clearly Japanese text:
+	// A one-byte guess, or none, gives way when the Japanese reading is clearly Japanese text:
 	// it has kana, a positive score and hardly any half-width katakana, private use or
 	// control characters.
 	else if (bestJapanese && (! guess || TSIsSingleByteEncoding(guess)) && japanese.kana > 0
-			&& japanese.score > 0 && 4 * japanese.unlikely <= japanese.japanese) {
+			&& japanese.score > 0 && 4 * japanese.unlikely <= japanese.japanese)
 		guess = bestJapanese;
-		lossy = NO;
+
+	// No guess at all, for a Japanese user: a Japanese reading that writes the file back
+	// unchanged and looks like Japanese, even without kana, as in a single kanji.
+	else if (bestJapanese && ! guess && [families containsObject:@"ja"] && japanese.score > 0
+			&& japanese.unlikely == 0 && TSDataRoundTrips(data, bestJapanese))
+		guess = bestJapanese;
+
+	// A Chinese guess for a Japanese or Korean user who does not use Chinese: GB 18030 reads
+	// almost any bytes, so a reading in the user's own encodings is preferred when one exists.
+	if (guess && [TSEncodingVariants(CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000)) containsObject:@(guess)]
+			&& ! [families containsObject:@"zh-Hans"] && ! [families containsObject:@"zh-Hant"]) {
+		if ([families containsObject:@"ja"] && bestJapanese && TSDataRoundTrips(data, bestJapanese))
+			guess = bestJapanese;
+		else if ([families containsObject:@"ko"])
+			for (NSNumber *korean in TSEncodingFamily(@"ko"))
+				if (available(korean.unsignedIntegerValue) && TSDataRoundTrips(data, korean.unsignedIntegerValue)) {
+					guess = korean.unsignedIntegerValue;
+					break;
+				}
 	}
 
-	if (guess && ! lossy && [self isAvailableEncoding:guess]) {
-		// GB 18030 includes GBK and GB 2312; use it whenever it reads the file.
+	// Among one-byte encodings, Foundation often confuses the Cyrillic and Central European
+	// ones. Compare the readings in the encodings of the user's language groups, the preferred
+	// encoding and the guess; on a tie the preferred encoding, then the guess wins.
+	if (! guess || TSIsSingleByteEncoding(guess)) {
+		NSMutableOrderedSet *oneByte = [NSMutableOrderedSet orderedSet];
+		if (TSIsSingleByteEncoding(preferred))
+			[oneByte addObject:@(preferred)];
+		if (guess)
+			[oneByte addObject:@(guess)];
+		for (NSString *family in families)
+			for (NSNumber *candidate in TSEncodingFamily(family))
+				if (TSIsSingleByteEncoding(candidate.unsignedIntegerValue))
+					[oneByte addObject:candidate];
+		// Without a guess, the first candidate that reads the file stands in for one.
+		if (! guess)
+			for (NSNumber *candidate in oneByte)
+				if (available(candidate.unsignedIntegerValue) && TSDataDecodes(data, candidate.unsignedIntegerValue)) {
+					guess = candidate.unsignedIntegerValue;
+					break;
+				}
+		// An ISO encoding whose reading has C1 control characters is usually the Windows
+		// encoding of the same languages, which puts punctuation there.
+		NSDictionary *windows = @{@(CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin1)): @(CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingWindowsLatin1)),
+								  @(CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin9)): @(CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingWindowsLatin1)),
+								  @(CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin2)): @(CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingWindowsLatin2))};
+		if (guess && windows[@(guess)] && available([windows[@(guess)] unsignedIntegerValue])) {
+			NSString *reading = [[NSString alloc] initWithData:data encoding:guess];
+			NSString *windowsReading = [[NSString alloc] initWithData:data encoding:[windows[@(guess)] unsignedIntegerValue]];
+			NSCharacterSet *c1 = [NSCharacterSet characterSetWithRange:NSMakeRange(0x80, 0x20)];
+			if ([reading rangeOfCharacterFromSet:c1].location != NSNotFound && windowsReading
+					&& [windowsReading rangeOfCharacterFromSet:c1].location == NSNotFound)
+				guess = [windows[@(guess)] unsignedIntegerValue];
+		}
+		// A guess of the user's groups that reads as clean words is kept.
+		TSAlphabeticScore guessReading = {0, 1};
+		if (guess)
+			guessReading = TSScoreAlphabetic([[NSString alloc] initWithData:data encoding:guess]);
+		double bestScore = 0;
+		NSStringEncoding best = 0;
+		if (guess && guessReading.suspicious == 0 && [oneByte containsObject:@(guess)])
+			[oneByte removeAllObjects];
+		for (NSNumber *candidate in oneByte) {
+			if (! available(candidate.unsignedIntegerValue))
+				continue;
+			NSString *text = [[NSString alloc] initWithData:data encoding:candidate.unsignedIntegerValue];
+			if (! text)
+				continue;
+			double score = TSScoreAlphabetic(text).score;
+			if (! best || score > bestScore) {
+				best = candidate.unsignedIntegerValue;
+				bestScore = score;
+			}
+		}
+		if (best)
+			guess = best;
+	}
+
+	if (guess) {
+		// GB 18030 includes GBK and GB 2312; use it whenever it writes the file back unchanged.
 		NSStringEncoding gb18030 = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
-		if ((guess == CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGBK_95)
-				|| guess == CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_2312_80)
-				|| guess == CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingDOSChineseSimplif))
-				&& [self isAvailableEncoding:gb18030] && TSDataDecodes(data, gb18030))
-			return gb18030;
-		// Between two encodings with one byte per character, keep the preferred one.
-		if (guess != preferred && TSIsSingleByteEncoding(guess) && TSIsSingleByteEncoding(preferred) && TSDataDecodes(data, preferred))
+		if ([TSEncodingVariants(gb18030) containsObject:@(guess)] && guess != gb18030 && available(gb18030) && TSDataRoundTrips(data, gb18030))
+			guess = gb18030;
+		NSArray *variants = TSEncodingVariants(guess);
+		// A variant of the guess that is the preferred encoding is kept, so that characters
+		// typed later are written as the user's encoding expects.
+		if (preferred != guess && [variants containsObject:@(preferred)] && TSDataRoundTrips(data, preferred))
 			return preferred;
+		// If the guess does not write the file back unchanged, a variant that does is used.
+		if (! TSDataRoundTrips(data, guess))
+			for (NSNumber *variant in variants)
+				if (available(variant.unsignedIntegerValue) && TSDataRoundTrips(data, variant.unsignedIntegerValue))
+					return variant.unsignedIntegerValue;
 		return guess;
 	}
 
@@ -716,6 +892,35 @@ static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 		if (TSDataDecodes(data, candidate.unsignedIntegerValue))
 			return candidate.unsignedIntegerValue;
 	return preferred;
+}
+
+// The byte order mark that starts data, so that a file can be saved with the same one.
++ (TSByteOrderMark)byteOrderMarkOfData:(NSData *)data
+{
+	const unsigned char *bytes = data.bytes;
+	if (data.length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+		return TSUTF8ByteOrderMark;
+	if (data.length >= 2 && bytes[0] == 0xFE && bytes[1] == 0xFF)
+		return TSUTF16BigEndianByteOrderMark;
+	if (data.length >= 2 && bytes[0] == 0xFF && bytes[1] == 0xFE)
+		return TSUTF16LittleEndianByteOrderMark;
+	return TSNoByteOrderMark;
+}
+
+- (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark
+{
+	if (encoding == NSUTF8StringEncoding && mark == TSUTF8ByteOrderMark) {
+		NSMutableData *data = [NSMutableData dataWithBytes:"\xEF\xBB\xBF" length:3];
+		[data appendData:[text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
+		return data;
+	}
+	if (encoding == NSUnicodeStringEncoding && (mark == TSUTF16BigEndianByteOrderMark || mark == TSUTF16LittleEndianByteOrderMark)) {
+		BOOL big = (mark == TSUTF16BigEndianByteOrderMark);
+		NSMutableData *data = [NSMutableData dataWithBytes:(big ? "\xFE\xFF" : "\xFF\xFE") length:2];
+		[data appendData:[text dataUsingEncoding:(big ? NSUTF16BigEndianStringEncoding : NSUTF16LittleEndianStringEncoding) allowLossyConversion:YES]];
+		return data;
+	}
+	return [text dataUsingEncoding:encoding allowLossyConversion:YES];
 }
 
 - (BOOL)ptexUtfOutputCheck: (NSString *)dataString withEncoding: (NSStringEncoding)enc

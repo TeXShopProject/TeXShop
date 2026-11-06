@@ -352,6 +352,9 @@ enum RootCommand
 	NSStringEncoding	_badEncoding;
 	BOOL                _encodingFromMagicComment;
 	BOOL                _hasReadSource;
+	NSInteger           _sourceByteOrderMark;	// TSByteOrderMark of the file when it was read
+	NSStringEncoding    _sourceMarkEncoding;	// the encoding it was read in
+	NSInteger           _lineEndingNotice;		// line endings converted to LF when the file was read
 	BOOL                showBadEncodingDialog;
 	BOOL				PDFfromKit;
 	NSUInteger		pdfCharacterIndex;

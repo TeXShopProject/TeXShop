@@ -136,3 +136,10 @@
 "Return to the word and choose Find Next before replacing." = "Torna alla parola e cerca la successiva prima di sostituire.";
 
 "Enter a different replacement in the Change All field." = "Inserisci una sostituzione diversa nel campo dedicato.";
+
+/* Notice after line endings were converted to LF when a document was opened */
+"This document mixes different line endings." = "Questo documento contiene terminatori di riga diversi.";
+"This document uses Windows line endings (CRLF)." = "Questo documento usa terminatori di riga Windows (CRLF).";
+"This document uses classic Mac line endings (CR)." = "Questo documento usa terminatori di riga del Mac classico (CR).";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop ha convertito tutti i terminatori di riga in LF. Quando salvi il documento, il file avrà terminatori di riga LF.";
+"Don’t show again for this document" = "Non mostrare più per questo documento";
