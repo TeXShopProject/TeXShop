@@ -152,7 +152,7 @@
 
 "Not found (current setting will be kept)" = "見つかりませんでした（現在の設定を保持します）";
 
-"Version unavailable" = "バージョン不明";
+"Version unavailable" = "不明";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "TeX環境をインストールしてから、設定の「内部設定」で「自動設定」を実行してください。";
 

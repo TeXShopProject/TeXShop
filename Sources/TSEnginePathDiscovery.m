@@ -139,12 +139,20 @@
             NSString *output = [self versionOutputForProgram:program];
             if (!output) continue;
             [seen addObject:identity];
-            NSString *version = [self capture:i == 0 ? @"pdfTeX ([0-9][0-9.\\-]+)" : @"^([0-9]+(?:\\.[0-9]+)+)" in:output];
+            NSString *version = [self capture:i == 0 ? @"pdfTeX ([0-9][0-9.\\-]+)" : @"^\\s*([0-9]+(?:\\.[0-9]+)+)" in:output];
             NSInteger year = i == 0 ? [[self capture:@"TeX Live ([0-9]{4})" in:output] integerValue] : 0;
-            [matches addObject:@{@"path": directory, @"version": year > 0 ? [NSString stringWithFormat:@"TeX Live %ld (%@)", (long)year, version] : version,
+            NSString *displayVersion = version;
+            if (year > 0) {
+                displayVersion = [NSString stringWithFormat:@"TeX Live %ld", (long)year];
+                if (version.length) displayVersion = [displayVersion stringByAppendingFormat:@" (%@)", version];
+            }
+            [matches addObject:@{@"path": directory, @"version": displayVersion,
                                  @"number": version, @"year": @(year), @"order": @(matches.count)}];
         }
         [matches sortUsingComparator:^NSComparisonResult(NSDictionary *a, NSDictionary *b) {
+            // Unidentified versions remain selectable, after every identified version.
+            BOOL aKnown = [a[@"version"] length] > 0, bKnown = [b[@"version"] length] > 0;
+            if (aKnown != bKnown) return aKnown ? NSOrderedAscending : NSOrderedDescending;
             NSComparisonResult year = [b[@"year"] compare:a[@"year"]];
             if (year != NSOrderedSame) return year;
             NSComparisonResult version = [b[@"number"] compare:a[@"number"] options:NSNumericSearch];
