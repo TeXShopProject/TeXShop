@@ -940,29 +940,144 @@ static NSString *TSLenientUTF8String(NSData *data, NSUInteger *validCharacters, 
 	return result;
 }
 
+static BOOL TSBytesDecode(const uint8_t *bytes, NSUInteger length, NSStringEncoding encoding)
+{
+	return length == 0 || [[NSString alloc] initWithBytes:bytes length:length encoding:encoding] != nil;
+}
+
+// The number of bytes at the end of bytes that start a UTF-8 character without finishing it,
+// and in *size the length of the whole character; 0 when the bytes do not end that way.
+static NSUInteger TSUnfinishedUTF8Character(const uint8_t *bytes, NSUInteger length, NSUInteger *size)
+{
+	for (NSUInteger k = 1; k <= 3 && k <= length; k++) {
+		uint8_t c = bytes[length - k];
+		if ((c & 0xC0) == 0x80)
+			continue;
+		NSUInteger whole = (c >= 0xC2 && c <= 0xDF) ? 2 : (c >= 0xE0 && c <= 0xEF) ? 3 : (c >= 0xF0 && c <= 0xF4) ? 4 : 0;
+		if (whole > k) {
+			if (size) *size = whole;
+			return k;
+		}
+		return 0;
+	}
+	return 0;
+}
+
+// The number of UTF-8 continuation bytes, at most limit, that start bytes.
+static NSUInteger TSLeadingUTF8Continuations(const uint8_t *bytes, NSUInteger length, NSUInteger limit)
+{
+	NSUInteger n = 0;
+	while (n < length && n < limit && (bytes[n] & 0xC0) == 0x80)
+		n++;
+	return n;
+}
+
+// Whether the line from start to the line break at end looks like a UTF-8 line that TeX broke
+// inside a character: it ends with the start of a character, and the rest of the line is
+// UTF-8 unless the encoding is UTF-8 itself. *unfinished is the number of bytes of the
+// character before the break, *needed the number after it, and *present the number of those
+// that follow the break in bytes.
+static BOOL TSLineBreakInsideCharacter(const uint8_t *b, NSUInteger start, NSUInteger end, NSUInteger length, NSStringEncoding encoding,
+									   NSUInteger *unfinished, NSUInteger *needed, NSUInteger *present)
+{
+	NSUInteger size = 0, k = TSUnfinishedUTF8Character(b + start, end - start, &size);
+	if (k == 0)
+		return NO;
+	if (encoding != NSUTF8StringEncoding && ! TSBytesDecode(b + start, end - start - k, NSUTF8StringEncoding))
+		return NO;
+	*unfinished = k;
+	*needed = size - k;
+	*present = TSLeadingUTF8Continuations(b + end + 1, length - end - 1, size - k);
+	return YES;
+}
+
+// One line of output: UTF-8, then the encoding, then UTF-8 with the bytes that are not UTF-8
+// replaced by U+FFFD when most of the line is UTF-8, and only otherwise Latin 9.
+static NSString *TSDisplayStringForLine(const uint8_t *bytes, NSUInteger length, NSStringEncoding encoding)
+{
+	if (length == 0)
+		return @"";
+	NSString *text = [[NSString alloc] initWithBytes:bytes length:length encoding:NSUTF8StringEncoding];
+	if (text)
+		return text;
+	if (encoding != NSUTF8StringEncoding && (text = [[NSString alloc] initWithBytes:bytes length:length encoding:encoding]))
+		return text;
+	NSUInteger valid = 0, invalid = 0;
+	text = TSLenientUTF8String([NSData dataWithBytesNoCopy:(void *)bytes length:length freeWhenDone:NO], &valid, &invalid);
+	if (valid > 0 && valid >= invalid)
+		return text;
+	return [[NSString alloc] initWithBytes:bytes length:length encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin9)] ?: @"";
+}
+
+// Output that is not all in the encoding is read line by line, so that bytes in another
+// encoding or broken bytes spoil only their own line. TeX breaks long lines after a fixed
+// number of bytes, which can put the line break inside a UTF-8 character; such a break is
+// moved to just before the character, so that the character reads whole.
 + (NSString *)displayStringForData:(NSData *)data encoding:(NSStringEncoding)encoding
 {
 	NSString *text = [[NSString alloc] initWithData:data encoding:encoding];
 	if (text)
 		return text;
-	if (encoding != NSUTF8StringEncoding && (text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]))
-		return text;
-	NSUInteger valid = 0, invalid = 0;
-	text = TSLenientUTF8String(data, &valid, &invalid);
-	if (valid > 0 && valid >= invalid)
-		return text;
-	return [[NSString alloc] initWithData:data encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin9)] ?: @"";
+	NSMutableData *bytes = [data mutableCopy];
+	uint8_t *b = bytes.mutableBytes;
+	NSUInteger length = bytes.length, start = 0;
+	NSMutableString *result = [NSMutableString stringWithCapacity:length];
+	while (start <= length) {
+		uint8_t *found = memchr(b + start, '\n', length - start);
+		NSUInteger end = found ? (NSUInteger)(found - b) : length;
+		NSUInteger unfinished = 0, needed = 0, present = 0;
+		if (found && TSLineBreakInsideCharacter(b, start, end, length, encoding, &unfinished, &needed, &present) && present == needed) {
+			uint8_t character[4];
+			memcpy(character, b + end - unfinished, unfinished);
+			memcpy(character + unfinished, b + end + 1, needed);
+			if (TSBytesDecode(character, unfinished + needed, NSUTF8StringEncoding)) {
+				// Move the line break from inside the character to before it.
+				memmove(b + end - unfinished + 1, b + end - unfinished, unfinished);
+				end -= unfinished;
+				b[end] = '\n';
+			}
+		}
+		[result appendString:TSDisplayStringForLine(b + start, end - start, encoding)];
+		if (! found)
+			break;
+		[result appendString:@"\n"];
+		start = end + 1;
+	}
+	return result;
 }
 
 + (NSUInteger)lengthOfIncompleteCharacterAtEndOfData:(NSData *)data encoding:(NSStringEncoding)encoding
 {
-	if (data.length == 0 || [[NSString alloc] initWithData:data encoding:encoding])
+	const uint8_t *b = data.bytes;
+	NSUInteger length = data.length;
+	if (length == 0 || TSBytesDecode(b, length, encoding))
 		return 0;
-	// At most three bytes are kept, which may be all of a short piece.
-	for (NSUInteger k = 1; k <= 3 && k <= data.length; k++)
-		if (k == data.length || [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, data.length - k)] encoding:encoding])
+	NSUInteger lineStart = length;
+	while (lineStart > 0 && b[lineStart - 1] != '\n')
+		lineStart--;
+	if (lineStart > 0) {
+		NSUInteger previousEnd = lineStart - 1, previousStart = previousEnd;
+		while (previousStart > 0 && b[previousStart - 1] != '\n')
+			previousStart--;
+		NSUInteger unfinished = 0, needed = 0, present = 0;
+		if (TSLineBreakInsideCharacter(b, previousStart, previousEnd, length, encoding, &unfinished, &needed, &present)) {
+			// A character TeX broke by a line break: until the rest of it has come, keep it
+			// with the break, so that it can be joined with the rest in the next piece.
+			if (present < needed && lineStart + present == length)
+				return unfinished + 1 + present;
+			// Once it has all come, the character is joined when the output is shown.
+			if (present == needed)
+				lineStart += needed;
+		}
+	}
+	// The start of a character at the end, in the encoding or in UTF-8: at most three bytes
+	// are kept, which may be all of a short piece.
+	if (TSBytesDecode(b + lineStart, length - lineStart, encoding))
+		return 0;
+	for (NSUInteger k = 1; k <= 3 && k <= length - lineStart; k++)
+		if (TSBytesDecode(b + lineStart, length - lineStart - k, encoding))
 			return k;
-	return 0;
+	return TSUnfinishedUTF8Character(b + lineStart, length - lineStart, NULL);
 }
 
 // The byte order mark that starts data, so that a file can be saved with the same one.

@@ -66,12 +66,13 @@ typedef NS_ENUM(NSInteger, TSByteOrderMark) {
 + (TSByteOrderMark)byteOrderMarkOfData:(NSData *)data;
 - (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark;
 
-// A string for showing output or a log that may not be in encoding: the encoding itself, then
-// UTF-8, then UTF-8 with the bytes that are not UTF-8 replaced by U+FFFD when most of it is
-// UTF-8, and only otherwise Latin 9, which reads any bytes.
+// A string for showing output or a log that may not be in encoding. Output that is not all in
+// the encoding is read line by line: UTF-8, then the encoding, then UTF-8 with the bytes that
+// are not UTF-8 replaced by U+FFFD when most of the line is UTF-8, and only otherwise Latin 9.
+// A line break that TeX put inside a UTF-8 character is moved to before the character.
 + (NSString *)displayStringForData:(NSData *)data encoding:(NSStringEncoding)encoding;
 // The number of bytes at the end of data that start a character the data does not finish,
-// to be read with the next piece of output.
+// with the line break TeX may have put inside it, to be read with the next piece of output.
 + (NSUInteger)lengthOfIncompleteCharacterAtEndOfData:(NSData *)data encoding:(NSStringEncoding)encoding;
 
 

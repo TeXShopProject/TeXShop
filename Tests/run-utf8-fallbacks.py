@@ -82,6 +82,57 @@ int main(int argc, char **argv) { @autoreleasepool {
         if (ready.length) [joined appendString:[TSEncodingSupport displayStringForData:ready encoding:utf8]];
     }
     check([joined isEqualToString:[[NSString alloc] initWithData:whole encoding:utf8]], @"output arriving one byte at a time reads back whole");
+    // TeX breaks long lines after a number of bytes, inside a character (tex-jp-build PR #198).
+    NSString *path = @"/tmp/\u65e5\u672c\u8a9e\u65e5\u672c\u8a9e\u65e5\u672c\u8a9e\u65e5\u672c\u8a9e\u65e5\u672c\u8a9e\u65e5\u672c\u8a9e\u65e5\u672c\u8a9e\u65e5\u672c\u8a9e/test.tex";
+    NSArray *texLines = @[[@"(" stringByAppendingString:path], [path stringByAppendingString:@":1: Undefined control sequence."], @"l.1 \\hoge", @"", @"No pages of output."];
+    NSMutableData *wrapped = [NSMutableData data];
+    for (NSString *line in texLines) {
+        NSData *d = [line dataUsingEncoding:utf8];
+        for (NSUInteger at = 0; at < d.length; at += 60) {
+            if (at) [wrapped appendBytes:"\n" length:1];
+            [wrapped appendData:[d subdataWithRange:NSMakeRange(at, MIN(60, d.length - at))]];
+        }
+        [wrapped appendBytes:"\n" length:1];
+    }
+    check([[NSString alloc] initWithData:wrapped encoding:utf8] == nil, @"the wrapped output is not UTF-8 as it stands");
+    NSString *unwrapped = [[texLines componentsJoinedByString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    for (NSNumber *e in @[@(utf8), @(sjis)]) {
+        NSStringEncoding enc = e.unsignedIntegerValue;
+        shown = [TSEncodingSupport displayStringForData:wrapped encoding:enc];
+        check(! [shown containsString:@"\ufffd"] && [[shown stringByReplacingOccurrencesOfString:@"\n" withString:@""] isEqualToString:unwrapped]
+              && [shown containsString:@"\u8a9e/test.tex:1: Undefined control sequence.\nl.1"],
+              [NSString stringWithFormat:@"a line break inside a character is moved before it (%@ document)", enc == utf8 ? @"UTF-8" : @"Shift JIS"]);
+    }
+    // The same output arriving one byte at a time, carried as TeXShop does, with what is
+    // still kept shown when the output ends.
+    for (NSUInteger step = 1; step <= 7; step++) {
+        joined = [NSMutableString string]; carry = nil;
+        for (NSUInteger i = 0; i < wrapped.length; i += step) {
+            NSMutableData *piece = [NSMutableData dataWithData:carry ?: [NSData data]];
+            [piece appendData:[wrapped subdataWithRange:NSMakeRange(i, MIN(step, wrapped.length - i))]];
+            NSUInteger incomplete = [TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:piece encoding:utf8];
+            carry = incomplete ? [piece subdataWithRange:NSMakeRange(piece.length - incomplete, incomplete)] : nil;
+            NSData *ready = [piece subdataWithRange:NSMakeRange(0, piece.length - incomplete)];
+            if (ready.length) [joined appendString:[TSEncodingSupport displayStringForData:ready encoding:utf8]];
+        }
+        if (carry) [joined appendString:[TSEncodingSupport displayStringForData:carry encoding:utf8]];
+        check([joined isEqualToString:[TSEncodingSupport displayStringForData:wrapped encoding:utf8]],
+              [NSString stringWithFormat:@"wrapped output arriving %lu byte(s) at a time reads as a whole", (unsigned long)step]);
+    }
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\xE6\n") encoding:utf8] == 2, @"a character broken by a line break at the end is kept with the break");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\xE6\n\x97") encoding:utf8] == 3, @"and so is its continuation after the break");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("\xFF ok\n? ") encoding:utf8] == 0, @"a prompt waiting for input is not kept");
+    check([TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:B("ab\xE6\nxy") encoding:utf8] == 0, @"a broken line followed by another line is not kept");
+    // Broken bytes spoil only their own line.
+    shown = [TSEncodingSupport displayStringForData:B("ab\xE6\nxyz") encoding:utf8];
+    check(shown.length == 7 && [shown hasPrefix:@"ab"] && [shown hasSuffix:@"\nxyz"], @"a lead byte that the next line does not continue stays where it is");
+    NSMutableData *mixed = [NSMutableData dataWithData:[@"\u65e5\u672c\u8a9e\n" dataUsingEncoding:utf8]];
+    [mixed appendBytes:"caf\xE9\n\xFF\xFE\xFD\xFC\xFB\xFA\n" length:12];
+    [mixed appendData:[@"\u725b\u4e3c\n" dataUsingEncoding:utf8]];
+    check([[TSEncodingSupport displayStringForData:mixed encoding:utf8] isEqualToString:@"\u65e5\u672c\u8a9e\ncaf\u00e9\n\u00ff\u00fe\u00fd\u00fc\u00fb\u00fa\n\u725b\u4e3c\n"],
+          @"Latin and broken lines between UTF-8 lines spoil only themselves");
+    NSData *sjisText = [@"\u65e5\u672c\u8a9e\n\uff76\uff85\n" dataUsingEncoding:sjis];
+    check([[TSEncodingSupport displayStringForData:sjisText encoding:sjis] isEqualToString:@"\u65e5\u672c\u8a9e\n\uff76\uff85\n"], @"Shift JIS output of a Shift JIS document is left alone");
     // Unknown encoding names.
     TSEncodingSupport *support = [TSEncodingSupport new];
     check([support stringEncodingForKey:@"UTF8"] == utf8, @"an unknown encoding name falls back to UTF-8");

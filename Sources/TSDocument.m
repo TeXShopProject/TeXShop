@@ -7498,13 +7498,15 @@ if (! useFullSplitWindow) {
         if (_consoleCarryHandle != myFileHandle)
             _consoleCarry = nil;
         _consoleCarryHandle = myFileHandle;
-        if (_consoleCarry.length && myData.length) {
+        BOOL atEnd = (myData.length == 0);
+        if (_consoleCarry.length) {
             NSMutableData *joined = [_consoleCarry mutableCopy];
-            [joined appendData: myData];
+            if (myData)
+                [joined appendData: myData];
             myData = joined;
         }
         _consoleCarry = nil;
-        NSUInteger incomplete = [TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData: myData encoding: _encoding];
+        NSUInteger incomplete = atEnd ? 0 : [TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData: myData encoding: _encoding];
         if (incomplete) {
             _consoleCarry = [myData subdataWithRange: NSMakeRange(myData.length - incomplete, incomplete)];
             myData = [myData subdataWithRange: NSMakeRange(0, myData.length - incomplete)];
@@ -7634,7 +7636,8 @@ if (! useFullSplitWindow) {
     //        [newOutput release];
             });
             // [self.readHandle readInBackgroundAndNotify];
-            [self.readHandle waitForDataInBackgroundAndNotify];
+            if (! atEnd)
+                [self.readHandle waitForDataInBackgroundAndNotify];
             }
     }
     else if (myFileHandle == self.texloganalyserHandle) {
