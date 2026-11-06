@@ -384,6 +384,19 @@ static TSEncoding _availableTexworksEncodings[] = {
 }
 
 
+// YES if stringEncodingForKey: would find the key without falling back to Latin 9.
+- (BOOL)knowsEncodingKey: (NSString *)key
+{
+	NSInteger i;
+	for (i = 0; i < ARRAYSIZE(_availableEncodings); ++i)
+		if ([key isEqualToString:self.availableEncodingsNames[i]])
+			return YES;
+	for (i = 0; i < ARRAYSIZE(_availableTexworksEncodings); ++i)
+		if ([key isEqualToString:self.availableTexworksEncodingNames[i]])
+			return YES;
+	return [key isEqualToString: @"CentralEurRoman"];
+}
+
 - (NSStringEncoding)stringEncodingForKey: (NSString *)key
 {
 

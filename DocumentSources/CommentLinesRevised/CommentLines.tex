@@ -193,8 +193,6 @@ Each command below changes a setting from its default. These are all the hidden 
 \newpage
 {\em Editing}
 \begin{description}
-\item[\texttt{defaults write TeXShop MakeatletterEnabled NO}] \hfill \\
-Do not color @ as a letter in command names.
 \item[\texttt{defaults write TeXShop ColorImmediately NO}] \hfill \\
 Do not color the syntax of a long file (over 100,000 characters) while it is being opened.
 \item[\texttt{defaults write TeXShop ResetSourceTextColorEachTime YES}] \hfill \\
@@ -317,14 +315,8 @@ The same with any editor, using a script /usr/local/bin/othereditor that you pro
 When a document is opened, bring the source window in front of the Preview window.
 \item[\texttt{defaults write TeXShop TabsAlsoForInputFiles YES}] \hfill \\
 Make the magic line useTabs also put the files of \verb|\input| commands in tabs.
-\item[\texttt{defaults write TeXShop AutoSaveEnabled NO}] \hfill \\
-Turn off autosaving.
-\item[\texttt{defaults write TeXShop KeepBackup YES}] \hfill \\
-Keep the previous version of a file as a backup when it is saved. This works only with autosaving turned off.
-\item[\texttt{defaults write TeXShop EncodingMenuInSaveDialog YES}] \hfill \\
-Add an encoding menu to the Save dialog, so that a file can be saved in another encoding.
 \item[\texttt{defaults write TeXShop WatchServer NO}] \hfill \\
-Do not watch for changes made by other programs to source files on a server. TeXShop watches only while autosaving is on.
+Do not watch for changes made by other programs to source files on a server. TeXShop watches only while Autosave and Versions is on in TeXShop Settings.
 \item[\texttt{defaults write TeXShop IgnoreStartOnReboot YES}] \hfill \\
 Do not reopen TeXShop automatically when you log in, even if it was running when you logged out.
 \end{description}

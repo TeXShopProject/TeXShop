@@ -149,6 +149,10 @@
                 <outlet property="_syncMatrix" destination="782" id="820"/>
                 <outlet property="_syncTabButton" destination="odf-Ny-S9G" id="jpP-OB-XmX"/>
                 <outlet property="_syntaxColorButton" destination="839" id="847"/>
+                <outlet property="_makeatletterButton" destination="cgA-o7-Bdw" id="gAl-rH-u7H"/>
+                <outlet property="_autoSaveEnabledButton" destination="RVR-YO-Xhy" id="Ghk-Ii-qus"/>
+                <outlet property="_keepBackupButton" destination="jhC-up-cya" id="vzo-ev-Zxm"/>
+                <outlet property="_saveEncodingMenuButton" destination="5xa-en-KkV" id="QZ8-E1-cUi"/>
                 <outlet property="_syntaxColorLineButton" destination="3gb-2l-vK7" id="Tew-l7-r5A"/>
                 <outlet property="_tabIndentButton" destination="9oZ-Jg-MfD" id="07w-LG-QB8"/>
                 <outlet property="_tabView" destination="7" id="Une-Dq-rzf"/>
@@ -791,14 +795,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Editor" translatesAutoresizingMaskIntoConstraints="NO" id="63">
-                                            <rect key="frame" x="46" y="321" width="262" height="290" />
+                                            <rect key="frame" x="46" y="301" width="262" height="310" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="c39-PI-VV1">
-                                                <rect key="frame" x="0.0" y="0.0" width="262" height="278" />
+                                                <rect key="frame" x="0.0" y="0.0" width="262" height="298" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="621">
-                                                        <rect key="frame" x="26" y="9" width="252" height="218" />
+                                                        <rect key="frame" x="26" y="9" width="252" height="238" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="252" height="18"/>
@@ -814,6 +818,13 @@ DQ
                                                                     <font key="font" metaFont="system"/>
                                                                     <connections>
                                                                         <action selector="syntaxColorPressed:" target="-2" id="848"/>
+                                                                    </connections>
+                                                                </buttonCell>
+                                                                <buttonCell type="check" title="@ as Part of Command Names" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="cgA-o7-Bdw">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <connections>
+                                                                        <action selector="makeatletterChanged:" target="-2" id="5aH-Pk-2Or"/>
                                                                     </connections>
                                                                 </buttonCell>
                                                                 <buttonCell type="check" title="Parens Matching" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="1" inset="2" id="840">
@@ -890,7 +901,7 @@ DQ
                                                         </cells>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9oZ-Jg-MfD">
-                                                        <rect key="frame" x="26" y="251" width="203" height="18" />
+                                                        <rect key="frame" x="26" y="271" width="203" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Use Tabs for Indent Menu" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="pdc-GP-Cbb">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -901,7 +912,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3gb-2l-vK7">
-                                                        <rect key="frame" x="26" y="231" width="203" height="18" />
+                                                        <rect key="frame" x="26" y="251" width="203" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Highlight Current Line" bezelStyle="regularSquare" imagePosition="left" inset="2" id="87S-PS-ZQu">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -916,7 +927,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Show Invisible Characters" translatesAutoresizingMaskIntoConstraints="NO" id="933">
-                                            <rect key="frame" x="52" y="151" width="256" height="158" />
+                                            <rect key="frame" x="52" y="131" width="256" height="158" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="1BU-WH-vph">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="146" />
@@ -2363,10 +2374,10 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Image Copy Type" translatesAutoresizingMaskIntoConstraints="NO" id="386">
-                                            <rect key="frame" x="157" y="553" width="323" height="58" />
+                                            <rect key="frame" x="137" y="553" width="363" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="g8D-eJ-1Uv">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="46" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="46" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="405">
@@ -2397,10 +2408,10 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Color Mapping" translatesAutoresizingMaskIntoConstraints="NO" id="447">
-                                            <rect key="frame" x="157" y="452" width="323" height="89" />
+                                            <rect key="frame" x="137" y="452" width="363" height="89" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="N8d-Su-fXT">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="77" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="77" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="439">
@@ -2450,11 +2461,64 @@ DQ
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
+                                        <box fixedFrame="YES" title="Saving Documents" translatesAutoresizingMaskIntoConstraints="NO" id="5ba-33-JZx">
+                                            <rect key="frame" x="137" y="87" width="363" height="130" />
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <view key="contentView" id="C6J-2i-mg2">
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="118" />
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RVR-YO-Xhy">
+                                                        <rect key="frame" x="28" y="92" width="327" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="Enable Autosave and Versions" bezelStyle="regularSquare" imagePosition="left" inset="2" id="PVm-Il-A7W">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="autoSaveEnabledPressed:" target="-2" id="exg-2q-6qE"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N8r-9Y-N2R">
+                                                        <rect key="frame" x="44" y="60" width="305" height="30" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="A macOS feature that overwrites the file automatically while you edit. Takes effect after TeXShop restarts." id="sto-5E-9Q5">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhC-up-cya">
+                                                        <rect key="frame" x="46" y="34" width="309" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="Keep the previous file as “name~” when saving" bezelStyle="regularSquare" imagePosition="left" inset="2" id="hmg-EV-KUC">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="keepBackupPressed:" target="-2" id="m6v-am-51U"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5xa-en-KkV">
+                                                        <rect key="frame" x="28" y="10" width="327" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="Show Encoding in Save Dialog" bezelStyle="regularSquare" imagePosition="left" inset="2" id="jjy-QZ-C0q">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="saveEncodingMenuPressed:" target="-2" id="wkl-jC-b2B"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                </subviews>
+                                            </view>
+                                            <font key="titleFont" metaFont="system"/>
+                                        </box>
                                         <box fixedFrame="YES" title="Insertion Cursor" translatesAutoresizingMaskIntoConstraints="NO" id="cSu-im-H1E">
-                                            <rect key="frame" x="157" y="229" width="323" height="211" />
+                                            <rect key="frame" x="137" y="229" width="363" height="211" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="ohZ-7S-ijU">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="199" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="199" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sHY-8y-Sax">

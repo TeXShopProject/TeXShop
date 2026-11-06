@@ -172,7 +172,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	invisibleCharacterTouched = NO; // added by Terada
 	kpsetoolTouched = NO; // added by Terada
 	bibTeXengineTouched = NO; // added by Terada
-//	makeatletterTouched = NO; // added by Terada
+	makeatletterTouched = NO; // added by Terada
     sparkleTouched = NO;
 #ifdef USESPARKLE
     // Added by Terada: snapshot both updater settings once for Cancel.
@@ -632,7 +632,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 }
 
 // added by Terada( - (IBAction)makeatletterChanged: )
-/* Commented out by Koch
 - (IBAction)makeatletterChanged:(id)sender
 {
 	// register the undo message first
@@ -642,7 +641,30 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	makeatletterTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 }
-*/
+
+// Autosave is read once at launch, so a change takes effect after TeXShop restarts.
+- (IBAction)autoSaveEnabledPressed:sender
+{
+	// register the undo message first
+	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AutoSaveEnabledKey] forKey:AutoSaveEnabledKey];
+	[SUD setBool:(_autoSaveEnabledButton.state == NSControlStateValueOn) forKey:AutoSaveEnabledKey];
+	// A backup file is kept only when Versions is off, which follows autosave.
+	_keepBackupButton.enabled = ![SUD boolForKey:AutoSaveEnabledKey];
+}
+
+- (IBAction)keepBackupPressed:sender
+{
+	// register the undo message first
+	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:KeepBackupKey] forKey:KeepBackupKey];
+	[SUD setBool:(_keepBackupButton.state == NSControlStateValueOn) forKey:KeepBackupKey];
+}
+
+- (IBAction)saveEncodingMenuPressed:sender
+{
+	// register the undo message first
+	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:EncodingMenuInSaveDialogKey] forKey:EncodingMenuInSaveDialogKey];
+	[SUD setBool:(_saveEncodingMenuButton.state == NSControlStateValueOn) forKey:EncodingMenuInSaveDialogKey];
+}
 
 // added by Terada( - (IBAction)kpsetoolChanged: )
 - (IBAction)kpsetoolChanged:sender
@@ -2213,9 +2235,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"CommandCompletionCharNotification" object: self];
 	}
 	// added by Terada
-	// third test removed by Koch
-	// if (highlightTouched || invisibleCharacterTouched || makeatletterTouched) {
-	if (highlightTouched || invisibleCharacterTouched) {
+	if (highlightTouched || invisibleCharacterTouched || makeatletterTouched) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 	}
     
@@ -2428,7 +2448,11 @@ This method retrieves the application preferences from the defaults object and s
 	[_showFullwidthSpaceCharacterButton setState:[defaults boolForKey:showFullwidthSpaceCharacterKey]]; // added by Terada
 	[_showNewLineCharacterButton setState:[defaults boolForKey:showNewLineCharacterKey]]; // added by Terada
     [self updateInvisibleCharacterControls:defaults];
-//	[_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]]; // added by Terada
+	[_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]]; // added by Terada
+	[_autoSaveEnabledButton setState:[defaults boolForKey:AutoSaveEnabledKey]];
+	[_keepBackupButton setState:[defaults boolForKey:KeepBackupKey]];
+	_keepBackupButton.enabled = ![defaults boolForKey:AutoSaveEnabledKey];
+	[_saveEncodingMenuButton setState:[defaults boolForKey:EncodingMenuInSaveDialogKey]];
 
 	NSString *kpsetool = [defaults objectForKey:KpsetoolKey];
 	if (!kpsetool || [kpsetool isEqualToString:@""]) {

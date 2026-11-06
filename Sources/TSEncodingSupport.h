@@ -42,6 +42,7 @@
 // New encoding API: Uses NSStringEncoding for the menu tags
 - (NSStringEncoding)defaultEncoding;
 - (NSStringEncoding)stringEncodingForKey: (NSString *)key;
+- (BOOL)knowsEncodingKey: (NSString *)key;
 - (NSString *)keyForStringEncoding: (NSStringEncoding)encoding;
 - (NSString *)localizedNameForKey: (NSString *)key;
 - (NSString *)localizedNameForStringEncoding: (NSStringEncoding)encoding;

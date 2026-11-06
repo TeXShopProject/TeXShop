@@ -150,6 +150,10 @@
                 <outlet property="_syncMatrix" destination="782" id="820"/>
                 <outlet property="_syncTabButton" destination="snd-4x-vSh" id="dYh-ah-UMs"/>
                 <outlet property="_syntaxColorButton" destination="683" id="690"/>
+                <outlet property="_makeatletterButton" destination="9u1-cR-5jF" id="pSq-UR-ee8"/>
+                <outlet property="_autoSaveEnabledButton" destination="kug-je-PQb" id="ctb-Ki-j4J"/>
+                <outlet property="_keepBackupButton" destination="UQf-Ld-lKZ" id="iL6-xH-ztL"/>
+                <outlet property="_saveEncodingMenuButton" destination="7DU-GA-R8r" id="LWh-Tx-Ctc"/>
                 <outlet property="_syntaxColorLineButton" destination="Ckn-mH-VpJ" id="mFR-lt-7i4"/>
                 <outlet property="_tabIndentButton" destination="0Ad-oh-5Ny" id="776-bV-FiD"/>
                 <outlet property="_tabView" destination="7" id="809"/>
@@ -725,7 +729,7 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="不可視文字の表示" translatesAutoresizingMaskIntoConstraints="NO" id="1081">
-                                            <rect key="frame" x="57" y="148" width="256" height="160" />
+                                            <rect key="frame" x="57" y="128" width="256" height="160" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="s19-89-D6Q">
                                                 <rect key="frame" x="0.0" y="0.0" width="256" height="148" />
@@ -846,14 +850,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="エディタ" translatesAutoresizingMaskIntoConstraints="NO" id="63">
-                                            <rect key="frame" x="57" y="320" width="256" height="290" />
+                                            <rect key="frame" x="57" y="300" width="256" height="310" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="jER-Wf-WAH">
-                                                <rect key="frame" x="0.0" y="0.0" width="256" height="278" />
+                                                <rect key="frame" x="0.0" y="0.0" width="256" height="298" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Ad-oh-5Ny">
-                                                        <rect key="frame" x="24" y="251" width="127" height="18" />
+                                                        <rect key="frame" x="24" y="271" width="127" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="タブでインデント" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="hlo-et-iCo">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -864,7 +868,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ckn-mH-VpJ">
-                                                        <rect key="frame" x="24" y="231" width="203" height="18" />
+                                                        <rect key="frame" x="24" y="251" width="203" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="現在の行をハイライト" bezelStyle="regularSquare" imagePosition="left" inset="2" id="LMb-ug-eUu">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -945,7 +949,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="621">
-                                            <rect key="frame" x="81" y="329" width="204" height="218" />
+                                            <rect key="frame" x="81" y="309" width="204" height="238" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             <size key="cellSize" width="204" height="18"/>
@@ -961,6 +965,13 @@ DQ
                                                         <font key="font" metaFont="system"/>
                                                         <connections>
                                                             <action selector="syntaxColorPressed:" target="-2" id="691"/>
+                                                        </connections>
+                                                    </buttonCell>
+                                                    <buttonCell type="check" title="@ をコマンド名の一部と見なす" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="9u1-cR-5jF">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                        <connections>
+                                                            <action selector="makeatletterChanged:" target="-2" id="QMd-yG-q7k"/>
                                                         </connections>
                                                     </buttonCell>
                                                     <buttonCell type="check" title="括弧の対応チェック" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="1" inset="2" id="684">
@@ -2365,10 +2376,10 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="カラーマップ" translatesAutoresizingMaskIntoConstraints="NO" id="447">
-                                            <rect key="frame" x="149" y="451" width="323" height="89" />
+                                            <rect key="frame" x="129" y="451" width="363" height="89" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="r84-hV-zbr">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="77" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="77" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button toolTip="黒と白を別の色に置き換えてコピーします。" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="437">
@@ -2419,10 +2430,10 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="フォーマット" translatesAutoresizingMaskIntoConstraints="NO" id="386">
-                                            <rect key="frame" x="149" y="552" width="323" height="58" />
+                                            <rect key="frame" x="129" y="552" width="363" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="BYJ-jr-5Aq">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="46" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="46" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="405">
@@ -2452,11 +2463,64 @@ DQ
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
+                                        <box fixedFrame="YES" title="書類の保存" translatesAutoresizingMaskIntoConstraints="NO" id="1Zt-3B-JOc">
+                                            <rect key="frame" x="129" y="86" width="363" height="130" />
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <view key="contentView" id="1dA-dM-TNB">
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="118" />
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kug-je-PQb">
+                                                        <rect key="frame" x="28" y="92" width="327" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="オートセーブとバージョンを有効にする" bezelStyle="regularSquare" imagePosition="left" inset="2" id="zhK-Xf-DAm">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="autoSaveEnabledPressed:" target="-2" id="3LD-Fa-gYF"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rsB-Yv-MR5">
+                                                        <rect key="frame" x="44" y="60" width="305" height="30" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="編集中に自動でファイルを上書きする macOS の機能です。TeXShop の再起動後に有効になります。" id="n9o-eY-0ew">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UQf-Ld-lKZ">
+                                                        <rect key="frame" x="46" y="34" width="309" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="保存時に以前のファイルを「名前~」として残す" bezelStyle="regularSquare" imagePosition="left" inset="2" id="K7u-ic-O0b">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="keepBackupPressed:" target="-2" id="8py-Ua-ElX"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7DU-GA-R8r">
+                                                        <rect key="frame" x="28" y="10" width="327" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="保存ダイアログにエンコーディングを表示" bezelStyle="regularSquare" imagePosition="left" inset="2" id="7tI-ON-uZJ">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="saveEncodingMenuPressed:" target="-2" id="ZyM-Es-bFm"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                </subviews>
+                                            </view>
+                                            <font key="titleFont" metaFont="system"/>
+                                        </box>
                                         <box fixedFrame="YES" title="カーソルの表示" translatesAutoresizingMaskIntoConstraints="NO" id="DRZ-BQ-Xff">
-                                            <rect key="frame" x="149" y="228" width="323" height="211" />
+                                            <rect key="frame" x="129" y="228" width="363" height="211" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="fKI-se-XWH">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="199" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="199" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h6o-pL-bxV">
