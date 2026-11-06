@@ -9,7 +9,9 @@ also choose that very encoding. The user's languages are set for the test proces
 (-AppleLanguages), so no preferences are written. --mutation=NAME removes one rule to show
 that the checks fail. The rules for runs of accented letters, mixed scripts in a word,
 Serbian in Latin letters, the first candidate without a guess and Windows encodings for C1
-characters are checked on real documents instead; the files used are listed in the audit notes."""
+characters are checked on real documents instead; the files used are listed in the audit notes.
+A declaration to inputenc decides between one-byte encodings that read a file alike, unless
+its reading is clearly worse."""
 from pathlib import Path
 import os, subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -32,6 +34,8 @@ mutations = {
     'round-trip': ('if (! TSDataRoundTrips(data, guess))\n\t\t\tfor', 'if (0)\n\t\t\tfor'),
     'recorded': ('if (recorded && [self isAvailableEncoding:recorded]', 'if (0 && recorded'),
     'byte-order-mark': ('if (encoding == NSUTF8StringEncoding && mark == TSUTF8ByteOrderMark) {', 'if (0) {'),
+    'inputenc': ('if (declared && guess && declared != guess && available(declared)) {', 'if (0) {'),
+    'inputenc-always': ('if (declaredScore >= guessScore - MAX(2.0, 0.1 * fabs(guessScore)))', 'if (1)'),
 }
 if mutation:
     old, new = mutations[mutation]; assert old in code, mutation; code = code.replace(old, new)
@@ -71,6 +75,12 @@ samples = {
     'accent-utf8': (doc('Café au lait, naïve résumé.'), 'utf-8'),
     # Mac Japanese has circled digits at 85 40; read as Windows Shift JIS they would be written back as 87 40.
     'mac-japanese-digits': (b'\\section{\x82\xa0}\n\x85\x40 \x85\x41\n', None),
+    # Letters that ISO Latin 2 and Windows Latin 2, or ISO Latin 9 and Windows Latin 1, write alike.
+    'pl-latin2-declared': ('\\documentclass{article}\n\\usepackage[T1]{fontenc}\n\\usepackage[latin2]{inputenc}\n\\begin{document}\nM\u0119\u017cczyzna \u0142owi\u0142 ryby, \u017c\u00f3\u0142w pe\u0142z\u0142 w\u00f3wczas po pla\u017cy.\n\\end{document}\n', 'iso8859_2'),
+    'pl-cp1250-declared': ('\\documentclass{article}\n\\usepackage[cp1250]{inputenc}\n\\begin{document}\nM\u0119\u017cczyzna \u0142owi\u0142 ryby, \u017c\u00f3\u0142w pe\u0142z\u0142 w\u00f3wczas po pla\u017cy.\n\\end{document}\n', 'cp1250'),
+    'fr-latin9-declared': ('\\documentclass{article}\n\\usepackage[latin9]{inputenc}\n\\begin{document}\nLa th\u00e9orie des cat\u00e9gories \u00e9tudie les structures, o\u00f9 l\u2019\u00e9l\u00e8ve apprend.\n\\end{document}\n'.replace('\u2019', "'"), 'iso8859_15'),
+    # A wrong declaration does not win over a clearly better reading.
+    'ru-koi8-declared-latin1': ('\\documentclass{article}\n\\usepackage[latin1]{inputenc}\n' + ru.split('\n', 1)[1], 'koi8_r'),
 }
 # (sample, languages, default encoding, true encoding, exact, xattr)
 cases = [
@@ -114,11 +124,15 @@ cases = [
     ('tex-section-sign', 'en', 'UTF8', 'WindowsLatin1', 0, None),
     # A few accented letters in UTF-8 also read as half-width katakana in Shift JIS.
     ('accent-utf8', 'ja', 'DOSJapanese', 'UTF8', 0, None),
+    ('pl-latin2-declared', 'pl', 'UTF8', 'ISOLatin2', 1, None), ('pl-cp1250-declared', 'pl', 'UTF8', 'WindowsLatin2', 1, None),
+    ('fr-latin9-declared', 'fr', 'UTF8', 'ISOLatin9', 1, None), ('ru-koi8-declared-latin1', 'ru', 'UTF8', 'KOI8_R', 1, None),
 ]
 program = r'''
 #import <Foundation/Foundation.h>
 #include <sys/xattr.h>
 #define ARRAYSIZE(x) ((NSInteger)(sizeof(x)/sizeof(x[0])))
+typedef enum { kNoFilterMode = 0, kMacJapaneseFilterMode = 1, kOtherJapaneseFilterMode = 2 } TSFilterMode;
+static TSFilterMode g_shouldFilter = kNoFilterMode;
 typedef NS_ENUM(NSInteger, TSByteOrderMark) { TSNoByteOrderMark = 0, TSUTF8ByteOrderMark, TSUTF16BigEndianByteOrderMark, TSUTF16LittleEndianByteOrderMark };
 @interface TSEncodingSupport : NSObject
 - (NSStringEncoding)detectedEncodingForData:(NSData *)data fileURL:(NSURL *)url preferredEncoding:(NSStringEncoding)preferred;

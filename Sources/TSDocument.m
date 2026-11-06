@@ -2092,7 +2092,7 @@ in other code when an external editor is being used. */
 				if (newEncodingRange.length > 0) {
 					encodingString = [[testString substringWithRange: newEncodingRange]
 						stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
- 					_encoding = _tempencoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
+ 					[self takeMagicCommentEncoding: encodingString];
 				}
 			} else if ([SUD boolForKey:UseOldHeadingCommandsKey]) {
 				encodingRange = [testString rangeOfString:@"%&encoding="];
@@ -2103,7 +2103,7 @@ in other code when an external editor is being used. */
 					if (newEncodingRange.length > 0) {
 						encodingString = [[testString substringWithRange: newEncodingRange]
 							stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-						_encoding = _tempencoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
+						[self takeMagicCommentEncoding: encodingString];
 					}
 				}
 			}
@@ -2129,6 +2129,16 @@ in other code when an external editor is being used. */
 			return [[TSEncodingSupport sharedInstance] dataForText: [_textStorage string] encoding: _encoding
 				byteOrderMark: (_encoding == _sourceMarkEncoding) ? _sourceByteOrderMark : TSNoByteOrderMark]; // original code
 	}
+}
+
+// The magic comment names the encoding the file is saved in, except when the file could not
+// be read in that encoding: its text was read in Latin 9 and is saved in Latin 9, unchanged.
+- (void)takeMagicCommentEncoding: (NSString *)name
+{
+	NSStringEncoding encoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: name];
+	if (_unreadableEncoding && encoding == _unreadableEncoding)
+		return;
+	_encoding = _tempencoding = encoding;
 }
 
 // the next routine looks at a line of text after tabRange, checking for (name1, name2, name3, ...), storing these
@@ -2709,8 +2719,11 @@ in other code when an external editor is being used. */
 		showBadEncodingDialog = YES;
 		content = [[NSString alloc] initWithData:myData encoding:NSISOLatin9StringEncoding] ;
 		// The text is Latin 9 now; saving it in the old encoding would garble the whole file.
+		_unreadableEncoding = _encoding;
 		_encoding = _tempencoding = NSISOLatin9StringEncoding;
     }
+	else
+		_unreadableEncoding = 0;
 	_sourceByteOrderMark = [TSEncodingSupport byteOrderMarkOfData: myData];
 	_sourceMarkEncoding = _encoding;
     
@@ -2733,6 +2746,7 @@ in other code when an external editor is being used. */
 			content = [utfRegex replaceAllMatchesInString: content delegate:self
 						replaceSelector:@selector(decodeUtfStyFormat:contextInfo:) contextInfo:nil];
 		}
+		content = [[TSEncodingSupport sharedInstance] textForEditing: content encoding: _encoding];
 		
 		theLength = [content length];
 		// NSLog([NSString stringWithFormat:@"%d", theLength]);
@@ -7395,6 +7409,7 @@ if (! useFullSplitWindow) {
 		NSString *theString = [[NSString alloc] initWithData:myData encoding:_encoding];
 
 		if (theString != nil) {
+			theString = [[TSEncodingSupport sharedInstance] textForEditing: theString encoding: _encoding];
 			[textView setString: theString];
 	//		[theString release];
 			if (fileIsTex) {

@@ -65,6 +65,7 @@ typedef NS_ENUM(NSInteger, TSByteOrderMark) {
 // A byte order mark found at the start of a file, and the data of a text with the same mark.
 + (TSByteOrderMark)byteOrderMarkOfData:(NSData *)data;
 - (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark;
+- (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding;
 
 
 - (BOOL)ptexUtfOutputCheck: (NSString *)dataString withEncoding: (NSStringEncoding)enc;

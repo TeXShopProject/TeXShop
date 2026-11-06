@@ -114,12 +114,16 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  write(fd,d.bytes,d.length); close(fd);
  if(how==2){struct timeval tv[2]; TIMESPEC_TO_TIMEVAL(&tv[0],&st.st_atimespec); TIMESPEC_TO_TIMEVAL(&tv[1],&st.st_mtimespec); utimes(path.fileSystemRepresentation,tv);}
 }
-// Byte order marks are not used in these tests.
+// Byte order marks and Japanese backslashes are not used in these tests.
 @interface TSEncodingSupport : NSObject
++ (instancetype)sharedInstance;
 + (NSInteger)byteOrderMarkOfData:(NSData *)data;
+- (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding;
 @end
 @implementation TSEncodingSupport
++ (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
 + (NSInteger)byteOrderMarkOfData:(NSData *)data { return 0; }
+- (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding { return text; }
 @end
 // No encoding is chosen in an Open dialog in these tests.
 @interface TSDocumentController : NSDocumentController
@@ -149,7 +153,7 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  BOOL showBadEncodingDialog, isLoading, firstTime;
  BOOL _encodingFromMagicComment, _hasReadSource;
  NSInteger _sourceByteOrderMark, _lineEndingNotice;
- NSStringEncoding _sourceMarkEncoding;
+ NSStringEncoding _sourceMarkEncoding, _unreadableEncoding;
 }
 @property NSUInteger reads;
 @property (readonly) NSTextStorage *storage;
