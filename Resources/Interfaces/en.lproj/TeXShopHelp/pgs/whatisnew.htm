@@ -12,6 +12,97 @@
 <BODY>
 
 <div id="content_normal"><P>
+<P><h5>TeXShop Changes 5.60</h5></P>
+<p>TeXShop 5.60 fixes typesetting cancellation and improves TeX-aware spell checking, external file monitoring, editing long documents, and Settings.
+<p><b>Typesetting and stability</b>
+<ul>
+<p><li> <b>Critical fix:</b> Fix a problem where Stop reported that typesetting had been aborted but left TeX running. Starting another typesetting job now also stops the previous job and its child processes.
+<p><li> Handle failures to launch typesetting tools and missing command-search paths more reliably, and avoid an indefinite wait when stopping helper processes.
+<p><li> Show a sheet when a specified TeX root file cannot be found.
+<p><li> Fix errors involving empty documents, isolated quotation marks, and save-completion handling.
+<p><li> Improve the handling of console output and log files that contain mixed encodings or broken characters. Read affected output line by line, trying UTF-8 and then the document’s encoding, with Latin 9 as a last resort. Keep unreadable data from spoiling other lines, and rejoin UTF-8 characters split by TeX’s line wrapping.
+</ul>
+<p><b>TeX-aware spell checking</b>
+<ul>
+<p><li> Add TeX-aware spell checking, based on suggestions from Ralph Martin. It checks prose while skipping TeX commands, comments, mathematics, and arguments used for references and similar purposes. The feature is enabled by default and can be turned off under Settings → Source.
+<p><li> Recognize supported macro definitions and language-switching commands when identifying text to check. The spelling panel can check passages in the specified language.
+<p><li> Add editable spelling-exclusion rules, a replacement field and Change All for words in the checked text, and a way to forget learned words found in the current document. A Change All operation can be undone in one step.
+<p><li> Fill the replacement field for Change All with the suggestion selected in the spelling panel, by clicking it or with the arrow keys. The text changes only when Change All is used.
+<p><li> Improve Find Next, scrolling to misspelled words, and spell-checking performance in long documents and split editors.
+</ul>
+<p><b>External file changes and PDF preview</b>
+<ul>
+<p><li> Make source-file monitoring continue after automatic reloads and file replacement by external editors, including atomic saves. Preserve unsaved edits and the undo history for TeXShop’s own saves. This includes the contribution from ddd3h in PR #1.
+<p><li> When Automatic Preview Update is enabled, detect PDFs changed by other applications and reload the preview while preserving the page position and zoom. Avoid replacing unsaved PDF annotations, and retry when an external writer temporarily leaves an incomplete PDF.
+<p><li> Move file-change checks off the main thread to keep the interface responsive.
+<p><li> Fix a PDFKit crash during preview reloads, including changes in page count, by correcting how PDF documents are shared with the second preview pane.
+<p><li> Correct Space and Shift-Space scrolling when a PDF page is larger than the preview window.
+<p><li> Add Page Layout and Two-Page Arrangement menus to the preview toolbar. They change the page layout, the page direction and whether the first page is shown alone as a cover for the current document until Restore Document Settings is chosen or the document is closed. The page being viewed and the zoom are kept when the layout or arrangement changes.
+<p><li> Add a check box under Settings → Preview, formerly a hidden setting, to show the first page alone as a cover in two-page layouts. Use the page direction recorded in the PDF unless a magic comment specifies the direction. These settings apply to documents opened afterward, and magic comments take precedence over them.
+</ul>
+<p><b>Editing and keyboard navigation</b>
+<ul>
+<p><li> Improve opening, scrolling, and editing long source documents by laying out text where needed and reducing repeated paragraph-layout work. Limit matching-brace searches on cursor movement.
+<p><li> Preserve explicit left alignment in right-to-left paragraphs.
+<p><li> Use Command-0 to show the current document’s console. Press it again in the console to return to the source or PDF window that opened it; if there is no originating window, return to the source. This follows the existing Command-1 behavior.
+<p><li> Keep the Tags menu correctly localized when reopening a document in the combined source-and-preview window.
+</ul>
+<p><b>Opening and saving documents</b>
+<ul>
+<p><li> Detect the encoding of a file that has no encoding magic comment when it is opened. Unicode files with or without a byte order mark, Japanese, Chinese and Korean files, and files in one-byte encodings of the user’s languages are recognized, with the encoding declared to inputenc as a hint. A hidden setting turns the detection off.
+<p><li> Keep the byte order mark of UTF-8 files and the byte order of UTF-16 files when saving, and read encoding magic comments in UTF-16 files.
+<p><li> Read GB 2312 files correctly, and stop a file that could not be read in its specified encoding from being damaged when it is saved.
+<p><li> Always write TeX’s backslash and tilde as the bytes 0x5C and 0x7E in Japanese encodings. A typed backslash or tilde no longer becomes a full-width backslash or wave dash, or the byte 0x80, in Mac Japanese and Shift JIS X0213 files, and a yen sign typed for a backslash no longer becomes “?” in Windows Shift JIS, EUC-JP and ISO-2022-JP files.
+<p><li> Use UTF-8 rather than Latin 9, with a message, when an encoding name is not recognized, and write project files in UTF-8.
+<p><li> When an opened file has Windows (CRLF), classic Mac (CR) or mixed line endings, tell the user that they have been changed to LF. The notice can be turned off for each file.
+<p><li> Fix the encoding menu in the Save dialog, which did not change the encoding of the saved file. The menu can now be shown from Settings → Misc1. When the source has an encoding magic comment, the menu shows that encoding and cannot be changed.
+<p><li> Add settings under Settings → Misc1 to turn autosave and Versions on or off and, while autosave is off, to keep the previous file as “name~” when saving.
+</ul>
+<p><b>App and Dock icons</b>
+<ul>
+<p><li> Introduce a white-frame app icon inspired by the classic circular icon, with optically centered TeX lettering and a rounded-square shape for current macOS versions.
+<p><li> Add five Dock icon choices under Settings → Misc2, including historical designs. The selected icon retains its original shape while TeXShop is running, without a separate background process. After quitting, the Dock returns to the standard app icon; the Finder icon is unchanged.
+</ul>
+<p><b>Settings and themes</b>
+<ul>
+<p><li> Correct overlapping controls, clipped labels, and incorrect control connections throughout the localized Settings windows. Add missing bracket-color controls in Dutch.
+<p><li> Choose the markers for spaces, full-width spaces, newlines and tabs from pop-up menus under Settings → Editor, with more choices for newlines and tabs.
+<p><li> Show bracket and expl3 colors from the theme being edited, update inherited colors correctly, and preserve the theme when a color change is ignored. Older themes without bracket colors use the marker color.
+<p><li> Store settings under the application’s bundle identifier and correct Cancel behavior after restoring defaults or editing the HTML Home setting.
+<p><li> Fix Make Default Editor for .tex files.
+<p><li> Add an option under Settings → Editor to treat @ as part of command names in syntax coloring.
+<p><li> Add an option under Settings → Editor to color expl3 code by default. Each document reads it when it opens, and the Source menu still turns expl3 coloring on or off for a single document.
+<p><li> Standardize the Settings terminology, remove obsolete PDFSync choices and ineffective settings, and consistently use the modern toolbar icons.
+</ul>
+<p><b>Help and source distribution</b>
+<ul>
+<p><li> Add help for TeX-aware spell checking, repair broken help links, and update the hidden-settings reference.
+<p><li> Fix a resource filename that could prevent building TeXShop from an extracted source archive.
+</ul>
+<p><b>Bundled libraries</b>
+<ul>
+<p><li> Update the bundled zlib to 1.4 and the SyncTeX parser to 1.21.
+</ul>
+
+<P><h5>TeXShop Changes 5.59</h5></P>
+<p>This is the first TeXShop release maintained by Yusuke Terada, following Richard Koch's handover of the project. It builds on TeXShop 5.58 Golden Gate.
+<ul>
+<p><li> Keep the PDF zoom indicator in sync with trackpad gestures and preserve manual zoom when reloading a PDF.
+<p><li> Correct initial PDF positioning and preview overlay coordinates.
+<p><li> Add a PDF appearance menu with System, Light, and Dark choices.
+<p><li> Fix toolbar item sizing and localized Preferences layouts and fonts.
+<p><li> Create HTML preview views at runtime to avoid document-window loading failures on older macOS versions.
+<p><li> Enable macOS filename suggestions for untitled documents on macOS 27.
+<p><li> Fix a syntax-highlighting range error that could cause a crash.
+<p><li> Align invisible-character markers with the text baseline.
+<p><li> Restore the preview after a failed compilation produces an invalid PDF and a subsequent compilation succeeds.
+<p><li> Work around a PDFKit/Metal rendering crash on macOS 27.
+<p><li> Introduce a new app icon and update Sparkle to 2.10.1, using the update feed at texshop.app.
+<p><li> Make the Spotlight importer native on Apple Silicon while retaining Intel support.
+<p><li> Update About credits to identify the current maintainer and original developer.
+</ul>
+<p>Users of Richard Koch's earlier releases must install TeXShop 5.59 or later manually once. Later updates use the new update feed at texshop.app.
+
 <P><h5>TeXShop Changes 5.57</h5></P>
 Version 5.57 was compiled on Sequoia, but works fine on Tahoe and the usual older systems. It fixes a small number of  problems in the 5.56 release:
 <ul>
