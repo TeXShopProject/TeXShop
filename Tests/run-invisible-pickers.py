@@ -1,18 +1,29 @@
 #!/usr/bin/env python3
 """Load every compiled preferences nib and exercise marker choices with isolated defaults."""
 from pathlib import Path
-import subprocess, tempfile
+import subprocess, tempfile, re
 root=Path(__file__).resolve().parents[1]
 source=(root/'Sources/TSPreferences.m').read_text()
 def method(sig):
  a=source.index("\n"+sig)+1;b=source.index('\n}',a)+2;return source[a:b]
 methods='\n'.join(method(s) for s in ['- (void)updateInvisibleCharacterControls:', '- (IBAction)invisibleCharacterChanged:'])
 keys=['Space','FullwidthSpace','NewLine','Tab']
-constants='\n'.join(f'static NSString *{k}CharacterKindKey=@"{k}CharacterKind", *show{k}CharacterKey=@"Show{k}Character";' for k in keys)
+globals_source=(root/'Sources/globals.m').read_text(encoding='latin1')
+constants='\n'.join(re.findall(r'^NSString \*(?:show(?:Space|FullwidthSpace|Tab|NewLine)CharacterKey|(?:Space|FullwidthSpace|Tab|NewLine)CharacterKindKey)\s*=.*?;', globals_source, re.M))
+assert len(constants.splitlines())==8
+update=method('- (void)updateControlsFromUserDefaults:')
+assert '[self updateInvisibleCharacterControls:defaults];' in update
+for caller in ('- (IBAction)showPreferences:', '- (void)undoDefaultPrefs:', '- (IBAction)setDefaults:'):
+ assert '[self updateControlsFromUserDefaults:SUD];' in method(caller)
+checkboxes='\n'.join(line for line in update.splitlines() if any('_show'+k+'CharacterButton setState:' in line for k in keys))
+assert len(checkboxes.splitlines())==4
+methods+='\n- (void)reloadControls:(NSUserDefaults *)defaults {\n'+checkboxes+'\n[self updateInvisibleCharacterControls:defaults];\n}'
+
 ivars='\n'.join(f'NSPopUpButton *_{k}CharacterKindPopup; NSButton *_show{k}CharacterButton;' for k in keys)
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import "TSInvisibleCharacters.h"
+#import "MemoryDefaults.h"
 static NSUserDefaults *settings;
 #define SUD settings
 CONSTANTS
@@ -31,8 +42,7 @@ METHODS
 static void Check(BOOL ok, NSString *why) {if(!ok){NSLog(@"FAIL: %@",why);exit(1);}}
 int main(int argc,char **argv){@autoreleasepool{
  [NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
- NSString *domain=[@"org.texshop.invisible-test." stringByAppendingString:NSUUID.UUID.UUIDString];
- settings=[[NSUserDefaults alloc]initWithSuiteName:domain];
+ settings=[TSMemoryDefaults new];
  NSArray *keys=@[@"SpaceCharacterKind",@"FullwidthSpaceCharacterKind",@"NewLineCharacterKind",@"TabCharacterKind"];
  NSArray *show=@[@"ShowSpaceCharacter",@"ShowFullwidthSpaceCharacter",@"ShowNewLineCharacter",@"ShowTabCharacter"];
  NSArray *expected=@[@[@"␣",@"·"],@[@"□",@"■"],@[@"↵",@"¶",@"↩",@"⏎"],@[@"‣",@"▹",@"⇥"]];
@@ -55,30 +65,50 @@ int main(int argc,char **argv){@autoreleasepool{
    Check(p.selectedTag==1 && p.enabled,@"existing second choice preserved");
    for(NSInteger j=0;j<p.numberOfItems;j++){
     [owner->_undoManager beginUndoGrouping];[p selectItemAtIndex:j];[NSApp sendAction:p.action to:p.target from:p];[owner->_undoManager endUndoGrouping];
-    Check([settings integerForKey:keys[i]]==j,@"each choice saves");
-    Check([TSInvisibleMarker(TSInvisibleMarkers(keys[i]),j) isEqual:p.title],@"saved value renders selected glyph");
+    Check(TSInvisibleStoredIndex(settings,keys[i])==j,@"each choice saves");
+    Check([settings integerForKey:keys[i]]>=0 && [settings integerForKey:keys[i]]<2,@"older renderers always receive a safe index");
+    Check([p.title isEqual:expected[i][j]],@"selected menu label");
+    [owner reloadControls:settings]; Check(p.selectedTag==j,@"persisted selection survives reload");
     [owner->_undoManager undo];[owner updateInvisibleCharacterControls:settings];
     Check(p.selectedTag==1 && [settings integerForKey:keys[i]]==1,@"cancel/undo restores prior choice");
    }
    [owner->_undoManager beginUndoGrouping];b.state=NSControlStateValueOff;[NSApp sendAction:b.action to:b.target from:b];[owner->_undoManager endUndoGrouping];
    Check(!p.enabled && p.selectedTag==1,@"disabled row retains selection");
    [owner->_undoManager undo];b.state=NSControlStateValueOn;[owner updateInvisibleCharacterControls:settings];Check(p.enabled,@"undo restores enabled state");
-   for(NSNumber *bad in @[@(-1),@99]){
-    [settings setInteger:bad.integerValue forKey:keys[i]];[owner updateInvisibleCharacterControls:settings];
+   for(id bad in @[@(-1),@99,@"junk"]){
+    [settings setObject:bad forKey:keys[i]];[owner updateInvisibleCharacterControls:settings];
     Check(p.indexOfSelectedItem==0,@"invalid stored selection falls back");
-    Check([TSInvisibleMarker(TSInvisibleMarkers(keys[i]),bad.integerValue) isEqual:expected[i][0]],@"invalid rendering index is safe");
+    Check([TSInvisibleMarker(TSInvisibleMarkers(keys[i]),[bad integerValue]) isEqual:expected[i][0]],@"invalid rendering index is safe");
    }
    [settings setInteger:1 forKey:keys[i]];[owner updateInvisibleCharacterControls:settings];
   }
+  // Repair a menu whose count is correct but contents are wrong.
+  NSPopUpButton *tab=popups[3]; [tab itemAtIndex:0].title=@"wrong";
+  [owner reloadControls:settings]; Check([tab.itemTitles isEqual:expected[3]],@"same-count damaged menu repaired");
+  // A fresh profile removes extended values and updates both checkbox and selection.
+  [((TSMemoryDefaults *)settings).values removeAllObjects];
+  for(int i=0;i<4;i++){ [settings setObject:@"0" forKey:keys[i]]; [settings setObject:@"NO" forKey:show[i]]; }
+  [owner reloadControls:settings];
+  for(int i=0;i<4;i++)Check([(NSPopUpButton *)popups[i] selectedTag]==0 && ![(NSPopUpButton *)popups[i] isEnabled] && [(NSButton *)buttons[i] state]==NSControlStateValueOff,@"profile defaults reload all controls");
+  // Extended choices round-trip and Cancel removes a newly-created key entirely.
+  [owner->_undoManager beginUndoGrouping]; [tab selectItemAtIndex:2]; [owner invisibleCharacterChanged:tab]; [owner->_undoManager endUndoGrouping];
+  Check([settings integerForKey:keys[3]]==0 && [settings integerForKey:TSInvisibleExtendedKey(keys[3])]==2,@"extended choice uses separate key");
+  [owner->_undoManager undo]; Check([settings objectForKey:TSInvisibleExtendedKey(keys[3])]==nil,@"Cancel removes absent extended key");
+  [settings setInteger:2 forKey:TSInvisibleExtendedKey(keys[3])]; [settings setInteger:1 forKey:keys[3]];
+  [owner reloadControls:settings]; Check(tab.selectedTag==1,@"historical second choice overrides stale extended value");
+  [((TSMemoryDefaults *)settings).values removeAllObjects];
   for(id o in objects)if([o isKindOfClass:NSWindow.class])[o orderOut:nil];
  }
- [settings removePersistentDomainForName:domain];
+
  puts("PASS: all compiled nibs; historical choices, added glyphs, save/undo, disabled rows and invalid settings");
 }return 0;}
 '''.replace('CONSTANTS',constants).replace('IVARS',ivars).replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='texshop-invisible-') as td:
  t=Path(td);(t/'probe.m').write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-I',str(root/'Sources'),str(t/'probe.m'),'-o',str(t/'probe')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-I',str(root/'Sources'),'-I',str(root/'Tests'),str(t/'probe.m'),'-o',str(t/'probe')],check=True)
  nibs=sorted((root/'Resources/Interfaces').glob('*.lproj/Preferences.nib/keyedobjects*.nib'))
  assert len(nibs)==24
  subprocess.run([str(t/'probe'),*map(str,nibs)],check=True)
+
+with tempfile.TemporaryDirectory(prefix="texshop-marker-draw-") as td:
+ subprocess.run(["/bin/bash",str(root/"Tests/run-invisible-baseline.sh"),str(Path(td)/"markers.png")],check=True)

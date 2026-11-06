@@ -60,6 +60,7 @@
                  attributes:(NSDictionary *)attributes
                       cache:(NSMutableDictionary *)cache
 {
+    if (marker.length == 0) return;
     NSArray *key = @[marker, attributes[NSFontAttributeName]];
     NSTextStorage *markerStorage = cache[key];
     if (markerStorage == nil) {
@@ -99,10 +100,10 @@
 	BOOL showFullwidthSpaceCharacter = (invisibleCharactersShowing && [SUD boolForKey:showFullwidthSpaceCharacterKey]);
 	BOOL showSpaceCharacter = (invisibleCharactersShowing && [SUD boolForKey:showSpaceCharacterKey]);
 
-	NSString *tabCharacter = TSInvisibleMarker(self.tabCharacters, [SUD integerForKey:TabCharacterKindKey]);
-    NSString *nextLineCharacter = TSInvisibleMarker(self.nextLineCharacters, [SUD integerForKey:NewLineCharacterKindKey]);
-    NSString *fullwidthSpaceCharacter = TSInvisibleMarker(self.fullwidthSpaceCharacters, [SUD integerForKey:FullwidthSpaceCharacterKindKey]);
-    NSString *spaceCharacter = TSInvisibleMarker(self.spaceCharacters, [SUD integerForKey:SpaceCharacterKindKey]);
+	NSString *tabCharacter = TSInvisibleMarker(self.tabCharacters, TSInvisibleStoredIndex(SUD, TabCharacterKindKey));
+    NSString *nextLineCharacter = TSInvisibleMarker(self.nextLineCharacters, TSInvisibleStoredIndex(SUD, NewLineCharacterKindKey));
+    NSString *fullwidthSpaceCharacter = TSInvisibleMarker(self.fullwidthSpaceCharacters, TSInvisibleStoredIndex(SUD, FullwidthSpaceCharacterKindKey));
+    NSString *spaceCharacter = TSInvisibleMarker(self.spaceCharacters, TSInvisibleStoredIndex(SUD, SpaceCharacterKindKey));
 
 	for (theGlyphIndex = inGlyphRange.location; theGlyphIndex < theLengthToRedraw; theGlyphIndex++) {
 		theCharIndex = [self characterIndexForGlyphAtIndex:theGlyphIndex];

@@ -576,61 +576,28 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 
 - (void)updateInvisibleCharacterControls:(NSUserDefaults *)defaults
 {
-    {
-        NSPopUpButton *popup = _SpaceCharacterKindPopup;
-        NSArray<NSString *> *markers = TSInvisibleMarkers(SpaceCharacterKindKey);
-        if (popup.numberOfItems != markers.count) {
+    NSArray *popups = @[_SpaceCharacterKindPopup, _FullwidthSpaceCharacterKindPopup,
+                        _NewLineCharacterKindPopup, _TabCharacterKindPopup];
+    NSArray *buttons = @[_showSpaceCharacterButton, _showFullwidthSpaceCharacterButton,
+                         _showNewLineCharacterButton, _showTabCharacterButton];
+    NSArray *keys = @[SpaceCharacterKindKey, FullwidthSpaceCharacterKindKey,
+                      NewLineCharacterKindKey, TabCharacterKindKey];
+    NSArray *showKeys = @[showSpaceCharacterKey, showFullwidthSpaceCharacterKey,
+                          showNewLineCharacterKey, showTabCharacterKey];
+    for (NSUInteger n = 0; n < popups.count; n++) {
+        NSPopUpButton *popup = popups[n];
+        NSButton *button = buttons[n];
+        NSArray<NSString *> *markers = TSInvisibleMarkers(keys[n]);
+        if (![popup.itemTitles isEqual:markers]) {
             [popup removeAllItems];
             [popup addItemsWithTitles:markers];
         }
         for (NSInteger i = 0; i < popup.numberOfItems; i++) [popup itemAtIndex:i].tag = i;
         popup.font = [NSFont systemFontOfSize:15];
         popup.menu.font = popup.font;
-        popup.accessibilityLabel = _showSpaceCharacterButton.title;
-        [popup selectItemAtIndex:TSInvisibleMarkerIndex([defaults integerForKey:SpaceCharacterKindKey], markers.count)];
-        popup.enabled = [defaults boolForKey:showSpaceCharacterKey];
-    }
-    {
-        NSPopUpButton *popup = _FullwidthSpaceCharacterKindPopup;
-        NSArray<NSString *> *markers = TSInvisibleMarkers(FullwidthSpaceCharacterKindKey);
-        if (popup.numberOfItems != markers.count) {
-            [popup removeAllItems];
-            [popup addItemsWithTitles:markers];
-        }
-        for (NSInteger i = 0; i < popup.numberOfItems; i++) [popup itemAtIndex:i].tag = i;
-        popup.font = [NSFont systemFontOfSize:15];
-        popup.menu.font = popup.font;
-        popup.accessibilityLabel = _showFullwidthSpaceCharacterButton.title;
-        [popup selectItemAtIndex:TSInvisibleMarkerIndex([defaults integerForKey:FullwidthSpaceCharacterKindKey], markers.count)];
-        popup.enabled = [defaults boolForKey:showFullwidthSpaceCharacterKey];
-    }
-    {
-        NSPopUpButton *popup = _NewLineCharacterKindPopup;
-        NSArray<NSString *> *markers = TSInvisibleMarkers(NewLineCharacterKindKey);
-        if (popup.numberOfItems != markers.count) {
-            [popup removeAllItems];
-            [popup addItemsWithTitles:markers];
-        }
-        for (NSInteger i = 0; i < popup.numberOfItems; i++) [popup itemAtIndex:i].tag = i;
-        popup.font = [NSFont systemFontOfSize:15];
-        popup.menu.font = popup.font;
-        popup.accessibilityLabel = _showNewLineCharacterButton.title;
-        [popup selectItemAtIndex:TSInvisibleMarkerIndex([defaults integerForKey:NewLineCharacterKindKey], markers.count)];
-        popup.enabled = [defaults boolForKey:showNewLineCharacterKey];
-    }
-    {
-        NSPopUpButton *popup = _TabCharacterKindPopup;
-        NSArray<NSString *> *markers = TSInvisibleMarkers(TabCharacterKindKey);
-        if (popup.numberOfItems != markers.count) {
-            [popup removeAllItems];
-            [popup addItemsWithTitles:markers];
-        }
-        for (NSInteger i = 0; i < popup.numberOfItems; i++) [popup itemAtIndex:i].tag = i;
-        popup.font = [NSFont systemFontOfSize:15];
-        popup.menu.font = popup.font;
-        popup.accessibilityLabel = _showTabCharacterButton.title;
-        [popup selectItemAtIndex:TSInvisibleMarkerIndex([defaults integerForKey:TabCharacterKindKey], markers.count)];
-        popup.enabled = [defaults boolForKey:showTabCharacterKey];
+        popup.accessibilityLabel = button.title;
+        [popup selectItemAtIndex:TSInvisibleStoredIndex(defaults, keys[n])];
+        popup.enabled = [defaults boolForKey:showKeys[n]];
     }
 }
 
@@ -650,17 +617,13 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:showNewLineCharacterKey] forKey:showNewLineCharacterKey];
 	[SUD setBool:[_showNewLineCharacterButton state] forKey:showNewLineCharacterKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:SpaceCharacterKindKey] forKey:SpaceCharacterKindKey];
-	[SUD setInteger:[_SpaceCharacterKindPopup selectedItem].tag forKey:SpaceCharacterKindKey];
+	TSSetInvisibleIndex(SUD, SpaceCharacterKindKey, [_SpaceCharacterKindPopup selectedItem].tag, _undoManager);
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:FullwidthSpaceCharacterKindKey] forKey:FullwidthSpaceCharacterKindKey];
-	[SUD setInteger:[_FullwidthSpaceCharacterKindPopup selectedItem].tag forKey:FullwidthSpaceCharacterKindKey];
+	TSSetInvisibleIndex(SUD, FullwidthSpaceCharacterKindKey, [_FullwidthSpaceCharacterKindPopup selectedItem].tag, _undoManager);
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:NewLineCharacterKindKey] forKey:NewLineCharacterKindKey];
-	[SUD setInteger:[_NewLineCharacterKindPopup selectedItem].tag forKey:NewLineCharacterKindKey];
+	TSSetInvisibleIndex(SUD, NewLineCharacterKindKey, [_NewLineCharacterKindPopup selectedItem].tag, _undoManager);
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:TabCharacterKindKey] forKey:TabCharacterKindKey];
-	[SUD setInteger:[_TabCharacterKindPopup selectedItem].tag forKey:TabCharacterKindKey];
+	TSSetInvisibleIndex(SUD, TabCharacterKindKey, [_TabCharacterKindPopup selectedItem].tag, _undoManager);
 	
     [self updateInvisibleCharacterControls:SUD];
 	invisibleCharacterTouched = YES;

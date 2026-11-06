@@ -2,16 +2,20 @@
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 #import "TSLayoutManager.h"
-NSString *showTabCharacterKey=@"testTab", *showNewLineCharacterKey=@"testNewline";
-NSString *showFullwidthSpaceCharacterKey=@"testFullwidth", *showSpaceCharacterKey=@"testSpace";
-NSString *TabCharacterKindKey=@"testTabKind", *NewLineCharacterKindKey=@"testNewlineKind";
-NSString *FullwidthSpaceCharacterKindKey=@"testFullwidthKind", *SpaceCharacterKindKey=@"testSpaceKind";
+#import "MarkerKeys.h"
+#import "MemoryDefaults.h"
+#import "TSInvisibleCharacters.h"
+static TSMemoryDefaults *settings;
+static id MemoryStandardDefaults(id self, SEL cmd) { return settings; }
 NSColor *InvisibleColor;
 static NSMutableArray *expected;
+static NSMutableArray *expectedMarkers;
 static NSUInteger verified;
 static void (*originalDraw)(id,SEL,NSRange,NSPoint);
 static void observeDraw(NSLayoutManager *layout, SEL cmd, NSRange range, NSPoint origin) {
     if (layout.textStorage.length == 1 && expected.count) {
+        NSCAssert([layout.textStorage.string isEqual:expectedMarkers[0]], @"Selected marker reaches actual drawing");
+        [expectedMarkers removeObjectAtIndex:0];
         NSPoint position = [layout locationForGlyphAtIndex:0];
         NSRect line = [layout lineFragmentRectForGlyphAtIndex:0 effectiveRange:NULL];
         NSPoint target = [expected[0] pointValue];
@@ -24,15 +28,27 @@ static void observeDraw(NSLayoutManager *layout, SEL cmd, NSRange range, NSPoint
 int main(int argc, const char **argv) {
  @autoreleasepool {
     [NSApplication sharedApplication];
-    [[NSUserDefaults standardUserDefaults] registerDefaults:@{showTabCharacterKey:@YES, showNewLineCharacterKey:@YES, showFullwidthSpaceCharacterKey:@YES, showSpaceCharacterKey:@YES}];
+    settings=[TSMemoryDefaults new];
+    method_setImplementation(class_getClassMethod(NSUserDefaults.class,@selector(standardUserDefaults)),(IMP)MemoryStandardDefaults);
+    [settings registerDefaults:@{showTabCharacterKey:@YES, showNewLineCharacterKey:@YES, showFullwidthSpaceCharacterKey:@YES, showSpaceCharacterKey:@YES}];
     InvisibleColor=NSColor.systemRedColor;
     Method method=class_getInstanceMethod(NSLayoutManager.class,@selector(drawGlyphsForGlyphRange:atPoint:));
     originalDraw=(void*)method_getImplementation(method);method_setImplementation(method,(IMP)observeDraw);
     NSImage *image=[[NSImage alloc]initWithSize:NSMakeSize(760,640)];
     [image lockFocusFlipped:YES];[NSColor.whiteColor setFill];NSRectFill(NSMakeRect(0,0,760,640));
-    expected=[NSMutableArray array];
-    for (int i=0;i<4;i++) {
-        NSFont *font=[NSFont fontWithName:(i%2 ? @"HiraginoSans-W3":@"Menlo-Regular") size:14+6*i];
+    expected=[NSMutableArray array]; expectedMarkers=[NSMutableArray array];
+    NSArray *keys=@[SpaceCharacterKindKey,FullwidthSpaceCharacterKindKey,NewLineCharacterKindKey,TabCharacterKindKey];
+    NSArray *choices=@[@[@"␣",@"·"],@[@"□",@"■"],@[@"↵",@"¶",@"↩",@"⏎"],@[@"‣",@"▹",@"⇥"]];
+    NSArray *values=@[@0,@1,@2,@3,@(-1),@99,@"junk"];
+    for (int variant=0;variant<9;variant++) for (int i=0;i<5;i++) {
+        NSInteger raw = variant<7 ? [values[variant] integerValue] : variant-5;
+        for (NSString *key in keys) {
+            [settings removeObjectForKey:TSInvisibleExtendedKey(key)];
+            [settings setObject:variant<7?values[variant]:@0 forKey:key];
+            if (variant>=7) [settings setInteger:raw forKey:TSInvisibleExtendedKey(key)];
+        }
+        NSFont *font=[NSFont fontWithName:(@[@"Menlo-Regular", @"HiraginoSans-W3", @"Osaka-Mono", @"Courier", @"SFMono-Regular"][i]) size:14+6*i];
+        if (!font && i==4) font=[NSFont monospacedSystemFontOfSize:14+6*i weight:NSFontWeightRegular];
         NSCAssert(font!=nil,@"テスト用フォント");
         NSMutableParagraphStyle *style=[NSMutableParagraphStyle new];style.lineSpacing=3*i;style.firstLineHeadIndent=11;
         NSString *text=@"ABC あいう　XYZ \t終わり\n次の行　 xyz\n";
@@ -45,6 +61,9 @@ int main(int argc, const char **argv) {
         for(NSUInteger g=0;g<layout.numberOfGlyphs;g++) {
             NSUInteger c=[layout characterIndexForGlyphAtIndex:g];unichar ch=[text characterAtIndex:c];
             if(ch==' '||ch=='\t'||ch=='\n'||ch==0x3000) {
+                NSInteger kind = ch==' ' ? 0 : ch==0x3000 ? 1 : ch=='\n' ? 2 : 3;
+                NSArray *markers=choices[kind];
+                [expectedMarkers addObject:markers[raw>=0 && raw<markers.count ? raw : 0]];
                 NSPoint base=[layout locationForGlyphAtIndex:g];NSRect line=[layout lineFragmentRectForGlyphAtIndex:g effectiveRange:NULL];
                 [expected addObject:[NSValue valueWithPoint:NSMakePoint(origin.x+line.origin.x+base.x,origin.y+line.origin.y+base.y)]];
             }
@@ -56,6 +75,6 @@ int main(int argc, const char **argv) {
     NSBitmapImageRep *rep=[NSBitmapImageRep imageRepWithData:image.TIFFRepresentation];
     [[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:[NSString stringWithUTF8String:argv[1]] atomically:YES];
     [[NSData dataWithBytes:rep.bitmapData length:rep.bytesPerRow * rep.pixelsHigh] writeToFile:[[NSString stringWithUTF8String:argv[1]] stringByAppendingString:@".pixels"] atomically:YES];
-    printf("PASS: %lu marker baselines (four fonts/sizes, mixed font, line spacing, nonzero origins)\n",(unsigned long)verified);
+    printf("PASS: %lu marker baselines (five fonts, all candidates, legacy/extended/invalid values, mixed font, line spacing, nonzero origins)\n",(unsigned long)verified);
  }
 }
