@@ -133,3 +133,10 @@
 "Return to the word and choose Find Next before replacing." = "请回到该词，并再次查找下一个错误后再替换。";
 
 "Enter a different replacement in the Change All field." = "请在全部更改的专用输入栏中输入不同的替换词。";
+
+/* Notice after line endings were converted to LF when a document was opened */
+"This document mixes different line endings." = "此文稿混用了不同的换行符。";
+"This document uses Windows line endings (CRLF)." = "此文稿使用 Windows 换行符（CRLF）。";
+"This document uses classic Mac line endings (CR)." = "此文稿使用经典 Mac 换行符（CR）。";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop 已将所有换行符转换为 LF。存储文稿时，文件将使用 LF 换行符。";
+"Don’t show again for this document" = "对此文稿不再显示";

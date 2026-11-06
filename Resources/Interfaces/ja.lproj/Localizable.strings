@@ -136,3 +136,10 @@
 "Return to the word and choose Find Next before replacing." = "対象の単語に戻り、「次を検索」で確認し直してください。";
 
 "Enter a different replacement in the Change All field." = "「すべて変更」の専用欄に別の置換語を入力してください。";
+
+/* Notice after line endings were converted to LF when a document was opened */
+"This document mixes different line endings." = "この書類では異なる改行コードが混在しています。";
+"This document uses Windows line endings (CRLF)." = "この書類の改行コードは Windows 形式（CRLF）です。";
+"This document uses classic Mac line endings (CR)." = "この書類の改行コードは旧 Mac 形式（CR）です。";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop はすべての改行を LF に揃えました。書類を保存すると、ファイルの改行コードは LF になります。";
+"Don’t show again for this document" = "この書類では今後表示しない";

@@ -29,6 +29,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSDocument.h"
+#include <sys/xattr.h>
 #import <OgreKit/OgreKit.h> // zenitani 1.35 (A)
 
 #if 0
@@ -1862,9 +1863,12 @@ if (! skipTextWindow) {
 - (void)setUpEncodingMenuInSavePanel: (NSPopUpButton *)menu
 {
 	NSString *name = [self encodingNameInMagicComment];
-	BOOL fixed = (name != nil) && [[TSEncodingSupport sharedInstance] knowsEncodingKey: name];
+	BOOL known = (name != nil) && [[TSEncodingSupport sharedInstance] knowsEncodingKey: name];
+	NSStringEncoding magic = known ? [[TSEncodingSupport sharedInstance] stringEncodingForKey: name] : 0;
+	// A file that could not be read in its magic comment's encoding is saved in Latin 9, so the menu is not fixed.
+	BOOL fixed = known && ! (_unreadableEncoding && magic == _unreadableEncoding);
 	if (fixed)
-		_tempencoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: name];
+		_tempencoding = magic;
 	[menu selectItemWithTag: _tempencoding];
 	menu.enabled = ! fixed;
 }
@@ -2119,7 +2123,7 @@ in other code when an external editor is being used. */
 	if ((GetCurrentKeyModifiers() & optionKey) == 0) {
 		encodingString = [self encodingNameInMagicComment];
 		if (encodingString != nil)
-			_encoding = _tempencoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
+			[self takeMagicCommentEncoding: encodingString];
 	}
 
 
@@ -2130,15 +2134,30 @@ in other code when an external editor is being used. */
 				[[TSEncodingSupport sharedInstance] ptexUtfOutputCheck: [[_textStorage string] normalizedStringWithModifiedNFC] withEncoding: _encoding] ) { // modified by Terada
 			return [[TSEncodingSupport sharedInstance] ptexUtfOutput: textView withEncoding: _encoding];
 		} else 
-			return [[[_textStorage string] normalizedStringWithModifiedNFC] dataUsingEncoding: _encoding allowLossyConversion:YES]; // modified by Terada
+			return [[TSEncodingSupport sharedInstance] dataForText: [[_textStorage string] normalizedStringWithModifiedNFC] encoding: _encoding
+				byteOrderMark: (_encoding == _sourceMarkEncoding) ? _sourceByteOrderMark : TSNoByteOrderMark]; // modified by Terada
 		}
 	else {
 		if( [SUD boolForKey:ptexUtfOutputEnabledKey] &&
 		   [[TSEncodingSupport sharedInstance] ptexUtfOutputCheck: [_textStorage string]  withEncoding: _encoding] ) { // original code
 				return [[TSEncodingSupport sharedInstance] ptexUtfOutput: textView withEncoding: _encoding];
 		} else 
-			return [[_textStorage string]  dataUsingEncoding: _encoding allowLossyConversion:YES]; // original code
+			return [[TSEncodingSupport sharedInstance] dataForText: [_textStorage string] encoding: _encoding
+				byteOrderMark: (_encoding == _sourceMarkEncoding) ? _sourceByteOrderMark : TSNoByteOrderMark]; // original code
 	}
+}
+
+// The magic comment names the encoding the file is saved in, except when the file could not
+// be read in that encoding: its text was read in Latin 9 and is saved in Latin 9, unchanged.
+// Once the user names another encoding, the magic comment decides again, even if it is later
+// changed back to the encoding that could not read the file.
+- (void)takeMagicCommentEncoding: (NSString *)name
+{
+	NSStringEncoding encoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: name];
+	if (_unreadableEncoding && encoding == _unreadableEncoding)
+		return;
+	_unreadableEncoding = 0;
+	_encoding = _tempencoding = encoding;
 }
 
 // the next routine looks at a line of text after tabRange, checking for (name1, name2, name3, ...), storing these
@@ -2240,7 +2259,15 @@ in other code when an external editor is being used. */
     
     // theEncoding = [[TSEncodingSupport sharedInstance] defaultEncoding]; this error broke the encoding menu in the save panel
 	theEncoding = _encoding;
-	firstBytes = [[NSString alloc] initWithData:theData encoding:NSISOLatin9StringEncoding];
+	_encodingFromMagicComment = NO;
+	// A UTF-16 file is scanned for magic comments in UTF-16; other files byte by byte.
+	TSByteOrderMark mark = [TSEncodingSupport byteOrderMarkOfData: theData];
+	if (mark == TSUTF16BigEndianByteOrderMark || mark == TSUTF16LittleEndianByteOrderMark)
+		firstBytes = [[NSString alloc] initWithData:theData encoding:NSUnicodeStringEncoding];
+	else
+		firstBytes = nil;
+	if (! firstBytes)
+		firstBytes = [[NSString alloc] initWithData:theData encoding:NSISOLatin9StringEncoding];
 	
 	// First check for new spelling language
 	
@@ -2466,6 +2493,7 @@ in other code when an external editor is being used. */
 					encodingString = [[testString substringWithRange: newEncodingRange]
 						stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 					theEncoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
+					_encodingFromMagicComment = YES;
 				}
 			} else if ([SUD boolForKey:UseOldHeadingCommandsKey]) {
 				encodingRange = [testString rangeOfString:@"%&encoding="];
@@ -2477,6 +2505,7 @@ in other code when an external editor is being used. */
 						encodingString = [[testString substringWithRange: newEncodingRange]
 							stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 						theEncoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: encodingString];
+						_encodingFromMagicComment = YES;
 					}
 				}
 			}
@@ -2641,6 +2670,18 @@ in other code when an external editor is being used. */
         self.automaticCorrection = YES;
 }
 
+// The encoding of a file without an encoding magic comment. When the file is read again,
+// its current encoding is kept as long as it reads the file.
+- (NSStringEncoding)encodingForUnmarkedData: (NSData *)data URL: (NSURL *)url
+{
+	if (_hasReadSource && [[NSString alloc] initWithData: data encoding: _encoding])
+		return _encoding;
+	if ([SUD objectForKey: EncodingAutoDetectionKey] && ! [SUD boolForKey: EncodingAutoDetectionKey])
+		return _encoding;
+	return [[TSEncodingSupport sharedInstance] detectedEncodingForData: data fileURL: url
+		preferredEncoding: [[TSEncodingSupport sharedInstance] defaultEncoding]];
+}
+
 - (BOOL)readFromURL: (NSURL *)absoluteURL ofType: (NSString *)typeName error: (NSError **)outError {
 // - (BOOL)readFromFile:(NSString *)fileName ofType:(NSString *)type {
 	NSData				*myData;
@@ -2654,6 +2695,14 @@ in other code when an external editor is being used. */
 	myData = sourceReloadData ?: [NSData dataWithContentsOfURL:absoluteURL options:0 error:outError];
     if (!myData) return NO;
 	_encoding = _tempencoding = [self dataEncoding: myData];
+	// An encoding chosen in the Open dialog is used once, for this file; a magic comment still wins.
+	// Reading a document again, as for a reload, is not the opening it was chosen for.
+	NSStringEncoding chosenEncoding;
+	BOOL encodingWasChosen = [[TSDocumentController sharedDocumentController] takeEncoding: &chosenEncoding chosenForURL: absoluteURL];
+	if (_hasReadSource)
+		encodingWasChosen = NO;
+	if (! _encodingFromMagicComment)
+		_encoding = _tempencoding = encodingWasChosen ? chosenEncoding : [self encodingForUnmarkedData: myData URL: absoluteURL];
     [self readPreviewArrangementFromData:myData];
     
 /*
@@ -2714,7 +2763,14 @@ in other code when an external editor is being used. */
 		_badEncoding = _encoding;
 		showBadEncodingDialog = YES;
 		content = [[NSString alloc] initWithData:myData encoding:NSISOLatin9StringEncoding] ;
+		// The text is Latin 9 now; saving it in the old encoding would garble the whole file.
+		_unreadableEncoding = _encoding;
+		_encoding = _tempencoding = NSISOLatin9StringEncoding;
     }
+	else
+		_unreadableEncoding = 0;
+	_sourceByteOrderMark = [TSEncodingSupport byteOrderMarkOfData: myData];
+	_sourceMarkEncoding = _encoding;
     
         if (content)
         {
@@ -2722,6 +2778,9 @@ in other code when an external editor is being used. */
     
 		// zenitani 1.35 (A) -- normalizing newline character for regular expression
 		if ([SUD boolForKey:ConvertLFKey]) {
+			// Tell the user, once, when a file that was just opened had other line endings.
+			if (! _hasReadSource)
+				_lineEndingNotice = [self lineEndingNoticeForText: content URL: absoluteURL];
 			content = [OGRegularExpression replaceNewlineCharactersInString:content
 															  withCharacter:OgreLfNewlineCharacter];
 		}
@@ -2732,6 +2791,7 @@ in other code when an external editor is being used. */
 			content = [utfRegex replaceAllMatchesInString: content delegate:self
 						replaceSelector:@selector(decodeUtfStyFormat:contextInfo:) contextInfo:nil];
 		}
+		content = [[TSEncodingSupport sharedInstance] textForEditing: content encoding: _encoding];
 		
 		theLength = [content length];
 		// NSLog([NSString stringWithFormat:@"%d", theLength]);
@@ -2744,7 +2804,7 @@ in other code when an external editor is being used. */
 		[[_textStorage mutableString] setString:content];
         sourceAcceptedFingerprint = sourceReloadFingerprint ?: TSSourceFingerprint(myData);
         ++sourceIOGeneration;
-	
+		_hasReadSource = YES;
 		return YES;
 	}
 else {
@@ -3190,16 +3250,101 @@ else {
     return _tempencoding;
 }
 
+// Line endings of a file before they are converted to LF: 0 when all are LF or the user
+// asked not to be told again for this file, 1 for CRLF, 2 for CR, 3 for a mixture.
+static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice-off";
+
+- (NSInteger)lineEndingNoticeForText: (NSString *)text URL: (NSURL *)url
+{
+	NSUInteger length = text.length, lf = 0, crlf = 0, cr = 0;
+	for (NSUInteger i = 0; i < length; i++) {
+		unichar c = [text characterAtIndex: i];
+		if (c == '\r') {
+			if (i + 1 < length && [text characterAtIndex: i + 1] == '\n') { crlf++; i++; }
+			else cr++;
+		} else if (c == '\n')
+			lf++;
+	}
+	if (crlf == 0 && cr == 0)
+		return 0;
+	if (url.isFileURL && getxattr(url.fileSystemRepresentation, TSLineEndingNoticeAttribute, NULL, 0, 0, 0) >= 0)
+		return 0;
+	if ((lf > 0) + (crlf > 0) + (cr > 0) > 1)
+		return 3;
+	return crlf ? 1 : 2;
+}
+
+- (void)tryLineEndingNotice: (NSWindow *)theWindow
+{
+	NSInteger notice = _lineEndingNotice;
+	_lineEndingNotice = 0;
+	if (! notice || ! theWindow)
+		return;
+	NSAlert *alert = [[NSAlert alloc] init];
+	if (notice == 3)
+		alert.messageText = NSLocalizedString(@"This document mixes different line endings.", @"Line ending notice: mixed");
+	else if (notice == 1)
+		alert.messageText = NSLocalizedString(@"This document uses Windows line endings (CRLF).", @"Line ending notice: CRLF");
+	else
+		alert.messageText = NSLocalizedString(@"This document uses classic Mac line endings (CR).", @"Line ending notice: CR");
+	alert.informativeText = NSLocalizedString(@"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings.", @"Line ending notice: explanation");
+	alert.showsSuppressionButton = YES;
+	alert.suppressionButton.title = NSLocalizedString(@"Don\u2019t show again for this document", @"Line ending notice: suppression check box");
+	NSURL *url = self.fileURL;
+	[alert beginSheetModalForWindow: theWindow completionHandler: ^(NSModalResponse response) {
+		if (alert.suppressionButton.state == NSControlStateValueOn && url.isFileURL)
+			setxattr(url.fileSystemRepresentation, TSLineEndingNoticeAttribute, "1", 1, 0, 0);
+	}];
+}
+
+// The window that shows the source on screen, where the notices about the opened file go: the
+// combined window when the source is in it, otherwise the source window. Nil while it is not
+// on screen or shows another sheet; the notices then wait.
+- (NSWindow *)windowForOpeningNotices
+{
+	NSWindow *window = useFullSplitWindow ? fullSplitWindow : textWindow;
+	return (window.isVisible && ! window.attachedSheet) ? window : nil;
+}
+
+- (void)tryOpeningNotices
+{
+	[self tryBadEncodingDialog: nil];
+}
+
+- (void)tryOpeningNoticesLater
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget: self selector: @selector(tryOpeningNotices) object: nil];
+	[self performSelector: @selector(tryOpeningNotices) withObject: nil afterDelay: 0.5];
+}
+
+// The window passed in is the one that asks; the notices go to windowForOpeningNotices.
 - (void)tryBadEncodingDialog: (NSWindow *)theWindow
 {
+	if (! showBadEncodingDialog && ! _lineEndingNotice)
+		return;
+	NSWindow *window = [self windowForOpeningNotices];
+	if (! window) {
+		// Wait for the window while it is coming on screen (or, without a limit, while it
+		// shows another sheet), for at most ten seconds otherwise.
+		NSWindow *shown = useFullSplitWindow ? fullSplitWindow : textWindow;
+		if ((shown.isVisible && shown.attachedSheet) || _openingNoticeAttempts++ < 20)
+			[self tryOpeningNoticesLater];
+		return;
+	}
+	_openingNoticeAttempts = 0;
 	if (showBadEncodingDialog) {
 		NSString *theEncoding = [[TSEncodingSupport sharedInstance] localizedNameForStringEncoding: _badEncoding];
 		NSBeginAlertSheet(NSLocalizedString(@"This file was opened with IsoLatin9 encoding.", @"This file was opened with IsoLatin9 encoding."),
-						  nil, nil, nil, theWindow, nil, nil, nil, nil,
+						  nil, nil, nil, window, nil, nil, nil, nil,
 						  NSLocalizedString(@"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again.",
 											@"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again."), theEncoding);
+		showBadEncodingDialog = FALSE;
+		// A line ending notice follows when this sheet is closed.
+		if (_lineEndingNotice)
+			[self tryOpeningNoticesLater];
 	}
-	showBadEncodingDialog = FALSE;
+	else
+		[self tryLineEndingNotice: window];
 
 }
 
@@ -7348,6 +7493,7 @@ if (! useFullSplitWindow) {
 		NSString *theString = [[NSString alloc] initWithData:myData encoding:_encoding];
 
 		if (theString != nil) {
+			theString = [[TSEncodingSupport sharedInstance] textForEditing: theString encoding: _encoding];
 			[textView setString: theString];
 	//		[theString release];
 			if (fileIsTex) {

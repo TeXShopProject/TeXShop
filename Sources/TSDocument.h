@@ -350,6 +350,13 @@ enum RootCommand
 	BOOL                realEngine;
 //	NSWindow            *callingWindow;
 	NSStringEncoding	_badEncoding;
+	BOOL                _encodingFromMagicComment;
+	BOOL                _hasReadSource;
+	NSInteger           _sourceByteOrderMark;	// TSByteOrderMark of the file when it was read
+	NSStringEncoding    _sourceMarkEncoding;	// the encoding it was read in
+	NSInteger           _lineEndingNotice;		// line endings converted to LF when the file was read
+	NSStringEncoding    _unreadableEncoding;	// the encoding that could not read the file, which was read in Latin 9
+	NSInteger           _openingNoticeAttempts;	// times the notices about the opened file waited for a window
 	BOOL                showBadEncodingDialog;
 	BOOL				PDFfromKit;
 	NSUInteger		pdfCharacterIndex;

@@ -277,6 +277,7 @@ extern NSString *LatexPanelNameKey;
 extern NSString *MakeEmptyDocumentKey;
 extern NSString *UseExternalEditorKey;
 extern NSString *EncodingKey;
+extern NSString *EncodingAutoDetectionKey;
 extern NSString *LineBreakModeKey;
 extern NSString *TagSectionsKey;
 extern NSString *LPanelOutlinesKey;

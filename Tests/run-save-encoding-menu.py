@@ -80,7 +80,7 @@ static FakeDefaults *gDefaults;
     NSPopUpButton *openSaveBox, *openSaveBoxHS, *saveFormatMenu;
     NSView *openSaveView, *openSaveViewHS;
     NSSavePanel *theSavePanel;
-    NSStringEncoding _encoding, _tempencoding;
+    NSStringEncoding _encoding, _tempencoding, _unreadableEncoding;
     NSString *fileExtensions[1];
     NSTextStorage *_textStorage;
 }

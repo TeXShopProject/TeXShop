@@ -77,6 +77,8 @@ Note also that ``xelatex'' and ``pdflatexmk'' are engines defined by scripts in 
 
 These Special Comment lines fix the encoding used to read and write a source file, overriding all other methods of setting this encoding. It is important to use the exact name for an encoding used by the Macintosh, so I again recommend Ramon Figueros-Centeno's ``Encoding'' macro, which lists all possibilities and requires only a click on a choice to produce the correct syntax line.
  
+Without such a line, TeXShop detects the encoding when it opens a file: it looks for a byte order mark, the encoding recorded by the program that wrote the file, and valid UTF-8, and otherwise chooses the encoding that reads the file most plausibly among the encoding set in TeXShop Settings and the encodings of your languages. An encoding chosen in the Open dialog is used as it is.
+
  \begin{verbatim}    
      % !TEX encoding = UTF-8 Unicode
      % !TEX encoding = Iso Latin 9
@@ -245,6 +247,8 @@ Rebuild the Tags and Labels menus shortly after each change to the text, as olde
 
 {\em Typesetting and Files}
 \begin{description}
+\item[\texttt{defaults write TeXShop EncodingAutoDetection NO}] \hfill \\
+Do not detect the encoding of a file without an encoding magic line; open it in the encoding of TeXShop Settings, as older versions did.
 \item[\texttt{defaults write TeXShop UseOldHeadingCommands YES}] \hfill \\
 Also accept the old first line forms of the magic lines: \%\&pdflatex and similar lines and \%\&program= for the typesetting program, \%\&encoding= for the encoding and \%SourceDoc for the root file.
 \item[\texttt{defaults write TeXShop RedConsoleAfterError YES}] \hfill \\

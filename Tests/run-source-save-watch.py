@@ -114,6 +114,27 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  write(fd,d.bytes,d.length); close(fd);
  if(how==2){struct timeval tv[2]; TIMESPEC_TO_TIMEVAL(&tv[0],&st.st_atimespec); TIMESPEC_TO_TIMEVAL(&tv[1],&st.st_mtimespec); utimes(path.fileSystemRepresentation,tv);}
 }
+// Byte order marks and Japanese backslashes are not used in these tests.
+@interface TSEncodingSupport : NSObject
++ (instancetype)sharedInstance;
++ (NSInteger)byteOrderMarkOfData:(NSData *)data;
+- (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding;
+@end
+@implementation TSEncodingSupport
++ (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
++ (NSInteger)byteOrderMarkOfData:(NSData *)data { return 0; }
+- (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding { return text; }
+@end
+// No encoding is chosen in an Open dialog in these tests.
+@interface TSDocumentController : NSDocumentController
+- (BOOL)takeEncoding:(NSStringEncoding *)encoding chosenForURL:(NSURL *)url;
+@end
+@implementation TSDocumentController
+@end
+// The shared controller in these tests is a plain NSDocumentController.
+@implementation NSDocumentController (TSProbeEncoding)
+- (BOOL)takeEncoding:(NSStringEncoding *)encoding chosenForURL:(NSURL *)url { return NO; }
+@end
 @interface TSDocument : NSDocument {
 @public dispatch_source_t dispatch_source;
  NSString *watchedFileSignature;
@@ -130,6 +151,9 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  NSTextStorage *_textStorage;
  NSStringEncoding _encoding, _tempencoding, _badEncoding;
  BOOL showBadEncodingDialog, isLoading, firstTime;
+ BOOL _encodingFromMagicComment, _hasReadSource;
+ NSInteger _sourceByteOrderMark, _lineEndingNotice;
+ NSStringEncoding _sourceMarkEncoding, _unreadableEncoding;
 }
 @property NSUInteger reads;
 @property (readonly) NSTextStorage *storage;
@@ -150,6 +174,8 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 - (void)readPreviewArrangementFromData:(NSData *)data {}
 - (void)colorizeAll { if(gThrowOnColorize>0 && --gThrowOnColorize==0){ gThrown++; [NSException raise:@"TSProbeException" format:@"colorize"]; } }
 - (BOOL)doNotReadSource { return NO; }
+- (NSStringEncoding)encodingForUnmarkedData:(NSData *)d URL:(NSURL *)u { return _encoding; }
+- (NSInteger)lineEndingNoticeForText:(NSString *)text URL:(NSURL *)url { return 0; }
 - (NSStringEncoding)dataEncoding:(NSData *)d {
  self.reads++;
  if(gInjectOnRead>0 && --gInjectOnRead==0) ExtWrite(gPath, gInjectText, gInjectHow);

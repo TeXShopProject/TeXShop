@@ -24,6 +24,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+typedef NS_ENUM(NSInteger, TSByteOrderMark) {
+	TSNoByteOrderMark = 0,
+	TSUTF8ByteOrderMark,
+	TSUTF16BigEndianByteOrderMark,
+	TSUTF16LittleEndianByteOrderMark
+};
+
 @interface TSEncodingSupport : NSObject {
   
 }
@@ -50,6 +57,16 @@
 // Add a (localized) list of available encodings to the given menu. The tag of each menu item
 // will equal the corresponding NSStringEncoding.
 - (void)addEncodingsToMenu:(NSMenu *)menu withTarget:(id)aTarget action:(SEL)anAction;
+
+// Choose the encoding of a file that has no encoding magic comment: a byte order mark,
+// 7-bit text, an encoding recorded by another application, UTF-8, the preferred encoding,
+// then the encodings of the user's languages. Only encodings in TeXShop's list are chosen.
+- (NSStringEncoding)detectedEncodingForData:(NSData *)data fileURL:(NSURL *)url preferredEncoding:(NSStringEncoding)preferred;
+
+// A byte order mark found at the start of a file, and the data of a text with the same mark.
++ (TSByteOrderMark)byteOrderMarkOfData:(NSData *)data;
+- (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark;
+- (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding;
 
 
 - (BOOL)ptexUtfOutputCheck: (NSString *)dataString withEncoding: (NSStringEncoding)enc;
