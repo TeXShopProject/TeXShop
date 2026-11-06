@@ -54,17 +54,29 @@
   [d changePreviewLayout:Choice(@selector(changePreviewLayout:),2)]; Pump(); CGFloat s2=v.scaleFactor;
   AUDIT(v.autoScales && s2<s1,([NSString stringWithFormat:@"(D) auto-fit recomputed single %.3f -> two-up %.3f",s1,s2]));
   // (E/F) Source reload is a no-op; real changes retain the point on the current page.
-  int unchangedCases=0, pointCases=0;
-  for(int style=1;style<=4;style++) for(int k=0;k<3;k++) for(int where=0;where<2;where++) {
-   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)]; [d comments:@""];
-   v.document=PDF(); [d changePreviewLayout:Choice(@selector(changePreviewLayout:),style)];
+  int unchangedCases=0, pointCases=0, directionCases=0;
+  NSArray *reloadSources=@[@"",@"% !TEX bookDisplay\n% !TEX PageDirectionR2L",@"% !TEX PageDirectionR2L",@"% !TEX bookDisplay",@"",@""];
+  for(int source=0;source<6;source++) for(int style=1;style<=4;style++) for(int k=0;k<3;k++) for(int where=0;where<2;where++) {
+   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)]; [d comments:reloadSources[source]];
+   v.document=source==4 ? DirectedPDF(@"/ViewerPreferences << /Direction /R2L >>") : PDF();
+   if(source==5){[d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),2)];[d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),3)];}
+   [d changePreviewLayout:Choice(@selector(changePreviewLayout:),style)];
    v->resizeOption=2; v.scaleFactor=(k==0?.6:(k==1?1.5:2.5)); Pump();
-   PDFPage *p=[v.document pageAtIndex:3];
+   PDFPage *p=[v.document pageAtIndex:MIN(3,v.document.pageCount-1)];
    [v goToDestination:[[PDFDestination alloc]initWithPage:p atPoint:NSMakePoint(120,where?40:330)]]; Pump();
    NSClipView *clip=v.documentView.enclosingScrollView.contentView;
    NSRect before=clip.bounds; PDFPage *current=v.currentPage;
-   [d comments:@""]; Pump();
-   Check(NSEqualRects(before,clip.bounds) && v.currentPage==current,@"Unchanged source reload preserves exact viewport and page"); unchangedCases++;
+   [d comments:reloadSources[source]]; Pump();
+   Check(NSEqualRects(before,clip.bounds) && v.currentPage==current,@"Unchanged source reload preserves exact viewport and page");
+   Check(v.displaysRTL==d.previewDisplaysRTL && v.displaysAsBook==d.previewDisplaysAsBook,@"Reload preserves resolved arrangement"); unchangedCases++;
+  }
+  // (G) Check a direction-only action before a cover or layout action can mask it.
+  for(int style=1;style<=4;style++) for(int book=0;book<2;book++) for(int rtl=0;rtl<2;rtl++) {
+   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)];
+   [d comments:book?@"% !TEX bookDisplay":@""];
+   v.document=PDF(); [d changePreviewLayout:Choice(@selector(changePreviewLayout:),style)];
+   [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),rtl?2:1)]; Pump();
+   Check(v.displaysRTL==rtl && d.previewDisplaysRTL==rtl && v.displaysAsBook==book,@"Direction-only toolbar action reaches the view and preserves cover"); directionCases++;
   }
   for(int style=1;style<=4;style++) for(int op=0;op<2;op++) {
    [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)]; [d comments:@""];
@@ -77,7 +89,7 @@
    PDFDestination *after=v.currentDestination;
    Check(after.page==before.page && v.currentPage==current && fabs(after.point.x-before.point.x)<1 && fabs(after.point.y-before.point.y)<1,@"Arrangement preserves within-page position"); pointCases++;
   }
-  printf("PASS: unchanged reload %d cases; high-zoom arrangement %d cases\n",unchangedCases,pointCases);
+  printf("PASS: unchanged reload %d cases; high-zoom arrangement %d cases; direction-only %d cases\n",unchangedCases,pointCases,directionCases);
   Check(auditFail==0,@"Arrangement and last-page regression cases");
   #undef AUDIT
  }
