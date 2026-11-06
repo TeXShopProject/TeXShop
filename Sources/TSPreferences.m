@@ -27,6 +27,7 @@
 #import "UseSparkle.h"
 
 #import "TSPreferences.h"
+#import "TSEnginePathDiscovery.h"
 #import "TSInvisibleCharacters.h"
 #import "TSDockIconController.h"
 #import "TSSpellSupport.h"
@@ -51,6 +52,12 @@ static NSString *TSPreferencesDomainName(void)
 	return [[NSBundle mainBundle] bundleIdentifier] ?: @"TeXShop";
 }
 
+
+@interface TSPreferences ()
+@property NSUInteger enginePathSearchGeneration;
+@property (weak) NSButton *enginePathSearchButton;
+- (void)searchEnginePathsForInitialSetup:(BOOL)initial sender:(NSButton *)sender;
+@end
 
 @implementation TSPreferences
 /*"
@@ -120,6 +127,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 "*/
 - (IBAction)showPreferences:sender
 {
+    [self cancelEnginePathDiscovery];
 	if (_prefsWindow == nil) {
 		// we need to load the nib
 		if ([NSBundle loadNibNamed:@"Preferences" owner:self] == NO) {
@@ -1644,6 +1652,126 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 
 
 //==============================================================================
+- (void)cancelEnginePathDiscovery
+{
+    self.enginePathSearchGeneration++;
+    self.enginePathSearchButton.enabled = YES;
+    self.enginePathSearchButton = nil;
+}
+
+- (void)discoverInitialEnginePaths
+{
+    [self searchEnginePathsForInitialSetup:YES sender:nil];
+}
+
+- (IBAction)discoverEnginePaths:(id)sender
+{
+    [_prefsWindow makeFirstResponder:_prefsWindow];
+    [self searchEnginePathsForInitialSetup:NO sender:sender];
+}
+
+- (BOOL)enginePathSnapshotMatches:(NSArray<NSString *> *)snapshot initial:(BOOL)initial
+{
+    if (![snapshot[0] isEqualToString:[SUD stringForKey:TetexBinPath] ?: @""] ||
+        ![snapshot[1] isEqualToString:[SUD stringForKey:GSBinPath] ?: @""]) return NO;
+    return initial || ([_tetexBinPathField.stringValue isEqualToString:snapshot[0]] &&
+                       [_gsBinPathField.stringValue isEqualToString:snapshot[1]]);
+}
+
+- (void)searchEnginePathsForInitialSetup:(BOOL)initial sender:(NSButton *)sender
+{
+    [self cancelEnginePathDiscovery];
+    NSUInteger generation = self.enginePathSearchGeneration;
+    self.enginePathSearchButton = sender;
+    sender.enabled = NO;
+    NSArray *snapshot = @[[SUD stringForKey:TetexBinPath] ?: @"", [SUD stringForKey:GSBinPath] ?: @""];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        NSDictionary *found = [TSEnginePathDiscovery candidatesForPaths:[TSEnginePathDiscovery systemSearchPaths]
+                                                  currentTeX:snapshot[0] currentGhostscript:snapshot[1]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (generation != self.enginePathSearchGeneration) return;
+            sender.enabled = YES;
+            if ((!initial && !self->_prefsWindow.visible) || ![self enginePathSnapshotMatches:snapshot initial:initial]) return;
+            NSAlert *alert = [NSAlert new];
+            alert.messageText = NSLocalizedString(initial ? @"Set Up TeX Engine Paths" : @"Detected Engine Paths", @"");
+            BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
+            alert.informativeText = NSLocalizedString(@"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged.", @"");
+            NSView *choices = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 560, 340)];
+            NSMutableDictionary *matrices = [NSMutableDictionary dictionary];
+            CGFloat top = 340;
+            for (NSString *key in @[@"TeX", @"Ghostscript"]) {
+                NSTextField *label = [NSTextField labelWithString:key];
+                label.font = [NSFont boldSystemFontOfSize:13];
+                top -= 22;
+                label.frame = NSMakeRect(0, top, 560, 20);
+                [choices addSubview:label];
+                NSArray *candidates = found[key];
+                if (candidates.count == 0) {
+                    NSTextField *missing = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Not found (current setting will be kept)", @"")];
+                    top -= 30;
+                    missing.frame = NSMakeRect(0, top, 560, 28);
+                    [choices addSubview:missing];
+                } else {
+                    NSButtonCell *cell = [NSButtonCell new];
+                    [cell setButtonType:NSButtonTypeRadio];
+                    cell.font = [NSFont systemFontOfSize:12];
+                    cell.wraps = YES;
+                    NSMatrix *matrix = [[NSMatrix alloc] initWithFrame:NSMakeRect(0, 0, 540, 42 * candidates.count)
+                        mode:NSRadioModeMatrix prototype:cell numberOfRows:candidates.count numberOfColumns:1];
+                    matrix.cellSize = NSMakeSize(540, 40);
+                    matrix.intercellSpacing = NSMakeSize(0, 2);
+                    [matrix sizeToCells];
+                    for (NSUInteger row = 0; row < candidates.count; row++) {
+                        NSDictionary *candidate = candidates[row];
+                        NSString *version = [candidate[@"version"] length] ? candidate[@"version"] : NSLocalizedString(@"Version unavailable", @"");
+                        [[matrix cellAtRow:row column:0] setTitle:[NSString stringWithFormat:@"%@\n%@", version, candidate[@"path"]]];
+                        [matrix setToolTip:candidate[@"path"] forCell:[matrix cellAtRow:row column:0]];
+                    }
+                    [matrix selectCellAtRow:0 column:0];
+                    CGFloat height = MIN(126, NSHeight(matrix.frame));
+                    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, top - height, 560, height)];
+                    scroll.hasVerticalScroller = YES;
+                    scroll.autohidesScrollers = YES;
+                    scroll.drawsBackground = NO;
+                    scroll.documentView = matrix;
+                    [matrix scrollCellToVisibleAtRow:0 column:0];
+                    [choices addSubview:scroll];
+                    matrices[key] = matrix;
+                    top -= height;
+                }
+                top -= 16;
+            }
+            // Remove unused space when there are only one or two installations.
+            for (NSView *view in choices.subviews) [view setFrameOrigin:NSMakePoint(view.frame.origin.x, view.frame.origin.y - top)];
+            [choices setFrameSize:NSMakeSize(560, 340 - top)];
+            alert.accessoryView = choices;
+            if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Engine.", @"")];
+            [alert addButtonWithTitle:NSLocalizedString(hasPaths ? @"Use These Paths" : @"OK", @"")];
+            if (hasPaths) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+            void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
+                if (response != NSAlertFirstButtonReturn || !hasPaths || generation != self.enginePathSearchGeneration ||
+                    ![self enginePathSnapshotMatches:snapshot initial:initial]) return;
+                NSArray *keys = @[TetexBinPath, GSBinPath];
+                NSArray *names = @[@"TeX", @"Ghostscript"];
+                NSArray *required = @[@[@"tex", @"latex", @"pdftex", @"pdflatex"], @[@"gs"]];
+                for (NSUInteger i = 0; i < keys.count; i++) {
+                    NSMatrix *matrix = matrices[names[i]];
+                    NSString *path = matrix ? found[names[i]][matrix.selectedRow][@"path"] : nil;
+                    if (!path || ![TSEnginePathDiscovery directory:path containsPrograms:required[i]]) continue;
+                    if (!initial) [[self->_undoManager prepareWithInvocationTarget:SUD] setObject:snapshot[i] forKey:keys[i]];
+                    [SUD setObject:path forKey:keys[i]];
+                }
+                if (!initial) {
+                    self->_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath];
+                    self->_gsBinPathField.stringValue = [SUD stringForKey:GSBinPath];
+                }
+            };
+            if (initial) finish([alert runModal]);
+            else [alert beginSheetModalForWindow:self->_prefsWindow completionHandler:finish];
+        });
+    });
+}
+
 /*" This method is connected to the textField that holds the tetex bin path.
 "*/
 - (IBAction)tetexBinPathChanged:sender
@@ -2129,6 +2257,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
 "*/
 - (IBAction)okButtonPressed:sender
 {
+    [self cancelEnginePathDiscovery];
     [[TSDockIconController sharedController] acceptEditing];
 	// save everything to the user defaults
 
@@ -2174,6 +2303,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
 "*/
 - (IBAction)cancelButtonPressed:sender
 {
+    [self cancelEnginePathDiscovery];
     BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
     [self cancelForColor];
     // undo everyting

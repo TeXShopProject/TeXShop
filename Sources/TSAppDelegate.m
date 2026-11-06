@@ -35,6 +35,7 @@
 #import "TSMacroMenuController.h"
 #import "TSMatrixPanelController.h"
 #import "TSPreferences.h"
+#import "TSEnginePathDiscovery.h"
 #import "TSWindowManager.h"
 #import "TSTextEditorWindow.h"
 #import "TSFullSplitWindow.h"
@@ -75,6 +76,10 @@
 
 /*" This class is registered as the delegate of the TeXShop NSApplication object. We do various stuff here, e.g. registering factory defaults, dealing with keyboard shortcuts etc.
 "*/
+@interface TSAppDelegate ()
+@property BOOL shouldDiscoverEnginePaths;
+@end
+
 @implementation TSAppDelegate
 
 /*
@@ -199,6 +204,9 @@
     }
     // Rule editing and spelling help remain accessible in either spelling mode.
     [TSSpellSupport installMenuItems];
+    if (self.shouldDiscoverEnginePaths) {
+        [[TSPreferences sharedInstance] discoverInitialEnginePaths];
+    }
 }
 
 
@@ -307,6 +315,9 @@
 
 	
 		
+    NSDictionary *savedSettings = [SUD persistentDomainForName:NSBundle.mainBundle.bundleIdentifier ?: @"TeXShop"] ?: @{};
+    self.shouldDiscoverEnginePaths = [TSEnginePathDiscovery shouldSearchOnFirstLaunch:savedSettings];
+
 	// if this is the first time the app is used, register a set of defaults to make sure
 	// that the app is useable.
 	if (([[NSUserDefaults standardUserDefaults] boolForKey:TSHasBeenUsedKey] == NO) ||
