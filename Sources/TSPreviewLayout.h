@@ -1,5 +1,21 @@
 #pragma once
 #import <Cocoa/Cocoa.h>
+#import <PDFKit/PDFKit.h>
+#include <string.h>
+
+// Read the catalog of the already-loaded PDF (including in-memory snapshots).
+// A missing, malformed or unknown direction is not a document-level preference.
+static inline NSNumber *TSPreviewPDFDirection(PDFDocument *document) {
+    CGPDFDocumentRef reference = document.documentRef;
+    if (!reference) return nil;
+    CGPDFDictionaryRef catalog = CGPDFDocumentGetCatalog(reference), preferences = NULL;
+    const char *direction = NULL;
+    if (!catalog || !CGPDFDictionaryGetDictionary(catalog, "ViewerPreferences", &preferences) ||
+        !CGPDFDictionaryGetName(preferences, "Direction", &direction)) return nil;
+    if (strcmp(direction, "R2L") == 0) return @YES;
+    if (strcmp(direction, "L2R") == 0) return @NO;
+    return nil;
+}
 
 static NSString * const TSPreviewLayoutToolbarID = @"TSPreviewPageLayout";
 static NSString * const TSPreviewArrangementToolbarID = @"TSPreviewArrangement";
@@ -53,6 +69,7 @@ static inline NSMenuToolbarItem *TSPreviewLayoutItem(id target, NSString *identi
     item.image = layout ? TSPreviewLayoutImage(1) : [NSImage imageWithSystemSymbolName:@"book.pages" accessibilityDescription:label];
     if (!item.image) item.image = [NSImage imageWithSystemSymbolName:@"book" accessibilityDescription:label];
     item.showsIndicator = YES;
+    item.visibilityPriority = NSToolbarItemVisibilityPriorityUser;
     item.target = target;
     NSMenu *menu = [[NSMenu alloc] initWithTitle:label];
     for (NSInteger tag = 1; tag <= 4; tag++) {

@@ -8086,6 +8086,9 @@ else
     BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
     CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
     [super setDocument:document];
+    // Apply the resolved direction after PDFKit has installed the new catalog.
+    // Explicit source comments and toolbar choices take precedence over the PDF.
+    if (document && self.myDocument) self.displaysRTL = self.myDocument.previewDisplaysRTL;
     [self.myDocument updatePreviewLayoutControls];
     if (preserveZoom) {
         [super setScaleFactor:previousScale];

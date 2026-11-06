@@ -386,7 +386,10 @@ else
 
 - (BOOL)previewDisplaysRTL
 {
-    return self.previewDirectionOverride ? self.previewDirectionOverride.boolValue : self.RTLDisplay;
+    if (self.previewDirectionOverride) return self.previewDirectionOverride.boolValue;
+    if (self.previewHasDirectionComment) return self.RTLDisplay;
+    NSNumber *direction = TSPreviewPDFDirection(self.myPDFKitView.document);
+    return direction ? direction.boolValue : self.RTLDisplay;
 }
 
 - (void)changePreviewLayout:(id)sender

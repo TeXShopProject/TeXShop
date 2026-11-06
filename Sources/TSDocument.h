@@ -523,6 +523,7 @@ enum RootCommand
 @property           BOOL            useAlternatePath;
 @property BOOL previewInitialBookDisplay;
 @property BOOL previewInitialRTLDisplay;
+@property BOOL previewHasDirectionComment;
 @property (strong) NSNumber *previewBookOverride;
 @property (strong) NSNumber *previewDirectionOverride;
 @property           BOOL            bookDisplay;

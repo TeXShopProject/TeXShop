@@ -2295,6 +2295,7 @@ in other code when an external editor is being used. */
     self.numberingCorrection = 0;
     self.bookDisplay = self.previewInitialBookDisplay;
     self.RTLDisplay = self.previewInitialRTLDisplay;
+    self.previewHasDirectionComment = NO;
     
     while ((myRange.location < length) && (!done) && (linesTested < 20)) {
         [firstBytes getLineStart: &start end: &end contentsEnd: nil forRange: myRange];
@@ -2323,12 +2324,15 @@ in other code when an external editor is being used. */
                 self.bookDisplay = NO;
             }
         parserRange = [testString rangeOfString:@"% !TEX PageDirectionL2R"];
-            if (parserRange.location != NSNotFound)
+            if (parserRange.location != NSNotFound) {
                 self.RTLDisplay = NO;
+                self.previewHasDirectionComment = YES;
+            }
         parserRange = [testString rangeOfString:@"% !TEX PageDirectionR2L"];
             if (parserRange.location != NSNotFound)
             {
                 self.RTLDisplay = YES;
+                self.previewHasDirectionComment = YES;
             }
        // parserRange = [testString rangeOfString:@"% !TEX numberingCorrection Automatic"];
        // if (parserRange.location != NSNotFound)

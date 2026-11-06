@@ -10,7 +10,7 @@ view=(root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
 doc=(root/'Sources/TSDocument.m').read_text()
 prefs=(root/'Sources/TSPreferences.m').read_text()
 controller='\n'.join(method(toolbar,s) for s in ['- (BOOL)previewDisplaysAsBook','- (BOOL)previewDisplaysRTL','- (void)changePreviewLayout:', '- (void)changePreviewArrangement:', '- (BOOL)validatePreviewLayoutItem:', '- (void)updatePreviewLayoutControls'])
-viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle'])
+viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle', '- (void)setDocument:(PDFDocument *)document'])
 parse=doc[doc.index('        parserRange = [testString rangeOfString:@"% !TEX bookDisplay"]'):doc.index('       // parserRange = [testString rangeOfString:@"% !TEX numberingCorrection Automatic"]')]
 initialize=doc[doc.index('    self.bookDisplay = [SUD boolForKey:DisplayAsBookKey];'):doc.index('    self.previewInitialRTLDisplay = self.RTLDisplay;')+len('    self.previewInitialRTLDisplay = self.RTLDisplay;')]
 program=r'''
@@ -42,7 +42,7 @@ static NSUserDefaults *defaults;
 @implementation TestWindow
 @end
 @interface TSDocument : NSObject <NSToolbarDelegate>
-@property BOOL bookDisplay, RTLDisplay,previewInitialBookDisplay,previewInitialRTLDisplay;
+@property BOOL bookDisplay, RTLDisplay,previewInitialBookDisplay,previewInitialRTLDisplay,previewHasDirectionComment;
 @property NSNumber *previewBookOverride,*previewDirectionOverride;
 @property MyPDFKitView *myPDFKitView,*myPDFKitView2;
 @property TestWindow *pdfKitWindow;
@@ -54,7 +54,7 @@ static NSUserDefaults *defaults;
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
 @end
 @interface MyPDFKitView : PDFView {
- @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1;
+ @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady;
 }
 @property (weak) TSDocument *myDocument;
 @property BOOL doScroll;
@@ -64,6 +64,8 @@ static NSUserDefaults *defaults;
 @end
 @implementation MyPDFKitView
 - (void)cleanupMarquee:(BOOL)b {}
+- (void)updateDarkModeInversion {}
+- (void)scaleChanged:(id)sender {}
 VIEWMETHODS
 @end
 @implementation TSDocument
@@ -71,7 +73,7 @@ VIEWMETHODS
 - (MyPDFKitView *)pdfKitView {return self.pdfKitWindow.activeView ?: self.myPDFKitView;}
 CONTROLLER
 - (void)comments:(NSString *)source {
- self.bookDisplay=self.previewInitialBookDisplay; self.RTLDisplay=self.previewInitialRTLDisplay;
+ self.bookDisplay=self.previewInitialBookDisplay; self.RTLDisplay=self.previewInitialRTLDisplay; self.previewHasDirectionComment=NO;
  NSArray *lines=[source componentsSeparatedByString:@"\n"];
  for(NSString *testString in [lines subarrayWithRange:NSMakeRange(0,MIN(20,lines.count))]) {
  NSRange parserRange;
@@ -101,6 +103,20 @@ static PDFDocument *PDF(void){
  for(int i=0;i<8;i++) {CGPDFContextBeginPage(c,NULL);CGContextSetRGBFillColor(c,.1+i*.06,.4,.6,1);CGContextFillRect(c,CGRectMake(40,150,320,280));CGPDFContextEndPage(c);}
  CGPDFContextClose(c);CGContextRelease(c);CGDataConsumerRelease(consumer);return [[PDFDocument alloc]initWithData:data];
 }
+// Small deterministic PDFs with catalog preferences, not Info dictionary metadata.
+static PDFDocument *DirectedPDF(NSString *entry) {
+ NSArray *objects=@[[NSString stringWithFormat:@"<< /Type /Catalog /Pages 2 0 R %@ >>",entry],
+  @"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+  @"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 420 595] /Contents 4 0 R >>",
+  @"<< /Length 0 >>\nstream\nendstream"];
+ NSMutableString *pdf=[NSMutableString stringWithString:@"%PDF-1.4\n"];
+ NSMutableArray *offsets=[NSMutableArray array];
+ for(NSUInteger i=0;i<objects.count;i++){[offsets addObject:@(pdf.length)];[pdf appendFormat:@"%lu 0 obj\n%@\nendobj\n",i+1,objects[i]];}
+ NSUInteger xref=pdf.length;[pdf appendString:@"xref\n0 5\n0000000000 65535 f \n"];
+ for(NSNumber *offset in offsets)[pdf appendFormat:@"%010lu 00000 n \n",offset.unsignedIntegerValue];
+ [pdf appendFormat:@"trailer\n<< /Size 5 /Root 1 0 R >>\nstartxref\n%lu\n%%%%EOF\n",xref];
+ return [[PDFDocument alloc]initWithData:[pdf dataUsingEncoding:NSASCIIStringEncoding]];
+}
 static TSDocument *MakeDocument(void){
  TSDocument *d=[TSDocument new];
  d.pdfKitWindow=[[TestWindow alloc]initWithContentRect:NSMakeRect(0,0,850,650) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
@@ -122,6 +138,34 @@ int main(int argc,char **argv){@autoreleasepool{
  Check([domain hasPrefix:@"org.texshop.LayoutTest."],@"Isolated test preferences");
  defaults=NSUserDefaults.standardUserDefaults;[defaults registerDefaults:@{DisplayAsBookKey:@NO,PdfFirstPageStyleKey:@1,PdfMagnificationKey:@1}];
  TSDocument *d=MakeDocument(),*other=MakeDocument();
+ PDFDocument *rtlPDF=DirectedPDF(@"/ViewerPreferences << /Direction /R2L >>"), *ltrPDF=DirectedPDF(@"/ViewerPreferences << /Direction /L2R >>");
+ Check(rtlPDF && ltrPDF,@"Valid direction fixtures");
+ Check([TSPreviewPDFDirection(rtlPDF) isEqual:@YES] && [TSPreviewPDFDirection(ltrPDF) isEqual:@NO],@"Catalog direction names");
+ for(NSString *entry in @[@"",@"/ViewerPreferences 8",@"/ViewerPreferences << /Direction (R2L) >>",@"/ViewerPreferences << /Direction /Unknown >>"])
+  Check(TSPreviewPDFDirection(DirectedPDF(entry))==nil,@"Invalid or absent direction falls back");
+ d.myPDFKitView.document=rtlPDF;
+ Check(d.previewDisplaysRTL && d.myPDFKitView.displaysRTL,@"First load honors PDF R2L");
+ [d comments:@"% !TEX PageDirectionL2R"]; d.myPDFKitView.document=rtlPDF;
+ Check(!d.previewDisplaysRTL && !d.myPDFKitView.displaysRTL,@"Explicit L2R comment beats PDF R2L on load");
+ [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),2)];
+ Check(d.previewDisplaysRTL,@"Toolbar choice overrides comment");
+ d.myPDFKitView.document=ltrPDF;
+ Check(d.previewDisplaysRTL && d.myPDFKitView.displaysRTL,@"Reload metadata does not erase user choice");
+ [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),4)];
+ Check(!d.previewDisplaysRTL,@"Restore respects source comment");
+ [d comments:@"% !TEX PageDirectionR2L"];d.myPDFKitView.document=ltrPDF;
+ Check(d.previewDisplaysRTL && d.myPDFKitView.displaysRTL,@"R2L comment beats PDF L2R");
+ [d comments:@""]; d.myPDFKitView.document=ltrPDF;Check(!d.previewDisplaysRTL,@"Removing comment exposes PDF L2R");
+ d.myPDFKitView.document=rtlPDF;Check(d.previewDisplaysRTL,@"Replacing PDF updates direction without a user override");
+ d.myPDFKitView.document=PDF();Check(!d.previewDisplaysRTL,@"Missing PDF direction returns to app default");
+ for(NSString *arg in NSProcessInfo.processInfo.arguments)if([arg hasPrefix:@"--sample="]){
+  PDFDocument *sample=[[PDFDocument alloc]initWithURL:[NSURL fileURLWithPath:[arg substringFromIndex:9]]];
+  Check(sample.pageCount>0 && [TSPreviewPDFDirection(sample) isEqual:@YES],@"Supplied real PDF has R2L catalog direction");
+  d.myPDFKitView.document=sample;Check(d.previewDisplaysRTL && d.myPDFKitView.displaysRTL,@"Real PDF opens right to left");d.myPDFKitView.document=PDF();
+ }
+ for(NSToolbarItem *item in d.pdfKitWindow.toolbar.items)
+  Check(item.visibilityPriority==NSToolbarItemVisibilityPriorityUser,@"Both controls have highest visibility priority");
+
  [d comments:@"% !TEX bookDisplay\n% !TEX PageDirectionR2L"];
  Check(d.previewDisplaysAsBook && d.previewDisplaysRTL,@"Magic comments override defaults");
  [d changePreviewArrangement:Choice(@selector(changePreviewArrangement:),1)];
@@ -170,7 +214,7 @@ int main(int argc,char **argv){@autoreleasepool{
  d.myPDFKitView->resizeOption=3;[d.myPDFKitView setupMagnificationStyle];[d changePreviewLayout:Choice(@selector(changePreviewLayout:),2)];
  Check(d.myPDFKitView.autoScales && d.myPDFKitView->resizeOption==3,@"Auto fit retained");
  d.pdfKitWindow.title=@"TeXShop — PDF Layout Controls";
- if(argc>2)Snapshot(d.pdfKitWindow.contentView.superview,[@(argv[2]) stringByAppendingPathComponent:@"pdf-layout.png"]);
+ if(argc>2 && strcmp(argv[2],"-")!=0)Snapshot(d.pdfKitWindow.contentView.superview,[@(argv[2]) stringByAppendingPathComponent:@"pdf-layout.png"]);
  // Nib + actual preferences action, without loading TeXShop or its user settings.
  TSPreferences *owner=[TSPreferences new];owner.outlets=[NSMutableDictionary new];owner->_undoManager=[NSUndoManager new];owner->_undoManager.groupsByEvent=NO;
  NSString *nibFile=[@(argv[1]) stringByAppendingPathComponent:@"keyedobjects-101300.nib"];if(![NSFileManager.defaultManager fileExistsAtPath:nibFile])nibFile=[@(argv[1]) stringByAppendingPathComponent:@"keyedobjects.nib"];
@@ -179,10 +223,10 @@ int main(int argc,char **argv){@autoreleasepool{
  NSButton *cover=owner->_displayAsBookButton;Check(cover && cover.action==@selector(displayAsBookChanged:),@"Cover outlet and action");
  [defaults setBool:NO forKey:DisplayAsBookKey];[owner->_undoManager beginUndoGrouping];cover.state=NSControlStateValueOn;[owner displayAsBookChanged:cover];[owner->_undoManager endUndoGrouping];
  Check([defaults boolForKey:DisplayAsBookKey],@"Cover preference saved");[owner->_undoManager undo];Check(![defaults boolForKey:DisplayAsBookKey],@"Cancel restores cover preference");
- for(id o in objects)if([o isKindOfClass:NSWindow.class]){NSWindow *w=o;NSTabView *tabs=Tabs(w.contentView);if(tabs.numberOfTabViewItems!=9)continue;[tabs selectTabViewItemAtIndex:2];w.appearance=[NSAppearance appearanceNamed:NSAppearanceNameAqua];[w orderOut:nil];[w.contentView layoutSubtreeIfNeeded];[w displayIfNeeded];if(argc>2){Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(cover.superview.superview,[@(argv[2]) stringByAppendingPathComponent:@"arrangement-settings.png"]);}[w orderOut:nil];}
+ for(id o in objects)if([o isKindOfClass:NSWindow.class]){NSWindow *w=o;NSTabView *tabs=Tabs(w.contentView);if(tabs.numberOfTabViewItems!=9)continue;[tabs selectTabViewItemAtIndex:2];w.appearance=[NSAppearance appearanceNamed:NSAppearanceNameAqua];[w orderOut:nil];[w.contentView layoutSubtreeIfNeeded];[w displayIfNeeded];if(argc>2 && strcmp(argv[2],"-")!=0){Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(cover.superview.superview,[@(argv[2]) stringByAppendingPathComponent:@"arrangement-settings.png"]);}[w orderOut:nil];}
  d.myPDFKitView.document=nil;Check(![d validatePreviewLayoutItem:Choice(@selector(changePreviewLayout:),1)],@"No PDF disables actions");
  [defaults removePersistentDomainForName:domain];
- NSLog(@"PASS: 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, preferences undo");
+ NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, preferences undo");
 }}
 '''
 for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:'))]:program=program.replace(key,value)
@@ -198,7 +242,9 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  nib=root/f'Resources/Interfaces/{"Base" if lang=="en" else lang}.lproj/Preferences.nib'
  snapshot=next((a.split('=',1)[1] for a in sys.argv if a.startswith('--snapshots=')),None)
  args=[str(mac/'LayoutTest'),str(nib)]
- if snapshot:Path(snapshot).mkdir(parents=True,exist_ok=True);args.append(snapshot)
+ if snapshot:Path(snapshot).mkdir(parents=True,exist_ok=True)
+ args.append(snapshot or "-")
+ args += [a for a in sys.argv[1:] if a.startswith("--sample=")]
  args+=['-AppleLanguages',f'({lang})']
  try:
   subprocess.run(args,check=True)
