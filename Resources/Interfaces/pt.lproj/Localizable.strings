@@ -97,7 +97,7 @@
 "Skin Tone IV" = "Morena moderada";
 "Skin Tone V" = "Morena escura";
 "Skin Tone VI" = "Negra";
-"Unknown encoding; using Latin 9." = "Codificação desconhecida; usando ISO Latin 9.";
+"Unknown encoding; using UTF-8." = "Codificação desconhecida; usando UTF-8.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Vídeos demo requerem Mac OS 10.9, Mavericks, ou superior";
 "Source" = "Fonte";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Digite algum texto aqui.\nEscreva diversas para testar\no espaçamento entre linhas.";

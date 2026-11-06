@@ -143,7 +143,10 @@ static TSEncoding _availableTexworksEncodings[] = {
         
         self.availableEncodingsNames = myArray;
         self.availableTexworksEncodingNames = texWorksArray;
-        self.defaultEncodingNumber = 4; // ISOLatin9
+        // An unknown encoding name falls back to UTF-8.
+        for (NSInteger i = 0; i < ARRAYSIZE(_availableEncodings); ++i)
+            if (_availableEncodings[i].cfEnc == kCFStringEncodingUTF8)
+                self.defaultEncodingNumber = i;
 
 
 		g_shouldFilter = kNoFilterMode;
@@ -412,9 +415,9 @@ static TSEncoding _availableTexworksEncodings[] = {
 			return CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingMacCentralEurRoman);
 
 
-	// If the encoding is unknown, use the default encoding in our list (Latin 9).
+	// If the encoding is unknown, use the default encoding in our list (UTF-8).
     NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"),
-                    NSLocalizedString(@"Unknown encoding; using Latin 9.", @"Unknown encoding; using Latin 9."),
+                    NSLocalizedString(@"Unknown encoding; using UTF-8.", @"Unknown encoding; using UTF-8."),
                     nil, nil, nil);
 
     return _availableEncodings[self.defaultEncodingNumber].nsEnc;
@@ -428,9 +431,9 @@ static TSEncoding _availableTexworksEncodings[] = {
 		if (_availableEncodings[i].nsEnc == encoding)
 			return self.availableEncodingsNames[i];
 	}
-	// If the encoding is unknown, use the default encoding in our list (Latin 9).
+	// If the encoding is unknown, use the default encoding in our list (UTF-8).
     NSRunAlertPanel(NSLocalizedString(@"Error", @"Error"),
-                    NSLocalizedString(@"Unknown encoding; using Latin 9.", @"Unknown encoding; using Latin 9."),
+                    NSLocalizedString(@"Unknown encoding; using UTF-8.", @"Unknown encoding; using UTF-8."),
                     nil, nil, nil);
     return self.availableEncodingsNames[self.defaultEncodingNumber];
 	// return self.availableEncodingsNames[0];
@@ -892,6 +895,74 @@ static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 		if (TSDataDecodes(data, candidate.unsignedIntegerValue))
 			return candidate.unsignedIntegerValue;
 	return preferred;
+}
+
+// UTF-8 in which each byte that does not start or continue a valid character is replaced
+// by U+FFFD. validCharacters counts the characters of two or more bytes that were valid.
+static NSString *TSLenientUTF8String(NSData *data, NSUInteger *validCharacters, NSUInteger *invalidBytes)
+{
+	const uint8_t *bytes = data.bytes;
+	NSUInteger length = data.length, i = 0, segment = 0, valid = 0, invalid = 0;
+	NSMutableString *result = [NSMutableString stringWithCapacity:length];
+	while (i < length) {
+		uint8_t c = bytes[i];
+		if (c < 0x80) { i++; continue; }
+		NSUInteger size = 0;
+		uint32_t minimum = 0, code = 0;
+		if (c >= 0xC2 && c <= 0xDF) { size = 2; minimum = 0x80; }
+		else if (c >= 0xE0 && c <= 0xEF) { size = 3; minimum = 0x800; }
+		else if (c >= 0xF0 && c <= 0xF4) { size = 4; minimum = 0x10000; }
+		BOOL ok = size > 0 && i + size <= length;
+		if (ok) {
+			code = c & (0x7F >> size);
+			for (NSUInteger k = 1; k < size && ok; k++) {
+				if ((bytes[i + k] & 0xC0) != 0x80) ok = NO;
+				else code = (code << 6) | (bytes[i + k] & 0x3F);
+			}
+			if (ok && (code < minimum || code > 0x10FFFF || (code >= 0xD800 && code <= 0xDFFF)))
+				ok = NO;
+		}
+		if (ok) {
+			valid++;
+			i += size;
+			continue;
+		}
+		if (i > segment)
+			[result appendString:[[NSString alloc] initWithBytes:bytes + segment length:i - segment encoding:NSUTF8StringEncoding] ?: @""];
+		[result appendString:@"\uFFFD"];
+		invalid++;
+		segment = ++i;
+	}
+	if (length > segment)
+		[result appendString:[[NSString alloc] initWithBytes:bytes + segment length:length - segment encoding:NSUTF8StringEncoding] ?: @""];
+	if (validCharacters) *validCharacters = valid;
+	if (invalidBytes) *invalidBytes = invalid;
+	return result;
+}
+
++ (NSString *)displayStringForData:(NSData *)data encoding:(NSStringEncoding)encoding
+{
+	NSString *text = [[NSString alloc] initWithData:data encoding:encoding];
+	if (text)
+		return text;
+	if (encoding != NSUTF8StringEncoding && (text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]))
+		return text;
+	NSUInteger valid = 0, invalid = 0;
+	text = TSLenientUTF8String(data, &valid, &invalid);
+	if (valid > 0 && valid >= invalid)
+		return text;
+	return [[NSString alloc] initWithData:data encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISOLatin9)] ?: @"";
+}
+
++ (NSUInteger)lengthOfIncompleteCharacterAtEndOfData:(NSData *)data encoding:(NSStringEncoding)encoding
+{
+	if (data.length == 0 || [[NSString alloc] initWithData:data encoding:encoding])
+		return 0;
+	// At most three bytes are kept, which may be all of a short piece.
+	for (NSUInteger k = 1; k <= 3 && k <= data.length; k++)
+		if (k == data.length || [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, data.length - k)] encoding:encoding])
+			return k;
+	return 0;
 }
 
 // The byte order mark that starts data, so that a file can be saved with the same one.

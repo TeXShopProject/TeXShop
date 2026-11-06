@@ -97,7 +97,7 @@
 "Skin Tone IV" = "Medium";
 "Skin Tone V" = "Medium Dark";
 "Skin Tone VI" = "Dark";
-"Unknown encoding; using Latin 9." = "Unknown encoding; using Latin 9.";
+"Unknown encoding; using UTF-8." = "Codificação desconhecida; a usar UTF-8.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Demo Movies require Mac OS 10.9, Mavericks, or higher.";
 "Source" = "Source";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Type sample text here.\nUse several lines to test\ninterline spacing.";

@@ -344,7 +344,8 @@
 	if (![[NSFileManager defaultManager] fileExistsAtPath: projectPath])
 		return NO;
 
-	NSString *projectRoot = [NSString stringWithContentsOfFile: projectPath usedEncoding: &theEncoding error:NULL];
+	NSString *projectRoot = [NSString stringWithContentsOfFile: projectPath usedEncoding: &theEncoding error:NULL]
+		?: [NSString stringWithContentsOfFile: projectPath encoding: NSISOLatin1StringEncoding error: NULL]; // written in Latin 1 before
 	projectRoot = [projectRoot stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	if ([projectRoot length] == 0)
 		return NO;
@@ -354,7 +355,7 @@
 	} else {
 		nameString = [[[self fileURL] path] stringByDeletingLastPathComponent];
 		nameString = [[nameString stringByAppendingString:@"/"]
-                      stringByAppendingString: [NSString stringWithContentsOfFile: projectPath usedEncoding: &theEncoding error: NULL]];
+                      stringByAppendingString: projectRoot];
 		nameString = [nameString stringByStandardizingPath];
 	}
 

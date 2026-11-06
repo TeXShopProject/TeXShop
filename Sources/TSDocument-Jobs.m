@@ -2124,7 +2124,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 		command = [[texCommand stringValue] stringByAppendingString:@"\n"];
 		command = [self filterBackslashes:command];
 
-		myData = [command dataUsingEncoding: NSISOLatin9StringEncoding allowLossyConversion:YES];
+		// TeX reads what is typed in the encoding of the document (UTF-8 for a UTF-16 document).
+		myData = [command dataUsingEncoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) allowLossyConversion:YES];
 		[self.writeHandle writeData: myData];
 		// added by mitsu --(L) reflect tex input and clear tex input field in console window
 		NSRange selectedRange = [outputText selectedRange];

@@ -4504,7 +4504,8 @@ preference change is cancelled. "*/
 		project = [[[[self fileURL] path] stringByDeletingPathExtension]
 			stringByAppendingString: @".texshop"];
 		if ([[NSFileManager defaultManager] fileExistsAtPath: project]) {
-			nameString = [NSString stringWithContentsOfFile: project usedEncoding: &theEncoding error:NULL];
+			nameString = [NSString stringWithContentsOfFile: project usedEncoding: &theEncoding error:NULL]
+				?: [NSString stringWithContentsOfFile: project encoding: NSISOLatin1StringEncoding error: NULL]; // written in Latin 1 before
 			[projectName setStringValue: nameString];
 		}
 		else
@@ -4515,7 +4516,7 @@ preference change is cancelled. "*/
 		if (result == 0) {
 			nameString = [projectName stringValue];
 			//            if ([nameString isAbsolutePath])
-			[nameString writeToFile: project atomically: YES encoding:NSISOLatin1StringEncoding error:NULL];
+			[nameString writeToFile: project atomically: YES encoding:NSUTF8StringEncoding error:NULL];
 			//           else {
 			//                anotherString = [[self fileName] stringByDeletingLastPathComponent];
 			//                anotherString = [[anotherString stringByAppendingString:@"/"]
@@ -7442,9 +7443,8 @@ if (! useFullSplitWindow) {
     
     NSString    *myPath = [[self fileURL] path];
     NSString    *logPath = [[myPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"log"];
-    NSString    *logContents = [NSString stringWithContentsOfFile:logPath encoding:theEncoding error:&error];
-    if (logContents == nil)
-        logContents = [NSString stringWithContentsOfFile:logPath encoding:NSISOLatin9StringEncoding error:&error];
+    NSData      *logData = [NSData dataWithContentsOfFile:logPath];
+    NSString    *logContents = logData ? [TSEncodingSupport displayStringForData:logData encoding:theEncoding] : nil;
     if (logContents == nil)
         return;
     
@@ -7494,6 +7494,21 @@ if (! useFullSplitWindow) {
         // NSData* myData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
         NSData* myData = [self availableDataOrError: myFileHandle];
 //        myData = [myFileHandle availableData];
+        // A character can be split between two pieces of output; keep its start for the next one.
+        if (_consoleCarryHandle != myFileHandle)
+            _consoleCarry = nil;
+        _consoleCarryHandle = myFileHandle;
+        if (_consoleCarry.length && myData.length) {
+            NSMutableData *joined = [_consoleCarry mutableCopy];
+            [joined appendData: myData];
+            myData = joined;
+        }
+        _consoleCarry = nil;
+        NSUInteger incomplete = [TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData: myData encoding: _encoding];
+        if (incomplete) {
+            _consoleCarry = [myData subdataWithRange: NSMakeRange(myData.length - incomplete, incomplete)];
+            myData = [myData subdataWithRange: NSMakeRange(0, myData.length - incomplete)];
+        }
         if ([myData length]) {
             dispatch_async(process_queue, ^{
                 NSString        *newOutput, *numberOutput, *searchString, *tempString, *loopString;
@@ -7511,12 +7526,8 @@ if (! useFullSplitWindow) {
 
                 // theEncoding = [[TSEncodingSupport sharedInstance] defaultEncoding];
             theEncoding = _encoding;
-            newOutput = [[NSString alloc] initWithData: myData encoding: theEncoding];
-            
-            // 1.35 (F) fix --- suggested by Kino-san
-            if (newOutput == nil) {
-                newOutput = [[NSString alloc] initWithData: myData encoding: NSISOLatin9StringEncoding];
-            }
+            // 1.35 (F) fix --- suggested by Kino-san: output that is not in the document's encoding
+            newOutput = [TSEncodingSupport displayStringForData: myData encoding: theEncoding];
             
                 loopString = newOutput;
             
@@ -7630,7 +7641,7 @@ if (! useFullSplitWindow) {
         texloganalyserData = [self availableDataOrError: myFileHandle];
         // texloganalyserData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
         if ([texloganalyserData length]) {
-            texloganalyserString = [[NSString alloc] initWithData: texloganalyserData encoding: NSISOLatin9StringEncoding];
+            texloganalyserString = [TSEncodingSupport displayStringForData: texloganalyserData encoding: _encoding];
             // NSLog(texloganalyserString);
             
             // [self.logTextView insertText: texloganalyserString];
@@ -7657,7 +7668,7 @@ if (! useFullSplitWindow) {
         // detexData = [[aNotification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
         detexData = [self availableDataOrError: myFileHandle];
         if ([detexData length]) {
-            detexString = [[NSString alloc] initWithData: detexData encoding: NSISOLatin9StringEncoding];
+            detexString = [TSEncodingSupport displayStringForData: detexData encoding: _encoding];
             NSScanner *myScanner = [NSScanner scannerWithString:detexString];
             result = [myScanner scanInteger:&lineCount];
             if (result)
@@ -10380,7 +10391,6 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	NSString			*logPath;
 	NSString			*content;
 	NSData				*logData;
-    NSStringEncoding    defaultEncoding;
 	NSStringEncoding	theEncoding;
     NSString            *flags;
     BOOL                errorFlag;
@@ -10391,7 +10401,6 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
  
 
 	// theEncoding = NSISOLatin9StringEncoding;
-    defaultEncoding = NSISOLatin9StringEncoding;
     theEncoding = _encoding;
 	// logPath = [[[self fileName] stringByDeletingPathExtension] stringByAppendingPathExtension:@"log"];
 	if (self.logExtension == nil)
@@ -10403,9 +10412,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 			logData = [[NSFileManager defaultManager] contentsAtPath:logPath];
 			if (!logData)
 				return NO;
-			content = [[NSString alloc] initWithData:logData encoding:theEncoding] ;
-            if (!content)
-                content = [[NSString alloc] initWithData:logData encoding:defaultEncoding] ;
+			content = [TSEncodingSupport displayStringForData:logData encoding:theEncoding] ;
             if (!content) 
                 return NO;
             

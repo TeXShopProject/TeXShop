@@ -98,7 +98,7 @@
 "Skin Tone IV" = "Carnagione Leggermente Scura/Olivastra";
 "Skin Tone V" = "Carnagione Scura";
 "Skin Tone VI" = "Carnagione Scurissima/Nera";
-"Unknown encoding; using Latin 9." = "Encoding sconosciuto; attivato ISO Latin 9.";
+"Unknown encoding; using UTF-8." = "Encoding sconosciuto; attivato UTF-8.";
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "I filmati dimostrativi richiedono Mac OS 10.9, Mavericks, o superiore.";
 "Source" = "Sorgente";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Scrivi un testo d’esempio qui.\nScrivi su più linee per controllare\nla spaziatura interlinea.";

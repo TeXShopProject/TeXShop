@@ -355,6 +355,8 @@ enum RootCommand
 	NSInteger           _sourceByteOrderMark;	// TSByteOrderMark of the file when it was read
 	NSStringEncoding    _sourceMarkEncoding;	// the encoding it was read in
 	NSInteger           _lineEndingNotice;		// line endings converted to LF when the file was read
+	NSData              *_consoleCarry;			// the start of a character split between two pieces of output
+	id                  _consoleCarryHandle;	// the output the carried bytes came from
 	BOOL                showBadEncodingDialog;
 	BOOL				PDFfromKit;
 	NSUInteger		pdfCharacterIndex;

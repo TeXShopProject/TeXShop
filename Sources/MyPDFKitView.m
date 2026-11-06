@@ -6372,10 +6372,7 @@ else
  
  
  
- aString = [[NSString alloc] initWithData:myData encoding:theEncoding] ;
- if (! aString) {
- aString = [[NSString alloc] initWithData:myData encoding:NSMacOSRomanStringEncoding] ;
- }
+ aString = [TSEncodingSupport displayStringForData:myData encoding:theEncoding] ;
  sourceText[i + 1] = aString;
  sourcelength[i + 1] = [sourceText[i + 1] length];
  }
