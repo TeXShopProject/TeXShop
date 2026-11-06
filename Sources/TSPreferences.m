@@ -617,6 +617,23 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 }
 
+// Autosave is read once at launch, so a change takes effect after TeXShop restarts.
+- (IBAction)autoSaveEnabledPressed:sender
+{
+	// register the undo message first
+	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AutoSaveEnabledKey] forKey:AutoSaveEnabledKey];
+	[SUD setBool:(_autoSaveEnabledButton.state == NSControlStateValueOn) forKey:AutoSaveEnabledKey];
+	// A backup file is kept only when Versions is off, which follows autosave.
+	_keepBackupButton.enabled = ![SUD boolForKey:AutoSaveEnabledKey];
+}
+
+- (IBAction)keepBackupPressed:sender
+{
+	// register the undo message first
+	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:KeepBackupKey] forKey:KeepBackupKey];
+	[SUD setBool:(_keepBackupButton.state == NSControlStateValueOn) forKey:KeepBackupKey];
+}
+
 // added by Terada( - (IBAction)kpsetoolChanged: )
 - (IBAction)kpsetoolChanged:sender
 {
@@ -2397,6 +2414,9 @@ This method retrieves the application preferences from the defaults object and s
 	[_NewLineCharacterKindMatrix selectCellWithTag:[defaults integerForKey:NewLineCharacterKindKey]]; // added by Terada
 	[_TabCharacterKindMatrix selectCellWithTag:[defaults integerForKey:TabCharacterKindKey]]; // added by Terada
 	[_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]]; // added by Terada
+	[_autoSaveEnabledButton setState:[defaults boolForKey:AutoSaveEnabledKey]];
+	[_keepBackupButton setState:[defaults boolForKey:KeepBackupKey]];
+	_keepBackupButton.enabled = ![defaults boolForKey:AutoSaveEnabledKey];
 
 	NSString *kpsetool = [defaults objectForKey:KpsetoolKey];
 	if (!kpsetool || [kpsetool isEqualToString:@""]) {

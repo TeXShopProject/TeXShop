@@ -149,6 +149,8 @@
                 <outlet property="_syncTabButton" destination="dK5-7I-ymJ" id="bFg-dr-rDb"/>
                 <outlet property="_syntaxColorButton" destination="683" id="690"/>
                 <outlet property="_makeatletterButton" destination="7Du-ET-K2e" id="GPN-5N-j3a"/>
+                <outlet property="_autoSaveEnabledButton" destination="0nU-mu-Gem" id="8Wb-Th-aAm"/>
+                <outlet property="_keepBackupButton" destination="n6g-kU-S18" id="pLI-tc-cX8"/>
                 <outlet property="_syntaxColorLineButton" destination="82S-EK-I9k" id="Vfh-IU-l4D"/>
                 <outlet property="_tabIndentButton" destination="8Wx-hC-JXD" id="KJg-FI-fw6"/>
                 <outlet property="_tabView" destination="7" id="809"/>
@@ -2412,10 +2414,10 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="Coloriage" translatesAutoresizingMaskIntoConstraints="NO" id="447">
-                                            <rect key="frame" x="132" y="451" width="399" height="89" />
+                                            <rect key="frame" x="112" y="451" width="439" height="89" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="2AT-kW-ozX">
-                                                <rect key="frame" x="0.0" y="0.0" width="399" height="77" />
+                                                <rect key="frame" x="0.0" y="0.0" width="439" height="77" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button toolTip="Check if you want to map black and white to different colors" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="437">
@@ -2467,10 +2469,10 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Type de copie de l'image" translatesAutoresizingMaskIntoConstraints="NO" id="386">
-                                            <rect key="frame" x="132" y="552" width="399" height="58" />
+                                            <rect key="frame" x="112" y="552" width="439" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="j0t-Ce-glU">
-                                                <rect key="frame" x="0.0" y="0.0" width="399" height="46" />
+                                                <rect key="frame" x="0.0" y="0.0" width="439" height="46" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="405">
@@ -2500,11 +2502,53 @@ DQ
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
+                                        <box fixedFrame="YES" title="Enregistrement des documents" translatesAutoresizingMaskIntoConstraints="NO" id="MeN-VL-NL7">
+                                            <rect key="frame" x="112" y="110" width="439" height="106" />
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <view key="contentView" id="ZKc-Gn-ALO">
+                                                <rect key="frame" x="0.0" y="0.0" width="439" height="94" />
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0nU-mu-Gem">
+                                                        <rect key="frame" x="28" y="68" width="403" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="Activer l’enregistrement automatique et les versions" bezelStyle="regularSquare" imagePosition="left" inset="2" id="PGG-ns-qiT">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="autoSaveEnabledPressed:" target="-2" id="f3y-wp-ROX"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xop-bF-GvF">
+                                                        <rect key="frame" x="44" y="36" width="381" height="30" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Fonction de macOS qui écrase automatiquement le fichier pendant la modification. Prend effet après le redémarrage de TeXShop." id="8QA-Gs-z9b">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n6g-kU-S18">
+                                                        <rect key="frame" x="46" y="10" width="385" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="Conserver le fichier précédent sous « nom~ »" bezelStyle="regularSquare" imagePosition="left" inset="2" id="vZb-mG-RJt">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="keepBackupPressed:" target="-2" id="1q4-Lh-0vi"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                </subviews>
+                                            </view>
+                                            <font key="titleFont" metaFont="system"/>
+                                        </box>
                                         <box fixedFrame="YES" title="Curseur d’insertion" translatesAutoresizingMaskIntoConstraints="NO" id="Ycy-Sb-7wJ">
-                                            <rect key="frame" x="132" y="228" width="399" height="211" />
+                                            <rect key="frame" x="112" y="228" width="439" height="211" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="OkN-0S-gVg">
-                                                <rect key="frame" x="0.0" y="0.0" width="399" height="199" />
+                                                <rect key="frame" x="0.0" y="0.0" width="439" height="199" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9YT-y2-P7s">

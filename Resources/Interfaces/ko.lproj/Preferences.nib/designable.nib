@@ -150,6 +150,8 @@
                 <outlet property="_syncTabButton" destination="KT1-Ag-NwE" id="gHe-VG-gEs"/>
                 <outlet property="_syntaxColorButton" destination="32" id="432"/>
                 <outlet property="_makeatletterButton" destination="BdV-X1-ril" id="mjT-Ty-wLx"/>
+                <outlet property="_autoSaveEnabledButton" destination="qum-hr-4xC" id="o3w-RR-tiw"/>
+                <outlet property="_keepBackupButton" destination="pUl-9E-rF3" id="X8R-rA-eBY"/>
                 <outlet property="_syntaxColorLineButton" destination="M4H-oQ-6aF" id="X5F-df-A3p"/>
                 <outlet property="_tabIndentButton" destination="28" id="433"/>
                 <outlet property="_tabView" destination="5" id="434"/>
@@ -2416,10 +2418,10 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="칼러 맵" translatesAutoresizingMaskIntoConstraints="NO" id="276">
-                                            <rect key="frame" x="144" y="455" width="323" height="85" />
+                                            <rect key="frame" x="124" y="455" width="363" height="85" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="bbY-Ey-6R4">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="73" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="73" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button toolTip="Check if you want to map black and white to different colors" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="277">
@@ -2470,10 +2472,10 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="복사할 이미지 형식" translatesAutoresizingMaskIntoConstraints="NO" id="298">
-                                            <rect key="frame" x="144" y="552" width="323" height="58" />
+                                            <rect key="frame" x="124" y="552" width="363" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="FCo-Fj-nfr">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="46" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="46" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="299">
@@ -2503,11 +2505,53 @@ DQ
                                             </view>
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
+                                        <box fixedFrame="YES" title="문서 저장" translatesAutoresizingMaskIntoConstraints="NO" id="7ty-20-Hjf">
+                                            <rect key="frame" x="124" y="114" width="363" height="106" />
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <view key="contentView" id="2sp-BI-WDy">
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="94" />
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qum-hr-4xC">
+                                                        <rect key="frame" x="28" y="68" width="327" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="자동 저장 및 버전 사용" bezelStyle="regularSquare" imagePosition="left" inset="2" id="SPC-tO-Qgz">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="autoSaveEnabledPressed:" target="-2" id="FSY-wu-P26"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G62-pK-TIl">
+                                                        <rect key="frame" x="44" y="36" width="305" height="30" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="편집 중에 파일을 자동으로 덮어쓰는 macOS 기능입니다. TeXShop을 다시 시작한 후에 적용됩니다." id="gFF-gx-FSy">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pUl-9E-rF3">
+                                                        <rect key="frame" x="46" y="10" width="309" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="저장할 때 이전 파일을 ‘이름~’으로 남기기" bezelStyle="regularSquare" imagePosition="left" inset="2" id="sZr-uN-xwu">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="keepBackupPressed:" target="-2" id="Mfd-tz-XkF"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                </subviews>
+                                            </view>
+                                            <font key="titleFont" metaFont="system"/>
+                                        </box>
                                         <box fixedFrame="YES" title="삽입커서" translatesAutoresizingMaskIntoConstraints="NO" id="Lbe-jt-WzC">
-                                            <rect key="frame" x="144" y="232" width="323" height="211" />
+                                            <rect key="frame" x="124" y="232" width="363" height="211" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="LvT-ot-KHF">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="199" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="199" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Aeg-ld-twj">

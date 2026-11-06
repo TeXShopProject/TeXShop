@@ -150,6 +150,8 @@
                 <outlet property="_syncTabButton" destination="DK3-nI-ugS" id="aEd-SZ-Xp7"/>
                 <outlet property="_syntaxColorButton" destination="839" id="847"/>
                 <outlet property="_makeatletterButton" destination="xCO-2R-MtT" id="u0R-dx-In9"/>
+                <outlet property="_autoSaveEnabledButton" destination="0jA-t9-vhR" id="orn-S6-qDH"/>
+                <outlet property="_keepBackupButton" destination="DZ8-kD-eXq" id="KY3-sr-IGn"/>
                 <outlet property="_syntaxColorLineButton" destination="9zW-5t-3xn" id="kkO-I1-ZH7"/>
                 <outlet property="_tabIndentButton" destination="P4v-Lw-RHd" id="eYv-hj-YBM"/>
                 <outlet property="_tabView" destination="7" id="Hss-H1-qJz"/>
@@ -2445,10 +2447,10 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box fixedFrame="YES" title="图像副本类型" translatesAutoresizingMaskIntoConstraints="NO" id="386">
-                                            <rect key="frame" x="143" y="557" width="323" height="58" />
+                                            <rect key="frame" x="123" y="557" width="363" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="qam-eo-UMQ">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="46" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="46" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="405">
@@ -2479,10 +2481,10 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="颜色映射" translatesAutoresizingMaskIntoConstraints="NO" id="447">
-                                            <rect key="frame" x="143" y="459" width="323" height="86" />
+                                            <rect key="frame" x="123" y="459" width="363" height="86" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="nkj-eF-nCu">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="74" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="74" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <button toolTip="Check if you want to map black and white to different colors" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="437">
@@ -2532,11 +2534,53 @@ DQ
                                             </view>
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
+                                        <box fixedFrame="YES" title="存储文稿" translatesAutoresizingMaskIntoConstraints="NO" id="BLI-0w-GVE">
+                                            <rect key="frame" x="123" y="118" width="363" height="106" />
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <view key="contentView" id="cgU-qw-LwZ">
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="94" />
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0jA-t9-vhR">
+                                                        <rect key="frame" x="28" y="68" width="327" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="启用自动保存和版本" bezelStyle="regularSquare" imagePosition="left" inset="2" id="1FB-Ok-de5">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="autoSaveEnabledPressed:" target="-2" id="NJ0-O2-7fz"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L4L-xs-x3B">
+                                                        <rect key="frame" x="44" y="36" width="305" height="30" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="编辑时自动覆盖文件的 macOS 功能。重新启动 TeXShop 后生效。" id="2dA-bf-BI3">
+                                                            <font key="font" metaFont="smallSystem"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DZ8-kD-eXq">
+                                                        <rect key="frame" x="46" y="10" width="309" height="18" />
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <buttonCell key="cell" type="check" title="存储时将之前的文件保留为“名称~”" bezelStyle="regularSquare" imagePosition="left" inset="2" id="pDW-p7-fnL">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <connections>
+                                                                <action selector="keepBackupPressed:" target="-2" id="nAy-yM-kHt"/>
+                                                            </connections>
+                                                        </buttonCell>
+                                                    </button>
+                                                </subviews>
+                                            </view>
+                                            <font key="titleFont" metaFont="system"/>
+                                        </box>
                                         <box fixedFrame="YES" title="插入光标" translatesAutoresizingMaskIntoConstraints="NO" id="tdo-Ey-cnI">
-                                            <rect key="frame" x="143" y="236" width="323" height="211" />
+                                            <rect key="frame" x="123" y="236" width="363" height="211" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="HYh-v4-RBb">
-                                                <rect key="frame" x="0.0" y="0.0" width="323" height="199" />
+                                                <rect key="frame" x="0.0" y="0.0" width="363" height="199" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1xR-98-zs7">

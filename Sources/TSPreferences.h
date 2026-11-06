@@ -138,6 +138,8 @@
 	IBOutlet NSTextField *_kpsetoolField; // added by Terada
 	IBOutlet NSTextField *_bibTeXengineField; // added by Terada
 	IBOutlet NSButtonCell *_makeatletterButton; // added by Terada
+	IBOutlet NSButton *_autoSaveEnabledButton;
+	IBOutlet NSButton *_keepBackupButton;
     
     IBOutlet NSTextField *_HtmlHomeField;
     
@@ -383,6 +385,8 @@
 - (IBAction)kpsetoolChanged:sender; // added by Terada
 - (IBAction)bibTeXengineChanged:sender; // added by Terada
 - (IBAction)makeatletterChanged:sender; // added by Terada
+- (IBAction)autoSaveEnabledPressed:sender;
+- (IBAction)keepBackupPressed:sender;
 
 - (IBAction)HtmlHomeChanged:sender;
 
