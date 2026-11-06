@@ -276,3 +276,15 @@ tiToolTipHtmlSearch           = "Search";
 "PreviewAppearanceDark" = "Dark";
 "tiLabelTSPreviewAppearance" = "Appearance";
 /* added by Terada (until this line) */
+
+"Page Layout" = "Page Layout";
+"Two-Page Arrangement" = "Two-Page Arrangement";
+"Applies when displaying two pages" = "Applies when displaying two pages";
+"Left to right" = "Left to right";
+"Right to left" = "Right to left";
+"Show first page alone as cover" = "Show first page alone as cover";
+"Restore Document Settings" = "Restore Document Settings";
+"Single Page" = "Single Page";
+"Two Pages" = "Two Pages";
+"Continuous" = "Continuous";
+"Continuous Two Pages" = "Continuous Two Pages";

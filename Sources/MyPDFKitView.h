@@ -302,6 +302,7 @@
 - (void)setSyncRect: (int)which originX: (float)x originY: (float)y width: (float)width height: (float)height;
 - (void)setOldSync: (BOOL)value;
 - (void)changePageStyleTo:(NSInteger)newStyle;
+- (void)applyPreviewArrangement;
 - (void)changePDFViewSizeTo: (NSInteger)newResizeOption;
 - (void)moveSplitToCorrectSpot:(NSInteger)index;
 - (NSInteger)index;

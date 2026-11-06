@@ -102,6 +102,7 @@
                 <outlet property="_escapeWarningButton" destination="325" id="326"/>
                 <outlet property="_externalEditorButton" destination="272" id="274"/>
                 <outlet property="_findMatrix" destination="581" id="586"/>
+                <outlet property="_displayAsBookButton" destination="preview-cover-button" id="preview-cover-outlet"/>
                 <outlet property="_firstPageMatrix" destination="506" id="512"/>
                 <outlet property="_flashBackgroundButton" destination="977" id="1040"/>
                 <outlet property="_fontTextView" destination="OsV-66-xiV" id="VUF-6S-vzs"/>
@@ -1342,7 +1343,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Modo de ratón" translatesAutoresizingMaskIntoConstraints="NO" id="330">
-                                            <rect key="frame" x="19" y="356" width="303" height="58" />
+                                            <rect key="frame" x="19" y="292" width="303" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gD7-Yg-aMF">
                                                 <rect key="frame" x="0.0" y="0.0" width="303" height="46" />
@@ -1432,14 +1433,30 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Con páginas dobles" translatesAutoresizingMaskIntoConstraints="NO" id="501">
-                                            <rect key="frame" x="19" y="426" width="306" height="70" />
+                                            <rect key="frame" x="19" y="362" width="306" height="134" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="LLk-LX-HgV">
-                                                <rect key="frame" x="0.0" y="0.0" width="306" height="58" />
+                                                <rect key="frame" x="0.0" y="0.0" width="306" height="122" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
+                                                <subviews><button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-button">
+ <rect key="frame" x="14" y="42" width="280" height="22"/>
+ <autoresizingMask key="autoresizingMask"/>
+ <buttonCell key="cell" type="check" title="Show first page alone as cover" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-cover-cell">
+ <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+ <font key="font" metaFont="system" size="11"/>
+ </buttonCell>
+ <connections><action selector="displayAsBookChanged:" target="-2" id="preview-cover-action"/></connections>
+ </button>
+ <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-note">
+ <rect key="frame" x="14" y="8" width="278" height="28"/>
+ <autoresizingMask key="autoresizingMask"/>
+ <textFieldCell key="cell" title="Applies on opening. Magic comments and&#10;PDF reading direction take precedence." id="preview-cover-note-cell">
+ <font key="font" metaFont="system" size="10"/>
+ <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+ <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+ </textFieldCell></textField>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="506">
-                                                        <rect key="frame" x="14" y="9" width="234" height="38" />
+                                                        <rect key="frame" x="14" y="73" width="234" height="38" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="234" height="18"/>
@@ -1469,7 +1486,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Editor externo" translatesAutoresizingMaskIntoConstraints="NO" id="555">
-                                            <rect key="frame" x="19" y="294" width="303" height="50" />
+                                            <rect key="frame" x="19" y="230" width="303" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="gin-I2-s5h">
                                                 <rect key="frame" x="0.0" y="0.0" width="303" height="38" />
@@ -1491,7 +1508,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Pantalla" translatesAutoresizingMaskIntoConstraints="NO" id="v4D-Cl-1a0">
-                                            <rect key="frame" x="19" y="232" width="303" height="50" />
+                                            <rect key="frame" x="19" y="168" width="303" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="GJt-PA-hIt">
                                                 <rect key="frame" x="0.0" y="0.0" width="303" height="38" />
@@ -1513,7 +1530,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Al abrir código TeX y PDF" translatesAutoresizingMaskIntoConstraints="NO" id="PKM-ER-Ux2">
-                                            <rect key="frame" x="19" y="147" width="303" height="73" />
+                                            <rect key="frame" x="19" y="83" width="303" height="73" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="sgY-YJ-Wx9">
                                                 <rect key="frame" x="0.0" y="0.0" width="303" height="61" />

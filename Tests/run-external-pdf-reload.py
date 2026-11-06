@@ -13,8 +13,8 @@ fixture = fixture.replace('-(void)reShowWithPath:(NSString*)path;', '-(void)reSh
 s=(root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
 def method(s, signature):
     a=s.rindex(signature); return s[a:s.index('\n}',a)+2]
-methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
-fixture=fixture.replace('METHODS',methods)
+methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:'])
+fixture=fixture.replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (BOOL)isVisible { return YES; }\n- (void)makeKeyAndOrderFront:(id)sender {}')
 s=(root/'Sources/TSDocument.m').read_text()
 controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)configureExternalPDFObservation','- (void)stopExternalPDFObservation','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)acceptExternalPDFAtPath:', '- (void)prepareExternalPDFContent', '- (BOOL)externalPDFReloadBlocked'])
@@ -132,6 +132,7 @@ int main(int argc,char **argv){@autoreleasepool{
    return 0;
  }
  [NSApplication sharedApplication];
+ BOOL rtlBook=![NSProcessInfo.processInfo.arguments containsObject:@"--ltr"];
  [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} forName:NSArgumentDomain];
  NSString *path=[@(argv[1]) stringByAppendingPathComponent:@"test.PDF"];
  NSData *first=PDF(12,1),*changed=PDF(12,2);
@@ -144,7 +145,7 @@ int main(int argc,char **argv){@autoreleasepool{
  d.pdfKitWindow.windowIsSplit=YES;
  d.myPDFKitView=[[RecoveryView alloc] initWithFrame:NSMakeRect(0,0,450,600)];d.myPDFKitView2=[[RecoveryView alloc] initWithFrame:NSMakeRect(450,0,450,600)];
  for(RecoveryView *v in @[d.myPDFKitView,d.myPDFKitView2]) {
- v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=d.pdfKitWindow;v.myDocument.myPDFKitView2=d.myPDFKitView2;
+ v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.previewDisplaysRTL=rtlBook;v.myDocument.previewDisplaysAsBook=rtlBook;v.myDocument.pdfKitWindow=d.pdfKitWindow;v.myDocument.myPDFKitView2=d.myPDFKitView2;
  [window.contentView addSubview:v];v.document=[[PDFDocument alloc]initWithData:first];v.displayMode=mode.integerValue;v.autoScales=fit.boolValue;if(!fit.boolValue)v.scaleFactor=1.6;
  [v goToDestination:[[PDFDestination alloc]initWithPage:[v.document pageAtIndex:(v==d.myPDFKitView?4:8)] atPoint:NSMakePoint(170,520)]];
  }
@@ -163,7 +164,7 @@ int main(int argc,char **argv){@autoreleasepool{
  TSExternalPDFPosition one=TSExternalPDFCapture(d.myPDFKitView),two=TSExternalPDFCapture(d.myPDFKitView2);
  PDFDocument *old=d.myPDFKitView.document;
  [changed writeToFile:path atomically:YES];Poll(d);Check(d.myPDFKitView.document==old,@"Wait for stable observation");
- Poll(d);Pump(.15);Check(d.myPDFKitView.document!=old,@"Atomic replacement reload");SamePosition(d.myPDFKitView,one,@"primary");SamePosition(d.myPDFKitView2,two,@"secondary");
+ Poll(d);Pump(.15);Check(d.myPDFKitView.document!=old,@"Atomic replacement reload");Check(d.myPDFKitView.displaysRTL==rtlBook && d.myPDFKitView.displaysAsBook==rtlBook && d.myPDFKitView2.displaysRTL==rtlBook && d.myPDFKitView2.displaysAsBook==rtlBook,@"Reload applies resolved direction and cover to both panes");SamePosition(d.myPDFKitView,one,@"primary");SamePosition(d.myPDFKitView2,two,@"secondary");
  old=d.myPDFKitView.document;[[changed subdataWithRange:NSMakeRange(0,changed.length/2)]writeToFile:path atomically:NO];StablePoll(d);Check(d.myPDFKitView.document==old,@"Partial PDF retains good display");
  NSUInteger attempts=snapshotCount;for(int retry=0;retry<10;retry++)Poll(d);
  Check(snapshotCount==attempts,@"Unchanged rejected PDF is not reparsed");
@@ -195,7 +196,17 @@ int main(int argc,char **argv){@autoreleasepool{
  [d.pdfRefreshTimer invalidate];
  [PDF(2,3)writeToFile:path atomically:YES];StablePoll(d);Check(d.myPDFKitView.document.pageCount==2 && d.myPDFKitView.currentPage!=nil,@"Fewer pages clamp");
  [first writeToFile:path atomically:YES];StablePoll(d);
- Check([d.myPDFKitView.document indexForPage:d.myPDFKitView.visiblePages.firstObject]<=1,@"Short-to-long PDF keeps original first spread visible within scroll bounds");
+ BOOL firstSpreadVisible=NO;
+ // PDFKit can report an empty visiblePages array for an RTL/book layout
+ // after replacement, even though currentPage and its onscreen rect are valid.
+ NSClipView *clip=d.myPDFKitView.documentView.enclosingScrollView.contentView;
+ NSRect viewport=[d.myPDFKitView convertRect:clip.bounds fromView:clip];
+ for(NSUInteger index=0;index<MIN(2,d.myPDFKitView.document.pageCount);index++) {
+  PDFPage *page=[d.myPDFKitView.document pageAtIndex:index];
+  NSRect pageRect=[d.myPDFKitView convertRect:[page boundsForBox:d.myPDFKitView.displayBox] fromPage:page];
+  if(NSIntersectsRect(pageRect,viewport)) firstSpreadVisible=YES;
+ }
+ Check(firstSpreadVisible,@"Short-to-long PDF keeps original first spread visible within scroll bounds");
  old=d.myPDFKitView.document;NoteLoaded(d,path);
  StablePoll(d);Check(d.myPDFKitView.document==old,@"Do not repeat an acknowledged application reload");
  Check(screenUpdates==0,@"Screen updates balanced");
@@ -212,7 +223,7 @@ int main(int argc,char **argv){@autoreleasepool{
  TSDocument *d=[TSDocument new];d.fileURL=[NSURL fileURLWithPath:path];d->taskDone=YES;d.pdfKitWindow=[TestWindow new];d.documentType=isPDF;
  d.myPDFKitView=[[RecoveryView alloc] initWithFrame:NSMakeRect(0,0,450,600)];d.myPDFKitView2=[[RecoveryView alloc] initWithFrame:NSMakeRect(450,0,450,600)];
  for(RecoveryView *v in @[d.myPDFKitView,d.myPDFKitView2]) {
- v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=d.pdfKitWindow;v.myDocument.myPDFKitView2=d.myPDFKitView2;
+ v.myPDFWindow=d.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.previewDisplaysRTL=rtlBook;v.myDocument.previewDisplaysAsBook=rtlBook;v.myDocument.pdfKitWindow=d.pdfKitWindow;v.myDocument.myPDFKitView2=d.myPDFKitView2;
  [window.contentView addSubview:v];v.document=[[PDFDocument alloc]initWithData:first];
  }
  // An unsplit preview gives the second view no document.
@@ -319,4 +330,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-external-pdf-') as td:
   (p/'TSExternalPDFReload.h').write_text(header.replace(old,'info->st_mtimespec.tv_nsec, (long long)info->st_ctimespec.tv_sec, info->st_ctimespec.tv_nsec];').replace('%lld:%ld", path','%lld:%ld:%lld:%ld", path'))
  elif mutation and mutation not in mutations: raise SystemExit('unknown mutation')
  subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(snapshot),'-o',str(p/'test')],check=True)
- subprocess.run([str(p/'test'),td],env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)
+ subprocess.run([str(p/'test'),td]+(['--ltr'] if '--ltr' in sys.argv else []),env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)

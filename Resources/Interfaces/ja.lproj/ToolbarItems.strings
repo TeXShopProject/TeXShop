@@ -275,3 +275,15 @@ tiToolTipHtmlSearch           = "検索";
 "PreviewAppearanceDark" = "ダーク";
 "tiLabelTSPreviewAppearance" = "外観";
 /* added by Terada (until this line) */
+
+"Page Layout" = "ページレイアウト";
+"Two-Page Arrangement" = "見開きの配置";
+"Applies when displaying two pages" = "見開き表示時に適用します";
+"Left to right" = "左から右へ";
+"Right to left" = "右から左へ";
+"Show first page alone as cover" = "先頭ページを表紙として単独表示";
+"Restore Document Settings" = "文書の指定に戻す";
+"Single Page" = "単一ページ";
+"Two Pages" = "見開きページ";
+"Continuous" = "複数ページ";
+"Continuous Two Pages" = "複数見開きページ";

@@ -642,7 +642,8 @@ extern NSPanel *pageNumberWindow;
 		// mitsu 1.29 (O)
 	if ([anItem action] == @selector(changePageStyle:)) {
 		
-		return (([self.myDocument documentType] == isTeX) || ([self.myDocument documentType] == isPDF));
+		if ([self.myDocument fromKit]) return [self.myDocument validatePreviewLayoutItem:anItem];
+        return (([self.myDocument documentType] == isTeX) || ([self.myDocument documentType] == isPDF));
 	}
 
 	if ([anItem action] == @selector(copy:) || [anItem action] == @selector(saveSelectionToFile:))
@@ -668,7 +669,7 @@ extern NSPanel *pageNumberWindow;
 {
     
 	if ([self.myDocument fromKit])
-		[[self.myDocument pdfKitView] changePageStyle: sender];
+		[self.myDocument changePreviewLayout:sender];
 	else
 		[[self.myDocument pdfView] changePageStyle: sender];
 }

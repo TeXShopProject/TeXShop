@@ -6,7 +6,7 @@ root=Path(__file__).resolve().parents[1]
 s=(root/'Sources/MyPDFKitView.m').read_bytes().decode('utf-8', errors='replace')
 def method(signature):
     start=s.rindex(signature);return s[start:s.index('\n}',start)+2]
-methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:'])
+methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:'])
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
@@ -34,7 +34,7 @@ static NSInteger screenUpdates=0;
 @implementation TestWindow
 @end
 @interface TestDocument:NSObject
-@property BOOL externalEditor,pdfSinglePage;
+@property BOOL externalEditor,pdfSinglePage,previewDisplaysRTL,previewDisplaysAsBook;
 @property NSInteger stringWindowAlignment;
 @property NSInteger numberingCorrection;
 @property TestWindow *pdfKitWindow;
@@ -42,9 +42,11 @@ static NSInteger screenUpdates=0;
 @property PDFView *myPDFKitView2;
 @end
 @implementation TestDocument
+- (void)updatePreviewLayoutControls {}
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime {}
 @end
 @interface RecoveryView:PDFView {
+    BOOL _pdfViewReady;
     BOOL _editMode,protectFind,downOverLink,showSync,fromTypesetOrQuit,firstTimeSave;
     NSInteger pageStyle,firstPageStyle,resizeOption;
     NSMutableArray *_searchResults;
@@ -77,6 +79,8 @@ static NSInteger screenUpdates=0;
 -(void)reShowForSecond;
 @end
 @implementation RecoveryView
+-(void)updateDarkModeInversion {}
+-(void)scaleChanged:(id)sender {}
 -(BOOL)doReleaseDocument{return self.releaseDocument;}
 -(void)setup{[self initializeDisplay];}
 -(void)setupPageStyle{}
@@ -127,7 +131,7 @@ int main(int argc,char**argv){@autoreleasepool{
  }
  printf("PASS: invalid-to-valid reload, both panes, four display modes, data/URL loading\n");
 }}
-'''.replace('METHODS',methods)
+'''.replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
 with tempfile.TemporaryDirectory(prefix='texshop-recovery-') as directory:
     p=Path(directory);(p/'test.m').write_text(program)
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(p/'test')],check=True)

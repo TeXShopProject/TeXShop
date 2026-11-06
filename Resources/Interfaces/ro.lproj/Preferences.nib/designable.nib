@@ -98,6 +98,7 @@
                 <outlet property="_escapeWarningButton" destination="325" id="326"/>
                 <outlet property="_externalEditorButton" destination="272" id="274"/>
                 <outlet property="_findMatrix" destination="581" id="586"/>
+                <outlet property="_displayAsBookButton" destination="preview-cover-button" id="preview-cover-outlet"/>
                 <outlet property="_firstPageMatrix" destination="506" id="512"/>
                 <outlet property="_flashBackgroundButton" destination="977" id="1040"/>
                 <outlet property="_fontTextView" destination="yXO-Hz-joI" id="aJt-Fe-NOY"/>
@@ -1284,7 +1285,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Efectul Mausului" translatesAutoresizingMaskIntoConstraints="NO" id="330">
-                                            <rect key="frame" x="20" y="356" width="289" height="58" />
+                                            <rect key="frame" x="20" y="292" width="289" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="jZG-Z2-Z6q">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="46" />
@@ -1374,14 +1375,30 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Double Page Modes" translatesAutoresizingMaskIntoConstraints="NO" id="501">
-                                            <rect key="frame" x="20" y="426" width="289" height="70" />
+                                            <rect key="frame" x="20" y="362" width="289" height="134" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="5HC-lW-NDj">
-                                                <rect key="frame" x="0.0" y="0.0" width="289" height="58" />
+                                                <rect key="frame" x="0.0" y="0.0" width="289" height="122" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
+                                                <subviews><button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-button">
+ <rect key="frame" x="14" y="42" width="263" height="22"/>
+ <autoresizingMask key="autoresizingMask"/>
+ <buttonCell key="cell" type="check" title="Show first page alone as cover" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-cover-cell">
+ <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+ <font key="font" metaFont="system" size="11"/>
+ </buttonCell>
+ <connections><action selector="displayAsBookChanged:" target="-2" id="preview-cover-action"/></connections>
+ </button>
+ <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-note">
+ <rect key="frame" x="14" y="8" width="261" height="28"/>
+ <autoresizingMask key="autoresizingMask"/>
+ <textFieldCell key="cell" title="Applies on opening. Magic comments and&#10;PDF reading direction take precedence." id="preview-cover-note-cell">
+ <font key="font" metaFont="system" size="10"/>
+ <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+ <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+ </textFieldCell></textField>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="506">
-                                                        <rect key="frame" x="14" y="9" width="205" height="38" />
+                                                        <rect key="frame" x="14" y="73" width="205" height="38" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="205" height="18"/>
@@ -1411,7 +1428,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="External Editor" translatesAutoresizingMaskIntoConstraints="NO" id="555">
-                                            <rect key="frame" x="20" y="294" width="289" height="50" />
+                                            <rect key="frame" x="20" y="230" width="289" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="HX3-CB-y3r">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="38" />
@@ -1433,7 +1450,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Display" translatesAutoresizingMaskIntoConstraints="NO" id="hI9-DQ-pcp">
-                                            <rect key="frame" x="20" y="232" width="289" height="50" />
+                                            <rect key="frame" x="20" y="168" width="289" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="pGT-6l-9QB">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="38" />
@@ -1455,7 +1472,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Opening Source and Preview" translatesAutoresizingMaskIntoConstraints="NO" id="tTB-1d-ggh">
-                                            <rect key="frame" x="20" y="147" width="289" height="73" />
+                                            <rect key="frame" x="20" y="83" width="289" height="73" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="0Ql-da-r3f">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="61" />

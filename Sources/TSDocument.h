@@ -521,6 +521,11 @@ enum RootCommand
 @property           BOOL            useOldSyncParser;
 @property           BOOL            useConTeXtSyncParser;
 @property           BOOL            useAlternatePath;
+@property BOOL previewInitialBookDisplay;
+@property BOOL previewInitialRTLDisplay;
+@property BOOL previewHasDirectionComment;
+@property (strong) NSNumber *previewBookOverride;
+@property (strong) NSNumber *previewDirectionOverride;
 @property           BOOL            bookDisplay;
 @property           BOOL            RTLDisplay;
 @property           BOOL            useExplColor;
@@ -881,6 +886,7 @@ enum RootCommand
 
 - (NSString *)filterBackslashes:(NSString *)aString;
 - (NSStringEncoding)dataEncoding:(NSData *)theData;
+- (void)readPreviewArrangementFromData:(NSData *)data;
 - (void)annotationPanelWillClose:(NSNotification *)notification;
 
 
@@ -1062,3 +1068,12 @@ enum RootCommand
 
 // END PATCH
 
+
+@interface TSDocument (PreviewLayoutControls)
+- (BOOL)previewDisplaysAsBook;
+- (BOOL)previewDisplaysRTL;
+- (void)changePreviewLayout:(id)sender;
+- (void)changePreviewArrangement:(id)sender;
+- (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
+- (void)updatePreviewLayoutControls;
+@end

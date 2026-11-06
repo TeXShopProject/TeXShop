@@ -438,12 +438,15 @@ withDarkColors = NO;
 	self.logLineNumberView = nil;
 	self.logExtension = nil;
     self.bookDisplay = [SUD boolForKey:DisplayAsBookKey];
+    self.previewInitialBookDisplay = self.bookDisplay;
     NSInteger tempInt = [SUD integerForKey: PdfFirstPageStyleKey];
     if (tempInt == 1)
         self.RTLDisplay = NO;
     else
         self.RTLDisplay = YES;
     
+    self.previewInitialRTLDisplay = self.RTLDisplay;
+
 
 	lastCursorLocation = 0; // added by Terada
 	lastStringLength = 0; // added by Terada
@@ -2178,6 +2181,44 @@ in other code when an external editor is being used. */
 }
 
 
+// Parse only the document being opened/reloaded, never an inserted template.
+- (void)readPreviewArrangementFromData:(NSData *)data
+{
+    self.bookDisplay = self.previewInitialBookDisplay;
+    self.RTLDisplay = self.previewInitialRTLDisplay;
+    self.previewHasDirectionComment = NO;
+    NSString *source = [[NSString alloc] initWithData:data encoding:NSISOLatin9StringEncoding];
+    NSUInteger location = 0, count = 0;
+    while (location < source.length && count++ < 20) {
+        NSRange line = [source lineRangeForRange:NSMakeRange(location, 0)];
+        NSString *testString = [source substringWithRange:line];
+        NSRange parserRange;
+        parserRange = [testString rangeOfString:@"% !TEX bookDisplay"];
+            if (parserRange.location != NSNotFound)
+                self.bookDisplay = YES;
+        parserRange = [testString rangeOfString:@"% !TEX standardDisplay"];
+            if (parserRange.location != NSNotFound)
+            {
+                self.bookDisplay = NO;
+            }
+        parserRange = [testString rangeOfString:@"% !TEX PageDirectionL2R"];
+            if (parserRange.location != NSNotFound) {
+                self.RTLDisplay = NO;
+                self.previewHasDirectionComment = YES;
+            }
+        parserRange = [testString rangeOfString:@"% !TEX PageDirectionR2L"];
+            if (parserRange.location != NSNotFound)
+            {
+                self.RTLDisplay = YES;
+                self.previewHasDirectionComment = YES;
+            }
+        location = NSMaxRange(line);
+    }
+    [self.myPDFKitView applyPreviewArrangement];
+    [self.myPDFKitView2 applyPreviewArrangement];
+    [self updatePreviewLayoutControls];
+}
+
 - (NSStringEncoding)dataEncoding:(NSData *)theData {
 	NSString            *firstBytes, *encodingString, *testString, *spellcheckString, *numberingString;
 	NSRange             encodingRange, newEncodingRange, myRange, theRange, spellcheckRange, tabRange, pdfRange, parserRange, numberingRange;
@@ -2312,22 +2353,6 @@ in other code when an external editor is being used. */
         parserRange = [testString rangeOfString:@"% !TEX useAlternatePath"];
             if (parserRange.location != NSNotFound)
                 self.useAlternatePath = YES;
-        parserRange = [testString rangeOfString:@"% !TEX bookDisplay"];
-            if (parserRange.location != NSNotFound)
-                self.bookDisplay = YES;
-        parserRange = [testString rangeOfString:@"% !TEX standardDisplay"];
-            if (parserRange.location != NSNotFound)
-            {
-                self.bookDisplay = NO;
-            }
-        parserRange = [testString rangeOfString:@"% !TEX PageDirectionL2R"];
-            if (parserRange.location != NSNotFound)
-                self.RTLDisplay = NO;
-        parserRange = [testString rangeOfString:@"% !TEX PageDirectionR2L"];
-            if (parserRange.location != NSNotFound)
-            {
-                self.RTLDisplay = YES;
-            }
        // parserRange = [testString rangeOfString:@"% !TEX numberingCorrection Automatic"];
        // if (parserRange.location != NSNotFound)
        //     self.automaticCorrection = YES;
@@ -2619,6 +2644,7 @@ in other code when an external editor is being used. */
 	myData = sourceReloadData ?: [NSData dataWithContentsOfURL:absoluteURL options:0 error:outError];
     if (!myData) return NO;
 	_encoding = _tempencoding = [self dataEncoding: myData];
+    [self readPreviewArrangementFromData:myData];
     
 /*
 
@@ -6374,6 +6400,9 @@ if (! useFullSplitWindow) {
 
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
+    if (anItem.action == @selector(changePreviewLayout:) ||
+        anItem.action == @selector(changePreviewArrangement:))
+        return [self validatePreviewLayoutItem:anItem];
 // added by Terada (from this line)
     if (anItem.action == NSSelectorFromString(@"changePreviewAppearance:"))
         return TSValidatePreviewAppearanceChoice(anItem, SUD);
