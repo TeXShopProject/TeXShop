@@ -95,8 +95,6 @@ NSString *GSBinPath = @"GSBinPath";
 NSString *TexCommandKey = @"TexCommand";
 NSString *TexGSCommandKey = @"TexGSCommand";
 NSString *TexScriptCommandKey = @"TexScriptCommand";
-NSString *MetaPostCommandKey = @"MetaPostCommand";
-NSString *BibtexCommandKey = @"BibtexCommand"; // comment out by Terada (added back in, but unused: Koch)
 NSString *DistillerCommandKey = @"DistillerCommand";
 NSString *MatrixSizeKey = @"matrixsize"; // Jonas' Matrix addition
 NSString *TSHasBeenUsedKey = @"TSHasBeenUsed";
@@ -145,7 +143,6 @@ NSString *PdfPageBack_GKey = @"Pdfbackground_G";
 NSString *PdfPageBack_BKey = @"Pdfbackground_B";
 NSString *ExternalEditorTypesetAtStartKey = @"ExternalEditorTypesetAtStart";
 NSString *ConvertLFKey = @"ConvertLF";
-NSString *UseOgreKitKey = @"UseOgreKit";
 NSString *FindMethodKey = @"FindMethod";
 NSString *LineNumberSizeKey = @"LineNumberSize";
 NSString *BringPdfFrontOnAutomaticUpdateKey = @"BringPdfFrontOnAutomaticUpdate";
@@ -161,13 +158,10 @@ NSString *UseOldHeadingCommandsKey = @"UseOldHeadingCommands";
 NSString *SyncMethodKey = @"SyncMethod";
 NSString *UseOutlineKey = @"UseOutline";
 NSString *LeftRightArrowsAlwaysPageKey = @"LeftRightArrowsAlwaysPage";
-NSString *ReleaseDocumentClassesKey = @"ReleaseDocumentClasses"; // 0 = if 10.4.3 or higher; 1 = no; 2 = yes
 NSString *RedConsoleAfterErrorKey = @"RedConsoleAfterError"; // NO or YES
 NSString *PreviewDrawerOpenKey = @"PreviewDrawerOpen"; // NO or YES
 NSString *ConTeXtTagsKey = @"ConTeXtTags"; // NO or YES
-NSString *RevisePathKey = @"RevisePath"; // NO or YES
 NSString *OtherTeXExtensionsKey = @"OtherTeXExtensions";
-NSString *ReleaseDocumentOnLeopardKey = @"ReleaseDocumentOnLeopard";
 NSString *BibDeskCompletionKey = @"BibDeskCompletion";
 NSString *ConsoleBackgroundColor_RKey = @"ConsoleBackgroundColor_R";
 NSString *ConsoleBackgroundColor_GKey = @"ConsoleBackgroundColor_G";
@@ -214,15 +208,12 @@ NSString *invisibleCharGreenKey = @"invisibleCharGreen"; //Koch
 NSString *invisibleCharBlueKey = @"invisibleCharBlue"; //Koch
 NSString *brieflyFlashYellowForMatchKey = @"brieflyFlashYellowForMatch"; //Koch
 NSString *syncWithRedOvalsKey = @"syncWithRedOvals";
-NSString *AutoSaveKey = @"AutoSave"; // inactive
 NSString *RightJustifyIfAnyKey = @"RightJustifyIfAny";
 NSString *AutoSaveEnabledKey = @"AutoSaveEnabled";
 NSString *fullscreenPageStyleKey = @"fullscreenPageStyle";
 NSString *fullscreenResizeOptionKey = @"fullscreenResizeOption";
 NSString *WatchServerKey = @"WatchServer";
 NSString *SourceInterlineSpaceKey = @"SourceInterlineSpace";
-NSString *SpellingLanguageKey = @"SpellingLanguage";
-NSString *SpellingAutomaticLanguageKey = @"SpellingAutomaticLanguage";
 NSString *TagMenuInMenuBarKey = @"TagMenuInMenuBar";
 NSString *ResetSourceTextColorEachTimeKey = @"ResetSourceTextColorEachTime";
 NSString *SourceAndPreviewInSameWindowKey = @"SourceAndPreviewInSameWindow";
@@ -320,9 +311,6 @@ NSString *ExternalEditorNotification = @"ExternalEditorNotification";
 NSString *CommandCompletionCharNotification = @"CommandCompletionCharNotification";
 NSString *SourceColorChangedNotification = @"SourceColorChangedNotification";
 NSString *PreviewColorChangedNotification = @"PreviewColorChangedNotification";
-NSString *DoNotFixTeXCrashKey = @"DoNotFixTeXCrash";
-NSString *DisplayLogInfoKey = @"DisplayLogInfo";
-NSString *UseTerminationHandlerKey = @"UseTerminationHandler";
 NSString *TextMateSyncKey = @"TextMateSync";
 NSString *OtherEditorSyncKey = @"OtherEditorSync";
 
@@ -337,9 +325,7 @@ NSString *XMLProjectTagKey = @"XMLProjectTag";
 NSString *XMLFigureTagKey = @"XMLFigureTag";
 NSString *XMLTableTagKey = @"XMLTableTag";
 NSString *XMLMarkTagKey = @"XMLMarkTag";
-NSString *CreateImageKey = @"CreateImage";
 NSString *IncrementalSearchKey = @"IncrementalSearch";
-NSString *NewToolbarIconsKey = @"NewToolbarIcons";
 NSString *SyncUseTabsKey = @"SyncUseTabs";
 NSString *AltPathKey = @"AltPath";
 NSString *IgnoreStartOnRebootKey = @"IgnoreStartOnReboot";
@@ -367,7 +353,6 @@ NSString *BringFrontOnTypesetKey = @"BringFrontOnTypeset";
 // NSString *DarkModeInvertPreviewKey = @"DarkModeInvertPreview";
 
 
-NSString *RepeatTypesetOnError13Key = @"RepeatTypesetOnError13";
 
 
 

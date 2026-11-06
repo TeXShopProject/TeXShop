@@ -36,8 +36,6 @@
 	<string>NO</string>
 	<key>BibDeskCompletion</key>
 	<string>NO</string>
-	<key>BibtexCommand</key>
-	<string>1</string>
 	<key>BibTeXengine</key>
 	<string>pbibtex</string>
 	<key>brieflyFlashYellowForMatch</key>
@@ -56,8 +54,6 @@
 	<string>YES</string>
 	<key>commandblue</key>
 	<string> 1.0 </string>
-	<key>CommandCompletionAlterateMarkShortcut</key>
-	<string>YES</string>
 	<key>CommandCompletionChar</key>
 	<string>ESCAPE</string>
 	<key>commandgreen</key>
@@ -112,8 +108,6 @@
 	<string>DOSJapanese</string>
 	<key>ExternalEditorTypesetAtStart</key>
 	<string>YES</string>
-	<key>FastColor</key>
-	<string>NO</string>
 	<key>FlashBackgroundEnabled</key>
 	<string>NO</string>
 	<key>foreground_B</key>
@@ -190,8 +184,6 @@
 	<string> 0.02 </string>
 	<key>matrixsize</key>
 	<integer>12</integer>
-	<key>MetaPostCommand</key>
-	<string>0</string>
 	<key>NewLineCharacterKind</key>
 	<string>0</string>
 	<key>NoScrollEnabled</key>
@@ -262,18 +254,10 @@
 	<string>NO</string>
 	<key>RefreshTime</key>
 	<string>1.00</string>
-	<key>ReleaseDocumentClasses</key>
-	<string>1</string>
-	<key>ReleaseDocumentOnLeopard</key>
-	<string>YES</string>
-	<key>RevisePath</key>
-	<string>YES</string>
 	<key>RightJustify</key>
 	<string>NO</string>
 	<key>SaveDocumentFont</key>
 	<string>YES</string>
-	<key>SavePSCommand</key>
-	<string>NO</string>
 	<key>SaveRelated</key>
 	<string>NO</string>
 	<key>ShowFullPathEnabled</key>
@@ -322,8 +306,6 @@
 	<string>YES</string>
 	<key>UseExternalEditor</key>
 	<string>NO</string>
-	<key>UseOgreKit</key>
-	<string>YES</string>
 	<key>UseOldHeadingCommands</key>
 	<string>NO</string>
 	<key>UseOutline</key>
@@ -332,8 +314,6 @@
 	<string>NO</string>
 	<key>FindMethod</key>
 	<string>1</string>
-	<key>AutoSave</key>
-	<string>NO</string>
 	<key>RightJustifyIfAny</key>
 	<string>NO</string>
 	<key>AutoSaveEnabled</key>
@@ -346,10 +326,6 @@
 	<string>YES</string>
 	<key>SourceInterlineSpace</key>
 	<string>1.0</string>
-	<key>SpellingLanguage</key>
-	<string>U. S. English</string>
-	<key>SpellingAutomaticLanguage</key>
-	<true/>
 	<key>TagMenuInMenuBar</key>
 	<false/>
 	<key>ResetSourceTextColorEachTime</key>
@@ -432,12 +408,6 @@
 	<array/>
 	<key>ExtraCommandsNotToCheckParameters</key>
 	<array/>
-	<key>DoNotFixTeXCrash</key>
-	<false/>
-	<key>DisplayLogInfo</key>
-	<false/>
-	<key>UseTerminationHandler</key>
-	<false/>
 	<key>TextMateSync</key>
 	<false/>
 	<key>OtherEditorSync</key>
@@ -464,15 +434,7 @@
 	<true/>
 	<key>XMLMarkTag</key>
 	<true/>
-	<key>RepeatTypesetOnError13</key>
-	<false/>
-	<key>CreateImage</key>
-	<integer>1</integer>
 	<key>IncrementalSearch</key>
-	<true/>
-	<key>NewToolbar</key>
-	<false/>
-	<key>NewToolbarIcons</key>
 	<true/>
 	<key>SyncUseTabs</key>
 	<false/>

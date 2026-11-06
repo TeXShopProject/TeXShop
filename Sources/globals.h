@@ -22,26 +22,6 @@
  *
  */
 
-/* KEY TESTING DEFAULTS
-    defaults write TeXShop DisplayLogInfo YES
-    defaults write TeXShop UseTerminationHandler YES
-    defaults write TeXShop RepeatTypesetOnError13 YES
- 
-    In the current code, if the bug occurs, the program will typeset again. This happened to me, and the Termination Reason was
-    NSTaskTerminationReasonUncaughtSignal = 2
- 
-    Also the status was 13; this seems to be the key sign of this sort of error. According to the webb, error 13 means "couldn't posix spawn" or "permission denied".
-    Here status means [myTask terminationStatus]
-    Later I found the following url: https://support.circleci.com/hc/en-us/articles/360002341673-Identifying-Exit-Codes-and-their-meanings
-    This page has a table listing "standard Linux signals" and 13 = Broken pipe: write to pipe with no readers; see pipe(7)". This suggests that
-    the real bug occurs in the routine which reads standard output and writes it to the console.
- 
-    The final default says that if termination leads to status 13, TeXShop should remove the aux file and typeset again. For testing, the default value NO
-    is reasonable, but if version 4.32 is released, it should be set to YES until the bug is fixed
- 
- 
-*/
-
 /*
  Compile options. Comment out to compile on earlier versions of macOS, with limited facilities
 */
@@ -352,8 +332,6 @@ extern NSString *GSBinPath;
 extern NSString *TexCommandKey;
 extern NSString *TexGSCommandKey;
 extern NSString *TexScriptCommandKey;
-extern NSString *MetaPostCommandKey;
-extern NSString *BibtexCommandKey; // comment out by Terada (added back in, but unused; Koch)
 extern NSString *DistillerCommandKey;
 extern NSString *MatrixSizeKey; // Jonas' Matrix addition
 extern NSString *TSHasBeenUsedKey;
@@ -403,7 +381,6 @@ extern NSString *PdfPageBack_GKey;
 extern NSString *PdfPageBack_BKey;
 extern NSString *ExternalEditorTypesetAtStartKey;
 extern NSString *ConvertLFKey;
-extern NSString *UseOgreKitKey;
 extern NSString *FindMethodKey;
 extern NSString *LineNumberSizeKey;
 extern NSString *BringPdfFrontOnAutomaticUpdateKey;
@@ -419,13 +396,10 @@ extern NSString *UseOldHeadingCommandsKey;
 extern NSString *SyncMethodKey;
 extern NSString *UseOutlineKey;
 extern NSString *LeftRightArrowsAlwaysPageKey;
-extern NSString *ReleaseDocumentClassesKey;
 extern NSString *RedConsoleAfterErrorKey;
 extern NSString *PreviewDrawerOpenKey;
 extern NSString *ConTeXtTagsKey;
-extern NSString *RevisePathKey;
 extern NSString *OtherTeXExtensionsKey;
-extern NSString *ReleaseDocumentOnLeopardKey;
 extern NSString *BibDeskCompletionKey;
 extern NSString *ConsoleBackgroundColor_RKey;
 extern NSString *ConsoleBackgroundColor_GKey;
@@ -474,15 +448,12 @@ extern NSString *invisibleCharGreenKey; //Koch
 extern NSString *invisibleCharBlueKey; //Koch
 extern NSString *brieflyFlashYellowForMatchKey; //Koch
 extern NSString *syncWithRedOvalsKey;
-extern NSString *AutoSaveKey;
 extern NSString *RightJustifyIfAnyKey; //Koch; right justify lines containing Persian anywhere in the line
 extern NSString *AutoSaveEnabledKey;
 extern NSString *fullscreenPageStyleKey;
 extern NSString *fullscreenResizeOptionKey;
 extern NSString *WatchServerKey;
 extern NSString *SourceInterlineSpaceKey;
-extern NSString *SpellingLanguageKey;
-extern NSString *SpellingAutomaticLanguageKey;
 extern NSString *TagMenuInMenuBarKey;
 extern NSString *ResetSourceTextColorEachTimeKey;
 extern NSString *SourceAndPreviewInSameWindowKey;
@@ -523,9 +494,6 @@ extern NSString *TurnOffParameterSpellCheckKey;
 extern NSString *ExceptionListExcludesParametersKey; // if YES while turning off command spell checking, list of words to spell check parameters
 extern NSString *ExtraCommandsToCheckParametersKey; // array of keywords whose parameters should be spell checked
 extern NSString *ExtraCommandsNotToCheckParametersKey; // array of keywhords whose parameters should not be spell checked
-extern NSString *DoNotFixTeXCrashKey;
-extern NSString *DisplayLogInfoKey;
-extern NSString *UseTerminationHandlerKey;
 extern NSString *TextMateSyncKey;
 extern NSString *OtherEditorSyncKey;
 
@@ -541,10 +509,7 @@ extern NSString *XMLFigureTagKey;
 extern NSString *XMLTableTagKey;
 extern NSString *XMLMarkTagKey;
 
-extern NSString *RepeatTypesetOnError13Key;
-extern NSString *CreateImageKey;
 extern NSString *IncrementalSearchKey;
-extern NSString *NewToolbarIconsKey;
 extern NSString *SyncUseTabsKey;
 extern NSString *AltPathKey;
 extern NSString *IgnoreStartOnRebootKey;
