@@ -6,10 +6,13 @@ run with the output helpers of TSEncodingSupport, on a real pipe and on pieces o
 every width from 1 to 7 bytes. They check that the console keeps waiting for output when a
 whole piece is kept for the next one, that a kept piece is shown when nothing more comes,
 that a UTF-8 line in a Shift JIS or EUC-JP document reads the same however it is divided,
-that line breaks TeX puts inside a character are mended for LF, CRLF and CR, and that a
-backslash and a tilde typed in the console reach TeX as 0x5C and 0x7E in every Japanese
-encoding. Nothing is shown on screen. --mutation=NAME undoes one of these (rearm, hold,
-flush, cr, input, order) and the test must then fail."""
+that line breaks TeX puts inside a character are mended for LF, CRLF and CR, that the start
+of a character is kept across a pause longer than the console waits, until the rest of it or
+the end of the output comes, and that a backslash and a tilde typed in the console reach TeX
+as 0x5C and 0x7E in every encoding and filter mode, through the production backslash filter.
+It also checks that a source file is read whole in its own encoding for Sync. Nothing is
+shown on screen. --mutation=NAME undoes one of these (rearm, hold, flush, cr, input, order,
+pause, yen, source) and the test must then fail."""
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -27,6 +30,9 @@ output = cut(doc, '// Show a piece of TeX output in the console and look in it f
 jobs = (root/'Sources/TSDocument-Jobs.m').read_text(encoding='latin1')
 command = jobs[jobs.index('- (void) doTexCommand: sender'):]
 command = command[:command.index('\n}\n') + 3]
+filters = enc[enc.index('// replace backslashes by yens'):].rstrip() + '\n'
+filter_method = cut(doc, '- (NSString *)filterBackslashes:', '// The code below to handle line break algorithms')
+sync = (root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
 
 def mutate(text, old, new):
     assert old in text, old; return text.replace(old, new)
@@ -35,15 +41,23 @@ if mutation == 'rearm':
                     '        // Wait for more output even when all of this piece was kept for the next one.\n        if (! atEnd)\n',
                     '        if ([myData length])\n            [self showConsoleOutputData: myData];\n        if (! atEnd && [myData length])\n')
 elif mutation == 'hold':
-    helpers = mutate(helpers, 'if (encoding != NSUTF8StringEncoding && length - lineStart <= TSLongestKeptLine)',
+    helpers = mutate(helpers, 'if (line && encoding != NSUTF8StringEncoding && length - lineStart <= TSLongestKeptLine)',
                      'if (NO && length - lineStart <= TSLongestKeptLine)')
 elif mutation == 'flush':
-    output = mutate(output, '[self showConsoleOutputData: kept];', '')
+    output = mutate(output, '[self showConsoleOutputData: [kept subdataWithRange: NSMakeRange(0, kept.length - unfinished)]];', ';')
+elif mutation == 'pause':
+    output = mutate(output, 'NSUInteger unfinished = [TSEncodingSupport lengthOfUnfinishedCharacterAtEndOfData: kept encoding: self->_encoding];',
+                    'NSUInteger unfinished = 0;')
+elif mutation == 'yen':
+    command = mutate(command, '(g_shouldFilter == kMacJapaneseFilterMode ? filterYenToBackslash(command) : command)', 'command')
+elif mutation == 'source':
+    helpers = mutate(helpers, '+ (NSString *)stringForSourceData:(NSData *)data encoding:(NSStringEncoding)encoding\n{\n',
+                     '+ (NSString *)stringForSourceData:(NSData *)data encoding:(NSStringEncoding)encoding\n{\n\treturn [self displayStringForData:data encoding:encoding];\n')
 elif mutation == 'cr':
     helpers = mutate(helpers, "if (b[i] == '\\r') {", "if (NO) {")
 elif mutation == 'input':
-    command = mutate(command, '[[TSEncodingSupport sharedInstance] dataForText: command\n\t\t\tencoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) byteOrderMark: TSNoByteOrderMark]',
-                     '[command dataUsingEncoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) allowLossyConversion:YES]')
+    command = mutate(command, '[[TSEncodingSupport sharedInstance] dataForText: (g_shouldFilter == kMacJapaneseFilterMode ? filterYenToBackslash(command) : command)\n\t\t\tencoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) byteOrderMark: TSNoByteOrderMark]',
+                     '[filterYenToBackslash(command) dataUsingEncoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) allowLossyConversion:YES]')
 elif mutation == 'order':
     helpers = mutate(helpers, '\tif ((text = [[NSString alloc] initWithBytes:bytes length:length encoding:NSUTF8StringEncoding]))\n\t\treturn text;\n',
                      '\tif ((text = [[NSString alloc] initWithBytes:bytes length:length encoding:encoding]))\n\t\treturn text;\n')
@@ -68,13 +82,19 @@ typedef enum { TSNoByteOrderMark = 0, TSUTF8ByteOrderMark, TSUTF16BigEndianByteO
 + (instancetype)sharedInstance;
 + (NSString *)displayStringForData:(NSData *)data encoding:(NSStringEncoding)encoding;
 + (NSUInteger)lengthOfIncompleteCharacterAtEndOfData:(NSData *)data encoding:(NSStringEncoding)encoding;
++ (NSUInteger)lengthOfUnfinishedCharacterAtEndOfData:(NSData *)data encoding:(NSStringEncoding)encoding;
++ (NSString *)stringForSourceData:(NSData *)data encoding:(NSStringEncoding)encoding;
 - (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark;
 @end
+static NSString *yenString = @"\u00a5";
+NSMutableString *filterBackslashToYen(NSString *aString);
+NSMutableString *filterYenToBackslash(NSString *aString);
 @implementation TSEncodingSupport
 + (instancetype)sharedInstance { static TSEncodingSupport *s; if (! s) s = [self new]; return s; }
 HELPERS
 JAPANESE
 @end
+FILTERS
 @interface FakeHandle : NSObject
 @property NSData *nextData;
 @property NSUInteger arms;
@@ -119,7 +139,7 @@ JAPANESE
 @end
 @implementation Probe
 - (NSData *)availableDataOrError:(id)h { return [h isKindOfClass:[FakeHandle class]] ? [(FakeHandle *)h nextData] : [(NSFileHandle *)h availableData]; }
-- (NSString *)filterBackslashes:(NSString *)s { return s; }
+FILTERMETHOD
 OUTPUT
 COMMAND
 @end
@@ -180,6 +200,38 @@ int main(int argc, char **argv) { @autoreleasepool {
     check([shown(p) isEqualToString:@"\u65e5\u672c\u8a9e\u306e\u5165\u529b: "] && p->_consoleCarry.length == 0, @"a Japanese line without a line break is shown after a pause");
     p = throughPipe(utf8, @[B("? ")], 0.1, NO);
     check([shown(p) isEqualToString:@"? "], @"TeX's prompt is shown at once");
+    // A character divided by a pause longer than the console waits still reads whole.
+    struct { NSStringEncoding doc; NSArray *steps; NSString *expected; const char *name; } slow[] = {
+        {utf8, @[B("\xC3"), B("\xA9\n")], @"\u00e9\n", "a two-byte character"},
+        {utf8, @[B("\xE3"), B("\x81\x82\n")], @"\u3042\n", "a three-byte character"},
+        {utf8, @[B("\xE3\x81"), B("\x82\n")], @"\u3042\n", "a three-byte character after two bytes"},
+        {utf8, @[B("\xF0\x9D"), B("\x91\xA5\n")], @"\U0001d465\n", "a four-byte character"},
+        {utf8, @[B("ok \xE6\r\n"), B("\x97\xA5\n")], @"ok \r\n\u65e5\n", "a character TeX broke by CRLF"},
+        {utf8, @[B("ok \xE6\n\x97"), B("\xA5\n")], @"ok \n\u65e5\n", "a character TeX broke by LF, divided after the break"},
+        {sjis, @[B("\xE6"), B("\x97\xA5\n")], @"\u65e5\n", "UTF-8 in a Shift JIS document"},
+    };
+    for (size_t i = 0; i < sizeof(slow) / sizeof(slow[0]); i++) {
+        p = throughPipe(slow[i].doc, slow[i].steps, 0.45, YES);
+        check([shown(p) isEqualToString:slow[i].expected] && p->_consoleCarry.length == 0,
+              [NSString stringWithFormat:@"%s survives a pause of 0.45 seconds", slow[i].name]);
+    }
+    p = throughPipe(sjis, @[[@"\u65e5\u672c\u8a9e\u306e\u5165\u529b" dataUsingEncoding:utf8], B("\xE3"), B("\x81\x82: ")], 0.45, NO);
+    check([shown(p) isEqualToString:@"\u65e5\u672c\u8a9e\u306e\u5165\u529b\u3042: "], @"a Japanese prompt is shown while it waits, and a character divided by a pause in it reads whole");
+    p = throughPipe(utf8, @[B("a\xE3")], 0.45, NO);
+    check([shown(p) isEqualToString:@"a"] && p->_consoleCarry.length == 1, @"the start of a character is still kept after a pause");
+    p = throughPipe(utf8, @[B("a\xE3")], 0.45, YES);
+    check(shown(p).length == 2 && [shown(p) hasPrefix:@"a"] && p->_consoleCarry.length == 0, @"what is still kept is shown once when the output ends");
+    p = P(utf8); h = [FakeHandle new]; feed(p, h, B("\xE3")); run(0.45);
+    FakeHandle *next = [FakeHandle new]; feed(p, next, B("x\n"));
+    check([shown(p) isEqualToString:@"x\n"], @"what is kept from one job is not shown with the next");
+    // A source file is read whole in its own encoding for Sync, unlike output.
+    NSString *source = @"\u65e5\u672c\u8a9e\\section{x}\n";
+    NSMutableData *utf16 = [B("\xFF\xFE") mutableCopy]; [utf16 appendData:[source dataUsingEncoding:NSUTF16LittleEndianStringEncoding]];
+    check([[TSEncodingSupport stringForSourceData:utf16 encoding:NSUnicodeStringEncoding] isEqualToString:source], @"a UTF-16 source is read in UTF-16");
+    check([[TSEncodingSupport stringForSourceData:B("\xC2\xA2\n") encoding:euc] isEqualToString:@"\u8535\n"], @"an EUC-JP source that is also UTF-8 is read in EUC-JP");
+    check([[TSEncodingSupport stringForSourceData:[@"\u9b31\n" dataUsingEncoding:sjis] encoding:sjis] isEqualToString:@"\u9b31\n"], @"a Shift JIS source that is also UTF-8 is read in Shift JIS");
+    check([[TSEncodingSupport stringForSourceData:[source dataUsingEncoding:utf8] encoding:euc] isEqualToString:source], @"a UTF-8 source that is not EUC-JP is read in UTF-8");
+    check(SYNCREADS, @"Sync reads source files with the source reader");
     // A line reads the same however the output is divided.
     NSString *mixed = @"\u65e5\u672c\u8a9e\n\u3042\u3044\u3046\nl.3 \u5b8c\u74a7\u306a\u725b\u4e3c\n? ";
     struct { NSStringEncoding doc; NSData *data; const char *name; } outputs[] = {
@@ -220,25 +272,27 @@ int main(int argc, char **argv) { @autoreleasepool {
     };
     for (size_t i = 0; i < sizeof(docs) / sizeof(docs[0]); i++)
         for (int filter = 0; filter <= 1; filter++)
-            for (int yen = 0; yen <= (docs[i].doc == utf8 || docs[i].doc == NSUnicodeStringEncoding ? 0 : 1); yen++) {
+            for (int yen = 0; yen <= 1; yen++) {
+                // A yen sign typed in a Unicode document is a yen sign, except in yen mode.
+                if (yen && ! filter && (docs[i].doc == utf8 || docs[i].doc == NSUnicodeStringEncoding))
+                    continue;
                 g_shouldFilter = filter ? kMacJapaneseFilterMode : kNoFilterMode;
                 Probe *c = P(docs[i].doc); FakeHandle *w = [FakeHandle new]; FakeText *field = [FakeText new];
                 field.stringValue = yen ? @"\u00a5relax~" : @"\\relax~";
                 c->typesetStart = YES; c.inputPipe = w; c.writeHandle = w; c->texCommand = (id)field;
                 [c doTexCommand:nil];
                 BOOL ok = [w.written isEqualToData:B("\\relax~\n")];
-                if (! ok || (filter == 0 && yen == 0))
-                    check(ok, [NSString stringWithFormat:@"console input in %s (%s, typed %s) is 5C ... 7E", docs[i].name,
+                check(ok, [NSString stringWithFormat:@"console input in %s (%s, typed %s) is 5C ... 7E", docs[i].name,
                                filter ? "yen mode" : "backslash mode", yen ? "yen" : "backslash"]);
             }
     return failures ? 1 : 0;
 }}
 '''
-program = program.replace('HELPERS', helpers).replace('JAPANESE', japanese).replace('OUTPUT', output).replace('COMMAND', command)
+program = program.replace('HELPERS', helpers).replace('JAPANESE', japanese).replace('OUTPUT', output).replace('COMMAND', command).replace('FILTERMETHOD', filter_method).replace('SYNCREADS', 'YES' if 'stringForSourceData:myData encoding:theEncoding' in sync else 'NO').replace('FILTERS', filters)
 with tempfile.TemporaryDirectory(prefix='texshop-console-output-') as folder:
     p = Path(folder); (p/'test.m').write_text(program, encoding='latin1')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', str(p/'test.m'), '-o', str(p/'test')], check=True)
     r = subprocess.run([str(p/'test')], timeout=120)
     if r.returncode:
         raise SystemExit('FAIL: TeX output or console input is divided or converted wrongly')
-    print('PASS: TeX output reaches the console whole however it is divided, and console input keeps 0x5C and 0x7E')
+    print('PASS: TeX output reaches the console whole however it is divided, and console input keeps 0x5C and 0x7E, and sources are read in their encoding')

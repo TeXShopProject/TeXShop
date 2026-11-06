@@ -2126,7 +2126,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 
 		// TeX reads what is typed in the encoding of the document (UTF-8 for a UTF-16 document),
 		// with backslashes and tildes written as 0x5C and 0x7E, as when the source is saved.
-		myData = [[TSEncodingSupport sharedInstance] dataForText: command
+		// In yen mode a yen sign stands for the backslash in every encoding, UTF-8 included.
+		myData = [[TSEncodingSupport sharedInstance] dataForText: (g_shouldFilter == kMacJapaneseFilterMode ? filterYenToBackslash(command) : command)
 			encoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) byteOrderMark: TSNoByteOrderMark];
 		[self.writeHandle writeData: myData];
 		// added by mitsu --(L) reflect tex input and clear tex input field in console window

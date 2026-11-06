@@ -7696,13 +7696,16 @@ if (! useFullSplitWindow) {
         if (incomplete) {
             _consoleCarry = [myData subdataWithRange: NSMakeRange(myData.length - incomplete, incomplete)];
             myData = [myData subdataWithRange: NSMakeRange(0, myData.length - incomplete)];
-            // Show what is kept if nothing more comes soon, as when TeX waits for input.
+            // Show what is kept if nothing more comes soon, as when TeX waits for input, but go on
+            // keeping the start of a character, so that it can still join the rest of it.
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (generation == self->_consoleCarryGeneration && self->_consoleCarryHandle == myFileHandle
                     && self.readHandle == myFileHandle && self->_consoleCarry.length) {
                     NSData *kept = self->_consoleCarry;
-                    self->_consoleCarry = nil;
-                    [self showConsoleOutputData: kept];
+                    NSUInteger unfinished = [TSEncodingSupport lengthOfUnfinishedCharacterAtEndOfData: kept encoding: self->_encoding];
+                    self->_consoleCarry = unfinished ? [kept subdataWithRange: NSMakeRange(kept.length - unfinished, unfinished)] : nil;
+                    if (kept.length > unfinished)
+                        [self showConsoleOutputData: [kept subdataWithRange: NSMakeRange(0, kept.length - unfinished)]];
                 }
             });
         }

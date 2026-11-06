@@ -6372,7 +6372,7 @@ else
  
  
  
- aString = [TSEncodingSupport displayStringForData:myData encoding:theEncoding] ;
+ aString = [TSEncodingSupport stringForSourceData:myData encoding:theEncoding] ;
  sourceText[i + 1] = aString;
  sourcelength[i + 1] = [sourceText[i + 1] length];
  }
