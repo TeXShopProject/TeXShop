@@ -128,7 +128,7 @@ for ja in (False,True):
  first_cells=[first_version,first_os,first_cpu,cell(first['app'],'App',first['tag'],ja),cell(first['source'],'Source',first['tag'],ja)]
  rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(first_cells))+'</tr>')
  heading=''.join('<th scope="col">'+esc(x)+'</th>' for x in labels)
- back='<a href="downloads-ja.html">‹ リリース履歴</a>' if ja else '<a href="downloads.html">‹ Releases</a>'
+ back='<a href="downloads-ja.html">‹ ダウンロード</a>' if ja else '<a href="downloads.html">‹ Downloads</a>'
  main=f'<main class="archive-content downloads"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)
 print('Generated',len(rows),'rows per page')
