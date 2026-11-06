@@ -138,6 +138,7 @@
 	IBOutlet NSTextField *_kpsetoolField; // added by Terada
 	IBOutlet NSTextField *_bibTeXengineField; // added by Terada
 	IBOutlet NSButtonCell *_makeatletterButton; // added by Terada
+	IBOutlet NSButtonCell *_expl3SyntaxColorButton;
 	IBOutlet NSButton *_autoSaveEnabledButton;
 	IBOutlet NSButton *_keepBackupButton;
 	IBOutlet NSButton *_saveEncodingMenuButton;
@@ -388,6 +389,7 @@
 - (IBAction)kpsetoolChanged:sender; // added by Terada
 - (IBAction)bibTeXengineChanged:sender; // added by Terada
 - (IBAction)makeatletterChanged:sender; // added by Terada
+- (IBAction)expl3SyntaxColorPressed:sender;
 - (IBAction)autoSaveEnabledPressed:sender;
 - (IBAction)keepBackupPressed:sender;
 - (IBAction)saveEncodingMenuPressed:sender;

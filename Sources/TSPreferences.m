@@ -202,11 +202,15 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 //-----------------------------------
 {
     BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
+    BOOL oldMakeatletter = [SUD boolForKey:MakeatletterEnabledKey];
 	[SUD setPersistentDomain:oldDefaults forName:TSPreferencesDomainName()];
 	[SUD synchronize];
 	[self updateControlsFromUserDefaults:SUD];
     if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
         [TSSpellSupport preferencesDidChange];
+    // Open documents color commands again when @ is no longer, or now, part of their names.
+    if (oldMakeatletter != [SUD boolForKey:MakeatletterEnabledKey])
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object:self];
     
     // KOCH
     // Here is the spot where we need to redraw the document and console with the remembered fonts
@@ -218,6 +222,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (IBAction)setDefaults:sender
 {
     BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
+    BOOL oldMakeatletter = [SUD boolForKey:MakeatletterEnabledKey];
 
 	NSString *fileName;
 	NSDictionary *factoryDefaults, *oldDefaults;
@@ -266,6 +271,8 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	[self updateControlsFromUserDefaults:SUD];
     if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
         [TSSpellSupport preferencesDidChange];
+    if (oldMakeatletter != [SUD boolForKey:MakeatletterEnabledKey])
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object:self];
     
     // KOCH
     [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontRememberNotification object:self];
@@ -640,6 +647,14 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	
 	makeatletterTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
+}
+
+// Each document reads this when it opens; the Source menu still turns expl3 coloring on and off for one document.
+- (IBAction)expl3SyntaxColorPressed:sender
+{
+	// register the undo message first
+	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:expl3SyntaxColoringKey] forKey:expl3SyntaxColoringKey];
+	[SUD setBool:(_expl3SyntaxColorButton.state == NSControlStateValueOn) forKey:expl3SyntaxColoringKey];
 }
 
 // Autosave is read once at launch, so a change takes effect after TeXShop restarts.
@@ -2449,6 +2464,7 @@ This method retrieves the application preferences from the defaults object and s
 	[_showNewLineCharacterButton setState:[defaults boolForKey:showNewLineCharacterKey]]; // added by Terada
     [self updateInvisibleCharacterControls:defaults];
 	[_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]]; // added by Terada
+	[_expl3SyntaxColorButton setState:[defaults boolForKey:expl3SyntaxColoringKey]];
 	[_autoSaveEnabledButton setState:[defaults boolForKey:AutoSaveEnabledKey]];
 	[_keepBackupButton setState:[defaults boolForKey:KeepBackupKey]];
 	_keepBackupButton.enabled = ![defaults boolForKey:AutoSaveEnabledKey];

@@ -150,6 +150,7 @@
                 <outlet property="_syncTabButton" destination="dK5-7I-ymJ" id="bFg-dr-rDb"/>
                 <outlet property="_syntaxColorButton" destination="683" id="690"/>
                 <outlet property="_makeatletterButton" destination="7Du-ET-K2e" id="GPN-5N-j3a"/>
+                <outlet property="_expl3SyntaxColorButton" destination="vpM-CP-ZNR" id="9Gj-Oi-GAu"/>
                 <outlet property="_autoSaveEnabledButton" destination="0nU-mu-Gem" id="8Wb-Th-aAm"/>
                 <outlet property="_keepBackupButton" destination="n6g-kU-S18" id="pLI-tc-cX8"/>
                 <outlet property="_saveEncodingMenuButton" destination="uNC-8T-CSG" id="Vc8-se-2qt"/>
@@ -729,7 +730,7 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Affichage des caractères invisibles" translatesAutoresizingMaskIntoConstraints="NO" id="1067">
-                                            <rect key="frame" x="47" y="130" width="289" height="158" />
+                                            <rect key="frame" x="47" y="110" width="289" height="158" />
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <view key="contentView" id="Hyy-cw-xT6">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="146" />
@@ -916,14 +917,14 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="Éditeur" translatesAutoresizingMaskIntoConstraints="NO" id="63">
-                                            <rect key="frame" x="47" y="300" width="289" height="310" />
+                                            <rect key="frame" x="47" y="280" width="289" height="330" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="840-wl-37B">
-                                                <rect key="frame" x="0.0" y="0.0" width="289" height="298" />
+                                                <rect key="frame" x="0.0" y="0.0" width="289" height="318" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="621">
-                                                        <rect key="frame" x="17" y="9" width="273" height="238" />
+                                                        <rect key="frame" x="17" y="9" width="273" height="258" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="273" height="18"/>
@@ -946,6 +947,13 @@ DQ
                                                                     <font key="font" metaFont="system"/>
                                                                     <connections>
                                                                         <action selector="makeatletterChanged:" target="-2" id="B9L-ws-K1o"/>
+                                                                    </connections>
+                                                                </buttonCell>
+                                                                <buttonCell type="check" title="Colorer expl3 par défaut" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="vpM-CP-ZNR">
+                                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <connections>
+                                                                        <action selector="expl3SyntaxColorPressed:" target="-2" id="O4Q-8i-FuX"/>
                                                                     </connections>
                                                                 </buttonCell>
                                                                 <buttonCell type="check" title="Appariement des parenthèses" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="1" inset="2" id="684">
@@ -1022,7 +1030,7 @@ DQ
                                                         </cells>
                                                     </matrix>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Wx-hC-JXD">
-                                                        <rect key="frame" x="17" y="271" width="250" height="18" />
+                                                        <rect key="frame" x="17" y="291" width="250" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Utiliser des tabulations pour indenter " bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="402-uD-vmk">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1033,7 +1041,7 @@ DQ
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="82S-EK-I9k">
-                                                        <rect key="frame" x="17" y="251" width="253" height="18" />
+                                                        <rect key="frame" x="17" y="271" width="253" height="18" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <buttonCell key="cell" type="check" title="Surbrillance de la ligne courante" bezelStyle="regularSquare" imagePosition="left" inset="2" id="GuV-Lp-R7p">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
