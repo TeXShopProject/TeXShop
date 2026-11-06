@@ -509,9 +509,9 @@
                             <menuItem isSeparatorItem="YES" id="543">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="自动更正" id="1082">
+                            <menuItem title="按键绑定" id="1082">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="自动更正" id="1083">
+                                <menu key="submenu" title="按键绑定" id="1083">
                                     <items>
                                         <menuItem title="打开/关闭" id="1084">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -519,7 +519,7 @@
                                                 <action selector="changeAutoComplete:" target="-1" id="1086"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="编辑自动更正文件..." id="1085">
+                                        <menuItem title="编辑按键绑定文件..." id="1085">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="openAutoCompletionListEditor:" target="1080" id="1087"/>

@@ -817,7 +817,7 @@ DQ
                                                                         <action selector="spellCheckPressed:" target="-2" id="852"/>
                                                                     </connections>
                                                                 </buttonCell>
-                                                                <buttonCell type="check" title="自动更正" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="3" inset="2" id="842">
+                                                                <buttonCell type="check" title="按键绑定" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="3" inset="2" id="842">
                                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                     <font key="font" metaFont="system"/>
                                                                     <connections>
