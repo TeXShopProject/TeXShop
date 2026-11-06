@@ -2133,11 +2133,14 @@ in other code when an external editor is being used. */
 
 // The magic comment names the encoding the file is saved in, except when the file could not
 // be read in that encoding: its text was read in Latin 9 and is saved in Latin 9, unchanged.
+// Once the user names another encoding, the magic comment decides again, even if it is later
+// changed back to the encoding that could not read the file.
 - (void)takeMagicCommentEncoding: (NSString *)name
 {
 	NSStringEncoding encoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: name];
 	if (_unreadableEncoding && encoding == _unreadableEncoding)
 		return;
+	_unreadableEncoding = 0;
 	_encoding = _tempencoding = encoding;
 }
 

@@ -123,6 +123,16 @@
 	return document;
 }
 
+// A document that cannot be made is never read, whichever way it is opened.
+- (id)makeDocumentWithContentsOfURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError
+{
+	id document = [super makeDocumentWithContentsOfURL: url ofType: typeName error: outError];
+	NSURL *key = url.URLByStandardizingPath;
+	if (! document && key)
+		[_chosenEncodingURLs removeObject: key];
+	return document;
+}
+
 - (void)openDocumentWithContentsOfURL:(NSURL *)url display:(BOOL)displayDocument completionHandler:(void (^)(NSDocument *, BOOL, NSError *))completionHandler
 {
 	NSURL *key = url.URLByStandardizingPath;

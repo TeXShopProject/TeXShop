@@ -5,7 +5,8 @@ TeXShop reads such a file in Latin 9 and says so. The production serializedSourc
 reads the magic comment again when saving; it must not then write the Latin 9 text in the
 encoding that could not read the file, which would garble every non-ASCII byte. Once the file
 is read in its encoding, the magic comment decides again, and a magic comment naming another
-encoding is followed. --mutation=unreadable removes the check."""
+encoding is followed, also when it is later changed back. --mutation=unreadable removes the check;
+--mutation=kept-record keeps the record of the failed reading after another encoding is named."""
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -16,6 +17,9 @@ def method(signature):
 methods = method('- (NSData *)serializedSourceOfType:(NSString *)typeName error:(NSError **)outError {') + method('- (void)takeMagicCommentEncoding:')
 if mutation == 'unreadable':
     old = '\tif (_unreadableEncoding && encoding == _unreadableEncoding)\n\t\treturn;\n'
+    assert old in methods; methods = methods.replace(old, '')
+if mutation == 'kept-record':
+    old = '\t_unreadableEncoding = 0;\n'
     assert old in methods; methods = methods.replace(old, '')
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -85,6 +89,10 @@ int main(void) { @autoreleasepool {
     [doc->_textStorage replaceCharactersInRange:NSMakeRange(0, doc->_textStorage.length) withString:@"% !TEX encoding = IsoLatin\nCaf\u00e9\n"];
     saved = [doc serializedSourceOfType:@"tex" error:NULL];
     check(doc->_encoding == NSISOLatin1StringEncoding, "a magic comment naming another encoding is followed");
+    // Changed back to UTF-8 by the user, the magic comment is followed again.
+    [doc->_textStorage replaceCharactersInRange:NSMakeRange(0, doc->_textStorage.length) withString:@"% !TEX encoding = UTF-8 Unicode\nCaf\u00e9\n"];
+    saved = [doc serializedSourceOfType:@"tex" error:NULL];
+    check(doc->_encoding == NSUTF8StringEncoding && [saved isEqualToData:[doc->_textStorage.string dataUsingEncoding:NSUTF8StringEncoding]], "a magic comment changed back to the unreadable encoding is followed");
     // A file that was read in its encoding is saved in the encoding of its magic comment.
     TSDocument *readable = [TSDocument new];
     readable->_textStorage = [[NSTextStorage alloc] initWithString:@"% !TEX encoding = UTF-8 Unicode\nCaf\u00e9\n"];
