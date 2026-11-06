@@ -101,9 +101,6 @@
     // The default value has changed to /Library/TeX/texbin as of July, 2015. This is
     // done because OS X El Capitan does not allow user entries in /usr.
     
-    // Most of the remaining code is irrelevant; we leave it for historical reasons,
-    // but bypass it.
-    
     BOOL usrLocationBad = NO;
     BOOL LibraryLocationBad = NO;
     NSDictionary *myAttributes;
@@ -135,38 +132,7 @@
         [SUD setObject:@"/usr/texbin" forKey:TetexBinPath];
         [SUD synchronize];
         }
-    
-    return;
 
-	
-	BOOL canRevisePath = [SUD boolForKey:RevisePathKey];
-    NSString *binPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
-	
-	if (canRevisePath) {
-		if ( [binPath isEqualToString:@"/usr/local/teTeX/bin/powerpc-apple-darwin-current"] ||
-			[binPath isEqualToString:@"/usr/local/teTeX/bin/i386-apple-darwin-current"] ) {
-			
-			[SUD setObject:@"/usr/texbin" forKey:TetexBinPath];
-			[SUD setObject:@"NO" forKey:RevisePathKey];
-			[SUD synchronize];
-			
-			}
-		}
-		
-	else {
-
-			
-		if (! [binPath isEqualToString:@"/usr/local/teTeX/bin/powerpc-apple-darwin-current"])
-			return;
-	
-		// Determine CPU type
-		cpu_type_t cputype;
-		size_t s = sizeof cputype;
-		if (sysctlbyname("hw.cputype", &cputype, &s, NULL, 0) == 0 && cputype == CPU_TYPE_I386) {
-			[SUD setObject:@"/usr/local/teTeX/bin/i386-apple-darwin-current" forKey:TetexBinPath];
-			[SUD synchronize];
-		}
-    }
 }
 
 

@@ -924,7 +924,6 @@ enum RootCommand
 
 - (void) saveFinished: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo;
 
-- (void)repeatTypeset;
 - (void)checkATaskStatusFromTerminationRoutine: (NSTask *)theTask;
 
 - (BOOL) startTask: (NSTask*) task running: (NSString*) leafname withArgs: (NSMutableArray*) args inDirectoryContaining: (NSString*) sourcePath withEngine: (NSInteger)theEngine;

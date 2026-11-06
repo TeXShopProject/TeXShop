@@ -2608,7 +2608,6 @@ This method retrieves the application preferences from the defaults object and s
 	if (itemIndex == -1) itemIndex = 2; // default idx = 2
 	[_colorParam1Popup selectItemAtIndex: itemIndex];
 
-//	myTag = [defaults integerForKey:BibtexCommandKey]; // comment out by Terada
 //	[_defaultBibtexMatrix selectCellWithTag: myTag]; // comment out by Terada
 
 	myTag = [defaults integerForKey:DistillerCommandKey];

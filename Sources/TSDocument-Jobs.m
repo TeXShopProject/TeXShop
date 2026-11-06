@@ -214,7 +214,6 @@ for(NSString *key in enu)
 {
     BOOL    MainLogs;
     
-    //MainLogs = [SUD boolForKey: DisplayLogInfoKey];
     // Not needed since "sudden halt" bug is fixed
     MainLogs = NO;
     
@@ -1133,25 +1132,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     }
 }
 
--(void)repeatTypeset
-{
-    BOOL DisplayLogs;
-    
-    // DisplayLogs = ([SUD boolForKey: DisplayLogInfoKey] && [SUD boolForKey: UseTerminationHandlerKey]);
-    // Not needed since "sudden halt" bug is fixed
-    DisplayLogs = NO;
-    
-    if (DisplayLogs)
-    //    NSLog(@"Repeating Job");
-        ;
-    if ([SUD boolForKey: DoNotFixTeXCrashKey])
-        return;
-    
-    [self trashAUXFiles: self];
-    [self doTypeset:self];
-//    result = [self startTask: self.texTask running: oldLeafName withArgs: oldArgs inDirectoryContaining: oldSourcePath withEngine: oldTheEngine];
-}
-
 - (BOOL) startTask: (NSTask*) task running: (NSString*) leafname withArgs: (NSMutableArray*) args inDirectoryContaining: (NSString*) sourcePath withEngine: (NSInteger)theEngine
 {
 	BOOL            isFile;
@@ -1162,8 +1142,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     NSError         *error = nil;
     BOOL            DisplayLogs, MainLogs;
     
-    // MainLogs = [SUD boolForKey: DisplayLogInfoKey];
-    // DisplayLogs = ([SUD boolForKey: DisplayLogInfoKey] && [SUD boolForKey: UseTerminationHandlerKey]);
     // Not needed since "sudden halt" bug is fixed
     MainLogs = NO;
     DisplayLogs = NO;
@@ -1246,8 +1224,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     [task setStandardError: self.outputPipe];
     [task setStandardInput: self.inputPipe];
 
-   //  if ((task != self.indexTask) && ([SUD boolForKey: UseTerminationHandlerKey]))
-    // last part not needed since "sudden halt" bug is fixed
     
     if (task != self.indexTask)
     {
@@ -1275,7 +1251,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
         int theStatus = [myTask terminationStatus];
         if (DisplayLogs)
             NSLog(@"The status is %d:", theStatus);
-        BOOL doAbort1 = doAbort;
         doAbort = NO;
         
         
@@ -1311,20 +1286,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
             
             }
          
-      //  BOOL repeatTypesetOnError13 = [SUD boolForKey: RepeatTypesetOnError13Key];
-      //  Not needed since "sudden halt" bug is fixed
-     BOOL   repeatTypesetOnError13 = NO;
-        
-        if ((! doAbort1) && (myTask.terminationReason == 2) && (myTask == self.texTask) && (theStatus == 13) && (repeatTypesetOnError13))
-            {
-            if (myTask.running)
-            [myTask terminate];
-            [self performSelectorOnMainThread: @selector(repeatTypeset) withObject:nil waitUntilDone:NO];
-            }
-          else
-          {
-              [self performSelectorOnMainThread: @selector(checkATaskStatusFromTerminationRoutine:) withObject:myTask waitUntilDone:NO];
-          }
+        [self performSelectorOnMainThread: @selector(checkATaskStatusFromTerminationRoutine:) withObject:myTask waitUntilDone:NO];
     };
     }
         
@@ -1417,7 +1379,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     
     
     
-    // MainLogs = [SUD boolForKey: DisplayLogInfoKey];
     // Not needed since "sudden halt" bug is fixed
     MainLogs = NO;
     
@@ -1540,12 +1501,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 			} else
      */
             if (whichEngineLocal == MetapostEngine) {
-				NSString* mpEngineString;
-				switch ([SUD integerForKey:MetaPostCommandKey]) {
-					case 0: mpEngineString = @"metapostwrap"; break;
-					case 1: mpEngineString = @"metapostwrap"; break;
-					default: mpEngineString = @"metapostwrap"; break;
-				}
+				NSString* mpEngineString = @"metapostwrap";
 				enginePath = [[NSBundle mainBundle] pathForResource:mpEngineString ofType:nil];
 				if (continuous)
 					[args addObject: @"YES"];
@@ -2271,7 +2227,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     // Crucial note: I now know that when the bug occurs, this routine is called,
     // possibly with terminationStatus = 13
     
-    // MainLogs = [SUD boolForKey: DisplayLogInfoKey];
     // Not needed since "sudden halt" bug is fixed
     MainLogs = NO;
     
@@ -2290,7 +2245,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
  //           return;
     }
     
-    // DisplayLogs = ([SUD boolForKey: DisplayLogInfoKey] && [SUD boolForKey: UseTerminationHandlerKey]);
     // Not needed since "sudden halt" bug is fixed
     DisplayLogs = NO;
 
@@ -2532,14 +2486,12 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
    NSError         *error;
     BOOL            DisplayLogs, MainLogs;
     
-    // MainLogs = [SUD boolForKey: DisplayLogInfoKey];
     // Not needed since "sudden halt" bug is fixed
     MainLogs = NO;
     
     if (MainLogs)
         NSLog(@"checkATaskStatus");
     
-    // DisplayLogs = ([SUD boolForKey: DisplayLogInfoKey] && [SUD boolForKey: UseTerminationHandlerKey]);
     // Not needed since "sudden halt" bug is fixed
     DisplayLogs = NO;
     

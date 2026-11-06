@@ -488,7 +488,6 @@
 	
 	mouseMode = [SUD integerForKey: PdfKitMouseModeKey];
 	
-	// if ([SUD boolForKey:ReleaseDocumentClassesKey]) {
 	// A watched PDF must survive an in-place overwrite of its file.
 	// If no snapshot can be made, load the file as when it is not watched.
 	pdfDoc = self.myDocument.pdfRefreshTimer ? TSInitialPDFSnapshot(imagePath, loadedSignature) : nil;
@@ -741,7 +740,6 @@
         NSImage *myImage;
       
 
- //        NSInteger myChoice = [SUD integerForKey:CreateImageKey];
         
     // First method
         
@@ -807,7 +805,6 @@
         [myView addSubview: self.myHideView1];
    }
 
-	// if ([SUD boolForKey:ReleaseDocumentClassesKey]) {
 	if ([self doReleaseDocument]) {
 		// NSLog(@"texshop release");
 		pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];

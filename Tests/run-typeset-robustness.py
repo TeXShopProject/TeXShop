@@ -175,14 +175,12 @@ static int probe_kill(pid_t pid, int sig) {
 @property (copy) NSString *helpEnginePath, *helpPATH;
 - (NSDictionary *)environmentForSubTask;
 - (void)checkATaskStatusFromTerminationRoutine:(id)task;
-- (void)repeatTypeset;
 - (void)fixMacroMenu;
 - (void)showStatistics:sender;
 @end
 
 @implementation Probe
 - (void)checkATaskStatusFromTerminationRoutine:(id)task { }
-- (void)repeatTypeset { }
 - (void)fixMacroMenu { }
 - (void)showStatistics:sender { if (self.statisticsRaise) [NSException raise:NSRangeException format:@"probe"]; }
 ENVIRONMENT
