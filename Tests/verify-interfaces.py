@@ -4,10 +4,10 @@ from pathlib import Path
 import subprocess, sys, xml.etree.ElementTree as ET
 root=Path(__file__).resolve().parents[1]
 bundle=Path(sys.argv[1]) if len(sys.argv)>1 else None
+ORIGINAL_SOURCES='db040b9'  # Initial import of the original TeXShop 5.58 sources
 for kind in ('Preferences','TSDocument'):
     for path in sorted((root/'Resources/Interfaces').glob(f'*/{kind}.nib/designable.nib')):
         relative=path.relative_to(root)
-        original=ET.fromstring(subprocess.check_output(['git','show',f'a1c197b:{relative}'],cwd=root))
         current=ET.parse(path).getroot()
         def connections(r):
             result=[]
@@ -16,8 +16,11 @@ for kind in ('Preferences','TSDocument'):
                 if kind=='TSDocument' and attrs.get('property')=='htmlView': attrs['property']='htmlViewContainer'
                 result.append((e.tag,tuple(sorted(attrs.items()))))
             return sorted(result)
-        assert connections(original)==connections(current),path
         if kind=='TSDocument':
+            # The document window keeps the connections of the original 5.58 sources. The Settings
+            # window has gained controls since; run-preferences-wiring.py checks its connections.
+            original=ET.fromstring(subprocess.check_output(['git','show',f'{ORIGINAL_SOURCES}:{relative}'],cwd=root))
+            assert connections(original)==connections(current),path
             outlet=current.find('.//outlet[@property="htmlViewContainer"]')
             assert outlet is not None,path
             assert current.find(f'.//customView[@id="{outlet.get("destination")}"]') is not None,path
