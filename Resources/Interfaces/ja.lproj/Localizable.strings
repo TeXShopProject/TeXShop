@@ -157,3 +157,25 @@
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "TeX環境をインストールしてから、設定の「内部設定」で「自動設定」を実行してください。";
 
 "Use These Paths" = "この設定を使用";
+
+/* Menu keyboard shortcut customization */
+"Keyboard Shortcuts" = "キーボードショートカット";
+"Keyboard Shortcuts…" = "キーボードショートカット…";
+"Search commands" = "コマンドを検索";
+"Command" = "コマンド";
+"Shortcut" = "ショートカット";
+"Change…" = "変更…";
+"Remove Shortcut" = "割り当てを解除";
+"Restore Default" = "初期状態に戻す";
+"Restore All…" = "すべて元に戻す…";
+"Restore All" = "すべて元に戻す";
+"Change Shortcut" = "ショートカットを変更";
+"Apply" = "適用";
+"Shortcut Unavailable" = "割り当てできません";
+"Restore all keyboard shortcuts?" = "すべてのショートカットを元に戻しますか？";
+"Press the new shortcut (Escape to cancel)." = "新しいショートカットを押してください（Escでキャンセル）。";
+"This command is no longer available." = "このコマンドは利用できなくなりました。";
+"This shortcut is already used by “%@”." = "このショートカットは「%@」で使用されています。";
+"Use Command or Control with a key, or a function key (F1–F20)." = "CommandまたはControlとキーを組み合わせるか、ファンクションキー（F1〜F20）を使ってください。";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "コマンドを選択してショートカットを変更できます。変更はすぐに反映されます。マクロと文字入力のキーバインドは、それぞれの専用エディタで編集してください。";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "このウィンドウで行った変更を取り消します。既存のKeyEquivalents.plistの設定は維持されます。";

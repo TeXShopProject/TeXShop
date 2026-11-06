@@ -152,3 +152,25 @@
 "Version unavailable" = "Unbekannt";
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Installieren Sie eine TeX-Distribution und starten Sie dann die automatische Einrichtung unter Einstellungen > Programme.";
 "Use These Paths" = "Diese Pfade verwenden";
+
+/* Menu keyboard shortcut customization */
+"Keyboard Shortcuts" = "Tastaturkurzbefehle";
+"Keyboard Shortcuts…" = "Tastaturkurzbefehle…";
+"Search commands" = "Befehle suchen";
+"Command" = "Befehl";
+"Shortcut" = "Kurzbefehl";
+"Change…" = "Ändern…";
+"Remove Shortcut" = "Kurzbefehl entfernen";
+"Restore Default" = "Standard wiederherstellen";
+"Restore All…" = "Alle zurücksetzen…";
+"Restore All" = "Alle zurücksetzen";
+"Change Shortcut" = "Kurzbefehl ändern";
+"Apply" = "Anwenden";
+"Shortcut Unavailable" = "Kurzbefehl nicht verfügbar";
+"Restore all keyboard shortcuts?" = "Alle Tastaturkurzbefehle zurücksetzen?";
+"Press the new shortcut (Escape to cancel)." = "Neuen Kurzbefehl drücken (Escape zum Abbrechen).";
+"This command is no longer available." = "Dieser Befehl ist nicht mehr verfügbar.";
+"This shortcut is already used by “%@”." = "Dieser Kurzbefehl wird bereits von „%@“ verwendet.";
+"Use Command or Control with a key, or a function key (F1–F20)." = "Verwenden Sie eine Taste mit Command oder Control oder eine Funktionstaste (F1–F20).";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Wählen Sie einen Befehl, um seinen Kurzbefehl zu ändern. Änderungen werden sofort wirksam. Makros und Texteingabe-Tastenbelegungen haben eigene Editoren.";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Ihre Änderungen in diesem Fenster werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";

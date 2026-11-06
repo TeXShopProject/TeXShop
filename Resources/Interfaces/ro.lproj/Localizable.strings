@@ -152,3 +152,25 @@
 "Version unavailable" = "Necunoscută";
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instalați o distribuție TeX, apoi porniți configurarea automată din Configurări > Motor.";
 "Use These Paths" = "Folosește aceste căi";
+
+/* Menu keyboard shortcut customization */
+"Keyboard Shortcuts" = "Scurtături de tastatură";
+"Keyboard Shortcuts…" = "Scurtături de tastatură…";
+"Search commands" = "Caută comenzi";
+"Command" = "Comandă";
+"Shortcut" = "Scurtătură";
+"Change…" = "Modifică…";
+"Remove Shortcut" = "Elimină scurtătura";
+"Restore Default" = "Restabilește implicit";
+"Restore All…" = "Restabilește tot…";
+"Restore All" = "Restabilește tot";
+"Change Shortcut" = "Modificarea scurtăturii";
+"Apply" = "Aplică";
+"Shortcut Unavailable" = "Scurtătură indisponibilă";
+"Restore all keyboard shortcuts?" = "Restabiliți toate scurtăturile de tastatură?";
+"Press the new shortcut (Escape to cancel)." = "Apăsați noua scurtătură (Escape pentru anulare).";
+"This command is no longer available." = "Această comandă nu mai este disponibilă.";
+"This shortcut is already used by “%@”." = "Această scurtătură este deja folosită de „%@”.";
+"Use Command or Control with a key, or a function key (F1–F20)." = "Folosiți o tastă cu Command sau Control, ori o tastă funcțională (F1–F20).";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selectați o comandă pentru a-i modifica scurtătura. Modificările se aplică imediat. Macrocomenzile și scurtăturile de introducere a textului au editoare proprii.";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Modificările făcute în această fereastră vor fi eliminate. Configurările existente din KeyEquivalents.plist se păstrează.";

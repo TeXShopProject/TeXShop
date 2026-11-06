@@ -149,3 +149,25 @@
 "Version unavailable" = "未知";
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "请先安装 TeX 发行版，然后在“设置 > 引擎”中运行自动设置。";
 "Use These Paths" = "使用这些路径";
+
+/* Menu keyboard shortcut customization */
+"Keyboard Shortcuts" = "键盘快捷键";
+"Keyboard Shortcuts…" = "键盘快捷键…";
+"Search commands" = "搜索命令";
+"Command" = "命令";
+"Shortcut" = "快捷键";
+"Change…" = "更改…";
+"Remove Shortcut" = "移除快捷键";
+"Restore Default" = "恢复默认";
+"Restore All…" = "全部恢复…";
+"Restore All" = "全部恢复";
+"Change Shortcut" = "更改快捷键";
+"Apply" = "应用";
+"Shortcut Unavailable" = "快捷键不可用";
+"Restore all keyboard shortcuts?" = "恢复所有键盘快捷键？";
+"Press the new shortcut (Escape to cancel)." = "请按下新的快捷键（按 Escape 取消）。";
+"This command is no longer available." = "此命令已不可用。";
+"This shortcut is already used by “%@”." = "此快捷键已被“%@”使用。";
+"Use Command or Control with a key, or a function key (F1–F20)." = "请将 Command 或 Control 与一个按键组合使用，或使用功能键（F1–F20）。";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "选择命令以更改其快捷键。更改立即生效。宏和文本输入按键绑定使用各自的编辑器。";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除此窗口中所做的更改。现有的 KeyEquivalents.plist 设置将保留。";

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA1100000000000000000001 = {isa = PBXBuildFile; fileRef = EA1100000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		E16E00000000000000000001 = {isa = PBXBuildFile; fileRef = E16E00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = AABB05910000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		ED0C00000000000000000001 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -445,6 +446,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EA1100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSKeyboardShortcuts.m; sourceTree = SOURCE_ROOT; };
+		EA1100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSKeyboardShortcuts.h; sourceTree = SOURCE_ROOT; };
 		E16E00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSEnginePathDiscovery.m; sourceTree = SOURCE_ROOT; };
 		E16E00000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSEnginePathDiscovery.h; sourceTree = SOURCE_ROOT; };
 		AABB05910000000000000003 /* TSFileChangeMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSFileChangeMonitor.h; sourceTree = "<group>"; };
@@ -1415,6 +1418,8 @@
 		5288888E089D06B50095E82D /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				EA1100000000000000000002,
+				EA1100000000000000000003,
 				E16E00000000000000000002,
 				E16E00000000000000000003,
 				ED0C00000000000000000002,
@@ -2060,6 +2065,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA1100000000000000000001,
 				E16E00000000000000000001,
 				ED0C00000000000000000001,
 				EF5890000000000000000001 /* TSSparkleController.m in Sources */,

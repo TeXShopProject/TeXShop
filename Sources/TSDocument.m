@@ -3424,10 +3424,12 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 	NSRect		theFrame;
 	NSRange		selectedRange;
     
-    if ([NSEvent modifierFlags ] & NSEventModifierFlagOption)
-        [splitView setVertical: YES];
-    else
-        [splitView setVertical: NO];
+    BOOL vertical = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+    // A customized shortcut must retain the orientation of its menu command.
+    if ([sender isKindOfClass:[NSMenuItem class]] &&
+        [[sender identifier] hasPrefix:@"TSShortcut.splitWindow:."])
+        vertical = [[sender identifier] isEqualToString:@"TSShortcut.splitWindow:.vertical"];
+    [splitView setVertical:vertical];
     
      
 	selectedRange = [textView selectedRange];

@@ -1,3 +1,4 @@
+#import "TSKeyboardShortcuts.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2005 Richard Koch
@@ -204,6 +205,10 @@
     }
     // Rule editing and spelling help remain accessible in either spelling mode.
     [TSSpellSupport installMenuItems];
+    // OgreKit replaces the Find submenu during the launch notification.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[TSKeyboardShortcuts sharedController] installInMainMenu];
+    });
     if (self.shouldDiscoverEnginePaths) {
         [[TSPreferences sharedInstance] discoverInitialEnginePaths];
     }

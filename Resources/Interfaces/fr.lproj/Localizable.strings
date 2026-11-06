@@ -152,3 +152,25 @@
 "Version unavailable" = "Inconnue";
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Installez une distribution TeX, puis lancez la configuration automatique dans Réglages > Moteur.";
 "Use These Paths" = "Utiliser ces chemins";
+
+/* Menu keyboard shortcut customization */
+"Keyboard Shortcuts" = "Raccourcis clavier";
+"Keyboard Shortcuts…" = "Raccourcis clavier…";
+"Search commands" = "Rechercher des commandes";
+"Command" = "Commande";
+"Shortcut" = "Raccourci";
+"Change…" = "Modifier…";
+"Remove Shortcut" = "Supprimer le raccourci";
+"Restore Default" = "Rétablir par défaut";
+"Restore All…" = "Tout rétablir…";
+"Restore All" = "Tout rétablir";
+"Change Shortcut" = "Modifier le raccourci";
+"Apply" = "Appliquer";
+"Shortcut Unavailable" = "Raccourci indisponible";
+"Restore all keyboard shortcuts?" = "Rétablir tous les raccourcis clavier ?";
+"Press the new shortcut (Escape to cancel)." = "Appuyez sur le nouveau raccourci (Échap pour annuler).";
+"This command is no longer available." = "Cette commande n’est plus disponible.";
+"This shortcut is already used by “%@”." = "Ce raccourci est déjà utilisé par « %@ ».";
+"Use Command or Control with a key, or a function key (F1–F20)." = "Utilisez une touche avec Commande ou Contrôle, ou une touche de fonction (F1–F20).";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Sélectionnez une commande pour modifier son raccourci. Les changements sont immédiats. Les macros et les raccourcis de saisie ont leurs propres éditeurs.";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Les modifications faites dans cette fenêtre seront supprimées. Les réglages existants de KeyEquivalents.plist seront conservés.";
