@@ -617,6 +617,14 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 }
 
+// Each document reads this when it opens; the Source menu still turns expl3 coloring on and off for one document.
+- (IBAction)expl3SyntaxColorPressed:sender
+{
+	// register the undo message first
+	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:expl3SyntaxColoringKey] forKey:expl3SyntaxColoringKey];
+	[SUD setBool:(_expl3SyntaxColorButton.state == NSControlStateValueOn) forKey:expl3SyntaxColoringKey];
+}
+
 // Autosave is read once at launch, so a change takes effect after TeXShop restarts.
 - (IBAction)autoSaveEnabledPressed:sender
 {
@@ -2421,6 +2429,7 @@ This method retrieves the application preferences from the defaults object and s
 	[_NewLineCharacterKindMatrix selectCellWithTag:[defaults integerForKey:NewLineCharacterKindKey]]; // added by Terada
 	[_TabCharacterKindMatrix selectCellWithTag:[defaults integerForKey:TabCharacterKindKey]]; // added by Terada
 	[_makeatletterButton setState:[defaults boolForKey:MakeatletterEnabledKey]]; // added by Terada
+	[_expl3SyntaxColorButton setState:[defaults boolForKey:expl3SyntaxColoringKey]];
 	[_autoSaveEnabledButton setState:[defaults boolForKey:AutoSaveEnabledKey]];
 	[_keepBackupButton setState:[defaults boolForKey:KeepBackupKey]];
 	_keepBackupButton.enabled = ![defaults boolForKey:AutoSaveEnabledKey];
