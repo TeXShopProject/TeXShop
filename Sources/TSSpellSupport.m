@@ -178,6 +178,7 @@ static NSString *sReviewText;
 static NSRange sReviewSelection;
 static NSTextField *sReplacementField;
 static NSTextField *sReplacementStatus;
+static BOOL sUpdatingSpellingPanel;
 
 static BOOL ReviewIsCurrent(NSTextView *view)
 {
@@ -264,8 +265,43 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     [self findNextMisspellingInTextView:tv mask:fresh];
 }
 
-// Use the documented accessoryView, without inspecting or
-// moving AppKit's private panel controls. The replacement is explicitly entered.
+// Experimental bridge: AppKit currently uses a one-column, cell-based table
+// for spelling suggestions. Its selection is not an NSSpellChecker API contract.
+// Observe public table notifications without replacing AppKit's delegate or
+// action. If the structure changes, leave manual replacement entry available.
++ (void)spellingSuggestionSelectionDidChange:(NSNotification *)notification
+{
+    if (sUpdatingSpellingPanel || !sReplacementField || !sReviewWord.length ||
+        ![notification.object isKindOfClass:NSTableView.class]) return;
+    NSSpellChecker *checker = NSSpellChecker.sharedSpellChecker;
+    NSPanel *panel = checker.spellingPanel;
+    NSTableView *table = notification.object;
+    if (checker.accessoryView != sReplacementField.superview ||
+        !panel.isVisible || table.window != panel || panel.firstResponder != table ||
+        table.tableColumns.count != 1 || table.numberOfSelectedRows != 1) return;
+
+    // Do not copy selections made while rebuilding suggestions or editing the
+    // panel's other fields. Copy only in response to input in the candidate list.
+    NSEvent *event = NSApp.currentEvent;
+    if (!event || event.window != panel) return;
+    if (event.type == NSEventTypeLeftMouseDown || event.type == NSEventTypeLeftMouseUp) {
+        NSPoint point = [table convertPoint:event.locationInWindow fromView:nil];
+        if (!NSPointInRect(point, NSIntersectionRect(table.bounds, table.visibleRect))) return;
+    } else if (event.type != NSEventTypeKeyDown) return;
+    if (!ReviewIsCurrent(sReviewView)) return;
+
+    NSInteger row = table.selectedRow;
+    id<NSTableViewDataSource> source = table.dataSource;
+    if (row < 0 || row >= table.numberOfRows ||
+        ![source respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)]) return;
+    id value = [source tableView:table objectValueForTableColumn:table.tableColumns.firstObject row:row];
+    if (![value isKindOfClass:NSString.class] || [value length] == 0) return;
+    sReplacementField.stringValue = value;
+    sReplacementStatus.stringValue = @"";
+}
+
+// The replacement field remains a documented accessoryView and can always be
+// edited manually. Selecting a suggestion only fills it; it does not replace text.
 + (void)installChangeAllButton
 {
     if (sReplacementField) return;
@@ -288,6 +324,9 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     button.autoresizingMask = NSViewMinXMargin;
     [accessory addSubview:button];
     [NSSpellChecker sharedSpellChecker].accessoryView = accessory;
+    [NSNotificationCenter.defaultCenter addObserver:self
+        selector:@selector(spellingSuggestionSelectionDidChange:)
+        name:NSTableViewSelectionDidChangeNotification object:nil];
 }
 
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)tv mask:(TSSpellMask *)mask
@@ -323,7 +362,12 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     sReviewWord = word;
     sReviewText = [tv.string copy];
     sReviewSelection = tv.selectedRange;
-    [checker updateSpellingPanelWithMisspelledWord:word];
+    sUpdatingSpellingPanel = YES;
+    @try {
+        [checker updateSpellingPanelWithMisspelledWord:word];
+    } @finally {
+        sUpdatingSpellingPanel = NO;
+    }
     return word;
 }
 
@@ -616,6 +660,8 @@ static NSMenuItem *FindMenuItemWithAction(NSMenu *menu, SEL action)
 // our own accessory; AppKit or another component may have installed one.
 + (void)preferencesDidChange
 {
+    [NSNotificationCenter.defaultCenter removeObserver:self
+        name:NSTableViewSelectionDidChangeNotification object:nil];
     sReviewView = nil;
     sReviewWord = nil;
     sReviewText = nil;

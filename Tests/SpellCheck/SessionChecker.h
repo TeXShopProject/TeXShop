@@ -1,6 +1,8 @@
 #import <Cocoa/Cocoa.h>
 @interface SessionChecker : NSObject
 @property NSView *accessoryView;
+@property NSPanel *spellingPanel;
+@property (copy) void (^panelUpdate)(void);
 + (instancetype)sharedSpellChecker;
 - (NSString *)language;
 - (NSArray *)availableLanguages;
