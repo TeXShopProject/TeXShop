@@ -1868,6 +1868,9 @@ if (! skipTextWindow) {
         // Create the contents of the encoding menu on the fly
         [openSaveBox removeAllItems];
         [[TSEncodingSupport sharedInstance] addEncodingsToMenu:[openSaveBox menu] withTarget:0 action:0];
+        // The items have no action of their own, so choosing one sends the pop-up's action.
+        openSaveBox.target = self;
+        openSaveBox.action = @selector(chooseTempEncoding:);
         
         // Select active encoding
         [openSaveBox selectItemWithTag: _encoding];
