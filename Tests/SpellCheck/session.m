@@ -74,6 +74,11 @@ static void Review(NSTextView *v) {
     self.reads++; return self.value;
 }
 @end
+// A view-based/bindings-backed table need not implement the cell-value method.
+@interface RowOnlySuggestionSource : NSObject<NSTableViewDataSource> @end
+@implementation RowOnlySuggestionSource
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)table { return 2; }
+@end
 static NSEvent *CandidateKey(NSWindow *window, NSEventModifierFlags flags) {
     static NSTimeInterval serial=100;
     return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:serial++
@@ -168,6 +173,22 @@ static void TestSuggestionSync(void) {
     panel.testResponder=nil;
     source.value=@42; notify();
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"unsupported table values ignored");
+    source.value=@""; notify();
+    NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"empty candidate leaves manual replacement intact");
+    RowOnlySuggestionSource *rowOnly=[RowOnlySuggestionSource new];
+    app.inputEvent=nil;
+    table.dataSource=rowOnly; [table reloadData];
+    [table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    app.inputEvent=CandidateKey(panel,0);
+    NSCAssert(table.numberOfSelectedRows==1 && panel.firstResponder==table &&
+              ![table.dataSource respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)],
+              @"missing-method fixture must otherwise qualify for copying");
+    notify();
+    NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"unsupported data source leaves manual replacement intact");
+    app.inputEvent=nil;
+    table.dataSource=source; [table reloadData];
+    [table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    app.inputEvent=CandidateKey(panel,0);
     source.value=@"valid";
     [table addTableColumn:[[NSTableColumn alloc] initWithIdentifier:@"other"]]; notify();
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"unexpected table shape ignored");
