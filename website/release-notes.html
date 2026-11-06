@@ -27,7 +27,7 @@
 <h3>External file changes and PDF preview</h3>
 <ul>
 <li>Make source-file monitoring continue after automatic reloads and file replacement by external editors, including atomic saves. Preserve unsaved edits and the undo history for TeXShop’s own saves. This includes the contribution from ddd3h in PR #1.</li>
-<li>When Auto Update is enabled, detect PDFs changed by other applications and reload the preview while preserving the page position and zoom. Avoid replacing unsaved PDF annotations, and retry when an external writer temporarily leaves an incomplete PDF.</li>
+<li>When Automatic Preview Update is enabled, detect PDFs changed by other applications and reload the preview while preserving the page position and zoom. Avoid replacing unsaved PDF annotations, and retry when an external writer temporarily leaves an incomplete PDF.</li>
 <li>Move file-change checks off the main thread to keep the interface responsive.</li>
 <li>Fix a PDFKit crash during preview reloads, including changes in page count, by correcting how PDF documents are shared with the second preview pane.</li>
 <li>Correct Space and Shift-Space scrolling when a PDF page is larger than the preview window.</li>
