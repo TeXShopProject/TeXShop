@@ -179,6 +179,7 @@ static NSRange sReviewSelection;
 static NSTextField *sReplacementField;
 static NSTextField *sReplacementStatus;
 static BOOL sUpdatingSpellingPanel;
+static __weak NSEvent *sPanelUpdateEvent;
 
 static BOOL ReviewIsCurrent(NSTextView *view)
 {
@@ -280,14 +281,16 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
         !panel.isVisible || table.window != panel || panel.firstResponder != table ||
         table.tableColumns.count != 1 || table.numberOfSelectedRows != 1) return;
 
-    // Do not copy selections made while rebuilding suggestions or editing the
-    // panel's other fields. Copy only in response to input in the candidate list.
+    // Suppress our synchronous panel update and notifications still associated
+    // with the event that started it. This does not identify every possible
+    // asynchronous AppKit update. Require later input in the candidate list.
     NSEvent *event = NSApp.currentEvent;
-    if (!event || event.window != panel) return;
+    if (!event || event == sPanelUpdateEvent || event.window != panel) return;
     if (event.type == NSEventTypeLeftMouseDown || event.type == NSEventTypeLeftMouseUp) {
         NSPoint point = [table convertPoint:event.locationInWindow fromView:nil];
         if (!NSPointInRect(point, NSIntersectionRect(table.bounds, table.visibleRect))) return;
-    } else if (event.type != NSEventTypeKeyDown) return;
+    } else if (event.type != NSEventTypeKeyDown ||
+               (event.modifierFlags & NSEventModifierFlagCommand)) return;
     if (!ReviewIsCurrent(sReviewView)) return;
 
     NSInteger row = table.selectedRow;
@@ -363,6 +366,7 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     sReviewText = [tv.string copy];
     sReviewSelection = tv.selectedRange;
     sUpdatingSpellingPanel = YES;
+    sPanelUpdateEvent = NSApp.currentEvent;
     @try {
         [checker updateSpellingPanelWithMisspelledWord:word];
     } @finally {
@@ -662,6 +666,7 @@ static NSMenuItem *FindMenuItemWithAction(NSMenu *menu, SEL action)
 {
     [NSNotificationCenter.defaultCenter removeObserver:self
         name:NSTableViewSelectionDidChangeNotification object:nil];
+    sPanelUpdateEvent = nil;
     sReviewView = nil;
     sReviewWord = nil;
     sReviewText = nil;
