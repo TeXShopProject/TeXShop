@@ -87,7 +87,7 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 .download-table small.icon-transition-note,.download-table small.release-milestone-note,.download-table small.release-variant{color:var(--accordion);font-weight:500}
 
 /* CPU labels and compact release details. */
-.release-version>div{min-width:0}.download-table small.icon-transition-note,.download-table small.release-milestone-note{white-space:normal;overflow-wrap:normal;max-width:15em}
+.release-version>div{min-width:0}.download-table small.icon-transition-note,.download-table small.release-milestone-note,.download-table small.release-variant{white-space:normal;overflow-wrap:normal;max-width:15em}
 .cpu-tags{display:inline-flex;flex-direction:column;align-items:flex-start;gap:5px;vertical-align:middle}.cpu-tag{display:inline-block;border-radius:5px;padding:2px 7px;font-size:11px;line-height:1.5;font-weight:500;white-space:nowrap}.cpu-tag--arm64{background:#e0f1e5;color:#225f38}.cpu-tag--x86_64{background:#e0edfa;color:#205781}.cpu-tag--i386{background:#ede6f7;color:#603e80}.cpu-tag--ppc{background:#faedcf;color:#765018}.cpu-tag--ppc64{background:#f9e4e4;color:#8a3939}
 :root[data-theme=dark] .cpu-tag--arm64{background:#254c33;color:#d4f3dd}:root[data-theme=dark] .cpu-tag--x86_64{background:#22435b;color:#d5ebfa}:root[data-theme=dark] .cpu-tag--i386{background:#49345e;color:#e9dbf6}:root[data-theme=dark] .cpu-tag--ppc{background:#584321;color:#f9e8bd}:root[data-theme=dark] .cpu-tag--ppc64{background:#5c3232;color:#f7dede}
 
@@ -95,3 +95,12 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 
 /* GitHub links on the contact page. */
 .contact-github svg,.repo-links svg{display:inline-block;width:1em;height:1em;margin-right:.4em;vertical-align:-.1em;fill:currentColor}
+
+.download[aria-disabled="true"]{cursor:default;pointer-events:none;opacity:.65}
+
+.downloads #older-versions{margin-top:64px}.downloads #older-versions>h2{margin-top:0;margin-bottom:20px}.downloads #older-versions>.download-table{margin-top:0}
+.latest-release-tag{display:inline-block;vertical-align:middle;margin-left:5px;padding:2px 7px;border-radius:5px;background:#e0f1e5;color:#225f38;font-size:11px;font-weight:600;line-height:1.5;white-space:nowrap}
+:root[data-theme=dark] .latest-release-tag{background:#254c33;color:#d4f3dd}
+@media(prefers-color-scheme:dark){:root:not([data-theme]) .latest-release-tag{background:#254c33;color:#d4f3dd}}
+.downloads+footer{max-width:1050px}
+@media(max-width:1100px){.downloads+footer{margin-inline:25px}}

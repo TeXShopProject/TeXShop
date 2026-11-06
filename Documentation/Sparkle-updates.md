@@ -23,3 +23,28 @@ Use the official Sparkle 2.10.1 tools from https://github.com/sparkle-project/Sp
 Koch's existing releases use his feed and keys. This new key does not authorize updates for them. A transition through his feed requires coordination with Koch; otherwise users install 5.59 manually and receive subsequent updates from TeXShopProject.
 
 For the 5.59 domain transition, use `--replace-existing` to replace the existing 5.59 item in the staged feed. This option requires exactly one matching release and build version, preserves other releases, and still signs and verifies the complete feed. With the unchanged build number, an already-installed 5.59 must be replaced manually. Publish the replacement archive and verify its public checksum before deploying the replacement feed.
+
+## Localized release notes
+
+Starting with 5.60, prepare both `Documentation/Releases/<version>.md` (English)
+and `<version>-ja.md` (Japanese). Each must start with `# TeXShop <version>`.
+While the release is being prepared, retain `<!-- release-status: draft -->` in
+each file. Finalize the content and remove that marker before packaging; the
+preparation script rejects drafts or missing notes before invoking signing tools.
+Keep the matching articles in `website/release-notes.html` and
+`website/release-notes-ja.html` consistent with these documents.
+
+`prepare-sparkle-release.py` embeds both documents as localized Markdown
+`description` elements in the new appcast item. Sparkle selects the appropriate
+language (English is the fallback) and displays the changes in its update window.
+TeXShop 5.59 already ships Sparkle 2.10.1, which supports this format. The notes
+are covered by the whole-appcast signature, so they do not require separately
+signed HTML files. The existing signed `website/appcast.xml` is unchanged until
+an actual release is prepared. The full release-history link also lets Sparkle
+open the website's release notes.
+
+Before publication, verify the update window in isolated English and Japanese
+5.59 installations using the finalized signed feed. Check both the note display
+and the update itself. Do not modify the signed appcast after signing it.
+
+Reference: https://sparkle-project.org/documentation/publishing/

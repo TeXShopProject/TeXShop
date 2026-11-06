@@ -19,6 +19,34 @@ ROOT = Path(__file__).resolve().parents[1]
 def run(*args):
     return subprocess.check_output([str(arg) for arg in args], text=True).strip()
 
+def load_release_notes(version, directory):
+    """Read finalized notes before accessing signing tools or creating artifacts."""
+    notes = []
+    for language, suffix in [('en', ''), ('ja', '-ja')]:
+        path = directory / f'{version}{suffix}.md'
+        if not path.is_file():
+            raise ValueError(f'Missing {language} release notes: {path}')
+        content = path.read_text(encoding='utf-8').strip()
+        if not content.startswith(f'# TeXShop {version}\n'):
+            raise ValueError(f'Release notes have the wrong version heading: {path}')
+        if '<!-- release-status: draft -->' in content:
+            raise ValueError(f'Finalize the draft release notes before packaging: {path}')
+        notes.append((language, content))
+    return notes
+
+
+def append_release_notes(item, version, notes):
+    # Markdown notes are supported by Sparkle 2.9+, including TeXShop 5.59.
+    # Inline notes are covered by the existing whole-feed signature.
+    for language, content in notes:
+        ET.SubElement(item, 'description', {
+            '{http://www.w3.org/XML/1998/namespace}lang': language,
+            f'{{{SPARKLE}}}format': 'markdown',
+        }).text = content
+    ET.SubElement(item, f'{{{SPARKLE}}}fullReleaseNotesLink').text = (
+        f'https://texshop.app/release-notes.html#v{version}')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('app', type=Path)
@@ -32,6 +60,10 @@ def main():
     version = info['CFBundleShortVersionString']
     if not re.fullmatch(r'\d+(?:\.\d+)+', version):
         raise SystemExit('Expected a stable numeric release version')
+    try:
+        notes = load_release_notes(version, ROOT / 'Documentation/Releases')
+    except ValueError as error:
+        raise SystemExit(str(error)) from error
     if info.get('SUFeedURL') != FEED or info.get('SUPublicEDKey') != KEY:
         raise SystemExit('Application has the wrong update feed or public key')
     if run(args.tools / 'generate_keys', '--account', 'TeXShopProject', '-p') != KEY:
@@ -66,6 +98,7 @@ def main():
                        (f'{{{SPARKLE}}}shortVersionString', version),
                        (f'{{{SPARKLE}}}minimumSystemVersion', info['LSMinimumSystemVersion'])]:
         ET.SubElement(item, tag).text = value
+    append_release_notes(item, version, notes)
     ET.SubElement(item, 'enclosure', {
         'url': f'https://github.com/TeXShopProject/TeXShop/releases/download/v.{version}/{archive.name}',
         'length': str(archive.stat().st_size), 'type': 'application/octet-stream',

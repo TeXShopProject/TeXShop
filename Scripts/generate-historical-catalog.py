@@ -48,13 +48,22 @@ def details(app,ja):
  return os,cpu
 for ja in (False,True):
  filename='downloads-ja.html' if ja else 'downloads.html';text=(root/filename).read_text();pre,rest=text.split('<main class="archive-content downloads">',1); oldmain,post=rest.split('</main>',1)
- title='過去の全バージョン' if ja else 'All Previous Versions';pre=re.sub(r'<title>.*?</title>',f'<title>{title} — TeXShop</title>',pre,count=1)
+ title='リリース履歴' if ja else 'Release History';pre=re.sub(r'<title>.*?</title>',f'<title>{title} — TeXShop</title>',pre,count=1)
  if ja:pre=pre.replace('href="downloads.html" lang="en"','href="all-releases.html" lang="en"')
  else:pre=pre.replace('href="downloads-ja.html" lang="ja"','href="all-releases-ja.html" lang="ja"')
  pre=pre.replace('hreflang="en" href="downloads.html"','hreflang="en" href="all-releases.html"').replace('hreflang="ja" href="downloads-ja.html"','hreflang="ja" href="all-releases-ja.html"')
  labels=['バージョン','対応OS','対応CPU','App','Source'] if ja else ['Version','Supported OS','CPU','App','Source']; esc=html.escape
- rows=[]
+ # Use the current Downloads row as the single source of truth for the latest version.
+ latest_table=re.search(r'<table\b[^>]*>.*?</table>',oldmain,re.S).group(0)
+ latest_row=re.search(r'<tbody>\s*(<tr>.*?</tr>)',latest_table,re.S).group(1)
+ latest_cells=re.findall(r'<td\b[^>]*>.*?</td>',latest_row,re.S)
+ assert len(latest_cells)==6, 'Expected the current Downloads row with release notes'
+ latest_version=re.search(r'<strong>TeXShop ([^<]+)</strong>',latest_cells[0]).group(1)
+ notes_path=('release-notes-ja.html' if ja else 'release-notes.html')+'#v'+latest_version
+ latest_cells[0]=latest_cells[0].replace('<strong>TeXShop '+latest_version+'</strong>',f'<a href="{html.escape(notes_path,quote=True)}">TeXShop {html.escape(latest_version)}</a>')
+ rows=['<tr>'+''.join(latest_cells[:5])+'</tr>']
  for r in meta:
+  if r['tag'] in ('v'+latest_version,'v.'+latest_version):continue
   if not r['assets']:continue
   app=next((a for a in r['assets'] if a.get('kind') == 'app' or (not a.get('kind') and a['name'].lower().startswith('texshop-'))),None);source=next((a for a in r['assets'] if a.get('kind') == 'source' or (not a.get('kind') and a['name'].lower().startswith('texshopsource-'))),None)
   iconasset=app or source or {}; icon=iconasset.get('icon_png_sha256') or (None if iconasset.get('icon_inferred_from') else iconasset.get('icon_sha256')); iconpath='assets/release-icons/history/'+icon+'.png' if icon and (root/'assets/release-icons/history'/f'{icon}.png').exists() else None
@@ -86,7 +95,8 @@ for ja in (False,True):
    if not requirement_app.get('plist_min') and inferred.get('minimum_os'):
     requirement_app['plist_min']=inferred['minimum_os']
   os,cpu=details(requirement_app,ja)
-  version=esc(r['tag'][1:]); dateinfo=dates.get(r['tag'][1:]); stamp=''
+  if r.get('os_note'): os += '<small>'+html.escape(r['os_note']['ja' if ja else 'en'])+'</small>'
+  version=esc(r.get('display_version',r['tag'][1:])); dateinfo=dates.get(r['tag'][1:]); stamp=''
   match=re.fullmatch(r'v5\.(\d+)',r['tag'])
   if app and match and int(match.group(1))<=48:
    os+=('<small>macOS 10.14 Mojaveでは起動不可</small>' if ja else '<small>Does not run on macOS 10.14 Mojave</small>')
@@ -101,6 +111,7 @@ for ja in (False,True):
    badge=f'<small class="release-status first-official">{label_text}</small>'; version_contents=version_link+stamp+badge; version_class='release-version first-release-version'
   else:
    version_contents=version_link+badge+stamp; version_class='release-version'
+  if r.get('variant'): version_contents += '<small class="release-variant">'+html.escape(r['variant']['ja' if ja else 'en'])+'</small>'
   icon_note=icon_notes.get(r['tag'])
   if icon_note:
    version_contents += f'<small class="icon-transition-note">{html.escape(icon_note["ja" if ja else "en"])}</small>'; version_class='release-version first-release-version'
@@ -116,15 +127,8 @@ for ja in (False,True):
  first_version=f'<div class="release-version first-release-version"><img src="{html.escape(first["icon"],quote=True)}" width="48" height="48" alt="" loading="lazy"><div>{first_name}<small><time datetime="{first["release_date"]}">{first_stamp}</time></small><small class="recompiled-note">{first_variant}</small></div></div>'
  first_cells=[first_version,first_os,first_cpu,cell(first['app'],'App',first['tag'],ja),cell(first['source'],'Source',first['tag'],ja)]
  rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(first_cells))+'</tr>')
- note=('過去のバージョンをダウンロードできます。' if ja else 'Download previous versions of TeXShop.')
  heading=''.join('<th scope="col">'+esc(x)+'</th>' for x in labels)
- special=re.search(r'<tr>\s*<td data-label="[^"]+"><div class="release-version">(?:(?!</tr>).)*?TeXShop 5\.58(?:(?!</tr>).)*?</tr>',oldmain,re.S)
- assert special, 'Missing 5.58 in selected older releases'
- special_row=special.group(0).replace('TeXShop 5.58<small', '<a href="archive/golden-gate.html#section-4">TeXShop 5.58</a><small')
- assert special_row!=special.group(0), 'Missing 5.58 version label'
- special_index=sum(bool(r['assets']) and order(r)>order({'tag':'v5.58'}) for r in meta)
- rows.insert(special_index,special_row)
- back='<a href="downloads-ja.html">‹ リリース履歴</a>' if ja else '<a href="downloads.html">‹ Releases</a>'
- main=f'<main class="archive-content downloads"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1><p>{note}</p><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
+ back='<a href="downloads-ja.html">‹ ダウンロード</a>' if ja else '<a href="downloads.html">‹ Downloads</a>'
+ main=f'<main class="archive-content downloads"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)
 print('Generated',len(rows),'rows per page')
