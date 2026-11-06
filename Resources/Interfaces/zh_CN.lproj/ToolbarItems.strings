@@ -1,5 +1,5 @@
 
-    tiLabelAutoComplete = "\U81ea\U52a8\U66f4\U6b63";
+    tiLabelAutoComplete = "\U6309\U952e\U7ed1\U5b9a";
     tiLabelBackForthKIT = "\U540e\U9000/\U524d\U8fdb";
     tiLabelBackForthKITSplit = "\U540e\U9000/\U524d\U8fdb";
     tiLabelBibTeX = BibTeX;
@@ -42,7 +42,7 @@
     tiLabelTypeset = "\U6392\U7248";
     tiLabelTypesetEE = "\U6392\U7248";
     tiLabelTypesetKIT = "\U6392\U7248";
-    tiPaletteLabelAutoComplete = "\U81ea\U52a8\U66f4\U6b63";
+    tiPaletteLabelAutoComplete = "\U6309\U952e\U7ed1\U5b9a";
     tiPaletteLabelBackForthKIT = "\U540e\U9000/\U524d\U8fdb";
     tiPaletteLabelBackForthKITSplit = "\U540e\U9000/\U524d\U8fdb";
     tiPaletteLabelBibTeX = BibTeX;
@@ -85,7 +85,7 @@
     tiPaletteLabelTypeset = "\U6392\U7248";
     tiPaletteLabelTypesetEE = "\U6392\U7248";
     tiPaletteLabelTypesetKIT = "\U6392\U7248";
-    tiToolTipAutoComplete = "\U5207\U6362\U81ea\U52a8\U66f4\U6b63";
+    tiToolTipAutoComplete = "\U5207\U6362\U6309\U952e\U7ed1\U5b9a";
     tiToolTipBackForthKIT = "\U540e\U9000\U524d\U8fdb\U6309\U94ae";
     tiToolTipBackForthKITSplit = "\U540e\U9000\U524d\U8fdb\U6309\U94ae";
     tiToolTipBibTeX = "\U8fd0\U884c BibTeX";
