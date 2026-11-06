@@ -93,6 +93,7 @@
 	[[TSEncodingSupport sharedInstance] addEncodingsToMenu:[encodingMenu menu] withTarget:0 action:0];
 	[encodingMenu selectItemWithTag: [[TSEncodingSupport sharedInstance] defaultEncoding]];
 
+	_chosenEncodingURLs = nil;
 	result = [super runModalOpenPanel: openPanel forTypes: extensions];
 	if (result == YES) {
 		_encoding = [[encodingMenu selectedCell] tag];
@@ -107,6 +108,40 @@
 		}
 	}
 	return result;
+}
+
+// An encoding chosen in the Open panel is for the opening it was chosen for. When the file is
+// already open, or the opening fails, it is not read; the choice must not be left for a later
+// reading of the file, such as a reload after an external change. Every way of opening asks
+// documentForURL: for an open document first; the completion handler covers failures.
+- (NSDocument *)documentForURL:(NSURL *)url
+{
+	NSDocument *document = [super documentForURL: url];
+	NSURL *key = url.URLByStandardizingPath;
+	if (document && key)
+		[_chosenEncodingURLs removeObject: key];
+	return document;
+}
+
+// A document that cannot be made is never read, whichever way it is opened.
+- (id)makeDocumentWithContentsOfURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError
+{
+	id document = [super makeDocumentWithContentsOfURL: url ofType: typeName error: outError];
+	NSURL *key = url.URLByStandardizingPath;
+	if (! document && key)
+		[_chosenEncodingURLs removeObject: key];
+	return document;
+}
+
+- (void)openDocumentWithContentsOfURL:(NSURL *)url display:(BOOL)displayDocument completionHandler:(void (^)(NSDocument *, BOOL, NSError *))completionHandler
+{
+	NSURL *key = url.URLByStandardizingPath;
+	[super openDocumentWithContentsOfURL: url display: displayDocument completionHandler: ^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error) {
+		if (key)
+			[self->_chosenEncodingURLs removeObject: key];
+		if (completionHandler)
+			completionHandler(document, documentWasAlreadyOpen, error);
+	}];
 }
 
 - (BOOL)takeEncoding:(NSStringEncoding *)encoding chosenForURL:(NSURL *)url

@@ -704,6 +704,29 @@ static TSAlphabeticScore TSScoreAlphabetic(NSString *text)
 	return result;
 }
 
+// The one-byte encoding that \usepackage[...]{inputenc} declares in data, or 0. The last
+// option is the one inputenc uses.
+static NSStringEncoding TSInputencEncoding(NSData *data)
+{
+	NSString *text = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, MIN(data.length, (NSUInteger)65536))] encoding:NSISOLatin1StringEncoding];
+	NSRegularExpression *usepackage = [NSRegularExpression regularExpressionWithPattern:@"^[^%\\n]*\\\\usepackage\\s*\\[([^\\]]*)\\]\\s*\\{inputenc\\}" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+	NSTextCheckingResult *match = [usepackage firstMatchInString:text options:0 range:NSMakeRange(0, text.length)];
+	if (! match)
+		return 0;
+	NSString *option = [[[[text substringWithRange:[match rangeAtIndex:1]] componentsSeparatedByString:@","] lastObject]
+		stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	NSDictionary *encodings = @{@"latin1": @(kCFStringEncodingISOLatin1), @"latin2": @(kCFStringEncodingISOLatin2),
+								@"latin5": @(kCFStringEncodingISOLatin5), @"latin9": @(kCFStringEncodingISOLatin9),
+								@"cp1250": @(kCFStringEncodingWindowsLatin2), @"cp1251": @(kCFStringEncodingWindowsCyrillic),
+								@"cp1252": @(kCFStringEncodingWindowsLatin1), @"ansinew": @(kCFStringEncodingWindowsLatin1),
+								@"koi8-r": @(kCFStringEncodingKOI8_R), @"cp866": @(kCFStringEncodingDOSRussian),
+								@"cp855": @(kCFStringEncodingDOSCyrillic), @"applemac": @(kCFStringEncodingMacRoman),
+								@"macce": @(kCFStringEncodingMacCentralEurRoman), @"maccyr": @(kCFStringEncodingMacCyrillic),
+								@"macukr": @(kCFStringEncodingMacCyrillic)};
+	NSNumber *cf = encodings[option];
+	return cf ? CFStringConvertEncodingToNSStringEncoding((CFStringEncoding)cf.unsignedIntValue) : 0;
+}
+
 // Whether encoding is one of the one-byte encodings of TeXShop's list.
 static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 {
@@ -733,8 +756,13 @@ static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 		if (bytes[i] == 0x1B && i + 2 < length && bytes[i + 1] == '$' && (bytes[i + 2] == 'B' || bytes[i + 2] == '@'))
 			kanjiEscape = YES;
 	}
-	if (sevenBit)
-		return (kanjiEscape && TSDataDecodes(data, NSISO2022JPStringEncoding)) ? NSISO2022JPStringEncoding : preferred;
+	if (sevenBit) {
+		if (kanjiEscape && TSDataDecodes(data, NSISO2022JPStringEncoding))
+			return NSISO2022JPStringEncoding;
+		// The default encoding is kept if it writes ASCII letters as ASCII; UTF-16 does not.
+		NSData *sample = [@"Az09{}%" dataUsingEncoding:preferred];
+		return [sample isEqualToData:[NSData dataWithBytes:"Az09{}%" length:7]] ? preferred : NSUTF8StringEncoding;
+	}
 
 	// The encoding recorded by the application that wrote the file.
 	NSStringEncoding recorded = TSRecordedEncoding(url);
@@ -871,6 +899,18 @@ static BOOL TSIsSingleByteEncoding(NSStringEncoding encoding)
 		}
 		if (best)
 			guess = best;
+		// The encoding that the file declares to inputenc is used unless its reading looks
+		// clearly worse than the guess; declarations are sometimes wrong.
+		NSStringEncoding declared = TSInputencEncoding(data);
+		if (declared && guess && declared != guess && available(declared)) {
+			NSString *declaredText = [[NSString alloc] initWithData:data encoding:declared];
+			NSString *guessText = [[NSString alloc] initWithData:data encoding:guess];
+			if (declaredText && guessText) {
+				double declaredScore = TSScoreAlphabetic(declaredText).score, guessScore = TSScoreAlphabetic(guessText).score;
+				if (declaredScore >= guessScore - MAX(2.0, 0.1 * fabs(guessScore)))
+					guess = declared;
+			}
+		}
 	}
 
 	if (guess) {
@@ -1093,8 +1133,61 @@ static NSString *TSDisplayStringForLine(const uint8_t *bytes, NSUInteger length,
 	return TSNoByteOrderMark;
 }
 
+// Japanese encodings read the byte 0x5C, TeX's escape character, in two ways. Mac Japanese and
+// Shift JIS X0213 read it as a yen sign and write a backslash as another byte (0x80, or the
+// full-width backslash 81 5F); Shift JIS X0213 also reads 0x7E as an overline and writes a
+// tilde as the wave dash 81 60. The other Japanese encodings read 0x5C as a backslash and
+// cannot write a yen sign at all. A TeX source needs 0x5C and 0x7E whichever is typed.
+static BOOL TSReadsBackslashAsYen(NSStringEncoding encoding)
+{
+	CFStringEncoding cf = CFStringConvertNSStringEncodingToEncoding(encoding);
+	return cf == kCFStringEncodingMacJapanese || cf == kCFStringEncodingShiftJIS_X0213_00;
+}
+
+static BOOL TSReadsTildeAsOverline(NSStringEncoding encoding)
+{
+	return CFStringConvertNSStringEncodingToEncoding(encoding) == kCFStringEncodingShiftJIS_X0213_00;
+}
+
+static BOOL TSHasNoYenSign(NSStringEncoding encoding)
+{
+	CFStringEncoding cf = CFStringConvertNSStringEncodingToEncoding(encoding);
+	return cf == kCFStringEncodingDOSJapanese || cf == kCFStringEncodingEUC_JP || cf == kCFStringEncodingISO_2022_JP;
+}
+
+static NSString *TSReplacing(NSString *text, NSString *from, NSString *to)
+{
+	return [text rangeOfString:from].location == NSNotFound ? text : [text stringByReplacingOccurrencesOfString:from withString:to];
+}
+
+// The text of a file read in encoding, as the editor shows it: TeX's escape character is a
+// backslash, or a yen sign when typed backslashes become yen signs (Mac Japanese mode).
+- (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding
+{
+	if (TSReadsTildeAsOverline(encoding))
+		text = TSReplacing(text, @"\u203E", @"~");
+	if (TSReadsBackslashAsYen(encoding) && g_shouldFilter != kMacJapaneseFilterMode)
+		text = TSReplacing(text, @"\u00A5", @"\\");
+	else if (TSHasNoYenSign(encoding) && g_shouldFilter == kMacJapaneseFilterMode)
+		text = TSReplacing(text, @"\\", @"\u00A5");
+	return text;
+}
+
+// The text to write in encoding, so that backslashes, yen signs and tildes become 0x5C and 0x7E.
+static NSString *TSTextForSaving(NSString *text, NSStringEncoding encoding)
+{
+	if (TSReadsBackslashAsYen(encoding))
+		text = TSReplacing(text, @"\\", @"\u00A5");
+	if (TSReadsTildeAsOverline(encoding))
+		text = TSReplacing(text, @"~", @"\u203E");
+	if (TSHasNoYenSign(encoding))
+		text = TSReplacing(text, @"\u00A5", @"\\");
+	return text;
+}
+
 - (NSData *)dataForText:(NSString *)text encoding:(NSStringEncoding)encoding byteOrderMark:(TSByteOrderMark)mark
 {
+	text = TSTextForSaving(text, encoding);
 	if (encoding == NSUTF8StringEncoding && mark == TSUTF8ByteOrderMark) {
 		NSMutableData *data = [NSMutableData dataWithBytes:"\xEF\xBB\xBF" length:3];
 		[data appendData:[text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
@@ -1176,7 +1269,7 @@ static NSString *TSDisplayStringForLine(const uint8_t *bytes, NSUInteger length,
     if ( [SUD boolForKey:AutomaticUTF8MACtoUTF8ConversionKey] )
         newString = [NSMutableString stringWithString:[newString normalizedStringWithModifiedNFC]];
     
-	return [newString dataUsingEncoding:enc allowLossyConversion:YES];
+	return [self dataForText:newString encoding:enc byteOrderMark:TSNoByteOrderMark];
 }
 // end 1.35 (C)
 

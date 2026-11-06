@@ -357,6 +357,8 @@ enum RootCommand
 	NSInteger           _lineEndingNotice;		// line endings converted to LF when the file was read
 	NSData              *_consoleCarry;			// the start of a character split between two pieces of output
 	id                  _consoleCarryHandle;	// the output the carried bytes came from
+	NSStringEncoding    _unreadableEncoding;	// the encoding that could not read the file, which was read in Latin 9
+	NSInteger           _openingNoticeAttempts;	// times the notices about the opened file waited for a window
 	BOOL                showBadEncodingDialog;
 	BOOL				PDFfromKit;
 	NSUInteger		pdfCharacterIndex;
