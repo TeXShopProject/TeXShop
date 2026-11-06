@@ -14,7 +14,7 @@
 <li>Handle failures to launch typesetting tools and missing command-search paths more reliably, and avoid an indefinite wait when stopping helper processes.</li>
 <li>Show a sheet when a specified TeX root file cannot be found.</li>
 <li>Fix errors involving empty documents, isolated quotation marks, and save-completion handling.</li>
-<li>When console output, a log file or the log window cannot be read as a whole in the document’s encoding, read it line by line, trying UTF-8 first and then the document’s encoding, and use Latin 9 only as a last resort. A line that cannot be read affects only itself, and when TeX breaks a line inside a UTF-8 character, TeXShop rejoins the character.</li>
+<li>Improve the handling of console output and log files that contain mixed encodings or broken characters. Read affected output line by line, trying UTF-8 and then the document’s encoding, with Latin 9 as a last resort. Keep unreadable data from spoiling other lines, and rejoin UTF-8 characters split by TeX’s line wrapping.</li>
 </ul>
 <h3>TeX-aware spell checking</h3>
 <ul>
