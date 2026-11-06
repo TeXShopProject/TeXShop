@@ -136,6 +136,7 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 @property NSMutableArray *ops;
 - (void)watchFile:(NSString *)path;
 - (void)cancelWatchFile;
+- (void)readPreviewArrangementFromData:(NSData *)data;
 @end
 @implementation TSDocument
 + (BOOL)autosavesInPlace { return YES; }
@@ -146,6 +147,7 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 - (instancetype)init { if((self=[super init])){ _textStorage=[NSTextStorage new]; _encoding=NSUTF8StringEncoding; _ops=[NSMutableArray new]; } return self; }
 - (NSTextStorage *)storage { return _textStorage; }
 - (void)setupTags {}
+- (void)readPreviewArrangementFromData:(NSData *)data {}
 - (void)colorizeAll { if(gThrowOnColorize>0 && --gThrowOnColorize==0){ gThrown++; [NSException raise:@"TSProbeException" format:@"colorize"]; } }
 - (BOOL)doNotReadSource { return NO; }
 - (NSStringEncoding)dataEncoding:(NSData *)d {
