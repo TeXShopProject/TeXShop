@@ -54,6 +54,7 @@
 // added by mitsu --(H) Macro menu; macroButton
 #import "TSMacroMenuController.h"
 // end addition
+#import "TSPreviewLayout.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 
 
@@ -377,6 +378,79 @@ else
     [SUD setInteger:sender.tag forKey:TSPreviewAppearanceModeKey];
 }
 // added by Terada (until this line)
+
+- (BOOL)previewDisplaysAsBook
+{
+    return self.previewBookOverride ? self.previewBookOverride.boolValue : self.bookDisplay;
+}
+
+- (BOOL)previewDisplaysRTL
+{
+    return self.previewDirectionOverride ? self.previewDirectionOverride.boolValue : self.RTLDisplay;
+}
+
+- (void)changePreviewLayout:(id)sender
+{
+    MyPDFKitView *view = [self pdfKitView];
+    if (!view.document || [sender tag] < 1 || [sender tag] > 4) return;
+    [view changePageStyleTo:[sender tag]];
+    [self updatePreviewLayoutControls];
+}
+
+- (void)changePreviewArrangement:(id)sender
+{
+    if (![[self pdfKitView] document]) return;
+    switch ([sender tag]) {
+        case 1: self.previewDirectionOverride = @NO; break;
+        case 2: self.previewDirectionOverride = @YES; break;
+        case 3: self.previewBookOverride = @(!self.previewDisplaysAsBook); break;
+        case 4:
+            self.previewBookOverride = nil;
+            self.previewDirectionOverride = nil;
+            break;
+        default: return;
+    }
+    [self.myPDFKitView applyPreviewArrangement];
+    [self.myPDFKitView2 applyPreviewArrangement];
+    [self updatePreviewLayoutControls];
+}
+
+- (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item
+{
+    MyPDFKitView *view = [self pdfKitView];
+    BOOL selected = NO;
+    if (item.action == @selector(changePreviewLayout:) || item.action == @selector(changePageStyle:))
+        selected = item.tag == view.pageStyle;
+    else if (item.tag == 1) selected = !self.previewDisplaysRTL;
+    else if (item.tag == 2) selected = self.previewDisplaysRTL;
+    else if (item.tag == 3) selected = self.previewDisplaysAsBook;
+    item.state = selected ? NSControlStateValueOn : NSControlStateValueOff;
+    if (item.action == @selector(changePreviewArrangement:) && item.tag == 4)
+        return view.document != nil && (self.previewBookOverride != nil || self.previewDirectionOverride != nil);
+    return view.document != nil;
+}
+
+- (void)updatePreviewLayoutControls
+{
+    // Each toolbar belongs to this document; no application-global target lookup.
+    MyPDFKitView *view = [self pdfKitView];
+    for (NSWindow *window in @[(NSWindow *)self.pdfKitWindow ?: NSNull.null,
+                               (NSWindow *)self.fullSplitWindow ?: NSNull.null]) {
+        if (![window isKindOfClass:NSWindow.class]) continue;
+        for (NSToolbarItem *item in window.toolbar.items) {
+            BOOL layout = [item.itemIdentifier isEqual:TSPreviewLayoutToolbarID];
+            if (!layout && ![item.itemIdentifier isEqual:TSPreviewArrangementToolbarID]) continue;
+            item.enabled = view.document != nil;
+            if (layout) {
+                item.image = TSPreviewLayoutImage(view.pageStyle);
+                item.toolTip = [NSString stringWithFormat:@"%@: %@", item.label, TSPreviewPageTitle(view.pageStyle)];
+            }
+            for (NSMenuItem *choice in [(NSMenuToolbarItem *)item menu].itemArray)
+                if (choice.action) choice.enabled = [self validatePreviewLayoutItem:choice];
+        }
+    }
+}
+
 - (void) setupToolbar
 {
     NSWindow *tempWindow;
@@ -434,6 +508,21 @@ if (@available(macOS 11.0, *))
         }
     }
 // added by Terada (until this line)
+    for (NSWindow *window in @[(NSWindow *)self.pdfKitWindow ?: NSNull.null,
+                               (NSWindow *)self.fullSplitWindow ?: NSNull.null]) {
+        if (![window isKindOfClass:NSWindow.class] || !window.toolbar) continue;
+        NSToolbar *toolbar = window.toolbar;
+        NSString *key = [@"TSPreviewLayoutControlsInstalled-" stringByAppendingString:toolbar.identifier];
+        if (![SUD boolForKey:key]) {
+            NSUInteger index = MIN(4, toolbar.items.count);
+            for (NSString *identifier in @[TSPreviewLayoutToolbarID, TSPreviewArrangementToolbarID]) {
+                if (![[toolbar.items valueForKey:@"itemIdentifier"] containsObject:identifier])
+                    [toolbar insertItemWithItemIdentifier:identifier atIndex:MIN(index++, toolbar.items.count)];
+            }
+            [SUD setBool:YES forKey:key];
+        }
+    }
+    [self updatePreviewLayoutControls];
    [[self htmlWindow] setToolbar: [self makeToolbar: kHtmlWindowToolbarIdentifier]];
 }
 
@@ -503,6 +592,8 @@ if (@available(macOS 11.0, *))
     NSSearchToolbarItem  *mySearchToolbarItem;
 
     
+    if ([itemIdent isEqual:TSPreviewLayoutToolbarID] || [itemIdent isEqual:TSPreviewArrangementToolbarID])
+        return TSPreviewLayoutItem(self, itemIdent);
 // added by Terada (from this line)
     if ([itemIdent isEqual:TSPreviewAppearanceToolbarID])
         return TSPreviewAppearanceItem(self);
@@ -1475,6 +1566,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
 					kSharingKKTID,
 					kSplitKKTID,
                     // kSplitVerticalKKTID,
@@ -1499,6 +1592,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
                 TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
                  kSplitKKTID,                // NSToolbarSpaceItemIdentifier,
                 NSToolbarFlexibleSpaceItemIdentifier,
                 kSearchKKTID,
@@ -1532,6 +1627,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
                      TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
                      kSplitKKTID,
                      NSToolbarFlexibleSpaceItemIdentifier,
                      skSearchTID,
@@ -1558,6 +1655,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
                     TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
              		kSplitKKTID,
                     NSToolbarFlexibleSpaceItemIdentifier,
                     skSearchTID,
@@ -1581,6 +1680,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
                      TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
                      kSplitKKTID,
                      NSToolbarFlexibleSpaceItemIdentifier,
                      skSearchTID,
@@ -1608,6 +1709,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
                     TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
                     kSplitKKTID,
                     NSToolbarFlexibleSpaceItemIdentifier,
                     skSearchTID,
@@ -1780,6 +1883,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
 					kSyncMarksTID,
                     kSearchKKTID,
                     kSharingKKTID,
@@ -1818,6 +1923,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
 					kSyncMarksTID,
                     kSplitKKTID,
                     kToolsKKTID,
@@ -1860,6 +1967,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
                     skSearchTID,
 					kSplitKKTID,
                     skColorIndexTID,
@@ -1895,6 +2004,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
 // added by Terada (until this line)
+                    TSPreviewLayoutToolbarID,
+                    TSPreviewArrangementToolbarID,
                     skSearchTID,
 					kSplitKKTID,
                     skColorIndexTID,
@@ -2004,6 +2115,11 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 // this is based on validateMenuItem
 
 - (BOOL) validateToolbarItem: (NSToolbarItem *) toolbarItem {
+    if ([toolbarItem.itemIdentifier isEqual:TSPreviewLayoutToolbarID] ||
+        [toolbarItem.itemIdentifier isEqual:TSPreviewArrangementToolbarID]) {
+        [self updatePreviewLayoutControls];
+        return [[self pdfKitView] document] != nil;
+    }
 	// Optional method   self message is sent to us since we are the target of some toolbar item actions
 	// (for example:  of the save items action)
     

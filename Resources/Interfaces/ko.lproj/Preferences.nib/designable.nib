@@ -99,6 +99,7 @@
                 <outlet property="_escapeWarningButton" destination="234" id="389"/>
                 <outlet property="_externalEditorButton" destination="56" id="390"/>
                 <outlet property="_findMatrix" destination="9" id="391"/>
+                <outlet property="_displayAsBookButton" destination="preview-cover-button" id="preview-cover-outlet"/>
                 <outlet property="_firstPageMatrix" destination="151" id="392"/>
                 <outlet property="_flashBackgroundButton" destination="103" id="393"/>
                 <outlet property="_fontTextView" destination="iR5-8W-Z3q" id="aa7-Ra-C7q"/>
@@ -1325,7 +1326,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="마우스 모드" translatesAutoresizingMaskIntoConstraints="NO" id="126">
-                                            <rect key="frame" x="51" y="356" width="253" height="58" />
+                                            <rect key="frame" x="51" y="292" width="253" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="OsK-yS-WhW">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="46" />
@@ -1415,14 +1416,30 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="맞쪽보기" translatesAutoresizingMaskIntoConstraints="NO" id="150">
-                                            <rect key="frame" x="51" y="426" width="253" height="70" />
+                                            <rect key="frame" x="51" y="362" width="253" height="134" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="JHq-KY-oKF">
-                                                <rect key="frame" x="0.0" y="0.0" width="253" height="58" />
+                                                <rect key="frame" x="0.0" y="0.0" width="253" height="122" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
+                                                <subviews><button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-button">
+ <rect key="frame" x="14" y="42" width="227" height="22"/>
+ <autoresizingMask key="autoresizingMask"/>
+ <buttonCell key="cell" type="check" title="Show first page alone as cover" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-cover-cell">
+ <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+ <font key="font" metaFont="system" size="11"/>
+ </buttonCell>
+ <connections><action selector="displayAsBookChanged:" target="-2" id="preview-cover-action"/></connections>
+ </button>
+ <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-note">
+ <rect key="frame" x="14" y="8" width="225" height="28"/>
+ <autoresizingMask key="autoresizingMask"/>
+ <textFieldCell key="cell" title="For newly opened documents.&#10;Magic comments take precedence." id="preview-cover-note-cell">
+ <font key="font" metaFont="system" size="10"/>
+ <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+ <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+ </textFieldCell></textField>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="151">
-                                                        <rect key="frame" x="14" y="9" width="195" height="38" />
+                                                        <rect key="frame" x="14" y="73" width="195" height="38" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="195" height="18"/>
@@ -1452,7 +1469,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="외부 에디터" translatesAutoresizingMaskIntoConstraints="NO" id="155">
-                                            <rect key="frame" x="51" y="294" width="253" height="50" />
+                                            <rect key="frame" x="51" y="230" width="253" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="Azx-Bz-4Eg">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="38" />
@@ -1474,7 +1491,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="디스플레이" translatesAutoresizingMaskIntoConstraints="NO" id="158">
-                                            <rect key="frame" x="51" y="232" width="253" height="50" />
+                                            <rect key="frame" x="51" y="168" width="253" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="JLV-eP-rGE">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="38" />
@@ -1496,7 +1513,7 @@ DQ
                                             <font key="titleFont" size="13" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="창 배치" translatesAutoresizingMaskIntoConstraints="NO" id="Z4m-QX-PVb">
-                                            <rect key="frame" x="51" y="147" width="253" height="73" />
+                                            <rect key="frame" x="51" y="83" width="253" height="73" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="FsO-dz-b0j">
                                                 <rect key="frame" x="0.0" y="0.0" width="253" height="61" />

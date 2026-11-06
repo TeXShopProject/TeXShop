@@ -99,6 +99,7 @@
                 <outlet property="_escapeWarningButton" destination="325" id="326"/>
                 <outlet property="_externalEditorButton" destination="272" id="274"/>
                 <outlet property="_findMatrix" destination="581" id="586"/>
+                <outlet property="_displayAsBookButton" destination="preview-cover-button" id="preview-cover-outlet"/>
                 <outlet property="_firstPageMatrix" destination="506" id="512"/>
                 <outlet property="_flashBackgroundButton" destination="1140" id="1161"/>
                 <outlet property="_fontTextView" destination="OB9-Pm-bWw" id="zrw-Ko-G6r"/>
@@ -1294,7 +1295,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="マウスモード" translatesAutoresizingMaskIntoConstraints="NO" id="330">
-                                            <rect key="frame" x="32" y="358" width="289" height="58" />
+                                            <rect key="frame" x="32" y="294" width="289" height="58" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="cJO-Ty-BIz">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="46" />
@@ -1383,15 +1384,31 @@ DQ
                                             </view>
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
-                                        <box fixedFrame="YES" title="見開きページ" translatesAutoresizingMaskIntoConstraints="NO" id="501">
-                                            <rect key="frame" x="32" y="428" width="289" height="70" />
+                                        <box fixedFrame="YES" title="見開きの配置" translatesAutoresizingMaskIntoConstraints="NO" id="501">
+                                            <rect key="frame" x="32" y="364" width="289" height="134" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="ikb-NY-97E">
-                                                <rect key="frame" x="0.0" y="0.0" width="289" height="58" />
+                                                <rect key="frame" x="0.0" y="0.0" width="289" height="122" />
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
+                                                <subviews><button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-button">
+ <rect key="frame" x="17" y="42" width="260" height="22"/>
+ <autoresizingMask key="autoresizingMask"/>
+ <buttonCell key="cell" type="check" title="先頭ページを表紙として単独表示" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-cover-cell">
+ <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+ <font key="font" metaFont="system" size="11"/>
+ </buttonCell>
+ <connections><action selector="displayAsBookChanged:" target="-2" id="preview-cover-action"/></connections>
+ </button>
+ <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-cover-note">
+ <rect key="frame" x="14" y="8" width="261" height="28"/>
+ <autoresizingMask key="autoresizingMask"/>
+ <textFieldCell key="cell" title="新しく開く文書に適用します。&#10;マジックコメントを優先します。" id="preview-cover-note-cell">
+ <font key="font" metaFont="system" size="10"/>
+ <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+ <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+ </textFieldCell></textField>
                                                     <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="506">
-                                                        <rect key="frame" x="17" y="9" width="146" height="38" />
+                                                        <rect key="frame" x="17" y="73" width="146" height="38" />
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="cellSize" width="146" height="18"/>
@@ -1421,7 +1438,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="外部エディタ" translatesAutoresizingMaskIntoConstraints="NO" id="555">
-                                            <rect key="frame" x="32" y="296" width="289" height="50" />
+                                            <rect key="frame" x="32" y="232" width="289" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="qj3-lz-r3b">
                                                 <rect key="frame" x="0.0" y="0.0" width="289" height="38" />
@@ -1443,7 +1460,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="ディスプレイ" translatesAutoresizingMaskIntoConstraints="NO" id="cS3-3U-4so">
-                                            <rect key="frame" x="32" y="234" width="294" height="50" />
+                                            <rect key="frame" x="32" y="170" width="294" height="50" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="SPd-CY-YHu">
                                                 <rect key="frame" x="0.0" y="0.0" width="294" height="38" />
@@ -1465,7 +1482,7 @@ DQ
                                             <font key="titleFont" metaFont="system"/>
                                         </box>
                                         <box fixedFrame="YES" title="統合ウインドウの挙動" translatesAutoresizingMaskIntoConstraints="NO" id="liU-P0-RO7">
-                                            <rect key="frame" x="32" y="149" width="294" height="73" />
+                                            <rect key="frame" x="32" y="85" width="294" height="73" />
                                             <autoresizingMask key="autoresizingMask"/>
                                             <view key="contentView" id="K55-ZB-hwo">
                                                 <rect key="frame" x="0.0" y="0.0" width="294" height="61" />

@@ -1470,6 +1470,12 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 
 /*" This method is connect to the 'first double page' radio buttons.
 "*/
+- (IBAction)displayAsBookChanged:(NSButton *)sender
+{
+    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:DisplayAsBookKey] forKey:DisplayAsBookKey];
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:DisplayAsBookKey];
+}
+
 - (IBAction)firstDoublePageChanged:sender
 {
 	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:PdfFirstPageStyleKey] forKey:PdfFirstPageStyleKey];
@@ -2551,6 +2557,7 @@ This method retrieves the application preferences from the defaults object and s
 	myTag = [defaults integerForKey:PdfFirstPageStyleKey];
 	if (!myTag) myTag = PDF_FIRST_RIGHT;
 	[_firstPageMatrix selectCellWithTag:myTag];
+    [_displayAsBookButton setState:[defaults boolForKey:DisplayAsBookKey] ? NSControlStateValueOn : NSControlStateValueOff];
 
 	// mitsu 1.29 (O)
 	NSInteger itemIndex;

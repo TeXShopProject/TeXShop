@@ -438,12 +438,15 @@ withDarkColors = NO;
 	self.logLineNumberView = nil;
 	self.logExtension = nil;
     self.bookDisplay = [SUD boolForKey:DisplayAsBookKey];
+    self.previewInitialBookDisplay = self.bookDisplay;
     NSInteger tempInt = [SUD integerForKey: PdfFirstPageStyleKey];
     if (tempInt == 1)
         self.RTLDisplay = NO;
     else
         self.RTLDisplay = YES;
     
+    self.previewInitialRTLDisplay = self.RTLDisplay;
+
 
 	lastCursorLocation = 0; // added by Terada
 	lastStringLength = 0; // added by Terada
@@ -2290,6 +2293,8 @@ in other code when an external editor is being used. */
     myRange.length = 1;
     
     self.numberingCorrection = 0;
+    self.bookDisplay = self.previewInitialBookDisplay;
+    self.RTLDisplay = self.previewInitialRTLDisplay;
     
     while ((myRange.location < length) && (!done) && (linesTested < 20)) {
         [firstBytes getLineStart: &start end: &end contentsEnd: nil forRange: myRange];
@@ -6371,6 +6376,9 @@ if (! useFullSplitWindow) {
 
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
+    if (anItem.action == @selector(changePreviewLayout:) ||
+        anItem.action == @selector(changePreviewArrangement:))
+        return [self validatePreviewLayoutItem:anItem];
 // added by Terada (from this line)
     if (anItem.action == NSSelectorFromString(@"changePreviewAppearance:"))
         return TSValidatePreviewAppearanceChoice(anItem, SUD);

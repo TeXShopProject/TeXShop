@@ -94,9 +94,16 @@
     [[self myDocument].myPDFKitView zoomOut:sender];
 }
 
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+    if (item.action == @selector(changePageStyle:))
+        return [self.myDocument validatePreviewLayoutItem:item];
+    return [super validateMenuItem:item];
+}
+
 - (void)changePageStyle: sender;
 {
-    [[self myDocument].myPDFKitView changePageStyle:sender];
+    [[self myDocument] changePreviewLayout:sender];
 }
 
 
