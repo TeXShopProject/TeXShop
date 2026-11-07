@@ -48,6 +48,12 @@ static inline NSPoint TSLinkPreviewDestinationPoint(NSPoint point, NSSize size,
     return NSPointFromCGPoint(CGPointApplyAffineTransform(NSPointToCGPoint(point), transform));
 }
 
+static inline BOOL TSLinkPreviewHasHorizontalDestination(NSPoint raw, CGAffineTransform transform)
+{
+    return (fabs(transform.a) < 0.0001 || raw.x != kPDFDestinationUnspecifiedValue) &&
+           (fabs(transform.c) < 0.0001 || raw.y != kPDFDestinationUnspecifiedValue);
+}
+
 static inline NSRect TSLinkPreviewTextBounds(PDFPage *page, NSSize size, NSPoint point,
                                              CGAffineTransform transform, BOOL enlarged)
 {
@@ -57,10 +63,29 @@ static inline NSRect TSLinkPreviewTextBounds(PDFPage *page, NSSize size, NSPoint
     CGRect pageBand = CGRectApplyAffineTransform(NSRectToCGRect(band), CGAffineTransformInvert(transform));
     PDFSelection *selection = [page selectionForRect:NSRectFromCGRect(pageBand)];
     if (!selection.string.length) return NSZeroRect;
-    CGRect bounds = CGRectApplyAffineTransform(NSRectToCGRect([selection boundsForPage:page]), transform);
-    if (!isfinite(bounds.origin.x) || !isfinite(bounds.origin.y) ||
-        !isfinite(bounds.size.width) || !isfinite(bounds.size.height)) return NSZeroRect;
-    return NSIntersectionRect(band, NSRectFromCGRect(bounds));
+    // Retain the column intersecting the destination, not unrelated columns.
+    // Exceptionally wide lines (posters, A3 prose) should not shrink a local preview.
+    CGFloat limit = (enlarged ? 445 : 400) / 0.75;
+    CGFloat nearest = CGFLOAT_MAX;
+    NSMutableArray<NSValue *> *lines = [NSMutableArray array];
+    for (PDFSelection *line in selection.selectionsByLine) {
+        CGRect bounds = CGRectApplyAffineTransform(NSRectToCGRect([line boundsForPage:page]), transform);
+        if (!isfinite(bounds.origin.x) || !isfinite(bounds.origin.y) ||
+            !isfinite(bounds.size.width) || !isfinite(bounds.size.height)) continue;
+        NSRect rect = NSIntersectionRect(band, NSRectFromCGRect(bounds));
+        if (NSIsEmptyRect(rect) || rect.size.width > limit) continue;
+        CGFloat distance = MAX(MAX(NSMinX(rect) - point.x, point.x - NSMaxX(rect)), 0);
+        nearest = MIN(nearest, distance);
+        [lines addObject:[NSValue valueWithRect:rect]];
+    }
+    NSRect result = NSZeroRect;
+    for (NSValue *value in lines) {
+        NSRect rect = value.rectValue;
+        CGFloat distance = MAX(MAX(NSMinX(rect) - point.x, point.x - NSMaxX(rect)), 0);
+        if (distance <= nearest + 2)
+            result = NSIsEmptyRect(result) ? rect : NSUnionRect(result, rect);
+    }
+    return result;
 }
 
 static inline CGFloat TSLinkPreviewClamp(CGFloat value, CGFloat lower, CGFloat upper)
@@ -89,9 +114,14 @@ static inline BOOL TSLinkPreviewRects(NSSize pageSize, NSPoint destination, NSRe
     if (!NSIsEmptyRect(text)) preferredX = MIN(preferredX, NSMinX(text) - padding);
     CGFloat x = TSLinkPreviewClamp(preferredX, 0, pageSize.width - width);
     // Keep both the text's line beginnings and the actual destination in view.
-    CGFloat right = anchorX + padding;
-    if (enlarged && !NSIsEmptyRect(text)) right = MAX(right, NSMaxX(text) + padding);
+    CGFloat right = anchorX + (enlarged ? padding : 200);
+    if (!NSIsEmptyRect(text)) right = MAX(right, NSMaxX(text) + padding);
     width = MIN(pageSize.width - x, MAX(width, right - x));
+    if (width > (enlarged ? 445 : 400) / 0.75) {
+        // Prefer a readable destination over fitting a distant line beginning.
+        width = MIN(pageSize.width, enlarged ? 445 : 400);
+        x = TSLinkPreviewClamp(anchorX - padding, 0, pageSize.width - width);
+    }
     CGFloat y = TSLinkPreviewClamp(destination.y - height + 10, 0, pageSize.height - height);
     *source = NSMakeRect(x, y, width, height);
 

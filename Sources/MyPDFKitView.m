@@ -4294,6 +4294,9 @@ if (! self.skipLinks)
             NSRect textBounds = NSZeroRect;
             if (isfinite(linkedPoint.x) && isfinite(linkedPoint.y))
                 textBounds = TSLinkPreviewTextBounds(linkedPage, imageSize, linkedPoint, pageTransform, largerSize);
+            if (!TSLinkPreviewHasHorizontalDestination([theDestination point], pageTransform) &&
+                !NSIsEmptyRect(textBounds))
+                linkedPoint.x = NSMinX(textBounds);
             if (!TSLinkPreviewRects(imageSize, linkedPoint, textBounds, documentView.visibleRect,
                                     mouseLocDocumentView, largerSize, pushUp, documentView.isFlipped,
                                     &aRect, &bRect)) {

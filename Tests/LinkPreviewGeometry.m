@@ -147,6 +147,105 @@ static void testTextContext(void) {
     require(NSIsEmptyRect(TSLinkPreviewTextBounds(empty,emptySize,NSMakePoint(100,300),emptyTransform,YES)),
             "graphics-only PDF falls back without text bounds");
 }
+// Build real selectable text so column and coordinate regressions are observable.
+static PDFDocument *textFixture(NSSize size, NSRect crop, NSArray<NSDictionary *> *lines) {
+    NSMutableData *data=[NSMutableData data];
+    CGDataConsumerRef consumer=CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
+    CGRect media=CGRectMake(0,0,size.width,size.height), box=NSRectToCGRect(crop);
+    CGContextRef context=CGPDFContextCreate(consumer,&media,NULL);
+    NSDictionary *info=@{(__bridge NSString *)kCGPDFContextCropBox:[NSData dataWithBytes:&box length:sizeof(box)]};
+    CGPDFContextBeginPage(context,(__bridge CFDictionaryRef)info);
+    [NSGraphicsContext saveGraphicsState];
+    NSGraphicsContext.currentContext=[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO];
+    for (NSDictionary *line in lines)
+        [line[@"text"] drawAtPoint:[line[@"point"] pointValue]
+             withAttributes:@{NSFontAttributeName:[NSFont fontWithName:@"Helvetica" size:12]}];
+    [NSGraphicsContext restoreGraphicsState];
+    CGPDFContextEndPage(context); CGPDFContextClose(context);
+    CGContextRelease(context); CGDataConsumerRelease(consumer);
+    return [[PDFDocument alloc] initWithData:data];
+}
+static NSDictionary *textLine(NSString *text, CGFloat x, CGFloat y) {
+    return @{@"text":text,@"point":[NSValue valueWithPoint:NSMakePoint(x,y)]};
+}
+static void testColumnsAndWidePages(void) {
+    for (NSInteger wide=0;wide<2;wide++) {
+        NSSize size=NSMakeSize(wide?2400:612,842);
+        CGFloat x=wide?1500:380;
+        PDFDocument *document=textFixture(size,NSMakeRect(0,0,size.width,size.height),@[
+            textLine(@"LEFT COLUMN wrong equation (1)",49,600),
+            textLine(@"RIGHT COLUMN context surrounding formula",wide?1450:312,560),
+            textLine(@"x² + y² = z² (2)",x,600),
+            textLine(wide ? [@"Wide poster prose " stringByPaddingToLength:300 withString:@"abcdefghijk " startingAtIndex:0] : @"Left lower column",49,530)]);
+        PDFPage *page=[document pageAtIndex:0]; CGAffineTransform transform;
+        require(TSLinkPreviewPageGeometry(page,&size,&transform),"column geometry");
+        NSPoint destination=NSMakePoint(x,610);
+        PDFSelection *equation=[document findString:@"x² + y² = z² (2)" withOptions:0].firstObject;
+        require(equation!=nil,"real formula selected");
+        NSRect equationBounds=[equation boundsForPage:page];
+        for (NSInteger enlarged=0;enlarged<2;enlarged++) {
+            NSRect text=TSLinkPreviewTextBounds(page,size,destination,transform,enlarged);
+            require(NSMinX(text)>=(wide?1449:311),"context excludes unrelated left column and wide prose");
+            NSRect source,output;
+            require(TSLinkPreviewRects(size,destination,text,NSMakeRect(0,0,2000,1200),NSMakePoint(800,500),
+                enlarged,NO,YES,&source,&output),"column preview");
+            require(contains(source,equationBounds),"complete right-column formula remains visible");
+            require(output.size.width/source.size.width >= (enlarged?1:2.0/3.0)*0.75-0.001,
+                    "wide page context does not reduce readability below floor");
+        }
+    }
+    // If all surrounding context is unavoidably wide, retain a local destination crop.
+    for (NSInteger enlarged=0;enlarged<2;enlarged++) {
+        NSRect source,output;
+        require(TSLinkPreviewRects(NSMakeSize(2400,1000),NSMakePoint(1300,700),NSMakeRect(50,400,2200,300),
+            NSMakeRect(0,0,2000,1200),NSMakePoint(800,500),enlarged,NO,YES,&source,&output),"poster fallback");
+        require(source.origin.x>1200 && NSMaxX(source)>1500,"poster keeps destination and right-hand expression");
+        require(near(output.size.width/source.size.width,enlarged?1:2.0/3.0),"poster fallback retains nominal scale");
+    }
+    NSRect source,output;
+    require(TSLinkPreviewRects(NSMakeSize(800,900),NSMakePoint(200,700),NSMakeRect(80,400,500,300),
+        NSMakeRect(0,0,2000,1200),NSMakePoint(800,500),YES,NO,YES,&source,&output),"command full text width");
+    require(NSMaxX(source)>=590 && source.origin.x<=70,"Command includes right edge of same-column text");
+}
+static void testRotatedTextContext(void) {
+    NSRect crop=NSMakeRect(150,170,500,650);
+    for (NSInteger rotation=0;rotation<360;rotation+=90) {
+        PDFDocument *document=textFixture(NSMakeSize(800,1000),crop,@[textLine(@"TARGET",240,540)]);
+        [document pageAtIndex:0].rotation=rotation;
+        document=[[PDFDocument alloc] initWithData:document.dataRepresentation];
+        PDFPage *page=[document pageAtIndex:0]; NSSize size; CGAffineTransform transform;
+        require(TSLinkPreviewPageGeometry(page,&size,&transform),"rotated text geometry");
+        PDFSelection *selection=[document findString:@"TARGET" withOptions:0].firstObject;
+        require(selection!=nil,"rotated text is selectable");
+        NSRect raw=[selection boundsForPage:page];
+        // Explicit quarter-turn formulas, independent of the production CG transform.
+        NSRect r=NSOffsetRect(raw,-crop.origin.x,-crop.origin.y),expected;
+        switch(rotation) {
+            case 90: expected=NSMakeRect(r.origin.y,crop.size.width-NSMaxX(r),r.size.height,r.size.width);break;
+            case 180: expected=NSMakeRect(crop.size.width-NSMaxX(r),crop.size.height-NSMaxY(r),r.size.width,r.size.height);break;
+            case 270: expected=NSMakeRect(crop.size.height-NSMaxY(r),r.origin.x,r.size.height,r.size.width);break;
+            default: expected=r;
+        }
+        NSPoint destination=NSMakePoint(NSMidX(expected),NSMaxY(expected));
+        NSRect text=TSLinkPreviewTextBounds(page,size,destination,transform,YES);
+        require(near(text.origin.x,expected.origin.x) && near(text.origin.y,expected.origin.y) &&
+                near(text.size.width,expected.size.width) && near(text.size.height,expected.size.height),
+                "text band inverse and text bounds forward transforms agree with rotated CropBox");
+        NSPoint unspecified=NSMakePoint(kPDFDestinationUnspecifiedValue,kPDFDestinationUnspecifiedValue);
+        require(!TSLinkPreviewHasHorizontalDestination(unspecified,transform),"Fit has no horizontal anchor");
+        NSPoint missingX=NSMakePoint(kPDFDestinationUnspecifiedValue,500);
+        require(TSLinkPreviewHasHorizontalDestination(missingX,transform)==(rotation%180!=0),
+                "quarter turns use raw y for horizontal destination");
+    }
+    PDFDocument *document=textFixture(NSMakeSize(650,900),NSMakeRect(0,0,650,900),@[
+        textLine(@"E = mc²",200,650),textLine(@"LOWER surrounding context reaches leftward",80,410)]);
+    PDFPage *page=[document pageAtIndex:0]; NSSize size; CGAffineTransform transform;
+    require(TSLinkPreviewPageGeometry(page,&size,&transform),"long context geometry");
+    NSPoint point=NSMakePoint(205,660);
+    NSRect normal=TSLinkPreviewTextBounds(page,size,point,transform,NO);
+    NSRect enlarged=TSLinkPreviewTextBounds(page,size,point,transform,YES);
+    require(NSMinX(normal)>190 && NSMinX(enlarged)<90,"Command reads full 360 point vertical text band");
+}
 static void testPlacementAndUnspecified(void) {
     for (NSInteger enlarged=0; enlarged<2; enlarged++) for (NSInteger flipped=0; flipped<2; flipped++)
     for (NSInteger above=0; above<2; above++) {
@@ -202,5 +301,7 @@ int main(void) { @autoreleasepool {
     testDrawing();
     testTextContext();
     testPlacementAndUnspecified();
+    testColumnsAndWidePages();
+    testRotatedTextContext();
     puts("PASS: link preview bounds, aspect ratio, command sizing, CropBox and rotations");
 } }
