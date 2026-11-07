@@ -271,14 +271,15 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 
 	// A profile replaces the settings of this window, but not what is kept elsewhere:
 	// the keyboard shortcuts of their own window, the App Shortcuts and app language chosen
-	// in System Settings, and the positions of windows, toolbars and split views that AppKit
-	// saves. The menus keep those shortcuts until TeXShop quits.
+	// in System Settings, what Sparkle records about updates (its keys begin with SU), and
+	// the positions of windows, toolbars and split views that AppKit saves. The menus keep
+	// those shortcuts until TeXShop quits.
 	NSMutableDictionary *profile = [NSMutableDictionary dictionaryWithDictionary:factoryDefaults ?: @{}];
 	[oldDefaults enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
 		if (! [key isKindOfClass:[NSString class]] || profile[key] != nil)
 			return;
 		if ([key isEqualToString:TSMenuShortcutOverridesKey] || [key isEqualToString:@"NSUserKeyEquivalents"] ||
-				[key isEqualToString:@"AppleLanguages"] || [key hasPrefix:@"NSWindow Frame "] ||
+				[key isEqualToString:@"AppleLanguages"] || [key hasPrefix:@"SU"] || [key hasPrefix:@"NSWindow Frame "] ||
 				[key hasPrefix:@"NSToolbar Configuration "] || [key hasPrefix:@"NSSplitView Subview Frames "])
 			profile[key] = value;
 	}];
