@@ -56,7 +56,7 @@ int main(void) { @autoreleasepool {
             BOOL oldAllowed=oldKey.length && [TSShortcutStore isAllowedKey:oldKey modifiers:f&TSShortcutModifiers];
             if (!newAllowed && !oldAllowed) continue;
             allowed++;
-            NSDictionary *current=TSBinding(key,f), *previous=PreviousRecordingBinding(oldKey,f,data,kb.unsignedIntValue);
+            NSDictionary *current=TSRecordedBinding(event,Translate(data,code,0,kb.unsignedIntValue)), *previous=PreviousRecordingBinding(oldKey,f,data,kb.unsignedIntValue);
             BOOL a=newAllowed && Dispatch(menu,item,target,current,event),b=oldAllowed && Dispatch(menu,item,target,previous,event);
             newOK+=a; oldOK+=b; if (a&&!b) gained++;
             if (b&&!a) { lost++; if(lost<20) printf("REGRESSION %s kb=%u code=%u chars=%s ign=%s new=%s old=%s\n",name.UTF8String,kb.unsignedIntValue,code,chars.UTF8String,ign.UTF8String,current.description.UTF8String,previous.description.UTF8String); }

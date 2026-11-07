@@ -1005,7 +1005,7 @@
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
                                         <menuItem title="ズームイン" keyEquivalent="+" id="789" identifier="TSShortcut.zoomIn:.0">
-                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                             <connections>
                                                 <action selector="zoomIn:" target="-1" id="794"/>
                                             </connections>

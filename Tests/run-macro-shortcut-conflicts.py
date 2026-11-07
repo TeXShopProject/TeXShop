@@ -65,6 +65,119 @@ if '--mutations' in sys.argv:
         'restore without macro confirmation': [(k, 'if (![self confirmMacrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]) return;', 'if (NO) return;')],
         'save from sheet synchronously': [(e, 'dispatch_async(dispatch_get_main_queue(), ^{\n            if (response', '^{\n            if (response'), (e, 'else if (response == NSAlertSecondButtonReturn) [self cancelPressed:self];\n        });', 'else if (response == NSAlertSecondButtonReturn) [self cancelPressed:self];\n        }();')],
     }
+    cases.update({'A conflictForKey counts macro items (macros block custom keys in the UI)': [('TSKeyboardShortcuts.m',
+                                                                               'if (item == excluded || '
+                                                                               'item.submenu || item.action '
+                                                                               '== '
+                                                                               'NSSelectorFromString(@"doMacro:") '
+                                                                               '|| '
+                                                                               '!item.keyEquivalent.length) '
+                                                                               'return;',
+                                                                               'if (item == excluded || '
+                                                                               'item.submenu || '
+                                                                               '!item.keyEquivalent.length) '
+                                                                               'return;')],
+ 'B menuBindings includes installed macro items': [('TSKeyboardShortcuts.m',
+                                                    'if (!item.submenu && item.action != '
+                                                    'NSSelectorFromString(@"doMacro:") && '
+                                                    'item.keyEquivalent.length)\n'
+                                                    '            [result',
+                                                    'if (!item.submenu && item.keyEquivalent.length)\n'
+                                                    '            [result')],
+ 'C no clearing of command keys before applying (transient duplicates)': [('TSKeyboardShortcuts.m',
+                                                                           '    for (TSShortcutCommand '
+                                                                           '*command in self.commands) '
+                                                                           'command.item.keyEquivalent = '
+                                                                           '@"";\n'
+                                                                           '    for (TSShortcutCommand '
+                                                                           '*command in self.commands) {\n'
+                                                                           '        if ([active',
+                                                                           '    for (TSShortcutCommand '
+                                                                           '*command in self.commands) {\n'
+                                                                           '        if ([active')],
+ 'D refreshMenuAndMacros does not rebuild macros': [('TSKeyboardShortcuts.m',
+                                                     '        [[NSNotificationCenter defaultCenter] '
+                                                     'postNotificationName:TSRebuildMacrosNotification '
+                                                     'object:self];\n',
+                                                     '')],
+ 'E menuStructureChanged ignores reentrancy guards': [('TSKeyboardShortcuts.m',
+                                                       'if (menu != NSApp.mainMenu || '
+                                                       'self.menuRefreshPending || self.applyingMenus || '
+                                                       'self.rebuildingMacros) return;',
+                                                       'if (menu != NSApp.mainMenu || '
+                                                       'self.menuRefreshPending) return;')],
+ 'F menu notifications not observed at all': [('TSKeyboardShortcuts.m',
+                                               'for (NSNotificationName name in '
+                                               '@[NSMenuDidAddItemNotification, '
+                                               'NSMenuDidRemoveItemNotification])',
+                                               'for (NSNotificationName name in @[])')],
+ 'G imported macros treated as unchanged': [('MacroEditorProduction.inc',
+                                             'if (original && [original isEqual:binding]) continue;',
+                                             'if (!original || [original isEqual:binding]) continue;')],
+ 'H monitor never removed': [('TSKeyboardShortcuts.m',
+                              '@finally { [NSEvent removeMonitor:monitor]; }',
+                              '@finally { }')],
+ 'I pending key not restored after preview': [('MacroEditorProduction.inc',
+                                               '    [self refreshShortcutConflicts];\n'
+                                               '    self.previousItem.key = saved;',
+                                               '    [self refreshShortcutConflicts];')],
+ 'J accepted macro not recorded as owner (no tooltip for later duplicate)': [('MacroMenuProduction.inc',
+                                                                              '                    '
+                                                                              'self.keyOwners[binding] = @{',
+                                                                              '                    if (NO) '
+                                                                              'self.keyOwners[binding] = '
+                                                                              '@{')],
+ 'K close sheet not ordered out before deferred save': [('MacroEditorProduction.inc',
+                                                         '        [alert.window orderOut:nil];\n',
+                                                         '')],
+ 'L attachedSheet guard removed in windowShouldClose': [('MacroEditorProduction.inc',
+                                                         '    if ([window attachedSheet]) return NO;\n',
+                                                         '')],
+ 'M macrosAffectedByRestoringAll empty': [('TSKeyboardShortcuts.m',
+                                           '    for (TSShortcutCommand *command in self.commands)\n'
+                                           '        [result addObjectsFromArray:[self '
+                                           'macrosUsingKey:command.defaultKey '
+                                           'modifiers:command.defaultModifiers]];',
+                                           '')],
+ 'N applyCapturedShortcut skips macro confirmation': [('TSKeyboardShortcuts.m',
+                                                       '    if (![self '
+                                                       'confirmMacrosUsingKey:self.capturedKey '
+                                                       'modifiers:self.capturedModifiers]) return;\n'
+                                                       '    NSString *error = [self.store '
+                                                       'setKey:self.capturedKey',
+                                                       '    NSString *error = [self.store '
+                                                       'setKey:self.capturedKey')],
+ 'O beginMenuRebuild does not reapply menu keys': [('TSKeyboardShortcuts.m',
+                                                    '    self.rebuildingMacros = YES;\n'
+                                                    '    [self.store refreshMenu];',
+                                                    '    self.rebuildingMacros = YES;')],
+ 'P matchesItem compares raw strings without A-Z Shift folding': [('TSKeyboardShortcuts.m',
+                                                                   'return '
+                                                                   '[TSRecordedBinding(event, [event charactersByApplyingModifiers:0]) '
+                                                                   'isEqual:TSBinding(item.keyEquivalent, '
+                                                                   'item.keyEquivalentModifierMask)];',
+                                                                   'return '
+                                                                   '[TSShortcutCharacterForEvent(event) '
+                                                                   'isEqual:item.keyEquivalent] && '
+                                                                   '(event.modifierFlags & '
+                                                                   'TSShortcutModifiers) == '
+                                                                   '(item.keyEquivalentModifierMask & '
+                                                                   'TSShortcutModifiers);')],
+ 'Q restoreAll does not rebuild macros': [('TSKeyboardShortcuts.m',
+                                           '[self.store restoreAll]; [self refreshMenuAndMacros];',
+                                           '[self.store restoreAll];')],
+ 'R removeShortcut does not rebuild macros': [('TSKeyboardShortcuts.m',
+                                               '    [self showError:[self.store setKey:@"" modifiers:0 '
+                                               'forCommand:command]];\n'
+                                               '    [self refreshMenuAndMacros];',
+                                               '    [self showError:[self.store setKey:@"" modifiers:0 '
+                                               'forCommand:command]];')]})
+    cases.update({
+        'recording leaves redundant punctuation Shift': [(k, 'flags &= ~NSEventModifierFlagShift;', 'flags |= NSEventModifierFlagShift;')],
+        'engine rebuild leaves settings list stale': [(k, '    if (self.isWindowLoaded) [self reloadCommands];\n    [[NSNotificationCenter', '    [[NSNotificationCenter')],
+        'macro rebuild leaves guard set after exception': [(m, '    } @finally {\n        [[TSKeyboardShortcuts sharedController] endMenuRebuild];\n    }', '    } @catch (NSException *exception) { @throw; }\n    [[TSKeyboardShortcuts sharedController] endMenuRebuild];')],
+        'validation changes rebuild all macros': [(k, '@[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification]', '@[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification, NSMenuDidChangeItemNotification]'), (k,'    if ([[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) return;',''), (k,'if (![[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) [self refreshMenuAndMacros];','[self refreshMenuAndMacros];')],
+    })
     for name, changes in cases.items(): run_case(name, changes)
 for lang in ('en', 'ja'):
     subprocess.run(['plutil', '-lint', str(root / f'Resources/Interfaces/{lang}.lproj/Localizable.strings')], check=True)

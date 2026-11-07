@@ -60,6 +60,17 @@ static NSString *TSShortcutCharacterForEvent(NSEvent *event) {
     if (source) CFRelease(source);
     return latin.length == 1 && [latin characterAtIndex:0] >= 0x20 && [latin characterAtIndex:0] < 0x7f ? latin : key;
 }
+// A shifted punctuation character already encodes Shift in AppKit's key
+// equivalent. Canonicalize only captured input, never stored menu/macro bindings.
+static NSDictionary *TSRecordedBinding(NSEvent *event, NSString *unshifted) {
+    NSString *key = TSShortcutCharacterForEvent(event);
+    NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
+    if ((flags & NSEventModifierFlagShift) && key.length == 1 && unshifted.length == 1 &&
+        ![key isEqual:unshifted] && [key characterAtIndex:0] < 0xf700 &&
+        ![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])
+        flags &= ~NSEventModifierFlagShift;
+    return TSBinding(key, flags);
+}
 static void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *, NSString *)) {
     for (NSMenuItem *item in menu.itemArray) {
         NSString *title = path.length ? [path stringByAppendingFormat:@" › %@", item.title] : item.title;
@@ -317,7 +328,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 + (BOOL)event:(NSEvent *)event matchesItem:(NSMenuItem *)item {
     if (!item.keyEquivalent.length) return NO;
-    return [TSBinding(TSShortcutCharacterForEvent(event), event.modifierFlags) isEqual:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];
+    return [TSRecordedBinding(event, [event charactersByApplyingModifiers:0]) isEqual:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];
 }
 @end
 
@@ -364,6 +375,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 @interface TSKeyboardShortcuts () <NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate>
 @property TSShortcutStore *store;
 @property BOOL menuRefreshPending;
+@property NSArray *observedMenuBindings;
 @property BOOL rebuildingMacros;
 @property BOOL applyingMenus;
 @property NSTextField *hint;
@@ -398,9 +410,22 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
         break;
     }
     self.store = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:NSUserDefaults.standardUserDefaults];
-    for (NSNotificationName name in @[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification, NSMenuDidChangeItemNotification])
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuStructureChanged:) name:name object:nil];
+    [self observeMenuChanges];
     [self refreshMenuAndMacros];
+}
+- (NSArray *)menuBindingSnapshot {
+    NSMutableArray *bindings = [NSMutableArray array];
+    TSVisitMenu(NSApp.mainMenu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:"))
+            [bindings addObject:@[[NSValue valueWithNonretainedObject:item], item.keyEquivalent,
+                @(item.keyEquivalentModifierMask), NSStringFromSelector(item.action) ?: @"", item.identifier ?: @""]];
+    });
+    return bindings;
+}
+- (void)observeMenuChanges {
+    self.observedMenuBindings = [self menuBindingSnapshot];
+    for (NSNotificationName name in @[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification])
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuStructureChanged:) name:name object:nil];
 }
 - (void)beginMenuRebuild {
     self.rebuildingMacros = YES;
@@ -408,6 +433,8 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 - (void)endMenuRebuild {
     self.rebuildingMacros = NO;
+    self.observedMenuBindings = [self menuBindingSnapshot];
+    if (self.isWindowLoaded) [self reloadCommands];
     [[NSNotificationCenter defaultCenter] postNotificationName:TSMacroShortcutsChangedNotification object:self];
 }
 - (void)refreshMenuAndMacros {
@@ -417,7 +444,10 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
         [self.store refreshMenu];
         [[NSNotificationCenter defaultCenter] postNotificationName:TSRebuildMacrosNotification object:self];
         if (self.isWindowLoaded) [self reloadCommands];
-    } @finally { self.applyingMenus = NO; }
+    } @finally {
+        self.observedMenuBindings = [self menuBindingSnapshot];
+        self.applyingMenus = NO;
+    }
 }
 - (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates {
     return [self.store conflictsForMacroShortcuts:candidates] ?: @[];
@@ -426,10 +456,11 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     NSMenu *menu = notification.object;
     while (menu.supermenu) menu = menu.supermenu;
     if (menu != NSApp.mainMenu || self.menuRefreshPending || self.applyingMenus || self.rebuildingMacros) return;
+    if ([[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) return;
     self.menuRefreshPending = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
         self.menuRefreshPending = NO;
-        [self refreshMenuAndMacros];
+        if (![[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) [self refreshMenuAndMacros];
     });
 }
 + (BOOL)event:(NSEvent *)event matchesAction:(SEL)action tag:(NSInteger)tag {
@@ -621,7 +652,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
         self.captureDisplay.stringValue = NSLocalizedString(@"Press the new shortcut (Escape to cancel).", @"");
         self.captureError.stringValue = NSLocalizedString(@"Use Command or Control with a key, or a function key (F1–F20).", @"");
     } else {
-        NSDictionary *binding = TSBinding(key, flags);
+        NSDictionary *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
         self.capturedKey = binding[@"key"]; self.capturedModifiers = [binding[@"modifiers"] unsignedIntegerValue];
         self.captureDisplay.stringValue = [TSShortcutStore displayKey:self.capturedKey modifiers:self.capturedModifiers];
     }

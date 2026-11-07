@@ -47,10 +47,12 @@ static void CheckEscape(void) {
 - (void)removeObjectForKey:(NSString *)key { [self.values removeObjectForKey:key]; }
 @end
 static int reloads, writeAlerts;
+
 @implementation TSMacroMenuController
 + (id)sharedInstance { static id instance; if (!instance) instance=[self new]; return instance; }
 - (void)reloadMacros:(id)sender { reloads++; [self setupMainMacroMenu]; }
 - (void)doMacro:(id)sender {}
+
 - (void)doNothing:(id)sender {}
 #include "MacroMenuProduction.inc"
 @end
@@ -60,10 +62,18 @@ static int g_macroType;
 enum { TexEngine, LatexEngine, BibtexEngine, IndexEngine, MetapostEngine };
 static NSInteger TestWriteAlert(NSString *title, NSString *format, ...) { writeAlerts++; return 0; }
 static void (^sheetCompletion)(NSModalResponse);
+static int sheetStarts, sheetDismissals;
+@interface InvisibleSheetWindow : NSWindow @end
+@implementation InvisibleSheetWindow
+- (void)orderOut:(id)sender { sheetDismissals++; }
+@end
+static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSModalResponse)) { sheetStarts++; sheetCompletion=[handler copy]; }
+
 @interface TestSheetAlert : NSAlert
 @end
 @implementation TestSheetAlert
-- (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse))handler { sheetCompletion=[handler copy]; }
+- (void)beginSheetModalForWindow:(NSWindow *)window completionHandler:(void (^)(NSModalResponse))handler { CaptureSheet(self,_cmd,window,handler); }
+- (NSWindow *)window { static NSWindow *w; if (!w) w=[InvisibleSheetWindow new]; return w; }
 @end
 #define NSAlert TestSheetAlert
 #define NSRunAlertPanel TestWriteAlert
@@ -87,11 +97,12 @@ static void (^sheetCompletion)(NSModalResponse);
 @interface TestWindow : NSObject
 @property int closes;
 @property BOOL rejectCommit;
+@property NSWindow *attachedSheet;
 @end
 @implementation TestWindow
 - (BOOL)makeFirstResponder:(id)item { return !self.rejectCommit; }
 - (void)close { self.closes++; }
-- (NSWindow *)attachedSheet { return nil; }
+
 @end
 @interface TestEditor : TSMacroEditor
 @property NSModalResponse answer;
@@ -120,6 +131,8 @@ static void (^sheetCompletion)(NSModalResponse);
 @property BOOL consent;
 @property int confirmations;
 @property NSString *error;
+@property int commandReloads;
+@property BOOL pretendLoaded;
 @end
 @implementation TestShortcuts
 - (TSShortcutCommand *)selectedCommand { return self.selection; }
@@ -129,16 +142,45 @@ static void (^sheetCompletion)(NSModalResponse);
 }
 - (void)showError:(NSString *)error { self.error=error; }
 - (NSWindow *)window { return nil; }
+- (BOOL)isWindowLoaded { return self.pretendLoaded; }
+- (void)reloadCommands { self.commandReloads++; }
 @end
 static NSDictionary *Candidate(NSString *path, NSString *key, NSUInteger flags) { return @{@"path":path,@"key":key,@"modifiers":@(flags)}; }
 static NSMenuItem *Command(NSString *name, NSString *key) {
     NSMenuItem *item=[[NSMenuItem alloc] initWithTitle:name action:@selector(description) keyEquivalent:key];
+    item.allowsAutomaticKeyEquivalentLocalization=NO;
     item.identifier=[@"TSShortcut." stringByAppendingString:name]; item.keyEquivalentModifierMask=NSEventModifierFlagCommand; return item;
 }
 static NSDictionary *Macro(NSString *name,NSString *key) { return @{@"name":name,@"content":@"KEEP",@"key":key}; }
+static void Drain(void) {
+    NSDate *until=[NSDate dateWithTimeIntervalSinceNow:.04];
+    while([until timeIntervalSinceNow]>0) [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:until];
+}
+static NSMutableArray *assignments;
+@interface TrackedItem : NSMenuItem @end
+@implementation TrackedItem
+- (void)setKeyEquivalent:(NSString *)key {
+    if(assignments) [assignments addObject:@[self.title,key]];
+    [super setKeyEquivalent:key];
+}
+@end
+static void CheckAssignmentOrder(void) {
+    NSMenu *menu=[NSMenu new];
+    for(NSString *key in @[@"f",@"g"]) {
+        NSMenuItem *item=[[TrackedItem alloc] initWithTitle:key action:@selector(description) keyEquivalent:key];
+        item.identifier=[@"TSShortcut." stringByAppendingString:key]; [menu addItem:item];
+    }
+    TSShortcutStore *store=[[TSShortcutStore alloc] initWithMenu:menu defaults:(id)[MemoryDefaults new]];
+    assignments=[NSMutableArray new]; [store applySavedOverrides];
+    REQUIRE(assignments.count==4 && ![assignments[0][1] length] && ![assignments[1][1] length]);
+    REQUIRE([assignments[2][1] length] && [assignments[3][1] length]); assignments=nil;
+}
 int main(int argc, char **argv) { @autoreleasepool {
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
-    CheckEscape();
+    CheckEscape(); CheckAssignmentOrder();
+    NSEvent *punctuation=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand|NSEventModifierFlagShift timestamp:0 windowNumber:0 context:nil characters:@"{" charactersIgnoringModifiers:@"{" isARepeat:NO keyCode:33];
+    REQUIRE([TSRecordedBinding(punctuation,@"[") isEqual:TSBinding(@"{",NSEventModifierFlagCommand)]);
+    REQUIRE([TSShortcutStore event:punctuation matchesItem:Command(@"Find punctuation",@"{")]);
     MacrosPath=[NSString stringWithUTF8String:argv[1]]; g_macroType=LatexEngine;
     NSUInteger cmd=NSEventModifierFlagCommand, shift=NSEventModifierFlagShift;
     NSMenu *menu=[NSMenu new]; NSApp.mainMenu=menu;
@@ -155,6 +197,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(![store setKey:@"k" modifiers:cmd forCommand:findCommand]);
     macros.macroDict=@{@"submenu":@[Macro(@"Freed",@"F"),Macro(@"Blocked",@"K"),Macro(@"Root",@"-+ShiftKey"),Macro(@"Duplicate",@"F")]};
     [coordinator refreshMenuAndMacros];
+    REQUIRE(macroMenu.numberOfItems==6);
     REQUIRE([find.keyEquivalent isEqual:@"k"] && store.unavailableCommands.count==0);
     REQUIRE([macroMenu.itemArray[2].keyEquivalent isEqual:@"f"]);
     REQUIRE(macroMenu.itemArray[3].keyEquivalent.length==0 && [macroMenu.itemArray[3].toolTip containsString:@"Find"]);
@@ -169,8 +212,26 @@ int main(int argc, char **argv) { @autoreleasepool {
     ui.capturedKey=@"f";ui.capturedModifiers=cmd;ui.editingCommand=findCommand;ui.applyButton=[NSButton new];ui.applyButton.enabled=YES;ui.consent=NO;
     [ui applyCapturedShortcut:nil]; REQUIRE(ui.confirmations==3 && [find.keyEquivalent isEqual:@"k"]);
     ui.consent=YES;[ui applyCapturedShortcut:nil];REQUIRE(ui.confirmations==4 && [find.keyEquivalent isEqual:@"f"]);
-    macros.macroDict=@{@"submenu":@[Macro(@"Engine switch",@"F")]};[coordinator refreshMenuAndMacros];
+    macros.macroDict=@{@"submenu":@[Macro(@"Engine switch",@"F"),Macro(@"Still free",@"Z")]};[coordinator refreshMenuAndMacros];
     REQUIRE([find.keyEquivalent isEqual:@"f"] && !macroMenu.itemArray[2].keyEquivalent.length && store.unavailableCommands.count==0);
+    // Exercise the UI actions themselves, including the restore-all sheet callback.
+    [ui removeShortcut:nil];
+    REQUIRE(!find.keyEquivalent.length && [macroMenu.itemArray[2].keyEquivalent isEqual:@"f"]);
+    Method sheetMethod=class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:));
+    IMP originalSheet=method_setImplementation(sheetMethod,(IMP)CaptureSheet);
+    [ui restoreAll:nil]; REQUIRE(sheetCompletion); sheetCompletion(NSAlertFirstButtonReturn);
+    method_setImplementation(sheetMethod,originalSheet);
+    REQUIRE([find.keyEquivalent isEqual:@"f"] && !macroMenu.itemArray[2].keyEquivalent.length && [macroMenu.itemArray[3].keyEquivalent isEqual:@"z"]);
+    // An engine-only rebuild must reapply saved menu keys and refresh an open settings list.
+    find.keyEquivalent=@"x"; [macros setupMainMacroMenu]; REQUIRE([find.keyEquivalent isEqual:@"f"]);
+    ui.pretendLoaded=YES; [ui beginMenuRebuild]; [ui endMenuRebuild]; REQUIRE(ui.commandReloads>0); ui.pretendLoaded=NO;
+    NSDictionary *validMacros=macros.macroDict;
+    macros.macroDict=@{@"submenu":@[@42]};
+    BOOL caught=NO; @try { [macros setupMainMacroMenu]; } @catch(NSException *e) { caught=YES; }
+    REQUIRE(caught && !coordinator.rebuildingMacros);
+    macros.macroDict=validMacros; [macros setupMainMacroMenu];
+    NSEvent *upperEvent=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:cmd|shift timestamp:0 windowNumber:0 context:nil characters:@"T" charactersIgnoringModifiers:@"T" isARepeat:NO keyCode:17];
+    REQUIRE([TSShortcutStore event:upperEvent matchesItem:Command(@"Upper",@"T")]);
     NSMenuItem *importItem=[[NSMenuItem alloc] initWithTitle:@"Import" action:@selector(readDictionaryToMacroEditor:) keyEquivalent:@""];
     [macroMenu insertItem:importItem atIndex:1]; [coordinator refreshMenuAndMacros]; REQUIRE([macroMenu.itemArray containsObject:importItem]);
     [macroMenu removeItem:importItem];
@@ -192,6 +253,30 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"one",@"T",cmd),Candidate(@"two",@"t",cmd|shift)]].count==1);
     puts("PASS: services excluded; dynamically present menu keys counted without making them editable; ASCII Shift comparison");
 
+    // Observe real AppKit notifications; visual validation changes must not rebuild.
+    __block int rebuilds=0;
+    id counter=[[NSNotificationCenter defaultCenter] addObserverForName:TSRebuildMacrosNotification object:nil queue:nil usingBlock:^(NSNotification *n){ rebuilds++; }];
+    [coordinator observeMenuChanges]; Drain(); int before=rebuilds;
+    for(int i=0;i<10;i++) { find.enabled=!find.enabled; find.state=i%2; find.title=[NSString stringWithFormat:@"Title %d",i]; find.toolTip=@"changed"; [menu update]; Drain(); }
+    REQUIRE(rebuilds==before);
+    NSMenuItem *added=Command(@"Dynamic observed",@"v"); [menu addItem:added]; Drain(); REQUIRE(rebuilds==before+1);
+    [menu removeItem:added]; Drain(); REQUIRE(rebuilds==before+2);
+    NSMenuItem *replacement=Command(@"Dynamic observed",@"w"); [menu addItem:replacement]; Drain(); REQUIRE(rebuilds==before+3);
+    for (NSString *guard in @[@"applyingMenus",@"rebuildingMacros"]) {
+        [coordinator setValue:@YES forKey:guard];
+        [menu removeItem:replacement];
+        REQUIRE(!coordinator.menuRefreshPending);
+        [menu addItem:replacement];
+        [coordinator setValue:@NO forKey:guard];
+    }
+    Drain(); REQUIRE(rebuilds==before+3);
+    [menu removeItem:replacement]; Drain(); REQUIRE(rebuilds==before+4);
+    [[NSNotificationCenter defaultCenter] removeObserver:counter];
+    [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidAddItemNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidRemoveItemNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidChangeItemNotification object:nil];
+    find.title=@"Find";
+    puts("PASS: actual notifications ignore validation/title/state, track add/remove/replacement and reject reentry");
     TSMacroTreeNode *root=[TSMacroTreeNode submenuNodeWithName:@"ROOT"],*group=[TSMacroTreeNode submenuNodeWithName:@"Nested"];
     TSMacroTreeNode *old=[TSMacroTreeNode nodeWithName:@"Old collision" content:@"KEEP OLD" key:@"F"];
     TSMacroTreeNode *a=[TSMacroTreeNode nodeWithName:@"New collision" content:@"KEEP NEW" key:@"Y"];
@@ -225,8 +310,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     imported.key=@""; editor.failWrite=YES;[editor savePressed:nil];REQUIRE(writeAlerts==1 && reloads==3 && editor.testWindow.closes==3);
     editor.failWrite=NO; a.key=@"F"; editor.answer=NSAlertFirstButtonReturn;
     int prompts=editor.prompts;
-    REQUIRE(![editor windowShouldClose:editor.testWindow] && sheetCompletion);
-    sheetCompletion(NSAlertFirstButtonReturn); REQUIRE(editor.prompts==prompts);
+    int oldStarts=sheetStarts; editor.testWindow.attachedSheet=[InvisibleSheetWindow new];
+    REQUIRE(![editor windowShouldClose:editor.testWindow] && sheetStarts==oldStarts);
+    editor.testWindow.attachedSheet=nil;
+    REQUIRE(![editor windowShouldClose:editor.testWindow] && sheetCompletion && sheetStarts==oldStarts+1);
+    sheetCompletion(NSAlertFirstButtonReturn); REQUIRE(editor.prompts==prompts && sheetDismissals==1);
     NSDate *deadline=[NSDate dateWithTimeIntervalSinceNow:1];
     while(editor.prompts==prompts && [deadline timeIntervalSinceNow]>0)
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:.01]];

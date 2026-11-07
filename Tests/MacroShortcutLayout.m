@@ -1,6 +1,9 @@
 // Instantiate existing localized nibs offscreen and run the production status-band layout.
 #import "TSMacroEditor.h"
 #import <objc/runtime.h>
+#import "MemoryDefaults.h"
+static TSMemoryDefaults *memoryDefaults;
+static id StandardDefaults(id self, SEL cmd) { return memoryDefaults; }
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
 @implementation TSMacroEditor
 #include "MacroStatusLayout.inc"
@@ -14,14 +17,23 @@
 @implementation TSMacroOutlineView @end
 static void NoOrder(id self, SEL cmd, NSWindowOrderingMode mode, NSInteger relative) {}
 int main(int argc,char **argv) { @autoreleasepool {
+    memoryDefaults=[TSMemoryDefaults new];
+    method_setImplementation(class_getClassMethod(NSUserDefaults.class,@selector(standardUserDefaults)),(IMP)StandardDefaults);
+    REQUIRE(NSUserDefaults.standardUserDefaults==memoryDefaults);
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     // Make even an accidentally-visible nib incapable of ordering a window onscreen.
     method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(orderWindow:relativeTo:)),(IMP)NoOrder);
+    CGFloat savedHeight=0;
+    for(int round=0;round<4;round++) {
     TSMacroEditor *owner=[TSMacroEditor new];
     NSNib *nib=[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(argv[1])] bundle:nil];
     NSArray *objects; REQUIRE([nib instantiateWithOwner:owner topLevelObjects:&objects]);
     NSWindow *window=[owner valueForKey:@"window"]; REQUIRE(window && !window.visible);
+    if(round) [window setFrameUsingName:@"Macro Editor"];
+    CGFloat originalHeight=window.frame.size.height;
     [owner installShortcutStatus];
+    REQUIRE(window.frame.size.height==originalHeight);
+    if(round) REQUIRE(originalHeight==savedHeight);
     NSTextField *label=owner.shortcutStatus; NSView *host=window.contentView;
     for (NSString *text in @[@"This shortcut is inactive because it conflicts with “Typeset › Plain TeX” (⇧⌘T).",@"このキーは“タイプセット › Plain TeX”（⇧⌘T）と重なっているため無効です。"])
       for (NSAppearanceName mode in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]) {
@@ -34,5 +46,11 @@ int main(int argc,char **argv) { @autoreleasepool {
         if(argc>2) [[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:@(argv[2]) atomically:YES];
       }
     NSRect frame=window.frame; [owner installShortcutStatus]; REQUIRE(NSEqualRects(frame,window.frame));
+    if(round==1) { NSRect resized=window.frame; resized.size.height+=80; [window setFrame:resized display:NO]; }
+    savedHeight=window.frame.size.height;
+    [window saveFrameUsingName:@"Macro Editor"];
+    REQUIRE([[memoryDefaults stringForKey:@"NSWindow Frame Macro Editor"] length]>0);
+    window.releasedWhenClosed=NO; [window close];
+    }
     printf("PASS: %s status band: bounds, wrapping, control separation, idempotence, offscreen light/dark rendering\n",argv[1]);
 } return 0; }

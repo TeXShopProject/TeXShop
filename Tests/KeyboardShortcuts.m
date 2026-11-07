@@ -293,16 +293,26 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSEvent *swedishColon = LayoutEvent(@".",@":",kVK_ANSI_Period,cmd|shift);
     REQUIRE([TSShortcutCharacterForEvent(swedishColon) isEqual:@":"]);
     [controller recordShortcutEvent:swedishColon];
-    NSDictionary *expectedColon = TSBinding(@":",cmd|shift);
+    NSDictionary *expectedColon = TSBinding(@":",cmd);
     REQUIRE([controller.capturedKey isEqual:expectedColon[@"key"]]);
     REQUIRE(controller.capturedModifiers==[expectedColon[@"modifiers"] unsignedIntegerValue]);
     REQUIRE(![controller.capturedKey isEqual:@"."]);
     REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"/",@"?",kVK_ANSI_Minus,cmd|shift)) isEqual:@"?"]);
     REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@",",@";",kVK_ANSI_Comma,cmd|shift)) isEqual:@";"]);
     [controller recordShortcutEvent:LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift)];
-    NSDictionary *expectedBracket = TSBinding(@"[",cmd|shift);
+    NSDictionary *expectedBracket = TSRecordedBinding(LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift), [LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift) charactersByApplyingModifiers:0]);
+    REQUIRE([TSRecordedBinding(LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift), @"[") isEqual:TSBinding(@"[",cmd|shift)]);
     REQUIRE([controller.capturedKey isEqual:expectedBracket[@"key"]]);
     REQUIRE(controller.capturedModifiers==[expectedBracket[@"modifiers"] unsignedIntegerValue]);
+    for (NSString *symbol in @[@"{",@"}",@"?",@":",@"+"]) {
+        NSDictionary *binding=TSRecordedBinding(LayoutEvent(symbol,symbol,kVK_ANSI_LeftBracket,cmd|shift),@"[");
+        REQUIRE([binding isEqual:TSBinding(symbol,cmd)]);
+        NSMenu *collisionMenu=[NSMenu new];
+        NSMenuItem *existing=Item(@"TSShortcut.existing",symbol,cmd);
+        [collisionMenu addItem:existing];
+        TSShortcutStore *collisionStore=[[TSShortcutStore alloc] initWithMenu:collisionMenu defaults:(id)[ShortcutMemoryDefaults new]];
+        REQUIRE([collisionStore conflictForKey:binding[@"key"] modifiers:[binding[@"modifiers"] unsignedIntegerValue] except:nil restoring:nil]);
+    }
     puts("PASS: Command letters normalize case and shifted punctuation keeps the normal keyboard layer");
     REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"=",@"",kVK_ANSI_Equal,cmd)) isEqual:@"="]);
     puts("PASS: Command punctuation is retained when the normal keyboard layer is empty");

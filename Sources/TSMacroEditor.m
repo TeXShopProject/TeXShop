@@ -211,16 +211,18 @@ static TSFilterMode savedFilter = kNoFilterMode;
         if (![bottomControls containsObject:view]) lowest = MIN(lowest, NSMinY(view.frame));
     CGFloat statusY = bottom + 6, statusHeight = 52;
     CGFloat height = MAX(56, statusY + statusHeight + 6 - lowest);
-    BOOL autoresizes = host.autoresizesSubviews; host.autoresizesSubviews = NO;
-    // Keep localized key labels and modifier controls together; insert the status
-    // above the bottom action buttons instead of cutting through a translated row.
+    // Reserve a band by shortening the resizable editors, not by enlarging the
+    // window: its frame may already have been restored from an earlier opening.
+    CGFloat editorBottom = CGFLOAT_MAX;
+    for (NSView *view in host.subviews)
+        if ([view isKindOfClass:NSScrollView.class]) editorBottom = MIN(editorBottom, NSMinY(view.frame));
     for (NSView *view in host.subviews) if (![bottomControls containsObject:view]) {
-        NSRect frame = view.frame; frame.origin.y += height; view.frame = frame;
+        NSRect frame = view.frame;
+        if ([view isKindOfClass:NSScrollView.class]) {
+            frame.origin.y += height; frame.size.height -= height;
+        } else if (NSMinY(frame) < editorBottom) frame.origin.y += height;
+        view.frame = frame;
     }
-    NSRect frame = [window frame]; frame.size.height += height;
-    [window setFrame:frame display:NO];
-    NSSize minimum = [window minSize]; minimum.height += height; [window setMinSize:minimum];
-    host.autoresizesSubviews = autoresizes;
     self.shortcutStatus = [NSTextField wrappingLabelWithString:@""];
     self.shortcutStatus.frame = NSMakeRect(20, statusY, NSWidth(host.bounds)-40, statusHeight);
     self.shortcutStatus.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;

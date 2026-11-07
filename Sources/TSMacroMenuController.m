@@ -146,7 +146,8 @@ static id sharedMacroMenuController = nil;
 
 	if (!self.macroDict)
 		return;
-	[[TSKeyboardShortcuts sharedController] beginMenuRebuild];
+    @try {
+    [[TSKeyboardShortcuts sharedController] beginMenuRebuild];
     NSMutableArray *editorItems = [NSMutableArray array];
     for (NSMenuItem *item in macroMenu.itemArray)
         if (item.action == @selector(readDictionaryToMacroEditor:) || item.action == @selector(saveSelection:))
@@ -179,7 +180,9 @@ static id sharedMacroMenuController = nil;
 			[newItem setAction: @selector(doNothing:)];
 		}
 	}
-	[[TSKeyboardShortcuts sharedController] endMenuRebuild];
+    } @finally {
+        [[TSKeyboardShortcuts sharedController] endMenuRebuild];
+    }
 }
 
 // reload
