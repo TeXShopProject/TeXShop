@@ -50,6 +50,22 @@ static NSDictionary *TSBinding(NSString *key, NSEventModifierFlags flags) {
     if (source) CFRelease(source);
     return binding;
 }
+// Command switches non-Latin layouts to their Latin shortcut layer. Do not use
+// characters directly for Option/Control combinations (for example Option-G = ©).
+static NSString *TSShortcutCharacterForEvent(NSEvent *event) {
+    NSString *key = event.charactersIgnoringModifiers ?: @"";
+    if (!(event.modifierFlags & NSEventModifierFlagCommand) || key.length != 1 ||
+        [key characterAtIndex:0] < 0x80 || [key characterAtIndex:0] >= 0xf700) return key;
+    NSString *characters = event.characters;
+    if (!(event.modifierFlags & (NSEventModifierFlagOption | NSEventModifierFlagControl)) &&
+        characters.length == 1 && [characters characterAtIndex:0] >= 0x20 && [characters characterAtIndex:0] < 0x7f)
+        return characters;
+    TISInputSourceRef source = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
+    CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
+    NSString *latin = TSTranslateKey(data, event.keyCode, (event.modifierFlags & NSEventModifierFlagShift) != 0, LMGetKbdType());
+    if (source) CFRelease(source);
+    return latin.length == 1 && [latin characterAtIndex:0] >= 0x20 && [latin characterAtIndex:0] < 0x7f ? latin : key;
+}
 static void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *, NSString *)) {
     for (NSMenuItem *item in menu.itemArray) {
         NSString *title = path.length ? [path stringByAppendingFormat:@" › %@", item.title] : item.title;
@@ -58,9 +74,10 @@ static void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *
     }
 }
 static NSString *TSFindCommandID(NSMenuItem *item) {
+    if (item.action == NSSelectorFromString(@"jumpToSelection:")) return @"TSShortcut.centerSelectionInVisibleArea:.0";
     NSDictionary *tags = @{@"showFindPanel:":@1, @"findNext:":@2, @"findPrevious:":@3,
         @"replaceAll:":@4, @"replace:":@5, @"replaceAndFind:":@6,
-        @"useSelectionForFind:":@7, @"jumpToSelection:":@8};
+        @"useSelectionForFind:":@7};
     NSNumber *tag = tags[NSStringFromSelector(item.action) ?: @""];
     if (tag) return [NSString stringWithFormat:@"TSShortcut.performFindPanelAction:.%@", tag];
     return nil;
@@ -194,13 +211,22 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     command.item.keyEquivalentModifierMask = [binding[@"modifiers"] unsignedIntegerValue];
     command.item.keyEquivalent = binding[@"key"];
 }
-- (nullable NSString *)conflictForKey:(NSString *)key modifiers:(NSEventModifierFlags)flags except:(NSMenuItem *)excluded {
+- (nullable NSString *)conflictForKey:(NSString *)key modifiers:(NSEventModifierFlags)flags except:(NSMenuItem *)excluded restoring:(nullable TSShortcutCommand *)restoring {
     if (!key.length) return nil;
     NSDictionary *binding = TSBinding(key, flags);
     __block NSString *conflict = nil;
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item == excluded || item.submenu || !item.keyEquivalent.length) return;
-        if ([TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding]) conflict = path;
+        if (![TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding]) return;
+        if (restoring) {
+            // Preserve pre-existing default overlaps, but never allow a new custom conflict.
+            for (TSShortcutCommand *other in self.commands) {
+                if (other.item == item && [item.keyEquivalent isEqual:other.defaultKey] &&
+                    item.keyEquivalentModifierMask == other.defaultModifiers &&
+                    [TSBinding(other.defaultKey, other.defaultModifiers) isEqual:binding]) return;
+            }
+        }
+        conflict = path;
     });
     return conflict;
 }
@@ -211,18 +237,18 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 - (nullable NSString *)setKey:(NSString *)key modifiers:(NSEventModifierFlags)flags forCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
     if (![TSShortcutStore isAllowedKey:key modifiers:flags]) return NSLocalizedString(@"Use Command or Control with a key, or a function key (F1–F20).", @"");
-    NSString *conflict = [self conflictForKey:key modifiers:flags except:command.item];
-    if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     NSDictionary *binding = TSBinding(key, flags);
-    if ([binding isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) [self.overrides removeObjectForKey:command.commandID];
-    else self.overrides[command.commandID] = binding;
+    if ([binding isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) return [self restoreCommand:command];
+    NSString *conflict = [self conflictForKey:key modifiers:flags except:command.item restoring:nil];
+    if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
+    self.overrides[command.commandID] = binding;
     [self applySavedOverrides];
     [self persist];
     return [self.unavailableCommands containsObject:command.path] ? NSLocalizedString(@"Shortcut Unavailable", @"") : nil;
 }
 - (nullable NSString *)restoreCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
-    NSString *conflict = [self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item];
+    NSString *conflict = [self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     [self.overrides removeObjectForKey:command.commandID];
     [self applySavedOverrides]; [self persist];
@@ -234,7 +260,9 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 + (NSString *)displayKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
     if (!key.length) return @"—";
-    NSDictionary *binding = TSBinding(key, flags); flags = [binding[@"modifiers"] unsignedIntegerValue]; key = binding[@"key"];
+    // Display the actual menu definition. Canonicalization is for comparison only.
+    if (![key isEqual:key.lowercaseString]) flags |= NSEventModifierFlagShift;
+    key = key.lowercaseString;
     NSMutableString *text = [NSMutableString string];
     if (flags & NSEventModifierFlagControl) [text appendString:@"⌃"];
     if (flags & NSEventModifierFlagOption) [text appendString:@"⌥"];
@@ -248,7 +276,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 + (BOOL)event:(NSEvent *)event matchesItem:(NSMenuItem *)item {
     if (!item.keyEquivalent.length) return NO;
-    return [TSBinding(event.charactersIgnoringModifiers ?: @"", event.modifierFlags) isEqual:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];
+    return [TSBinding(TSShortcutCharacterForEvent(event), event.modifierFlags) isEqual:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];
 }
 @end
 
@@ -359,7 +387,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     });
     // Preserve PDF search if a custom menu entirely omits the standard Find commands.
     if (!found && action == @selector(performFindPanelAction:) && (tag == 1 || tag == 2)) {
-        NSDictionary *key = TSBinding(event.charactersIgnoringModifiers ?: @"", event.modifierFlags);
+        NSDictionary *key = TSBinding(TSShortcutCharacterForEvent(event), event.modifierFlags);
         return [key isEqual:TSBinding(tag == 1 ? @"f" : @"g", NSEventModifierFlagCommand)];
     }
     return matches;
@@ -512,7 +540,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     panel.initialFirstResponder = recorder;
 }
 - (void)recordShortcutEvent:(NSEvent *)event {
-    NSString *key = event.charactersIgnoringModifiers ?: @"";
+    NSString *key = TSShortcutCharacterForEvent(event);
     NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
     self.captureError.stringValue = @"";
     self.applyButton.enabled = [TSShortcutStore isAllowedKey:key modifiers:flags] && key.length > 0;
@@ -521,8 +549,9 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
         self.captureDisplay.stringValue = NSLocalizedString(@"Press the new shortcut (Escape to cancel).", @"");
         self.captureError.stringValue = NSLocalizedString(@"Use Command or Control with a key, or a function key (F1–F20).", @"");
     } else {
-        self.capturedKey = key; self.capturedModifiers = flags;
-        self.captureDisplay.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
+        NSDictionary *binding = TSBinding(key, flags);
+        self.capturedKey = binding[@"key"]; self.capturedModifiers = [binding[@"modifiers"] unsignedIntegerValue];
+        self.captureDisplay.stringValue = [TSShortcutStore displayKey:self.capturedKey modifiers:self.capturedModifiers];
     }
     self.capturePanel.recorder.accessibilityValue = self.captureDisplay.stringValue;
 }

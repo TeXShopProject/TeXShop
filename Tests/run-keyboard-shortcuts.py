@@ -29,10 +29,24 @@ for path in sorted((root / 'Resources/Interfaces').glob('*/MainMenu.nib/designab
         assert links.find('connections/action').get('selector') == 'toggleAutomaticLinkDetection:'
     print(f'PASS: {path.parts[-3]} {len(commands)} unique commands, including typesetting/alternates')
 
-macro = (root / 'Sources/TSMacroMenuController.m').read_text()
+macro = (root / 'Sources/TSMacroMenuController.m').read_text(encoding='latin-1')
 setup = macro[macro.index('- (void)setupMainMacroMenu'):macro.index('// reload')]
 assert setup.index('beginMenuRebuild') < setup.index('listKeyEquivalents:') < setup.index('endMenuRebuild')
 print('PASS: macro rebuild suspends overrides before collecting keys and reapplies them afterward')
+
+# Guard the call sites as well as the standalone menu model. These checks do not
+# replace the user's real-window checks for launch ordering and split orientation.
+delegate = (root / 'Sources/TSAppDelegate.m').read_text(encoding='latin-1')
+launch = delegate[delegate.index('- (void)applicationDidFinishLaunching:'):]
+assert 'dispatch_async(dispatch_get_main_queue(), ^{\n        [[TSKeyboardShortcuts sharedController] installInMainMenu];' in launch
+pdf = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin-1')
+for tag in (1, 2):
+    assert f'[TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:{tag}]' in pdf
+document = (root / 'Sources/TSDocument.m').read_text(encoding='latin-1')
+split = document[document.index('- (void) splitWindow:'):]
+assert split.index('hasPrefix:@"TSShortcut.splitWindow:."') < split.index('[splitView setVertical:vertical]')
+assert 'vertical = [[sender identifier] isEqualToString:@"TSShortcut.splitWindow:.vertical"]' in split
+print('PASS: deferred launch installation, PDF search call sites and stable split orientation integration')
 
 with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
     binary = Path(td) / 'shortcuts'

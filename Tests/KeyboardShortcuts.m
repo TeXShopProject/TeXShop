@@ -22,7 +22,9 @@
 - (void)run:(NSMenuItem *)sender { self.lastItem = sender; }
 @end
 static NSMenuItem *Item(NSString *ident, NSString *key, NSEventModifierFlags flags) {
-    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:ident ?: @"Dynamic" action:@selector(description) keyEquivalent:@""];
+    static NSUInteger serial = 0;
+    SEL action = NSSelectorFromString([NSString stringWithFormat:@"fixtureAction%lu:", (unsigned long)++serial]);
+    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:ident ?: @"Dynamic" action:action keyEquivalent:@""];
     item.identifier = ident; item.keyEquivalentModifierMask = flags; item.keyEquivalent = key; return item;
 }
 static TSShortcutCommand *Command(TSShortcutStore *store, NSString *ident) {
@@ -33,6 +35,10 @@ static NSDictionary *Saved(NSString *key) { return @{@"key":key, @"modifiers":@(
 static NSEvent *Event(NSString *key, NSEventModifierFlags flags) {
     return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0
         windowNumber:0 context:nil characters:key charactersIgnoringModifiers:key isARepeat:NO keyCode:0];
+}
+static NSEvent *LayoutEvent(NSString *characters, NSString *ignoring, unsigned short code, NSEventModifierFlags flags) {
+    return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0
+        windowNumber:0 context:nil characters:characters charactersIgnoringModifiers:ignoring isARepeat:NO keyCode:code];
 }
 static NSMenu *MainMenu(void) {
     NSMenu *root = [NSMenu new], *menu = [NSMenu new];
@@ -50,7 +56,21 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
         NSNib *nib = [[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(argv[1])] bundle:nil];
         NSArray *objects; REQUIRE([nib instantiateWithOwner:NSApp topLevelObjects:&objects]);
+        NSMutableDictionary *original = [NSMutableDictionary new];
+        TSVisitMenu(NSApp.mainMenu, @"", ^(NSMenuItem *item, NSString *path) {
+            if (item.identifier) original[item.identifier] = @[item.keyEquivalent, @(item.keyEquivalentModifierMask)];
+        });
         TSShortcutStore *store = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)[ShortcutMemoryDefaults new]];
+        TSVisitMenu(NSApp.mainMenu, @"", ^(NSMenuItem *item, NSString *path) {
+            if (original[item.identifier]) REQUIRE([original[item.identifier] isEqual:@[item.keyEquivalent, @(item.keyEquivalentModifierMask)]]);
+        });
+        TSShortcutCommand *typeset = Command(store,@"TSShortcut.doTypeset:.-1");
+        REQUIRE(typeset);
+        NSString *key = typeset.defaultKey; NSEventModifierFlags flags = typeset.defaultModifiers;
+        REQUIRE(![store setKey:@"\uf717" modifiers:NSEventModifierFlagControl forCommand:typeset]);
+        [store refreshMenu];
+        REQUIRE(![store restoreCommand:Command(store,typeset.commandID)]);
+        REQUIRE([typeset.item.keyEquivalent isEqual:key] && typeset.item.keyEquivalentModifierMask == flags);
         for (NSString *ident in @[@"TSShortcut.doTypeset:.-1",@"TSShortcut.doTypeset:.-2",@"TSShortcut.doAlternateTypeset:.-2",
             @"TSShortcut.splitWindow:.0",@"TSShortcut.splitWindow:.vertical",@"TSShortcut.doNextBulletAndDelete:.0",
             @"TSShortcut.doPreviousBulletAndDelete:.0",@"TSShortcut.placeComment:.0"])
@@ -71,7 +91,11 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(b.keyEquivalent.length == 0);
     [store restoreAll]; REQUIRE([a.keyEquivalent isEqual:@"a"] && [b.keyEquivalent isEqual:@"b"]);
     REQUIRE(defaults.values.count == 0);
-    puts("PASS: conflict rejection, change, removal and restoration on the live main menu");
+    REQUIRE(![store setKey:@"x" modifiers:cmd forCommand:Command(store,a.identifier)]);
+    [store refreshMenu]; [store refreshMenu];
+    REQUIRE(![store restoreCommand:Command(store,a.identifier)]);
+    REQUIRE([a.keyEquivalent isEqual:@"a"]);
+    puts("PASS: conflict rejection, change, removal, refresh preserving baseline and restoration");
 
     // Swapped saved bindings must not be lost to AppKit's duplicate-key suppression.
     defaults.values[TSMenuShortcutOverridesKey] = @{a.identifier:Saved(@"b"), b.identifier:Saved(@"a")};
@@ -121,6 +145,19 @@ int main(int argc, char **argv) { @autoreleasepool {
     [store restoreAll]; REQUIRE([newFind.keyEquivalent isEqual:@"f"]);
     REQUIRE([TSKeyboardShortcuts event:Event(@"f",cmd) matchesAction:@selector(performFindPanelAction:) tag:1]);
     puts("PASS: Ogre replacement, shared IDs, customized PDF search, explicit removal and reset");
+    NSMenuItem *jump=Item(@"TSShortcut.centerSelectionInVisibleArea:.0",@"j",cmd);
+    jump.action=@selector(centerSelectionInVisibleArea:); [ogre addItem:jump]; [store refreshMenu];
+    REQUIRE(![store setKey:@"k" modifiers:cmd forCommand:Command(store,jump.identifier)]);
+    [ogre removeItem:jump];
+    NSMenuItem *ogreJump=Item(nil,@"j",cmd); ogreJump.action=NSSelectorFromString(@"jumpToSelection:");
+    [ogre addItem:ogreJump]; [store refreshMenu];
+    REQUIRE([ogreJump.identifier isEqual:jump.identifier] && [ogreJump.keyEquivalent isEqual:@"k"]);
+    [ogre removeItem:ogreJump];
+    jump=Item(@"TSShortcut.centerSelectionInVisibleArea:.0",@"j",cmd); jump.action=@selector(centerSelectionInVisibleArea:);
+    [ogre addItem:jump]; [store refreshMenu];
+    REQUIRE([jump.keyEquivalent isEqual:@"k"]);
+    [store restoreAll];
+    puts("PASS: Jump to Selection override survives both standard/Ogre menu replacements");
 
     // Adding a macro later must not silently remove either command's shortcut.
     REQUIRE([store setKey:@"x" modifiers:cmd forCommand:Command(store,newFind.identifier)] == nil);
@@ -155,7 +192,29 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([TSBindingWithLayout(@"=",cmd|shift,data,40) isEqual:TSBindingWithLayout(@"+",cmd|shift,data,40)]);
     REQUIRE([TSBindingWithLayout(@"-",cmd|shift,data,40) isEqual:TSBindingWithLayout(@"_",cmd,data,40)]);
     REQUIRE([TSBindingWithLayout(@"G",cmd,data,40) isEqual:TSBindingWithLayout(@"g",cmd|shift,data,40)]);
+    REQUIRE([TSBindingWithLayout(@"=",cmd|shift,data,48) isEqual:TSBindingWithLayout(@"-",cmd|shift,data,48)]);
+    REQUIRE(![[TSShortcutStore displayKey:@"=" modifiers:cmd|shift] isEqual:[TSShortcutStore displayKey:@"-" modifiers:cmd|shift]]);
     CFRelease(sources);
+    menu=MainMenu();
+    NSMenuItem *left=Item(@"TSShortcut.left",@"G",cmd), *right=Item(@"TSShortcut.right",@"g",cmd|shift);
+    [menu addItem:left]; [menu addItem:right];
+    store=[[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)[ShortcutMemoryDefaults new]];
+    // Model the two raw defaults that canonicalize to the same binding without relying on host layout.
+    TSShortcutCommand *lc=Command(store,left.identifier), *rc=Command(store,right.identifier);
+    lc.defaultKey=@"G"; lc.defaultModifiers=cmd; rc.defaultKey=@"g"; rc.defaultModifiers=cmd|shift;
+    right.keyEquivalentModifierMask=cmd|shift; right.keyEquivalent=@"g";
+    REQUIRE(![store setKey:@"z" modifiers:cmd forCommand:lc]);
+    REQUIRE(![store restoreCommand:lc]);
+    REQUIRE([left.keyEquivalent isEqual:@"G"]);
+    REQUIRE(![store setKey:@"z" modifiers:cmd forCommand:lc]);
+    REQUIRE(![store setKey:@"g" modifiers:cmd|shift forCommand:lc]);
+    REQUIRE([left.keyEquivalent isEqual:@"G"]);
+    // A new custom collision must still prevent individual restoration.
+    [store setKey:@"z" modifiers:cmd forCommand:lc];
+    [menu removeItem:right];
+    NSMenuItem *custom=Item(nil,@"G",cmd); [menu addItem:custom];
+    REQUIRE([store restoreCommand:lc] != nil);
+    puts("PASS: JIS comparison, distinct raw display, baseline overlap restoration and custom conflict rejection");
     REQUIRE(![TSShortcutStore isAllowedKey:@"a" modifiers:0]);
     REQUIRE([TSShortcutStore isAllowedKey:@"\uf704" modifiers:0]);
     REQUIRE(![TSShortcutStore isAllowedKey:@"ab" modifiers:cmd]);
@@ -182,4 +241,36 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(!controller.applyButton.enabled && !controller.capturedKey);
     REQUIRE(![controller.captureDisplay.stringValue isEqual:validDisplay] && controller.captureError.stringValue.length);
     puts("PASS: invalid input clears the previous valid capture and disables Apply");
+    menu=MainMenu(); NSMenuItem *latinFind=Item(@"TSShortcut.performFindPanelAction:.1",@"f",cmd);
+    latinFind.action=@selector(performFindPanelAction:); latinFind.tag=1; [menu addItem:latinFind];
+    NSMenuItem *latinNext=Item(@"TSShortcut.performFindPanelAction:.2",@"g",cmd);
+    latinNext.action=@selector(performFindPanelAction:); latinNext.tag=2; [menu addItem:latinNext];
+    NSMenuItem *other=Item(@"TSShortcut.other",@"o",cmd); [menu addItem:other];
+    store=[[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)[ShortcutMemoryDefaults new]];
+    for (NSString *nonLatin in @[@"а",@"φ",@"כ"]) {
+        NSEvent *event=LayoutEvent(@"f",nonLatin,kVK_ANSI_F,cmd);
+        REQUIRE([TSKeyboardShortcuts event:event matchesAction:@selector(performFindPanelAction:) tag:1]);
+        [controller recordShortcutEvent:event];
+        REQUIRE([controller.capturedKey isEqual:@"f"]);
+        REQUIRE([store setKey:controller.capturedKey modifiers:controller.capturedModifiers forCommand:Command(store,other.identifier)] != nil);
+    }
+    REQUIRE([TSKeyboardShortcuts event:LayoutEvent(@"g",@"п",kVK_ANSI_G,cmd) matchesAction:@selector(performFindPanelAction:) tag:2]);
+    NSEvent *optionG=LayoutEvent(@"©",@"g",kVK_ANSI_G,cmd|NSEventModifierFlagOption);
+    REQUIRE([TSShortcutCharacterForEvent(optionG) isEqual:@"g"]);
+    [controller recordShortcutEvent:optionG];
+    REQUIRE([controller.capturedKey isEqual:@"g"] && controller.capturedModifiers==(cmd|NSEventModifierFlagOption));
+    REQUIRE(![TSKeyboardShortcuts event:optionG matchesAction:@selector(performFindPanelAction:) tag:2]);
+    TISInputSourceRef asciiSource=TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
+    CFDataRef asciiData=TISGetInputSourceProperty(asciiSource,kTISPropertyUnicodeKeyLayoutData);
+    NSString *asciiG=TSTranslateKey(asciiData,kVK_ANSI_G,NO,LMGetKbdType());
+    REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"©",@"п",kVK_ANSI_G,cmd|NSEventModifierFlagOption)) isEqual:asciiG]);
+    REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"\007",@"п",kVK_ANSI_G,cmd|NSEventModifierFlagControl)) isEqual:asciiG]);
+    CFRelease(asciiSource);
+    [controller recordShortcutEvent:LayoutEvent(@"F",@"А",kVK_ANSI_F,cmd|shift)];
+    REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==(cmd|shift));
+    MainMenu();
+    REQUIRE([TSKeyboardShortcuts event:Event(@"f",cmd) matchesAction:@selector(performFindPanelAction:) tag:1]);
+    REQUIRE([TSKeyboardShortcuts event:LayoutEvent(@"g",@"п",kVK_ANSI_G,cmd) matchesAction:@selector(performFindPanelAction:) tag:2]);
+    REQUIRE(![TSKeyboardShortcuts event:Event(@"f",cmd|shift) matchesAction:@selector(performFindPanelAction:) tag:1]);
+    puts("PASS: non-Latin PDF search and capture, conflict detection, Option character preservation, absent-menu fallback");
 } return 0; }
