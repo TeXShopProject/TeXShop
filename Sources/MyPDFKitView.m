@@ -1286,6 +1286,9 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
     else
         needsInitialization = NO;
     
+    // Document-view coordinates can move when later pages are added or removed.
+    // Preserve the visible point in page coordinates, as external reloads do.
+    TSExternalPDFPosition viewport = TSExternalPDFCapture(self);
     NSRect visibleRect = [[[self documentView] enclosingScrollView] documentVisibleRect];
     
     if ((visibleRect.origin.x == 0) && (visibleRect.origin.y == 0) && (visibleRect.size.height == 0) && (visibleRect.size.width == 0))
@@ -1408,7 +1411,10 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
        {
            
           // NSLog(@"visibleRect exists and regular scroll to visible");
-           [[self documentView] scrollRectToVisible: visibleRect];
+           if (viewport.valid && viewport.pageIndex < self.document.pageCount)
+               TSExternalPDFRestore(self, viewport);
+           else
+               [[self documentView] scrollRectToVisible: visibleRect];
            
        }
     
