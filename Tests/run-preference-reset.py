@@ -83,11 +83,14 @@ static NSString *gDefaultsFile;
 }
 @property NSFont *documentFont, *consoleFont;
 @property NSDictionary *fontAttributes;
+@property NSUInteger runtimeRefreshes;
 @end
 @implementation TSPreferences
 - (void)updateControlsFromUserDefaults:(id)defaults {}
 - (void)updateDocumentFontTextField {}
 - (void)updateConsoleFontTextField {}
+// Runtime copy behavior is exercised independently by run-preferences-runtime.py.
+- (void)refreshRuntimePreferences { self.runtimeRefreshes++; }
 SETDEFAULTS
 UNDODEFAULTS
 @end
@@ -116,7 +119,9 @@ int main(int argc, char **argv) { @autoreleasepool {
             memory.values = [earlier mutableCopy];
             NSButton *sender = [NSButton new]; sender.tag = 0;
             recolors = 0;
+            p.runtimeRefreshes = 0;
             [p->_undoManager beginUndoGrouping]; [p setDefaults:sender]; [p->_undoManager endUndoGrouping];
+            check(p.runtimeRefreshes == 1, @"profile refreshes runtime copies once");
             BOOL changed = (before != bundledAt);
             check(recolors == (changed ? 1 : 0) && [memory boolForKey:@"MakeatletterEnabled"] == bundledAt,
                   [NSString stringWithFormat:@"%@, @ was %s: restoring %s", gDefaultsFile.lastPathComponent, before ? "on" : "off",
@@ -132,6 +137,7 @@ int main(int argc, char **argv) { @autoreleasepool {
                   [NSString stringWithFormat:@"%@: other settings missing from the profile are still removed", gDefaultsFile.lastPathComponent]);
             recolors = 0;
             [p->_undoManager undo];
+            check(p.runtimeRefreshes == 2, @"profile undo refreshes runtime copies once");
             check([memory.values isEqual:earlier], [NSString stringWithFormat:@"%@: undoing restores the earlier settings exactly", gDefaultsFile.lastPathComponent]);
             check(recolors == (changed ? 1 : 0) && [memory boolForKey:@"MakeatletterEnabled"] == before,
                   [NSString stringWithFormat:@"%@, @ was %s: undoing it %s", gDefaultsFile.lastPathComponent, before ? "on" : "off",

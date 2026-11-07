@@ -190,7 +190,6 @@
 	BOOL            bibTeXengineTouched; // added by Terada
 	BOOL            makeatletterTouched; // added by Terada
     BOOL            sparkleTouched;
-    BOOL            xmlTagsTouched;
    
     IBOutlet NSPopUpButton  *dictionaryPopup;
 	IBOutlet NSButton *_displayAsBookButton;
@@ -480,17 +479,17 @@
 - (IBAction)XMLParameterChanged:sender;
 - (IBAction)XMLValueChanged:sender;
 
-- (IBAction)XMLChapterButtonChanged:sender;
-- (IBAction)XMLSectionButtonChanged:sender;
-- (IBAction)XMLSubsectionButtonChanged:sender;
-- (IBAction)XMLSubsubsectionButtonChanged:sender;
-- (IBAction)XMLIntroductionButtonChanged:sender;
-- (IBAction)XMLConclusionButtonChanged:sender;
-- (IBAction)XMLExercisesButtonChanged:sender;
-- (IBAction)XMLProjectButtonChanged:sender;
-- (IBAction)XMLFigureButtonChanged:sender;
-- (IBAction)XMLTableButtonChanged:sender;
-- (IBAction)XMLMarkButtonChanged:sender;
+- (IBAction)XMLChapterButtonChanged:(id)sender;
+- (IBAction)XMLSectionButtonChanged:(id)sender;
+- (IBAction)XMLSubsectionButtonChanged:(id)sender;
+- (IBAction)XMLSubsubsectionButtonChanged:(id)sender;
+- (IBAction)XMLIntroductionButtonChanged:(id)sender;
+- (IBAction)XMLConclusionButtonChanged:(id)sender;
+- (IBAction)XMLExercisesButtonChanged:(id)sender;
+- (IBAction)XMLProjectButtonChanged:(id)sender;
+- (IBAction)XMLFigureButtonChanged:(id)sender;
+- (IBAction)XMLTableButtonChanged:(id)sender;
+- (IBAction)XMLMarkButtonChanged:(id)sender;
 
 - (IBAction)okForStylePanel:sender;
 - (IBAction)cancelForStylePanel:sender;

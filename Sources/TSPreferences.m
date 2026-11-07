@@ -59,6 +59,7 @@ static NSString *TSPreferencesDomainName(void)
 @property BOOL initialEnginePathSearchPending;
 @property (weak) NSButton *enginePathSearchButton;
 - (void)searchEnginePathsForInitialSetup:(BOOL)initial sender:(NSButton *)sender;
+- (void)refreshRuntimePreferences;
 @end
 
 @implementation TSPreferences
@@ -161,7 +162,6 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 	[[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontRememberNotification object:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MagnificationRememberNotification object:self];
 	fontTouched = NO;
-    xmlTagsTouched = NO;
 	consoleFontTouched = NO;
 	consoleBackgroundColorTouched = NO;
 	consoleForegroundColorTouched = NO;
@@ -230,6 +230,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     // Here is the spot where we need to redraw the document and console with the remembered fonts
     [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontChangedNotification object:self];
     [[NSNotificationCenter defaultCenter] postNotificationName:ConsoleFontChangedNotification object:self];
+    [self refreshRuntimePreferences];
 }
 
 
@@ -314,8 +315,17 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     [SUD setObject: [self.consoleFont fontName] forKey:ConsoleFontNameKey];
     [SUD setFloat: [self.consoleFont pointSize] forKey: ConsoleFontSizeKey];
     [[NSNotificationCenter defaultCenter] postNotificationName:ConsoleFontChangedNotification object:self];
+    [self refreshRuntimePreferences];
 }
 
+
+// Refresh the process-wide copies after a group of settings has changed.
+// Individual controls update their own copy at the point of persistence.
+- (void)refreshRuntimePreferences
+{
+    editorCanAddBrackets = [SUD boolForKey:EditorCanAddBracketsKey];
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
+}
 
 //==============================================================================
 // Document pane
@@ -1150,92 +1160,92 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 }
 
 
-- (IBAction)XMLChapterButtonChanged:sender
+- (IBAction)XMLChapterButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLChapterTagKey] forKey:XMLChapterTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLChapterTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLSectionButtonChanged:sender
+- (IBAction)XMLSectionButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLSectionTagKey] forKey:XMLSectionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLSectionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLSubsectionButtonChanged:sender
+- (IBAction)XMLSubsectionButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLSubsectionTagKey] forKey:XMLSubsectionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLSubsectionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLSubsubsectionButtonChanged:sender
+- (IBAction)XMLSubsubsectionButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLSubsubsectionTagKey] forKey:XMLSubsubsectionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLSubsubsectionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLIntroductionButtonChanged:sender
+- (IBAction)XMLIntroductionButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLIntroductionTagKey] forKey:XMLIntroductionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLIntroductionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLConclusionButtonChanged:sender
+- (IBAction)XMLConclusionButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLConclusionTagKey] forKey:XMLConclusionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLConclusionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLExercisesButtonChanged:sender
+- (IBAction)XMLExercisesButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLExercisesTagKey] forKey:XMLExercisesTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLExercisesTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLProjectButtonChanged:sender
+- (IBAction)XMLProjectButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLProjectTagKey] forKey:XMLProjectTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLProjectTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLFigureButtonChanged:sender
+- (IBAction)XMLFigureButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLFigureTagKey] forKey:XMLFigureTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLFigureTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLTableButtonChanged:sender
+- (IBAction)XMLTableButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLTableTagKey] forKey:XMLTableTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLTableTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLMarkButtonChanged:sender
+- (IBAction)XMLMarkButtonChanged:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLMarkTagKey] forKey:XMLMarkTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLMarkTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
 
@@ -1278,12 +1288,13 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:SpellCheckEnabledKey];
 }
 
-- (IBAction)editorAddBracketsPressed:(id)sender;
+- (IBAction)editorAddBracketsPressed:(id)sender
 {
     // register the undo message first
     [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:EditorCanAddBracketsKey] forKey:EditorCanAddBracketsKey];
     
     [SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:EditorCanAddBracketsKey];
+    editorCanAddBrackets = [SUD boolForKey:EditorCanAddBracketsKey];
 }
 
 - (IBAction)spellCorrectPressed:sender
@@ -2317,8 +2328,6 @@ A tag of 0 means "no", a tag of 1 means "yes".
 
     editorCanAddBrackets = [SUD boolForKey: EditorCanAddBracketsKey];
     
-    if (xmlTagsTouched)
-        [(TSAppDelegate *)[[NSApplication sharedApplication] delegate] updateXMLTabs];
     
  	// close the window
 	// [_prefsWindow performClose:self];
@@ -2419,6 +2428,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
 		undo here. It calls undo during the next event loop. So the code below is called too soon.
 		I called it again when the preference panel is shown. */
 	//    [self updateControlsFromUserDefaults:SUD];
+    [self refreshRuntimePreferences];
 }
 
 //==============================================================================
