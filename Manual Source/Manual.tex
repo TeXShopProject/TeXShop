@@ -4071,7 +4071,7 @@ Therefore, I propose the following adjustments when creating PDF files with the 
 \item
 When you have a larger numbered formula, possibly covering several lines, then hover preview for a corresponding link might not show the beginning of the formula and clicking on the link might require some scrolling to bring it to full view.
 You can improve this behaviour by raising the hook (or anchor) of the internal link.
-Define a macro to work with version 7.01q or later of the \texttt{hyperref} package, for example
+For numbered equations provided by \texttt{amsmath}, with version 7.01q or later of \texttt{hyperref}, define the following macro:
 \begin{verbatim}
      \newcommand{\RaiseHook}[1]{\AddToHookNext{makelinktarget}%
      {\setlength{\normalbaselineskip}{#1\normalbaselineskip}}}
@@ -4082,7 +4082,8 @@ and add a command like
 \end{verbatim}
 just before you start a displayed two-line equation, for example.
 The number $1.6$ is in multiples of a baseline skip.
-The adjustment applies only to the next link target; subsequent targets use the normal height.
+The adjustment applies only to the next target created with \verb|\MakeLinkTarget|; subsequent targets use the normal height.
+Other targets, such as \texttt{equation} or \texttt{eqnarray} without \texttt{amsmath}, or figure captions, do not consume the adjustment: it remains pending until a later \verb|\MakeLinkTarget| target.
 To find the suitable numbers, you have to experiment a bit.
 A number is perfect, when a click on the link displays the entire formula at the top of the Preview window without superfluous space above it.
 Usually you have to start adding the \texttt{RaiseHook} command when your displayed formula contains a fraction ($1.2$), an integral with an upper bound ($1.4$), a summation symbol with an upper bound ($1.5$), a \texttt{cases} or \texttt{split} construction ($1.6$), or a \texttt{multline} environment ($2.2$).
