@@ -11,10 +11,11 @@
 - (void)unlearnWord:(NSString *)word { abort(); }
 - (NSString *)language { return @"en"; }
 - (NSArray *)availableLanguages { return @[@"en"]; }
+- (NSArray *)guessesForWordRange:(NSRange)range inString:(NSString *)string language:(NSString *)language inSpellDocumentWithTag:(NSInteger)tag { self.guessedWord=[string substringWithRange:range]; return self.guesses; }
 - (void)updateSpellingPanelWithMisspelledWord:(NSString *)word { if (self.panelUpdate) self.panelUpdate(); }
 - (NSRange)checkSpellingOfString:(NSString *)s startingAt:(NSInteger)start language:(NSString *)language
                           wrap:(BOOL)wrap inSpellDocumentWithTag:(NSInteger)tag wordCount:(NSInteger *)count {
-    return [s rangeOfString:@"zzqqa" options:0 range:NSMakeRange(start,s.length-start)];
+    return [s rangeOfString:@"zzqq[ab]" options:NSRegularExpressionSearch range:NSMakeRange(start,s.length-start)];
 }
 @end
 @interface SessionTextView : NSTextView @end
@@ -105,8 +106,8 @@ static void TestSuggestionSync(void) {
     [panel makeFirstResponder:panel];
     NSCAssert(!table.acceptsFirstResponder && panel.firstResponder != table,
               @"realistic suggestion table must not receive focus");
-    app.inputEvent=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0
-        windowNumber:panel.windowNumber context:nil characters:@"x" charactersIgnoringModifiers:@"x" isARepeat:NO keyCode:7];
+    // Start Find Next with an event that would otherwise qualify as candidate input.
+    app.inputEvent=CandidateKey(panel,0);
     NSTextView *view=View(@"zzqqa zzqqa"); Review(view);
     void (^notify)(void)=^{[NSNotificationCenter.defaultCenter postNotificationName:NSTableViewSelectionDidChangeNotification object:table];};
     SessionChecker.sharedSpellChecker.panelUpdate=^{
@@ -205,6 +206,19 @@ static void TestSuggestionSync(void) {
         windowNumber:panel.windowNumber context:nil characters:@"x" charactersIgnoringModifiers:@"x" isARepeat:NO keyCode:7];
     notify();
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"typing must not copy candidates");
+    // The real panel keeps its word field focused and moves the list from there.
+    NSTextField *wordField=[[NSTextField alloc] initWithFrame:NSMakeRect(0,250,200,22)];
+    [panel.contentView addSubview:wordField]; [panel makeFirstResponder:wordField];
+    NSCAssert([panel.firstResponder isKindOfClass:NSTextView.class] && Replacement().currentEditor==nil, @"word field fixture");
+    app.inputEvent=CandidateKey(panel,0); notify();
+    NSCAssert([Replacement().stringValue isEqual:@"valid"], @"arrow from the panel word field copies");
+    Replacement().stringValue=@"fixed";
+    app.inputEvent=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:2000
+        windowNumber:panel.windowNumber context:nil characters:@"\uF700" charactersIgnoringModifiers:@"\uF700" isARepeat:NO keyCode:126];
+    notify();
+    NSCAssert([Replacement().stringValue isEqual:@"valid"], @"up arrow copies");
+    Replacement().stringValue=@"fixed";
+    [wordField removeFromSuperview]; [panel makeFirstResponder:panel];
     app.inputEvent=keyboard;
     NSView *ownAccessory=SessionChecker.sharedSpellChecker.accessoryView;
     SessionChecker.sharedSpellChecker.accessoryView=[NSView new]; source.reads=0; notify();
@@ -223,11 +237,44 @@ static void TestSuggestionSync(void) {
         notify();
     };
     source.rowCount=1; source.value=@"sole suggestion";
+    SessionChecker.sharedSpellChecker.guesses=@[@"sole suggestion"];
     [TSSpellSupport findNextMisspellingInTextView:view mask:[[TSSpellExclusions sharedExclusions] maskForText:view.string]];
     NSCAssert([Replacement().stringValue isEqual:@"sole suggestion"], @"sole selected candidate is preloaded");
     NSCAssert([view.string isEqual:@"zzqqa changed"], @"preloading leaves document unchanged");
     Replacement().stringValue=@"hand edited"; notify();
     NSCAssert([Replacement().stringValue isEqual:@"hand edited"], @"later non-input update preserves manual entry");
+    void (^findNext)(void)=^{
+        [TSSpellSupport findNextMisspellingInTextView:view mask:[[TSSpellExclusions sharedExclusions] maskForText:view.string]];
+    };
+    NSCAssert([SessionChecker.sharedSpellChecker.guessedWord isEqual:@"zzqqa"], @"query uses current misspelled word");
+    panel.testHidden=YES; findNext();
+    NSCAssert(Replacement().stringValue.length==0, @"hidden panel must not preload");
+    panel.testHidden=NO;
+    view.string=@"zzqqb changed";
+    SessionChecker.sharedSpellChecker.guesses=@[@"new suggestion"]; findNext();
+    NSCAssert([SessionChecker.sharedSpellChecker.guessedWord isEqual:@"zzqqb"], @"next word is queried afresh");
+    NSCAssert(Replacement().stringValue.length==0, @"stale sole candidate must not preload");
+    source.value=@"new suggestion"; findNext();
+    NSCAssert([Replacement().stringValue isEqual:@"new suggestion"], @"updated sole candidate replaces previous one");
+    SessionChecker.sharedSpellChecker.guesses=@[@"new suggestion",@"alternative"]; findNext();
+    NSCAssert(Replacement().stringValue.length==0, @"stale single row with multiple current guesses must not preload");
+    SessionChecker.sharedSpellChecker.guesses=nil; findNext();
+    NSCAssert(Replacement().stringValue.length==0, @"unavailable current guesses must not preload");
+    SessionChecker.sharedSpellChecker.guesses=@[@"new suggestion"];
+    [table addTableColumn:[[NSTableColumn alloc] initWithIdentifier:@"extra"]]; findNext();
+    NSCAssert(Replacement().stringValue.length==0, @"unexpected table shape must not preload");
+    [table removeTableColumn:table.tableColumns.lastObject];
+    ownAccessory=SessionChecker.sharedSpellChecker.accessoryView;
+    void (^populate)(void)=SessionChecker.sharedSpellChecker.panelUpdate;
+    SessionChecker.sharedSpellChecker.panelUpdate=^{ populate(); app.reviewWindow=otherWindow; };
+    findNext();
+    NSCAssert(Replacement().stringValue.length==0, @"changed review must not preload");
+    app.reviewWindow=view.window;
+    SessionChecker.sharedSpellChecker.panelUpdate=^{ populate(); SessionChecker.sharedSpellChecker.accessoryView=[NSView new]; };
+    findNext();
+    SessionChecker.sharedSpellChecker.accessoryView=ownAccessory;
+    NSCAssert(Replacement().stringValue.length==0, @"replaced accessory must not preload");
+    SessionChecker.sharedSpellChecker.panelUpdate=populate;
     source.rowCount=2;
     [TSSpellSupport findNextMisspellingInTextView:view mask:[[TSSpellExclusions sharedExclusions] maskForText:view.string]];
     NSCAssert(Replacement().stringValue.length==0, @"multiple suggestions must not be preloaded");

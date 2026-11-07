@@ -405,11 +405,18 @@ static NSString *SuggestionAtRow(NSTableView *table, NSInteger row)
     // When there is only one suggestion the panel selects it itself, while the
     // observer above is ignoring its own update, so copy it here.
     NSTableView *table = SuggestionTable(checker.spellingPanel.contentView);
-    if (checker.accessoryView == sReplacementField.superview &&
+    if (checker.spellingPanel.isVisible &&
+        checker.accessoryView == sReplacementField.superview &&
         ReviewIsCurrent(tv) && sReplacementField.stringValue.length == 0 &&
         table.numberOfRows == 1 && table.numberOfSelectedRows == 1) {
         NSString *selected = SuggestionAtRow(table, table.selectedRow);
-        if (selected) sReplacementField.stringValue = selected;
+        // The panel may still contain a previous word's candidates. Verify its
+        // sole selection against the current word through the public API.
+        NSArray<NSString *> *guesses = selected ? [checker
+            guessesForWordRange:NSMakeRange(0, word.length) inString:word
+            language:checker.language inSpellDocumentWithTag:tag] : nil;
+        if (guesses.count == 1 && [guesses.firstObject isEqualToString:selected])
+            sReplacementField.stringValue = selected;
     }
     return word;
 }
