@@ -2243,11 +2243,50 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 */
 
 
+- (void)stepPageForward:(BOOL)forward sender:(id)sender
+{
+    TSExternalPDFPosition viewport = {0};
+    NSUInteger oldPage = NSNotFound;
+    if (@available(macOS 27.0, *)) {
+        if (self.displayMode == kPDFDisplaySinglePage || self.displayMode == kPDFDisplayTwoUp) {
+            viewport = TSExternalPDFCapture(self);
+            PDFPage *page = self.currentPage;
+            if (page) oldPage = [self.document indexForPage:page];
+        }
+    }
+
+    if (forward)
+        [self goToNextPage:sender];
+    else
+        [self goToPreviousPage:sender];
+
+    if (!viewport.valid || oldPage == NSNotFound || !self.document.pageCount)
+        return;
+    PDFPage *page = self.currentPage;
+    if (!page) return;
+    NSUInteger newPage = [self.document indexForPage:page];
+    if (newPage == NSNotFound)
+        return;
+
+    // macOS 27 moves to opposite page corners. PDFKit on Sequoia keeps
+    // the visible position. In two-up mode currentPage may be either page.
+    if (self.displayMode == kPDFDisplayTwoUp) {
+        NSUInteger offset = self.displaysAsBook ? 1 : 0;
+        oldPage = oldPage < offset ? 0 : offset + (oldPage - offset) / 2 * 2;
+        newPage = newPage < offset ? 0 : offset + (newPage - offset) / 2 * 2;
+    }
+    NSInteger target = (NSInteger)viewport.pageIndex + (NSInteger)newPage - (NSInteger)oldPage;
+    if (self.displayMode == kPDFDisplayTwoUp && self.displaysAsBook && newPage == 0)
+        target = 0; // The cover spread has no right-hand companion.
+    viewport.pageIndex = (NSUInteger)MAX(0, MIN(target, (NSInteger)self.document.pageCount - 1));
+    TSExternalPDFRestore(self, viewport);
+}
+
 - (void) previousPage: (id)sender
 {
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarquee: YES];
-	[self goToPreviousPage:self];
+	[self stepPageForward:NO sender:self];
 }
 
 - (void) nextPage: (id)sender
@@ -2255,7 +2294,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarquee: YES];
-	[self goToNextPage:sender];
+	[self stepPageForward:YES sender:sender];
 }
 
 - (void) firstPage: (id)sender

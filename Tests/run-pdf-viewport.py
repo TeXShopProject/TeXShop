@@ -3,12 +3,14 @@
 import argparse
 import ast
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import tempfile
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['legacy-reload', 'legacy-second', 'skip-last-page'])
+parser.add_argument('--artifacts', type=Path, help='Keep the generated Objective-C and executable for cross-OS testing')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin1')
@@ -40,8 +42,9 @@ elif args.mutation == 'skip-last-page':
     assert methods.count(old) == 1
     methods = methods.replace(old, 'viewport.pageIndex + 1 < self.document.pageCount')
 program = fixture.replace('METHODS', methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf')) + r'''
+static NSString *context;
 static void check(BOOL ok, NSString *message) {
-    if (!ok) { fprintf(stderr,"FAIL: %s\n",message.UTF8String); exit(1); }
+    if (!ok) { fprintf(stderr,"FAIL: %s [%s]\n",message.UTF8String,context.UTF8String); exit(1); }
 }
 static void pump(void) {
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.02]];
@@ -82,6 +85,7 @@ int main(void) { @autoreleasepool {
     for (NSInteger direction=0;direction<2;direction++)
     for (NSInteger mode=0;mode<4;mode++) for (NSNumber *rotation in @[@0,@90])
     for (NSNumber *scale in @[@1.25,@2.0]) {
+        context=[NSString stringWithFormat:@"direction=%ld mode=%ld rotation=%@ scale=%@",direction,mode,rotation,scale];
         NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,500,500)
             styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
         window.releasedWhenClosed = NO;
@@ -101,7 +105,7 @@ int main(void) { @autoreleasepool {
         // Appending/deleting later pages must not move the current page.
         for (NSNumber *count in @[@6,@8,@4]) {
             [view reShowWithDocument:document(bytes,count.unsignedIntegerValue,rotation.integerValue)]; pump();
-            sameViewport(before,view,@"reload preserves viewport with changed page count");
+            sameViewport(before,view,[NSString stringWithFormat:@"reload preserves viewport with page count %@",count]);
             check(fabs(view.scaleFactor-scale.doubleValue)<.001,@"reload preserves zoom");
         }
         // Reload after the window changes size must preserve its new viewport.
@@ -125,6 +129,7 @@ int main(void) { @autoreleasepool {
     // repeated upward drift even when the PDF has exactly the same pages.
     ViewportToolbar *toolbarDelegate = [ViewportToolbar new];
     for (NSInteger mode=0;mode<4;mode++) {
+        context=[NSString stringWithFormat:@"insets mode=%ld",mode];
         NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,500,500)
             styleMask:NSWindowStyleMaskTitled|NSWindowStyleMaskFullSizeContentView
             backing:NSBackingStoreBuffered defer:NO]; window.releasedWhenClosed=NO;
@@ -155,6 +160,7 @@ int main(void) { @autoreleasepool {
     // Follow the actual typesetting sequence, including the separately saved
     // lower pane rather than only the first view's document replacement.
     for (NSInteger mode=0;mode<4;mode++) for (NSNumber *scale in @[@1.25,@2]) {
+        context=[NSString stringWithFormat:@"split mode=%ld scale=%@",mode,scale];
         NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,600,900)
             styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];window.releasedWhenClosed=NO;
         RecoveryView *top=[[RecoveryView alloc]initWithFrame:NSMakeRect(0,450,600,450)];
@@ -187,10 +193,14 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
     temp = Path(directory)
     (temp / 'test.m').write_text(program)
-    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
+    subprocess.run(['xcrun', 'clang', '-mmacosx-version-min=14.6', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     '-I'+str(root/'Sources'), str(temp/'test.m'), str(root/'Sources/HideView.m'),
                     str(root/'Sources/TSExternalPDFSnapshot.m'), '-o', str(temp/'test')], check=True)
     home = temp / 'home'
     home.mkdir()
     environment = dict(os.environ, CFFIXED_USER_HOME=str(home))
+    if args.artifacts:
+        args.artifacts.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(temp/'test.m', args.artifacts/'test.m')
+        shutil.copy2(temp/'test', args.artifacts/'test')
     subprocess.run([str(temp/'test')], check=True, timeout=120, env=environment)
