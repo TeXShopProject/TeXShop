@@ -22,6 +22,51 @@ static TSExperimentJob *start(NSString *script, NSMutableData *output, void (^do
     return job;
 }
 int main(void) { @autoreleasepool {
+    // The direct task exits while a descendant still holds the output pipe open.
+    // Check the bytes at callback time, not after a later run-loop iteration.
+    NSMutableData *delayed = [NSMutableData data];
+    __block BOOL delayedDone = NO;
+    __block NSData *atCompletion = nil;
+    TSExperimentJob *delayedJob = start(@"printf head; (sleep 0.3; printf tail) & exit 0", delayed, ^(int status) {
+        atCompletion = [delayed copy];
+        delayedDone = YES;
+    });
+    BOOL completed = waitUntil(^BOOL{ return delayedDone; }, 3);
+    [delayedJob cancel];
+    check(completed, @"delayed pipe EOF completes");
+    check([[[NSString alloc] initWithData:atCompletion encoding:NSUTF8StringEncoding] isEqualToString:@"headtail"],
+          @"completion waits for descendant output and EOF");
+
+    // A descendant announces readiness after installing its TERM trap and after
+    // the direct task exits. Cancellation must still stop its process group.
+    // Cancellation must give the entire group a chance to handle TERM, rather
+    // than merely terminating the direct shell and later killing its children.
+    NSString *marker = [NSTemporaryDirectory() stringByAppendingPathComponent:NSUUID.UUID.UUIDString];
+    NSString *quotedMarker = [marker stringByReplacingOccurrencesOfString:@"'" withString:@"'\\''"];
+    NSString *gracefulScript = [NSString stringWithFormat:
+        @"/bin/sh -c 'trap '\\''printf term > \"$1\"; exit 0'\\'' TERM; while kill -0 \"$2\" 2>/dev/null; do sleep 0.01; done; printf '\\''%%s\\n'\\'' $$; while :; do sleep 0.02; done' sh '%@' $$ & exit 0", quotedMarker];
+    NSMutableData *gracefulOutput = [NSMutableData data];
+    TSExperimentJob *graceful = start(gracefulScript, gracefulOutput, nil);
+    BOOL gracefulReady = waitUntil(^BOOL{ return [gracefulOutput rangeOfData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding] options:0 range:NSMakeRange(0, gracefulOutput.length)].location != NSNotFound; }, 3);
+    pid_t gracefulPID = [[[NSString alloc] initWithData:gracefulOutput encoding:NSUTF8StringEncoding] intValue];
+    [graceful cancel];
+    BOOL receivedTERM = [[NSString stringWithContentsOfFile:marker encoding:NSUTF8StringEncoding error:NULL] isEqualToString:@"term"];
+    // Clean up the test-owned child even if an intentionally broken job left it running.
+    if (gracefulPID > 1 && kill(gracefulPID, 0) == 0) kill(gracefulPID, SIGKILL);
+    [[NSFileManager defaultManager] removeItemAtPath:marker error:NULL];
+    check(gracefulReady && gracefulPID > 1, @"TERM-trapping descendant ready");
+    check(receivedTERM, @"cancellation sends TERM to descendants before KILL");
+
+    // Ignore TERM before creating the child so both processes require escalation.
+    NSMutableData *stubbornOutput = [NSMutableData data];
+    TSExperimentJob *stubborn = start(@"trap '' TERM; sleep 20 & printf '%s\\n' $!; wait", stubbornOutput, nil);
+    BOOL stubbornReady = waitUntil(^BOOL{ return [stubbornOutput rangeOfData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding] options:0 range:NSMakeRange(0, stubbornOutput.length)].location != NSNotFound; }, 3);
+    pid_t stubbornPID = [[[NSString alloc] initWithData:stubbornOutput encoding:NSUTF8StringEncoding] intValue];
+    [stubborn cancel];
+    BOOL childStopped = stubbornPID > 1 && waitUntil(^BOOL{ return kill(stubbornPID, 0) != 0; }, 2);
+    if (stubbornPID > 1 && kill(stubbornPID, 0) == 0) kill(stubbornPID, SIGKILL);
+    check(stubbornReady && stubbornPID > 1, @"TERM-ignoring descendant ready");
+    check(childStopped, @"cancellation escalates to KILL for TERM-ignoring descendants");
     // Two simultaneous interactive jobs. Each console must receive only its own data,
     // and EOF must be drained before the completion callback.
     for (NSUInteger reverse = 0; reverse < 2; reverse++) {
@@ -80,5 +125,5 @@ int main(void) { @autoreleasepool {
     check(![bad startExecutable:@"/nonexistent/texshop-test-engine" arguments:@[] environment:@{} directory:[NSURL fileURLWithPath:NSTemporaryDirectory()] error:&error], @"launch failure reported");
     check(error != nil && !bad.active && ![bad sendData:NSData.data error:NULL], @"failed job cannot take input");
     [bad cancel];
-    puts("PASS: independent interactive jobs, both completion orders, cancellation/replacement, normal task preservation, output drain, launch failure");
+    puts("PASS: independent interactive jobs, both completion orders, cancellation/replacement, normal task preservation, delayed EOF, group TERM, KILL escalation, output drain, launch failure");
 } return 0; }

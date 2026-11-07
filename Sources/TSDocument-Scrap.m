@@ -491,7 +491,7 @@
                    encoding:self.scrapEffectiveEncoding title:scrapWindow.title ?: @"TeXShop"
                  completion:^(NSURL *pdfURL) {
         TSDocument *document = weakSelf;
-        if (!document || !document->scrapWindow.isVisible) return;
+        if (!document) return;
         if (![[NSFileManager defaultManager] fileExistsAtPath:pdfURL.path]) return;
         [document->scrapPDFKitView reShowWithPath:pdfURL.path];
         [document->scrapPDFWindow setHidesOnDeactivate:YES];

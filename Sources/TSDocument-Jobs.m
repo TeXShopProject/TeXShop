@@ -2492,8 +2492,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 
 - (void)checkATaskStatus:(NSNotification *)aNotification
 {
-	NSInteger		status;
-   NSError         *error;
     BOOL            DisplayLogs, MainLogs;
     
     // Not needed since "sudden halt" bug is fixed

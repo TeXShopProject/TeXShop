@@ -173,7 +173,7 @@
 "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除此窗口中所做的更改。现有的 KeyEquivalents.plist 设置将保留。";
 
 /* Independent Experiment console */
-"Experiment input" = "实验输入";
-"Stop Experiment" = "停止实验";
-"%@ — Experiment Console" = "%@ — 实验控制台";
-"Experiment stopped.\n" = "实验已停止。\n";
+"Experiment input" = "实验台输入";
+"Stop Experiment" = "停止实验台";
+"%@ — Experiment Console" = "%@ — 实验台控制台";
+"Experiment stopped.\n" = "实验台已停止。\n";

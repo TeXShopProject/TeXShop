@@ -26,7 +26,25 @@
 @end
 
 @implementation TSExperimentConsoleController
-- (instancetype)init { return [super initWithWindow:nil]; }
+- (instancetype)init
+{
+    self = [super initWithWindow:nil];
+    if (self) {
+        // initWithWindow:nil does not lazily invoke loadWindow.
+        [self loadWindow];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateConsoleFont:)
+            name:ConsoleFontChangedNotification object:nil];
+    }
+    return self;
+}
+
+- (void)updateConsoleFont:(NSNotification *)notification
+{
+    NSString *name = [SUD stringForKey:ConsoleFontNameKey];
+    CGFloat size = [SUD floatForKey:ConsoleFontSizeKey];
+    NSFont *font = name.length ? [NSFont fontWithName:name size:size > 0 ? size : 12] : nil;
+    self.outputText.font = font ?: [NSFont monospacedSystemFontOfSize:12 weight:NSFontWeightRegular];
+}
 
 - (void)loadWindow
 {
@@ -63,6 +81,7 @@
     field.accessibilityLabel = field.placeholderString;
     [content addSubview:field];
     self.commandField = field;
+    field.enabled = NO;
     NSButton *stop = [NSButton buttonWithTitle:NSLocalizedString(@"Stop Experiment", @"Stop Experiment job")
                                       target:self action:@selector(abort:)];
     [stop sizeToFit];
@@ -72,15 +91,18 @@
     stop.autoresizingMask = NSViewMinXMargin;
     [content addSubview:stop];
     self.stopButton = stop;
+    stop.enabled = NO;
     self.window = window;
     [window center];
+    [window setFrameAutosaveName:@"ExperimentConsole"];
+    [self updateConsoleFont:nil];
 }
 
 - (void)appendText:(NSString *)text
 {
     if (!text.length) return;
     NSAttributedString *addition = [[NSAttributedString alloc] initWithString:text attributes:@{
-        NSFontAttributeName:self.outputText.font, NSForegroundColorAttributeName:NSColor.textColor}];
+        NSFontAttributeName:self.outputText.font, NSForegroundColorAttributeName:self.outputText.textColor ?: NSColor.textColor}];
     [self.outputText.textStorage appendAttributedString:addition];
     [self.outputText scrollRangeToVisible:NSMakeRange(self.outputText.string.length, 0)];
 }
@@ -168,11 +190,12 @@
 - (void)sendCommand:(id)sender
 {
     NSString *command = [self.commandField.stringValue stringByAppendingString:@"\n"];
+    NSString *displayCommand = g_shouldFilter == kMacJapaneseFilterMode ? filterBackslashToYen(command) : command;
     if (g_shouldFilter == kMacJapaneseFilterMode) command = filterYenToBackslash(command);
     NSData *data = [[TSEncodingSupport sharedInstance] dataForText:command encoding:self.encoding byteOrderMark:TSNoByteOrderMark];
     NSError *error = nil;
     if ([self.job sendData:data error:&error]) {
-        [self appendText:command];
+        [self appendText:displayCommand];
         self.commandField.stringValue = @"";
     } else {
         NSBeep();
@@ -218,6 +241,7 @@
 }
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_job cancel];
     if (_directory) [[NSFileManager defaultManager] removeItemAtURL:_directory error:NULL];
 }

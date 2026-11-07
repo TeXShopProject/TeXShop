@@ -176,7 +176,7 @@
 "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Ihre Änderungen in diesem Fenster werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";
 
 /* Independent Experiment console */
-"Experiment input" = "Eingabe für Experiment";
-"Stop Experiment" = "Experiment stoppen";
-"%@ — Experiment Console" = "%@ — Experimentkonsole";
-"Experiment stopped.\n" = "Experiment gestoppt.\n";
+"Experiment input" = "Eingabe zum Testen";
+"Stop Experiment" = "Testen stoppen";
+"%@ — Experiment Console" = "%@ — Konsole zum Testen";
+"Experiment stopped.\n" = "Testen gestoppt.\n";
