@@ -212,3 +212,5 @@
 "Press a key" = "请按键";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与 Command 或 Control 组合使用，或使用 F1–F20。";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除自定菜单快捷键。KeyEquivalents.plist 中的设置将保留。";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "显示现有分配。此按键不能分配给新的快捷键。";

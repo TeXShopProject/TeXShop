@@ -652,6 +652,7 @@
 		4077C62303C7FAE800000009 /* TSMacroEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMacroEditor.m; sourceTree = "<group>"; };
 		4077C62403C7FAE800000009 /* TSMacroMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroMenuController.h; sourceTree = "<group>"; };
 		4077C62503C7FAE800000009 /* TSMacroMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMacroMenuController.m; sourceTree = "<group>"; };
+		A2A000010000000000000001 /* TSMacroSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroSelection.h; sourceTree = "<group>"; };
 		4077C62A03C7FB0200000009 /* TSMacroTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroTreeNode.h; sourceTree = "<group>"; };
 		4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMacroTreeNode.m; sourceTree = "<group>"; };
 		4077C62E03C7FB1E00000009 /* TSMacroOutlineController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroOutlineController.h; sourceTree = "<group>"; };
@@ -1406,6 +1407,7 @@
 				4077C62403C7FAE800000009 /* TSMacroMenuController.h */,
 				4077C62503C7FAE800000009 /* TSMacroMenuController.m */,
 				4077C62A03C7FB0200000009 /* TSMacroTreeNode.h */,
+				A2A000010000000000000001 /* TSMacroSelection.h */,
 				4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */,
 				4077C62E03C7FB1E00000009 /* TSMacroOutlineController.h */,
 				4077C62F03C7FB1E00000009 /* TSMacroOutlineController.m */,

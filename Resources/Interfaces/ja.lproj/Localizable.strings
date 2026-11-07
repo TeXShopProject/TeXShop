@@ -236,3 +236,5 @@
 "Press a key" = "キーを押してください";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "ショートカットに使えないキーです。⌘か⌃と組み合わせるか、F1〜F20を使ってください。";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "メニューのカスタムショートカットを削除します。KeyEquivalents.plistの設定は保持されます。";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "既存の割り当てを表示しています。このキーを新しいショートカットに割り当てることはできません。";

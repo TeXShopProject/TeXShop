@@ -215,3 +215,5 @@
 "Press a key" = "Premi un tasto";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Questo tasto non può essere usato come scorciatoia. Usa Comando o Controllo con un tasto, oppure F1–F20.";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Le scorciatoie personalizzate dei menu saranno rimosse. Le impostazioni di KeyEquivalents.plist saranno mantenute.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Sono mostrate le assegnazioni esistenti. Questo tasto non può essere assegnato a una nuova abbreviazione.";

@@ -183,3 +183,5 @@
 "Press a key" = "Press a key";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Existing assignments are shown. This key cannot be assigned to a new shortcut.";

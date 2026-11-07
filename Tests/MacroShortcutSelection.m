@@ -1,3 +1,4 @@
+#import "TSMacroSelection.h"
 // Production macro lookup and editor entry, using in-memory trees and inert collaborators.
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"

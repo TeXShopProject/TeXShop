@@ -22,6 +22,7 @@
  *
  */
 
+#import "TSMacroSelection.h"
 #import "TSMacroEditor.h"
 
 #import "TSMacroOutlineController.h"

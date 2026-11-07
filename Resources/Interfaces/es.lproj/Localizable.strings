@@ -215,3 +215,5 @@
 "Press a key" = "Pulse una tecla";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla no se puede usar como atajo. Use Comando o Control con una tecla, o F1–F20.";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Se eliminarán los atajos de menú personalizados. Se conservarán los ajustes de KeyEquivalents.plist.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Se muestran las asignaciones existentes. Esta tecla no se puede asignar a un nuevo atajo.";

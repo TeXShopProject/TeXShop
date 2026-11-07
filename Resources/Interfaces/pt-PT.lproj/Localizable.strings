@@ -214,3 +214,5 @@
 "Press a key" = "Prima uma tecla";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla não pode ser usada como atalho. Use Comando ou Controlo com uma tecla, ou F1–F20.";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Os atalhos de menu personalizados serão removidos. As definições de KeyEquivalents.plist serão mantidas.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "São apresentadas as atribuições existentes. Esta tecla não pode ser atribuída a um novo atalho.";

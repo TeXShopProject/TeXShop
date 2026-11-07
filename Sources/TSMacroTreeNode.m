@@ -23,6 +23,7 @@
  *
  */
 
+#import "TSMacroSelection.h"
 #import "TSMacroTreeNode.h"
 
 

@@ -1,3 +1,4 @@
+#import "TSMacroSelection.h"
 // Settings integration tests. No visible windows, user defaults or macro files.
 #import "TestAppKitIsolation.h"
 #import "TSKeyboardShortcuts.m"
@@ -33,6 +34,11 @@ static NSEvent *Event(NSString *text,NSUInteger flags,NSUInteger code){return [N
 static NSMenuItem *Item(NSString *title,NSString *key,NSUInteger flags){NSMenuItem *item=[[NSMenuItem alloc]initWithTitle:title action:@selector(description) keyEquivalent:key];item.identifier=[@"TSShortcut." stringByAppendingString:title];item.keyEquivalentModifierMask=flags;item.allowsAutomaticKeyEquivalentLocalization=NO;return item;}
 static TSShortcutMacro *Macro(NSString *name,NSString *key,NSUInteger flags,NSUInteger index){return [[TSShortcutMacro alloc]initWithName:name path:[@"Group ▸ " stringByAppendingString:name] indexPath:[NSIndexPath indexPathWithIndex:index] serializedKey:key key:key modifiers:flags];}
 static NSWindow *sheetParent;
+static NSWindow *fakeSheetOwner;
+static NSWindow *fakeAttachedSheet;
+static NSWindow *AttachedSheet(id self,SEL cmd){return self==fakeSheetOwner ? fakeAttachedSheet : nil;}
+static NSUInteger endedSheets;
+static void EndSheet(id self,SEL cmd,NSWindow *sheet,NSModalResponse response){endedSheets++;}
 static void (^sheetReply)(NSModalResponse);
 static void CaptureSheet(id self,SEL cmd,NSWindow *parent,void (^reply)(NSModalResponse)){sheetParent=parent;sheetReply=[reply copy];}
 @interface ProbePane:TSShortcutPaneController
@@ -58,6 +64,10 @@ int main(int argc,char **argv){@autoreleasepool{
  REQUIRE([first.keyEquivalent isEqual:@"k"] && ![coordinator isKindOfClass:NSWindowController.class]);
  REQUIRE(menu.numberOfItems==3 && [TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][@"TSShortcut.showKeyboardShortcuts:.0"] isEqual:oldEntry]);
  __block int routed=0;coordinator.showSettings=^{routed++;};[coordinator showKeyboardShortcuts:nil];REQUIRE(routed==1);
+ TSVisitMenu(main,@"",^(NSMenuItem *item,NSString *path){REQUIRE(![item.keyEquivalent isEqual:@"y"]);});
+ TSShortcutCommand *firstCommand=coordinator.store.commands.firstObject;
+ REQUIRE([coordinator.store setKey:@"j" modifiers:C forCommand:firstCommand]==nil);
+ REQUIRE([TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][@"TSShortcut.showKeyboardShortcuts:.0"] isEqual:oldEntry]);
  [coordinator.store restoreAll];
  NSArray *macros=@[Macro(@"First macro",@"f",C,0),Macro(@"Free",@"z",C,1),Macro(@"Later free",@"z",C,2),Macro(@"JIS",@"-",C|S,3)];
  coordinator.macroProvider=^{return macros;};
@@ -72,6 +82,19 @@ int main(int argc,char **argv){@autoreleasepool{
  [coordinator refreshMenuAndMacros];
  NSMenuItem *dynamic=Item(@"Dynamic",@"d",C);dynamic.identifier=nil;[menu addItem:dynamic];
  hits=[TSShortcutSearch matchesKey:@"d" modifiers:C store:coordinator.store macros:macros];REQUIRE(hits.count==1 && hits[0].winner && hits[0].command==nil);
+ // Multiple recorder spellings have one displayed owner in menu order.
+ NSMenuItem *shiftEquals=Item(@"Shift equals",@"=",C|S);[menu insertItem:shiftEquals atIndex:0];
+ fixtureCharacters=@"0";
+ NSEvent *german=Event(@"=",C|S,29);
+ NSArray *aliasMacros=@[Macro(@"Zero macro",@"0",C|S,10)];
+ hits=[TSShortcutSearch matchesEvent:german store:coordinator.store macros:aliasMacros];
+ REQUIRE(hits.count==3 && hits[0].menuItem==shiftEquals && hits[0].winner && hits[1].menuItem==equals && !hits[1].winner && !hits[2].winner);
+ [menu removeItem:shiftEquals];[menu addItem:shiftEquals];
+ hits=[TSShortcutSearch matchesEvent:german store:coordinator.store macros:aliasMacros];
+ REQUIRE(hits.count==3 && hits[0].menuItem==equals && hits[0].winner && !hits[1].winner && !hits[2].winner);
+ [menu removeItem:shiftEquals];
+ hits=[TSShortcutSearch matchesKey:@"0" modifiers:C|S store:coordinator.store macros:aliasMacros];REQUIRE(hits.count==1 && hits[0].winner);
+ puts("PASS: one displayed event owner follows menu order across spellings; raw macro ownership is unchanged");
  puts("PASS: saved assignments without a pane, compatibility routing, inert old ID, shared raw ownership and dynamic matches");
  Shell *shell=[[Shell alloc]initWithDefaults:TSIsolatedAppKitDefaults];Delegate *delegate=[Delegate new];shell.settingsDelegate=delegate;
  NSView *legacy=[[NSView alloc]initWithFrame:NSMakeRect(0,0,700,600)];NSTabView *tabs=[[NSTabView alloc]initWithFrame:legacy.bounds];[legacy addSubview:tabs];
@@ -95,6 +118,19 @@ int main(int argc,char **argv){@autoreleasepool{
  fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];REQUIRE(pane.searchMatches.count==2 && pane.table.selectedRow==1 && [pane macroHeaderRow]==0);
  fixtureCharacters=@"x";[shell.window performKeyEquivalent:Event(@"x",C,7)];REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"No command"]);
  REQUIRE([shell.window makeFirstResponder:pane.table]);fixtureCharacters=@"x";[shell.window keyDown:Event(@"x",0,7)];REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"cannot be used"] && forwardedKeys==0);
+ // Existing non-assignable shortcuts remain searchable, but new assignments stay restricted.
+ NSMenuItem *rotate=Item(@"Rotate",@"c",O),*switchViews=Item(@"Switch views",@"2",O);
+ [menu addItem:rotate];[menu addItem:switchViews];
+ for(NSMenuItem *item in @[rotate,switchViews]){
+  fixtureCharacters=item.keyEquivalent;[shell.window performKeyEquivalent:Event(item.keyEquivalent,O,8)];
+  REQUIRE(pane.searchMatches.count==1 && pane.searchMatches[0].menuItem==item && pane.searchMatches[0].winner && pane.table.selectedRow==0);
+  REQUIRE([pane.searchMessage containsString:@"cannot be assigned to a new shortcut"] && ![TSShortcutStore isAllowedKey:item.keyEquivalent modifiers:O]);
+ }
+ [menu removeItem:rotate];[menu removeItem:switchViews];
+ fixtureCharacters=@"0";[shell.window performKeyEquivalent:german];
+ REQUIRE([pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"=" modifiers:C]]);
+ fixtureCharacters=@"\033";[shell.window performKeyEquivalent:Event(@"\033",S,53)];
+ REQUIRE(pane.searchingByKey && [pane.search.stringValue isEqual:[TSShortcutStore displayKey:@"\033" modifiers:S]]);
  REQUIRE([TSIsolatedAppKitDefaults.values isEqual:saved]);
  REQUIRE([shell.window performKeyEquivalent:Event(@"\033",0,53)] && !pane.searchingByKey && pane.search.editable && [pane.search.stringValue isEqual:@"First"]);
  for(NSUInteger reason=0;reason<4;reason++){
@@ -122,6 +158,37 @@ int main(int argc,char **argv){@autoreleasepool{
  REQUIRE(sheetParent==shell.window && sheetReply!=nil && !accepted);sheetReply(NSAlertFirstButtonReturn);REQUIRE(!accepted);
  [pane confirmMacrosUsingKey:@"z" modifiers:C completion:^(BOOL value){accepted=value;}];sheetReply(NSAlertSecondButtonReturn);REQUIRE(accepted);
  [pane restoreAll:nil];REQUIRE(sheetParent==shell.window && sheetReply!=nil);
+ // Model an attached recording sheet without displaying or attaching an actual window.
+ TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(attachedSheet)),(IMP)AttachedSheet);
+ TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(endSheet:returnCode:)),(IMP)EndSheet);
+ pane.capturePanel=[[TSShortcutCapturePanel alloc]initWithContentRect:NSMakeRect(0,0,400,200) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+ fakeSheetOwner=shell.window;fakeAttachedSheet=pane.capturePanel;
+ sheetParent=nil;sheetReply=nil;accepted=NO;
+ [pane confirmMacrosUsingKey:@"z" modifiers:C completion:^(BOOL value){accepted=value;}];
+ REQUIRE(sheetParent==pane.capturePanel && sheetReply!=nil);sheetReply(NSAlertSecondButtonReturn);REQUIRE(accepted);
+ sheetParent=nil;
+ IMP showError=class_getMethodImplementation(TSShortcutPaneController.class,@selector(showError:));
+ ((void(*)(id,SEL,id))showError)(pane,@selector(showError:),@"Fixture error");REQUIRE(sheetParent==pane.capturePanel);
+ // Changing any captured value while a confirmation is pending must cancel the write.
+ pane.applyButton=[NSButton new];pane.applyButton.enabled=YES;pane.captureError=[NSTextField new];
+ for(NSUInteger change=0;change<3;change++){
+  pane.editingCommand=firstCommand;pane.capturedKey=@"z";pane.capturedModifiers=C;pane.capturedBindings=nil;
+  NSDictionary *before=[TSIsolatedAppKitDefaults.values copy];NSString *originalKey=[first.keyEquivalent copy];
+  sheetReply=nil;[pane applyCapturedShortcut:nil];REQUIRE(sheetReply!=nil);
+  if(change==0)pane.editingCommand=coordinator.store.commands.lastObject;
+  if(change==1)pane.capturedKey=@"v";
+  if(change==2)pane.capturedModifiers=C|S;
+  sheetReply(NSAlertSecondButtonReturn);
+  REQUIRE([TSIsolatedAppKitDefaults.values isEqual:before] && [first.keyEquivalent isEqual:originalKey] && endedSheets==0);
+ }
+ // The macro reservation is checked again when the asynchronous reply arrives.
+ accepted=NO;sheetReply=nil;[pane confirmMacrosUsingKey:@"z" modifiers:C completion:^(BOOL value){accepted=value;}];REQUIRE(sheetReply!=nil);
+ macroItem.keyEquivalent=@"v";sheetReply(NSAlertSecondButtonReturn);REQUIRE(!accepted);macroItem.keyEquivalent=@"z";
+ // An unchanged confirmation still applies the requested shortcut normally.
+ pane.editingCommand=firstCommand;pane.capturedKey=@"z";pane.capturedModifiers=C;pane.capturedBindings=nil;
+ sheetReply=nil;[pane applyCapturedShortcut:nil];REQUIRE(sheetReply!=nil);sheetReply(NSAlertSecondButtonReturn);
+ REQUIRE([first.keyEquivalent isEqual:@"z"] && endedSheets==1);
+ fakeSheetOwner=nil;fakeAttachedSheet=nil;pane.capturePanel=nil;pane.editingCommand=nil;
  puts("PASS: confirmations are asynchronous sheets attached to Settings");
  TSMacroTreeNode *tree=[TSMacroTreeNode submenuNodeWithName:@"root"],*group=[TSMacroTreeNode submenuNodeWithName:@"group"];
  TSMacroTreeNode *a=[TSMacroTreeNode nodeWithName:@"same" content:@"unsaved" key:@"A"],*b=[TSMacroTreeNode nodeWithName:@"same" content:@"other" key:@"B"];

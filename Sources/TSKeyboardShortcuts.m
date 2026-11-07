@@ -470,8 +470,26 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
             }
         }
     }
-    [menus addObjectsFromArray:macroMatches];
-    return [menus copy];
+    // A single input can have several recorder spellings. Display ownership in
+    // menu order across all matches, without changing raw assignment comparisons.
+    NSMutableArray<TSShortcutMatch *> *ordered = [NSMutableArray array];
+    NSMapTable<NSMenuItem *, TSShortcutMatch *> *byItem = [NSMapTable strongToStrongObjectsMapTable];
+    for (TSShortcutMatch *match in menus) { [byItem setObject:match forKey:match.menuItem]; }
+    TSVisitMenu(store.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        TSShortcutMatch *match = [byItem objectForKey:item];
+        if (match == nil) { return; }
+        [ordered addObject:[[TSShortcutMatch alloc] initWithPath:match.path menuItem:item command:match.command macro:nil winner:ordered.count == 0]];
+    });
+    BOOL hasWinner = ordered.count > 0;
+    for (TSShortcutMacro *macro in macros) {
+        for (TSShortcutMatch *match in macroMatches) {
+            if (match.macro != macro) { continue; }
+            BOOL winner = match.winner && !hasWinner;
+            [ordered addObject:[[TSShortcutMatch alloc] initWithPath:match.path menuItem:nil command:nil macro:macro winner:winner]];
+            hasWinner = hasWinner || winner;
+        }
+    }
+    return [ordered copy];
 }
 @end
 
@@ -812,11 +830,13 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         NSString *key = binding[@"key"];
         NSEventModifierFlags flags = [binding[@"modifiers"] unsignedIntegerValue];
         self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
+        NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
+        self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
         if (key.length == 0 || ![TSShortcutStore isAllowedKey:key modifiers:flags]) {
-            self.searchMessage = NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
+            self.searchMessage = self.searchMatches.count > 0
+                ? NSLocalizedString(@"Existing assignments are shown. This key cannot be assigned to a new shortcut.", @"")
+                : NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
         } else {
-            NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
-            self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
             self.searchMessage = self.searchMatches.count == 0 ? NSLocalizedString(@"No command uses this key.", @"") : NSLocalizedString(@"Assignment priority is shown; whether a command can run depends on the document.", @"");
         }
     }

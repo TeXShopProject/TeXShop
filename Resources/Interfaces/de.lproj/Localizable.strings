@@ -215,3 +215,5 @@
 "Press a key" = "Taste drücken";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Diese Taste kann nicht als Kurzbefehl verwendet werden. Verwenden Sie Command oder Control mit einer Taste oder F1–F20.";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Eigene Menükurzbefehle werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Vorhandene Zuweisungen werden angezeigt. Diese Taste kann keinem neuen Kurzbefehl zugewiesen werden.";

@@ -212,3 +212,5 @@
 "Press a key" = "Druk op een toets";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Deze toets kan niet als sneltoets worden gebruikt. Gebruik Command of Control met een toets, of F1–F20.";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Aangepaste menusneltoetsen worden verwijderd. Bestaande instellingen in KeyEquivalents.plist blijven behouden.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Bestaande toewijzingen worden getoond. Deze toets kan niet aan een nieuwe sneltoets worden toegewezen.";

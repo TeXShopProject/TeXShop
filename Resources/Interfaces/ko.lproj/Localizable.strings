@@ -215,3 +215,5 @@
 "Press a key" = "키를 누르세요";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "이 키는 단축키로 사용할 수 없습니다. Command 또는 Control과 조합하거나 F1–F20을 사용하세요.";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "사용자 지정 메뉴 단축키가 삭제됩니다. KeyEquivalents.plist의 설정은 유지됩니다.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "기존 할당을 표시합니다. 이 키를 새 단축키에 할당할 수 없습니다.";

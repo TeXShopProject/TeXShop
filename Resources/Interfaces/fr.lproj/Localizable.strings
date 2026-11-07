@@ -215,3 +215,5 @@
 "Press a key" = "Appuyez sur une touche";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Cette touche ne peut pas servir de raccourci. Utilisez Commande ou Contrôle avec une touche, ou F1–F20.";
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Les raccourcis de menu personnalisés seront supprimés. Les réglages de KeyEquivalents.plist seront conservés.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Les affectations existantes sont affichées. Cette touche ne peut pas être attribuée à un nouveau raccourci.";
