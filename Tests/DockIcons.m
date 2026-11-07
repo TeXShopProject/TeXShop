@@ -1,5 +1,7 @@
 // Isolated native preference and running-app Dock checks.
 #import <Cocoa/Cocoa.h>
+#import <objc/runtime.h>
+#import "MemoryDefaults.h"
 #import "../Sources/TSDockIconController.h"
 #import "../Sources/TSDockIcon.h"
 #define SUD NSUserDefaults.standardUserDefaults
@@ -40,14 +42,27 @@ static void Require(BOOL condition, NSString *message) { if (!condition) { NSLog
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)app { return YES; }
 @end
 #import "PreferenceCancel.h"
+static TSMemoryDefaults *memoryDefaults;
+static id InMemoryStandardDefaults(id self, SEL cmd) { return memoryDefaults; }
+static void PreventOrdering(id self, SEL cmd, NSWindowOrderingMode mode, NSInteger relative) {}
 int main(int argc,char **argv) { @autoreleasepool {
+    memoryDefaults = [TSMemoryDefaults new];
+    for (int i = 1; i + 1 < argc; i++) if ([@(argv[i]) isEqual:@"-AppleLanguages"]) {
+        NSString *language = [@(argv[i+1]) stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"()"]];
+        [memoryDefaults registerDefaults:@{@"AppleLanguages":@[language]}];
+    }
+    method_setImplementation(class_getClassMethod(NSUserDefaults.class,@selector(standardUserDefaults)),(IMP)InMemoryStandardDefaults);
+    // Check before creating AppKit objects, so a broken isolation fixture cannot write preferences.
+    Require([NSUserDefaults standardUserDefaults] == memoryDefaults, @"All standard defaults must remain in memory");
+    BOOL snapshot = argc > 2 && [@(argv[2]) isEqualToString:@"--snapshot"];
+    BOOL preview = snapshot || (argc > 2 && [@(argv[2]) isEqualToString:@"--preview"]);
+    if (!preview) method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(orderWindow:relativeTo:)),(IMP)PreventOrdering);
     [NSApplication sharedApplication];
+    if (!preview) [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     NSString *domain = NSBundle.mainBundle.bundleIdentifier;
     Require([domain hasPrefix:@"org.texshop.DockLab"], @"Use the isolated test bundle");
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    BOOL snapshot = argc > 2 && [@(argv[2]) isEqualToString:@"--snapshot"];
-    BOOL preview = snapshot || (argc > 2 && [@(argv[2]) isEqualToString:@"--preview"]);
-    if (!preview) [defaults removePersistentDomainForName:domain];
+
     NSBundle *bundle = NSBundle.mainBundle;
     TSDockIconController *controller = [[TSDockIconController alloc] initWithBundle:bundle defaults:defaults];
     TSPreferences *owner = [TSPreferences new];
@@ -90,7 +105,7 @@ int main(int argc,char **argv) { @autoreleasepool {
             [buttons[i] performClick:nil];
             Require((NSApp.dockTile.contentView != nil) == (i != 4), @"Native custom drawing and reset");
             [controller acceptEditing];
-            Require([[defaults stringForKey:TSDockIconKey] isEqual:TSDockIconNames()[i]], @"Persist choice");
+            Require([[defaults stringForKey:TSDockIconKey] isEqual:TSDockIconNames()[i]], @"Save choice in memory");
             TSDockIconController *fresh = [[TSDockIconController alloc] initWithBundle:bundle defaults:[NSUserDefaults standardUserDefaults]];
             [fresh restoreSavedIcon];
             Require([[fresh valueForKey:@"selection"] isEqual:TSDockIconNames()[i]], @"Restore across controller instances");
@@ -111,7 +126,7 @@ int main(int argc,char **argv) { @autoreleasepool {
         TSApplyDockIcon((id)probe,bundle,@"current");
         Require(probe.contentView == nil && [probe.badgeLabel isEqual:@"7"], @"Reset does not alter badges");
         CheckPreferenceCancel();
-        [defaults removePersistentDomainForName:domain];
+
         puts("PASS: nib, five assets, preview, save, restore, cancel, close, fallback, badge property and production Cancel prefix");
         return 0;
     }

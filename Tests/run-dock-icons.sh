@@ -7,8 +7,6 @@ app="$build/DockLab.app"
 domain="org.texshop.DockLab.$(basename "$build" | tr . -)"
 cleanup() {
     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u "$app" >/dev/null 2>&1 || true
-    defaults delete "$domain" >/dev/null 2>&1 || true
-    rm -f "$HOME/Library/Preferences/$domain.plist"
     rm -rf "$build"
 }
 trap cleanup EXIT
@@ -30,7 +28,19 @@ cat > "$app/Contents/Info.plist" <<PLIST
 </dict></plist>
 PLIST
 python3 "$root/Tests/extract-dock-preferences.py" "$build/PreferenceCancel.h"
-xcrun clang -I"$build" -fobjc-arc -fmodules -framework Cocoa "$root/Tests/DockIcons.m" "$root/Sources/TSDockIconController.m" -o "$app/Contents/MacOS/DockLab"
+test_source="$root/Tests/DockIcons.m"
+if [ "${1:-}" = --mutation-persistent-defaults ]; then
+    python3 - "$test_source" "$build/DockIcons.m" <<'PYM'
+from pathlib import Path
+import sys
+s=Path(sys.argv[1]).read_text()
+line='    method_setImplementation(class_getClassMethod(NSUserDefaults.class,@selector(standardUserDefaults)),(IMP)InMemoryStandardDefaults);'
+assert s.count(line)==1
+Path(sys.argv[2]).write_text(s.replace(line,''))
+PYM
+    test_source="$build/DockIcons.m"
+fi
+xcrun clang -I"$root/Tests" -I"$build" -fobjc-arc -fmodules -framework Cocoa "$test_source" "$root/Sources/TSDockIconController.m" -o "$app/Contents/MacOS/DockLab"
 codesign --force --sign - "$app"
 if [ "${1:-}" = --snapshot ]; then
     "$app/Contents/MacOS/DockLab" "$root/Resources/Interfaces/${2:-ja}.lproj/Preferences.nib" --snapshot "$3" -AppleLanguages "(${2:-ja})"
