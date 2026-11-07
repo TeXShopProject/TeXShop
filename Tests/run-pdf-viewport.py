@@ -2,6 +2,7 @@
 """Check real PDFKit viewport restoration without launching TeXShop or loading its settings."""
 import argparse
 import ast
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -111,4 +112,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
     subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     '-I'+str(root/'Sources'), str(temp/'test.m'), str(root/'Sources/HideView.m'),
                     str(root/'Sources/TSExternalPDFSnapshot.m'), '-o', str(temp/'test')], check=True)
-    subprocess.run([str(temp/'test')], check=True, timeout=60)
+    home = temp / 'home'
+    home.mkdir()
+    environment = dict(os.environ, CFFIXED_USER_HOME=str(home))
+    subprocess.run([str(temp/'test')], check=True, timeout=60, env=environment)
