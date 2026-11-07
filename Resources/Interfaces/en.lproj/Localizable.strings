@@ -140,3 +140,5 @@
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
+
+"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";

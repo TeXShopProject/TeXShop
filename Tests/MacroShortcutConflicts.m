@@ -286,9 +286,25 @@ int main(int argc, char **argv) { @autoreleasepool {
     [menu removeItem:replacement]; replacement.keyEquivalentModifierMask=cmd|shift; [menu addItem:replacement];
     Drain(); REQUIRE(rebuilds==before+1);
     [menu removeItem:replacement]; Drain(); before=rebuilds;
+    // AppKit can hide an anonymous item's key when an installed macro already uses it.
+    NSDictionary *priorMacros=macros.macroDict;
+    macros.macroDict=@{@"submenu":@[Macro(@"Late collision",@"C+ControlKey")]};
+    [coordinator refreshMenuAndMacros]; Drain(); before=rebuilds;
+    REQUIRE([macroMenu.itemArray[2].keyEquivalent isEqual:@"c"]);
+    NSMenuItem *late=[[NSMenuItem alloc] initWithTitle:@"Enter Full Screen" action:@selector(toggleFullScreen:) keyEquivalent:@"c"];
+    late.keyEquivalentModifierMask=cmd|control;
+    [menu addItem:late]; Drain();
+    REQUIRE(rebuilds==before+1 && [late.keyEquivalent isEqual:@"c"]);
+    REQUIRE(!macroMenu.itemArray[2].keyEquivalent.length && [macroMenu.itemArray[2].toolTip containsString:@"Enter Full Screen"]);
+    REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"Late collision",@"c",cmd|control)]].count==1);
+    [menu removeItem:late]; Drain();
+    REQUIRE([macroMenu.itemArray[2].keyEquivalent isEqual:@"c"]);
+    macros.macroDict=priorMacros; [coordinator refreshMenuAndMacros]; Drain(); before=rebuilds;
     NSMenuItem *recent=[[NSMenuItem alloc] initWithTitle:@"Recent document" action:@selector(description) keyEquivalent:@""];
-    for(int i=0;i<5;i++) { [menu addItem:recent]; Drain(); [menu removeItem:recent]; Drain(); }
-    REQUIRE(rebuilds==before);
+    // A burst of structural edits coalesces into one refresh when it leaves a different menu.
+    for(int i=0;i<5;i++) { [menu addItem:recent]; [menu removeItem:recent]; }
+    [menu addItem:recent]; Drain(); REQUIRE(rebuilds==before+1);
+    [menu removeItem:recent]; Drain(); REQUIRE(rebuilds==before+2);
     [[NSNotificationCenter defaultCenter] removeObserver:counter];
     [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidAddItemNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidRemoveItemNotification object:nil];

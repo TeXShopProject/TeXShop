@@ -193,3 +193,5 @@
 "Save Anyway (Conflicting Shortcuts Inactive)" = "このまま保存（重なるキーは無効）";
 "Remove Conflicting Shortcuts and Save" = "重なるキーを外して保存";
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "このキーはマクロ“%@”（%@）と重なっています。そちらは一覧で後にあるため、そのキーが無効になります。";
+
+"This shortcut is already used by:\n%@" = "このショートカットは次のコマンドで使用されています：\n%@";

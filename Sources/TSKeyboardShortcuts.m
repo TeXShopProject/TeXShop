@@ -429,8 +429,8 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 - (NSArray *)menuBindingSnapshot {
     NSMutableArray *bindings = [NSMutableArray array];
     TSVisitMenu(NSApp.mainMenu, @"", ^(NSMenuItem *item, NSString *path) {
-        if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:") &&
-            (item.keyEquivalent.length || [item.identifier hasPrefix:@"TSShortcut."]))
+        // AppKit may hide a newly inserted item's key until the existing macro key is cleared.
+        if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:"))
             [bindings addObject:@[[NSValue valueWithNonretainedObject:item], item.keyEquivalent,
                 @(item.keyEquivalentModifierMask), NSStringFromSelector(item.action) ?: @"", item.identifier ?: @""]];
     });
@@ -682,12 +682,16 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
             except:self.editingCommand.item restoring:nil];
         if (path) [conflicts addObject:path];
     }
-    return conflicts.count ? [conflicts.array componentsJoinedByString:@"; "] : nil;
+    if (!conflicts.count) return nil;
+    if (conflicts.count == 1)
+        return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflicts.firstObject];
+    return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by:\n%@", @""),
+        [conflicts.array componentsJoinedByString:@"\n"]];
 }
 - (void)applyCapturedShortcut:(id)sender {
     if (!self.capturedKey || !self.applyButton.enabled) return;
     NSString *conflict = [self conflictForCapturedShortcut];
-    if (conflict) { self.captureError.stringValue = [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict]; return; }
+    if (conflict) { self.captureError.stringValue = conflict; return; }
     if (![self confirmMacrosUsingKey:self.capturedKey modifiers:self.capturedModifiers]) return;
     NSString *error = [self.store setKey:self.capturedKey modifiers:self.capturedModifiers forCommand:self.editingCommand];
     [self refreshMenuAndMacros];

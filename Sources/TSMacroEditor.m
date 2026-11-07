@@ -232,6 +232,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
     [window setMinSize:minimum];
     NSRect windowFrame = [window frame];
     if (NSHeight(windowFrame) < minimum.height) {
+        windowFrame.origin.y -= minimum.height - NSHeight(windowFrame);
         windowFrame.size.height = minimum.height;
         [window setFrame:windowFrame display:NO];
     }

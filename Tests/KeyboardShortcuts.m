@@ -82,6 +82,23 @@ static void CheckRecordedMenuConflicts(TSShortcutStore *store) {
         REQUIRE(ui.capturedBindings.count==1);
         REQUIRE(![[ui conflictForCapturedShortcut] containsString:zoom.path]);
     }
+    // Re-recording a command's own key must not conflict with that command's aliases.
+    ui.editingCommand=zoom; fixtureUnshifted=@"=";
+    [ui recordShortcutEvent:LayoutEvent(@"+",@"+",24,cmd|shift)];
+    REQUIRE(![[ui conflictForCapturedShortcut] containsString:zoom.path]);
+    // German menus have both the unshifted text-size and shifted preview-zoom commands.
+    ui.editingCommand=Command(store,@"TSShortcut.doTypeset:.-1");
+    TSShortcutCommand *bigger=Command(store,@"TSShortcut.modifyFont:.3");
+    if (bigger && [bigger.item.keyEquivalent isEqual:@"+"] && [zoom.item.keyEquivalent isEqual:@"+"]) {
+        REQUIRE([[ui conflictForCapturedShortcut] containsString:bigger.path]);
+        REQUIRE([[ui conflictForCapturedShortcut] containsString:zoom.path]);
+        [ui applyCapturedShortcut:nil];
+        REQUIRE([ui.captureError.stringValue containsString:bigger.path] && [ui.captureError.stringValue containsString:zoom.path]);
+        REQUIRE([[ui.captureError.stringValue componentsSeparatedByString:@"\n"] containsObject:bigger.path]);
+        REQUIRE([[ui.captureError.stringValue componentsSeparatedByString:@"\n"] containsObject:zoom.path]);
+        NSTextField *error=[NSTextField wrappingLabelWithString:ui.captureError.stringValue];
+        REQUIRE([error.cell cellSizeForBounds:NSMakeRect(0,0,600,CGFLOAT_MAX)].height<=70);
+    }
     method_setImplementation(method,originalUnshifted); fixtureUnshifted=nil;
 }
 static NSMenu *MainMenu(void) {

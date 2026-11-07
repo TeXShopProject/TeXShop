@@ -89,7 +89,7 @@ if '--mutations' in sys.argv:
         'strip Shift from non-ASCII letters': [(k, '![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])\n        flags &= ~NSEventModifierFlagShift;', 'YES)\n        flags &= ~NSEventModifierFlagShift;')],
         'snapshot ignores modifiers': [(k, '@(item.keyEquivalentModifierMask), NSStringFromSelector', '@0, NSStringFromSelector')],
         'snapshot ignores key equivalents': [(k, '[NSValue valueWithNonretainedObject:item], item.keyEquivalent,', '[NSValue valueWithNonretainedObject:item], @"",')],
-        'rebuild on keyless recent documents': [(k, '(item.keyEquivalent.length || [item.identifier hasPrefix:@"TSShortcut."])', 'YES')],
+        'ignore items whose keys AppKit hides': [(k, 'if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:"))', 'if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:") && (item.keyEquivalent.length || [item.identifier hasPrefix:@"TSShortcut."]))')],
         'PDF drops legacy shifted punctuation': [(k, 'return [TSEventBindings(event, [event charactersByApplyingModifiers:0]) containsObject:', 'return [TSRecordedBinding(event, [event charactersByApplyingModifiers:0]) isEqual:')],
         'leave Shift for dead keys': [(k, 'key.length == 1 &&\n        ![key isEqual:unshifted]', 'key.length == 1 && unshifted.length == 1 &&\n        ![key isEqual:unshifted]')],
     }

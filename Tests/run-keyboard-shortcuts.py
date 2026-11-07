@@ -65,6 +65,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
     print('PASS: commands and bundled macro keys in all 36 compiled menu variants (12 languages)')
     if '--mutations' in sys.argv:
         cases={
+            'report the edited command as its own conflict': (
+                'except:self.editingCommand.item restoring:nil];', 'except:nil restoring:nil];'),
+            'show only the last conflicting command': (
+                '[conflicts.array componentsJoinedByString:@"\\n"]', 'conflicts.lastObject'),
             'ignore captured spellings when checking conflicts': (
                 'NSArray *bindings = self.capturedBindings ?: @[TSBinding(self.capturedKey, self.capturedModifiers)];',
                 'NSArray *bindings = @[TSBinding(self.capturedKey, self.capturedModifiers)];'),

@@ -23,13 +23,16 @@ int main(int argc,char **argv) { @autoreleasepool {
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     // Make even an accidentally-visible nib incapable of ordering a window onscreen.
     method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(orderWindow:relativeTo:)),(IMP)NoOrder);
+    [memoryDefaults setObject:@"414 289 585 100 0 0 1920 1080 " forKey:@"NSWindow Frame Macro Editor"];
     CGFloat savedHeight=0;
     for(int round=0;round<4;round++) {
     TSMacroEditor *owner=[TSMacroEditor new];
     NSNib *nib=[[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:@(argv[1])] bundle:nil];
     NSArray *objects; REQUIRE([nib instantiateWithOwner:owner topLevelObjects:&objects]);
     NSWindow *window=[owner valueForKey:@"window"]; REQUIRE(window && !window.visible);
-    if(round) [window setFrameUsingName:@"Macro Editor"];
+    [window setFrameUsingName:@"Macro Editor"];
+    REQUIRE(window.minSize.height>=272);
+    REQUIRE(window.frame.size.height>=window.minSize.height);
     CGFloat originalHeight=window.frame.size.height;
     NSMutableDictionary *originalMinimumHeights=[NSMutableDictionary new];
     NSRect smallest;
@@ -39,7 +42,9 @@ int main(int argc,char **argv) { @autoreleasepool {
         NSRect previousMinimum=window.frame; previousMinimum.size.height=window.minSize.height;
         [window setFrame:previousMinimum display:NO]; originalHeight=window.frame.size.height;
     }
+    CGFloat originalTop=NSMaxY(window.frame);
     [owner installShortcutStatus];
+    REQUIRE(fabs(NSMaxY(window.frame)-originalTop)<.1);
     REQUIRE(window.frame.size.height==MAX(originalHeight,window.minSize.height));
     if(round) REQUIRE(originalHeight==savedHeight);
     NSTextField *label=owner.shortcutStatus; NSView *host=window.contentView;
