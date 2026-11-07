@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 # added by Terada: Independently test PDFView drawing, CPU tile coordinates, and vector printing.
+"""Default/--headless: isolated CPU checks. --screen [PDF]: explicitly displays a window."""
+import argparse
+parser=argparse.ArgumentParser(description=__doc__)
+modes=parser.add_mutually_exclusive_group()
+modes.add_argument('--headless',action='store_true')
+modes.add_argument('--screen',action='store_true')
+parser.add_argument('pdf',nargs='?')
+args=parser.parse_args()
+if args.pdf and not args.screen: parser.error('a PDF path requires --screen; this displays a window')
 from pathlib import Path
 import subprocess, tempfile, sys, os
 root=Path(__file__).resolve().parents[1]

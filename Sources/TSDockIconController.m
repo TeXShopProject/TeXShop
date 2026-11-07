@@ -42,10 +42,6 @@
     [self.defaults setObject:self.selection forKey:TSDockIconKey];
     [self updatePreview];
 }
-- (void)installInPreferences:(NSTabView *)tabs {
-    if (tabs.numberOfTabViewItems < 2) return;
-    [self installInPreferencesPane:tabs.tabViewItems[tabs.numberOfTabViewItems - 2].view];
-}
 - (void)installInPreferencesPane:(NSView *)misc {
     if (misc == nil || self.buttons.count != 0) return;
     CGFloat middle = NSMidX(misc.bounds);

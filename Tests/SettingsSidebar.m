@@ -2,35 +2,75 @@
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
 #import "TSSettingsWindowController.h"
+@interface TSSettingsWindowController (Testing)
+@property (strong, readonly) NSTableView *categoryTable;
+@property (strong, readonly) NSSegmentedControl *navigationControl;
+@property (strong, readonly) NSScrollView *contentScroll;
+- (void)navigate:(NSSegmentedControl *)sender;
+@end
 static NSString *shellPath;
 static BOOL testKeyWindow;
+static BOOL restoreFrame;
+static NSRect savedFrame;
+static BOOL RestoreFrame(NSWindow *window, SEL selector, NSString *name) {
+ if (restoreFrame && [name isEqual:@"SettingsSidebarWindow"]) [window setFrame:savedFrame display:NO];
+ return YES;
+}
+static NSEvent *Key(NSString *text){return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0 windowNumber:0 context:nil characters:text charactersIgnoringModifiers:text isARepeat:NO keyCode:0];}
 static NSWindow *testSheet;
 static BOOL IsKey(id self,SEL selector){return testKeyWindow;}
 static NSWindow *Sheet(id self,SEL selector){return testSheet;}
 static void Check(BOOL yes,NSString *message){if(!yes){fprintf(stderr,"FAIL: %s\n",message.UTF8String);exit(1);}}
+static NSData *ReadNib(NSString *path) {NSData *data=[NSData dataWithContentsOfFile:path];if(data==nil) abort();return data;}
+static NSString *Argument(const char *value) {NSString *text=[NSString stringWithUTF8String:value];if(text==nil) abort();return text;}
+@interface Segment:NSSegmentedControl
+@property NSInteger testSegment;
+@end
+@implementation Segment
+- (NSInteger)selectedSegment {return self.testSegment;}
+@end
 @interface TestController:TSSettingsWindowController @end
 @implementation TestController
 - (void)loadWindow {
- NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:shellPath] bundle:nil];
+ NSNib *nib=[[NSNib alloc]initWithNibData:ReadNib(shellPath) bundle:nil];
  NSArray *objects=nil;Check([nib instantiateWithOwner:self topLevelObjects:&objects],@"shell XIB loads");
 }
 @end
-@interface Owner:NSObject<TSSettingsWindowDelegate>
+static NSString *legacyPath;
+static TSMemoryDefaults *fixtureDefaults;
+static NSWindow *fixtureOldWindow;
+@interface FixtureBundle:NSObject
++ (instancetype)mainBundle;
+- (BOOL)loadNibNamed:(NSString *)name owner:(id)owner topLevelObjects:(NSArray **)objects;
+@end
+@interface Owner:NSObject<TSSettingsWindowDelegate> { @public NSWindow *_prefsWindow; NSTabView *_tabView; }
+@property NSArray<NSObject *> *preferenceNibObjects;
+@property TSSettingsWindowController *settingsController;
 @property NSMutableDictionary *outlets;
 @property BOOL valid;
 @property NSUInteger commits,fonts;
 @end
 @implementation Owner
+// PRODUCTION_PREPARE
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {if(value)self.outlets[key]=value;}
 - (BOOL)settingsMayChangeCategory {self.commits++;return self.valid;}
-- (void)settingsChangeFont:(id)sender {self.fonts++;}
+- (void)settingsChangeFont:(NSFontManager *)sender {self.fonts++;}
 @end
 @interface TSPreferenceWindow:NSWindow @end
 @implementation TSPreferenceWindow @end
 static NSTabView *Tabs(NSView *v){if([v isKindOfClass:NSTabView.class])return (id)v;for(NSView*c in v.subviews){NSTabView*t=Tabs(c);if(t)return t;}return nil;}
-static void SaveImage(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:image.TIFFRepresentation];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
+@implementation FixtureBundle
++ (instancetype)mainBundle {return [self new];}
+- (BOOL)loadNibNamed:(NSString *)name owner:(Owner *)owner topLevelObjects:(NSArray **)objects {
+ NSNib *nib=[[NSNib alloc] initWithNibData:ReadNib(legacyPath) bundle:nil];
+ BOOL ok=[nib instantiateWithOwner:owner topLevelObjects:objects];
+ for(id o in *objects) if([o isKindOfClass:NSWindow.class] && Tabs([o contentView]).numberOfTabViewItems==9){owner->_prefsWindow=o;owner->_tabView=Tabs([o contentView]);fixtureOldWindow=o;break;}
+ return ok;
+}
+@end
+static void SaveImage(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSData *tiff=image.TIFFRepresentation;if(tiff==nil)abort();NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:tiff];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
 int main(int argc,char **argv){@autoreleasepool{
- TSInstallAppKitIsolation();[NSApplication sharedApplication];
+ TSInstallAppKitIsolation();TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(setFrameAutosaveName:)),(IMP)RestoreFrame);[NSApplication sharedApplication];
  class_addMethod(TSSettingsWindow.class,@selector(isKeyWindow),(IMP)IsKey,"B@:");
  class_addMethod(TSSettingsWindow.class,@selector(attachedSheet),(IMP)Sheet,"@@:");shellPath=@(argv[1]);
  TSSettingsNavigationHistory *h=[TSSettingsNavigationHistory new];[h resetWithIdentifier:@"a"];
@@ -41,8 +81,19 @@ int main(int argc,char **argv){@autoreleasepool{
  for(int i=0;i<60;i++)[h visitIdentifier:[NSString stringWithFormat:@"%d",i]];Check(h.count==50,@"history limit");
  for(int i=0;i<60;i++)[h goBack];Check([h.currentIdentifier isEqual:@"10"],@"oldest entries evicted");
  for(int a=3;a<argc;a++){
+  legacyPath=@(argv[a]);fixtureDefaults=[TSMemoryDefaults new];
+  Owner *integration=[Owner new];integration.outlets=[NSMutableDictionary new];integration.valid=YES;
+  Check([integration prepareSettingsWindow],@"production prepare succeeds");
+  Check(integration->_prefsWindow==integration.settingsController.window && integration->_prefsWindow!=fixtureOldWindow && fixtureOldWindow.contentView==nil,@"production owner targets new window");
+  if(a==3){
+   [integration->_prefsWindow.contentView layoutSubtreeIfNeeded];
+   NSSize extent=integration.settingsController.contentScroll.contentSize, pane=integration.settingsController.contentScroll.documentView.frame.size;
+   fprintf(stderr,"INITIAL viewport %.0fx%.0f pane %.0fx%.0f\n",extent.width,extent.height,pane.width,pane.height);
+   if(NSHeight(NSScreen.mainScreen.visibleFrame)>pane.height+150) Check(extent.height>=pane.height,@"default height fits pane when screen permits");
+  }
+  Check(integration->_tabView.window==integration->_prefsWindow && integration.preferenceNibObjects.count>0,@"production retains nib objects in new window");
   Owner *owner=[Owner new];owner.outlets=[NSMutableDictionary new];owner.valid=YES;
-  NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:@(argv[a])] bundle:nil];NSArray *objects;
+  NSNib *nib=[[NSNib alloc]initWithNibData:ReadNib(Argument(argv[a])) bundle:nil];NSArray *objects;
   Check([nib instantiateWithOwner:owner topLevelObjects:&objects],@"legacy nib loads");
   NSWindow *old=nil;NSTabView*tabs=nil;for(id o in objects)if([o isKindOfClass:NSWindow.class] && Tabs([o contentView]).numberOfTabViewItems==9){old=o;tabs=Tabs(old.contentView);break;}
   Check(tabs.numberOfTabViewItems==9,@"nine localized primary categories");
@@ -52,18 +103,46 @@ int main(int argc,char **argv){@autoreleasepool{
   NSRect expectedTabFrame=[tabs convertRect:tabs.contentRect toView:old.contentView];
   NSArray *oldIdentifiers=[tabs.tabViewItems valueForKey:@"identifier"];
   TSMemoryDefaults *memory=[TSMemoryDefaults new];[memory setObject:@"unknown" forKey:@"TSSettingsSelectedCategory"];[memory setObject:@"sentinel" forKey:@"TexCommand"];
+  // Fresh controllers must preserve a valid saved category through assembly.
+  [memory setObject:@"console" forKey:@"TSSettingsSelectedCategory"];
+  restoreFrame=YES;savedFrame=NSMakeRect(100,100,1200,900);
   TestController *c=[[TestController alloc]initWithDefaults:memory];c.settingsDelegate=owner;
   NSView *content=old.contentView;[c hostLegacyContent:content tabView:tabs];old.contentView=nil;
+  for(NSUInteger n=0;n<savedViews.count;n++) {if(!NSEqualRects(savedViews[n].frame,savedFrames[n].rectValue)) fprintf(stderr,"GEOMETRY %s %s -> %s\n",NSStringFromClass(savedViews[n].class).UTF8String,NSStringFromRect(savedFrames[n].rectValue).UTF8String,NSStringFromRect(savedViews[n].frame).UTF8String);Check(NSEqualRects(savedViews[n].frame,savedFrames[n].rectValue),@"hosting preserves fixed control geometry");}
+  Check([[memory stringForKey:@"TSSettingsSelectedCategory"] isEqual:@"console"],@"assembly never overwrites persisted category");
+  [c beginSession];Check([c.history.currentIdentifier isEqual:@"console"] && c.categoryTable.selectedRow==3,@"fresh controller restores saved category");
+  [c.window.contentView layoutSubtreeIfNeeded];
+  Check(NSEqualRects(c.window.frame,savedFrame) && !c.shouldCascadeWindows,@"restore frame after complete assembly without cascading");
+  Check((c.window.styleMask & NSWindowStyleMaskFullSizeContentView)!=0,@"full height content enabled");
+  NSRect scrollInWindow=[c.contentScroll convertRect:c.contentScroll.bounds toView:nil];
+  Check(fabs(NSMaxY(scrollInWindow)-NSMaxY(c.window.contentLayoutRect))<1,@"content pinned below toolbar safe area");
+  NSSplitViewController *split=(id)c.window.contentViewController;
+  NSRect sidebarInWindow=[split.splitViewItems[0].viewController.view convertRect:split.splitViewItems[0].viewController.view.bounds toView:nil];
+  Check(fabs(NSMaxY(sidebarInWindow)-NSHeight(c.window.contentView.bounds))<1,@"sidebar reaches titlebar top");
+  Check(c.contentScroll.documentView.isFlipped && fabs(c.contentScroll.documentVisibleRect.origin.y)<1,@"content starts at top in tall window");
+  Check(c.window.toolbar.items.count==2 && [c.window.toolbar.items[0] isKindOfClass:NSTrackingSeparatorToolbarItem.class] && c.window.toolbar.items[1].navigational,@"tracking divider and navigational toolbar");
+  NSArray *expected=@[@"source",@"editor",@"preview",@"console",@"typesetting",@"engines",@"misc-1",@"misc-2",@"themes"];
+  Check([c.categoryIdentifiers isEqual:expected],@"stable ordered category identifiers");
+  for(NSUInteger i=0;i<expected.count;i++) Check([c legacyViewForCategoryIdentifier:expected[i]]==tabs.tabViewItems[i].view,@"category maps to original localized pane");
+  [memory setObject:@"unknown" forKey:@"TSSettingsSelectedCategory"];
   Check(c.window!=old && tabs.window==c.window,@"every sheet and focus target uses the host window");
   Check(NSEqualRects(tabs.frame,expectedTabFrame),@"hidden tabs preserve the original pane frame");
   Check(tabs.tabViewType==NSNoTabsNoBorder && c.categoryTable.numberOfRows==9,@"hidden legacy tabs and sidebar");
   [c beginSession];Check([c.history.currentIdentifier isEqual:@"source"] && c.categoryTable.selectedRow==0,@"unknown category falls back to source");
-  for(NSUInteger n=0;n<savedViews.count;n++) Check(NSEqualRects(savedViews[n].frame,savedFrames[n].rectValue),@"hosting preserves fixed control geometry");
+
   NSTabView *themeTabs=Tabs([c legacyViewForCategoryIdentifier:@"themes"]);
   Check(themeTabs.numberOfTabViewItems==2,@"both theme groups retained");
   for(NSTabViewItem *item in themeTabs.tabViewItems){[themeTabs selectTabViewItem:item];Check(themeTabs.selectedTabViewItem==item,@"theme groups selectable");}
+  // Selection-query callbacks must never navigate or validate.
+  NSUInteger queryCount=c.history.count,queryCommits=owner.commits;
+  for(NSInteger row=0;row<9;row++) [(id<NSTableViewDelegate>)c tableView:c.categoryTable shouldSelectRow:row];
+  Check(c.history.count==queryCount && owner.commits==queryCommits,@"selection queries have no side effects");
+  if(a==3){
+   [c.categoryTable keyDown:Key(@"c")];Check(c.history.count<=queryCount+1 && owner.commits<=queryCommits+1,@"type select visits at most one row");
+   queryCount=c.history.count;queryCommits=owner.commits;[c.categoryTable keyDown:Key(@"¤")];Check(c.history.count==queryCount && owner.commits==queryCommits,@"unmatched typing never navigates");
+  }
   NSRect frame=c.window.frame;
-  for(NSString*identifier in c.categoryIdentifiers)Check([c selectCategoryIdentifier:identifier],@"all categories reachable");
+  for(NSString*identifier in c.categoryIdentifiers){Check([c selectCategoryIdentifier:identifier],@"all categories reachable");Check([c.window.title isEqual:tabs.selectedTabViewItem.label],@"title follows selected category");}
   Check(NSEqualRects(frame,c.window.frame),@"navigation never resizes window");
   Check([[tabs.tabViewItems valueForKey:@"identifier"] isEqual:oldIdentifiers],@"legacy tab identifiers retained");
   Check(memory.values.count==2 && [[memory stringForKey:@"TexCommand"]isEqual:@"sentinel"],@"navigation only saves UI category state");
@@ -71,20 +150,26 @@ int main(int argc,char **argv){@autoreleasepool{
   [c goForward:nil];Check(c.categoryTable.selectedRow==8 && ![c.navigationControl isEnabledForSegment:1],@"forward syncs sidebar/buttons");
   owner.valid=NO;NSUInteger count=c.history.count;[c goBack:nil];Check(c.categoryTable.selectedRow==8 && c.history.count==count,@"invalid field blocks history changes");
   Check(![c selectCategoryIdentifier:@"preview"] && c.categoryTable.selectedRow==8,@"invalid field blocks sidebar changes");
-  owner.valid=YES;testSheet=[NSWindow new];[c goBack:nil];Check(c.categoryTable.selectedRow==8 && ![c selectCategoryIdentifier:@"source"],@"sheet blocks both routes");testSheet=nil;
+  owner.valid=YES;
+  [c goBack:nil];owner.valid=NO;[c goForward:nil];Check(c.categoryTable.selectedRow==7,@"invalid field blocks forward");
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==7 && [c.history.currentIdentifier isEqual:@"misc-2"],@"invalid sidebar selection restored");
+  owner.valid=YES;testSheet=[NSWindow new];[c goForward:nil];Check(c.categoryTable.selectedRow==7,@"sheet blocks forward");testSheet=nil;
+  Segment *segment=[Segment new];segment.testSegment=1;Check(c.navigationControl.target==c && c.navigationControl.action==@selector(navigate:),@"toolbar action wired");[c navigate:segment];Check(c.categoryTable.selectedRow==8,@"forward toolbar segment");
+  segment.testSegment=0;[c navigate:segment];Check(c.categoryTable.selectedRow==7,@"back toolbar segment");[c goForward:nil];
+  testSheet=[NSWindow new];[c goBack:nil];Check(c.categoryTable.selectedRow==8 && ![c selectCategoryIdentifier:@"source"],@"sheet blocks both routes");testSheet=nil;
   testKeyWindow=YES;
   NSEvent *back=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand timestamp:0 windowNumber:0 context:nil characters:@"[" charactersIgnoringModifiers:@"[" isARepeat:NO keyCode:33];
   Check([c.window performKeyEquivalent:back] && c.categoryTable.selectedRow==7,@"Command bracket follows window history");
   testKeyWindow=NO;[c.window performKeyEquivalent:back];Check(c.categoryTable.selectedRow==7,@"history shortcut only in key settings window");
-  [c.categoryTable.delegate tableView:c.categoryTable shouldSelectRow:2];Check(c.categoryTable.selectedRow==2 && c.history.forwardIdentifier==nil,@"sidebar route synchronizes once and truncates forward history");
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==2 && c.history.forwardIdentifier==nil,@"sidebar route synchronizes once and truncates forward history");
   NSEvent *down=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0 windowNumber:0 context:nil characters:@"\uF701" charactersIgnoringModifiers:@"\uF701" isARepeat:NO keyCode:125];
   [c.categoryTable keyDown:down];Check(c.categoryTable.selectedRow==3,@"arrow key uses validated category route");
   [c selectCategoryIdentifier:@"preview"];
-  NSUInteger visits=c.history.count;[c.categoryTable.delegate tableView:c.categoryTable shouldSelectRow:2];Check(c.history.count==visits,@"reselect is not duplicate history");
+  NSUInteger visits=c.history.count;[c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.history.count==visits,@"reselect is not duplicate history");
   [c endSession];[c beginSession];Check(c.history.count==1 && !c.history.backIdentifier && !c.history.forwardIdentifier,@"reopen resets history and preserves category");
   [c endSession];[memory setObject:@"console" forKey:@"TSSettingsSelectedCategory"];[c beginSession];
   Check([c.history.currentIdentifier isEqual:@"console"] && c.history.count==1,@"reopening reads saved category without retaining history");
-  [c changeFont:nil];Check(owner.fonts==1,@"font is explicitly forwarded to preference owner");
+  [c changeFont:(NSFontManager *)owner];Check(owner.fonts==1,@"font is explicitly forwarded to preference owner");
   for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
    c.window.appearance=[NSAppearance appearanceNamed:appearance];
    for(NSValue *size in @[[NSValue valueWithSize:NSMakeSize(960,650)],[NSValue valueWithSize:NSMakeSize(660,440)]]){
@@ -92,7 +177,7 @@ int main(int argc,char **argv){@autoreleasepool{
     for(NSString*identifier in c.categoryIdentifiers){
      [c selectCategoryIdentifier:identifier];[c.window.contentView layoutSubtreeIfNeeded];
      Check(tabs.selectedTabViewItem.view.window==c.window,@"selected controls belong to new window");
-     if(a==3 || [@(argv[a]) containsString:@"ja.lproj"]){
+     if(strlen(argv[2])>0 && (a==3 || [@(argv[a]) containsString:@"ja.lproj"])){
       NSString *lang=[[@(argv[a]) stringByDeletingLastPathComponent]stringByDeletingLastPathComponent].lastPathComponent;
       NSString *name=[NSString stringWithFormat:@"%@-%@-%@-%.0f.png",lang,appearance,identifier,size.sizeValue.width];
       SaveImage(content, [@(argv[2]) stringByAppendingPathComponent:[@"pane-" stringByAppendingString:name]]);

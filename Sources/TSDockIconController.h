@@ -5,5 +5,4 @@
 - (instancetype)initWithBundle:(NSBundle *)bundle defaults:(NSUserDefaults *)defaults;
 - (void)restoreSavedIcon;
 - (void)installInPreferencesPane:(NSView *)pane;
-- (void)installInPreferences:(NSTabView *)tabs;
 @end

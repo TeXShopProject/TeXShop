@@ -58,10 +58,14 @@ static NSString *TSPreferencesDomainName(void)
 }
 
 
+typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
+    TSSettingsFontNone, TSSettingsFontDocument, TSSettingsFontConsole
+};
+
 @interface TSPreferences () <NSWindowDelegate, NSTabViewDelegate, NSTextFieldDelegate, TSSettingsWindowDelegate>
 @property (strong) TSSettingsWindowController *settingsController;
-@property (copy) NSArray *preferenceNibObjects;
-@property (copy) NSString *fontEditingContext;
+@property (copy) NSArray<NSObject *> *preferenceNibObjects;
+@property TSSettingsFontDestination fontEditingContext;
 @property (strong) NSMapTable<NSControl *, TSPreferenceInput *> *inputRules;
 @property (weak) NSControl *editingField;
 @property (copy) NSString *editingOriginalText;
@@ -136,7 +140,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 "*/
 - (IBAction)showPreferences:(id)sender
 {
-    if (_prefsWindow.visible) { [_prefsWindow makeKeyAndOrderFront:sender]; return; }
+    if ((_prefsWindow.visible || _prefsWindow.miniaturized)) { [_prefsWindow makeKeyAndOrderFront:sender]; return; }
     if (!self.initialEnginePathSearchPending) [self cancelEnginePathDiscovery];
     if (![self prepareSettingsWindow]) return;
     self.endingPreferences = NO;
@@ -144,7 +148,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     _prefsWindow.delegate = self;
     _tabView.delegate = self;
     [self configurePreferenceInputs];
-    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController legacyViewForCategoryIdentifier:@"misc-2"]];
+    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController legacyViewForCategoryIdentifier:TSSettingsCategoryMiscTwo]];
     [[TSDockIconController sharedController] restoreSavedIcon];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
@@ -155,7 +159,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (BOOL)prepareSettingsWindow
 {
     if (self.settingsController != nil) return YES;
-    NSArray *objects = nil;
+    NSArray<NSObject *> *objects = nil;
     if (![NSBundle.mainBundle loadNibNamed:@"Preferences" owner:self topLevelObjects:&objects]) return NO;
     self.preferenceNibObjects = objects;
     NSWindow *oldWindow = _prefsWindow;
@@ -178,7 +182,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     [self releasePreferencePanels];
     return YES;
 }
-- (void)settingsChangeFont:(id)sender
+- (void)settingsChangeFont:(NSFontManager *)sender
 {
     [self changeFont:sender];
 }
@@ -297,7 +301,7 @@ Clicking this button will bring up the font panel.
     // self.documentFont = [fontManager convertFont:self.documentFont];
     if (![self finishPreferenceEditing:YES]) return;
     self.ownsFontPanel = YES;
-    self.fontEditingContext = @"Document";
+    self.fontEditingContext = TSSettingsFontDocument;
     [_prefsWindow makeFirstResponder:_prefsWindow];
     [[NSFontManager sharedFontManager] setSelectedFont:self.documentFont isMultiple:NO];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:self];
@@ -366,7 +370,7 @@ Clicking this button will bring up the font panel.
 	// up the responder chain
 	if (![self finishPreferenceEditing:YES]) return;
     self.ownsFontPanel = YES;
-    self.fontEditingContext = @"Console";
+    self.fontEditingContext = TSSettingsFontConsole;
 	[_prefsWindow makeFirstResponder:_prefsWindow];
 	[[NSFontManager sharedFontManager] setSelectedFont:self.consoleFont isMultiple:NO];
 	[[NSFontManager sharedFontManager] orderFrontFontPanel:self];
@@ -382,9 +386,9 @@ Clicking this button will bring up the font panel.
         !(_prefsWindow.isKeyWindow || _prefsWindow.isMainWindow)) return;
     
     NSData    *fontData;
-    NSString *theTab = self.fontEditingContext;
+    TSSettingsFontDestination destination = self.fontEditingContext;
 
-	if ([theTab isEqualToString: @"Document"])
+	if (destination == TSSettingsFontDocument)
 		{
 
 		self.documentFont = [fontManager convertFont:self.documentFont];
@@ -402,7 +406,7 @@ Clicking this button will bring up the font panel.
 
 		}
 		
-	else if ([theTab isEqualToString: @"Console"])
+	else if (destination == TSSettingsFontConsole)
 		{
 		self.consoleFont = [fontManager convertFont:self.consoleFont];
 		[SUD setObject: [self.consoleFont fontName] forKey:ConsoleFontNameKey];
@@ -1986,9 +1990,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
 }
 - (BOOL)tabView:(NSTabView *)tabView shouldSelectTabViewItem:(NSTabViewItem *)item
 {
-    if (![self finishPreferenceEditing:YES]) return NO;
-    [self releasePreferencePanels];
-    return YES;
+    return [self settingsMayChangeCategory];
 }
 - (void)releasePreferencePanels
 {
@@ -1999,7 +2001,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
         [[manager fontPanel:NO] close];
     }
     self.ownsFontPanel = NO;
-    self.fontEditingContext = nil;
+    self.fontEditingContext = TSSettingsFontNone;
 }
 - (void)tearDownPreferenceEditing
 {

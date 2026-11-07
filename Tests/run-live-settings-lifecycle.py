@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 source=(ROOT/'Sources/TSPreferences.m').read_text()
 def method(sig):
  a=source.index('\n'+sig)+1;return source[a:source.index('\n}',a)+2]
-names=['- (void)presentInputErrorForField:', '- (BOOL)commitPreferenceField:', '- (void)controlTextDidBeginEditing:', '- (BOOL)control:', '- (BOOL)finishPreferenceEditing:', '- (BOOL)windowShouldClose:', '- (void)windowWillClose:', '- (BOOL)tabView:', '- (void)releasePreferencePanels', '- (void)tearDownPreferenceEditing', '- (void)finishPreferencesForTermination', '- (void)cancelEnginePathDiscovery']
+names=['- (BOOL)settingsMayChangeCategory', '- (void)presentInputErrorForField:', '- (BOOL)commitPreferenceField:', '- (void)controlTextDidBeginEditing:', '- (BOOL)control:', '- (BOOL)finishPreferenceEditing:', '- (BOOL)windowShouldClose:', '- (void)windowWillClose:', '- (BOOL)tabView:', '- (void)releasePreferencePanels', '- (void)tearDownPreferenceEditing', '- (void)finishPreferencesForTermination', '- (void)cancelEnginePathDiscovery']
 methods='\n'.join(map(method,names))
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
 mutations={
@@ -26,6 +26,7 @@ program=r'''
 #import <Cocoa/Cocoa.h>
 #import "MemoryDefaults.h"
 #import "TSPreferenceInput.h"
+typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) { TSSettingsFontNone, TSSettingsFontDocument, TSSettingsFontConsole };
 static TSMemoryDefaults *memory;
 #define SUD memory
 @interface Editor : NSObject @property(copy) NSString *string; @end
@@ -76,7 +77,7 @@ static FakeAlert *shown;
 @interface Probe : NSObject <NSControlTextEditingDelegate> { @public Window *_prefsWindow; }
 @property NSMapTable *inputRules;
 @property id settingsController;
-@property(copy) NSString *fontEditingContext;
+@property TSSettingsFontDestination fontEditingContext;
 @property(weak) NSControl *editingField;
 @property(copy) NSString *editingOriginalText;
 @property BOOL inputErrorPresented,ownsFontPanel,endingPreferences,initialEnginePathSearchPending;

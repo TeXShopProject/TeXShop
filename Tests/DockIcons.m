@@ -74,7 +74,7 @@ int main(int argc,char **argv) { @autoreleasepool {
         if (candidate.numberOfTabViewItems == 9) { window = object; tabs = candidate; break; }
     }
     Require(tabs != nil, @"Nine main preference tabs");
-    [controller installInPreferences:tabs];
+    [controller installInPreferencesPane:tabs.tabViewItems[tabs.numberOfTabViewItems - 2].view];
     NSTabView *nested = Tabs(tabs.tabViewItems.lastObject.view);
     Require(nested.numberOfTabViewItems == 2, @"No extra preference sub-tab");
     [tabs selectLastTabViewItem:nil]; [nested selectLastTabViewItem:nil];

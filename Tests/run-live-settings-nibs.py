@@ -4,8 +4,11 @@ from pathlib import Path
 import subprocess,tempfile,sys,hashlib,xml.etree.ElementTree as ET
 R=Path(__file__).resolve().parents[1]
 nibs=sorted((R/'Resources/Interfaces').glob('*.lproj/Preferences.nib'))
+expected_category_objects={'Base': ['9', 'oKf-gv-Zsv', '8', '705', '179', '12', '415', 'oKY-XW-zh8', 'cCi-AG-dLh'], 'de': ['9', 'ojA-nd-9Bh', '8', '705', '179', '12', '415', '127', 'GZb-Wd-1z4'], 'es': ['9', '8Yq-tq-YHl', '8', '705', '179', '12', '415', '127', 'hg1-fQ-r8c'], 'fr': ['9', 'NRu-Ho-X2V', '8', '705', '179', '12', '415', '127', 'vC4-9I-kap'], 'it': ['9', 'fhj-gm-r8W', '8', '705', '179', '12', '415', '127', 'Ijc-4D-Pq3'], 'ja': ['9', 'cFa-nR-PWg', '8', '705', '179', '12', '415', '127', 'ily-wg-WCL'], 'ko': ['6', 'ZtK-zb-S7z', '109', '163', '191', '223', '274', '310', 'vRH-ih-Phg'], 'nl': ['9', 'ygL-Hz-cPs', '8', '705', '179', '12', '415', '127', 'Iko-Uy-1YZ'], 'pt-PT': ['9', 'vSl-aQ-Jem', '8', '705', '179', '12', '415', '127', 'BjP-aW-ZeK'], 'pt': ['9', 'Liu-Xu-uZ2', '8', '705', '179', '12', '415', '127', 'hFq-KW-LgH'], 'ro': ['9', 'bUk-zg-ezp', '8', '705', '179', '12', '415', '127', 'bbA-ns-GW7'], 'zh_CN': ['9', 'kRE-Gu-AaN', '8', '705', '179', '12', '415', '127', 'ILr-M7-I2L']}
 for nib in nibs:
  tree=ET.parse(nib/'designable.nib');window=next(w for w in tree.iter('window') if w.find(".//tabView") is not None)
+ tabs=next(t for t in tree.iter('tabView') if len(t.findall('tabViewItems/tabViewItem'))==9)
+ assert [i.get('id') for i in tabs.findall('tabViewItems/tabViewItem')]==expected_category_objects[nib.parent.stem],nib
  assert window.find('windowStyleMask').get('closable')=='YES'
  assert window.find('windowStyleMask').get('resizable')!='YES'
  actions={a.get('selector') for a in tree.iter('action')}

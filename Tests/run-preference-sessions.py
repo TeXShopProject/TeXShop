@@ -17,12 +17,14 @@ program=r'''
 #import "MemoryDefaults.h"
 #import "TSPreferenceInput.h"
 #import "TSPreferenceProfile.h"
+#import "TSSettingsCategory.h"
 #import "TestAppKitIsolation.h"
+typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) { TSSettingsFontNone, TSSettingsFontDocument, TSSettingsFontConsole };
 static TSMemoryDefaults *memory;
 #define SUD memory
 CONSTANTS
 @interface Window:NSObject
-@property BOOL visible,isKeyWindow,isMainWindow;
+@property BOOL visible,miniaturized,isKeyWindow,isMainWindow;
 @property id delegate;
 @property NSUInteger fronts;
 - (void)makeKeyAndOrderFront:(id)sender;
@@ -61,10 +63,17 @@ CONSTANTS
 @interface NSObject (SettingsTest)
 - (id)legacyViewForCategoryIdentifier:(NSString *)identifier;
 @end
+static NSString *requestedPane;
+static NSUInteger begins;
+@interface Shell:NSObject @end
+@implementation Shell
+- (id)legacyViewForCategoryIdentifier:(NSString *)identifier {requestedPane=identifier;return identifier;}
+- (void)beginSession {begins++;}
+@end
 @interface TSDockIconController:NSObject @end
 @implementation TSDockIconController
 + (id)sharedController {static id x;if(!x)x=[self new];return x;}
-- (void)installInPreferencesPane:(id)pane {}
+- (void)installInPreferencesPane:(id)pane {if(![pane isEqual:@"misc-2"]) abort();}
 - (void)restoreSavedIcon {}
 @end
 static NSUInteger resourceLookups, confirmations;
@@ -100,7 +109,7 @@ static NSString *resources;
 @interface Probe:NSObject <NSControlTextEditingDelegate> { @public Window *_prefsWindow; Tab *_tabView; FIELDS }
 @property NSMapTable *inputRules;
 @property id settingsController;
-@property(copy) NSString *fontEditingContext;
+@property TSSettingsFontDestination fontEditingContext;
 @property BOOL endingPreferences,inputErrorPresented,initialEnginePathSearchPending,ownsFontPanel,valid;
 @property NSUInteger finishCalls;
 @property NSFont *documentFont,*consoleFont;
@@ -135,8 +144,10 @@ int main(int argc,char **argv){@autoreleasepool{
  check([tabs validatedValue:@"501"].numberValue.integerValue==50,"production tabs maximum");
  TSPreferenceInput *zoom=[p.inputRules objectForKey:p->_magTextField];
  check(fabs([zoom validatedValue:@"125"].numberValue.doubleValue-1.25)<0.0001,"production PDF percentage");
- p.endingPreferences=YES;p.inputErrorPresented=YES;[p showPreferences:nil];
+ p.settingsController=[Shell new];p.endingPreferences=YES;p.inputErrorPresented=YES;[p showPreferences:nil];
  check(!p.endingPreferences && !p.inputErrorPresented && p->_prefsWindow.fronts==1,"reopen resets ending state before editing");
+ p->_prefsWindow.miniaturized=YES;p.endingPreferences=YES;[p showPreferences:nil];check(p.endingPreferences && p->_prefsWindow.fronts==2,"minimized settings brought forward without restarting session");p->_prefsWindow.miniaturized=NO;p.endingPreferences=NO;
+ check(begins==1 && [requestedPane isEqual:@"misc-2"],"opening starts category session and routes Dock to misc2");
  NSMenuItem *invalid=[[NSMenuItem alloc]initWithTitle:@"invalid" action:NULL keyEquivalent:@""];invalid.tag=0;
  NSUInteger count=p.finishCalls;[p setDefaults:invalid];
  check(p.finishCalls==count+1,"profile entry first commits pending field before resolving profile");
@@ -145,13 +156,13 @@ int main(int argc,char **argv){@autoreleasepool{
  p.valid=YES;[p setDefaults:invalid];check(confirmations==1 && resourceLookups==looked+2,"valid profile loads its values and factory fallbacks after commit");
  FontManager *fm=[FontManager sharedFontManager];NSObject *documentTarget=[NSObject new];fm.target=documentTarget;
  p.documentFont=[NSFont systemFontOfSize:12];[SUD setObject:@"Helvetica" forKey:ConsoleFontNameKey];[SUD setObject:@12 forKey:ConsoleFontSizeKey];
- [p changeDocumentFont:nil];[p changeConsoleFont:nil];
+ [p changeDocumentFont:nil];check(p.fontEditingContext==TSSettingsFontDocument,"document button selects document destination");[p changeConsoleFont:nil];check(p.fontEditingContext==TSSettingsFontConsole,"console button selects console destination");
  check(fm.target==documentTarget && fm.fronts==2,"settings do not capture global font target");
  [SUD.values removeAllObjects];fm.target=nil;
  for(NSNumber *owns in @[@NO,@YES]) {p.ownsFontPanel=owns.boolValue;[p changeFont:(id)fm];}
  check(fm.conversions==0 && SUD.values.count==0,"document-main font operations never change preference defaults");
  p->_prefsWindow.isMainWindow=YES;p.ownsFontPanel=NO;[p changeFont:(id)fm];check(fm.conversions==0,"font session must be owned");
- p.ownsFontPanel=YES;p.fontEditingContext=@"Document";[p changeFont:(id)fm];check(fm.conversions==1 && [SUD objectForKey:DocumentFontKey]!=nil,"active owned font session persists");
+ p.ownsFontPanel=YES;[p changeDocumentFont:nil];[p changeFont:(id)fm];check(fm.conversions==1 && [SUD objectForKey:DocumentFontKey]!=nil,"active owned font session persists");
  p.endingPreferences=YES;[p changeFont:(id)fm];check(fm.conversions==1,"ending session ignores font action");
  puts("PASS: nineteen production rules, formatter removal, reopen, profile precommit and responder-based font ownership");
 }return 0;}
@@ -169,5 +180,5 @@ for i,(f,(kind,low,high,empty)) in enumerate(zip(fields,expected)):
 program=program.replace('INITFIELDS','\n'.join('p->%s=[Field new];p->%s.formatter=[NSObject new];'%(f,f) for f in fields)).replace('FIELDS',' '.join('Field *%s;'%f for f in fields)).replace('CONSTANTS','\n'.join('static NSString *%s=@"%s";'%(k,constant_values[k]) for k in constants)).replace('RULECHECKS','\n'.join(checks)).replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='texshop-settings-sessions-') as td:
  p=Path(td);(p/'test.m').write_text(program)
- subprocess.run(['xcrun','clang','-w','-fobjc-arc','-I',str(R/'Sources'),'-I',str(R/'Tests'),'-framework','Cocoa',str(p/'test.m'),str(R/'Sources/TSPreferenceInput.m'),str(R/'Sources/TSPreferenceProfile.m'),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-w','-fobjc-arc','-I',str(R/'Sources'),'-I',str(R/'Tests'),'-framework','Cocoa',str(p/'test.m'),str(R/'Sources/TSPreferenceInput.m'),str(R/'Sources/TSPreferenceProfile.m'),str(R/'Sources/TSSettingsCategory.m'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test'),str(R/'Resources/Shellscripts')],check=True)

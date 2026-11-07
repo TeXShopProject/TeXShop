@@ -21,4 +21,5 @@ FOUNDATION_EXPORT BOOL TSPreferenceProfilePreservesKey(TSPreferenceKey key);
                      registeredDefaults:(NSDictionary<NSString *, id> *)registeredDefaults NS_DESIGNATED_INITIALIZER;
 - (void)applyToDefaults:(NSUserDefaults *)defaults;
 @end
+FOUNDATION_EXPORT TSPreferenceKey const TSSettingsSelectedCategoryKey;
 NS_ASSUME_NONNULL_END

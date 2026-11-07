@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E18100000000000000000005 = {isa = PBXBuildFile; fileRef = E18000000000000000000005; };
-		E18100000000000000000002 = {isa = PBXBuildFile; fileRef = E18000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		E18100000000000000000001 = {isa = PBXBuildFile; fileRef = E18000000000000000000001; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		E18100000000000000000002 = {isa = PBXBuildFile; fileRef = E18000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		E18100000000000000000001 = {isa = PBXBuildFile; fileRef = E18000000000000000000001; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		EA1100000000000000000001 = {isa = PBXBuildFile; fileRef = EA1100000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		E16E00000000000000000001 = {isa = PBXBuildFile; fileRef = E16E00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		E17000000000000000000001 = {isa = PBXBuildFile; fileRef = E17000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
@@ -402,6 +402,11 @@
 		52E4BF8D08CA74C300726E11 /* TeXShop in Resources */ = {isa = PBXBuildFile; fileRef = 52E4BF4408CA74C300726E11 /* TeXShop */; };
 		EF5890000000000000000001 /* TSSparkleController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5890000000000000000002; };
 		EF5590000000000000000001 /* TeXShop.icon in Resources */ = {isa = PBXBuildFile; fileRef = EF5590000000000000000002; };
+		E18300000000000000000000 = {isa = PBXBuildFile; fileRef = E18200000000000000000010; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		E18300000000000000000001 = {isa = PBXBuildFile; fileRef = E18200000000000000000110; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		E18300000000000000000002 = {isa = PBXBuildFile; fileRef = E18200000000000000000210; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		E18300000000000000000003 = {isa = PBXBuildFile; fileRef = E18200000000000000000310; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		E18300000000000000000004 = {isa = PBXBuildFile; fileRef = E18200000000000000000410; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -1078,6 +1083,16 @@
 		EF5890000000000000000002 /* TSSparkleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSparkleController.m; sourceTree = "<group>"; };
 		EF5890000000000000000003 /* TSSparkleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSparkleController.h; sourceTree = "<group>"; };
 		EF5590000000000000000002 /* TeXShop.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.icon; path = Artwork/TeXShop.icon; sourceTree = SOURCE_ROOT; };
+		E18200000000000000000000 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsCategory.h; sourceTree = "<group>"; };
+		E18200000000000000000010 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsCategory.m; sourceTree = "<group>"; };
+		E18200000000000000000100 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsCategoryList.h; sourceTree = "<group>"; };
+		E18200000000000000000110 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsCategoryList.m; sourceTree = "<group>"; };
+		E18200000000000000000200 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsStateStore.h; sourceTree = "<group>"; };
+		E18200000000000000000210 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsStateStore.m; sourceTree = "<group>"; };
+		E18200000000000000000300 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsSidebarRow.h; sourceTree = "<group>"; };
+		E18200000000000000000310 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsSidebarRow.m; sourceTree = "<group>"; };
+		E18200000000000000000400 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsContentView.h; sourceTree = "<group>"; };
+		E18200000000000000000410 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsContentView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1275,6 +1290,16 @@
 				4016DD852109FC6200745019 /* TSColorSupport.m */,
 				403649E1211BDA800086DDD1 /* TSPreferenceWindow.h */,
 				403649E2211BDA800086DDD1 /* TSPreferenceWindow.m */,
+				E18200000000000000000000,
+				E18200000000000000000010,
+				E18200000000000000000100,
+				E18200000000000000000110,
+				E18200000000000000000200,
+				E18200000000000000000210,
+				E18200000000000000000300,
+				E18200000000000000000310,
+				E18200000000000000000400,
+				E18200000000000000000410,
 				E18000000000000000000001,
 				E18000000000000000000002,
 				E18000000000000000000003,
@@ -2110,6 +2135,11 @@
 				4078817D0519249A006979EA /* TSTextEditorWindow.m in Sources */,
 				4078817E0519249A006979EA /* TSPreviewWindow.m in Sources */,
 				4078817F0519249A006979EA /* TSPrintView.m in Sources */,
+				E18300000000000000000000,
+				E18300000000000000000001,
+				E18300000000000000000002,
+				E18300000000000000000003,
+				E18300000000000000000004,
 				E18100000000000000000001,
 				E18100000000000000000002,
 				407881810519249A006979EA /* TSPreferences.m in Sources */,
