@@ -152,3 +152,25 @@
 "Version unavailable" = "Desconocida";
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instale una distribución de TeX y ejecute la configuración automática en Ajustes > Motor.";
 "Use These Paths" = "Usar estas rutas";
+
+/* Menu keyboard shortcut customization */
+"Keyboard Shortcuts" = "Atajos de teclado";
+"Keyboard Shortcuts…" = "Atajos de teclado…";
+"Search commands" = "Buscar comandos";
+"Command" = "Comando";
+"Shortcut" = "Atajo";
+"Change…" = "Cambiar…";
+"Remove Shortcut" = "Eliminar atajo";
+"Restore Default" = "Restaurar predeterminado";
+"Restore All…" = "Restaurar todos…";
+"Restore All" = "Restaurar todos";
+"Change Shortcut" = "Cambiar atajo";
+"Apply" = "Aplicar";
+"Shortcut Unavailable" = "Atajo no disponible";
+"Restore all keyboard shortcuts?" = "¿Restaurar todos los atajos de teclado?";
+"Press the new shortcut (Escape to cancel)." = "Pulse el nuevo atajo (Escape para cancelar).";
+"This command is no longer available." = "Este comando ya no está disponible.";
+"This shortcut is already used by “%@”." = "Este atajo ya se usa para «%@».";
+"Use Command or Control with a key, or a function key (F1–F20)." = "Use una tecla con Comando o Control, o una tecla de función (F1–F20).";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Seleccione un comando para cambiar su atajo. Los cambios se aplican inmediatamente. Las macros y los atajos de entrada de texto tienen sus propios editores.";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Se eliminarán los cambios realizados en esta ventana. Se conservarán los ajustes existentes de KeyEquivalents.plist.";

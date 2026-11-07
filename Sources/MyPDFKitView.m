@@ -1,3 +1,4 @@
+#import "TSKeyboardShortcuts.h"
 #import "TSPDFScreenRendering.h" // added by Terada
 /*
  * TeXShop - TeX editor for Mac OS
@@ -7671,19 +7672,10 @@ else
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
-    NSString	*theKey;
-    unichar		key;
-    
-    theKey = theEvent.characters;
-    if (theKey.length >= 1)
-        key = [theKey characterAtIndex:0];
-    else
-        key = 0;
-    
     if (([self.myDocument useFullSplitWindow]) && (! ([[self window] firstResponder] == self)))
         return NO;
     
-    if ((key == 'f') && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+    if ([TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:1]) {
         // [self.drawer open];
         // [[self window] makeFirstResponder:_searchField ];
        if ([self.myDocument useFullSplitWindow])
@@ -7694,7 +7686,7 @@ else
         return YES;
     }
     
-    if ((key == 'g') && ([theEvent modifierFlags] & NSCommandKeyMask)) {
+    if ([TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:2]) {
         [self doFindAgain];
         return YES;
     }

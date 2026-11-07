@@ -152,3 +152,25 @@
 "Version unavailable" = "알 수 없음";
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "TeX 배포판을 설치한 다음 설정 > 엔진설정에서 자동 설정을 실행하십시오.";
 "Use These Paths" = "이 경로 사용";
+
+/* Menu keyboard shortcut customization */
+"Keyboard Shortcuts" = "키보드 단축키";
+"Keyboard Shortcuts…" = "키보드 단축키…";
+"Search commands" = "명령 검색";
+"Command" = "명령";
+"Shortcut" = "단축키";
+"Change…" = "변경…";
+"Remove Shortcut" = "단축키 제거";
+"Restore Default" = "기본값 복원";
+"Restore All…" = "모두 복원…";
+"Restore All" = "모두 복원";
+"Change Shortcut" = "단축키 변경";
+"Apply" = "적용";
+"Shortcut Unavailable" = "사용할 수 없는 단축키";
+"Restore all keyboard shortcuts?" = "모든 키보드 단축키를 복원하시겠습니까?";
+"Press the new shortcut (Escape to cancel)." = "새 단축키를 누르십시오 (Escape로 취소).";
+"This command is no longer available." = "이 명령은 더 이상 사용할 수 없습니다.";
+"This shortcut is already used by “%@”." = "이 단축키는 이미 “%@”에서 사용 중입니다.";
+"Use Command or Control with a key, or a function key (F1–F20)." = "Command 또는 Control과 키를 조합하거나 기능 키(F1–F20)를 사용하십시오.";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "명령을 선택하여 단축키를 변경하십시오. 변경 사항은 즉시 적용됩니다. 매크로와 텍스트 입력 키 바인딩은 각각의 편집기에서 설정합니다.";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "이 윈도우에서 변경한 내용이 제거됩니다. 기존 KeyEquivalents.plist 설정은 유지됩니다.";

@@ -23,6 +23,7 @@
  */
 
 #import "TSMacroMenuController.h"
+#import "TSKeyboardShortcuts.h"
 
 #import "TSTextEditorWindow.h"
 #import "TSFullSplitWindow.h"
@@ -141,6 +142,7 @@ static id sharedMacroMenuController = nil;
 
 	if (!self.macroDict)
 		return;
+	[[TSKeyboardShortcuts sharedController] beginMenuRebuild];
 	// remove old items
 	while ([macroMenu numberOfItems] > 1) {
 		[macroMenu removeItemAtIndex: 1];
@@ -167,6 +169,7 @@ static id sharedMacroMenuController = nil;
 			[newItem setAction: @selector(doNothing:)];
 		}
 	}
+	[[TSKeyboardShortcuts sharedController] endMenuRebuild];
 }
 
 // reload
@@ -214,8 +217,8 @@ static id sharedMacroMenuController = nil;
 				NSUInteger modifier = getKeyModifierMaskFromString(keyEquiv);
 				keyEquiv = getKeyEquivalentFromString(keyEquiv);
 				if (keyEquiv && ![self isAlreadyDefined: keyEquiv modifier: modifier]) {
-					[newItem setKeyEquivalent: keyEquiv];
 					[newItem setKeyEquivalentModifierMask: modifier];
+					[newItem setKeyEquivalent: keyEquiv];
 				}
 			}
 		}

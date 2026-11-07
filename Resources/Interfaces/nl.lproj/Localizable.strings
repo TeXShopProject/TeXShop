@@ -149,3 +149,25 @@
 "Version unavailable" = "Onbekend";
 "Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Installeer een TeX-distributie en start daarna de automatische configuratie via Instellingen > Engine.";
 "Use These Paths" = "Deze paden gebruiken";
+
+/* Menu keyboard shortcut customization */
+"Keyboard Shortcuts" = "Toetscombinaties";
+"Keyboard Shortcuts…" = "Toetscombinaties…";
+"Search commands" = "Zoek commando’s";
+"Command" = "Commando";
+"Shortcut" = "Toetscombinatie";
+"Change…" = "Wijzig…";
+"Remove Shortcut" = "Verwijder combinatie";
+"Restore Default" = "Herstel standaard";
+"Restore All…" = "Herstel alles…";
+"Restore All" = "Herstel alles";
+"Change Shortcut" = "Wijzig toetscombinatie";
+"Apply" = "Pas toe";
+"Shortcut Unavailable" = "Toetscombinatie niet beschikbaar";
+"Restore all keyboard shortcuts?" = "Alle toetscombinaties herstellen?";
+"Press the new shortcut (Escape to cancel)." = "Druk op de nieuwe combinatie (Escape om te annuleren).";
+"This command is no longer available." = "Dit commando is niet meer beschikbaar.";
+"This shortcut is already used by “%@”." = "Deze toetscombinatie wordt al gebruikt door ‘%@’.";
+"Use Command or Control with a key, or a function key (F1–F20)." = "Gebruik een toets met Command of Control, of een functietoets (F1–F20).";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selecteer een commando om de toetscombinatie te wijzigen. Wijzigingen worden direct toegepast. Macro’s en toetscombinaties voor tekstinvoer hebben eigen editors.";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Uw wijzigingen in dit venster worden verwijderd. Bestaande instellingen in KeyEquivalents.plist blijven behouden.";
