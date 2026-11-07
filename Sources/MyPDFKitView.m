@@ -63,6 +63,9 @@
 
 
 @implementation MyPDFKitView : PDFView
+{
+    TSExternalPDFPosition secondViewport;
+}
 
 - (void)dealloc
 {
@@ -1577,6 +1580,7 @@ if ((atLeastHighSierra) && (self.PDFFlashFix))
 		secondNeedsInitialization = NO;
 	
 	
+    secondViewport = TSExternalPDFCapture(self);
 	secondVisibleRect = [[self documentView] visibleRect];
 	secondFullRect = [[self documentView] bounds];
 	
@@ -1655,7 +1659,10 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	secondVisibleRect.origin.y = secondVisibleRect.origin.y + difference;
 	
 	// [self display];
-	[[self documentView] scrollRectToVisible: secondVisibleRect];
+    if (secondViewport.valid && secondViewport.pageIndex < self.document.pageCount)
+        TSExternalPDFRestore(self, secondViewport);
+    else
+        [[self documentView] scrollRectToVisible: secondVisibleRect];
     if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_10_Max)
         [[self window] enableFlushWindow];
     //[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:1]];

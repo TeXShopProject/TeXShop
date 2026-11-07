@@ -8,7 +8,7 @@ import subprocess
 import tempfile
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['legacy-reload'])
+parser.add_argument('--mutation', choices=['legacy-reload', 'legacy-second', 'skip-last-page'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin1')
@@ -19,6 +19,7 @@ fixture_tree = ast.parse((root / 'Tests/run-pdf-recovery.py').read_text())
 fixture = max((node.value for node in ast.walk(fixture_tree)
                if isinstance(node, ast.Constant) and isinstance(node.value, str)), key=len)
 fixture = fixture[:fixture.index('static void check(')]
+fixture = fixture.replace('WINDOW_METHODS', '')
 fixture = '#define PDF_SINGLE_PAGE_STYLE 1\n#define PDF_TWO_PAGE_STYLE 2\n' + fixture
 signatures = ['- (void)reShowWithPath:', '- (void)reShowWithDocument:',
               '- (void)shareDocumentWithSecondView', '- (void)prepareSecond',
@@ -30,6 +31,14 @@ if args.mutation == 'legacy-reload':
     old = 'if (viewport.valid && viewport.pageIndex < self.document.pageCount)'
     assert methods.count(old) == 1
     methods = methods.replace(old, 'if (NO)')
+elif args.mutation == 'legacy-second':
+    old = 'if (secondViewport.valid && secondViewport.pageIndex < self.document.pageCount)'
+    assert methods.count(old) == 1
+    methods = methods.replace(old, 'if (NO)')
+elif args.mutation == 'skip-last-page':
+    old = 'viewport.pageIndex < self.document.pageCount'
+    assert methods.count(old) == 1
+    methods = methods.replace(old, 'viewport.pageIndex + 1 < self.document.pageCount')
 program = fixture.replace('METHODS', methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf')) + r'''
 static void check(BOOL ok, NSString *message) {
     if (!ok) { fprintf(stderr,"FAIL: %s\n",message.UTF8String); exit(1); }
@@ -53,6 +62,15 @@ static void sameViewport(TSExternalPDFPosition expected, PDFView *view, NSString
                 NSStringFromPoint(actual.pagePoint).UTF8String);
     check(actual.valid && actual.pageIndex == expected.pageIndex && distance < 1.1, message);
 }
+@interface ViewportToolbar : NSObject <NSToolbarDelegate> @end
+@implementation ViewportToolbar
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)insert {
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label=@"Test"; item.view=[NSButton buttonWithTitle:@"Test" target:nil action:nil]; return item;
+}
+@end
 int main(void) { @autoreleasepool {
     [NSApplication sharedApplication];
     [SUD setVolatileDomain:@{@"flash":@NO} forName:NSArgumentDomain];
@@ -103,7 +121,67 @@ int main(void) { @autoreleasepool {
         check([view.document indexForPage:view.currentPage]==1,@"removed current page falls back to last page");
         view.document=nil; [view removeFromSuperview]; [window close];
     }
-    puts("PASS: four display modes, changed page counts, zoom, rotation, horizontal/vertical, book/RTL, resize, auto fit, last-page fallback");
+    // A toolbar extending into the content produces the insets associated with
+    // repeated upward drift even when the PDF has exactly the same pages.
+    ViewportToolbar *toolbarDelegate = [ViewportToolbar new];
+    for (NSInteger mode=0;mode<4;mode++) {
+        NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,500,500)
+            styleMask:NSWindowStyleMaskTitled|NSWindowStyleMaskFullSizeContentView
+            backing:NSBackingStoreBuffered defer:NO]; window.releasedWhenClosed=NO;
+        NSToolbar *toolbar=[[NSToolbar alloc] initWithIdentifier:@"ViewportTest"];
+        toolbar.delegate=toolbarDelegate; window.toolbar=toolbar;
+        window.toolbarStyle=NSWindowToolbarStyleExpanded;
+        RecoveryView *view=[[RecoveryView alloc] initWithFrame:window.contentView.bounds];
+        [window.contentView addSubview:view];
+        view.myPDFWindow=[TestWindow new]; view.myDocument=[TestDocument new];
+        view.myDocument.pdfKitWindow=view.myPDFWindow;
+        view.document=document(bytes,4,0); view.displayMode=mode;view.scaleFactor=1.25;
+        [view goToPage:[view.document pageAtIndex:3]]; pump();
+        NSScrollView *scroll=view.documentView.enclosingScrollView;
+        check(scroll.contentInsets.top>0,@"toolbar test actually has a top inset");
+        NSClipView *clip=scroll.contentView; NSRect bounds=clip.bounds;
+        bounds.origin.x+=40; bounds.origin.y+=(mode==0||mode==2)?80:-100;
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];pump();
+        TSExternalPDFPosition before=TSExternalPDFCapture(view);
+        if (mode==kPDFDisplaySinglePage) check(before.pageIndex==3,@"last-page viewport captured");
+        for (NSUInteger n=0;n<3;n++) {
+            [view reShowWithDocument:document(bytes,4,0)];pump();
+            sameViewport(before,view,@"same PDF reload retains inset viewport on final page");
+        }
+        [view reShowWithDocument:document(bytes,6,0)];pump();
+        sameViewport(before,view,@"appending pages retains formerly final page viewport");
+        view.document=nil;[view removeFromSuperview];[window close];
+    }
+    // Follow the actual typesetting sequence, including the separately saved
+    // lower pane rather than only the first view's document replacement.
+    for (NSInteger mode=0;mode<4;mode++) for (NSNumber *scale in @[@1.25,@2]) {
+        NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,600,900)
+            styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];window.releasedWhenClosed=NO;
+        RecoveryView *top=[[RecoveryView alloc]initWithFrame:NSMakeRect(0,450,600,450)];
+        RecoveryView *bottom=[[RecoveryView alloc]initWithFrame:NSMakeRect(0,0,600,450)];
+        TestWindow *tw=[TestWindow new];tw.windowIsSplit=YES;
+        TestDocument *td=[TestDocument new];td.pdfKitWindow=tw;td.myPDFKitView2=bottom;
+        for (RecoveryView *view in @[top,bottom]) {
+            [window.contentView addSubview:view];view.myPDFWindow=tw;view.myDocument=td;
+        }
+        top.document=document(bytes,6,0);bottom.document=top.document;
+        for (RecoveryView *view in @[top,bottom]) {view.displayMode=mode;view.scaleFactor=scale.doubleValue;}
+        [top goToPage:[top.document pageAtIndex:1]];[bottom goToPage:[bottom.document pageAtIndex:2]];pump();
+        for (RecoveryView *view in @[top,bottom]) {
+            NSClipView *clip=view.documentView.enclosingScrollView.contentView;NSRect bounds=clip.bounds;
+            bounds.origin.x+=50;bounds.origin.y+=(mode==0||mode==2)?100:-120;
+            [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];
+        }
+        pump();TSExternalPDFPosition first=TSExternalPDFCapture(top),second=TSExternalPDFCapture(bottom);
+        for (NSNumber *count in @[@6,@8,@4]) {
+            [bottom prepareSecond];[top reShowWithDocument:document(bytes,count.unsignedIntegerValue,0)];
+            bottom.document=top.document;[bottom reShowForSecond];pump();
+            sameViewport(first,top,@"split top pane keeps viewport");
+            sameViewport(second,bottom,@"split bottom pane keeps viewport");
+        }
+        top.document=nil;bottom.document=nil;[top removeFromSuperview];[bottom removeFromSuperview];[window close];
+    }
+    puts("PASS: four display modes, changed page counts, zoom, rotation, horizontal/vertical, book/RTL, resize, auto fit, last-page fallback, insets, retained last page, split panes");
 } return 0; }
 '''
 with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
@@ -115,4 +193,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
     home = temp / 'home'
     home.mkdir()
     environment = dict(os.environ, CFFIXED_USER_HOME=str(home))
-    subprocess.run([str(temp/'test')], check=True, timeout=60, env=environment)
+    subprocess.run([str(temp/'test')], check=True, timeout=120, env=environment)
