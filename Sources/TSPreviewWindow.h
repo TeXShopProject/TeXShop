@@ -61,7 +61,8 @@
 
 // The property previewClosed is initialized to NO when the main document is first opened.
 // This property is set to YES if the user closes the Preview Window.
-// Reopening the window clears this property, preserving the user's new position.
+// Reopening the window or moving the PDF into the combined window clears this
+// property, preserving the user's new position.
 // If typesetting finishes while it is still closed, reload starts at the beginning
 // and clears the property before showing the window.
 //

@@ -11486,6 +11486,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [textWindow orderOut:self];
             [self.pdfKitWindow orderOut:self];
             useFullSplitWindow = YES;
+            // The PDF is visible in the combined window even though its own
+            // window remains hidden. Preserve its position on the next reload.
+            self.pdfKitWindow.previewClosed = NO;
             [myDrawer setParentWindow: fullSplitWindow];
             // [self setWindow: fullSplitWindow];
             

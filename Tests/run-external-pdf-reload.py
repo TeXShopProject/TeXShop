@@ -9,14 +9,16 @@ mutation = next((a.split('=',1)[1] for a in sys.argv[1:] if a.startswith('--muta
 tree = ast.parse((root/'Tests/run-pdf-recovery.py').read_text())
 fixture = max((n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value,str)),key=len)
 fixture = fixture[:fixture.index('static void check(')]
-fixture = fixture.replace('WINDOW_METHODS', '')
 fixture = fixture.replace('-(void)reShowWithPath:(NSString*)path;', '-(void)reShowWithPath:(NSString*)path;\n-(void)reShowWithDocument:(PDFDocument*)document;')
 s=(root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
 def method(s, signature):
     a=s.rindex(signature); return s[a:s.index('\n}',a)+2]
+window_source=(root/'Sources/TSPreviewWindow.m').read_text()
+window_methods='\n'.join(method(window_source,x) for x in ['- (void)close', '- (void)orderWindow:'])
+fixture=fixture.replace('WINDOW_METHODS',window_methods.replace('TSDocument *theDocument', 'TestDocument *theDocument'))
 methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:'])
 fixture=fixture.replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
-fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (BOOL)isVisible { return YES; }\n- (void)makeKeyAndOrderFront:(id)sender {}')
+fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (void)makeKeyAndOrderFront:(id)sender {[self orderWindow:NSWindowAbove relativeTo:0];}')
 s=(root/'Sources/TSDocument.m').read_text()
 controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)configureExternalPDFObservation','- (void)stopExternalPDFObservation','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)acceptExternalPDFAtPath:', '- (void)prepareExternalPDFContent', '- (BOOL)externalPDFReloadBlocked'])
 # Count and optionally stall the file checks made by the polling path only.
@@ -182,7 +184,8 @@ int main(int argc,char **argv){@autoreleasepool{
  // AppleScript commands clear taskDone even when no job starts.
  d->taskDone=NO;StablePoll(d);Check(d.myPDFKitView.document!=old,@"Stale taskDone without a running job does not stop reloads");d->taskDone=YES;
  old=d.myPDFKitView.document;[changed writeToFile:path atomically:YES];
- d.pdfKitWindow.previewClosed=YES;StablePoll(d);Check(d.myPDFKitView.document==old,@"Do not reopen preview");d.pdfKitWindow.previewClosed=NO;StablePoll(d);Check(d.myPDFKitView.document!=old,@"Resume after gates");
+ [d.pdfKitWindow close];StablePoll(d);Check(d.myPDFKitView.document==old,@"Do not reopen preview");
+ [d.pdfKitWindow orderWindow:NSWindowAbove relativeTo:0];StablePoll(d);Check(d.myPDFKitView.document!=old,@"Resume after production preview reopening");
  // Exercise the actual timer, rather than only calling its action.
  [d startExternalPDFObservation];
  for(NSNumber *atomic in @[@NO,@YES]) {
