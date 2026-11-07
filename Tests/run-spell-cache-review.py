@@ -32,6 +32,7 @@ program=r'''
 - (void)unlearnWord:(NSString *)word { abort(); }
 - (NSString *)language { return @"en"; }
 - (NSArray *)availableLanguages { return @[@"en"]; }
+- (NSArray *)guessesForWordRange:(NSRange)range inString:(NSString *)string language:(NSString *)language inSpellDocumentWithTag:(NSInteger)tag { self.guessedWord=[string substringWithRange:range]; return self.guesses; }
 - (void)updateSpellingPanelWithMisspelledWord:(NSString *)word {}
 - (NSRange)checkSpellingOfString:(NSString *)s startingAt:(NSInteger)start language:(NSString *)language
                           wrap:(BOOL)wrap inSpellDocumentWithTag:(NSInteger)tag wordCount:(NSInteger *)count { return NSMakeRange(NSNotFound,0); }
