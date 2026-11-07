@@ -154,6 +154,7 @@
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
+    [[TSPreferences sharedInstance] finishPreferencesForTermination];
   
 /*
     // Remember spell checker setting, but don't want to do this if a "% !TEX" language is in place

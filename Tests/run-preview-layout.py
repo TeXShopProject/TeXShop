@@ -20,6 +20,7 @@ assert 'readPreviewArrangementFromData' not in method(doc, '- (void) doTemplate:
 initialize=doc[doc.index('    self.bookDisplay = [SUD boolForKey:DisplayAsBookKey];'):doc.index('    self.previewInitialRTLDisplay = self.RTLDisplay;')+len('    self.previewInitialRTLDisplay = self.RTLDisplay;')]
 program=r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <PDFKit/PDFKit.h>
 #import "TSPreviewLayout.h"
 #import "MemoryDefaults.h"
@@ -93,7 +94,7 @@ PARSE
 - (BOOL)setFrameAutosaveName:(NSString *)name { return NO; }
 - (void)saveFrameUsingName:(NSString *)name {}
 @end
-@interface TSPreferences : NSObject { @public NSUndoManager *_undoManager; NSButton *_displayAsBookButton; }
+@interface TSPreferences : NSObject { @public NSButton *_displayAsBookButton; }
 @property NSMutableDictionary *outlets;
 @end
 @implementation TSPreferences
@@ -139,7 +140,7 @@ static TSDocument *MakeDocument(void){
 static NSTabView *Tabs(NSView *v){if([v isKindOfClass:NSTabView.class])return (id)v;for(NSView *c in v.subviews){NSTabView *t=Tabs(c);if(t)return t;}return nil;}
 static void Snapshot(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:image.TIFFRepresentation];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
 int main(int argc,char **argv){@autoreleasepool{
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];
  NSString *domain=NSBundle.mainBundle.bundleIdentifier;
  Check([domain hasPrefix:@"org.texshop.LayoutTest."],@"Isolated test preferences");
  defaults=[TSMemoryDefaults new];[defaults registerDefaults:@{DisplayAsBookKey:@NO,PdfFirstPageStyleKey:@1,PdfMagnificationKey:@1}];
@@ -226,16 +227,16 @@ int main(int argc,char **argv){@autoreleasepool{
  if(argc>2 && strcmp(argv[2],"-")!=0)Snapshot(d.pdfKitWindow.contentView.superview,[@(argv[2]) stringByAppendingPathComponent:@"pdf-layout.png"]);
  REGRESSION
  // Nib + actual preferences action, without loading TeXShop or its user settings.
- TSPreferences *owner=[TSPreferences new];owner.outlets=[NSMutableDictionary new];owner->_undoManager=[NSUndoManager new];owner->_undoManager.groupsByEvent=NO;
+ TSPreferences *owner=[TSPreferences new];owner.outlets=[NSMutableDictionary new];
  NSString *nibFile=[@(argv[1]) stringByAppendingPathComponent:@"keyedobjects-101300.nib"];if(![NSFileManager.defaultManager fileExistsAtPath:nibFile])nibFile=[@(argv[1]) stringByAppendingPathComponent:@"keyedobjects.nib"];
  NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:nibFile] bundle:nil];NSArray *objects;
  Check([nib instantiateWithOwner:owner topLevelObjects:&objects],@"Load Preferences nib");
  NSButton *cover=owner->_displayAsBookButton;Check(cover && cover.action==@selector(displayAsBookChanged:),@"Cover outlet and action");
- [defaults setBool:NO forKey:DisplayAsBookKey];[owner->_undoManager beginUndoGrouping];cover.state=NSControlStateValueOn;[owner displayAsBookChanged:cover];[owner->_undoManager endUndoGrouping];
- Check([defaults boolForKey:DisplayAsBookKey],@"Cover preference saved");[owner->_undoManager undo];Check(![defaults boolForKey:DisplayAsBookKey],@"Cancel restores cover preference");
+ [defaults setBool:NO forKey:DisplayAsBookKey];cover.state=NSControlStateValueOn;[owner displayAsBookChanged:cover];
+ Check([defaults boolForKey:DisplayAsBookKey],@"Cover preference saved");Check([defaults boolForKey:DisplayAsBookKey],@"cover preference remains saved");
  for(id o in objects)if([o isKindOfClass:NSWindow.class]){NSWindow *w=o;NSTabView *tabs=Tabs(w.contentView);if(tabs.numberOfTabViewItems!=9)continue;[tabs selectTabViewItemAtIndex:2];w.appearance=[NSAppearance appearanceNamed:NSAppearanceNameAqua];[w orderOut:nil];[w.contentView layoutSubtreeIfNeeded];[w displayIfNeeded];if(argc>2 && strcmp(argv[2],"-")!=0){Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(cover.superview.superview,[@(argv[2]) stringByAppendingPathComponent:@"arrangement-settings.png"]);}[w orderOut:nil];}
  d.myPDFKitView.document=nil;Check(![d validatePreviewLayoutItem:Choice(@selector(changePreviewLayout:),1)],@"No PDF disables actions");
- NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, preferences undo");
+ NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, immediate preferences");
 }}
 '''
 for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('REGRESSION',(root/'Tests/PreviewLayoutRegression.inc').read_text()),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:'))]:program=program.replace(key,value)

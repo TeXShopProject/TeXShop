@@ -7,7 +7,7 @@
 <main class="archive-content release-notes"><h1>Release Notes</h1>
 <article id="v5.60"><h2>TeXShop 5.60</h2>
 <p class="release-date">In preparation — draft release notes.</p>
-<p>TeXShop 5.60 fixes typesetting cancellation and improves TeX-aware spell checking, external file monitoring, editing long documents, and Settings.</p>
+<p>TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell checking, external file monitoring, editing long documents, and Settings.</p>
 <h3>Typesetting and stability</h3>
 <ul>
 <li><strong>Critical fix:</strong> Fix a problem where Stop reported that typesetting had been aborted but left TeX running. Starting another typesetting job now also stops the previous job and its child processes.</li>
@@ -16,9 +16,9 @@
 <li>Fix errors involving empty documents, isolated quotation marks, and save-completion handling.</li>
 <li>Improve the handling of console output and log files that contain mixed encodings or broken characters. Read affected output line by line, trying UTF-8 and then the document’s encoding, with Latin 9 as a last resort. Keep unreadable data from spoiling other lines, and rejoin UTF-8 characters split by TeX’s line wrapping.</li>
 </ul>
-<h3>TeX-aware spell checking</h3>
+<h3>LaTeX-aware spell checking</h3>
 <ul>
-<li>Add TeX-aware spell checking, based on suggestions from Ralph Martin. It checks prose while skipping TeX commands, comments, mathematics, and arguments used for references and similar purposes. The feature is enabled by default and can be turned off under Settings → Source.</li>
+<li>Add LaTeX-aware spell checking, based on suggestions from Ralph Martin. It checks prose while skipping TeX commands, comments, mathematics, and arguments used for references and similar purposes. The feature is enabled by default and can be turned off under Settings → Source.</li>
 <li>Recognize supported macro definitions and language-switching commands when identifying text to check. The spelling panel can check passages in the specified language.</li>
 <li>Add editable spelling-exclusion rules, a replacement field and Change All for words in the checked text, and a way to forget learned words found in the current document. A Change All operation can be undone in one step.</li>
 <li>Fill the replacement field for Change All with the suggestion selected in the spelling panel, by clicking it or with the arrow keys. When there is only one suggestion, it is filled in as soon as the word is shown. The text changes only when Change All is used.</li>
@@ -64,8 +64,11 @@
 <li>Correct overlapping controls, clipped labels, and incorrect control connections throughout the localized Settings windows. Add missing bracket-color controls in Dutch.</li>
 <li>Choose the markers for spaces, full-width spaces, newlines and tabs from pop-up menus under Settings → Editor, with more choices for newlines and tabs.</li>
 <li>Show bracket and expl3 colors from the theme being edited, update inherited colors correctly, and preserve the theme when a color change is ignored. Older themes without bracket colors use the marker color.</li>
-<li>Store settings under the application’s bundle identifier and correct Cancel behavior after restoring defaults or editing the HTML Home setting.</li>
-<li>Keep keyboard shortcuts, update settings, window positions and similar items when a settings profile is chosen.</li>
+<li>Store settings under the application’s bundle identifier. Save valid Settings changes as they are made; close the window with the close button or Command-W. Text fields are checked on Return, focus changes, navigation, and closing. Invalid entries keep their last saved value; there is no whole-window OK or Cancel.</li>
+<li>Save theme edits immediately and update documents only after the theme file has been written successfully. Duplicate a theme before editing to keep the original. A failed save restores the last saved colors; selecting a theme to edit does not temporarily apply it to every document.</li>
+<li>Save the selected Dock icon immediately. Closing Settings keeps the choice; applying a settings profile restores the current app icon.</li>
+<li>Use the zoom setting as the default for newly opened PDFs, preserving the zoom of existing PDFs. Source and console font changes still update open windows immediately.</li>
+<li>Apply settings profiles after showing their reset scope and TeX engine path. Reset known editing, engine, display, hidden settings, and the running Dock icon; preserve shortcuts, system language, window layouts, automatic updates, theme files, and unrecognized settings. Theme selections may change.</li>
 <li>Fix Make Default Editor for .tex files.</li>
 <li>Add an option under Settings → Editor to treat @ as part of command names in syntax coloring.</li>
 <li>Add an option under Settings → Editor to color expl3 code by default. Each document reads it when it opens, and the Source menu still turns expl3 coloring on or off for a single document.</li>
@@ -73,7 +76,7 @@
 </ul>
 <h3>Help and source distribution</h3>
 <ul>
-<li>Add help for TeX-aware spell checking, repair broken help links, and update the hidden-settings reference.</li>
+<li>Add help for LaTeX-aware spell checking, repair broken help links, and update the hidden-settings reference.</li>
 <li>Fix a resource filename that could prevent building TeXShop from an extracted source archive.</li>
 </ul>
 <h3>Bundled libraries</h3>

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the production spelling preference, file scope, Undo, and factory presets.
+"""Check the production spelling preference, file scope, live saving, and factory presets.
 Uses in-memory defaults; does not start TeXShop or touch spelling dictionaries.
 """
 from pathlib import Path
@@ -17,17 +17,12 @@ def method(path, signature):
     return source[start:end]
 methods = '\n'.join(method('Sources/TSPreferences.m', signature) for signature in [
     '- (void)updateSpellingControlsFromDefaults:', '- (IBAction)texAwareSpellCheckPressed:'])
-# Exercise the production Cancel path through the spelling refresh, before Dock/UI work.
-preferences_source = (root / 'Sources/TSPreferences.m').read_text()
-cancel = preferences_source[preferences_source.index('- (IBAction)cancelButtonPressed:'):]
-methods += '\n' + cancel.split('[[TSDockIconController sharedController] cancelEditing]')[0] + '}'
-restore = method('Sources/TSPreferences.m', '- (void)undoDefaultPrefs:')
-methods += '\n' + restore.split('// KOCH')[0] + '}'
 scope = method('Sources/TSTextView.m', '- (BOOL)usesTeXAwareSpellChecking')
 for p in (root / 'Resources/Shellscripts').glob('*Defaults*.plist'):
     assert plistlib.loads(p.read_bytes())['TeXAwareSpellChecking'] is True, p
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #define REQUIRE(x) do { if (!(x)) { NSLog(@"FAIL at line %d", __LINE__); exit(1); } } while(0)
 @interface MemoryDefaults : NSUserDefaults
 @property NSMutableDictionary *values;
@@ -51,7 +46,7 @@ static int refreshes;
 @end
 @interface PreferenceProbe:NSObject {
 @public
-    NSUndoManager *_undoManager;
+
     NSButton *_texAwareSpellCheckButton, *_editSpellingExclusionsButton;
     NSButtonCell *_spellCheckCommands, *_spellCheckParameters, *_spellCheckComments;
 }
@@ -77,9 +72,10 @@ static unichar g_texChar = '\\';
 SCOPE
 @end
 int main(void) { @autoreleasepool {
+    TSInstallAppKitIsolation();
     settings = [MemoryDefaults new]; settings.values = [NSMutableDictionary dictionary];
     PreferenceProbe *p = [PreferenceProbe new];
-    p->_undoManager = [NSUndoManager new]; p->_undoManager.groupsByEvent = NO;
+
     p->_texAwareSpellCheckButton = [NSButton new];
     p->_editSpellingExclusionsButton = [NSButton new];
     p->_spellCheckCommands = [NSButtonCell new];
@@ -90,9 +86,12 @@ int main(void) { @autoreleasepool {
     REQUIRE(!p->_spellCheckComments.enabled);
     REQUIRE(p->_editSpellingExclusionsButton.enabled);
     [settings setBool:NO forKey:@"SpellCheckEnabled"];
+    [settings setBool:YES forKey:@"TurnOffCommandSpellCheck"];
+    [settings setBool:NO forKey:@"TurnOffParameterSpellCheck"];
+    [settings setBool:YES forKey:@"TurnOffCommentSpellCheck"];
     for (NSNumber *initial in @[@YES, @NO]) {
         [settings setBool:initial.boolValue forKey:@"TeXAwareSpellChecking"];
-        [p->_undoManager beginUndoGrouping];
+
         p->_texAwareSpellCheckButton.state = !initial.boolValue;
         [p texAwareSpellCheckPressed:p->_texAwareSpellCheckButton];
         REQUIRE([settings boolForKey:@"TeXAwareSpellChecking"] == !initial.boolValue);
@@ -100,36 +99,17 @@ int main(void) { @autoreleasepool {
         REQUIRE(p->_spellCheckParameters.enabled == initial.boolValue);
         REQUIRE(p->_spellCheckComments.enabled == initial.boolValue);
         REQUIRE(p->_editSpellingExclusionsButton.enabled == !initial.boolValue);
-        [p->_undoManager endUndoGrouping]; [p->_undoManager undo];
+
         [p updateSpellingControlsFromDefaults:settings];
-        REQUIRE([settings boolForKey:@"TeXAwareSpellChecking"] == initial.boolValue);
-        REQUIRE(p->_texAwareSpellCheckButton.state == initial.boolValue);
+        REQUIRE([settings boolForKey:@"TeXAwareSpellChecking"] == !initial.boolValue);
+        REQUIRE(p->_texAwareSpellCheckButton.state == !initial.boolValue);
         REQUIRE(![settings boolForKey:@"SpellCheckEnabled"]);
+        REQUIRE([settings boolForKey:@"TurnOffCommandSpellCheck"]);
+        REQUIRE(![settings boolForKey:@"TurnOffParameterSpellCheck"]);
+        REQUIRE([settings boolForKey:@"TurnOffCommentSpellCheck"]);
     }
     REQUIRE(refreshes == 2);
-    for (NSNumber *initial in @[@YES, @NO]) {
-        for (NSNumber *changed in @[@NO, @YES]) {
-            [settings setBool:initial.boolValue forKey:@"TeXAwareSpellChecking"];
-            int before = refreshes;
-            [p->_undoManager beginUndoGrouping];
-            if (changed.boolValue) {
-                [[p->_undoManager prepareWithInvocationTarget:settings] setBool:initial.boolValue forKey:@"TeXAwareSpellChecking"];
-                [settings setBool:!initial.boolValue forKey:@"TeXAwareSpellChecking"];
-            }
-            [p cancelButtonPressed:nil];
-            REQUIRE([settings boolForKey:@"TeXAwareSpellChecking"] == initial.boolValue);
-            REQUIRE(refreshes == before + changed.boolValue);
-        }
-        for (NSDictionary *domain in @[@{}, @{@"TeXAwareSpellChecking": @YES}, @{@"TeXAwareSpellChecking": @NO}]) {
-            [settings setBool:initial.boolValue forKey:@"TeXAwareSpellChecking"];
-            int before = refreshes;
-            BOOL expected = domain[@"TeXAwareSpellChecking"] ? [domain[@"TeXAwareSpellChecking"] boolValue] : YES;
-            [p undoDefaultPrefs:domain];
-            REQUIRE(refreshes == before + (initial.boolValue != expected));
-            REQUIRE(p->_texAwareSpellCheckButton.state == expected);
-        }
-    }
-    puts("PASS: unchanged Cancel/restore preserves spelling state; changed settings refresh");
+    puts("PASS: reloading controls keeps the saved choice; child settings follow the selected mode");
     ViewProbe *v = [ViewProbe new];
     [settings setBool:YES forKey:@"TeXAwareSpellChecking"];
     REQUIRE(![v usesTeXAwareSpellChecking]);
@@ -149,12 +129,12 @@ int main(void) { @autoreleasepool {
     [settings setBool:YES forKey:@"TeXAwareSpellChecking"];
     v.document.documentType = 2; REQUIRE(![v usesTeXAwareSpellChecking]);
     v.document.documentType = isTeX; g_texChar = 0xa5; REQUIRE(![v usesTeXAwareSpellChecking]);
-    puts("PASS: default ON, explicit OFF, Undo, independent continuous spelling, and TeX-only scope");
+    puts("PASS: default ON, explicit OFF, live saving, independent continuous spelling, and TeX-only scope");
 } }
 '''.replace('METHODS', methods).replace('SCOPE', scope)
 with tempfile.TemporaryDirectory(prefix='texshop-spelling-preference-') as td:
     t = Path(td); (t/'probe.m').write_text(program)
-    subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa',str(t/'probe.m'),'-o',str(t/'probe')],check=True)
+    subprocess.run(['xcrun','clang','-fobjc-arc','-I',str(root/'Tests'),'-framework','Cocoa',str(t/'probe.m'),'-o',str(t/'probe')],check=True)
     subprocess.run([str(t/'probe')],check=True)
 
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa',

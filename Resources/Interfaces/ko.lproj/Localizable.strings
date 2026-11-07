@@ -174,3 +174,19 @@
 "Use Command or Control with a key, or a function key (F1–F20)." = "Command 또는 Control과 키를 조합하거나 기능 키(F1–F20)를 사용하십시오.";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "명령을 선택하여 단축키를 변경하십시오. 변경 사항은 즉시 적용됩니다. 매크로와 텍스트 입력 키 바인딩은 각각의 편집기에서 설정합니다.";
 "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "이 윈도우에서 변경한 내용이 제거됩니다. 기존 KeyEquivalents.plist 설정은 유지됩니다.";
+
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "The selected profile is invalid.";
+"Apply Settings Profile?" = "Apply Settings Profile?";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@";
+"Apply Profile" = "Apply Profile";
+"Settings could not be saved" = "Settings could not be saved";
+"Enter a valid setting" = "Enter a valid setting";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+"Continue Editing" = "Continue Editing";
+"Restore This Field" = "Restore This Field";
+"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Choose a valid theme name without path separators." = "Choose a valid theme name without path separators.";
+"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";

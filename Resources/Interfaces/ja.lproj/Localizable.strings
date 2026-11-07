@@ -195,3 +195,19 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "このキーはマクロ“%@”（%@）と重なっています。そちらは一覧で後にあるため、そのキーが無効になります。";
 
 "This shortcut is already used by:\n%@" = "このショートカットは次のコマンドで使用されています：\n%@";
+
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "選択した設定プロファイルが正しくありません。";
+"Apply Settings Profile?" = "設定プロファイルを適用しますか？";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@" = "エンジン、編集、表示、既知の隠し設定、Dockアイコンを初期化します。ショートカット、システムの言語、窓の配置、自動更新、テーマファイルは保持します。テーマの選択は変わる場合があります。TeXエンジンのパス：%@";
+"Apply Profile" = "プロファイルを適用";
+"Settings could not be saved" = "設定を保存できませんでした";
+"Enter a valid setting" = "有効な設定値を入力してください";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "この欄を修正するか、最後に保存した値へ戻してください。他の設定はすでに保存されています。";
+"Continue Editing" = "編集を続ける";
+"Restore This Field" = "この欄を元に戻す";
+"The theme could not be saved. Its last saved colors have been restored." = "テーマを保存できませんでした。最後に保存した色へ戻しました。";
+"Choose a valid theme name without path separators." = "パス区切り文字を含まない有効なテーマ名を入力してください。";
+"The new theme could not be saved. The original theme is unchanged." = "新しいテーマを保存できませんでした。元のテーマは変更していません。";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "設定を開き直すか、読み取れるテーマを選んでから編集・複製してください。";

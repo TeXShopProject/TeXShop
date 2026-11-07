@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		EA1100000000000000000001 = {isa = PBXBuildFile; fileRef = EA1100000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		E16E00000000000000000001 = {isa = PBXBuildFile; fileRef = E16E00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		E17000000000000000000001 = {isa = PBXBuildFile; fileRef = E17000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
+		E17200000000000000000001 = {isa = PBXBuildFile; fileRef = E17200000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
+		E17100000000000000000001 = {isa = PBXBuildFile; fileRef = E17100000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
 		AABB05910000000000000001 /* TSFileChangeMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = AABB05910000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		ED0C00000000000000000001 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		ED0C00000000000000000003 = {isa = PBXBuildFile; fileRef = ED0C00000000000000000004; };
@@ -449,7 +452,13 @@
 		EA1100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSKeyboardShortcuts.m; sourceTree = SOURCE_ROOT; };
 		EA1100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSKeyboardShortcuts.h; sourceTree = SOURCE_ROOT; };
 		E16E00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSEnginePathDiscovery.m; sourceTree = SOURCE_ROOT; };
+		E17000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSPreferenceProfile.m; sourceTree = SOURCE_ROOT; };
+		E17200000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSThemeFileStore.m; sourceTree = SOURCE_ROOT; };
+		E17100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSPreferenceInput.m; sourceTree = SOURCE_ROOT; };
 		E16E00000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSEnginePathDiscovery.h; sourceTree = SOURCE_ROOT; };
+		E17000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSPreferenceProfile.h; sourceTree = SOURCE_ROOT; };
+		E17200000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSThemeFileStore.h; sourceTree = SOURCE_ROOT; };
+		E17100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSPreferenceInput.h; sourceTree = SOURCE_ROOT; };
 		AABB05910000000000000003 /* TSFileChangeMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSFileChangeMonitor.h; sourceTree = "<group>"; };
 		AABB05910000000000000002 /* TSFileChangeMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSFileChangeMonitor.m; sourceTree = "<group>"; };
 		ED0C00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSDockIconController.m; sourceTree = SOURCE_ROOT; };
@@ -1421,7 +1430,13 @@
 				EA1100000000000000000002,
 				EA1100000000000000000003,
 				E16E00000000000000000002,
+				E17000000000000000000002,
+				E17200000000000000000002,
+				E17100000000000000000002,
 				E16E00000000000000000003,
+				E17000000000000000000003,
+				E17200000000000000000003,
+				E17100000000000000000003,
 				ED0C00000000000000000002,
 				ED0C00000000000000000006,
 				ED0C00000000000000000007,
@@ -2067,6 +2082,9 @@
 			files = (
 				EA1100000000000000000001,
 				E16E00000000000000000001,
+				E17000000000000000000001,
+				E17200000000000000000001,
+				E17100000000000000000001,
 				ED0C00000000000000000001,
 				EF5890000000000000000001 /* TSSparkleController.m in Sources */,
 				407881790519249A006979EA /* main.m in Sources */,

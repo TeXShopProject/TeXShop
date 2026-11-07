@@ -38,7 +38,6 @@ IBOutlet		NSTextField                  *totalPage1;
 IBOutlet		NSTextField                  *myScale1;
 IBOutlet		id                  myStepper1;
 	NSInteger			documentType;
-	double              oldMagnification;
 	//double            oldWidth, oldHeight; // mitsu 1.29 (O) not used
 	BOOL                fixScroll;
 	BOOL                showSync;

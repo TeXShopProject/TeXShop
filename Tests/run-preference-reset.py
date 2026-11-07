@@ -1,156 +1,96 @@
 #!/usr/bin/env python3
-"""Restoring default settings recolors open documents when @ changes its meaning.
-
-The production -setDefaults: and -undoDefaultPrefs: of TSPreferences run on every bundled
-defaults file, with settings kept in memory (no user defaults are read or written). When
-MakeatletterEnabled changes, open documents must be told to color commands again, both when
-the defaults are restored and when that is undone; when it does not change, they are not.
---mutation=reset or --mutation=undo removes one of the two and the test must then fail.
-A profile keeps what is not a setting of the window: keyboard shortcuts, the App Shortcuts and
-app language chosen in System Settings, what Sparkle records about updates, and AppKit's window,
-toolbar and split view state. Other settings missing from the profile are still removed, and
-undoing restores the earlier settings exactly. --mutation=keep drops nothing and must fail."""
+"""Exercise all nine profile transactions and their production reflection path."""
 from pathlib import Path
-import subprocess, sys, tempfile
-root = Path(__file__).resolve().parents[1]
-mutation = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--mutation=')), None)
-s = (root/'Sources/TSPreferences.m').read_text(encoding='latin1')
-def method(signature):
-    a = s.index('\n' + signature) + 1
-    return s[a:s.index('\n}', a) + 2]
-setDefaults = method('- (IBAction)setDefaults:sender')
-undoDefaults = method('- (void)undoDefaultPrefs:')
-recolor = '    if (oldMakeatletter != [SUD boolForKey:MakeatletterEnabledKey])\n'
-if mutation == 'reset':
-    assert recolor in setDefaults; setDefaults = setDefaults.replace(recolor, '    if (NO)\n')
-elif mutation == 'undo':
-    assert recolor in undoDefaults; undoDefaults = undoDefaults.replace(recolor, '    if (NO)\n')
-elif mutation == 'keep':
-    kept = 'profile[key] = value;'
-    assert setDefaults.count(kept) == 1; setDefaults = setDefaults.replace(kept, ';')
-elif mutation:
-    raise SystemExit('unknown mutation ' + mutation)
-plists = sorted(str(p) for p in (root/'Resources/Shellscripts').glob('*.plist') if p.name.startswith(('FactoryDefaults', 'Defaults_')))
-program = r'''
-#import <Cocoa/Cocoa.h>
-@interface MemoryDefaults : NSObject
-@property NSMutableDictionary *values;
-@end
-@implementation MemoryDefaults
-- (instancetype)init { if ((self = [super init])) _values = [NSMutableDictionary new]; return self; }
-- (NSDictionary *)persistentDomainForName:(NSString *)n { return [self.values copy]; }
-- (void)setPersistentDomain:(NSDictionary *)d forName:(NSString *)n { self.values = [d mutableCopy]; }
-- (void)synchronize {}
-- (BOOL)boolForKey:(NSString *)k { return [self.values[k] boolValue]; }
-- (void)setBool:(BOOL)v forKey:(NSString *)k { self.values[k] = @(v); }
-- (id)objectForKey:(NSString *)k { return self.values[k]; }
-- (void)setObject:(id)v forKey:(NSString *)k { if (v) self.values[k] = v; else [self.values removeObjectForKey:k]; }
-- (NSString *)stringForKey:(NSString *)k { id v = self.values[k]; return [v isKindOfClass:[NSString class]] ? v : [v description]; }
-- (float)floatForKey:(NSString *)k { return [self.values[k] floatValue]; }
-- (void)setFloat:(float)v forKey:(NSString *)k { self.values[k] = @(v); }
-@end
-static MemoryDefaults *memory;
-#define SUD memory
-#define MakeatletterEnabledKey @"MakeatletterEnabled"
-#define TSMenuShortcutOverridesKey @"TSMenuShortcutOverrides"
-#define DocumentFontKey @"DocumentFont"
-#define DocumentFontAttributesKey @"DocumentFontAttributes"
-#define ConsoleFontNameKey @"ConsoleFontName"
-#define ConsoleFontSizeKey @"ConsoleFontSize"
-#define DocumentFontChangedNotification @"DocumentFontChanged"
-#define ConsoleFontChangedNotification @"ConsoleFontChanged"
-#define DocumentFontRememberNotification @"DocumentFontRemember"
-static NSString *TSPreferencesDomainName(void) { return @"memory-only"; }
-@interface TSSpellSupport : NSObject
-+ (void)preferencesDidChange;
-@end
-@implementation TSSpellSupport
-+ (void)preferencesDidChange {}
-@end
-static NSString *gDefaultsFile;
-@interface TestBundle : NSObject
-+ (instancetype)mainBundle;
-- (NSString *)pathForResource:(NSString *)name ofType:(NSString *)ext;
-@end
-@implementation TestBundle
-+ (instancetype)mainBundle { return [self new]; }
-- (NSString *)pathForResource:(NSString *)name ofType:(NSString *)ext { return gDefaultsFile; }
-@end
-#define NSBundle TestBundle
-@interface TSPreferences : NSObject {
-@public
-    NSUndoManager *_undoManager;
+import subprocess,tempfile,sys
+ROOT=Path(__file__).resolve().parents[1]
+s=(ROOT/'Sources/TSPreferences.m').read_text()
+a=s.index('\n- (void)applyPreferenceProfile:')+1;body=s[a:s.index('\n}',a)+2]
+mutation=sys.argv[1] if len(sys.argv)>1 else ''
+mutations={
+ 'recolor':('@"MakeatletterEnabled",',''),
+ 'runtime':('[self refreshRuntimePreferences];',';'),
+ 'dock':('if ([changed containsObject:@"DockIconStyle"]) [[TSDockIconController sharedController] restoreSavedIcon];',';'),
+ 'spell':('[TSSpellSupport preferencesDidChange];',';'),
+ 'theme':('[[TSColorSupport sharedInstance] initializeColors];',';'),
+ 'no-change':('if (![changed intersectsSet:[NSSet setWithArray:groups[name]]]) continue;',';'),
 }
-@property NSFont *documentFont, *consoleFont;
-@property NSDictionary *fontAttributes;
-@property NSUInteger runtimeRefreshes;
+if mutation:
+ old,new=mutations[mutation];assert old in body;body=body.replace(old,new)
+# The confirmation handler invokes this transaction only after explicit local confirmation.
+assert '[strongSelf applyPreferenceProfile:proposal font:font];' in s
+for old in ['undoDefaultPrefs:', 'cancelButtonPressed:', '_undoManager', 'MagnificationChangedNotification']:
+ assert old not in s,old
+names=['DocumentFontChangedNotification','ConsoleFontChangedNotification','DocumentSyntaxColorNotification','DocumentAutoCompleteNotification','DocumentBibDeskCompleteNotification','ExternalEditorNotification','SourceColorChangedNotification']
+program=r'''
+#import <Cocoa/Cocoa.h>
+#import "MemoryDefaults.h"
+#import "TSPreferenceProfile.h"
+static TSMemoryDefaults *memory;
+#define SUD memory
+CONSTANTS
+static NSUInteger dock,spell,colors,encoding;
+@interface TSDockIconController:NSObject @end
+@implementation TSDockIconController
++ (id)sharedController {static id v;if(!v)v=[self new];return v;}
+- (void)restoreSavedIcon {dock++;}
 @end
-@implementation TSPreferences
-- (void)updateControlsFromUserDefaults:(id)defaults {}
-- (void)updateDocumentFontTextField {}
-- (void)updateConsoleFontTextField {}
-// Runtime copy behavior is exercised independently by run-preferences-runtime.py.
-- (void)refreshRuntimePreferences { self.runtimeRefreshes++; }
-SETDEFAULTS
-UNDODEFAULTS
+@interface TSSpellSupport:NSObject @end
+@implementation TSSpellSupport
++ (void)preferencesDidChange {spell++;}
 @end
-#undef NSBundle
-static int failures = 0, recolors = 0;
-static void check(BOOL ok, NSString *what) { printf("%s %s\n", ok ? "ok  " : "FAIL", what.UTF8String); failures += ! ok; }
-int main(int argc, char **argv) { @autoreleasepool {
-    memory = [MemoryDefaults new];
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"NeedsForRecolorNotification" object:nil queue:nil
-        usingBlock:^(NSNotification *n) { recolors++; }];
-    TSPreferences *p = [TSPreferences new];
-    p->_undoManager = [NSUndoManager new];
-    p.documentFont = [NSFont userFontOfSize:12];
-    for (int i = 1; i < argc; i++) {
-        gDefaultsFile = @(argv[i]);
-        NSDictionary *bundled = [[NSString stringWithContentsOfFile:gDefaultsFile usedEncoding:NULL error:NULL] propertyList];
-        BOOL bundledAt = [bundled[@"MakeatletterEnabled"] boolValue];
-        for (int before = 0; before <= 1; before++) {
-            [p->_undoManager removeAllActions];
-            NSDictionary *shortcuts = @{@"TSShortcut.doTypeset:.-1": @{@"key": @"r", @"modifiers": @(NSEventModifierFlagCommand)}};
-            NSDictionary *earlier = @{@"MakeatletterEnabled": @(before), @"TSMenuShortcutOverrides": shortcuts,
-                @"NSWindow Frame PrefPane": @"10 10 600 500 0 0 1440 900 ", @"NSToolbar Configuration TSPdfToolbar": @{@"TB Is Shown": @1},
-                @"NSSplitView Subview Frames Split": @[@"0, 0, 100, 100, NO"], @"TeXAwareSpellChecking": @NO, @"EncodingAutoDetection": @NO,
-                @"NSUserKeyEquivalents": @{@"Typeset": @"@r"}, @"AppleLanguages": @[@"ja"],
-                @"SUEnableAutomaticChecks": @YES, @"SUHasLaunchedBefore": @YES, @"SUSkippedVersion": @"5.61"};
-            memory.values = [earlier mutableCopy];
-            NSButton *sender = [NSButton new]; sender.tag = 0;
-            recolors = 0;
-            p.runtimeRefreshes = 0;
-            [p->_undoManager beginUndoGrouping]; [p setDefaults:sender]; [p->_undoManager endUndoGrouping];
-            check(p.runtimeRefreshes == 1, @"profile refreshes runtime copies once");
-            BOOL changed = (before != bundledAt);
-            check(recolors == (changed ? 1 : 0) && [memory boolForKey:@"MakeatletterEnabled"] == bundledAt,
-                  [NSString stringWithFormat:@"%@, @ was %s: restoring %s", gDefaultsFile.lastPathComponent, before ? "on" : "off",
-                   changed ? "recolors once" : "does not recolor"]);
-            check([memory.values[@"TSMenuShortcutOverrides"] isEqual:shortcuts] && memory.values[@"NSWindow Frame PrefPane"] &&
-                  memory.values[@"NSToolbar Configuration TSPdfToolbar"] && memory.values[@"NSSplitView Subview Frames Split"] &&
-                  [memory.values[@"NSUserKeyEquivalents"] isEqual:earlier[@"NSUserKeyEquivalents"]] && [memory.values[@"AppleLanguages"] isEqual:@[@"ja"]] &&
-                  [memory.values[@"SUEnableAutomaticChecks"] isEqual:@YES] && [memory.values[@"SUHasLaunchedBefore"] isEqual:@YES] &&
-                  [memory.values[@"SUSkippedVersion"] isEqual:@"5.61"],
-                  [NSString stringWithFormat:@"%@: keyboard shortcuts, App Shortcuts, app language, Sparkle's records and window, toolbar and split view state are kept", gDefaultsFile.lastPathComponent]);
-            check((bundled[@"TeXAwareSpellChecking"] != nil || memory.values[@"TeXAwareSpellChecking"] == nil) &&
-                  (bundled[@"EncodingAutoDetection"] != nil || memory.values[@"EncodingAutoDetection"] == nil),
-                  [NSString stringWithFormat:@"%@: other settings missing from the profile are still removed", gDefaultsFile.lastPathComponent]);
-            recolors = 0;
-            [p->_undoManager undo];
-            check(p.runtimeRefreshes == 2, @"profile undo refreshes runtime copies once");
-            check([memory.values isEqual:earlier], [NSString stringWithFormat:@"%@: undoing restores the earlier settings exactly", gDefaultsFile.lastPathComponent]);
-            check(recolors == (changed ? 1 : 0) && [memory boolForKey:@"MakeatletterEnabled"] == before,
-                  [NSString stringWithFormat:@"%@, @ was %s: undoing it %s", gDefaultsFile.lastPathComponent, before ? "on" : "off",
-                   changed ? "recolors once" : "does not recolor"]);
-        }
-    }
-    return failures ? 1 : 0;
-}}
-'''.replace('SETDEFAULTS', setDefaults).replace('UNDODEFAULTS', undoDefaults)
-with tempfile.TemporaryDirectory(prefix='texshop-preference-reset-') as folder:
-    f = Path(folder); (f/'test.m').write_text(program, encoding='latin1')
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', str(f/'test.m'), '-o', str(f/'test')], check=True)
-    r = subprocess.run([str(f/'test'), *plists], timeout=60)
-    if r.returncode:
-        raise SystemExit('FAIL: restoring default settings does not behave as it should')
-    print('PASS: restoring default settings, and undoing it, recolors open documents exactly when @ changes and keeps keyboard shortcuts and window state')
+@interface TSColorSupport:NSObject @end
+@implementation TSColorSupport
++ (id)sharedInstance {static id v;if(!v)v=[self new];return v;}
+- (void)initializeColors {colors++;}
+@end
+@interface TSEncodingSupport:NSObject @end
+@implementation TSEncodingSupport
++ (id)sharedInstance {static id v;if(!v)v=[self new];return v;}
+- (void)setupForEncoding {encoding++;}
+@end
+@interface Probe:NSObject
+@property id documentFont,fontAttributes;
+@property NSUInteger runtime,controls,themes;
+@end
+@implementation Probe
+- (void)refreshRuntimePreferences {self.runtime++;}
+- (void)updateControlsFromUserDefaults:(id)d {self.controls++;}
+- (void)PrepareColorPane:(id)d {self.themes++;}
+BODY
+@end
+static void check(BOOL ok,const char *msg){if(!ok){fprintf(stderr,"FAIL: %s\n",msg);exit(1);}}
+int main(int argc,char **argv){@autoreleasepool{
+ NSData *font=[@"font" dataUsingEncoding:NSUTF8StringEncoding];
+ for(int n=1;n<argc;n++) {
+  NSDictionary *profile=[NSDictionary dictionaryWithContentsOfFile:@(argv[n])];
+  TSPreferenceProfile *proposal=[[TSPreferenceProfile alloc]initWithProfile:profile documentFont:font];check(proposal!=nil,"valid profile");
+  memory=[TSMemoryDefaults new];Probe *p=[Probe new];
+  NSMutableArray *notes=[NSMutableArray new];
+  id token=[NSNotificationCenter.defaultCenter addObserverForName:nil object:p queue:nil usingBlock:^(NSNotification *note){[notes addObject:note.name];check(note.userInfo==nil,"no transient theme dictionary");}];
+  [p applyPreferenceProfile:proposal font:nil];
+  check(p.runtime==1 && p.controls==1 && p.themes==1,"runtime and loaded controls refresh exactly once");
+  [notes removeAllObjects];NSUInteger d=dock,sp=spell,c=colors;
+  [p applyPreferenceProfile:proposal font:nil];
+  check(notes.count==0 && d==dock && sp==spell && c==colors,"unchanged profile does not broadcast or touch Dock/spelling/themes");
+  [SUD setBool:![profile[@"MakeatletterEnabled"] boolValue] forKey:@"MakeatletterEnabled"];
+  [p applyPreferenceProfile:proposal font:nil];
+  check([notes containsObject:@"NeedsForRecolorNotification"],"makeatletter refreshes existing text");
+  [notes removeAllObjects];
+  [SUD setObject:@"round" forKey:@"DockIconStyle"];
+  [SUD setBool:NO forKey:@"TeXAwareSpellChecking"];
+  [SUD setObject:@"other" forKey:@"DefaultDarkTheme"];
+  d=dock;sp=spell;c=colors;
+  [p applyPreferenceProfile:proposal font:nil];
+  check(dock==d+1 && spell==sp+1 && colors==c+1,"changed Dock/spelling/theme reflect once");
+  check([notes containsObject:SourceColorChangedNotification],"theme notification uses actual saved themes");
+  check(![notes containsObject:@"MagnificationChangedNotification"],"open PDFs keep their magnification");
+  check([SUD objectForKey:@"DockIconStyle"]==nil,"Dock reset survives control refresh");
+  [NSNotificationCenter.defaultCenter removeObserver:token];
+ }
+ puts("PASS: nine profile transactions, changed-only reflection, Dock reset, spelling invalidation and no PDF zoom broadcast");
+}return 0;}
+'''.replace('CONSTANTS','\n'.join(f'NSString *const {n}=@"{n}";' for n in names)).replace('BODY',body)
+with tempfile.TemporaryDirectory(prefix='texshop-profile-live-') as td:
+ t=Path(td);(t/'probe.m').write_text(program)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-I',str(ROOT/'Sources'),'-I',str(ROOT/'Tests'),'-framework','Cocoa',str(t/'probe.m'),str(ROOT/'Sources/TSPreferenceProfile.m'),'-o',str(t/'probe')],check=True)
+ subprocess.run([str(t/'probe'),*map(str,sorted((ROOT/'Resources/Shellscripts').glob('*Defaults*.plist')))],check=True)

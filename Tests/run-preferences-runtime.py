@@ -22,10 +22,8 @@ delegate_source = (ROOT / 'Sources/TSAppDelegate.m').read_text(encoding='latin1'
 start = delegate_source.index('- (void)updateXMLTabs\n')
 xml_reader = delegate_source[start:delegate_source.index('\n}', start) + 2]
 xml_reader = xml_reader.replace('updateXMLTabs', 'readXMLDefaults', 1)
-# Keep the transitional Cancel and profile entry points connected until the
-# complete window lifecycle is migrated. Removing a call must fail the test.
-for signature in ('- (void)undoDefaultPrefs:', '- (IBAction)setDefaults:', '- (IBAction)cancelButtonPressed:'):
-    assert '[self refreshRuntimePreferences];' in method(signature), signature
+assert '[self refreshRuntimePreferences];' in method('- (void)applyPreferenceProfile:')
+assert 'cancelButtonPressed:' not in source and 'undoDefaultPrefs:' not in source
 
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 if mutation.startswith('xml-'):
@@ -44,14 +42,15 @@ elif mutation in ('editor', 'refresh-editor', 'refresh-xml'):
 elif mutation:
     raise SystemExit('Unknown mutation: ' + mutation)
 
-keys = {name + 'Key': name for name in ['EditorCanAddBrackets']}
+keys = {name + 'Key': name for name in ['EditorCanAddBrackets', 'AutoSaveEnabled', 'WatchServer', 'TagMenuInMenuBar', 'PdfPageBack_R', 'PdfPageBack_G', 'PdfPageBack_B']}
 keys.update({'XML' + name + 'TagKey': 'XML' + name + 'Tag' for name in xml_names})
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import "MemoryDefaults.h"
 TSMemoryDefaults *memory;
 #define SUD memory
-BOOL editorCanAddBrackets;
+BOOL editorCanAddBrackets, doAutoSave, activateBauerPatch;
+NSColor *PreviewBackgroundColor;
 BOOL g_activeXMLTags[11];
 KEYS
 @interface TSAppDelegate : NSObject
@@ -73,6 +72,7 @@ XMLREADER
 @end
 @interface FakeApp : NSObject
 @property TSAppDelegate *delegate;
+@property NSMenu *mainMenu;
 @end
 @implementation FakeApp @end
 FakeApp *fakeApp;
@@ -89,7 +89,7 @@ FakeApp *fakeApp;
 @end
 @interface Preferences : NSObject {
 @public
-    NSUndoManager *_undoManager;
+
 }
 @end
 @implementation Preferences
@@ -102,7 +102,7 @@ int main(void) { @autoreleasepool {
     memory = [TSMemoryDefaults new];
     fakeApp = [FakeApp new]; fakeApp.delegate = [TSAppDelegate new];
     Preferences *p = [Preferences new];
-    p->_undoManager = [NSUndoManager new];
+
     Control *control = [Control new];
     // Both directions must update the already-running application without OK.
     for (NSNumber *value in @[@YES, @NO, @YES]) {
@@ -113,15 +113,18 @@ int main(void) { @autoreleasepool {
         check(editorCanAddBrackets == flag, "editor runtime immediate");
         XMLTESTS
     }
-    // A profile or rollback has already changed the source of truth. The
+    // A profile has already changed the source of truth. The
     // copied globals must follow it, not stale control states.
     for (NSNumber *value in @[@NO, @YES]) {
         BOOL flag = value.boolValue;
         [SUD setBool:flag forKey:EditorCanAddBracketsKey];
+        [SUD setBool:flag forKey:AutoSaveEnabledKey];
+        [SUD setObject:@0.25 forKey:PdfPageBack_RKey];
         for (NSString *key in XMLKEYS) [SUD setBool:flag forKey:key];
         NSUInteger count = fakeApp.delegate.updates;
         [p refreshRuntimePreferences];
-        check(editorCanAddBrackets == flag, "bulk runtime refresh");
+        check(editorCanAddBrackets == flag && doAutoSave == flag, "bulk runtime refresh");
+        check(fabs(PreviewBackgroundColor.redComponent - 0.25) < 0.001, "preview background copy");
         check(fakeApp.delegate.updates == count + 1, "bulk XML refresh once");
         for (NSString *key in XMLKEYS) check([fakeApp.delegate.xml[key] boolValue] == flag, "bulk XML value");
     }

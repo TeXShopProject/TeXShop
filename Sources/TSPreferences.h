@@ -27,6 +27,7 @@
 
 #import <AppKit/AppKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
 @interface TSPreferences : NSObject
 {
 	IBOutlet NSWindow	*_prefsWindow;			/*" connected to the window "*/
@@ -45,8 +46,6 @@
     IBOutlet NSPanel    *stylePanel;
     // for Color
     IBOutlet NSTextField *styleTitle;
-    NSString *oldLiteStyle;
-    NSString *oldDarkStyle;
 
     IBOutlet NSButton       *_tabIndentButton;		    /*" connected to "Use Tab" "*/
     IBOutlet NSButton       *_syntaxColorLineButton;    /*" connected to "Syntax Active Line Coloring" "*/
@@ -156,41 +155,6 @@
     IBOutlet NSButtonCell   *_spellCheckParameters;
     IBOutlet NSButtonCell   *_spellCheckComments;
 
-	NSUndoManager		*_undoManager;			/*" used for discarding all changes when the cancel button was pressed "*/
-//	NSFont			*_documentFont;			/*" used to track the font that the user has selected for the document window "*/
-//	NSFont			*_consoleFont;			/*" used to track the font that the user has selected for the console window "*/
-	BOOL			fontTouched;			/*" if user fiddled with fonts and then cancelled,
-																we restore the old one "*/
-	BOOL			consoleFontTouched;
-	BOOL			consoleBackgroundColorTouched;
-	BOOL			consoleForegroundColorTouched;
-	BOOL			sourceBackgroundColorTouched;
-    BOOL            sourceTextColorTouched;
-	BOOL			previewBackgroundColorTouched;
-	BOOL			syntaxColorTouched;		/*" if user fiddled with syntax and then cancelled,
-																we restore the old one "*/
-    BOOL            syntaxColorLineTouched;        /*" if user fiddled with syntax and then cancelled,
-                                                                we restore the old one "*/
-	BOOL			oldSyntaxColor;			/*" value when preferences shown "*/
-    BOOL            oldSyntaxLineColor;
-	BOOL			autoCompleteTouched;
-	BOOL			bibDeskCompleteTouched;
-    BOOL            HtmlHomeTouched;
-	BOOL			oldAutoComplete;
-	BOOL			oldBibDeskComplete;
-    BOOL            oldSparkleAutomaticUpdate;
-    NSTimeInterval  oldSparkleInterval;
-	BOOL			magnificationTouched;
-	BOOL			externalEditorTouched;
-	BOOL			encodingTouched;
-	BOOL			commandCompletionCharTouched;
-	BOOL            invisibleCharacterTouched; // added by Terada
-	BOOL            highlightTouched; // added by Terada
-	BOOL            kpsetoolTouched; // added by Terada
-	BOOL            bibTeXengineTouched; // added by Terada
-	BOOL            makeatletterTouched; // added by Terada
-    BOOL            sparkleTouched;
-   
     IBOutlet NSPopUpButton  *dictionaryPopup;
 	IBOutlet NSButton *_displayAsBookButton;
 	IBOutlet NSPopUpButton	*_pageStylePopup;// mitsu 1.29 (O) /*" connected to page style popup button "*/
@@ -278,7 +242,7 @@
 
 @property (retain) NSFont		*documentFont;			/*" used to track the font that the user has selected for the document window "*/
 @property (retain) NSFont		*consoleFont;			/*" used to track the font that the user has selected for the console window "*/
-@property (retain) NSDictionary *fontAttributes;         /*" used to track the font attributes that the user has selected for the document window "*/
+@property (retain, nullable) NSDictionary *fontAttributes;         /*" used to track the font attributes that the user has selected for the document window "*/
 
 + (id)sharedInstance;
 
@@ -381,8 +345,6 @@
 - (IBAction)colorParam1Changed:sender; // mitsu 1.29 (O)
 #endif
 
-- (IBAction)okButtonPressed:sender;
-- (IBAction)cancelButtonPressed:sender;
 - (IBAction)setDefaults:sender;
 
 - (IBAction)highlightChanged:sender; // added by Terada
@@ -423,9 +385,16 @@
 - (void)updateDocumentFontTextField;
 - (void)updateConsoleFontTextField;
 
+- (void)finishPreferencesForTermination;
+- (void)showPreferenceError:(NSString *)message;
+
+@property (copy, nullable) NSDictionary<NSString *, id> *lastSavedEditingColors;
+
 @end
 
 @interface TSPreferences (Color)
+- (void)deactivatePreferenceColorWells;
+- (IBAction)themeSelectionChanged:(id)sender;
 
 - (void)PrepareColorPane:(NSUserDefaults *)defaults;
 
@@ -493,9 +462,11 @@
 
 - (IBAction)okForStylePanel:sender;
 - (IBAction)cancelForStylePanel:sender;
-- (void)okForColor;
-- (void)cancelForColor;
+
+
 
 
 
 @end
+
+NS_ASSUME_NONNULL_END

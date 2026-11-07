@@ -13,7 +13,7 @@ constants='\n'.join(re.findall(r'^NSString \*(?:show(?:Space|FullwidthSpace|Tab|
 assert len(constants.splitlines())==8
 update=method('- (void)updateControlsFromUserDefaults:')
 assert '[self updateInvisibleCharacterControls:defaults];' in update
-for caller in ('- (IBAction)showPreferences:', '- (void)undoDefaultPrefs:', '- (IBAction)setDefaults:'):
+for caller in ('- (IBAction)showPreferences:',):
  assert '[self updateControlsFromUserDefaults:SUD];' in method(caller)
 checkboxes='\n'.join(line for line in update.splitlines() if any('_show'+k+'CharacterButton setState:' in line for k in keys))
 assert len(checkboxes.splitlines())==4
@@ -22,12 +22,13 @@ methods+='\n- (void)reloadControls:(NSUserDefaults *)defaults {\n'+checkboxes+'\
 ivars='\n'.join(f'NSPopUpButton *_{k}CharacterKindPopup; NSButton *_show{k}CharacterButton;' for k in keys)
 program=r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import "TSInvisibleCharacters.h"
 #import "MemoryDefaults.h"
 static NSUserDefaults *settings;
 #define SUD settings
 CONSTANTS
-@interface TSPreferences:NSObject { @public NSUndoManager *_undoManager; BOOL invisibleCharacterTouched; IVARS }
+@interface TSPreferences:NSObject { @public IVARS }
 @end
 @implementation TSPreferences
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {}
@@ -41,13 +42,13 @@ METHODS
 @end
 static void Check(BOOL ok, NSString *why) {if(!ok){NSLog(@"FAIL: %@",why);exit(1);}}
 int main(int argc,char **argv){@autoreleasepool{
- [NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
  settings=[TSMemoryDefaults new];
  NSArray *keys=@[@"SpaceCharacterKind",@"FullwidthSpaceCharacterKind",@"NewLineCharacterKind",@"TabCharacterKind"];
  NSArray *show=@[@"ShowSpaceCharacter",@"ShowFullwidthSpaceCharacter",@"ShowNewLineCharacter",@"ShowTabCharacter"];
  NSArray *expected=@[@[@"␣",@"·"],@[@"□",@"■"],@[@"↵",@"¶",@"↩",@"⏎"],@[@"‣",@"▹",@"⇥"]];
  for(int n=1;n<argc;n++){
-  TSPreferences *owner=[TSPreferences new];owner->_undoManager=[NSUndoManager new];owner->_undoManager.groupsByEvent=NO;
+  TSPreferences *owner=[TSPreferences new];
   NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:@(argv[n])] bundle:nil];NSArray *objects;
   Check([nib instantiateWithOwner:owner topLevelObjects:&objects],@"compiled nib loads");
   NSArray *popups=@[owner->_SpaceCharacterKindPopup,owner->_FullwidthSpaceCharacterKindPopup,owner->_NewLineCharacterKindPopup,owner->_TabCharacterKindPopup];
@@ -64,28 +65,29 @@ int main(int argc,char **argv){@autoreleasepool{
    Check([TSInvisibleMarkers(keys[i]) isEqual:p.itemTitles],@"rendering and UI choices agree");
    Check(p.selectedTag==1 && p.enabled,@"existing second choice preserved");
    for(NSInteger j=0;j<p.numberOfItems;j++){
-    [owner->_undoManager beginUndoGrouping];[p selectItemAtIndex:j];[NSApp sendAction:p.action to:p.target from:p];[owner->_undoManager endUndoGrouping];
+    [p selectItemAtIndex:j];[NSApp sendAction:p.action to:p.target from:p];
     Check(TSInvisibleStoredIndex(settings,keys[i])==j,@"each choice saves");
     Check([settings integerForKey:keys[i]]>=0 && [settings integerForKey:keys[i]]<2,@"older renderers always receive a safe index");
     Check([p.title isEqual:expected[i][j]],@"selected menu label");
     [owner reloadControls:settings]; Check(p.selectedTag==j,@"persisted selection survives reload");
-    [owner->_undoManager undo];[owner updateInvisibleCharacterControls:settings];
-    Check(p.selectedTag==1 && [settings integerForKey:keys[i]]==1,@"cancel/undo restores prior choice");
+    [owner updateInvisibleCharacterControls:settings];
+    Check(p.selectedTag==j,@"reopening keeps immediate selection");
    }
    // Switching back from an extended marker must remove the extended value.
    for(NSInteger added=2;added<p.numberOfItems;added++) for(NSInteger legacy=0;legacy<2;legacy++){
-    [owner->_undoManager beginUndoGrouping];
+
     [p selectItemAtIndex:added];[NSApp sendAction:p.action to:p.target from:p];
     [p selectItemAtIndex:legacy];[NSApp sendAction:p.action to:p.target from:p];
-    [owner->_undoManager endUndoGrouping];
+
     Check([settings objectForKey:TSInvisibleExtendedKey(keys[i])]==nil,@"returning to a legacy choice removes the extended key");
     [owner reloadControls:settings];Check(p.selectedTag==legacy,@"legacy choice survives reload after extended choice");
-    [owner->_undoManager undo];[owner reloadControls:settings];
-    Check(p.selectedTag==1 && [settings objectForKey:TSInvisibleExtendedKey(keys[i])]==nil,@"Cancel restores the choice before multiple changes");
+    [owner reloadControls:settings];
+    Check(p.selectedTag==legacy && [settings objectForKey:TSInvisibleExtendedKey(keys[i])]==nil,@"reopening preserves final legacy choice");
    }
-   [owner->_undoManager beginUndoGrouping];b.state=NSControlStateValueOff;[NSApp sendAction:b.action to:b.target from:b];[owner->_undoManager endUndoGrouping];
+   [p selectItemWithTag:1];[owner invisibleCharacterChanged:p];
+   b.state=NSControlStateValueOff;[NSApp sendAction:b.action to:b.target from:b];
    Check(!p.enabled && p.selectedTag==1,@"disabled row retains selection");
-   [owner->_undoManager undo];b.state=NSControlStateValueOn;[owner updateInvisibleCharacterControls:settings];Check(p.enabled,@"undo restores enabled state");
+   b.state=NSControlStateValueOn;[NSApp sendAction:b.action to:b.target from:b];[owner updateInvisibleCharacterControls:settings];Check(p.enabled,@"enabling retains selected marker");
    for(id bad in @[@(-1),@99,@"junk"]){
     [settings setObject:bad forKey:keys[i]];[owner updateInvisibleCharacterControls:settings];
     Check(p.indexOfSelectedItem==0,@"invalid stored selection falls back");
@@ -101,17 +103,17 @@ int main(int argc,char **argv){@autoreleasepool{
   for(int i=0;i<4;i++){ [settings setObject:@"0" forKey:keys[i]]; [settings setObject:@"NO" forKey:show[i]]; }
   [owner reloadControls:settings];
   for(int i=0;i<4;i++)Check([(NSPopUpButton *)popups[i] selectedTag]==0 && ![(NSPopUpButton *)popups[i] isEnabled] && [(NSButton *)buttons[i] state]==NSControlStateValueOff,@"profile defaults reload all controls");
-  // Extended choices round-trip and Cancel removes a newly-created key entirely.
-  [owner->_undoManager beginUndoGrouping]; [tab selectItemAtIndex:2]; [owner invisibleCharacterChanged:tab]; [owner->_undoManager endUndoGrouping];
+  // Extended choices round-trip and remain saved after reloading.
+   [tab selectItemAtIndex:2]; [owner invisibleCharacterChanged:tab];
   Check([settings integerForKey:keys[3]]==0 && [settings integerForKey:TSInvisibleExtendedKey(keys[3])]==2,@"extended choice uses separate key");
-  [owner->_undoManager undo]; Check([settings objectForKey:TSInvisibleExtendedKey(keys[3])]==nil,@"Cancel removes absent extended key");
+   [owner reloadControls:settings]; Check(tab.selectedTag==2,@"reopening retains extended key");
   [settings setInteger:2 forKey:TSInvisibleExtendedKey(keys[3])]; [settings setInteger:1 forKey:keys[3]];
   [owner reloadControls:settings]; Check(tab.selectedTag==1,@"historical second choice overrides stale extended value");
   [((TSMemoryDefaults *)settings).values removeAllObjects];
   for(id o in objects)if([o isKindOfClass:NSWindow.class])[o orderOut:nil];
  }
 
- puts("PASS: all compiled nibs; historical choices, added glyphs, save/undo, disabled rows and invalid settings");
+ puts("PASS: all compiled nibs; historical choices, added glyphs, immediate saving, disabled rows and invalid settings");
 }return 0;}
 '''.replace('CONSTANTS',constants).replace('IVARS',ivars).replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='texshop-invisible-') as td:

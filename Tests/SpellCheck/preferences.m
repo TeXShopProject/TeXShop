@@ -1,5 +1,6 @@
 // Load compiled preferences without starting TeXShop or writing its settings.
 #import <Cocoa/Cocoa.h>
+#import "../TestAppKitIsolation.h"
 @interface TSPreferences:NSObject { @public NSButton *_texAwareSpellCheckButton, *_editSpellingExclusionsButton; }
 @property NSUInteger clicks;
 @end
@@ -23,8 +24,9 @@ static NSButton *EditButton(NSView *v) {
  for (NSView *c in v.subviews) { NSButton *b=EditButton(c); if(b)return b; } return nil;
 }
 int main(int argc,char **argv){@autoreleasepool{
- [NSApplication sharedApplication];
- [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
+ TSInstallAppKitIsolation();
+    [NSApplication sharedApplication];
+    [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
  for(int i=1;i<argc;i++){
   NSString *path=@(argv[i]), *lang=path.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent.lastPathComponent;
   TSPreferences *owner=[TSPreferences new];

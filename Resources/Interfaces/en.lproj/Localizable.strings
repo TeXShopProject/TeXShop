@@ -142,3 +142,19 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
 
 "This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
+
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "The selected profile is invalid.";
+"Apply Settings Profile?" = "Apply Settings Profile?";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@";
+"Apply Profile" = "Apply Profile";
+"Settings could not be saved" = "Settings could not be saved";
+"Enter a valid setting" = "Enter a valid setting";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+"Continue Editing" = "Continue Editing";
+"Restore This Field" = "Restore This Field";
+"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Choose a valid theme name without path separators." = "Choose a valid theme name without path separators.";
+"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";

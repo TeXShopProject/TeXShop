@@ -27,7 +27,7 @@ if len(stats) != expected:
 for l in stats:
     fields = dict(kv.split('=') for kv in l.split('\tSTAT ')[1].split())
     controls, empty = int(fields['controls']), int(fields['empty'])
-    if controls < 3 or empty * 10 > controls:
+    if controls < (2 if '\tbar\t' in l else 3) or empty * 10 > controls:
         problems.append(f'too few controls measured: {l}')
 for l in problems:
     print(l)

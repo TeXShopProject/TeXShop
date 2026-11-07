@@ -37,11 +37,11 @@ static void Require(BOOL condition, NSString *message) { if (!condition) { NSLog
 - (void)accept:(id)sender; - (void)cancel:(id)sender;
 @end
 @implementation PreviewDelegate
-- (void)accept:(id)sender { [self.controller acceptEditing]; [NSApp terminate:nil]; }
-- (void)cancel:(id)sender { [self.controller cancelEditing]; [NSApp terminate:nil]; }
+- (void)accept:(id)sender { [NSApp terminate:nil]; }
+- (void)cancel:(id)sender { [NSApp terminate:nil]; }
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)app { return YES; }
 @end
-#import "PreferenceCancel.h"
+
 static TSMemoryDefaults *memoryDefaults;
 static id InMemoryStandardDefaults(id self, SEL cmd) { return memoryDefaults; }
 static void PreventOrdering(id self, SEL cmd, NSWindowOrderingMode mode, NSInteger relative) {}
@@ -98,25 +98,25 @@ int main(int argc,char **argv) { @autoreleasepool {
         NSInteger pixels = 0; for (NSImageRep *rep in image.representations) pixels = MAX(pixels,rep.pixelsWide);
         Require(pixels >= 1024, @"High resolution artwork");
     }
-    [controller beginEditing];
+    [controller restoreSavedIcon];
     if (!preview) {
         Require(buttons[4].state == NSControlStateValueOn, @"Default current icon");
         for (NSInteger i = 0; i < 5; i++) {
             [buttons[i] performClick:nil];
             Require((NSApp.dockTile.contentView != nil) == (i != 4), @"Native custom drawing and reset");
-            [controller acceptEditing];
+
             Require([[defaults stringForKey:TSDockIconKey] isEqual:TSDockIconNames()[i]], @"Save choice in memory");
             TSDockIconController *fresh = [[TSDockIconController alloc] initWithBundle:bundle defaults:[NSUserDefaults standardUserDefaults]];
             [fresh restoreSavedIcon];
             Require([[fresh valueForKey:@"selection"] isEqual:TSDockIconNames()[i]], @"Restore across controller instances");
-            [controller beginEditing];
+            [controller restoreSavedIcon];
         }
-        [buttons[0] performClick:nil]; [controller cancelEditing];
-        Require([[defaults stringForKey:TSDockIconKey] isEqual:@"current"] && NSApp.dockTile.contentView == nil, @"Cancel preserves saved icon");
+        [buttons[0] performClick:nil];
+        Require([[defaults stringForKey:TSDockIconKey] isEqual:TSDockIconNames()[0]] && NSApp.dockTile.contentView != nil, @"click immediately saves custom icon");
         [defaults setObject:@"current" forKey:TSDockIconKey];
-        [controller beginEditing]; [buttons[2] performClick:nil];
+        [controller restoreSavedIcon]; [buttons[2] performClick:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowWillCloseNotification object:window];
-        Require(NSApp.dockTile.contentView == nil, @"Window-close cancels preview");
+        Require(NSApp.dockTile.contentView != nil && [[defaults stringForKey:TSDockIconKey] isEqual:TSDockIconNames()[2]], @"Window-close retains the saved selection");
         [defaults setObject:@"invalid-style" forKey:TSDockIconKey]; [controller restoreSavedIcon];
         Require(NSApp.dockTile.contentView == nil, @"Unknown preference falls back");
         Require([bundle objectForInfoDictionaryKey:@"NSDockTilePlugIn"] == nil, @"No resident Dock plug-in");
@@ -125,9 +125,9 @@ int main(int argc,char **argv) { @autoreleasepool {
         Require(probe.contentView != nil && [probe.badgeLabel isEqual:@"7"], @"Custom drawing does not alter badges");
         TSApplyDockIcon((id)probe,bundle,@"current");
         Require(probe.contentView == nil && [probe.badgeLabel isEqual:@"7"], @"Reset does not alter badges");
-        CheckPreferenceCancel();
 
-        puts("PASS: nib, five assets, preview, save, restore, cancel, close, fallback, badge property and production Cancel prefix");
+
+        puts("PASS: nib, five assets, immediate save, restore, close persistence, fallback and badge property");
         return 0;
     }
     if (snapshot) {
@@ -152,7 +152,7 @@ int main(int argc,char **argv) { @autoreleasepool {
         NSButton *b = (id)v; b.enabled = NO;
     }
     for (NSUInteger i = 0; i < 2; i++) {
-        NSButton *b = [NSButton buttonWithTitle:i ? @"OK" : @"Cancel" target:delegate action:i ? @selector(accept:) : @selector(cancel:)];
+        NSButton *b = [NSButton buttonWithTitle:@"Close" target:delegate action:i ? @selector(accept:) : @selector(cancel:)];
         b.frame = NSMakeRect(420+i*90,12,80,28); [window.contentView addSubview:b];
     }
     window.title = @"TeXShop Dock Icon Experiment";

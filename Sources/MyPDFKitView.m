@@ -1,3 +1,4 @@
+#import "TSPreferenceProfile.h"
 #import "TSKeyboardShortcuts.h"
 #import "TSPDFScreenRendering.h" // added by Terada
 /*
@@ -382,12 +383,8 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(changeMagnification:)
 												 name:MagnificationChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(rememberMagnification:)
-												 name:MagnificationRememberNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(revertMagnification:)
-												 name:MagnificationRevertNotification object:nil];
+
+
    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(previewBackgroundChange:)
@@ -7623,16 +7620,9 @@ else
 	[self resetMagnification];
 }
 
-- (void)rememberMagnification:(NSNotification *)aNotification
-{
-	oldMagnification = [self magnification];
-}
 
-- (void) revertMagnification:(NSNotification *)aNotification
-{
-	if (oldMagnification != [self magnification])
-		[self setMagnification: oldMagnification];
-}
+
+
 
 
 // Left and right arrows perform page up and page down if horizontal scroll bar is inactive
@@ -8068,6 +8058,7 @@ else
 
 - (void)previewAppearanceDefaultsChanged:(NSNotification *)notification
 {
+    if (TSPreferenceProfileIsApplying()) return;
     [self updateDarkModeInversion];
 }
 

@@ -491,7 +491,11 @@ Creating a new template with TeXShop is easy. If you like, start with an existin
 \section{Preference Design}
 \label{MenuDesign}
 
-TeXShop has a Preference Panel, which can be opened using the {\bf Preferences...} item in the main TeXShop menu. In macOS Ventura and later, this item is renamed {\bf Settings}. The panel has tabs which display various related groups of preference settings. At bottom right are two buttons labeled {\bf Cancel} and {\bf OK}. It is necessary to push {\bf OK} after making changes if you want these changes to take effect. Some changes take effect immediately, while others become active when documents are reopened.
+TeXShop Settings opens from the main TeXShop menu. Its tabs group related settings. Changes are saved as they are made; there are no whole-window OK or Cancel buttons. Press Return or leave a text field to validate and save it. Closing the window or changing tabs also validates input. If a value is invalid, correct it or restore that field alone. Closing with the close button or Command-W keeps successful changes. Some settings affect open windows immediately; defaults for newly opened documents take effect when those documents open.
+
+The settings-profile menu first shows its reset scope and the selected TeX engine path. Applying a profile resets known editing, engine, display, hidden settings and the running Dock icon. Shortcuts, system language and key equivalents, window layouts, automatic updates, theme files and unknown settings are preserved. Theme selections may change. A profile is applied immediately after confirmation; closing Settings does not undo it.
+
+The zoom setting in Preview is the default for newly opened PDFs. Existing PDF windows keep their zoom and position. Source and console font settings update open windows immediately.
 
 TeXShop also has menu items to change its behavior. These items often duplicate items that can be set in Preferences. There is a big difference between setting a behavior with a menu item, and setting the same behavior in Preferences.
 %
@@ -501,7 +505,7 @@ TeXShop also has menu items to change its behavior. These items often duplicate 
 
 For example, the Source menu has an item called {\bf Show Syntax Color} and Preferences under the Edit tab has a check box labeled {\bf Syntax Coloring}. The menu toggles syntax coloring on or off in the active source window. Select one of  two source files, say file A, and toggle until syntax coloring is on. Select a second file B, and toggle until syntax coloring is off. Notice that each window remembers its state, so if you make file A active, it will be syntax colored, and if you make file B active, it will not be syntax colored. When file A is brought forward, the syntax color menu item is checked and when file B is brought forward, the syntax color menu item is unchecked.
 
-The {\bf Syntax Coloring} preference item does not change syntax coloring in these two files. Instead, it determines whether new documents will have syntax coloring or not when first opened. Uncheck the item and press OK. Then open a new document and notice that it has no syntax coloring.
+The {\bf Syntax Coloring} preference item does not change syntax coloring in these two files. Instead, it determines whether new documents will have syntax coloring or not when first opened. Uncheck the item. Then open a new document and notice that it has no syntax coloring.
 
 \section{Source Font and Font Size}\label{Font_Size}
 
@@ -517,7 +521,7 @@ The remarks about keyboard shortcuts in the previous two paragraphs apply to a U
 
 The source font itself can be changed using a menu command, but this is almost never done. Instead users make the change in Preferences so it will affect all future source windows.
 
-To change the font in the Source Window, open the  {\em Source} tab of Preferences. Push the {\em Set} button and the Font Panel will appear. Use this panel to select a new source font and its size. What happens next is one of those slight modifications of our design philosophy --- the font and font size immediately change in all open windows. We do that so users can immediately see the effect of the change and experiment until they get exactly the correct behavior. Selection is not yet finished. In the end, push {\em Cancel} or {\em OK}. Pushing {\em Cancel} reverts to the old font and size in all open windows, while {\em OK} accepts the change for all open windows and for windows opened in the future. 
+To change the font in the Source Window, open the {\em Source} tab of Settings and press {\em Set}. Choose a font and size in the Font Panel. The change is immediately saved and applied to open source windows and to future windows. Closing Settings keeps the choice. The Console font is selected separately and updates open console windows.
 
 It is useful to choose a monospace font for the source file, since then all characters have the same width and list items and the like will line up. 
 
@@ -988,7 +992,7 @@ Homebrew, or MikTeX, the location of the binaries will be different. Consult the
 
 The second item in the tab is a full path to the Ghostscript binary. This is /usr/local/bin for the copy of Ghostscript installed by MacTeX. The standard build sequence for Ghostscript will also install it at this location. If you use the Ghostscript in MacPorts or Homebrew, consult their documentation for the proper location. Many typesetting engines do not use Ghostscript, so this is not a crucial preference item.
 
-Starting with TeXShop 5.60, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Auto Setup...} in the Path settings box of the Engine tab is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Nothing changes until {\bf Use These Paths} is pressed, and in Settings the change can still be undone with {\bf Cancel}. If nothing is found, the current settings are kept. Custom engines and the Alternate Path are never changed. Installations in other places can still be entered by hand.
+Starting with TeXShop 5.60, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Auto Setup...} in the Path settings box of the Engine tab is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Nothing changes until {\bf Use These Paths} is pressed, after which the selected paths are saved immediately. Cancel in the path-selection dialog leaves the settings unchanged. If nothing is found, the current settings are kept. Custom engines and the Alternate Path are never changed. Installations in other places can still be entered by hand.
 
 The Alternate Path preference will be explained later and is not used by the toolchains discussed in this chapter.
 
@@ -3540,19 +3544,19 @@ Gary Gray contributed GLG-Dark for Dark mode. Gray then tweaked this theme, and 
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
    \includegraphics[width=5.5in]{Graphics/Theme.png} 
-   \caption{Theme Preference Items}
+   \caption{Theme Preference Items (earlier layout; current versions save immediately)}
    \label{fig:Theme}
 \end{figure}
 
 There is no distinction between themes for Lite Mode and themes for Dark Mode. Thus nothing prevents a user from setting both Lite Mode  and Dark Mode to the same theme.
 
 
-After editing a theme, push ``Cancel'' or ``OK'' to end a preference session. If ``Cancel'' is pressed, the edited colors will not be saved and the Lite Mode and Dark Mode themes will return to choices before opening the Preference Pane. If ``OK'' is pressed, the edited colors will be saved and Lite Mode or Dark Mode themes will change to their new values.
+Theme edits are saved immediately. Documents refresh only after the theme file has been saved successfully, using their own light or dark theme selection. On failure, the editing controls and in-memory colors return to the last saved colors and an error is shown. Closing Settings does not undo saved edits.
 
 
-Some users may want to edit several different themes during a session. When these users are finished editing their first theme, they should press ``Save Edited Theme.'' This will save the changes for that  theme {\em permanently}, even if the entire session is ended using the ``Cancel'' button. Repeat the process for other themes. 
+To keep the original theme, duplicate it with ``Create New Theme'' before changing its colors. The ``Theme to Edit'' menu shows the theme currently being edited. Each successful change is saved; there is no separate ``Save Edited Theme'' button.
 
-To create a new theme, first change ``Theme to Edit'' to obtain reasonable starting colors for your new theme. Then push ``Create New Theme'' and fill in the resulting dialog with a title for this theme. Do not use spaces in this title. The new theme will become the ``Theme to Edit'' and you can begin changing colors.
+To create a new theme, first change ``Theme to Edit'' to obtain reasonable starting colors for your new theme. Then push ``Create New Theme'' and fill in the resulting dialog with a title for this theme. Use a filename without path separators. The new theme will become the ``Theme to Edit'' and you can begin changing colors.
 
 One final item in the left column must be explained, but it is essentially obsolete. When the theme panel was first introduced, some users had spent time using the original color preference system to revise the default colors, only to have that system ripped out of the program. Their color preference choices, however, still remained in the Preferences data base. The button ``New Theme from Prefs'' created a new color theme using these old preference choices. There is just one other use for this button which someone might conceivably still use. When the old color preference system existed, some people on the internet developed color themes for TeXShop and made them available as shell scripts which reset various TeXShop color setting preferences. These shell scripts still work, but they no longer affect the appearance of TeXShop. After running such a script, you can use ``New Theme from Prefs'' to convert the old scripted theme to a regular new Theme.
 
@@ -3567,7 +3571,7 @@ saves the edited file, the new version does not quite meet required standards fo
 
 You can  remove Themes you no longer use by removing their plist files from the Themes folder. Avoid removing themes being used for Lite Mode or Dark Mode (although TeXShop should react gracefully when it runs into this situation). As explained earlier, the themes LiteTheme and DarkTheme will be recreated if they are removed. 
 
-When a theme is selected for editing, TeXShop colors will temporarily be reset to those colors. Revising colors is then interactive; as soon as colors change in Preferences, they will also change in TeXShop's Source and Preview windows. But the new colors only become permanent after you press ``OK''.
+Selecting a theme to edit only fills the color wells. It does not temporarily apply that theme to every document. Editing an unused theme leaves the current document colors unchanged. Choosing Lite Mode or Dark Mode themes saves those selections and updates the corresponding documents immediately.
 
 Finally we explain the actual color choices. At the top of the Theme Panel, the Foreground and Background colors can be set for the Source, Console, and Log Windows, and the Background color can be set for the Preview Window. For each of these except the Log window, transparency can also be set. In color theory, alpha value sets transparency.  Transparency settings bring up a full Color Well, but the colors of these items are ignored and only the alpha values of the choices matter. 
 
@@ -4415,7 +4419,7 @@ The final way to spell check is to use the menu item {\em Check Spelling While T
 
 \section{TeX-aware Spell Checking}
 
-TeXShop 5.60 adds TeX-aware spell checking, based on an implementation proposed by Ralph Martin. It is on by default, and can be turned off with the item {\bf TeX-aware spell checking} under the Source tab of TeXShop Settings. The item does not turn on {\em Check Spelling While Typing}.
+TeXShop 5.60 adds TeX-aware spell checking, based on an implementation proposed by Ralph Martin. It is on by default, and can be turned off with the item {\bf LaTeX-aware spell checking} under the Source tab of TeXShop Settings. The item does not turn on {\em Check Spelling While Typing}.
 
 TeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
 
@@ -4431,7 +4435,7 @@ What is skipped is described by rules in the file
 \begin{verbatim}
      ~/Library/TeXShop/SpellCheck/SpellingExclusions.txt
 \end{verbatim}
-Open it with {\em Edit Spelling Exclusions...} in the Spelling and Grammar submenu, or with the button {\bf Edit TeX exclusion rules...} in TeXShop Settings. The file explains its format at the top, and changes take effect the next time you spell check. For example, the following lines skip the first argument of a command \verb|\mycommand| and the contents of the \verb|proof| environment:
+Open it with {\em Edit Spelling Exclusions...} in the Spelling and Grammar submenu, or with the button {\bf Edit LaTeX exclusion rules...} in TeXShop Settings. The file explains its format at the top, and changes take effect the next time you spell check. For example, the following lines skip the first argument of a command \verb|\mycommand| and the contents of the \verb|proof| environment:
 \begin{verbatim}
      skip-args  1  mycommand
      skip-body  proof
@@ -6966,4 +6970,4 @@ The TeXShop program icon is by Thiemo Gamma. Designing icons is the most difficu
 Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the Misc2 tab of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
 
 
-\end{document}  
+\end{document}

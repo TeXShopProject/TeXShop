@@ -8,7 +8,6 @@
 @property (strong) NSUserDefaults *defaults;
 @property (copy) NSString *selection;
 @property (strong) NSMutableArray<NSButton *> *buttons;
-@property BOOL editing;
 @end
 @implementation TSDockIconController
 + (instancetype)sharedController {
@@ -38,7 +37,9 @@
     TSApplyDockIcon(NSApp.dockTile, self.bundle, self.selection);
 }
 - (void)chooseIcon:(NSButton *)sender {
+    if (sender.tag < 0 || (NSUInteger)sender.tag >= TSDockIconNames().count) return;
     self.selection = TSDockIconNames()[sender.tag];
+    [self.defaults setObject:self.selection forKey:TSDockIconKey];
     [self updatePreview];
 }
 - (void)installInPreferences:(NSTabView *)tabs {
@@ -65,7 +66,6 @@
     group.toolTip = [self text:@"Applies while TeXShop is running. The standard icon returns after quitting."];
     group.autoresizingMask = NSViewMinYMargin;
     [misc addSubview:group];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesClosed:) name:NSWindowWillCloseNotification object:tabs.window];
     NSView *panel = group.contentView;
     NSArray *titles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
     NSArray *details = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
@@ -91,16 +91,4 @@
         [panel addSubview:image];
     }
 }
-- (void)beginEditing { self.editing = YES; [self restoreSavedIcon]; }
-- (void)acceptEditing {
-    if (!self.editing) return;
-    [self.defaults setObject:self.selection forKey:TSDockIconKey];
-    [self.defaults synchronize];
-    self.editing = NO;
-}
-- (void)cancelEditing { self.editing = NO; [self restoreSavedIcon]; }
-- (void)preferencesClosed:(NSNotification *)notification {
-    if (self.editing) [self cancelEditing];
-}
-- (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
 @end

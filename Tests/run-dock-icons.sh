@@ -27,7 +27,6 @@ cat > "$app/Contents/Info.plist" <<PLIST
 <key>CFBundleIconFile</key><string>TeXShop</string>
 </dict></plist>
 PLIST
-python3 "$root/Tests/extract-dock-preferences.py" "$build/PreferenceCancel.h"
 test_source="$root/Tests/DockIcons.m"
 if [ "${1:-}" = --mutation-persistent-defaults ]; then
     python3 - "$test_source" "$build/DockIcons.m" <<'PYM'
