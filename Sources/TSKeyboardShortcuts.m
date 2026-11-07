@@ -470,23 +470,43 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
             }
         }
     }
-    // A single input can have several recorder spellings. Display ownership in
-    // menu order across all matches, without changing raw assignment comparisons.
-    NSMutableArray<TSShortcutMatch *> *ordered = [NSMutableArray array];
+    // Recorded and shifted input spellings are searched before the unshifted
+    // fallback. Keep priority independent of deduplication used to gather results.
+    NSArray<NSDictionary *> *primaryBindings = @[
+        TSRecordedBinding(event, [event charactersByApplyingModifiers:0]),
+        TSBinding(TSShortcutCharacterForEvent(event), event.modifierFlags)
+    ];
     NSMapTable<NSMenuItem *, TSShortcutMatch *> *byItem = [NSMapTable strongToStrongObjectsMapTable];
     for (TSShortcutMatch *match in menus) { [byItem setObject:match forKey:match.menuItem]; }
+    NSMutableDictionary<NSDictionary *, TSShortcutMatch *> *activeMacros = [NSMutableDictionary dictionary];
+    for (TSShortcutMatch *match in macroMatches) {
+        TSShortcutMacro *macro = match.macro;
+        if (macro != nil && match.winner) { activeMacros[TSBinding(macro.key, macro.modifiers)] = match; }
+    }
+    NSMutableArray<TSShortcutMatch *> *orderedMenus = [NSMutableArray array];
+    __block TSShortcutMatch *winner = nil;
+    __block NSUInteger winningTier = NSUIntegerMax;
+    // A raw-active macro competes at its live doMacro: item's position, not
+    // after every menu. This affects search display only, never stored bindings.
     TSVisitMenu(store.menu, @"", ^(NSMenuItem *item, NSString *path) {
         TSShortcutMatch *match = [byItem objectForKey:item];
+        if (match != nil) { [orderedMenus addObject:match]; }
+        NSDictionary *binding = TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask);
+        if (match == nil && item.action == NSSelectorFromString(@"doMacro:") && item.keyEquivalent.length > 0) {
+            match = activeMacros[binding];
+        }
         if (match == nil) { return; }
-        [ordered addObject:[[TSShortcutMatch alloc] initWithPath:match.path menuItem:item command:match.command macro:nil winner:ordered.count == 0]];
+        NSUInteger tier = [primaryBindings containsObject:binding] ? 0 : 1;
+        if (tier < winningTier) { winner = match; winningTier = tier; }
     });
-    BOOL hasWinner = ordered.count > 0;
+    NSMutableArray<TSShortcutMatch *> *ordered = [NSMutableArray array];
+    for (TSShortcutMatch *match in orderedMenus) {
+        [ordered addObject:[[TSShortcutMatch alloc] initWithPath:match.path menuItem:match.menuItem command:match.command macro:nil winner:match == winner]];
+    }
     for (TSShortcutMacro *macro in macros) {
         for (TSShortcutMatch *match in macroMatches) {
             if (match.macro != macro) { continue; }
-            BOOL winner = match.winner && !hasWinner;
-            [ordered addObject:[[TSShortcutMatch alloc] initWithPath:match.path menuItem:nil command:nil macro:macro winner:winner]];
-            hasWinner = hasWinner || winner;
+            [ordered addObject:[[TSShortcutMatch alloc] initWithPath:match.path menuItem:nil command:nil macro:macro winner:match == winner]];
         }
     }
     return [ordered copy];

@@ -1,5 +1,5 @@
-#import "TSMacroSelection.h"
 // Settings integration tests. No visible windows, user defaults or macro files.
+#import "TSMacroSelection.h"
 #import "TestAppKitIsolation.h"
 #import "TSKeyboardShortcuts.m"
 #import "TSSettingsCategory.h"
@@ -33,6 +33,52 @@ static NSEvent *Event(NSString *text,NSUInteger flags,NSUInteger code){return [N
 @end
 static NSMenuItem *Item(NSString *title,NSString *key,NSUInteger flags){NSMenuItem *item=[[NSMenuItem alloc]initWithTitle:title action:@selector(description) keyEquivalent:key];item.identifier=[@"TSShortcut." stringByAppendingString:title];item.keyEquivalentModifierMask=flags;item.allowsAutomaticKeyEquivalentLocalization=NO;return item;}
 static TSShortcutMacro *Macro(NSString *name,NSString *key,NSUInteger flags,NSUInteger index){return [[TSShortcutMacro alloc]initWithName:name path:[@"Group ▸ " stringByAppendingString:name] indexPath:[NSIndexPath indexPathWithIndex:index] serializedKey:key key:key modifiers:flags];}
+static void CheckEventPriority(void) {
+ const NSUInteger C=NSEventModifierFlagCommand,S=NSEventModifierFlagShift;
+ // Before / nested Macros / After mirrors the application's top-level order.
+ NSArray<NSDictionary *> *cases=@[
+  @{@"input":@"+",@"plain":@"=",@"flags":@(C|S),@"after":@[@"=",@(C|S)],@"macros":@[@[@"+",@(C)]],@"winner":@"macro0"},
+  @{@"input":@"?",@"plain":@"/",@"flags":@(C|S),@"after":@[@"?",@(C)],@"macros":@[@[@"?",@(C|S)]],@"winner":@"macro0"},
+  @{@"input":@"=",@"plain":@"0",@"flags":@(C|S),@"before":@[@"=",@(C)],@"macros":@[@[@"0",@(C|S)]],@"winner":@"before"},
+  @{@"input":@"1",@"plain":@"+",@"flags":@(C|S),@"after":@[@"1",@(C)],@"macros":@[@[@"+",@(C|S)]],@"winner":@"after"},
+  @{@"input":@"1",@"plain":@"+",@"flags":@(C|S),@"before":@[@"+",@(C|S)],@"after":@[@"1",@(C)],@"macros":@[],@"winner":@"after"},
+  @{@"input":@"z",@"plain":@"z",@"flags":@(C),@"macros":@[@[@"z",@(C)]],@"winner":@"macro0"},
+  @{@"input":@"?",@"plain":@"/",@"flags":@(C|S),@"macros":@[@[@"?",@(C|S)],@[@"?",@(C)]],@"winner":@"macro0"},
+  @{@"input":@"z",@"plain":@"z",@"flags":@(C),@"macros":@[@[@"z",@(C)],@[@"z",@(C)]],@"winner":@"macro0"},
+  @{@"input":@"z",@"plain":@"z",@"flags":@(C),@"after":@[@"z",@(C)],@"macros":@[@[@"z",@(C)]],@"winner":@"after"},
+  // Letter input does not acquire an unshifted punctuation fallback.
+  @{@"input":@"a",@"plain":@"+",@"flags":@(C|S),@"before":@[@"+",@(C|S)],@"after":@[@"a",@(C|S)],@"macros":@[],@"winner":@"after"}
+ ];
+ for(NSDictionary *c in cases){
+  NSMenu *main=[NSMenu new],*before=[NSMenu new],*macroMenu=[NSMenu new],*after=[NSMenu new];
+  for(NSMenu *menu in @[before,macroMenu,after]){NSMenuItem *root=Item(@"Group",@"",0);root.submenu=menu;[main addItem:root];}
+  NSMenuItem *beforeItem=nil,*afterItem=nil;
+  if(c[@"before"]){NSArray *b=c[@"before"];beforeItem=Item(@"Before",b[0],[b[1] unsignedIntegerValue]);[before addItem:beforeItem];}
+  if(c[@"after"]){NSArray *b=c[@"after"];afterItem=Item(@"After",b[0],[b[1] unsignedIntegerValue]);[after addItem:afterItem];}
+  TSShortcutStore *store=[[TSShortcutStore alloc]initWithMenu:main defaults:TSIsolatedAppKitDefaults];
+  NSMenu *nested=[NSMenu new];NSMenuItem *folder=Item(@"Folder",@"",0);folder.submenu=nested;[macroMenu addItem:folder];[nested addItem:NSMenuItem.separatorItem];
+  NSMutableArray<TSShortcutMacro *> *macros=[NSMutableArray array];NSMutableArray<NSDictionary *> *raw=[NSMutableArray array];
+  for(NSArray *b in c[@"macros"]){
+   TSShortcutMacro *macro=Macro([NSString stringWithFormat:@"macro%lu",macros.count],b[0],[b[1] unsignedIntegerValue],macros.count);
+   [macros addObject:macro];[raw addObject:@{@"path":macro.path,@"key":macro.key,@"modifiers":@(macro.modifiers)}];
+  }
+  NSMutableIndexSet *inactive=[NSMutableIndexSet indexSet];
+  for(NSDictionary *conflict in [store conflictsForMacroShortcuts:raw]){[inactive addIndex:[conflict[@"index"] unsignedIntegerValue]];}
+  for(NSUInteger index=0;index<macros.count;index++){
+   TSShortcutMacro *macro=macros[index];NSMenuItem *item=Item(macro.name,[inactive containsIndex:index]?@"":macro.key,macro.modifiers);item.action=@selector(doMacro:);item.identifier=nil;[nested addItem:item];
+  }
+  fixtureCharacters=c[@"plain"];
+  NSArray<TSShortcutMatch *> *hits=[TSShortcutSearch matchesEvent:Event(c[@"input"],[c[@"flags"] unsignedIntegerValue],0) store:store macros:macros];
+  NSUInteger winners=0,macroIndex=0;NSString *actual=nil;
+  for(TSShortcutMatch *hit in hits){
+   if(hit.macro){REQUIRE(hit.macro==macros[macroIndex]);macroIndex++;}
+   if(!hit.winner)continue;
+   winners++;actual=hit.macro!=nil?hit.macro.name:hit.menuItem==beforeItem?@"before":@"after";
+  }
+  REQUIRE(winners==1 && [actual isEqual:c[@"winner"]] && macroIndex==macros.count);
+ }
+ puts("PASS: nested live macro positions, primary/fallback tiers, raw inactive macros, macro-only and file-order owners");
+}
 static NSWindow *sheetParent;
 static NSWindow *fakeSheetOwner;
 static NSWindow *fakeAttachedSheet;
@@ -54,6 +100,7 @@ int main(int argc,char **argv){@autoreleasepool{
  TSReplaceTestMethod(class_getInstanceMethod(NSEvent.class,@selector(charactersByApplyingModifiers:)),(IMP)Characters);
  TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(keyDown:)),(IMP)RejectForwardedKey);
  class_addMethod(TSSettingsWindow.class,@selector(isKeyWindow),(IMP)IsKey,"B@:");
+ CheckEventPriority();
  NSMenu *main=[NSMenu new],*menu=[NSMenu new];NSMenuItem *root=[[NSMenuItem alloc]initWithTitle:@"Actions" action:NULL keyEquivalent:@""];root.submenu=menu;[main addItem:root];NSApp.mainMenu=main;
  NSMenuItem *first=Item(@"First",@"f",C),*second=Item(@"Second",@"f",C),*equals=Item(@"Equals",@"=",C);
  for(NSMenuItem *item in @[first,second,equals])[menu addItem:item];
@@ -71,6 +118,22 @@ int main(int argc,char **argv){@autoreleasepool{
  [coordinator.store restoreAll];
  NSArray *macros=@[Macro(@"First macro",@"f",C,0),Macro(@"Free",@"z",C,1),Macro(@"Later free",@"z",C,2),Macro(@"JIS",@"-",C|S,3)];
  coordinator.macroProvider=^{return macros;};
+ NSMenu *liveMacros=[NSMenu new];NSMenuItem *macroRoot=Item(@"Macros",@"",0);macroRoot.submenu=liveMacros;[main addItem:macroRoot];
+ for(NSUInteger index=0;index<macros.count;index++){
+  TSShortcutMacro *macro=macros[index];NSMenuItem *item=Item(macro.name,(index==1 || index==3)?macro.key:@"",macro.modifiers);item.action=@selector(doMacro:);item.identifier=nil;[liveMacros addItem:item];
+ }
+
+ id macroObserver=[[NSNotificationCenter defaultCenter] addObserverForName:TSRebuildMacrosNotification object:coordinator queue:nil usingBlock:^(NSNotification *notification){
+  NSMutableArray *raw=[NSMutableArray array];
+  for(TSShortcutMacro *macro in macros)[raw addObject:@{@"path":macro.path,@"key":macro.key,@"modifiers":@(macro.modifiers)}];
+  NSMutableIndexSet *inactive=[NSMutableIndexSet indexSet];
+  for(NSDictionary *conflict in [coordinator conflictsForMacroShortcuts:raw])[inactive addIndex:[conflict[@"index"] unsignedIntegerValue]];
+  for(NSUInteger index=0;index<macros.count;index++){
+   TSShortcutMacro *macro=macros[index];NSMenuItem *item=[liveMacros itemAtIndex:index];
+   item.keyEquivalent=[inactive containsIndex:index]?@"":macro.key;item.keyEquivalentModifierMask=macro.modifiers;
+  }
+ }];
+
  NSArray<TSShortcutMatch *> *hits=[TSShortcutSearch matchesKey:@"f" modifiers:C store:coordinator.store macros:macros];
  REQUIRE(hits.count==3 && hits[0].menuItem==first && hits[0].winner && !hits[1].winner && !hits[2].winner);
  REQUIRE([coordinator.store conflictForKey:@"f" modifiers:C except:nil restoring:nil]!=nil);
@@ -115,7 +178,7 @@ int main(int argc,char **argv){@autoreleasepool{
  REQUIRE(pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];[pane updateSelectionButtons];
  REQUIRE(!pane.selectionButtons[0].enabled && pane.macroButton.enabled);
- fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];REQUIRE(pane.searchMatches.count==2 && pane.table.selectedRow==1 && [pane macroHeaderRow]==0);
+ fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];REQUIRE(pane.searchMatches.count==2 && pane.searchMatches[0].winner && !pane.searchMatches[1].winner && pane.table.selectedRow==1 && [pane macroHeaderRow]==0);
  fixtureCharacters=@"x";[shell.window performKeyEquivalent:Event(@"x",C,7)];REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"No command"]);
  REQUIRE([shell.window makeFirstResponder:pane.table]);fixtureCharacters=@"x";[shell.window keyDown:Event(@"x",0,7)];REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"cannot be used"] && forwardedKeys==0);
  // Existing non-assignable shortcuts remain searchable, but new assignments stay restricted.
@@ -212,5 +275,6 @@ int main(int argc,char **argv){@autoreleasepool{
   fprintf(stdout,"PASS: %s pane controls fit minimum content size\n",language.UTF8String);
  }}
  localizedStrings=nil;method_setImplementation(class_getInstanceMethod(NSBundle.class,@selector(localizedStringForKey:value:table:)),originalLocalization);
+ [[NSNotificationCenter defaultCenter] removeObserver:macroObserver];
  REQUIRE(TSIsolatedAppKitDefaults==NSUserDefaults.standardUserDefaults);
 }}
