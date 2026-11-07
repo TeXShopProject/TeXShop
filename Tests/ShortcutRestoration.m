@@ -105,8 +105,8 @@ int main(int argc,char **argv) { @autoreleasepool {
     RestorationStore *store=[[RestorationStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)defaults];store.layout=us;
     Method method=class_getInstanceMethod(NSEvent.class,@selector(charactersByApplyingModifiers:));
     IMP old=method_setImplementation(method,(IMP)Unshifted);
-    NSUInteger exercised=0, factory=0;
-    NSArray *layoutIDs=@[@"US",@"ABC",@"German",@"Danish",@"Turkish",@"Polish",@"Czech",@"Hungarian",@"French-PC",@"DVORAK-QWERTYCMD"];
+    NSUInteger exercised=0, factory=0, selfRestores=0, highCodeConflicts=0;
+    NSArray *layoutIDs=@[@"US",@"ABC",@"German",@"Danish",@"Turkish",@"Polish",@"Czech",@"Hungarian",@"French-PC",@"DVORAK-QWERTYCMD",@"Macedonian"];
     for (NSString *layoutID in layoutIDs) for (NSNumber *keyboard in @[@40,@41,@48]) { @autoreleasepool {
         store.layout=Layout([@"com.apple.keylayout." stringByAppendingString:layoutID]);store.keyboard=keyboard.unsignedIntValue;
         [store restoreAll];
@@ -142,7 +142,9 @@ int main(int argc,char **argv) { @autoreleasepool {
             TSShortcutCommand *zoom=Find(store,ident); REQUIRE(zoom);
             NSDictionary *original=TSBinding(zoom.defaultKey,zoom.defaultModifiers);
             NSEvent *chosen=nil;
-            for(UInt16 code=0;code<128;code++) {
+            // Exercise keypad-only spellings rather than stopping at a main-row match.
+            UInt16 firstCode=[layoutID isEqual:@"Macedonian"]?64:0;
+            for(UInt16 code=firstCode;code<128;code++) {
                 if (code==66||code==68||code==70||code==72||code==73||code==74||code==77) continue;
                 NSEvent *event=KeyEvent(store.layout,code,C|S,store.keyboard);
                 NSString *plain=Input(store.layout,code,0,store.keyboard);
@@ -153,6 +155,27 @@ int main(int argc,char **argv) { @autoreleasepool {
                 }
             }
             if (!chosen) continue; // Some physical layouts need only the unchanged raw check.
+            // Recording a command's own default stroke can save a different raw spelling.
+            // Its own live override must not prevent restoring the original spelling.
+            RestorationUI *selfUI=[[RestorationUI alloc] initWithWindow:nil];
+            selfUI.store=store;selfUI.editingCommand=zoom;selfUI.selection=zoom;
+            selfUI.captureDisplay=[NSTextField new];selfUI.captureError=[NSTextField new];selfUI.applyButton=[NSButton new];
+            [selfUI recordShortcutEvent:chosen];
+            if (![selfUI conflictForCapturedShortcut]) {
+                REQUIRE(selfUI.applyButton.enabled);
+                [selfUI applyCapturedShortcut:nil];
+                NSDictionary *recorded=TSBinding(selfUI.capturedKey,selfUI.capturedModifiers);
+                REQUIRE(![recorded isEqual:original]);
+                REQUIRE([TSBinding(zoom.item.keyEquivalent,zoom.item.keyEquivalentModifierMask) isEqual:recorded]);
+                REQUIRE([store.overrides[zoom.commandID] isEqual:recorded]);
+                REQUIRE([[defaults objectForKey:TSMenuShortcutOverridesKey][zoom.commandID] isEqual:recorded]);
+                [selfUI restoreShortcut:nil];
+                REQUIRE(!selfUI.error);
+                REQUIRE([TSBinding(zoom.item.keyEquivalent,zoom.item.keyEquivalentModifierMask) isEqual:original]);
+                REQUIRE(store.overrides.count==0 && ![defaults objectForKey:TSMenuShortcutOverridesKey]);
+                selfRestores++;
+            }
+            [store restoreAll];
             REQUIRE(![store setKey:@"z" modifiers:C|K forCommand:zoom]);
             RestorationUI *ui=[[RestorationUI alloc] initWithWindow:nil];ui.store=store;ui.editingCommand=typeset;ui.selection=zoom;
             ui.captureDisplay=[NSTextField new];ui.captureError=[NSTextField new];ui.applyButton=[NSButton new];
@@ -178,6 +201,7 @@ int main(int argc,char **argv) { @autoreleasepool {
             REQUIRE(![store conflictForRestoringCommand:zoom]);
             [macro.menu removeItem:macro];
             exercised++;
+            if (chosen.keyCode>=64) highCodeConflicts++;
         }
     }}
     [store restoreAll];
@@ -190,5 +214,8 @@ int main(int argc,char **argv) { @autoreleasepool {
     [dynamic.menu removeItem:dynamic];
     method_setImplementation(method,old);[store restoreAll];
     REQUIRE(exercised>=2);
-    printf("PASS: %s layouts=10 keyboardTypes=ANSI40/ISO41/JIS48 factory restores=%lu, conflict sequences=%lu; raw priority preserved\n",argv[1],(unsigned long)factory,(unsigned long)exercised);
+    NSString *nibPath=@(argv[1]);
+    if ([nibPath containsString:@"/Base.lproj/"] || [nibPath containsString:@"/ja.lproj/"]) REQUIRE(selfRestores>0);
+    if ([nibPath containsString:@"/Base.lproj/"]) REQUIRE(highCodeConflicts>0);
+    printf("PASS: %s layouts=%lu keyboardTypes=ANSI40/ISO41/JIS48 factory restores=%lu, conflict sequences=%lu, own-stroke restores=%lu, high-code conflicts=%lu; raw priority preserved\n",argv[1],(unsigned long)layoutIDs.count,(unsigned long)factory,(unsigned long)exercised,(unsigned long)selfRestores,(unsigned long)highCodeConflicts);
 }return 0;}

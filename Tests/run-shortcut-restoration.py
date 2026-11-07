@@ -25,6 +25,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcut-restore-') as td:
             'restore store checks raw spelling only': ('[self conflictForRestoringCommand:command]','[self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command]'),
             'restore UI checks raw spelling only': ('[self.store conflictForRestoringCommand:command]','[self.store conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command]'),
             'restoration conflicts with itself': ('except:command.item restoring:command];','except:nil restoring:command];'),
+            'restoration aliases conflict with own override': ('other.item != command.item && self.overrides[other.commandID]', 'self.overrides[other.commandID]'),
+            'restoration omits key codes 64 and above': ('for (UInt16 code = 0; code < 128; code++)', 'for (UInt16 code = 0; code < 64; code++)'),
         }
         for name,(before,after) in cases.items():
             assert production.count(before)==1,(name,before)
