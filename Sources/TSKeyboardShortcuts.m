@@ -50,16 +50,17 @@ static NSDictionary *TSBinding(NSString *key, NSEventModifierFlags flags) {
     if (source) CFRelease(source);
     return binding;
 }
-// Command switches non-Latin layouts to their Latin shortcut layer. Do not use
+// Honor the Command layer, including Dvorak–QWERTY Command. Do not use
 // characters directly for Option/Control combinations (for example Option-G = ©).
 static NSString *TSShortcutCharacterForEvent(NSEvent *event) {
     NSString *key = event.charactersIgnoringModifiers ?: @"";
-    if (!(event.modifierFlags & NSEventModifierFlagCommand) || key.length != 1 ||
-        [key characterAtIndex:0] < 0x80 || [key characterAtIndex:0] >= 0xf700) return key;
+    if (!(event.modifierFlags & NSEventModifierFlagCommand)) return key;
     NSString *characters = event.characters;
     if (!(event.modifierFlags & (NSEventModifierFlagOption | NSEventModifierFlagControl)) &&
         characters.length == 1 && [characters characterAtIndex:0] >= 0x20 && [characters characterAtIndex:0] < 0x7f)
-        return characters;
+        // Shift comes from the event flags; Caps Lock must not add Shift.
+        return characters.lowercaseString;
+    if (key.length != 1 || [key characterAtIndex:0] < 0x80 || [key characterAtIndex:0] >= 0xf700) return key;
     TISInputSourceRef source = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
     CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
     NSString *latin = TSTranslateKey(data, event.keyCode, (event.modifierFlags & NSEventModifierFlagShift) != 0, LMGetKbdType());

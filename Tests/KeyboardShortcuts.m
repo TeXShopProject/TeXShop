@@ -96,6 +96,14 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(![store restoreCommand:Command(store,a.identifier)]);
     REQUIRE([a.keyEquivalent isEqual:@"a"]);
     puts("PASS: conflict rejection, change, removal, refresh preserving baseline and restoration");
+    REQUIRE(![store setKey:@"x" modifiers:cmd forCommand:Command(store,a.identifier)]);
+    REQUIRE(![store setKey:@"a" modifiers:cmd forCommand:Command(store,b.identifier)]);
+    REQUIRE([store setKey:@"a" modifiers:cmd forCommand:Command(store,a.identifier)] != nil);
+    REQUIRE([store restoreCommand:Command(store,a.identifier)] != nil);
+    REQUIRE([a.keyEquivalent isEqual:@"x"] && [b.keyEquivalent isEqual:@"a"]);
+    REQUIRE(store.unavailableCommands.count == 0);
+    [store restoreAll];
+    puts("PASS: recording the original shortcut rejects a conflicting custom assignment without displacing it");
 
     // Swapped saved bindings must not be lost to AppKit's duplicate-key suppression.
     defaults.values[TSMenuShortcutOverridesKey] = @{a.identifier:Saved(@"b"), b.identifier:Saved(@"a")};
@@ -193,7 +201,8 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([TSBindingWithLayout(@"-",cmd|shift,data,40) isEqual:TSBindingWithLayout(@"_",cmd,data,40)]);
     REQUIRE([TSBindingWithLayout(@"G",cmd,data,40) isEqual:TSBindingWithLayout(@"g",cmd|shift,data,40)]);
     REQUIRE([TSBindingWithLayout(@"=",cmd|shift,data,48) isEqual:TSBindingWithLayout(@"-",cmd|shift,data,48)]);
-    REQUIRE(![[TSShortcutStore displayKey:@"=" modifiers:cmd|shift] isEqual:[TSShortcutStore displayKey:@"-" modifiers:cmd|shift]]);
+    REQUIRE([[TSShortcutStore displayKey:@"=" modifiers:cmd|shift] isEqual:@"⇧⌘="]);
+    REQUIRE([[TSShortcutStore displayKey:@"-" modifiers:cmd|shift] isEqual:@"⇧⌘-"]);
     CFRelease(sources);
     menu=MainMenu();
     NSMenuItem *left=Item(@"TSShortcut.left",@"G",cmd), *right=Item(@"TSShortcut.right",@"g",cmd|shift);
@@ -255,6 +264,19 @@ int main(int argc, char **argv) { @autoreleasepool {
         REQUIRE([store setKey:controller.capturedKey modifiers:controller.capturedModifiers forCommand:Command(store,other.identifier)] != nil);
     }
     REQUIRE([TSKeyboardShortcuts event:LayoutEvent(@"g",@"п",kVK_ANSI_G,cmd) matchesAction:@selector(performFindPanelAction:) tag:2]);
+    for (NSArray *entry in @[@[@"f",@"u",@(kVK_ANSI_F),@1], @[@"g",@"i",@(kVK_ANSI_G),@2]]) {
+        NSEvent *event=LayoutEvent(entry[0],entry[1],[entry[2] unsignedShortValue],cmd);
+        REQUIRE([TSKeyboardShortcuts event:event matchesAction:@selector(performFindPanelAction:) tag:[entry[3] integerValue]]);
+        [controller recordShortcutEvent:event];
+        REQUIRE([controller.capturedKey isEqual:entry[0]] && controller.capturedModifiers==cmd);
+        REQUIRE([store setKey:controller.capturedKey modifiers:controller.capturedModifiers forCommand:Command(store,other.identifier)] != nil);
+    }
+    [controller recordShortcutEvent:LayoutEvent(@"F",@"",kVK_ANSI_F,cmd|shift)];
+    REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==(cmd|shift));
+    [controller recordShortcutEvent:LayoutEvent(@"F",@"f",kVK_ANSI_F,cmd|NSEventModifierFlagCapsLock)];
+    REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==cmd);
+    REQUIRE([TSKeyboardShortcuts event:LayoutEvent(@"F",@"f",kVK_ANSI_F,cmd|NSEventModifierFlagCapsLock) matchesAction:@selector(performFindPanelAction:) tag:1]);
+    puts("PASS: Dvorak–QWERTY Command, empty unmodified characters and Caps Lock");
     NSEvent *optionG=LayoutEvent(@"©",@"g",kVK_ANSI_G,cmd|NSEventModifierFlagOption);
     REQUIRE([TSShortcutCharacterForEvent(optionG) isEqual:@"g"]);
     [controller recordShortcutEvent:optionG];
