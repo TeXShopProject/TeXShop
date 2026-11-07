@@ -5,7 +5,11 @@ The production -setDefaults: and -undoDefaultPrefs: of TSPreferences run on ever
 defaults file, with settings kept in memory (no user defaults are read or written). When
 MakeatletterEnabled changes, open documents must be told to color commands again, both when
 the defaults are restored and when that is undone; when it does not change, they are not.
---mutation=reset or --mutation=undo removes one of the two and the test must then fail."""
+--mutation=reset or --mutation=undo removes one of the two and the test must then fail.
+A profile keeps what is not a setting of the window: keyboard shortcuts, the App Shortcuts and
+app language chosen in System Settings, what Sparkle records about updates, and AppKit's window,
+toolbar and split view state. Other settings missing from the profile are still removed, and
+undoing restores the earlier settings exactly. --mutation=keep drops nothing and must fail."""
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
@@ -21,6 +25,9 @@ if mutation == 'reset':
     assert recolor in setDefaults; setDefaults = setDefaults.replace(recolor, '    if (NO)\n')
 elif mutation == 'undo':
     assert recolor in undoDefaults; undoDefaults = undoDefaults.replace(recolor, '    if (NO)\n')
+elif mutation == 'keep':
+    kept = 'profile[key] = value;'
+    assert setDefaults.count(kept) == 1; setDefaults = setDefaults.replace(kept, ';')
 elif mutation:
     raise SystemExit('unknown mutation ' + mutation)
 plists = sorted(str(p) for p in (root/'Resources/Shellscripts').glob('*.plist') if p.name.startswith(('FactoryDefaults', 'Defaults_')))
@@ -45,6 +52,7 @@ program = r'''
 static MemoryDefaults *memory;
 #define SUD memory
 #define MakeatletterEnabledKey @"MakeatletterEnabled"
+#define TSMenuShortcutOverridesKey @"TSMenuShortcutOverrides"
 #define DocumentFontKey @"DocumentFont"
 #define DocumentFontAttributesKey @"DocumentFontAttributes"
 #define ConsoleFontNameKey @"ConsoleFontName"
@@ -99,7 +107,13 @@ int main(int argc, char **argv) { @autoreleasepool {
         BOOL bundledAt = [bundled[@"MakeatletterEnabled"] boolValue];
         for (int before = 0; before <= 1; before++) {
             [p->_undoManager removeAllActions];
-            memory.values = [@{@"MakeatletterEnabled": @(before)} mutableCopy];
+            NSDictionary *shortcuts = @{@"TSShortcut.doTypeset:.-1": @{@"key": @"r", @"modifiers": @(NSEventModifierFlagCommand)}};
+            NSDictionary *earlier = @{@"MakeatletterEnabled": @(before), @"TSMenuShortcutOverrides": shortcuts,
+                @"NSWindow Frame PrefPane": @"10 10 600 500 0 0 1440 900 ", @"NSToolbar Configuration TSPdfToolbar": @{@"TB Is Shown": @1},
+                @"NSSplitView Subview Frames Split": @[@"0, 0, 100, 100, NO"], @"TeXAwareSpellChecking": @NO, @"EncodingAutoDetection": @NO,
+                @"NSUserKeyEquivalents": @{@"Typeset": @"@r"}, @"AppleLanguages": @[@"ja"],
+                @"SUEnableAutomaticChecks": @YES, @"SUHasLaunchedBefore": @YES, @"SUSkippedVersion": @"5.61"};
+            memory.values = [earlier mutableCopy];
             NSButton *sender = [NSButton new]; sender.tag = 0;
             recolors = 0;
             [p->_undoManager beginUndoGrouping]; [p setDefaults:sender]; [p->_undoManager endUndoGrouping];
@@ -107,8 +121,18 @@ int main(int argc, char **argv) { @autoreleasepool {
             check(recolors == (changed ? 1 : 0) && [memory boolForKey:@"MakeatletterEnabled"] == bundledAt,
                   [NSString stringWithFormat:@"%@, @ was %s: restoring %s", gDefaultsFile.lastPathComponent, before ? "on" : "off",
                    changed ? "recolors once" : "does not recolor"]);
+            check([memory.values[@"TSMenuShortcutOverrides"] isEqual:shortcuts] && memory.values[@"NSWindow Frame PrefPane"] &&
+                  memory.values[@"NSToolbar Configuration TSPdfToolbar"] && memory.values[@"NSSplitView Subview Frames Split"] &&
+                  [memory.values[@"NSUserKeyEquivalents"] isEqual:earlier[@"NSUserKeyEquivalents"]] && [memory.values[@"AppleLanguages"] isEqual:@[@"ja"]] &&
+                  [memory.values[@"SUEnableAutomaticChecks"] isEqual:@YES] && [memory.values[@"SUHasLaunchedBefore"] isEqual:@YES] &&
+                  [memory.values[@"SUSkippedVersion"] isEqual:@"5.61"],
+                  [NSString stringWithFormat:@"%@: keyboard shortcuts, App Shortcuts, app language, Sparkle's records and window, toolbar and split view state are kept", gDefaultsFile.lastPathComponent]);
+            check((bundled[@"TeXAwareSpellChecking"] != nil || memory.values[@"TeXAwareSpellChecking"] == nil) &&
+                  (bundled[@"EncodingAutoDetection"] != nil || memory.values[@"EncodingAutoDetection"] == nil),
+                  [NSString stringWithFormat:@"%@: other settings missing from the profile are still removed", gDefaultsFile.lastPathComponent]);
             recolors = 0;
             [p->_undoManager undo];
+            check([memory.values isEqual:earlier], [NSString stringWithFormat:@"%@: undoing restores the earlier settings exactly", gDefaultsFile.lastPathComponent]);
             check(recolors == (changed ? 1 : 0) && [memory boolForKey:@"MakeatletterEnabled"] == before,
                   [NSString stringWithFormat:@"%@, @ was %s: undoing it %s", gDefaultsFile.lastPathComponent, before ? "on" : "off",
                    changed ? "recolors once" : "does not recolor"]);
@@ -122,5 +146,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-preference-reset-') as folder:
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', str(f/'test.m'), '-o', str(f/'test')], check=True)
     r = subprocess.run([str(f/'test'), *plists], timeout=60)
     if r.returncode:
-        raise SystemExit('FAIL: restoring default settings does not recolor open documents as it should')
-    print('PASS: restoring default settings, and undoing it, recolors open documents exactly when @ changes')
+        raise SystemExit('FAIL: restoring default settings does not behave as it should')
+    print('PASS: restoring default settings, and undoing it, recolors open documents exactly when @ changes and keeps keyboard shortcuts and window state')
