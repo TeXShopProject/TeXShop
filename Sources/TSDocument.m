@@ -29,6 +29,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSDocument.h"
+#import "TSExperimentConsoleController.h"
 #include <sys/xattr.h>
 #import <OgreKit/OgreKit.h> // zenitani 1.35 (A)
 
@@ -268,10 +269,7 @@ withDarkColors = NO;
 
 - (BOOL)experimentActive
 {
-    if ([scrapWindow isVisible] && [scrapPDFWindow isVisible])
-        return YES;
-    else
-        return NO;
+    return [self experimentHasKeyWindow];
 }
 
 - (void)activateExperimentWindow
@@ -3014,6 +3012,7 @@ else {
 
 - (void)close
 {
+    [self closeExperiment];
     [self cancelWatchFile];
     [self stopExternalPDFObservation];
     if (self.annotationsExist)
@@ -10464,6 +10463,10 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
 - (void)displayConsole: (id)sender
 {
+    if ([self experimentHasKeyWindow]) {
+        [self showExperimentConsole];
+        return;
+    }
 	NSString	*theSource;
 	
 	// Show Console in the console itself returns to the window it was shown from.

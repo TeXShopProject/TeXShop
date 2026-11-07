@@ -27,6 +27,7 @@
 #import <objc/runtime.h>
 
 #import "TSDocument.h"
+#import "TSExperimentConsoleController.h"
 
 #import "MyPDFView.h"
 #import "MyPDFKitView.h"
@@ -2033,6 +2034,11 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 - (void) doTypeset: sender;
 
  {
+    if ([self experimentHasKeyWindow]) {
+        [self typesetScrap:sender];
+        return;
+    }
+
    if (self.annotationsExist)
    {
        self.annotationsExist = NO;
@@ -2049,10 +2055,6 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 //    NSString	*titleString;
 	BOOL	useError;
     
-    if ([scrapWindow isVisible]) {
-        [self typesetScrap: sender];
-        return;
-        }
     
     NSUInteger modifiers = ([NSEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask);
     
@@ -2153,6 +2155,10 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 
 - (void)abort:(id)sender
 {
+    if ([self experimentHasKeyWindow]) {
+        [self.experimentConsole abort:sender];
+        return;
+    }
     doAbort = YES;
     
 	if (! fileIsTex)
@@ -2205,9 +2211,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 //
 // Until 2018, we did not use a TerminationHandler, and instead relied on NSTaskDidTerminateNotification, which was handled by
 // "checkATaskStatus", one routine below. This still holds for many tasks: displayPackageHelpTask (calling texdoc to display
-// documentation, scrapTask (to handle the "Experiment" menu item, detexTask (to find statistics for a source), convertTask (to
+// documentation, detexTask (to find statistics for a source), convertTask (to
 // convert tiff to pdf), and scriptTask (to run Applescript). All of these tasks still use the old NSTask API and call "checkATaskStatus".
-// However, in most cases "checkATaskStatus" does nothing or very little. It only directly handles scrapTask and thus "Experiment".
+// Experiment jobs own their completion and output handlers separately.
 // All other tasks are sent to checkATaskStatusFromTerminationRoutine, but this routine really does something significant only
 // for the key tasks sent there directly from the TerminationHandler.
 
@@ -2503,34 +2509,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
         NSLog(@"CheckATaskStatus");
     
     
-   if ([aNotification object] == self.scrapTask)
-    {
-    if (DisplayLogs)
-        NSLog(@"Doing Scrap Task");
-    error = nil;
-    //  [[NSFileManager defaultManager] removeItemAtURL:self.scrapDirectoryURL error:&error];
-    self.scrapDirectoryURL = nil;
-    [outputText setSelectable: YES];
-    status = [[aNotification object] terminationStatus];
-    [self.writeHandle closeFile];
-    self.inputPipe = 0;
-    self.scrapTask = nil;
-    
-    if ((status == 0) || (status == 1)) {
-        
-        if ([[NSFileManager defaultManager] fileExistsAtPath: self.scrapImagePath])
-            [scrapPDFKitView reShowWithPath: self.scrapImagePath];
-        
-        [scrapPDFWindow setHidesOnDeactivate:YES];
-        [scrapPDFWindow makeKeyAndOrderFront:self];
-        
-    }
-    
-    self.scrapImagePath = nil;
-    }
-
-else
-       [self checkATaskStatusFromTerminationRoutine: [aNotification object]];
+   [self checkATaskStatusFromTerminationRoutine:[aNotification object]];
     
     
 /*

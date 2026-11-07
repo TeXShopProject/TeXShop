@@ -171,3 +171,9 @@
 "Use Command or Control with a key, or a function key (F1–F20)." = "请将 Command 或 Control 与一个按键组合使用，或使用功能键（F1–F20）。";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "选择命令以更改其快捷键。更改立即生效。宏和文本输入按键绑定使用各自的编辑器。";
 "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除此窗口中所做的更改。现有的 KeyEquivalents.plist 设置将保留。";
+
+/* Independent Experiment console */
+"Experiment input" = "实验输入";
+"Stop Experiment" = "停止实验";
+"%@ — Experiment Console" = "%@ — 实验控制台";
+"Experiment stopped.\n" = "实验已停止。\n";
