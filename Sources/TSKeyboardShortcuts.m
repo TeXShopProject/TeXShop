@@ -18,7 +18,7 @@ NSModalResponse TSRunShortcutAlert(NSAlert *alert) {
     @finally { [NSEvent removeMonitor:monitor]; }
 }
 
-// Translate input only when recording a key event; never use this for binding equality.
+// Translate event input and restoration candidates; never use this for binding equality.
 static NSString *TSTranslateKey(CFDataRef data, UInt16 keyCode, BOOL shifted, UInt32 keyboardType) {
     if (!data) return nil;
     UniChar chars[8]; UniCharCount count = 0; UInt32 dead = 0;
@@ -81,6 +81,34 @@ static NSArray<NSDictionary *> *TSEventBindings(NSEvent *event, NSString *unshif
         [key characterAtIndex:0] < 0xf700 &&
         ![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])
         [bindings addObject:TSBinding(unshifted, event.modifierFlags)];
+    return bindings.array;
+}
+// Extra spellings are transient and used only to reject a conflicting default restore.
+// Stored assignments, macro comparison and launch-time application remain raw.
+static BOOL TSRestorationSymbol(NSString *key) {
+    if (key.length != 1) return NO;
+    unichar c = [key characterAtIndex:0];
+    return [[NSCharacterSet punctuationCharacterSet] characterIsMember:c] ||
+        [[NSCharacterSet symbolCharacterSet] characterIsMember:c];
+}
+static NSArray<NSDictionary *> *TSRestorationBindings(NSString *key, NSEventModifierFlags flags, CFDataRef data, UInt32 keyboardType) {
+    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSetWithObject:TSBinding(key, flags)];
+    if (!TSRestorationSymbol(key)) return bindings.array;
+    BOOL encodesShift = NO;
+    for (UInt16 code = 0; data && code < 128; code++) {
+        NSString *plain = TSTranslateKey(data, code, NO, keyboardType);
+        NSString *shifted = TSTranslateKey(data, code, YES, keyboardType);
+        if ([plain isEqual:shifted]) continue;
+        if ((flags & NSEventModifierFlagShift) && [plain isEqual:key] && TSRestorationSymbol(shifted)) {
+            [bindings addObject:TSBinding(shifted, flags & ~NSEventModifierFlagShift)];
+            [bindings addObject:TSBinding(shifted, flags)];
+        }
+        if ([shifted isEqual:key] && TSRestorationSymbol(plain)) {
+            encodesShift = YES;
+            [bindings addObject:TSBinding(plain, flags | NSEventModifierFlagShift)];
+        }
+    }
+    if (encodesShift) [bindings addObject:TSBinding(key, flags ^ NSEventModifierFlagShift)];
     return bindings.array;
 }
 static void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *, NSString *)) {
@@ -294,6 +322,21 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     });
     return conflict;
 }
+- (NSArray<NSDictionary *> *)restorationBindingsForCommand:(TSShortcutCommand *)command {
+    TISInputSourceRef source = TISCopyCurrentKeyboardLayoutInputSource();
+    CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
+    NSArray *bindings = TSRestorationBindings(command.defaultKey, command.defaultModifiers, data, LMGetKbdType());
+    if (source) CFRelease(source);
+    return bindings;
+}
+- (nullable NSString *)conflictForRestoringCommand:(TSShortcutCommand *)command {
+    for (NSDictionary *binding in [self restorationBindingsForCommand:command]) {
+        NSString *conflict = [self conflictForKey:binding[@"key"] modifiers:[binding[@"modifiers"] unsignedIntegerValue]
+            except:command.item restoring:command];
+        if (conflict) return conflict;
+    }
+    return nil;
+}
 - (void)persist {
     if (self.overrides.count) [self.defaults setObject:self.overrides.copy forKey:TSMenuShortcutOverridesKey];
     else [self.defaults removeObjectForKey:TSMenuShortcutOverridesKey];
@@ -312,7 +355,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 - (nullable NSString *)restoreCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
-    NSString *conflict = [self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command];
+    NSString *conflict = [self conflictForRestoringCommand:command];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     [self.overrides removeObjectForKey:command.commandID];
     [self applySavedOverrides]; [self persist];
@@ -605,7 +648,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 - (void)restoreShortcut:(id)sender {
     TSShortcutCommand *command = self.selectedCommand; if (!command) return;
-    NSString *error = [self.store conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command];
+    NSString *error = [self.store conflictForRestoringCommand:command];
     if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
     if (![self confirmMacrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]) return;
     [self showError:[self.store restoreCommand:command]];
