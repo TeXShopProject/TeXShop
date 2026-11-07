@@ -27,6 +27,7 @@
 #import "UseSparkle.h"
 
 #import "TSPreferences+LiveSettings.h"
+#import "TSSettingsWindowController.h"
 #import "TSEnginePathDiscovery.h"
 #import "TSPreferenceProfile.h"
 #import "TSPreferenceInput.h"
@@ -57,7 +58,10 @@ static NSString *TSPreferencesDomainName(void)
 }
 
 
-@interface TSPreferences () <NSWindowDelegate, NSTabViewDelegate, NSTextFieldDelegate>
+@interface TSPreferences () <NSWindowDelegate, NSTabViewDelegate, NSTextFieldDelegate, TSSettingsWindowDelegate>
+@property (strong) TSSettingsWindowController *settingsController;
+@property (copy) NSArray *preferenceNibObjects;
+@property (copy) NSString *fontEditingContext;
 @property (strong) NSMapTable<NSControl *, TSPreferenceInput *> *inputRules;
 @property (weak) NSControl *editingField;
 @property (copy) NSString *editingOriginalText;
@@ -134,17 +138,49 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 {
     if (_prefsWindow.visible) { [_prefsWindow makeKeyAndOrderFront:sender]; return; }
     if (!self.initialEnginePathSearchPending) [self cancelEnginePathDiscovery];
-    if (_prefsWindow == nil && ![NSBundle loadNibNamed:@"Preferences" owner:self]) return;
+    if (![self prepareSettingsWindow]) return;
     self.endingPreferences = NO;
     self.inputErrorPresented = NO;
     _prefsWindow.delegate = self;
     _tabView.delegate = self;
     [self configurePreferenceInputs];
-    [[TSDockIconController sharedController] installInPreferences:_tabView];
+    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController legacyViewForCategoryIdentifier:@"misc-2"]];
     [[TSDockIconController sharedController] restoreSavedIcon];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
+    [self.settingsController beginSession];
     [_prefsWindow makeKeyAndOrderFront:self];
+}
+
+- (BOOL)prepareSettingsWindow
+{
+    if (self.settingsController != nil) return YES;
+    NSArray *objects = nil;
+    if (![NSBundle.mainBundle loadNibNamed:@"Preferences" owner:self topLevelObjects:&objects]) return NO;
+    self.preferenceNibObjects = objects;
+    NSWindow *oldWindow = _prefsWindow;
+    NSView *content = oldWindow.contentView;
+    if (content == nil || _tabView.numberOfTabViewItems != 9) return NO;
+    TSSettingsWindowController *controller = [[TSSettingsWindowController alloc] initWithDefaults:SUD];
+    NSWindow *newWindow = controller.window;
+    if (newWindow == nil) return NO;
+    controller.settingsDelegate = self;
+    oldWindow.delegate = nil;
+    [controller hostLegacyContent:content tabView:_tabView];
+    oldWindow.contentView = nil;
+    _prefsWindow = newWindow;
+    self.settingsController = controller;
+    return YES;
+}
+- (BOOL)settingsMayChangeCategory
+{
+    if (![self finishPreferenceEditing:YES]) return NO;
+    [self releasePreferencePanels];
+    return YES;
+}
+- (void)settingsChangeFont:(id)sender
+{
+    [self changeFont:sender];
 }
 
 //==============================================================================
@@ -182,7 +218,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     alert.messageText = NSLocalizedString(@"Apply Settings Profile?", @"");
     alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@", @""), proposal.enginePath];
     [alert addButtonWithTitle:NSLocalizedString(@"Apply Profile", @"")].keyEquivalent = @"";
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")].keyEquivalent = @"\r";
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")].keyEquivalent = @"\e";
     __weak TSPreferences *weakSelf = self;
     [alert beginSheetModalForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
         TSPreferences *strongSelf = weakSelf;
@@ -209,8 +245,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
     if ([changed containsObject:@"PdfCopyType"]) {
-        NSMenuItem *item = [_imageCopyTypePopup selectedItem];
-        if (item != nil) [(TSAppDelegate *)NSApp.delegate changeImageCopyType:item];
+        [(TSAppDelegate *)NSApp.delegate syncImageCopyTypeMenu];
     }
     if ([changed containsObject:@"DockIconStyle"]) [[TSDockIconController sharedController] restoreSavedIcon];
     NSDictionary<NSNotificationName, NSArray<NSString *> *> *groups = @{
@@ -262,6 +297,7 @@ Clicking this button will bring up the font panel.
     // self.documentFont = [fontManager convertFont:self.documentFont];
     if (![self finishPreferenceEditing:YES]) return;
     self.ownsFontPanel = YES;
+    self.fontEditingContext = @"Document";
     [_prefsWindow makeFirstResponder:_prefsWindow];
     [[NSFontManager sharedFontManager] setSelectedFont:self.documentFont isMultiple:NO];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:self];
@@ -330,6 +366,7 @@ Clicking this button will bring up the font panel.
 	// up the responder chain
 	if (![self finishPreferenceEditing:YES]) return;
     self.ownsFontPanel = YES;
+    self.fontEditingContext = @"Console";
 	[_prefsWindow makeFirstResponder:_prefsWindow];
 	[[NSFontManager sharedFontManager] setSelectedFont:self.consoleFont isMultiple:NO];
 	[[NSFontManager sharedFontManager] orderFrontFontPanel:self];
@@ -345,7 +382,7 @@ Clicking this button will bring up the font panel.
         !(_prefsWindow.isKeyWindow || _prefsWindow.isMainWindow)) return;
     
     NSData    *fontData;
-    NSString *theTab = [[_tabView selectedTabViewItem] identifier];
+    NSString *theTab = self.fontEditingContext;
 
 	if ([theTab isEqualToString: @"Document"])
 		{
@@ -515,13 +552,13 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setBool:(_saveEncodingMenuButton.state == NSControlStateValueOn) forKey:EncodingMenuInSaveDialogKey];
 }
 
-// added by Terada(
+// added by Terada( - (IBAction)kpsetoolChanged: )
 - (IBAction)kpsetoolChanged:(id)sender
 {
     [self commitPreferenceField:_kpsetoolField showError:YES reflect:YES];
 }
 
-// added by Terada(
+// added by Terada( - (IBAction)bibTeXengineChanged: )
 - (IBAction)bibTeXengineChanged:(id)sender
 {
     [self commitPreferenceField:_bibTeXengineField showError:YES reflect:YES];
@@ -1962,6 +1999,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
         [[manager fontPanel:NO] close];
     }
     self.ownsFontPanel = NO;
+    self.fontEditingContext = nil;
 }
 - (void)tearDownPreferenceEditing
 {
@@ -1970,6 +2008,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
     [self releasePreferencePanels];
     self.editingField = nil;
     self.editingOriginalText = nil;
+    [self.settingsController endSession];
 }
 - (void)finishPreferencesForTermination
 {

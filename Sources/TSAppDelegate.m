@@ -1335,6 +1335,22 @@
 
 #ifdef MITSU_PDF
 // mitsu 1.29 (O)
+- (void)syncImageCopyTypeMenu
+{
+    NSInteger selected = [SUD integerForKey:PdfCopyTypeKey];
+    NSMutableArray<NSMenu *> *pending = [NSMutableArray array];
+    if (NSApp.mainMenu != nil) [pending addObject:NSApp.mainMenu];
+    while (pending.count > 0) {
+        NSMenu *menu = pending.lastObject;
+        [pending removeLastObject];
+        for (NSMenuItem *item in menu.itemArray) {
+            if (item.action == @selector(changeImageCopyType:))
+                item.state = item.tag == selected ? NSControlStateValueOn : NSControlStateValueOff;
+            if (item.submenu != nil) [pending addObject:item.submenu];
+        }
+    }
+}
+
 - (void)changeImageCopyType: (id)sender
 {
 	id  item;

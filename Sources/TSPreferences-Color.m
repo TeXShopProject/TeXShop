@@ -315,7 +315,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     NSString* ourColorPath = [[[newColorPath stringByAppendingString:@"/"] stringByAppendingString: theTitle] stringByAppendingString: @".plist"];
     
     NSURL *safeURL = [[self themeStore] URLForTitle:theTitle];
-    if (safeURL == nil) { [self showPreferenceError:NSLocalizedString(@"Choose a valid theme name without path separators.", @"")]; return; }
+    if (safeURL == nil) { [self showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")]; return; }
     ourColorPath = safeURL.path;
     if ([fileManager fileExistsAtPath:ourColorPath])
     {
@@ -425,7 +425,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     NSString* ourColorPath = [[[newColorPath stringByAppendingString:@"/"] stringByAppendingString: theTitle] stringByAppendingString: @".plist"];
     
     NSURL *safeURL = [[self themeStore] URLForTitle:theTitle];
-    if (safeURL == nil) { [self showPreferenceError:NSLocalizedString(@"Choose a valid theme name without path separators.", @"")]; return; }
+    if (safeURL == nil) { [self showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")]; return; }
     ourColorPath = safeURL.path;
     if ([fileManager fileExistsAtPath:ourColorPath])
     {

@@ -75,6 +75,8 @@ static FakeAlert *shown;
 @end
 @interface Probe : NSObject <NSControlTextEditingDelegate> { @public Window *_prefsWindow; }
 @property NSMapTable *inputRules;
+@property id settingsController;
+@property(copy) NSString *fontEditingContext;
 @property(weak) NSControl *editingField;
 @property(copy) NSString *editingOriginalText;
 @property BOOL inputErrorPresented,ownsFontPanel,endingPreferences,initialEnginePathSearchPending;
@@ -82,6 +84,7 @@ static FakeAlert *shown;
 @property Field *enginePathSearchButton;
 @end
 @implementation Probe
+- (void)endSession {}
 - (void)deactivatePreferenceColorWells {self.colorTeardowns++;}
 METHODS
 @end
@@ -121,6 +124,8 @@ int main(void){@autoreleasepool{
  FakeFontManager *manager=[FakeFontManager sharedFontManager];manager.panel=[Window new];
  manager.target=[NSObject new];p.ownsFontPanel=YES;p->_prefsWindow.isMainWindow=YES;
  [p releasePreferencePanels];check(manager.panel.closes==0 && manager.target!=nil,"document-owned font panel untouched");
+ manager.target=nil;p.ownsFontPanel=YES;p->_prefsWindow.isMainWindow=NO;p->_prefsWindow.isKeyWindow=NO;
+ [p releasePreferencePanels];check(manager.panel.closes==0,"inactive settings never close document font panel");
  manager.target=nil;p.ownsFontPanel=YES;p->_prefsWindow.isMainWindow=YES;
  [p releasePreferencePanels];check(manager.panel.closes==1 && manager.target==nil,"only owned font session closed");
  p.initialEnginePathSearchPending=YES;p.enginePathSearchButton=[Field new];p.enginePathSearchButton.enabled=NO;

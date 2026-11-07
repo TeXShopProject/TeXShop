@@ -58,13 +58,25 @@ CONSTANTS
 - (void)setSelectedFont:(NSFont *)font isMultiple:(BOOL)multiple {}
 - (void)orderFrontFontPanel:(id)sender {self.fronts++;}
 @end
+@interface NSObject (SettingsTest)
+- (id)legacyViewForCategoryIdentifier:(NSString *)identifier;
+@end
 @interface TSDockIconController:NSObject @end
 @implementation TSDockIconController
 + (id)sharedController {static id x;if(!x)x=[self new];return x;}
-- (void)installInPreferences:(id)tabs {}
+- (void)installInPreferencesPane:(id)pane {}
 - (void)restoreSavedIcon {}
 @end
 static NSUInteger resourceLookups, confirmations;
+@interface TSPreferenceProfile (FactoryTest)
+- (instancetype)checkedProfile:(NSDictionary *)p documentFont:(NSData *)f registeredDefaults:(NSDictionary *)d;
+@end
+@implementation TSPreferenceProfile (FactoryTest)
+- (instancetype)checkedProfile:(NSDictionary *)p documentFont:(NSData *)f registeredDefaults:(NSDictionary *)d {
+ if(d.count<100 || !d[@"TetexBinPath"]) {fprintf(stderr,"FAIL: full factory defaults supplied\n");exit(1);}
+ return [self checkedProfile:p documentFont:f registeredDefaults:d];
+}
+@end
 static NSString *resources;
 @interface Bundle:NSObject @end
 @implementation Bundle
@@ -77,15 +89,18 @@ static NSString *resources;
 @implementation Button @end
 @interface Alert:NSObject
 @property(copy) NSString *messageText,*informativeText;
+@property NSMutableArray *buttons;
 - (NSButton *)addButtonWithTitle:(NSString *)title;
 - (void)beginSheetModalForWindow:(id)window completionHandler:(void (^)(NSModalResponse))block;
 @end
 @implementation Alert
-- (NSButton *)addButtonWithTitle:(NSString *)title {return (id)[Button new];}
-- (void)beginSheetModalForWindow:(id)window completionHandler:(void (^)(NSModalResponse))block {confirmations++;block(NSAlertSecondButtonReturn);}
+- (NSButton *)addButtonWithTitle:(NSString *)title {if(!self.buttons)self.buttons=[NSMutableArray new];Button *b=[Button new];[self.buttons addObject:b];return (id)b;}
+- (void)beginSheetModalForWindow:(id)window completionHandler:(void (^)(NSModalResponse))block {if(![self.buttons[0] keyEquivalent] || ![[self.buttons[0] keyEquivalent] isEqual:@""] || ![[self.buttons[1] keyEquivalent] isEqual:@"\e"] || ![self.informativeText containsString:@"/Library/TeX/texbin"]) {fprintf(stderr,"FAIL: profile confirmation keys and engine path\n");exit(1);} confirmations++;block(NSAlertSecondButtonReturn);}
 @end
 @interface Probe:NSObject <NSControlTextEditingDelegate> { @public Window *_prefsWindow; Tab *_tabView; FIELDS }
 @property NSMapTable *inputRules;
+@property id settingsController;
+@property(copy) NSString *fontEditingContext;
 @property BOOL endingPreferences,inputErrorPresented,initialEnginePathSearchPending,ownsFontPanel,valid;
 @property NSUInteger finishCalls;
 @property NSFont *documentFont,*consoleFont;
@@ -93,6 +108,8 @@ static NSString *resources;
 @implementation Probe
 - (BOOL)finishPreferenceEditing:(BOOL)show {self.finishCalls++;return self.valid;}
 - (void)cancelEnginePathDiscovery {}
+- (BOOL)prepareSettingsWindow {return YES;}
+- (void)beginSession {}
 - (void)releasePreferencePanels {}
 - (void)updateControlsFromUserDefaults:(id)d {}
 - (void)PrepareColorPane:(id)d {}
@@ -105,6 +122,7 @@ METHODS
 static void check(BOOL ok,const char *message){if(!ok){fprintf(stderr,"FAIL: %s\n",message);exit(1);}}
 int main(int argc,char **argv){@autoreleasepool{
  resources=@(argv[1]);
+ method_exchangeImplementations(class_getInstanceMethod(TSPreferenceProfile.class,@selector(initWithProfile:documentFont:registeredDefaults:)),class_getInstanceMethod(TSPreferenceProfile.class,@selector(checkedProfile:documentFont:registeredDefaults:)));
  TSInstallAppKitIsolation();memory=[TSMemoryDefaults new];Probe *p=[Probe new];p.valid=YES;
  p->_prefsWindow=[Window new];p->_tabView=[Tab new];p->_tabView.identifier=@"Document";
  INITFIELDS
@@ -133,7 +151,7 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSNumber *owns in @[@NO,@YES]) {p.ownsFontPanel=owns.boolValue;[p changeFont:(id)fm];}
  check(fm.conversions==0 && SUD.values.count==0,"document-main font operations never change preference defaults");
  p->_prefsWindow.isMainWindow=YES;p.ownsFontPanel=NO;[p changeFont:(id)fm];check(fm.conversions==0,"font session must be owned");
- p.ownsFontPanel=YES;[p changeFont:(id)fm];check(fm.conversions==1 && [SUD objectForKey:DocumentFontKey]!=nil,"active owned font session persists");
+ p.ownsFontPanel=YES;p.fontEditingContext=@"Document";[p changeFont:(id)fm];check(fm.conversions==1 && [SUD objectForKey:DocumentFontKey]!=nil,"active owned font session persists");
  p.endingPreferences=YES;[p changeFont:(id)fm];check(fm.conversions==1,"ending session ignores font action");
  puts("PASS: nineteen production rules, formatter removal, reopen, profile precommit and responder-based font ownership");
 }return 0;}
@@ -141,10 +159,14 @@ int main(int argc,char **argv){@autoreleasepool{
 # Independent expectations: do not derive limits or empty policy from production.
 expected=[('Integer',2,50,False),('Integer',0,100,False),('Integer',0,100,False),('Integer',1,20,False),('Percentage',20,400,False),('Text',0,0,True),('Text',0,0,False),('Text',0,0,False),('Text',0,0,False),('Text',0,0,False),('Text',0,0,False),('Text',0,0,False),('Text',0,0,False),('Text',0,0,True),('Text',0,0,False),('Text',0,0,False),('Text',0,0,True),('Text',0,0,True),('Text',0,0,True)]
 assert len(fields)==len(expected)==19
+expected_keys=['tabs','SourceFirstLineHeadIndent','SourceHeadIndent','SourceInterlineSpace','PdfMagnification','HtmlHome','DefaultEngine','TexCommand','LatexCommand','TexGSCommand','LatexGSCommand','TetexBinPath','GSBinPath','AltPath','Kpsetool','BibTeXengine','TexScriptCommand','LatexScriptCommand','AlternateEngine']
+globals_source=(R/'Sources/globals.m').read_bytes().decode('latin1')
+constant_values={k:re.search(r'\b'+re.escape(k)+r'\s*=\s*@"([^"\n]*)"',globals_source).group(1) for k in constants}
 checks=[]
-for f,k,(kind,low,high,empty) in zip(fields,keys,expected):
- checks.append('{TSPreferenceInput *v=[p.inputRules objectForKey:p->%s];check([v.key isEqual:%s] && v.kind==TSPreferenceInput%s && v.minimum==%s && v.maximum==%s && v.allowsEmpty==%s,"rule %s");}'%(f,k,kind,low,high,'YES' if empty else 'NO',f))
-program=program.replace('INITFIELDS','\n'.join('p->%s=[Field new];p->%s.formatter=[NSObject new];'%(f,f) for f in fields)).replace('FIELDS',' '.join('Field *%s;'%f for f in fields)).replace('CONSTANTS','\n'.join('static NSString *%s=@"%s";'%(k,k) for k in constants)).replace('RULECHECKS','\n'.join(checks)).replace('METHODS',methods)
+for i,(f,(kind,low,high,empty)) in enumerate(zip(fields,expected)):
+ notification='[v.notification isEqual:DocumentFontChangedNotification]' if i<4 else 'v.notification==nil'
+ checks.append('{TSPreferenceInput *v=[p.inputRules objectForKey:p->%s];check([v.key isEqual:@"%s"] && %s && v.kind==TSPreferenceInput%s && v.minimum==%s && v.maximum==%s && v.allowsEmpty==%s,"rule %s");}'%(f,expected_keys[i],notification,kind,low,high,'YES' if empty else 'NO',f))
+program=program.replace('INITFIELDS','\n'.join('p->%s=[Field new];p->%s.formatter=[NSObject new];'%(f,f) for f in fields)).replace('FIELDS',' '.join('Field *%s;'%f for f in fields)).replace('CONSTANTS','\n'.join('static NSString *%s=@"%s";'%(k,constant_values[k]) for k in constants)).replace('RULECHECKS','\n'.join(checks)).replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='texshop-settings-sessions-') as td:
  p=Path(td);(p/'test.m').write_text(program)
  subprocess.run(['xcrun','clang','-w','-fobjc-arc','-I',str(R/'Sources'),'-I',str(R/'Tests'),'-framework','Cocoa',str(p/'test.m'),str(R/'Sources/TSPreferenceInput.m'),str(R/'Sources/TSPreferenceProfile.m'),'-o',str(p/'test')],check=True)

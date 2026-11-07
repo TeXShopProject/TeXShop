@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E18100000000000000000005 = {isa = PBXBuildFile; fileRef = E18000000000000000000005; };
+		E18100000000000000000002 = {isa = PBXBuildFile; fileRef = E18000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		E18100000000000000000001 = {isa = PBXBuildFile; fileRef = E18000000000000000000001; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		EA1100000000000000000001 = {isa = PBXBuildFile; fileRef = EA1100000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		E16E00000000000000000001 = {isa = PBXBuildFile; fileRef = E16E00000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		E17000000000000000000001 = {isa = PBXBuildFile; fileRef = E17000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
@@ -449,6 +452,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E18000000000000000000005 = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Resources/SettingsWindow.xib; sourceTree = SOURCE_ROOT; };
+		E18000000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSSettingsWindowController.h; sourceTree = SOURCE_ROOT; };
+		E18000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSSettingsNavigationHistory.h; sourceTree = SOURCE_ROOT; };
+		E18000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSSettingsWindowController.m; sourceTree = SOURCE_ROOT; };
+		E18000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSSettingsNavigationHistory.m; sourceTree = SOURCE_ROOT; };
 		EA1100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSKeyboardShortcuts.m; sourceTree = SOURCE_ROOT; };
 		EA1100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSKeyboardShortcuts.h; sourceTree = SOURCE_ROOT; };
 		E16E00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSEnginePathDiscovery.m; sourceTree = SOURCE_ROOT; };
@@ -1267,6 +1275,11 @@
 				4016DD852109FC6200745019 /* TSColorSupport.m */,
 				403649E1211BDA800086DDD1 /* TSPreferenceWindow.h */,
 				403649E2211BDA800086DDD1 /* TSPreferenceWindow.m */,
+				E18000000000000000000001,
+				E18000000000000000000002,
+				E18000000000000000000003,
+				E18000000000000000000004,
+				E18000000000000000000005,
 				0AC768C30010B1D17F000001 /* TSPreferences.h */,
 				0AC768C40010B1D17F000001 /* TSPreferences.m */,
 				4080F36B210BA5520034C707 /* TSPreferences-Color.m */,
@@ -1831,6 +1844,7 @@
 				4078807D0519249A006979EA /* Credits.rtf in Resources */,
 				52B13E4808A8182F00756E5E /* MainMenu.nib in Resources */,
 				52B13E5008A8183B00756E5E /* FindPanel.nib in Resources */,
+				E18100000000000000000005,
 				52B13E4C08A8183B00756E5E /* Preferences.nib in Resources */,
 				52B13E4E08A8183B00756E5E /* completionpanel1.2.nib in Resources */,
 				40C1E9EB25CB9FE10091614B /* TeXLiveDocumentation.pdf in Resources */,
@@ -2096,6 +2110,8 @@
 				4078817D0519249A006979EA /* TSTextEditorWindow.m in Sources */,
 				4078817E0519249A006979EA /* TSPreviewWindow.m in Sources */,
 				4078817F0519249A006979EA /* TSPrintView.m in Sources */,
+				E18100000000000000000001,
+				E18100000000000000000002,
 				407881810519249A006979EA /* TSPreferences.m in Sources */,
 				407881820519249A006979EA /* globals.m in Sources */,
 				407881830519249A006979EA /* TSAppDelegate.m in Sources */,

@@ -1,6 +1,7 @@
 // Check the shipped localized menus using AppKit's key-equivalent dispatch.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
+#import "TestAppKitIsolation.h"
 static void IgnoreOutlet(id self,SEL cmd,id value,NSString *key) {}
 static NSMenuItem *FindConsole(NSMenu *menu) {
  for(NSMenuItem *item in menu.itemArray) {
@@ -17,6 +18,7 @@ static NSMenuItem *FindConsole(NSMenu *menu) {
 - (void)displayConsole:(id)sender {self.calls++;}
 @end
 int main(int argc,char **argv) { @autoreleasepool {
+ TSInstallAppKitIsolation();
  [NSApplication sharedApplication];
  for(NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSAutoCompletionListEditor",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]) {
   Class c=objc_allocateClassPair(NSObject.class,name.UTF8String,0);
@@ -30,7 +32,7 @@ int main(int argc,char **argv) { @autoreleasepool {
   NSMenuItem *item=FindConsole(menu);
   if(!item || ![item.keyEquivalent isEqualToString:@"0"] || item.keyEquivalentModifierMask!=NSEventModifierFlagCommand || item.target) return 2;
   Receiver *r=[[Receiver alloc] initWithContentRect:NSMakeRect(-20000,-20000,400,300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
-  r.releasedWhenClosed=NO;[r orderBack:nil];[r makeMainWindow];[r makeKeyWindow];
+  r.releasedWhenClosed=NO;
   NSApp.nextResponder=r;
   item.enabled=YES;
   NSEvent *e=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand timestamp:0 windowNumber:0 context:nil characters:@"0" charactersIgnoringModifiers:@"0" isARepeat:NO keyCode:29];

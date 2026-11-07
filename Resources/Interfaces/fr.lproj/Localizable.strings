@@ -186,7 +186,19 @@
 "Continue Editing" = "Continue Editing";
 "Restore This Field" = "Restore This Field";
 "The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
-"Choose a valid theme name without path separators." = "Choose a valid theme name without path separators.";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Choisissez un autre nom de thème. Les noms commençant par un point, les séparateurs de chemin, les caractères de contrôle et les liens symboliques ne sont pas autorisés.";
 "The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
 
 "Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+
+"Back" = "Précédent";
+
+"Forward" = "Suivant";
+
+"Settings Categories" = "Catégories de réglages";
+
+"Navigation History" = "Historique de navigation";
+
+"Back (⌘[)" = "Précédent (⌘[)";
+
+"Forward (⌘])" = "Suivant (⌘])";

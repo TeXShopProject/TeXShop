@@ -207,7 +207,19 @@
 "Continue Editing" = "編集を続ける";
 "Restore This Field" = "この欄を元に戻す";
 "The theme could not be saved. Its last saved colors have been restored." = "テーマを保存できませんでした。最後に保存した色へ戻しました。";
-"Choose a valid theme name without path separators." = "パス区切り文字を含まない有効なテーマ名を入力してください。";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "別のテーマ名を指定してください。ドットで始まる名前、パス区切り文字、制御文字、シンボリックリンクは使用できません。";
 "The new theme could not be saved. The original theme is unchanged." = "新しいテーマを保存できませんでした。元のテーマは変更していません。";
 
 "Reopen Settings or select a readable theme before editing or duplicating it." = "設定を開き直すか、読み取れるテーマを選んでから編集・複製してください。";
+
+"Back" = "戻る";
+
+"Forward" = "進む";
+
+"Settings Categories" = "設定カテゴリ";
+
+"Navigation History" = "移動履歴";
+
+"Back (⌘[)" = "戻る (⌘[)";
+
+"Forward (⌘])" = "進む (⌘])";

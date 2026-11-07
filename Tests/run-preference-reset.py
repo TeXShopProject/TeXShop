@@ -20,6 +20,9 @@ if mutation:
 assert '[strongSelf applyPreferenceProfile:proposal font:font];' in s
 for old in ['undoDefaultPrefs:', 'cancelButtonPressed:', '_undoManager', 'MagnificationChangedNotification']:
  assert old not in re.sub(r"/\*.*?\*/", "", s, flags=re.S),old
+delegate_source=(ROOT/'Sources/TSAppDelegate.m').read_bytes().decode('latin1')
+a=delegate_source.index('- (void)syncImageCopyTypeMenu\n');copy_method=delegate_source[a:delegate_source.index('\n}',a)+2].replace('NSApp.mainMenu','copyMenu')
+copy_method=copy_method.replace('{\n','{\n    self.copies++;\n',1)
 names=['DocumentFontChangedNotification','ConsoleFontChangedNotification','DocumentSyntaxColorNotification','DocumentAutoCompleteNotification','DocumentBibDeskCompleteNotification','ExternalEditorNotification','SourceColorChangedNotification']
 program=r'''
 #import <Cocoa/Cocoa.h>
@@ -29,6 +32,8 @@ static TSMemoryDefaults *memory;
 #define SUD memory
 CONSTANTS
 static NSUInteger dock,spell,colors,encoding;
+static NSMenu *copyMenu;
+static NSString *PdfCopyTypeKey=@"PdfCopyType";
 @interface TSDockIconController:NSObject @end
 @implementation TSDockIconController
 + (id)sharedController {static id v;if(!v)v=[self new];return v;}
@@ -50,10 +55,10 @@ static NSUInteger dock,spell,colors,encoding;
 @end
 @interface TSAppDelegate:NSObject
 @property NSUInteger copies;
-- (void)changeImageCopyType:(id)item;
+- (void)syncImageCopyTypeMenu;
 @end
 @implementation TSAppDelegate
-- (void)changeImageCopyType:(id)item { self.copies++; }
+COPYMETHOD
 @end
 @interface FakeApp:NSObject
 @property TSAppDelegate *delegate;
@@ -82,10 +87,11 @@ int main(int argc,char **argv){@autoreleasepool{
  for(int n=1;n<argc;n++) {
   NSDictionary *profile=[NSDictionary dictionaryWithContentsOfFile:@(argv[n])];
   TSPreferenceProfile *proposal=[[TSPreferenceProfile alloc]initWithProfile:profile documentFont:font];check(proposal!=nil,"valid profile");
-  memory=[TSMemoryDefaults new];Probe *p=[Probe new];p->_imageCopyTypePopup=[Popup new];app=[FakeApp new];app.delegate=[TSAppDelegate new];
+  memory=[TSMemoryDefaults new];copyMenu=[[NSMenu alloc]initWithTitle:@"Root"];NSMenuItem *parent=[[NSMenuItem alloc]initWithTitle:@"Nested" action:NULL keyEquivalent:@""];[copyMenu addItem:parent];parent.submenu=[[NSMenu alloc]initWithTitle:@"Copy Format"];for(NSInteger tag=1;tag<=5;tag++){NSMenuItem *i=[[NSMenuItem alloc]initWithTitle:@"Format" action:@selector(changeImageCopyType:) keyEquivalent:@""];i.tag=tag;i.state=NSControlStateValueOn;[parent.submenu addItem:i];} Probe *p=[Probe new];p->_imageCopyTypePopup=[Popup new];app=[FakeApp new];app.delegate=[TSAppDelegate new];
   NSMutableArray *notes=[NSMutableArray new];
   id token=[NSNotificationCenter.defaultCenter addObserverForName:nil object:p queue:nil usingBlock:^(NSNotification *note){[notes addObject:note.name];check(note.userInfo==nil,"no transient theme dictionary");}];
   [p applyPreferenceProfile:proposal font:nil];
+  for(NSMenuItem *i in parent.submenu.itemArray)check(i.state==([SUD integerForKey:@"PdfCopyType"]==i.tag?NSControlStateValueOn:NSControlStateValueOff),"profile synchronizes exactly one main menu format check");
   check(p.runtime==1 && p.controls==1 && p.themes==1,"runtime and loaded controls refresh exactly once");
   [notes removeAllObjects];NSUInteger d=dock,sp=spell,c=colors;
   [p applyPreferenceProfile:proposal font:nil];
@@ -116,7 +122,7 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  puts("PASS: nine profile transactions, changed-only reflection, Dock reset, spelling invalidation and no PDF zoom broadcast");
 }return 0;}
-'''.replace('CONSTANTS','\n'.join(f'NSString *const {n}=@"{n}";' for n in names)).replace('BODY',body)
+'''.replace('CONSTANTS','\n'.join(f'NSString *const {n}=@"{n}";' for n in names)).replace('BODY',body).replace('COPYMETHOD',copy_method)
 with tempfile.TemporaryDirectory(prefix='texshop-profile-live-') as td:
  t=Path(td);(t/'probe.m').write_text(program)
  subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-I',str(ROOT/'Sources'),'-I',str(ROOT/'Tests'),'-framework','Cocoa',str(t/'probe.m'),str(ROOT/'Sources/TSPreferenceProfile.m'),'-o',str(t/'probe')],check=True)

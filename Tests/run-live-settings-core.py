@@ -47,6 +47,7 @@ int main(int argc,const char **argv) { @autoreleasepool {
     for (int index=2;index<argc;index++) {
         NSMutableDictionary *profile = [[NSDictionary dictionaryWithContentsOfFile:(@(argv[index]) ?: @"")] mutableCopy];
         profile[@"DocumentFontAttributes"] = @"profile-attributes";
+        profile[@"TSSettingsSelectedCategory"] = @"profile-category";
         check(profile != nil,"load bundled profile");
         for (NSString *key in profile) check([TSKnownPreferenceKeys() containsObject:key],"classify every bundled key");
         TSPreferenceProfile *proposal = [[TSPreferenceProfile alloc] initWithProfile:profile documentFont:font];
@@ -57,7 +58,7 @@ int main(int argc,const char **argv) { @autoreleasepool {
                 @"AppleLanguages":@[@"ja"],@"SparkleAutomaticUpdate":@YES,@"SparkleInterval":@3,
                 @"SUEnableAutomaticChecks":@YES,@"SUHasLaunchedBefore":@YES,@"SUScheduledCheckInterval":@99,
                 @"NSWindow Frame Settings":@"frame",@"NSToolbar Configuration PDF":@{@"x":@1},
-                @"NSSplitView Subview Frames A":@[@"frame"],@"TSSettingsUICategory":@"source",@"UnknownVendorKey":@"keep"};
+                @"NSSplitView Subview Frames A":@[@"frame"],@"TSSettingsUICategory":@"source",@"TSSettingsSelectedCategory":@"preview",@"UnknownVendorKey":@"keep"};
             if (withPreservedValues.boolValue) [defaults.values addEntriesFromDictionary:kept];
             defaults.values[@"DockIconStyle"]=@"classic";
             defaults.values[@"TeXAwareSpellChecking"]=@NO;

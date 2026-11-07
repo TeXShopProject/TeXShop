@@ -186,7 +186,19 @@
 "Continue Editing" = "Continue Editing";
 "Restore This Field" = "Restore This Field";
 "The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
-"Choose a valid theme name without path separators." = "Choose a valid theme name without path separators.";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Alegeți alt nume pentru temă. Nu sunt permise numele care încep cu punct, separatorii de cale, caracterele de control sau legăturile simbolice.";
 "The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
 
 "Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+
+"Back" = "Înapoi";
+
+"Forward" = "Înainte";
+
+"Settings Categories" = "Categorii de configurări";
+
+"Navigation History" = "Istoric de navigare";
+
+"Back (⌘[)" = "Înapoi (⌘[)";
+
+"Forward (⌘])" = "Înainte (⌘])";

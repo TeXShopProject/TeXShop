@@ -208,6 +208,7 @@ static TSPreferenceKey const TSProfileKeySyntaxColorFootnote = @"SyntaxColorFoot
 static TSPreferenceKey const TSProfileKeySyntaxColoringEnabled = @"SyntaxColoringEnabled";
 static TSPreferenceKey const TSProfileKeyTSHasBeenUsed = @"TSHasBeenUsed";
 static TSPreferenceKey const TSProfileKeyTSMenuShortcutOverrides = @"TSMenuShortcutOverrides";
+static TSPreferenceKey const TSProfileKeyTSSettingsSelectedCategory = @"TSSettingsSelectedCategory";
 static TSPreferenceKey const TSProfileKeyTSPreviewAppearanceMode = @"TSPreviewAppearanceMode";
 static TSPreferenceKey const TSProfileKeyTabCharacterKind = @"TabCharacterKind";
 static TSPreferenceKey const TSProfileKeyTabCharacterKindExtended = @"TabCharacterKindExtended";
@@ -498,6 +499,7 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             TSProfileKeySyntaxColoringEnabled,
             TSProfileKeyTSHasBeenUsed,
             TSProfileKeyTSMenuShortcutOverrides,
+            TSProfileKeyTSSettingsSelectedCategory,
             TSProfileKeyTSPreviewAppearanceMode,
             TSProfileKeyTabCharacterKind,
             TSProfileKeyTabCharacterKindExtended,
@@ -599,7 +601,8 @@ BOOL TSPreferenceProfilePreservesKey(TSPreferenceKey key)
         TSProfileKeyPdfWindow,
         TSProfileKeySparkleAutomaticUpdate,
         TSProfileKeySparkleInterval,
-        TSProfileKeyTSMenuShortcutOverrides
+        TSProfileKeyTSMenuShortcutOverrides,
+        TSProfileKeyTSSettingsSelectedCategory
     ] containsObject:key];
 }
 

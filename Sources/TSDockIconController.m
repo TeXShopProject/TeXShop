@@ -43,10 +43,11 @@
     [self updatePreview];
 }
 - (void)installInPreferences:(NSTabView *)tabs {
-    if (self.buttons.count || tabs.numberOfTabViewItems < 2) return;
-    // The second-to-last tab is Misc2 in every localization. Its lower-left corner
-    // is free below the left column, which leaves room for more choices later.
-    NSView *misc = tabs.tabViewItems[tabs.numberOfTabViewItems - 2].view;
+    if (tabs.numberOfTabViewItems < 2) return;
+    [self installInPreferencesPane:tabs.tabViewItems[tabs.numberOfTabViewItems - 2].view];
+}
+- (void)installInPreferencesPane:(NSView *)misc {
+    if (misc == nil || self.buttons.count != 0) return;
     CGFloat middle = NSMidX(misc.bounds);
     NSBox *column = nil;
     for (NSView *view in misc.subviews)

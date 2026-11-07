@@ -183,7 +183,19 @@
 "Continue Editing" = "Continue Editing";
 "Restore This Field" = "Restore This Field";
 "The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
-"Choose a valid theme name without path separators." = "Choose a valid theme name without path separators.";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "请指定其他主题名称。不允许使用以点开头的名称、路径分隔符、控制字符或符号链接。";
 "The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
 
 "Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+
+"Back" = "后退";
+
+"Forward" = "前进";
+
+"Settings Categories" = "设置类别";
+
+"Navigation History" = "导航历史记录";
+
+"Back (⌘[)" = "后退 (⌘[)";
+
+"Forward (⌘])" = "前进 (⌘])";
