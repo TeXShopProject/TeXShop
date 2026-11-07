@@ -277,6 +277,23 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==cmd);
     REQUIRE([TSKeyboardShortcuts event:LayoutEvent(@"F",@"f",kVK_ANSI_F,cmd|NSEventModifierFlagCapsLock) matchesAction:@selector(performFindPanelAction:) tag:1]);
     puts("PASS: Dvorak–QWERTY Command, empty unmodified characters and Caps Lock");
+    [controller recordShortcutEvent:LayoutEvent(@"F",@"φ",kVK_ANSI_F,cmd)];
+    REQUIRE([controller.capturedKey isEqual:@"f"] && controller.capturedModifiers==cmd);
+    NSEvent *swedishColon = LayoutEvent(@".",@":",kVK_ANSI_Period,cmd|shift);
+    REQUIRE([TSShortcutCharacterForEvent(swedishColon) isEqual:@":"]);
+    [controller recordShortcutEvent:swedishColon];
+    NSDictionary *expectedColon = TSBinding(@":",cmd|shift);
+    REQUIRE([controller.capturedKey isEqual:expectedColon[@"key"]]);
+    REQUIRE(controller.capturedModifiers==[expectedColon[@"modifiers"] unsignedIntegerValue]);
+    REQUIRE(![controller.capturedKey isEqual:@"."]);
+    REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"/",@"?",kVK_ANSI_Minus,cmd|shift)) isEqual:@"?"]);
+    REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@",",@";",kVK_ANSI_Comma,cmd|shift)) isEqual:@";"]);
+    [controller recordShortcutEvent:LayoutEvent(@"[",@"[",kVK_ANSI_LeftBracket,cmd|shift)];
+    NSDictionary *expectedBracket = TSBinding(@"[",cmd|shift);
+    REQUIRE([controller.capturedKey isEqual:expectedBracket[@"key"]]);
+    REQUIRE(controller.capturedModifiers==[expectedBracket[@"modifiers"] unsignedIntegerValue]);
+    puts("PASS: Command letters normalize case and shifted punctuation keeps the normal keyboard layer");
+
     NSEvent *optionG=LayoutEvent(@"©",@"g",kVK_ANSI_G,cmd|NSEventModifierFlagOption);
     REQUIRE([TSShortcutCharacterForEvent(optionG) isEqual:@"g"]);
     [controller recordShortcutEvent:optionG];

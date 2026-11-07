@@ -56,11 +56,16 @@ static NSString *TSShortcutCharacterForEvent(NSEvent *event) {
     NSString *key = event.charactersIgnoringModifiers ?: @"";
     if (!(event.modifierFlags & NSEventModifierFlagCommand)) return key;
     NSString *characters = event.characters;
-    if (!(event.modifierFlags & (NSEventModifierFlagOption | NSEventModifierFlagControl)) &&
-        characters.length == 1 && [characters characterAtIndex:0] >= 0x20 && [characters characterAtIndex:0] < 0x7f)
+    unichar c = characters.length == 1 ? [characters characterAtIndex:0] : 0;
+    BOOL plainASCII = !(event.modifierFlags & (NSEventModifierFlagOption | NSEventModifierFlagControl)) && c >= 0x20 && c < 0x7f;
+    if (plainASCII && ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
         // Shift comes from the event flags; Caps Lock must not add Shift.
         return characters.lowercaseString;
-    if (key.length != 1 || [key characterAtIndex:0] < 0x80 || [key characterAtIndex:0] >= 0xf700) return key;
+    // Command layers can suppress Shift for punctuation. Keep the normal layer
+    // here so normalization cannot turn, for example, Swedish Command-colon into Command-period.
+    if (key.length == 1 && ([key characterAtIndex:0] < 0x80 || [key characterAtIndex:0] >= 0xf700)) return key;
+    if (plainASCII) return characters;
+    if (key.length != 1) return key;
     TISInputSourceRef source = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
     CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
     NSString *latin = TSTranslateKey(data, event.keyCode, (event.modifierFlags & NSEventModifierFlagShift) != 0, LMGetKbdType());
