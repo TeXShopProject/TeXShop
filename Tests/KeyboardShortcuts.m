@@ -293,6 +293,8 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([controller.capturedKey isEqual:expectedBracket[@"key"]]);
     REQUIRE(controller.capturedModifiers==[expectedBracket[@"modifiers"] unsignedIntegerValue]);
     puts("PASS: Command letters normalize case and shifted punctuation keeps the normal keyboard layer");
+    REQUIRE([TSShortcutCharacterForEvent(LayoutEvent(@"=",@"",kVK_ANSI_Equal,cmd)) isEqual:@"="]);
+    puts("PASS: Command punctuation is retained when the normal keyboard layer is empty");
 
     NSEvent *optionG=LayoutEvent(@"©",@"g",kVK_ANSI_G,cmd|NSEventModifierFlagOption);
     REQUIRE([TSShortcutCharacterForEvent(optionG) isEqual:@"g"]);
