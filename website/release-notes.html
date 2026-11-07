@@ -31,7 +31,7 @@
 <li>Move file-change checks off the main thread to keep the interface responsive.</li>
 <li>Fix a PDFKit crash during preview reloads, including changes in page count, by correcting how PDF documents are shared with the second preview pane.</li>
 <li>Correct Space and Shift-Space scrolling when a PDF page is larger than the preview window.</li>
-<li>Add Page Layout and Two-Page Arrangement menus to the preview toolbar. They change the page layout, the page direction and whether the first page is shown alone as a cover for the current document until Restore Document Settings is chosen or the document is closed. The page being viewed and the zoom are kept when the layout or arrangement changes.</li>
+<li>Add Page Layout and Two-Page Arrangement menus to the preview toolbar. Page Layout changes the page layout of the current document. Two-Page Arrangement changes the page direction and whether the first page is shown alone as a cover; Restore Document Settings returns these two to the document’s settings. The changes last until the document is closed. The page being viewed and the zoom are kept when the layout or arrangement changes.</li>
 <li>Add a check box under Settings → Preview, formerly a hidden setting, to show the first page alone as a cover in two-page layouts. Use the page direction recorded in the PDF unless a magic comment specifies the direction. These settings apply to documents opened afterward, and magic comments take precedence over them.</li>
 </ul>
 <h3>Editing and keyboard navigation</h3>
@@ -50,7 +50,7 @@
 <li>Always write TeX’s backslash and tilde as the bytes 0x5C and 0x7E in Japanese encodings. A typed backslash or tilde no longer becomes a full-width backslash or wave dash, or the byte 0x80, in Mac Japanese and Shift JIS X0213 files, and a yen sign typed for a backslash no longer becomes “?” in Windows Shift JIS, EUC-JP and ISO-2022-JP files.</li>
 <li>Use UTF-8 rather than Latin 9, with a message, when an encoding name is not recognized, and write project files in UTF-8.</li>
 <li>When an opened file has Windows (CRLF), classic Mac (CR) or mixed line endings, tell the user that they have been changed to LF. The notice can be turned off for each file.</li>
-<li>Fix the encoding menu in the Save dialog, which did not change the encoding of the saved file. The menu can now be shown from Settings → Misc1. When the source has an encoding magic comment, the menu shows that encoding and cannot be changed.</li>
+<li>Fix the encoding menu in the Save dialog, which did not change the encoding of the saved file. The menu can now be shown from Settings → Misc1. When the source has an encoding magic comment naming a known encoding, the menu shows that encoding and cannot be changed, unless the file could not be read in that encoding.</li>
 <li>Add settings under Settings → Misc1 to turn autosave and Versions on or off and, while autosave is off, to keep the previous file as “name~” when saving.</li>
 </ul>
 <h3>App and Dock icons</h3>
