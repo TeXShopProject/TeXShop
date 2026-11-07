@@ -5,6 +5,7 @@ No TeXShop launch, real preference writes or input-source selection changes.
 from pathlib import Path
 import subprocess
 import tempfile
+import sys
 import xml.etree.ElementTree as ET
 
 root = Path(__file__).resolve().parents[1]
@@ -50,8 +51,10 @@ print('PASS: deferred launch installation, PDF search call sites and stable spli
 
 with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
     (Path(td) / 'MacroKeyProduction.inc').write_text(macro[macro.index('NSString *getKeyEquivalentFromString('):])
+    production=(root/'Sources/TSKeyboardShortcuts.m').read_text()
+    (Path(td)/'TSKeyboardShortcuts.m').write_text(production)
     binary = Path(td) / 'shortcuts'
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Carbon', '-I', td,
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Carbon', '-I', td, '-I',str(root/'Sources'),
                     str(root / 'Tests/KeyboardShortcuts.m'), '-o', str(binary)], check=True)
     subprocess.run([str(binary)], check=True)
     paths = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
@@ -60,3 +63,32 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
         result = subprocess.run([str(binary), str(path), str(root / "Resources/TeXShop/Macros/Macros_Latex.plist")], capture_output=True, text=True)
         assert result.returncode == 0, (str(path), result.stdout, result.stderr)
     print('PASS: commands and bundled macro keys in all 36 compiled menu variants (12 languages)')
+    if '--mutations' in sys.argv:
+        cases={
+            'ignore captured spellings when checking conflicts': (
+                'NSArray *bindings = self.capturedBindings ?: @[TSBinding(self.capturedKey, self.capturedModifiers)];',
+                'NSArray *bindings = @[TSBinding(self.capturedKey, self.capturedModifiers)];'),
+            'discard unshifted physical spelling': (
+                '[bindings addObject:TSBinding(unshifted, event.modifierFlags)];', '(void)0;'),
+            'discard shifted character spelling': (
+                '[bindings addObject:TSBinding(key, event.modifierFlags)];', '(void)0;'),
+            'do not retain captured event spellings': (
+                'self.capturedBindings = TSEventBindings(event, [event charactersByApplyingModifiers:0]);',
+                'self.capturedBindings = @[TSRecordedBinding(event, [event charactersByApplyingModifiers:0])];'),
+            'apply shortcut without checking event spellings': (
+                'NSString *conflict = [self conflictForCapturedShortcut];',
+                'NSString *conflict = [self.store conflictForKey:self.capturedKey modifiers:self.capturedModifiers except:self.editingCommand.item restoring:nil];'),
+        }
+        for name,(before,after) in cases.items():
+            assert production.count(before)==1,(name,before)
+            (Path(td)/'TSKeyboardShortcuts.m').write_text(production.replace(before,after))
+            subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-nullability-completeness','-framework','Cocoa','-framework','Carbon','-I',td,'-I',str(root/'Sources'),str(root/'Tests/KeyboardShortcuts.m'),'-o',str(binary)],check=True)
+            detected=False
+            for path in paths:
+                result=subprocess.run([str(binary),str(path),str(root/'Resources/TeXShop/Macros/Macros_Latex.plist')],capture_output=True,text=True)
+                if result.returncode:
+                    assert 'FAIL ' in result.stderr,(name,result.stderr)
+                    print('DETECTED:',name,path.parts[-3],result.stderr.strip())
+                    detected=True
+                    break
+            assert detected,name

@@ -1,7 +1,7 @@
 // Runs against production code with in-memory preferences and no visible windows.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
-#import "../Sources/TSKeyboardShortcuts.m"
+#import "TSKeyboardShortcuts.m"
 #pragma clang diagnostic pop
 #include "MacroKeyProduction.inc"
 static void CollectMacros(NSArray *array, NSString *path, NSMutableArray *candidates) {
@@ -49,6 +49,41 @@ static NSEvent *LayoutEvent(NSString *characters, NSString *ignoring, unsigned s
     return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0
         windowNumber:0 context:nil characters:characters charactersIgnoringModifiers:ignoring isARepeat:NO keyCode:code];
 }
+static NSString *fixtureUnshifted;
+static IMP originalUnshifted;
+static id UnshiftedForFixture(id self, SEL cmd, NSEventModifierFlags flags) {
+    return fixtureUnshifted ?: ((id (*)(id,SEL,NSEventModifierFlags))originalUnshifted)(self,cmd,flags);
+}
+static void CheckRecordedMenuConflicts(TSShortcutStore *store) {
+    const NSUInteger cmd=NSEventModifierFlagCommand, shift=NSEventModifierFlagShift;
+    TSKeyboardShortcuts *ui=[[TSKeyboardShortcuts alloc] initWithWindow:nil];
+    ui.store=store; ui.editingCommand=Command(store,@"TSShortcut.doTypeset:.-1");
+    ui.captureError=[NSTextField new]; ui.captureDisplay=[NSTextField new]; ui.applyButton=[NSButton new];
+    NSString *original=ui.editingCommand.item.keyEquivalent;
+    NSArray *cases=@[@[@"+",@"=",@24,@"zoomIn:"],@[@"_",@"-",@27,@"zoomOut:"]];
+    if ([Command(store,@"TSShortcut.zoomOut:.0").item.keyEquivalent isEqual:@"_"])
+        cases=[cases arrayByAddingObjectsFromArray:@[@[@"+",@";",@41,@"zoomIn:"],@[@"_",@"\\",@94,@"zoomOut:"]]];
+    Method method=class_getInstanceMethod(NSEvent.class,@selector(charactersByApplyingModifiers:));
+    originalUnshifted=method_setImplementation(method,(IMP)UnshiftedForFixture);
+    for (NSArray *c in cases) {
+        fixtureUnshifted=c[1];
+        [ui recordShortcutEvent:LayoutEvent(c[0],c[0],[c[2] unsignedShortValue],cmd|shift)];
+        TSShortcutCommand *zoom=Command(store,[@"TSShortcut." stringByAppendingFormat:@"%@.0",c[3]]);
+        REQUIRE(zoom);
+        REQUIRE([[ui conflictForCapturedShortcut] containsString:zoom.path]);
+        [ui applyCapturedShortcut:nil];
+        REQUIRE([ui.captureError.stringValue containsString:zoom.path]);
+        REQUIRE([ui.editingCommand.item.keyEquivalent isEqual:original]);
+    }
+    // A German unshifted plus must not acquire the shifted Zoom In alias.
+    TSShortcutCommand *zoom=Command(store,@"TSShortcut.zoomIn:.0");
+    if ([zoom.item.keyEquivalent isEqual:@"+"] && zoom.item.keyEquivalentModifierMask==(cmd|shift)) {
+        fixtureUnshifted=@"+"; [ui recordShortcutEvent:LayoutEvent(@"+",@"+",30,cmd)];
+        REQUIRE(ui.capturedBindings.count==1);
+        REQUIRE(![[ui conflictForCapturedShortcut] containsString:zoom.path]);
+    }
+    method_setImplementation(method,originalUnshifted); fixtureUnshifted=nil;
+}
 static NSMenu *MainMenu(void) {
     NSMenu *root = [NSMenu new], *menu = [NSMenu new];
     NSMenuItem *parent = [[NSMenuItem alloc] initWithTitle:@"Fixture" action:nil keyEquivalent:@""];
@@ -91,6 +126,7 @@ int main(int argc, char **argv) { @autoreleasepool {
             if (conflicts.count) fprintf(stderr,"Conflicts: %s\n",conflicts.description.UTF8String);
             REQUIRE(candidates.count>100 && conflicts.count==0);
         }
+        CheckRecordedMenuConflicts(store);
         return 0;
     }
     const NSEventModifierFlags cmd = NSEventModifierFlagCommand, shift = NSEventModifierFlagShift;

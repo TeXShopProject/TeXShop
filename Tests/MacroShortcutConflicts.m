@@ -181,6 +181,14 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSEvent *punctuation=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand|NSEventModifierFlagShift timestamp:0 windowNumber:0 context:nil characters:@"{" charactersIgnoringModifiers:@"{" isARepeat:NO keyCode:33];
     REQUIRE([TSRecordedBinding(punctuation,@"[") isEqual:TSBinding(@"{",NSEventModifierFlagCommand)]);
     REQUIRE([TSShortcutStore event:punctuation matchesItem:Command(@"Find punctuation",@"{")]);
+    NSMenuItem *legacy=Command(@"Legacy Find",@"{"); legacy.keyEquivalentModifierMask=NSEventModifierFlagCommand|NSEventModifierFlagShift;
+    REQUIRE([TSShortcutStore event:punctuation matchesItem:legacy]);
+    NSUInteger control=NSEventModifierFlagControl, shifted=NSEventModifierFlagShift;
+    NSEvent *cyrillic=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:control|shifted timestamp:0 windowNumber:0 context:nil characters:@"Ж" charactersIgnoringModifiers:@"Ж" isARepeat:NO keyCode:41];
+    REQUIRE([TSRecordedBinding(cyrillic,@"ж") isEqual:TSBinding(@"Ж",control|shifted)]);
+    REQUIRE([TSRecordedBinding(punctuation,@"") isEqual:TSBinding(@"{",NSEventModifierFlagCommand)]);
+    REQUIRE([TSRecordedBinding(punctuation,@"ab") isEqual:TSBinding(@"{",NSEventModifierFlagCommand)]);
+    REQUIRE([TSEventBindings(punctuation,@"[") containsObject:TSBinding(@"{",NSEventModifierFlagCommand|shifted)]);
     MacrosPath=[NSString stringWithUTF8String:argv[1]]; g_macroType=LatexEngine;
     NSUInteger cmd=NSEventModifierFlagCommand, shift=NSEventModifierFlagShift;
     NSMenu *menu=[NSMenu new]; NSApp.mainMenu=menu;
@@ -271,6 +279,16 @@ int main(int argc, char **argv) { @autoreleasepool {
     }
     Drain(); REQUIRE(rebuilds==before+3);
     [menu removeItem:replacement]; Drain(); REQUIRE(rebuilds==before+4);
+    // Reinsert the same object with only its key or modifier changed.
+    [menu addItem:replacement]; Drain(); before=rebuilds;
+    [menu removeItem:replacement]; replacement.keyEquivalent=@"u"; [menu addItem:replacement];
+    Drain(); REQUIRE(rebuilds==before+1); before=rebuilds;
+    [menu removeItem:replacement]; replacement.keyEquivalentModifierMask=cmd|shift; [menu addItem:replacement];
+    Drain(); REQUIRE(rebuilds==before+1);
+    [menu removeItem:replacement]; Drain(); before=rebuilds;
+    NSMenuItem *recent=[[NSMenuItem alloc] initWithTitle:@"Recent document" action:@selector(description) keyEquivalent:@""];
+    for(int i=0;i<5;i++) { [menu addItem:recent]; Drain(); [menu removeItem:recent]; Drain(); }
+    REQUIRE(rebuilds==before);
     [[NSNotificationCenter defaultCenter] removeObserver:counter];
     [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidAddItemNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:coordinator name:NSMenuDidRemoveItemNotification object:nil];

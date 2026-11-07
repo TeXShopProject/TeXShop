@@ -16,10 +16,17 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
             args.append(str(Path(sys.argv[1])/f'macro-{path.parts[-3]}.png'))
         subprocess.run(args,check=True)
     if mutation:
-        # Reintroduce the faulty frame expansion independently of layout placement.
-        broken=body.replace('    if (self.shortcutStatus) return;', '    if (self.shortcutStatus) return; NSRect f=[window frame]; f.size.height+=60; [window setFrame:f display:NO];')
-        (Path(td)/'MacroStatusLayout.inc').write_text(broken)
-        subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-framework','Cocoa','-I',td,'-I',str(root/'Sources'),str(root/'Tests/MacroShortcutLayout.m'),'-o',str(binary)],check=True)
-        result=subprocess.run([str(binary),str(root/'Resources/Interfaces/Base.lproj/MacroEditor.nib/keyedobjects.nib')],capture_output=True,text=True)
-        assert result.returncode and 'FAIL ' in result.stderr, result.stderr
-        print('DETECTED: frame growth on reopening:',result.stderr.strip())
+        cases={
+            'frame growth on reopening': ('    if (self.shortcutStatus) return;', '    if (self.shortcutStatus) return; NSRect f=[window frame]; f.size.height+=60; [window setFrame:f display:NO];'),
+            'editors extend beyond window': ('frame.origin.y += height; frame.size.height -= height;', 'frame.origin.y += height;'),
+            'controls overlap status band': ('} else if (NSMinY(frame) < editorBottom) frame.origin.y += height;', '}'),
+            'minimum height excludes status band': ('minimum.height += height;', ''),
+            'restored small window stays too small': ('if (NSHeight(windowFrame) < minimum.height)', 'if (NO)'),
+        }
+        for name,(before,after) in cases.items():
+            assert body.count(before)==1
+            (Path(td)/'MacroStatusLayout.inc').write_text(body.replace(before,after))
+            subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-framework','Cocoa','-I',td,'-I',str(root/'Sources'),str(root/'Tests/MacroShortcutLayout.m'),'-o',str(binary)],check=True)
+            result=subprocess.run([str(binary),str(root/'Resources/Interfaces/Base.lproj/MacroEditor.nib/keyedobjects.nib')],capture_output=True,text=True)
+            assert result.returncode and 'FAIL ' in result.stderr,(name,result.stderr)
+            print('DETECTED:',name,result.stderr.strip())

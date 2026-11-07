@@ -65,11 +65,23 @@ static NSString *TSShortcutCharacterForEvent(NSEvent *event) {
 static NSDictionary *TSRecordedBinding(NSEvent *event, NSString *unshifted) {
     NSString *key = TSShortcutCharacterForEvent(event);
     NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
-    if ((flags & NSEventModifierFlagShift) && key.length == 1 && unshifted.length == 1 &&
+    if ((flags & NSEventModifierFlagShift) && key.length == 1 &&
         ![key isEqual:unshifted] && [key characterAtIndex:0] < 0xf700 &&
         ![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])
         flags &= ~NSEventModifierFlagShift;
     return TSBinding(key, flags);
+}
+// These spellings describe the captured event only. They are never used to
+// compare saved menu bindings with macro bindings or written to preferences.
+static NSArray<NSDictionary *> *TSEventBindings(NSEvent *event, NSString *unshifted) {
+    NSString *key = TSShortcutCharacterForEvent(event);
+    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSetWithObject:TSRecordedBinding(event, unshifted)];
+    [bindings addObject:TSBinding(key, event.modifierFlags)];
+    if ((event.modifierFlags & NSEventModifierFlagShift) && key.length == 1 && unshifted.length == 1 &&
+        [key characterAtIndex:0] < 0xf700 &&
+        ![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])
+        [bindings addObject:TSBinding(unshifted, event.modifierFlags)];
+    return bindings.array;
 }
 static void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *, NSString *)) {
     for (NSMenuItem *item in menu.itemArray) {
@@ -328,7 +340,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 + (BOOL)event:(NSEvent *)event matchesItem:(NSMenuItem *)item {
     if (!item.keyEquivalent.length) return NO;
-    return [TSRecordedBinding(event, [event charactersByApplyingModifiers:0]) isEqual:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];
+    return [TSEventBindings(event, [event charactersByApplyingModifiers:0]) containsObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];
 }
 @end
 
@@ -389,6 +401,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 @property NSTextField *captureError;
 @property NSButton *applyButton;
 @property NSString *capturedKey;
+@property NSArray<NSDictionary *> *capturedBindings;
 @property NSEventModifierFlags capturedModifiers;
 @end
 @implementation TSKeyboardShortcuts
@@ -416,7 +429,8 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 - (NSArray *)menuBindingSnapshot {
     NSMutableArray *bindings = [NSMutableArray array];
     TSVisitMenu(NSApp.mainMenu, @"", ^(NSMenuItem *item, NSString *path) {
-        if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:"))
+        if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:") &&
+            (item.keyEquivalent.length || [item.identifier hasPrefix:@"TSShortcut."]))
             [bindings addObject:@[[NSValue valueWithNonretainedObject:item], item.keyEquivalent,
                 @(item.keyEquivalentModifierMask), NSStringFromSelector(item.action) ?: @"", item.identifier ?: @""]];
     });
@@ -611,7 +625,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 - (void)editShortcut:(id)sender {
     TSShortcutCommand *command = self.selectedCommand; if (!command || self.window.attachedSheet) return;
-    self.editingCommand = command; self.capturedKey = nil;
+    self.editingCommand = command; self.capturedKey = nil; self.capturedBindings = nil;
     TSShortcutCapturePanel *panel = [[TSShortcutCapturePanel alloc] initWithContentRect:NSMakeRect(0,0,640,240) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     self.capturePanel = panel;
     panel.title = NSLocalizedString(@"Change Shortcut", @"");
@@ -648,20 +662,31 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     self.captureError.stringValue = @"";
     self.applyButton.enabled = [TSShortcutStore isAllowedKey:key modifiers:flags] && key.length > 0;
     if (!self.applyButton.enabled) {
-        self.capturedKey = nil;
+        self.capturedKey = nil; self.capturedBindings = nil;
         self.captureDisplay.stringValue = NSLocalizedString(@"Press the new shortcut (Escape to cancel).", @"");
         self.captureError.stringValue = NSLocalizedString(@"Use Command or Control with a key, or a function key (F1–F20).", @"");
     } else {
-        NSDictionary *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
+        self.capturedBindings = TSEventBindings(event, [event charactersByApplyingModifiers:0]);
+        NSDictionary *binding = self.capturedBindings.firstObject;
         self.capturedKey = binding[@"key"]; self.capturedModifiers = [binding[@"modifiers"] unsignedIntegerValue];
         self.captureDisplay.stringValue = [TSShortcutStore displayKey:self.capturedKey modifiers:self.capturedModifiers];
     }
     self.capturePanel.recorder.accessibilityValue = self.captureDisplay.stringValue;
 }
 - (void)cancelCapture:(id)sender { [self.window endSheet:self.capturePanel returnCode:NSModalResponseCancel]; }
+- (NSString *)conflictForCapturedShortcut {
+    NSArray *bindings = self.capturedBindings ?: @[TSBinding(self.capturedKey, self.capturedModifiers)];
+    NSMutableOrderedSet *conflicts = [NSMutableOrderedSet orderedSet];
+    for (NSDictionary *binding in bindings) {
+        NSString *path = [self.store conflictForKey:binding[@"key"] modifiers:[binding[@"modifiers"] unsignedIntegerValue]
+            except:self.editingCommand.item restoring:nil];
+        if (path) [conflicts addObject:path];
+    }
+    return conflicts.count ? [conflicts.array componentsJoinedByString:@"; "] : nil;
+}
 - (void)applyCapturedShortcut:(id)sender {
     if (!self.capturedKey || !self.applyButton.enabled) return;
-    NSString *conflict = [self.store conflictForKey:self.capturedKey modifiers:self.capturedModifiers except:self.editingCommand.item restoring:nil];
+    NSString *conflict = [self conflictForCapturedShortcut];
     if (conflict) { self.captureError.stringValue = [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict]; return; }
     if (![self confirmMacrosUsingKey:self.capturedKey modifiers:self.capturedModifiers]) return;
     NSString *error = [self.store setKey:self.capturedKey modifiers:self.capturedModifiers forCommand:self.editingCommand];

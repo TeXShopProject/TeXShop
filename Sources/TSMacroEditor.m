@@ -223,6 +223,18 @@ static TSFilterMode savedFilter = kNoFilterMode;
         } else if (NSMinY(frame) < editorBottom) frame.origin.y += height;
         view.frame = frame;
     }
+    NSSize minimum = [window minSize];
+    minimum.height += height;
+    // Some older nibs have no useful minimum. Keep at least 64pt of editor
+    // content even there, without enlarging a normally sized window.
+    for (NSView *view in host.subviews) if ([view isKindOfClass:NSScrollView.class])
+        minimum.height = MAX(minimum.height, NSHeight([window frame]) - NSHeight(view.frame) + 64);
+    [window setMinSize:minimum];
+    NSRect windowFrame = [window frame];
+    if (NSHeight(windowFrame) < minimum.height) {
+        windowFrame.size.height = minimum.height;
+        [window setFrame:windowFrame display:NO];
+    }
     self.shortcutStatus = [NSTextField wrappingLabelWithString:@""];
     self.shortcutStatus.frame = NSMakeRect(20, statusY, NSWidth(host.bounds)-40, statusHeight);
     self.shortcutStatus.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
