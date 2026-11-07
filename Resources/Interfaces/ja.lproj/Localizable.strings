@@ -179,3 +179,19 @@
 "Use Command or Control with a key, or a function key (F1–F20)." = "CommandまたはControlとキーを組み合わせるか、ファンクションキー（F1〜F20）を使ってください。";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "コマンドを選択してショートカットを変更できます。変更はすぐに反映されます。マクロと文字入力のキーバインドは、それぞれの専用エディタで編集してください。";
 "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "このウィンドウで行った変更を取り消します。既存のKeyEquivalents.plistの設定は維持されます。";
+
+/* Menu and macro shortcut conflicts */
+"Assign a shortcut used by macros?" = "マクロが使用しているキーを割り当てますか？";
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "次のマクロがこのキーを使用しています。メニューのコマンドに割り当てると、マクロのキーは無効になります。マクロのファイルは変更しません。\n\n%@";
+"Assign" = "割り当てる";
+"These macro shortcuts will become inactive:" = "次のマクロのショートカットは無効になります：";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "このキーはマクロ“%@”（%@）が先に使っているため無効です。";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "このキーは“%@”（%@）と重なっているため無効です。";
+"Macro shortcut conflicts" = "マクロのショートカットが競合しています";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "新しく割り当てた・変更したキーがほかの割り当てと重なっています。無効になるキーを一覧に示します。編集に戻るか、このまま保存するか、変更した競合キーだけを外して保存できます。マクロの名前と内容は保持されます。";
+"Return to Editing" = "編集に戻る";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "このまま保存（重なるキーは無効）";
+"Remove Conflicting Shortcuts and Save" = "重なるキーを外して保存";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "このキーはマクロ“%@”（%@）と重なっています。そちらは一覧で後にあるため、そのキーが無効になります。";
+
+"This shortcut is already used by:\n%@" = "このショートカットは次のコマンドで使用されています：\n%@";

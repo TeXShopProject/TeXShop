@@ -26,6 +26,7 @@
 #import "TSMacroOutlineController.h"
 
 #import "TSMacroMenuController.h"
+#import "TSMacroEditor.h"
 #import "TSMacroTreeNode.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
@@ -296,6 +297,8 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
  		}
 	} else if([[tableColumn identifier] isEqualToString: COLUMNID_KEY]) {
 		objectValue = getMenuItemString([(TSMacroTreeNode*)item key]);
+        if ([[TSMacroEditor sharedInstance] shortcutConflictForNode:item])
+            objectValue = [@"⚠ " stringByAppendingString:objectValue];
 	}
 	return objectValue;
 }
@@ -308,7 +311,7 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 	} else if ([[tableColumn identifier] isEqualToString: COLUMNID_KEY]) {
 		[(TSMacroTreeNode*)item setKey: object];
 	}
-
+    [[TSMacroEditor sharedInstance] outlineViewItemsChanged:nil];
 }
 
 // ================================================================
@@ -342,7 +345,8 @@ static TSMacroOutlineController *_sharedOutlineViewController = nil;
 			 [(ImageAndTextCell*)cell setImage1: nil];
         }
 	} else if ([[tableColumn identifier] isEqualToString: COLUMNID_KEY]) {
-		// Don't do anything unusual for the kind column.
+		[(NSTextFieldCell *)cell setTextColor:[[TSMacroEditor sharedInstance] shortcutConflictForNode:item]
+            ? NSColor.secondaryLabelColor : NSColor.controlTextColor];
 	}
 }
 

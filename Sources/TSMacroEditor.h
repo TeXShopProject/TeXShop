@@ -55,6 +55,11 @@
 	BOOL keyTouched;
 }
 
+@property (retain) NSMapTable *originalShortcutKeys;
+@property (retain) NSMapTable *shortcutConflicts;
+@property (retain) NSTextField *shortcutStatus;
+- (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node;
+- (void)refreshShortcutConflicts;
 @property (retain) TSMacroTreeNode *previousItem;	// record previously selected item
 
 + (id)sharedInstance;
@@ -78,7 +83,7 @@
 
 - (void)saveMacrosSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
 
-- (void)saveNodes: (id)nodes toFile: (NSString *)filePath;
+- (BOOL)saveNodes: (id)nodes toFile: (NSString *)filePath;
 - (void)saveSelection: (id)sender;
 - (void)savePanelDidEnd:(NSSavePanel *)sheet returnCode:(NSInteger)returnCode contextInfo:(void  *)contextInfo;
 - (void)readDictionaryToMacroEditor: (id)sender;

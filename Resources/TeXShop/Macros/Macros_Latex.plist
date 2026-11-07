@@ -2797,7 +2797,7 @@ end tell
 -- 2004 Will Robertson
 -- (You may do what you like with this script)</string>
 					<key>key</key>
-					<string>A+ControlKey</string>
+					<string>A+ShiftKey+ControlKey</string>
 					<key>name</key>
 					<string>New array</string>
 				</dict>

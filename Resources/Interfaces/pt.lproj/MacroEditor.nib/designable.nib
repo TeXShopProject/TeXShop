@@ -870,6 +870,7 @@
 					<reference key="NSNextKeyView" ref="433207824"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
+				<string key="NSMinSize">{270, 272}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<string key="NSFrameAutosaveName">Macro Editor</string>
 				<bool key="NSWindowIsRestorable">YES</bool>

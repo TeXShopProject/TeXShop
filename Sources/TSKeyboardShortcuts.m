@@ -4,8 +4,21 @@
 NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 static const NSEventModifierFlags TSShortcutModifiers = NSEventModifierFlagCommand | NSEventModifierFlagOption | NSEventModifierFlagControl | NSEventModifierFlagShift;
 
-// AppKit represents shifted punctuation as the resulting character without Shift.
-// Resolve older menu definitions such as Shift+"=" using the active keyboard layout.
+NSString * const TSRebuildMacrosNotification = @"TSRebuildMacros";
+NSString * const TSMacroShortcutsChangedNotification = @"TSMacroShortcutsChanged";
+NSModalResponse TSRunShortcutAlert(NSAlert *alert) {
+    id monitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent *(NSEvent *event) {
+        if (NSApp.modalWindow == alert.window && event.keyCode == 53) {
+            [NSApp stopModalWithCode:NSAlertFirstButtonReturn];
+            return nil;
+        }
+        return event;
+    }];
+    @try { return [alert runModal]; }
+    @finally { [NSEvent removeMonitor:monitor]; }
+}
+
+// Translate event input and restoration candidates; never use this for binding equality.
 static NSString *TSTranslateKey(CFDataRef data, UInt16 keyCode, BOOL shifted, UInt32 keyboardType) {
     if (!data) return nil;
     UniChar chars[8]; UniCharCount count = 0; UInt32 dead = 0;
@@ -14,41 +27,15 @@ static NSString *TSTranslateKey(CFDataRef data, UInt16 keyCode, BOOL shifted, UI
         kUCKeyTranslateNoDeadKeysBit, &dead, 8, &count, chars);
     return result == noErr && count == 1 ? [NSString stringWithCharacters:chars length:count] : nil;
 }
-static NSDictionary *TSBindingWithLayout(NSString *key, NSEventModifierFlags flags, CFDataRef data, UInt32 keyboardType) {
+// Compare AppKit key equivalents without consulting a keyboard layout.
+static NSDictionary *TSBinding(NSString *key, NSEventModifierFlags flags) {
     flags &= TSShortcutModifiers;
     if (!key.length) return @{@"key":@"", @"modifiers":@0};
-    if (![key isEqualToString:key.lowercaseString]) flags |= NSEventModifierFlagShift;
-    key = key.lowercaseString;
-    if ((flags & NSEventModifierFlagShift) && key.length == 1 &&
-        ![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]] &&
-        [key characterAtIndex:0] < 0xf700) {
-        // Prefer an already shifted character ("{"), then an unshifted definition ("=").
-        BOOL found = NO;
-        for (UInt16 code = 0; code < 128; code++) {
-            NSString *base = TSTranslateKey(data, code, NO, keyboardType), *shifted = TSTranslateKey(data, code, YES, keyboardType);
-            if ([shifted isEqual:key] && base.length == 1 && [base characterAtIndex:0] >= 0x20 && ![base isEqual:shifted]) { found = YES; break; }
-        }
-        if (!found) {
-            for (UInt16 code = 0; code < 128; code++) {
-                NSString *base = TSTranslateKey(data, code, NO, keyboardType), *shifted = TSTranslateKey(data, code, YES, keyboardType);
-                if ([base isEqual:key] && shifted.length == 1 && [shifted characterAtIndex:0] >= 0x20 && ![base isEqual:shifted]) { key = shifted; found = YES; break; }
-            }
-        }
-        if (found) flags &= ~NSEventModifierFlagShift;
+    if (key.length == 1 && [key characterAtIndex:0] >= 'A' && [key characterAtIndex:0] <= 'Z') {
+        key = key.lowercaseString;
+        flags |= NSEventModifierFlagShift;
     }
     return @{@"key":key, @"modifiers":@(flags)};
-}
-static NSDictionary *TSBinding(NSString *key, NSEventModifierFlags flags) {
-    TISInputSourceRef source = TISCopyCurrentKeyboardLayoutInputSource();
-    CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
-    if (!data) {
-        if (source) CFRelease(source);
-        source = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
-        data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
-    }
-    NSDictionary *binding = TSBindingWithLayout(key, flags, data, LMGetKbdType());
-    if (source) CFRelease(source);
-    return binding;
 }
 // Honor the Command layer, including Dvorak–QWERTY Command. Do not use
 // characters directly for Option/Control combinations (for example Option-G = ©).
@@ -62,9 +49,10 @@ static NSString *TSShortcutCharacterForEvent(NSEvent *event) {
         // Shift comes from the event flags; Caps Lock must not add Shift.
         return characters.lowercaseString;
     // Command layers can suppress Shift for punctuation. Keep the normal layer
-    // here so normalization cannot turn, for example, Swedish Command-colon into Command-period.
+    // here so recording cannot turn, for example, Swedish Command-colon into Command-period.
     if (key.length == 1 && ([key characterAtIndex:0] < 0x80 || [key characterAtIndex:0] >= 0xf700)) return key;
-    if (plainASCII) return characters;
+    if (key.length == 1 && ![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]]) return key;
+    if (plainASCII) return key.length ? key : characters;
     if (key.length != 1) return key;
     TISInputSourceRef source = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
     CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
@@ -72,9 +60,74 @@ static NSString *TSShortcutCharacterForEvent(NSEvent *event) {
     if (source) CFRelease(source);
     return latin.length == 1 && [latin characterAtIndex:0] >= 0x20 && [latin characterAtIndex:0] < 0x7f ? latin : key;
 }
+// A shifted punctuation character already encodes Shift in AppKit's key
+// equivalent. Canonicalize only captured input, never stored menu/macro bindings.
+static NSDictionary *TSRecordedBinding(NSEvent *event, NSString *unshifted) {
+    NSString *key = TSShortcutCharacterForEvent(event);
+    NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
+    if ((flags & NSEventModifierFlagShift) && key.length == 1 &&
+        ![key isEqual:unshifted] && [key characterAtIndex:0] < 0xf700 &&
+        ![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])
+        flags &= ~NSEventModifierFlagShift;
+    return TSBinding(key, flags);
+}
+// These spellings describe the captured event only. They are never used to
+// compare saved menu bindings with macro bindings or written to preferences.
+static NSArray<NSDictionary *> *TSEventBindings(NSEvent *event, NSString *unshifted) {
+    NSString *key = TSShortcutCharacterForEvent(event);
+    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSetWithObject:TSRecordedBinding(event, unshifted)];
+    [bindings addObject:TSBinding(key, event.modifierFlags)];
+    if ((event.modifierFlags & NSEventModifierFlagShift) && key.length == 1 && unshifted.length == 1 &&
+        [key characterAtIndex:0] < 0xf700 &&
+        ![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])
+        [bindings addObject:TSBinding(unshifted, event.modifierFlags)];
+    return bindings.array;
+}
+// Extra spellings are transient and used only to reject a conflicting default restore.
+// Stored assignments, macro comparison and launch-time application remain raw.
+static BOOL TSRestorationSymbol(NSString *key) {
+    if (key.length != 1) return NO;
+    unichar c = [key characterAtIndex:0];
+    return [[NSCharacterSet punctuationCharacterSet] characterIsMember:c] ||
+        [[NSCharacterSet symbolCharacterSet] characterIsMember:c];
+}
+static NSString *TSRestorationCharacters(CFDataRef data, UInt16 code, NSEventModifierFlags flags, UInt32 keyboardType) {
+    UInt32 modifiers = ((flags & NSEventModifierFlagCommand) ? cmdKey : 0) |
+        ((flags & NSEventModifierFlagShift) ? shiftKey : 0) |
+        ((flags & NSEventModifierFlagOption) ? optionKey : 0) |
+        ((flags & NSEventModifierFlagControl) ? controlKey : 0);
+    UniChar chars[8]; UniCharCount count = 0; UInt32 dead = 0;
+    OSStatus result = UCKeyTranslate((const UCKeyboardLayout *)CFDataGetBytePtr(data), code,
+        kUCKeyActionDown, modifiers >> 8, keyboardType, kUCKeyTranslateNoDeadKeysBit, &dead, 8, &count, chars);
+    return result == noErr ? [NSString stringWithCharacters:chars length:count] : @"";
+}
+static NSArray<NSDictionary *> *TSRestorationBindings(NSString *key, NSEventModifierFlags flags, CFDataRef data, UInt32 keyboardType) {
+    NSDictionary *original = TSBinding(key, flags);
+    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSetWithObject:original];
+    if (!data || !TSRestorationSymbol(key)) return bindings.array;
+    // Reuse the recorder's spellings, including the Command layer and symbols on number keys.
+    // This constructs events for comparison only; it never posts them or changes the input source.
+    for (UInt16 code = 0; code < 128; code++) {
+        if (code == 66 || code == 68 || code == 70 || code == 72 || code == 73 || code == 74 || code == 77) continue;
+        NSString *plain = TSRestorationCharacters(data, code, 0, keyboardType);
+        for (NSUInteger shift = 0; shift < 2; shift++) {
+            NSEventModifierFlags modifiers = (flags & ~NSEventModifierFlagShift) | (shift ? NSEventModifierFlagShift : 0);
+            NSString *characters = TSRestorationCharacters(data, code, modifiers, keyboardType);
+            NSString *ignoring = TSRestorationCharacters(data, code, modifiers & NSEventModifierFlagShift, keyboardType);
+            NSEvent *event = [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:modifiers
+                timestamp:0 windowNumber:0 context:nil characters:characters charactersIgnoringModifiers:ignoring isARepeat:NO keyCode:code];
+            NSArray *spellings = TSEventBindings(event, plain);
+            NSDictionary *recorded = spellings.firstObject;
+            if ([TSShortcutStore isAllowedKey:recorded[@"key"] modifiers:[recorded[@"modifiers"] unsignedIntegerValue]] &&
+                [spellings containsObject:original]) [bindings addObjectsFromArray:spellings];
+        }
+    }
+    return bindings.array;
+}
 static void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *, NSString *)) {
     for (NSMenuItem *item in menu.itemArray) {
         NSString *title = path.length ? [path stringByAppendingFormat:@" › %@", item.title] : item.title;
+        if (item.submenu == NSApp.servicesMenu && item.submenu) continue;
         visit(item, title);
         if (item.submenu && item.submenu != NSApp.servicesMenu) TSVisitMenu(item.submenu, title, visit);
     }
@@ -147,15 +200,6 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     self.commands = commands;
     [self applySavedOverrides];
 }
-- (void)suspendOverridesForMenuRebuild {
-    // Let rebuilt macro items reserve their own keys before applying user overrides.
-    for (TSShortcutCommand *command in self.commands) command.item.keyEquivalent = @"";
-    for (TSShortcutCommand *command in self.commands) {
-        command.item.allowsAutomaticKeyEquivalentLocalization = command.defaultLocalization;
-        command.item.keyEquivalentModifierMask = command.defaultModifiers;
-        command.item.keyEquivalent = command.defaultKey;
-    }
-}
 - (void)applySavedOverrides {
     NSMutableSet *active = [NSMutableSet set];
     NSMutableOrderedSet *unavailable = [NSMutableOrderedSet orderedSet];
@@ -166,7 +210,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     do {
         changed = NO;
         TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
-            if (!item.submenu) [planned setObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) forKey:item];
+            if (!item.submenu && item.action != NSSelectorFromString(@"doMacro:")) [planned setObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) forKey:item];
         });
         for (TSShortcutCommand *command in self.commands) {
             NSDictionary *value = [active containsObject:command.commandID] ? self.overrides[command.commandID] : TSBinding(command.defaultKey, command.defaultModifiers);
@@ -185,6 +229,11 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
         }
         if (rejected.count) { [active minusSet:rejected]; changed = YES; }
     } while (changed);
+    // Remove old macro keys before assigning menus; AppKit can otherwise suppress
+    // a menu assignment which duplicates an installed macro. Rebuild macros next.
+    TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.action == NSSelectorFromString(@"doMacro:")) item.keyEquivalent = @"";
+    });
     // Avoid transient duplicates when restoring defaults or swapping two saved bindings.
     for (TSShortcutCommand *command in self.commands) command.item.keyEquivalent = @"";
     for (TSShortcutCommand *command in self.commands) {
@@ -201,6 +250,64 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
             [unavailable addObject:command.path];
     }
     self.unavailableCommands = unavailable.array;
+}
+// Only the effective menu bindings reserve keys. AppKit-inserted commands
+// participate while present, but without a stable identifier cannot be customized.
++ (NSArray<NSDictionary *> *)menuBindings:(NSMenu *)menu {
+    NSMutableArray *result = [NSMutableArray array];
+    TSVisitMenu(menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (!item.submenu && item.action != NSSelectorFromString(@"doMacro:") && item.keyEquivalent.length)
+            [result addObject:@{@"path":path, @"key":item.keyEquivalent,
+                @"modifiers":@(item.keyEquivalentModifierMask), @"macro":@NO}];
+    });
+    return result;
+}
++ (NSDictionary *)normalizedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags { return TSBinding(key, flags); }
+- (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates {
+    NSMutableDictionary *reserved = [NSMutableDictionary dictionary];
+    for (NSDictionary *entry in [TSShortcutStore menuBindings:self.menu]) {
+        NSDictionary *binding = TSBinding(entry[@"key"], [entry[@"modifiers"] unsignedIntegerValue]);
+        if (!reserved[binding]) reserved[binding] = entry;
+    }
+    NSMutableArray *result = [NSMutableArray array];
+    [candidates enumerateObjectsUsingBlock:^(NSDictionary *candidate, NSUInteger index, BOOL *stop) {
+        NSDictionary *binding = TSBinding(candidate[@"key"], [candidate[@"modifiers"] unsignedIntegerValue]);
+        if (![binding[@"key"] length]) return;
+        if (reserved[binding]) [result addObject:@{@"index":@(index), @"other":reserved[binding]}];
+        else {
+            NSMutableDictionary *entry = [candidate mutableCopy]; entry[@"macro"] = @YES;
+            reserved[binding] = entry;
+        }
+    }];
+    return result;
+}
++ (NSString *)reasonForMacroConflict:(NSDictionary *)conflict {
+    NSDictionary *other = conflict[@"other"];
+    NSString *key = [self displayKey:other[@"key"] modifiers:[other[@"modifiers"] unsignedIntegerValue]];
+    NSString *format = [conflict[@"displaced"] boolValue]
+        ? NSLocalizedString(@"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.", @"")
+        : [other[@"macro"] boolValue]
+        ? NSLocalizedString(@"This shortcut is inactive because macro “%@” (%@) uses it first.", @"")
+        : NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).", @"");
+    return [NSString stringWithFormat:format, other[@"path"], key];
+}
+- (NSArray<NSString *> *)macrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
+    NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSet];
+    if (!key.length) return @[];
+    NSDictionary *binding = TSBinding(key, flags);
+    TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.action == NSSelectorFromString(@"doMacro:") && item.keyEquivalent.length &&
+            [TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding])
+            [result addObject:[NSString stringWithFormat:@"%@ (%@)", path,
+                [TSShortcutStore displayKey:item.keyEquivalent modifiers:item.keyEquivalentModifierMask]]];
+    });
+    return result.array;
+}
+- (NSArray<NSString *> *)macrosAffectedByRestoringAll {
+    NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSet];
+    for (TSShortcutCommand *command in self.commands)
+        [result addObjectsFromArray:[self macrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]];
+    return result.array;
 }
 + (BOOL)isAllowedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
     if (key.length == 0) return YES;
@@ -222,17 +329,35 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     NSDictionary *binding = TSBinding(key, flags);
     __block NSString *conflict = nil;
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
-        if (item == excluded || item.submenu || !item.keyEquivalent.length) return;
+        if (item == excluded || item.submenu || item.action == NSSelectorFromString(@"doMacro:") || !item.keyEquivalent.length) return;
         if (![TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding]) return;
-        if (restoring) {
-            // Preserve pre-existing default overlaps, but never allow a new custom conflict.
-            for (TSShortcutCommand *other in self.commands) {
-                if (other.item == item && [item.keyEquivalent isEqual:other.defaultKey] &&
-                    item.keyEquivalentModifierMask == other.defaultModifiers &&
-                    [TSBinding(other.defaultKey, other.defaultModifiers) isEqual:binding]) return;
-            }
-        }
         conflict = path;
+    });
+    return conflict;
+}
+- (NSArray<NSDictionary *> *)restorationBindingsForCommand:(TSShortcutCommand *)command {
+    TISInputSourceRef source = TISCopyCurrentKeyboardLayoutInputSource();
+    CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
+    NSArray *bindings = TSRestorationBindings(command.defaultKey, command.defaultModifiers, data, LMGetKbdType());
+    if (source) CFRelease(source);
+    return bindings;
+}
+- (nullable NSString *)conflictForRestoringCommand:(TSShortcutCommand *)command {
+    NSString *rawConflict = [self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command];
+    if (rawConflict) return rawConflict;
+    // Preserve shipped defaults even where their physical spellings overlap on a layout.
+    // Only live, user-assigned menu keys participate in the additional restoration check.
+    NSMutableSet *customItems = [NSMutableSet set];
+    for (TSShortcutCommand *other in self.commands)
+        if (other.item != command.item && self.overrides[other.commandID] && other.item.keyEquivalent.length &&
+            [TSBinding(other.item.keyEquivalent, other.item.keyEquivalentModifierMask) isEqual:self.overrides[other.commandID]])
+            [customItems addObject:other.item];
+    if (!customItems.count) return nil;
+    NSArray *bindings = [self restorationBindingsForCommand:command];
+    __block NSString *conflict = nil;
+    TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (conflict || item.submenu || item.action == NSSelectorFromString(@"doMacro:") || ![customItems containsObject:item]) return;
+        if ([bindings containsObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)]) conflict = path;
     });
     return conflict;
 }
@@ -254,7 +379,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 - (nullable NSString *)restoreCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
-    NSString *conflict = [self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command];
+    NSString *conflict = [self conflictForRestoringCommand:command];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];
     [self.overrides removeObjectForKey:command.commandID];
     [self applySavedOverrides]; [self persist];
@@ -267,8 +392,8 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 + (NSString *)displayKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
     if (!key.length) return @"—";
     // Display the actual menu definition. Canonicalization is for comparison only.
-    if (![key isEqual:key.lowercaseString]) flags |= NSEventModifierFlagShift;
-    key = key.lowercaseString;
+    if (key.length == 1 && [key characterAtIndex:0] >= 'A' && [key characterAtIndex:0] <= 'Z')
+        flags |= NSEventModifierFlagShift;
     NSMutableString *text = [NSMutableString string];
     if (flags & NSEventModifierFlagControl) [text appendString:@"⌃"];
     if (flags & NSEventModifierFlagOption) [text appendString:@"⌥"];
@@ -282,7 +407,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 + (BOOL)event:(NSEvent *)event matchesItem:(NSMenuItem *)item {
     if (!item.keyEquivalent.length) return NO;
-    return [TSBinding(TSShortcutCharacterForEvent(event), event.modifierFlags) isEqual:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];
+    return [TSEventBindings(event, [event charactersByApplyingModifiers:0]) containsObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];
 }
 @end
 
@@ -329,6 +454,9 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 @interface TSKeyboardShortcuts () <NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate>
 @property TSShortcutStore *store;
 @property BOOL menuRefreshPending;
+@property NSArray *observedMenuBindings;
+@property BOOL rebuildingMacros;
+@property BOOL applyingMenus;
 @property NSTextField *hint;
 @property NSTableView *table;
 @property NSSearchField *search;
@@ -340,6 +468,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 @property NSTextField *captureError;
 @property NSButton *applyButton;
 @property NSString *capturedKey;
+@property NSArray<NSDictionary *> *capturedBindings;
 @property NSEventModifierFlags capturedModifiers;
 @end
 @implementation TSKeyboardShortcuts
@@ -350,7 +479,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     return controller;
 }
 - (void)installInMainMenu {
-    if (self.store) { [self.store refreshMenu]; return; }
+    if (self.store) { [self refreshMenuAndMacros]; return; }
     NSMenu *appMenu = NSApp.mainMenu.itemArray.firstObject.submenu;
     for (NSMenuItem *item in appMenu.itemArray) {
         if (item.action != NSSelectorFromString(@"showPreferences:")) continue;
@@ -361,25 +490,58 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
         break;
     }
     self.store = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:NSUserDefaults.standardUserDefaults];
+    [self observeMenuChanges];
+    [self refreshMenuAndMacros];
+}
+- (NSArray *)menuBindingSnapshot {
+    NSMutableArray *bindings = [NSMutableArray array];
+    TSVisitMenu(NSApp.mainMenu, @"", ^(NSMenuItem *item, NSString *path) {
+        // AppKit may hide a newly inserted item's key until the existing macro key is cleared.
+        if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:"))
+            [bindings addObject:@[[NSValue valueWithNonretainedObject:item], item.keyEquivalent,
+                @(item.keyEquivalentModifierMask), NSStringFromSelector(item.action) ?: @"", item.identifier ?: @""]];
+    });
+    return bindings;
+}
+- (void)observeMenuChanges {
+    self.observedMenuBindings = [self menuBindingSnapshot];
     for (NSNotificationName name in @[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification])
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuStructureChanged:) name:name object:nil];
 }
 - (void)beginMenuRebuild {
-    [self.store suspendOverridesForMenuRebuild];
+    self.rebuildingMacros = YES;
+    [self.store refreshMenu];
 }
 - (void)endMenuRebuild {
-    [self.store refreshMenu];
+    self.rebuildingMacros = NO;
+    self.observedMenuBindings = [self menuBindingSnapshot];
     if (self.isWindowLoaded) [self reloadCommands];
+    [[NSNotificationCenter defaultCenter] postNotificationName:TSMacroShortcutsChangedNotification object:self];
+}
+- (void)refreshMenuAndMacros {
+    if (self.applyingMenus || self.rebuildingMacros) return;
+    self.applyingMenus = YES;
+    @try {
+        [self.store refreshMenu];
+        [[NSNotificationCenter defaultCenter] postNotificationName:TSRebuildMacrosNotification object:self];
+        if (self.isWindowLoaded) [self reloadCommands];
+    } @finally {
+        self.observedMenuBindings = [self menuBindingSnapshot];
+        self.applyingMenus = NO;
+    }
+}
+- (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates {
+    return [self.store conflictsForMacroShortcuts:candidates] ?: @[];
 }
 - (void)menuStructureChanged:(NSNotification *)notification {
     NSMenu *menu = notification.object;
     while (menu.supermenu) menu = menu.supermenu;
-    if (menu != NSApp.mainMenu || self.menuRefreshPending) return;
+    if (menu != NSApp.mainMenu || self.menuRefreshPending || self.applyingMenus || self.rebuildingMacros) return;
+    if ([[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) return;
     self.menuRefreshPending = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
         self.menuRefreshPending = NO;
-        [self.store refreshMenu];
-        if (self.isWindowLoaded) [self reloadCommands];
+        if (![[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) [self refreshMenuAndMacros];
     });
 }
 + (BOOL)event:(NSEvent *)event matchesAction:(SEL)action tag:(NSInteger)tag {
@@ -493,28 +655,44 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     NSAlert *alert = [NSAlert new]; alert.messageText = NSLocalizedString(@"Shortcut Unavailable", @""); alert.informativeText = error;
     [alert beginSheetModalForWindow:self.window completionHandler:nil];
 }
+- (BOOL)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
+    NSArray *macros = [self.store macrosUsingKey:key modifiers:flags];
+    if (!macros.count) return YES;
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = NSLocalizedString(@"Assign a shortcut used by macros?", @"");
+    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@", @""), [macros componentsJoinedByString:@"\n"]];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Assign", @"")];
+    return TSRunShortcutAlert(alert) == NSAlertSecondButtonReturn;
+}
 - (void)removeShortcut:(id)sender {
     TSShortcutCommand *command = self.selectedCommand; if (!command) return;
     [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];
-    [self reloadCommands];
+    [self refreshMenuAndMacros];
 }
 - (void)restoreShortcut:(id)sender {
     TSShortcutCommand *command = self.selectedCommand; if (!command) return;
+    NSString *error = [self.store conflictForRestoringCommand:command];
+    if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
+    if (![self confirmMacrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]) return;
     [self showError:[self.store restoreCommand:command]];
-    [self reloadCommands];
+    [self refreshMenuAndMacros];
 }
 - (void)restoreAll:(id)sender {
     NSAlert *alert = [NSAlert new]; alert.messageText = NSLocalizedString(@"Restore all keyboard shortcuts?", @"");
     alert.informativeText = NSLocalizedString(@"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved.", @"");
+    NSArray *macros = [self.store macrosAffectedByRestoringAll];
+    if (macros.count) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@\n%@",
+        NSLocalizedString(@"These macro shortcuts will become inactive:", @""), [macros componentsJoinedByString:@"\n"]];
     [alert addButtonWithTitle:NSLocalizedString(@"Restore All", @"")]; [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
     [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse response) {
         if (response != NSAlertFirstButtonReturn) return;
-        [self.store restoreAll]; [self reloadCommands];
+        [self.store restoreAll]; [self refreshMenuAndMacros];
     }];
 }
 - (void)editShortcut:(id)sender {
     TSShortcutCommand *command = self.selectedCommand; if (!command || self.window.attachedSheet) return;
-    self.editingCommand = command; self.capturedKey = nil;
+    self.editingCommand = command; self.capturedKey = nil; self.capturedBindings = nil;
     TSShortcutCapturePanel *panel = [[TSShortcutCapturePanel alloc] initWithContentRect:NSMakeRect(0,0,640,240) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     self.capturePanel = panel;
     panel.title = NSLocalizedString(@"Change Shortcut", @"");
@@ -551,20 +729,39 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     self.captureError.stringValue = @"";
     self.applyButton.enabled = [TSShortcutStore isAllowedKey:key modifiers:flags] && key.length > 0;
     if (!self.applyButton.enabled) {
-        self.capturedKey = nil;
+        self.capturedKey = nil; self.capturedBindings = nil;
         self.captureDisplay.stringValue = NSLocalizedString(@"Press the new shortcut (Escape to cancel).", @"");
         self.captureError.stringValue = NSLocalizedString(@"Use Command or Control with a key, or a function key (F1–F20).", @"");
     } else {
-        NSDictionary *binding = TSBinding(key, flags);
+        self.capturedBindings = TSEventBindings(event, [event charactersByApplyingModifiers:0]);
+        NSDictionary *binding = self.capturedBindings.firstObject;
         self.capturedKey = binding[@"key"]; self.capturedModifiers = [binding[@"modifiers"] unsignedIntegerValue];
         self.captureDisplay.stringValue = [TSShortcutStore displayKey:self.capturedKey modifiers:self.capturedModifiers];
     }
     self.capturePanel.recorder.accessibilityValue = self.captureDisplay.stringValue;
 }
 - (void)cancelCapture:(id)sender { [self.window endSheet:self.capturePanel returnCode:NSModalResponseCancel]; }
+- (NSString *)conflictForCapturedShortcut {
+    NSArray *bindings = self.capturedBindings ?: @[TSBinding(self.capturedKey, self.capturedModifiers)];
+    NSMutableOrderedSet *conflicts = [NSMutableOrderedSet orderedSet];
+    for (NSDictionary *binding in bindings) {
+        NSString *path = [self.store conflictForKey:binding[@"key"] modifiers:[binding[@"modifiers"] unsignedIntegerValue]
+            except:self.editingCommand.item restoring:nil];
+        if (path) [conflicts addObject:path];
+    }
+    if (!conflicts.count) return nil;
+    if (conflicts.count == 1)
+        return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflicts.firstObject];
+    return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by:\n%@", @""),
+        [conflicts.array componentsJoinedByString:@"\n"]];
+}
 - (void)applyCapturedShortcut:(id)sender {
     if (!self.capturedKey || !self.applyButton.enabled) return;
+    NSString *conflict = [self conflictForCapturedShortcut];
+    if (conflict) { self.captureError.stringValue = conflict; return; }
+    if (![self confirmMacrosUsingKey:self.capturedKey modifiers:self.capturedModifiers]) return;
     NSString *error = [self.store setKey:self.capturedKey modifiers:self.capturedModifiers forCommand:self.editingCommand];
+    [self refreshMenuAndMacros];
     if (error) { self.captureError.stringValue = error; [self.capturePanel makeFirstResponder:self.capturePanel.recorder]; return; }
     [self.window endSheet:self.capturePanel returnCode:NSModalResponseOK];
 }

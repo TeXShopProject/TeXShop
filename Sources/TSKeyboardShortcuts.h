@@ -2,6 +2,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 extern NSString * const TSMenuShortcutOverridesKey;
+extern NSString * const TSRebuildMacrosNotification;
+extern NSString * const TSMacroShortcutsChangedNotification;
+// First button is the safe choice for both Return and Escape.
+NSModalResponse TSRunShortcutAlert(NSAlert *alert);
 
 @interface TSShortcutCommand : NSObject
 @property (nonatomic, strong) NSMenuItem *item;
@@ -16,11 +20,17 @@ extern NSString * const TSMenuShortcutOverridesKey;
 @property (nonatomic, readonly) NSArray<TSShortcutCommand *> *commands;
 @property (nonatomic, readonly) NSArray<NSString *> *unavailableCommands;
 - (void)refreshMenu;
-- (void)suspendOverridesForMenuRebuild;
+
 - (instancetype)initWithMenu:(NSMenu *)menu defaults:(NSUserDefaults *)defaults;
 - (nullable NSString *)setKey:(NSString *)key modifiers:(NSEventModifierFlags)flags forCommand:(TSShortcutCommand *)command;
 - (nullable NSString *)restoreCommand:(TSShortcutCommand *)command;
 - (void)restoreAll;
+- (NSArray<NSString *> *)macrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
+- (NSArray<NSString *> *)macrosAffectedByRestoringAll;
+- (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates;
++ (NSDictionary *)normalizedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
++ (NSArray<NSDictionary *> *)menuBindings:(NSMenu *)menu;
++ (NSString *)reasonForMacroConflict:(NSDictionary *)conflict;
 + (NSString *)displayKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 + (BOOL)isAllowedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags;
 + (BOOL)event:(NSEvent *)event matchesItem:(NSMenuItem *)item;
@@ -31,6 +41,8 @@ extern NSString * const TSMenuShortcutOverridesKey;
 - (void)installInMainMenu;
 - (void)beginMenuRebuild;
 - (void)endMenuRebuild;
+- (void)refreshMenuAndMacros;
+- (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates;
 - (void)showKeyboardShortcuts:(nullable id)sender;
 + (BOOL)event:(NSEvent *)event matchesAction:(SEL)action tag:(NSInteger)tag;
 @end
