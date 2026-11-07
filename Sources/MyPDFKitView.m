@@ -4279,8 +4279,7 @@ if (! self.skipLinks)
                 self.handlingLink = 0;
                 return;
             }
-            linkedPoint = NSPointFromCGPoint(CGPointApplyAffineTransform(
-                NSPointToCGPoint([theDestination point]), pageTransform));
+            linkedPoint = TSLinkPreviewDestinationPoint([theDestination point], imageSize, pageTransform);
 
             if ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask)
                 largerSize = YES;
@@ -4292,7 +4291,10 @@ if (! self.skipLinks)
             
              
             NSView *documentView = self.documentView;
-            if (!TSLinkPreviewRects(imageSize, linkedPoint, documentView.visibleRect,
+            NSRect textBounds = NSZeroRect;
+            if (isfinite(linkedPoint.x) && isfinite(linkedPoint.y))
+                textBounds = TSLinkPreviewTextBounds(linkedPage, imageSize, linkedPoint, pageTransform, largerSize);
+            if (!TSLinkPreviewRects(imageSize, linkedPoint, textBounds, documentView.visibleRect,
                                     mouseLocDocumentView, largerSize, pushUp, documentView.isFlipped,
                                     &aRect, &bRect)) {
                 self.handlingLink = 0;
