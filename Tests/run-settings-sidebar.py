@@ -14,6 +14,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-sidebar-') as td:
  source=(r/'Sources/TSPreferences.m').read_text();start=source.index('- (BOOL)prepareSettingsWindow\n');method=source[start:source.index('\n}',start)+2]
  method=method.replace('NSBundle.mainBundle','FixtureBundle.mainBundle').replace('[[TSSettingsWindowController alloc]','[[TestController alloc]').replace('SUD','fixtureDefaults')
  test=(r/'Tests/SettingsSidebar.m').read_text().replace('// PRODUCTION_PREPARE',method)
+ for marker,signature in [('PRODUCTION_VALIDATE','- (BOOL)settingsMayChangeCategory'),('PRODUCTION_FINISH','- (BOOL)finishPreferenceEditing:(BOOL)showError')]:
+  start=source.index(signature+'\n');test=test.replace('// '+marker,source[start:source.index('\n}',start)+2])
  (p/'test.m').write_text(test)
  subprocess.run(['xcrun','clang' ,'-fobjc-arc','-Wall','-Wextra','-Wno-unused-parameter','-mmacosx-version-min=14.6','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Werror=unguarded-availability-new','-I',str(r/'Tests'),'-I',str(r/'Sources'),'-framework','Cocoa',str(p/'test.m'),*[str(f) for f in sorted((r/'Sources').glob('TSSettings*.m'))],str(r/'Sources/TSPreferenceProfile.m'),'-o',str(p/'test')],check=True)
  out=Path(args.output) if args.output else p/'images';out.mkdir(parents=True,exist_ok=True)

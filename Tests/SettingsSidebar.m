@@ -12,6 +12,11 @@ static NSString *shellPath;
 static BOOL testKeyWindow;
 static BOOL restoreFrame;
 static NSRect savedFrame;
+static BOOL smallScreen;
+static IMP originalVisibleFrame;
+static NSRect VisibleFrame(NSScreen *screen, SEL selector) {
+ return smallScreen ? NSMakeRect(0,0,800,600) : ((NSRect (*)(id,SEL))originalVisibleFrame)(screen,selector);
+}
 static BOOL RestoreFrame(NSWindow *window, SEL selector, NSString *name) {
  if (restoreFrame && [name isEqual:@"SettingsSidebarWindow"]) [window setFrame:savedFrame display:NO];
  return YES;
@@ -43,18 +48,31 @@ static NSWindow *fixtureOldWindow;
 + (instancetype)mainBundle;
 - (BOOL)loadNibNamed:(NSString *)name owner:(id)owner topLevelObjects:(NSArray **)objects;
 @end
-@interface Owner:NSObject<TSSettingsWindowDelegate> { @public NSWindow *_prefsWindow; NSTabView *_tabView; }
+@interface Owner:NSObject<TSSettingsWindowDelegate,NSTabViewDelegate> { @public NSWindow *_prefsWindow; NSTabView *_tabView; }
 @property NSArray<NSObject *> *preferenceNibObjects;
 @property TSSettingsWindowController *settingsController;
 @property NSMutableDictionary *outlets;
 @property BOOL valid;
+@property (strong) NSMapTable *inputRules;
+@property (strong) NSControl *errorField;
 @property NSUInteger commits,fonts;
 @end
 @implementation Owner
 // PRODUCTION_PREPARE
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {if(value)self.outlets[key]=value;}
-- (BOOL)settingsMayChangeCategory {self.commits++;return self.valid;}
+// PRODUCTION_VALIDATE
+// PRODUCTION_FINISH
+- (BOOL)commitPreferenceField:(NSControl *)field showError:(BOOL)showError reflect:(BOOL)reflect {
+ if(!self.valid && self.errorField) [_prefsWindow makeFirstResponder:self.errorField];
+ return self.valid;
+}
+- (void)releasePreferencePanels { self.commits++; }
+- (BOOL)tabView:(NSTabView *)tabView shouldSelectTabViewItem:(NSTabViewItem *)item { return [self settingsMayChangeCategory]; }
 - (void)settingsChangeFont:(NSFontManager *)sender {self.fonts++;}
+@end
+@interface EditingField:NSTextField @end
+@implementation EditingField
+- (NSText *)currentEditor { return [NSText new]; }
 @end
 @interface TSPreferenceWindow:NSWindow @end
 @implementation TSPreferenceWindow @end
@@ -71,6 +89,9 @@ static NSTabView *Tabs(NSView *v){if([v isKindOfClass:NSTabView.class])return (i
 static void SaveImage(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSData *tiff=image.TIFFRepresentation;if(tiff==nil)abort();NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:tiff];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(setFrameAutosaveName:)),(IMP)RestoreFrame);[NSApplication sharedApplication];
+ Method visibleMethod=class_getInstanceMethod(NSScreen.class,@selector(visibleFrame));
+ Check(visibleMethod!=NULL,@"screen method exists");
+ if(visibleMethod!=NULL) originalVisibleFrame=method_setImplementation(visibleMethod,(IMP)VisibleFrame);
  class_addMethod(TSSettingsWindow.class,@selector(isKeyWindow),(IMP)IsKey,"B@:");
  class_addMethod(TSSettingsWindow.class,@selector(attachedSheet),(IMP)Sheet,"@@:");shellPath=@(argv[1]);
  TSSettingsNavigationHistory *h=[TSSettingsNavigationHistory new];[h resetWithIdentifier:@"a"];
@@ -83,13 +104,18 @@ int main(int argc,char **argv){@autoreleasepool{
  for(int a=3;a<argc;a++){
   legacyPath=@(argv[a]);fixtureDefaults=[TSMemoryDefaults new];
   Owner *integration=[Owner new];integration.outlets=[NSMutableDictionary new];integration.valid=YES;
+  restoreFrame=NO;smallScreen=(a==3);
   Check([integration prepareSettingsWindow],@"production prepare succeeds");
   Check(integration->_prefsWindow==integration.settingsController.window && integration->_prefsWindow!=fixtureOldWindow && fixtureOldWindow.contentView==nil,@"production owner targets new window");
+  if(a==3){
+   Check(NSWidth(integration->_prefsWindow.frame)<=800 && NSHeight(integration->_prefsWindow.frame)<=600,@"initial window fits a small screen");
+  }
+  smallScreen=NO;
   if(a==3){
    [integration->_prefsWindow.contentView layoutSubtreeIfNeeded];
    NSSize extent=integration.settingsController.contentScroll.contentSize, pane=integration.settingsController.contentScroll.documentView.frame.size;
    fprintf(stderr,"INITIAL viewport %.0fx%.0f pane %.0fx%.0f\n",extent.width,extent.height,pane.width,pane.height);
-   if(NSHeight(NSScreen.mainScreen.visibleFrame)>pane.height+150) Check(extent.height>=pane.height,@"default height fits pane when screen permits");
+   Check(extent.height>0 && pane.height>extent.height,@"small screen uses a scrollable pane");
   }
   Check(integration->_tabView.window==integration->_prefsWindow && integration.preferenceNibObjects.count>0,@"production retains nib objects in new window");
   Owner *owner=[Owner new];owner.outlets=[NSMutableDictionary new];owner.valid=YES;
@@ -107,6 +133,9 @@ int main(int argc,char **argv){@autoreleasepool{
   [memory setObject:@"console" forKey:@"TSSettingsSelectedCategory"];
   restoreFrame=YES;savedFrame=NSMakeRect(100,100,1200,900);
   TestController *c=[[TestController alloc]initWithDefaults:memory];c.settingsDelegate=owner;
+  owner->_prefsWindow=c.window;
+  EditingField *editing=[EditingField new];owner.inputRules=[NSMapTable strongToStrongObjectsMapTable];[owner.inputRules setObject:@YES forKey:editing];
+  tabs.delegate=owner;
   NSView *content=old.contentView;[c hostLegacyContent:content tabView:tabs];old.contentView=nil;
   for(NSUInteger n=0;n<savedViews.count;n++) {if(!NSEqualRects(savedViews[n].frame,savedFrames[n].rectValue)) fprintf(stderr,"GEOMETRY %s %s -> %s\n",NSStringFromClass(savedViews[n].class).UTF8String,NSStringFromRect(savedFrames[n].rectValue).UTF8String,NSStringFromRect(savedViews[n].frame).UTF8String);Check(NSEqualRects(savedViews[n].frame,savedFrames[n].rectValue),@"hosting preserves fixed control geometry");}
   Check([[memory stringForKey:@"TSSettingsSelectedCategory"] isEqual:@"console"],@"assembly never overwrites persisted category");
@@ -129,6 +158,21 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(NSEqualRects(tabs.frame,expectedTabFrame),@"hidden tabs preserve the original pane frame");
   Check(tabs.tabViewType==NSNoTabsNoBorder && c.categoryTable.numberOfRows==9,@"hidden legacy tabs and sidebar");
   [c beginSession];Check([c.history.currentIdentifier isEqual:@"source"] && c.categoryTable.selectedRow==0,@"unknown category falls back to source");
+
+
+  Check(c.window.firstResponder==c.categoryTable,@"begin session focuses sidebar");
+  NSEvent *arrow=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagFunction|NSEventModifierFlagNumericPad timestamp:0 windowNumber:c.window.windowNumber context:nil characters:@"\uF701" charactersIgnoringModifiers:@"\uF701" isARepeat:NO keyCode:125];
+  NSUInteger beforeArrows=owner.commits;
+  for(NSInteger step=1;step<=3;step++) {
+   [c.window sendEvent:arrow];
+   Check(c.categoryTable.selectedRow==step && c.window.firstResponder==c.categoryTable,@"consecutive window arrows preserve sidebar focus");
+   Check(owner.commits==beforeArrows+(NSUInteger)step,@"one production validation per category change");
+  }
+  NSUInteger beforeSame=owner.commits;[c selectCategoryIdentifier:@"console"];
+  Check(owner.commits==beforeSame,@"reselect does not validate or release panels");
+  [c.window makeFirstResponder:nil];[c endSession];[c beginSession];
+  Check(c.window.firstResponder==c.categoryTable,@"reopen restores sidebar focus");
+  [c selectCategoryIdentifier:@"source"];
 
   NSTabView *themeTabs=Tabs([c legacyViewForCategoryIdentifier:@"themes"]);
   Check(themeTabs.numberOfTabViewItems==2,@"both theme groups retained");
@@ -170,6 +214,33 @@ int main(int argc,char **argv){@autoreleasepool{
   [c endSession];[memory setObject:@"console" forKey:@"TSSettingsSelectedCategory"];[c beginSession];
   Check([c.history.currentIdentifier isEqual:@"console"] && c.history.count==1,@"reopening reads saved category without retaining history");
   [c changeFont:(NSFontManager *)owner];Check(owner.fonts==1,@"font is explicitly forwarded to preference owner");
+
+  [c.window setContentSize:NSMakeSize(660,440)];[c.window.contentView layoutSubtreeIfNeeded];
+  [c.contentScroll.contentView scrollToPoint:NSMakePoint(0,200)];
+  NSPoint scrolled=c.contentScroll.contentView.bounds.origin;
+  Check(scrolled.y>0,@"fixture is scrolled before rejection");
+  owner.valid=NO;NSUInteger rejectedHistory=c.history.count;
+  // Simulate a validation failure with focus already in a field, not the sidebar.
+  NSTextField *focusField=[[NSTextField alloc]initWithFrame:NSMakeRect(0,0,100,20)];
+  [tabs.selectedTabViewItem.view addSubview:focusField];[c.window makeFirstResponder:focusField];
+  NSResponder *failedFocus=c.window.firstResponder;
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];
+  Check(NSEqualPoints(c.contentScroll.contentView.bounds.origin,scrolled) && c.history.count==rejectedHistory,@"rejected selection preserves scroll and history");
+  Check(c.window.firstResponder==failedFocus,@"failed validation does not steal field focus");
+  [c.window makeFirstResponder:c.categoryTable];owner.errorField=focusField;
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];
+  Check(c.window.firstResponder==focusField.currentEditor && c.window.firstResponder!=c.categoryTable,@"validation error transfers focus to the invalid field");
+  owner.errorField=nil;owner.valid=YES;[focusField removeFromSuperview];
+  [c selectCategoryIdentifier:@"preview"];
+  Check(fabs(c.contentScroll.contentView.bounds.origin.y)<1,@"successful category switch resets scroll");
+  Check(c.window.firstResponder!=c.categoryTable,@"navigation from content does not force sidebar focus");
+  [c selectCategoryIdentifier:@"engines"];[c endSession];
+  // A new controller reads what actual navigation saved, without injecting defaults.
+  TestController *fresh=[[TestController alloc]initWithDefaults:memory];fresh.settingsDelegate=owner;
+  [fresh hostLegacyContent:content tabView:tabs];owner->_prefsWindow=fresh.window;[fresh beginSession];
+  Check([fresh.history.currentIdentifier isEqual:@"engines"] && fresh.categoryTable.selectedRow==5,@"navigation persists for a fresh controller");
+  [c hostLegacyContent:content tabView:tabs];owner->_prefsWindow=c.window;[c beginSession];
+
   for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
    c.window.appearance=[NSAppearance appearanceNamed:appearance];
    for(NSValue *size in @[[NSValue valueWithSize:NSMakeSize(960,650)],[NSValue valueWithSize:NSMakeSize(660,440)]]){

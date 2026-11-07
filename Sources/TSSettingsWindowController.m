@@ -173,6 +173,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     TSSettingsCategoryID identifier = [self.stateStore selectedCategoryInIdentifiers:self.categoryIdentifiers];
     [self.history resetWithIdentifier:identifier];
     [self displayCurrentCategory];
+    [self.window makeFirstResponder:self.categoryTable];
 }
 - (void)endSession
 {
@@ -216,9 +217,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     self.legacyTabs.delegate = nil;
     [self.legacyTabs selectTabViewItemAtIndex:legacyIndex];
     self.legacyTabs.delegate = delegate;
-    self.synchronizingSelection = YES;
-    [self.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
-    self.synchronizingSelection = NO;
+    [self synchronizeSidebarSelection];
     self.window.title = [self.legacyTabs tabViewItemAtIndex:legacyIndex].label;
     [self.legacyContent setAccessibilityLabel:self.window.title];
     [self.stateStore saveSelectedCategory:identifier];
@@ -226,6 +225,16 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     [self.contentScroll reflectScrolledClipView:self.contentScroll.contentView];
     [self.window recalculateKeyViewLoop];
     [self updateNavigation];
+}
+- (void)synchronizeSidebarSelection
+{
+    TSSettingsCategoryID identifier = self.history.currentIdentifier;
+    if (identifier == nil) { return; }
+    NSUInteger index = [self.categoryIdentifiers indexOfObject:identifier];
+    if (index == NSNotFound) { return; }
+    self.synchronizingSelection = YES;
+    [self.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+    self.synchronizingSelection = NO;
 }
 - (void)updateNavigation
 {
@@ -236,7 +245,12 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 {
     id<TSSettingsWindowDelegate> delegate = self.settingsDelegate;
     if (delegate == nil) { return NO; }
-    return [delegate settingsMayChangeCategory];
+    BOOL sidebarHadFocus = self.window.firstResponder == self.categoryTable;
+    BOOL allowed = [delegate settingsMayChangeCategory];
+    // Committing fields clears the first responder. Preserve keyboard navigation
+    // only after successful validation; an invalid field keeps its focus.
+    if (allowed && sidebarHadFocus) { [self.window makeFirstResponder:self.categoryTable]; }
+    return allowed;
 }
 - (void)changeFont:(id)sender
 {
@@ -254,7 +268,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     if (self.synchronizingSelection || self.history.currentIdentifier == nil) { return; }
     NSInteger row = self.categoryTable.selectedRow;
     if (row < 0 || row >= (NSInteger)self.categoryIdentifiers.count) { return; }
-    if (![self selectCategoryIdentifier:self.categoryIdentifiers[(NSUInteger)row]]) { [self displayCurrentCategory]; }
+    if (![self selectCategoryIdentifier:self.categoryIdentifiers[(NSUInteger)row]]) { [self synchronizeSidebarSelection]; }
 }
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
