@@ -1,3 +1,5 @@
+#import "TSShortcutPaneController.h"
+#import "TSMacroEditor.h"
 #import "TSKeyboardShortcuts.h"
 /*
  * TeXShop - TeX editor for Mac OS
@@ -208,7 +210,13 @@
     [TSSpellSupport installMenuItems];
     // OgreKit replaces the Find submenu during the launch notification.
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[TSKeyboardShortcuts sharedController] installInMainMenu];
+        TSKeyboardShortcuts *shortcuts = [TSKeyboardShortcuts sharedController];
+        shortcuts.showSettings = ^{ [[TSPreferences sharedInstance] showKeyboardSettings:nil]; };
+        shortcuts.macroProvider = ^{ return [[TSMacroMenuController sharedInstance] shortcutEntries]; };
+        shortcuts.showMacro = ^(TSShortcutMacro *macro) {
+            [[TSMacroEditor sharedInstance] openMacroEditorSelectingMacroAtIndexPath:macro.indexPath name:macro.name key:macro.serializedKey];
+        };
+        [shortcuts startObservingMenu];
     });
     if (self.shouldDiscoverEnginePaths) {
         [[TSPreferences sharedInstance] discoverInitialEnginePaths];

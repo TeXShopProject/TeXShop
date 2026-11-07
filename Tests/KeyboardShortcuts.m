@@ -56,7 +56,7 @@ static id UnshiftedForFixture(id self, SEL cmd, NSEventModifierFlags flags) {
 }
 static void CheckRecordedMenuConflicts(TSShortcutStore *store) {
     const NSUInteger cmd=NSEventModifierFlagCommand, shift=NSEventModifierFlagShift;
-    TSKeyboardShortcuts *ui=[[TSKeyboardShortcuts alloc] initWithWindow:nil];
+    TSShortcutPaneController *ui=[[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts new]];
     ui.store=store; ui.editingCommand=Command(store,@"TSShortcut.doTypeset:.-1");
     ui.captureError=[NSTextField new]; ui.captureDisplay=[NSTextField new]; ui.applyButton=[NSButton new];
     NSString *original=ui.editingCommand.item.keyEquivalent;
@@ -303,7 +303,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([recorder performKeyEquivalent:Event(@"\031",shift)] && recorded==1);
     REQUIRE(recorder.accessibilityLabel.length && [recorder.accessibilityRole isEqual:NSAccessibilityTextFieldRole]);
     puts("PASS: capture consumes commands, Return accepts, Escape cancels, accessibility metadata");
-    TSKeyboardShortcuts *controller = [[TSKeyboardShortcuts alloc] initWithWindow:nil];
+    TSShortcutPaneController *controller = [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts new]];
     controller.captureDisplay = [NSTextField labelWithString:@""];
     controller.captureError = [NSTextField labelWithString:@""];
     controller.applyButton = [NSButton new];

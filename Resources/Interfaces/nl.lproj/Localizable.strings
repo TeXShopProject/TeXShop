@@ -199,3 +199,16 @@
 "Back (⌘[)" = "Terug (⌘[)";
 
 "Forward (⌘])" = "Vooruit (⌘])";
+
+"Keyboard" = "Toetsenbord";
+"Search by Function" = "Zoeken op functie";
+"Search by Key" = "Zoeken op toets";
+"Show in Macro Editor" = "Toon in macro-editor";
+"Assigned" = "Toegewezen";
+"Inactive for this key" = "Inactief voor deze toets";
+"Assignment priority is shown; whether a command can run depends on the document." = "De toewijzingsprioriteit wordt getoond. Of een commando kan worden uitgevoerd, hangt af van het document.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "Toetsen die door het systeem worden gebruikt, kunnen niet worden gedetecteerd. Escape stopt de opname.";
+"No command uses this key." = "Geen commando gebruikt deze toets.";
+"Press a key" = "Druk op een toets";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Deze toets kan niet als sneltoets worden gebruikt. Gebruik Command of Control met een toets, of F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Aangepaste menusneltoetsen worden verwijderd. Bestaande instellingen in KeyEquivalents.plist blijven behouden.";

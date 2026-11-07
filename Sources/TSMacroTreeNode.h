@@ -154,3 +154,8 @@
 #define NODE_INFO(str, node) (_PRINT_NODE_INFO(str, node, node))
 #define NODE_INFO_PLUS(str, node) (_PRINT_NODE_INFO(str, node, node+1))
 #define NODE_INFO_MINUS(str, node) (_PRINT_NODE_INFO(str, node, node-1))
+
+// Locate a saved macro in a possibly reordered, unsaved editor tree.
+@interface TSMacroSelection : NSObject
++ (nullable TSMacroTreeNode *)nodeInRoot:(TSMacroTreeNode * _Nonnull)root indexPath:(NSIndexPath * _Nonnull)path name:(NSString * _Nonnull)name key:(NSString * _Nonnull)key;
+@end

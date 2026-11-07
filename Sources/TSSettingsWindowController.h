@@ -3,11 +3,16 @@
 #import "TSSettingsNavigationHistory.h"
 #import "TSSettingsCategory.h"
 NS_ASSUME_NONNULL_BEGIN
+@protocol TSSettingsKeyboardPane <NSObject>
+- (void)stopKeySearch;
+- (BOOL)handleKeySearchEvent:(NSEvent *)event;
+@end
 @protocol TSSettingsWindowDelegate <NSObject>
 - (BOOL)settingsMayChangeCategory;
 - (void)settingsChangeFont:(NSFontManager *)sender;
 @end
 @interface TSSettingsWindowController : NSWindowController
+@property (copy, nullable) NSViewController<TSSettingsKeyboardPane> * _Nullable (^keyboardPaneProvider)(void);
 @property (weak, nullable) id<TSSettingsWindowDelegate> settingsDelegate;
 @property (copy, readonly) NSArray<TSSettingsCategoryID> *categoryIdentifiers;
 @property (strong, readonly) TSSettingsNavigationHistory *history;

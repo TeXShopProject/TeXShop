@@ -170,3 +170,16 @@
 "Back (⌘[)" = "Back (⌘[)";
 
 "Forward (⌘])" = "Forward (⌘])";
+
+"Keyboard" = "Keyboard";
+"Search by Function" = "Search by Function";
+"Search by Key" = "Search by Key";
+"Show in Macro Editor" = "Show in Macro Editor";
+"Assigned" = "Assigned";
+"Inactive for this key" = "Inactive for this key";
+"Assignment priority is shown; whether a command can run depends on the document." = "Assignment priority is shown; whether a command can run depends on the document.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "Keys used by the system cannot be detected. Press Escape to stop recording.";
+"No command uses this key." = "No command uses this key.";
+"Press a key" = "Press a key";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved.";

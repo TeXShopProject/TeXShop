@@ -202,3 +202,16 @@
 "Back (⌘[)" = "Atrás (⌘[)";
 
 "Forward (⌘])" = "Adelante (⌘])";
+
+"Keyboard" = "Teclado";
+"Search by Function" = "Buscar por función";
+"Search by Key" = "Buscar por tecla";
+"Show in Macro Editor" = "Mostrar en el editor de macros";
+"Assigned" = "Asignado";
+"Inactive for this key" = "Inactivo para esta tecla";
+"Assignment priority is shown; whether a command can run depends on the document." = "Se muestra la prioridad de asignación. La ejecución del comando depende del documento.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "No se pueden detectar las teclas usadas por el sistema. Escape termina la grabación.";
+"No command uses this key." = "Ningún comando usa esta tecla.";
+"Press a key" = "Pulse una tecla";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla no se puede usar como atajo. Use Comando o Control con una tecla, o F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Se eliminarán los atajos de menú personalizados. Se conservarán los ajustes de KeyEquivalents.plist.";

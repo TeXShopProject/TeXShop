@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-sidebar-') as td:
  for marker,signature in [('PRODUCTION_VALIDATE','- (BOOL)settingsMayChangeCategory'),('PRODUCTION_FINISH','- (BOOL)finishPreferenceEditing:(BOOL)showError')]:
   start=source.index(signature+'\n');test=test.replace('// '+marker,source[start:source.index('\n}',start)+2])
  (p/'test.m').write_text(test)
- subprocess.run(['xcrun','clang' ,'-fobjc-arc','-Wall','-Wextra','-Wno-unused-parameter','-mmacosx-version-min=14.6','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Werror=unguarded-availability-new','-I',str(r/'Tests'),'-I',str(r/'Sources'),'-framework','Cocoa',str(p/'test.m'),*[str(f) for f in sorted((r/'Sources').glob('TSSettings*.m'))],str(r/'Sources/TSPreferenceProfile.m'),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang' ,'-fobjc-arc','-Wall','-Wextra','-Wno-unused-parameter','-mmacosx-version-min=14.6','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Werror=unguarded-availability-new','-I',str(r/'Tests'),'-I',str(r/'Sources'),'-framework','Cocoa','-framework','Carbon',str(r/'Sources/TSKeyboardShortcuts.m'),str(p/'test.m'),*[str(f) for f in sorted((r/'Sources').glob('TSSettings*.m'))],str(r/'Sources/TSPreferenceProfile.m'),'-o',str(p/'test')],check=True)
  out=Path(args.output) if args.output else p/'images';out.mkdir(parents=True,exist_ok=True)
  paths=sorted((resources or r/'Resources/Interfaces').glob('*.lproj/Preferences.nib/keyedobjects.nib'))
  assert len(paths)==12

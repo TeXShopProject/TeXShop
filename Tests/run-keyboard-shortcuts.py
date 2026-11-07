@@ -39,7 +39,8 @@ print('PASS: macro rebuild applies effective menu keys before collecting free ke
 # replace the user's real-window checks for launch ordering and split orientation.
 delegate = (root / 'Sources/TSAppDelegate.m').read_text(encoding='latin-1')
 launch = delegate[delegate.index('- (void)applicationDidFinishLaunching:'):]
-assert 'dispatch_async(dispatch_get_main_queue(), ^{\n        [[TSKeyboardShortcuts sharedController] installInMainMenu];' in launch
+assert 'dispatch_async(dispatch_get_main_queue(), ^{\n        TSKeyboardShortcuts *shortcuts = [TSKeyboardShortcuts sharedController];' in launch
+assert '[shortcuts startObservingMenu];' in launch
 pdf = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin-1')
 for tag in (1, 2):
     assert f'[TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:{tag}]' in pdf

@@ -2,6 +2,7 @@
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
 #import "TSSettingsWindowController.h"
+#import "TSShortcutPaneController.h"
 @interface TSSettingsWindowController (Testing)
 @property (strong, readonly) NSTableView *categoryTable;
 @property (strong, readonly) NSSegmentedControl *navigationControl;
@@ -13,9 +14,10 @@ static BOOL testKeyWindow;
 static BOOL restoreFrame;
 static NSRect savedFrame;
 static BOOL smallScreen;
+static BOOL largeScreen;
 static IMP originalVisibleFrame;
 static NSRect VisibleFrame(NSScreen *screen, SEL selector) {
- return smallScreen ? NSMakeRect(0,0,800,600) : ((NSRect (*)(id,SEL))originalVisibleFrame)(screen,selector);
+ return smallScreen ? NSMakeRect(0,0,800,600) : largeScreen ? NSMakeRect(0,0,2560,1600) : ((NSRect (*)(id,SEL))originalVisibleFrame)(screen,selector);
 }
 static BOOL RestoreFrame(NSWindow *window, SEL selector, NSString *name) {
  if (restoreFrame && [name isEqual:@"SettingsSidebarWindow"]) [window setFrame:savedFrame display:NO];
@@ -117,6 +119,15 @@ int main(int argc,char **argv){@autoreleasepool{
    fprintf(stderr,"INITIAL viewport %.0fx%.0f pane %.0fx%.0f\n",extent.width,extent.height,pane.width,pane.height);
    Check(extent.height>0 && pane.height>extent.height,@"small screen uses a scrollable pane");
   }
+  if(a==3){
+   largeScreen=YES;
+   Owner *large=[Owner new];large.outlets=[NSMutableDictionary new];large.valid=YES;
+   Check([large prepareSettingsWindow],@"large screen production prepare succeeds");
+   [large->_prefsWindow.contentView layoutSubtreeIfNeeded];
+   NSSize extent=large.settingsController.contentScroll.contentSize, pane=large.settingsController.contentScroll.documentView.frame.size;
+   Check(extent.height>=pane.height,@"large screen initial viewport includes pane and titlebar chrome");
+   largeScreen=NO;
+  }
   Check(integration->_tabView.window==integration->_prefsWindow && integration.preferenceNibObjects.count>0,@"production retains nib objects in new window");
   Owner *owner=[Owner new];owner.outlets=[NSMutableDictionary new];owner.valid=YES;
   NSNib *nib=[[NSNib alloc]initWithNibData:ReadNib(Argument(argv[a])) bundle:nil];NSArray *objects;
@@ -151,12 +162,12 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(c.contentScroll.documentView.isFlipped && fabs(c.contentScroll.documentVisibleRect.origin.y)<1,@"content starts at top in tall window");
   Check(c.window.toolbar.items.count==2 && [c.window.toolbar.items[0] isKindOfClass:NSTrackingSeparatorToolbarItem.class] && c.window.toolbar.items[1].navigational,@"tracking divider and navigational toolbar");
   NSArray *expected=@[@"source",@"editor",@"preview",@"console",@"typesetting",@"engines",@"misc-1",@"misc-2",@"themes"];
-  Check([c.categoryIdentifiers isEqual:expected],@"stable ordered category identifiers");
+  Check([c.categoryIdentifiers isEqual:[expected arrayByAddingObject:@"keyboard"]],@"stable ordered category identifiers");
   for(NSUInteger i=0;i<expected.count;i++) Check([c legacyViewForCategoryIdentifier:expected[i]]==tabs.tabViewItems[i].view,@"category maps to original localized pane");
   [memory setObject:@"unknown" forKey:@"TSSettingsSelectedCategory"];
   Check(c.window!=old && tabs.window==c.window,@"every sheet and focus target uses the host window");
   Check(NSEqualRects(tabs.frame,expectedTabFrame),@"hidden tabs preserve the original pane frame");
-  Check(tabs.tabViewType==NSNoTabsNoBorder && c.categoryTable.numberOfRows==9,@"hidden legacy tabs and sidebar");
+  Check(tabs.tabViewType==NSNoTabsNoBorder && c.categoryTable.numberOfRows==10,@"hidden legacy tabs and sidebar");
   [c beginSession];Check([c.history.currentIdentifier isEqual:@"source"] && c.categoryTable.selectedRow==0,@"unknown category falls back to source");
 
 
@@ -186,7 +197,7 @@ int main(int argc,char **argv){@autoreleasepool{
    queryCount=c.history.count;queryCommits=owner.commits;[c.categoryTable keyDown:Key(@"¤")];Check(c.history.count==queryCount && owner.commits==queryCommits,@"unmatched typing never navigates");
   }
   NSRect frame=c.window.frame;
-  for(NSString*identifier in c.categoryIdentifiers){Check([c selectCategoryIdentifier:identifier],@"all categories reachable");Check([c.window.title isEqual:tabs.selectedTabViewItem.label],@"title follows selected category");}
+  for(NSString*identifier in expected){Check([c selectCategoryIdentifier:identifier],@"all categories reachable");Check([c.window.title isEqual:tabs.selectedTabViewItem.label],@"title follows selected category");}
   Check(NSEqualRects(frame,c.window.frame),@"navigation never resizes window");
   Check([[tabs.tabViewItems valueForKey:@"identifier"] isEqual:oldIdentifiers],@"legacy tab identifiers retained");
   Check(memory.values.count==2 && [[memory stringForKey:@"TexCommand"]isEqual:@"sentinel"],@"navigation only saves UI category state");
@@ -245,7 +256,7 @@ int main(int argc,char **argv){@autoreleasepool{
    c.window.appearance=[NSAppearance appearanceNamed:appearance];
    for(NSValue *size in @[[NSValue valueWithSize:NSMakeSize(960,650)],[NSValue valueWithSize:NSMakeSize(660,440)]]){
     [c.window setContentSize:size.sizeValue];[c.window.contentView layoutSubtreeIfNeeded];
-    for(NSString*identifier in c.categoryIdentifiers){
+    for(NSString*identifier in expected){
      [c selectCategoryIdentifier:identifier];[c.window.contentView layoutSubtreeIfNeeded];
      Check(tabs.selectedTabViewItem.view.window==c.window,@"selected controls belong to new window");
      if(strlen(argv[2])>0 && (a==3 || [@(argv[a]) containsString:@"ja.lproj"])){

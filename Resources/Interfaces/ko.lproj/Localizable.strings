@@ -202,3 +202,16 @@
 "Back (⌘[)" = "뒤로 (⌘[)";
 
 "Forward (⌘])" = "앞으로 (⌘])";
+
+"Keyboard" = "키보드";
+"Search by Function" = "기능으로 검색";
+"Search by Key" = "키로 검색";
+"Show in Macro Editor" = "매크로 편집기에서 보기";
+"Assigned" = "할당됨";
+"Inactive for this key" = "이 키에서는 비활성";
+"Assignment priority is shown; whether a command can run depends on the document." = "키 할당의 우선순위를 표시합니다. 명령 실행 가능 여부는 문서 상태에 따라 달라집니다.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "시스템이 사용하는 키는 감지할 수 없습니다. Esc를 누르면 기록이 끝납니다.";
+"No command uses this key." = "이 키를 사용하는 명령이 없습니다.";
+"Press a key" = "키를 누르세요";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "이 키는 단축키로 사용할 수 없습니다. Command 또는 Control과 조합하거나 F1–F20을 사용하세요.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "사용자 지정 메뉴 단축키가 삭제됩니다. KeyEquivalents.plist의 설정은 유지됩니다.";

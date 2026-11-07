@@ -202,3 +202,16 @@
 "Back (⌘[)" = "Précédent (⌘[)";
 
 "Forward (⌘])" = "Suivant (⌘])";
+
+"Keyboard" = "Clavier";
+"Search by Function" = "Rechercher par fonction";
+"Search by Key" = "Rechercher par touche";
+"Show in Macro Editor" = "Afficher dans l’éditeur de macros";
+"Assigned" = "Attribué";
+"Inactive for this key" = "Inactif pour cette touche";
+"Assignment priority is shown; whether a command can run depends on the document." = "La priorité d’attribution est affichée. La possibilité d’exécuter une commande dépend du document.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "Les touches utilisées par le système ne peuvent pas être détectées. Échap termine l’enregistrement.";
+"No command uses this key." = "Aucune commande n’utilise cette touche.";
+"Press a key" = "Appuyez sur une touche";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Cette touche ne peut pas servir de raccourci. Utilisez Commande ou Contrôle avec une touche, ou F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Les raccourcis de menu personnalisés seront supprimés. Les réglages de KeyEquivalents.plist seront conservés.";

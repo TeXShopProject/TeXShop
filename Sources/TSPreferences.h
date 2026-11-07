@@ -248,6 +248,7 @@
 //------------------------------------------------------------------------------
 // target/action methods
 //------------------------------------------------------------------------------
+- (void)showKeyboardSettings:(id)sender;
 - (IBAction)showPreferences:sender;
 - (IBAction)discoverEnginePaths:(id)sender;
 - (void)discoverInitialEnginePaths;

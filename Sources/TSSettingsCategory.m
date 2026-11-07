@@ -9,6 +9,7 @@ TSSettingsCategoryID const TSSettingsCategoryEngines = @"engines";
 TSSettingsCategoryID const TSSettingsCategoryMiscOne = @"misc-1";
 TSSettingsCategoryID const TSSettingsCategoryMiscTwo = @"misc-2";
 TSSettingsCategoryID const TSSettingsCategoryThemes = @"themes";
+TSSettingsCategoryID const TSSettingsCategoryKeyboard = @"keyboard";
 @implementation TSSettingsCategory
 - (instancetype)initWithIdentifier:(TSSettingsCategoryID)identifier symbolName:(NSString *)symbolName color:(NSColor *)color startsGroup:(BOOL)startsGroup legacyIndex:(NSUInteger)legacyIndex
 {

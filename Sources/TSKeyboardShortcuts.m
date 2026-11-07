@@ -1,4 +1,5 @@
 #import "TSKeyboardShortcuts.h"
+#import "TSShortcutPaneController.h"
 #import <Carbon/Carbon.h>
 
 NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
@@ -150,6 +151,23 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
             item.identifier = [NSString stringWithFormat:@"TSShortcut.Ogre.%@.%ld", NSStringFromSelector(item.action), (long)item.tag];
     });
 }
+@implementation TSShortcutMacro
+- (instancetype)initWithName:(NSString *)name path:(NSString *)path indexPath:(NSIndexPath *)indexPath serializedKey:(NSString *)serializedKey key:(NSString *)key modifiers:(NSEventModifierFlags)modifiers {
+    self = [super init];
+    if (self == nil) { return nil; }
+    _name = [name copy]; _path = [path copy]; _indexPath = [indexPath copy];
+    _serializedKey = [serializedKey copy]; _key = [key copy]; _modifiers = modifiers;
+    return self;
+}
+@end
+@implementation TSShortcutMatch
+- (instancetype)initWithPath:(NSString *)path menuItem:(NSMenuItem *)menuItem command:(TSShortcutCommand *)command macro:(TSShortcutMacro *)macro winner:(BOOL)winner {
+    self = [super init];
+    if (self == nil) { return nil; }
+    _path = [path copy]; _menuItem = menuItem; _command = command; _macro = macro; _winner = winner;
+    return self;
+}
+@end
 @implementation TSShortcutCommand
 @end
 
@@ -324,16 +342,22 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     command.item.keyEquivalentModifierMask = [binding[@"modifiers"] unsignedIntegerValue];
     command.item.keyEquivalent = binding[@"key"];
 }
-- (nullable NSString *)conflictForKey:(NSString *)key modifiers:(NSEventModifierFlags)flags except:(NSMenuItem *)excluded restoring:(nullable TSShortcutCommand *)restoring {
-    if (!key.length) return nil;
+- (NSArray<TSShortcutMatch *> *)menuMatchesKey:(NSString *)key modifiers:(NSEventModifierFlags)flags excluding:(NSMenuItem *)excluded {
+    if (key.length == 0) { return @[]; }
     NSDictionary *binding = TSBinding(key, flags);
-    __block NSString *conflict = nil;
+    NSMutableArray<TSShortcutMatch *> *matches = [NSMutableArray array];
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
-        if (item == excluded || item.submenu || item.action == NSSelectorFromString(@"doMacro:") || !item.keyEquivalent.length) return;
-        if (![TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding]) return;
-        conflict = path;
+        if (item == excluded || item.submenu != nil || item.action == NSSelectorFromString(@"doMacro:") || item.keyEquivalent.length == 0) { return; }
+        if (![TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding]) { return; }
+        TSShortcutCommand *command = nil;
+        for (TSShortcutCommand *candidate in self.commands) { if (candidate.item == item) { command = candidate; break; } }
+        [matches addObject:[[TSShortcutMatch alloc] initWithPath:path menuItem:item command:command macro:nil winner:matches.count == 0]];
     });
-    return conflict;
+    return [matches copy];
+}
+- (nullable NSString *)conflictForKey:(NSString *)key modifiers:(NSEventModifierFlags)flags except:(NSMenuItem *)excluded restoring:(nullable TSShortcutCommand *)restoring {
+    TSShortcutMatch *match = [self menuMatchesKey:key modifiers:flags excluding:excluded].lastObject;
+    return match != nil ? match.path : nil;
 }
 - (NSArray<NSDictionary *> *)restorationBindingsForCommand:(TSShortcutCommand *)command {
     TISInputSourceRef source = TISCopyCurrentKeyboardLayoutInputSource();
@@ -411,6 +435,61 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 @end
 
+@implementation TSShortcutSearch
++ (NSArray<TSShortcutMatch *> *)matchesKey:(NSString *)key modifiers:(NSEventModifierFlags)flags store:(TSShortcutStore *)store macros:(NSArray<TSShortcutMacro *> *)macros {
+    NSMutableArray<TSShortcutMatch *> *matches = [[store menuMatchesKey:key modifiers:flags excluding:nil] mutableCopy];
+    // Reuse the same raw comparison and file-order ownership used by the macro editor.
+    NSMutableArray<NSDictionary *> *candidates = [NSMutableArray array];
+    for (TSShortcutMacro *macro in macros) {
+        [candidates addObject:@{@"path":macro.path, @"key":macro.key, @"modifiers":@(macro.modifiers)}];
+    }
+    NSMutableIndexSet *inactive = [NSMutableIndexSet indexSet];
+    for (NSDictionary *conflict in [store conflictsForMacroShortcuts:candidates]) { [inactive addIndex:[conflict[@"index"] unsignedIntegerValue]]; }
+    NSDictionary *binding = TSBinding(key, flags);
+    [macros enumerateObjectsUsingBlock:^(TSShortcutMacro *macro, NSUInteger index, BOOL *stop) {
+        if (macro.key.length == 0 || ![TSBinding(macro.key, macro.modifiers) isEqual:binding]) { return; }
+        [matches addObject:[[TSShortcutMatch alloc] initWithPath:macro.path menuItem:nil command:nil macro:macro winner:![inactive containsIndex:index]]];
+    }];
+    return [matches copy];
+}
++ (NSArray<TSShortcutMatch *> *)matchesEvent:(NSEvent *)event store:(TSShortcutStore *)store macros:(NSArray<TSShortcutMacro *> *)macros {
+    NSMutableArray<TSShortcutMatch *> *menus = [NSMutableArray array], *macroMatches = [NSMutableArray array];
+    NSMutableSet<NSMenuItem *> *seenMenus = [NSMutableSet set];
+    NSMutableSet<NSIndexPath *> *seenMacros = [NSMutableSet set];
+    // These are only the recorder's spellings of this input. Ownership stays raw;
+    // no restoration aliases or keyboard-layout comparison of assignments is used.
+    for (NSDictionary *binding in TSEventBindings(event, [event charactersByApplyingModifiers:0])) {
+        NSString *key = binding[@"key"] ?: @"";
+        for (TSShortcutMatch *match in [self matchesKey:key modifiers:[binding[@"modifiers"] unsignedIntegerValue] store:store macros:macros]) {
+            NSMenuItem *item = match.menuItem;
+            TSShortcutMacro *macro = match.macro;
+            if (item != nil && ![seenMenus containsObject:item]) {
+                [seenMenus addObject:item]; [menus addObject:match];
+            } else if (macro != nil && ![seenMacros containsObject:macro.indexPath]) {
+                [seenMacros addObject:macro.indexPath]; [macroMatches addObject:match];
+            }
+        }
+    }
+    [menus addObjectsFromArray:macroMatches];
+    return [menus copy];
+}
+@end
+
+@interface TSShortcutKeySearchView : NSView
+@property (copy, nullable) BOOL (^handleEvent)(NSEvent *event);
+@end
+@implementation TSShortcutKeySearchView
+- (BOOL)acceptsFirstResponder { return YES; }
+- (BOOL)isAccessibilityElement { return YES; }
+- (NSString *)accessibilityRole { return NSAccessibilityTextFieldRole; }
+- (NSString *)accessibilityLabel { return NSLocalizedString(@"Search by Key", @""); }
+- (void)keyDown:(NSEvent *)event { [self performKeyEquivalent:event]; }
+- (BOOL)performKeyEquivalent:(NSEvent *)event {
+    if (self.handleEvent == nil) { return NO; }
+    return self.handleEvent(event);
+}
+@end
+
 @interface TSShortcutRecorder : NSView
 @property (copy) void (^record)(NSEvent *);
 @property (copy) dispatch_block_t accept;
@@ -451,47 +530,32 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 @end
 
-@interface TSKeyboardShortcuts () <NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate>
-@property TSShortcutStore *store;
+@interface TSKeyboardShortcuts ()
+@property (strong, readwrite, nullable) TSShortcutStore *store;
 @property BOOL menuRefreshPending;
 @property NSArray *observedMenuBindings;
 @property BOOL rebuildingMacros;
 @property BOOL applyingMenus;
-@property NSTextField *hint;
-@property NSTableView *table;
-@property NSSearchField *search;
-@property NSArray<TSShortcutCommand *> *visibleCommands;
-@property NSArray<NSButton *> *selectionButtons;
-@property TSShortcutCapturePanel *capturePanel;
-@property TSShortcutCommand *editingCommand;
-@property NSTextField *captureDisplay;
-@property NSTextField *captureError;
-@property NSButton *applyButton;
-@property NSString *capturedKey;
-@property NSArray<NSDictionary *> *capturedBindings;
-@property NSEventModifierFlags capturedModifiers;
 @end
+
 @implementation TSKeyboardShortcuts
 + (instancetype)sharedController {
     static TSKeyboardShortcuts *controller;
     static dispatch_once_t once;
-    dispatch_once(&once, ^{ controller = [[self alloc] initWithWindow:nil]; });
+    dispatch_once(&once, ^{ controller = [[self alloc] init]; });
     return controller;
 }
-- (void)installInMainMenu {
-    if (self.store) { [self refreshMenuAndMacros]; return; }
-    NSMenu *appMenu = NSApp.mainMenu.itemArray.firstObject.submenu;
-    for (NSMenuItem *item in appMenu.itemArray) {
-        if (item.action != NSSelectorFromString(@"showPreferences:")) continue;
-        NSMenuItem *entry = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Keyboard Shortcuts…", @"") action:@selector(showKeyboardShortcuts:) keyEquivalent:@""];
-        entry.target = self;
-        entry.identifier = @"TSShortcut.showKeyboardShortcuts:.0";
-        [appMenu insertItem:entry atIndex:[appMenu indexOfItem:item] + 1];
-        break;
-    }
-    self.store = [[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:NSUserDefaults.standardUserDefaults];
+- (void)startObservingMenu {
+    if (self.store != nil) { [self refreshMenuAndMacros]; return; }
+    NSMenu *menu = NSApp.mainMenu;
+    if (menu == nil) { return; }
+    self.store = [[TSShortcutStore alloc] initWithMenu:menu defaults:NSUserDefaults.standardUserDefaults];
     [self observeMenuChanges];
     [self refreshMenuAndMacros];
+}
+- (void)showKeyboardShortcuts:(id)sender {
+    if (self.showSettings == nil) { return; }
+    self.showSettings();
 }
 - (NSArray *)menuBindingSnapshot {
     NSMutableArray *bindings = [NSMutableArray array];
@@ -515,7 +579,7 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 - (void)endMenuRebuild {
     self.rebuildingMacros = NO;
     self.observedMenuBindings = [self menuBindingSnapshot];
-    if (self.isWindowLoaded) [self reloadCommands];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:TSMacroShortcutsChangedNotification object:self];
 }
 - (void)refreshMenuAndMacros {
@@ -524,11 +588,12 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     @try {
         [self.store refreshMenu];
         [[NSNotificationCenter defaultCenter] postNotificationName:TSRebuildMacrosNotification object:self];
-        if (self.isWindowLoaded) [self reloadCommands];
+
     } @finally {
         self.observedMenuBindings = [self menuBindingSnapshot];
         self.applyingMenus = NO;
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:TSMacroShortcutsChangedNotification object:self];
 }
 - (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates {
     return [self.store conflictsForMacroShortcuts:candidates] ?: @[];
@@ -560,33 +625,87 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     }
     return matches;
 }
+@end
+
+typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
+    TSShortcutSearchByFunction,
+    TSShortcutSearchByKey
+};
+
+@interface TSShortcutPaneController () <NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate>
+@property (strong) TSKeyboardShortcuts *shortcuts;
+@property (readwrite) BOOL searchingByKey;
+@property (strong) NSSegmentedControl *searchMode;
+@property (strong) TSShortcutKeySearchView *keySearchView;
+@property (strong) NSButton *macroButton;
+@property (copy) NSString *textQuery;
+@property (strong, nullable) NSEvent *searchEvent;
+@property (copy) NSArray<TSShortcutMatch *> *searchMatches;
+@property (copy) NSString *searchMessage;
+@property (strong, nullable) TSShortcutStore *store;
+@property (strong, nullable, readonly) NSWindow *window;
+@property NSTextField *hint;
+@property NSTableView *table;
+@property NSSearchField *search;
+@property NSArray<TSShortcutCommand *> *visibleCommands;
+@property NSArray<NSButton *> *selectionButtons;
+@property TSShortcutCapturePanel *capturePanel;
+@property TSShortcutCommand *editingCommand;
+@property NSTextField *captureDisplay;
+@property NSTextField *captureError;
+@property NSButton *applyButton;
+@property NSString *capturedKey;
+@property NSArray<NSDictionary *> *capturedBindings;
+@property NSEventModifierFlags capturedModifiers;
+@end
+@implementation TSShortcutPaneController
+- (instancetype)initWithShortcuts:(TSKeyboardShortcuts *)shortcuts {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self == nil) { return nil; }
+    _shortcuts = shortcuts;
+    _store = shortcuts.store;
+    _textQuery = @""; _searchMatches = @[]; _searchMessage = @"";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shortcutsChanged:) name:TSMacroShortcutsChangedNotification object:shortcuts];
+    return self;
+}
+- (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
+- (NSWindow *)window { return self.viewIfLoaded.window; }
+- (void)shortcutsChanged:(NSNotification *)notification { self.store = self.shortcuts.store; if (self.isViewLoaded) { [self reloadCommands]; } }
+- (void)refreshMenuAndMacros { [self.shortcuts refreshMenuAndMacros]; }
 - (NSButton *)button:(NSString *)title action:(SEL)action {
     return [NSButton buttonWithTitle:NSLocalizedString(title, @"") target:self action:action];
 }
-- (void)loadWindow {
-    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 820, 570)
-        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
-        backing:NSBackingStoreBuffered defer:NO];
-    window.title = NSLocalizedString(@"Keyboard Shortcuts", @"");
-    window.contentMinSize = NSMakeSize(760, 480);
-    window.releasedWhenClosed = NO;
-    self.window = window;
-    NSView *content = window.contentView;
+- (void)loadView {
+    NSView *content = [[NSView alloc] initWithFrame:NSMakeRect(0,0,700,570)];
+    self.view = content;
     self.search = [NSSearchField new];
     self.search.placeholderString = NSLocalizedString(@"Search commands", @"");
     self.search.delegate = self;
+    self.searchMode = [NSSegmentedControl segmentedControlWithLabels:@[NSLocalizedString(@"Search by Function", @""), NSLocalizedString(@"Search by Key", @"")]
+        trackingMode:NSSegmentSwitchTrackingSelectOne target:self action:@selector(changeSearchMode:)];
+    self.searchMode.selectedSegment = TSShortcutSearchByFunction;
+    [self.searchMode setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [self.searchMode setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
+    self.keySearchView = [TSShortcutKeySearchView new];
+    self.keySearchView.hidden = YES;
+    __weak TSShortcutPaneController *weakSelf = self;
+    self.keySearchView.handleEvent = ^BOOL(NSEvent *event) {
+        TSShortcutPaneController *strongSelf = weakSelf;
+        if (strongSelf == nil) { return NO; }
+        return [strongSelf handleKeySearchEvent:event];
+    };
     NSTextField *hint = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors.", @"")];
     hint.textColor = NSColor.secondaryLabelColor; self.hint = hint;
     NSScrollView *scroll = [NSScrollView new];
-    scroll.hasVerticalScroller = YES; scroll.borderType = NSBezelBorder;
+    scroll.hasVerticalScroller = YES; scroll.hasHorizontalScroller = YES; scroll.borderType = NSBezelBorder;
     self.table = [NSTableView new];
     self.table.delegate = self; self.table.dataSource = self;
     self.table.rowHeight = 28; self.table.usesAlternatingRowBackgroundColors = YES;
     self.table.doubleAction = @selector(editShortcut:); self.table.target = self;
     NSTableColumn *command = [[NSTableColumn alloc] initWithIdentifier:@"command"];
-    command.title = NSLocalizedString(@"Command", @""); command.width = 560; command.minWidth = 390;
+    command.title = NSLocalizedString(@"Command", @""); command.width = 560; command.minWidth = 240;
     NSTableColumn *shortcut = [[NSTableColumn alloc] initWithIdentifier:@"shortcut"];
-    shortcut.title = NSLocalizedString(@"Shortcut", @""); shortcut.width = 160; shortcut.minWidth = 130;
+    shortcut.title = NSLocalizedString(@"Shortcut", @""); shortcut.width = 160; shortcut.minWidth = 100;
     [self.table addTableColumn:command]; [self.table addTableColumn:shortcut];
     scroll.documentView = self.table;
     NSButton *edit = [self button:@"Change…" action:@selector(editShortcut:)];
@@ -594,32 +713,38 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     NSButton *restore = [self button:@"Restore Default" action:@selector(restoreShortcut:)];
     NSButton *all = [self button:@"Restore All…" action:@selector(restoreAll:)];
     self.selectionButtons = @[edit, clear, restore];
-    NSStackView *buttons = [NSStackView stackViewWithViews:@[edit,clear,restore,all]];
-    buttons.orientation = NSUserInterfaceLayoutOrientationHorizontal; buttons.spacing = 12;
-    for (NSView *view in @[self.search,hint,scroll,buttons]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
+    self.macroButton = [self button:@"Show in Macro Editor" action:@selector(showSelectedMacro:)];
+    self.macroButton.enabled = NO;
+    NSStackView *primary = [NSStackView stackViewWithViews:@[edit,clear,restore]];
+    primary.orientation = NSUserInterfaceLayoutOrientationHorizontal; primary.spacing = 8;
+    NSStackView *secondary = [NSStackView stackViewWithViews:@[all,self.macroButton]];
+    secondary.orientation = NSUserInterfaceLayoutOrientationHorizontal; secondary.spacing = 8;
+    NSStackView *buttons = [NSStackView stackViewWithViews:@[primary,secondary]];
+    buttons.orientation = NSUserInterfaceLayoutOrientationVertical; buttons.alignment = NSLayoutAttributeLeading; buttons.spacing = 8;
+    for (NSView *view in @[self.searchMode,self.search,hint,scroll,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
     [NSLayoutConstraint activateConstraints:@[
-        [self.search.topAnchor constraintEqualToAnchor:content.topAnchor constant:20],
+        [self.searchMode.topAnchor constraintEqualToAnchor:content.topAnchor constant:16],
+        [self.searchMode.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
+        [self.searchMode.centerYAnchor constraintEqualToAnchor:self.search.centerYAnchor],
+        [self.search.widthAnchor constraintGreaterThanOrEqualToConstant:160],
+        [self.keySearchView.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor],
+        [self.keySearchView.trailingAnchor constraintEqualToAnchor:self.search.trailingAnchor],
+        [self.keySearchView.topAnchor constraintEqualToAnchor:self.search.topAnchor],
+        [self.keySearchView.bottomAnchor constraintEqualToAnchor:self.search.bottomAnchor],
         [self.search.leadingAnchor constraintEqualToAnchor:content.leadingAnchor constant:20],
-        [self.search.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
+        [self.search.trailingAnchor constraintEqualToAnchor:self.searchMode.leadingAnchor constant:-8],
         [hint.topAnchor constraintEqualToAnchor:self.search.bottomAnchor constant:12],
-        [hint.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [hint.trailingAnchor constraintEqualToAnchor:self.search.trailingAnchor],
+        [hint.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [hint.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
         [scroll.topAnchor constraintEqualToAnchor:hint.bottomAnchor constant:16],
-        [scroll.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [scroll.trailingAnchor constraintEqualToAnchor:self.search.trailingAnchor],
+        [scroll.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [scroll.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
         [buttons.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:16],
         [buttons.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor],
-        [buttons.trailingAnchor constraintLessThanOrEqualToAnchor:self.search.trailingAnchor],
+        [buttons.trailingAnchor constraintLessThanOrEqualToAnchor:content.trailingAnchor constant:-20],
         [buttons.bottomAnchor constraintEqualToAnchor:content.bottomAnchor constant:-20]
     ]];
-    [window center];
     [self reloadCommands];
 }
-- (void)showKeyboardShortcuts:(id)sender {
-    [self installInMainMenu];
-    [self showWindow:sender];
-    [self reloadCommands];
-    [self.window makeKeyAndOrderFront:sender];
-}
-- (void)reloadCommands {
+- (void)reloadFunctionCommands {
     self.hint.stringValue = NSLocalizedString(@"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors.", @"");
     if (self.store.unavailableCommands.count)
         self.hint.stringValue = [self.hint.stringValue stringByAppendingFormat:@"\n%@: %@", NSLocalizedString(@"Shortcut Unavailable", @""), [self.store.unavailableCommands componentsJoinedByString:@", "]];
@@ -633,10 +758,116 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     [self.table reloadData];
     for (NSButton *button in self.selectionButtons) button.enabled = [self selectedCommand] != nil;
 }
-- (void)controlTextDidChange:(NSNotification *)notification { [self reloadCommands]; }
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView { return self.visibleCommands.count; }
+- (void)controlTextDidChange:(NSNotification *)notification { if (!self.searchingByKey) { [self reloadCommands]; } }
+- (void)reloadCommands {
+    if (self.searchingByKey) { [self updateKeyResults]; }
+    else { [self reloadFunctionCommands]; self.macroButton.enabled = NO; }
+}
+- (void)changeSearchMode:(NSSegmentedControl *)sender {
+    if (sender.selectedSegment == TSShortcutSearchByFunction) { [self stopKeySearch]; return; }
+    if (self.searchingByKey) { [self stopKeySearch]; return; }
+    self.textQuery = self.search.stringValue;
+    self.searchingByKey = YES;
+    self.search.editable = NO;
+    self.searchEvent = nil;
+    self.keySearchView.hidden = NO;
+    self.search.stringValue = @"";
+    self.search.placeholderString = NSLocalizedString(@"Press a key", @"");
+    [self updateKeyResults];
+    NSWindow *window = self.window;
+    if (window != nil) { [window makeFirstResponder:self.keySearchView]; }
+}
+- (void)stopKeySearch {
+    if (!self.searchingByKey) { return; }
+    self.searchingByKey = NO;
+    self.searchMode.selectedSegment = TSShortcutSearchByFunction;
+    self.searchEvent = nil; self.searchMatches = @[];
+    self.keySearchView.hidden = YES;
+    self.search.editable = YES;
+    self.search.stringValue = self.textQuery;
+    self.search.placeholderString = NSLocalizedString(@"Search commands", @"");
+    [self reloadCommands];
+}
+- (BOOL)handleKeySearchEvent:(NSEvent *)event {
+    if (!self.searchingByKey) { return NO; }
+    if (event.type != NSEventTypeKeyDown) { return YES; }
+    NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
+    if (flags == 0 && [event.charactersIgnoringModifiers isEqualToString:@"\033"]) {
+        [self stopKeySearch];
+        NSWindow *window = self.window;
+        if (window != nil && window.isKeyWindow) { [window makeFirstResponder:self.search]; }
+        return YES;
+    }
+    self.searchEvent = event;
+    [self updateKeyResults];
+    return YES;
+}
+- (void)updateKeyResults {
+    TSShortcutStore *store = self.store;
+    NSEvent *event = self.searchEvent;
+    self.searchMatches = @[];
+    self.searchMessage = NSLocalizedString(@"Press a key", @"");
+    if (store != nil && event != nil) {
+        NSDictionary *binding = TSRecordedBinding(event, [event charactersByApplyingModifiers:0]);
+        NSString *key = binding[@"key"];
+        NSEventModifierFlags flags = [binding[@"modifiers"] unsignedIntegerValue];
+        self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
+        if (key.length == 0 || ![TSShortcutStore isAllowedKey:key modifiers:flags]) {
+            self.searchMessage = NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
+        } else {
+            NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
+            self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
+            self.searchMessage = self.searchMatches.count == 0 ? NSLocalizedString(@"No command uses this key.", @"") : NSLocalizedString(@"Assignment priority is shown; whether a command can run depends on the document.", @"");
+        }
+    }
+    self.hint.stringValue = [self.searchMessage stringByAppendingFormat:@"\n%@", NSLocalizedString(@"Keys used by the system cannot be detected. Press Escape to stop recording.", @"")];
+    self.keySearchView.accessibilityValue = self.search.stringValue;
+    [self.table reloadData];
+    NSInteger first = self.searchMatches.count > 0 ? (self.searchMatches[0].macro != nil ? 1 : 0) : -1;
+    if (first >= 0) { [self.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)first] byExtendingSelection:NO]; [self.table scrollRowToVisible:first]; }
+    [self updateSelectionButtons];
+}
+- (NSInteger)macroHeaderRow {
+    if (!self.searchingByKey) { return -1; }
+    for (NSUInteger index = 0; index < self.searchMatches.count; index++) { if (self.searchMatches[index].macro != nil) { return (NSInteger)index; } }
+    return -1;
+}
+- (TSShortcutMatch *)matchAtRow:(NSInteger)row {
+    if (!self.searchingByKey || row < 0) { return nil; }
+    NSInteger header = [self macroHeaderRow];
+    if (row == header) { return nil; }
+    if (header >= 0 && row > header) { row--; }
+    return row < (NSInteger)self.searchMatches.count ? self.searchMatches[(NSUInteger)row] : nil;
+}
+- (void)showSelectedMacro:(id)sender {
+    TSShortcutMacro *macro = [self matchAtRow:self.table.selectedRow].macro;
+    if (macro == nil || self.shortcuts.showMacro == nil) { return; }
+    [self stopKeySearch];
+    self.shortcuts.showMacro(macro);
+}
+- (void)updateSelectionButtons {
+    for (NSButton *button in self.selectionButtons) { button.enabled = [self selectedCommand] != nil; }
+    self.macroButton.enabled = [self matchAtRow:self.table.selectedRow].macro != nil;
+}
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    return self.searchingByKey ? (NSInteger)self.searchMatches.count + ([self macroHeaderRow] >= 0 ? 1 : 0) : (NSInteger)self.visibleCommands.count;
+}
+- (BOOL)tableView:(NSTableView *)tableView isGroupRow:(NSInteger)row { return self.searchingByKey && row == [self macroHeaderRow]; }
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row { return ![self tableView:tableView isGroupRow:row]; }
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)column row:(NSInteger)row {
-    TSShortcutCommand *command = self.visibleCommands[row];
+    if (self.searchingByKey) {
+        if (row == [self macroHeaderRow]) { return [NSTextField labelWithString:[column.identifier isEqualToString:@"command"] ? NSLocalizedString(@"Macros", @"") : @""]; }
+        TSShortcutMatch *match = [self matchAtRow:row];
+        if (match == nil) { return nil; }
+        NSString *key = match.macro != nil ? match.macro.key : match.menuItem.keyEquivalent;
+        NSEventModifierFlags flags = match.macro != nil ? match.macro.modifiers : match.menuItem.keyEquivalentModifierMask;
+        NSString *status = match.winner ? NSLocalizedString(@"Assigned", @"") : NSLocalizedString(@"Inactive for this key", @"");
+        NSString *text = [column.identifier isEqualToString:@"command"] ? [match.path stringByAppendingFormat:@" — %@", status] : [TSShortcutStore displayKey:key modifiers:flags];
+        NSTextField *label = [NSTextField labelWithString:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
+        return label;
+    }
+    if (row < 0 || row >= (NSInteger)self.visibleCommands.count) { return nil; }
+    TSShortcutCommand *command = self.visibleCommands[(NSUInteger)row];
     BOOL isCommand = [column.identifier isEqualToString:@"command"];
     NSTextField *label = [NSTextField labelWithString:isCommand ? command.path : [TSShortcutStore displayKey:command.item.keyEquivalent modifiers:command.item.keyEquivalentModifierMask]];
     label.lineBreakMode = NSLineBreakByTruncatingMiddle;
@@ -645,25 +876,33 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
 }
 - (TSShortcutCommand *)selectedCommand {
     NSInteger row = self.table.selectedRow;
+    if (self.searchingByKey) { return [self matchAtRow:row].command; }
     return row >= 0 && row < self.visibleCommands.count ? self.visibleCommands[row] : nil;
 }
-- (void)tableViewSelectionDidChange:(NSNotification *)notification {
-    for (NSButton *button in self.selectionButtons) button.enabled = [self selectedCommand] != nil;
-}
+- (void)tableViewSelectionDidChange:(NSNotification *)notification { [self updateSelectionButtons]; }
 - (void)showError:(NSString *)error {
-    if (!error) return;
+    NSWindow *parent = self.capturePanel ?: self.window;
+    if (error == nil || parent == nil || parent.attachedSheet != nil) { return; }
     NSAlert *alert = [NSAlert new]; alert.messageText = NSLocalizedString(@"Shortcut Unavailable", @""); alert.informativeText = error;
-    [alert beginSheetModalForWindow:self.window completionHandler:nil];
+    [alert beginSheetModalForWindow:parent completionHandler:nil];
 }
-- (BOOL)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
+- (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion {
     NSArray *macros = [self.store macrosUsingKey:key modifiers:flags];
-    if (!macros.count) return YES;
+    if (!macros.count) { completion(YES); return; }
+    NSWindow *parent = self.capturePanel ?: self.window;
+    if (parent == nil || parent.attachedSheet != nil) { completion(NO); return; }
     NSAlert *alert = [NSAlert new];
     alert.messageText = NSLocalizedString(@"Assign a shortcut used by macros?", @"");
     alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@", @""), [macros componentsJoinedByString:@"\n"]];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
     [alert addButtonWithTitle:NSLocalizedString(@"Assign", @"")];
-    return TSRunShortcutAlert(alert) == NSAlertSecondButtonReturn;
+    __weak typeof(self) weakSelf = self;
+    [alert beginSheetModalForWindow:parent completionHandler:^(NSModalResponse response) {
+        TSShortcutPaneController *strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+        BOOL unchanged = [[strongSelf.store macrosUsingKey:key modifiers:flags] isEqualToArray:macros];
+        completion(response == NSAlertSecondButtonReturn && unchanged);
+    }];
 }
 - (void)removeShortcut:(id)sender {
     TSShortcutCommand *command = self.selectedCommand; if (!command) return;
@@ -674,24 +913,35 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     TSShortcutCommand *command = self.selectedCommand; if (!command) return;
     NSString *error = [self.store conflictForRestoringCommand:command];
     if (error) { [self showError:[NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), error]]; return; }
-    if (![self confirmMacrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]) return;
-    [self showError:[self.store restoreCommand:command]];
-    [self refreshMenuAndMacros];
+    __weak typeof(self) weakSelf = self;
+    [self confirmMacrosUsingKey:command.defaultKey modifiers:command.defaultModifiers completion:^(BOOL accepted) {
+        TSShortcutPaneController *strongSelf = weakSelf;
+        if (strongSelf == nil || !accepted) { return; }
+        [strongSelf showError:[strongSelf.store restoreCommand:command]];
+        [strongSelf refreshMenuAndMacros];
+    }];
 }
 - (void)restoreAll:(id)sender {
+    NSWindow *parent = self.window;
+    if (parent == nil || parent.attachedSheet != nil) { return; }
     NSAlert *alert = [NSAlert new]; alert.messageText = NSLocalizedString(@"Restore all keyboard shortcuts?", @"");
-    alert.informativeText = NSLocalizedString(@"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved.", @"");
+    alert.informativeText = NSLocalizedString(@"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved.", @"");
     NSArray *macros = [self.store macrosAffectedByRestoringAll];
     if (macros.count) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@\n%@",
         NSLocalizedString(@"These macro shortcuts will become inactive:", @""), [macros componentsJoinedByString:@"\n"]];
     [alert addButtonWithTitle:NSLocalizedString(@"Restore All", @"")]; [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-    [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse response) {
-        if (response != NSAlertFirstButtonReturn) return;
-        [self.store restoreAll]; [self refreshMenuAndMacros];
+    __weak typeof(self) weakSelf = self;
+    [alert beginSheetModalForWindow:parent completionHandler:^(NSModalResponse response) {
+        TSShortcutPaneController *strongSelf = weakSelf;
+        if (strongSelf == nil || response != NSAlertFirstButtonReturn) { return; }
+        [strongSelf.store restoreAll]; [strongSelf refreshMenuAndMacros];
     }];
 }
 - (void)editShortcut:(id)sender {
-    TSShortcutCommand *command = self.selectedCommand; if (!command || self.window.attachedSheet) return;
+    NSWindow *parent = self.window;
+    TSShortcutCommand *command = self.selectedCommand;
+    if (command == nil || parent == nil || parent.attachedSheet != nil) { return; }
+    [self stopKeySearch];
     self.editingCommand = command; self.capturedKey = nil; self.capturedBindings = nil;
     TSShortcutCapturePanel *panel = [[TSShortcutCapturePanel alloc] initWithContentRect:NSMakeRect(0,0,640,240) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     self.capturePanel = panel;
@@ -712,13 +962,15 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     cancel.frame = NSMakeRect(NSMinX(self.applyButton.frame)-NSWidth(cancel.frame)-12,18,NSWidth(cancel.frame),32);
     for (NSView *view in @[title,self.captureDisplay,self.captureError,self.applyButton,cancel]) [recorder addSubview:view];
     __weak typeof(self) weakSelf = self;
-    recorder.record = ^(NSEvent *event) { [weakSelf recordShortcutEvent:event]; };
-    recorder.accept = ^{ [weakSelf applyCapturedShortcut:nil]; };
-    recorder.cancel = ^{ [weakSelf cancelCapture:nil]; };
-    [self.window beginSheet:panel completionHandler:^(NSModalResponse result) {
+    recorder.record = ^(NSEvent *event) { TSShortcutPaneController *strongSelf = weakSelf; if (strongSelf != nil) { [strongSelf recordShortcutEvent:event]; } };
+    recorder.accept = ^{ TSShortcutPaneController *strongSelf = weakSelf; if (strongSelf != nil) { [strongSelf applyCapturedShortcut:nil]; } };
+    recorder.cancel = ^{ TSShortcutPaneController *strongSelf = weakSelf; if (strongSelf != nil) { [strongSelf cancelCapture:nil]; } };
+    [parent beginSheet:panel completionHandler:^(NSModalResponse result) {
         panel.recorder.record = nil; panel.recorder.accept = nil; panel.recorder.cancel = nil;
-        weakSelf.capturePanel = nil; weakSelf.editingCommand = nil;
-        [weakSelf reloadCommands];
+        TSShortcutPaneController *strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+        strongSelf.capturePanel = nil; strongSelf.editingCommand = nil;
+        [strongSelf reloadCommands];
     }];
     [panel makeFirstResponder:recorder];
     panel.initialFirstResponder = recorder;
@@ -740,7 +992,11 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     }
     self.capturePanel.recorder.accessibilityValue = self.captureDisplay.stringValue;
 }
-- (void)cancelCapture:(id)sender { [self.window endSheet:self.capturePanel returnCode:NSModalResponseCancel]; }
+- (void)cancelCapture:(id)sender {
+    NSWindow *parent = self.window;
+    TSShortcutCapturePanel *panel = self.capturePanel;
+    if (parent != nil && panel != nil && panel.attachedSheet == nil) { [parent endSheet:panel returnCode:NSModalResponseCancel]; }
+}
 - (NSString *)conflictForCapturedShortcut {
     NSArray *bindings = self.capturedBindings ?: @[TSBinding(self.capturedKey, self.capturedModifiers)];
     NSMutableOrderedSet *conflicts = [NSMutableOrderedSet orderedSet];
@@ -756,13 +1012,28 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
         [conflicts.array componentsJoinedByString:@"\n"]];
 }
 - (void)applyCapturedShortcut:(id)sender {
-    if (!self.capturedKey || !self.applyButton.enabled) return;
+    NSString *key = self.capturedKey;
+    TSShortcutCommand *command = self.editingCommand;
+    NSEventModifierFlags flags = self.capturedModifiers;
+    if (key == nil || command == nil || !self.applyButton.enabled) { return; }
     NSString *conflict = [self conflictForCapturedShortcut];
-    if (conflict) { self.captureError.stringValue = conflict; return; }
-    if (![self confirmMacrosUsingKey:self.capturedKey modifiers:self.capturedModifiers]) return;
-    NSString *error = [self.store setKey:self.capturedKey modifiers:self.capturedModifiers forCommand:self.editingCommand];
-    [self refreshMenuAndMacros];
-    if (error) { self.captureError.stringValue = error; [self.capturePanel makeFirstResponder:self.capturePanel.recorder]; return; }
-    [self.window endSheet:self.capturePanel returnCode:NSModalResponseOK];
+    if (conflict != nil) { self.captureError.stringValue = conflict; return; }
+    __weak typeof(self) weakSelf = self;
+    [self confirmMacrosUsingKey:key modifiers:flags completion:^(BOOL accepted) {
+        TSShortcutPaneController *strongSelf = weakSelf;
+        if (strongSelf == nil || !accepted || strongSelf.editingCommand != command ||
+            ![strongSelf.capturedKey isEqualToString:key] || strongSelf.capturedModifiers != flags) { return; }
+        NSString *error = [strongSelf conflictForCapturedShortcut];
+        if (error == nil) { error = [strongSelf.store setKey:key modifiers:flags forCommand:command]; }
+        [strongSelf refreshMenuAndMacros];
+        TSShortcutCapturePanel *panel = strongSelf.capturePanel;
+        if (error != nil) {
+            strongSelf.captureError.stringValue = error;
+            if (panel != nil) { [panel makeFirstResponder:panel.recorder]; }
+            return;
+        }
+        NSWindow *parent = strongSelf.window;
+        if (parent != nil && panel != nil) { [parent endSheet:panel returnCode:NSModalResponseOK]; }
+    }];
 }
 @end

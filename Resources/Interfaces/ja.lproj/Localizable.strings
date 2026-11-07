@@ -223,3 +223,16 @@
 "Back (⌘[)" = "戻る (⌘[)";
 
 "Forward (⌘])" = "進む (⌘])";
+
+"Keyboard" = "キーボード";
+"Search by Function" = "機能で検索";
+"Search by Key" = "キーで検索";
+"Show in Macro Editor" = "マクロエディタで表示";
+"Assigned" = "割り当て有効";
+"Inactive for this key" = "このキーでは無効";
+"Assignment priority is shown; whether a command can run depends on the document." = "キーの割当ての優先順位を示しています。コマンドを実行できるかは書類の状態によります。";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "システムが使っているキーは検出できません。Escで記録を終了します。";
+"No command uses this key." = "このキーを使うコマンドはありません。";
+"Press a key" = "キーを押してください";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "ショートカットに使えないキーです。⌘か⌃と組み合わせるか、F1〜F20を使ってください。";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "メニューのカスタムショートカットを削除します。KeyEquivalents.plistの設定は保持されます。";

@@ -19,16 +19,29 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 @property (strong) NSTabView *legacyTabs;
 @property (strong) NSView *legacyContent;
 @property BOOL synchronizingSelection;
+@property (strong, nullable) NSViewController<TSSettingsKeyboardPane> *keyboardPane;
+@property (strong, nullable) NSScrollView *keyboardScroll;
+- (BOOL)handleKeySearchEvent:(NSEvent *)event;
 @end
 @implementation TSSettingsWindow
 - (BOOL)performKeyEquivalent:(NSEvent *)event
 {
-    if (self.settingsController != nil && self.isKeyWindow && (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagControl | NSEventModifierFlagOption)) == NSEventModifierFlagCommand) {
-        NSString *key = event.charactersIgnoringModifiers;
-        if ([key isEqualToString:@"["]) { [self.settingsController goBack:self]; return YES; }
-        if ([key isEqualToString:@"]"]) { [self.settingsController goForward:self]; return YES; }
+    TSSettingsWindowController *controller = self.settingsController;
+    if (controller != nil && self.isKeyWindow && self.attachedSheet == nil) {
+        if ([controller handleKeySearchEvent:event]) { return YES; }
+        NSEventModifierFlags flags = event.modifierFlags;
+        if ((flags & NSEventModifierFlagCommand) && !(flags & NSEventModifierFlagControl)) {
+            NSString *key = (flags & NSEventModifierFlagOption) ? [event charactersByApplyingModifiers:flags & (NSEventModifierFlagOption | NSEventModifierFlagShift)] : event.charactersIgnoringModifiers;
+            if ([key isEqualToString:@"["]) { [controller goBack:self]; return YES; }
+            if ([key isEqualToString:@"]"]) { [controller goForward:self]; return YES; }
+        }
     }
     return [super performKeyEquivalent:event];
+}
+- (void)keyDown:(NSEvent *)event
+{
+    if (self.isKeyWindow && self.settingsController != nil && [self.settingsController handleKeySearchEvent:event]) { return; }
+    [super keyDown:event];
 }
 @end
 @implementation TSSettingsWindowController
@@ -43,6 +56,12 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     _categoryIdentifiers = _categoryList.identifiers;
     return self;
 }
+- (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
+- (void)windowResignedKey:(NSNotification *)notification { if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; } }
+- (BOOL)handleKeySearchEvent:(NSEvent *)event {
+    if (![self.history.currentIdentifier isEqualToString:TSSettingsCategoryKeyboard] || self.keyboardPane == nil) { return NO; }
+    return [self.keyboardPane handleKeySearchEvent:event];
+}
 - (NSNibName)windowNibName { return @"SettingsWindow"; }
 - (void)windowDidLoad
 {
@@ -51,6 +70,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     if (window == nil) return;
     ((TSSettingsWindow *)window).settingsController = self;
     window.releasedWhenClosed = NO;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResignedKey:) name:NSWindowDidResignKeyNotification object:window];
     window.toolbarStyle = NSWindowToolbarStyleUnified;
     window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleAutomatic;
     window.contentMinSize = NSMakeSize(660, 440);
@@ -177,6 +197,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 }
 - (void)endSession
 {
+    if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; }
     [self.history resetWithIdentifier:self.history.currentIdentifier ?: TSSettingsCategorySource];
     [self updateNavigation];
 }
@@ -208,17 +229,55 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     TSSettingsCategoryID identifier = self.history.currentIdentifier;
     if (identifier == nil) { return; }
     NSUInteger index = [self.categoryIdentifiers indexOfObject:identifier];
-    if (index == NSNotFound || index >= (NSUInteger)self.legacyTabs.numberOfTabViewItems) return;
+    if (index == NSNotFound) { return; }
     TSSettingsCategory *category = [self.categoryList categoryForIdentifier:identifier];
-    if (category == nil || category.legacyIndex >= (NSUInteger)self.legacyTabs.numberOfTabViewItems) { return; }
-    NSUInteger legacyIndex = category.legacyIndex;
-    // Input has already been validated. Avoid repeating the legacy delegate path.
-    id<NSTabViewDelegate> delegate = self.legacyTabs.delegate;
-    self.legacyTabs.delegate = nil;
-    [self.legacyTabs selectTabViewItemAtIndex:legacyIndex];
-    self.legacyTabs.delegate = delegate;
+    if (category == nil) { return; }
+    if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; }
+    BOOL keyboard = [identifier isEqualToString:TSSettingsCategoryKeyboard];
+    if (keyboard && self.keyboardPane == nil && self.keyboardPaneProvider != nil) {
+        self.keyboardPane = self.keyboardPaneProvider();
+        NSView *parent = self.contentScroll.superview;
+        NSViewController<TSSettingsKeyboardPane> *controller = self.keyboardPane;
+        NSView *pane = controller != nil ? controller.view : nil;
+        if (parent != nil && pane != nil) {
+            NSScrollView *scroll = [NSScrollView new];
+            scroll.translatesAutoresizingMaskIntoConstraints = NO;
+            scroll.hasVerticalScroller = YES; scroll.hasHorizontalScroller = YES;
+            self.keyboardScroll = scroll;
+            TSSettingsContentView *document = [[TSSettingsContentView alloc] initWithContent:pane];
+            document.translatesAutoresizingMaskIntoConstraints = NO;
+            pane.translatesAutoresizingMaskIntoConstraints = NO;
+            scroll.documentView = document;
+            [parent addSubview:scroll];
+            NSLayoutConstraint *width = [document.widthAnchor constraintEqualToAnchor:scroll.contentView.widthAnchor];
+            NSLayoutConstraint *height = [document.heightAnchor constraintEqualToAnchor:scroll.contentView.heightAnchor];
+            width.priority = NSLayoutPriorityDefaultHigh; height.priority = NSLayoutPriorityDefaultHigh;
+            [NSLayoutConstraint activateConstraints:@[
+                [scroll.leadingAnchor constraintEqualToAnchor:self.contentScroll.leadingAnchor],
+                [scroll.trailingAnchor constraintEqualToAnchor:self.contentScroll.trailingAnchor],
+                [scroll.topAnchor constraintEqualToAnchor:self.contentScroll.topAnchor],
+                [scroll.bottomAnchor constraintEqualToAnchor:self.contentScroll.bottomAnchor],
+                [document.widthAnchor constraintGreaterThanOrEqualToConstant:700],
+                [document.heightAnchor constraintGreaterThanOrEqualToConstant:570], width, height,
+                [pane.leadingAnchor constraintEqualToAnchor:document.leadingAnchor],
+                [pane.trailingAnchor constraintEqualToAnchor:document.trailingAnchor],
+                [pane.topAnchor constraintEqualToAnchor:document.topAnchor],
+                [pane.bottomAnchor constraintEqualToAnchor:document.bottomAnchor]]];
+        }
+    }
+    self.contentScroll.hidden = keyboard;
+    if (self.keyboardScroll != nil) { self.keyboardScroll.hidden = !keyboard; }
+    if (keyboard) {
+        self.window.title = NSLocalizedString(@"Keyboard", @"");
+    } else {
+        if (category.legacyIndex >= (NSUInteger)self.legacyTabs.numberOfTabViewItems) { return; }
+        id<NSTabViewDelegate> delegate = self.legacyTabs.delegate;
+        self.legacyTabs.delegate = nil;
+        [self.legacyTabs selectTabViewItemAtIndex:category.legacyIndex];
+        self.legacyTabs.delegate = delegate;
+        self.window.title = [self.legacyTabs tabViewItemAtIndex:category.legacyIndex].label;
+    }
     [self synchronizeSidebarSelection];
-    self.window.title = [self.legacyTabs tabViewItemAtIndex:legacyIndex].label;
     [self.legacyContent setAccessibilityLabel:self.window.title];
     [self.stateStore saveSelectedCategory:identifier];
     [self.contentScroll.contentView scrollToPoint:NSZeroPoint];
@@ -258,7 +317,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     if (delegate == nil || sender == nil) { return; }
     [delegate settingsChangeFont:(NSFontManager *)sender];
 }
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView { return self.legacyTabs.numberOfTabViewItems; }
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView { return self.categoryList.categories.count; }
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
 {
     return row >= 0 && row < (NSInteger)self.categoryIdentifiers.count;
@@ -277,8 +336,9 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 }
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    if (row < 0 || row >= (NSInteger)self.categoryList.categories.count || row >= self.legacyTabs.numberOfTabViewItems) { return nil; }
+    if (row < 0 || row >= (NSInteger)self.categoryList.categories.count) { return nil; }
     TSSettingsCategory *category = self.categoryList.categories[(NSUInteger)row];
+    if ([category.identifier isEqualToString:TSSettingsCategoryKeyboard]) { return [TSSettingsSidebarRow cellForCategory:category title:NSLocalizedString(@"Keyboard", @"")]; }
     if (category.legacyIndex >= (NSUInteger)self.legacyTabs.numberOfTabViewItems) { return nil; }
     return [TSSettingsSidebarRow cellForCategory:category title:[self.legacyTabs tabViewItemAtIndex:category.legacyIndex].label];
 }

@@ -12,7 +12,8 @@
         [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryEngines symbolName:@"gearshape.2" color:NSColor.systemGrayColor startsGroup:NO legacyIndex:5],
         [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryMiscOne symbolName:@"slider.horizontal.3" color:NSColor.systemIndigoColor startsGroup:YES legacyIndex:6],
         [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryMiscTwo symbolName:@"switch.2" color:NSColor.systemTealColor startsGroup:NO legacyIndex:7],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryThemes symbolName:@"paintpalette" color:NSColor.systemPinkColor startsGroup:NO legacyIndex:8]]];
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryThemes symbolName:@"paintpalette" color:NSColor.systemPinkColor startsGroup:NO legacyIndex:8],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryKeyboard symbolName:@"keyboard" color:NSColor.systemOrangeColor startsGroup:YES legacyIndex:NSNotFound]]];
 }
 - (instancetype)initWithCategories:(NSArray<TSSettingsCategory *> *)categories
 {

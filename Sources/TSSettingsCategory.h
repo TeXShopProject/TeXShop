@@ -11,6 +11,7 @@ FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategoryEngines;
 FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategoryMiscOne;
 FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategoryMiscTwo;
 FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategoryThemes;
+FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategoryKeyboard;
 @interface TSSettingsCategory : NSObject
 @property (copy, readonly) TSSettingsCategoryID identifier;
 @property (copy, readonly) NSString *symbolName;

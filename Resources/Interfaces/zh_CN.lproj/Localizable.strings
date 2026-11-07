@@ -199,3 +199,16 @@
 "Back (⌘[)" = "后退 (⌘[)";
 
 "Forward (⌘])" = "前进 (⌘])";
+
+"Keyboard" = "键盘";
+"Search by Function" = "按功能搜索";
+"Search by Key" = "按按键搜索";
+"Show in Macro Editor" = "在宏编辑器中显示";
+"Assigned" = "已分配";
+"Inactive for this key" = "此按键无效";
+"Assignment priority is shown; whether a command can run depends on the document." = "显示按键分配的优先级。命令能否执行取决于文稿状态。";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "无法检测系统使用的按键。按 Esc 结束录制。";
+"No command uses this key." = "没有命令使用此按键。";
+"Press a key" = "请按键";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与 Command 或 Control 组合使用，或使用 F1–F20。";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除自定菜单快捷键。KeyEquivalents.plist 中的设置将保留。";

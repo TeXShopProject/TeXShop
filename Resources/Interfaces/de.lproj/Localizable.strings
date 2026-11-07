@@ -202,3 +202,16 @@
 "Back (⌘[)" = "Zurück (⌘[)";
 
 "Forward (⌘])" = "Vorwärts (⌘])";
+
+"Keyboard" = "Tastatur";
+"Search by Function" = "Nach Funktion suchen";
+"Search by Key" = "Nach Taste suchen";
+"Show in Macro Editor" = "Im Makroeditor anzeigen";
+"Assigned" = "Zugewiesen";
+"Inactive for this key" = "Für diese Taste inaktiv";
+"Assignment priority is shown; whether a command can run depends on the document." = "Die Priorität der Zuweisung wird angezeigt. Ob ein Befehl ausgeführt werden kann, hängt vom Dokument ab.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "Vom System verwendete Tasten können nicht erkannt werden. Escape beendet die Aufzeichnung.";
+"No command uses this key." = "Kein Befehl verwendet diese Taste.";
+"Press a key" = "Taste drücken";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Diese Taste kann nicht als Kurzbefehl verwendet werden. Verwenden Sie Command oder Control mit einer Taste oder F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Eigene Menükurzbefehle werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";

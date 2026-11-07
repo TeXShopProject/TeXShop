@@ -1,3 +1,4 @@
+#import "TSShortcutPaneController.h"
 /*
  * SUUpdate = KOCHSU
  * TeXShop - TeX editor for Mac OS
@@ -156,6 +157,13 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     [_prefsWindow makeKeyAndOrderFront:self];
 }
 
+- (void)showKeyboardSettings:(id)sender
+{
+    [self showPreferences:sender];
+    if (self.settingsController == nil) { return; }
+    [self.settingsController selectCategoryIdentifier:TSSettingsCategoryKeyboard];
+}
+
 - (BOOL)prepareSettingsWindow
 {
     if (self.settingsController != nil) return YES;
@@ -169,6 +177,9 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     NSWindow *newWindow = controller.window;
     if (newWindow == nil) return NO;
     controller.settingsDelegate = self;
+    controller.keyboardPaneProvider = ^NSViewController<TSSettingsKeyboardPane> * {
+        return [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts sharedController]];
+    };
     oldWindow.delegate = nil;
     [controller hostLegacyContent:content tabView:_tabView];
     oldWindow.contentView = nil;
