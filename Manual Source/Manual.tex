@@ -4083,7 +4083,7 @@ and add a command like
 just before you start a displayed two-line equation, for example.
 The number $1.6$ is in multiples of a baseline skip.
 The adjustment applies only to the next target created with \verb|\MakeLinkTarget|; subsequent targets use the normal height.
-Other targets, such as \texttt{equation} or \texttt{eqnarray} without \texttt{amsmath}, or figure captions, do not consume the adjustment: it remains pending until a later \verb|\MakeLinkTarget| target.
+Other targets, such as \texttt{eqnarray} (even with \texttt{amsmath}), \texttt{equation} without \texttt{amsmath}, or figure captions, do not consume the adjustment: it remains pending until a later \verb|\MakeLinkTarget| target.
 To find the suitable numbers, you have to experiment a bit.
 A number is perfect, when a click on the link displays the entire formula at the top of the Preview window without superfluous space above it.
 Usually you have to start adding the \texttt{RaiseHook} command when your displayed formula contains a fraction ($1.2$), an integral with an upper bound ($1.4$), a summation symbol with an upper bound ($1.5$), a \texttt{cases} or \texttt{split} construction ($1.6$), or a \texttt{multline} environment ($2.2$).
