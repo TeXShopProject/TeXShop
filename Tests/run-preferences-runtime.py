@@ -17,6 +17,7 @@ xml_names = ['Chapter', 'Section', 'Subsection', 'Subsubsection', 'Introduction'
              'Conclusion', 'Exercises', 'Project', 'Figure', 'Table', 'Mark']
 actions = [method('- (IBAction)XML' + name + 'ButtonChanged:') for name in xml_names]
 editor = method('- (IBAction)editorAddBracketsPressed:')
+autosave = method('- (IBAction)autoSaveEnabledPressed:')
 refresh = method('- (void)refreshRuntimePreferences\n')
 delegate_source = (ROOT / 'Sources/TSAppDelegate.m').read_text(encoding='latin1')
 start = delegate_source.index('- (void)updateXMLTabs\n')
@@ -89,7 +90,7 @@ FakeApp *fakeApp;
 @end
 @interface Preferences : NSObject {
 @public
-
+ Control *_autoSaveEnabledButton,*_keepBackupButton;
 }
 @end
 @implementation Preferences
@@ -102,12 +103,18 @@ int main(void) { @autoreleasepool {
     memory = [TSMemoryDefaults new];
     fakeApp = [FakeApp new]; fakeApp.delegate = [TSAppDelegate new];
     Preferences *p = [Preferences new];
+    fakeApp.mainMenu=[[NSMenu alloc]initWithTitle:@"main"];
+    NSMenuItem *tags=[[NSMenuItem alloc]initWithTitle:@"Tags" action:NULL keyEquivalent:@""];
+    [fakeApp.mainMenu addItem:tags];
 
-    Control *control = [Control new];
+    Control *control = [Control new];p->_autoSaveEnabledButton=control;
+    doAutoSave=YES;activateBauerPatch=YES;
     // Both directions must update the already-running application without OK.
     for (NSNumber *value in @[@YES, @NO, @YES]) {
         BOOL flag = value.boolValue;
         control.state = flag;
+        [p autoSaveEnabledPressed:control];
+        check([SUD boolForKey:AutoSaveEnabledKey]==flag && doAutoSave && activateBauerPatch,"autosave persists but does not change running documents");
         [p editorAddBracketsPressed:control];
         check([SUD boolForKey:EditorCanAddBracketsKey] == flag, "editor persisted");
         check(editorCanAddBrackets == flag, "editor runtime immediate");
@@ -119,11 +126,13 @@ int main(void) { @autoreleasepool {
         BOOL flag = value.boolValue;
         [SUD setBool:flag forKey:EditorCanAddBracketsKey];
         [SUD setBool:flag forKey:AutoSaveEnabledKey];
+        [SUD setBool:flag forKey:TagMenuInMenuBarKey];
         [SUD setObject:@0.25 forKey:PdfPageBack_RKey];
         for (NSString *key in XMLKEYS) [SUD setBool:flag forKey:key];
         NSUInteger count = fakeApp.delegate.updates;
         [p refreshRuntimePreferences];
-        check(editorCanAddBrackets == flag && doAutoSave == flag, "bulk runtime refresh");
+        check(editorCanAddBrackets == flag && doAutoSave && activateBauerPatch, "bulk runtime refresh");
+        check(tags.hidden == !flag,"profile reflects Tags menu visibility");
         check(fabs(PreviewBackgroundColor.redComponent - 0.25) < 0.001, "preview background copy");
         check(fakeApp.delegate.updates == count + 1, "bulk XML refresh once");
         for (NSString *key in XMLKEYS) check([fakeApp.delegate.xml[key] boolValue] == flag, "bulk XML value");
@@ -144,7 +153,7 @@ for name in xml_names:
 program = program.replace('XMLREADER', xml_reader)
 program = program.replace('XMLKEYS', xmlkeys).replace('XMLTESTS', '\n'.join(xmltests))
 program = program.replace('KEYS', '\n'.join('NSString *const %s = @"%s";' % pair for pair in keys.items()))
-program = program.replace('METHODS', '\n'.join(actions + [editor, refresh]))
+program = program.replace('METHODS', '\n'.join(actions + [editor, refresh, autosave]))
 with tempfile.TemporaryDirectory(prefix='texshop-preferences-runtime-') as temp:
     src = Path(temp) / 'probe.m'
     src.write_text(program)

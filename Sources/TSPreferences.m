@@ -26,7 +26,7 @@
 #import "UseMitsu.h"
 #import "UseSparkle.h"
 
-#import "TSPreferences.h"
+#import "TSPreferences+LiveSettings.h"
 #import "TSEnginePathDiscovery.h"
 #import "TSPreferenceProfile.h"
 #import "TSPreferenceInput.h"
@@ -172,14 +172,17 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     NSDictionary<NSString *, id> *profile = [NSDictionary dictionaryWithContentsOfURL:url];
     NSFont *font = [NSFont userFontOfSize:12.0];
     if (profile == nil || font == nil) return;
+    NSURL *factoryURL = [NSBundle.mainBundle URLForResource:@"FactoryDefaults" withExtension:@"plist"];
+    NSDictionary<NSString *, id> *factory = factoryURL == nil ? nil : [NSDictionary dictionaryWithContentsOfURL:factoryURL];
+    if (factory == nil) return;
     TSPreferenceProfile *proposal = [[TSPreferenceProfile alloc] initWithProfile:profile
-        documentFont:[NSArchiver archivedDataWithRootObject:font]];
+        documentFont:[NSArchiver archivedDataWithRootObject:font] registeredDefaults:factory];
     if (proposal == nil) { [self showPreferenceError:NSLocalizedString(@"The selected profile is invalid.", @"")]; return; }
     NSAlert *alert = [NSAlert new];
     alert.messageText = NSLocalizedString(@"Apply Settings Profile?", @"");
-    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@", @""), proposal.enginePath];
-    [alert addButtonWithTitle:NSLocalizedString(@"Apply Profile", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@", @""), proposal.enginePath];
+    [alert addButtonWithTitle:NSLocalizedString(@"Apply Profile", @"")].keyEquivalent = @"";
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")].keyEquivalent = @"\r";
     __weak TSPreferences *weakSelf = self;
     [alert beginSheetModalForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
         TSPreferences *strongSelf = weakSelf;
@@ -205,17 +208,21 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     [self refreshRuntimePreferences];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
+    if ([changed containsObject:@"PdfCopyType"]) {
+        NSMenuItem *item = [_imageCopyTypePopup selectedItem];
+        if (item != nil) [(TSAppDelegate *)NSApp.delegate changeImageCopyType:item];
+    }
     if ([changed containsObject:@"DockIconStyle"]) [[TSDockIconController sharedController] restoreSavedIcon];
     NSDictionary<NSNotificationName, NSArray<NSString *> *> *groups = @{
         DocumentFontChangedNotification: @[@"DocumentFont", @"DocumentFontAttributes", @"tabs", @"SourceFirstLineHeadIndent", @"SourceHeadIndent", @"SourceInterlineSpace"],
         ConsoleFontChangedNotification: @[@"ConsoleFontName", @"ConsoleFontSize"],
-        DocumentSyntaxColorNotification: @[@"SyntaxColoringEnabled"],
+        DocumentSyntaxColorNotification: @[@"SyntaxColoringEnabled", @"SyntaxColorEntryLine"],
         DocumentAutoCompleteNotification: @[@"AutoCompleteEnabled"],
         DocumentBibDeskCompleteNotification: @[@"BibDeskCompletion"],
         ExternalEditorNotification: @[@"UseExternalEditor"],
         @"EncodingChangedNotification": @[@"Encoding", @"ptexUtfOutput"],
         @"CommandCompletionCharNotification": @[@"CommandCompletionChar"],
-        @"NeedsForRecolorNotification": @[@"MakeatletterEnabled", @"expl3SyntaxColoring", @"ShowInvisibleChractersEnabled", @"ShowSpaceCharacter", @"ShowFullwidthSpaceCharacter", @"ShowNewLineCharacter", @"ShowTabCharacter", @"SpaceCharacterKind", @"FullwidthSpaceCharacterKind", @"NewLineCharacterKind", @"TabCharacterKind", @"SpaceCharacterKindExtended", @"FullwidthSpaceCharacterKindExtended", @"NewLineCharacterKindExtended", @"TabCharacterKindExtended"]
+        @"NeedsForRecolorNotification": @[@"AlwaysHighlightEnabled", @"ShowIndicatorForMoveEnabled", @"HighlightContentEnabled", @"BeepEnabled", @"FlashBackgroundEnabled", @"CheckBraceEnabled", @"CheckBracketEnabled", @"CheckSquareBracketEnabled", @"CheckParenEnabled", @"MakeatletterEnabled", @"expl3SyntaxColoring", @"ShowInvisibleChractersEnabled", @"ShowSpaceCharacter", @"ShowFullwidthSpaceCharacter", @"ShowNewLineCharacter", @"ShowTabCharacter", @"SpaceCharacterKind", @"FullwidthSpaceCharacterKind", @"NewLineCharacterKind", @"TabCharacterKind", @"SpaceCharacterKindExtended", @"FullwidthSpaceCharacterKindExtended", @"NewLineCharacterKindExtended", @"TabCharacterKindExtended"]
     };
     for (NSNotificationName name in groups) {
         if (![changed intersectsSet:[NSSet setWithArray:groups[name]]]) continue;
@@ -236,9 +243,6 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (void)refreshRuntimePreferences
 {
     editorCanAddBrackets = [SUD boolForKey:EditorCanAddBracketsKey];
-    doAutoSave = [SUD boolForKey:AutoSaveEnabledKey];
-    activateBauerPatch = doAutoSave && [SUD boolForKey:WatchServerKey] &&
-        (![SUD objectForKey:@"ApplePersistence"] || [SUD boolForKey:@"ApplePersistence"]);
     PreviewBackgroundColor = [NSColor colorWithCalibratedRed:[SUD floatForKey:PdfPageBack_RKey]
         green:[SUD floatForKey:PdfPageBack_GKey] blue:[SUD floatForKey:PdfPageBack_BKey] alpha:1];
     [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
@@ -258,7 +262,6 @@ Clicking this button will bring up the font panel.
     // self.documentFont = [fontManager convertFont:self.documentFont];
     if (![self finishPreferenceEditing:YES]) return;
     self.ownsFontPanel = YES;
-    [NSFontManager sharedFontManager].target = self;
     [_prefsWindow makeFirstResponder:_prefsWindow];
     [[NSFontManager sharedFontManager] setSelectedFont:self.documentFont isMultiple:NO];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:self];
@@ -327,7 +330,6 @@ Clicking this button will bring up the font panel.
 	// up the responder chain
 	if (![self finishPreferenceEditing:YES]) return;
     self.ownsFontPanel = YES;
-    [NSFontManager sharedFontManager].target = self;
 	[_prefsWindow makeFirstResponder:_prefsWindow];
 	[[NSFontManager sharedFontManager] setSelectedFont:self.consoleFont isMultiple:NO];
 	[[NSFontManager sharedFontManager] orderFrontFontPanel:self];
@@ -339,7 +341,8 @@ Clicking this button will bring up the font panel.
 "*/
 - (void)changeFont:(id)fontManager
 {
-    if (!self.ownsFontPanel || self.endingPreferences) return;
+    if (!self.ownsFontPanel || self.endingPreferences ||
+        !(_prefsWindow.isKeyWindow || _prefsWindow.isMainWindow)) return;
     
     NSData    *fontData;
     NSString *theTab = [[_tabView selectedTabViewItem] identifier];
@@ -494,13 +497,10 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setBool:(_expl3SyntaxColorButton.state == NSControlStateValueOn) forKey:expl3SyntaxColoringKey];
 }
 
-// Update the value used by NSDocument when it next checks autosave support.
+// Persist immediately; NSDocument autosave and server watching change at next launch.
 - (IBAction)autoSaveEnabledPressed:sender
 {
 	[SUD setBool:(_autoSaveEnabledButton.state == NSControlStateValueOn) forKey:AutoSaveEnabledKey];
-    doAutoSave = [SUD boolForKey:AutoSaveEnabledKey];
-    activateBauerPatch = doAutoSave && [SUD boolForKey:WatchServerKey] &&
-        (![SUD objectForKey:@"ApplePersistence"] || [SUD boolForKey:@"ApplePersistence"]);
 	// A backup file is kept only when Versions is off, which follows autosave.
 	_keepBackupButton.enabled = ![SUD boolForKey:AutoSaveEnabledKey];
 }
@@ -515,11 +515,13 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setBool:(_saveEncodingMenuButton.state == NSControlStateValueOn) forKey:EncodingMenuInSaveDialogKey];
 }
 
+// added by Terada(
 - (IBAction)kpsetoolChanged:(id)sender
 {
     [self commitPreferenceField:_kpsetoolField showError:YES reflect:YES];
 }
 
+// added by Terada(
 - (IBAction)bibTeXengineChanged:(id)sender
 {
     [self commitPreferenceField:_bibTeXengineField showError:YES reflect:YES];
@@ -1189,8 +1191,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 
 	NSMenu *formatMenu = [[previewMenu itemWithTitle:
 						NSLocalizedString(@"Copy Format", @"Copy Format")] submenu];
-	id item = [formatMenu itemWithTag: [SUD integerForKey:PdfCopyTypeKey]];
-	item = [formatMenu itemWithTag: [[sender selectedCell] tag]];
+	id item = [formatMenu itemWithTag: [[sender selectedCell] tag]];
 	if (item)
 		[(TSAppDelegate *)[NSApp delegate] changeImageCopyType: item];
 	// end mitsu 1.29b
@@ -1572,9 +1573,6 @@ person script. See also: DefaultTypesetMode.
     
     // become first responder so we will see the envents that NSFontManager sends
     // up the responder chain
-    if (![self finishPreferenceEditing:YES]) return;
-    self.ownsFontPanel = YES;
-    [NSFontManager sharedFontManager].target = self;
     [_prefsWindow makeFirstResponder:_prefsWindow];
     [[NSFontManager sharedFontManager] setSelectedFont:self.consoleFont isMultiple:NO];
  */
@@ -1904,13 +1902,12 @@ A tag of 0 means "no", a tag of 1 means "yes".
     if (rule == nil) return YES;
     NSText *editor = field.currentEditor;
     NSString *text = editor != nil ? editor.string : field.stringValue;
-    id value = [rule validatedValue:text];
+    TSPreferenceInputValue *value = [rule validatedValue:text];
     if (value == nil) {
         if (showError) [self presentInputErrorForField:field];
         return NO;
     }
-    BOOL changed = ![[SUD objectForKey:rule.key] isEqual:value];
-    [SUD setObject:value forKey:rule.key];
+    BOOL changed = [value storeInDefaults:SUD forKey:rule.key];
     field.stringValue = [rule displayStringForValue:value];
     if (editor != nil) editor.string = field.stringValue;
     self.editingOriginalText = field.stringValue;
@@ -1960,9 +1957,9 @@ A tag of 0 means "no", a tag of 1 means "yes".
 {
     [self deactivatePreferenceColorWells];
     NSFontManager *manager = [NSFontManager sharedFontManager];
-    if (self.ownsFontPanel && manager.target == self) {
+    if (self.ownsFontPanel && manager.target == nil &&
+        (_prefsWindow.isKeyWindow || _prefsWindow.isMainWindow)) {
         [[manager fontPanel:NO] close];
-        manager.target = nil;
     }
     self.ownsFontPanel = NO;
 }

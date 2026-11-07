@@ -491,7 +491,7 @@ Creating a new template with TeXShop is easy. If you like, start with an existin
 \section{Preference Design}
 \label{MenuDesign}
 
-TeXShop Settings opens from the main TeXShop menu. Its tabs group related settings. Changes are saved as they are made; there are no whole-window OK or Cancel buttons. Press Return or leave a text field to validate and save it. Closing the window or changing tabs also validates input. If a value is invalid, correct it or restore that field alone. Closing with the close button or Command-W keeps successful changes. Some settings affect open windows immediately; defaults for newly opened documents take effect when those documents open.
+TeXShop Settings opens from the main TeXShop menu. Its tabs group related settings. Changes are saved as they are made; there are no whole-window OK or Cancel buttons. Press Return or leave a text field to validate and save it. Closing the window or changing tabs also validates input. If a value is invalid, correct it or restore that field alone. Closing with the close button or Command-W keeps successful changes. Some settings affect open windows immediately; defaults for newly opened documents take effect when those documents open. Auto Save changes are saved immediately but take effect after restarting TeXShop.
 
 The settings-profile menu first shows its reset scope and the selected TeX engine path. Applying a profile resets known editing, engine, display, hidden settings and the running Dock icon. Shortcuts, system language and key equivalents, window layouts, automatic updates, theme files and unknown settings are preserved. Theme selections may change. A profile is applied immediately after confirmation; closing Settings does not undo it.
 
@@ -629,7 +629,7 @@ can be single spaced or double spaced or somewhere between these extremes.
 Preference values for various style fields are integers. These values are constrained in various ways. Tab indent can be between 2 and 50, paragraph indent can be between 0 and 100, and interline spacing can be between 1 and 20. When larger or smaller values are entered, they are replaced with the closest allowed value.
 
 
-If a source window is open when the style items are set, the changes will appear immediately in the source, so users can experiment with  values until they find a pleasing set. However, there is a mild complication. When number entry boxes are used in preferences, changes in these boxes are not sent to the Mac until the box is deactivated. The easy way to deactivate a box is to activate another box by clicking in it. At that moment, the source window will be updated to reveal changes. It is tempting to press RETURN to deactivate a box, but the Preference dialog reacts to RETURN by accepting all changes and closing the Preference window.
+If a source window is open when the style items are set, the changes will appear immediately in the source, so users can experiment with  values until they find a pleasing set. However, there is a mild complication. When number entry boxes are used in preferences, changes in these boxes are not sent to the Mac until the box is deactivated. The easy way to deactivate a box is to activate another box by clicking in it. At that moment, the source window will be updated to reveal changes. Press Return or leave the field to validate and save the value. Return keeps Settings open.
 
 {\em Aside:} The first version of this manual had a different explanation for the style items. It read
 ``The first item sets the width of a tab; by default, the value is 4. The remaining items are left from an earlier version and do nothing. There are no plans to revive them.'' To my  surprise, a user wrote telling me that the remaining items actually worked, but TeXShop had to be restarted to see the changes.  Sure enough. So I revised the items to immediately show their effect in source windows.
@@ -4417,7 +4417,7 @@ A second way to spell check is to activate the menu item {\em Correct Spelling A
 
 The final way to spell check is to use the menu item {\em Check Spelling While Typing}.  This item underlines misspelled words as they are typed, and the user can then go back and correct these words. This is how I spell check in TeXShop. 
 
-\section{TeX-aware Spell Checking}
+\section{LaTeX-aware Spell Checking}
 
 TeXShop 5.60 adds TeX-aware spell checking, based on an implementation proposed by Ralph Martin. It is on by default, and can be turned off with the item {\bf LaTeX-aware spell checking} under the Source tab of TeXShop Settings. The item does not turn on {\em Check Spelling While Typing}.
 

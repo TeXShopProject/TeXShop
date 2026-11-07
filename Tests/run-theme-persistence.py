@@ -5,20 +5,22 @@ import tempfile,subprocess,sys
 R=Path(__file__).resolve().parents[1];source=(R/'Sources/TSPreferences-Color.m').read_text()
 def method(sig):
  a=source.index('\n'+sig)+1;return source[a:source.index('\n}',a)+2]
-methods='\n'.join(map(method,['- (IBAction)SaveEditedStyle:', '- (void)saveNewTheme:', '- (IBAction)themeSelectionChanged:', '- (IBAction)EditingStyleChoice:']))
+methods='\n'.join(map(method,['- (IBAction)SaveEditedStyle:', '- (void)saveNewTheme:', '- (IBAction)themeSelectionChanged:', '- (IBAction)EditingStyleChoice:', '- (IBAction)SaveNewStyle:', '- (void)setThemeEditingEnabled:']))
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
 mutations={
  'failure-dictionary':('EditingColors = [saved mutableCopy];',';'),
  'failure-fallback':('[[self themeStore] readTitle:title] ?: self.lastSavedEditingColors','[[self themeStore] readTitle:title]'),
  'save-notify':('[NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];',';'),
  'clone-early':('if (![[self themeStore] writeColors:colors title:title error:&error]) {','if (NO && ![[self themeStore] writeColors:colors title:title error:&error]) {'),
- 'selection-store':('[SUD setObject:dark forKey:DefaultDarkThemeKey];',';'),
+ 'selection-store':('[SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];',';'),
 }
 if mutation:
  old,new=mutations[mutation];assert old in methods;methods=methods.replace(old,new)
+methods=methods.replace('NSPopUpButton *popup', 'Popup *popup')
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import "MemoryDefaults.h"
+#import "TestAppKitIsolation.h"
 #import "TSThemeFileStore.h"
 static TSMemoryDefaults *memory;
 #define SUD memory
@@ -42,7 +44,23 @@ static NSUInteger reloads;
 - (void)addItemWithTitle:(NSString *)title{[self.items addObject:title];}
 - (void)selectItemWithTitle:(NSString *)title{self.titleOfSelectedItem=title;}
 @end
-@interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *EditingStyle,*LiteStyle,*DarkStyle; }
+static NSString *ColorPath;
+@interface FakePanel:NSObject @end
+@implementation FakePanel
+- (void)close {}
+@end
+@interface FakeApp:NSObject @end
+@implementation FakeApp
+- (NSInteger)runModalForWindow:(id)window {return 0;}
+@end
+static FakeApp *app;
+#undef NSApp
+#define NSApp app
+@interface Field:NSObject
+@property(copy) NSString *stringValue;
+@end
+@implementation Field @end
+@interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *EditingStyle,*LiteStyle,*DarkStyle; Field *styleTitle; FakePanel *stylePanel; }
 @property(copy) NSDictionary *lastSavedEditingColors;
 @property TSThemeFileStore *store;
 @property NSUInteger errors,fills;
@@ -55,9 +73,9 @@ METHODS
 @end
 static void check(BOOL ok,const char *why){if(!ok){fprintf(stderr,"FAIL: %s\n",why);exit(1);}}
 int main(int argc,char **argv){@autoreleasepool{
- memory=[TSMemoryDefaults new];Probe *p=[Probe new];
+ TSInstallAppKitIsolation();memory=[TSMemoryDefaults new];Probe *p=[Probe new];
  NSURL *root=[NSURL fileURLWithPath:@(argv[1]) isDirectory:YES];
- p.store=[[TSThemeFileStore alloc]initWithDirectory:root];
+ p.store=[[TSThemeFileStore alloc]initWithDirectory:root];ColorPath=root.path;app=[FakeApp new];p->stylePanel=[FakePanel new];p->styleTitle=[Field new];
  NSDictionary *original=@{@"Title":@"Original",@"EditorText":@[@0.1,@0.2,@0.3,@1]};
  check([p.store writeColors:original title:@"Original" error:NULL],"seed file");
  p->EditingStyle=[Popup new];p->LiteStyle=[Popup new];p->DarkStyle=[Popup new];
@@ -75,14 +93,24 @@ int main(int argc,char **argv){@autoreleasepool{
  p->EditingColors[@"EditorText"]=@[@0.9,@0.9,@0.9,@1];
  [p SaveEditedStyle:nil];
  check(p.errors==1 && [p->EditingColors isEqual:saved] && notifications==1 && reloads==1,"failed save restores last successful dictionary without applying it");
- [p saveNewTheme:p.lastSavedEditingColors title:@"Clone"];
+ p->EditingColors[@"EditorText"]=@[@0.4,@0.4,@0.4,@1];
+ p->styleTitle.stringValue=@"Clone";
+ [p SaveNewStyle:nil];
  check([[[p.store readTitle:@"Clone"] objectForKey:@"EditorText"] isEqual:saved[@"EditorText"]],"clone after failed save excludes unsaved colors");
  check([p->EditingStyle.titleOfSelectedItem isEqual:@"Clone"] && [p->LiteStyle.items containsObject:@"Clone"],"successful clone updates all lists and editing selection");
  NSDictionary *before=[p->EditingColors copy];NSArray *items=[p->LiteStyle.items copy];
  [p saveNewTheme:p.lastSavedEditingColors title:@"Original"];
  check(p.errors==2 && [p->EditingColors isEqual:before] && [p->EditingStyle.titleOfSelectedItem isEqual:@"Clone"] && [items isEqual:p->LiteStyle.items],"failed clone leaves original dictionary and lists intact");
- NSUInteger count=notifications;[p themeSelectionChanged:nil];
- check([[SUD stringForKey:DefaultLiteThemeKey] isEqual:@"Light"] && [[SUD stringForKey:DefaultDarkThemeKey] isEqual:@"Dark"] && notifications==count+1,"theme selection persists then applies");
+ NSUInteger count=notifications,reloaded=reloads;
+ p->DarkStyle.titleOfSelectedItem=nil;[SUD setObject:@"Missing" forKey:DefaultDarkThemeKey];
+ [p themeSelectionChanged:p->LiteStyle];
+ check([[SUD stringForKey:DefaultLiteThemeKey] isEqual:@"Light"] && [[SUD stringForKey:DefaultDarkThemeKey] isEqual:@"Missing"] && notifications==count+1 && reloads==reloaded+1,"valid popup persists and reloads despite missing other theme");
+ p->DarkStyle.titleOfSelectedItem=@"Dark";[p themeSelectionChanged:p->DarkStyle];
+ check([[SUD stringForKey:DefaultDarkThemeKey] isEqual:@"Dark"] && reloads==reloaded+2,"dark popup persists independently");
+ NSView *view=[[NSView alloc]initWithFrame:NSZeroRect];
+ NSColorWell *theme=[[NSColorWell alloc]initWithFrame:NSZeroRect],*cursor=[[NSColorWell alloc]initWithFrame:NSZeroRect];
+ cursor.action=@selector(BlockCursorColorChanged:);[view addSubview:theme];[view addSubview:cursor];
+ [p setThemeEditingEnabled:NO inView:view];check(!theme.enabled && cursor.enabled,"unreadable theme does not disable cursor color");
  [NSNotificationCenter.defaultCenter removeObserver:token];
  puts("PASS: theme selection, save failure, last-success fallback, clone after failure and unchanged failed-clone UI");
 }return 0;}

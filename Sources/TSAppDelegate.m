@@ -35,7 +35,7 @@
 #import "TSLaTeXPanelController.h"
 #import "TSMacroMenuController.h"
 #import "TSMatrixPanelController.h"
-#import "TSPreferences.h"
+#import "TSPreferences+LiveSettings.h"
 #import "TSEnginePathDiscovery.h"
 #import "TSWindowManager.h"
 #import "TSTextEditorWindow.h"

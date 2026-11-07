@@ -175,7 +175,7 @@
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
 "Apply Settings Profile?" = "Apply Settings Profile?";
-"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
 "Apply Profile" = "Apply Profile";
 "Settings could not be saved" = "Settings could not be saved";
 "Enter a valid setting" = "Enter a valid setting";

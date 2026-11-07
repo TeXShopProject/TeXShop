@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Exercise all nine profile transactions and their production reflection path."""
 from pathlib import Path
-import subprocess,tempfile,sys
+import subprocess,tempfile,sys,re
 ROOT=Path(__file__).resolve().parents[1]
 s=(ROOT/'Sources/TSPreferences.m').read_text()
 a=s.index('\n- (void)applyPreferenceProfile:')+1;body=s[a:s.index('\n}',a)+2]
@@ -19,7 +19,7 @@ if mutation:
 # The confirmation handler invokes this transaction only after explicit local confirmation.
 assert '[strongSelf applyPreferenceProfile:proposal font:font];' in s
 for old in ['undoDefaultPrefs:', 'cancelButtonPressed:', '_undoManager', 'MagnificationChangedNotification']:
- assert old not in s,old
+ assert old not in re.sub(r"/\*.*?\*/", "", s, flags=re.S),old
 names=['DocumentFontChangedNotification','ConsoleFontChangedNotification','DocumentSyntaxColorNotification','DocumentAutoCompleteNotification','DocumentBibDeskCompleteNotification','ExternalEditorNotification','SourceColorChangedNotification']
 program=r'''
 #import <Cocoa/Cocoa.h>
@@ -48,7 +48,25 @@ static NSUInteger dock,spell,colors,encoding;
 + (id)sharedInstance {static id v;if(!v)v=[self new];return v;}
 - (void)setupForEncoding {encoding++;}
 @end
-@interface Probe:NSObject
+@interface TSAppDelegate:NSObject
+@property NSUInteger copies;
+- (void)changeImageCopyType:(id)item;
+@end
+@implementation TSAppDelegate
+- (void)changeImageCopyType:(id)item { self.copies++; }
+@end
+@interface FakeApp:NSObject
+@property TSAppDelegate *delegate;
+@end
+@implementation FakeApp @end
+static FakeApp *app;
+#undef NSApp
+#define NSApp app
+@interface Popup:NSObject @end
+@implementation Popup
+- (id)selectedItem {return self;}
+@end
+@interface Probe:NSObject { @public Popup *_imageCopyTypePopup; }
 @property id documentFont,fontAttributes;
 @property NSUInteger runtime,controls,themes;
 @end
@@ -64,7 +82,7 @@ int main(int argc,char **argv){@autoreleasepool{
  for(int n=1;n<argc;n++) {
   NSDictionary *profile=[NSDictionary dictionaryWithContentsOfFile:@(argv[n])];
   TSPreferenceProfile *proposal=[[TSPreferenceProfile alloc]initWithProfile:profile documentFont:font];check(proposal!=nil,"valid profile");
-  memory=[TSMemoryDefaults new];Probe *p=[Probe new];
+  memory=[TSMemoryDefaults new];Probe *p=[Probe new];p->_imageCopyTypePopup=[Popup new];app=[FakeApp new];app.delegate=[TSAppDelegate new];
   NSMutableArray *notes=[NSMutableArray new];
   id token=[NSNotificationCenter.defaultCenter addObserverForName:nil object:p queue:nil usingBlock:^(NSNotification *note){[notes addObject:note.name];check(note.userInfo==nil,"no transient theme dictionary");}];
   [p applyPreferenceProfile:proposal font:nil];
@@ -75,6 +93,15 @@ int main(int argc,char **argv){@autoreleasepool{
   [SUD setBool:![profile[@"MakeatletterEnabled"] boolValue] forKey:@"MakeatletterEnabled"];
   [p applyPreferenceProfile:proposal font:nil];
   check([notes containsObject:@"NeedsForRecolorNotification"],"makeatletter refreshes existing text");
+  [notes removeAllObjects];
+  for (NSString *key in @[@"AlwaysHighlightEnabled",@"ShowIndicatorForMoveEnabled",@"HighlightContentEnabled",@"BeepEnabled",@"FlashBackgroundEnabled",@"CheckBraceEnabled",@"CheckBracketEnabled",@"CheckSquareBracketEnabled",@"CheckParenEnabled",@"SyntaxColorEntryLine"]) {
+    [notes removeAllObjects];[SUD setBool:![SUD boolForKey:key] forKey:key];
+    [p applyPreferenceProfile:proposal font:nil];
+    check([notes containsObject:[key isEqual:@"SyntaxColorEntryLine"] ? DocumentSyntaxColorNotification : @"NeedsForRecolorNotification"],"profile reflects every highlighting key");
+  }
+  NSUInteger copies=app.delegate.copies;
+  [SUD setInteger:999 forKey:@"PdfCopyType"];[p applyPreferenceProfile:proposal font:nil];
+  check(app.delegate.copies==copies+1,"profile reflects PDF copy menu");
   [notes removeAllObjects];
   [SUD setObject:@"round" forKey:@"DockIconStyle"];
   [SUD setBool:NO forKey:@"TeXAwareSpellChecking"];

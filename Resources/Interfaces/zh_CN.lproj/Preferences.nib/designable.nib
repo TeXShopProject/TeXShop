@@ -2531,7 +2531,7 @@
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L4L-xs-x3B">
                                                         <rect key="frame" x="44" y="60" width="305" height="30" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="编辑时自动覆盖文件的 macOS 功能。" id="2dA-bf-BI3">
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="编辑时自动覆盖文件的 macOS 功能。重新启动 TeXShop 后生效。" id="2dA-bf-BI3">
                                                             <font key="font" metaFont="smallSystem" />
                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

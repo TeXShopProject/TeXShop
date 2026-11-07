@@ -27,7 +27,6 @@
 
 #import <AppKit/AppKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
 @interface TSPreferences : NSObject
 {
 	IBOutlet NSWindow	*_prefsWindow;			/*" connected to the window "*/
@@ -242,7 +241,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (retain) NSFont		*documentFont;			/*" used to track the font that the user has selected for the document window "*/
 @property (retain) NSFont		*consoleFont;			/*" used to track the font that the user has selected for the console window "*/
-@property (retain, nullable) NSDictionary *fontAttributes;         /*" used to track the font attributes that the user has selected for the document window "*/
+@property (retain) NSDictionary *fontAttributes;         /*" used to track the font attributes that the user has selected for the document window "*/
 
 + (id)sharedInstance;
 
@@ -385,10 +384,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateDocumentFontTextField;
 - (void)updateConsoleFontTextField;
 
-- (void)finishPreferencesForTermination;
-- (void)showPreferenceError:(NSString *)message;
-
-@property (copy, nullable) NSDictionary<NSString *, id> *lastSavedEditingColors;
 
 @end
 
@@ -468,5 +463,3 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @end
-
-NS_ASSUME_NONNULL_END

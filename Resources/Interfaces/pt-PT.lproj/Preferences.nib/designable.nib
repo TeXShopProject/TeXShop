@@ -2499,7 +2499,7 @@
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pwt-4j-M6K">
                                                         <rect key="frame" x="44" y="60" width="305" height="44" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Funcionalidade do macOS que substitui o ficheiro automaticamente durante a edição." id="79N-ZD-sNh">
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Funcionalidade do macOS que substitui o ficheiro automaticamente durante a edição. Aplica-se após reiniciar o TeXShop." id="79N-ZD-sNh">
                                                             <font key="font" metaFont="smallSystem" />
                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

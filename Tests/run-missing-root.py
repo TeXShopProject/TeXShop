@@ -18,6 +18,7 @@ if 'NSUserNotificationCenter' in active:
     failures.append('NSUserNotification is still used')
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 enum { RootForOpening = 1, RootForTexing = 2, RootForPrinting = 3 };
 @interface Doc : NSObject
 @property (strong) NSWindow *window;
@@ -28,7 +29,7 @@ enum { RootForOpening = 1, RootForTexing = 2, RootForPrinting = 3 };
 METHOD
 @end
 int main(void) { @autoreleasepool {
-    [NSApplication sharedApplication];
+    TSInstallAppKitIsolation();[NSApplication sharedApplication];
     int failures = 0;
     for (NSNumber *task in @[@(RootForTexing), @(RootForPrinting), @(RootForOpening)]) {
         Doc *doc = [Doc new];
@@ -51,7 +52,7 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-root-') as tmp:
     src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
     src.write_text(program)
-    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', str(src), '-o', str(exe)], check=True)
+    subprocess.run(['xcrun', 'clang','-I',str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', str(src), '-o', str(exe)], check=True)
     r = subprocess.run([str(exe)], capture_output=True, text=True, timeout=60)
     out = r.stdout.strip()
     if out: print(out)

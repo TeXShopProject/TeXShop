@@ -12,7 +12,7 @@
 }
 - (nullable NSURL *)URLForTitle:(NSString *)title
 {
-    if (title.length == 0 || [title isEqualToString:@"."] || [title isEqualToString:@".."] ||
+    if (title.length == 0 || [title hasPrefix:@"."] || [title isEqualToString:@"."] || [title isEqualToString:@".."] ||
         [title rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"/\\:"]].location != NSNotFound ||
         [title rangeOfCharacterFromSet:NSCharacterSet.controlCharacterSet].location != NSNotFound) return nil;
     NSString *filename = [title stringByAppendingPathExtension:@"plist"];
@@ -23,7 +23,7 @@
     if (path == nil) return nil;
     NSDictionary<NSFileAttributeKey, id> *attributes = [NSFileManager.defaultManager attributesOfItemAtPath:path error:NULL];
     if ([attributes[NSFileType] isEqual:NSFileTypeSymbolicLink]) return nil;
-    if (![url.URLByResolvingSymlinksInPath.URLByDeletingLastPathComponent isEqual:self.directory.URLByResolvingSymlinksInPath]) return nil;
+    if (![url.URLByDeletingLastPathComponent.URLByResolvingSymlinksInPath isEqual:self.directory.URLByResolvingSymlinksInPath]) return nil;
     return url;
 }
 - (nullable NSDictionary<NSString *, id> *)readTitle:(NSString *)title

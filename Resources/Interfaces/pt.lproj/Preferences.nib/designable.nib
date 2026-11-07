@@ -2508,7 +2508,7 @@
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JOO-yH-LmC">
                                                         <rect key="frame" x="44" y="60" width="386" height="30" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Recurso do macOS que sobrescreve o arquivo automaticamente durante a edição." id="Km8-T7-hJl">
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Recurso do macOS que sobrescreve o arquivo automaticamente durante a edição. Vale após reiniciar o TeXShop." id="Km8-T7-hJl">
                                                             <font key="font" metaFont="smallSystem" />
                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

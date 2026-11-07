@@ -2497,7 +2497,7 @@
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mek-nS-QfK">
                                                         <rect key="frame" x="44" y="60" width="305" height="44" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Función de macOS que sobrescribe el archivo automáticamente mientras se edita." id="d8E-Vx-iB5">
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Función de macOS que sobrescribe el archivo automáticamente mientras se edita. Se aplica al reiniciar TeXShop." id="d8E-Vx-iB5">
                                                             <font key="font" metaFont="smallSystem" />
                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

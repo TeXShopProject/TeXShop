@@ -22,7 +22,7 @@
  *
  */
 
-#import "TSPreferences.h"
+#import "TSPreferences+LiveSettings.h"
 #import "globals.h"
 #import "TSColorSupport.h"
 #import "TSThemeFileStore.h"
@@ -1114,7 +1114,8 @@ NSInteger stringSort(id s1, id s2, void *context)
 - (void)setThemeEditingEnabled:(BOOL)enabled inView:(NSView *)view
 {
     for (NSView *child in view.subviews) {
-        if ([child isKindOfClass:NSColorWell.class]) [(NSColorWell *)child setEnabled:enabled];
+        if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).action != @selector(BlockCursorColorChanged:))
+            [(NSColorWell *)child setEnabled:enabled];
         if ([child isKindOfClass:NSButton.class] && ((NSButton *)child).action == @selector(SaveNewStyle:))
             [(NSButton *)child setEnabled:enabled];
         [self setThemeEditingEnabled:enabled inView:child];
@@ -1145,11 +1146,11 @@ NSInteger stringSort(id s1, id s2, void *context)
 }
 - (IBAction)themeSelectionChanged:(id)sender
 {
-    NSString *lite = LiteStyle.titleOfSelectedItem;
-    NSString *dark = DarkStyle.titleOfSelectedItem;
-    if (lite == nil || dark == nil) return;
-    [SUD setObject:lite forKey:DefaultLiteThemeKey];
-    [SUD setObject:dark forKey:DefaultDarkThemeKey];
+    if (sender != LiteStyle && sender != DarkStyle) return;
+    NSPopUpButton *popup = sender;
+    NSString *title = popup.titleOfSelectedItem;
+    if (title == nil) return;
+    [SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];
     [[TSColorSupport sharedInstance] initializeColors];
     [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
 }

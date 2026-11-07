@@ -10,11 +10,11 @@ names=['- (void)presentInputErrorForField:', '- (BOOL)commitPreferenceField:', '
 methods='\n'.join(map(method,names))
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
 mutations={
- 'persist':('[SUD setObject:value forKey:rule.key];',';'),
+ 'persist':('BOOL changed = [value storeInDefaults:SUD forKey:rule.key];','BOOL changed = NO;'),
  'close-validation':('window != _prefsWindow || [self finishPreferenceEditing:YES]','YES'),
  'tab-validation':('if (![self finishPreferenceEditing:YES]) return NO;',';'),
  'generation':('self.enginePathSearchGeneration++;',';'),
- 'font-ownership':('self.ownsFontPanel && manager.target == self','YES'),
+ 'font-ownership':('self.ownsFontPanel && manager.target == nil','YES'),
  'terminate-ui':('[self finishPreferenceEditing:NO];','[self finishPreferenceEditing:YES];'),
  'terminate-abort':('for (NSControl *field in self.inputRules) [field abortEditing];',';'),
  'restore-field':('field.stringValue = original;','field.stringValue = @"wrong";'),
@@ -42,6 +42,7 @@ static TSMemoryDefaults *memory;
 @end
 @interface Window : NSObject
 @property id attachedSheet;
+@property BOOL isKeyWindow,isMainWindow;
 @property NSUInteger resigns,closes;
 - (BOOL)makeFirstResponder:(id)object;
 - (void)close;
@@ -101,6 +102,9 @@ int main(void){@autoreleasepool{
  Field *f=edit(p,@"tabs",@"20");
  check([p control:(id)f textShouldEndEditing:(id)f.currentEditor] && [SUD integerForKey:@"tabs"]==20 && changes==1,"focus commits exactly once");
  [p commitPreferenceField:(id)f showError:YES reflect:YES];check(changes==1,"Return action does not duplicate reflection");
+ p->_prefsWindow.attachedSheet=[NSObject new];
+ check(![p windowShouldClose:(id)p->_prefsWindow] && ![p tabView:nil shouldSelectTabViewItem:nil],"attached sheet blocks close and tab even with valid input");
+ p->_prefsWindow.attachedSheet=nil;
  f.currentEditor.string=@"99";
  check([p windowShouldClose:(id)p->_prefsWindow] && [SUD integerForKey:@"tabs"]==50 && [f.stringValue isEqual:@"50"] && p->_prefsWindow.resigns==1,"close clamps saves and ends field editing");
  f.currentEditor.string=@"";
@@ -115,9 +119,9 @@ int main(void){@autoreleasepool{
  f.currentEditor.string=@"7";
  check([p tabView:nil shouldSelectTabViewItem:nil] && [SUD integerForKey:@"tabs"]==7 && p.colorTeardowns==1,"valid navigation commits and detaches panels");
  FakeFontManager *manager=[FakeFontManager sharedFontManager];manager.panel=[Window new];
- manager.target=[NSObject new];p.ownsFontPanel=YES;
+ manager.target=[NSObject new];p.ownsFontPanel=YES;p->_prefsWindow.isMainWindow=YES;
  [p releasePreferencePanels];check(manager.panel.closes==0 && manager.target!=nil,"document-owned font panel untouched");
- manager.target=p;p.ownsFontPanel=YES;
+ manager.target=nil;p.ownsFontPanel=YES;p->_prefsWindow.isMainWindow=YES;
  [p releasePreferencePanels];check(manager.panel.closes==1 && manager.target==nil,"only owned font session closed");
  p.initialEnginePathSearchPending=YES;p.enginePathSearchButton=[Field new];p.enginePathSearchButton.enabled=NO;
  [p windowWillClose:[NSNotification notificationWithName:NSWindowWillCloseNotification object:p->_prefsWindow]];

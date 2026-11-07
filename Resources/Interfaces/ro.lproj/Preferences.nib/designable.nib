@@ -2439,7 +2439,7 @@
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hKO-wo-B5l">
                                                         <rect key="frame" x="44" y="60" width="374" height="30" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="O funcție macOS care suprascrie automat fișierul în timpul editării." id="EKE-Eu-fcO">
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="O funcție macOS care suprascrie automat fișierul în timpul editării. Intră în vigoare după repornirea TeXShop." id="EKE-Eu-fcO">
                                                             <font key="font" metaFont="smallSystem" />
                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

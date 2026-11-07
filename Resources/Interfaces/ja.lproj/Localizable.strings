@@ -199,7 +199,7 @@
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "選択した設定プロファイルが正しくありません。";
 "Apply Settings Profile?" = "設定プロファイルを適用しますか？";
-"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language, window layouts, automatic updates, and theme files are kept. Theme selections may change. TeX engine path: %@" = "エンジン、編集、表示、既知の隠し設定、Dockアイコンを初期化します。ショートカット、システムの言語、窓の配置、自動更新、テーマファイルは保持します。テーマの選択は変わる場合があります。TeXエンジンのパス：%@";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "エンジン・編集・表示・既知の隠し設定とDockアイコンを初期化します。ショートカット、システムの言語とキー設定、ウインドウ配置、自動更新、テーマファイル、未知の設定は保持します。テーマの選択は変更されることがあります。TeXエンジンのパス: %@";
 "Apply Profile" = "プロファイルを適用";
 "Settings could not be saved" = "設定を保存できませんでした";
 "Enter a valid setting" = "有効な設定値を入力してください";

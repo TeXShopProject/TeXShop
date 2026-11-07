@@ -2502,7 +2502,7 @@
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G62-pK-TIl">
                                                         <rect key="frame" x="44" y="60" width="305" height="30" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="편집 중에 파일을 자동으로 덮어쓰는 macOS 기능입니다." id="gFF-gx-FSy">
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="편집 중에 파일을 자동으로 덮어쓰는 macOS 기능입니다. TeXShop을 다시 시작한 후에 적용됩니다." id="gFF-gx-FSy">
                                                             <font key="font" metaFont="smallSystem" />
                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

@@ -2499,7 +2499,7 @@
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rsB-Yv-MR5">
                                                         <rect key="frame" x="44" y="60" width="305" height="30" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="編集中に自動でファイルを上書きする macOS の機能です。" id="n9o-eY-0ew">
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="編集中に自動でファイルを上書きする macOS の機能です。TeXShop の再起動後に有効になります。" id="n9o-eY-0ew">
                                                             <font key="font" metaFont="smallSystem" />
                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

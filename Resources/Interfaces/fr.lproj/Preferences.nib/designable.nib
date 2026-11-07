@@ -2499,7 +2499,7 @@
                                                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xop-bF-GvF">
                                                         <rect key="frame" x="44" y="60" width="381" height="30" />
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Fonction de macOS qui écrase automatiquement le fichier pendant la modification." id="8QA-Gs-z9b">
+                                                        <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Fonction de macOS qui écrase automatiquement le fichier pendant la modification. Prend effet après le redémarrage de TeXShop." id="8QA-Gs-z9b">
                                                             <font key="font" metaFont="smallSystem" />
                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
