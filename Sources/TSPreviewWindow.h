@@ -61,8 +61,9 @@
 
 // The property previewClosed is initialized to NO when the main document is first opened.
 // This property is set to YES if the user closes the Preview Window.
-// If the window is later opened, usually by typesetting, it is scrolled to the beginning when previewClosed = YES,
-// and then previewClosed is set to NO.
+// Reopening the window clears this property, preserving the user's new position.
+// If typesetting finishes while it is still closed, reload starts at the beginning
+// and clears the property before showing the window.
 //
 // noPdfFile will be YES only when the initial source document has no related preview file
 

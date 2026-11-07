@@ -9,6 +9,7 @@ mutation = next((a.split('=',1)[1] for a in sys.argv[1:] if a.startswith('--muta
 tree = ast.parse((root/'Tests/run-pdf-recovery.py').read_text())
 fixture = max((n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value,str)),key=len)
 fixture = fixture[:fixture.index('static void check(')]
+fixture = fixture.replace('WINDOW_METHODS', '')
 fixture = fixture.replace('-(void)reShowWithPath:(NSString*)path;', '-(void)reShowWithPath:(NSString*)path;\n-(void)reShowWithDocument:(PDFDocument*)document;')
 s=(root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
 def method(s, signature):
