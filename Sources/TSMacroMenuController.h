@@ -43,6 +43,7 @@
 
 @property (retain) NSDictionary *macroDict;
 @property (retain) NSMutableArray *keyEquivalents;
+@property (retain) NSMutableDictionary *keyOwners;
 
 + (id)sharedInstance;
 

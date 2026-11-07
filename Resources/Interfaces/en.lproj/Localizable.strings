@@ -126,3 +126,17 @@
 "This document uses classic Mac line endings (CR)." = "This document uses classic Mac line endings (CR).";
 "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings.";
 "Don’t show again for this document" = "Don’t show again for this document";
+
+/* Menu and macro shortcut conflicts */
+"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+"Assign" = "Assign";
+"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
+"Macro shortcut conflicts" = "Macro shortcut conflicts";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
+"Return to Editing" = "Return to Editing";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";

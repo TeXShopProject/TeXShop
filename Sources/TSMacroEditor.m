@@ -26,6 +26,7 @@
 
 #import "TSMacroOutlineController.h"
 #import "TSMacroMenuController.h"
+#import "TSKeyboardShortcuts.h"
 #import "TSTextView.h"
 #import "TSEncodingSupport.h"
 #import "NSText-Extras.h"
@@ -91,7 +92,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
 					selector:@selector(outlineViewItemsChanged:)
 					name: TSMacroOutlineViewAcceptedDropNotification object: outlineView];
 		// set up variables
-		[outlineController setRootOfTree: newRoot]; // one can use [outlineView dataSource] instead
+		[outlineController setRootOfTree: newRoot];
+        [self rememberOriginalShortcutKeys];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuShortcutsChanged:) name:TSMacroShortcutsChangedNotification object:nil]; // one can use [outlineView dataSource] instead
 		self.previousItem = nil;
 		dataTouched = NO;
 		nameTouched = NO;
@@ -117,6 +120,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 					action: @selector(saveSelection:) keyEquivalent:@"" atIndex: 2];
 		[item setTarget: self];
 	}
+	[self refreshShortcutConflicts];
 	[window makeKeyAndOrderFront: nil];
 }
 
@@ -130,6 +134,8 @@ static TSFilterMode savedFilter = kNoFilterMode;
 			NSBeep();
 			return;
 		}
+        [self installShortcutStatus];
+
 		// set up window and UI elements
 		// [window setDelegate: self];	// not necessary if it is connected in IB
 
@@ -172,6 +178,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		// text fields
         [nameField setDelegate: [TSEncodingSupport sharedInstance]];
 		[keyField setDelegate: [TSEncodingSupport sharedInstance]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pendingKeyChanged:) name:NSControlTextDidChangeNotification object:keyField];
 		// set up properties for UI
 		[nameField setEditable: NO];
 		[contentTextView setEditable: NO];
@@ -188,6 +195,158 @@ static TSFilterMode savedFilter = kNoFilterMode;
 	}
 }
 
+
+- (void)installShortcutStatus
+{
+    if (self.shortcutStatus) return;
+    NSView *host = [window contentView];
+    NSMutableSet *bottomControls = [NSMutableSet set];
+    CGFloat bottom = 0, lowest = CGFLOAT_MAX;
+    for (NSView *button in @[saveButton, cancelButton, testButton]) {
+        NSView *view = button;
+        while (view.superview != host) view = view.superview;
+        [bottomControls addObject:view]; bottom = MAX(bottom, NSMaxY(view.frame));
+    }
+    for (NSView *view in host.subviews)
+        if (![bottomControls containsObject:view]) lowest = MIN(lowest, NSMinY(view.frame));
+    CGFloat statusY = bottom + 6, statusHeight = 52;
+    CGFloat height = MAX(56, statusY + statusHeight + 6 - lowest);
+    BOOL autoresizes = host.autoresizesSubviews; host.autoresizesSubviews = NO;
+    // Keep localized key labels and modifier controls together; insert the status
+    // above the bottom action buttons instead of cutting through a translated row.
+    for (NSView *view in host.subviews) if (![bottomControls containsObject:view]) {
+        NSRect frame = view.frame; frame.origin.y += height; view.frame = frame;
+    }
+    NSRect frame = [window frame]; frame.size.height += height;
+    [window setFrame:frame display:NO];
+    NSSize minimum = [window minSize]; minimum.height += height; [window setMinSize:minimum];
+    host.autoresizesSubviews = autoresizes;
+    self.shortcutStatus = [NSTextField wrappingLabelWithString:@""];
+    self.shortcutStatus.frame = NSMakeRect(20, statusY, NSWidth(host.bounds)-40, statusHeight);
+    self.shortcutStatus.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
+    self.shortcutStatus.textColor = NSColor.secondaryLabelColor;
+    [host addSubview:self.shortcutStatus];
+}
+
+- (void)collectShortcutCandidates:(TSMacroTreeNode *)parent path:(NSString *)path
+                           nodes:(NSMutableArray *)nodes candidates:(NSMutableArray *)candidates
+{
+    for (TSMacroTreeNode *node in parent.children) {
+        NSString *title = path.length ? [path stringByAppendingFormat:@" › %@", node.name] : node.name;
+        if (node.isGroup) [self collectShortcutCandidates:node path:title nodes:nodes candidates:candidates];
+        else if (node.isStandardItem) {
+            [nodes addObject:node];
+            [candidates addObject:@{@"path":title ?: @"", @"key":getKeyEquivalentFromString(node.key),
+                @"modifiers":@(getKeyModifierMaskFromString(node.key))}];
+        }
+    }
+}
+
+- (void)pendingKeyChanged:(NSNotification *)notification { [self updatePendingShortcutStatus]; }
+- (void)updatePendingShortcutStatus
+{
+    if (!self.previousItem.isStandardItem) return;
+    NSString *saved = self.previousItem.key;
+    self.previousItem.key = getStringFormKeyEquivalent(keyField.stringValue, shiftCheckBox.state == NSControlStateValueOn,
+        optionCheckBox.state == NSControlStateValueOn, controlCheckBox.state == NSControlStateValueOn);
+    [self refreshShortcutConflicts];
+    self.previousItem.key = saved;
+}
+- (void)rememberOriginalShortcutKeys
+{
+    self.originalShortcutKeys = [NSMapTable strongToStrongObjectsMapTable];
+    NSMutableArray *nodes = [NSMutableArray array], *candidates = [NSMutableArray array];
+    [self collectShortcutCandidates:[outlineController rootOfTree] path:@"" nodes:nodes candidates:candidates];
+    for (TSMacroTreeNode *node in nodes) [self.originalShortcutKeys setObject:[TSShortcutStore normalizedKey:getKeyEquivalentFromString(node.key) modifiers:getKeyModifierMaskFromString(node.key)] forKey:node];
+}
+- (NSArray *)currentShortcutConflictsWithNodes:(NSMutableArray *)nodes candidates:(NSMutableArray *)candidates
+{
+    [self collectShortcutCandidates:[outlineController rootOfTree] path:NSLocalizedString(@"Macros", @"") nodes:nodes candidates:candidates];
+    return [[TSKeyboardShortcuts sharedController] conflictsForMacroShortcuts:candidates];
+}
+- (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node { return node ? [self.shortcutConflicts objectForKey:node] : nil; }
+- (void)refreshShortcutConflicts
+{
+    if (!outlineView) return;
+    NSMutableArray *nodes = [NSMutableArray array], *candidates = [NSMutableArray array];
+    NSArray *conflicts = [self currentShortcutConflictsWithNodes:nodes candidates:candidates];
+    self.shortcutConflicts = [NSMapTable strongToStrongObjectsMapTable];
+    for (NSDictionary *conflict in conflicts)
+        [self.shortcutConflicts setObject:[TSShortcutStore reasonForMacroConflict:conflict] forKey:nodes[[conflict[@"index"] unsignedIntegerValue]]];
+    self.shortcutStatus.stringValue = [self shortcutConflictForNode:self.previousItem] ?: @"";
+    self.shortcutStatus.toolTip = self.shortcutStatus.stringValue;
+    // Repaint cells without rebuilding the tree or changing its current selection.
+    [outlineView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]
+                          columnIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfColumns])]];
+}
+- (void)menuShortcutsChanged:(NSNotification *)notification { [self refreshShortcutConflicts]; }
+- (NSModalResponse)showShortcutConflicts:(NSString *)details
+{
+    NSAlert *alert = [NSAlert new];
+    alert.alertStyle = NSAlertStyleWarning;
+    alert.messageText = NSLocalizedString(@"Macro shortcut conflicts", @"");
+    alert.informativeText = NSLocalizedString(@"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.", @"");
+    [alert addButtonWithTitle:NSLocalizedString(@"Return to Editing", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Save Anyway (Conflicting Shortcuts Inactive)", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Remove Conflicting Shortcuts and Save", @"")];
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0,0,520,180)];
+    scroll.hasVerticalScroller = YES; scroll.borderType = NSBezelBorder;
+    NSTextView *text = [[NSTextView alloc] initWithFrame:scroll.bounds];
+    text.editable = NO; text.selectable = YES;
+    text.font = [NSFont systemFontOfSize:NSFont.systemFontSize];
+    text.textContainerInset = NSMakeSize(8,8); text.textContainer.widthTracksTextView = YES;
+    text.autoresizingMask = NSViewWidthSizable; text.string = details;
+    scroll.documentView = text; alert.accessoryView = scroll;
+    return TSRunShortcutAlert(alert);
+}
+- (BOOL)validateMacroShortcutsBeforeSaving
+{
+    NSMutableArray *nodes = [NSMutableArray array], *candidates = [NSMutableArray array], *changed = [NSMutableArray array], *lines = [NSMutableArray array];
+    NSMutableArray *conflicts = [[self currentShortcutConflictsWithNodes:nodes candidates:candidates] mutableCopy];
+    NSMutableIndexSet *inactive = [NSMutableIndexSet indexSet];
+    for (NSDictionary *conflict in conflicts) [inactive addIndex:[conflict[@"index"] unsignedIntegerValue]];
+    // A newly changed earlier macro may take a key from a later, unchanged one.
+    // Confirm that change too, while preserving file-order precedence at runtime.
+    for (NSUInteger index = 0; index < nodes.count; index++) {
+        TSMacroTreeNode *node = nodes[index];
+        NSDictionary *binding = [TSShortcutStore normalizedKey:getKeyEquivalentFromString(node.key) modifiers:getKeyModifierMaskFromString(node.key)];
+        if (![binding[@"key"] length] || [inactive containsIndex:index] || [[self.originalShortcutKeys objectForKey:node] isEqual:binding]) continue;
+        for (NSUInteger later = index + 1; later < candidates.count; later++) {
+            NSDictionary *candidate = candidates[later];
+            if (![binding isEqual:[TSShortcutStore normalizedKey:candidate[@"key"] modifiers:[candidate[@"modifiers"] unsignedIntegerValue]]]) continue;
+            NSMutableDictionary *other = [candidate mutableCopy]; other[@"macro"] = @YES;
+            [conflicts addObject:@{@"index":@(index), @"other":other, @"displaced":@YES}];
+            break;
+        }
+    }
+    for (NSDictionary *conflict in conflicts) {
+        NSUInteger index = [conflict[@"index"] unsignedIntegerValue];
+        TSMacroTreeNode *node = nodes[index];
+        NSDictionary *original = [self.originalShortcutKeys objectForKey:node];
+        NSDictionary *binding = [TSShortcutStore normalizedKey:getKeyEquivalentFromString(node.key) modifiers:getKeyModifierMaskFromString(node.key)];
+        if (original && [original isEqual:binding]) continue;
+        [changed addObject:conflict];
+        NSDictionary *candidate = candidates[index];
+        [lines addObject:[NSString stringWithFormat:@"%@ (%@)\n%@", candidate[@"path"],
+            [TSShortcutStore displayKey:candidate[@"key"] modifiers:[candidate[@"modifiers"] unsignedIntegerValue]],
+            [TSShortcutStore reasonForMacroConflict:conflict]]];
+    }
+    if (!changed.count) return YES;
+    NSModalResponse response = [self showShortcutConflicts:[lines componentsJoinedByString:@"\n\n"]];
+    if (response == NSAlertThirdButtonReturn) {
+        for (NSDictionary *conflict in changed) [nodes[[conflict[@"index"] unsignedIntegerValue]] setKey:@""];
+        [self reflectChangesInEditor:YES];
+        return YES;
+    }
+    if (response == NSAlertSecondButtonReturn) return YES;
+    TSMacroTreeNode *node = nodes[[changed.firstObject[@"index"] unsignedIntegerValue]];
+    NSMutableArray *parents = [NSMutableArray array];
+    for (TSMacroTreeNode *parent = node.nodeParent; parent; parent = parent.nodeParent) [parents addObject:parent];
+    for (TSMacroTreeNode *parent in parents.reverseObjectEnumerator) [outlineView expandItem:parent];
+    [outlineView selectItems:@[node] byExtendingSelection:NO];
+    [self reflectChangesInEditor:YES]; [window makeFirstResponder:keyField];
+    return NO;
+}
 
 // action for Save button
 - (IBAction)savePressed:(id)sender
@@ -210,10 +369,11 @@ static TSFilterMode savedFilter = kNoFilterMode;
 	}
 	pathStr = [pathStr stringByAppendingPathExtension:@"plist"];
 	
-	[window makeFirstResponder: window];// finish editing fields
+	if (![window makeFirstResponder:window]) return; // finish editing fields
 										//[outlineView deselectAll: sender];
 		[self reflectChangesInEditor: YES];
 		if (dataTouched) {	// save only if data was touched
+            if (![self validateMacroShortcutsBeforeSaving]) return;
 			// mitsu 1.29 (U)-- back up old macro file, so that you can recover it manually if needed
 			NS_DURING
 				if ([[NSFileManager defaultManager] fileExistsAtPath:pathStr]) {
@@ -227,7 +387,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 					NS_ENDHANDLER
 					// end mitsu 1.29
 					// save the node data to a file
-					[self saveNodes: [outlineController rootOfTree] toFile: pathStr];
+					if (![self saveNodes: [outlineController rootOfTree] toFile: pathStr]) return;
 					// reload macros
 					[[TSMacroMenuController sharedInstance] reloadMacros: self];
 		}
@@ -274,6 +434,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[keyField setStringValue: [key substringToIndex: 1]];
 	}
 	keyTouched = YES;
+    [self updatePendingShortcutStatus];
 	[self reflectChangesInEditor: YES];
 }
 
@@ -281,6 +442,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 - (IBAction)modifiersAction:(id)sender
 {
 	keyTouched = YES;
+    [self updatePendingShortcutStatus];
 	[self reflectChangesInEditor: YES];
 }
 
@@ -299,6 +461,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 - (void)outlineViewItemsChanged: (NSNotification *)note
 {
 	dataTouched = YES;	// user may have changed the order or dropped an item
+    [self refreshShortcutConflicts];
 }
 
 // interation bewteen outline data and nameField/contentTextView/etc
@@ -383,47 +546,40 @@ static TSFilterMode savedFilter = kNoFilterMode;
 	nameTouched = NO;
 	contentTouched = NO;
 	keyTouched = NO;
+    [self refreshShortcutConflicts];
 	//	[outlineView reloadData];// this caused a crash if a node and its child are selected and the disclosure triangle is pressed
 }
 
 // delegate method for window
-- (BOOL) windowShouldClose: (id)sender
+- (BOOL)windowShouldClose:(id)sender
 {
-	if (sender == self)		// called via saveButtonPressed or cancelButtonPressed
-		return YES;
-	[window makeFirstResponder: window];
-	[outlineView deselectAll: sender];
-	if (!dataTouched)	// data was not changed
-		return YES;
-	else {	// close button in title bar was pressed or "Close Macro Editor" was chosen fromm menu
-//		NSBeginAlertSheet(@"Warning", @"Save", @"Don't save", @"Cancel",
-//				window, self,
-//				@selector(saveMacrosSheetDidEnd:returnCode:contextInfo:), nil, nil,
-//				@"Do you want to save macros?");
-				NSBeginAlertSheet(NSLocalizedString(@"Warning", @""),
-					NSLocalizedString(@"Save", @""),
-					NSLocalizedString(@"Don't Save", @""),
-					NSLocalizedString(@"Cancel", @""), window, self,
-					@selector(saveMacrosSheetDidEnd:returnCode:contextInfo:),
-					nil, nil,
-					NSLocalizedString(@"Do you want to save macros?", @""));
-		return NO;
-	};
+    if (sender == self) return YES;
+    if (![window makeFirstResponder:window]) return NO;
+    [self reflectChangesInEditor:YES];
+    if (!dataTouched) return YES;
+    if ([window attachedSheet]) return NO;
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = NSLocalizedString(@"Do you want to save macros?", @"");
+    [alert addButtonWithTitle:NSLocalizedString(@"Save", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Don't Save", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse response) {
+        [alert.window orderOut:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (response == NSAlertFirstButtonReturn) [self savePressed:self];
+            else if (response == NSAlertSecondButtonReturn) [self cancelPressed:self];
+        });
+    }];
+    return NO;
 }
-
-// handler for "Save Macros?" sheet
-- (void) saveMacrosSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+// Compatibility for any older nib callback; defer until the sheet has gone.
+- (void)saveMacrosSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
-	switch (returnCode) {
-		case NSAlertDefaultReturn:
-			[self savePressed: self];
-			break;
-		case NSAlertAlternateReturn:
-			[self cancelPressed: self];
-			break;
-		default:
-			break;
-	}
+    [sheet orderOut:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (returnCode == NSAlertDefaultReturn) [self savePressed:self];
+        else if (returnCode == NSAlertAlternateReturn) [self cancelPressed:self];
+    });
 }
 
 // delegate method for window
@@ -434,6 +590,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		self.previousItem = nil;
 	self.previousItem = nil;
 	[outlineController setRootOfTree: nil]; // this release the tree structure
+    self.originalShortcutKeys = nil; self.shortcutConflicts = nil; self.shortcutStatus = nil;
 	outlineView = nil;
 	window = nil;
 	// restore menu item
@@ -529,7 +686,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 }
 
 // save given nodes of the tree to a file
-- (void)saveNodes: (id)nodes toFile: (NSString *)filePath
+- (BOOL)saveNodes: (id)nodes toFile: (NSString *)filePath
 {
 	id 	propertyList;
 	NSString *pathStr, *error;
@@ -548,7 +705,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		propertyList = [NSDictionary dictionaryWithObjectsAndKeys:
 						@"ROOT", NAME_KEY, array, CHILDREN_KEY, nil];
 	} else
-		return;
+		return NO;
 	// convert to XML in UTF8 format
 	NS_DURING
 	error = nil;
@@ -559,13 +716,15 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[NSException raise: @"XML error" format: @""];
 	// finally write to file
 	pathStr = [[NSString stringWithString: filePath] stringByStandardizingPath];
-	[xmlData writeToFile: pathStr atomically: YES];
+	if (![xmlData writeToFile: pathStr atomically: YES])
+        [NSException raise:@"Macro write failed" format:@"%@", pathStr];
 
 	NS_HANDLER
 		NSRunAlertPanel(@"Error", [NSString stringWithFormat:
 			@"failed to save macros to %@\n%@", filePath, error], nil, nil, nil);
-	//			if (error) [error release]; // mitsu 1.29 (U) added
+    return NO;
 	NS_ENDHANDLER
+    return YES;
 }
 
 // action for "save selection to file" menu item

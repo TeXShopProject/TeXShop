@@ -54,6 +54,8 @@ static id sharedMacroMenuController = nil;
 	{
 		sharedMacroMenuController = [super init];
 		self.macroDict = nil;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shortcutsChanged:)
+            name:TSRebuildMacrosNotification object:nil];
 				// the next command was commented out by koch because it was moved to NSAppDelegate
 		// [self loadMacros];
 				// the next stuff was commented out by mitsu
@@ -134,6 +136,8 @@ static id sharedMacroMenuController = nil;
 }
 
 
+- (void)shortcutsChanged:(NSNotification *)notification { [self setupMainMacroMenu]; }
+
 // set up main macro menu on the menu bar
 - (void)setupMainMacroMenu
 {
@@ -143,6 +147,10 @@ static id sharedMacroMenuController = nil;
 	if (!self.macroDict)
 		return;
 	[[TSKeyboardShortcuts sharedController] beginMenuRebuild];
+    NSMutableArray *editorItems = [NSMutableArray array];
+    for (NSMenuItem *item in macroMenu.itemArray)
+        if (item.action == @selector(readDictionaryToMacroEditor:) || item.action == @selector(saveSelection:))
+            [editorItems addObject:item];
 	// remove old items
 	while ([macroMenu numberOfItems] > 1) {
 		[macroMenu removeItemAtIndex: 1];
@@ -152,10 +160,12 @@ static id sharedMacroMenuController = nil;
 	//									action: nil keyEquivalent: @""];
 	//[newItem setTarget: [TSMacroEditor sharedInstance]];
 
+    for (NSMenuItem *item in editorItems) [macroMenu addItem:item];
 	[macroMenu addItem: [NSMenuItem separatorItem]];
 
 	// check predefined key equivalents
 	self.keyEquivalents = [NSMutableArray array];
+    self.keyOwners = [NSMutableDictionary dictionary];
 	[self listKeyEquivalents: [NSApp mainMenu]];
 
 	// now add macros from dictionary
@@ -192,6 +202,10 @@ static id sharedMacroMenuController = nil;
 // build menu from property list
 - (void)addItemsToMenu: (NSMenu *)menu fromArray: (NSArray *)array withKey: (BOOL)flag
 {
+    [self addItemsToMenu:menu fromArray:array withKey:flag path:NSLocalizedString(@"Macros", @"")];
+}
+- (void)addItemsToMenu:(NSMenu *)menu fromArray:(NSArray *)array withKey:(BOOL)flag path:(NSString *)path
+{
 	NSDictionary *dict;
 	NSEnumerator *enumerator = [array objectEnumerator];
 	id newItem;
@@ -200,11 +214,12 @@ static id sharedMacroMenuController = nil;
 	
 	while ((dict = (NSDictionary *)[enumerator nextObject])) {
 		nameStr = [dict objectForKey: NAME_KEY];
+		NSString *itemPath = [path stringByAppendingFormat:@" › %@", nameStr];
 		NSArray *childlenArray = [dict objectForKey: SUBMENU_KEY];
 		if (childlenArray) {	// submenu item
 			newItem = [menu addItemWithTitle: nameStr action: nil keyEquivalent: @""];
 			submenu = [[NSMenu alloc] init];
-			[self addItemsToMenu: submenu fromArray: childlenArray withKey: flag];
+			[self addItemsToMenu:submenu fromArray:childlenArray withKey:flag path:itemPath];
 			[newItem setSubmenu: submenu];
 		} else if ([nameStr isEqualToString: SEPARATOR]) {	// separator item
 			[menu addItem: [NSMenuItem separatorItem]];
@@ -216,9 +231,14 @@ static id sharedMacroMenuController = nil;
 				NSString *keyEquiv = (NSString *)[dict objectForKey: KEYEQUIV_KEY];
 				NSUInteger modifier = getKeyModifierMaskFromString(keyEquiv);
 				keyEquiv = getKeyEquivalentFromString(keyEquiv);
-				if (keyEquiv && ![self isAlreadyDefined: keyEquiv modifier: modifier]) {
+				NSDictionary *binding = [TSShortcutStore normalizedKey:keyEquiv modifiers:modifier];
+                if (keyEquiv.length && [self isAlreadyDefined:keyEquiv modifier:modifier]) {
+                    NSDictionary *owner = self.keyOwners[binding];
+                    if (owner) [newItem setToolTip:[TSShortcutStore reasonForMacroConflict:@{@"other":owner}]];
+                } else if (keyEquiv.length) {
 					[newItem setKeyEquivalentModifierMask: modifier];
 					[newItem setKeyEquivalent: keyEquiv];
+                    self.keyOwners[binding] = @{@"path":itemPath, @"key":keyEquiv, @"modifiers":@(modifier), @"macro":@YES};
 				}
 			}
 		}
@@ -483,46 +503,20 @@ static id sharedMacroMenuController = nil;
 }
 
 // list key equivalents which are already assigned
-- (void)listKeyEquivalents: (NSMenu *)menu
+- (void)listKeyEquivalents:(NSMenu *)menu
 {
-	NSArray *menuitems = [menu itemArray];
-	NSEnumerator *enumerator = [menuitems objectEnumerator];
-	NSMenuItem *item;
-	while ((item = (NSMenuItem *)[enumerator nextObject])) {
-		if (![[item keyEquivalent] isEqualToString: @""]) {
-			NSString *keyEquiv = [item keyEquivalent];
-			NSUInteger modifier = [item keyEquivalentModifierMask];
-			if (![keyEquiv isEqualToString: [keyEquiv lowercaseString]]) {
-				keyEquiv = [keyEquiv lowercaseString];
-				modifier |= NSShiftKeyMask;
-			}
-			NSArray *keyPair = [NSArray arrayWithObjects: keyEquiv,
-				[NSNumber numberWithUnsignedInteger:modifier], nil];
-			[self.keyEquivalents addObject: keyPair];
-		}
-		if ([item hasSubmenu]) {
-			[self listKeyEquivalents: [item submenu]];
-		}
-	}
+    for (NSDictionary *entry in [TSShortcutStore menuBindings:menu]) {
+        NSDictionary *binding = [TSShortcutStore normalizedKey:entry[@"key"] modifiers:[entry[@"modifiers"] unsignedIntegerValue]];
+        [self.keyEquivalents addObject:binding];
+        if (!self.keyOwners[binding]) self.keyOwners[binding] = entry;
+    }
 }
-
-// check with the list of key equivalents which are already assigned
-- (BOOL)isAlreadyDefined: (NSString *)keyEquiv modifier: (NSUInteger)modifier
+- (BOOL)isAlreadyDefined:(NSString *)keyEquiv modifier:(NSUInteger)modifier
 {
-	NSEnumerator *enumerator = [self.keyEquivalents objectEnumerator];
-	NSArray *item;
-	keyEquiv = [keyEquiv lowercaseString];
-	while ((item = (NSArray *)[enumerator nextObject])) {
-		if ([[item objectAtIndex: 0] isEqualToString: keyEquiv]
-			&& [[item objectAtIndex: 1] unsignedIntegerValue] == modifier)
-		{
-			NSArray *keyPair = [NSArray arrayWithObjects: keyEquiv,
-				[NSNumber numberWithUnsignedInteger:modifier], nil];
-			[self.keyEquivalents addObject: keyPair];	// add to our list of predefined key equivalents
-			return YES;
-		}
-	}
-	return NO;
+    NSDictionary *binding = [TSShortcutStore normalizedKey:keyEquiv modifiers:modifier];
+    if ([self.keyEquivalents containsObject:binding]) return YES;
+    if ([binding[@"key"] length]) [self.keyEquivalents addObject:binding];
+    return NO;
 }
 
 @end

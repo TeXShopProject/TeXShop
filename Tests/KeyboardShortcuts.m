@@ -3,6 +3,15 @@
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 #import "../Sources/TSKeyboardShortcuts.m"
 #pragma clang diagnostic pop
+#include "MacroKeyProduction.inc"
+static void CollectMacros(NSArray *array, NSString *path, NSMutableArray *candidates) {
+    for (NSDictionary *entry in array) {
+        NSString *name=[path stringByAppendingFormat:@" › %@", entry[@"name"]];
+        if (entry[@"submenu"]) CollectMacros(entry[@"submenu"], name, candidates);
+        else if (![entry[@"name"] isEqual:@"Separator"])
+            [candidates addObject:@{@"path":name, @"key":getKeyEquivalentFromString(entry[@"key"]), @"modifiers":@(getKeyModifierMaskFromString(entry[@"key"]))}];
+    }
+}
 #import <objc/runtime.h>
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr, "FAIL line %d: %s\n", __LINE__, #__VA_ARGS__); exit(1); } } while (0)
 @interface ShortcutMemoryDefaults : NSObject
@@ -75,6 +84,13 @@ int main(int argc, char **argv) { @autoreleasepool {
             @"TSShortcut.splitWindow:.0",@"TSShortcut.splitWindow:.vertical",@"TSShortcut.doNextBulletAndDelete:.0",
             @"TSShortcut.doPreviousBulletAndDelete:.0",@"TSShortcut.placeComment:.0"])
             REQUIRE(Command(store,ident));
+        if (argc > 2) {
+            NSDictionary *macros=[NSDictionary dictionaryWithContentsOfFile:@(argv[2])]; REQUIRE(macros);
+            NSMutableArray *candidates=[NSMutableArray array]; CollectMacros(macros[@"submenu"], @"Macros", candidates);
+            NSArray *conflicts=[store conflictsForMacroShortcuts:candidates];
+            if (conflicts.count) fprintf(stderr,"Conflicts: %s\n",conflicts.description.UTF8String);
+            REQUIRE(candidates.count>100 && conflicts.count==0);
+        }
         return 0;
     }
     const NSEventModifierFlags cmd = NSEventModifierFlagCommand, shift = NSEventModifierFlagShift;
@@ -169,11 +185,11 @@ int main(int argc, char **argv) { @autoreleasepool {
 
     // Adding a macro later must not silently remove either command's shortcut.
     REQUIRE([store setKey:@"x" modifiers:cmd forCommand:Command(store,newFind.identifier)] == nil);
-    [store suspendOverridesForMenuRebuild];
-    NSMenuItem *macro=Item(nil,@"x",cmd); [menu addItem:macro]; [store refreshMenu];
-    REQUIRE([newFind.keyEquivalent isEqual:@"f"] && [macro.keyEquivalent isEqual:@"x"]);
-    REQUIRE(store.unavailableCommands.count == 1); [store restoreAll];
-    puts("PASS: dynamic-menu conflicts preserve the default and report the skipped override");
+    [store refreshMenu];
+    NSMenuItem *macro=Item(nil,@"x",cmd); macro.action=NSSelectorFromString(@"doMacro:"); [menu addItem:macro]; [store refreshMenu];
+    REQUIRE([newFind.keyEquivalent isEqual:@"x"]);
+    REQUIRE(store.unavailableCommands.count == 0); [store restoreAll];
+    puts("PASS: macros never suspend a menu override");
 
     menu = MainMenu(); menu.autoenablesItems = NO;
     NSMenuItem *normal = Item(@"TSShortcut.normal",@"t",cmd);
@@ -191,33 +207,28 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(alternate.keyEquivalentModifierMask == (cmd|NSEventModifierFlagOption));
     puts("PASS: alternate commands remain selectable and dispatch after removing Option from their shortcut");
 
-    // Verify canonicalization with a known layout without changing the user's input source.
-    CFArrayRef sources=TISCreateInputSourceList((__bridge CFDictionaryRef)@{(__bridge NSString *)kTISPropertyInputSourceID:@"com.apple.keylayout.US"}, true);
-    REQUIRE(sources && CFArrayGetCount(sources));
-    TISInputSourceRef us=(TISInputSourceRef)CFArrayGetValueAtIndex(sources,0);
-    CFDataRef data=TISGetInputSourceProperty(us,kTISPropertyUnicodeKeyLayoutData); REQUIRE(data);
-    REQUIRE([TSBindingWithLayout(@"{",cmd|shift,data,40) isEqual:TSBindingWithLayout(@"{",cmd,data,40)]);
-    REQUIRE([TSBindingWithLayout(@"=",cmd|shift,data,40) isEqual:TSBindingWithLayout(@"+",cmd|shift,data,40)]);
-    REQUIRE([TSBindingWithLayout(@"-",cmd|shift,data,40) isEqual:TSBindingWithLayout(@"_",cmd,data,40)]);
-    REQUIRE([TSBindingWithLayout(@"G",cmd,data,40) isEqual:TSBindingWithLayout(@"g",cmd|shift,data,40)]);
-    REQUIRE([TSBindingWithLayout(@"=",cmd|shift,data,48) isEqual:TSBindingWithLayout(@"-",cmd|shift,data,48)]);
-    REQUIRE([[TSShortcutStore displayKey:@"=" modifiers:cmd|shift] isEqual:@"⇧⌘="]);
+    menu=MainMenu(); menu.autoenablesItems=NO;
+    NSMenuItem *minus=Item(nil,@"-",cmd|shift), *equals=Item(nil,@"=",cmd);
+    for(NSMenuItem *item in @[minus,equals]) { item.action=@selector(run:);item.target=target;item.enabled=YES;item.allowsAutomaticKeyEquivalentLocalization=NO;[menu addItem:item]; }
+    target.lastItem=nil; REQUIRE([menu performKeyEquivalent:LayoutEvent(@"-",@"-",kVK_ANSI_Minus,cmd|shift)] && target.lastItem==minus);
+    target.lastItem=nil; REQUIRE([menu performKeyEquivalent:LayoutEvent(@"=",@"=",kVK_ANSI_Minus,cmd)] && target.lastItem==equals);
+    puts("PASS: public AppKit dispatch distinguishes raw Shift-minus and equals");
+    // Key comparison is independent of the active keyboard layout and hardware.
+    REQUIRE(![TSBinding(@"-",cmd|shift) isEqual:TSBinding(@"=",cmd)]);
+    REQUIRE(![TSBinding(@"=",cmd|shift) isEqual:TSBinding(@"+",cmd|shift)]);
+    REQUIRE([TSBinding(@"G",cmd) isEqual:TSBinding(@"g",cmd|shift)]);
     REQUIRE([[TSShortcutStore displayKey:@"-" modifiers:cmd|shift] isEqual:@"⇧⌘-"]);
-    CFRelease(sources);
     menu=MainMenu();
     NSMenuItem *left=Item(@"TSShortcut.left",@"G",cmd), *right=Item(@"TSShortcut.right",@"g",cmd|shift);
     [menu addItem:left]; [menu addItem:right];
     store=[[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)[ShortcutMemoryDefaults new]];
-    // Model the two raw defaults that canonicalize to the same binding without relying on host layout.
+    // Restoring a default must not create a collision, even with another default.
     TSShortcutCommand *lc=Command(store,left.identifier), *rc=Command(store,right.identifier);
     lc.defaultKey=@"G"; lc.defaultModifiers=cmd; rc.defaultKey=@"g"; rc.defaultModifiers=cmd|shift;
     right.keyEquivalentModifierMask=cmd|shift; right.keyEquivalent=@"g";
     REQUIRE(![store setKey:@"z" modifiers:cmd forCommand:lc]);
-    REQUIRE(![store restoreCommand:lc]);
-    REQUIRE([left.keyEquivalent isEqual:@"G"]);
-    REQUIRE(![store setKey:@"z" modifiers:cmd forCommand:lc]);
-    REQUIRE(![store setKey:@"g" modifiers:cmd|shift forCommand:lc]);
-    REQUIRE([left.keyEquivalent isEqual:@"G"]);
+    REQUIRE([store restoreCommand:lc] != nil);
+    REQUIRE([left.keyEquivalent isEqual:@"z"]);
     // A new custom collision must still prevent individual restoration.
     [store setKey:@"z" modifiers:cmd forCommand:lc];
     [menu removeItem:right];
