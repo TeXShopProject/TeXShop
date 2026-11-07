@@ -266,6 +266,28 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     [self findNextMisspellingInTextView:tv mask:fresh];
 }
 
+// Find the current panel's table in its view hierarchy. Its contents are
+// checked separately before copying a suggestion.
+static NSTableView *SuggestionTable(NSView *view)
+{
+    if ([view isKindOfClass:NSTableView.class]) return (NSTableView *)view;
+    for (NSView *sub in view.subviews) {
+        NSTableView *found = SuggestionTable(sub);
+        if (found) return found;
+    }
+    return nil;
+}
+
+// The suggestion in the given row of the panel's table, or nil.
+static NSString *SuggestionAtRow(NSTableView *table, NSInteger row)
+{
+    id<NSTableViewDataSource> source = table.dataSource;
+    if (row < 0 || row >= table.numberOfRows || table.tableColumns.count != 1 ||
+        ![source respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)]) return nil;
+    id value = [source tableView:table objectValueForTableColumn:table.tableColumns.firstObject row:row];
+    return ([value isKindOfClass:NSString.class] && [value length]) ? value : nil;
+}
+
 // Experimental bridge: AppKit currently uses a one-column, cell-based table
 // for spelling suggestions. Its selection is not an NSSpellChecker API contract.
 // Observe public table notifications without replacing AppKit's delegate or
@@ -278,8 +300,10 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     NSPanel *panel = checker.spellingPanel;
     NSTableView *table = notification.object;
     if (checker.accessoryView != sReplacementField.superview ||
-        !panel.isVisible || table.window != panel || panel.firstResponder != table ||
+        !panel.isVisible || table.window != panel ||
         table.tableColumns.count != 1 || table.numberOfSelectedRows != 1) return;
+    // The standard panel's suggestion table can refuse first-responder status.
+    // Identify candidate input by its event instead of requiring table focus.
 
     // Suppress our synchronous panel update and notifications still associated
     // with the event that started it. This does not identify every possible
@@ -289,16 +313,22 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     if (event.type == NSEventTypeLeftMouseDown || event.type == NSEventTypeLeftMouseUp) {
         NSPoint point = [table convertPoint:event.locationInWindow fromView:nil];
         if (!NSPointInRect(point, NSIntersectionRect(table.bounds, table.visibleRect))) return;
-    } else if (event.type != NSEventTypeKeyDown ||
-               (event.modifierFlags & NSEventModifierFlagCommand)) return;
+    } else {
+        // Typing can also refresh the list. Only arrow navigation counts as
+        // choosing a candidate; arrows in our replacement editor must not copy.
+        if (event.type != NSEventTypeKeyDown ||
+            (event.modifierFlags & NSEventModifierFlagCommand) ||
+            (sReplacementField.currentEditor &&
+             panel.firstResponder == sReplacementField.currentEditor)) return;
+        NSString *keys = event.charactersIgnoringModifiers;
+        if (keys.length != 1 ||
+            ([keys characterAtIndex:0] != NSUpArrowFunctionKey &&
+             [keys characterAtIndex:0] != NSDownArrowFunctionKey)) return;
+    }
     if (!ReviewIsCurrent(sReviewView)) return;
 
-    NSInteger row = table.selectedRow;
-    id<NSTableViewDataSource> source = table.dataSource;
-    if (row < 0 || row >= table.numberOfRows ||
-        ![source respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)]) return;
-    id value = [source tableView:table objectValueForTableColumn:table.tableColumns.firstObject row:row];
-    if (![value isKindOfClass:NSString.class] || [value length] == 0) return;
+    NSString *value = SuggestionAtRow(table, table.selectedRow);
+    if (!value) return;
     sReplacementField.stringValue = value;
     sReplacementStatus.stringValue = @"";
 }
@@ -371,6 +401,15 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
         [checker updateSpellingPanelWithMisspelledWord:word];
     } @finally {
         sUpdatingSpellingPanel = NO;
+    }
+    // When there is only one suggestion the panel selects it itself, while the
+    // observer above is ignoring its own update, so copy it here.
+    NSTableView *table = SuggestionTable(checker.spellingPanel.contentView);
+    if (checker.accessoryView == sReplacementField.superview &&
+        ReviewIsCurrent(tv) && sReplacementField.stringValue.length == 0 &&
+        table.numberOfRows == 1 && table.numberOfSelectedRows == 1) {
+        NSString *selected = SuggestionAtRow(table, table.selectedRow);
+        if (selected) sReplacementField.stringValue = selected;
     }
     return word;
 }

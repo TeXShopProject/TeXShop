@@ -58,21 +58,25 @@ static void Review(NSTextView *v) {
 // system spelling panel, dictionaries, or user preferences.
 @interface SuggestionPanel : NSPanel
 @property BOOL testHidden;
-@property NSResponder *testResponder;
 @end
 @implementation SuggestionPanel
 - (BOOL)isVisible { return !self.testHidden; }
-- (NSResponder *)firstResponder { return self.testResponder ?: super.firstResponder; }
 @end
 @interface SuggestionSource : NSObject<NSTableViewDataSource>
 @property id value;
 @property NSInteger reads;
+@property NSInteger rowCount;
 @end
 @implementation SuggestionSource
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)table { return 2; }
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)table { return self.rowCount; }
 - (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)column row:(NSInteger)row {
     self.reads++; return self.value;
 }
+@end
+// Match the standard spelling panel: selection does not transfer focus.
+@interface SuggestionTable : NSTableView @end
+@implementation SuggestionTable
+- (BOOL)acceptsFirstResponder { return NO; }
 @end
 // A view-based/bindings-backed table need not implement the cell-value method.
 @interface RowOnlySuggestionSource : NSObject<NSTableViewDataSource> @end
@@ -93,12 +97,14 @@ static void TestSuggestionSync(void) {
     SuggestionPanel *panel=[[SuggestionPanel alloc] initWithContentRect:NSMakeRect(-20000,-20000,430,300)
         styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     SessionChecker.sharedSpellChecker.spellingPanel=panel;
-    NSTableView *table=[[NSTableView alloc] initWithFrame:NSMakeRect(0,0,400,200)];
+    NSTableView *table=[[SuggestionTable alloc] initWithFrame:NSMakeRect(0,0,400,200)];
     [table addTableColumn:[[NSTableColumn alloc] initWithIdentifier:@"candidate"]];
-    SuggestionSource *source=[SuggestionSource new]; source.value=@"suggestion";
+    SuggestionSource *source=[SuggestionSource new]; source.value=@"suggestion"; source.rowCount=2;
     table.dataSource=source; [panel.contentView addSubview:table]; [table reloadData];
     [table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
-    [panel makeFirstResponder:table];
+    [panel makeFirstResponder:panel];
+    NSCAssert(!table.acceptsFirstResponder && panel.firstResponder != table,
+              @"realistic suggestion table must not receive focus");
     app.inputEvent=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0
         windowNumber:panel.windowNumber context:nil characters:@"x" charactersIgnoringModifiers:@"x" isARepeat:NO keyCode:7];
     NSTextView *view=View(@"zzqqa zzqqa"); Review(view);
@@ -133,8 +139,7 @@ static void TestSuggestionSync(void) {
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"other document ignored");
     ReviewThenInput(view,panel); app.inputEvent=nil; notify();
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"non-input selection ignored");
-    app.inputEvent=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0
-        windowNumber:panel.windowNumber context:nil characters:@"x" charactersIgnoringModifiers:@"x" isARepeat:NO keyCode:7];
+    app.inputEvent=CandidateKey(panel,0);
     NSEvent *keyboard=app.inputEvent;
     app.inputEvent=[NSEvent mouseEventWithType:NSEventTypeLeftMouseUp location:NSMakePoint(20,20)
         modifierFlags:0 timestamp:0 windowNumber:panel.windowNumber context:nil eventNumber:1 clickCount:1 pressure:0];
@@ -165,12 +170,9 @@ static void TestSuggestionSync(void) {
     app.inputEvent=CandidateKey(panel,NSEventModifierFlagCommand); notify();
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"menu shortcut ignored");
     app.inputEvent=keyboard;
-    // Hold the focus condition true to exercise the window guard independently.
-    panel.testResponder=table;
     [table removeFromSuperview]; [otherWindow.contentView addSubview:table]; notify();
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"unrelated window ignored");
     [table removeFromSuperview]; [panel.contentView addSubview:table]; [panel makeFirstResponder:table];
-    panel.testResponder=nil;
     source.value=@42; notify();
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"unsupported table values ignored");
     source.value=@""; notify();
@@ -180,7 +182,7 @@ static void TestSuggestionSync(void) {
     table.dataSource=rowOnly; [table reloadData];
     [table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     app.inputEvent=CandidateKey(panel,0);
-    NSCAssert(table.numberOfSelectedRows==1 && panel.firstResponder==table &&
+    NSCAssert(table.numberOfSelectedRows==1 && panel.firstResponder!=table &&
               ![table.dataSource respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)],
               @"missing-method fixture must otherwise qualify for copying");
     notify();
@@ -193,9 +195,17 @@ static void TestSuggestionSync(void) {
     [table addTableColumn:[[NSTableColumn alloc] initWithIdentifier:@"other"]]; notify();
     NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"unexpected table shape ignored");
     [table removeTableColumn:table.tableColumns.lastObject];
-    [panel makeFirstResponder:panel]; notify();
-    NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"unfocused candidate list ignored");
-    [panel makeFirstResponder:table];
+    [panel.contentView addSubview:SessionChecker.sharedSpellChecker.accessoryView];
+    [panel makeFirstResponder:Replacement()];
+    NSCAssert(Replacement().currentEditor == panel.firstResponder, @"replacement editor fixture");
+    notify();
+    NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"arrows in a text editor must not copy candidates");
+    [panel makeFirstResponder:panel];
+    app.inputEvent=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:1000
+        windowNumber:panel.windowNumber context:nil characters:@"x" charactersIgnoringModifiers:@"x" isARepeat:NO keyCode:7];
+    notify();
+    NSCAssert([Replacement().stringValue isEqual:@"fixed"], @"typing must not copy candidates");
+    app.inputEvent=keyboard;
     NSView *ownAccessory=SessionChecker.sharedSpellChecker.accessoryView;
     SessionChecker.sharedSpellChecker.accessoryView=[NSView new]; source.reads=0; notify();
     NSCAssert(source.reads==0, @"replaced accessory ignored");
@@ -204,6 +214,39 @@ static void TestSuggestionSync(void) {
     NSCAssert(source.reads==0, @"mode change removes observer");
     ReviewThenInput(view,panel); source.reads=0; notify();
     NSCAssert(source.reads==1 && [Replacement().stringValue isEqual:@"valid"], @"reinstall has exactly one observer");
+    // Find Next only preloads a sole, selected suggestion. This also exercises
+    // synchronous AppKit notifications while the panel is being populated.
+    app.inputEvent=nil;
+    SessionChecker.sharedSpellChecker.panelUpdate=^{
+        [table reloadData];
+        [table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+        notify();
+    };
+    source.rowCount=1; source.value=@"sole suggestion";
+    [TSSpellSupport findNextMisspellingInTextView:view mask:[[TSSpellExclusions sharedExclusions] maskForText:view.string]];
+    NSCAssert([Replacement().stringValue isEqual:@"sole suggestion"], @"sole selected candidate is preloaded");
+    NSCAssert([view.string isEqual:@"zzqqa changed"], @"preloading leaves document unchanged");
+    Replacement().stringValue=@"hand edited"; notify();
+    NSCAssert([Replacement().stringValue isEqual:@"hand edited"], @"later non-input update preserves manual entry");
+    source.rowCount=2;
+    [TSSpellSupport findNextMisspellingInTextView:view mask:[[TSSpellExclusions sharedExclusions] maskForText:view.string]];
+    NSCAssert(Replacement().stringValue.length==0, @"multiple suggestions must not be preloaded");
+    source.rowCount=0;
+    [TSSpellSupport findNextMisspellingInTextView:view mask:[[TSSpellExclusions sharedExclusions] maskForText:view.string]];
+    NSCAssert(Replacement().stringValue.length==0, @"no suggestions clears the previous replacement");
+    source.rowCount=1;
+    SessionChecker.sharedSpellChecker.panelUpdate=^{
+        [table reloadData]; [table deselectAll:nil];
+    };
+    [TSSpellSupport findNextMisspellingInTextView:view mask:[[TSSpellExclusions sharedExclusions] maskForText:view.string]];
+    NSCAssert(Replacement().stringValue.length==0, @"unselected sole candidate must not be preloaded");
+    SessionChecker.sharedSpellChecker.panelUpdate=^{
+        [table selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+        Replacement().stringValue=@"nested manual entry";
+    };
+    [TSSpellSupport findNextMisspellingInTextView:view mask:[[TSSpellExclusions sharedExclusions] maskForText:view.string]];
+    NSCAssert([Replacement().stringValue isEqual:@"nested manual entry"], @"nested input is not overwritten");
+    SessionChecker.sharedSpellChecker.panelUpdate=nil;
     [TSSpellSupport preferencesDidChange]; app.inputEvent=nil;
     puts("PASS: suggestion sync, explicit Change All/Undo, stale-state rejection and observer lifecycle");
 }
