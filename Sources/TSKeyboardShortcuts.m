@@ -91,24 +91,37 @@ static BOOL TSRestorationSymbol(NSString *key) {
     return [[NSCharacterSet punctuationCharacterSet] characterIsMember:c] ||
         [[NSCharacterSet symbolCharacterSet] characterIsMember:c];
 }
+static NSString *TSRestorationCharacters(CFDataRef data, UInt16 code, NSEventModifierFlags flags, UInt32 keyboardType) {
+    UInt32 modifiers = ((flags & NSEventModifierFlagCommand) ? cmdKey : 0) |
+        ((flags & NSEventModifierFlagShift) ? shiftKey : 0) |
+        ((flags & NSEventModifierFlagOption) ? optionKey : 0) |
+        ((flags & NSEventModifierFlagControl) ? controlKey : 0);
+    UniChar chars[8]; UniCharCount count = 0; UInt32 dead = 0;
+    OSStatus result = UCKeyTranslate((const UCKeyboardLayout *)CFDataGetBytePtr(data), code,
+        kUCKeyActionDown, modifiers >> 8, keyboardType, kUCKeyTranslateNoDeadKeysBit, &dead, 8, &count, chars);
+    return result == noErr ? [NSString stringWithCharacters:chars length:count] : @"";
+}
 static NSArray<NSDictionary *> *TSRestorationBindings(NSString *key, NSEventModifierFlags flags, CFDataRef data, UInt32 keyboardType) {
-    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSetWithObject:TSBinding(key, flags)];
-    if (!TSRestorationSymbol(key)) return bindings.array;
-    BOOL encodesShift = NO;
-    for (UInt16 code = 0; data && code < 128; code++) {
-        NSString *plain = TSTranslateKey(data, code, NO, keyboardType);
-        NSString *shifted = TSTranslateKey(data, code, YES, keyboardType);
-        if ([plain isEqual:shifted]) continue;
-        if ((flags & NSEventModifierFlagShift) && [plain isEqual:key] && TSRestorationSymbol(shifted)) {
-            [bindings addObject:TSBinding(shifted, flags & ~NSEventModifierFlagShift)];
-            [bindings addObject:TSBinding(shifted, flags)];
-        }
-        if ([shifted isEqual:key] && TSRestorationSymbol(plain)) {
-            encodesShift = YES;
-            [bindings addObject:TSBinding(plain, flags | NSEventModifierFlagShift)];
+    NSDictionary *original = TSBinding(key, flags);
+    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSetWithObject:original];
+    if (!data || !TSRestorationSymbol(key)) return bindings.array;
+    // Reuse the recorder's spellings, including the Command layer and symbols on number keys.
+    // This constructs events for comparison only; it never posts them or changes the input source.
+    for (UInt16 code = 0; code < 128; code++) {
+        if (code == 66 || code == 68 || code == 70 || code == 72 || code == 73 || code == 74 || code == 77) continue;
+        NSString *plain = TSRestorationCharacters(data, code, 0, keyboardType);
+        for (NSUInteger shift = 0; shift < 2; shift++) {
+            NSEventModifierFlags modifiers = (flags & ~NSEventModifierFlagShift) | (shift ? NSEventModifierFlagShift : 0);
+            NSString *characters = TSRestorationCharacters(data, code, modifiers, keyboardType);
+            NSString *ignoring = TSRestorationCharacters(data, code, modifiers & NSEventModifierFlagShift, keyboardType);
+            NSEvent *event = [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:modifiers
+                timestamp:0 windowNumber:0 context:nil characters:characters charactersIgnoringModifiers:ignoring isARepeat:NO keyCode:code];
+            NSArray *spellings = TSEventBindings(event, plain);
+            NSDictionary *recorded = spellings.firstObject;
+            if ([TSShortcutStore isAllowedKey:recorded[@"key"] modifiers:[recorded[@"modifiers"] unsignedIntegerValue]] &&
+                [spellings containsObject:original]) [bindings addObjectsFromArray:spellings];
         }
     }
-    if (encodesShift) [bindings addObject:TSBinding(key, flags ^ NSEventModifierFlagShift)];
     return bindings.array;
 }
 static void TSVisitMenu(NSMenu *menu, NSString *path, void (^visit)(NSMenuItem *, NSString *)) {
@@ -330,12 +343,23 @@ static void TSPrepareMenuIdentifiers(NSMenu *menu) {
     return bindings;
 }
 - (nullable NSString *)conflictForRestoringCommand:(TSShortcutCommand *)command {
-    for (NSDictionary *binding in [self restorationBindingsForCommand:command]) {
-        NSString *conflict = [self conflictForKey:binding[@"key"] modifiers:[binding[@"modifiers"] unsignedIntegerValue]
-            except:command.item restoring:command];
-        if (conflict) return conflict;
-    }
-    return nil;
+    NSString *rawConflict = [self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command];
+    if (rawConflict) return rawConflict;
+    // Preserve shipped defaults even where their physical spellings overlap on a layout.
+    // Only live, user-assigned menu keys participate in the additional restoration check.
+    NSMutableSet *customItems = [NSMutableSet set];
+    for (TSShortcutCommand *other in self.commands)
+        if (other.item != command.item && self.overrides[other.commandID] && other.item.keyEquivalent.length &&
+            [TSBinding(other.item.keyEquivalent, other.item.keyEquivalentModifierMask) isEqual:self.overrides[other.commandID]])
+            [customItems addObject:other.item];
+    if (!customItems.count) return nil;
+    NSArray *bindings = [self restorationBindingsForCommand:command];
+    __block NSString *conflict = nil;
+    TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (conflict || item.submenu || item.action == NSSelectorFromString(@"doMacro:") || ![customItems containsObject:item]) return;
+        if ([bindings containsObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)]) conflict = path;
+    });
+    return conflict;
 }
 - (void)persist {
     if (self.overrides.count) [self.defaults setObject:self.overrides.copy forKey:TSMenuShortcutOverridesKey];

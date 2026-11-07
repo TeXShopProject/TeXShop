@@ -40,6 +40,18 @@ static id StandardDefaults(id s, SEL c) { return appDefaults; }
 static NSString *unshifted;
 static id Unshifted(id s, SEL c, NSEventModifierFlags flags) { return unshifted; }
 static void NoOrder(id self, SEL cmd, NSWindowOrderingMode mode, NSInteger relative) {}
+// Independent input construction, using the actual modifier layers from the selected layout data.
+static NSString *Input(NSData *data, UInt16 code, NSEventModifierFlags flags, UInt32 keyboard) {
+    UInt32 cm=((flags&NSEventModifierFlagCommand)?cmdKey:0)|((flags&NSEventModifierFlagShift)?shiftKey:0)|
+        ((flags&NSEventModifierFlagOption)?optionKey:0)|((flags&NSEventModifierFlagControl)?controlKey:0);
+    UniChar chars[8];UniCharCount count=0;UInt32 dead=0;
+    OSStatus status=UCKeyTranslate((const UCKeyboardLayout *)data.bytes,code,kUCKeyActionDown,cm>>8,keyboard,kUCKeyTranslateNoDeadKeysBit,&dead,8,&count,chars);
+    return status==noErr?[NSString stringWithCharacters:chars length:count]:@"";
+}
+static NSEvent *KeyEvent(NSData *data, UInt16 code, NSEventModifierFlags flags, UInt32 keyboard) {
+    return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0 windowNumber:0 context:nil
+        characters:Input(data,code,flags,keyboard) charactersIgnoringModifiers:Input(data,code,flags&NSEventModifierFlagShift,keyboard) isARepeat:NO keyCode:code];
+}
 int main(int argc,char **argv) { @autoreleasepool {
     appDefaults=[TSMemoryDefaults new];
     method_setImplementation(class_getClassMethod(NSUserDefaults.class,@selector(standardUserDefaults)),(IMP)StandardDefaults);
@@ -56,7 +68,21 @@ int main(int argc,char **argv) { @autoreleasepool {
     REQUIRE(![TSRestorationBindings(@"=",C|S,(__bridge CFDataRef)us,40) containsObject:TSBinding(@"=",C)]);
     REQUIRE(TSRestorationBindings(@"=",C|S,NULL,40).count==1);
     NSData *german=Layout(@"com.apple.keylayout.German");
-    REQUIRE(![TSRestorationBindings(@"+",C,(__bridge CFDataRef)german,40) containsObject:TSBinding(@"+",C|S)]);
+    REQUIRE(german.length);
+    // Symbols on digit keys must follow the recorder, including a digit as the saved key.
+    for (NSString *name in @[@"Polish",@"Turkish"]) {
+        NSData *data=Layout([@"com.apple.keylayout." stringByAppendingString:name]);
+        REQUIRE([TSRestorationBindings(@"_",C|S,(__bridge CFDataRef)data,40) containsObject:TSBinding(@"_",C)]);
+    }
+    NSData *frenchPC=Layout(@"com.apple.keylayout.French-PC");
+    REQUIRE([TSRestorationBindings(@"_",C|S,(__bridge CFDataRef)frenchPC,40) containsObject:TSBinding(@"8",C)]);
+    NSData *czech=Layout(@"com.apple.keylayout.Czech");
+    REQUIRE([TSRestorationBindings(@"+",C|S,(__bridge CFDataRef)czech,40) containsObject:TSBinding(@"1",C)]);
+    REQUIRE([TSRestorationBindings(@"=",C|S,(__bridge CFDataRef)german,40) containsObject:TSBinding(@"=",C)]);
+    NSData *dvorakCommand=Layout(@"com.apple.keylayout.DVORAK-QWERTYCMD");
+    REQUIRE(![TSRestorationBindings(@":",C,(__bridge CFDataRef)dvorakCommand,40) containsObject:TSBinding(@";",C|S)]);
+    REQUIRE(![TSRestorationBindings(@":",C,(__bridge CFDataRef)dvorakCommand,40) containsObject:TSBinding(@":",C|S)]);
+
     REQUIRE([TSRestorationBindings(@"_",C|S|K|O,(__bridge CFDataRef)us,40) containsObject:TSBinding(@"_",C|K|O)]);
     for(NSDictionary *b in TSRestorationBindings(@"_",C|S|K|O,(__bridge CFDataRef)us,40)) REQUIRE(([b[@"modifiers"] unsignedIntegerValue]&(C|K|O))==(C|K|O));
     for(NSString *key in @[@"a",@"A",@"Ж",@"1",@"\uf704",@"",@"ab"]) REQUIRE(TSRestorationBindings(key,C|S,(__bridge CFDataRef)us,40).count==1);
@@ -79,41 +105,90 @@ int main(int argc,char **argv) { @autoreleasepool {
     RestorationStore *store=[[RestorationStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)defaults];store.layout=us;
     Method method=class_getInstanceMethod(NSEvent.class,@selector(charactersByApplyingModifiers:));
     IMP old=method_setImplementation(method,(IMP)Unshifted);
-    NSUInteger exercised=0;
-    for (NSNumber *keyboard in @[@40,@41]) for(NSArray *c in @[@[@"TSShortcut.zoomIn:.0",@"+",@"=",@24],@[@"TSShortcut.zoomOut:.0",@"_",@"-",@27],@[@"TSShortcut.zoomOut:.0",@"_",@"\\",@94]]) {
-        store.keyboard=keyboard.unsignedIntValue;
-        if ([c[3] unsignedShortValue]==94 && store.keyboard!=41) continue;
-        TSShortcutCommand *zoom=Find(store,c[0]),*typeset=Find(store,@"TSShortcut.doTypeset:.-1"); REQUIRE(zoom&&typeset);
-        // These localized defaults are the actual shifted-symbol definitions at issue.
-        if (!(zoom.defaultModifiers&S)) continue;
-        if ([c[0] isEqual:@"TSShortcut.zoomIn:.0"] && ![zoom.defaultKey isEqual:@"="]) continue;
+    NSUInteger exercised=0, factory=0;
+    NSArray *layoutIDs=@[@"US",@"ABC",@"German",@"Danish",@"Turkish",@"Polish",@"Czech",@"Hungarian",@"French-PC",@"DVORAK-QWERTYCMD"];
+    for (NSString *layoutID in layoutIDs) for (NSNumber *keyboard in @[@40,@41,@48]) { @autoreleasepool {
+        store.layout=Layout([@"com.apple.keylayout." stringByAppendingString:layoutID]);store.keyboard=keyboard.unsignedIntValue;
         [store restoreAll];
-        REQUIRE(![store setKey:@"z" modifiers:C|K forCommand:zoom]);
-        RestorationUI *ui=[[RestorationUI alloc] initWithWindow:nil];ui.store=store;ui.editingCommand=typeset;ui.selection=zoom;
-        ui.captureDisplay=[NSTextField new];ui.captureError=[NSTextField new];ui.applyButton=[NSButton new];
-        unshifted=c[2];
-        NSEvent *event=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:C|S timestamp:0 windowNumber:0 context:nil characters:c[1] charactersIgnoringModifiers:c[1] isARepeat:NO keyCode:[c[3] unsignedShortValue]];
-        [ui recordShortcutEvent:event];
-        REQUIRE(![ui conflictForCapturedShortcut]);
-        [ui applyCapturedShortcut:nil];REQUIRE([typeset.item.keyEquivalent isEqual:c[1]]);
-        NSDictionary *saved=[[defaults objectForKey:TSMenuShortcutOverridesKey] copy];
-        ui.confirmations=0;[ui restoreShortcut:nil];
-        REQUIRE([ui.error containsString:typeset.path] && ui.confirmations==0);
-        REQUIRE([zoom.item.keyEquivalent isEqual:@"z"] && [[defaults objectForKey:TSMenuShortcutOverridesKey] isEqual:saved]);
-        REQUIRE([[store restoreCommand:zoom] containsString:typeset.path]);
-        REQUIRE([zoom.item.keyEquivalent isEqual:@"z"] && [[defaults objectForKey:TSMenuShortcutOverridesKey] isEqual:saved]);
-        // A conflicting macro with a different raw spelling is not promoted to a menu conflict.
-        REQUIRE(![store setKey:@"" modifiers:0 forCommand:typeset]);
-        NSMenuItem *macro=[[NSMenuItem alloc] initWithTitle:@"Macro" action:NSSelectorFromString(@"doMacro:") keyEquivalent:c[1]];
-        macro.keyEquivalentModifierMask=C;[typeset.item.menu addItem:macro];
-        REQUIRE(![store conflictForRestoringCommand:zoom]);
-        [ui restoreShortcut:nil];REQUIRE(!ui.error && ui.confirmations==1);
-        REQUIRE([TSBinding(zoom.item.keyEquivalent,zoom.item.keyEquivalentModifierMask) isEqual:TSBinding(zoom.defaultKey,zoom.defaultModifiers)]);
-        REQUIRE(![store conflictForRestoringCommand:zoom]); // self must be excluded
-        [macro.menu removeItem:macro];
-        exercised++;
-    }
+        // Every factory command must remain restorable, including layout-dependent overlaps.
+        for (TSShortcutCommand *command in store.commands) REQUIRE(![store conflictForRestoringCommand:command]);
+        // Rejected saved overrides leave factory keys active; they are not custom alias conflicts.
+        for (TSShortcutCommand *command in store.commands) if (TSRestorationSymbol(command.defaultKey))
+            store.overrides[command.commandID]=TSBinding(@"t",C);
+        [store applySavedOverrides];
+        REQUIRE(store.unavailableCommands.count>0);
+        for (TSShortcutCommand *command in store.commands) REQUIRE(![store conflictForRestoringCommand:command]);
+        [store restoreAll];
+        TSShortcutCommand *typeset=Find(store,@"TSShortcut.doTypeset:.-1"); REQUIRE(typeset);
+        REQUIRE(![store setKey:@"\uf717" modifiers:K forCommand:typeset]);
+        for (TSShortcutCommand *command in store.commands) {
+            if (!TSRestorationSymbol(command.defaultKey)) continue;
+            RestorationUI *ui=[[RestorationUI alloc] initWithWindow:nil];ui.store=store;ui.selection=command;
+            [ui restoreShortcut:nil]; REQUIRE(!ui.error);
+            REQUIRE(![store setKey:@"\uf716" modifiers:K forCommand:command]);
+            [ui restoreShortcut:nil]; REQUIRE(!ui.error);
+            REQUIRE([TSBinding(command.item.keyEquivalent,command.item.keyEquivalentModifierMask) isEqual:TSBinding(command.defaultKey,command.defaultModifiers)]);
+            factory++;
+        }
+        [store restoreAll];
+        // Actual layout characters, rather than hard-coded US strings paired with another keyboard type.
+        if ([layoutID isEqual:@"US"] && store.keyboard==48) {
+            REQUIRE([Input(store.layout,94,0,48) isEqual:@"_"]);
+            REQUIRE([Input(store.layout,94,S,48) isEqual:@"_"]);
+            REQUIRE([Input(store.layout,27,S,48) isEqual:@"="]);
+        }
+        for (NSString *ident in @[@"TSShortcut.zoomIn:.0",@"TSShortcut.zoomOut:.0"]) {
+            [store restoreAll];
+            TSShortcutCommand *zoom=Find(store,ident); REQUIRE(zoom);
+            NSDictionary *original=TSBinding(zoom.defaultKey,zoom.defaultModifiers);
+            NSEvent *chosen=nil;
+            for(UInt16 code=0;code<128;code++) {
+                if (code==66||code==68||code==70||code==72||code==73||code==74||code==77) continue;
+                NSEvent *event=KeyEvent(store.layout,code,C|S,store.keyboard);
+                NSString *plain=Input(store.layout,code,0,store.keyboard);
+                NSArray *spellings=TSEventBindings(event,plain);
+                if ([spellings containsObject:original] && ![spellings.firstObject isEqual:original] &&
+                    [TSShortcutStore isAllowedKey:spellings.firstObject[@"key"] modifiers:[spellings.firstObject[@"modifiers"] unsignedIntegerValue]]) {
+                    chosen=event;unshifted=plain;break;
+                }
+            }
+            if (!chosen) continue; // Some physical layouts need only the unchanged raw check.
+            REQUIRE(![store setKey:@"z" modifiers:C|K forCommand:zoom]);
+            RestorationUI *ui=[[RestorationUI alloc] initWithWindow:nil];ui.store=store;ui.editingCommand=typeset;ui.selection=zoom;
+            ui.captureDisplay=[NSTextField new];ui.captureError=[NSTextField new];ui.applyButton=[NSButton new];
+            [ui recordShortcutEvent:chosen];
+            // A few locales have another factory key for the same stroke; free it first.
+            for(TSShortcutCommand *other in store.commands) if(other!=zoom && other!=typeset &&
+                [ui.capturedBindings containsObject:TSBinding(other.item.keyEquivalent,other.item.keyEquivalentModifierMask)])
+                REQUIRE(![store setKey:@"" modifiers:0 forCommand:other]);
+            REQUIRE(![ui conflictForCapturedShortcut]);
+            [ui applyCapturedShortcut:nil];REQUIRE([typeset.item.keyEquivalent isEqual:ui.capturedKey]);
+            NSDictionary *saved=[[defaults objectForKey:TSMenuShortcutOverridesKey] copy];
+            ui.confirmations=0;[ui restoreShortcut:nil];
+            REQUIRE([ui.error containsString:typeset.path] && ui.confirmations==0);
+            REQUIRE([zoom.item.keyEquivalent isEqual:@"z"] && [[defaults objectForKey:TSMenuShortcutOverridesKey] isEqual:saved]);
+            REQUIRE([[store restoreCommand:zoom] containsString:typeset.path]);
+            REQUIRE([zoom.item.keyEquivalent isEqual:@"z"] && [[defaults objectForKey:TSMenuShortcutOverridesKey] isEqual:saved]);
+            REQUIRE(![store setKey:@"" modifiers:0 forCommand:typeset]);
+            NSMenuItem *macro=[[NSMenuItem alloc] initWithTitle:@"Macro" action:NSSelectorFromString(@"doMacro:") keyEquivalent:ui.capturedKey];
+            macro.keyEquivalentModifierMask=ui.capturedModifiers;[typeset.item.menu addItem:macro];
+            REQUIRE(![store conflictForRestoringCommand:zoom]);
+            [ui restoreShortcut:nil];REQUIRE(!ui.error && ui.confirmations==1);
+            REQUIRE([TSBinding(zoom.item.keyEquivalent,zoom.item.keyEquivalentModifierMask) isEqual:original]);
+            REQUIRE(![store conflictForRestoringCommand:zoom]);
+            [macro.menu removeItem:macro];
+            exercised++;
+        }
+    }}
+    [store restoreAll];
+    // Raw collisions still count for menu items without custom overrides, including anonymous items.
+    TSShortcutCommand *zoom=Find(store,@"TSShortcut.zoomOut:.0");
+    REQUIRE(![store setKey:@"z" modifiers:C|K forCommand:zoom]);
+    NSMenuItem *dynamic=[[NSMenuItem alloc] initWithTitle:@"Dynamic raw conflict" action:@selector(description) keyEquivalent:zoom.defaultKey];
+    dynamic.keyEquivalentModifierMask=zoom.defaultModifiers;[zoom.item.menu addItem:dynamic];
+    REQUIRE([[store restoreCommand:zoom] containsString:@"Dynamic raw conflict"]);
+    [dynamic.menu removeItem:dynamic];
     method_setImplementation(method,old);[store restoreAll];
     REQUIRE(exercised>=2);
-    printf("PASS: %s restore sequences=%lu, blocked UI/store restore preserves settings; freed key restores; macros remain raw\n",argv[1],(unsigned long)exercised);
+    printf("PASS: %s layouts=10 keyboardTypes=ANSI40/ISO41/JIS48 factory restores=%lu, conflict sequences=%lu; raw priority preserved\n",argv[1],(unsigned long)factory,(unsigned long)exercised);
 }return 0;}

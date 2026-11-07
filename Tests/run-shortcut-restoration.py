@@ -10,20 +10,21 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcut-restore-') as td:
     binary=Path(td)/'restore'
     def compile_source(source):
         (Path(td)/'TSKeyboardShortcuts.m').write_text(source)
-        subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-deprecated-declarations','-framework','Cocoa','-framework','Carbon','-I',td,'-I',str(root/'Sources'),str(root/'Tests/ShortcutRestoration.m'),'-o',str(binary)],check=True)
+        subprocess.run(['xcrun','clang','-O2','-fobjc-arc','-Wno-deprecated-declarations','-framework','Cocoa','-framework','Carbon','-I',td,'-I',str(root/'Sources'),str(root/'Tests/ShortcutRestoration.m'),'-o',str(binary)],check=True)
     compile_source(production)
     for path in paths:
         subprocess.run([str(binary),str(path)],check=True)
     if '--mutations' in sys.argv:
         cases={
-            'treat every symbol as Shift-encoded': ('if (encodesShift) [bindings addObject:', 'if (YES) [bindings addObject:'),
-            'omit alternate Shift spelling': ('if (encodesShift) [bindings addObject:TSBinding(key, flags ^ NSEventModifierFlagShift)];',''),
-            'omit shifted layout character': ('[bindings addObject:TSBinding(shifted, flags & ~NSEventModifierFlagShift)];',''),
-            'omit unshifted physical spelling': ('[bindings addObject:TSBinding(plain, flags | NSEventModifierFlagShift)];','(void)0;'),
+            'compare aliases against untouched defaults': ('self.overrides[other.commandID] && other.item.keyEquivalent.length &&\n            [TSBinding(other.item.keyEquivalent, other.item.keyEquivalentModifierMask) isEqual:self.overrides[other.commandID]]', 'other.item.keyEquivalent.length'),
+            'compare rejected overrides as live custom keys': (' &&\n            [TSBinding(other.item.keyEquivalent, other.item.keyEquivalentModifierMask) isEqual:self.overrides[other.commandID]]', ''),
+            'omit raw check for anonymous menu items': ('if (rawConflict) return rawConflict;', '(void)rawConflict;'),
+            'omit all alternate restoration spellings': ('if (!data || !TSRestorationSymbol(key)) return bindings.array;', 'return bindings.array;'),
+            'ignore symbols on number keys': ('if ([TSShortcutStore isAllowedKey:recorded[@"key"]', 'if (TSRestorationSymbol(plain) && [TSShortcutStore isAllowedKey:recorded[@"key"]'),
+            'ignore Command modifier layer': ('TSRestorationCharacters(data, code, modifiers, keyboardType)', 'TSRestorationCharacters(data, code, modifiers & NSEventModifierFlagShift, keyboardType)'),
             'restore store checks raw spelling only': ('[self conflictForRestoringCommand:command]','[self conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command]'),
             'restore UI checks raw spelling only': ('[self.store conflictForRestoringCommand:command]','[self.store conflictForKey:command.defaultKey modifiers:command.defaultModifiers except:command.item restoring:command]'),
             'restoration conflicts with itself': ('except:command.item restoring:command];','except:nil restoring:command];'),
-            'restoration expands letter keys': ('if (!TSRestorationSymbol(key)) return bindings.array;','if (!key.length) return bindings.array;'),
         }
         for name,(before,after) in cases.items():
             assert production.count(before)==1,(name,before)
