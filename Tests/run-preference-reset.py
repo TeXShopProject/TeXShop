@@ -6,8 +6,8 @@ defaults file, with settings kept in memory (no user defaults are read or writte
 MakeatletterEnabled changes, open documents must be told to color commands again, both when
 the defaults are restored and when that is undone; when it does not change, they are not.
 --mutation=reset or --mutation=undo removes one of the two and the test must then fail.
-A profile keeps what is not a setting of the window: keyboard shortcuts and AppKit's window,
-toolbar and split view state. Other settings missing from the profile are still removed, and
+A profile keeps what is not a setting of the window: keyboard shortcuts, the App Shortcuts and
+app language chosen in System Settings, and AppKit's window, toolbar and split view state. Other settings missing from the profile are still removed, and
 undoing restores the earlier settings exactly. --mutation=keep drops nothing and must fail."""
 from pathlib import Path
 import subprocess, sys, tempfile
@@ -109,7 +109,8 @@ int main(int argc, char **argv) { @autoreleasepool {
             NSDictionary *shortcuts = @{@"TSShortcut.doTypeset:.-1": @{@"key": @"r", @"modifiers": @(NSEventModifierFlagCommand)}};
             NSDictionary *earlier = @{@"MakeatletterEnabled": @(before), @"TSMenuShortcutOverrides": shortcuts,
                 @"NSWindow Frame PrefPane": @"10 10 600 500 0 0 1440 900 ", @"NSToolbar Configuration TSPdfToolbar": @{@"TB Is Shown": @1},
-                @"NSSplitView Subview Frames Split": @[@"0, 0, 100, 100, NO"], @"TeXAwareSpellChecking": @NO, @"EncodingAutoDetection": @NO};
+                @"NSSplitView Subview Frames Split": @[@"0, 0, 100, 100, NO"], @"TeXAwareSpellChecking": @NO, @"EncodingAutoDetection": @NO,
+                @"NSUserKeyEquivalents": @{@"Typeset": @"@r"}, @"AppleLanguages": @[@"ja"]};
             memory.values = [earlier mutableCopy];
             NSButton *sender = [NSButton new]; sender.tag = 0;
             recolors = 0;
@@ -119,8 +120,9 @@ int main(int argc, char **argv) { @autoreleasepool {
                   [NSString stringWithFormat:@"%@, @ was %s: restoring %s", gDefaultsFile.lastPathComponent, before ? "on" : "off",
                    changed ? "recolors once" : "does not recolor"]);
             check([memory.values[@"TSMenuShortcutOverrides"] isEqual:shortcuts] && memory.values[@"NSWindow Frame PrefPane"] &&
-                  memory.values[@"NSToolbar Configuration TSPdfToolbar"] && memory.values[@"NSSplitView Subview Frames Split"],
-                  [NSString stringWithFormat:@"%@: keyboard shortcuts and window, toolbar and split view state are kept", gDefaultsFile.lastPathComponent]);
+                  memory.values[@"NSToolbar Configuration TSPdfToolbar"] && memory.values[@"NSSplitView Subview Frames Split"] &&
+                  [memory.values[@"NSUserKeyEquivalents"] isEqual:earlier[@"NSUserKeyEquivalents"]] && [memory.values[@"AppleLanguages"] isEqual:@[@"ja"]],
+                  [NSString stringWithFormat:@"%@: keyboard shortcuts, App Shortcuts, app language and window, toolbar and split view state are kept", gDefaultsFile.lastPathComponent]);
             check((bundled[@"TeXAwareSpellChecking"] != nil || memory.values[@"TeXAwareSpellChecking"] == nil) &&
                   (bundled[@"EncodingAutoDetection"] != nil || memory.values[@"EncodingAutoDetection"] == nil),
                   [NSString stringWithFormat:@"%@: other settings missing from the profile are still removed", gDefaultsFile.lastPathComponent]);
