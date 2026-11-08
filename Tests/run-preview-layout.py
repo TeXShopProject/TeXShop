@@ -68,11 +68,13 @@ static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
 }
 @property (weak) TSDocument *myDocument;
 @property BOOL doScroll;
+@property NSInteger handlingLink;
 - (NSInteger)pageStyle;
 - (void)changePageStyleTo:(NSInteger)style;
 - (void)applyPreviewArrangement;
 @end
 @implementation MyPDFKitView
+- (void)doKillPopup { self.handlingLink = 0; }
 - (void)cleanupMarquee:(BOOL)b {}
 - (void)updateDarkModeInversion {}
 - (void)scaleChanged:(id)sender {}
