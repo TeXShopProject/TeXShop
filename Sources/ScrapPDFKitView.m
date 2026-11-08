@@ -157,7 +157,7 @@
 {
     if (item.action == @selector(changePreviewAppearance:))
         return TSValidatePreviewAppearanceChoice(item, SUD);
-    return YES;
+    return [super validateMenuItem:item];
 }
 
 - (void)dealloc

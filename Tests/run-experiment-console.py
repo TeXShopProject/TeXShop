@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Exercise the production Experiment controller with real AppKit windows and text views.
 
-Uses real child processes and encoding helpers. Window ordering alone is suppressed;
+Uses real child processes and encoding helpers. Window ordering and frame autosaving are suppressed;
 no TeXShop user settings are read and no windows are shown.
 """
 from pathlib import Path
 import subprocess, tempfile, os, argparse
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance"])
+parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha"])
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -31,6 +31,8 @@ elif args.mutation == "no-appearance-hook":
 elif args.mutation == "stale-child-appearance":
     assert "self.window.contentView.effectiveAppearance" in controller
     controller = controller.replace("self.window.contentView.effectiveAppearance", "self.outputText.effectiveAppearance", 1)
+if args.mutation == "no-console-alpha":
+    controller = controller.replace('self.window.alphaValue = TSExperimentWindowAlpha(theme, @"ConsoleAlpha");', '')
 prefix = r'''
 #import <Cocoa/Cocoa.h>
 #import "TSExperimentJob.h"
@@ -73,9 +75,13 @@ static BOOL behind;
 '''.replace('HELPERS', helpers).replace('JAPANESE', japanese).replace('FILTERS', filters)
 tests = r'''
 // Keep the production initializer, window getter, loadWindow and appendText.
-// Suppress only operations that would make a window appear on screen.
+// Suppress window ordering and keep frame autosave bookkeeping in memory.
 static NSUInteger backCount;
+static NSString *testFrameAutosaveName;
 @implementation TSExperimentConsoleWindow (HeadlessOrdering)
+// Preserve the requested name for assertions without touching standard defaults.
+- (BOOL)setFrameAutosaveName:(NSString *)name { testFrameAutosaveName = [name copy]; return YES; }
+- (NSString *)frameAutosaveName { return testFrameAutosaveName ?: @""; }
 - (void)makeKeyAndOrderFront:(id)sender { }
 - (void)orderFront:(id)sender { }
 - (void)orderBack:(id)sender { backCount++; }

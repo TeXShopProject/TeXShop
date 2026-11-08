@@ -3,12 +3,12 @@
 
 The PDF view is compiled from its complete production implementation. The source view's
 new lifecycle/theme methods run on NSTextView; legacy completion dependencies are omitted.
-Defaults use a unique temporary suite, and no window uses frame autosaving.
+Defaults stay in memory, and no window uses frame autosaving, including failing mutations.
 """
 from pathlib import Path
 import argparse, os, subprocess, tempfile
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook'])
+parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/ScrapTextView.m').read_text(encoding='latin1')
@@ -25,13 +25,34 @@ if args.mutation == 'defaults-hook':
 if args.mutation == 'reload-hook':
     start, end = pdf.index('- (void)setDocument:'), pdf.index('- (NSArray<NSToolbarItemIdentifier> *)toolbarAllowed')
     pdf = pdf[:start] + '- (void)setDocument:(PDFDocument *)document { [super setDocument:document]; }\n' + pdf[end:]
+if args.mutation == 'menu-validation':
+    pdf = pdf.replace('return [super validateMenuItem:item];', 'return YES;')
+if args.mutation == 'source-alpha':
+    source = source.replace('self.window.alphaValue = TSExperimentWindowAlpha(theme, @"SourceAlpha");', '')
+if args.mutation == 'preview-alpha':
+    pdf = pdf.replace('self.window.alphaValue = TSExperimentWindowAlpha(theme, @"PreviewAlpha");', '')
+appearance = (root/'Sources/TSPreviewAppearance.h').read_text()
+if args.mutation == 'filter-gamma':
+    appearance = appearance.replace('numberWithDouble:1.6', 'numberWithDouble:1.0')
+pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 prefix = r'''
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import "TSColorSupport.h"
 #import "TSExperimentTheme.h"
 static NSDictionary *liteColors, *darkColors;
-static NSUserDefaults *testDefaults;
+@interface ExperimentMemoryDefaults : NSUserDefaults
+@property (nonatomic, strong) NSMutableDictionary *values;
+@end
+@implementation ExperimentMemoryDefaults
+- (instancetype)init { self = [super init]; if (self) _values = [NSMutableDictionary dictionary]; return self; }
+- (NSInteger)integerForKey:(NSString *)key { return [self.values[key] integerValue]; }
+- (void)setInteger:(NSInteger)value forKey:(NSString *)key {
+    self.values[key] = @(value);
+    [NSNotificationCenter.defaultCenter postNotificationName:NSUserDefaultsDidChangeNotification object:self];
+}
+@end
+static ExperimentMemoryDefaults *testDefaults;
 #define SUD testDefaults
 #define SourceColorChangedNotification @"SourceColorChanged"
 @implementation TSColorSupport
@@ -75,8 +96,7 @@ static PDFDocument *document(void) {
 static BOOL inverted(ScrapPDFKitView *view) { return view.documentView.enclosingScrollView.contentFilters.count == 3; }
 int main(void) { @autoreleasepool {
     [NSApplication sharedApplication];
-    NSString *suite = [@"org.texshop.tests.experiment-themes." stringByAppendingString:NSUUID.UUID.UUIDString];
-    testDefaults = [[NSUserDefaults alloc] initWithSuiteName:suite];
+    testDefaults = [ExperimentMemoryDefaults new];
     liteColors = @{@"EditorBackground":NSColor.whiteColor, @"EditorText":NSColor.blackColor,
         @"EditorInsertionPoint":NSColor.blueColor, @"PreviewBackground":NSColor.grayColor,
         @"SourceAlpha":@[@0,@0,@0,@.92], @"PreviewAlpha":@[@0,@0,@0,@.93]};
@@ -95,6 +115,16 @@ int main(void) { @autoreleasepool {
     check([pdf.backgroundColor isEqual:NSColor.grayColor], @"initial preview theme");
     check(fabs(sourceWindow.alphaValue-.92)<.001 && fabs(pdfWindow.alphaValue-.93)<.001, @"initial source/PDF transparency");
     check(!inverted(pdf), @"system light pages");
+    NSMenuItem *next = [[NSMenuItem alloc] initWithTitle:@"Next" action:@selector(goToNextPage:) keyEquivalent:@""];
+    NSMenuItem *previous = [[NSMenuItem alloc] initWithTitle:@"Previous" action:@selector(goToPreviousPage:) keyEquivalent:@""];
+    check(![pdf validateMenuItem:next] && ![pdf validateMenuItem:previous], @"single page navigation stays disabled");
+    PDFDocument *twoPages = document();
+    [twoPages insertPage:[document() pageAtIndex:0] atIndex:1];
+    pdf.document = twoPages; pump();
+    check([pdf validateMenuItem:next] && ![pdf validateMenuItem:previous], @"first page navigation uses PDFKit validation");
+    [pdf goToLastPage:nil]; pump();
+    check(![pdf validateMenuItem:next] && [pdf validateMenuItem:previous], @"last page navigation uses PDFKit validation");
+    pdf.document = document(); pump();
     NSMenuToolbarItem *appearance = nil;
     for (NSToolbarItem *item in pdfWindow.toolbar.items)
         if ([item.itemIdentifier isEqual:TSPreviewAppearanceToolbarID]) appearance=(id)item;
@@ -109,6 +139,26 @@ int main(void) { @autoreleasepool {
     check([pdf.backgroundColor isEqual:NSColor.darkGrayColor], @"preview follows system dark");
     check(fabs(sourceWindow.alphaValue-.82)<.001 && fabs(pdfWindow.alphaValue-.83)<.001, @"dark transparency");
     check(inverted(pdf), @"system dark pages even though PDF scroll view is forced light");
+    NSArray *filters = pdf.documentView.enclosingScrollView.contentFilters;
+    check([[(CIFilter *)filters[0] name] isEqualToString:@"CIGammaAdjust"] &&
+          [[(CIFilter *)filters[1] name] isEqualToString:@"CIColorMatrix"] &&
+          [[(CIFilter *)filters[2] name] isEqualToString:@"CIGammaAdjust"], @"inversion filter order");
+    check(fabs([[filters[0] valueForKey:@"inputPower"] doubleValue]-.625)<1e-6 &&
+          fabs([[filters[2] valueForKey:@"inputPower"] doubleValue]-1.6)<1e-6, @"inversion gamma contract");
+    CGFloat factor = NSWorkspace.sharedWorkspace.accessibilityDisplayShouldIncreaseContrast ? 1.9337 : 1.8972;
+    NSArray *vectors = @[@"inputRVector", @"inputGVector", @"inputBVector"];
+    CGFloat weights[] = {.2126, .7152, .0722};
+    for (NSUInteger row=0; row<3; row++) {
+        CIVector *v = [filters[1] valueForKey:vectors[row]];
+        for (NSUInteger column=0; column<4; column++) {
+            CGFloat expected = column==3 ? 0 : (row==column ? 1 : 0)-weights[column]*factor;
+            check(fabs([v valueAtIndex:column]-expected)<1e-6, @"inversion matrix contract");
+        }
+    }
+    CIVector *bias = [filters[1] valueForKey:@"inputBiasVector"];
+    CIVector *alpha = [filters[1] valueForKey:@"inputAVector"];
+    check(bias.X==1 && bias.Y==1 && bias.Z==1 && bias.W==0 &&
+          alpha.X==0 && alpha.Y==0 && alpha.Z==0 && alpha.W==1, @"inversion preserves page alpha");
     [appearance.menu performActionForItemAtIndex:1]; pump();
     check([testDefaults integerForKey:TSPreviewAppearanceModeKey] == 1 && !inverted(pdf), @"Light choice persists and overrides dark system");
     for (NSMenuItem *choice in appearance.menu.itemArray) {
@@ -148,7 +198,6 @@ int main(void) { @autoreleasepool {
     check(TSExperimentWindowAlpha(@{@"SourceAlpha":@[@0]}, @"SourceAlpha")==1, @"malformed alpha stays opaque");
     check(!sourceWindow.isVisible && !pdfWindow.isVisible && !secondWindow.isVisible, @"no windows displayed");
     [sourceWindow close]; [pdfWindow close]; [secondWindow close];
-    [testDefaults removePersistentDomainForName:suite];
     printf("PASS: %d Experiment theme and PDF appearance checks\n", checks);
 } return 0; }
 '''
