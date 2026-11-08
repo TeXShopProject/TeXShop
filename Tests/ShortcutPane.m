@@ -327,11 +327,11 @@ int main(int argc,char **argv){@autoreleasepool{
   translated.search.stringValue=@"missing command fixture";[translated reloadCommands];
   REQUIRE(translated.table.numberOfRows==0);
   translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];
-  for(NSString *trigger in @[@"TAB",@"ESC",@"TAB"]){
-   [TSIsolatedAppKitDefaults setObject:trigger forKey:@"CommandCompletionChar"];
+  for(id trigger in @[@"TAB",@"ESCAPE",NSNull.null,@"unexpected",@"ESC",@"TAB"]){
+   [TSIsolatedAppKitDefaults setObject:trigger==NSNull.null?nil:trigger forKey:@"CommandCompletionChar"];
    NSDictionary *unchanged=[TSIsolatedAppKitDefaults.values copy];fixtureCharacters=@"\t";
    REQUIRE([translated handleKeySearchEvent:Event(@"\t",0,48)]);
-   BOOL reserved=[trigger isEqual:@"TAB"];
+   BOOL reserved=![trigger isEqual:@"ESCAPE"];
    REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]==reserved);
    REQUIRE((translated.highlightedCompletionRow!=nil)==reserved);
    if(reserved){
@@ -344,13 +344,25 @@ int main(int argc,char **argv){@autoreleasepool{
    }
    REQUIRE([TSIsolatedAppKitDefaults.values isEqual:unchanged]);
   }
-  [TSIsolatedAppKitDefaults setObject:@"ESC" forKey:@"CommandCompletionChar"];
+  [TSIsolatedAppKitDefaults setObject:@"ESCAPE" forKey:@"CommandCompletionChar"];
   [NSNotificationCenter.defaultCenter postNotificationName:@"CommandCompletionCharNotification" object:nil];
   REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage containsString:@"reserved"]);
   [TSIsolatedAppKitDefaults setObject:@"TAB" forKey:@"CommandCompletionChar"];
   fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",NSEventModifierFlagShift,48)];
   REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]);
-  [translated stopKeySearch];REQUIRE(translated.highlightedCompletionRow==nil);
+  fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",0,48)];
+  NSView *highlighted=translated.highlightedCompletionRow;
+  REQUIRE(highlighted!=nil && highlighted.layer.borderWidth==2);
+  [translated stopKeySearch];REQUIRE(translated.highlightedCompletionRow==nil && highlighted.layer.borderWidth==0);
+  translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];
+  for(NSString *plain in @[@"a",@"x"]){
+   fixtureCharacters=plain;[translated handleKeySearchEvent:Event(plain,0,0)];
+   REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")]);
+  }
+  fixtureCharacters=@"x";[translated handleKeySearchEvent:Event(@"x",NSEventModifierFlagControl|NSEventModifierFlagOption|NSEventModifierFlagCommand,7)];
+  REQUIRE(translated.searchMatches.count==0 && translated.highlightedCompletionRow==nil);
+  REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"No command uses this key.",@"")]);
+  [translated stopKeySearch];
   [host setContentSize:NSMakeSize(700,780)];[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
   REQUIRE(!translated.inputGroups[0].hidden && !translated.inputGroups[1].hidden);
   translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];fixtureCharacters=@"\t";

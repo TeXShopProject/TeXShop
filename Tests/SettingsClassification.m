@@ -84,6 +84,17 @@ int main(int argc,char **argv){@autoreleasepool{
  NSMutableArray *originalCells=[NSMutableArray arrayWithArray:[(NSMatrix *)before[@"settings.621"] cells]];
  [originalCells addObjectsFromArray:[(NSMatrix *)before[@"settings.cp7-bc-avh"] cells]];
  [before removeObjectForKey:@"settings.621"];[before removeObjectForKey:@"settings.cp7-bc-avh"];
+ NSDictionary *expectedMembership=[NSJSONSerialization JSONObjectWithData:Required([NSData dataWithContentsOfFile:Argument(argv[2])]) options:0 error:NULL][@"originalGroups"];
+ NSMutableDictionary *originalMembers=[NSMutableDictionary dictionary];
+ for(NSString *category in expectedMembership){
+  NSMutableDictionary *members=[NSMutableDictionary dictionary];
+  for(NSString *groupID in expectedMembership[category]){
+   NSView *group=nil;
+   for(TSPrefPaneController *pane in original){group=Find(pane.view,[@"settings." stringByAppendingString:groupID]);if(group)break;}
+   Check(group!=nil,@"Frozen original group exists");Collect(group,members);
+  }
+  Check(members.count>0,@"Original group membership is nonempty");originalMembers[category]=members;
+ }
  NSDictionary *panes=[owner classifySettingsPanes:original];Check(panes.count==10,@"Ten final categories");
  NSDictionary *contract=[NSJSONSerialization JSONObjectWithData:Required([NSData dataWithContentsOfFile:Argument(argv[2])]) options:0 error:NULL][@"groups"];
  Check(contract.count==panes.count,@"Independent category contract covers every category");
@@ -95,6 +106,8 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  NSDictionary *controlCategories=@{@"settings.hidden-settings-help":@"general",@"settings.926":@"keyboard",@"settings.cell.842":@"keyboard",@"settings.cell.843":@"keyboard",@"settings.edit-bindings":@"keyboard",@"settings.edit-completion":@"keyboard",@"settings.ENd-QB-0Uf":@"spelling",@"settings.ts-edit-spelling":@"spelling",@"settings.cell.teg-0p-Q8J":@"spelling"};
  for(NSString *identifier in controlCategories)Check(Find([panes[Required(controlCategories[identifier])] view],identifier)!=nil,[@"Planned control category: " stringByAppendingString:identifier]);
+ for(NSString *category in originalMembers)for(NSString *identifier in originalMembers[category])
+  Check(Find([panes[category] view],identifier)==originalMembers[category][identifier],[@"Merged original control retains category: " stringByAppendingString:identifier]);
  Check(HeadingCount(Find([panes[@"documents"] view],@"group.encoding"))==1 && HeadingCount(Find([panes[@"documents"] view],@"group.saving"))==1,@"Documents has one heading for Encoding and one for Saving");
  Check([Find([panes[@"documents"] view],@"settings.5xa-en-KkV") isDescendantOf:Find([panes[@"documents"] view],@"group.encoding")],@"Encoding dialog option belongs to Encoding");
  TSDockIconController *dock=[[TSDockIconController alloc]initWithBundle:bundle defaults:memory];
@@ -124,6 +137,12 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  NSDictionary *titles=@{@"settings.ts-aware-spelling":@"Use LaTeX-aware spell checking (recommended)",@"settings.legacy-spelling":@"Use legacy spell checking",@"settings.edit-bindings":@"Edit Key Bindings…",@"settings.edit-completion":@"Edit Command Completion…",@"settings.hidden-settings-help":@"Comment Lines and Hidden Settings"};
  for(NSString *identifier in titles) Check([[(NSButton *)after[identifier] title] isEqual:[bundle localizedStringForKey:Required(titles[identifier]) value:titles[identifier] table:@"Localizable"]],@"Displayed custom label uses its localized string");
+ NSTextField *trigger=(NSTextField *)after[@"settings.completion-trigger-label"];
+ Check([trigger.stringValue isEqual:[bundle localizedStringForKey:@"Completion trigger" value:nil table:@"Localizable"]],@"Completion trigger label is localized");
+ NSBox *bindings=(NSBox *)Find([panes[@"keyboard"] view],@"group.bindings");
+ NSString *bindingsTitle=[NSString stringWithFormat:@"%@ — %@",[bundle localizedStringForKey:@"Key Bindings" value:nil table:@"Localizable"],[bundle localizedStringForKey:@"Defaults for New Documents" value:nil table:@"Localizable"]];
+ Check([bindings.accessibilityLabel isEqual:bindingsTitle],@"Bindings heading identifies defaults for new documents");
+ Check([[(NSTextField *)Find(bindings,@"heading.group.bindings") stringValue] isEqual:bindingsTitle],@"Visible bindings heading matches accessibility label");
  ApplicationDelegate *appDelegate=[ApplicationDelegate new];NSApp.delegate=appDelegate;
  for(NSString *identifier in @[@"settings.edit-bindings",@"settings.edit-completion",@"settings.hidden-settings-help"]) {
   NSButton *button=after[identifier];Check(button!=nil,@"Editor/help button exists");

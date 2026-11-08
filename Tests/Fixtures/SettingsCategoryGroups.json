@@ -1,5 +1,5 @@
 {
-  "source": "Reviewed plan section 6.1 category table and audit group consolidation; do not regenerate from production code.",
+  "source": "Fixed expected category groups and original group membership; do not regenerate from production code.",
   "groups": {
     "general": [
       "settings.236",
@@ -66,6 +66,39 @@
     ],
     "updates": [
       "settings.e3h-Wk-X7D"
+    ]
+  },
+  "originalGroups": {
+    "documents": [
+      "262",
+      "03p-fB-1K3",
+      "5ba-33-JZx",
+      "314"
+    ],
+    "preview": [
+      "329",
+      "111",
+      "501",
+      "342",
+      "228",
+      "330",
+      "5HT-3x-Zr6",
+      "386",
+      "447",
+      "YrC-m9-abH",
+      "p2D-Mi-Gyc"
+    ],
+    "typesetting": [
+      "183",
+      "188",
+      "675",
+      "823",
+      "W5U-9S-4OG",
+      "1020",
+      "1027",
+      "SXg-YM-OVa",
+      "163-F5-v8Z",
+      "SS5-tZ-cDa"
     ]
   }
 }

@@ -17,15 +17,14 @@ to convert eps files to pdf files
 
 <p> It is possible to configure pdftex, pdflatex, and other programs so they can call arbitrary shell commands during
 typesetting. In that case, the flag "--shell-escape" must be added to the calling sequence, either
-in the Engine configuration section of TeXShop Settings or in particular engine scripts. However,
+in the Typesetting category of TeXShop Settings or in particular engine scripts. However,
 this flag is a serious security risk because it allows arbitrary shell programs to run, including for
 example a short program to erase all files in the home directory. If the flag is set, a malicious
 web site could offer a TeX source file which erases these files when it is typeset.
 
 <p> Although we recommend against setting the flag, it may be required by a few unusual
 typesetting packages.  
-TeXShop provides a protection mechanism for this situation. A setting under the Engine
-		category is labeled "Shell Escape Warning." This item is off when TeXShop is delivered.
+TeXShop provides a protection mechanism for this situation. A setting under the Typesetting category is labeled "Shell Escape Warning." This item is off when TeXShop is delivered.
 		If the item is on and "shell-escape" is active, then the first time a file is typeset during
 		a TexShop session, a warning dialog will appear allowing you to turn shell-escape
 		off for that particular file. This dialog will not appear again during the session for that

@@ -33,6 +33,11 @@ int main(int argc,char **argv){@autoreleasepool{
    toggle.keyEquivalent=@"";
    Apply(main,@{@"Source":@{@"Key Bindings":@{child:key}}});
    Check([toggle.keyEquivalent isEqual:@"k"],@"Named path retains toggle");
+   for(NSNumber *option in @[@NO,@YES])for(NSNumber *control in @[@NO,@YES]){
+    Apply(main,@{@"Source":@{@"Key Bindings":@{child:@[@"k",option,control]}}});
+    NSEventModifierFlags mask=toggle.keyEquivalentModifierMask;
+    Check((mask & NSEventModifierFlagCommand)!=0 && ((mask & NSEventModifierFlagOption)!=0)==option.boolValue && ((mask & NSEventModifierFlagControl)!=0)==control.boolValue,@"Legacy Command/Option/Control modifiers are retained independently");
+   }
   }
   Apply(main,@{@"1":@{@"2":@{@"3":@[@"e",@NO,@NO]},@"3":@[@"z",@NO,@YES]},@"999":@{},@"-2":@{}});
   Check([other.keyEquivalent isEqual:@"z"] && (other.keyEquivalentModifierMask & NSEventModifierFlagControl),@"Removed completion or invalid menu does not interrupt other assignments");

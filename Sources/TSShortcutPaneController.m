@@ -352,7 +352,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
         NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
         self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
-        reservedCompletion = flags == 0 && [key isEqualToString:@"\t"] && [store.defaults stringForKey:@"CommandCompletionChar"] != nil && [[store.defaults stringForKey:@"CommandCompletionChar"] isEqualToString:@"TAB"];
+        reservedCompletion = flags == 0 && [key isEqualToString:@"\t"] && ![[store.defaults stringForKey:@"CommandCompletionChar"] isEqualToString:@"ESCAPE"];
         if (reservedCompletion) {
             self.searchMatches = @[];
             self.searchMessage = NSLocalizedString(@"This key is reserved for command completion.", @"");

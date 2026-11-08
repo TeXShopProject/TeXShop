@@ -1523,7 +1523,7 @@ Preferences under the General tab, there is an item labeled ``Prefer tabs in ful
 
 Next I discovered that some applications have their own similar preference. This makes it possible to improve tab support in these applications without forcing it upon the full system. For example, Safari has an item labeled ``Open pages in tabs instead of windows'' with possible values ``Never'', ``Automatically'', and ``Always''.  The choice ``Automatically'' causes Safari to follow the global preference item in System Preferences.
 
-TeXShop now has a similar preference setting. The item is at the bottom of the  Source category in TeXShop Preferences, with the same choices as Safari.
+TeXShop now has a similar preference setting. The item is in the General category in TeXShop Preferences, with the same choices as Safari.
 
 When separate source and preview windows are used:
 \begin{itemize}
@@ -2217,7 +2217,7 @@ I've been too lazy to learn Command Completion. The expert on that system (and s
 In the ``Source'' menu there is a submenu CommandCompletion/Marks with the items: Next Mark, Previous Mark. These items have keyboard shortcuts control-command-F and control-command-G. 
 A regular user of CommandCompletion will remember these keyboard shortcuts and thus easily enter source, jumping from star to star, without lifting a hand from the keyboard.
 
-Some users prefer to use Tab rather than Escape for triggering operations. TeXShop has a Preference setting under the Source category to make this change.
+Some users prefer to use Tab rather than Escape for triggering operations. TeXShop has a Preference setting under the Keyboard category to make this change.
 
 
 It takes practice to learn which commands have completions and which do not. For example,
@@ -2982,7 +2982,7 @@ ConTeXt is a special case because its author, Hans Hagen, is constantly making i
 
 
 
-A recent version of TeXShop makes it easy for the two distributions to coexist. In TeXShop Preferences under the ``Engine'' tab, the ``Path Settings'' item at the top has a new item named ``Alternative Distribution.'' Set this item to the path of your  ConTeXt distribution, which depends on the location you picked to install it. Then add the magic line below to the top of your ConTeXt source files:
+A recent version of TeXShop makes it easy for the two distributions to coexist. In TeXShop Preferences under the Typesetting category, the ``Path Settings'' item at the top has a new item named ``Alternative Distribution.'' Set this item to the path of your  ConTeXt distribution, which depends on the location you picked to install it. Then add the magic line below to the top of your ConTeXt source files:
 \begin{verbatim}
      % !TEX useAlternatePath
 \end{verbatim}
@@ -3543,7 +3543,7 @@ which reads
 
 \chapter{Themes}
 
-TeXShop uses customizable colors for syntax coloring, for various window backgrounds, and for other purposes. In the original version of TeXShop, users could modify these colors with a fairly baroque set of preference items. Then in macOS Mojave, Apple introduced ``Lite Mode'' and ``Dark Mode'' and an entirely new set of colors was required. At that point the old color preferences were ripped out of TeXShop and replaced by the Themes category in Preferences, see \cref{fig:Theme}. While previously many colors could only be changed using  obscure hidden Preference settings, now all color choices are available in the Themes category.
+TeXShop uses customizable colors for syntax coloring, for various window backgrounds, and for other purposes. In the original version of TeXShop, users could modify these colors with a fairly baroque set of preference items. Then in macOS Mojave, Apple introduced ``Lite Mode'' and ``Dark Mode'' and an entirely new set of colors was required. At that point the old color preferences were ripped out of TeXShop and replaced by the theme settings in the Appearance category in Preferences, see \cref{fig:Theme}. While previously many colors could only be changed using  obscure hidden Preference settings, now all color choices are available in the theme settings in the Appearance category.
 
 The illustration on the next page shows the earlier tabbed Themes interface for reference. The current Settings layout shows both color groups one below the other in a single pane; dependent options are indented. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. These themes are listed in three pulldown menus: Lite Mode Theme, Dark Mode Them, Theme to Edit. The first menu sets the theme used on all systems below Mojave, and the theme used in Lite Mode on Mojave and above. The second menu sets the theme used in Dark Mode on Mojave and above. The final menu sets the theme which Preferences is currently editing.
 
@@ -3635,7 +3635,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  
  \section{expl3 Coloring Rules}
  
- The colors used for expl3 syntax coloring can be changed in TeXShop Preferences using the Themes category. This method works as usual, and seven additional colors are provided for expl3 coloring.
+ The colors used for expl3 syntax coloring can be changed in TeXShop Preferences using the theme settings in the Appearance category. This method works as usual, and seven additional colors are provided for expl3 coloring.
  
  I am not a macro programmer, so my description of expl3 syntax may be a little rough. Syntax coloring is in TeXShop because it was requested by Alan Munn, and the description of the syntax comes directly from Munn. If you are a macro programmer, thank Munn for the new feature.
  
@@ -4460,7 +4460,7 @@ The following sections describe the methods used before TeXShop 5.60. They still
 \section{Dictionaries}
 
 The Macintosh has many dictionaries; special commands choose the active dictionary.
-A  ``Dictionary'' field in TeXShop Preferences under the Source category has a pop-up menu which can be used to select the default dictionary. An unexpected feature is that dictionaries are listed using the ISO 639-1 and ISO 639-2 standards rather than the localized names shown in the ``Show Spelling and Grammar'' pane to be discussed later. These ISO values are easy to decipher. The preference menu also has an ``Automatic'' item in which the computer selects the appropriate dictionary based on the localization you are using.
+A  ``Dictionary'' field in TeXShop Preferences under the Spell Checking category has a pop-up menu which can be used to select the default dictionary. An unexpected feature is that dictionaries are listed using the ISO 639-1 and ISO 639-2 standards rather than the localized names shown in the ``Show Spelling and Grammar'' pane to be discussed later. These ISO values are easy to decipher. The preference menu also has an ``Automatic'' item in which the computer selects the appropriate dictionary based on the localization you are using.
 
 
 
