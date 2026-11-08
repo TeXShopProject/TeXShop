@@ -7759,13 +7759,55 @@ else
 
     
 
+// In paginated views, bare vertical arrows scroll within a zoomed page.
+// A hidden overlay scroller still has a scrollable range.
+- (BOOL)scrollVerticalArrowWithinPage:(NSEvent *)event
+{
+    if (self.displayMode != kPDFDisplaySinglePage && self.displayMode != kPDFDisplayTwoUp)
+        return NO;
+    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption |
+                               NSEventModifierFlagControl | NSEventModifierFlagShift))
+        return NO;
+    NSString *characters = event.charactersIgnoringModifiers;
+    if (characters.length != 1) return NO;
+    unichar key = [characters characterAtIndex:0];
+    if (key != NSUpArrowFunctionKey && key != NSDownArrowFunctionKey) return NO;
+
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    if (!self.document.pageCount || !clip || NSIsEmptyRect(clip.bounds)) return NO;
+    NSRect bounds = clip.bounds, lower = bounds, upper = bounds;
+    NSRect documentRect = clip.documentRect;
+    NSEdgeInsets insets = scroll.contentInsets;
+    CGFloat margin = bounds.size.height + fabs(insets.top) + fabs(insets.bottom) + 1;
+    lower.origin.y = NSMinY(documentRect) - margin;
+    upper.origin.y = NSMaxY(documentRect) + margin;
+    // Query only the limits: Tahoe may shift an interior constrained origin.
+    CGFloat minimum = [clip constrainBoundsRect:lower].origin.y;
+    CGFloat maximum = [clip constrainBoundsRect:upper].origin.y;
+    if (!isfinite(minimum) || !isfinite(maximum) || maximum - minimum <= 0.5)
+        return NO;
+
+    CGFloat step = scroll.verticalLineScroll;
+    if (!isfinite(step) || step <= 0) step = 10;
+    CGFloat direction = key == NSDownArrowFunctionKey ? 1 : -1;
+    if (!clip.isFlipped) direction = -direction;
+    NSPoint origin = bounds.origin;
+    origin.y = fmin(fmax(origin.y + direction * step, minimum), maximum);
+    [clip scrollToPoint:origin];
+    [scroll reflectScrolledClipView:clip];
+    // Consume the event even at the limit, so PDFKit cannot turn the page.
+    return YES;
+}
+
 - (void)keyDown:(NSEvent *)theEvent
 {
     NSString	*theKey;
     unichar		key;
-    BOOL        result;
     
     if ([self annotationKeyDown: theEvent])
+        return;
+    if ([self scrollVerticalArrowWithinPage:theEvent])
         return;
    
     
