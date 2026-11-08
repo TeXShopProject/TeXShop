@@ -8,6 +8,7 @@ from pathlib import Path
 import subprocess, tempfile, os, argparse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter"])
+parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 def cut(text, start, end):
@@ -27,6 +28,7 @@ elif args.mutation == "no-yen-filter":
 prefix = r'''
 #import <Cocoa/Cocoa.h>
 #import "TSExperimentJob.h"
+#import "TSColorSupport.h"
 #import "TSEncodingSupport.h"
 typedef enum { kNoFilterMode = 0, kMacJapaneseFilterMode = 1, kOtherJapaneseFilterMode = 2 } TSFilterMode;
 static TSFilterMode g_shouldFilter = kNoFilterMode;
@@ -37,6 +39,13 @@ HELPERS
 JAPANESE
 @end
 FILTERS
+static NSDictionary *liteColors;
+static NSDictionary *darkColors;
+@implementation TSColorSupport
++ (id)sharedInstance { static id s; if (!s) s = [self new]; return s; }
+- (NSColor *)colorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
+{ return theme[key] ?: (dark ? NSColor.blackColor : NSColor.whiteColor); }
+@end
 static BOOL behind;
 @interface TestDefaults : NSObject
 - (BOOL)boolForKey:(NSString *)key;
@@ -49,6 +58,7 @@ static BOOL behind;
 - (BOOL)boolForKey:(NSString *)key { return [key isEqualToString:@"ConsoleBehavior"] ? behind : YES; }
 @end
 #define SUD ((TestDefaults *)[TestDefaults new])
+#define SourceColorChangedNotification @"SourceColorChanged"
 #define ConsoleFontNameKey @"ConsoleFontName"
 #define ConsoleFontSizeKey @"ConsoleFontSize"
 #define ConsoleFontChangedNotification @"ConsoleFontChanged"
@@ -78,6 +88,8 @@ static NSURL *directory(void) {
 static BOOL exists(NSURL *d) { return [[NSFileManager defaultManager] fileExistsAtPath:d.path]; }
 int main(void) { @autoreleasepool {
     [NSApplication sharedApplication];
+    liteColors = @{@"ConsoleBackground":NSColor.whiteColor, @"ConsoleText":NSColor.blackColor};
+    darkColors = @{@"ConsoleBackground":NSColor.blackColor, @"ConsoleText":NSColor.whiteColor};
     TSExperimentConsoleController *console = [TSExperimentConsoleController new];
     check(console.window != nil && console.isWindowLoaded, @"production initializer creates window");
     check(console.outputText != nil && console.commandField != nil && console.stopButton != nil, @"production controls exist");
@@ -86,6 +98,40 @@ int main(void) { @autoreleasepool {
     check([console.window.frameAutosaveName isEqualToString:@"ExperimentConsole"], @"separate frame autosave name");
     [console appendText:@"initial output"];
     check([console.outputText.string isEqualToString:@"initial output"], @"production appendText stores text");
+    NSScrollView *output = console.outputText.enclosingScrollView;
+    for (NSValue *size in @[[NSValue valueWithSize:NSMakeSize(504,430)], [NSValue valueWithSize:NSMakeSize(720,600)]]) {
+        [console.window setContentSize:size.sizeValue];
+        check(fabs(NSMaxY(output.frame)-NSMinY(console.stopButton.frame))<1, @"stop button sits above output");
+        check(NSMaxY(console.commandField.frame)<=NSMinY(output.frame), @"input sits below output");
+        check(NSMaxX(console.commandField.frame)<=NSWidth(console.window.contentView.bounds), @"input fits resized console");
+    }
+    console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    [console updateConsoleColors:nil];
+    check([console.outputText.backgroundColor isEqual:NSColor.blackColor] && [console.outputText.textColor isEqual:NSColor.whiteColor], @"dark console theme applied");
+    NSDictionary *preview = @{@"ConsoleBackground":NSColor.blueColor, @"ConsoleText":NSColor.yellowColor};
+    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:nil userInfo:preview];
+    check([console.outputText.backgroundColor isEqual:NSColor.blueColor], @"live theme preview applied");
+    check([[console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] isEqual:NSColor.yellowColor], @"existing output recolored");
+    console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    [console updateConsoleColors:nil];
+    check([console.outputText.backgroundColor isEqual:NSColor.whiteColor], @"light console theme restored");
+    NSString *artifacts = NSProcessInfo.processInfo.environment[@"CONSOLE_ARTIFACTS"];
+    if (artifacts) {
+        [console.window setContentSize:NSMakeSize(504,430)];
+        console.outputText.string = @"This is LuaHBTeX, Version 1.22.0 (TeX Live 2026)\n(file.tex\nLaTeX2e <2026-06-01>\n! Undefined control sequence.\nl.8 \\example\n? ";
+        console.commandField.enabled = YES; console.stopButton.enabled = YES;
+        for (NSString *mode in @[@"light", @"dark"]) {
+            BOOL dark = [mode isEqualToString:@"dark"];
+            console.window.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+            [console updateConsoleColors:nil];
+            NSView *content = console.window.contentView;
+            [content layoutSubtreeIfNeeded];
+            NSBitmapImageRep *bitmap = [content bitmapImageRepForCachingDisplayInRect:content.bounds];
+            [content cacheDisplayInRect:content.bounds toBitmapImageRep:bitmap];
+            NSData *png = [bitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
+            check([png writeToFile:[artifacts stringByAppendingPathComponent:[mode stringByAppendingString:@".png"]] atomically:YES], @"save console preview");
+        }
+    }
     NSURL *dir = directory();
     behind = YES;
     __block BOOL completed = NO;
@@ -139,6 +185,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-console-') as tmp:
     src.write_text(prefix + controller + tests)
     subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Sources'), str(src), str(root / 'Sources/TSExperimentJob.m'), '-o', str(exe)], check=True)
     env = dict(os.environ, CFFIXED_USER_HOME=tmp)
+    if args.artifacts:
+        args.artifacts.mkdir(parents=True, exist_ok=True)
+        env["CONSOLE_ARTIFACTS"] = str(args.artifacts.resolve())
     result = subprocess.run([str(exe)], env=env, capture_output=True, text=True, timeout=30)
     if args.mutation:
         assert result.returncode == 1 and "FAIL:" in result.stderr, result.stdout + result.stderr
