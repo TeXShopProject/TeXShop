@@ -27,7 +27,7 @@ elif args.mutation == 'ignore-annotation':
 elif args.mutation == 'visible-scroller':
     methods = methods.replace('NSClipView *clip = scroll.contentView;', 'if (scroll.verticalScroller.hidden) return NO;\n    NSClipView *clip = scroll.contentView;')
 elif args.mutation == 'scaled-step':
-    original = 'if (isfinite(magnification) && magnification > 0) step /= magnification;'
+    original = 'step /= magnification;'
     assert original in methods
     methods = methods.replace(original, '')
 program = r'''

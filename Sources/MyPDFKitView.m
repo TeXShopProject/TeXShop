@@ -7785,14 +7785,15 @@ else
     // Query only the limits: macOS 26 may shift an interior clip-view origin.
     CGFloat minimum = [clip constrainBoundsRect:lower].origin.y;
     CGFloat maximum = [clip constrainBoundsRect:upper].origin.y;
-    if (!isfinite(minimum) || !isfinite(maximum) || maximum - minimum <= 0.5)
+    // Line scrolling and the scrollable test are measured on screen; the clip bounds are magnified.
+    CGFloat magnification = scroll.magnification;
+    if (!isfinite(magnification) || magnification <= 0) magnification = 1;
+    if (!isfinite(minimum) || !isfinite(maximum) || (maximum - minimum) * magnification <= 0.5)
         return NO;
 
     CGFloat step = scroll.verticalLineScroll;
     if (!isfinite(step) || step <= 0) step = 10;
-    // Line scrolling is measured on screen; the clip bounds are magnified.
-    CGFloat magnification = scroll.magnification;
-    if (isfinite(magnification) && magnification > 0) step /= magnification;
+    step /= magnification;
     CGFloat direction = key == NSDownArrowFunctionKey ? 1 : -1;
     if (!clip.isFlipped) direction = -direction;
     NSPoint origin = bounds.origin;
