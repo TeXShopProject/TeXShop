@@ -3,6 +3,7 @@
 #import "TSEncodingSupport.h"
 #import "globals.h"
 #import "TSColorSupport.h"
+#import "TSExperimentTheme.h"
 
 @interface TSExperimentConsoleController (Colors)
 - (void)updateConsoleColors:(NSNotification *)notification;
@@ -79,6 +80,7 @@
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
     self.outputText.backgroundColor = [colors colorForKey:@"ConsoleBackground" fromDictionary:theme isWindowDark:dark];
     self.outputText.textColor = [colors colorForKey:@"ConsoleText" fromDictionary:theme isWindowDark:dark];
+    self.window.alphaValue = TSExperimentWindowAlpha(theme, @"ConsoleAlpha");
 }
 
 - (void)loadWindow

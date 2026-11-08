@@ -25,8 +25,46 @@
 #import "GlobalData.h"
 #import <OgreKit/OgreKit.h>
 #import "TSEncodingSupport.h"
+#import "TSColorSupport.h"
+#import "TSExperimentTheme.h"
 
 @implementation ScrapTextView
+
+- (void)updateExperimentColors:(NSNotification *)notification
+{
+    if (!self.window) return;
+    BOOL dark = [[self.effectiveAppearance bestMatchFromAppearancesWithNames:
+        @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
+    NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
+    TSColorSupport *colors = [TSColorSupport sharedInstance];
+    self.backgroundColor = [colors colorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark];
+    self.textColor = [colors colorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark];
+    self.insertionPointColor = [colors colorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark];
+    self.window.alphaValue = TSExperimentWindowAlpha(theme, @"SourceAlpha");
+}
+
+- (void)viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    [center removeObserver:self name:SourceColorChangedNotification object:nil];
+    if (self.window) {
+        [center addObserver:self selector:@selector(updateExperimentColors:)
+            name:SourceColorChangedNotification object:nil];
+        [self updateExperimentColors:nil];
+    }
+}
+
+- (void)viewDidChangeEffectiveAppearance
+{
+    [super viewDidChangeEffectiveAppearance];
+    [self updateExperimentColors:nil];
+}
+
+- (void)dealloc
+{
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+}
 
 - (void)awakeFromNib
 {

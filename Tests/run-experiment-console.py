@@ -95,7 +95,7 @@ static BOOL exists(NSURL *d) { return [[NSFileManager defaultManager] fileExists
 int main(void) { @autoreleasepool {
     [NSApplication sharedApplication];
     liteColors = @{@"ConsoleBackground":NSColor.whiteColor, @"ConsoleText":NSColor.blackColor};
-    darkColors = @{@"ConsoleBackground":NSColor.blackColor, @"ConsoleText":NSColor.whiteColor};
+    darkColors = @{@"ConsoleBackground":NSColor.blackColor, @"ConsoleText":NSColor.whiteColor, @"ConsoleAlpha":@[@0,@0,@0,@.85]};
     TSExperimentConsoleController *console = [TSExperimentConsoleController new];
     check(console.window != nil && console.isWindowLoaded, @"production initializer creates window");
     check(console.outputText != nil && console.commandField != nil && console.stopButton != nil, @"production controls exist");
@@ -119,12 +119,15 @@ int main(void) { @autoreleasepool {
     console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
     check([console.outputText.backgroundColor isEqual:NSColor.blackColor] && [console.outputText.textColor isEqual:NSColor.whiteColor], @"dark console theme applied through appearance hook");
     check([[console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] isEqual:NSColor.whiteColor], @"appearance hook recolors existing output");
-    NSDictionary *preview = @{@"ConsoleBackground":NSColor.blueColor, @"ConsoleText":NSColor.yellowColor};
+    check(fabs(console.window.alphaValue-.85)<.001, @"dark console transparency");
+    NSDictionary *preview = @{@"ConsoleBackground":NSColor.blueColor, @"ConsoleText":NSColor.yellowColor, @"ConsoleAlpha":@[@0,@0,@0,@.75]};
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:nil userInfo:preview];
+    check(fabs(console.window.alphaValue-.75)<.001, @"live console transparency");
     check([console.outputText.backgroundColor isEqual:NSColor.blueColor], @"live theme preview applied");
     check([[console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] isEqual:NSColor.yellowColor], @"existing output recolored");
     console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     check([console.outputText.backgroundColor isEqual:NSColor.whiteColor] && [console.outputText.textColor isEqual:NSColor.blackColor], @"light console theme restored through appearance hook");
+    check(fabs(console.window.alphaValue-1)<.001, @"missing alpha restores opaque console");
     NSString *artifacts = NSProcessInfo.processInfo.environment[@"CONSOLE_ARTIFACTS"];
     if (artifacts) {
         [console.window setContentSize:NSMakeSize(504,430)];
