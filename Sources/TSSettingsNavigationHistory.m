@@ -12,6 +12,12 @@
     _entries = [NSMutableArray array];
     return self;
 }
+- (id)copyWithZone:(NSZone *)zone
+{
+    TSSettingsNavigationHistory *copy = [[[self class] allocWithZone:zone] init];
+    copy.entries = [self.entries mutableCopy]; copy.position = self.position;
+    return copy;
+}
 - (NSString *)currentIdentifier { return self.entries.count == 0 ? nil : self.entries[self.position]; }
 - (NSString *)backIdentifier { return self.position == 0 ? nil : self.entries[self.position - 1]; }
 - (NSString *)forwardIdentifier { return self.position + 1 >= self.entries.count ? nil : self.entries[self.position + 1]; }

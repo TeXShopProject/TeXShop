@@ -2,6 +2,12 @@
 #import "TSPrefConsoleController.h"
 #import "TSPreferences.h"
 @implementation TSPrefConsoleController
+- (void)loadView
+{
+    [super loadView];
+    self.consoleFontTextField.accessibilityIdentifier = @"settings.user-data";
+}
+
 - (instancetype)init { return [super initWithNibName:@"SettingsConsole" bundle:nil]; }
 - (IBAction)MacroPressed:(id)sender { [self.preferences MacroPressed:sender]; }
 - (IBAction)changeConsoleFont:(id)sender { [self.preferences changeConsoleFont:sender]; }

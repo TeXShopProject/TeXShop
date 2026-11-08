@@ -340,6 +340,10 @@ int main(int argc,char **argv){@autoreleasepool{
   TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:NSBundle.mainBundle categoryOrder:@[@"keyboard"] commandNames:@[]];
   searchExcludedView=translated.settingsHeader;
   SearchViews(translated.view,@"keyboard",index);searchExcludedView=nil;
+  [translated applySettingsQuery:@"completion" targets:@[@"row.settings.completion-trigger-label"] filterCommands:NO];
+  REQUIRE(translated.inputGroups[0].hidden && !translated.inputGroups[1].hidden);
+  [translated applySettingsQuery:@"bindings" targets:@[@"heading.group.bindings"] filterCommands:NO];
+  REQUIRE(!translated.inputGroups[0].hidden && translated.inputGroups[1].hidden);
   [translated applySettingsQuery:@"ＦＩＲＳＴ" targets:@[] filterCommands:YES];
   REQUIRE(translated.visibleCommands.count==1);
   [translated applySettingsQuery:@"" targets:@[] filterCommands:NO];

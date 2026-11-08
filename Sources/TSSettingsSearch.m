@@ -29,23 +29,30 @@
     if (self == nil) return nil;
     _categoryOrder = [order copy];
     NSMutableArray<TSSettingsSearchEntry *> *entries = [NSMutableArray array];
-    void (^add)(NSString *, NSString *, NSString *, NSString *, NSInteger) = ^(NSString *category, NSString *target, NSString *table, NSString *key, NSInteger weight) {
+    void (^add)(TSSettingsCategoryID, NSString *, NSString *, NSString *, NSInteger) = ^(TSSettingsCategoryID category, NSString *target, NSString *table, NSString *key, NSInteger weight) {
         NSString *text = [bundle localizedStringForKey:key value:key table:table];
         if (text.length) [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:category target:target text:text weight:weight command:NO]];
     };
     // Only resource keys and category/control identifiers live in the map. The
     // localized text is read from the same tables used by the interface.
 #include "TSSettingsSearchCatalog.inc"
+    NSArray<NSString *> *dockTitles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
+    NSArray<NSString *> *dockPeriods = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
+    NSString *(^dockText)(NSString *) = ^(NSString *key) { return [bundle localizedStringForKey:key value:key table:@"SettingsDock"]; };
+    for (NSUInteger i = 0; i < dockTitles.count; i++) {
+        NSString *tip = [NSString stringWithFormat:@"%@ — %@\n%@", dockText(dockTitles[i]), dockText(dockPeriods[i]), dockText(@"Applies while TeXShop is running. The standard icon returns after quitting.")];
+        [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryAppearance target:@"DockIconChoices" text:tip weight:TSSettingsSearchWeightDescription command:NO]];
+    }
     NSString *bindings = [NSString stringWithFormat:@"%@ — %@", [bundle localizedStringForKey:@"Key Bindings" value:@"Key Bindings" table:@"Localizable"], [bundle localizedStringForKey:@"Defaults for New Documents" value:@"Defaults for New Documents" table:@"Localizable"]];
-    [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryKeyboard target:@"heading.group.bindings" text:bindings weight:60 command:NO]];
-    for (NSString *category in order) add(category, @"", @"SettingsCategories", category, 100);
+    [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryKeyboard target:@"heading.group.bindings" text:bindings weight:TSSettingsSearchWeightHeading command:NO]];
+    for (NSString *category in order) add(category, @"", @"SettingsCategories", category, TSSettingsSearchWeightCategory);
     for (NSString *category in order) {
         NSMutableOrderedSet<NSString *> *headings = [NSMutableOrderedSet orderedSet];
-        for (TSSettingsSearchEntry *entry in entries) if ([entry.category isEqual:category] && entry.weight == 60 && headings.count < 3) [headings addObject:entry.text];
-        if (headings.count) [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:category target:@"category.description" text:[headings.array componentsJoinedByString:@" · "] weight:20 command:NO]];
+        for (TSSettingsSearchEntry *entry in entries) if ([entry.category isEqual:category] && entry.weight == TSSettingsSearchWeightHeading && headings.count < 3) [headings addObject:entry.text];
+        if (headings.count) [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:category target:@"category.description" text:[headings.array componentsJoinedByString:@" · "] weight:TSSettingsSearchWeightDescription command:NO]];
     }
     for (NSString *name in names) if (name.length) {
-        [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryKeyboard target:@"shortcut.commands" text:name weight:10 command:YES]];
+        [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryKeyboard target:@"shortcut.commands" text:name weight:TSSettingsSearchWeightCommand command:YES]];
     }
     _entries = [entries copy];
     return self;
@@ -69,7 +76,7 @@
                 if (![entry.category isEqualToString:category]) continue;
                 NSRange range = [entry.normalizedText rangeOfString:token];
                 if (range.location == NSNotFound) continue;
-                NSInteger bonus = entry.normalizedText.length == token.length ? 20 : (range.location == 0 ? 10 : 0);
+                NSInteger bonus = entry.normalizedText.length == token.length ? TSSettingsSearchBonusExact : (range.location == 0 ? TSSettingsSearchBonusPrefix : TSSettingsSearchBonusSubstring);
                 best = MAX(best, entry.weight + bonus); [matched addObject:entry];
             }
             if (!best) { score = 0; break; }

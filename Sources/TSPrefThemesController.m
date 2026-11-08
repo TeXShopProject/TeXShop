@@ -2,6 +2,14 @@
 #import "TSPrefThemesController.h"
 #import "TSPreferences.h"
 @implementation TSPrefThemesController
+- (void)loadView
+{
+    [super loadView];
+    self.DarkStyle.accessibilityIdentifier = @"settings.user-data";
+    self.EditingStyle.accessibilityIdentifier = @"settings.user-data";
+    self.LiteStyle.accessibilityIdentifier = @"settings.user-data";
+}
+
 - (instancetype)init { return [super initWithNibName:@"SettingsThemes" bundle:nil]; }
 - (IBAction)ConsoleAlphaChanged:(id)sender { [self.preferences ConsoleAlphaChanged:sender]; }
 - (IBAction)ConsoleBackgroundColorChanged:(id)sender { [self.preferences ConsoleBackgroundColorChanged:sender]; }

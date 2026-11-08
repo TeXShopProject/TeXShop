@@ -539,14 +539,14 @@ Most standard Macintosh fonts do not contain Hebrew letters. But Apple's program
 The solution was simple: choose a source file which contains Hebrew. The Apple Font Book can list languages supported by each font on the system, and many of these fonts support a large number of languages, so finding a suitable source font was easy.
 
 
-\section{Customizing Menu Shortcuts}
+\section{Settings for the Source Window}
 
 Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings, Keyboard and cannot be assigned by their former menu titles.
 
 
 Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose “Use \LaTeX{}-aware spell checking (recommended)” with “Edit \LaTeX{} exclusion rules…”, or “Use legacy spell checking” with three indented options. Changing the method preserves all child values. “Check Spelling” is independent. Keyboard places key bindings and command completion above shortcut search and the scrolling list. On a short window the input groups can be expanded one at a time. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings. Disabled controls retain their saved values; an obsolete remembered category opens General.
 
-Use Search Settings above the sidebar to find categories, labels, options and menu commands. Words separated by spaces must all occur in the same category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to reveal and highlight its controls without changing their values. Clearing the query returns to the category used before searching. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording. Personal paths, entered values and user-created theme names are not searched.
+Use Search Settings above the sidebar to find categories, labels, options and menu commands. Words separated by spaces must all occur in the same category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to reveal and highlight its controls without changing their values. Clearing the query returns to the category used before searching and restores its Back and Forward history. During search, either navigation arrow first clears the query and restores that history. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording. Personal paths, entered values and user-created theme names are not searched.
 
 Earlier screenshots in this manual show the former tabs. Use the category names above for the current Settings window.
 

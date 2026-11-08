@@ -9,6 +9,13 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 @property (readwrite) NSArray<NSString *> *unavailableCommands;
 @end
 @implementation TSShortcutStore
+- (NSArray<NSString *> *)settingsSearchCommandNames
+{
+    NSMutableArray<NSString *> *names = [NSMutableArray array];
+    for (TSShortcutCommand *command in self.commands)
+        if (!command.item.hidden || command.item.allowsKeyEquivalentWhenHidden) [names addObject:command.path];
+    return [names copy];
+}
 - (instancetype)initWithMenu:(NSMenu *)menu defaults:(NSUserDefaults *)defaults {
     if (!(self = [super init])) return nil;
     _menu = menu; _defaults = defaults;

@@ -3,6 +3,7 @@
 from pathlib import Path
 import argparse,json,subprocess,tempfile
 from pane_fixtures import bundles,sources
+from encoding_menu_fixture import encoding_menu_fixture
 r=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--app',type=Path);p.add_argument('--language');args=p.parse_args()
 s=(r/'Sources/TSPreferences.m').read_text()
@@ -14,7 +15,7 @@ names=sorted({'BlockCursorKey','PdfColorMapKey','SourceAndPreviewInSameWindowKey
 constants='BOOL editorCanAddBrackets;\n'+'\n'.join(re.search(r'^NSString \*'+k+r'\s*=.*?;',g,re.M)[0] for k in names if re.search(r'^NSString \*'+k+r'\s*=',g,re.M))
 with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
- program=(r/'Tests/SettingsClassification.m').read_text().replace('#import <Cocoa/Cocoa.h>', '#import <Cocoa/Cocoa.h>\n#import \"TSSettingsSearch.h\"').replace('int main(int argc,char **argv)', (r/'Tests/SettingsSearchCoverage.inc').read_text()+'\nint main(int argc,char **argv)').replace(' NSMutableDictionary *after=[NSMutableDictionary dictionary];',' SearchCoverage(panes,bundle);return 0;\n NSMutableDictionary *after=[NSMutableDictionary dictionary];').replace('// CONSTANTS',constants).replace('// DEPENDENCIES',methods)
+ program=(r/'Tests/SettingsClassification.m').read_text().replace('#import <Cocoa/Cocoa.h>', '#import <Cocoa/Cocoa.h>\n#import \"TSSettingsSearch.h\"').replace('int main(int argc,char **argv)', encoding_menu_fixture(r)+(r/'Tests/SettingsSearchCoverage.inc').read_text()+'\nint main(int argc,char **argv)').replace(' NSMutableDictionary *after=[NSMutableDictionary dictionary];',' for(NSString *name in @[@"documentFontTextField",@"consoleFontTextField",@"DarkStyle",@"EditingStyle",@"LiteStyle"]) { NSView *value=[owner valueForKey:name]; Check(value!=nil && [value.accessibilityIdentifier isEqual:@"settings.user-data"],@"Dynamic values identified through actual preference outlets"); } NSPopUpButton *enc=[owner valueForKey:@"defaultEncodeMatrix"]; Check(enc!=nil,@"Encoding popup outlet"); [[[EncodingMenuFixture alloc] init] addEncodingsToMenu:Required(enc.menu) withTarget:nil action:NULL]; Check(enc.numberOfItems>=31,@"Actual encoding menu populated"); NSPopUpButton *dictionary=[owner valueForKey:@"dictionaryPopup"]; Check(dictionary!=nil,@"Dictionary popup outlet"); // DICTIONARY_POPULATION\n SearchCoverage(panes,bundle);return 0;\n NSMutableDictionary *after=[NSMutableDictionary dictionary];').replace('// CONSTANTS',constants).replace('// DEPENDENCIES',methods).replace('// DICTIONARY_POPULATION', re.search(r'\[dictionaryPopup addItemWithTitle:.*?;', s)[0].replace('dictionaryPopup','dictionary'))
  (t/'test.m').write_text(program)
  subprocess.run(['xcrun','clang','-fobjc-arc','-Werror','-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),str(r/'Sources/TSSettingsCategory.m'),str(r/'Sources/TSSettingsSearch.m'),str(r/'Sources/TSDockIconController.m'),'-o',str(t/'probe')],check=True)
  from settings_contract import expand
@@ -31,6 +32,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
    else:assert actual.get(key,key)==key,(lang,key)
   import shutil
   dest=bundle/'Contents/Resources'/('en.lproj' if lang=='Base' else lang+'.lproj');dest.mkdir(exist_ok=True);shutil.copy2(f,dest/'Localizable.strings')
+  enc=(args.app/'Contents/Resources'/loc.name if args.app else loc)/'Encodings.strings'
+  if not enc.exists(): enc=(args.app/'Contents/Resources/en.lproj' if args.app else r/'Resources/Interfaces/en.lproj')/'Encodings.strings'
+  shutil.copy2(enc,dest/'Encodings.strings')
   if args.app:
    built=args.app/'Contents/Resources'/loc.name/'Localizable.strings';assert json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(built)]))==actual
   print('CHECK',lang,flush=True);subprocess.run([str(t/'probe'),str(bundle),str(r/'Tests/Fixtures/SettingsCategoryGroups.json')],check=True,timeout=90)

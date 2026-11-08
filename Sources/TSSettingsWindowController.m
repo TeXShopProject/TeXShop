@@ -32,6 +32,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 @property (copy, readwrite) NSString *searchQuery;
 @property (copy, readwrite) NSArray<TSSettingsSearchResult *> *searchResults;
 @property (copy, nullable) TSSettingsCategoryID categoryBeforeSearch;
+@property (strong, nullable) TSSettingsNavigationHistory *historyBeforeSearch;
 @property (strong) NSMutableArray<NSView *> *searchHighlights;
 - (NSArray<TSSettingsCategoryID> *)visibleIdentifiers;
 - (void)applySearchHighlight;
@@ -82,7 +83,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 @end
 @implementation TSSettingsWindowController
 @synthesize categoryTextIndex = _categoryTextIndex;
-@synthesize settingsSearchField = _settingsSearchField, searchStatus = _searchStatus, searchQuery = _searchQuery, searchResults = _searchResults, categoryBeforeSearch = _categoryBeforeSearch, searchHighlights = _searchHighlights, commandNamesProvider = _commandNamesProvider, searchBundle = _searchBundle;
+@synthesize settingsSearchField = _settingsSearchField, searchStatus = _searchStatus, searchQuery = _searchQuery, searchResults = _searchResults, categoryBeforeSearch = _categoryBeforeSearch, historyBeforeSearch = _historyBeforeSearch, searchHighlights = _searchHighlights, commandNamesProvider = _commandNamesProvider, searchBundle = _searchBundle;
 - (instancetype)initWithDefaults:(NSUserDefaults *)defaults
 {
     self = [super initWithWindow:nil];
@@ -140,6 +141,8 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     self.settingsSearchField.placeholderString = NSLocalizedString(@"Search Settings", @"");
     self.settingsSearchField.accessibilityLabel = self.settingsSearchField.placeholderString;
     self.settingsSearchField.delegate = self;
+    self.settingsSearchField.target = self;
+    self.settingsSearchField.action = @selector(settingsSearchChanged:);
     self.settingsSearchField.sendsSearchStringImmediately = YES;
     self.searchStatus = [NSTextField wrappingLabelWithString:@""];
     self.searchStatus.translatesAutoresizingMaskIntoConstraints = NO;
@@ -241,7 +244,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 }
 - (void)beginSession
 {
-    self.searchQuery = @""; self.searchResults = @[]; self.categoryBeforeSearch = nil;
+    self.searchQuery = @""; self.searchResults = @[]; self.categoryBeforeSearch = nil; self.historyBeforeSearch = nil;
     self.settingsSearchField.stringValue = @""; self.searchStatus.stringValue = @"";
     [self clearSearchHighlights]; [self.categoryTable reloadData];
     TSSettingsCategoryID identifier = [self.stateStore selectedCategoryInIdentifiers:self.categoryIdentifiers];
@@ -269,14 +272,16 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 }
 - (void)goBack:(id)sender
 {
+    // Search is a temporary navigation session. Either arrow exits it first.
+    if (self.searchQuery.length) { [self setSettingsSearchQuery:@""]; return; }
     if (self.history.backIdentifier == nil || self.window.attachedSheet != nil || ![self mayChangeCategory]) return;
-    if (self.searchQuery.length && ![self setSettingsSearchQuery:@""]) return;
     [self.history goBack]; [self displayCurrentCategory];
 }
 - (void)goForward:(id)sender
 {
+    // Search is a temporary navigation session. Either arrow exits it first.
+    if (self.searchQuery.length) { [self setSettingsSearchQuery:@""]; return; }
     if (self.history.forwardIdentifier == nil || self.window.attachedSheet != nil || ![self mayChangeCategory]) return;
-    if (self.searchQuery.length && ![self setSettingsSearchQuery:@""]) return;
     [self.history goForward]; [self displayCurrentCategory];
 }
 - (void)navigate:(NSSegmentedControl *)sender
@@ -355,8 +360,8 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 }
 - (void)updateNavigation
 {
-    [self.navigationControl setEnabled:self.history.backIdentifier != nil forSegment:0];
-    [self.navigationControl setEnabled:self.history.forwardIdentifier != nil forSegment:1];
+    [self.navigationControl setEnabled:self.searchQuery.length || self.history.backIdentifier != nil forSegment:0];
+    [self.navigationControl setEnabled:self.searchQuery.length || self.history.forwardIdentifier != nil forSegment:1];
 }
 - (BOOL)mayChangeCategory
 {
@@ -427,10 +432,25 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     for (TSSettingsSearchResult *result in self.searchResults) [identifiers addObject:result.category];
     return [identifiers copy];
 }
+- (void)settingsSearchChanged:(NSSearchField *)sender
+{
+    if ([(NSTextView *)sender.currentEditor hasMarkedText]) return;
+    if (![self setSettingsSearchQuery:sender.stringValue]) sender.stringValue = self.searchQuery;
+}
 - (void)controlTextDidChange:(NSNotification *)notification
 {
     if (notification.object != self.settingsSearchField) return;
-    if (![self setSettingsSearchQuery:self.settingsSearchField.stringValue]) self.settingsSearchField.stringValue = self.searchQuery;
+    NSTextView *editor = (NSTextView *)self.settingsSearchField.currentEditor;
+    if (editor.hasMarkedText) return;
+    [self settingsSearchChanged:self.settingsSearchField];
+}
+- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command
+{
+    if (control == self.settingsSearchField && command == @selector(cancelOperation:)) {
+        if (!textView.hasMarkedText) [self setSettingsSearchQuery:@""];
+        return !textView.hasMarkedText;
+    }
+    return NO;
 }
 - (BOOL)control:(NSControl *)control textShouldBeginEditing:(NSText *)editor
 {
@@ -442,10 +462,15 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     if ([self.keyboardPane respondsToSelector:@selector(searchingByKey)] && self.keyboardPane.searchingByKey) return NO;
     if (self.window.attachedSheet != nil) return NO;
     NSString *effective = TSSettingsQueryTokens(query).count ? query : @"";
+    BOOL fieldHadFocus = self.settingsSearchField.currentEditor != nil && self.window.firstResponder == self.settingsSearchField.currentEditor;
     if (!effective.length && self.categoryBeforeSearch != nil && ![self mayChangeCategory]) return NO;
-    if (effective.length && !self.searchQuery.length) self.categoryBeforeSearch = self.history.currentIdentifier;
+    if (effective.length && !self.searchQuery.length) {
+        self.categoryBeforeSearch = self.history.currentIdentifier;
+        self.historyBeforeSearch = [self.history copy];
+    }
     self.searchQuery = effective;
-    self.settingsSearchField.stringValue = effective;
+    // Preserve raw input (including whitespace) independently from effective tokens.
+    if (![self.settingsSearchField.stringValue isEqualToString:query]) self.settingsSearchField.stringValue = query;
     NSArray<NSString *> *commands = self.commandNamesProvider != nil ? self.commandNamesProvider() : @[];
     TSSettingsSearch *index = [[TSSettingsSearch alloc] initWithBundle:self.searchBundle categoryOrder:self.categoryIdentifiers commandNames:commands];
     self.searchResults = [index resultsForQuery:effective];
@@ -454,10 +479,14 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     self.synchronizingSelection = YES; [self.categoryTable reloadData]; self.synchronizingSelection = NO;
     if (!effective.length) {
         TSSettingsCategoryID previous = self.categoryBeforeSearch; self.categoryBeforeSearch = nil;
-        if (previous != nil) { [self.history visitIdentifier:previous]; [self displayCurrentCategory]; }
+        if (previous != nil && self.historyBeforeSearch != nil) {
+            self.history = self.historyBeforeSearch; self.historyBeforeSearch = nil;
+            [self displayCurrentCategory];
+        }
         if ([self.keyboardPane respondsToSelector:@selector(applySettingsQuery:targets:filterCommands:)]) [self.keyboardPane applySettingsQuery:@"" targets:@[] filterCommands:NO];
     }
-    [self synchronizeSidebarSelection]; [self applySearchHighlight];
+    [self synchronizeSidebarSelection]; [self applySearchHighlight]; [self updateNavigation];
+    if (fieldHadFocus && self.settingsSearchField.currentEditor == nil) [self.window makeFirstResponder:self.settingsSearchField];
     NSAccessibilityPostNotification(self.searchStatus, NSAccessibilityValueChangedNotification);
     return YES;
 }
@@ -477,7 +506,17 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
         return;
     }
     NSMutableArray<NSString *> *targets = [NSMutableArray array]; BOOL commands = NO;
-    for (TSSettingsSearchEntry *entry in hit.entries) { if (entry.targetIdentifier.length) [targets addObject:entry.targetIdentifier]; commands |= entry.command; }
+    NSArray<NSString *> *tokens = TSSettingsQueryTokens(self.searchQuery);
+    NSString *normalized = TSSettingsNormalizedText(self.searchQuery);
+    NSArray<TSSettingsSearchEntry *> *ordered = [hit.entries sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TSSettingsSearchEntry *a, TSSettingsSearchEntry *b) {
+        BOOL exactA = [a.normalizedText isEqualToString:normalized], exactB = [b.normalizedText isEqualToString:normalized];
+        if (exactA != exactB) return exactA ? NSOrderedAscending : NSOrderedDescending;
+        BOOL allA = TSSettingsTextMatches(a.text, tokens), allB = TSSettingsTextMatches(b.text, tokens);
+        if (allA != allB) return allA ? NSOrderedAscending : NSOrderedDescending;
+        if (a.weight == b.weight) return NSOrderedSame;
+        return a.weight > b.weight ? NSOrderedAscending : NSOrderedDescending;
+    }];
+    for (TSSettingsSearchEntry *entry in ordered) { if (entry.targetIdentifier.length) [targets addObject:entry.targetIdentifier]; commands |= entry.command; }
     BOOL keyboard = [category isEqualToString:TSSettingsCategoryKeyboard];
     if (keyboard && [self.keyboardPane respondsToSelector:@selector(applySettingsQuery:targets:filterCommands:)]) [self.keyboardPane applySettingsQuery:self.searchQuery targets:targets filterCommands:commands];
     NSView *root = keyboard ? self.keyboardPane.view : self.panes[category].view;
@@ -487,7 +526,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     TSCollectSearchTargets(root, [NSSet setWithArray:targets], matches);
     for (NSView *match in matches) {
         NSView *row = match;
-        while (row.superview != nil && row.superview != root && ![row.identifier hasPrefix:@"row."] && ![row.identifier hasPrefix:@"heading."] && ![row isKindOfClass:NSBox.class]) row = row.superview;
+        while (row.superview != nil && row.superview != root && ![row.identifier hasPrefix:@"row."] && ![row.identifier hasPrefix:@"heading."] && ![row.identifier hasPrefix:@"shortcut."] && ![row isKindOfClass:NSBox.class]) row = row.superview;
         TSSettingsSearchHighlight *overlay = [[TSSettingsSearchHighlight alloc] initWithFrame:row.bounds];
         overlay.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         [row addSubview:overlay]; [self.searchHighlights addObject:overlay];

@@ -118,16 +118,18 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 - (void)loadView {
     NSView *content = [[NSView alloc] initWithFrame:NSMakeRect(0,0,700,570)];
     self.view = content;
-    self.search = [NSSearchField new]; self.search.identifier = @"shortcut.section";
+    self.search = [NSSearchField new]; self.search.identifier = @"shortcut.function";
     self.search.accessibilityIdentifier = @"settings.user-data";
     self.search.placeholderString = NSLocalizedString(@"Search commands", @"");
     self.search.delegate = self;
     self.searchMode = [NSSegmentedControl segmentedControlWithLabels:@[NSLocalizedString(@"Search by Function", @""), NSLocalizedString(@"Search by Key", @"")]
         trackingMode:NSSegmentSwitchTrackingSelectOne target:self action:@selector(changeSearchMode:)];
+    self.searchMode.identifier = @"shortcut.mode";
     self.searchMode.selectedSegment = TSShortcutSearchByFunction;
     [self.searchMode setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
     [self.searchMode setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];
     self.keySearchView = [TSShortcutKeySearchView new];
+    self.keySearchView.identifier = @"shortcut.key";
     self.keySearchView.hidden = YES;
     __weak TSShortcutPaneController *weakSelf = self;
     self.keySearchView.handleEvent = ^BOOL(NSEvent *event) {
@@ -136,6 +138,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         return [strongSelf handleKeySearchEvent:event];
     };
     NSTextField *hint = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors.", @"")];
+    hint.identifier = @"shortcut.hint";
     hint.textColor = NSColor.secondaryLabelColor; self.hint = hint;
     NSScrollView *scroll = [NSScrollView new];
     scroll.hasVerticalScroller = YES; scroll.hasHorizontalScroller = YES; scroll.borderType = NSBezelBorder;
@@ -149,12 +152,15 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     shortcut.title = NSLocalizedString(@"Shortcut", @""); shortcut.width = 160; shortcut.minWidth = 100;
     [self.table addTableColumn:command]; [self.table addTableColumn:shortcut];
     scroll.documentView = self.table;
+    self.table.headerView.identifier = @"shortcut.columns";
     NSButton *edit = [self button:@"Change…" action:@selector(editShortcut:)];
     NSButton *clear = [self button:@"Remove Shortcut" action:@selector(removeShortcut:)];
     NSButton *restore = [self button:@"Restore Default" action:@selector(restoreShortcut:)];
     NSButton *all = [self button:@"Restore All…" action:@selector(restoreAll:)];
+    edit.identifier = @"shortcut.edit"; clear.identifier = @"shortcut.remove"; restore.identifier = @"shortcut.restore"; all.identifier = @"shortcut.restore-all";
     self.selectionButtons = @[edit, clear, restore];
     self.macroButton = [self button:@"Show in Macro Editor" action:@selector(showSelectedMacro:)];
+    self.macroButton.identifier = @"shortcut.macro";
     self.macroButton.enabled = NO;
     NSStackView *primary = [NSStackView stackViewWithViews:@[edit,clear,restore]];
     primary.orientation = NSUserInterfaceLayoutOrientationHorizontal; primary.spacing = 8;
@@ -625,17 +631,26 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         NSString *previous = self.functionQueryBeforeGlobalSearch;
         if (previous != nil) { self.search.stringValue = previous; self.functionQueryBeforeGlobalSearch = nil; [self reloadFunctionCommands]; }
     }
-    for (NSUInteger index = 0; index < self.inputGroups.count; index++) {
-        NSBox *group = self.inputGroups[index];
-        NSMutableArray<NSView *> *queue = [NSMutableArray arrayWithObject:group];
-        BOOL found = [targets containsObject:[@"heading." stringByAppendingString:group.identifier ?: @""]];
-        while (queue.count) {
-            NSView *view = queue.lastObject; [queue removeLastObject];
-            NSString *identifier = view.identifier;
-            if (identifier != nil && [targets containsObject:identifier]) found = YES;
-            [queue addObjectsFromArray:view.subviews];
+    // Prefer the most specific matching control, even if another group contains
+    // an individual word from the query. The caller orders targets by relevance.
+    BOOL revealed = NO;
+    for (NSString *target in targets) {
+        for (NSUInteger index = 0; index < self.inputGroups.count; index++) {
+            NSBox *group = self.inputGroups[index];
+            NSMutableArray<NSView *> *queue = [NSMutableArray arrayWithObject:group];
+            BOOL found = [target isEqualToString:[@"heading." stringByAppendingString:group.identifier ?: @""]];
+            while (queue.count) {
+                NSView *view = queue.lastObject; [queue removeLastObject];
+                NSString *identifier = view.identifier;
+                if (identifier != nil && [target isEqualToString:identifier]) found = YES;
+                [queue addObjectsFromArray:view.subviews];
+            }
+            if (found) {
+                for (NSUInteger other = 0; other < self.inputGroups.count; other++) [self setInputGroup:other expanded:other == index];
+                revealed = YES; break;
+            }
         }
-        if (found) { for (NSUInteger other = 0; other < self.inputGroups.count; other++) [self setInputGroup:other expanded:other == index]; break; }
+        if (revealed) break;
     }
     [self.view layoutSubtreeIfNeeded];
 }

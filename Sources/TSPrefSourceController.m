@@ -2,6 +2,12 @@
 #import "TSPrefSourceController.h"
 #import "TSPreferences.h"
 @implementation TSPrefSourceController
+- (void)loadView
+{
+    [super loadView];
+    self.documentFontTextField.accessibilityIdentifier = @"settings.user-data";
+}
+
 - (instancetype)init { return [super initWithNibName:@"SettingsSource" bundle:nil]; }
 - (IBAction)changeDocumentFont:(id)sender { [self.preferences changeDocumentFont:sender]; }
 - (IBAction)commandCompletionChanged:(id)sender { [self.preferences commandCompletionChanged:sender]; }

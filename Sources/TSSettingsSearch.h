@@ -2,6 +2,19 @@
 #import "TSSettingsCategory.h"
 #import "TSSettingsSearchText.h"
 NS_ASSUME_NONNULL_BEGIN
+typedef NS_ENUM(NSInteger, TSSettingsSearchWeight) {
+    TSSettingsSearchWeightCommand = 10,
+    TSSettingsSearchWeightDescription = 20,
+    TSSettingsSearchWeightChoice = 30,
+    TSSettingsSearchWeightLabel = 50,
+    TSSettingsSearchWeightHeading = 60,
+    TSSettingsSearchWeightCategory = 100
+};
+typedef NS_ENUM(NSInteger, TSSettingsSearchBonus) {
+    TSSettingsSearchBonusSubstring = 0,
+    TSSettingsSearchBonusPrefix = 10,
+    TSSettingsSearchBonusExact = 20
+};
 @interface TSSettingsSearchEntry : NSObject
 @property (copy, readonly) TSSettingsCategoryID category;
 @property (copy, readonly) NSString *targetIdentifier;

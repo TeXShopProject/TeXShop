@@ -20,6 +20,7 @@ NSModalResponse TSRunShortcutAlert(NSAlert *alert);
 @property (nonatomic, readonly) NSArray<TSShortcutCommand *> *commands;
 @property (nonatomic, readonly) NSArray<NSString *> *unavailableCommands;
 - (void)refreshMenu;
+- (NSArray<NSString *> *)settingsSearchCommandNames;
 
 - (instancetype)initWithMenu:(NSMenu *)menu defaults:(NSUserDefaults *)defaults;
 - (nullable NSString *)setKey:(NSString *)key modifiers:(NSEventModifierFlags)flags forCommand:(TSShortcutCommand *)command;

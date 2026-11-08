@@ -155,6 +155,25 @@ int main(int argc,char **argv){@autoreleasepool{
    SaveImage(keyboard,[Argument(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"keyboard-%@.png",name]]);
   }
   [keyboardPane stopKeySearch];
+  integration.settingsController.searchBundle=paneBundle;
+  NSDictionary *keyboardTargets=@{@"Change…":@"shortcut.edit",@"Remove Shortcut":@"shortcut.remove",@"Restore Default":@"shortcut.restore",@"Restore All…":@"shortcut.restore-all",@"Show in Macro Editor":@"shortcut.macro",@"Search by Function":@"shortcut.mode",@"Search by Key":@"shortcut.mode",@"Search commands":@"shortcut.function",@"Command":@"shortcut.columns",@"Shortcut":@"shortcut.columns"};
+  for(NSString *key in keyboardTargets) {
+   NSString *query=[paneBundle localizedStringForKey:key value:key table:@"Localizable"];
+   Check([integration.settingsController setSettingsSearchQuery:query],@"Keyboard control search accepted");
+   Check([integration.settingsController selectCategoryIdentifier:@"keyboard"],@"Keyboard search result selected");
+   NSView *target=FindControl(keyboard,keyboardTargets[key]); Check(target!=nil,@"Matching Keyboard control exists");
+   BOOL highlighted=NO;
+   for(NSView *overlay in [integration.settingsController valueForKey:@"searchHighlights"]) if(overlay.superview==target) highlighted=YES;
+   Check(highlighted,[@"Keyboard result highlights the actual control: " stringByAppendingString:key]);
+  }
+  [integration.settingsController setSettingsSearchQuery:@""];
+  NSBox *completion=(NSBox *)FindControl(keyboard,@"group.completion");
+  completion.hidden=YES;
+  NSButton *editCompletion=(NSButton *)FindControl(keyboard,@"settings.edit-completion");
+  [integration.settingsController setSettingsSearchQuery:editCompletion.title];
+  [integration.settingsController selectCategoryIdentifier:@"keyboard"];
+  Check(!completion.hidden,@"Global result expands the real collapsed completion input group");
+  [integration.settingsController setSettingsSearchQuery:@""];
   [integration.settingsController selectCategoryIdentifier:@"general"];
   smallScreen=NO;
   if(a==3){
@@ -317,11 +336,46 @@ int main(int argc,char **argv){@autoreleasepool{
   Check([c selectCategoryIdentifier:@"spelling"],@"Result can show a disabled control");
   Check(!dependent.enabled && dependent.state==NSControlStateValueOn,@"Result navigation preserves disabled state and non-default value");
   Check([[c valueForKey:@"searchHighlights"] count]>0,@"Result highlights matching row");
+  for(NSView *overlay in [c valueForKey:@"searchHighlights"]) Check([overlay hitTest:NSMakePoint(NSMidX(overlay.frame),NSMidY(overlay.frame))]==nil,@"Search highlighting never intercepts clicks");
   Check([c setSettingsSearchQuery:@"notfound-93762"] && c.categoryTable.numberOfRows==0,@"Empty results do not show normal categories");
   Check([[c valueForKey:@"searchHighlights"] count]==0,@"Query change removes obsolete highlighting");
   owner.valid=NO;Check(![c setSettingsSearchQuery:@""] && c.searchQuery.length>0,@"Invalid fields refuse search exit without losing query");owner.valid=YES;
   Check([c setSettingsSearchQuery:@""] && [c.history.currentIdentifier isEqual:@"console"],@"Search origin survives several query changes");
   Check(c.categoryTable.numberOfRows==10,@"Normal category list restored");
+  // A temporary result visit must preserve both sides of the normal history.
+  [c.history resetWithIdentifier:@"general"]; [c selectCategoryIdentifier:@"editor"]; [c selectCategoryIdentifier:@"console"]; [c goBack:nil];
+  NSUInteger normalCount=c.history.count;
+  for (NSUInteger exit=0;exit<3;exit++) {
+   [c setSettingsSearchQuery:@"Unique search command 93762"]; [c selectCategoryIdentifier:@"keyboard"];
+   if(exit==0)[c setSettingsSearchQuery:@""]; else if(exit==1)[c goBack:nil]; else [c goForward:nil];
+   Check(c.history.count==normalCount && [c.history.currentIdentifier isEqual:@"editor"] && [c.history.backIdentifier isEqual:@"general"] && [c.history.forwardIdentifier isEqual:@"console"],@"Search exit restores the entire history including forward entries");
+  }
+  [c goForward:nil];Check([c.history.currentIdentifier isEqual:@"console"],@"Forward resumes normal navigation after search exit");
+  NSSearchField *globalField=[c valueForKey:@"settingsSearchField"];
+  [c setSettingsSearchQuery:@"  "]; Check([globalField.stringValue isEqual:@"  "],@"Programmatic query preserves raw whitespace too");
+  [c.window makeFirstResponder:globalField];
+  NSTextView *globalEditor=(NSTextView *)globalField.currentEditor;
+  Check(globalEditor!=nil,@"Actual global field editor is available without ordering a window");
+  [globalEditor insertText:@"   " replacementRange:NSMakeRange(0,globalEditor.string.length)];
+  Check([globalField.stringValue isEqual:@"   "] && !c.searchQuery.length,@"Leading whitespace remains in the actual field");
+  [globalEditor insertText:@"Unique search command 93762" replacementRange:NSMakeRange(0,globalEditor.string.length)];
+  Check(c.searchResults.count==1,@"Field-editor input triggers search");
+  [globalEditor setSelectedRange:NSMakeRange(0,globalEditor.string.length)]; [globalEditor deleteBackward:nil];
+  Check(!c.searchQuery.length && globalField.currentEditor==c.window.firstResponder,@"Deleting the last characters preserves the field editor");
+  globalEditor=(NSTextView *)globalField.currentEditor;
+  [globalEditor insertText:@"Unique search command 93762" replacementRange:NSMakeRange(0,globalEditor.string.length)];
+  [globalEditor doCommandBySelector:@selector(cancelOperation:)];
+  Check(!c.searchQuery.length && globalField.currentEditor==c.window.firstResponder,@"Escape clears search and retains typing focus");
+  [c setSettingsSearchQuery:@"Unique search command 93762"]; [c selectCategoryIdentifier:@"keyboard"];
+  [c.window makeFirstResponder:c.categoryTable];
+  NSButtonCell *cancel=((NSSearchFieldCell *)globalField.cell).cancelButtonCell;
+  SEL cancelAction=cancel.action; if(cancelAction==NULL)abort();
+  Check([NSApp sendAction:cancelAction to:cancel.target from:cancel],@"Actual nonediting cancel button action sent");
+  Check(!c.searchQuery.length && c.categoryTable.numberOfRows==10 && [c.history.currentIdentifier isEqual:@"console"],@"Nonediting cancel action clears results and restores the origin");
+  [c.window makeFirstResponder:globalField]; globalEditor=(NSTextView *)globalField.currentEditor;
+  [globalEditor insertText:@"Unique search command 93762" replacementRange:NSMakeRange(0,globalEditor.string.length)];
+  Check([NSApp sendAction:cancelAction to:cancel.target from:cancel],@"Actual editing cancel button action sent");
+  Check(!c.searchQuery.length && globalField.currentEditor==c.window.firstResponder,@"Editing cancel button preserves typing focus");
   testSheet=[NSWindow new];Check(![c setSettingsSearchQuery:@"PDF"],@"Sheet blocks global search changes");testSheet=nil;
   Check(!c.window.visible,@"no window ordered");
   printf("PASS %s: categories, history, persistence, ownership and four layouts\n",argv[a]);

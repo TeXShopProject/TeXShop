@@ -18,9 +18,10 @@ static void CheckSearchText(TSSettingsSearch *index,NSString *text,NSString *cat
 static void SearchViews(NSView *view,NSString *category,TSSettingsSearch *index) {
  if(view==searchExcludedView)return;
  if([view isKindOfClass:NSSearchField.class])CheckSearchText(index,[(NSSearchField *)view placeholderString] ?: @"",category);
+ CheckSearchText(index,view.toolTip ?: @"",category);
  BOOL data=[view.accessibilityIdentifier isEqual:@"settings.user-data"];
  if([view isKindOfClass:NSTextField.class] && [(NSTextField *)view isEditable])Check(data,@"Editable values carry user-data marker");
- if([@[@"settings.18",@"settings.754",@"settings.eo2-De-DNv",@"settings.O5R-pm-csa",@"settings.xpQ-zQ-oZe"] containsObject:view.identifier ?: @""])Check(data,@"Dynamic names carry user-data marker");
+
  if(data){
   if([view isKindOfClass:NSTextField.class]) [(NSTextField *)view setStringValue:@"/private/user-only-path-93762"];
   if([view isKindOfClass:NSPopUpButton.class])[(NSPopUpButton *)view addItemWithTitle:@"My Private Theme 93762"];

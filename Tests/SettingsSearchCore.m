@@ -11,6 +11,9 @@
 int main(void){@autoreleasepool{
  TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:[TextBundle new] categoryOrder:@[@"general",@"documents",@"editor",@"keyboard"] commandNames:@[@"shared",@"ONLYCOMMAND",@"かたかな"]];
  NSArray *hits=[index resultsForQuery:@"shared"];
+ Check([[hits objectAtIndex:0] score]==120);
+ Check([[[index resultsForQuery:@"shar"] objectAtIndex:0] score]==110);
+ Check([[[index resultsForQuery:@"hare"] objectAtIndex:0] score]==100);
  Check(hits.count==3);Check([[hits[0] category] isEqual:@"general"]);Check([[hits[1] category] isEqual:@"documents"]);Check([[hits[2] category] isEqual:@"keyboard"]);
  Check([index resultsForQuery:@"shared ONLYCOMMAND"].count==1);
  Check([index resultsForQuery:@"straße ONLYCOMMAND"].count==0);

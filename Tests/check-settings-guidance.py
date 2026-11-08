@@ -21,7 +21,7 @@ CATEGORY_RULES = {
     'ko': ENGLISH + r'|(?i:\b(?:Source|Engines?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)' + r'|(문서|엔진설정|기타1|기타2)\s*(?:\(Engine\)\s*)?(탭|범주|카테고리|tab)',
     'ja': r'「詳細」タブ|「(?:内部設定|詳細1|詳細2|書類|ソース|テーマ)」(?:タブ|カテゴリ|パネル|項目)|「(?:内部設定|詳細1|詳細2)」|内部設定\s*>',
     'de': rf'(?:Registerkarte)\s+{QUOTE}(?:Programme|Themes|Quelltext)\b|\b(?:Quelltext|Programme|Div\. ?[12]){QUOTE}[- ]?(?:Reiter|Kategorie|Tab|Bereich)\b|(?:Reiter|Kategorie)\s+{QUOTE}(?:Quelltext|Programme|Div\.)',
-    'es': rf'\b(?:solapa|pestaña|categoría|sección|apartado)\s+{QUOTE}(?:Código|Motor|Misc\d?|Documento|Modos)\b',
+    'es': rf'\b(?:solapa|pestaña|categoría|sección|apartado)\s+{QUOTE}(?:Código|Motor|Misc\d?|Documento|Modos|Copiar)\b',
 }
 REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Completion File|'
                 r'Key Bindings menu|Vervollständigungsdatei öffnen|Autovervollständigung-Datei|'
@@ -30,7 +30,8 @@ REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Compl
 OLD_UI = (r'Edit Rules|Check Spelling While Typing is independent|share one vertical scroll area|'
           r'LaTeXに対応したスペルチェック|従来のスペルチェック|同じ縦スクロール領域|'
           r'einen vertikalen Scrollbereich|un área de desplazamiento vertical|'
-          r'two tabs inside Themes remain|テーマ内の2つのタブはそのまま|Typesetting tab')
+          r'機能で探す|キーで探す|UTF パッケージ対応|Customizing Menu Shortcuts|'
+          r'under Preferences\s*>\s*Source|two tabs inside Themes remain|テーマ内の2つのタブはそのまま|Typesetting tab')
 
 def strings(path):
     return json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(path)]))
@@ -73,6 +74,8 @@ for language in LANGUAGES:
     for name in ('basic_preferences', 'basic_spelling', 'configure_menushortcuts', 'configure_prefchanges'):
         text = pages[name]
         assert 'id="settings-search"' in text, (language, name, 'global search instructions')
+        if language=='ja':
+            for key in ('Search by Function','Search by Key'): assert labels[key] in text, (language,name,key)
         for key in CATEGORIES:
             assert categories[key] in text, (language, name, key)
         for key in ('Use LaTeX-aware spell checking (recommended)', 'Use legacy spell checking'):
@@ -83,8 +86,12 @@ for language in LANGUAGES:
         if name == 'basic_commandcompletion' or language in ('en', 'ko', 'ja'):
             assert labels[key] in pages[name] and categories['keyboard'] in pages[name], (language, name, key)
 
+ja_unicode=read_help(ROOT/'Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/advanced_unicode.htm','ja')
+assert strings(ROOT/'Resources/Interfaces/ja.lproj/SettingsMiscTwo.strings')['ahm-aK-Qi9.title'] in ja_unicode
+
 manual = (ROOT / 'Manual Source/Manual.tex').read_text()
 check_obsolete(manual, 'en', 'Manual.tex')
+assert '\\section{Settings for the Source Window}' in manual
 for file in ('Documentation/Releases/5.60.md', 'website/release-notes.html', 'Manual Source/Manual.tex'):
     text = (ROOT / file).read_text()
     assert 'NSUserKeyEquivalents' in text, file
@@ -99,3 +106,29 @@ for file in ('Documentation/Releases/5.60-ja.md', 'website/release-notes-ja.html
 contract = json.loads((ROOT / 'Tests/Fixtures/SettingsCategoryGroups.json').read_text())
 assert contract['source'] == 'Fixed expected category groups and original group membership; do not regenerate from production code.'
 print(f'PASS: {page_count} current help pages in five languages, 20 category overviews, manual, editing routes and original encodings')
+
+# Release changes must belong to the version's Settings section, not its footer.
+from html.parser import HTMLParser
+class ReleaseParser(HTMLParser):
+    def __init__(self):
+        super().__init__(); self.stack=[]; self.article=None; self.heading=''; self.in_heading=False; self.items=[]; self.item=None
+    def handle_starttag(self,tag,attrs):
+        self.stack.append(tag)
+        if tag=='article': self.article=dict(attrs).get('id')
+        if tag=='h3': self.heading='';self.in_heading=True
+        if tag=='li': self.item=[self.article,self.heading,'ul' in self.stack,'']
+    def handle_endtag(self,tag):
+        if tag=='h3':self.in_heading=False
+        if tag=='li' and self.item:self.items.append(self.item);self.item=None
+        if tag=='article':self.article=None
+        if tag in self.stack: self.stack=self.stack[:len(self.stack)-1-self.stack[::-1].index(tag)]
+    def handle_data(self,data):
+        if self.in_heading:self.heading+=data
+        if self.item:self.item[3]+=data
+for suffix,heading,phrase in [('', 'Settings and themes', 'Add Search Settings'),('-ja','設定とテーマ','「設定を検索」を追加')]:
+    md=(ROOT/('Documentation/Releases/5.60'+suffix+'.md')).read_text()
+    section=md.split('## '+heading+'\n',1)[1].split('\n## ',1)[0]
+    assert any(line.startswith('- ') and phrase in line for line in section.splitlines()), (suffix,'release Markdown section')
+    parser=ReleaseParser();parser.feed((ROOT/('website/release-notes'+suffix+'.html')).read_text())
+    assert any(a=='v5.60' and h==heading and ul and phrase in text for a,h,ul,text in parser.items), (suffix,'release article/list section')
+print('PASS: release notes have one Settings item inside v5.60 and the matching Markdown section')
