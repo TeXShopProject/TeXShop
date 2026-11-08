@@ -435,20 +435,18 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 #pragma mark =====pdfSync=====
 
 
-// WARNING:  This is called by mouse events with an actual event as parameter
-// but it is also alled by menuForEvent with, I think, a menu item number
-// Note that "theEvent" is never actually used! RMK; Feb, 2019
-
-- (void)doSyncForMenu: (NSInteger)theIndex
+- (void)doSyncForMenu:(id)sender
 {
-    NSPoint screenPosition = menuPoint;
-    [self doSyncFinal: screenPosition];
+    [self doSyncFinal:menuPoint];
 }
 
 - (void)doSync:(NSEvent *)theEvent
 {
-    NSPoint screenPosition = [NSEvent  mouseLocation];
-    [self doSyncFinal: screenPosition];
+    // Use the click's position even if the pointer has moved before dispatch.
+    NSWindow *window = theEvent.window;
+    if (!window)
+        return;
+    [self doSyncFinal:[window convertPointToScreen:theEvent.locationInWindow]];
 }
 
 - (void)doSyncFinal:(NSPoint)screenPosition
@@ -458,22 +456,24 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 	BOOL            found;
 	NSUInteger        start, end, irrelevant, stringlength, theIndex;
 	NSRange         myRange;
-	// NSPoint         screenPosition;
 	NSString        *theSource;
 
-	// find the line number
-	// screenPosition = [NSEvent  mouseLocation];
-	theIndex = [self characterIndexForPoint: screenPosition];
-	[self.document setCharacterIndex: theIndex];
-	text = [[self.document textView] string];
-	stringlength = [text length];
+    if (!self.window)
+        return;
+    NSPoint viewPosition = [self convertPoint:[self.window convertPointFromScreen:screenPosition] fromView:nil];
+    theIndex = [self characterIndexForInsertionAtPoint:viewPosition];
+    text = self.string;
+    stringlength = text.length;
+    if (!stringlength || theIndex == NSNotFound || theIndex > stringlength)
+        return;
+    [self.document setCharacterIndex:theIndex];
 	myRange.location = 0;
 	myRange.length = 1;
 	line = 0;
 	found = NO;
 	while ((! found) && (myRange.location < stringlength)) {
 		[text getLineStart: &start end: &end contentsEnd: &irrelevant forRange: myRange];
-		if (end >= theIndex)
+		if (end > theIndex || (theIndex == stringlength && end == stringlength))
 			found = YES;
 		myRange.location = end;
 		line++;
@@ -489,7 +489,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 	// otherwise call this document's doPreviewSync with nil for filename and
 	// this line number
 
-	 theSource = [[self.document textView] string];
+	 theSource = text;
 	 if (theSource == nil)
 		return;
 	 if ([self.document checkMasterFile:theSource forTask:RootForPdfSync])
@@ -497,7 +497,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 	 if ([self.document checkRootFile_forTask:RootForPdfSync])
 			return;
 
-	 [self.document doPreviewSyncWithFilename:nil andLine:line andCharacterIndex: theIndex andTextView: [self.document textView]];
+	 [self.document doPreviewSyncWithFilename:nil andLine:line andCharacterIndex: theIndex andTextView:self];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -2938,16 +2938,11 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     [self setSelectedRange: selectedRange];
 }
 
-// Something fishy is going on here; I think the parameter of doSync is a menu item number, but doSync expects an event.
-// However, it never uses this event
-
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
 	NSMenu *theMenu = [super menuForEvent: theEvent];
 	if (theMenu != nil) {
-        menuPoint = [NSEvent mouseLocation];
-        // menuPoint = [theEvent locationInWindow];
-        // NSLog(@"The new values are %f and %f", menuPoint.x, menuPoint.y);
+        menuPoint = [theEvent.window convertPointToScreen:theEvent.locationInWindow];
         
 		[theMenu insertItemWithTitle:NSLocalizedString(@"Sync", @"Sync") action:@selector(doSyncForMenu:) keyEquivalent:@"" atIndex:0];
         [theMenu insertItemWithTitle:NSLocalizedString(@"Split Window", @"Split Window") action:@selector(splitWindow:) keyEquivalent:@"" atIndex:1];

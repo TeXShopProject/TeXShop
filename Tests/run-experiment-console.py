@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Exercise the production Experiment controller with real AppKit windows and text views.
 
-Uses real child processes and encoding helpers. Window ordering alone is suppressed;
+Uses real child processes and encoding helpers. Window ordering and frame autosaving are suppressed;
 no TeXShop user settings are read and no windows are shown.
 """
 from pathlib import Path
 import subprocess, tempfile, os, argparse
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter"])
+parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha"])
+parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 def cut(text, start, end):
@@ -24,9 +25,18 @@ if args.mutation == "no-window-load":
 elif args.mutation == "no-yen-filter":
     assert "command = filterYenToBackslash(command);" in controller
     controller = controller.replace("command = filterYenToBackslash(command);", "command = command;", 1)
+elif args.mutation == "no-appearance-hook":
+    assert "[self.controller updateConsoleColors:nil];" in controller
+    controller = controller.replace("[self.controller updateConsoleColors:nil];", "", 1)
+elif args.mutation == "stale-child-appearance":
+    assert "self.window.contentView.effectiveAppearance" in controller
+    controller = controller.replace("self.window.contentView.effectiveAppearance", "self.outputText.effectiveAppearance", 1)
+if args.mutation == "no-console-alpha":
+    controller = controller.replace('self.window.alphaValue = TSExperimentWindowAlpha(theme, @"ConsoleAlpha");', '')
 prefix = r'''
 #import <Cocoa/Cocoa.h>
 #import "TSExperimentJob.h"
+#import "TSColorSupport.h"
 #import "TSEncodingSupport.h"
 typedef enum { kNoFilterMode = 0, kMacJapaneseFilterMode = 1, kOtherJapaneseFilterMode = 2 } TSFilterMode;
 static TSFilterMode g_shouldFilter = kNoFilterMode;
@@ -37,6 +47,13 @@ HELPERS
 JAPANESE
 @end
 FILTERS
+static NSDictionary *liteColors;
+static NSDictionary *darkColors;
+@implementation TSColorSupport
++ (id)sharedInstance { static id s; if (!s) s = [self new]; return s; }
+- (NSColor *)colorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
+{ return theme[key] ?: (dark ? NSColor.blackColor : NSColor.whiteColor); }
+@end
 static BOOL behind;
 @interface TestDefaults : NSObject
 - (BOOL)boolForKey:(NSString *)key;
@@ -49,6 +66,7 @@ static BOOL behind;
 - (BOOL)boolForKey:(NSString *)key { return [key isEqualToString:@"ConsoleBehavior"] ? behind : YES; }
 @end
 #define SUD ((TestDefaults *)[TestDefaults new])
+#define SourceColorChangedNotification @"SourceColorChanged"
 #define ConsoleFontNameKey @"ConsoleFontName"
 #define ConsoleFontSizeKey @"ConsoleFontSize"
 #define ConsoleFontChangedNotification @"ConsoleFontChanged"
@@ -57,9 +75,13 @@ static BOOL behind;
 '''.replace('HELPERS', helpers).replace('JAPANESE', japanese).replace('FILTERS', filters)
 tests = r'''
 // Keep the production initializer, window getter, loadWindow and appendText.
-// Suppress only operations that would make a window appear on screen.
+// Suppress window ordering and keep frame autosave bookkeeping in memory.
 static NSUInteger backCount;
+static NSString *testFrameAutosaveName;
 @implementation TSExperimentConsoleWindow (HeadlessOrdering)
+// Preserve the requested name for assertions without touching standard defaults.
+- (BOOL)setFrameAutosaveName:(NSString *)name { testFrameAutosaveName = [name copy]; return YES; }
+- (NSString *)frameAutosaveName { return testFrameAutosaveName ?: @""; }
 - (void)makeKeyAndOrderFront:(id)sender { }
 - (void)orderFront:(id)sender { }
 - (void)orderBack:(id)sender { backCount++; }
@@ -78,14 +100,56 @@ static NSURL *directory(void) {
 static BOOL exists(NSURL *d) { return [[NSFileManager defaultManager] fileExistsAtPath:d.path]; }
 int main(void) { @autoreleasepool {
     [NSApplication sharedApplication];
+    liteColors = @{@"ConsoleBackground":NSColor.whiteColor, @"ConsoleText":NSColor.blackColor};
+    darkColors = @{@"ConsoleBackground":NSColor.blackColor, @"ConsoleText":NSColor.whiteColor, @"ConsoleAlpha":@[@0,@0,@0,@.85]};
     TSExperimentConsoleController *console = [TSExperimentConsoleController new];
     check(console.window != nil && console.isWindowLoaded, @"production initializer creates window");
     check(console.outputText != nil && console.commandField != nil && console.stopButton != nil, @"production controls exist");
     check(!console.commandField.enabled && !console.stopButton.enabled, @"idle console controls disabled");
     check(console.outputText.font.pointSize == 15, @"console font preference applied");
     check([console.window.frameAutosaveName isEqualToString:@"ExperimentConsole"], @"separate frame autosave name");
+    // CFFIXED_USER_HOME alone does not isolate NSWindow frame autosaving on every macOS.
+    [console.window setFrameAutosaveName:@""];
+    check(console.window.frameAutosaveName.length == 0, @"frame autosaving disabled before resizing");
+    console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    [console updateConsoleColors:nil];
     [console appendText:@"initial output"];
     check([console.outputText.string isEqualToString:@"initial output"], @"production appendText stores text");
+    NSScrollView *output = console.outputText.enclosingScrollView;
+    for (NSValue *size in @[[NSValue valueWithSize:NSMakeSize(504,430)], [NSValue valueWithSize:NSMakeSize(720,600)]]) {
+        [console.window setContentSize:size.sizeValue];
+        check(fabs(NSMaxY(output.frame)-NSMinY(console.stopButton.frame))<1, @"stop button sits above output");
+        check(NSMaxY(console.commandField.frame)<=NSMinY(output.frame), @"input sits below output");
+        check(NSMaxX(console.commandField.frame)<=NSWidth(console.window.contentView.bounds), @"input fits resized console");
+    }
+    console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    check([console.outputText.backgroundColor isEqual:NSColor.blackColor] && [console.outputText.textColor isEqual:NSColor.whiteColor], @"dark console theme applied through appearance hook");
+    check([[console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] isEqual:NSColor.whiteColor], @"appearance hook recolors existing output");
+    check(fabs(console.window.alphaValue-.85)<.001, @"dark console transparency");
+    NSDictionary *preview = @{@"ConsoleBackground":NSColor.blueColor, @"ConsoleText":NSColor.yellowColor, @"ConsoleAlpha":@[@0,@0,@0,@.75]};
+    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:nil userInfo:preview];
+    check(fabs(console.window.alphaValue-.75)<.001, @"live console transparency");
+    check([console.outputText.backgroundColor isEqual:NSColor.blueColor], @"live theme preview applied");
+    check([[console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] isEqual:NSColor.yellowColor], @"existing output recolored");
+    console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    check([console.outputText.backgroundColor isEqual:NSColor.whiteColor] && [console.outputText.textColor isEqual:NSColor.blackColor], @"light console theme restored through appearance hook");
+    check(fabs(console.window.alphaValue-1)<.001, @"missing alpha restores opaque console");
+    NSString *artifacts = NSProcessInfo.processInfo.environment[@"CONSOLE_ARTIFACTS"];
+    if (artifacts) {
+        [console.window setContentSize:NSMakeSize(504,430)];
+        console.outputText.string = @"This is LuaHBTeX, Version 1.22.0 (TeX Live 2026)\n(file.tex\nLaTeX2e <2026-06-01>\n! Undefined control sequence.\nl.8 \\example\n? ";
+        console.commandField.enabled = YES; console.stopButton.enabled = YES;
+        for (NSString *mode in @[@"light", @"dark"]) {
+            BOOL dark = [mode isEqualToString:@"dark"];
+            console.window.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
+            NSView *content = console.window.contentView;
+            [content layoutSubtreeIfNeeded];
+            NSBitmapImageRep *bitmap = [content bitmapImageRepForCachingDisplayInRect:content.bounds];
+            [content cacheDisplayInRect:content.bounds toBitmapImageRep:bitmap];
+            NSData *png = [bitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
+            check([png writeToFile:[artifacts stringByAppendingPathComponent:[mode stringByAppendingString:@".png"]] atomically:YES], @"save console preview");
+        }
+    }
     NSURL *dir = directory();
     behind = YES;
     __block BOOL completed = NO;
@@ -139,6 +203,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-console-') as tmp:
     src.write_text(prefix + controller + tests)
     subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Sources'), str(src), str(root / 'Sources/TSExperimentJob.m'), '-o', str(exe)], check=True)
     env = dict(os.environ, CFFIXED_USER_HOME=tmp)
+    if args.artifacts:
+        args.artifacts.mkdir(parents=True, exist_ok=True)
+        env["CONSOLE_ARTIFACTS"] = str(args.artifacts.resolve())
     result = subprocess.run([str(exe)], env=env, capture_output=True, text=True, timeout=30)
     if args.mutation:
         assert result.returncode == 1 and "FAIL:" in result.stderr, result.stdout + result.stderr

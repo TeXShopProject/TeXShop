@@ -28,7 +28,7 @@
 #import "OverView.h"
 
 
-@interface ScrapPDFKitView : PDFView 
+@interface ScrapPDFKitView : PDFView <NSToolbarDelegate, NSMenuItemValidation>
 {
 
     
