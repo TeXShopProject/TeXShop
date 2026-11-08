@@ -3,6 +3,7 @@
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
 #import "TSPrefPaneController.h"
+#import "TSPrefPaneLayout.h"
 #import "TSPreferences+Panes.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
@@ -92,6 +93,10 @@ static void CheckGeometry(NSView *view) {
             Check(cell.cellSize.width<=NSWidth(frame)+1,[NSString stringWithFormat:@"Matrix title fits: %@ %.1f <= %.1f",cell.title,cell.cellSize.width,NSWidth(frame)]);
         }
     }
+    if([view isKindOfClass:NSBox.class]) {
+        NSBox *box=(NSBox *)view;
+        Check(box.cornerRadius==[TSSettingsGroupStyle cornerRadiusForMajorVersion:NSProcessInfo.processInfo.operatingSystemVersion.majorVersion],@"Shared group appearance applied");
+    }
     if([view isKindOfClass:NSStackView.class]) {
         NSArray *children=((NSStackView *)view).arrangedSubviews;
         for(NSUInteger a=0;a<children.count;a++)for(NSUInteger b=a+1;b<children.count;b++) {
@@ -116,6 +121,13 @@ int main(int argc, const char **argv) { @autoreleasepool {
     TSPreferences *coordinator=[TSPreferences new];
     NSArray<TSPrefPaneController *> *panes=[coordinator makeSettingsPanes];
     method_setImplementation(class_getClassMethod(NSBundle.class,@selector(mainBundle)),mainBundle);
+    for (NSString *name in expected[@"Categories"]) {
+        NSString *className=[NSString stringWithFormat:@"TSPref%@Controller",name];
+        TSPrefPaneController *found=nil;
+        for(TSPrefPaneController *pane in panes) if([NSStringFromClass(pane.class) isEqual:className]) found=pane;
+        Check(found!=nil && [found.categoryIdentifier isEqual:expected[@"Categories"][name]],@"Production category ID belongs to its fixed pane class");
+    }
+    Check([TSSettingsGroupStyle cornerRadiusForMajorVersion:14]==10 && [TSSettingsGroupStyle cornerRadiusForMajorVersion:15]==10 && [TSSettingsGroupStyle cornerRadiusForMajorVersion:26]==12,@"Group radii match the supported OS versions");
     Check(panes.count==11,@"Production factory eagerly owns all eleven panes");
     for(NSDictionary *entry in expected[@"Bridge"]) {
         TSPrefPaneController *pane=nil;
@@ -176,6 +188,16 @@ int main(int argc, const char **argv) { @autoreleasepool {
                 for (NSAppearanceName appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]) {
                     window.appearance=[NSAppearance appearanceNamed:appearance];
                     [parent layoutSubtreeIfNeeded]; CheckGeometry(view);
+                    for(NSDictionary *heading in expected[[name stringByAppendingString:@"Headings"]]) {
+                        NSTextField *label=(NSTextField *)Find(view,heading[@"id"]);
+                        Check(label!=nil && [label.stringValue isEqual:heading[@"title"]] && !label.hidden && NSHeight(label.frame)>0,@"Each localized group heading remains visible");
+                    }
+                    if([name isEqual:@"MiscOne"]) {
+                        NSView *parentControl=Find(view,@"settings.RVR-YO-Xhy"),*childControl=Find(view,@"settings.jhC-up-cya");
+                        CGFloat parentX=NSMinX([parentControl convertRect:parentControl.bounds toView:view]);
+                        CGFloat childX=NSMinX([childControl convertRect:childControl.bounds toView:view]);
+                        Check(fabs(childX-parentX-24)<1,@"Backup setting retains one explicit level of indentation");
+                    }
                     if (argc > 2 && !wide.boolValue) {
                         NSString *folder=[NSString stringWithUTF8String:argv[2]];
                         NSString *file=[folder stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@",name,appearance]];

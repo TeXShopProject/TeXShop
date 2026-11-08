@@ -61,13 +61,13 @@ CONSTANTS
 - (void)orderFrontFontPanel:(id)sender {self.fronts++;}
 @end
 @interface NSObject (SettingsTest)
-- (id)legacyViewForCategoryIdentifier:(NSString *)identifier;
+- (id)viewForCategoryIdentifier:(NSString *)identifier;
 @end
 static NSString *requestedPane;
 static NSUInteger begins;
 @interface Shell:NSObject @end
 @implementation Shell
-- (id)legacyViewForCategoryIdentifier:(NSString *)identifier {requestedPane=identifier;return identifier;}
+- (id)viewForCategoryIdentifier:(NSString *)identifier {requestedPane=identifier;return identifier;}
 - (void)beginSession {begins++;}
 @end
 @interface TSDockIconController:NSObject @end

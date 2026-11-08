@@ -5,10 +5,11 @@
 @property (copy, readwrite) NSArray<NSObject *> *nibObjects;
 @end
 @implementation TSPrefPaneController
-- (void)setCategoryIdentifier:(NSString *)identifier
+- (void)setCategoryIdentifier:(TSSettingsCategoryID _Nullable)identifier
 {
     _categoryIdentifier = [identifier copy];
-    self.title = [(self.nibBundle ?: NSBundle.mainBundle) localizedStringForKey:identifier value:nil table:@"SettingsCategories"];
+    if (identifier == nil) { self.title = nil; return; }
+    self.title = [(self.nibBundle ?: NSBundle.mainBundle) localizedStringForKey:identifier ?: @"" value:nil table:@"SettingsCategories"];
 }
 - (void)loadView
 {

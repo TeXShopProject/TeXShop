@@ -48,7 +48,8 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 }
 - (void)keyDown:(NSEvent *)event
 {
-    if (self.isKeyWindow && self.settingsController != nil && [self.settingsController handleKeySearchEvent:event]) { return; }
+    TSSettingsWindowController *controller = self.settingsController;
+    if (self.isKeyWindow && controller != nil && [controller handleKeySearchEvent:event]) { return; }
     [super keyDown:event];
 }
 @end

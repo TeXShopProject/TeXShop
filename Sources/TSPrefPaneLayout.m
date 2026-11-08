@@ -1,7 +1,53 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPrefPaneLayout.h"
 
+typedef NS_ENUM(NSInteger, TSSettingsRowKind) {
+    TSSettingsRowControls, TSSettingsRowField, TSSettingsRowSection
+};
+@interface TSSettingsLayoutRow : NSObject
+@property (copy, readonly) NSArray<NSString *> *identifiers;
+@property (readonly) TSSettingsRowKind kind;
+@property (readonly) NSUInteger indentation;
++ (instancetype)controls:(NSArray<NSString *> *)identifiers kind:(TSSettingsRowKind)kind indentation:(NSUInteger)indentation;
+@end
+@implementation TSSettingsLayoutRow
++ (instancetype)controls:(NSArray<NSString *> *)identifiers kind:(TSSettingsRowKind)kind indentation:(NSUInteger)indentation
+{
+    TSSettingsLayoutRow *row = [self new];
+    row->_identifiers = [identifiers copy]; row->_kind = kind; row->_indentation = indentation;
+    return row;
+}
+@end
+@interface TSSettingsLayoutGroup : NSObject
+@property (copy, readonly) NSArray<TSSettingsLayoutRow *> *rows;
+@property (copy, readonly) NSArray<NSArray<NSString *> *> *cells;
++ (instancetype)rows:(NSArray<TSSettingsLayoutRow *> *)rows;
++ (instancetype)grid:(NSArray<NSArray<NSString *> *> *)cells;
+@end
+@implementation TSSettingsLayoutGroup
++ (instancetype)rows:(NSArray<TSSettingsLayoutRow *> *)rows
+{
+    TSSettingsLayoutGroup *group = [self new]; group->_rows = [rows copy]; group->_cells = @[]; return group;
+}
++ (instancetype)grid:(NSArray<NSArray<NSString *> *> *)cells
+{
+    TSSettingsLayoutGroup *group = [self new]; group->_rows = @[]; group->_cells = [cells copy]; return group;
+}
+@end
+@implementation TSSettingsGroupStyle
++ (CGFloat)cornerRadiusForMajorVersion:(NSInteger)version { return version >= 26 ? 12 : 10; }
++ (void)applyToBox:(NSBox *)box
+{
+    box.titlePosition = NSNoTitle;
+    box.boxType = NSBoxCustom;
+    box.borderWidth = 0;
+    box.fillColor = NSColor.controlBackgroundColor;
+    box.cornerRadius = [self cornerRadiusForMajorVersion:NSProcessInfo.processInfo.operatingSystemVersion.majorVersion];
+    box.translatesAutoresizingMaskIntoConstraints = NO;
+}
+@end
 @implementation TSPrefPaneLayout
+#include "TSSettingsPaneComposition.inc"
 + (NSStackView *)stackWithViews:(NSArray<NSView *> *)views orientation:(NSUserInterfaceLayoutOrientation)orientation
 {
     NSStackView *stack = [NSStackView stackViewWithViews:views];
@@ -37,154 +83,120 @@
             for (NSInteger row = 0; row < matrix.numberOfRows; row++) ideal = MAX(ideal, [matrix cellAtRow:row column:column].cellSize.width);
             width += ceil(ideal);
         }
-        [matrix.widthAnchor constraintGreaterThanOrEqualToConstant:MAX(width, NSWidth(matrix.frame))].active = YES;
+        [matrix.widthAnchor constraintGreaterThanOrEqualToConstant:width].active = YES;
     } else if ([view isKindOfClass:NSColorWell.class]) {
         [view.widthAnchor constraintEqualToConstant:60].active = YES;
         [view.heightAnchor constraintEqualToConstant:24].active = YES;
     }
 }
-// Preserve the shared row/column meaning of color headings and wells.
-+ (BOOL)arrangeColorGrid:(NSView *)view
++ (NSTextField *)heading:(NSString *)title identifier:(NSString *)identifier
 {
-    NSArray<NSView *> *children = [view.subviews copy];
-    NSMutableArray<NSNumber *> *centers = [NSMutableArray array];
-    NSUInteger wells = 0;
-    for (NSView *child in children) {
-        if (![child isKindOfClass:NSColorWell.class] && ![child isKindOfClass:NSTextField.class]) return NO;
-        if ([child isKindOfClass:NSColorWell.class]) {
-            wells++;
-            CGFloat center = NSMidX(child.frame);
-            BOOL known = NO;
-            for (NSNumber *number in centers) if (fabs(number.doubleValue - center) < 10) known = YES;
-            if (!known) [centers addObject:@(center)];
-        }
-    }
-    if (wells < 3) return NO;
-    [centers sortUsingSelector:@selector(compare:)];
-    CGFloat first = centers.firstObject.doubleValue;
-    BOOL rowLabels = NO;
-    for (NSView *child in children) if (NSMidX(child.frame) < first - 45) rowLabels = YES;
-    if (rowLabels) [centers insertObject:@(first - 90) atIndex:0];
-    NSArray<NSView *> *ordered = [children sortedArrayUsingComparator:^NSComparisonResult(NSView *a, NSView *b) {
-        if (NSMidY(a.frame) != NSMidY(b.frame)) return NSMidY(a.frame) > NSMidY(b.frame) ? NSOrderedAscending : NSOrderedDescending;
-        return NSMidX(a.frame) < NSMidX(b.frame) ? NSOrderedAscending : NSOrderedDescending;
-    }];
-    NSMutableArray<NSMutableArray<NSView *> *> *rows = [NSMutableArray array];
-    CGFloat rowY = CGFLOAT_MAX;
-    for (NSView *child in ordered) {
-        CGFloat y = NSMidY(child.frame), x = NSMidX(child.frame);
-        if (fabs(y - rowY) > 10) {
-            NSMutableArray *row = [NSMutableArray array];
-            for (NSUInteger index = 0; index < centers.count; index++) [row addObject:NSGridCell.emptyContentView];
-            [rows addObject:row]; rowY = y;
-        }
-        NSUInteger column = 0; CGFloat distance = CGFLOAT_MAX;
-        for (NSUInteger index = 0; index < centers.count; index++) {
-            CGFloat candidate = fabs(x - centers[index].doubleValue);
-            if (candidate < distance) { column = index; distance = candidate; }
-        }
-        NSAssert(rows.lastObject[column] == NSGridCell.emptyContentView, @"Color grid cells must be unique");
-        rows.lastObject[column] = child;
-        [child removeFromSuperview]; [self prepareControl:child];
-        if ([child isKindOfClass:NSTextField.class]) {
-            [child.widthAnchor constraintEqualToConstant:120].active = YES;
-            ((NSTextField *)child).preferredMaxLayoutWidth = 120;
-        }
-    }
-    NSGridView *grid = [NSGridView gridViewWithViews:rows];
-    grid.translatesAutoresizingMaskIntoConstraints = NO;
-    grid.columnSpacing = 8; grid.rowSpacing = 8;
-    grid.xPlacement = NSGridCellPlacementLeading; grid.yPlacement = NSGridCellPlacementCenter;
-    for (NSInteger index = 0; index < grid.numberOfColumns; index++) [grid columnAtIndex:index].width = 120;
-    [view addSubview:grid]; view.translatesAutoresizingMaskIntoConstraints = NO;
-    [NSLayoutConstraint activateConstraints:@[
-        [grid.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:8],
-        [grid.trailingAnchor constraintLessThanOrEqualToAnchor:view.trailingAnchor constant:-8],
-        [grid.topAnchor constraintEqualToAnchor:view.topAnchor constant:8],
-        [grid.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-8]]];
-    return YES;
+    NSTextField *heading = [NSTextField wrappingLabelWithString:title];
+    heading.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
+    heading.identifier = identifier;
+    heading.translatesAutoresizingMaskIntoConstraints = NO;
+    return heading;
 }
-+ (void)arrangeView:(NSView *)view
++ (void)attachRows:(NSArray<NSView *> *)rows toView:(NSView *)view
 {
-    if ([self arrangeColorGrid:view]) return;
-    NSArray<NSView *> *children = [view.subviews sortedArrayUsingComparator:^NSComparisonResult(NSView *a, NSView *b) {
-        CGFloat difference = NSMidY(b.frame) - NSMidY(a.frame);
-        if (difference != 0) return difference < 0 ? NSOrderedAscending : NSOrderedDescending;
-        if (NSMinX(a.frame) == NSMinX(b.frame)) return NSOrderedSame;
-        return NSMinX(a.frame) < NSMinX(b.frame) ? NSOrderedAscending : NSOrderedDescending;
-    }];
-    NSMutableArray<NSView *> *rows = [NSMutableArray array];
-    NSMutableArray<NSView *> *row = [NSMutableArray array];
-    CGFloat rowY = CGFLOAT_MAX;
-    void (^flush)(void) = ^{
-        if (row.count == 0) return;
-        [row sortUsingComparator:^NSComparisonResult(NSView *a, NSView *b) {
-            if (NSMinX(a.frame) == NSMinX(b.frame)) return NSOrderedSame;
-            return NSMinX(a.frame) < NSMinX(b.frame) ? NSOrderedAscending : NSOrderedDescending;
-        }];
-        [rows addObject:[self stackWithViews:[row copy] orientation:NSUserInterfaceLayoutOrientationHorizontal]];
-        [row removeAllObjects];
-    };
-    for (NSView *child in children) {
-        CGFloat centerY = NSMidY(child.frame);
-        [child removeFromSuperview];
-        if ([child isKindOfClass:NSBox.class]) {
-            flush(); rowY = CGFLOAT_MAX;
-            NSBox *box = (NSBox *)child;
-            NSView *content = box.contentView;
-            if (content == nil) continue;
-            [self arrangeView:content];
-            NSString *title = box.title;
-            box.titlePosition = NSNoTitle;
-            box.translatesAutoresizingMaskIntoConstraints = NO;
-            box.boxType = NSBoxCustom;
-            box.borderWidth = 0;
-            box.fillColor = NSColor.controlBackgroundColor;
-            box.cornerRadius = 8;
-            if (@available(macOS 26.0, *)) { box.cornerRadius = 12; }
-            box.contentViewMargins = NSMakeSize(16, 12);
-            [NSLayoutConstraint activateConstraints:@[
-                [content.leadingAnchor constraintEqualToAnchor:box.leadingAnchor constant:8],
-                [content.trailingAnchor constraintEqualToAnchor:box.trailingAnchor constant:-8],
-                [content.topAnchor constraintEqualToAnchor:box.topAnchor constant:8],
-                [content.bottomAnchor constraintEqualToAnchor:box.bottomAnchor constant:-8]]];
-            NSStackView *body = [content.subviews.firstObject isKindOfClass:NSStackView.class] ? (NSStackView *)content.subviews.firstObject : nil;
-            NSTextField *heading = [NSTextField wrappingLabelWithString:title];
-            heading.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
-            heading.translatesAutoresizingMaskIntoConstraints = NO;
-            if (title.length && body) {
-                [body insertArrangedSubview:heading atIndex:0];
-                [heading.widthAnchor constraintEqualToAnchor:body.widthAnchor].active = YES;
-            }
-            [rows addObject:box];
-        } else if ([child isKindOfClass:NSTabView.class]) {
-            flush(); rowY = CGFLOAT_MAX;
-            for (NSTabViewItem *item in ((NSTabView *)child).tabViewItems) {
-                NSView *content = item.view;
-                [content removeFromSuperview];
-                [self arrangeView:content];
-                NSTextField *heading = [NSTextField labelWithString:item.label];
-                heading.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
-                [rows addObject:heading];
-                [rows addObject:content];
-            }
-        } else {
-            if (fabs(centerY - rowY) > 10) { flush(); rowY = centerY; }
-            [self prepareControl:child];
-            [row addObject:child];
-        }
-    }
-    flush();
     NSStackView *stack = [self stackWithViews:rows orientation:NSUserInterfaceLayoutOrientationVertical];
-    [view addSubview:stack];
-    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [view addSubview:stack]; view.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
         [stack.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:16],
         [stack.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-16],
-        [stack.topAnchor constraintEqualToAnchor:view.topAnchor constant:16],
-        [stack.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-16]]];
-    for (NSView *rowView in rows) {
-        [rowView.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active = YES;
+        [stack.topAnchor constraintEqualToAnchor:view.topAnchor constant:12],
+        [stack.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-12]]];
+    for (NSView *row in rows) [row.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active = YES;
+}
++ (void)arrangeView:(NSView *)view
+{
+    NSString *identifier = view.identifier;
+    TSSettingsLayoutGroup *model = identifier ? [self groups][identifier] : nil;
+    if (model == nil) [NSException raise:NSInternalInconsistencyException format:@"Missing settings composition for %@", identifier];
+    NSMutableDictionary<NSString *, NSView *> *controls = [NSMutableDictionary dictionary];
+    for (NSView *child in [view.subviews copy]) {
+        NSString *key = child.identifier;
+        if (key == nil || controls[key] != nil) [NSException raise:NSInternalInconsistencyException format:@"Duplicate or missing settings control identifier %@", key];
+        controls[key] = child;
     }
+    NSMutableSet<NSString *> *used = [NSMutableSet set];
+    NSView *(^take)(NSString *) = ^NSView *(NSString *key) {
+        NSView *control = controls[key];
+        if (control == nil || [used containsObject:key]) [NSException raise:NSInternalInconsistencyException format:@"Missing or repeated settings control %@", key];
+        [used addObject:key]; [control removeFromSuperview]; return control;
+    };
+    NSMutableArray<NSView *> *rows = [NSMutableArray array];
+    if (model.cells.count) {
+        NSMutableArray<NSArray<NSView *> *> *cells = [NSMutableArray array];
+        for (NSArray<NSString *> *row in model.cells) {
+            NSMutableArray<NSView *> *items = [NSMutableArray array];
+            for (NSString *key in row) {
+                if (!key.length) { [items addObject:NSGridCell.emptyContentView]; continue; }
+                NSView *child = take(key); [self prepareControl:child];
+                if ([child isKindOfClass:NSTextField.class]) {
+                    [child.widthAnchor constraintEqualToConstant:120].active = YES;
+                    ((NSTextField *)child).preferredMaxLayoutWidth = 120;
+                }
+                [items addObject:child];
+            }
+            [cells addObject:items];
+        }
+        NSGridView *grid = [NSGridView gridViewWithViews:cells];
+        grid.translatesAutoresizingMaskIntoConstraints = NO;
+        grid.columnSpacing = 8; grid.rowSpacing = 8;
+        grid.xPlacement = NSGridCellPlacementLeading; grid.yPlacement = NSGridCellPlacementCenter;
+        for (NSInteger index = 0; index < grid.numberOfColumns; index++) [grid columnAtIndex:index].width = 120;
+        [rows addObject:grid];
+    }
+    for (TSSettingsLayoutRow *row in model.rows) {
+        NSMutableArray<NSView *> *items = [NSMutableArray array];
+        for (NSString *key in row.identifiers) [items addObject:take(key)];
+        NSView *first = items.firstObject;
+        if (row.kind == TSSettingsRowSection) {
+            if ([first isKindOfClass:NSBox.class]) {
+                NSBox *box = (NSBox *)first;
+                NSView *content = box.contentView;
+                if (content == nil) [NSException raise:NSInternalInconsistencyException format:@"Missing settings group content %@", row.identifiers.firstObject];
+                [self arrangeView:content]; [TSSettingsGroupStyle applyToBox:box];
+                box.contentViewMargins = NSMakeSize(16, 12);
+                box.accessibilityLabel = box.title;
+                [NSLayoutConstraint activateConstraints:@[
+                    [content.leadingAnchor constraintEqualToAnchor:box.leadingAnchor constant:8],
+                    [content.trailingAnchor constraintEqualToAnchor:box.trailingAnchor constant:-8],
+                    [content.topAnchor constraintEqualToAnchor:box.topAnchor constant:8],
+                    [content.bottomAnchor constraintEqualToAnchor:box.bottomAnchor constant:-8]]];
+                NSStackView *body = (NSStackView *)content.subviews.firstObject;
+                if (box.title.length) {
+                    NSTextField *heading = [self heading:box.title identifier:[@"heading." stringByAppendingString:box.identifier ?: @""]];
+                    [body insertArrangedSubview:heading atIndex:0];
+                    [heading.widthAnchor constraintEqualToAnchor:body.widthAnchor].active = YES;
+                }
+                [rows addObject:box];
+            } else if ([first isKindOfClass:NSTabView.class]) {
+                for (NSTabViewItem *item in ((NSTabView *)first).tabViewItems) {
+                    NSView *content = item.view;
+                    if (content == nil) continue;
+                    [content removeFromSuperview]; [self arrangeView:content];
+                    [rows addObject:[self heading:item.label identifier:[@"heading." stringByAppendingString:content.identifier ?: @""]]];
+                    [rows addObject:content];
+                }
+            } else [NSException raise:NSInternalInconsistencyException format:@"Invalid settings section %@", first];
+            continue;
+        }
+        for (NSView *child in items) [self prepareControl:child];
+        NSStackView *body = [self stackWithViews:items orientation:NSUserInterfaceLayoutOrientationHorizontal];
+        NSView *container = [NSView new]; container.translatesAutoresizingMaskIntoConstraints = NO;
+        [container addSubview:body];
+        [NSLayoutConstraint activateConstraints:@[
+            [body.leadingAnchor constraintEqualToAnchor:container.leadingAnchor constant:24 * row.indentation],
+            [body.trailingAnchor constraintEqualToAnchor:container.trailingAnchor],
+            [body.centerYAnchor constraintEqualToAnchor:container.centerYAnchor],
+            [container.heightAnchor constraintGreaterThanOrEqualToAnchor:body.heightAnchor],
+            [container.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
+        if (row.kind == TSSettingsRowField) [first.widthAnchor constraintEqualToConstant:170].active = YES;
+        [rows addObject:container];
+    }
+    if (used.count != controls.count) [NSException raise:NSInternalInconsistencyException format:@"Unplaced settings controls in %@", identifier];
+    [self attachRows:rows toView:view];
 }
 @end

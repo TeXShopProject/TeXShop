@@ -237,3 +237,7 @@
 
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "一致する項目: %lu";
+
+"The theme “%@” already exists. Replace it?" = "テーマ「%@」はすでにあります。置き換えますか？";
+
+"Replace" = "置き換える";

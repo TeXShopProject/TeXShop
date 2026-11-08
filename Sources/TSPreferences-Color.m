@@ -368,25 +368,31 @@ NSInteger stringSort(id s1, id s2, void *context)
     NSDictionary<NSString *, id> *snapshot = [colors copy];
     styleTitle.stringValue = @"";
     [stylePanel setContentSize:NSMakeSize(420, stylePanel.contentView.fittingSize.height)];
+    __weak __typeof(self) weakSelf = self;
     [_prefsWindow beginSheet:stylePanel completionHandler:^(NSModalResponse response) {
-        if (response != NSModalResponseOK || generation != self.themeOperationGeneration) return;
-        NSString *title = [self->styleTitle.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        __strong __typeof(weakSelf) coordinator = weakSelf;
+        if (coordinator == nil) return;
+        if (response != NSModalResponseOK || generation != coordinator.themeOperationGeneration) return;
+        NSString *title = [coordinator->styleTitle.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         if (title.length == 0) return;
-        NSURL *url = [[self themeStore] URLForTitle:title];
-        if (url == nil) {
-            [self showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")];
+        NSURL *url = [[coordinator themeStore] URLForTitle:title];
+        NSString *path = url.path;
+        if (path == nil) {
+            [coordinator showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")];
             return;
         }
-        if (![NSFileManager.defaultManager fileExistsAtPath:url.path]) {
-            [self saveNewTheme:snapshot title:title];
+        if (![NSFileManager.defaultManager fileExistsAtPath:path]) {
+            [coordinator saveNewTheme:snapshot title:title];
             return;
         }
         NSAlert *alert = [NSAlert new];
-        alert.messageText = NSLocalizedString(@"File already exists", @"");
-        [alert addButtonWithTitle:NSLocalizedString(@"Continue", @"")];
+        alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"The theme “%@” already exists. Replace it?", @""), title];
+        [alert addButtonWithTitle:NSLocalizedString(@"Replace", @"")];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-        [alert beginSheetModalForWindow:self->_prefsWindow completionHandler:^(NSModalResponse answer) {
-            if (answer == NSAlertFirstButtonReturn && generation == self.themeOperationGeneration) [self saveNewTheme:snapshot title:title];
+        [alert beginSheetModalForWindow:coordinator->_prefsWindow completionHandler:^(NSModalResponse answer) {
+            __strong __typeof(weakSelf) confirmedCoordinator = weakSelf;
+            if (confirmedCoordinator == nil) return;
+            if (answer == NSAlertFirstButtonReturn && generation == confirmedCoordinator.themeOperationGeneration) [confirmedCoordinator saveNewTheme:snapshot title:title];
         }];
     }];
 }

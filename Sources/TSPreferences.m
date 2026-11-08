@@ -180,7 +180,8 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     NSMutableDictionary<TSSettingsCategoryID, NSViewController *> *panes = [NSMutableDictionary dictionary];
     NSView *footer = nil;
     for (TSPrefPaneController *pane in self.preferencePanes) {
-        if (pane.categoryIdentifier.length > 0) { panes[pane.categoryIdentifier] = pane; }
+        TSSettingsCategoryID identifier = pane.categoryIdentifier;
+        if (identifier != nil) { panes[identifier] = pane; }
         if ([pane isKindOfClass:TSPrefFooterController.class]) { footer = pane.view; }
     }
     if (footer == nil) { return NO; }

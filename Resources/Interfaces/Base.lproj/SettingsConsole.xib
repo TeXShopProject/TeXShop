@@ -119,35 +119,37 @@
           <view key="contentView" id="BCz-G7-Yrz" identifier="settings.BCz-G7-Yrz">
             <rect key="frame" x="0.0" y="0.0" width="370" height="58" />
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="764" identifier="settings.764">
+                <rect key="frame" x="148" y="346" width="147" height="38" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="147" height="18" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="923">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Arbitrary Resize" imagePosition="left" alignment="left" state="on" inset="2" id="766">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Vertical Resize Only" imagePosition="left" alignment="left" tag="1" inset="2" id="765">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="changeConsoleResize:" target="-2" id="811" />
+                </connections>
+              </matrix>
+            </subviews>
           </view>
           <font key="titleFont" metaFont="system" />
         </box>
-        <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="764" identifier="settings.764">
-          <rect key="frame" x="148" y="346" width="147" height="38" />
-          <autoresizingMask key="autoresizingMask" />
-          <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
-          <size key="cellSize" width="147" height="18" />
-          <size key="intercellSpacing" width="4" height="2" />
-          <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="923">
-            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-            <font key="font" metaFont="system" />
-          </buttonCell>
-          <cells>
-            <column>
-              <buttonCell type="radio" title="Arbitrary Resize" imagePosition="left" alignment="left" state="on" inset="2" id="766">
-                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                <font key="font" metaFont="system" />
-              </buttonCell>
-              <buttonCell type="radio" title="Vertical Resize Only" imagePosition="left" alignment="left" tag="1" inset="2" id="765">
-                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                <font key="font" metaFont="system" />
-              </buttonCell>
-            </column>
-          </cells>
-          <connections>
-            <action selector="changeConsoleResize:" target="-2" id="811" />
-          </connections>
-        </matrix>
         <box fixedFrame="YES" title="Show Console" translatesAutoresizingMaskIntoConstraints="NO" id="828" identifier="settings.828">
           <rect key="frame" x="123" y="256" width="370" height="69" />
           <autoresizingMask key="autoresizingMask" />

@@ -2,13 +2,13 @@
 #import "TSPrefPaneController.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface TSPrefTypesettingController : TSPrefPaneController
-@property (strong) IBOutlet NSMatrix *afterTypesettingMatrix;
-@property (strong) IBOutlet NSMatrix *defaultCommandMatrix;
-@property (strong) IBOutlet NSMatrix *defaultScriptMatrix;
-@property (strong) IBOutlet NSTextField *engineTextField;
-@property (strong) IBOutlet NSButton *saveRelatedButton;
-@property (strong) IBOutlet NSMatrix *syncMatrix;
-@property (strong) IBOutlet NSButton *syncTabButton;
-@property (strong) IBOutlet NSButton *useTransparencyButton;
+@property (strong, nullable) IBOutlet NSMatrix *afterTypesettingMatrix;
+@property (strong, nullable) IBOutlet NSMatrix *defaultCommandMatrix;
+@property (strong, nullable) IBOutlet NSMatrix *defaultScriptMatrix;
+@property (strong, nullable) IBOutlet NSTextField *engineTextField;
+@property (strong, nullable) IBOutlet NSButton *saveRelatedButton;
+@property (strong, nullable) IBOutlet NSMatrix *syncMatrix;
+@property (strong, nullable) IBOutlet NSButton *syncTabButton;
+@property (strong, nullable) IBOutlet NSButton *useTransparencyButton;
 @end
 NS_ASSUME_NONNULL_END

@@ -1,6 +1,7 @@
 // Dock appearance is independent of editor color themes, so the choices live on Misc2.
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSDockIconController.h"
+#import "TSPrefPaneLayout.h"
 #import "TSDockIcon.h"
 
 @interface TSDockIconController ()
@@ -43,13 +44,9 @@
     NSStackView *body = [misc.subviews.firstObject isKindOfClass:NSStackView.class] ? (NSStackView *)misc.subviews.firstObject : nil;
     if (body == nil) return;
     NSBox *group = [NSBox new];
-    group.titlePosition = NSNoTitle;
-    group.boxType = NSBoxCustom;
-    group.borderWidth = 0;
-    group.fillColor = NSColor.controlBackgroundColor;
-    group.cornerRadius = 8;
-    if (@available(macOS 26.0, *)) { group.cornerRadius = 12; }
+    [TSSettingsGroupStyle applyToBox:group];
     group.identifier = @"DockIconChoices";
+    group.accessibilityLabel = [self text:@"Dock Icon While Running"];
     group.toolTip = [self text:@"Applies while TeXShop is running. The standard icon returns after quitting."];
     group.translatesAutoresizingMaskIntoConstraints = NO;
     NSMutableArray<NSView *> *options = [NSMutableArray array];

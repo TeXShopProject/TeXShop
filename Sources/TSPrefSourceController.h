@@ -2,25 +2,25 @@
 #import "TSPrefPaneController.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface TSPrefSourceController : TSPrefPaneController
-@property (strong) IBOutlet NSButton *texAwareSpellCheckButton;
-@property (strong) IBOutlet NSButton *editSpellingExclusionsButton;
-@property (strong) IBOutlet NSButton *checkBraceButton;
-@property (strong) IBOutlet NSButton *checkBracketButton;
-@property (strong) IBOutlet NSButton *checkParenButton;
-@property (strong) IBOutlet NSButton *checkSquareBracketButton;
-@property (strong) IBOutlet NSMatrix *commandCompletionMatrix;
-@property (strong) IBOutlet NSPopUpButton *defaultEncodeMatrix;
-@property (strong) IBOutlet NSButton *docWindowPosButton;
-@property (strong) IBOutlet NSTextField *documentFontTextField;
-@property (strong) IBOutlet NSButton *externalEditorButton;
-@property (strong) IBOutlet NSMatrix *findMatrix;
-@property (strong) IBOutlet NSMatrix *lineSizeMatrix;
-@property (strong) IBOutlet NSPopUpButton *openAsTabsMatrix;
-@property (strong) IBOutlet NSButton *openEmptyButton;
-@property (strong) IBOutlet NSMatrix *sourceWindowPosMatrix;
-@property (strong) IBOutlet NSButtonCell *spellCheckCommands;
-@property (strong) IBOutlet NSButtonCell *spellCheckComments;
-@property (strong) IBOutlet NSButtonCell *spellCheckParameters;
-@property (strong) IBOutlet NSPopUpButton *dictionaryPopup;
+@property (strong, nullable) IBOutlet NSButton *texAwareSpellCheckButton;
+@property (strong, nullable) IBOutlet NSButton *editSpellingExclusionsButton;
+@property (strong, nullable) IBOutlet NSButton *checkBraceButton;
+@property (strong, nullable) IBOutlet NSButton *checkBracketButton;
+@property (strong, nullable) IBOutlet NSButton *checkParenButton;
+@property (strong, nullable) IBOutlet NSButton *checkSquareBracketButton;
+@property (strong, nullable) IBOutlet NSMatrix *commandCompletionMatrix;
+@property (strong, nullable) IBOutlet NSPopUpButton *defaultEncodeMatrix;
+@property (strong, nullable) IBOutlet NSButton *docWindowPosButton;
+@property (strong, nullable) IBOutlet NSTextField *documentFontTextField;
+@property (strong, nullable) IBOutlet NSButton *externalEditorButton;
+@property (strong, nullable) IBOutlet NSMatrix *findMatrix;
+@property (strong, nullable) IBOutlet NSMatrix *lineSizeMatrix;
+@property (strong, nullable) IBOutlet NSPopUpButton *openAsTabsMatrix;
+@property (strong, nullable) IBOutlet NSButton *openEmptyButton;
+@property (strong, nullable) IBOutlet NSMatrix *sourceWindowPosMatrix;
+@property (strong, nullable) IBOutlet NSButtonCell *spellCheckCommands;
+@property (strong, nullable) IBOutlet NSButtonCell *spellCheckComments;
+@property (strong, nullable) IBOutlet NSButtonCell *spellCheckParameters;
+@property (strong, nullable) IBOutlet NSPopUpButton *dictionaryPopup;
 @end
 NS_ASSUME_NONNULL_END

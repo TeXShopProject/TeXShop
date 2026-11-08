@@ -2,15 +2,15 @@
 #import "TSPrefPaneController.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface TSPrefMiscOneController : TSPrefPaneController
-@property (strong) IBOutlet NSColorWell *BlockCursorColorWell;
-@property (strong) IBOutlet NSButton *blockCursorButton;
-@property (strong) IBOutlet NSMatrix *blockSideMatrix;
-@property (strong) IBOutlet NSMatrix *blockWidthMatrix;
-@property (strong) IBOutlet NSButton *colorMapButton;
-@property (strong) IBOutlet NSPopUpButton *colorParam1Popup;
-@property (strong) IBOutlet NSPopUpButton *imageCopyTypePopup;
-@property (strong) IBOutlet NSButton *autoSaveEnabledButton;
-@property (strong) IBOutlet NSButton *keepBackupButton;
-@property (strong) IBOutlet NSButton *saveEncodingMenuButton;
+@property (strong, nullable) IBOutlet NSColorWell *BlockCursorColorWell NS_SWIFT_NAME(blockCursorColorWell);
+@property (strong, nullable) IBOutlet NSButton *blockCursorButton;
+@property (strong, nullable) IBOutlet NSMatrix *blockSideMatrix;
+@property (strong, nullable) IBOutlet NSMatrix *blockWidthMatrix;
+@property (strong, nullable) IBOutlet NSButton *colorMapButton;
+@property (strong, nullable) IBOutlet NSPopUpButton *colorParam1Popup;
+@property (strong, nullable) IBOutlet NSPopUpButton *imageCopyTypePopup;
+@property (strong, nullable) IBOutlet NSButton *autoSaveEnabledButton;
+@property (strong, nullable) IBOutlet NSButton *keepBackupButton;
+@property (strong, nullable) IBOutlet NSButton *saveEncodingMenuButton;
 @end
 NS_ASSUME_NONNULL_END

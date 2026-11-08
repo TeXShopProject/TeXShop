@@ -213,3 +213,7 @@
 
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "匹配项：%lu";
+
+"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+
+"Replace" = "Replace";

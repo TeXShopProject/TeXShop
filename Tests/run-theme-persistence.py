@@ -8,8 +8,9 @@ def method(sig):
 methods='\n'.join(map(method,['- (IBAction)SaveEditedStyle:', '- (void)saveNewTheme:', '- (IBAction)themeSelectionChanged:', '- (IBAction)EditingStyleChoice:', '- (IBAction)SaveNewStyle:', '- (void)requestNameForThemeColors:', '- (void)okForStylePanel:', '- (void)cancelForStylePanel:', '- (void)setThemeEditingEnabled:']))
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
 mutations={
- 'sheet-generation':('generation != self.themeOperationGeneration','NO'),
- 'overwrite-generation':('answer == NSAlertFirstButtonReturn && generation == self.themeOperationGeneration','answer == NSAlertFirstButtonReturn'),
+ 'duplicate-sheet':('_prefsWindow.attachedSheet != nil','NO'),
+ 'sheet-generation':('generation != coordinator.themeOperationGeneration','NO'),
+ 'overwrite-generation':('answer == NSAlertFirstButtonReturn && generation == confirmedCoordinator.themeOperationGeneration','answer == NSAlertFirstButtonReturn'),
  'sheet-cancel':('response != NSModalResponseOK ||','NO ||'),
  'failure-dictionary':('EditingColors = [saved mutableCopy];',';'),
  'failure-fallback':('[[self themeStore] readTitle:title] ?: self.lastSavedEditingColors','[[self themeStore] readTitle:title]'),
@@ -63,14 +64,17 @@ static NSString *ColorPath;
 - (void)setContentSize:(NSSize)size {}
 @end
 static void (^alertCompletion)(NSModalResponse);
+static NSString *alertMessage;
+static NSMutableArray *alertButtons;
 @interface FakeAlert:NSObject
 @property(copy) NSString *messageText;
 - (void)addButtonWithTitle:(NSString *)title;
 - (void)beginSheetModalForWindow:(FakePanel *)parent completionHandler:(void (^)(NSModalResponse))handler;
 @end
 @implementation FakeAlert
-- (void)addButtonWithTitle:(NSString *)title {}
-- (void)beginSheetModalForWindow:(FakePanel *)parent completionHandler:(void (^)(NSModalResponse))handler { alertCompletion=[handler copy]; }
+- (instancetype)init { if ((self=[super init])) alertButtons=[NSMutableArray new]; return self; }
+- (void)addButtonWithTitle:(NSString *)title { [alertButtons addObject:title]; }
+- (void)beginSheetModalForWindow:(FakePanel *)parent completionHandler:(void (^)(NSModalResponse))handler { alertMessage=[self.messageText copy];alertCompletion=[handler copy]; }
 @end
 #define NSAlert FakeAlert
 @interface Field:NSObject
@@ -114,7 +118,10 @@ int main(int argc,char **argv){@autoreleasepool{
  p->EditingColors[@"EditorText"]=@[@0.4,@0.4,@0.4,@1];
  [p SaveNewStyle:nil];
  check(p->_prefsWindow.attachedSheet==p->stylePanel && [p->styleTitle.stringValue isEqual:@""],"clone uses a cleared name sheet");
+ NSUInteger activeGeneration=p.themeOperationGeneration;
  p->styleTitle.stringValue=@"Clone";
+ [p requestNameForThemeColors:@{@"EditorText":@[@0,@0,@0,@1]}];
+ check(p.themeOperationGeneration==activeGeneration && [p->styleTitle.stringValue isEqual:@"Clone"],"duplicate sheet request leaves name, generation and snapshot intact");
  [p okForStylePanel:nil];
  check([[[p.store readTitle:@"Clone"] objectForKey:@"EditorText"] isEqual:saved[@"EditorText"]],"clone after failed save excludes unsaved colors");
  check([p->EditingStyle.titleOfSelectedItem isEqual:@"Clone"] && [p->LiteStyle.items containsObject:@"Clone"],"successful clone updates all lists and editing selection");
@@ -128,7 +135,8 @@ int main(int argc,char **argv){@autoreleasepool{
  [p SaveNewStyle:nil];p->styleTitle.stringValue=@"../Bad";[p okForStylePanel:nil];
  check(p.errors==errors+1,"invalid title rejected before saving");
  [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Clone";[p okForStylePanel:nil];
- check(alertCompletion!=nil,"collision asks on a sheet");alertCompletion(NSAlertSecondButtonReturn);alertCompletion=nil;
+ check(alertCompletion!=nil,"collision asks on a sheet");
+ check([alertMessage containsString:@"Clone"] && [alertButtons.firstObject isEqual:@"Replace"],"overwrite confirmation names the theme and the replacement action");alertCompletion(NSAlertSecondButtonReturn);alertCompletion=nil;
  check([[p.store readTitle:@"Clone"] isEqual:clone],"overwrite cancellation leaves disk intact");
  NSDictionary *replacement=@{@"Title":@"Snapshot",@"EditorText":@[@0.2,@0.5,@0.8,@1]};
  p.lastSavedEditingColors=replacement;[p SaveNewStyle:nil];p.lastSavedEditingColors=clone;
@@ -154,6 +162,18 @@ int main(int argc,char **argv){@autoreleasepool{
  cursor.action=@selector(BlockCursorColorChanged:);[view addSubview:theme];[view addSubview:cursor];
  [p setThemeEditingEnabled:NO inView:view];check(!theme.enabled && cursor.enabled,"unreadable theme does not disable cursor color");
  [NSNotificationCenter.defaultCenter removeObserver:token];
+ __weak Probe *released=nil;void (^pending)(NSModalResponse);
+ @autoreleasepool {
+   Probe *temporary=[Probe new];temporary->_prefsWindow=[FakePanel new];temporary->stylePanel=[FakePanel new];temporary->styleTitle=[Field new];
+   [temporary requestNameForThemeColors:clone];pending=[temporary->_prefsWindow.completion copy];released=temporary;
+ }
+ check(released==nil,"pending name sheet does not retain the coordinator");pending(NSModalResponseOK);pending=nil;
+ @autoreleasepool {
+   Probe *temporary=[Probe new];temporary.store=p.store;temporary->_prefsWindow=[FakePanel new];temporary->stylePanel=[FakePanel new];temporary->styleTitle=[Field new];
+   [temporary requestNameForThemeColors:clone];temporary->styleTitle.stringValue=@"Clone";[temporary okForStylePanel:nil];released=temporary;
+ }
+ check(released==nil,"pending overwrite does not retain the coordinator");alertCompletion(NSAlertFirstButtonReturn);alertCompletion=nil;
+ check([[p.store readTitle:@"Clone"][@"EditorText"] isEqual:replacement[@"EditorText"]],"late overwrite after coordinator release leaves the file intact");
  puts("PASS: theme selection, save failure, last-success fallback, clone after failure and unchanged failed-clone UI");
 }return 0;}
 '''.replace('METHODS',methods)
