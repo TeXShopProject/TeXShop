@@ -12,6 +12,10 @@ def method(sig):
 tree=ast.parse((root/'Tests/run-pdf-recovery.py').read_text())
 fixture=max((n.value for n in ast.walk(tree) if isinstance(n,ast.Constant) and isinstance(n.value,str)),key=len)
 fixture=fixture[:fixture.index('static void check(')]
+window_source=(root/'Sources/TSPreviewWindow.m').read_text()
+def window_method(sig):
+    a=window_source.rindex(sig); return window_source[a:window_source.index('\n}',a)+2]
+fixture=fixture.replace('WINDOW_METHODS','\n'.join(window_method(x) for x in ['- (void)close', '- (void)orderWindow:']).replace('TSDocument *theDocument', 'TestDocument *theDocument'))
 fixture=fixture.replace('NSInteger pageStyle,','NSInteger mouseMode;\n    NSInteger pageStyle,')
 fixture=fixture.replace('#import "TSExternalPDFReload.h"\n', '#import "TSExternalPDFReload.h"\n'+r'''// Simulates a snapshot that cannot be made, e.g. a full or unavailable volume.
 static BOOL failSnapshots;

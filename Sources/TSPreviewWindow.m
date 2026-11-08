@@ -114,6 +114,15 @@ extern NSPanel *pageNumberWindow;
 }
 
 
+- (void)orderWindow:(NSWindowOrderingMode)place relativeTo:(NSInteger)otherWindowNumber
+{
+    [super orderWindow:place relativeTo:otherWindowNumber];
+    // A user can reopen the preview while typesetting is still running, for
+    // example through SyncTeX. Preserve the newly selected position on reload.
+    if (place != NSWindowOut && self.isVisible)
+        self.previewClosed = NO;
+}
+
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)window defaultFrame:(NSRect)defaultFrame
 {
 	NSRect	newFrame;

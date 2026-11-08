@@ -1151,9 +1151,9 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
  
  The second tricky case occurs if the user closes the preview window. Since this window is part of the NSDocument object
  associated with the source file, the window is not removed from memory. It disappears from the screen, but its scroll
- position and configuration are still known. The only way to make that window reappear is to typeset the source. The
- user believes they are typesetting from scratch, so the start of the pdf file should appear. But actually without
- help the pdf will scroll to its old position.
+ position and configuration are still known. If it remains closed until typesetting finishes, reShowWithPath
+ displays the start of the pdf file. If the user reopens it first (for example through SyncTeX), the window clears previewClosed
+ so reloading preserves the user's newly selected position instead.
  
  We handle these two special cases with boolean values attached to the preview window: noPdfFile and previewClosed.
  If noPdfFile = YES, then there was no pdf file when the document was opened and so reShowWithPath must initialize
