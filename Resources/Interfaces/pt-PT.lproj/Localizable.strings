@@ -42,7 +42,7 @@
 "Magnification Panel" = "Magnification Panel";
 "Omit Shell Escape" = "Omit Shell Escape";
 "Warning: Using Shell Escape" = "Warning: Using Shell Escape";
-"Preview" = "Pré-visualização";
+"Preview" = "Preview";
 "Display Format" = "Display Format";// mitsu 1.29b
 "Magnification" = "Magnification";// mitsu 1.29b
 "Copy Format" = "Copy Format";// mitsu 1.29b
@@ -277,7 +277,6 @@
 "No Settings Found" = "Nenhuma definição encontrada";
 
 "Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "As alterações feitas nesta janela serão removidas. As definições existentes em KeyEquivalents.plist serão preservadas.";
 
 /* Independent Experiment console */
 "Experiment input" = "Entrada da experiência";
@@ -289,7 +288,6 @@
 "Assign" = "Assign";
 "Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
 "Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "Return to Editing" = "Return to Editing";
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";

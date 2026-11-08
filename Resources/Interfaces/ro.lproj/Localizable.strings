@@ -278,7 +278,6 @@
 "No Settings Found" = "Nicio configurare găsită";
 
 "Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Modificările făcute în această fereastră vor fi eliminate. Configurările existente din KeyEquivalents.plist se păstrează.";
 
 /* Independent Experiment console */
 "Experiment input" = "Intrare pentru experiment";
@@ -290,7 +289,6 @@
 "Assign" = "Assign";
 "Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
 "Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "Return to Editing" = "Return to Editing";
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";

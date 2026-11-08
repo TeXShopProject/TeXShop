@@ -1,0 +1,228 @@
+{
+  "baseline": "35f0ad0145eecb1fabf6da3db1954c122f9f34ff",
+  "note": "Frozen pre-settings menu lookup exceptions. Do not regenerate from the implementation under test. Dynamic Window and Macro editor item titles are not static MainMenu entries.",
+  "languages": [
+    "en",
+    "de",
+    "es",
+    "fr",
+    "it",
+    "ja",
+    "ko",
+    "nl",
+    "pt",
+    "pt-PT",
+    "ro",
+    "zh_CN"
+  ],
+  "routes": {
+    "Edit": [],
+    "File": [],
+    "Help": [],
+    "Macros": [],
+    "Preview": [],
+    "Source": [],
+    "Tags": [],
+    "Typeset": [],
+    "Copy Format": [
+      "Preview"
+    ],
+    "Display Format": [
+      "Preview"
+    ],
+    "Magnification": [
+      "Preview"
+    ],
+    "TeXShop Demos": [
+      "Help"
+    ],
+    "Syntax Color expl3 Code": [
+      "Source"
+    ],
+    "Open Macro Editor...": [
+      "Macros"
+    ]
+  },
+  "exceptions": {
+    "fr:Open Macro Editor...": {
+      "value": "Ouvrir l'éditeur de macros...",
+      "parentValues": [
+        "Macros"
+      ]
+    },
+    "it:Preview": {
+      "value": "Anteprima",
+      "parentValues": []
+    },
+    "it:Copy Format": {
+      "value": "Formato di copia",
+      "parentValues": [
+        "Anteprima"
+      ]
+    },
+    "it:Display Format": {
+      "value": "Vista Documento",
+      "parentValues": [
+        "Anteprima"
+      ]
+    },
+    "it:Magnification": {
+      "value": "Ingrandimento",
+      "parentValues": [
+        "Anteprima"
+      ]
+    },
+    "ko:Edit": {
+      "value": "Edit",
+      "parentValues": []
+    },
+    "ko:File": {
+      "value": "File",
+      "parentValues": []
+    },
+    "ko:Help": {
+      "value": "Help",
+      "parentValues": []
+    },
+    "ko:Macros": {
+      "value": "Macros",
+      "parentValues": []
+    },
+    "ko:Preview": {
+      "value": "Preview",
+      "parentValues": []
+    },
+    "ko:Typeset": {
+      "value": "Typeset",
+      "parentValues": []
+    },
+    "ko:Copy Format": {
+      "value": "Copy Format",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "ko:Display Format": {
+      "value": "Display Format",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "ko:Magnification": {
+      "value": "Magnification",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "ko:TeXShop Demos": {
+      "value": "TeXShop Demos",
+      "parentValues": [
+        "Help"
+      ]
+    },
+    "ko:Open Macro Editor...": {
+      "value": "Open Macro Editor...",
+      "parentValues": [
+        "Macros"
+      ]
+    },
+    "nl:Macros": {
+      "value": "Macros",
+      "parentValues": []
+    },
+    "nl:Preview": {
+      "value": "Preview",
+      "parentValues": []
+    },
+    "nl:Copy Format": {
+      "value": "Copy Format",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "nl:Display Format": {
+      "value": "Display Format",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "nl:Magnification": {
+      "value": "Magnification",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "nl:TeXShop Demos": {
+      "value": "TeXShop Demos",
+      "parentValues": [
+        "Help"
+      ]
+    },
+    "nl:Open Macro Editor...": {
+      "value": "Open Macro Editor...",
+      "parentValues": [
+        "Macros"
+      ]
+    },
+    "pt:Preview": {
+      "value": "Pré-visualizar",
+      "parentValues": []
+    },
+    "pt:Copy Format": {
+      "value": "Copiar Formato",
+      "parentValues": [
+        "Pré-visualizar"
+      ]
+    },
+    "pt:Display Format": {
+      "value": "Formato de exibição",
+      "parentValues": [
+        "Pré-visualizar"
+      ]
+    },
+    "pt:Magnification": {
+      "value": "Zoom",
+      "parentValues": [
+        "Pré-visualizar"
+      ]
+    },
+    "pt:Open Macro Editor...": {
+      "value": "Abrir editor de Macro...",
+      "parentValues": [
+        "Macros"
+      ]
+    },
+    "pt-PT:File": {
+      "value": "Fincheiro",
+      "parentValues": []
+    },
+    "pt-PT:Preview": {
+      "value": "Preview",
+      "parentValues": []
+    },
+    "pt-PT:Copy Format": {
+      "value": "Copy Format",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "pt-PT:Display Format": {
+      "value": "Display Format",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "pt-PT:Magnification": {
+      "value": "Magnification",
+      "parentValues": [
+        "Preview"
+      ]
+    },
+    "zh_CN:Copy Format": {
+      "value": "拷贝样式",
+      "parentValues": [
+        "预览"
+      ]
+    }
+  }
+}

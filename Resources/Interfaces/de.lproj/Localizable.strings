@@ -49,7 +49,6 @@
 "ToolbarItems" = "Werkzeugleistenelemente";
 "Autocompletion" = "Autovervollständigung";
 "Completion" = "Vervollständigung";
-"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Pfad: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@";
 "Info: %@" = "Info: %@";
 "%@\n\nCharacters: %d" = "%@\n\nZeichen: %d";
 "The file encoding changed; characters can be lost if the wrong encoding is used." = "Die Dateikodierung hat sich geändert. Einige Zeichen können bei falscher Kodierung verloren gehen.";
@@ -278,7 +277,6 @@
 "No Settings Found" = "Keine Einstellungen gefunden";
 
 "Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Ihre Änderungen in diesem Fenster werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";
 
 /* Independent Experiment console */
 "Experiment input" = "Eingabe zum Testen";

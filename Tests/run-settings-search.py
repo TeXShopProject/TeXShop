@@ -25,7 +25,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
   if args.language and lang!=args.language:continue
   loc=r/'Resources/Interfaces'/('en.lproj' if lang=='Base' else lang+'.lproj');f=loc/'Localizable.strings'
   actual=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(f)]))
-  assert all(actual.get(k)==v for k,v in expected[lang].items()),lang
+  # Preview is a settings category label here, not the legacy menu lookup key.
+  category_file=(args.app/'Contents/Resources' if args.app else r/'Resources/Interfaces')/(lang+'.lproj')/'SettingsCategories.strings'
+  categories=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(category_file)]))
+  assert categories['preview']==expected[lang]['Preview'],(lang,'Preview category')
+  assert all(actual.get(k)==v for k,v in expected[lang].items() if k!='Preview'),lang
   # This named confirmation deliberately uses English fallback outside Japanese.
   for key,ja in [('Replace','置き換える'),('The theme “%@” already exists. Replace it?','テーマ「%@」はすでにあります。置き換えますか？')]:
    if lang=='ja':assert actual.get(key)==ja,(lang,key,actual.get(key))

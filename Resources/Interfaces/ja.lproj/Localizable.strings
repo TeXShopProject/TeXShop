@@ -306,5 +306,3 @@
 "Experiment stopped.\n" = "実験を中止しました。\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved.";

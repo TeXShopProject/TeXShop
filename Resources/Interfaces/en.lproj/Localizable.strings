@@ -273,7 +273,6 @@
 "None of the words in this document have been learned for %@." = "None of the words in this document have been learned for %@.";
 "Not found (current setting will be kept)" = "Not found (current setting will be kept)";
 "OK" = "OK";
-"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
 "Press the new shortcut (Escape to cancel)." = "Press the new shortcut (Escape to cancel).";
 "Problems in the spelling exclusions file" = "Problems in the spelling exclusions file";
 "Remove Shortcut" = "Remove Shortcut";
@@ -295,4 +294,3 @@
 "Use Command or Control with a key, or a function key (F1–F20)." = "Use Command or Control with a key, or a function key (F1–F20).";
 "Use These Paths" = "Use These Paths";
 "Version unavailable" = "Version unavailable";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved.";

@@ -116,7 +116,6 @@
 "Forget learned words" = "忘记已学习的单词";
 "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "此文稿中的以下单词已为%@学习。请选择要忘记的单词。按住 Shift 或 Command 键点按可选择多个。";
 "Forget Selected" = "忘记所选单词";
-"Cancel" = "取消";
 "Forgot %lu word." = "已忘记 %lu 个单词。";
 "Forgot %lu words." = "已忘记 %lu 个单词。";
 "No learned words in this document" = "此文稿中没有已学习的单词";
@@ -222,7 +221,6 @@
 "Editor" = "编辑器";
 "Spell Checking" = "拼写检查";
 "Appearance" = "外观";
-"Preview" = "预览";
 "Typesetting" = "排版";
 "Console" = "控制台";
 "Updates" = "更新";
@@ -276,7 +274,6 @@
 "No Settings Found" = "未找到设置";
 
 "Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除此窗口中所做的更改。现有的 KeyEquivalents.plist 设置将保留。";
 
 /* Independent Experiment console */
 "Experiment input" = "实验台输入";
@@ -289,7 +286,6 @@
 "Assign" = "Assign";
 "Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
 "Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "Return to Editing" = "Return to Editing";
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";

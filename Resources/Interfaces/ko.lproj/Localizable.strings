@@ -43,7 +43,7 @@
 "Magnification Panel" = "Magnification Panel";
 "Omit Shell Escape" = "Omit Shell Escape";
 "Warning: Using Shell Escape" = "Warning: Using Shell Escape";
-"Preview" = "미리보기";
+"Preview" = "Preview";
 "Display Format" = "Display Format";// mitsu 1.29b
 "Magnification" = "Magnification";// mitsu 1.29b
 "Copy Format" = "Copy Format";// mitsu 1.29b
@@ -278,7 +278,6 @@
 "No Settings Found" = "일치하는 설정 없음";
 
 "Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "이 윈도우에서 변경한 내용이 제거됩니다. 기존 KeyEquivalents.plist 설정은 유지됩니다.";
 
 /* Independent Experiment console */
 "Experiment input" = "실험 입력";
@@ -290,7 +289,6 @@
 "Assign" = "Assign";
 "Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
 "Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "Return to Editing" = "Return to Editing";
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
