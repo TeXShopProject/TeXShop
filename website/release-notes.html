@@ -27,6 +27,7 @@
 </ul>
 <h3>External file changes and PDF preview</h3>
 <ul>
+<li>Use the recorded source-click position and the clicked split editor for SyncTeX, including clicks at the start of a line and context-menu actions. Match valid filesystem aliases to SyncTeX inputs, prefer an exact recorded path, and reject paths that cannot be resolved.</li>
 <li>Preserve the page-relative position in both PDF panes after reloading, including content insets on macOS Tahoe. Preserve it across single-page and two-page navigation on macOS 27 when native PDFKit moves the viewport; skip the workaround when PDFKit already keeps the position. Up and Down arrows scroll within an enlarged page at a consistent on-screen step and stop at its edge.</li>
 <li>Keep PDF link previews within page and viewport bounds, with surrounding text and the appropriate column visible even for destinations near an edge.</li>
 <li>Preserve the preview position when a window is closed and reopened during typesetting, including the combined source-and-preview window.</li>
@@ -67,6 +68,7 @@
 </ul>
 <h3>Settings and themes</h3>
 <ul>
+<li>Apply the selected theme’s background, text, insertion-point colors and window opacity to Experiment source, preview and console windows where those controls are present. Experiment previews share the normal preview’s System, Light and Dark page appearance choices.</li>
 <li>Add Search Settings to find localized settings and menu commands, with navigation to the matching controls.</li>
 <li>Find TeX and Ghostscript installations automatically. When TeXShop is first used, and with Auto Setup… under Settings → Typesetting, the installations found are listed with their versions. The newest is selected, and another can be chosen for TeX and for Ghostscript separately. The paths change only after confirmation; custom engines and the alternate path are not changed.</li>
 <li>Correct overlapping controls, clipped labels, and incorrect control connections throughout the localized Settings windows. Add missing bracket-color controls in Dutch.</li>

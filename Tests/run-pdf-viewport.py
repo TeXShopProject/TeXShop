@@ -129,6 +129,22 @@ int main(void) { @autoreleasepool {
             sameViewport(before,view,[NSString stringWithFormat:@"reload preserves viewport with page count %@",count]);
             check(fabs(view.scaleFactor-scale.doubleValue)<.001,@"reload preserves zoom");
         }
+        // Exercise the first reload after zooming, before and after AppKit settles.
+        for (NSNumber *settle in @[@NO, @YES]) {
+            view.scaleFactor = scale.doubleValue / 2;
+            pump();
+            view.scaleFactor = scale.doubleValue;
+            if (settle.boolValue) pump();
+            TSExternalPDFPosition zoomed = TSExternalPDFCapture(view);
+            for (NSUInteger reload=0; reload<2; reload++) {
+                [view reShowWithDocument:document(bytes,4,rotation.integerValue)]; pump();
+                TSExternalPDFPosition actual = TSExternalPDFCapture(view);
+                CGFloat screenDrift = hypot(actual.pagePoint.x-zoomed.pagePoint.x,
+                                             actual.pagePoint.y-zoomed.pagePoint.y) * view.scaleFactor;
+                check(actual.pageIndex == zoomed.pageIndex && screenDrift < .75,
+                      [NSString stringWithFormat:@"zoom reload %lu (settled=%@) drift %.3f screen points",reload,settle,screenDrift]);
+            }
+        }
         // Reload after the window changes size must preserve its new viewport.
         [window setContentSize:NSMakeSize(650,420)]; pump();
         TSExternalPDFPosition resized=TSExternalPDFCapture(view);

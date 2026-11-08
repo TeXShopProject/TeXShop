@@ -2,6 +2,29 @@
 #import "TSExperimentJob.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
+#import "TSColorSupport.h"
+#import "TSExperimentTheme.h"
+
+@interface TSExperimentConsoleController (Colors)
+- (void)updateConsoleColors:(NSNotification *)notification;
+@end
+
+@interface TSExperimentConsoleContentView : NSView
+@property (nonatomic, weak) TSExperimentConsoleController *controller;
+@end
+@implementation TSExperimentConsoleContentView
+- (void)drawRect:(NSRect)dirtyRect
+{
+    [NSColor.windowBackgroundColor setFill];
+    NSRectFill(dirtyRect);
+}
+- (void)viewDidChangeEffectiveAppearance
+{
+    [super viewDidChangeEffectiveAppearance];
+    self.needsDisplay = YES;
+    [self.controller updateConsoleColors:nil];
+}
+@end
 
 @interface TSExperimentConsoleWindow : NSPanel
 @property (nonatomic, weak) TSExperimentConsoleController *controller;
@@ -34,6 +57,8 @@
         [self loadWindow];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateConsoleFont:)
             name:ConsoleFontChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateConsoleColors:)
+            name:SourceColorChangedNotification object:nil];
     }
     return self;
 }
@@ -46,20 +71,34 @@
     self.outputText.font = font ?: [NSFont monospacedSystemFontOfSize:12 weight:NSFontWeightRegular];
 }
 
+- (void)updateConsoleColors:(NSNotification *)notification
+{
+    // The content view receives the appearance change before its child text view.
+    BOOL dark = [[self.window.contentView.effectiveAppearance bestMatchFromAppearancesWithNames:
+        @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
+    TSColorSupport *colors = [TSColorSupport sharedInstance];
+    NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
+    self.outputText.backgroundColor = [colors colorForKey:@"ConsoleBackground" fromDictionary:theme isWindowDark:dark];
+    self.outputText.textColor = [colors colorForKey:@"ConsoleText" fromDictionary:theme isWindowDark:dark];
+    self.window.alphaValue = TSExperimentWindowAlpha(theme, @"ConsoleAlpha");
+}
+
 - (void)loadWindow
 {
     TSExperimentConsoleWindow *window = [[TSExperimentConsoleWindow alloc]
-        initWithContentRect:NSMakeRect(0, 0, 640, 360)
+        initWithContentRect:NSMakeRect(0, 0, 504, 430)
         styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
         backing:NSBackingStoreBuffered defer:NO];
     window.controller = self;
     window.releasedWhenClosed = NO;
     window.hidesOnDeactivate = YES;
     window.minSize = NSMakeSize(420, 220);
-    NSView *content = window.contentView;
-    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(12, 54, 616, 294)];
+    TSExperimentConsoleContentView *content = [[TSExperimentConsoleContentView alloc] initWithFrame:window.contentView.bounds];
+    window.contentView = content;
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 55, 504, 343)];
     scroll.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     scroll.hasVerticalScroller = YES;
+    scroll.borderType = NSNoBorder;
     NSTextView *text = [[NSTextView alloc] initWithFrame:scroll.contentView.bounds];
     text.editable = NO;
     text.richText = NO;
@@ -73,8 +112,11 @@
     scroll.documentView = text;
     [content addSubview:scroll];
     self.outputText = text;
-    NSTextField *field = [[NSTextField alloc] initWithFrame:NSMakeRect(12, 15, 506, 24)];
+    NSTextField *field = [[NSTextField alloc] initWithFrame:NSMakeRect(20, 0, 464, 53)];
     field.autoresizingMask = NSViewWidthSizable;
+    field.bezelStyle = NSTextFieldRoundedBezel;
+    field.focusRingType = NSFocusRingTypeNone;
+    field.font = [NSFont systemFontOfSize:11];
     field.target = self;
     field.action = @selector(sendCommand:);
     field.placeholderString = NSLocalizedString(@"Experiment input", @"Experiment console input placeholder");
@@ -84,18 +126,20 @@
     field.enabled = NO;
     NSButton *stop = [NSButton buttonWithTitle:NSLocalizedString(@"Stop Experiment", @"Stop Experiment job")
                                       target:self action:@selector(abort:)];
+    stop.bezelStyle = NSBezelStyleShadowlessSquare;
     [stop sizeToFit];
     CGFloat width = MAX(100, stop.frame.size.width);
-    stop.frame = NSMakeRect(628 - width, 12, width, 30);
-    field.frame = NSMakeRect(12, 15, 604 - width, 24);
-    stop.autoresizingMask = NSViewMinXMargin;
+    stop.frame = NSMakeRect(504 - width, 398, width, 33);
+    stop.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin;
     [content addSubview:stop];
     self.stopButton = stop;
     stop.enabled = NO;
     self.window = window;
+    content.controller = self;
     [window center];
     [window setFrameAutosaveName:@"ExperimentConsole"];
     [self updateConsoleFont:nil];
+    [self updateConsoleColors:nil];
 }
 
 - (void)appendText:(NSString *)text
