@@ -513,11 +513,11 @@
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="키 바인딩" id="102" identifier="TSShortcut.changeAutoComplete:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeAutoComplete:" target="-1" id="456"/>
-                                            </connections>
-                                        </menuItem>
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAutoComplete:" target="-1" id="456"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="명령 완성" id="104">
                                 <menu key="submenu" title="명령 완성" id="105">
                                     <items>
@@ -568,7 +568,6 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-
                                     </items>
                                 </menu>
                             </menuItem>

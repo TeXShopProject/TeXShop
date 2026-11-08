@@ -241,3 +241,29 @@
 "Advanced" = "Geavanceerd";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Installeer een TeX-distributie en voer automatische configuratie uit bij Instellingen > Zetwerk.";
+
+"Completion trigger" = "Activeringstoets";
+
+"This key is reserved for command completion." = "Deze toets is gereserveerd voor commandoaanvulling.";
+
+"Encoding" = "Codering";
+
+"Saving Documents" = "Documenten bewaren";
+
+"Page Display" = "Paginaweergave";
+
+"PDF Interaction" = "PDF-bediening";
+
+"PDF Appearance" = "PDF-vormgeving";
+
+"HTML Preview" = "HTML-voorvertoning";
+
+"Typesetting Defaults" = "Zetwerkstandaarden";
+
+"Synchronization" = "Synchronisatie";
+
+"Tools" = "Hulpmiddelen";
+
+"Expanded" = "Uitgeklapt";
+
+"Collapsed" = "Ingeklapt";

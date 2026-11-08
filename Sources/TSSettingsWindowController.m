@@ -83,7 +83,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     window.toolbarStyle = NSWindowToolbarStyleUnified;
     window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleAutomatic;
     NSScreen *screen = window.screen ?: NSScreen.mainScreen;
-    window.contentMinSize = NSMakeSize(screen != nil ? MIN(1040, NSWidth(screen.visibleFrame)) : 1040, 520);
+    window.contentMinSize = NSMakeSize(screen != nil ? MIN(900, NSWidth(screen.visibleFrame)) : 900, 560);
     self.splitController = [NSSplitViewController new];
     NSViewController *sidebar = [NSViewController new];
     sidebar.view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 220, 600)];

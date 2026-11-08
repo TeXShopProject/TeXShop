@@ -245,3 +245,29 @@
 "Advanced" = "Avanzado";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instale una distribución TeX y ejecute la configuración automática en Ajustes > Composición.";
+
+"Completion trigger" = "Tecla de activación";
+
+"This key is reserved for command completion." = "Esta tecla está reservada para completar comandos.";
+
+"Encoding" = "Codificación";
+
+"Saving Documents" = "Guardar documentos";
+
+"Page Display" = "Visualización de páginas";
+
+"PDF Interaction" = "Interacción con PDF";
+
+"PDF Appearance" = "Aspecto del PDF";
+
+"HTML Preview" = "Vista previa HTML";
+
+"Typesetting Defaults" = "Valores de composición";
+
+"Synchronization" = "Sincronización";
+
+"Tools" = "Herramientas";
+
+"Expanded" = "Expandido";
+
+"Collapsed" = "Contraído";

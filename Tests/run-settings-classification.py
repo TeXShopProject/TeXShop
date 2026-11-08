@@ -16,7 +16,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  program=(r/'Tests/SettingsClassification.m').read_text().replace('// CONSTANTS',constants).replace('// DEPENDENCIES',methods)
  (t/'test.m').write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-Werror','-Wno-deprecated-declarations','-Wno-nullability-completeness','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),str(r/'Sources/TSSettingsCategory.m'),str(r/'Sources/TSDockIconController.m'),'-o',str(t/'probe')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-Werror','-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),str(r/'Sources/TSSettingsCategory.m'),str(r/'Sources/TSDockIconController.m'),'-o',str(t/'probe')],check=True)
  expected=json.loads((r/'Tests/Fixtures/SettingsClassificationStrings.json').read_text())
  for bundle in bundles(r,t/'fixtures',product=args.app,dock=True):
   lang=bundle.stem
@@ -32,4 +32,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
   dest=bundle/'Contents/Resources'/('en.lproj' if lang=='Base' else lang+'.lproj');dest.mkdir(exist_ok=True);shutil.copy2(f,dest/'Localizable.strings')
   if args.app:
    built=args.app/'Contents/Resources'/loc.name/'Localizable.strings';assert json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(built)]))==actual
-  print('CHECK',lang,flush=True);subprocess.run([str(t/'probe'),str(bundle)],check=True,timeout=90)
+  print('CHECK',lang,flush=True);subprocess.run([str(t/'probe'),str(bundle),str(r/'Tests/Fixtures/SettingsCategoryGroups.json')],check=True,timeout=90)

@@ -541,12 +541,15 @@ The solution was simple: choose a source file which contains Hebrew. The Apple F
 
 \section{Other Source Preference Items}
 
-Settings has ten categories: General, Documents and Saving, Editor, Spelling, Appearance, Preview, Typesetting, Console, Keyboard, and Updates. Spelling offers \LaTeX{}-aware checking (recommended), with Edit Rules beneath it, or legacy checking with three indented options. Changing the method keeps the inactive options and their values. Check Spelling While Typing is independent. Keyboard contains text input key bindings, Esc/Tab command completion, BibDesk completion and both file editors; these editors have moved from the Source menu. When Tab triggers completion it is reserved for completion. Input settings and shortcut results share one vertical scroll area, while search and action buttons remain available. General provides a link to Comment Lines and Hidden Settings. Disabled child controls keep their saved values. An obsolete remembered category opens General.
+Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings, Keyboard and cannot be assigned by their former menu titles.
+
+
+Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose “Use \LaTeX{}-aware spell checking (recommended)” with “Edit \LaTeX{} exclusion rules…”, or “Use legacy spell checking” with three indented options. Changing the method preserves all child values. “Check Spelling” is independent. Keyboard places key bindings and command completion above shortcut search and the scrolling list. On a short window the input groups can be expanded one at a time. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings. Disabled controls retain their saved values; an obsolete remembered category opens General.
 
 Earlier screenshots in this manual show the former tabs. Use the category names above for the current Settings window.
 
 
-This is a useful time to consider a few other Preference items which affect the source window. These items occur under the General, Documents and Saving, and Spelling categories. But several items in this tab are better explained later and will be skipped.
+This is a useful time to consider a few other Preference items which affect the source window. These items occur under the General, Documents and Saving, and Spell Checking categories. But several items in this tab are better explained later and will be skipped.
 
 {\bf Document Font} This was just explained.
 
@@ -4429,7 +4432,7 @@ The final way to spell check is to use the menu item {\em Check Spelling While T
 
 \section{LaTeX-aware Spell Checking}
 
-TeXShop 5.60 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spelling, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Use legacy spell checking}. The new method has an indented Edit Rules button; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
+TeXShop 5.60 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Use legacy spell checking}. The new method has an indented ``Edit LaTeX exclusion rules...'' button; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
 
 LaTeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
 
@@ -4489,7 +4492,7 @@ What is the mechanism Sims uses to turn off spell checking? I wish I had thought
 
 %Note that cocoAspell uses more sophisticated methods and operates at the optimal moment when the system is actually checking spelling, rather than at an earlier syntax coloring moment. So if you use cocoAspell, you will want to turn all the "Spell Checking" preferences off.
 
-In TeXShop Preferences under the Source category, there is a box of selections labeled {\em Spell Checking}. These items are off by default. Leave them off if you use cocoAspell or any spell checking method except ``Check Spelling While Typing.'' Starting with TeXShop 5.60, these items are used only when LaTeX-aware spell checking is turned off.
+In Settings under Spell Checking, the three indented options below ``Use legacy spell checking'' apply to the legacy method. These options are off by default. Leave them off if you use cocoAspell or another spelling service. Starting with TeXShop 5.60, these items are used only when LaTeX-aware spell checking is turned off.
 
 The first spell checking item turns off spell checking for all TeX command words like: 
 \begin{verbatim}
@@ -6580,7 +6583,7 @@ Latex3 programmers use '\_', ':' and '@' in their commands. The item {\bf Color 
 
 \subsubsection{<Preferences to Control Spell Checking>}
 
-TeXShop Preferences under the Spelling category has an item for Spell Checking. This item is explained in the main part of this Manual. There are some hidden preferences to fine tune this behavior. Starting with TeXShop 5.60, they are used only when LaTeX-aware spell checking is turned off; LaTeX-aware spell checking is configured with the file SpellingExclusions.txt instead.
+TeXShop Preferences under the Spell Checking category has an item for Spell Checking. This item is explained in the main part of this Manual. There are some hidden preferences to fine tune this behavior. Starting with TeXShop 5.60, they are used only when LaTeX-aware spell checking is turned off; LaTeX-aware spell checking is configured with the file SpellingExclusions.txt instead.
 
 The list of specialized TeX commands can be extended.. The first command below adds one more element to the existing array of user supplied exceptions. The second command erases the array so the user can start over. Note that neither command affects TeXShop's default list of special commands.
 \begin{verbatim}

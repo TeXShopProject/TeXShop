@@ -4,6 +4,7 @@
 #import "TSKeyboardShortcuts.m"
 #import "TSSettingsCategory.h"
 #import "TSMacroTreeNode.h"
+#import "TSPrefPaneLayout.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
 static NSUInteger forwardedWindowEvents;
 static void AppKitSendEventProbe(id receiver, SEL selector, NSEvent *event) { forwardedWindowEvents++; }
@@ -13,10 +14,31 @@ static IMP originalLocalization;
 static NSString *Localized(NSBundle *bundle,SEL cmd,NSString *key,NSString *value,NSString *table){return localizedStrings[key] ?: ((id(*)(id,SEL,id,id,id))originalLocalization)(bundle,cmd,key,value,table);}
 static void CheckButtons(NSView *view,NSView *root){
  for(NSView *child in view.subviews){
+  if(child.hidden)continue;
   if([child isKindOfClass:NSButton.class]) {NSRect rect=[child convertRect:child.bounds toView:root];REQUIRE(NSMinX(rect)>=0 && NSMaxX(rect)<=NSWidth(root.bounds)+1 && NSMinY(rect)>=0 && NSMaxY(rect)<=NSHeight(root.bounds)+1);REQUIRE(NSWidth(child.frame)+1>=child.intrinsicContentSize.width);}
   if([child isKindOfClass:NSClipView.class]) CheckButtons(((NSClipView *)child).documentView,((NSClipView *)child).documentView);
   else CheckButtons(child,root);
  }
+}
+// Independent input fixture: two groups with the production row identifiers.
+static NSView *InputHeader(void) {
+ NSView *header=[NSView new];NSMutableArray *groups=[NSMutableArray array];
+ for(NSString *key in @[@"bindings",@"completion"]){
+  NSBox *box=[NSBox new];[TSSettingsGroupStyle applyToBox:box];box.identifier=[@"group." stringByAppendingString:key];
+  box.accessibilityLabel=NSLocalizedString([key isEqual:@"bindings"]?@"Key Bindings":@"Command Completion",@"");
+  NSMutableArray *rows=[NSMutableArray array];
+  NSTextField *heading=[NSTextField labelWithString:box.accessibilityLabel];heading.identifier=[@"heading." stringByAppendingString:key];[rows addObject:heading];
+  for(NSUInteger i=0;i<([key isEqual:@"completion"]?3:1);i++){
+   NSButton *button=[NSButton buttonWithTitle:i==0?NSLocalizedString(@"Completion trigger",@""):@"Input fixture" target:nil action:NULL];
+   NSView *row=[TSPrefPaneLayout viewForRow:[[TSSettingsControlRow alloc]initWithControls:@[button] indentation:0]];
+   if([key isEqual:@"completion"] && i==0)row.identifier=@"row.settings.completion-trigger-label";
+   [rows addObject:row];
+  }
+  [TSPrefPaneLayout attachRows:rows toView:box.contentView];
+  [NSLayoutConstraint activateConstraints:@[[box.contentView.leadingAnchor constraintEqualToAnchor:box.leadingAnchor constant:8],[box.contentView.trailingAnchor constraintEqualToAnchor:box.trailingAnchor constant:-8],[box.contentView.topAnchor constraintEqualToAnchor:box.topAnchor constant:8],[box.contentView.bottomAnchor constraintEqualToAnchor:box.bottomAnchor constant:-8]]];
+  [groups addObject:box];
+ }
+ [TSPrefPaneLayout attachRows:groups toView:header];return header;
 }
 static NSString *fixtureCharacters;
 static BOOL fixtureKeyWindow=YES;
@@ -291,23 +313,51 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSString *language in translations){@autoreleasepool{
   localizedStrings=translations[language];
   TSShortcutPaneController *translated=[[TSShortcutPaneController alloc]initWithShortcuts:coordinator];
-  NSView *inputHeader=[NSView new];
-  [inputHeader.heightAnchor constraintEqualToConstant:348].active=YES;
-  NSButton *inputButton=[NSButton buttonWithTitle:@"Input fixture" target:nil action:NULL];
-  inputButton.frame=NSMakeRect(16,16,160,30);[inputHeader addSubview:inputButton];
-  translated.settingsHeader=inputHeader;
-  NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,340) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];host.contentView=translated.view;
-  [host.contentView layoutSubtreeIfNeeded];CheckButtons(translated.view,translated.view);
+  NSView *inputHeader=InputHeader();translated.settingsHeader=inputHeader;
+  NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,460) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];host.contentView=translated.view;
+  [translated viewDidLayout];[host.contentView layoutSubtreeIfNeeded];CheckButtons(translated.view,translated.view);
+  REQUIRE(translated.inputGroups.count==2 && translated.inputGroups[0].hidden && translated.inputGroups[1].hidden);
   REQUIRE(NSHeight(translated.table.enclosingScrollView.frame)>40);
-  REQUIRE(translated.table.enclosingScrollView.documentView==inputHeader.superview);
-  REQUIRE(translated.table.superview==inputHeader.superview);
-  REQUIRE(fabs(NSHeight(translated.table.frame)-NSMaxY([translated.table rectOfRow:translated.table.numberOfRows-1]))<1);
+  REQUIRE(translated.table.enclosingScrollView.documentView==translated.table && translated.table.headerView.superview!=nil);
+  REQUIRE(![inputHeader isDescendantOf:translated.table.enclosingScrollView]);
+  NSRect h=[inputHeader convertRect:inputHeader.bounds toView:translated.view];
+  REQUIRE(NSMinY(h)>NSMaxY(translated.search.frame));
   [translated.table scrollRowToVisible:translated.table.numberOfRows-1];
   REQUIRE(NSIntersectsRect(translated.table.visibleRect,[translated.table rectOfRow:translated.table.numberOfRows-1]));
   translated.search.stringValue=@"missing command fixture";[translated reloadCommands];
-  REQUIRE(translated.table.numberOfRows==0 && NSHeight(translated.table.frame)==0);
-  [inputHeader scrollRectToVisible:inputHeader.bounds];
-  REQUIRE(NSIntersectsRect(inputHeader.visibleRect,inputButton.frame));
+  REQUIRE(translated.table.numberOfRows==0);
+  translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];
+  for(NSString *trigger in @[@"TAB",@"ESC",@"TAB"]){
+   [TSIsolatedAppKitDefaults setObject:trigger forKey:@"CommandCompletionChar"];
+   NSDictionary *unchanged=[TSIsolatedAppKitDefaults.values copy];fixtureCharacters=@"\t";
+   REQUIRE([translated handleKeySearchEvent:Event(@"\t",0,48)]);
+   BOOL reserved=[trigger isEqual:@"TAB"];
+   REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]==reserved);
+   REQUIRE((translated.highlightedCompletionRow!=nil)==reserved);
+   if(reserved){
+    REQUIRE(translated.inputGroups[0].hidden && !translated.inputGroups[1].hidden);
+    REQUIRE(translated.highlightedCompletionRow.layer.borderWidth==2);
+    [translated.view layoutSubtreeIfNeeded];CheckButtons(translated.view,translated.view);
+    NSRect row=[translated.highlightedCompletionRow convertRect:translated.highlightedCompletionRow.bounds toView:translated.view];
+    REQUIRE(NSContainsRect(translated.view.bounds,row));
+    REQUIRE(NSHeight(translated.table.enclosingScrollView.frame)>40);
+   }
+   REQUIRE([TSIsolatedAppKitDefaults.values isEqual:unchanged]);
+  }
+  [TSIsolatedAppKitDefaults setObject:@"ESC" forKey:@"CommandCompletionChar"];
+  [NSNotificationCenter.defaultCenter postNotificationName:@"CommandCompletionCharNotification" object:nil];
+  REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage containsString:@"reserved"]);
+  [TSIsolatedAppKitDefaults setObject:@"TAB" forKey:@"CommandCompletionChar"];
+  fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",NSEventModifierFlagShift,48)];
+  REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]);
+  [translated stopKeySearch];REQUIRE(translated.highlightedCompletionRow==nil);
+  [host setContentSize:NSMakeSize(700,780)];[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
+  REQUIRE(!translated.inputGroups[0].hidden && !translated.inputGroups[1].hidden);
+  translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];fixtureCharacters=@"\t";
+  [translated handleKeySearchEvent:Event(@"\t",0,48)];
+  [host setContentSize:NSMakeSize(700,460)];[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
+  REQUIRE(translated.highlightedCompletionRow!=nil && !translated.inputGroups[1].hidden);
+  CheckButtons(translated.view,translated.view);
   REQUIRE(NSContainsRect(translated.view.bounds,translated.table.enclosingScrollView.frame));
   REQUIRE(NSWidth(translated.searchMode.frame)+1>=translated.searchMode.intrinsicContentSize.width);
   fprintf(stdout,"PASS: %s pane controls fit minimum content size\n",language.UTF8String);

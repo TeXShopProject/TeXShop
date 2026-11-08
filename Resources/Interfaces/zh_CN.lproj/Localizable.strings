@@ -242,3 +242,29 @@
 "Advanced" = "高级";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "安装 TeX 发行版，然后在设置 > 排版中运行自动设置。";
+
+"Completion trigger" = "触发按键";
+
+"This key is reserved for command completion." = "此按键已保留用于命令补全。";
+
+"Encoding" = "字符编码";
+
+"Saving Documents" = "保存文稿";
+
+"Page Display" = "页面显示";
+
+"PDF Interaction" = "PDF操作";
+
+"PDF Appearance" = "PDF外观";
+
+"HTML Preview" = "HTML预览";
+
+"Typesetting Defaults" = "排版默认值";
+
+"Synchronization" = "同步";
+
+"Tools" = "工具";
+
+"Expanded" = "展开";
+
+"Collapsed" = "折叠";

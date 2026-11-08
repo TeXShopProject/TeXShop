@@ -216,3 +216,29 @@
 "Advanced" = "Advanced";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Install a TeX distribution, then run Auto Setup in Settings > Typesetting.";
+
+"Completion trigger" = "Completion trigger";
+
+"This key is reserved for command completion." = "This key is reserved for command completion.";
+
+"Encoding" = "Encoding";
+
+"Saving Documents" = "Saving Documents";
+
+"Page Display" = "Page Display";
+
+"PDF Interaction" = "PDF Interaction";
+
+"PDF Appearance" = "PDF Appearance";
+
+"HTML Preview" = "HTML Preview";
+
+"Typesetting Defaults" = "Typesetting Defaults";
+
+"Synchronization" = "Synchronization";
+
+"Tools" = "Tools";
+
+"Expanded" = "Expanded";
+
+"Collapsed" = "Collapsed";

@@ -510,11 +510,11 @@
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Auto Completion" id="979" identifier="TSShortcut.changeAutoComplete:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeAutoComplete:" target="-1" id="982"/>
-                                            </connections>
-                                        </menuItem>
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAutoComplete:" target="-1" id="982"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Aanvullen" id="539">
                                 <menu key="submenu" title="Aanvullen" id="540">
                                     <items>
@@ -565,7 +565,6 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-
                                     </items>
                                 </menu>
                             </menuItem>

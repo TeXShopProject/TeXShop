@@ -507,11 +507,11 @@
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Key Bindings" id="1087" identifier="TSShortcut.changeAutoComplete:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeAutoComplete:" target="-1" id="1090"/>
-                                            </connections>
-                                        </menuItem>
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAutoComplete:" target="-1" id="1090"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Command Completion" id="539">
                                 <menu key="submenu" title="Command Completion" id="540">
                                     <items>
@@ -562,7 +562,6 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-
                                     </items>
                                 </menu>
                             </menuItem>

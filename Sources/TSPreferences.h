@@ -238,13 +238,13 @@
 }
 
 @property NSUInteger themeOperationGeneration;
-@property (strong, nullable) NSButton *legacySpellCheckButton;
-@property (strong, nullable) TSAutoCompletionListEditor *keyBindingEditor;
-@property (strong, nullable) HelpDocuments *settingsHelpDocuments;
+@property (strong) NSButton *legacySpellCheckButton;
+@property (strong) TSAutoCompletionListEditor *keyBindingEditor;
+@property (strong) HelpDocuments *settingsHelpDocuments;
 - (IBAction)displayCommentLines:(id)sender;
-- (IBAction)editKeyBindings:(id _Nullable)sender;
-- (IBAction)legacySpellCheckPressed:(NSButton * _Nullable)sender;
-- (void)updateSettingsDependenciesFromDefaults:(NSUserDefaults * _Nonnull)defaults;
+- (IBAction)editKeyBindings:(id)sender;
+- (IBAction)legacySpellCheckPressed:(NSButton *)sender;
+- (void)updateSettingsDependenciesFromDefaults:(NSUserDefaults *)defaults;
 @property (retain) NSFont		*documentFont;			/*" used to track the font that the user has selected for the document window "*/
 @property (retain) NSFont		*consoleFont;			/*" used to track the font that the user has selected for the console window "*/
 @property (retain) NSDictionary *fontAttributes;         /*" used to track the font attributes that the user has selected for the document window "*/

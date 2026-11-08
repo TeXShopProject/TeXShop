@@ -84,6 +84,8 @@
 @property BOOL shouldDiscoverEnginePaths;
 @end
 
+#include "TSLegacyMenuKeyEquivalents.inc"
+
 @implementation TSAppDelegate
 
 /*
@@ -909,84 +911,9 @@
 // This is further menuKey configuration assuming folder already created
 - (void)finishMenuKeyEquivalentsConfigure
 {
-	NSString		*shortcutsPath, *theChar;
-	NSDictionary	*shortcutsDictionary, *menuDictionary;
-	NSEnumerator	*mainMenuEnumerator, *menuItemsEnumerator, *subMenuItemsEnumerator;
-	NSMenu		*mainMenu, *theMenu, *subMenu;
-	id 		theMenuItem;
-	id			key, key1, key2, object;
-	NSUInteger	mask;
-	NSInteger			value;
-	
-	// The code below is copied from Sarah Chambers' code
-	
-	shortcutsPath = [MenuShortcutsPath stringByStandardizingPath];
-	shortcutsPath = [shortcutsPath stringByAppendingPathComponent:@"KeyEquivalents"];
-	shortcutsPath = [shortcutsPath stringByAppendingPathExtension:@"plist"];
-	if ([[NSFileManager defaultManager] fileExistsAtPath: shortcutsPath])
-		shortcutsDictionary = [NSDictionary dictionaryWithContentsOfFile:shortcutsPath];
-	else
-		return;
-	mainMenu = [NSApp mainMenu];
-	mainMenuEnumerator = [shortcutsDictionary keyEnumerator];
-	while ((key = [mainMenuEnumerator nextObject])) {
-		value = [key integerValue];
-		if (value == 0)
-			theMenu = [[mainMenu itemWithTitle: key] submenu];
-		else
-			theMenu = [[mainMenu itemAtIndex: (value - 1)] submenu];
-		menuDictionary = [shortcutsDictionary objectForKey: key];
-		
-		if (theMenu && menuDictionary) {
-			menuItemsEnumerator = [menuDictionary keyEnumerator];
-			while ((key1 = [menuItemsEnumerator nextObject])) {
-				value = [key1 integerValue];
-				if (value == 0)
-					theMenuItem = [theMenu itemWithTitle: key1];
-				else
-					theMenuItem = [theMenu itemAtIndex: (value - 1)];
-				object = [menuDictionary objectForKey: key1];
-				
-				if (([object isKindOfClass: [NSDictionary class]]) && ([theMenuItem hasSubmenu])) {
-					subMenu = [theMenuItem submenu];
-					subMenuItemsEnumerator = [object keyEnumerator];
-					while ((key2 = [subMenuItemsEnumerator nextObject])) {
-						value = [key2 integerValue];
-						if (value == 0)
-							theMenuItem = [subMenu itemWithTitle: key2];
-						else
-							theMenuItem = [subMenu itemAtIndex: (value - 1)];
-						object = [object objectForKey: key2];
-						if ([object isKindOfClass: [NSArray class]]) {
-							theChar = [object objectAtIndex: 0];
-							if ([theChar isKindOfClass: [NSString class]]) {
-								mask = (NSCommandKeyMask | NSFunctionKeyMask);
-								if ([[object objectAtIndex: 1] boolValue])
-									mask = (mask | NSAlternateKeyMask);
-								if ([[object objectAtIndex: 2] boolValue])
-									mask = (mask | NSControlKeyMask);
-								[theMenuItem setKeyEquivalent: theChar];
-								[theMenuItem setKeyEquivalentModifierMask: mask];
-								}							}
-						}
-					} 
-				
-				else if ([object isKindOfClass: [NSArray class]]) {
-					theChar = [object objectAtIndex: 0];
-					if ([theChar isKindOfClass: [NSString class]]) {
-						mask = (NSCommandKeyMask | NSFunctionKeyMask);
-						if ([[object objectAtIndex: 1] boolValue])
-							mask = (mask | NSAlternateKeyMask);
-						if ([[object objectAtIndex: 2] boolValue])
-							mask = (mask | NSControlKeyMask);
-						[theMenuItem setKeyEquivalent: theChar];
-						[theMenuItem setKeyEquivalentModifierMask: mask];
-						}
-				}
-			}
-		}
-	}
-	
+    NSString *path = [[[MenuShortcutsPath stringByStandardizingPath] stringByAppendingPathComponent:@"KeyEquivalents"] stringByAppendingPathExtension:@"plist"];
+    NSDictionary *shortcuts = [NSDictionary dictionaryWithContentsOfFile:path];
+    TSApplyLegacyMenuKeys(NSApp.mainMenu, shortcuts);
 }
 
 // mitsu 1.29 (P)

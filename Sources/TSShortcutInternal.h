@@ -18,6 +18,7 @@ void TSPrepareMenuIdentifiers(NSMenu *menu);
 SEL TSMacroAction(void);
 @interface TSShortcutStore (MenuAccess)
 @property (readonly) NSMenu *menu;
+@property (readonly) NSUserDefaults *defaults;
 - (NSArray<TSShortcutMatch *> *)menuMatchesKey:(NSString *)key modifiers:(NSEventModifierFlags)flags excluding:(nullable NSMenuItem *)excluded;
 - (nullable NSString *)conflictForKey:(NSString *)key modifiers:(NSEventModifierFlags)flags except:(nullable NSMenuItem *)excluded restoring:(nullable TSShortcutCommand *)restoring;
 - (nullable NSString *)conflictForRestoringCommand:(TSShortcutCommand *)command;

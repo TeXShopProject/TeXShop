@@ -1,11 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSShortcutInternal.h"
-@interface TSShortcutContentView : NSView
-@end
-@implementation TSShortcutContentView
-- (BOOL)isFlipped { return YES; }
-@end
-
+#import <QuartzCore/QuartzCore.h>
 @interface TSShortcutKeySearchView : NSView
 @property (copy, nullable) BOOL (^handleEvent)(NSEvent *event);
 @end
@@ -80,7 +75,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (strong, nullable, readonly) NSWindow *window;
 @property NSTextField *hint;
 @property NSTableView *table;
-@property NSLayoutConstraint *tableContentHeight;
+@property (copy) NSArray<NSBox *> *inputGroups;
+@property (copy) NSArray<NSButton *> *inputDisclosures;
+@property BOOL compactInputs;
+@property BOOL configuredInputs;
+@property (nullable) NSView *highlightedCompletionRow;
 @property NSSearchField *search;
 @property NSArray<TSShortcutCommand *> *visibleCommands;
 @property NSArray<NSButton *> *selectionButtons;
@@ -94,6 +93,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property NSEventModifierFlags capturedModifiers;
 @end
 @implementation TSShortcutPaneController
+@synthesize settingsHeader = _settingsHeader;
+@synthesize inputGroups = _inputGroups, inputDisclosures = _inputDisclosures, compactInputs = _compactInputs, configuredInputs = _configuredInputs, highlightedCompletionRow = _highlightedCompletionRow;
 - (instancetype)initWithShortcuts:(TSKeyboardShortcuts *)shortcuts {
     self = [super initWithNibName:nil bundle:nil];
     if (self == nil) { return nil; }
@@ -101,6 +102,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     _store = shortcuts.store;
     _textQuery = @""; _searchMatches = @[]; _searchMessage = @"";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shortcutsChanged:) name:TSMacroShortcutsChangedNotification object:shortcuts];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(completionTriggerChanged:) name:@"CommandCompletionCharNotification" object:nil];
     return self;
 }
 - (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
@@ -158,35 +160,19 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     buttons.orientation = NSUserInterfaceLayoutOrientationVertical; buttons.alignment = NSLayoutAttributeLeading; buttons.spacing = 8;
     for (NSView *view in @[self.searchMode,self.search,hint,scroll,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
     NSView *header = self.settingsHeader;
+    NSLayoutYAxisAnchor *searchTop = content.topAnchor;
     if (header != nil) {
-        // Input settings and command rows share one vertical scroll document.
-        // Search and actions stay available even on a short display.
-        NSView *document = [TSShortcutContentView new];
-        document.translatesAutoresizingMaskIntoConstraints = NO;
-        NSTableHeaderView *columns = self.table.headerView;
-        self.table.headerView = nil;
-        scroll.documentView = document;
-        for (NSView *part in @[header, columns, self.table]) {
-            part.translatesAutoresizingMaskIntoConstraints = NO;
-            [document addSubview:part];
-            [NSLayoutConstraint activateConstraints:@[
-                [part.leadingAnchor constraintEqualToAnchor:document.leadingAnchor],
-                [part.trailingAnchor constraintEqualToAnchor:document.trailingAnchor]]];
-        }
-        self.tableContentHeight = [self.table.heightAnchor constraintEqualToConstant:0];
-        NSLayoutConstraint *width = [document.widthAnchor constraintEqualToAnchor:scroll.contentView.widthAnchor];
-        width.priority = NSLayoutPriorityDefaultHigh;
+        header.translatesAutoresizingMaskIntoConstraints = NO;
+        [content addSubview:header];
         [NSLayoutConstraint activateConstraints:@[
-            width, [document.widthAnchor constraintGreaterThanOrEqualToConstant:660],
-            [header.topAnchor constraintEqualToAnchor:document.topAnchor],
-            [columns.topAnchor constraintEqualToAnchor:header.bottomAnchor constant:12],
-            [columns.heightAnchor constraintEqualToConstant:24],
-            [self.table.topAnchor constraintEqualToAnchor:columns.bottomAnchor],
-            self.tableContentHeight,
-            [self.table.bottomAnchor constraintEqualToAnchor:document.bottomAnchor]]];
+            [header.leadingAnchor constraintEqualToAnchor:content.leadingAnchor],
+            [header.trailingAnchor constraintEqualToAnchor:content.trailingAnchor],
+            [header.topAnchor constraintEqualToAnchor:content.topAnchor]]];
+        [self configureInputDisclosures];
+        searchTop = header.bottomAnchor;
     }
     [NSLayoutConstraint activateConstraints:@[
-        [self.searchMode.topAnchor constraintEqualToAnchor:content.topAnchor constant:16],
+        [self.searchMode.topAnchor constraintEqualToAnchor:searchTop constant:8],
         [self.searchMode.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
         [self.searchMode.centerYAnchor constraintEqualToAnchor:self.search.centerYAnchor],
         [self.search.widthAnchor constraintGreaterThanOrEqualToConstant:160],
@@ -198,23 +184,89 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         [self.search.trailingAnchor constraintEqualToAnchor:self.searchMode.leadingAnchor constant:-8],
         [hint.topAnchor constraintEqualToAnchor:self.search.bottomAnchor constant:12],
         [hint.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [hint.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
-        [scroll.topAnchor constraintEqualToAnchor:hint.bottomAnchor constant:16],
+        [scroll.topAnchor constraintEqualToAnchor:hint.bottomAnchor constant:8],
         [scroll.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor], [scroll.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
-        [buttons.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:16],
+        [buttons.topAnchor constraintEqualToAnchor:scroll.bottomAnchor constant:8],
         [buttons.leadingAnchor constraintEqualToAnchor:self.search.leadingAnchor],
         [buttons.trailingAnchor constraintLessThanOrEqualToAnchor:content.trailingAnchor constant:-20],
         [buttons.bottomAnchor constraintEqualToAnchor:content.bottomAnchor constant:-20]
     ]];
     [self reloadCommands];
 }
-- (void)reloadTable {
-    [self.table reloadData];
-    if (self.tableContentHeight != nil) {
-        NSInteger count = self.table.numberOfRows;
-        self.tableContentHeight.constant = count > 0 ? NSMaxY([self.table rectOfRow:count - 1]) : 0;
-        [self.view layoutSubtreeIfNeeded];
+- (void)configureInputDisclosures {
+    NSView *candidate = self.settingsHeader.subviews.firstObject;
+    if (![candidate isKindOfClass:NSStackView.class]) return;
+    NSStackView *stack = (NSStackView *)candidate;
+    stack.spacing = 8;
+    // A compact header leaves room for the independently scrolling result list.
+    for (NSLayoutConstraint *constraint in self.settingsHeader.constraints) {
+        if (constraint.firstAttribute == NSLayoutAttributeTop) constraint.constant = 4;
+        if (constraint.firstAttribute == NSLayoutAttributeBottom) constraint.constant = -4;
+    }
+    NSMutableArray<NSBox *> *groups = [NSMutableArray array];
+    NSMutableArray<NSButton *> *buttons = [NSMutableArray array];
+    for (NSView *view in [stack.arrangedSubviews copy]) {
+        if (![view isKindOfClass:NSBox.class]) continue;
+        NSBox *group = (NSBox *)view;
+        for (NSLayoutConstraint *constraint in group.contentView.constraints) {
+            if (constraint.firstAttribute == NSLayoutAttributeTop) constraint.constant = 4;
+            if (constraint.firstAttribute == NSLayoutAttributeBottom) constraint.constant = -4;
+        }
+        NSButton *button = [NSButton buttonWithTitle:@"" target:self action:@selector(toggleInputGroup:)];
+        [button setButtonType:NSButtonTypeOnOff]; button.bezelStyle = NSBezelStyleDisclosure;
+        button.tag = (NSInteger)groups.count; button.state = NSControlStateValueOn;
+        button.accessibilityValue = NSLocalizedString(@"Expanded", @"");
+        button.translatesAutoresizingMaskIntoConstraints = NO;
+        button.accessibilityLabel = group.accessibilityLabel;
+        [button.widthAnchor constraintEqualToConstant:18].active = YES;
+        [button.heightAnchor constraintEqualToConstant:18].active = YES;
+        NSTextField *caption = [NSTextField wrappingLabelWithString:group.accessibilityLabel ?: @""];
+        caption.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
+        NSStackView *disclosureRow = [NSStackView stackViewWithViews:@[button, caption]];
+        disclosureRow.orientation = NSUserInterfaceLayoutOrientationHorizontal;
+        disclosureRow.alignment = NSLayoutAttributeCenterY;
+        disclosureRow.spacing = 8;
+        disclosureRow.translatesAutoresizingMaskIntoConstraints = NO;
+        NSUInteger index = [stack.arrangedSubviews indexOfObject:group];
+        [stack insertArrangedSubview:disclosureRow atIndex:index];
+        [disclosureRow.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active = YES;
+        NSView *body = group.contentView.subviews.firstObject;
+        if ([body isKindOfClass:NSStackView.class]) {
+            NSView *heading = ((NSStackView *)body).arrangedSubviews.firstObject;
+            if ([heading.identifier hasPrefix:@"heading."]) [heading removeFromSuperview];
+        }
+        [groups addObject:group]; [buttons addObject:button];
+    }
+    self.inputGroups = groups; self.inputDisclosures = buttons;
+}
+- (void)setInputGroup:(NSUInteger)index expanded:(BOOL)expanded {
+    if (index >= self.inputGroups.count) return;
+    self.inputGroups[index].hidden = !expanded;
+    self.inputDisclosures[index].state = expanded ? NSControlStateValueOn : NSControlStateValueOff;
+    self.inputDisclosures[index].accessibilityValue = NSLocalizedString(expanded ? @"Expanded" : @"Collapsed", @"");
+}
+- (void)toggleInputGroup:(NSButton *)sender {
+    BOOL expanded = sender.state == NSControlStateValueOn;
+    if (self.compactInputs && expanded) for (NSUInteger index = 0; index < self.inputGroups.count; index++) [self setInputGroup:index expanded:NO];
+    [self setInputGroup:(NSUInteger)sender.tag expanded:expanded];
+}
+- (void)viewDidLayout {
+    [super viewDidLayout];
+    BOOL compact = NSHeight(self.view.bounds) < 700;
+    if (!self.configuredInputs || compact != self.compactInputs) {
+        self.configuredInputs = YES; self.compactInputs = compact;
+        for (NSUInteger index = 0; index < self.inputGroups.count; index++) [self setInputGroup:index expanded:!compact];
+        if (self.highlightedCompletionRow != nil) [self revealCompletionGroup];
     }
 }
+- (void)revealCompletionGroup {
+    for (NSUInteger index = 0; index < self.inputGroups.count; index++) {
+        BOOL completion = [self.inputGroups[index].identifier isEqualToString:@"group.completion"];
+        if (completion || self.compactInputs) [self setInputGroup:index expanded:completion];
+    }
+    [self.view layoutSubtreeIfNeeded];
+}
+- (void)reloadTable { [self.table reloadData]; }
 - (void)reloadFunctionCommands {
     self.hint.stringValue = NSLocalizedString(@"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors.", @"");
     if (self.store.unavailableCommands.count)
@@ -249,6 +301,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     if (window != nil) { [window makeFirstResponder:self.keySearchView]; }
 }
 - (void)stopKeySearch {
+    [self clearCompletionHighlight];
     if (!self.searchingByKey) { return; }
     self.searchingByKey = NO;
     self.searchMode.selectedSegment = TSShortcutSearchByFunction;
@@ -273,7 +326,21 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     [self updateKeyResults];
     return YES;
 }
+- (NSView *)completionRowInView:(NSView *)view {
+    if ([view.identifier isEqualToString:@"row.settings.completion-trigger-label"]) return view;
+    for (NSView *child in view.subviews) { NSView *found = [self completionRowInView:child]; if (found != nil) return found; }
+    return nil;
+}
+- (void)clearCompletionHighlight {
+    self.highlightedCompletionRow.layer.borderWidth = 0;
+    self.highlightedCompletionRow = nil;
+}
+- (void)completionTriggerChanged:(NSNotification *)notification {
+    if (self.searchingByKey) [self updateKeyResults];
+}
 - (void)updateKeyResults {
+    [self clearCompletionHighlight];
+    BOOL reservedCompletion = NO;
     TSShortcutStore *store = self.store;
     NSEvent *event = self.searchEvent;
     self.searchMatches = @[];
@@ -285,7 +352,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
         NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
         self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
-        if (key.length == 0 || ![TSShortcutStore isAllowedKey:key modifiers:flags]) {
+        reservedCompletion = flags == 0 && [key isEqualToString:@"\t"] && [store.defaults stringForKey:@"CommandCompletionChar"] != nil && [[store.defaults stringForKey:@"CommandCompletionChar"] isEqualToString:@"TAB"];
+        if (reservedCompletion) {
+            self.searchMatches = @[];
+            self.searchMessage = NSLocalizedString(@"This key is reserved for command completion.", @"");
+        } else if (key.length == 0 || ![TSShortcutStore isAllowedKey:key modifiers:flags]) {
             self.searchMessage = self.searchMatches.count > 0
                 ? NSLocalizedString(@"Existing assignments are shown. This key cannot be assigned to a new shortcut.", @"")
                 : NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
@@ -307,6 +378,16 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     NSInteger first = self.searchMatches.count > 0 ? (self.searchMatches[0].macro != nil ? 1 : 0) : -1;
     if (first >= 0) { [self.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)first] byExtendingSelection:NO]; [self.table scrollRowToVisible:first]; }
     [self updateSelectionButtons];
+    if (reservedCompletion && self.settingsHeader != nil) {
+        [self revealCompletionGroup];
+        NSView *row = [self completionRowInView:self.settingsHeader];
+        if (row == nil) return;
+        row.wantsLayer = YES; row.layer.cornerRadius = 4;
+        row.layer.borderColor = NSColor.controlAccentColor.CGColor; row.layer.borderWidth = 2;
+        self.highlightedCompletionRow = row;
+        [row scrollRectToVisible:NSInsetRect(row.bounds, -4, -4)];
+        NSAccessibilityPostNotification(row, NSAccessibilityLayoutChangedNotification);
+    }
 }
 - (NSInteger)macroHeaderRow {
     if (!self.searchingByKey) { return -1; }

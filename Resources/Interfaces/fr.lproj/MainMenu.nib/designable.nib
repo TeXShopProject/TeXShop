@@ -510,11 +510,11 @@
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Raccourcis clavier" id="943" identifier="TSShortcut.changeAutoComplete:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeAutoComplete:" target="-1" id="945"/>
-                                            </connections>
-                                        </menuItem>
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAutoComplete:" target="-1" id="945"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Commande de complètement" id="539">
                                 <menu key="submenu" title="Commande de complètement" id="540">
                                     <items>
@@ -565,7 +565,6 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-
                                     </items>
                                 </menu>
                             </menuItem>

@@ -13,6 +13,7 @@
 #import "TSPrefThemeNameController.h"
 #import "TSSettingsCategory.h"
 #import "TSPrefPaneLayout.h"
+#import "TSAppDelegate.h"
 #include "TSSettingsPaneClassification.inc"
 @implementation TSPreferences (Panes)
 - (NSArray<TSPrefPaneController *> *)makeSettingsPanes

@@ -512,11 +512,11 @@
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="キーバインド" id="944" identifier="TSShortcut.changeAutoComplete:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeAutoComplete:" target="-1" id="946"/>
-                                            </connections>
-                                        </menuItem>
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAutoComplete:" target="-1" id="946"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="コマンド補完" id="539">
                                 <menu key="submenu" title="コマンド補完" id="540">
                                     <items>
@@ -567,7 +567,6 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-
                                     </items>
                                 </menu>
                             </menuItem>

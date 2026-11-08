@@ -27,6 +27,10 @@ def bundles(root, temp, names=NAMES, product=None, dock=False):
         for name in [*('Settings'+n for n in names),'SettingsCategories','SettingsDock']:
             src=(product/'Contents/Resources'/loc.name if product else loc)/(name+'.strings')
             if src.exists():shutil.copy2(src,destination/src.name)
+        localization = 'en.lproj' if language == 'Base' else loc.name
+        localized = resources/localization; localized.mkdir(exist_ok=True)
+        original = (product/'Contents/Resources'/localization if product else root/'Resources/Interfaces'/localization)/'Localizable.strings'
+        if original.exists():shutil.copy2(original,localized/original.name)
         if dock:
             artwork=product/'Contents/Resources/DockIcons' if product else root/'Resources/DockIcons'
             (resources/'DockIcons').symlink_to(artwork,target_is_directory=True)

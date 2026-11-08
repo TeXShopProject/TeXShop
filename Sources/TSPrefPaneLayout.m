@@ -63,6 +63,15 @@ typedef NS_ENUM(NSInteger, TSSettingsRowKind) {
     box.translatesAutoresizingMaskIntoConstraints = NO;
 }
 @end
+@implementation TSSettingsControlRow
+@synthesize controls = _controls, indentation = _indentation;
+- (instancetype)initWithControls:(NSArray<NSView *> *)controls indentation:(NSUInteger)indentation
+{
+    self = [super init];
+    if (self != nil) { _controls = [controls copy]; _indentation = indentation; }
+    return self;
+}
+@end
 @implementation TSPrefPaneLayout
 #include "TSSettingsPaneComposition.inc"
 + (NSStackView *)stackWithViews:(NSArray<NSView *> *)views orientation:(NSUserInterfaceLayoutOrientation)orientation
@@ -126,6 +135,23 @@ typedef NS_ENUM(NSInteger, TSSettingsRowKind) {
         [stack.topAnchor constraintEqualToAnchor:view.topAnchor constant:12],
         [stack.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-12]]];
     for (NSView *row in rows) [row.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active = YES;
+}
++ (NSView *)viewForRow:(TSSettingsControlRow *)row
+{
+    for (NSView *child in row.controls) [self prepareControl:child];
+    NSStackView *body = [self stackWithViews:row.controls orientation:NSUserInterfaceLayoutOrientationHorizontal];
+    NSView *container = [NSView new]; container.translatesAutoresizingMaskIntoConstraints = NO;
+    [container addSubview:body];
+    [NSLayoutConstraint activateConstraints:@[
+        [body.leadingAnchor constraintEqualToAnchor:container.leadingAnchor constant:24 * row.indentation],
+        [body.trailingAnchor constraintEqualToAnchor:container.trailingAnchor],
+        [body.centerYAnchor constraintEqualToAnchor:container.centerYAnchor],
+        [container.heightAnchor constraintGreaterThanOrEqualToAnchor:body.heightAnchor],
+        [container.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
+    NSLayoutConstraint *fittingHeight = [container.heightAnchor constraintEqualToConstant:0];
+    fittingHeight.priority = 249; fittingHeight.active = YES;
+    container.identifier = [@"row." stringByAppendingString:row.controls.firstObject.identifier ?: @""];
+    return container;
 }
 + (void)arrangeView:(NSView *)view
 {
@@ -202,19 +228,7 @@ typedef NS_ENUM(NSInteger, TSSettingsRowKind) {
             } else [NSException raise:NSInternalInconsistencyException format:@"Invalid settings section %@", first];
             continue;
         }
-        for (NSView *child in items) [self prepareControl:child];
-        NSStackView *body = [self stackWithViews:items orientation:NSUserInterfaceLayoutOrientationHorizontal];
-        NSView *container = [NSView new]; container.translatesAutoresizingMaskIntoConstraints = NO;
-        [container addSubview:body];
-        [NSLayoutConstraint activateConstraints:@[
-            [body.leadingAnchor constraintEqualToAnchor:container.leadingAnchor constant:24 * row.indentation],
-            [body.trailingAnchor constraintEqualToAnchor:container.trailingAnchor],
-            [body.centerYAnchor constraintEqualToAnchor:container.centerYAnchor],
-            [container.heightAnchor constraintGreaterThanOrEqualToAnchor:body.heightAnchor],
-            [container.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
-        NSLayoutConstraint *fittingHeight = [container.heightAnchor constraintEqualToConstant:0];
-        fittingHeight.priority = 249; fittingHeight.active = YES;
-        container.identifier = [@"row." stringByAppendingString:row.identifiers.firstObject ?: @""];
+        NSView *container = [self viewForRow:[[TSSettingsControlRow alloc] initWithControls:items indentation:row.indentation]];
         if (row.kind == TSSettingsRowField) [first.widthAnchor constraintEqualToConstant:170].active = YES;
         [rows addObject:container];
     }

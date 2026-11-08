@@ -265,3 +265,29 @@
 "Advanced" = "詳細";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "TeX環境をインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。";
+
+"Completion trigger" = "呼び出すキー";
+
+"This key is reserved for command completion." = "予約済みのキーです（コマンド補完の呼び出し）。";
+
+"Encoding" = "文字コード";
+
+"Saving Documents" = "保存";
+
+"Page Display" = "ページ表示";
+
+"PDF Interaction" = "PDFの操作";
+
+"PDF Appearance" = "PDFの外観";
+
+"HTML Preview" = "HTMLプレビュー";
+
+"Typesetting Defaults" = "タイプセットの初期値";
+
+"Synchronization" = "同期";
+
+"Tools" = "ツール";
+
+"Expanded" = "展開";
+
+"Collapsed" = "折りたたみ";

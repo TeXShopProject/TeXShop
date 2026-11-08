@@ -244,3 +244,29 @@
 "Advanced" = "고급";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "TeX 배포판을 설치한 다음 설정 > 조판에서 자동 설정을 실행하십시오.";
+
+"Completion trigger" = "호출 키";
+
+"This key is reserved for command completion." = "명령어 완성을 위해 예약된 키입니다.";
+
+"Encoding" = "문자 인코딩";
+
+"Saving Documents" = "문서 저장";
+
+"Page Display" = "페이지 표시";
+
+"PDF Interaction" = "PDF 조작";
+
+"PDF Appearance" = "PDF 모양";
+
+"HTML Preview" = "HTML 미리보기";
+
+"Typesetting Defaults" = "조판 기본값";
+
+"Synchronization" = "동기화";
+
+"Tools" = "도구";
+
+"Expanded" = "펼침";
+
+"Collapsed" = "접힘";

@@ -6,6 +6,7 @@
 #import "TSPrefPaneController.h"
 #import "TSPrefFooterController.h"
 #import "TSPreferences.h"
+#import "TSAppDelegate.h"
 #import "TSPrefPaneLayout.h"
 #include "TSSettingsPaneClassification.inc"
 @interface TSSettingsWindowController (Testing)
@@ -13,6 +14,12 @@
 @property (strong, readonly) NSSegmentedControl *navigationControl;
 @property (strong, readonly) NSScrollView *contentScroll;
 - (void)navigate:(NSSegmentedControl *)sender;
+@end
+@interface TSShortcutPaneController (Testing)
+@property (readonly) NSSegmentedControl *searchMode;
+@property (readonly) NSTableView *table;
+@property (readonly) NSView *highlightedCompletionRow;
+- (void)changeSearchMode:(NSSegmentedControl *)sender;
 @end
 static NSString *shellPath;
 static BOOL testKeyWindow;
@@ -33,6 +40,7 @@ static NSWindow *testSheet;
 static BOOL IsKey(id self,SEL selector){return testKeyWindow;}
 static NSWindow *Sheet(id self,SEL selector){return testSheet;}
 static void Check(BOOL yes,NSString *message){if(!yes){fprintf(stderr,"FAIL: %s\n",message.UTF8String);exit(1);}}
+static NSView *FindControl(NSView *view,NSString *identifier) {if([view.identifier isEqual:identifier])return view;for(NSView *child in view.subviews){NSView *found=FindControl(child,identifier);if(found)return found;}return nil;}
 static NSData *ReadNib(NSString *path) {NSData *data=[NSData dataWithContentsOfFile:path];if(data==nil) abort();return data;}
 static NSString *Argument(const char *value) {NSString *text=[NSString stringWithUTF8String:value];if(text==nil) abort();return text;}
 @interface Segment:NSSegmentedControl
@@ -49,6 +57,8 @@ static NSString *Argument(const char *value) {NSString *text=[NSString stringWit
 }
 @end
 static NSBundle *paneBundle;
+static IMP originalMainBundle;
+static id MainBundle(id receiver,SEL selector) { return paneBundle ?: ((id (*)(id,SEL))originalMainBundle)(receiver,selector); }
 static TSMemoryDefaults *fixtureDefaults;
 @interface Owner:NSObject<TSSettingsWindowDelegate,NSObject> { @public NSWindow *_prefsWindow; }
 @property NSArray<TSPrefPaneController *> *preferencePanes;
@@ -99,6 +109,8 @@ static NSView *Footer(NSArray<TSPrefPaneController *> *panes) { for(TSPrefPaneCo
 static void SaveImage(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSData *tiff=image.TIFFRepresentation;if(tiff==nil)abort();NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:tiff];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(setFrameAutosaveName:)),(IMP)RestoreFrame);[NSApplication sharedApplication];
+ Method bundleMethod=class_getClassMethod(NSBundle.class,@selector(mainBundle));Check(bundleMethod!=NULL,@"bundle method exists");
+ originalMainBundle=method_setImplementation(bundleMethod,(IMP)MainBundle);
  Method visibleMethod=class_getInstanceMethod(NSScreen.class,@selector(visibleFrame));
  Check(visibleMethod!=NULL,@"screen method exists");
  if(visibleMethod!=NULL) originalVisibleFrame=method_setImplementation(visibleMethod,(IMP)VisibleFrame);
@@ -113,6 +125,7 @@ int main(int argc,char **argv){@autoreleasepool{
  for(int i=0;i<60;i++)[h goBack];Check([h.currentIdentifier isEqual:@"10"],@"oldest entries evicted");
  for(int a=3;a<argc;a++){
   paneBundle=[NSBundle bundleWithPath:Argument(argv[a])];fixtureDefaults=[TSMemoryDefaults new];
+  [[TSKeyboardShortcuts sharedController] setValue:[[TSShortcutStore alloc]initWithMenu:[NSMenu new] defaults:fixtureDefaults] forKey:@"store"];
   Owner *integration=[Owner new];integration.outlets=[NSMutableDictionary new];integration.valid=YES;
   restoreFrame=NO;smallScreen=(a==3);
   Check([integration prepareSettingsWindow],@"production prepare succeeds");[integration.settingsController beginSession];
@@ -120,6 +133,29 @@ int main(int argc,char **argv){@autoreleasepool{
   if(a==3){
    Check(NSWidth(integration->_prefsWindow.frame)<=800 && NSHeight(integration->_prefsWindow.frame)<=600,@"initial window fits a small screen");
   }
+  Check([integration.settingsController selectCategoryIdentifier:@"keyboard"],@"Production keyboard is selectable");
+  TSShortcutPaneController *keyboardPane=[integration.settingsController valueForKey:@"keyboardPane"];
+  Check(keyboardPane!=nil && keyboardPane.settingsHeader!=nil,@"Actual keyboard provider carries the input header");
+  NSView *keyboard=keyboardPane.view;
+  Check(keyboard.window==integration->_prefsWindow,@"Actual keyboard view is attached to the settings window");
+  for(NSString *identifier in @[@"settings.edit-bindings",@"settings.edit-completion",@"settings.926",@"settings.cell.843",@"settings.completion-trigger-label"])Check(FindControl(keyboard,identifier)!=nil,[@"Production provider attaches input settings: " stringByAppendingString:identifier]);
+  [integration->_prefsWindow.contentView layoutSubtreeIfNeeded];
+  Check(!keyboard.enclosingScrollView.hasVerticalScroller,@"Keyboard list owns vertical scrolling");
+  [keyboardPane viewDidLayout];[keyboard layoutSubtreeIfNeeded];
+  [fixtureDefaults setObject:@"TAB" forKey:@"CommandCompletionChar"];
+  keyboardPane.searchMode.selectedSegment=1;[keyboardPane changeSearchMode:keyboardPane.searchMode];
+  NSEvent *tab=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0 windowNumber:0 context:nil characters:@"\t" charactersIgnoringModifiers:@"\t" isARepeat:NO keyCode:48];
+  Check([keyboardPane handleKeySearchEvent:tab],@"Actual keyboard captures Tab");[keyboard layoutSubtreeIfNeeded];
+  NSView *trigger=keyboardPane.highlightedCompletionRow;
+  Check(trigger!=nil && NSContainsRect(keyboard.bounds,[trigger convertRect:trigger.bounds toView:keyboard]),@"Actual completion trigger is highlighted within the keyboard viewport");
+  fprintf(stderr,"ACTUAL keyboard=%s header=%s table=%s\n",NSStringFromRect(keyboard.frame).UTF8String,NSStringFromRect(keyboardPane.settingsHeader.frame).UTF8String,NSStringFromRect(keyboardPane.table.enclosingScrollView.frame).UTF8String);
+  Check(NSHeight(keyboardPane.table.enclosingScrollView.frame)>40,@"Actual input controls leave space for the scrolling list");
+  if(strlen(argv[2]) && (a==3 || [paneBundle.bundlePath containsString:@"ja.bundle"] || [paneBundle.bundlePath containsString:@"de.bundle"])) {
+   NSString *name=[paneBundle.bundlePath.lastPathComponent stringByDeletingPathExtension];
+   SaveImage(keyboard,[Argument(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"keyboard-%@.png",name]]);
+  }
+  [keyboardPane stopKeySearch];
+  [integration.settingsController selectCategoryIdentifier:@"general"];
   smallScreen=NO;
   if(a==3){
    [integration->_prefsWindow.contentView layoutSubtreeIfNeeded];
@@ -132,6 +168,7 @@ int main(int argc,char **argv){@autoreleasepool{
    Owner *large=[Owner new];large.outlets=[NSMutableDictionary new];large.valid=YES;
    Check([large prepareSettingsWindow],@"large screen production prepare succeeds");[large.settingsController beginSession];
    [large->_prefsWindow.contentView layoutSubtreeIfNeeded];
+   Check(large->_prefsWindow.contentMinSize.width==900 && large->_prefsWindow.contentMinSize.height==560,@"Normal minimum balances 190-point sidebar and 700-point content");
    NSSize extent=large.settingsController.contentScroll.contentSize, pane=large.settingsController.contentScroll.documentView.frame.size;
    Check(extent.height>0 && pane.height>0,@"large screen has a usable scrollable viewport");
    largeScreen=NO;
