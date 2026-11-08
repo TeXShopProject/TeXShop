@@ -67,10 +67,13 @@
 @implementation MyPDFKitView : PDFView
 {
     TSExternalPDFPosition secondViewport;
+    id linkPreviewEventMonitor;
 }
 
 - (void)dealloc
 {
+    if (linkPreviewEventMonitor) [NSEvent removeMonitor:linkPreviewEventMonitor];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (external_scanner != NULL)
         synctex_scanner_free(external_scanner);
     external_scanner = NULL;
@@ -196,8 +199,8 @@
     self.firstTime = YES;
     
     protectFind = NO;
-    self.handlingLink = 0;
-    self.timerNumber = 0;
+    if (self.handlingLink) [self doKillPopup];
+    [self increaseTimerNumber];
     self.oneOffSearchString = NULL;
     self.PDFFlashFix = [SUD boolForKey: FlashFixKey];
     tempDelay = [SUD doubleForKey: FlashDelayKey];
@@ -3851,6 +3854,7 @@ if (self.myDocument.useConTeXtSyncParser)
 
  - (void) mouseDown: (NSEvent *) theEvent
 {
+    if (self.handlingLink) [self doKillPopup];
     
     if ([self annotationMouseDown: theEvent])
         return;
@@ -3999,7 +4003,7 @@ if (self.myDocument.useConTeXtSyncParser)
  If the mouse is moved to a different link, the original popUp
   immediately disappears and is replaced by a new popUp. If the mouse is moved away from links,
  the popUp  immediately disappears. If the option key is down when the popUp window appears, the popUp
- will remain until the mouse moves.
+ will remain while the mouse moves, until Escape is pressed.
  
  It is therefore necessary to avoid the following problem. Suppose the mouse is in one link and is then
  moved to a second link. The original popUp will then be removed by just removing the overlay, and an image
@@ -4053,7 +4057,7 @@ The system then remembers the new number and sends is to the Timer which will di
 {
    
     
-if (! self.skipLinks)
+if (!self.skipLinks && !self.globalLongTerm)
     
     {
         
@@ -4307,7 +4311,7 @@ if (! self.skipLinks)
     
     NSNumber *timerNumberObject = (NSNumber *)theTimer.userInfo[0];
     NSInteger aTimerNumber = [(NSNumber *)theTimer.userInfo[0] integerValue];
-    if (aTimerNumber != self.timerNumber)
+    if (aTimerNumber != self.timerNumber || self.handlingLink != 1 || self.skipLinks || !self.window)
         return;
     NSPoint originalPoint = [(NSValue *)theTimer.userInfo[1] pointValue];
     NSEvent *theEvent = (NSEvent *)theTimer.userInfo[2];
@@ -4343,8 +4347,7 @@ if (! self.skipLinks)
                 largerSize = YES;
             if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
                 pushUp = YES;
-            if ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)
-                self.globalLongTerm = YES;
+
             
             
              
@@ -4362,6 +4365,7 @@ if (! self.skipLinks)
                 return;
             }
             NSImage *myImageNew = TSLinkPreviewImage(linkedPage, imageSize);
+            if (!myImageNew) { self.handlingLink = 0; return; }
             OverView *theOverView = [[OverView alloc] initWithFrame: [[self documentView] frame] ];
             if (self.overView) {
                 [self.overView removeFromSuperview];
@@ -4383,6 +4387,8 @@ if (! self.skipLinks)
             // if (outputString)
             // NSLog(outputString);
             self.handlingLink = 2;
+            self.globalLongTerm = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+            [self observeLinkPreviewEvents];
             NSArray *info = [NSArray arrayWithObjects: timerNumberObject, nil];
             [NSTimer scheduledTimerWithTimeInterval:4.0
                                              target:self
@@ -4403,38 +4409,67 @@ if (! self.skipLinks)
 
 
 
- - (void)doKillPopup
+// Observe only this window; hovering must not steal keyboard focus from its controls.
+- (NSEvent *)handleLinkPreviewEvent:(NSEvent *)event
 {
-
-    if (self.overView) {
-        [self.overView removeFromSuperview];
-        self.overView = nil;
-        self.globalLongTerm = NO;
+    if (!self.window || event.window != self.window || self.handlingLink != 2)
+        return event;
+    if (event.type == NSEventTypeFlagsChanged && (event.modifierFlags & NSEventModifierFlagOption))
+        self.globalLongTerm = YES;
+    if (self.globalLongTerm && event.type == NSEventTypeKeyDown
+        && !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl
+                                    | NSEventModifierFlagOption | NSEventModifierFlagShift))
+        && [event.charactersIgnoringModifiers isEqualToString:@"\033"]) {
+        [self doKillPopup];
+        return nil;
     }
+    return event;
+}
+
+- (void)observeLinkPreviewEvents
+{
+    if (linkPreviewEventMonitor) return;
+    __weak MyPDFKitView *weakSelf = self;
+    linkPreviewEventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:
+        NSEventMaskKeyDown | NSEventMaskFlagsChanged handler:^NSEvent *(NSEvent *event) {
+            MyPDFKitView *view = weakSelf;
+            return view ? [view handleLinkPreviewEvent:event] : event;
+        }];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkPreviewWindowWillClose:)
+        name:NSWindowWillCloseNotification object:self.window];
+}
+
+- (void)linkPreviewWindowWillClose:(NSNotification *)notification
+{
+    [self doKillPopup];
+}
+
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+    if (newWindow != self.window && self.handlingLink) [self doKillPopup];
+    [super viewWillMoveToWindow:newWindow];
+}
+
+- (void)doKillPopup
+{
+    // Invalidate a pending show timer as well as the previous popup's timeout.
+    [self increaseTimerNumber];
+    if (linkPreviewEventMonitor) {
+        [NSEvent removeMonitor:linkPreviewEventMonitor];
+        linkPreviewEventMonitor = nil;
+    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:nil];
+    [self.overView removeFromSuperview];
+    self.overView = nil;
+    self.globalLongTerm = NO;
     self.handlingLink = 0;
 }
 
-- (void)killPopup: (NSTimer *)theTimer
+- (void)killPopup:(NSTimer *)theTimer
 {
-    
-   // return; // activate this to leave "link destination" until cursor moves
-    
-    if ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask)
-        return;
-    
-    if (self.globalLongTerm)
-        return;
-    
     NSInteger aTimerNumber = [(NSNumber *)theTimer.userInfo[0] integerValue];
-    if (aTimerNumber != self.timerNumber)
-        return;
-    
-    if (self.overView) {
-        [self.overView removeFromSuperview];
-        self.overView = nil;
-        self.globalLongTerm = NO;
-    }
-    self.handlingLink = 0;
+    if (aTimerNumber != self.timerNumber || self.handlingLink != 2) return;
+    if (!self.globalLongTerm) [self doKillPopup];
 }
 
 
@@ -4871,6 +4906,7 @@ if (! self.skipLinks)
 // earses the frame of selected rectangle and cleans up the cached image
 - (void)cleanupMarquee: (BOOL)terminate
 {
+    if (self.handlingLink) { [self doKillPopup]; return; }
     // for Mavericks
    //  if (atLeastMavericks) {
     {
@@ -7982,6 +8018,7 @@ else
 
 - (void)setDocument:(PDFDocument *)document
 {
+    if (self.handlingLink) [self doKillPopup];
     BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
     CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
     [super setDocument:document];
