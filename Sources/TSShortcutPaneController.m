@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSShortcutInternal.h"
+#import "TSSettingsSearchText.h"
 #import <QuartzCore/QuartzCore.h>
 @interface TSShortcutKeySearchView : NSView
 @property (copy, nullable) BOOL (^handleEvent)(NSEvent *event);
@@ -71,6 +72,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (strong, nullable) NSEvent *searchEvent;
 @property (copy) NSArray<TSShortcutMatch *> *searchMatches;
 @property (copy) NSString *searchMessage;
+@property (copy, nullable) NSString *functionQueryBeforeGlobalSearch;
 @property (strong, nullable) TSShortcutStore *store;
 @property (strong, nullable, readonly) NSWindow *window;
 @property NSTextField *hint;
@@ -93,6 +95,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property NSEventModifierFlags capturedModifiers;
 @end
 @implementation TSShortcutPaneController
+@synthesize functionQueryBeforeGlobalSearch = _functionQueryBeforeGlobalSearch;
 @synthesize settingsHeader = _settingsHeader;
 @synthesize inputGroups = _inputGroups, inputDisclosures = _inputDisclosures, compactInputs = _compactInputs, configuredInputs = _configuredInputs, highlightedCompletionRow = _highlightedCompletionRow;
 - (instancetype)initWithShortcuts:(TSKeyboardShortcuts *)shortcuts {
@@ -115,7 +118,8 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 - (void)loadView {
     NSView *content = [[NSView alloc] initWithFrame:NSMakeRect(0,0,700,570)];
     self.view = content;
-    self.search = [NSSearchField new];
+    self.search = [NSSearchField new]; self.search.identifier = @"shortcut.section";
+    self.search.accessibilityIdentifier = @"settings.user-data";
     self.search.placeholderString = NSLocalizedString(@"Search commands", @"");
     self.search.delegate = self;
     self.searchMode = [NSSegmentedControl segmentedControlWithLabels:@[NSLocalizedString(@"Search by Function", @""), NSLocalizedString(@"Search by Key", @"")]
@@ -222,6 +226,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         [button.heightAnchor constraintEqualToConstant:18].active = YES;
         NSTextField *caption = [NSTextField wrappingLabelWithString:group.accessibilityLabel ?: @""];
         caption.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
+        caption.identifier = [@"heading." stringByAppendingString:group.identifier ?: @""];
         NSStackView *disclosureRow = [NSStackView stackViewWithViews:@[button, caption]];
         disclosureRow.orientation = NSUserInterfaceLayoutOrientationHorizontal;
         disclosureRow.alignment = NSLayoutAttributeCenterY;
@@ -272,10 +277,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     if (self.store.unavailableCommands.count)
         self.hint.stringValue = [self.hint.stringValue stringByAppendingFormat:@"\n%@: %@", NSLocalizedString(@"Shortcut Unavailable", @""), [self.store.unavailableCommands componentsJoinedByString:@", "]];
     NSString *query = self.search.stringValue ?: @"";
+    NSArray<NSString *> *tokens = TSSettingsQueryTokens(query);
     NSMutableArray *visible = [NSMutableArray array];
     for (TSShortcutCommand *command in self.store.commands) {
         if (command.item.hidden && !command.item.allowsKeyEquivalentWhenHidden) continue;
-        if (!query.length || [command.path localizedCaseInsensitiveContainsString:query]) [visible addObject:command];
+        if (!tokens.count || TSSettingsTextMatches(command.path, tokens)) [visible addObject:command];
     }
     self.visibleCommands = visible;
     [self reloadTable];
@@ -607,5 +613,30 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         NSWindow *parent = strongSelf.window;
         if (parent != nil && panel != nil) { [parent endSheet:panel returnCode:NSModalResponseOK]; }
     }];
+}
+- (void)applySettingsQuery:(NSString *)query targets:(NSArray<NSString *> *)targets filterCommands:(BOOL)filter
+{
+    [self stopKeySearch];
+    if (!self.isViewLoaded) return;
+    if (filter) {
+        if (self.functionQueryBeforeGlobalSearch == nil) self.functionQueryBeforeGlobalSearch = self.search.stringValue;
+        self.search.stringValue = query; [self reloadFunctionCommands];
+    } else {
+        NSString *previous = self.functionQueryBeforeGlobalSearch;
+        if (previous != nil) { self.search.stringValue = previous; self.functionQueryBeforeGlobalSearch = nil; [self reloadFunctionCommands]; }
+    }
+    for (NSUInteger index = 0; index < self.inputGroups.count; index++) {
+        NSBox *group = self.inputGroups[index];
+        NSMutableArray<NSView *> *queue = [NSMutableArray arrayWithObject:group];
+        BOOL found = [targets containsObject:[@"heading." stringByAppendingString:group.identifier ?: @""]];
+        while (queue.count) {
+            NSView *view = queue.lastObject; [queue removeLastObject];
+            NSString *identifier = view.identifier;
+            if (identifier != nil && [targets containsObject:identifier]) found = YES;
+            [queue addObjectsFromArray:view.subviews];
+        }
+        if (found) { for (NSUInteger other = 0; other < self.inputGroups.count; other++) [self setInputGroup:other expanded:other == index]; break; }
+    }
+    [self.view layoutSubtreeIfNeeded];
 }
 @end

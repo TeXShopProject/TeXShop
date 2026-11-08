@@ -6,6 +6,8 @@
 #import "TSMacroTreeNode.h"
 #import "TSPrefPaneLayout.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
+static void Check(BOOL value,NSString *message){if(!value){fprintf(stderr,"FAIL: %s\n",message.UTF8String);exit(1);}}
+#include "SettingsSearchCoverage.inc"
 static NSUInteger forwardedWindowEvents;
 static void AppKitSendEventProbe(id receiver, SEL selector, NSEvent *event) { forwardedWindowEvents++; }
 static NSString *nibPath;
@@ -201,10 +203,21 @@ int main(int argc,char **argv){@autoreleasepool{
  REQUIRE([shell selectCategoryIdentifier:TSSettingsCategoryKeyboard] && created==1);
  REQUIRE(pane.view.window==shell.window && [shell.window.title isEqual:@"Keyboard"] && ![pane isKindOfClass:NSWindowController.class]);
  [shell.window.contentView layoutSubtreeIfNeeded];
+ pane.search.stringValue=@"pre-existing query";[pane reloadCommands];
+ shell.commandNamesProvider=^NSArray<NSString *> *{NSMutableArray *names=[NSMutableArray array];for(TSShortcutCommand *command in coordinator.store.commands)[names addObject:command.path];return names;};
+ [shell selectCategoryIdentifier:@"general"];
+ REQUIRE([shell setSettingsSearchQuery:@"First"]);
+ REQUIRE([shell selectCategoryIdentifier:@"keyboard"]);
+ REQUIRE([pane.search.stringValue isEqual:@"First"] && pane.visibleCommands.count==1);
+ REQUIRE([shell setSettingsSearchQuery:@""] && [shell.history.currentIdentifier isEqual:@"general"]);
+ REQUIRE([pane.search.stringValue isEqual:@"pre-existing query"]);
+ [shell selectCategoryIdentifier:@"keyboard"];
  pane.search.stringValue=@"First";[pane reloadCommands];REQUIRE(pane.visibleCommands.count==1);
  NSDictionary *saved=[TSIsolatedAppKitDefaults.values copy];
  pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];
  REQUIRE(pane.searchingByKey && !pane.search.editable && shell.window.firstResponder==pane.keySearchView);
+ REQUIRE(![shell setSettingsSearchQuery:@"PDF"] && shell.searchQuery.length==0);
+ REQUIRE(![(id<NSSearchFieldDelegate>)shell control:[shell valueForKey:@"settingsSearchField"] textShouldBeginEditing:[NSText new]]);
  REQUIRE([pane.keySearchView.accessibilityValue isEqual:@"Press a key"]);
  for(NSString *key in @[@"q",@"w",@",",@"h",@"[",@"]"]){fixtureCharacters=key;REQUIRE([shell.window performKeyEquivalent:Event(key,C,0)] && pane.searchingByKey && [shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);}
  fixtureCharacters=@"f";[shell.window keyDown:Event(@"f",C,3)];REQUIRE(pane.searchMatches.count==3 && pane.table.selectedRow==0 && [pane macroHeaderRow]==2);
@@ -324,6 +337,12 @@ int main(int argc,char **argv){@autoreleasepool{
   REQUIRE(NSMinY(h)>NSMaxY(translated.search.frame));
   [translated.table scrollRowToVisible:translated.table.numberOfRows-1];
   REQUIRE(NSIntersectsRect(translated.table.visibleRect,[translated.table rectOfRow:translated.table.numberOfRows-1]));
+  TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:NSBundle.mainBundle categoryOrder:@[@"keyboard"] commandNames:@[]];
+  searchExcludedView=translated.settingsHeader;
+  SearchViews(translated.view,@"keyboard",index);searchExcludedView=nil;
+  [translated applySettingsQuery:@"ＦＩＲＳＴ" targets:@[] filterCommands:YES];
+  REQUIRE(translated.visibleCommands.count==1);
+  [translated applySettingsQuery:@"" targets:@[] filterCommands:NO];
   translated.search.stringValue=@"missing command fixture";[translated reloadCommands];
   REQUIRE(translated.table.numberOfRows==0);
   translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];

@@ -291,3 +291,11 @@
 "Expanded" = "展開";
 
 "Collapsed" = "折りたたみ";
+
+"Search Settings" = "設定を検索";
+
+"Settings results: %lu" = "設定の検索結果：%lu件";
+
+"No Settings Found" = "一致する設定がありません";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "全書類で使う共通ファイルを編集します。チェックボックスは新しい書類の初期値を設定します。";

@@ -268,3 +268,11 @@
 "Expanded" = "展开";
 
 "Collapsed" = "折叠";
+
+"Search Settings" = "搜索设置";
+
+"Settings results: %lu" = "找到的设置类别：%lu";
+
+"No Settings Found" = "未找到设置";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";

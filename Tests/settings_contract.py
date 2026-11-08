@@ -10,6 +10,10 @@ from pathlib import Path
 import argparse,json,hashlib
 
 def expand(contract):
+    if contract.get('format') == 3:
+        return {lang: {key: record['overrides'].get(lang, record['default'])
+                       for key, record in contract['strings'].items()}
+                for lang in contract['languages']}
     if contract.get('format') != 2:
         return contract
     return {language: {**contract['common'], **entries} for language,entries in contract['languages'].items()}

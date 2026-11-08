@@ -300,6 +300,29 @@ int main(int argc,char **argv){@autoreleasepool{
     }
    }
   }
+  c.searchBundle=paneBundle;
+  [c selectCategoryIdentifier:@"console"];
+  NSString *beforeSearch=[memory stringForKey:@"TSSettingsSelectedCategory"];
+  c.commandNamesProvider=^NSArray<NSString *> *{return @[@"Unique search command 93762"];};
+  Check([c setSettingsSearchQuery:@"Unique search command 93762"] && c.searchResults.count==1,@"Command model contributes without constructing Keyboard view");
+  Check(c.categoryTable.numberOfRows==1,@"Sidebar shows result categories only");
+  Check([(id<NSTableViewDelegate>)c tableView:c.categoryTable heightOfRow:0]==50,@"Result rows have no group separator spacing");
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+  Check([c.history.currentIdentifier isEqual:@"keyboard"],@"Filtered row resolves by category ID");
+  Check([[memory stringForKey:@"TSSettingsSelectedCategory"] isEqual:beforeSearch],@"Search navigation does not replace saved normal category");
+  Check([c setSettingsSearchQuery:@""] && [c.history.currentIdentifier isEqual:@"console"],@"Clearing returns to pre-search category");
+  NSButton *dependent=(NSButton *)FindControl([c viewForCategoryIdentifier:@"spelling"],@"settings.cell.teg-0p-Q8J");
+  dependent.enabled=NO;dependent.state=NSControlStateValueOn;
+  Check([c setSettingsSearchQuery:dependent.title],@"Disabled control label remains searchable");
+  Check([c selectCategoryIdentifier:@"spelling"],@"Result can show a disabled control");
+  Check(!dependent.enabled && dependent.state==NSControlStateValueOn,@"Result navigation preserves disabled state and non-default value");
+  Check([[c valueForKey:@"searchHighlights"] count]>0,@"Result highlights matching row");
+  Check([c setSettingsSearchQuery:@"notfound-93762"] && c.categoryTable.numberOfRows==0,@"Empty results do not show normal categories");
+  Check([[c valueForKey:@"searchHighlights"] count]==0,@"Query change removes obsolete highlighting");
+  owner.valid=NO;Check(![c setSettingsSearchQuery:@""] && c.searchQuery.length>0,@"Invalid fields refuse search exit without losing query");owner.valid=YES;
+  Check([c setSettingsSearchQuery:@""] && [c.history.currentIdentifier isEqual:@"console"],@"Search origin survives several query changes");
+  Check(c.categoryTable.numberOfRows==10,@"Normal category list restored");
+  testSheet=[NSWindow new];Check(![c setSettingsSearchQuery:@"PDF"],@"Sheet blocks global search changes");testSheet=nil;
   Check(!c.window.visible,@"no window ordered");
   printf("PASS %s: categories, history, persistence, ownership and four layouts\n",argv[a]);
  }

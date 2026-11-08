@@ -87,6 +87,9 @@ typedef NS_ENUM(NSInteger, TSSettingsRowKind) {
 + (void)prepareControl:(NSView *)view
 {
     view.translatesAutoresizingMaskIntoConstraints = NO;
+    if (([view isKindOfClass:NSTextField.class] && ((NSTextField *)view).editable) ||
+        [@[@"settings.18", @"settings.754", @"settings.eo2-De-DNv", @"settings.O5R-pm-csa", @"settings.xpQ-zQ-oZe"] containsObject:view.identifier ?: @""])
+        view.accessibilityIdentifier = @"settings.user-data";
     if ([view isKindOfClass:NSTextField.class]) {
         NSTextField *field = (NSTextField *)view;
         if (!field.editable) {

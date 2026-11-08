@@ -7,8 +7,35 @@
 static NSToolbarItemIdentifier const TSSettingsDivider = @"settings.divider";
 static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigation";
 
-@interface TSSettingsWindowController () <NSTableViewDataSource, NSTableViewDelegate, NSToolbarDelegate>
+@interface TSSettingsSearchHighlight : NSView
+@end
+@implementation TSSettingsSearchHighlight
+- (NSView *)hitTest:(NSPoint)point { return nil; }
+- (BOOL)isAccessibilityElement { return NO; }
+- (void)drawRect:(NSRect)dirtyRect {
+    [NSColor.controlAccentColor setStroke];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(self.bounds, 1, 1) xRadius:5 yRadius:5];
+    path.lineWidth = 2; [path stroke];
+}
+@end
+static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSMutableArray<NSView *> *matches) {
+    NSString *identifier = view.identifier;
+    if (identifier != nil && [targets containsObject:identifier]) { [matches addObject:view]; return; }
+    for (NSView *child in view.subviews) TSCollectSearchTargets(child, targets, matches);
+}
+
+@interface TSSettingsWindowController () <NSTableViewDataSource, NSTableViewDelegate, NSToolbarDelegate, NSSearchFieldDelegate>
 @property (strong) TSSettingsCategoryList *categoryList;
+@property (strong) NSSearchField *settingsSearchField;
+@property (strong, nullable) TSSettingsSearch *categoryTextIndex;
+@property (strong) NSTextField *searchStatus;
+@property (copy, readwrite) NSString *searchQuery;
+@property (copy, readwrite) NSArray<TSSettingsSearchResult *> *searchResults;
+@property (copy, nullable) TSSettingsCategoryID categoryBeforeSearch;
+@property (strong) NSMutableArray<NSView *> *searchHighlights;
+- (NSArray<TSSettingsCategoryID> *)visibleIdentifiers;
+- (void)applySearchHighlight;
+- (void)clearSearchHighlights;
 @property (strong) TSSettingsStateStore *stateStore;
 @property (strong, readwrite) TSSettingsNavigationHistory *history;
 @property (copy, readwrite) NSArray<TSSettingsCategoryID> *categoryIdentifiers;
@@ -54,6 +81,8 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 }
 @end
 @implementation TSSettingsWindowController
+@synthesize categoryTextIndex = _categoryTextIndex;
+@synthesize settingsSearchField = _settingsSearchField, searchStatus = _searchStatus, searchQuery = _searchQuery, searchResults = _searchResults, categoryBeforeSearch = _categoryBeforeSearch, searchHighlights = _searchHighlights, commandNamesProvider = _commandNamesProvider, searchBundle = _searchBundle;
 - (instancetype)initWithDefaults:(NSUserDefaults *)defaults
 {
     self = [super initWithWindow:nil];
@@ -63,8 +92,10 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     self.shouldCascadeWindows = NO;
     _history = [TSSettingsNavigationHistory new];
     _categoryIdentifiers = _categoryList.identifiers;
+    _searchBundle = NSBundle.mainBundle; _searchQuery = @""; _searchResults = @[]; _searchHighlights = [NSMutableArray array];
     return self;
 }
+- (void)setSearchBundle:(NSBundle *)bundle { _searchBundle = bundle; self.categoryTextIndex = nil; }
 - (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
 - (void)windowResignedKey:(NSNotification *)notification { if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; } }
 - (BOOL)handleKeySearchEvent:(NSEvent *)event {
@@ -95,7 +126,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     self.categoryTable.style = NSTableViewStyleSourceList;
     self.categoryTable.headerView = nil;
     self.categoryTable.rowHeight = 50;
-    self.categoryTable.allowsEmptySelection = NO;
+    self.categoryTable.allowsEmptySelection = YES;
     self.categoryTable.columnAutoresizingStyle = NSTableViewFirstColumnOnlyAutoresizingStyle;
     self.categoryTable.dataSource = self;
     self.categoryTable.delegate = self;
@@ -104,11 +135,28 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     column.width = 210;
     [self.categoryTable addTableColumn:column];
     listScroll.documentView = self.categoryTable;
+    self.settingsSearchField = [NSSearchField new];
+    self.settingsSearchField.translatesAutoresizingMaskIntoConstraints = NO;
+    self.settingsSearchField.placeholderString = NSLocalizedString(@"Search Settings", @"");
+    self.settingsSearchField.accessibilityLabel = self.settingsSearchField.placeholderString;
+    self.settingsSearchField.delegate = self;
+    self.settingsSearchField.sendsSearchStringImmediately = YES;
+    self.searchStatus = [NSTextField wrappingLabelWithString:@""];
+    self.searchStatus.translatesAutoresizingMaskIntoConstraints = NO;
+    self.searchStatus.textColor = NSColor.secondaryLabelColor;
+    [sidebar.view addSubview:self.settingsSearchField];
+    [sidebar.view addSubview:self.searchStatus];
     [sidebar.view addSubview:listScroll];
     [NSLayoutConstraint activateConstraints:@[
         [listScroll.leadingAnchor constraintEqualToAnchor:sidebar.view.leadingAnchor],
         [listScroll.trailingAnchor constraintEqualToAnchor:sidebar.view.trailingAnchor],
-        [listScroll.topAnchor constraintEqualToAnchor:sidebar.view.safeAreaLayoutGuide.topAnchor],
+        [self.settingsSearchField.leadingAnchor constraintEqualToAnchor:sidebar.view.leadingAnchor constant:10],
+        [self.settingsSearchField.trailingAnchor constraintEqualToAnchor:sidebar.view.trailingAnchor constant:-10],
+        [self.settingsSearchField.topAnchor constraintEqualToAnchor:sidebar.view.safeAreaLayoutGuide.topAnchor constant:10],
+        [self.searchStatus.leadingAnchor constraintEqualToAnchor:self.settingsSearchField.leadingAnchor],
+        [self.searchStatus.trailingAnchor constraintEqualToAnchor:self.settingsSearchField.trailingAnchor],
+        [self.searchStatus.topAnchor constraintEqualToAnchor:self.settingsSearchField.bottomAnchor constant:4],
+        [listScroll.topAnchor constraintEqualToAnchor:self.searchStatus.bottomAnchor constant:4],
         [listScroll.bottomAnchor constraintEqualToAnchor:sidebar.view.bottomAnchor]]];
     NSSplitViewItem *sidebarItem = [NSSplitViewItem sidebarWithViewController:sidebar];
     sidebarItem.minimumThickness = 190;
@@ -193,6 +241,9 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 }
 - (void)beginSession
 {
+    self.searchQuery = @""; self.searchResults = @[]; self.categoryBeforeSearch = nil;
+    self.settingsSearchField.stringValue = @""; self.searchStatus.stringValue = @"";
+    [self clearSearchHighlights]; [self.categoryTable reloadData];
     TSSettingsCategoryID identifier = [self.stateStore selectedCategoryInIdentifiers:self.categoryIdentifiers];
     [self.history resetWithIdentifier:identifier];
     [self displayCurrentCategory];
@@ -201,13 +252,16 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 - (void)endSession
 {
     if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; }
+    TSSettingsCategoryID previous = self.categoryBeforeSearch;
+    if (previous != nil) [self.stateStore saveSelectedCategory:previous];
+    [self clearSearchHighlights];
     [self.history resetWithIdentifier:self.history.currentIdentifier ?: TSSettingsCategoryGeneral];
     [self updateNavigation];
 }
 - (BOOL)selectCategoryIdentifier:(NSString *)identifier
 {
     if (![self.categoryIdentifiers containsObject:identifier]) return NO;
-    if ([identifier isEqual:self.history.currentIdentifier]) return YES;
+    if ([identifier isEqual:self.history.currentIdentifier]) { [self applySearchHighlight]; return YES; }
     if (self.window.attachedSheet != nil || ![self mayChangeCategory]) return NO;
     [self.history visitIdentifier:identifier];
     [self displayCurrentCategory];
@@ -216,11 +270,13 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 - (void)goBack:(id)sender
 {
     if (self.history.backIdentifier == nil || self.window.attachedSheet != nil || ![self mayChangeCategory]) return;
+    if (self.searchQuery.length && ![self setSettingsSearchQuery:@""]) return;
     [self.history goBack]; [self displayCurrentCategory];
 }
 - (void)goForward:(id)sender
 {
     if (self.history.forwardIdentifier == nil || self.window.attachedSheet != nil || ![self mayChangeCategory]) return;
+    if (self.searchQuery.length && ![self setSettingsSearchQuery:@""]) return;
     [self.history goForward]; [self displayCurrentCategory];
 }
 - (void)navigate:(NSSegmentedControl *)sender
@@ -235,6 +291,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     if (index == NSNotFound) { return; }
     TSSettingsCategory *category = [self.categoryList categoryForIdentifier:identifier];
     if (category == nil) { return; }
+    [self clearSearchHighlights];
     if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; }
     BOOL keyboard = [identifier isEqualToString:TSSettingsCategoryKeyboard];
     if (keyboard && self.keyboardPane == nil && self.keyboardPaneProvider != nil) {
@@ -281,20 +338,19 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     }
     [self synchronizeSidebarSelection];
     [self.contentScroll.documentView setAccessibilityLabel:self.window.title];
-    [self.stateStore saveSelectedCategory:identifier];
+    if (!self.searchQuery.length) [self.stateStore saveSelectedCategory:identifier];
     [self.contentScroll.contentView scrollToPoint:NSZeroPoint];
     [self.contentScroll reflectScrolledClipView:self.contentScroll.contentView];
     [self.window recalculateKeyViewLoop];
     [self updateNavigation];
+    [self applySearchHighlight];
 }
 - (void)synchronizeSidebarSelection
 {
     TSSettingsCategoryID identifier = self.history.currentIdentifier;
-    if (identifier == nil) { return; }
-    NSUInteger index = [self.categoryIdentifiers indexOfObject:identifier];
-    if (index == NSNotFound) { return; }
+    NSUInteger index = identifier != nil ? [[self visibleIdentifiers] indexOfObject:identifier] : NSNotFound;
     self.synchronizingSelection = YES;
-    [self.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
+    [self.categoryTable selectRowIndexes:index == NSNotFound ? NSIndexSet.indexSet : [NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
     self.synchronizingSelection = NO;
 }
 - (void)updateNavigation
@@ -319,31 +375,37 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     if (delegate == nil || sender == nil) { return; }
     [delegate settingsChangeFont:(NSFontManager *)sender];
 }
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView { return self.categoryList.categories.count; }
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView { return [self visibleIdentifiers].count; }
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row
 {
-    return row >= 0 && row < (NSInteger)self.categoryIdentifiers.count;
+    return row >= 0 && row < (NSInteger)[self visibleIdentifiers].count;
 }
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
     if (self.synchronizingSelection || self.history.currentIdentifier == nil) { return; }
     NSInteger row = self.categoryTable.selectedRow;
-    if (row < 0 || row >= (NSInteger)self.categoryIdentifiers.count) { return; }
-    if (![self selectCategoryIdentifier:self.categoryIdentifiers[(NSUInteger)row]]) { [self synchronizeSidebarSelection]; }
+    if (row < 0 || row >= (NSInteger)[self visibleIdentifiers].count) { return; }
+    if (![self selectCategoryIdentifier:[self visibleIdentifiers][(NSUInteger)row]]) { [self synchronizeSidebarSelection]; }
 }
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-    if (row < 0 || row >= (NSInteger)self.categoryList.categories.count) { return 50; }
+    if (self.searchQuery.length || row < 0 || row >= (NSInteger)self.categoryList.categories.count) { return 50; }
     return self.categoryList.categories[(NSUInteger)row].startsGroup ? 62 : 50;
 }
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    if (row < 0 || row >= (NSInteger)self.categoryList.categories.count) { return nil; }
-    TSSettingsCategory *category = self.categoryList.categories[(NSUInteger)row];
-    if ([category.identifier isEqualToString:TSSettingsCategoryKeyboard]) { return [TSSettingsSidebarRow cellForCategory:category title:NSLocalizedString(@"Keyboard", @"")]; }
+    NSArray<TSSettingsCategoryID> *identifiers = [self visibleIdentifiers];
+    if (row < 0 || row >= (NSInteger)identifiers.count) return nil;
+    TSSettingsCategory *category = [self.categoryList categoryForIdentifier:identifiers[(NSUInteger)row]];
+    if (category == nil) return nil;
+    if (self.searchQuery.length) category = [[TSSettingsCategory alloc] initWithIdentifier:category.identifier symbolName:category.symbolName color:category.color startsGroup:NO];
     NSViewController *pane = self.panes[category.identifier];
-    if (pane == nil) { return nil; }
-    return [TSSettingsSidebarRow cellForCategory:category title:pane.title ?: @""];
+    NSString *title = [category.identifier isEqualToString:TSSettingsCategoryKeyboard] ? NSLocalizedString(@"Keyboard", @"") : (pane.title ?: @"");
+    NSTableCellView *cell = [TSSettingsSidebarRow cellForCategory:category title:title];
+    if (self.categoryTextIndex == nil) self.categoryTextIndex = [[TSSettingsSearch alloc] initWithBundle:self.searchBundle categoryOrder:self.categoryIdentifiers commandNames:@[]];
+    cell.toolTip = [self.categoryTextIndex categoryDescription:category.identifier];
+    cell.accessibilityHelp = cell.toolTip;
+    return cell;
 }
 - (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[TSSettingsDivider,TSSettingsNavigation]; }
 - (NSArray<NSToolbarItemIdentifier> *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[TSSettingsDivider,TSSettingsNavigation]; }
@@ -356,5 +418,81 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     item.navigational = YES;
     item.label = NSLocalizedString(@"Navigation History", @"");
     return item;
+}
+
+- (NSArray<TSSettingsCategoryID> *)visibleIdentifiers
+{
+    if (!self.searchQuery.length) return self.categoryIdentifiers;
+    NSMutableArray<TSSettingsCategoryID> *identifiers = [NSMutableArray array];
+    for (TSSettingsSearchResult *result in self.searchResults) [identifiers addObject:result.category];
+    return [identifiers copy];
+}
+- (void)controlTextDidChange:(NSNotification *)notification
+{
+    if (notification.object != self.settingsSearchField) return;
+    if (![self setSettingsSearchQuery:self.settingsSearchField.stringValue]) self.settingsSearchField.stringValue = self.searchQuery;
+}
+- (BOOL)control:(NSControl *)control textShouldBeginEditing:(NSText *)editor
+{
+    if (control != self.settingsSearchField) return YES;
+    return !([self.keyboardPane respondsToSelector:@selector(searchingByKey)] && self.keyboardPane.searchingByKey);
+}
+- (BOOL)setSettingsSearchQuery:(NSString *)query
+{
+    if ([self.keyboardPane respondsToSelector:@selector(searchingByKey)] && self.keyboardPane.searchingByKey) return NO;
+    if (self.window.attachedSheet != nil) return NO;
+    NSString *effective = TSSettingsQueryTokens(query).count ? query : @"";
+    if (!effective.length && self.categoryBeforeSearch != nil && ![self mayChangeCategory]) return NO;
+    if (effective.length && !self.searchQuery.length) self.categoryBeforeSearch = self.history.currentIdentifier;
+    self.searchQuery = effective;
+    self.settingsSearchField.stringValue = effective;
+    NSArray<NSString *> *commands = self.commandNamesProvider != nil ? self.commandNamesProvider() : @[];
+    TSSettingsSearch *index = [[TSSettingsSearch alloc] initWithBundle:self.searchBundle categoryOrder:self.categoryIdentifiers commandNames:commands];
+    self.searchResults = [index resultsForQuery:effective];
+    [self clearSearchHighlights];
+    self.searchStatus.stringValue = !effective.length ? @"" : (self.searchResults.count ? [NSString localizedStringWithFormat:NSLocalizedString(@"Settings results: %lu", @""), (unsigned long)self.searchResults.count] : NSLocalizedString(@"No Settings Found", @""));
+    self.synchronizingSelection = YES; [self.categoryTable reloadData]; self.synchronizingSelection = NO;
+    if (!effective.length) {
+        TSSettingsCategoryID previous = self.categoryBeforeSearch; self.categoryBeforeSearch = nil;
+        if (previous != nil) { [self.history visitIdentifier:previous]; [self displayCurrentCategory]; }
+        if ([self.keyboardPane respondsToSelector:@selector(applySettingsQuery:targets:filterCommands:)]) [self.keyboardPane applySettingsQuery:@"" targets:@[] filterCommands:NO];
+    }
+    [self synchronizeSidebarSelection]; [self applySearchHighlight];
+    NSAccessibilityPostNotification(self.searchStatus, NSAccessibilityValueChangedNotification);
+    return YES;
+}
+- (void)clearSearchHighlights
+{
+    for (NSView *view in self.searchHighlights) [view removeFromSuperview];
+    [self.searchHighlights removeAllObjects];
+}
+- (void)applySearchHighlight
+{
+    [self clearSearchHighlights];
+    TSSettingsCategoryID category = self.history.currentIdentifier;
+    TSSettingsSearchResult *hit = nil;
+    for (TSSettingsSearchResult *result in self.searchResults) if ([result.category isEqualToString:category]) { hit = result; break; }
+    if (hit == nil) {
+        if ([category isEqualToString:TSSettingsCategoryKeyboard] && [self.keyboardPane respondsToSelector:@selector(applySettingsQuery:targets:filterCommands:)]) [self.keyboardPane applySettingsQuery:self.searchQuery targets:@[] filterCommands:NO];
+        return;
+    }
+    NSMutableArray<NSString *> *targets = [NSMutableArray array]; BOOL commands = NO;
+    for (TSSettingsSearchEntry *entry in hit.entries) { if (entry.targetIdentifier.length) [targets addObject:entry.targetIdentifier]; commands |= entry.command; }
+    BOOL keyboard = [category isEqualToString:TSSettingsCategoryKeyboard];
+    if (keyboard && [self.keyboardPane respondsToSelector:@selector(applySettingsQuery:targets:filterCommands:)]) [self.keyboardPane applySettingsQuery:self.searchQuery targets:targets filterCommands:commands];
+    NSView *root = keyboard ? self.keyboardPane.view : self.panes[category].view;
+    if (root == nil) return;
+    [root layoutSubtreeIfNeeded];
+    NSMutableArray<NSView *> *matches = [NSMutableArray array];
+    TSCollectSearchTargets(root, [NSSet setWithArray:targets], matches);
+    for (NSView *match in matches) {
+        NSView *row = match;
+        while (row.superview != nil && row.superview != root && ![row.identifier hasPrefix:@"row."] && ![row.identifier hasPrefix:@"heading."] && ![row isKindOfClass:NSBox.class]) row = row.superview;
+        TSSettingsSearchHighlight *overlay = [[TSSettingsSearchHighlight alloc] initWithFrame:row.bounds];
+        overlay.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [row addSubview:overlay]; [self.searchHighlights addObject:overlay];
+    }
+    NSView *first = matches.firstObject;
+    if (first != nil && !keyboard) [first scrollRectToVisible:first.bounds];
 }
 @end

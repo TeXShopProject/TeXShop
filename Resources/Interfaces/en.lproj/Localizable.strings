@@ -242,3 +242,11 @@
 "Expanded" = "Expanded";
 
 "Collapsed" = "Collapsed";
+
+"Search Settings" = "Search Settings";
+
+"Settings results: %lu" = "Settings results: %lu";
+
+"No Settings Found" = "No Settings Found";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";

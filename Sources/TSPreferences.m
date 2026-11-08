@@ -179,6 +179,13 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     controller.settingsDelegate = self;
     NSDictionary<TSSettingsCategoryID, NSViewController *> *panes = [self classifySettingsPanes:self.preferencePanes];
     NSView *keyboardOptions = panes[TSSettingsCategoryKeyboard].view;
+    controller.commandNamesProvider = ^NSArray<NSString *> * {
+        NSMutableArray<NSString *> *names = [NSMutableArray array];
+        TSShortcutStore *store = [TSKeyboardShortcuts sharedController].store;
+        if (store == nil) return @[];
+        for (TSShortcutCommand *command in store.commands) if (!command.item.hidden || command.item.allowsKeyEquivalentWhenHidden) [names addObject:command.path];
+        return [names copy];
+    };
     controller.keyboardPaneProvider = ^NSViewController<TSSettingsKeyboardPane> * {
         TSShortcutPaneController *keyboard = [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts sharedController]];
         keyboard.settingsHeader = keyboardOptions;

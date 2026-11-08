@@ -539,17 +539,19 @@ Most standard Macintosh fonts do not contain Hebrew letters. But Apple's program
 The solution was simple: choose a source file which contains Hebrew. The Apple Font Book can list languages supported by each font on the system, and many of these fonts support a large number of languages, so finding a suitable source font was easy.
 
 
-\section{Other Source Preference Items}
+\section{Customizing Menu Shortcuts}
 
 Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings, Keyboard and cannot be assigned by their former menu titles.
 
 
 Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose “Use \LaTeX{}-aware spell checking (recommended)” with “Edit \LaTeX{} exclusion rules…”, or “Use legacy spell checking” with three indented options. Changing the method preserves all child values. “Check Spelling” is independent. Keyboard places key bindings and command completion above shortcut search and the scrolling list. On a short window the input groups can be expanded one at a time. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings. Disabled controls retain their saved values; an obsolete remembered category opens General.
 
+Use Search Settings above the sidebar to find categories, labels, options and menu commands. Words separated by spaces must all occur in the same category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to reveal and highlight its controls without changing their values. Clearing the query returns to the category used before searching. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording. Personal paths, entered values and user-created theme names are not searched.
+
 Earlier screenshots in this manual show the former tabs. Use the category names above for the current Settings window.
 
 
-This is a useful time to consider a few other Preference items which affect the source window. These items occur under the General, Documents and Saving, and Spell Checking categories. But several items in this tab are better explained later and will be skipped.
+This is a useful time to consider a few other Preference items which affect the source window. These items occur under the General, Documents and Saving, and Spell Checking categories. But several items in these categories are better explained later and will be skipped.
 
 {\bf Document Font} This was just explained.
 
@@ -2879,7 +2881,7 @@ PreTeXt source files have extension .xml or .ptx.  They are text files containin
 
 \subsection{Syntax Coloring}
 
-The old syntax coloring methods are used for LaTeX embedded in these files, but in addition five extra colors are used for the tags. These colors, and all other TeXShop colors, can be adjusted  in TeXShop's Themes Preferences, to be described in a later chapter.
+The old syntax coloring methods are used for LaTeX embedded in these files, but in addition five extra colors are used for the tags. These colors, and all other TeXShop colors, can be adjusted  in the theme settings in TeXShop's Appearance category, to be described in a later chapter.
 
 The ``Comment'' color is for xml comments and the ``Tag'' color is for xml tags. Some tags contain extra information; for instance, the minimal.xml file contains
 \begin{verbatim}
@@ -3602,7 +3604,7 @@ After this come the direct and reverse colors used to indicate a SyncTeX match.
 
 
 
-The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some features introduced by Yusuke Terada; see the menu item ``Show Invisible Characters'' and the item ``Parens Targets \& Highlight Color'' in the Source Tab of Preferences, and the items ``Show Invisible Characters'' and ``Parens Matching Settings'' in the Editor Tab of Preferences. The items ``Image Copy Foreground, Background'' refer to rather obscure colors, used when copying a portion of the pdf file in unusual formats.rather than as pdf, jpeg, tiff, or png.
+The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some features introduced by Yusuke Terada; see the menu item ``Show Invisible Characters'' and the item ``Parens Targets \& Highlight Color'' in the Editor category of Preferences, and the items ``Show Invisible Characters'' and ``Parens Matching Settings'' in the Editor category of Preferences. The items ``Image Copy Foreground, Background'' refer to rather obscure colors, used when copying a portion of the pdf file in unusual formats.rather than as pdf, jpeg, tiff, or png.
  
  An item in the Source menu asks the editor to ``Show Invisible Characters''. The Invisible color is the color used for these characters.
  
@@ -3610,7 +3612,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  
  Finally the XML Syntax colors are colors used when TeXShop syntax colors html, xml, and ptr files, as described in the chapter on Html, TeX4ht, and PreTeXt.
  
- To be completely honest, one color is not set in the Themes panel. It is the color of the optional block cursor, set in the Editor category of Preferences. This will be discussed in a later chapter of this Manual.
+ To be completely honest, one color is not set in the theme settings in the Appearance category. It is the color of the optional block cursor, set in the Editor category of Preferences. This will be discussed in a later chapter of this Manual.
  
  In September, 2025, a user requested that marker symbols be colored in a more precise manner.
  Before then, round parentheses were not colored, and the pairs \{ \}, [ ], and symbols \& and \$  were all given the same coloring. Starting in September, 2025, only \& and \$ are given the standard ``marker''

@@ -270,3 +270,11 @@
 "Expanded" = "펼침";
 
 "Collapsed" = "접힘";
+
+"Search Settings" = "설정 검색";
+
+"Settings results: %lu" = "설정 검색 결과: %lu개";
+
+"No Settings Found" = "일치하는 설정 없음";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";

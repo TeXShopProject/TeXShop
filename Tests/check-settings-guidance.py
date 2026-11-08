@@ -14,13 +14,13 @@ CATEGORIES = ('general', 'documents', 'editor', 'spelling', 'appearance',
 # theme *settings* remain valid; the removed sidebar categories do not.
 QUOTE = r'["“”„«»\x27`]*'
 ENGLISH = (rf'\b(?:Source|Engines?|Misc ?[12]?|Themes){QUOTE}\s+'
-           rf'(?:configuration\s+)?(?:tab|category|pane|section)\b|'
+           rf'(?:configuration\s+)?(?:tab|category|pane)\b|'
            rf'\b(?:tab|category|pane)\s+{QUOTE}(?:Source|Engines?|Misc\d?|Themes)\b')
 CATEGORY_RULES = {
-    'en': ENGLISH,
-    'ko': ENGLISH + r'|(문서|엔진설정|기타1|기타2)\s*(?:\(Engine\)\s*)?(탭|범주|카테고리|tab)',
-    'ja': r'「(?:内部設定|詳細1|詳細2|書類|ソース|テーマ)」(?:タブ|カテゴリ|パネル|項目)|「(?:内部設定|詳細1|詳細2)」|内部設定\s*>',
-    'de': rf'\b(?:Quelltext|Programme|Div\. ?[12]){QUOTE}[- ]?(?:Reiter|Kategorie|Tab|Bereich)\b|(?:Reiter|Kategorie)\s+{QUOTE}(?:Quelltext|Programme|Div\.)',
+    'en': ENGLISH + r'|(?i:\b(?:Source|Engines?|Misc ?[12]?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)',
+    'ko': ENGLISH + r'|(?i:\b(?:Source|Engines?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)' + r'|(문서|엔진설정|기타1|기타2)\s*(?:\(Engine\)\s*)?(탭|범주|카테고리|tab)',
+    'ja': r'「詳細」タブ|「(?:内部設定|詳細1|詳細2|書類|ソース|テーマ)」(?:タブ|カテゴリ|パネル|項目)|「(?:内部設定|詳細1|詳細2)」|内部設定\s*>',
+    'de': rf'(?:Registerkarte)\s+{QUOTE}(?:Programme|Themes|Quelltext)\b|\b(?:Quelltext|Programme|Div\. ?[12]){QUOTE}[- ]?(?:Reiter|Kategorie|Tab|Bereich)\b|(?:Reiter|Kategorie)\s+{QUOTE}(?:Quelltext|Programme|Div\.)',
     'es': rf'\b(?:solapa|pestaña|categoría|sección|apartado)\s+{QUOTE}(?:Código|Motor|Misc\d?|Documento|Modos)\b',
 }
 REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Completion File|'
@@ -30,7 +30,7 @@ REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Compl
 OLD_UI = (r'Edit Rules|Check Spelling While Typing is independent|share one vertical scroll area|'
           r'LaTeXに対応したスペルチェック|従来のスペルチェック|同じ縦スクロール領域|'
           r'einen vertikalen Scrollbereich|un área de desplazamiento vertical|'
-          r'two tabs inside Themes remain|テーマ内の2つのタブはそのまま')
+          r'two tabs inside Themes remain|テーマ内の2つのタブはそのまま|Typesetting tab')
 
 def strings(path):
     return json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(path)]))
@@ -67,8 +67,12 @@ for language in LANGUAGES:
         check_obsolete(text, language, path)
         pages[path.stem] = text
         page_count += 1
+    if language in ('en', 'ko'):
+        route = 'Settings > Typesetting > Tools > BibTeX Engine' if language == 'en' else 'Settings > 조판 > 도구 > BibTeX 엔진'
+        assert route in pages['advanced_bibtex'], (language, 'BibTeX Engine route')
     for name in ('basic_preferences', 'basic_spelling', 'configure_menushortcuts', 'configure_prefchanges'):
         text = pages[name]
+        assert 'id="settings-search"' in text, (language, name, 'global search instructions')
         for key in CATEGORIES:
             assert categories[key] in text, (language, name, key)
         for key in ('Use LaTeX-aware spell checking (recommended)', 'Use legacy spell checking'):
@@ -93,5 +97,5 @@ for file in ('Documentation/Releases/5.60-ja.md', 'website/release-notes-ja.html
     assert 'NSUserKeyEquivalents' in text and 'LaTeXの構造を考慮する（推奨）' in text and '従来方式を使う' in text
     assert '入力設定とショートカット一覧は同じ縦スクロール領域' not in text
 contract = json.loads((ROOT / 'Tests/Fixtures/SettingsCategoryGroups.json').read_text())
-assert not re.search(r'audit|監査|計画書|作業計画', contract['source'], re.I), 'Category fixture provenance must be independent of internal documents'
+assert contract['source'] == 'Fixed expected category groups and original group membership; do not regenerate from production code.'
 print(f'PASS: {page_count} current help pages in five languages, 20 category overviews, manual, editing routes and original encodings')

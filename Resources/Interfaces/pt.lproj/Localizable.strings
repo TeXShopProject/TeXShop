@@ -269,3 +269,11 @@
 "Expanded" = "Expandido";
 
 "Collapsed" = "Recolhido";
+
+"Search Settings" = "Buscar ajustes";
+
+"Settings results: %lu" = "Categorias encontradas: %lu";
+
+"No Settings Found" = "Nenhum ajuste encontrado";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";

@@ -14,7 +14,7 @@
 "54.title" = "pdfTeX";
 "878.title" = "LaTeX ";
 "880.title" = "TeX";
-"882.title" = "Avisos shell-scape";
+"882.title" = "Avisos shell-escape";
 "887.title" = "Guardar el archivo PostScript";
 "889.title" = "(pdf)TeX (por defecto: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (por defecto: /usr/local/bin)";

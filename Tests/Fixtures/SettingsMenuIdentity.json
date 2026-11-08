@@ -1,5 +1,5 @@
 {
-  "source": "Audited commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions. Update only after reviewing a deliberate command migration.",
+  "source": "Fixed command identity of commit 127ecbab90b1ad199c9d7e6adfa86258e3f36c6c, excluding the two intentionally removed editor actions. Update only after reviewing a deliberate command migration.",
   "languages": {
     "Base": "2c742097c6a0cac931899e43dae006c7e892eb2413d2465b5973880f7f26ce3f",
     "de": "3615367150ca5a9daa58a0dab99f35d9ef4e3f9b3b89d8671739065da9300d38",

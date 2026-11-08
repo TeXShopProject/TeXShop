@@ -7,6 +7,7 @@ import argparse,subprocess,tempfile
 parser=argparse.ArgumentParser()
 parser.add_argument("output",nargs="?")
 parser.add_argument("--app",type=Path)
+parser.add_argument('--language')
 args=parser.parse_args()
 r=Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='texshop-sidebar-') as td:
@@ -23,4 +24,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-sidebar-') as td:
  out=Path(args.output) if args.output else p/'images';out.mkdir(parents=True,exist_ok=True)
  paths=bundles(r,p,product=args.app)
  assert len(paths)==12
+ if args.language:paths=[p for p in paths if p.stem==args.language]
  subprocess.run([str(p/'test'),str(nib),str(out) if args.output else "",*map(str,paths)],check=True,timeout=240)

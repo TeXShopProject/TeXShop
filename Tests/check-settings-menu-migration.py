@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify stable command identity against the audited pre-migration menu contract."""
+"""Verify stable command identity against the fixed pre-migration menu contract."""
 from pathlib import Path
 import hashlib,json,xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[1]

@@ -17,7 +17,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  program=(r/'Tests/SettingsClassification.m').read_text().replace('// CONSTANTS',constants).replace('// DEPENDENCIES',methods)
  (t/'test.m').write_text(program)
  subprocess.run(['xcrun','clang','-fobjc-arc','-Werror','-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),str(r/'Sources/TSSettingsCategory.m'),str(r/'Sources/TSDockIconController.m'),'-o',str(t/'probe')],check=True)
- expected=json.loads((r/'Tests/Fixtures/SettingsClassificationStrings.json').read_text())
+ from settings_contract import expand
+ expected=expand(json.loads((r/'Tests/Fixtures/SettingsClassificationStrings.json').read_text()))
  for bundle in bundles(r,t/'fixtures',product=args.app,dock=True):
   lang=bundle.stem
   if args.language and lang!=args.language:continue

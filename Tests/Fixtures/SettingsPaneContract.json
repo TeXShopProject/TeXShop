@@ -10034,7 +10034,7 @@
           "1024.title": "kpsetool (por defecto: kpsetool -w -n latex tex)",
           "1063.title": "por defecto",
           "878.title": "LaTeX ",
-          "882.title": "Avisos shell-scape",
+          "882.title": "Avisos shell-escape",
           "1068.title": "por defecto",
           "891.title": "Distiller (por defecto: /usr/local/bin)",
           "1074.title": "por defecto",
@@ -10948,7 +10948,7 @@
           "view": "settings.325",
           "kind": "cell",
           "property": "title",
-          "value": "Avisos shell-scape"
+          "value": "Avisos shell-escape"
         },
         {
           "key": "1068.title",

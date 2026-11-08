@@ -2,10 +2,14 @@
 #import <Cocoa/Cocoa.h>
 #import "TSSettingsNavigationHistory.h"
 #import "TSSettingsCategory.h"
+#import "TSSettingsSearch.h"
 NS_ASSUME_NONNULL_BEGIN
 @protocol TSSettingsKeyboardPane <NSObject>
 - (void)stopKeySearch;
 - (BOOL)handleKeySearchEvent:(NSEvent *)event;
+@optional
+@property (readonly) BOOL searchingByKey;
+- (void)applySettingsQuery:(NSString *)query targets:(NSArray<NSString *> *)targets filterCommands:(BOOL)filter;
 @end
 @protocol TSSettingsWindowDelegate <NSObject>
 - (BOOL)settingsMayChangeCategory;
@@ -14,6 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TSSettingsWindowController : NSWindowController
 @property (copy, nullable) NSViewController<TSSettingsKeyboardPane> * _Nullable (^keyboardPaneProvider)(void);
 @property (weak, nullable) id<TSSettingsWindowDelegate> settingsDelegate;
+@property (copy, nullable) NSArray<NSString *> *(^commandNamesProvider)(void);
+@property (nonatomic, strong) NSBundle *searchBundle;
+@property (copy, readonly) NSString *searchQuery;
+@property (copy, readonly) NSArray<TSSettingsSearchResult *> *searchResults;
+- (BOOL)setSettingsSearchQuery:(NSString *)query;
 @property (copy, readonly) NSArray<TSSettingsCategoryID> *categoryIdentifiers;
 @property (strong, readonly) TSSettingsNavigationHistory *history;
 - (instancetype)initWithDefaults:(NSUserDefaults *)defaults NS_DESIGNATED_INITIALIZER;

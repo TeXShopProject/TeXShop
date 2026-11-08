@@ -13,6 +13,7 @@ static void CollectMacros(NSArray *array, NSString *path, NSMutableArray *candid
     }
 }
 #import <objc/runtime.h>
+#import "TestAppKitIsolation.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr, "FAIL line %d: %s\n", __LINE__, #__VA_ARGS__); exit(1); } } while (0)
 @interface ShortcutMemoryDefaults : NSObject
 @property NSMutableDictionary *values;
@@ -108,6 +109,7 @@ static NSMenu *MainMenu(void) {
 }
 static void IgnoreShortcutOutlet(id self, SEL cmd, id value, NSString *key) {}
 int main(int argc, char **argv) { @autoreleasepool {
+    TSInstallAppKitIsolation();
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     if (argc > 1) {
         for (NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSAutoCompletionListEditor",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]) {

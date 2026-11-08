@@ -110,6 +110,7 @@
     custom[@"spelling-method"] = [self group:text(@"LaTeX Spell Checking") identifier:@"group.spelling-method" rows:@[row(@[aware], 0), row(@[take(@"ts-edit-spelling")], 1), row(@[legacy], 0), row(@[take(@"cell.teg-0p-Q8J")], 1), row(@[take(@"cell.3eF-XA-ahc")], 1), row(@[take(@"cell.8Wq-gx-FqO")], 1)]];
     NSButton *bindings = [NSButton buttonWithTitle:text(@"Edit Key Bindings…") target:preferences action:@selector(editKeyBindings:)];
     bindings.identifier = @"settings.edit-bindings";
+    bindings.toolTip = text(@"Edits the shared file for all documents. The checkbox sets the default for new documents.");
     custom[@"bindings"] = [self group:[NSString stringWithFormat:@"%@ — %@", text(@"Key Bindings"), text(@"Defaults for New Documents")] identifier:@"group.bindings" rows:@[row(@[take(@"cell.842"), bindings], 0)]];
     NSButton *completion = [NSButton buttonWithTitle:text(@"Edit Command Completion…") target:nil action:@selector(openCommandCompletionList:)];
     completion.identifier = @"settings.edit-completion";

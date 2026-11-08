@@ -267,3 +267,11 @@
 "Expanded" = "Uitgeklapt";
 
 "Collapsed" = "Ingeklapt";
+
+"Search Settings" = "Zoek in instellingen";
+
+"Settings results: %lu" = "Gevonden categorieën: %lu";
+
+"No Settings Found" = "Geen instellingen gevonden";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";

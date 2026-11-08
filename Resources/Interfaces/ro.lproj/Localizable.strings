@@ -270,3 +270,11 @@
 "Expanded" = "Extins";
 
 "Collapsed" = "Restrâns";
+
+"Search Settings" = "Caută în configurări";
+
+"Settings results: %lu" = "Categorii găsite: %lu";
+
+"No Settings Found" = "Nicio configurare găsită";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
