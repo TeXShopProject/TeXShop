@@ -1,0 +1,17 @@
+{
+  "origin": "127ecbab localized Toggle On/Off titles, retained before flattening",
+  "titles": {
+    "Base": "Toggle On/Off",
+    "de": "Ein/Aus",
+    "es": "Activar/desactivar",
+    "fr": "Activer/Désactiver",
+    "it": "Attiva/Disattiva",
+    "ja": "ON/OFF 切り替え",
+    "ko": "ON/OFF 교체",
+    "nl": "Toggle On/Off",
+    "pt-PT": "Toggle On/Off",
+    "pt": "Alternar Ligar/Desligar",
+    "ro": "Toggle On/Off",
+    "zh_CN": "打开/关闭"
+  }
+}

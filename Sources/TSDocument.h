@@ -278,7 +278,6 @@ enum RootCommand
 
 //	NSDate		*startDate;
 //	NSPDFImageRep	*texRep;
-//	NSData		*previousFontData;	/*" holds font data in case preferences change is cancelled "*/
 	BOOL		fileIsTex;
     
 
@@ -493,8 +492,6 @@ enum RootCommand
 @property (retain)	id                  syncBox;
 @property (retain)  id					indexColorBox;
 
-@property (retain) 	NSData		*previousFontData;	/*" holds font data in case preferences change is cancelled "*/
-@property (retain) NSData       *previousFontStyleData; /*" ditto for font style "*/
 @property TSDocumentType			documentType;
 
 @property (retain) 	NSConnection    *completionConnection; //Adam Maxwell

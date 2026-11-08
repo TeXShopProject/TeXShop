@@ -65,6 +65,7 @@
 + (id)sharedInstance;
 
 - (IBAction)openMacroEditor: (id)sender;
+- (void)openMacroEditorSelectingMacroAtIndexPath:(NSIndexPath *)path name:(NSString *)name key:(NSString *)key;
 - (void)loadUI;
 
 - (IBAction)savePressed:(id)sender;

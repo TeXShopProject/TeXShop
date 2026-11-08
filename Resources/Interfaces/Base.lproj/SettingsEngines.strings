@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+"1020.title" = "Search command";
+"1024.title" = "kpsetool (default: kpsetool -w -n latex tex)";
+"1027.title" = "BibTeX Engine";
+"1030.title" = "default: bibtex";
+"1063.title" = "Default";
+"1068.title" = "Default";
+"1069.title" = "TeX";
+"1071.title" = "Default";
+"1074.title" = "Default";
+"1075.title" = "LaTeX ";
+"200.title" = "TeX + dvips + distiller";
+"215.title" = "Path settings";
+"54.title" = "pdfTeX";
+"878.title" = "LaTeX ";
+"880.title" = "TeX";
+"882.title" = "Shell Escape Warning";
+"887.title" = "Save Postscript File";
+"889.title" = "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)";
+"891.title" = "Distiller (ghostscript) (default: /usr/local/bin)";
+"BYT-g3-3p0.title" = "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)";
+"engine-auto-cell.title" = "Auto Setup…";

@@ -13,6 +13,7 @@ static void CollectMacros(NSArray *array, NSString *path, NSMutableArray *candid
     }
 }
 #import <objc/runtime.h>
+#import "TestAppKitIsolation.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr, "FAIL line %d: %s\n", __LINE__, #__VA_ARGS__); exit(1); } } while (0)
 @interface ShortcutMemoryDefaults : NSObject
 @property NSMutableDictionary *values;
@@ -56,7 +57,7 @@ static id UnshiftedForFixture(id self, SEL cmd, NSEventModifierFlags flags) {
 }
 static void CheckRecordedMenuConflicts(TSShortcutStore *store) {
     const NSUInteger cmd=NSEventModifierFlagCommand, shift=NSEventModifierFlagShift;
-    TSKeyboardShortcuts *ui=[[TSKeyboardShortcuts alloc] initWithWindow:nil];
+    TSShortcutPaneController *ui=[[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts new]];
     ui.store=store; ui.editingCommand=Command(store,@"TSShortcut.doTypeset:.-1");
     ui.captureError=[NSTextField new]; ui.captureDisplay=[NSTextField new]; ui.applyButton=[NSButton new];
     NSString *original=ui.editingCommand.item.keyEquivalent;
@@ -108,6 +109,7 @@ static NSMenu *MainMenu(void) {
 }
 static void IgnoreShortcutOutlet(id self, SEL cmd, id value, NSString *key) {}
 int main(int argc, char **argv) { @autoreleasepool {
+    TSInstallAppKitIsolation();
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     if (argc > 1) {
         for (NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSAutoCompletionListEditor",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]) {
@@ -303,7 +305,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([recorder performKeyEquivalent:Event(@"\031",shift)] && recorded==1);
     REQUIRE(recorder.accessibilityLabel.length && [recorder.accessibilityRole isEqual:NSAccessibilityTextFieldRole]);
     puts("PASS: capture consumes commands, Return accepts, Escape cancels, accessibility metadata");
-    TSKeyboardShortcuts *controller = [[TSKeyboardShortcuts alloc] initWithWindow:nil];
+    TSShortcutPaneController *controller = [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts new]];
     controller.captureDisplay = [NSTextField labelWithString:@""];
     controller.captureError = [NSTextField labelWithString:@""];
     controller.applyButton = [NSButton new];

@@ -110,7 +110,6 @@
 "Split Window" = "ウインドウを分割する";
 "New Document" = "新しいドキュメント";
 "Link Popups" = "リンク先をポップアップ";
-"Source" = "ソース";
 "Syntax Color expl3 Code" = "expl3コードをハイライト";
 "PDF File Has No Annotations" = "PDFファイルに注釈が含まれません";
 
@@ -154,13 +153,10 @@
 
 "Version unavailable" = "不明";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "TeX環境をインストールしてから、設定の「内部設定」で「自動設定」を実行してください。";
 
 "Use These Paths" = "この設定を使用";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "キーボードショートカット";
-"Keyboard Shortcuts…" = "キーボードショートカット…";
 "Search commands" = "コマンドを検索";
 "Command" = "コマンド";
 "Shortcut" = "ショートカット";
@@ -178,7 +174,6 @@
 "This shortcut is already used by “%@”." = "このショートカットは「%@」で使用されています。";
 "Use Command or Control with a key, or a function key (F1–F20)." = "CommandまたはControlとキーを組み合わせるか、ファンクションキー（F1〜F20）を使ってください。";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "コマンドを選択してショートカットを変更できます。変更はすぐに反映されます。マクロと文字入力のキーバインドは、それぞれの専用エディタで編集してください。";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "このウィンドウで行った変更を取り消します。既存のKeyEquivalents.plistの設定は維持されます。";
 
 /* Menu and macro shortcut conflicts */
 "Assign a shortcut used by macros?" = "マクロが使用しているキーを割り当てますか？";
@@ -196,8 +191,118 @@
 
 "This shortcut is already used by:\n%@" = "このショートカットは次のコマンドで使用されています：\n%@";
 
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "選択した設定プロファイルが正しくありません。";
+"Apply Settings Profile?" = "設定プロファイルを適用しますか？";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "エンジン・編集・表示・既知の隠し設定とDockアイコンを初期化します。ショートカット、システムの言語とキー設定、ウインドウ配置、自動更新、テーマファイル、未知の設定は保持します。テーマの選択は変更されることがあります。TeXエンジンのパス: %@";
+"Apply Profile" = "プロファイルを適用";
+"Settings could not be saved" = "設定を保存できませんでした";
+"Enter a valid setting" = "有効な設定値を入力してください";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "この欄を修正するか、最後に保存した値へ戻してください。他の設定はすでに保存されています。";
+"Continue Editing" = "編集を続ける";
+"Restore This Field" = "この欄を元に戻す";
+"The theme could not be saved. Its last saved colors have been restored." = "テーマを保存できませんでした。最後に保存した色へ戻しました。";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "別のテーマ名を指定してください。ドットで始まる名前、パス区切り文字、制御文字、シンボリックリンクは使用できません。";
+"The new theme could not be saved. The original theme is unchanged." = "新しいテーマを保存できませんでした。元のテーマは変更していません。";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "設定を開き直すか、読み取れるテーマを選んでから編集・複製してください。";
+
+"Back" = "戻る";
+
+"Forward" = "進む";
+
+"Settings Categories" = "設定カテゴリ";
+
+"Navigation History" = "移動履歴";
+
+"Back (⌘[)" = "戻る (⌘[)";
+
+"Forward (⌘])" = "進む (⌘])";
+
+"Keyboard" = "キーボード";
+"Search by Function" = "機能で検索";
+"Search by Key" = "キーで検索";
+"Show in Macro Editor" = "マクロエディタで表示";
+"Assigned" = "割り当て有効";
+"Inactive for this key" = "このキーでは無効";
+"Assignment priority is shown; whether a command can run depends on the document." = "キーの割当ての優先順位を示しています。コマンドを実行できるかは書類の状態によります。";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "システムが使っているキーは検出できません。Escで記録を終了します。";
+"No command uses this key." = "このキーを使うコマンドはありません。";
+"Press a key" = "キーを押してください";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "ショートカットに使えないキーです。⌘か⌃と組み合わせるか、F1〜F20を使ってください。";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "メニューのカスタムショートカットを削除します。KeyEquivalents.plistの設定は保持されます。";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "既存の割り当てを表示しています。このキーを新しいショートカットに割り当てることはできません。";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "一致する項目: %lu";
+
+"The theme “%@” already exists. Replace it?" = "テーマ「%@」はすでにあります。置き換えますか？";
+
+"Replace" = "置き換える";
+
+"General" = "一般";
+"Documents and Saving" = "書類と保存";
+"Editor" = "エディタ";
+"Spell Checking" = "スペルチェック";
+"Appearance" = "外観";
+"Typesetting" = "タイプセット";
+"Console" = "コンソール";
+"Updates" = "アップデート";
+"Defaults for New Documents" = "新しい書類の初期値";
+"Matching Brackets" = "括弧の対応";
+"Spelling While Typing" = "入力中のスペルチェック";
+"Use LaTeX-aware spell checking (recommended)" = "LaTeXの構造を考慮する（推奨）";
+"Use legacy spell checking" = "従来方式を使う";
+"LaTeX Spell Checking" = "LaTeXのスペルチェック";
+"Edit Key Bindings…" = "キーバインドファイルを編集…";
+"Key Bindings" = "キーバインド";
+"Edit Command Completion…" = "コマンド補完ファイルを編集…";
+"Command Completion" = "コマンド補完";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Tabでコマンド補完を呼び出す場合、Tabは補完用に予約され、メニューのショートカットには割り当てられません。";
+"Source and Preview Windows" = "ソースとプレビューのウインドウ";
+"Comment Lines and Hidden Settings" = "コメント行と隠し設定";
+"Advanced" = "詳細";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "TeX環境をインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。";
+
+"Completion trigger" = "呼び出すキー";
+
+"This key is reserved for command completion." = "予約済みのキーです（コマンド補完の呼び出し）。";
+
+"Encoding" = "文字コード";
+
+"Saving Documents" = "保存";
+
+"Page Display" = "ページ表示";
+
+"PDF Interaction" = "PDFの操作";
+
+"PDF Appearance" = "PDFの外観";
+
+"HTML Preview" = "HTMLプレビュー";
+
+"Typesetting Defaults" = "タイプセットの初期値";
+
+"Synchronization" = "同期";
+
+"Tools" = "ツール";
+
+"Expanded" = "展開";
+
+"Collapsed" = "折りたたみ";
+
+"Search Settings" = "設定を検索";
+
+"Settings results: %lu" = "設定の検索結果：%lu件";
+
+"No Settings Found" = "一致する設定がありません";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "全書類で使う共通ファイルを編集します。チェックボックスは新しい書類の初期値を設定します。";
 /* Independent Experiment console */
 "Experiment input" = "実験への入力";
 "Stop Experiment" = "実験を中止";
 "%@ — Experiment Console" = "%@ — 実験コンソール";
 "Experiment stopped.\n" = "実験を中止しました。\n";
+
+/* Explicit fallback for shared keys without a translation. */

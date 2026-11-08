@@ -32,6 +32,7 @@ elif args.mutation == 'scaled-step':
     methods = methods.replace(original, '')
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <PDFKit/PDFKit.h>
 #import "TSExternalPDFReload.h"
 #define SUD NSUserDefaults.standardUserDefaults
@@ -73,7 +74,7 @@ static PDFDocument *document(NSInteger rotation) {
  return doc;
 }
 int main(void) { @autoreleasepool {
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];
  NSArray *documents=@[document(0),document(90),document(180),document(270)];
  for(NSNumber *scale in @[@1.25,@2,@4]) for(NSInteger mode=0;mode<4;mode++) for(NSInteger style=0;style<2;style++)
  for(NSInteger book=0;book<2;book++) for(NSInteger rtl=0;rtl<2;rtl++) for(NSInteger rotation=0;rotation<4;rotation++) {
@@ -130,9 +131,9 @@ int main(void) { @autoreleasepool {
 '''.replace('METHODS', methods)
 with tempfile.TemporaryDirectory(prefix='texshop-vertical-arrows-') as directory:
     temp = Path(directory)
-    (temp/'home').mkdir()
+    (temp/'home'/'Library'/'Preferences').mkdir(parents=True)
     (temp/'test.m').write_text(program)
-    subprocess.run(['xcrun','clang','-mmacosx-version-min=14.6','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
+    subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-mmacosx-version-min=14.6','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
                     '-I'+str(root/'Sources'),str(temp/'test.m'),'-o',str(temp/'TeXShopVerticalArrowTest')],check=True)
     subprocess.run([str(temp/'TeXShopVerticalArrowTest')],check=True,timeout=240,
-                   env=dict(os.environ,CFFIXED_USER_HOME=str(temp/'home')))
+                   env=dict(os.environ,HOME=str(temp/'home'),CFFIXED_USER_HOME=str(temp/'home')))

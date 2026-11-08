@@ -509,24 +509,11 @@
                             <menuItem isSeparatorItem="YES" id="543">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Autovervollständigung" id="922">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <menu key="submenu" title="Autovervollständigung" id="923">
-                                    <items>
-                                        <menuItem title="Ein/Aus" id="924" identifier="TSShortcut.changeAutoComplete:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeAutoComplete:" target="-1" id="926"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Autovervollständigung-Datei öffnen..." id="Wxi-4b-l9Y" identifier="TSShortcut.openAutoCompletionListEditor:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openAutoCompletionListEditor:" target="920" id="fvH-cX-djT"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="Autovervollständigung" id="924" identifier="TSShortcut.changeAutoComplete:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAutoComplete:" target="-1" id="926"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Vervollständigung" id="539">
                                 <menu key="submenu" title="Vervollständigung" id="540">
@@ -577,11 +564,6 @@
                                                     </menuItem>
                                                 </items>
                                             </menu>
-                                        </menuItem>
-                                        <menuItem title="Vervollständigungsdatei öffnen..." id="542" identifier="TSShortcut.openCommandCompletionList:.0">
-                                            <connections>
-                                                <action selector="openCommandCompletionList:" target="-1" id="546"/>
-                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -1657,12 +1639,6 @@ Gw
                 </subviews>
             </view>
         </window>
-        <customObject id="920" customClass="TSAutoCompletionListEditor"/>
-        <menuItem title="Autovervollständigung-Datei öffnen..." id="925" identifier="TSShortcut.openAutoCompletionListEditor:.0.secondary">
-            <modifierMask key="keyEquivalentModifierMask"/>
-            <connections>
-                <action selector="openAutoCompletionListEditor:" target="920" id="927"/>
-            </connections>
-        </menuItem>
+
     </objects>
 </document>

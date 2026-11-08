@@ -20,6 +20,7 @@ NSModalResponse TSRunShortcutAlert(NSAlert *alert);
 @property (nonatomic, readonly) NSArray<TSShortcutCommand *> *commands;
 @property (nonatomic, readonly) NSArray<NSString *> *unavailableCommands;
 - (void)refreshMenu;
+- (NSArray<NSString *> *)settingsSearchCommandNames;
 
 - (instancetype)initWithMenu:(NSMenu *)menu defaults:(NSUserDefaults *)defaults;
 - (nullable NSString *)setKey:(NSString *)key modifiers:(NSEventModifierFlags)flags forCommand:(TSShortcutCommand *)command;
@@ -36,9 +37,14 @@ NSModalResponse TSRunShortcutAlert(NSAlert *alert);
 + (BOOL)event:(NSEvent *)event matchesItem:(NSMenuItem *)item;
 @end
 
-@interface TSKeyboardShortcuts : NSWindowController
+@class TSShortcutMacro;
+@interface TSKeyboardShortcuts : NSObject
+@property (strong, readonly, nullable) TSShortcutStore *store;
+@property (copy, nullable) NSArray<TSShortcutMacro *> * (^macroProvider)(void);
+@property (copy, nullable) void (^showMacro)(TSShortcutMacro *macro);
+@property (copy, nullable) void (^showSettings)(void);
 + (instancetype)sharedController;
-- (void)installInMainMenu;
+- (void)startObservingMenu;
 - (void)beginMenuRebuild;
 - (void)endMenuRebuild;
 - (void)refreshMenuAndMacros;

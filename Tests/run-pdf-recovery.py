@@ -14,6 +14,7 @@ def window_method(signature):
 window_methods='\n'.join(window_method(x) for x in ['- (void)close', '- (void)orderWindow:'])
 program=r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <PDFKit/PDFKit.h>
 #import "TSExternalPDFReload.h"
 static BOOL atLeastHighSierra=YES,atLeastMojave=YES;
@@ -123,7 +124,7 @@ METHODS
 @end
 static void check(BOOL ok,NSString *message){if(!ok){NSLog(@"FAIL: %@",message);exit(1);}}
 int main(int argc,char**argv){@autoreleasepool{
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation();[NSApplication sharedApplication];
  [SUD registerDefaults:@{FlashFixKey:@YES,FlashDelayKey:@0.01}];
  NSString *good=[NSString stringWithUTF8String:argv[1]],*bad=[NSString stringWithUTF8String:argv[2]];
  NSData *goodData=[NSData dataWithContentsOfFile:good],*badData=[NSData dataWithContentsOfFile:bad];
@@ -189,6 +190,6 @@ int main(int argc,char**argv){@autoreleasepool{
 '''.replace('WINDOW_METHODS',window_methods.replace('TSDocument *theDocument', 'TestDocument *theDocument')).replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
 with tempfile.TemporaryDirectory(prefix='texshop-recovery-') as directory:
     p=Path(directory);(p/'test.m').write_text(program)
-    (p/'home').mkdir()
-    subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(p/'test')],check=True)
-    subprocess.run([str(p/'test'),*(sys.argv[1:] or [str(p/'good.pdf'),str(p/'bad.pdf')]),str(p/'live.pdf')],env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)
+    (p/'home'/'Library'/'Preferences').mkdir(parents=True)
+    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(p/'test')],check=True)
+    subprocess.run([str(p/'test'),*(sys.argv[1:] or [str(p/'good.pdf'),str(p/'bad.pdf')]),str(p/'live.pdf')],env=dict(os.environ,HOME=str(p/'home'),CFFIXED_USER_HOME=str(p/'home')),check=True)

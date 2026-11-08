@@ -1,3 +1,4 @@
+#import "../TestAppKitIsolation.h"
 // Learned-word lookup and Find Next, with a stand-in spell checker that never
 // learns, ignores or forgets words.
 #import <Cocoa/Cocoa.h>
@@ -60,7 +61,7 @@ static NSArray<NSString *> *Find(NSString *text, BOOL masked, double *callSecond
 int main(void)
 {
     @autoreleasepool {
-        [NSApplication sharedApplication];
+        TSInstallAppKitIsolation(); [NSApplication sharedApplication];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
         sAsked = [NSMutableArray array];
         sChecked = [NSMutableArray array];

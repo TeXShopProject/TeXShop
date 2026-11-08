@@ -576,8 +576,6 @@ extern NSString *ColorPath;
 /*" Notifications "*/
 extern NSString *SyntaxColoringChangedNotification;
 extern NSString *DocumentFontChangedNotification;
-extern NSString *DocumentFontRememberNotification;
-extern NSString *DocumentFontRevertNotification;
 extern NSString *ConsoleFontChangedNotification;
 extern NSString *ConsoleBackgroundColorChangedNotification;
 extern NSString *ConsoleForegroundColorChangedNotification;
@@ -587,8 +585,6 @@ extern NSString *SourceColorChangedNotification;
 extern NSString *PreviewColorChangedNotification;
 extern NSString *PreviewBackgroundColorChangedNotification;
 extern NSString *MagnificationChangedNotification;
-extern NSString *MagnificationRememberNotification;
-extern NSString *MagnificationRevertNotification;
 extern NSString *DocumentSyntaxColorNotification;
 extern NSString *DocumentAutoCompleteNotification;
 extern NSString *DocumentBibDeskCompleteNotification;

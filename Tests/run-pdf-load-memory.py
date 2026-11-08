@@ -40,8 +40,8 @@ static BOOL PasswordField(NSView *view){
  return NO;
 }
 int main(int argc,char**argv){@autoreleasepool{
- [NSApplication sharedApplication];NSString *path=@(argv[1]),*mode=@(argv[2]);
- [SUD setVolatileDomain:@{@"flash":@NO,@"drawer":@NO} forName:NSArgumentDomain];
+ TSInstallAppKitIsolation();[NSApplication sharedApplication];NSString *path=@(argv[1]),*mode=@(argv[2]);
+ TSIsolatedAppKitDefaults.values=[@{@"flash":@NO,@"drawer":@NO} mutableCopy];
  NSWindow *w=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,900,600) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];w.releasedWhenClosed=NO;
  RecoveryView *v=[[RecoveryView alloc]initWithFrame:NSMakeRect(0,0,450,600)],*second=[[RecoveryView alloc]initWithFrame:NSMakeRect(450,0,450,600)];
  for(RecoveryView *view in @[v,second]){view.myPDFWindow=[TestWindow new];view.myDocument=[TestDocument new];view.myDocument.pdfKitWindow=view.myPDFWindow;view.releaseDocument=YES;[w.contentView addSubview:view];view.displayMode=kPDFDisplaySinglePageContinuous;if(![mode isEqual:@"url"])view.myDocument.pdfRefreshTimer=[NSTimer timerWithTimeInterval:100 repeats:NO block:^(NSTimer*t){}];}
@@ -84,7 +84,7 @@ int main(int argc,char**argv){@autoreleasepool{
 '''
 with tempfile.TemporaryDirectory(prefix='texshop-pdf-load-') as td:
     t=Path(td);(t/'test.m').write_text(program)
-    base=['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I'+str(root/'Sources')]
+    base=['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I'+str(root/'Sources')]
     subprocess.run(base+[str(t/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(t/'test')],check=True)
     for mode in ['fail-show','fail-reload','locked-show','locked-reload']:
         subprocess.run([str(t/'test'),str(t/'locked.pdf'),mode],check=True)

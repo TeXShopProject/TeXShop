@@ -96,7 +96,7 @@ static void installShiftingClip(void) {
 }
 @end
 int main(void) { @autoreleasepool {
-    [NSApplication sharedApplication];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     [SUD setVolatileDomain:@{@"flash":@NO} forName:NSArgumentDomain];
     NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(600,800)];
     [image lockFocus]; [NSColor.whiteColor setFill]; NSRectFill(NSMakeRect(0,0,600,800)); [image unlockFocus];
@@ -128,6 +128,22 @@ int main(void) { @autoreleasepool {
             [view reShowWithDocument:document(bytes,count.unsignedIntegerValue,rotation.integerValue)]; pump();
             sameViewport(before,view,[NSString stringWithFormat:@"reload preserves viewport with page count %@",count]);
             check(fabs(view.scaleFactor-scale.doubleValue)<.001,@"reload preserves zoom");
+        }
+        // Exercise the first reload after zooming, before and after AppKit settles.
+        for (NSNumber *settle in @[@NO, @YES]) {
+            view.scaleFactor = scale.doubleValue / 2;
+            pump();
+            view.scaleFactor = scale.doubleValue;
+            if (settle.boolValue) pump();
+            TSExternalPDFPosition zoomed = TSExternalPDFCapture(view);
+            for (NSUInteger reload=0; reload<2; reload++) {
+                [view reShowWithDocument:document(bytes,4,rotation.integerValue)]; pump();
+                TSExternalPDFPosition actual = TSExternalPDFCapture(view);
+                CGFloat screenDrift = hypot(actual.pagePoint.x-zoomed.pagePoint.x,
+                                             actual.pagePoint.y-zoomed.pagePoint.y) * view.scaleFactor;
+                check(actual.pageIndex == zoomed.pageIndex && screenDrift < .75,
+                      [NSString stringWithFormat:@"zoom reload %lu (settled=%@) drift %.3f screen points",reload,settle,screenDrift]);
+            }
         }
         // Reload after the window changes size must preserve its new viewport.
         [window setContentSize:NSMakeSize(650,420)]; pump();
@@ -289,12 +305,12 @@ with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
         replacement = ('    target = [clip constrainBoundsRect:target];\n'
                        if args.mutation == 'legacy-constraints' else '')
         (temp/'TSExternalPDFReload.h').write_text(header[:start] + replacement + header[end:])
-    subprocess.run(['xcrun', 'clang', '-mmacosx-version-min=14.6', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     '-I'+str(root/'Sources'), str(temp/'test.m'), str(root/'Sources/HideView.m'),
                     str(root/'Sources/TSExternalPDFSnapshot.m'), '-o', str(temp/'test')], check=True)
     home = temp / 'home'
-    home.mkdir()
-    environment = dict(os.environ, CFFIXED_USER_HOME=str(home))
+    (home/'Library'/'Preferences').mkdir(parents=True)
+    environment = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home))
     if args.artifacts:
         args.artifacts.mkdir(parents=True, exist_ok=True)
         shutil.copy2(temp/'test.m', args.artifacts/'test.m')

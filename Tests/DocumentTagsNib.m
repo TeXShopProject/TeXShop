@@ -1,3 +1,4 @@
+#import "TestAppKitIsolation.h"
 // Inspect actual compiled nibs without starting TeXShop or loading its preferences.
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
@@ -17,7 +18,7 @@ static void Register(NSString *name,Class base) {
  objc_registerClassPair(c);
 }
 int main(int argc,char **argv) { @autoreleasepool {
- [NSApplication sharedApplication];outlets=[NSMutableDictionary dictionary];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];outlets=[NSMutableDictionary dictionary];
 
  for(NSString *name in @[@"TSConsoleWindow",@"TSFullSplitWindow",@"TSFullscreenWindow",@"TSHTMLWindow",@"TSLogWindow",@"TSPreviewWindow",@"TSTextEditorWindow"]) Register(name,NSWindow.class);
  Register(@"MyPDFView",NSView.class);

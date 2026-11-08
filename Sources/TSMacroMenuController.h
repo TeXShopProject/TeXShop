@@ -34,6 +34,8 @@
 
 #define SEPARATOR @"Separator"
 
+@class TSShortcutMacro;
+
 @interface TSMacroMenuController : NSObject
 {
 	IBOutlet NSMenu *macroMenu;
@@ -48,6 +50,7 @@
 + (id)sharedInstance;
 
 // - (NSDictionary *)macroDictionary;
+- (NSArray<TSShortcutMacro *> *)shortcutEntries;
 - (void)loadMacros;
 - (void)setupMainMacroMenu;
 - (void)reloadMacros: (id)sender;

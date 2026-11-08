@@ -8,14 +8,20 @@
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 <BODY>
+<p>Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose &#8220;Use LaTeX-aware spell checking (recommended)&#8221; with &#8220;Edit LaTeX exclusion rules&#8230;&#8221;, or &#8220;Use legacy spell checking&#8221; with three indented options. Changing the method preserves all child values. &#8220;Check Spelling&#8221; is independent. Keyboard places key bindings and command completion above shortcut search and the scrolling list. On a short window the input groups can be expanded one at a time. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings. Disabled controls retain their saved values; an obsolete remembered category opens General.</p>
+
 <div id="content_border">
+<p>Settings uses a resizable window with a category sidebar and Back/Forward navigation. Command-left bracket and Command-right bracket navigate Settings while that window is active, taking precedence over menu shortcuts there. The last category is remembered; navigation history is cleared when Settings closes. Select categories with the mouse or arrow keys, then use Tab to reach their controls. Scroll the content when the window is small. References in older help to Settings tabs now mean sidebar categories. Theme color groups are shown together in Appearance. Escape cancels profile confirmation; Return does not apply it.</p>
+<p>Command-bracket navigation also supports brackets produced with Option. Back and Forward buttons are available on every layout.</p>
+<p lang="en">Starting with TeXShop 5.60, Settings changes are saved immediately. Press Return or leave a text field to validate it. Closing Settings or changing categories also validates unfinished input; invalid input does not replace the last saved value. There is no whole-window OK or Cancel. The Preview zoom setting is the default for newly opened PDFs; existing PDFs keep their zoom. Source and console font changes update open windows. Theme edits are saved before documents refresh; duplicate a theme before editing to retain the original. If saving fails, the last saved colors are restored. A settings profile asks for confirmation before resetting known engine, editing, display, hidden settings and the running Dock icon. Shortcuts, language, window layouts, automatic updates, theme files and unknown settings are preserved; theme selections may change.</p>
+
 
 		<P>
 Users should consider changing a small number of default settings provided by TeXShop. Some of these changes depend on characteristics of individual displays and cannot be set until you use the program.
 </P>
 		<p>
 By default, TeXShop opens source and preview windows in the spot they last appeared. This only makes sense when you deal with one document at a time. It is usually better to open source and preview windows in a predetermined optimal position. To make that happen, typeset a simple document. Then arrange the position and size of the source
-and preview windows. Side by side is best if your screen is large enough. Open TeXShop Settings. In the "Document" tab, select "All Windows Start At Fixed Position" and click "Set With Current Position." Make the same change in the "Preview" tab.
+and preview windows. Side by side is best if your screen is large enough. Open TeXShop Settings. In the "General" category, select "All Windows Start At Fixed Position" and click "Set With Current Position." Make the same change in the "Preview" category.
 </p>
 <p> A later addition to TeXShop makes this easier. Instead of opening TeXShop Settings,
 activate the source window and then choose ``Save Source Position'' in the Source Menu. Then
@@ -29,6 +35,7 @@ Activate the source window and select the menu item ``Save Source Position for P
 Source Menu, Then activate the preview window and select ``Save Preview Position for Portable''
 in the preview window.
 
+<p>Settings use vertically stacked groups with wrapping labels. Themes shows both color groups in one pane. Creating a theme uses a name sheet attached to Settings; replacing an existing theme requires confirmation. Cancelling either sheet leaves existing files unchanged.</p>
 </div>		
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
@@ -47,10 +54,14 @@ in the preview window.
 			<li><a href="configure_panel.htm">Modifying the Latex Panel</a>
 			<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a>
 			<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-			
+
 			<li><a href="configure_macros.htm">Modifying the Macros Menu</a>
 		</ul>
 	</div>
-	</BODY>
+	<p lang="en">Auto Save changes are saved immediately but take effect after restarting TeXShop.</p>
+
+<h3 id="settings-search">Search Settings</h3>
+<p>Use Search Settings above the sidebar to find categories, labels, options and menu commands. Words separated by spaces must all occur in the same category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to reveal and highlight its controls without changing their values. Clearing the query returns to the category used before searching. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording. Personal paths, entered values and user-created theme names are not searched.</p>
+</BODY>
 
 </HTML>

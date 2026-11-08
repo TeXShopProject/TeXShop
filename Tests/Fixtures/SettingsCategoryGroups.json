@@ -1,0 +1,104 @@
+{
+  "source": "Fixed expected category groups and original group membership; do not regenerate from production code.",
+  "groups": {
+    "general": [
+      "settings.236",
+      "settings.aig-4m-gAG",
+      "settings.19",
+      "settings.585",
+      "settings.Kin-Cw-xVc",
+      "group.advanced"
+    ],
+    "documents": [
+      "group.encoding",
+      "group.saving"
+    ],
+    "editor": [
+      "group.editor-defaults",
+      "group.editor-behavior",
+      "settings.4a3-VM-Tgq",
+      "settings.Gj7-Yx-1Hv",
+      "settings.eIA-mh-q2u",
+      "group.parens",
+      "settings.934",
+      "settings.935",
+      "settings.933",
+      "settings.cSu-im-H1E",
+      "settings.DU3-gi-QzY"
+    ],
+    "spelling": [
+      "group.spelling-common",
+      "settings.ENd-QB-0Uf",
+      "group.spelling-method"
+    ],
+    "appearance": [
+      "settings.14",
+      "settings.ZlV-mI-DdK"
+    ],
+    "preview": [
+      "group.windows",
+      "settings.47",
+      "group.page-display",
+      "group.pdf-interaction",
+      "settings.555",
+      "group.pdf-appearance",
+      "group.html-preview"
+    ],
+    "typesetting": [
+      "group.typesetting-defaults",
+      "group.synchronization",
+      "settings.215",
+      "settings.54",
+      "settings.200",
+      "settings.Eb6-59-PxD",
+      "settings.vEF-zd-SJl",
+      "group.tools"
+    ],
+    "console": [
+      "settings.752",
+      "settings.WQX-9X-AFi",
+      "settings.772",
+      "settings.828"
+    ],
+    "keyboard": [
+      "group.bindings",
+      "group.completion"
+    ],
+    "updates": [
+      "settings.e3h-Wk-X7D"
+    ]
+  },
+  "originalGroups": {
+    "documents": [
+      "262",
+      "03p-fB-1K3",
+      "5ba-33-JZx",
+      "314"
+    ],
+    "preview": [
+      "329",
+      "111",
+      "501",
+      "342",
+      "228",
+      "330",
+      "5HT-3x-Zr6",
+      "386",
+      "447",
+      "YrC-m9-abH",
+      "p2D-Mi-Gyc"
+    ],
+    "typesetting": [
+      "183",
+      "188",
+      "675",
+      "823",
+      "W5U-9S-4OG",
+      "1020",
+      "1027",
+      "SXg-YM-OVa",
+      "163-F5-v8Z",
+      "SS5-tZ-cDa"
+    ]
+  }
+}

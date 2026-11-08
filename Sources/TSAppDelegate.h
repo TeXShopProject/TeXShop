@@ -50,6 +50,7 @@
 - (void)reReadCommandCompletionData;
 - (void)openCommandCompletionList: (id)sender; // mitsu 1.29 (P)
 #ifdef MITSU_PDF
+- (void)syncImageCopyTypeMenu;
 - (void)changeImageCopyType: (id)sender; // mitsu 1.29 (O)
 #endif
 - (void)finishAutoCompletionConfigure;

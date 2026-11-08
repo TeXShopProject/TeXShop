@@ -90,11 +90,12 @@ pieces = {
     'OLD_HEADING': block(jobs, '- (void) saveFinished:',
                          'if ((! done) && ([SUD boolForKey:UseOldHeadingCommandsKey])) {'),
     'SAVE_FOR_STATISTICS': method('TSDocument.m', '- (void)saveForStatistics:'),
-    'HTML_HOME_CHANGED': method('TSPreferences.m', '- (IBAction)HtmlHomeChanged:sender'),
+    'HTML_HOME_CHANGED': method('TSPreferences.m', '- (IBAction)HtmlHomeChanged:(id)sender'),
 }
 
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TSPreferenceInput.h"
 #import <objc/runtime.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -220,11 +221,16 @@ SAVE_FOR_STATISTICS
 
 @interface ProbePreferencesController : NSObject {
 @public
-    NSUndoManager *_undoManager;
     ProbeText *_HtmlHomeField;
 }
 @end
 @implementation ProbePreferencesController
+- (BOOL)commitPreferenceField:(id)field showError:(BOOL)showError reflect:(BOOL)reflect {
+    TSPreferenceInput *rule=[[TSPreferenceInput alloc]initWithKey:HtmlHomeKey kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil];
+    TSPreferenceInputValue *value=[rule validatedValue:[field stringValue]];
+    if (value == nil) return NO;
+    [value storeInDefaults:(id)SUD forKey:rule.key];return YES;
+}
 HTML_HOME_CHANGED
 @end
 
@@ -505,24 +511,19 @@ int main(int argc, char **argv) {
                 ok = YES;
             });
 
-            // Preferences undo (A5).
-            CHECK(@"HtmlHomeChanged: undo restores HTML Home and keeps the TeX bin path", {
+            // Immediate HTML Home persistence (A5); full validator lifecycle is tested separately.
+            CHECK(@"HtmlHomeChanged: saves HTML Home immediately and keeps the TeX bin path", {
                 ProbePreferencesController *c = [ProbePreferencesController new];
-                c->_undoManager = [NSUndoManager new];
-                c->_undoManager.groupsByEvent = NO;
                 c->_HtmlHomeField = [ProbeText new];
                 [c->_HtmlHomeField.text setString:@"  /new/home \n"];
                 [probePreferences.values removeAllObjects];
                 probePreferences.values[TetexBinPath] = @"/Library/TeX/texbin";
                 probePreferences.values[HtmlHomeKey] = @"/old/home";
-                [c->_undoManager beginUndoGrouping];
                 [c HtmlHomeChanged:nil];
-                [c->_undoManager endUndoGrouping];
                 BOOL changed = [probePreferences.values[HtmlHomeKey] isEqualToString:@"/new/home"];
-                [c->_undoManager undo];
-                ok = changed && [probePreferences.values[HtmlHomeKey] isEqualToString:@"/old/home"]
+                ok = changed && [probePreferences.values[HtmlHomeKey] isEqualToString:@"/new/home"]
                     && [probePreferences.values[TetexBinPath] isEqualToString:@"/Library/TeX/texbin"];
-                detail = [NSString stringWithFormat:@"after undo %@", probePreferences.values];
+                detail = [NSString stringWithFormat:@"after commit %@", probePreferences.values];
             });
         }
 
@@ -574,19 +575,6 @@ int main(int argc, char **argv) {
 '''
 
 failed = False
-# Every undo registration in the preferences must restore the key it reads.
-preferences = (sources / 'TSPreferences.m').read_text(errors='replace')
-mismatched = []
-for m in re.finditer(r'prepareWithInvocationTarget:\s*SUD\]\s*\w+:\s*\[SUD \w+ForKey:\s*(\w+)\]\s*forKey:\s*(\w+)\]',
-                     preferences):
-    if m.group(1) != m.group(2):
-        mismatched.append(f'{m.group(1)} -> {m.group(2)}')
-if mismatched:
-    failed = True
-    print('FAIL: preference undo registrations use another key:', ', '.join(mismatched))
-else:
-    print('PASS: every preference undo registration restores the key it reads')
-
 # A task's recorded process group is dropped when the task is cleaned up after it exits,
 # before the termination routine can return.
 routine = method(jobs, '- (void)checkATaskStatusFromTerminationRoutine:')
@@ -603,7 +591,7 @@ try:
     bad = temporary / 'not-an-executable'
     bad.write_bytes(b'\x00\x01\x02 not a program\n')
     bad.chmod(0o755)
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', str(temporary / 'test.m'),
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I', str(sources), str(sources / 'TSPreferenceInput.m'), str(temporary / 'test.m'),
                     '-o', str(temporary / 'test')], check=True)
     (temporary / 'job.c').write_text(job_program)
     subprocess.run(['xcrun', 'clang', '-w', str(temporary / 'job.c'), '-o', str(temporary / 'job')], check=True)

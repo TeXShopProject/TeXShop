@@ -512,24 +512,11 @@
                             <menuItem isSeparatorItem="YES" id="99">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="키 바인딩" id="100">
+                            <menuItem title="키 바인딩" id="102" identifier="TSShortcut.changeAutoComplete:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="키 바인딩" id="101">
-                                    <items>
-                                        <menuItem title="ON/OFF 교체" id="102" identifier="TSShortcut.changeAutoComplete:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeAutoComplete:" target="-1" id="456"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="키 바인딩 파일 편집..." id="103" identifier="TSShortcut.openAutoCompletionListEditor:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openAutoCompletionListEditor:" target="298" id="457"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                                <connections>
+                                    <action selector="changeAutoComplete:" target="-1" id="456"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="명령 완성" id="104">
                                 <menu key="submenu" title="명령 완성" id="105">
@@ -580,11 +567,6 @@
                                                     </menuItem>
                                                 </items>
                                             </menu>
-                                        </menuItem>
-                                        <menuItem title="자동완성 용어파일 편집..." id="115" identifier="TSShortcut.openCommandCompletionList:.0">
-                                            <connections>
-                                                <action selector="openCommandCompletionList:" target="-1" id="368"/>
-                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -1657,6 +1639,5 @@ Gw
                 </subviews>
             </view>
         </window>
-        <customObject id="298" customClass="TSAutoCompletionListEditor"/>
     </objects>
 </document>

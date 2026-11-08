@@ -2,6 +2,7 @@
 """Load every compiled preferences nib and exercise marker choices with isolated defaults."""
 from pathlib import Path
 import subprocess, tempfile, re
+from pane_fixtures import bundles, sources
 root=Path(__file__).resolve().parents[1]
 source=(root/'Sources/TSPreferences.m').read_text()
 def method(sig):
@@ -13,7 +14,7 @@ constants='\n'.join(re.findall(r'^NSString \*(?:show(?:Space|FullwidthSpace|Tab|
 assert len(constants.splitlines())==8
 update=method('- (void)updateControlsFromUserDefaults:')
 assert '[self updateInvisibleCharacterControls:defaults];' in update
-for caller in ('- (IBAction)showPreferences:', '- (void)undoDefaultPrefs:', '- (IBAction)setDefaults:'):
+for caller in ('- (IBAction)showPreferences:',):
  assert '[self updateControlsFromUserDefaults:SUD];' in method(caller)
 checkboxes='\n'.join(line for line in update.splitlines() if any('_show'+k+'CharacterButton setState:' in line for k in keys))
 assert len(checkboxes.splitlines())==4
@@ -22,12 +23,14 @@ methods+='\n- (void)reloadControls:(NSUserDefaults *)defaults {\n'+checkboxes+'\
 ivars='\n'.join(f'NSPopUpButton *_{k}CharacterKindPopup; NSButton *_show{k}CharacterButton;' for k in keys)
 program=r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import "TSInvisibleCharacters.h"
+#import "TSPrefEditorController.h"
 #import "MemoryDefaults.h"
 static NSUserDefaults *settings;
 #define SUD settings
 CONSTANTS
-@interface TSPreferences:NSObject { @public NSUndoManager *_undoManager; BOOL invisibleCharacterTouched; IVARS }
+@interface TSPreferences:NSObject { @public IVARS }
 @end
 @implementation TSPreferences
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {}
@@ -41,51 +44,57 @@ METHODS
 @end
 static void Check(BOOL ok, NSString *why) {if(!ok){NSLog(@"FAIL: %@",why);exit(1);}}
 int main(int argc,char **argv){@autoreleasepool{
- [NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
  settings=[TSMemoryDefaults new];
  NSArray *keys=@[@"SpaceCharacterKind",@"FullwidthSpaceCharacterKind",@"NewLineCharacterKind",@"TabCharacterKind"];
  NSArray *show=@[@"ShowSpaceCharacter",@"ShowFullwidthSpaceCharacter",@"ShowNewLineCharacter",@"ShowTabCharacter"];
  NSArray *expected=@[@[@"␣",@"·"],@[@"□",@"■"],@[@"↵",@"¶",@"↩",@"⏎"],@[@"‣",@"▹",@"⇥"]];
  for(int n=1;n<argc;n++){
-  TSPreferences *owner=[TSPreferences new];owner->_undoManager=[NSUndoManager new];owner->_undoManager.groupsByEvent=NO;
-  NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:@(argv[n])] bundle:nil];NSArray *objects;
-  Check([nib instantiateWithOwner:owner topLevelObjects:&objects],@"compiled nib loads");
+  TSPreferences *owner=[TSPreferences new];
+  NSBundle *bundle=[NSBundle bundleWithPath:@(argv[n])];
+  TSPrefEditorController *pane=[[TSPrefEditorController alloc]initWithNibName:@"SettingsEditor" bundle:bundle];
+  Check(pane.view!=nil,@"shared editor pane loads");pane.preferences=owner;
+  BRIDGE
+  NSWindow *window=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,1600) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
+  [window.contentView addSubview:pane.view];
+  [NSLayoutConstraint activateConstraints:@[[pane.view.widthAnchor constraintEqualToConstant:650],[pane.view.topAnchor constraintEqualToAnchor:window.contentView.topAnchor],[pane.view.leadingAnchor constraintEqualToAnchor:window.contentView.leadingAnchor]]];
+  [window.contentView layoutSubtreeIfNeeded];
   NSArray *popups=@[owner->_SpaceCharacterKindPopup,owner->_FullwidthSpaceCharacterKindPopup,owner->_NewLineCharacterKindPopup,owner->_TabCharacterKindPopup];
   NSArray *buttons=@[owner->_showSpaceCharacterButton,owner->_showFullwidthSpaceCharacterButton,owner->_showNewLineCharacterButton,owner->_showTabCharacterButton];
   for(int i=0;i<4;i++){[settings setInteger:1 forKey:keys[i]];[settings setBool:YES forKey:show[i]];[(NSButton *)buttons[i] setState:NSControlStateValueOn];}
   [owner updateInvisibleCharacterControls:settings];
   for(int i=0;i<4;i++){
    NSPopUpButton *p=popups[i];NSButton *b=buttons[i];
-   NSView *box=p.superview.superview;
-   Check(box.frame.size.width>100 && box.frame.size.height>100,@"visible settings box bounds");
+   Check(NSWidth(pane.view.frame)>600,@"editor pane has usable width");
    Check(NSContainsRect(p.superview.bounds,p.frame),@"popup stays inside settings box");
-   Check([p isKindOfClass:NSPopUpButton.class] && p.target==owner && p.action==@selector(invisibleCharacterChanged:),@"popup wiring");
+   Check([p isKindOfClass:NSPopUpButton.class] && p.target==pane && p.action==@selector(invisibleCharacterChanged:),@"popup wiring");
    Check([p.itemTitles isEqual:expected[i]],@"compiled menu glyphs and order");
    Check([TSInvisibleMarkers(keys[i]) isEqual:p.itemTitles],@"rendering and UI choices agree");
    Check(p.selectedTag==1 && p.enabled,@"existing second choice preserved");
    for(NSInteger j=0;j<p.numberOfItems;j++){
-    [owner->_undoManager beginUndoGrouping];[p selectItemAtIndex:j];[NSApp sendAction:p.action to:p.target from:p];[owner->_undoManager endUndoGrouping];
+    [p selectItemAtIndex:j];[NSApp sendAction:p.action to:p.target from:p];
     Check(TSInvisibleStoredIndex(settings,keys[i])==j,@"each choice saves");
     Check([settings integerForKey:keys[i]]>=0 && [settings integerForKey:keys[i]]<2,@"older renderers always receive a safe index");
     Check([p.title isEqual:expected[i][j]],@"selected menu label");
     [owner reloadControls:settings]; Check(p.selectedTag==j,@"persisted selection survives reload");
-    [owner->_undoManager undo];[owner updateInvisibleCharacterControls:settings];
-    Check(p.selectedTag==1 && [settings integerForKey:keys[i]]==1,@"cancel/undo restores prior choice");
+    [owner updateInvisibleCharacterControls:settings];
+    Check(p.selectedTag==j,@"reopening keeps immediate selection");
    }
    // Switching back from an extended marker must remove the extended value.
    for(NSInteger added=2;added<p.numberOfItems;added++) for(NSInteger legacy=0;legacy<2;legacy++){
-    [owner->_undoManager beginUndoGrouping];
+
     [p selectItemAtIndex:added];[NSApp sendAction:p.action to:p.target from:p];
     [p selectItemAtIndex:legacy];[NSApp sendAction:p.action to:p.target from:p];
-    [owner->_undoManager endUndoGrouping];
+
     Check([settings objectForKey:TSInvisibleExtendedKey(keys[i])]==nil,@"returning to a legacy choice removes the extended key");
     [owner reloadControls:settings];Check(p.selectedTag==legacy,@"legacy choice survives reload after extended choice");
-    [owner->_undoManager undo];[owner reloadControls:settings];
-    Check(p.selectedTag==1 && [settings objectForKey:TSInvisibleExtendedKey(keys[i])]==nil,@"Cancel restores the choice before multiple changes");
+    [owner reloadControls:settings];
+    Check(p.selectedTag==legacy && [settings objectForKey:TSInvisibleExtendedKey(keys[i])]==nil,@"reopening preserves final legacy choice");
    }
-   [owner->_undoManager beginUndoGrouping];b.state=NSControlStateValueOff;[NSApp sendAction:b.action to:b.target from:b];[owner->_undoManager endUndoGrouping];
+   [p selectItemWithTag:1];[owner invisibleCharacterChanged:p];
+   b.state=NSControlStateValueOff;[NSApp sendAction:b.action to:b.target from:b];
    Check(!p.enabled && p.selectedTag==1,@"disabled row retains selection");
-   [owner->_undoManager undo];b.state=NSControlStateValueOn;[owner updateInvisibleCharacterControls:settings];Check(p.enabled,@"undo restores enabled state");
+   b.state=NSControlStateValueOn;[NSApp sendAction:b.action to:b.target from:b];[owner updateInvisibleCharacterControls:settings];Check(p.enabled,@"enabling retains selected marker");
    for(id bad in @[@(-1),@99,@"junk"]){
     [settings setObject:bad forKey:keys[i]];[owner updateInvisibleCharacterControls:settings];
     Check(p.indexOfSelectedItem==0,@"invalid stored selection falls back");
@@ -101,24 +110,24 @@ int main(int argc,char **argv){@autoreleasepool{
   for(int i=0;i<4;i++){ [settings setObject:@"0" forKey:keys[i]]; [settings setObject:@"NO" forKey:show[i]]; }
   [owner reloadControls:settings];
   for(int i=0;i<4;i++)Check([(NSPopUpButton *)popups[i] selectedTag]==0 && ![(NSPopUpButton *)popups[i] isEnabled] && [(NSButton *)buttons[i] state]==NSControlStateValueOff,@"profile defaults reload all controls");
-  // Extended choices round-trip and Cancel removes a newly-created key entirely.
-  [owner->_undoManager beginUndoGrouping]; [tab selectItemAtIndex:2]; [owner invisibleCharacterChanged:tab]; [owner->_undoManager endUndoGrouping];
+  // Extended choices round-trip and remain saved after reloading.
+   [tab selectItemAtIndex:2]; [owner invisibleCharacterChanged:tab];
   Check([settings integerForKey:keys[3]]==0 && [settings integerForKey:TSInvisibleExtendedKey(keys[3])]==2,@"extended choice uses separate key");
-  [owner->_undoManager undo]; Check([settings objectForKey:TSInvisibleExtendedKey(keys[3])]==nil,@"Cancel removes absent extended key");
+   [owner reloadControls:settings]; Check(tab.selectedTag==2,@"reopening retains extended key");
   [settings setInteger:2 forKey:TSInvisibleExtendedKey(keys[3])]; [settings setInteger:1 forKey:keys[3]];
   [owner reloadControls:settings]; Check(tab.selectedTag==1,@"historical second choice overrides stale extended value");
   [((TSMemoryDefaults *)settings).values removeAllObjects];
-  for(id o in objects)if([o isKindOfClass:NSWindow.class])[o orderOut:nil];
+  [pane.view removeFromSuperview];
  }
 
- puts("PASS: all compiled nibs; historical choices, added glyphs, save/undo, disabled rows and invalid settings");
+ puts("PASS: all compiled nibs; historical choices, added glyphs, immediate saving, disabled rows and invalid settings");
 }return 0;}
-'''.replace('CONSTANTS',constants).replace('IVARS',ivars).replace('METHODS',methods)
+'''.replace('CONSTANTS',constants).replace('IVARS',ivars).replace('METHODS',methods).replace('BRIDGE','\n'.join(f'owner->_{k}CharacterKindPopup=pane.{k}CharacterKindPopup;owner->_show{k}CharacterButton=pane.show{k}CharacterButton;' for k in keys))
 with tempfile.TemporaryDirectory(prefix='texshop-invisible-') as td:
  t=Path(td);(t/'probe.m').write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-I',str(root/'Sources'),'-I',str(root/'Tests'),str(t/'probe.m'),'-o',str(t/'probe')],check=True)
- nibs=sorted((root/'Resources/Interfaces').glob('*.lproj/Preferences.nib/keyedobjects*.nib'))
- assert len(nibs)==24
+ subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-I',str(root/'Sources'),'-I',str(root/'Tests'),str(t/'probe.m'),*map(str,sources(root,('Editor',))),'-o',str(t/'probe')],check=True)
+ nibs=bundles(root,t,('Editor',))
+ assert len(nibs)==12
  subprocess.run([str(t/'probe'),*map(str,nibs)],check=True)
 
 with tempfile.TemporaryDirectory(prefix="texshop-marker-draw-") as td:

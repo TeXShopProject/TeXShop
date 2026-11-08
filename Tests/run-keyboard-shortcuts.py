@@ -3,6 +3,7 @@
 No TeXShop launch, real preference writes or input-source selection changes.
 """
 from pathlib import Path
+from shortcut_sources import production_source
 import subprocess
 import tempfile
 import sys
@@ -39,7 +40,8 @@ print('PASS: macro rebuild applies effective menu keys before collecting free ke
 # replace the user's real-window checks for launch ordering and split orientation.
 delegate = (root / 'Sources/TSAppDelegate.m').read_text(encoding='latin-1')
 launch = delegate[delegate.index('- (void)applicationDidFinishLaunching:'):]
-assert 'dispatch_async(dispatch_get_main_queue(), ^{\n        [[TSKeyboardShortcuts sharedController] installInMainMenu];' in launch
+assert 'dispatch_async(dispatch_get_main_queue(), ^{\n        TSKeyboardShortcuts *shortcuts = [TSKeyboardShortcuts sharedController];' in launch
+assert '[shortcuts startObservingMenu];' in launch
 pdf = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin-1')
 for tag in (1, 2):
     assert f'[TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:{tag}]' in pdf
@@ -51,7 +53,7 @@ print('PASS: deferred launch installation, PDF search call sites and stable spli
 
 with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
     (Path(td) / 'MacroKeyProduction.inc').write_text(macro[macro.index('NSString *getKeyEquivalentFromString('):])
-    production=(root/'Sources/TSKeyboardShortcuts.m').read_text()
+    production=production_source(root)
     (Path(td)/'TSKeyboardShortcuts.m').write_text(production)
     binary = Path(td) / 'shortcuts'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Carbon', '-I', td, '-I',str(root/'Sources'),

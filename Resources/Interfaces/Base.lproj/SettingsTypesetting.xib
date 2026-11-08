@@ -1,0 +1,280 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="25079.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+  <dependencies>
+    <deployment version="101000" identifier="macosx" />
+    <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="25079.1" />
+    <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0" />
+  </dependencies>
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="TSPrefTypesettingController">
+      <connections>
+        <outlet property="afterTypesettingMatrix" destination="678" id="682" />
+        <outlet property="defaultCommandMatrix" destination="181" id="221" />
+        <outlet property="defaultScriptMatrix" destination="186" id="211" />
+        <outlet property="engineTextField" destination="592" id="597" />
+        <outlet property="saveRelatedButton" destination="316" id="318" />
+        <outlet property="syncMatrix" destination="782" id="820" />
+        <outlet property="syncTabButton" destination="odf-Ny-S9G" id="jpP-OB-XmX" />
+        <outlet property="useTransparencyButton" destination="8pA-l1-G9L" id="2LS-1R-OC6" />
+        <outlet property="view" destination="170" id="settings-root-view" />
+      </connections>
+    </customObject>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder" />
+    <customObject id="-3" userLabel="Application" customClass="NSObject" />
+    <customView key="view" id="170" identifier="settings.170">
+      <rect key="frame" x="10" y="33" width="652" height="623" />
+      <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+      <subviews>
+        <box fixedFrame="YES" title="Default Script" translatesAutoresizingMaskIntoConstraints="NO" id="188" identifier="settings.188">
+          <rect key="frame" x="40" y="380" width="260" height="93" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="mpr-dj-yHz" identifier="settings.mpr-dj-yHz">
+            <rect key="frame" x="0.0" y="0.0" width="260" height="81" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="186" identifier="settings.186">
+                <rect key="frame" x="17" y="9" width="171" height="61" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="171" height="19" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="920">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Pdftex" imagePosition="left" alignment="left" state="on" tag="100" inset="2" id="191">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="TeX + DVI" imagePosition="left" alignment="left" tag="101" inset="2" id="187">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Personal Script" imagePosition="left" alignment="left" tag="102" inset="2" id="190">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="defaultScriptChanged:" target="-2" id="212" />
+                </connections>
+              </matrix>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="During File Save" translatesAutoresizingMaskIntoConstraints="NO" id="314" identifier="settings.314">
+          <rect key="frame" x="335" y="457" width="225" height="50" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="ArE-cZ-tBv" identifier="settings.ArE-cZ-tBv">
+            <rect key="frame" x="0.0" y="0.0" width="225" height="38" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="316" identifier="settings.316">
+                <rect key="frame" x="15" y="9" width="137" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Save related files" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="898">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="saveRelatedButtonPressed:" target="-2" id="317" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="After Typesetting" translatesAutoresizingMaskIntoConstraints="NO" id="675" identifier="settings.675">
+          <rect key="frame" x="335" y="519" width="225" height="92" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="Hkv-Rw-Dgs" identifier="settings.Hkv-Rw-Dgs">
+            <rect key="frame" x="0.0" y="0.0" width="225" height="80" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="678" identifier="settings.678">
+                <rect key="frame" x="14" y="8" width="169" height="61" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="169" height="19" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="921">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Bring Preview Forward" imagePosition="left" alignment="left" state="on" inset="2" id="679">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Continue Editing" imagePosition="left" alignment="left" tag="1" inset="2" id="680">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Stay in Current Window" imagePosition="left" alignment="left" tag="2" inset="2" id="bYh-V5-ri6">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="afterTypesettingChanged:" target="-2" id="681" />
+                </connections>
+              </matrix>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Sync Method" translatesAutoresizingMaskIntoConstraints="NO" id="823" identifier="settings.823">
+          <rect key="frame" x="335" y="374" width="225" height="71" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="2rk-I1-3zq" identifier="settings.2rk-I1-3zq">
+            <rect key="frame" x="0" y="0" width="225" height="59" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="782" identifier="settings.782">
+                <rect key="frame" x="17" y="9" width="202" height="40" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="202" height="19" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="922">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Search" imagePosition="left" alignment="left" tag="1" inset="2" id="785">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="syncChanged:" target="-2" id="821" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="radio" title="SyncTeX" imagePosition="left" alignment="left" state="on" tag="3" inset="2" id="786">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="syncChanged:" target="-2" id="822" />
+                </connections>
+              </matrix>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Default Command" translatesAutoresizingMaskIntoConstraints="NO" id="183" identifier="settings.183">
+          <rect key="frame" x="40" y="485" width="260" height="126" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="vSL-XM-z8W" identifier="settings.vSL-XM-z8W">
+            <rect key="frame" x="0.0" y="0.0" width="260" height="114" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="181" identifier="settings.181">
+                <rect key="frame" x="14" y="41" width="169" height="63" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="169" height="21" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="919">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="TeX" imagePosition="left" alignment="left" state="on" inset="2" id="588">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="LaTeX" imagePosition="left" alignment="left" tag="1" inset="2" id="589">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Command Listed Below" imagePosition="left" alignment="left" tag="2" inset="2" id="590">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="defaultProgramChanged:" target="-2" id="223" />
+                </connections>
+              </matrix>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="592" identifier="settings.592">
+                <rect key="frame" x="19" y="11" width="181" height="22" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="897">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="setEngine:" target="-2" id="596" />
+                </connections>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="If Sync Opens a New Window" translatesAutoresizingMaskIntoConstraints="NO" id="W5U-9S-4OG" identifier="settings.W5U-9S-4OG">
+          <rect key="frame" x="335" y="281" width="225" height="81" />
+          <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+          <view key="contentView" id="0et-QV-IOa" identifier="settings.0et-QV-IOa">
+            <rect key="frame" x="0.0" y="0.0" width="225" height="69" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="odf-Ny-S9G" identifier="settings.odf-Ny-S9G">
+                <rect key="frame" x="17" y="42" width="200" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Open as Tab in Root Window" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="YQv-fE-Uzg">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="syncTabButtonPressed:" target="-2" id="msG-kl-gCe" />
+                </connections>
+              </button>
+              <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Py-bW-sDC" identifier="settings.5Py-bW-sDC">
+                <rect key="frame" x="14" y="12" width="198" height="16" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" lineBreakMode="clipping" title="(Should be OFF for most users.)" id="O6H-3y-7Ca">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Ghostscript Options" translatesAutoresizingMaskIntoConstraints="NO" id="163-F5-v8Z" identifier="settings.163-F5-v8Z">
+          <rect key="frame" x="40" y="318" width="260" height="50" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="XzI-12-6dm" identifier="settings.XzI-12-6dm">
+            <rect key="frame" x="0.0" y="0.0" width="260" height="38" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8pA-l1-G9L" identifier="settings.8pA-l1-G9L">
+                <rect key="frame" x="17" y="11" width="231" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Use -dALLOWPSTRANSPARENCY" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="xwP-lA-zVw">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="useTransparencyPressed:" target="-2" id="HYy-zt-GNS" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+      </subviews>
+    </customView>
+  </objects>
+</document>

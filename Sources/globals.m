@@ -294,8 +294,6 @@ NSString *ColorPath = @"~/Library/TeXShop/Themes";
 // Notifications
 NSString *SyntaxColoringChangedNotification = @"SyntaxColoringChangedNotification";
 NSString *DocumentFontChangedNotification = @"DocumentFontChangedNotification";
-NSString *DocumentFontRememberNotification = @"DocumentFontRememberNotification";
-NSString *DocumentFontRevertNotification = @"DocumentFontRevertNotification";
 NSString *ConsoleFontChangedNotification = @"ConsoleFontChangedNotification";
 NSString *ConsoleBackgroundColorChangedNotification = @"ConsoleBackgroundColorChangedNotification";
 NSString *ConsoleForegroundColorChangedNotification = @"ConsoleForegroundColorChangedNotification";
@@ -303,8 +301,6 @@ NSString *SourceBackgroundColorChangedNotification = @"DocumentBackgroundColorCh
 NSString *SourceTextColorChangedNotification = @"DocumentTextColorChangedNotification";;
 NSString *PreviewBackgroundColorChangedNotification = @"PreviewBackgroundColorChangedNotification";
 NSString *MagnificationChangedNotification = @"MagnificationChangedNotification";
-NSString *MagnificationRememberNotification = @"MagnificationRememberNotification";
-NSString *MagnificationRevertNotification = @"MagnificationRevertNotification";
 NSString *DocumentSyntaxColorNotification = @"DocumentSyntaxColorNotification";
 NSString *DocumentAutoCompleteNotification = @"DocumentAutoCompleteNotification";
 NSString *DocumentBibDeskCompleteNotification = @"DocumentBibDeskCompleteNotification";

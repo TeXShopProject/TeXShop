@@ -37,9 +37,41 @@
 // end mistu 1.29
 
 
+#import "TSShortcutPaneController.h"
+
+static void TSCollectShortcutEntries(NSArray *items, NSIndexPath *parent, NSString *prefix, NSMutableArray<TSShortcutMacro *> *entries) {
+    [items enumerateObjectsUsingBlock:^(id value, NSUInteger index, BOOL *stop) {
+        if (![value isKindOfClass:NSDictionary.class]) { return; }
+        NSDictionary *item = value;
+        NSString *name = item[NAME_KEY];
+        if (![name isKindOfClass:NSString.class]) { return; }
+        NSIndexPath *path = [parent indexPathByAddingIndex:index];
+        NSString *title = prefix.length > 0 ? [prefix stringByAppendingFormat:@" › %@", name] : name;
+        NSArray *children = item[SUBMENU_KEY];
+        if ([children isKindOfClass:NSArray.class]) {
+            TSCollectShortcutEntries(children, path, title, entries);
+            return;
+        }
+        NSString *serialized = item[KEYEQUIV_KEY];
+        if ([name isEqualToString:SEPARATOR] || ![serialized isKindOfClass:NSString.class]) { return; }
+        NSString *key = getKeyEquivalentFromString(serialized);
+        if (key.length == 0) { return; }
+        [entries addObject:[[TSShortcutMacro alloc] initWithName:name path:title indexPath:path serializedKey:serialized key:key modifiers:getKeyModifierMaskFromString(serialized)]];
+    }];
+}
+
 @implementation TSMacroMenuController
 
 static id sharedMacroMenuController = nil;
+
+- (NSArray<TSShortcutMacro *> *)shortcutEntries {
+    NSMutableArray<TSShortcutMacro *> *entries = [NSMutableArray array];
+    NSArray *children = self.macroDict[SUBMENU_KEY];
+    if ([children isKindOfClass:NSArray.class]) {
+        TSCollectShortcutEntries(children, [NSIndexPath indexPathWithIndexes:NULL length:0], NSLocalizedString(@"Macros", @""), entries);
+    }
+    return [entries copy];
+}
 
 + (id)sharedInstance
 {

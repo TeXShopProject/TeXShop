@@ -52,12 +52,8 @@ NSData *draggedData;
 	[[NSNotificationCenter defaultCenter] addObserver:self
 			selector:@selector(changeMagnification:)
 			name:MagnificationChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-			selector:@selector(rememberMagnification:)
-			name:MagnificationRememberNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-			selector:@selector(revertMagnification:)
-			name:MagnificationRevertNotification object:nil];
+
+
 	fixScroll = NO;
 	showSync = NO;
 	if ([SUD boolForKey:ShowSyncMarksKey])
@@ -848,16 +844,9 @@ failed. If you change the code below, be sure to test carefully!
 	[self resetMagnification];
 }
 
-- (void)rememberMagnification:(NSNotification *)aNotification
-{
-	oldMagnification = [self magnification];
-}
 
-- (void) revertMagnification:(NSNotification *)aNotification
-{
-	if (oldMagnification != [self magnification])
-		[self setMagnification: oldMagnification];
-}
+
+
 
 
 #pragma mark =====drawRect=====

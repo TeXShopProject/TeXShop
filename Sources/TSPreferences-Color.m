@@ -22,9 +22,10 @@
  *
  */
 
-#import "TSPreferences.h"
+#import "TSPreferences+LiveSettings.h"
 #import "globals.h"
 #import "TSColorSupport.h"
+#import "TSThemeFileStore.h"
 
 
 @implementation TSPreferences (Color)
@@ -44,11 +45,9 @@ NSInteger stringSort(id s1, id s2, void *context)
     
   // Fill three menus with names of plist files in ~/Library/TeXShop/Colors
     
-    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
-    [colorSupport checkAndRestoreDefaults];
-    
-    oldLiteStyle = [SUD objectForKey: DefaultLiteThemeKey];
-    oldDarkStyle = [SUD objectForKey: DefaultDarkThemeKey];
+    [LiteStyle removeAllItems];
+    [DarkStyle removeAllItems];
+    [EditingStyle removeAllItems];
 
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -79,15 +78,18 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((atLeastMojave) && (_prefsWindow.effectiveAppearance.name == NSAppearanceNameDarkAqua))
     {
         [EditingStyle selectItemWithTitle:darkTitle];
-        EditingColors = [colorSupport dictionaryForColorFile: darkTitle];
+
     }
     else
 #endif
     {
         [EditingStyle selectItemWithTitle: liteTitle];
-        EditingColors = [colorSupport dictionaryForColorFile: liteTitle];
+
     }
     
+    NSString *selected = EditingStyle.titleOfSelectedItem;
+    EditingColors = selected == nil ? nil : [[[self themeStore] readTitle:selected] mutableCopy];
+    self.lastSavedEditingColors = [EditingColors copy];
     // Fill in all the color wells with the colors of these items
     
     [self FillInColorWells];
@@ -95,41 +97,6 @@ NSInteger stringSort(id s1, id s2, void *context)
     
 }
 
-
-// OK button pressed in Preferences
-// if the OK button is pressed, then the current editing changes for the currently chosen editing style are
-// saved. Also the new choices for liteColor and darkColor are activated
-
-- (void)okForColor
-{
-    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
-    [self SaveEditedStyle:self];
-    
-    [SUD setObject:  [LiteStyle titleOfSelectedItem] forKey: DefaultLiteThemeKey];
-    [SUD setObject: [DarkStyle titleOfSelectedItem] forKey: DefaultDarkThemeKey];
-    [colorSupport     checkAndRestoreDefaults];
-    [colorSupport initializeColors];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: nil];
-    [[NSColorPanel sharedColorPanel] close];
-  
-}
-
-// Cancel button pressed in Preferences
-// if the cancel button is pressed, then all editing changes are lost EXCEPT those saved using the "Save" button
-// also default lite and dark styles do not change
-
-- (void)cancelForColor
-{
-    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
-    
-   [SUD setObject: oldLiteStyle forKey: DefaultLiteThemeKey];
-   [SUD setObject: oldDarkStyle forKey: DefaultDarkThemeKey];
-    [colorSupport checkAndRestoreDefaults];
-    [colorSupport initializeColors];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: nil];
-   [[NSColorPanel sharedColorPanel] close];
-  
-}
 
 // Bracket and expl3 wells show the theme being edited, resolved the way documents resolve it.
 - (NSColor *)editingColorForKey: (NSString *)theKey
@@ -159,6 +126,8 @@ NSInteger stringSort(id s1, id s2, void *context)
 
 - (void)FillInColorWells
 {
+    [self setThemeEditingEnabled:(EditingColors != nil) inView:_prefsWindow.contentView];
+    if (EditingColors == nil) return;
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     NSColor *flashColor, *aColor;
     NSColor *footnoteCol, *EntryCol;
@@ -288,74 +257,38 @@ NSInteger stringSort(id s1, id s2, void *context)
     
 }
 
-- (IBAction)EditingStyleChoice:sender
+- (IBAction)EditingStyleChoice:(id)sender
 {
-    NSString *newEditingItem = [EditingStyle titleOfSelectedItem];
-    
-    // Create a new dictionary with the colors of this style
-    // Fill in all the color wells with the colors of these items
-    
-    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
-    EditingColors = [colorSupport dictionaryForColorFile: newEditingItem ];
-    // [colorSupport initializeColors];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    NSString *title = EditingStyle.titleOfSelectedItem;
+    if (title == nil) return;
+    NSDictionary<NSString *, id> *saved = [[self themeStore] readTitle:title];
+    EditingColors = [saved mutableCopy];
+    self.lastSavedEditingColors = saved;
     [self FillInColorWells];
 }
 
-- (IBAction)SaveEditedStyle:sender
+- (IBAction)SaveEditedStyle:(id)sender
 {
-    NSString *theTitle = [EditingStyle titleOfSelectedItem];
-    
-    NSString *newColorPath = [ColorPath stringByExpandingTildeInPath];
-    NSString* ourColorPath = [[[newColorPath stringByAppendingString:@"/"] stringByAppendingString: theTitle] stringByAppendingString: @".plist"];
-    
-    [EditingColors writeToFile: ourColorPath atomically: YES];
-    
-    
+    NSString *title = EditingStyle.titleOfSelectedItem;
+    if (title == nil || EditingColors == nil || self.lastSavedEditingColors == nil) return;
+    NSError *error = nil;
+    if (![[self themeStore] writeColors:EditingColors title:title error:&error]) {
+        NSDictionary<NSString *, id> *saved = [[self themeStore] readTitle:title] ?: self.lastSavedEditingColors;
+        EditingColors = [saved mutableCopy];
+        self.lastSavedEditingColors = saved;
+        [self FillInColorWells];
+        [self showPreferenceError:NSLocalizedString(@"The theme could not be saved. Its last saved colors have been restored.", @"")];
+        return;
+    }
+    self.lastSavedEditingColors = [EditingColors copy];
+    [[TSColorSupport sharedInstance] initializeColors];
+    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
 }
 
 - (IBAction)NewStyleFromPrefs:sender
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    NSInteger result;
-    NSString *theTitle;
-    NSMutableDictionary *prefsDictionary;
-    
-    result = [NSApp runModalForWindow: stylePanel];
-    // [packageHelpPanel close];
-    if (result == 0) {
-        theTitle = [styleTitle stringValue];
-        [stylePanel close];
-    }
-    else {
-        [stylePanel close];
-        return;
-    }
-    
-    if ([theTitle isEqualToString:@""])
-        return;
-    theTitle = [theTitle stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([theTitle isEqualToString:@""])
-        return;
-    
-    NSString *newColorPath = [ColorPath stringByExpandingTildeInPath];
-    NSString* ourColorPath = [[[newColorPath stringByAppendingString:@"/"] stringByAppendingString: theTitle] stringByAppendingString: @".plist"];
-    
-    if ([fileManager fileExistsAtPath:ourColorPath])
-    {
-        // dialog asking if should overwrite existing file; return if NO; otherwise continue
-        NSAlert *alert = [NSAlert alertWithMessageText:@"Alert" defaultButton:@"Continue" alternateButton:@"Cancel" otherButton:nil informativeTextWithFormat:NSLocalizedString(@"File already exists", @"File already exists")];
-        result = [alert runModal];
-        if (! result)
-            return;
-    }
-    
-    
-    prefsDictionary = [NSMutableDictionary dictionaryWithCapacity:19];
-    [prefsDictionary setObject: theTitle forKey:@"Title"];
-     
+    NSMutableDictionary *prefsDictionary = [NSMutableDictionary dictionaryWithCapacity:19];
     [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"EditorText" withRed: [SUD doubleForKey:foreground_RKey]
                                           Green: [SUD doubleForKey:foreground_GKey] Blue: [SUD doubleForKey:foreground_BKey] Alpha: 1.0];
     [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"EditorBackground" withRed: [SUD doubleForKey:background_RKey]
@@ -413,91 +346,82 @@ NSInteger stringSort(id s1, id s2, void *context)
                                       Alpha: [SUD doubleForKey:PdfBack_AKey]];
     
     
-    [prefsDictionary writeToFile: ourColorPath atomically: YES];
-    
-    [LiteStyle addItemWithTitle: theTitle];
-    [DarkStyle addItemWithTitle: theTitle];
-    [EditingStyle addItemWithTitle: theTitle];
-    [EditingStyle selectItemWithTitle: theTitle];
+    [self requestNameForThemeColors:prefsDictionary];
 
-    
 }
 
 
 
 - (IBAction)SaveNewStyle:sender
 {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (self.lastSavedEditingColors == nil) {
+        [self showPreferenceError:NSLocalizedString(@"Reopen Settings or select a readable theme before editing or duplicating it.", @"")];
+        return;
+    }
+    [self requestNameForThemeColors:self.lastSavedEditingColors];
+}
 
-    NSInteger result;
-    NSString *theTitle;
-    
-    result = [NSApp runModalForWindow: stylePanel];
-    // [packageHelpPanel close];
-    if (result == 0) {
-        theTitle = [styleTitle stringValue];
-        [stylePanel close];
-    }
-    else {
-        [stylePanel close];
-        return;
-    }
-    
-    if ([theTitle isEqualToString:@""])
-        return;
-    theTitle = [theTitle stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([theTitle isEqualToString:@""])
-        return;
-    
-    NSString *newColorPath = [ColorPath stringByExpandingTildeInPath];
-    NSString* ourColorPath = [[[newColorPath stringByAppendingString:@"/"] stringByAppendingString: theTitle] stringByAppendingString: @".plist"];
-    
-    if ([fileManager fileExistsAtPath:ourColorPath])
-    {
-        // dialog asking if should overwrite existing file; return if NO; otherwise continue
-        NSAlert *alert = [NSAlert alertWithMessageText:@"Alert" defaultButton:@"Continue" alternateButton:@"Cancel" otherButton:nil informativeTextWithFormat:NSLocalizedString(@"File already exists", @"File already exists")];
-        result = [alert runModal];
-        if (! result)
+- (void)requestNameForThemeColors:(NSDictionary<NSString *, id> *)colors
+{
+    if (_prefsWindow == nil || stylePanel == nil || _prefsWindow.attachedSheet != nil) return;
+    NSUInteger generation = ++self.themeOperationGeneration;
+    NSDictionary<NSString *, id> *snapshot = [colors copy];
+    styleTitle.stringValue = @"";
+    [stylePanel setContentSize:NSMakeSize(420, stylePanel.contentView.fittingSize.height)];
+    __weak __typeof(self) weakSelf = self;
+    [_prefsWindow beginSheet:stylePanel completionHandler:^(NSModalResponse response) {
+        __strong __typeof(weakSelf) coordinator = weakSelf;
+        if (coordinator == nil) return;
+        if (response != NSModalResponseOK || generation != coordinator.themeOperationGeneration) return;
+        NSString *title = [coordinator->styleTitle.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        if (title.length == 0) return;
+        NSURL *url = [[coordinator themeStore] URLForTitle:title];
+        NSString *path = url.path;
+        if (path == nil) {
+            [coordinator showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")];
             return;
-    }
-    
-    
-    [EditingColors setObject: theTitle forKey: @"Title"];
-    [EditingColors writeToFile: ourColorPath atomically: YES];
-    
-    [LiteStyle addItemWithTitle: theTitle];
-    [DarkStyle addItemWithTitle: theTitle];
-    [EditingStyle addItemWithTitle: theTitle];
-    [EditingStyle selectItemWithTitle: theTitle];
-    
+        }
+        if (![NSFileManager.defaultManager fileExistsAtPath:path]) {
+            [coordinator saveNewTheme:snapshot title:title];
+            return;
+        }
+        NSAlert *alert = [NSAlert new];
+        alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"The theme “%@” already exists. Replace it?", @""), title];
+        [alert addButtonWithTitle:NSLocalizedString(@"Replace", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [alert beginSheetModalForWindow:coordinator->_prefsWindow completionHandler:^(NSModalResponse answer) {
+            __strong __typeof(weakSelf) confirmedCoordinator = weakSelf;
+            if (confirmedCoordinator == nil) return;
+            if (answer == NSAlertFirstButtonReturn && generation == confirmedCoordinator.themeOperationGeneration) [confirmedCoordinator saveNewTheme:snapshot title:title];
+        }];
+    }];
 }
 
-- (void) okForStylePanel: sender
+- (void)okForStylePanel:(id)sender
 {
-    [NSApp stopModalWithCode: 0];
+    if (stylePanel.sheetParent == _prefsWindow) [_prefsWindow endSheet:stylePanel returnCode:NSModalResponseOK];
 }
 
-- (void) cancelForStylePanel: sender
+- (void)cancelForStylePanel:(id)sender
 {
-    [NSApp stopModalWithCode:1];
+    if (stylePanel.sheetParent == _prefsWindow) [_prefsWindow endSheet:stylePanel returnCode:NSModalResponseCancel];
 }
-
-
 
 // Actual Colors
 - (IBAction)SourceTextColorChanged:sender
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorText"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
 
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorText" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -505,14 +429,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorBackground"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorBackground" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -520,14 +445,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorInsertionPoint"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorInsertionPoint" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -535,14 +461,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"PreviewBackground"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"PreviewBackground" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object: self userInfo:EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -550,14 +477,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-   if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+   if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"ConsoleText"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"ConsoleText" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -565,14 +493,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"ConsoleBackground"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"ConsoleBackground" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -580,14 +509,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-   if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+   if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"LogText"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"LogText" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -595,14 +525,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"LogBackground"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"LogBackground" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -611,14 +542,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxComment"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxComment" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -626,14 +558,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-   if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+   if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxCommand"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxCommand" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -641,15 +574,16 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-   if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+   if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxMarker"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarker" fromColorWell:sender];
     [self refreshInheritedBracketColorWells];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -657,14 +591,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"SyntaxIndex"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxIndex" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -672,15 +607,16 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"FootnoteColor"];
         if (oldColor != nil)
             ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"FootnoteColor" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -688,15 +624,16 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EntryColor"];
         if (oldColor != nil)
             ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EntryColor" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -706,14 +643,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorReverseSync"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
    [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorReverseSync" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -721,14 +659,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"PreviewDirectSync"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"PreviewDirectSync" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -737,14 +676,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorHighlightBraces"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorHighlightBraces" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -752,14 +692,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-   if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+   if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorHighlightContent"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorHighlightContent" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -767,14 +708,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorInvisibleChar"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorInvisibleChar" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -782,15 +724,16 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"EditorFlash"];
         if (oldColor != nil)
             ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorFlash" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -798,14 +741,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SourceAlpha" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -813,14 +757,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-   if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+   if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"PreviewAlpha" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -828,14 +773,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"ConsoleAlpha" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -843,14 +789,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"ImageForeground"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"ImageForeground" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -858,14 +805,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"ImageBackground"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"ImageBackground" fromColorWell:sender];
-     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+     [self SaveEditedStyle:sender];
     
 }
 
@@ -873,14 +821,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLComment"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"XMLComment" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -888,14 +837,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLTag"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"XMLTag" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -903,14 +853,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLSpecial"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"XMLSpecial" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -918,14 +869,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLParameter"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"XMLParameter" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -933,14 +885,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         NSColor *oldColor = [colorSupport colorFromDictionary:EditingColors andKey: @"XMLValue"];
         ((NSColorWell *)sender).color = oldColor;
+        return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"XMLValue" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
     
 }
 
@@ -948,15 +901,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"explFunction"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explFunction" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -964,15 +917,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"SyntaxMarkerParen"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarkerParen" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -981,15 +934,15 @@ NSInteger stringSort(id s1, id s2, void *context)
     
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"SyntaxMarkerCurly"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarkerCurly" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -998,15 +951,15 @@ NSInteger stringSort(id s1, id s2, void *context)
     
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"SyntaxMarkerSquare"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SyntaxMarkerSquare" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -1016,15 +969,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"explVariable"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explVariable" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -1032,15 +985,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"explIntenseFunction"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explIntenseFunction" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -1048,15 +1001,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"explIntenseVariable"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explIntenseVariable" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -1064,15 +1017,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"explmykey"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explmykey" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -1080,15 +1033,15 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"explmykeyArgument"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explmykeyArgument" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
@@ -1096,19 +1049,80 @@ NSInteger stringSort(id s1, id s2, void *context)
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
-    if ((! _prefsWindow.keyWindow ) && (! [NSColorPanel sharedColorPanel].keyWindow))
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
-        [[NSColorPanel sharedColorPanel] close];
+        [self deactivatePreferenceColorWells];
         // Restore the well without storing its color, so a missing key stays missing.
         ((NSColorWell *)sender).color = [self editingColorForKey: @"explmsg"];
         return;
     }
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"explmsg" fromColorWell:sender];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:self userInfo: EditingColors];
+    [self SaveEditedStyle:sender];
 
 }
 
 
 
+
+- (void)setThemeEditingEnabled:(BOOL)enabled inView:(NSView *)view
+{
+    for (NSView *child in view.subviews) {
+        if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).action != @selector(BlockCursorColorChanged:))
+            [(NSColorWell *)child setEnabled:enabled];
+        if ([child isKindOfClass:NSButton.class] && ((NSButton *)child).action == @selector(SaveNewStyle:))
+            [(NSButton *)child setEnabled:enabled];
+        [self setThemeEditingEnabled:enabled inView:child];
+    }
+}
+- (TSThemeFileStore *)themeStore
+{
+    return [[TSThemeFileStore alloc] initWithDirectory:[NSURL fileURLWithPath:[ColorPath stringByExpandingTildeInPath] isDirectory:YES]];
+}
+- (void)saveNewTheme:(NSDictionary<NSString *, id> *)colors title:(NSString *)title
+{
+    NSError *error = nil;
+    if (![[self themeStore] writeColors:colors title:title error:&error]) {
+        [self showPreferenceError:NSLocalizedString(@"The new theme could not be saved. The original theme is unchanged.", @"")];
+        return;
+    }
+    NSMutableDictionary<NSString *, id> *saved = [colors mutableCopy];
+    saved[@"Title"] = title;
+    EditingColors = saved;
+    self.lastSavedEditingColors = [saved copy];
+    for (NSPopUpButton *popup in @[LiteStyle, DarkStyle, EditingStyle]) {
+        if ([popup itemWithTitle:title] == nil) [popup addItemWithTitle:title];
+    }
+    [EditingStyle selectItemWithTitle:title];
+    [self FillInColorWells];
+    [[TSColorSupport sharedInstance] initializeColors];
+    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+}
+- (IBAction)themeSelectionChanged:(id)sender
+{
+    if (sender != LiteStyle && sender != DarkStyle) return;
+    NSPopUpButton *popup = sender;
+    NSString *title = popup.titleOfSelectedItem;
+    if (title == nil) return;
+    [SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];
+    [[TSColorSupport sharedInstance] initializeColors];
+    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+}
+- (BOOL)deactivateColorWellsInView:(NSView *)view
+{
+    BOOL owned = NO;
+    for (NSView *child in view.subviews) {
+        if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).isActive) {
+            [(NSColorWell *)child deactivate]; owned = YES;
+        }
+        owned = [self deactivateColorWellsInView:child] || owned;
+    }
+    return owned;
+}
+- (void)deactivatePreferenceColorWells
+{
+    if (_prefsWindow == nil) return;
+    BOOL owned = [self deactivateColorWellsInView:_prefsWindow.contentView];
+    if (owned && NSColorPanel.sharedColorPanelExists) [[NSColorPanel sharedColorPanel] close];
+}
 
 @end

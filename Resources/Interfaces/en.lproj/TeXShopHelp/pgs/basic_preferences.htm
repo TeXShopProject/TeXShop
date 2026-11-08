@@ -11,6 +11,8 @@
 <BODY>
 	<div id="content_border">
 <h1> Changing settings in the Settings window</h1>
+<p>Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose &#8220;Use LaTeX-aware spell checking (recommended)&#8221; with &#8220;Edit LaTeX exclusion rules&#8230;&#8221;, or &#8220;Use legacy spell checking&#8221; with three indented options. Changing the method preserves all child values. &#8220;Check Spelling&#8221; is independent. Keyboard places key bindings and command completion above shortcut search and the scrolling list. On a short window the input groups can be expanded one at a time. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings. Disabled controls retain their saved values; an obsolete remembered category opens General.</p>
+
 <h2>Windows and display</h2>
 		<P>Several items can be changed in the Settings window: the default font for the input window, the default magnification for the output window, and the default position of these windows when they first appear. You can configure the console so it always appears when typesetting, or only appears when there is an error. You can configure the source window so an initial click in the window only activates the
 window, or this initial click also sets the text insertion point.</P>
@@ -18,7 +20,7 @@ window, or this initial click also sets the text insertion point.</P>
 		<p>The Settings window can also be used to change the commands executed when the &quot;TeX&quot; and &quot;LaTeX&quot; buttons are pushed. This is useful because some users prefer a version of TeX called etex, and there are pdf versions of etex called pdfetex and pdfelatex. Obviously the substituted command must produce a pdf output file. If the new programs are in the teTeX binary directory, it is enough to name them in the Settings window; the dialog will also accept fully qualified path names for files which live elsewhere.</p>
 <h2>Text encoding</h2>
 		<p>TeXShop editing is done with Apple's Cocoa editing class, which uses Unicode for internal work. When TeXShop files are written to disk, they are usually converted to 8-bit ascii because TeX expects to receive such a file. There are several ways to do the conversion: Mac OS Roman, Iso Latin 1, Iso Latin 2, and others. A setting selects the method used. For many users, the choice will make no difference. Some TeX packages allow users to type accented European characters directly on the keyboard; these packages require the Iso Latin conversion. Thanks to Martin Heusse for providing the original code for this setting. The conversion method can also be selected directly from the Open and Save panels.</p>
-<p> When TeXShop typesets a source file, it displays the result in the preview window, activating this window and bringing it to the front. A setting changes this behavior, showing the result in the preview window but keeping the source window active for further editing. This is particularly useful if you have a large monitor and the source and preview windows do not overlap. To change this setting, choose the Typesetting tab in Settings and change the "After Typesetting" item to "Continue Editing."</p>
+<p> When TeXShop typesets a source file, it displays the result in the preview window, activating this window and bringing it to the front. A setting changes this behavior, showing the result in the preview window but keeping the source window active for further editing. This is particularly useful if you have a large monitor and the source and preview windows do not overlap. To change this setting, choose the Typesetting category in Settings and change the "After Typesetting" item to "Continue Editing."</p>
 <h2>Japanese/Korean settings</h2>
 <p>Users in Japan and Korea will use other conversion settings, also provided.</p>
 <p>A pulldown menu
@@ -92,7 +94,7 @@ opaque. Use these commands cautiously!</p>
 <p>tells TeXShop to syntax color biblatex 'lbx' files.<p>
 
 
-			
+
 	</div>		
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
@@ -123,6 +125,9 @@ opaque. Use these commands cautiously!</p>
 			<li><a href="basic_license.htm">License</a>
 		</UL>
 	</div>
-	</BODY>
+
+<h3 id="settings-search">Search Settings</h3>
+<p>Use Search Settings above the sidebar to find categories, labels, options and menu commands. Words separated by spaces must all occur in the same category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to reveal and highlight its controls without changing their values. Clearing the query returns to the category used before searching. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording. Personal paths, entered values and user-created theme names are not searched.</p>
+</BODY>
 
 </HTML>

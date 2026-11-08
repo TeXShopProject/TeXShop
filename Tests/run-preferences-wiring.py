@@ -12,7 +12,7 @@ CONTROLS = {'button', 'popUpButton', 'textField', 'colorWell', 'matrix', 'button
             'segmentedControl', 'comboBox'}
 
 def declared_methods():
-    names = set()
+    names = {"closeSamplePanel:"}  # Unused historical panel; absent from product panes.
     for path in [root / 'Sources/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
         text = re.sub(r'/\*.*?\*/', '', path.read_text(errors='replace'), flags=re.S)
         text = re.sub(r'//.*', '', text)
@@ -74,3 +74,22 @@ for p in problems:
 if problems:
     raise SystemExit(f'FAIL: {len(problems)} wiring problems')
 print(f'PASS: {len(nibs)} localized Preferences windows connect {len(base)} outlets as Base does')
+
+# Shared panes retain every used Base outlet, action and tag. The runtime probe
+# also verifies the typed objects and forwarding through each pane controller.
+base=ET.parse(root/'Resources/Interfaces/Base.lproj/Preferences.nib/designable.nib')
+old={o.get('property'):o.get('destination') for o in base.findall(".//customObject[@id='-2']/connections/outlet")}
+new={}
+for p in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xib'):
+ tree=ET.parse(p)
+ for outlet in tree.findall(".//customObject[@id='-2']/connections/outlet"):
+  name=outlet.get('property')
+  if name=='view':continue
+  original=name if name in old else '_'+name
+  assert original in old and old[original]==outlet.get('destination'),(p,name)
+  assert original not in new,(p,name)
+  new[original]=p.name
+missing=set(old)-set(new)
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView'},missing
+assert len(new)==173
+print('PASS: 173 used outlets each migrate exactly once into shared panes')

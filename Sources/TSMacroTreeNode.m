@@ -23,6 +23,7 @@
  *
  */
 
+#import "TSMacroSelection.h"
 #import "TSMacroTreeNode.h"
 
 
@@ -641,4 +642,29 @@
 	}
 }
 
+@end
+
+@implementation TSMacroSelection
++ (TSMacroTreeNode *)nodeInRoot:(TSMacroTreeNode *)root indexPath:(NSIndexPath *)path name:(NSString *)name key:(NSString *)key {
+    TSMacroTreeNode *candidate = root;
+    for (NSUInteger depth = 0; depth < path.length; depth++) {
+        NSUInteger index = [path indexAtPosition:depth];
+        NSArray<TSMacroTreeNode *> *children = [candidate children];
+        if (index >= children.count) { candidate = nil; break; }
+        candidate = children[index];
+    }
+    if (candidate != nil && candidate.isStandardItem && [candidate.name isEqualToString:name] && [candidate.key isEqualToString:key]) { return candidate; }
+    NSMutableArray<TSMacroTreeNode *> *pending = [NSMutableArray arrayWithArray:[root children]];
+    TSMacroTreeNode *match = nil;
+    while (pending.count > 0) {
+        TSMacroTreeNode *node = pending.lastObject;
+        [pending removeLastObject];
+        if (node.isStandardItem && [node.name isEqualToString:name] && [node.key isEqualToString:key]) {
+            if (match != nil) { return nil; }
+            match = node;
+        }
+        [pending addObjectsFromArray:[node children]];
+    }
+    return match;
+}
 @end

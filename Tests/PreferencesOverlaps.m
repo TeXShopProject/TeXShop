@@ -6,6 +6,7 @@
 // The controls around the tabs are checked too. Each tab also prints a STAT line with the number of controls checked and how many of
 // them drew nothing, so a change in how controls draw cannot make the check vacuous.
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 @interface TSPreferences : NSObject @end
 @implementation TSPreferences
 - (void)setValue:(id)v forUndefinedKey:(NSString *)k {}
@@ -252,7 +253,9 @@ static void Check(NSString *where, NSView *root, NSView *tv, NSMutableString *re
     }
 }
 int main(int argc, char **argv) { @autoreleasepool {
+    TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
+    [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     NSMutableString *report = [NSMutableString string];
     TSPreferences *owner = [TSPreferences new];
     NSArray *appearances = @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua];

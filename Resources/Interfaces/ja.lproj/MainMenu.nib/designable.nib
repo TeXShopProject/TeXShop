@@ -511,24 +511,11 @@
                             <menuItem isSeparatorItem="YES" id="543">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="キーバインド" id="942">
+                            <menuItem title="キーバインド" id="944" identifier="TSShortcut.changeAutoComplete:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="キーバインド" id="943">
-                                    <items>
-                                        <menuItem title="ON/OFF 切り替え" id="944" identifier="TSShortcut.changeAutoComplete:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeAutoComplete:" target="-1" id="946"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="キーバインドファイルの編集..." id="945" identifier="TSShortcut.openAutoCompletionListEditor:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openAutoCompletionListEditor:" target="940" id="947"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                                <connections>
+                                    <action selector="changeAutoComplete:" target="-1" id="946"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="コマンド補完" id="539">
                                 <menu key="submenu" title="コマンド補完" id="540">
@@ -579,11 +566,6 @@
                                                     </menuItem>
                                                 </items>
                                             </menu>
-                                        </menuItem>
-                                        <menuItem title="補完用語ファイルの編集..." id="542" identifier="TSShortcut.openCommandCompletionList:.0">
-                                            <connections>
-                                                <action selector="openCommandCompletionList:" target="-1" id="546"/>
-                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -1658,6 +1640,5 @@ Gw
                 </subviews>
             </view>
         </window>
-        <customObject id="940" customClass="TSAutoCompletionListEditor"/>
     </objects>
 </document>

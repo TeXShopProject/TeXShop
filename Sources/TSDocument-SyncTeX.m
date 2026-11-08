@@ -30,8 +30,51 @@
 #import "MyDragView.h"
 #import "MyPDFKitView.h"
 #import "synctex_parser.h"
+#import <stdlib.h>
+#import <string.h>
 
 
+
+// A failed resolution must not be mistaken for a canonical pathname.
+static NSString *TSSyncTeXResolvedPath(NSString *path)
+{
+    if (!path.length) return nil;
+    const char *filePath = path.fileSystemRepresentation;
+    if (!filePath) return nil;
+    char *resolved = realpath(filePath, NULL);
+    if (!resolved) return nil; // Includes ELOOP, ENOENT and EACCES.
+    NSString *result = [NSFileManager.defaultManager stringWithFileSystemRepresentation:resolved
+        length:strlen(resolved)];
+    free(resolved);
+    return result;
+}
+
+// Match filesystem aliases without changing the input name passed back to SyncTeX.
+static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
+                                            NSString *sourcePath, NSString *rootPath)
+{
+    if (!scanner || !sourcePath.length || !rootPath.length)
+        return NULL;
+    NSString *source = [sourcePath stringByExpandingTildeInPath];
+    // Do not collapse ".." before realpath: its meaning can depend on a symlink.
+    NSString *resolvedSource = TSSyncTeXResolvedPath(source);
+    if (!resolvedSource) return NULL;
+    const char *aliasMatch = NULL;
+    for (synctex_node_p node = synctex_scanner_input(scanner); node;
+         node = synctex_node_sibling(node)) {
+        const char *name = synctex_scanner_get_name(scanner, synctex_node_tag(node));
+        if (!name) continue;
+        NSString *input = [NSString stringWithUTF8String:name];
+        if (!input.length) continue;
+        NSString *candidate = input.isAbsolutePath ? input : [rootPath stringByAppendingPathComponent:input];
+        NSString *resolvedCandidate = TSSyncTeXResolvedPath(candidate);
+        if (!resolvedCandidate || ![resolvedSource isEqualToString:resolvedCandidate]) continue;
+        // Prefer an exact spelling even when an equivalent alias appeared earlier.
+        if ([source isEqualToString:candidate]) return name;
+        if (!aliasMatch) aliasMatch = name;
+    }
+    return aliasMatch;
+}
 
 @implementation TSDocument (SyncTeX)
 
@@ -2437,8 +2480,6 @@
 	// float			magnification;
 	// float			xoffset, yoffset;
 	const char		*name;
-	NSString		*theName;
-	NSString		*theFullName; //, *aName;
 	// NSString		*pathString;
 	NSString		*rootFile, *rootPath, *theFile;
 	float			x, y, h, v, width, height;
@@ -2484,32 +2525,11 @@
 	if (scanner == NULL)
 		return NO;
 	
-	synctex_node_p node = synctex_scanner_input(scanner);
-	BOOL found = NO;
-	while (node != NULL) {
-		name = synctex_scanner_get_name(scanner, synctex_node_tag(node));
-		theName = [NSString stringWithCString:name encoding: NSUTF8StringEncoding];
-		theFullName = [theName stringByStandardizingPath];
-        
-        
-		if ([theFile isEqualToString: theFullName]) {
-			found = YES;
-			break;
-        }
-		
-		theFullName = [[rootPath stringByAppendingPathComponent: theName] stringByStandardizingPath];
-		if ([theFile isEqualToString: theFullName]) {
-			found = YES;
-			break;
-        }
-		node = synctex_node_sibling(node);
-	}
-	
-	if (! found) {
-		// NSLog(@"Nope, Couldn't Find File");
-		return NO;
-	}
-	
+    name = TSSyncTeXInputNameForSource(scanner, theFile, rootPath);
+    if (!name)
+        return NO;
+    synctex_node_p node;
+
 	boxNumber = 0;
     
  //   NSLog(@"got here");
@@ -3036,8 +3056,6 @@
     NSRect          pageSize;
     NSString        *mySyncTeXFileName; //, *mySyncTeX;
     const char        *name;
-    NSString        *theName;
-    NSString        *theFullName; //, *aName;
     NSString        *rootFile, *rootPath, *theFile;
     float            x, y, h, v, width, height;
     PDFPage         *aPage;
@@ -3071,31 +3089,11 @@
     
     [self allocateSyncScanner];
     
-    synctex_node_p node = synctex_scanner_input(scanner);
-    BOOL found = NO;
-    while (node != NULL) {
-        name = synctex_scanner_get_name(scanner, synctex_node_tag(node));
-        theName = [NSString stringWithCString:name encoding: NSUTF8StringEncoding];
-        theFullName = [theName stringByStandardizingPath];
-        
-        if ([theFile isEqualToString: theFullName]) {
-            found = YES;
-            break;
-        }
-        
-        theFullName = [[rootPath stringByAppendingPathComponent: theName] stringByStandardizingPath];
-        if ([theFile isEqualToString: theFullName]) {
-            found = YES;
-            break;
-        }
-        node = synctex_node_sibling(node);
-    }
-    
-    if (! found) {
-     //   NSLog(@"Nope, Couldn't Find File");
+    name = TSSyncTeXInputNameForSource(scanner, theFile, rootPath);
+    if (!name)
         return;
-    }
-    
+    synctex_node_p node;
+
     boxNumber = 0;
     
     //   NSLog(@"got here");

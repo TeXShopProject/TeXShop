@@ -13,7 +13,7 @@
     return TSRestorationBindings(command.defaultKey, command.defaultModifiers, (__bridge CFDataRef)self.layout, self.keyboard);
 }
 @end
-@interface RestorationUI : TSKeyboardShortcuts
+@interface RestorationUI : TSShortcutPaneController
 @property TSShortcutCommand *selection;
 @property NSString *error;
 @property NSUInteger confirmations;
@@ -21,7 +21,7 @@
 @implementation RestorationUI
 - (TSShortcutCommand *)selectedCommand { return self.selection; }
 - (void)showError:(NSString *)error { self.error=error; }
-- (BOOL)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags { self.confirmations++; return YES; }
+- (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion { self.confirmations++; completion(YES); }
 - (void)refreshMenuAndMacros { [self.store refreshMenu]; }
 @end
 static TSShortcutCommand *Find(TSShortcutStore *store, NSString *ident) {
@@ -123,7 +123,7 @@ int main(int argc,char **argv) { @autoreleasepool {
         REQUIRE(![store setKey:@"\uf717" modifiers:K forCommand:typeset]);
         for (TSShortcutCommand *command in store.commands) {
             if (!TSRestorationSymbol(command.defaultKey)) continue;
-            RestorationUI *ui=[[RestorationUI alloc] initWithWindow:nil];ui.store=store;ui.selection=command;
+            RestorationUI *ui=[[RestorationUI alloc] initWithShortcuts:[TSKeyboardShortcuts new]];ui.store=store;ui.selection=command;
             [ui restoreShortcut:nil]; REQUIRE(!ui.error);
             REQUIRE(![store setKey:@"\uf716" modifiers:K forCommand:command]);
             [ui restoreShortcut:nil]; REQUIRE(!ui.error);
@@ -157,7 +157,7 @@ int main(int argc,char **argv) { @autoreleasepool {
             if (!chosen) continue; // Some physical layouts need only the unchanged raw check.
             // Recording a command's own default stroke can save a different raw spelling.
             // Its own live override must not prevent restoring the original spelling.
-            RestorationUI *selfUI=[[RestorationUI alloc] initWithWindow:nil];
+            RestorationUI *selfUI=[[RestorationUI alloc] initWithShortcuts:[TSKeyboardShortcuts new]];
             selfUI.store=store;selfUI.editingCommand=zoom;selfUI.selection=zoom;
             selfUI.captureDisplay=[NSTextField new];selfUI.captureError=[NSTextField new];selfUI.applyButton=[NSButton new];
             [selfUI recordShortcutEvent:chosen];
@@ -177,7 +177,7 @@ int main(int argc,char **argv) { @autoreleasepool {
             }
             [store restoreAll];
             REQUIRE(![store setKey:@"z" modifiers:C|K forCommand:zoom]);
-            RestorationUI *ui=[[RestorationUI alloc] initWithWindow:nil];ui.store=store;ui.editingCommand=typeset;ui.selection=zoom;
+            RestorationUI *ui=[[RestorationUI alloc] initWithShortcuts:[TSKeyboardShortcuts new]];ui.store=store;ui.editingCommand=typeset;ui.selection=zoom;
             ui.captureDisplay=[NSTextField new];ui.captureError=[NSTextField new];ui.applyButton=[NSButton new];
             [ui recordShortcutEvent:chosen];
             // A few locales have another factory key for the same stroke; free it first.

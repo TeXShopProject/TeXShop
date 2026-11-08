@@ -28,9 +28,9 @@ static void observeDraw(NSLayoutManager *layout, SEL cmd, NSRange range, NSPoint
 }
 int main(int argc, const char **argv) {
  @autoreleasepool {
-    [NSApplication sharedApplication];
     settings=[TSMemoryDefaults new];
     method_setImplementation(class_getClassMethod(NSUserDefaults.class,@selector(standardUserDefaults)),(IMP)MemoryStandardDefaults);
+    [NSApplication sharedApplication];
     [settings registerDefaults:@{showTabCharacterKey:@YES, showNewLineCharacterKey:@YES, showFullwidthSpaceCharacterKey:@YES, showSpaceCharacterKey:@YES}];
     InvisibleColor=NSColor.systemRedColor;
     Method method=class_getInstanceMethod(NSLayoutManager.class,@selector(drawGlyphsForGlyphRange:atPoint:));

@@ -49,7 +49,6 @@
 "ToolbarItems" = "Werkzeugleistenelemente";
 "Autocompletion" = "Autovervollständigung";
 "Completion" = "Vervollständigung";
-"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Pfad: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@";
 "Info: %@" = "Info: %@";
 "%@\n\nCharacters: %d" = "%@\n\nZeichen: %d";
 "The file encoding changed; characters can be lost if the wrong encoding is used." = "Die Dateikodierung hat sich geändert. Einige Zeichen können bei falscher Kodierung verloren gehen.";
@@ -110,7 +109,6 @@
 "Split Window" = "Geteiltes Fenster";
 "New Document" = "Neues Dokument";
 "Link Popups" = "Link Popups";
-"Source" = "Quelltext";
 "Syntax Color expl3 Code" = "expl3-Syntax farblich hervorheben";
 "PDF File Has No Annotations" = "PDF-Datei hat keine Anmerkungen";
 
@@ -150,12 +148,9 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "Die neueste gefundene Installation ist ausgewählt. Sie können unten eine andere auswählen. Eigene Programmbefehle und der alternative Pfad bleiben unverändert.";
 "Not found (current setting will be kept)" = "Nicht gefunden (die aktuelle Einstellung bleibt erhalten)";
 "Version unavailable" = "Unbekannt";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Installieren Sie eine TeX-Distribution und starten Sie dann die automatische Einrichtung unter Einstellungen > Programme.";
 "Use These Paths" = "Diese Pfade verwenden";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "Tastaturkurzbefehle";
-"Keyboard Shortcuts…" = "Tastaturkurzbefehle…";
 "Search commands" = "Befehle suchen";
 "Command" = "Befehl";
 "Shortcut" = "Kurzbefehl";
@@ -173,10 +168,134 @@
 "This shortcut is already used by “%@”." = "Dieser Kurzbefehl wird bereits von „%@“ verwendet.";
 "Use Command or Control with a key, or a function key (F1–F20)." = "Verwenden Sie eine Taste mit Command oder Control oder eine Funktionstaste (F1–F20).";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Wählen Sie einen Befehl, um seinen Kurzbefehl zu ändern. Änderungen werden sofort wirksam. Makros und Texteingabe-Tastenbelegungen haben eigene Editoren.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Ihre Änderungen in diesem Fenster werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";
+
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "The selected profile is invalid.";
+"Apply Settings Profile?" = "Apply Settings Profile?";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+"Apply Profile" = "Apply Profile";
+"Settings could not be saved" = "Settings could not be saved";
+"Enter a valid setting" = "Enter a valid setting";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+"Continue Editing" = "Continue Editing";
+"Restore This Field" = "Restore This Field";
+"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Wählen Sie einen anderen Namen für das Thema. Namen mit einem Punkt am Anfang, Pfadtrennzeichen, Steuerzeichen und symbolische Links sind nicht erlaubt.";
+"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+
+"Back" = "Zurück";
+
+"Forward" = "Vorwärts";
+
+"Settings Categories" = "Einstellungskategorien";
+
+"Navigation History" = "Navigationsverlauf";
+
+"Back (⌘[)" = "Zurück (⌘[)";
+
+"Forward (⌘])" = "Vorwärts (⌘])";
+
+"Keyboard" = "Tastatur";
+"Search by Function" = "Nach Funktion suchen";
+"Search by Key" = "Nach Taste suchen";
+"Show in Macro Editor" = "Im Makroeditor anzeigen";
+"Assigned" = "Zugewiesen";
+"Inactive for this key" = "Für diese Taste inaktiv";
+"Assignment priority is shown; whether a command can run depends on the document." = "Die Priorität der Zuweisung wird angezeigt. Ob ein Befehl ausgeführt werden kann, hängt vom Dokument ab.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "Vom System verwendete Tasten können nicht erkannt werden. Escape beendet die Aufzeichnung.";
+"No command uses this key." = "Kein Befehl verwendet diese Taste.";
+"Press a key" = "Taste drücken";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Diese Taste kann nicht als Kurzbefehl verwendet werden. Verwenden Sie Command oder Control mit einer Taste oder F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Eigene Menükurzbefehle werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Vorhandene Zuweisungen werden angezeigt. Diese Taste kann keinem neuen Kurzbefehl zugewiesen werden.";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "Treffer: %lu";
+
+"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+
+"Replace" = "Replace";
+
+"General" = "Allgemein";
+"Documents and Saving" = "Dokumente und Sichern";
+"Editor" = "Editor";
+"Spell Checking" = "Rechtschreibprüfung";
+"Appearance" = "Erscheinungsbild";
+"Typesetting" = "Satz";
+"Console" = "Konsole";
+"Updates" = "Updates";
+"Defaults for New Documents" = "Vorgaben für neue Dokumente";
+"Matching Brackets" = "Klammerzuordnung";
+"Spelling While Typing" = "Rechtschreibprüfung bei der Eingabe";
+"Use LaTeX-aware spell checking (recommended)" = "LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)";
+"Use legacy spell checking" = "Bisherige Rechtschreibprüfung verwenden";
+"LaTeX Spell Checking" = "LaTeX-Rechtschreibprüfung";
+"Edit Key Bindings…" = "Tastenbelegungen bearbeiten…";
+"Key Bindings" = "Tastenbelegungen";
+"Edit Command Completion…" = "Befehlsvervollständigung bearbeiten…";
+"Command Completion" = "Befehlsvervollständigung";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Wenn Tab die Befehlsvervollständigung auslöst, ist Tab dafür reserviert und kann keinem Menübefehl zugewiesen werden.";
+"Source and Preview Windows" = "Quelltext- und Vorschaufenster";
+"Comment Lines and Hidden Settings" = "Kommentarzeilen und verborgene Einstellungen";
+"Advanced" = "Erweitert";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Installieren Sie eine TeX-Distribution und starten Sie die automatische Einrichtung unter Einstellungen > Schriftsatz.";
+
+"Completion trigger" = "Auslösetaste";
+
+"This key is reserved for command completion." = "Diese Taste ist für die Befehlsvervollständigung reserviert.";
+
+"Encoding" = "Kodierung";
+
+"Saving Documents" = "Dokumente sichern";
+
+"Page Display" = "Seitendarstellung";
+
+"PDF Interaction" = "PDF-Bedienung";
+
+"PDF Appearance" = "PDF-Darstellung";
+
+"HTML Preview" = "HTML-Vorschau";
+
+"Typesetting Defaults" = "Satzvorgaben";
+
+"Synchronization" = "Synchronisierung";
+
+"Tools" = "Werkzeuge";
+
+"Expanded" = "Erweitert";
+
+"Collapsed" = "Reduziert";
+
+"Search Settings" = "Einstellungen suchen";
+
+"Settings results: %lu" = "Gefundene Kategorien: %lu";
+
+"No Settings Found" = "Keine Einstellungen gefunden";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 
 /* Independent Experiment console */
 "Experiment input" = "Eingabe zum Testen";
 "Stop Experiment" = "Testen stoppen";
 "%@ — Experiment Console" = "%@ — Konsole zum Testen";
 "Experiment stopped.\n" = "Testen gestoppt.\n";
+
+/* Explicit fallback for shared keys without a translation. */
+"Assign" = "Assign";
+"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
+"Macro shortcut conflicts" = "Macro shortcut conflicts";
+"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Pfad: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@";
+"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
+"Return to Editing" = "Return to Editing";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
+"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";

@@ -42,11 +42,130 @@
 #import "globals.h"
 #import "TSDocument.h"
 #import "TSEncodingSupport.h"
+#import "TSColorSupport.h"
+#import "TSPreviewAppearance.h"
+#import "TSExperimentTheme.h"
 
 
 
 
-@implementation ScrapPDFKitView : PDFView
+@interface ScrapPDFKitView ()
+@property (nonatomic) BOOL experimentViewReady;
+@property (nonatomic) BOOL updatingExperimentAppearance;
+@property (nonatomic, strong) NSToolbar *experimentToolbar;
+@end
+
+@implementation ScrapPDFKitView
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) _experimentViewReady = YES;
+    return self;
+}
+
+- (instancetype)initWithFrame:(NSRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) _experimentViewReady = YES;
+    return self;
+}
+
+- (void)updateExperimentColors:(NSNotification *)notification
+{
+    if (!self.experimentViewReady || !self.window) return;
+    BOOL dark = [[self.effectiveAppearance bestMatchFromAppearancesWithNames:
+        @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
+    NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
+    self.backgroundColor = [[TSColorSupport sharedInstance] colorForKey:@"PreviewBackground"
+        fromDictionary:theme isWindowDark:dark];
+    self.window.alphaValue = TSExperimentWindowAlpha(theme, @"PreviewAlpha");
+}
+
+- (void)updateExperimentAppearance:(NSNotification *)notification
+{
+    if (!self.experimentViewReady || self.updatingExperimentAppearance) return;
+    self.updatingExperimentAppearance = YES;
+    TSApplyPreviewInversion(self.documentView.enclosingScrollView,
+        TSPreviewShouldInvert([SUD integerForKey:TSPreviewAppearanceModeKey], NSApp.effectiveAppearance));
+    self.updatingExperimentAppearance = NO;
+}
+
+- (void)viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    [center removeObserver:self name:SourceColorChangedNotification object:nil];
+    [center removeObserver:self name:NSUserDefaultsDidChangeNotification object:SUD];
+    if (!self.window) return;
+    [center addObserver:self selector:@selector(updateExperimentColors:)
+        name:SourceColorChangedNotification object:nil];
+    [center addObserver:self selector:@selector(updateExperimentAppearance:)
+        name:NSUserDefaultsDidChangeNotification object:SUD];
+    if (!self.window.toolbar) {
+        NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"TSExperimentPreviewToolbar"];
+        toolbar.delegate = self;
+        toolbar.displayMode = NSToolbarDisplayModeIconOnly;
+        toolbar.allowsUserCustomization = NO;
+        self.experimentToolbar = toolbar;
+        self.window.toolbar = toolbar;
+    }
+    [self updateExperimentColors:nil];
+    [self updateExperimentAppearance:nil];
+}
+
+- (void)viewDidChangeEffectiveAppearance
+{
+    [super viewDidChangeEffectiveAppearance];
+    [self updateExperimentColors:nil];
+    [self updateExperimentAppearance:nil];
+}
+
+- (void)setDocument:(PDFDocument *)document
+{
+    [super setDocument:document];
+    [self updateExperimentAppearance:nil];
+    // PDFKit may create its document scroll view on the following run-loop turn.
+    __weak ScrapPDFKitView *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{ [weakSelf updateExperimentAppearance:nil]; });
+}
+
+- (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
+{
+    return @[NSToolbarFlexibleSpaceItemIdentifier, TSPreviewAppearanceToolbarID];
+}
+
+- (NSArray<NSToolbarItemIdentifier> *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
+{
+    return [self toolbarAllowedItemIdentifiers:toolbar];
+}
+
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSToolbarItemIdentifier)identifier
+    willBeInsertedIntoToolbar:(BOOL)inserted
+{
+    return [identifier isEqualToString:TSPreviewAppearanceToolbarID] ? TSPreviewAppearanceItem(self) : nil;
+}
+
+- (void)changePreviewAppearance:(NSMenuItem *)sender
+{
+    if (sender.tag < TSPreviewAppearanceSystem || sender.tag > TSPreviewAppearanceDark) return;
+    [SUD setInteger:sender.tag forKey:TSPreviewAppearanceModeKey];
+    [self updateExperimentAppearance:nil];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)item
+{
+    if (item.action == @selector(changePreviewAppearance:))
+        return TSValidatePreviewAppearanceChoice(item, SUD);
+    return [super validateMenuItem:item];
+}
+
+- (void)dealloc
+{
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+    self.experimentToolbar.delegate = nil;
+}
+
 
 
 

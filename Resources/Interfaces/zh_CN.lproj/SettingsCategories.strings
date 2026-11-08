@@ -1,0 +1,16 @@
+"source" = "源代码";
+"editor" = "编辑器";
+"preview" = "预览";
+"console" = "控制台";
+"typesetting" = "排版";
+"engines" = "引擎";
+"misc-1" = "其他1";
+"misc-2" = "其他2";
+"themes" = "主题";
+
+"general" = "通用";
+"documents" = "文稿与保存";
+"spelling" = "拼写检查";
+"appearance" = "外观";
+"keyboard" = "键盘";
+"updates" = "更新";

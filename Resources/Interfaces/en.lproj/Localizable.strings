@@ -110,7 +110,6 @@
 "Split Window" = "Split Window";
 "New Document" = "New Document";
 "Link Popups" = "Link Popups";
-"Source" = "Source";
 "Syntax Color expl3 Code" = "Syntax Color expl3 Code";
 "PDF File Has No Annotations" = "PDF File Has No Annotations";
 
@@ -143,8 +142,155 @@
 
 "This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
 
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "The selected profile is invalid.";
+"Apply Settings Profile?" = "Apply Settings Profile?";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+"Apply Profile" = "Apply Profile";
+"Settings could not be saved" = "Settings could not be saved";
+"Enter a valid setting" = "Enter a valid setting";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+"Continue Editing" = "Continue Editing";
+"Restore This Field" = "Restore This Field";
+"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.";
+"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+
+"Back" = "Back";
+
+"Forward" = "Forward";
+
+"Settings Categories" = "Settings Categories";
+
+"Navigation History" = "Navigation History";
+
+"Back (⌘[)" = "Back (⌘[)";
+
+"Forward (⌘])" = "Forward (⌘])";
+
+"Keyboard" = "Keyboard";
+"Search by Function" = "Search by Function";
+"Search by Key" = "Search by Key";
+"Show in Macro Editor" = "Show in Macro Editor";
+"Assigned" = "Assigned";
+"Inactive for this key" = "Inactive for this key";
+"Assignment priority is shown; whether a command can run depends on the document." = "Assignment priority is shown; whether a command can run depends on the document.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "Keys used by the system cannot be detected. Press Escape to stop recording.";
+"No command uses this key." = "No command uses this key.";
+"Press a key" = "Press a key";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Existing assignments are shown. This key cannot be assigned to a new shortcut.";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "Matches: %lu";
+
+"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+
+"Replace" = "Replace";
+
+"General" = "General";
+"Documents and Saving" = "Documents and Saving";
+"Editor" = "Editor";
+"Spell Checking" = "Spell Checking";
+"Appearance" = "Appearance";
+"Typesetting" = "Typesetting";
+"Console" = "Console";
+"Updates" = "Updates";
+"Defaults for New Documents" = "Defaults for New Documents";
+"Matching Brackets" = "Matching Brackets";
+"Spelling While Typing" = "Spelling While Typing";
+"Use LaTeX-aware spell checking (recommended)" = "Use LaTeX-aware spell checking (recommended)";
+"Use legacy spell checking" = "Use legacy spell checking";
+"LaTeX Spell Checking" = "LaTeX Spell Checking";
+"Edit Key Bindings…" = "Edit Key Bindings…";
+"Key Bindings" = "Key Bindings";
+"Edit Command Completion…" = "Edit Command Completion…";
+"Command Completion" = "Command Completion";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut.";
+"Source and Preview Windows" = "Source and Preview Windows";
+"Comment Lines and Hidden Settings" = "Comment Lines and Hidden Settings";
+"Advanced" = "Advanced";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Install a TeX distribution, then run Auto Setup in Settings > Typesetting.";
+
+"Completion trigger" = "Completion trigger";
+
+"This key is reserved for command completion." = "This key is reserved for command completion.";
+
+"Encoding" = "Encoding";
+
+"Saving Documents" = "Saving Documents";
+
+"Page Display" = "Page Display";
+
+"PDF Interaction" = "PDF Interaction";
+
+"PDF Appearance" = "PDF Appearance";
+
+"HTML Preview" = "HTML Preview";
+
+"Typesetting Defaults" = "Typesetting Defaults";
+
+"Synchronization" = "Synchronization";
+
+"Tools" = "Tools";
+
+"Expanded" = "Expanded";
+
+"Collapsed" = "Collapsed";
+
+"Search Settings" = "Search Settings";
+
+"Settings results: %lu" = "Settings results: %lu";
+
+"No Settings Found" = "No Settings Found";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 /* Independent Experiment console */
 "Experiment input" = "Experiment input";
 "Stop Experiment" = "Stop Experiment";
 "%@ — Experiment Console" = "%@ — Experiment Console";
 "Experiment stopped.\n" = "Experiment stopped.\n";
+
+/* Explicit fallback for shared keys without a translation. */
+"Apply" = "Apply";
+"Change All" = "Change All";
+"Change Shortcut" = "Change Shortcut";
+"Change…" = "Change…";
+"Command" = "Command";
+"Detected Engine Paths" = "Detected Engine Paths";
+"Edit Spelling Exclusions…" = "Edit Spelling Exclusions…";
+"Forget Learned Words…" = "Forget Learned Words…";
+"Forget Selected" = "Forget Selected";
+"Forget learned words" = "Forget learned words";
+"Forgot %lu word." = "Forgot %lu word.";
+"Forgot %lu words." = "Forgot %lu words.";
+"No learned words in this document" = "No learned words in this document";
+"None of the words in this document have been learned for %@." = "None of the words in this document have been learned for %@.";
+"Not found (current setting will be kept)" = "Not found (current setting will be kept)";
+"OK" = "OK";
+"Press the new shortcut (Escape to cancel)." = "Press the new shortcut (Escape to cancel).";
+"Problems in the spelling exclusions file" = "Problems in the spelling exclusions file";
+"Remove Shortcut" = "Remove Shortcut";
+"Restore All" = "Restore All";
+"Restore All…" = "Restore All…";
+"Restore Default" = "Restore Default";
+"Restore all keyboard shortcuts?" = "Restore all keyboard shortcuts?";
+"Search commands" = "Search commands";
+"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors.";
+"Set Up TeX Engine Paths" = "Set Up TeX Engine Paths";
+"Shortcut" = "Shortcut";
+"Shortcut Unavailable" = "Shortcut Unavailable";
+"Spell Checking Help" = "Spell Checking Help";
+"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged.";
+"The spell checking help could not be found" = "The spell checking help could not be found";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several.";
+"This command is no longer available." = "This command is no longer available.";
+"This shortcut is already used by “%@”." = "This shortcut is already used by “%@”.";
+"Use Command or Control with a key, or a function key (F1–F20)." = "Use Command or Control with a key, or a function key (F1–F20).";
+"Use These Paths" = "Use These Paths";
+"Version unavailable" = "Version unavailable";

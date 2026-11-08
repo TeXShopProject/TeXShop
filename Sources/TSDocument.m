@@ -1,3 +1,4 @@
+#import "TSPreferenceProfile.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2007 Richard Koch
@@ -3564,9 +3565,9 @@ if ( ! skipTextWindow) {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setTextColorBoth:) name:SourceTextColorChangedNotification object:nil];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(revertDocumentFont:) name:DocumentFontRevertNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rememberFont:) name:DocumentFontRememberNotification object:nil];
+
+
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setCommandCompletionChar:) name:CommandCompletionCharNotification object:nil]; 
 
@@ -4233,49 +4234,7 @@ if ( ! skipTextWindow) {
 	return _externalEditor;
 }
 
-- (void)rememberFont:(NSNotification *)notification
-/*" Called when preferences starts to save current font "*/
-{
-    NSFont  *font;
-    NSAttributedString *myAttributedString;
-    NSDictionary *fontStyle;
-    
-    {
-        font = [textView font];
-        self.previousFontData = [NSArchiver archivedDataWithRootObject: font];
-    }
-    
-    myAttributedString = textView.textStorage;
-    if (myAttributedString == nil)
-        self.previousFontStyleData = nil;
-    else if ([myAttributedString length] == 0)
-        self.previousFontStyleData = nil;
-    else
-    {
-    fontStyle = [myAttributedString attributesAtIndex:0 effectiveRange: NULL];
-    if (fontStyle != nil)
-        self.previousFontStyleData = [NSArchiver archivedDataWithRootObject: fontStyle];
-    else
-        self.previousFontStyleData = nil;
-    }
 
-/*
-    NSFont 	*font;
-    NSDictionary *fontStyle;
-       // fontStyle = [textView typingAttributes];
-  		self.previousFontData = [NSArchiver archivedDataWithRootObject: font];
-        self.previousFontStyleData = [NSArchiver archivedDataWithRootObject: fontStyle];
-    NSAttributedString *myAttributedString;
-    
-    //    if (self.previousFontData != nil)
-    //            [self.previousFontData release];
-    {
-        font = [textView font];
-        myAttributedString = textView.textStorage;
-        fontStyle = [myAttributedString attributesAtIndex:0 effectiveRange: NULL];
-    }
-*/
-}
 	 
 - (void)setCommandCompletionChar: (NSNotification *)notification
 /*" Called when preferences changes the Command Completion Character "*/
@@ -4292,54 +4251,7 @@ if ( ! skipTextWindow) {
 		
 	}
 
-- (void)revertDocumentFont:(NSNotification *)notification
-/*" Changes the font of %textView to the one used before preferences called, in case the
-preference change is cancelled. "*/
-{
-    NSFont     *font;
-    NSDictionary *fontAttributes;
-    NSMutableAttributedString *myAttributedString;
-    NSRange myRange;
-    
-    
-    if (self.previousFontData != nil)
-    {
-        // NSLog(@"did font only");
-        font = [NSUnarchiver unarchiveObjectWithData:self.previousFontData];
-        [textView1 setFontSafely:font];
-        [textView2 setFontSafely:font];
-    }
-    
-    
-    myAttributedString = textView1.textStorage;
-    NSUInteger thelength = [myAttributedString length];
-    myRange.location = 0;
-    myRange.length = thelength;
-    [myAttributedString setAttributes: nil range: myRange];
- 
-    
-    NSTextStorage* textViewContent = [textView1 textStorage];
-    NSRange area = NSMakeRange(0, [textViewContent length]);
-    /*
-    [textViewContent invalidateAttributesInRange:area];
-    */
-    
-    if (self.previousFontStyleData != nil)
-    {
-        fontAttributes = [NSUnarchiver unarchiveObjectWithData:self.previousFontStyleData];
-        if (fontAttributes != nil)
-        {
-             [textViewContent addAttributes: fontAttributes range: area];
-        }
-     }
-    
-    else
-    
-    
-    
-	[self fixUpTabs];
-    
-}
+
 
 
 - (void) doNothing: (id) theDictionary
@@ -7241,6 +7153,7 @@ if (! useFullSplitWindow) {
 
 - (void)externalPDFSettingsChanged:(NSNotification *)notification
 {
+    if (TSPreferenceProfileIsApplying()) return;
     NSTimeInterval interval = MAX(0.5, [SUD doubleForKey:RefreshTimeKey]);
     if ([self externalPDFObservationEnabled] != (self.pdfRefreshTimer != nil) ||
         (self.pdfRefreshTimer && self.pdfRefreshTimer.timeInterval != interval))

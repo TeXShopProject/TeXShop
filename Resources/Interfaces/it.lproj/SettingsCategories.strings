@@ -1,0 +1,16 @@
+"source" = "Documento";
+"editor" = "Editor";
+"preview" = "Anteprima";
+"console" = "Console";
+"typesetting" = "Composizione";
+"engines" = "Motore";
+"misc-1" = "Misc1";
+"misc-2" = "Misc2";
+"themes" = "Temi";
+
+"general" = "Generali";
+"documents" = "Documenti e salvataggio";
+"spelling" = "Ortografia";
+"appearance" = "Aspetto";
+"keyboard" = "Tastiera";
+"updates" = "Aggiornamenti";

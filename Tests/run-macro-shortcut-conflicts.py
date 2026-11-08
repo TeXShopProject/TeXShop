@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise production macro save/validation methods with no visible UI or real preferences."""
 from pathlib import Path
+from shortcut_sources import production_source
 import subprocess
 import tempfile
 import sys
@@ -23,7 +24,7 @@ parts = {
 }
 def run_case(name, changes=()):
     sources = dict(parts)
-    sources['TSKeyboardShortcuts.m'] = (root / 'Sources/TSKeyboardShortcuts.m').read_text()
+    sources['TSKeyboardShortcuts.m'] = production_source(root)
     for filename, before, after in changes:
         assert sources[filename].count(before) == 1, (name, filename, before)
         sources[filename] = sources[filename].replace(before, after)
@@ -62,9 +63,9 @@ if '--mutations' in sys.argv:
         'ignore write failure': [(e, 'if (![self saveNodes: [outlineController rootOfTree] toFile: pathStr]) return;', '[self saveNodes: [outlineController rootOfTree] toFile: pathStr];')],
         'do not select conflicting macro': [(e, '[outlineView selectItems:@[node] byExtendingSelection:NO];', '[outlineView selectItems:@[] byExtendingSelection:NO];')],
         'no Escape handling': [(k, 'event.keyCode == 53', 'event.keyCode == 99')],
-        'restore without macro confirmation': [(k, 'if (![self confirmMacrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]) return;', 'if (NO) return;')],
+        'restore ignores macro confirmation refusal': [(k, 'if (strongSelf == nil || !accepted) { return; }', 'if (strongSelf == nil) { return; }')],
         'save from sheet synchronously': [(e, 'dispatch_async(dispatch_get_main_queue(), ^{\n            if (response', '^{\n            if (response'), (e, 'else if (response == NSAlertSecondButtonReturn) [self cancelPressed:self];\n        });', 'else if (response == NSAlertSecondButtonReturn) [self cancelPressed:self];\n        }();')],
-        'conflictForKey counts macro items (macros block custom keys in the UI)': [(k, 'if (item == excluded || item.submenu || item.action == NSSelectorFromString(@"doMacro:") || !item.keyEquivalent.length) return;', 'if (item == excluded || item.submenu || !item.keyEquivalent.length) return;')],
+        'conflictForKey counts macro items (macros block custom keys in the UI)': [(k, 'if (item == excluded || item.submenu != nil || item.action == NSSelectorFromString(@"doMacro:") || item.keyEquivalent.length == 0) { return; }', 'if (item == excluded || item.submenu != nil || item.keyEquivalent.length == 0) { return; }')],
         'menuBindings includes installed macro items': [(k, 'if (!item.submenu && item.action != NSSelectorFromString(@"doMacro:") && item.keyEquivalent.length)\n            [result', 'if (!item.submenu && item.keyEquivalent.length)\n            [result')],
         'no clearing of command keys before applying (transient duplicates)': [(k, '    for (TSShortcutCommand *command in self.commands) command.item.keyEquivalent = @"";\n    for (TSShortcutCommand *command in self.commands) {\n        if ([active', '    for (TSShortcutCommand *command in self.commands) {\n        if ([active')],
         'refreshMenuAndMacros does not rebuild macros': [(k, '        [[NSNotificationCenter defaultCenter] postNotificationName:TSRebuildMacrosNotification object:self];\n', '')],
@@ -77,13 +78,13 @@ if '--mutations' in sys.argv:
         'close sheet not ordered out before deferred save': [(e, '        [alert.window orderOut:nil];\n', '')],
         'attachedSheet guard removed in windowShouldClose': [(e, '    if ([window attachedSheet]) return NO;\n', '')],
         'macrosAffectedByRestoringAll empty': [(k, '    for (TSShortcutCommand *command in self.commands)\n        [result addObjectsFromArray:[self macrosUsingKey:command.defaultKey modifiers:command.defaultModifiers]];', '')],
-        'applyCapturedShortcut skips macro confirmation': [(k, '    if (![self confirmMacrosUsingKey:self.capturedKey modifiers:self.capturedModifiers]) return;\n    NSString *error = [self.store setKey:self.capturedKey', '    NSString *error = [self.store setKey:self.capturedKey')],
+        'applyCapturedShortcut ignores macro confirmation refusal': [(k, 'if (strongSelf == nil || !accepted || strongSelf.editingCommand != command ||', 'if (strongSelf == nil || strongSelf.editingCommand != command ||')],
         'beginMenuRebuild does not reapply menu keys': [(k, '    self.rebuildingMacros = YES;\n    [self.store refreshMenu];', '    self.rebuildingMacros = YES;')],
         'matchesItem compares raw strings without A-Z Shift folding': [(k, 'return [TSEventBindings(event, [event charactersByApplyingModifiers:0]) containsObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask)];', 'return [TSShortcutCharacterForEvent(event) isEqual:item.keyEquivalent] && (event.modifierFlags & TSShortcutModifiers) == (item.keyEquivalentModifierMask & TSShortcutModifiers);')],
-        'restoreAll does not rebuild macros': [(k, '[self.store restoreAll]; [self refreshMenuAndMacros];', '[self.store restoreAll];')],
+        'restoreAll does not rebuild macros': [(k, '[strongSelf.store restoreAll]; [strongSelf refreshMenuAndMacros];', '[strongSelf.store restoreAll];')],
         'removeShortcut does not rebuild macros': [(k, '    [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];\n    [self refreshMenuAndMacros];', '    [self showError:[self.store setKey:@"" modifiers:0 forCommand:command]];')],
         'recording leaves redundant punctuation Shift': [(k, 'flags &= ~NSEventModifierFlagShift;', 'flags |= NSEventModifierFlagShift;')],
-        'engine rebuild leaves settings list stale': [(k, '    if (self.isWindowLoaded) [self reloadCommands];\n    [[NSNotificationCenter', '    [[NSNotificationCenter')],
+        'engine rebuild leaves settings list stale': [(k, 'if (self.isViewLoaded) { [self reloadCommands]; }', 'if (NO) { [self reloadCommands]; }')],
         'macro rebuild leaves guard set after exception': [(m, '    } @finally {\n        [[TSKeyboardShortcuts sharedController] endMenuRebuild];\n    }', '    } @catch (NSException *exception) { @throw; }\n    [[TSKeyboardShortcuts sharedController] endMenuRebuild];')],
         'validation changes rebuild all macros': [(k, '@[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification]', '@[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification, NSMenuDidChangeItemNotification]'), (k, '    if ([[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) return;', ''), (k, 'if (![[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) [self refreshMenuAndMacros];', '[self refreshMenuAndMacros];')],
         'strip Shift from non-ASCII letters': [(k, '![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])\n        flags &= ~NSEventModifierFlagShift;', 'YES)\n        flags &= ~NSEventModifierFlagShift;')],

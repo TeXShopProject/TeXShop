@@ -11,6 +11,8 @@
 <!--コメントアウトしてある部分はバージョン1.35の旧文です。-->
 
 <body>
+<p>設定には「一般」「書類と保存」「エディタ」「スペルチェック」「外観」「プレビュー」「タイプセット」「コンソール」「キーボード」「アップデート」の10分類があります。「スペルチェック」では「LaTeXの構造を考慮する（推奨）」と「従来方式を使う」のどちらかを選びます。新方式の下には「LaTeXの除外規則を編集…」、従来方式の下には字下げした3項目があります。方式を変えても子項目の値は保持します。入力中のスペルチェックは独立した設定です。「キーボード」ではキーバインドとコマンド補完を検索欄より上に置き、ショートカット一覧だけを縦にスクロールします。高さが足りないときは入力設定を一つずつ開けます。Tabを補完キーにしてキー検索でTabを押すと、予約の説明と補完キーの設定行を表示します。「一般」からコメント行と隠し設定の説明を開けます。無効な子項目の保存値を保持し、廃止された分類を記憶していた場合は「一般」を開きます。</p>
+
 
 <div id="content_border">
 
@@ -109,10 +111,10 @@ TeXShop バージョン 1.35 では、下のような設定プロファイルが搭載されており、日本語
 <tr><th><font size="1">設定箇所<th><font size="1">Shift JIS<th><font size="1">EUC</tr>
 <tr><td align="center"><font size="1">書類 &gt; エンコーディング<td align="center"><font size="1">Japanese ( Shift JIS &#x005C; )<td align="center"><font size="1">Japanese ( EUC )</tr>
 <tr><td align="center"><font size="1">プレビュー &gt; 見開きページ<td align="center" colspan="2"><font size="1">左からスタート（両面）</tr>
-<tr><td align="center"><font size="1">内部設定 &gt; パス設定 &gt; (pdf)TeX<td align="center" colspan="2"><font size="1">/usr/local/bin</tr>
-<tr><td align="center"><font size="1">内部設定 &gt; distiller &gt; TeXプログラム<td align="center"><font size="1">~/Library/TeXShop/bin/ptex2pdf-sjis<td align="center"><font size="1">~/Library/TeXShop/bin/ptex2pdf-euc</tr>
-<tr><td align="center"><font size="1">内部設定 &gt; distiller &gt; LaTeXプログラム<td align="center"><font size="1">~/Library/TeXShop/bin/platex2pdf-sjis<td align="center"><font size="1">~/Library/TeXShop/bin/platex2pdf-euc</tr>
-<tr><td align="center"><font size="1">詳細 &gt; BibTeX<td align="center" colspan="2"><font size="1">jbibtex</tr>
+<tr><td align="center"><font size="1">タイプセット &gt; パス設定 &gt; (pdf)TeX<td align="center" colspan="2"><font size="1">/usr/local/bin</tr>
+<tr><td align="center"><font size="1">タイプセット &gt; TeX+dvipdfmx / TeX+dvips+distiller &gt; TeX<td align="center"><font size="1">~/Library/TeXShop/bin/ptex2pdf-sjis<td align="center"><font size="1">~/Library/TeXShop/bin/ptex2pdf-euc</tr>
+<tr><td align="center"><font size="1">タイプセット &gt; TeX+dvipdfmx / TeX+dvips+distiller &gt; LaTeX<td align="center"><font size="1">~/Library/TeXShop/bin/platex2pdf-sjis<td align="center"><font size="1">~/Library/TeXShop/bin/platex2pdf-euc</tr>
+<tr><td align="center"><font size="1">タイプセット &gt; ツール &gt; BibTeX エンジン<td align="center" colspan="2"><font size="1">jbibtex</tr>
 <tr><td align="center"><font size="1">タイプセット &gt; デフォルトのスクリプト<td align="center" colspan="2"><font size="1">TeX＋Ghostscript</font></tr>
 </table>
 
@@ -153,6 +155,9 @@ TeXShop バージョン 1.35 では、下のような設定プロファイルが搭載されており、日本語
 			<li><a href="basic_license.htm">使用許諾</a>
 		</ul>
 	</div>
+
+<h3 id="settings-search">設定を検索</h3>
+<p>サイドバー上部の「設定を検索」で、カテゴリ名、項目名、選択肢、メニューコマンドを探せます。空白で区切った語は、同じカテゴリ内ですべて一致する必要があります。大文字・小文字、欧文のアクセント、全角・半角、ひらがな・カタカナの違いを吸収します。結果を選ぶと該当箇所へ移動して強調します。設定値や無効な項目の状態は変えません。検索語を消すと検索前のカテゴリに戻ります。メニューコマンドに一致した場合は「キーボード」の「機能で検索」に同じ語を入れます。キー記録中は「キーで検索」が優先されます。入力した値、個人のパス、自分で作ったテーマ名は検索しません。</p>
 </body>
 
 </HTML>
