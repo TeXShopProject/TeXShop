@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['delegate-at-edge', 'all-modes', 'ignore-modifiers', 'ignore-annotation', 'visible-scroller'])
+parser.add_argument('--mutation', choices=['delegate-at-edge', 'all-modes', 'ignore-modifiers', 'ignore-annotation', 'visible-scroller', 'scaled-step'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin1')
@@ -26,6 +26,10 @@ elif args.mutation == 'ignore-annotation':
     methods = methods.replace('if ([self annotationKeyDown: theEvent])', 'if (NO)')
 elif args.mutation == 'visible-scroller':
     methods = methods.replace('NSClipView *clip = scroll.contentView;', 'if (scroll.verticalScroller.hidden) return NO;\n    NSClipView *clip = scroll.contentView;')
+elif args.mutation == 'scaled-step':
+    original = 'if (isfinite(magnification) && magnification > 0) step /= magnification;'
+    assert original in methods
+    methods = methods.replace(original, '')
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
@@ -71,14 +75,14 @@ static PDFDocument *document(NSInteger rotation) {
 int main(void) { @autoreleasepool {
  [NSApplication sharedApplication];
  NSArray *documents=@[document(0),document(90),document(180),document(270)];
- for(NSInteger mode=0;mode<4;mode++) for(NSInteger style=0;style<2;style++)
+ for(NSNumber *scale in @[@1.25,@2,@4]) for(NSInteger mode=0;mode<4;mode++) for(NSInteger style=0;style<2;style++)
  for(NSInteger book=0;book<2;book++) for(NSInteger rtl=0;rtl<2;rtl++) for(NSInteger rotation=0;rotation<4;rotation++) {
-  context=[NSString stringWithFormat:@"mode=%ld style=%ld book=%ld rtl=%ld rotation=%ld",mode,style,book,rtl,rotation*90];
+  context=[NSString stringWithFormat:@"mode=%ld style=%ld book=%ld rtl=%ld rotation=%ld scale=%@",mode,style,book,rtl,rotation*90,scale];
   NSWindow *w=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,500,500) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];w.releasedWhenClosed=NO;
   ArrowView *v=[[ArrowView alloc]initWithFrame:w.contentView.bounds];[w.contentView addSubview:v];
-  v.document=documents[rotation];v.displayMode=mode;v.displaysAsBook=book;v.displaysRTL=rtl;v.scaleFactor=2;
+  v.document=documents[rotation];v.displayMode=mode;v.displaysAsBook=book;v.displaysRTL=rtl;v.scaleFactor=scale.doubleValue;
   NSScrollView *scroll=v.documentView.enclosingScrollView;scroll.scrollerStyle=style;scroll.verticalLineScroll=32;
-  TSExternalPDFPosition start={YES,NO,3,NSMakePoint(300,400),2};TSExternalPDFRestore(v,start);pump();
+  TSExternalPDFPosition start={YES,NO,3,NSMakePoint(300,400),scale.doubleValue};TSExternalPDFRestore(v,start);pump();
   NSClipView *clip=scroll.contentView;
   // Overlay bars may be hidden until a gesture. Visibility must not determine routing.
   if(style==NSScrollerStyleOverlay) scroll.verticalScroller.hidden=YES;
@@ -89,6 +93,7 @@ int main(void) { @autoreleasepool {
    if(!paginated) { check(v.delegated==1,@"continuous views delegate to PDFKit"); continue; }
    CGFloat sign=character.unsignedShortValue==NSDownArrowFunctionKey?1:-1;if(!clip.isFlipped)sign=-sign;
    check((clip.bounds.origin.y-before.y)*sign>0,@"arrow moves visibly in requested direction");
+   check(fabs(fabs(clip.bounds.origin.y-before.y)*scroll.magnification-32)<1, @"arrow step stays constant on screen at every zoom");
    check(fabs(clip.bounds.origin.x-before.x)<.01,@"vertical arrows preserve horizontal position");
    for(NSUInteger i=0;i<100;i++) [v keyDown:key(character.unsignedShortValue,0,YES)];
    NSPoint end=clip.bounds.origin;
@@ -107,10 +112,10 @@ int main(void) { @autoreleasepool {
   [v keyDown:key(NSLeftArrowFunctionKey,NSEventModifierFlagCommand,NO)];
   [v keyDown:key(NSRightArrowFunctionKey,NSEventModifierFlagCommand,NO)];
   check(v.previousCalls==1&&v.nextCalls==1,@"command arrows still navigate pages");
-  [SUD setBool:YES forKey:LeftRightArrowsAlwaysPageKey];
+  [SUD setVolatileDomain:@{LeftRightArrowsAlwaysPageKey:@YES} forName:NSArgumentDomain];
   [v keyDown:key(NSLeftArrowFunctionKey,0,NO)];[v keyDown:key(NSRightArrowFunctionKey,0,NO)];
   check(v.previousCalls==2&&v.nextCalls==2,@"left/right preference still works");
-  [SUD setBool:NO forKey:LeftRightArrowsAlwaysPageKey];
+  [SUD removeVolatileDomainForName:NSArgumentDomain];
   if(paginated) {
    v.scaleFactor=.2;[v layoutDocumentView];[v layoutSubtreeIfNeeded];pump();
    v.delegated=0;[v keyDown:key(NSDownArrowFunctionKey,0,NO)];
@@ -128,6 +133,6 @@ with tempfile.TemporaryDirectory(prefix='texshop-vertical-arrows-') as directory
     (temp/'home').mkdir()
     (temp/'test.m').write_text(program)
     subprocess.run(['xcrun','clang','-mmacosx-version-min=14.6','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
-                    '-I'+str(root/'Sources'),str(temp/'test.m'),'-o',str(temp/'test')],check=True)
-    subprocess.run([str(temp/'test')],check=True,timeout=180,
+                    '-I'+str(root/'Sources'),str(temp/'test.m'),'-o',str(temp/'TeXShopVerticalArrowTest')],check=True)
+    subprocess.run([str(temp/'TeXShopVerticalArrowTest')],check=True,timeout=240,
                    env=dict(os.environ,CFFIXED_USER_HOME=str(temp/'home')))

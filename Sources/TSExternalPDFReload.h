@@ -87,7 +87,7 @@ static inline void TSExternalPDFRestore(PDFView *view, TSExternalPDFPosition pos
     NSPoint point = [documentView convertPoint:[view convertPoint:position.pagePoint fromPage:page] fromView:view];
     NSRect target = clip.bounds;
     target.origin = NSMakePoint(point.x-target.size.width/2, point.y-target.size.height/2);
-    // PDFKit on Tahoe can offset an already valid origin in constrainBoundsRect:.
+    // On macOS 26, NSClipView can offset an already valid origin in constrainBoundsRect:.
     // Obtain the scroll limits at the document edges, then clamp without changing
     // an interior position. Keep native inset/centering rules for smaller pages.
     NSRect documentRect = clip.documentRect;

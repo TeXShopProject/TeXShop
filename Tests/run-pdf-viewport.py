@@ -65,6 +65,27 @@ static void sameViewport(TSExternalPDFPosition expected, PDFView *view, NSString
                 NSStringFromPoint(actual.pagePoint).UTF8String);
     check(actual.valid && actual.pageIndex == expected.pageIndex && distance < 1.1, message);
 }
+// Stand-in for macOS 26: with content insets, -[NSClipView constrainBoundsRect:]
+// moved an origin that was already inside the scrollable range by about 13.5
+// points. Reproduce that on other systems so the restoration is checked there too.
+#import <objc/runtime.h>
+static NSClipView *shiftingClip;
+static NSRect (*nativeConstrain)(id, SEL, NSRect);
+static NSRect shiftingConstrain(NSClipView *self, SEL _cmd, NSRect proposed) {
+    NSRect result = nativeConstrain(self, _cmd, proposed);
+    if (self != shiftingClip) return result;
+    NSRect far = proposed; far.origin.y = NSMaxY(self.documentRect) + 1e5;
+    CGFloat top = nativeConstrain(self, _cmd, far).origin.y;
+    far.origin.y = NSMinY(self.documentRect) - 1e5;
+    CGFloat bottom = nativeConstrain(self, _cmd, far).origin.y;
+    if (result.origin.y > bottom + .5 && result.origin.y < top - .5)
+        result.origin.y = fmin(result.origin.y + 13.5, top);
+    return result;
+}
+static void installShiftingClip(void) {
+    Method method = class_getInstanceMethod(NSClipView.class, @selector(constrainBoundsRect:));
+    nativeConstrain = (void *)method_setImplementation(method, (IMP)shiftingConstrain);
+}
 @interface ViewportToolbar : NSObject <NSToolbarDelegate> @end
 @implementation ViewportToolbar
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[@"item"]; }
@@ -160,6 +181,42 @@ int main(void) { @autoreleasepool {
         sameViewport(before,view,@"appending pages retains formerly final page viewport");
         view.document=nil;[view removeFromSuperview];[window close];
     }
+    installShiftingClip();
+    for (NSInteger mode=0;mode<4;mode++) for (NSNumber *scale in @[@1.25,@2]) {
+        context=[NSString stringWithFormat:@"shifting clip mode=%ld scale=%@",mode,scale];
+        NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,500,500)
+            styleMask:NSWindowStyleMaskTitled|NSWindowStyleMaskFullSizeContentView
+            backing:NSBackingStoreBuffered defer:NO]; window.releasedWhenClosed=NO;
+        NSToolbar *toolbar=[[NSToolbar alloc] initWithIdentifier:@"ViewportShift"];
+        toolbar.delegate=toolbarDelegate; window.toolbar=toolbar;
+        window.toolbarStyle=NSWindowToolbarStyleExpanded;
+        RecoveryView *view=[[RecoveryView alloc] initWithFrame:window.contentView.bounds];
+        [window.contentView addSubview:view];
+        view.myPDFWindow=[TestWindow new]; view.myDocument=[TestDocument new];
+        view.myDocument.pdfKitWindow=view.myPDFWindow;
+        view.document=document(bytes,4,0); view.displayMode=mode;
+        view.documentView.enclosingScrollView.scrollerStyle=NSScrollerStyleOverlay;
+        view.scaleFactor=scale.doubleValue;
+        [view goToPage:[view.document pageAtIndex:1]]; pump();
+        NSClipView *clip=view.documentView.enclosingScrollView.contentView;
+        NSRect bounds=clip.bounds; bounds.origin.x+=40; bounds.origin.y+=60;
+        [clip scrollToPoint:[clip constrainBoundsRect:bounds].origin];pump();
+        shiftingClip=clip;
+        TSExternalPDFPosition before=TSExternalPDFCapture(view);
+        for (NSUInteger n=0;n<3;n++) {
+            [view reShowWithDocument:document(bytes,4,0)];pump();
+            sameViewport(before,view,@"reload keeps an interior viewport when constraints shift it");
+        }
+        // Positions beyond the scrollable range must still follow the native limits.
+        TSExternalPDFPosition far={YES,NO,3,NSMakePoint(590,10),scale.doubleValue};
+        TSExternalPDFRestore(view,far);pump();
+        NSRect limited=[clip constrainBoundsRect:NSMakeRect(1e5,1e5,clip.bounds.size.width,clip.bounds.size.height)];
+        if (clip.isFlipped) check(fabs(clip.bounds.origin.y-limited.origin.y)<.5,@"far restoration stops at the native lower limit");
+        shiftingClip=nil;
+        view.document=nil;[view removeFromSuperview];[window close];
+    }
+    method_setImplementation(class_getInstanceMethod(NSClipView.class, @selector(constrainBoundsRect:)),
+                             (IMP)nativeConstrain);
     // A new typeset PDF may use smaller paper. Keeping the old page coordinates
     // must not scroll the entire replacement page out of view.
     for (NSInteger mode=0;mode<4;mode++) {
@@ -227,7 +284,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
     (temp / 'test.m').write_text(program)
     if args.mutation in ('legacy-constraints', 'unconstrained'):
         header = (root / 'Sources/TSExternalPDFReload.h').read_text()
-        start = header.index('    // PDFKit on Tahoe')
+        start = header.index('    // On macOS 26, NSClipView')
         end = header.index('    [clip scrollToPoint:target.origin];', start)
         replacement = ('    target = [clip constrainBoundsRect:target];\n'
                        if args.mutation == 'legacy-constraints' else '')
