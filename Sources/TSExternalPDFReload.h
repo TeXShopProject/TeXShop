@@ -87,7 +87,22 @@ static inline void TSExternalPDFRestore(PDFView *view, TSExternalPDFPosition pos
     NSPoint point = [documentView convertPoint:[view convertPoint:position.pagePoint fromPage:page] fromView:view];
     NSRect target = clip.bounds;
     target.origin = NSMakePoint(point.x-target.size.width/2, point.y-target.size.height/2);
-    target = [clip constrainBoundsRect:target];
+    // On macOS 26, NSClipView can offset an already valid origin in constrainBoundsRect:.
+    // Obtain the scroll limits at the document edges, then clamp without changing
+    // an interior position. Keep native inset/centering rules for smaller pages.
+    NSRect documentRect = clip.documentRect;
+    NSEdgeInsets insets = scroll.contentInsets;
+    CGFloat horizontalMargin = target.size.width + fabs(insets.left) + fabs(insets.right) + 1;
+    CGFloat verticalMargin = target.size.height + fabs(insets.top) + fabs(insets.bottom) + 1;
+    NSRect lower = target, upper = target;
+    lower.origin = NSMakePoint(NSMinX(documentRect) - horizontalMargin,
+                               NSMinY(documentRect) - verticalMargin);
+    upper.origin = NSMakePoint(NSMaxX(documentRect) + horizontalMargin,
+                               NSMaxY(documentRect) + verticalMargin);
+    lower = [clip constrainBoundsRect:lower];
+    upper = [clip constrainBoundsRect:upper];
+    target.origin.x = fmin(fmax(target.origin.x, lower.origin.x), upper.origin.x);
+    target.origin.y = fmin(fmax(target.origin.y, lower.origin.y), upper.origin.y);
     [clip scrollToPoint:target.origin];
     [scroll reflectScrolledClipView:clip];
 }

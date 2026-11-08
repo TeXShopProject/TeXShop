@@ -64,6 +64,9 @@
 
 
 @implementation MyPDFKitView : PDFView
+{
+    TSExternalPDFPosition secondViewport;
+}
 
 - (void)dealloc
 {
@@ -1287,6 +1290,9 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
     else
         needsInitialization = NO;
     
+    // Document-view coordinates can move when later pages are added or removed.
+    // Preserve the visible point in page coordinates, as external reloads do.
+    TSExternalPDFPosition viewport = TSExternalPDFCapture(self);
     NSRect visibleRect = [[[self documentView] enclosingScrollView] documentVisibleRect];
     
     if ((visibleRect.origin.x == 0) && (visibleRect.origin.y == 0) && (visibleRect.size.height == 0) && (visibleRect.size.width == 0))
@@ -1409,7 +1415,10 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
        {
            
           // NSLog(@"visibleRect exists and regular scroll to visible");
-           [[self documentView] scrollRectToVisible: visibleRect];
+           if (viewport.valid && viewport.pageIndex < self.document.pageCount)
+               TSExternalPDFRestore(self, viewport);
+           else
+               [[self documentView] scrollRectToVisible: visibleRect];
            
        }
     
@@ -1572,6 +1581,7 @@ if ((atLeastHighSierra) && (self.PDFFlashFix))
 		secondNeedsInitialization = NO;
 	
 	
+    secondViewport = TSExternalPDFCapture(self);
 	secondVisibleRect = [[self documentView] visibleRect];
 	secondFullRect = [[self documentView] bounds];
 	
@@ -1650,7 +1660,10 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	secondVisibleRect.origin.y = secondVisibleRect.origin.y + difference;
 	
 	// [self display];
-	[[self documentView] scrollRectToVisible: secondVisibleRect];
+    if (secondViewport.valid && secondViewport.pageIndex < self.document.pageCount)
+        TSExternalPDFRestore(self, secondViewport);
+    else
+        [[self documentView] scrollRectToVisible: secondVisibleRect];
     if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_10_Max)
         [[self window] enableFlushWindow];
     //[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:1]];
@@ -2231,11 +2244,59 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 */
 
 
+- (void)stepPageForward:(BOOL)forward sender:(id)sender
+{
+    TSExternalPDFPosition viewport = {0};
+    NSUInteger oldPage = NSNotFound;
+    if (@available(macOS 27.0, *)) {
+        if (self.displayMode == kPDFDisplaySinglePage || self.displayMode == kPDFDisplayTwoUp) {
+            viewport = TSExternalPDFCapture(self);
+            PDFPage *page = self.currentPage;
+            if (page) oldPage = [self.document indexForPage:page];
+        }
+    }
+
+    if (forward)
+        [self goToNextPage:sender];
+    else
+        [self goToPreviousPage:sender];
+
+    if (!viewport.valid || oldPage == NSNotFound || !self.document.pageCount)
+        return;
+    PDFPage *page = self.currentPage;
+    if (!page) return;
+    NSUInteger newPage = [self.document indexForPage:page];
+    if (newPage == NSNotFound)
+        return;
+
+    // macOS 27 moves to opposite page corners. PDFKit on Sequoia keeps
+    // the visible position. In two-up mode currentPage may be either page.
+    if (self.displayMode == kPDFDisplayTwoUp) {
+        NSUInteger offset = self.displaysAsBook ? 1 : 0;
+        oldPage = oldPage < offset ? 0 : offset + (oldPage - offset) / 2 * 2;
+        newPage = newPage < offset ? 0 : offset + (newPage - offset) / 2 * 2;
+    }
+    NSInteger target = (NSInteger)viewport.pageIndex + (NSInteger)newPage - (NSInteger)oldPage;
+    if (self.displayMode == kPDFDisplayTwoUp && self.displaysAsBook && newPage == 0)
+        target = 0; // The cover spread has no right-hand companion.
+    viewport.pageIndex = (NSUInteger)MAX(0, MIN(target, (NSInteger)self.document.pageCount - 1));
+    // Let native navigation stand if PDFKit already preserved the viewport.
+    // Compare in view points so the tolerance does not grow with zoom.
+    TSExternalPDFPosition actual = TSExternalPDFCapture(self);
+    if (actual.valid && actual.pageIndex == viewport.pageIndex &&
+        actual.autoScales == viewport.autoScales &&
+        (viewport.autoScales || actual.scale == viewport.scale) && actual.scale > 0 &&
+        hypot(actual.pagePoint.x - viewport.pagePoint.x,
+              actual.pagePoint.y - viewport.pagePoint.y) * actual.scale <= 0.5)
+        return;
+    TSExternalPDFRestore(self, viewport);
+}
+
 - (void) previousPage: (id)sender
 {
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarquee: YES];
-	[self goToPreviousPage:self];
+	[self stepPageForward:NO sender:self];
 }
 
 - (void) nextPage: (id)sender
@@ -2243,7 +2304,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarquee: YES];
-	[self goToNextPage:sender];
+	[self stepPageForward:YES sender:sender];
 }
 
 - (void) firstPage: (id)sender
@@ -7601,13 +7662,59 @@ else
 
     
 
+// In paginated views, bare vertical arrows scroll within a zoomed page.
+// A hidden overlay scroller still has a scrollable range.
+- (BOOL)scrollVerticalArrowWithinPage:(NSEvent *)event
+{
+    if (self.displayMode != kPDFDisplaySinglePage && self.displayMode != kPDFDisplayTwoUp)
+        return NO;
+    if (event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagOption |
+                               NSEventModifierFlagControl | NSEventModifierFlagShift))
+        return NO;
+    NSString *characters = event.charactersIgnoringModifiers;
+    if (characters.length != 1) return NO;
+    unichar key = [characters characterAtIndex:0];
+    if (key != NSUpArrowFunctionKey && key != NSDownArrowFunctionKey) return NO;
+
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    if (!self.document.pageCount || !clip || NSIsEmptyRect(clip.bounds)) return NO;
+    NSRect bounds = clip.bounds, lower = bounds, upper = bounds;
+    NSRect documentRect = clip.documentRect;
+    NSEdgeInsets insets = scroll.contentInsets;
+    CGFloat margin = bounds.size.height + fabs(insets.top) + fabs(insets.bottom) + 1;
+    lower.origin.y = NSMinY(documentRect) - margin;
+    upper.origin.y = NSMaxY(documentRect) + margin;
+    // Query only the limits: macOS 26 may shift an interior clip-view origin.
+    CGFloat minimum = [clip constrainBoundsRect:lower].origin.y;
+    CGFloat maximum = [clip constrainBoundsRect:upper].origin.y;
+    // Line scrolling and the scrollable test are measured on screen; the clip bounds are magnified.
+    CGFloat magnification = scroll.magnification;
+    if (!isfinite(magnification) || magnification <= 0) magnification = 1;
+    if (!isfinite(minimum) || !isfinite(maximum) || (maximum - minimum) * magnification <= 0.5)
+        return NO;
+
+    CGFloat step = scroll.verticalLineScroll;
+    if (!isfinite(step) || step <= 0) step = 10;
+    step /= magnification;
+    CGFloat direction = key == NSDownArrowFunctionKey ? 1 : -1;
+    if (!clip.isFlipped) direction = -direction;
+    NSPoint origin = bounds.origin;
+    origin.y = fmin(fmax(origin.y + direction * step, minimum), maximum);
+    [clip scrollToPoint:origin];
+    [scroll reflectScrolledClipView:clip];
+    // Consume the event even at the limit, so PDFKit cannot turn the page.
+    return YES;
+}
+
 - (void)keyDown:(NSEvent *)theEvent
 {
     NSString	*theKey;
     unichar		key;
-    BOOL        result;
     
     if ([self annotationKeyDown: theEvent])
+        return;
+    if ([self scrollVerticalArrowWithinPage:theEvent])
         return;
    
     

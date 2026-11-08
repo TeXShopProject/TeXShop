@@ -81,6 +81,7 @@ WINDOW_METHODS
     NSTextField *totalPage,*stotalPage,*totalPage1,*currentPage0,*scurrentPage,*currentPage1;
     BOOL drawMark,secondNeedsInitialization;
     NSRect secondVisibleRect,secondFullRect;
+    TSExternalPDFPosition secondViewport;
 }
 @property BOOL firstTime,oldUsed,doScroll,skipLinks,globalLongTerm;
 @property NSInteger handlingLink,timerNumber,stringAlignment;
