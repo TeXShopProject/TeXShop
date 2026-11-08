@@ -524,7 +524,7 @@ The remarks about keyboard shortcuts in the previous two paragraphs apply to a U
 
 The source font itself can be changed using a menu command, but this is almost never done. Instead users make the change in Preferences so it will affect all future source windows.
 
-To change the font in the Source Window, open the {\em Source} category of Settings and press {\em Set}. Choose a font and size in the Font Panel. The change is immediately saved and applied to open source windows and to future windows. Closing Settings keeps the choice. The Console font is selected separately and updates open console windows.
+To change the font in the Source Window, open the {\em Appearance} category of Settings and press {\em Set}. Choose a font and size in the Font Panel. The change is immediately saved and applied to open source windows and to future windows. Closing Settings keeps the choice. The Console font is selected separately and updates open console windows.
 
 It is useful to choose a monospace font for the source file, since then all characters have the same width and list items and the like will line up. 
 
@@ -541,7 +541,12 @@ The solution was simple: choose a source file which contains Hebrew. The Apple F
 
 \section{Other Source Preference Items}
 
-This is a useful time to consider a few other Preference items which affect the source window. These items occur under the first  tab, Source. But several items in this tab are better explained later and will be skipped.
+Settings has ten categories: General, Documents and Saving, Editor, Spelling, Appearance, Preview, Typesetting, Console, Keyboard, and Updates. Spelling offers \LaTeX{}-aware checking (recommended), with Edit Rules beneath it, or legacy checking with three indented options. Changing the method keeps the inactive options and their values. Check Spelling While Typing is independent. Keyboard contains text input key bindings, Esc/Tab command completion, BibDesk completion and both file editors; these editors have moved from the Source menu. When Tab triggers completion it is reserved for completion. Input settings and shortcut results share one vertical scroll area, while search and action buttons remain available. General provides a link to Comment Lines and Hidden Settings. Disabled child controls keep their saved values. An obsolete remembered category opens General.
+
+Earlier screenshots in this manual show the former tabs. Use the category names above for the current Settings window.
+
+
+This is a useful time to consider a few other Preference items which affect the source window. These items occur under the General, Documents and Saving, and Spelling categories. But several items in this tab are better explained later and will be skipped.
 
 {\bf Document Font} This was just explained.
 
@@ -684,7 +689,7 @@ This can also be alarming, so use this feature only if you know what you are doi
 
 \section{About Encodings}
 
-In TeXShop Preferences under the {\em Source} category, the top item in the second column is labeled {\bf Encoding}.
+In TeXShop Preferences under the {\em Documents and Saving} category, the top item in the second column is labeled {\bf Encoding}.
 This item is a drop-down menu listing 31 choices. The default choice is {\bf Unicode (UTF-8)} and that choice will work fine for most users. If you are just starting to work with \TeX, by all means select UTF-8. 
 
 
@@ -766,7 +771,7 @@ The line overrides all other methods used to determine the encoding. If you have
 Select it and a list of known encodings will appear. Select the one you want, and the magic line will be added to the top of the source file. If the magic line names an encoding that TeXShop does not know, TeXShop reads the file as UTF-8 and says so.
 
 {\bf Save Dialog} Versions of TeXShop before 5.04 had an encoding menu in the Save Dialog, allowing users to select the encoding used to write the file. By default, this was the encoding used when the file was opened, so the menu was not needed in most cases. To avoid misuse, the menu was removed in TeXShop 5.04.
-If you updated from an earlier version of TeXShop and routinely used the menu, you can restore it. Starting with TeXShop 5.60, this is done with the item {\bf Show Encoding in Save Dialog} under the Misc1 category of TeXShop Settings; earlier versions used the hidden preference EncodingMenuInSaveDialog. The encoding selected in the menu is used to save the file. If the source contains an encoding magic comment line naming an encoding TeXShop knows, the menu shows that encoding and cannot be changed; edit the magic comment line instead. The menu can still be changed when the magic comment line names an unknown encoding, or when the file could not be read in the encoding it names and was opened in IsoLatin9.
+If you updated from an earlier version of TeXShop and routinely used the menu, you can restore it. Starting with TeXShop 5.60, this is done with the item {\bf Show Encoding in Save Dialog} under the Documents and Saving category of TeXShop Settings; earlier versions used the hidden preference EncodingMenuInSaveDialog. The encoding selected in the menu is used to save the file. If the source contains an encoding magic comment line naming an encoding TeXShop knows, the menu shows that encoding and cannot be changed; edit the magic comment line instead. The menu can still be changed when the magic comment line names an unknown encoding, or when the file could not be read in the encoding it names and was opened in IsoLatin9.
 
 I do not recommend using the menu to change encodings. See the following sections for details.
 
@@ -946,7 +951,7 @@ Notice that the BibTeX menu command has a keyboard equivalent.
 
 The file ``mybibliography.bib'' can be opened and edited by TeXShop. If you use TeXShop to create the file ``mybibliography.bib'' in the first place, use the pulldown tag labeled ``file format'' to save the file as a bib file rather than as a tex file.
 
-In recent years, additional programs like biber have been written to handle bibliographies. Japanese typesetting is done using a modified TeX and still other programs like pbibtex and ubibtex are available there for bibliographies. So TeXShop has a preference setting to set the program called when the BibTeX menu item is chosen. It is at the bottom of the Engine category. Fill in with the appropriate name, and any flags that should be used when calling this command line program.
+In recent years, additional programs like biber have been written to handle bibliographies. Japanese typesetting is done using a modified TeX and still other programs like pbibtex and ubibtex are available there for bibliographies. So TeXShop has a preference setting to set the program called when the BibTeX menu item is chosen. It is at the bottom of the Typesetting category. Fill in with the appropriate name, and any flags that should be used when calling this command line program.
 
 Often users use different bibliography programs for different projects, or when working with different coauthors. TeXShop allows the bibliography program to be set on a file-by-file basis. To set it for a given source file, include the following line within the first twenty lines of the source, replacing ``biber'' with the desired program names and any desired flags.
 
@@ -988,14 +993,14 @@ Many additional details can be found in The LaTeX Companion by Goossens, Mittelb
 
 If you installed using MacTeX or BasicTeX, you can  ignore this section because TeXShop is preconfigured for those distributions.
  
-Otherwise open Preferences and select  the {\bf Engines} category. The first item in this dialog is a  full path to the \TeX\ Distribution command line programs. When TeX Live is installed, it creates a symbolic link to these binaries with path /Library/TeX/texbin. That is the default value for the preference. An advantage is that when TeX Live is updated for a new year, the link is also updated and thus the preference setting does not change.
+Otherwise open Preferences and select  the {\bf Typesetting} category. The first item in this dialog is a  full path to the \TeX\ Distribution command line programs. When TeX Live is installed, it creates a symbolic link to these binaries with path /Library/TeX/texbin. That is the default value for the preference. An advantage is that when TeX Live is updated for a new year, the link is also updated and thus the preference setting does not change.
  
 If you installed \TeX\ using MacPorts, 
 Homebrew, or MikTeX, the location of the binaries will be different. Consult the documentation for these distributions to discover the required value.
 
 The second item in the tab is a full path to the Ghostscript binary. This is /usr/local/bin for the copy of Ghostscript installed by MacTeX. The standard build sequence for Ghostscript will also install it at this location. If you use the Ghostscript in MacPorts or Homebrew, consult their documentation for the proper location. Many typesetting engines do not use Ghostscript, so this is not a crucial preference item.
 
-Starting with TeXShop 5.60, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Auto Setup...} in the Path settings box of the Engine category is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Nothing changes until {\bf Use These Paths} is pressed, after which the selected paths are saved immediately. Cancel in the path-selection dialog leaves the settings unchanged. If nothing is found, the current settings are kept. Custom engines and the Alternate Path are never changed. Installations in other places can still be entered by hand.
+Starting with TeXShop 5.60, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Auto Setup...} in the Path settings box of the Typesetting category is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Nothing changes until {\bf Use These Paths} is pressed, after which the selected paths are saved immediately. Cancel in the path-selection dialog leaves the settings unchanged. If nothing is found, the current settings are kept. Custom engines and the Alternate Path are never changed. Installations in other places can still be entered by hand.
 
 The Alternate Path preference will be explained later and is not used by the toolchains discussed in this chapter.
 
@@ -1107,7 +1112,7 @@ Engines/Inactive/latexmk contains several documents by Herbert Schulz with  more
 If typesetting speed is an issue, TeXShop has an obscure trick to help. While a document is being written, use pdflatex, which only typesets once. But every so often, switch to pdflatexmk so all features are correct. To make this easier, there is a special typesetting shortcut,
 control-option-command-T, which typesets with pdflatexmk. Therefore you can set the typesetting engine to pdflatex, typeset with command-T as a rule, but typeset with control-option-command-T occasionally.
 
-This trick fails if you typeset with unusual engines. For example, suppose you typeset with XeLaTeX rather than pdflatex. Then there is a special engine in Engines/Inactive/latexmk which calls XeLaTeX rather than pdflatex. So the special command for control-option-command-T should call that XeLaTeX form of pdflatexmk rather than ordinary pdflatexmk. In TeXShop Preferences under the Misc2 category there is a setting named ``Alternate Engine'' allowing pdflatexmk to be changed to any other desired engine, including the special XeLaTeX version of pdflatexmk.
+This trick fails if you typeset with unusual engines. For example, suppose you typeset with XeLaTeX rather than pdflatex. Then there is a special engine in Engines/Inactive/latexmk which calls XeLaTeX rather than pdflatex. So the special command for control-option-command-T should call that XeLaTeX form of pdflatexmk rather than ordinary pdflatexmk. In TeXShop Preferences under the Typesetting category there is a setting named ``Alternate Engine'' allowing pdflatexmk to be changed to any other desired engine, including the special XeLaTeX version of pdflatexmk.
 
 \section[latexmk History]{latexmk History by Herbert Schulz}
 
@@ -1169,10 +1174,10 @@ If a project has a root file and several include files, the magic comment must b
 The magic line might be used to pass one or more flags to engines.
 For instance, Herbert Schulz used this line to add a --shell-escape flag when pdflatex needs to call an external program during typesetting. 
 
-Finally, \verb|"|\$3\verb|"| contains a path to the \TeX\  binaries. Therefore \verb|"|\$3\verb|"| will usually contain \verb|"|$\sim$/Library/TeX/texbin\verb|"|. However users who install TeX using MacPorts or MikTeX or something else will have set a different location for binaries at the top of the Engine category in TeXShop Preferences, and then \verb|"|\$3\verb|"| will contain that location. For the cases of TeX Live, MacPorts, and MikTeX, this parameter is not needed because the Cocoa call to a binary contains its location. So  \verb|"|\$3\verb|"|  is usually not mentioned in an engine.
+Finally, \verb|"|\$3\verb|"| contains a path to the \TeX\  binaries. Therefore \verb|"|\$3\verb|"| will usually contain \verb|"|$\sim$/Library/TeX/texbin\verb|"|. However users who install TeX using MacPorts or MikTeX or something else will have set a different location for binaries at the top of the Typesetting category in TeXShop Preferences, and then \verb|"|\$3\verb|"| will contain that location. For the cases of TeX Live, MacPorts, and MikTeX, this parameter is not needed because the Cocoa call to a binary contains its location. So  \verb|"|\$3\verb|"|  is usually not mentioned in an engine.
 
 But there is one special situation when it is needed. ConTeXt is a set of macros by Hans Hagen providing a different approach to typesetting. It is usually used with LuaTeX, another version of \TeX. The ConTeXt community has its own distribution of both ConTeXt and LuaTeX, which is small and updated often. So TeXShop has 
-a preference item under the Engine category named {\bf Alternate Path} listing the location of this distribution. The ConTeXt users then add a magic comment to the top of their source code
+a preference item under the Typesetting category named {\bf Alternate Path} listing the location of this distribution. The ConTeXt users then add a magic comment to the top of their source code
 \begin{verbatim}
      % !TEX useAlternatePath
 \end{verbatim}
@@ -1282,7 +1287,7 @@ Use the first form if the root file is in the same folder as the chapter file. U
 
 The Macros menu has an item labeled ``Root''. To add the magic line to a chapter source file, activate that source file and then select the macro. A Finder window will appear which you can use to navigate to the root file. The macro will then offer to create either a relative or an absolute magic line, replacing any earlier root magic line.
 
-If a chapter file with a root magic line is opened in TeXShop, TeXShop will also open the root file, and thus also the associated Preview Window for the entire book. It will not open remaining chapter files. Thus an author can revise the chapter text and typeset as usual;  the Preview Window will show changes. During this operation, it is usually not necessary to edit the root file, so some authors prefer to immediately minimize the root source. In TeXShop Preferences under the Misc2 category there is an item to immediately minimize the root source after opening a chapter file and its root. This action is a little surprising, so I recommend not selecting it at first. Later on, you can decide if you want to activate it. If multiple files  open in the same window using tabs (as explained in a later chapter), then minimizing the root is completely unnecessary.
+If a chapter file with a root magic line is opened in TeXShop, TeXShop will also open the root file, and thus also the associated Preview Window for the entire book. It will not open remaining chapter files. Thus an author can revise the chapter text and typeset as usual;  the Preview Window will show changes. During this operation, it is usually not necessary to edit the root file, so some authors prefer to immediately minimize the root source. In TeXShop Preferences under the General category there is an item to immediately minimize the root source after opening a chapter file and its root. This action is a little surprising, so I recommend not selecting it at first. Later on, you can decide if you want to activate it. If multiple files  open in the same window using tabs (as explained in a later chapter), then minimizing the root is completely unnecessary.
 
 The root magic line is also important for the ``Goto Error'', ``Kill Aux Files'', and ``SyncTeX'' features to be discussed next. 
 
@@ -2157,11 +2162,11 @@ For example, a quotation on a typewriter would be written
 But when typeset by LaTeX, this input would become ``that is not the point'' rather than the desired ``that is not the point''.
 Key Bindings can reprogram the \verb|"| character to input the correct symbols to start a LaTeX quote and the correct symbols to end that quote with the cursor positioned in the middle. If text is selected in the editor and then \verb|"|  is typed, Key Bindings can insert LaTeX quote symbols before the selection and after it.
 
-There is an item in TeXShop Preferences under the Editor category to turn Key Bindings on or off when documents are first opened. To be frank, I leave it off because I find it confusing to type a key that is supposed to produce one symbol and have it produce something else. But if you can get around that hangup, turn it on.
+There is an item in TeXShop Preferences under the Keyboard category to turn Key Bindings on or off when documents are first opened. To be frank, I leave it off because I find it confusing to type a key that is supposed to produce one symbol and have it produce something else. But if you can get around that hangup, turn it on.
 
 There is also an item in the TeXShop ``Source'' menu to toggle Key Bindings on or off. So if you use Key Bindings but suddenly need an unusual character that has been remapped, turn Key Bindings off, type the character, and turn it back on. If this situation occurs often for you, there is an optional tool for the Source Window toolbar which toggles Key Bindings on and off.
 
-Finally there is another item in the TeXShop ``Source'' menu called ``Edit Key Bindings File ...'' This brings up an editor listing  keys in a column on the left and the corresponding output in a similar column on the right.
+Open Settings, select Keyboard, and press ``Edit Key Bindings...''. This opens an editor listing keys in a column on the left and the corresponding output on the right.
 Extra items can be added, and existing items can be edited or removed.  
 
 Note the special symbols \#SEL\# and \#INS\#. If there is selected text when a remapped key is pressed, \#SEL\# will be that selection in the resulting output. The insertion cursor will be placed at the spot \#INS\#
@@ -2344,7 +2349,7 @@ Similarly, writing \verb|tt| and Escape will give \verb|\texttt{|\selmark\verb|}
 \subsection{Editing the Command Completion File}
 
 The location $\sim$/Library/TeXShop/CommandCompletion  contains a file named CommandCompletion.txt. This is the actual list of command completion elements defining the system. TeXShop has a built-in Command Completion editor, so consulting the file CommandCompletion.txt is never necessary. 
-To use the built-in editor, select the menu item Source/CommandCompletion/Edit Command Completion File.
+To use the built-in editor, open Settings, select Keyboard, and press ``Edit Command Completion...''.
 
 This is not the place to explain how to add items in detail; consult the larger Schulz document for that. Studying and copying  items in the existing file will be enough to get started. But some questions will arise immediately because the file contains a large number of • symbols. 
 
@@ -2405,7 +2410,7 @@ What happens if you decide to experiment, get confused, end up with a source doc
 When I give talks about TeXShop at TeX User Group Conferences, users of Linux and Windows like to make fun of features of the Macintosh. So when I talked about Automatic Saving, I was sure the Linux users would warn about the danger of losing data. To my surprise, their actual comment was ``we've had that for years!''
 A user has never complained to me about losing data due to automatic saving and  I cannot imagine living without it.
 
-Just in case, TeXShop has a way to turn AutoSave off. Starting with TeXShop 5.60, this is the item {\bf Enable Autosave and Versions} under the Misc1 category of TeXShop Settings; it takes effect after TeXShop restarts. In earlier versions it was the hidden preference AutoSaveEnabled.
+Just in case, TeXShop has a way to turn AutoSave off. Starting with TeXShop 5.60, this is the item {\bf Enable Autosave and Versions} under the Documents and Saving category of TeXShop Settings; it takes effect after TeXShop restarts. In earlier versions it was the hidden preference AutoSaveEnabled.
 Turning AutoSave off is strongly discouraged. I never test TeXShop with AutoSave disabled.
 
 When AutoSave is off, the item {\bf Keep the previous file as ``name\textasciitilde'' when saving}, just below it, makes TeXShop keep the previous version of a file as a backup each time the file is saved. The backup has the name of the file followed by a tilde. This item replaces the hidden preference KeepBackup.
@@ -2556,7 +2561,7 @@ The ``select pdf'' tool offers more options than first imagined. Select any port
 
 Drag and drop also works with graphic selections. For instance, click and hold down the mouse inside the selection and then drag everything into Apple's Keynote to copy the information to a slide. Dragging the selection to the desktop creates a file containing the pdf information, with a default name. Rather than dragging and dropping the selection, select the item ``Save Selection to File..'' in the Preview menu to name the corresponding file and the location on disk where it is saved.
 
-An item in the Misc1 category of TeXShop Preferences determines the type of graphic data created for selections. By default, pdf data is created, but various types of tiff, jpeg, and png data are also possible. This choice can also made in the Preview menu for an individual selection using the ``Copy Format'' menu.
+An item in the Preview category of TeXShop Preferences determines the type of graphic data created for selections. By default, pdf data is created, but various types of tiff, jpeg, and png data are also possible. This choice can also made in the Preview menu for an individual selection using the ``Copy Format'' menu.
 
 \section{Back, Forward, Rotation}
 
@@ -2890,7 +2895,7 @@ In LaTeX mode, the Tags menu lists all
 \begin{verbatim}
      <chapter>, <section>, <subsection>
 \end{verbatim}
-locations, with associated text. Indeed, the command recognizes eleven distinct tags. Since this is a large number, it can cause very long scrollable Tags menus. So under the Misc2 category in TeXShop Preferences, an item lists all eleven possibilities and allows the user to select the items that create entries in the menu.
+locations, with associated text. Indeed, the command recognizes eleven distinct tags. Since this is a large number, it can cause very long scrollable Tags menus. So under the Editor category in TeXShop Preferences, an item lists all eleven possibilities and allows the user to select the items that create entries in the menu.
 It is possible to mark your own important spots in the source using the command
 \begin{verbatim}
      <!--!mytext-->
@@ -2931,7 +2936,7 @@ For example, consider the text below, where <hello> has no associated closing ta
 
 \subsection{Command Completion}
 
-A new completion dictionary is provided for html, xml, and ptx files, listing phrases likely to occur in a PreTeXt document. When an xml file is opened, TeXShop will automatically switch to this dictionary, and the menu command “Edit Command Completion File” will open this dictionary.
+A new completion dictionary is provided for html, xml, and ptx files, listing phrases likely to occur in a PreTeXt document. When an xml file is opened, TeXShop will automatically switch to this dictionary, and the Edit Command Completion button in Settings, Keyboard will open this dictionary.
 
 Consult the document {\bf PreTeX with TeXShop} in the directory \path{~/Library/TeXShop/Engines/Inactive/PreTeXt} for details about using and creating entries in this xml version of the command completion dictionary. 
 
@@ -3101,7 +3106,7 @@ To update if a new version of the distribution is made available, just repeat th
 \section{Typesetting ConTeXt from ConTeXt Garden}
 
 Drag the engine {\bf ConTeXt-CG.engine} from the Inactive folder of engines in TeXShop to the active engine section
-\path{~/Library/TeXShop/Engines}. Use this engine to typeset. Before doing this for the first time, modify an item in TeXShop Preferences. Open Preferences, go to the Engine Tab, and change the ``Alternate Path'' item to read
+\path{~/Library/TeXShop/Engines}. Use this engine to typeset. Before doing this for the first time, modify an item in TeXShop Preferences. Open Preferences, go to the Typesetting category, and change the ``Alternate Path'' item to read
 \begin{verbatim}
 	~/context/context-osx-arm64/tex/texmf-osx-arm64/bin
 \end{verbatim}
@@ -3602,7 +3607,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  
  Finally the XML Syntax colors are colors used when TeXShop syntax colors html, xml, and ptr files, as described in the chapter on Html, TeX4ht, and PreTeXt.
  
- To be completely honest, one color is not set in the Themes panel. It is the color of the optional block cursor, set in the Misc1 category of Preferences. This will be discussed in a later chapter of this Manual.
+ To be completely honest, one color is not set in the Themes panel. It is the color of the optional block cursor, set in the Editor category of Preferences. This will be discussed in a later chapter of this Manual.
  
  In September, 2025, a user requested that marker symbols be colored in a more precise manner.
  Before then, round parentheses were not colored, and the pairs \{ \}, [ ], and symbols \& and \$  were all given the same coloring. Starting in September, 2025, only \& and \$ are given the standard ``marker''
@@ -4397,13 +4402,13 @@ Some authors like to issue a line feed after each source line, while other autho
 
 For  further emphasis of the insertion cursor itself, a second item named {\em Use Block Cursor} is available. This item is really a second mode for ``Highlight Current Line'', changing its default behavior. The two features cannot  both be active at the same time.
 
-To turn the block cursor on for all new documents, select it under the Misc1 category in TeXShop Preferences. This will override the item ``Highlight Current Line'' in the Editor category, which can be either on or off. To modify the block cursor using a menu item for the active document, toggle {\em Use Block Insertion Cursor} on or off in the Source Menu. Turning this item on will also turn on ``Highlight Current Line''. Thus if you later toggle the block cursor off, the current line will be highlighted instead.
+To turn the block cursor on for all new documents, select it under the Editor category in TeXShop Preferences. This will override the item ``Highlight Current Line'' in the Editor category, which can be either on or off. To modify the block cursor using a menu item for the active document, toggle {\em Use Block Insertion Cursor} on or off in the Source Menu. Turning this item on will also turn on ``Highlight Current Line''. Thus if you later toggle the block cursor off, the current line will be highlighted instead.
 
-The block cursor works by syntax coloring the backgrounds of the adjacent characters just before and just after the insertion line, while leaving the original insertion line to blink as before. It provides a  color for this background which can be adjusted by a preference item in the Misc1 category.
+The block cursor works by syntax coloring the backgrounds of the adjacent characters just before and just after the insertion line, while leaving the original insertion line to blink as before. It provides a  color for this background which can be adjusted by a preference item in the Editor category.
 
 The block cursor cannot color the background of a character that does not exist. So if there is no character before the insertion character, only one character's background is colored, and if there is no character after the insertion character, only one character's background is colored. In particular, when starting a brand new line, nothing is colored and only the original insertion character shows. When editing existing text, both sides show and the insertion character is highly visible.
 
-The features of this block cursor can be modified in TeXShop Preferences under the Misc1 category. The defaults described above seem best to me. I recommend that users try this cursor and decide for themselves if it is useful or  distracting.
+The features of this block cursor can be modified in TeXShop Preferences under the Editor category. The defaults described above seem best to me. I recommend that users try this cursor and decide for themselves if it is useful or  distracting.
 
 \chapter{Spell Checking}
 \section{Introduction}
@@ -4424,9 +4429,9 @@ The final way to spell check is to use the menu item {\em Check Spelling While T
 
 \section{LaTeX-aware Spell Checking}
 
-TeXShop 5.60 adds TeX-aware spell checking, based on an implementation proposed by Ralph Martin. It is on by default, and can be turned off with the item {\bf LaTeX-aware spell checking} under the Source category of TeXShop Settings. The item does not turn on {\em Check Spelling While Typing}.
+TeXShop 5.60 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spelling, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Use legacy spell checking}. The new method has an indented Edit Rules button; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
 
-TeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
+LaTeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
 
 Choose {\em Show Spelling and Grammar} in the Edit menu to open the panel. It goes to the first misspelled word after the cursor. Press {\em Find Next} in the panel, or choose {\em Check Document Now} (\cmdkey-;), to move to the next one. The word is selected and the window scrolls so that its line is in the middle. Hold down the Option key when choosing these items or pressing {\em Find Next} to use the system's own search, which does not skip any markup.
 
@@ -4447,7 +4452,7 @@ Open it with {\em Edit Spelling Exclusions...} in the Spelling and Grammar subme
 \end{verbatim}
 If the file is deleted, TeXShop creates a fresh copy of the default file the next time it starts.
 
-The following sections describe the methods used before TeXShop 5.60. They still apply when TeX-aware spell checking is turned off, and to files that are not TeX source files.
+The following sections describe the methods used before TeXShop 5.60. They still apply when LaTeX-aware spell checking is turned off, and to files that are not TeX source files.
 
 \section{Dictionaries}
 
@@ -4484,7 +4489,7 @@ What is the mechanism Sims uses to turn off spell checking? I wish I had thought
 
 %Note that cocoAspell uses more sophisticated methods and operates at the optimal moment when the system is actually checking spelling, rather than at an earlier syntax coloring moment. So if you use cocoAspell, you will want to turn all the "Spell Checking" preferences off.
 
-In TeXShop Preferences under the Source category, there is a box of selections labeled {\em Spell Checking}. These items are off by default. Leave them off if you use cocoAspell or any spell checking method except ``Check Spelling While Typing.'' Starting with TeXShop 5.60, these items are used only when TeX-aware spell checking is turned off.
+In TeXShop Preferences under the Source category, there is a box of selections labeled {\em Spell Checking}. These items are off by default. Leave them off if you use cocoAspell or any spell checking method except ``Check Spelling While Typing.'' Starting with TeXShop 5.60, these items are used only when LaTeX-aware spell checking is turned off.
 
 The first spell checking item turns off spell checking for all TeX command words like: 
 \begin{verbatim}
@@ -4519,7 +4524,7 @@ Unfortunately, the new attribute is totally ignored by the ``Check Spelling'' se
 
 
 %Remarks on cocoAspell: Coco-Aspell is an alternate spell checker by Anton Leuski. Leuski's project allows users to replace Apple's own dictionaries with new dictionaries that can be made "LaTeX aware", while still using all the Apple spelling facilities. Leuski made the project open source recently; see https://github.com/leuski/cocoAspell,
-%I think of the project as the "gold standard" for TeX-aware spell checking. It has some minor problems. It can be difficult to install, and the latest commit to the open source project was August 5, 2017. Moreover, users must then use the dictionaries supplied with cocoAspell, rather than dictionaries by Apple or others. But it is my recommended approach
+%I think of the project as the "gold standard" for LaTeX-aware spell checking. It has some minor problems. It can be difficult to install, and the latest commit to the open source project was August 5, 2017. Moreover, users must then use the dictionaries supplied with cocoAspell, rather than dictionaries by Apple or others. But it is my recommended approach
 %
 %
 %
@@ -4537,7 +4542,7 @@ Unfortunately, the new attribute is totally ignored by the ``Check Spelling'' se
 
 
 cocoAspell is an alternate spell checker by Anton Leuski. Leuski's project allows users to replace Apple's own dictionaries with new dictionaries that can be made ``LaTeX aware'', while still using all the Apple spelling facilities. Leuski made the project open source recently; see \url{https://github.com/leuski/cocoAspell}.
-I think of the project as the ``gold standard'' for TeX-aware spell checking, and if you use it, then the {\em Spell Checking} preference items discussed in the previous section should be turned off.
+I think of the project as the ``gold standard'' for LaTeX-aware spell checking, and if you use it, then the {\em Spell Checking} preference items discussed in the previous section should be turned off.
 
 cocoAspell can be difficult to install, and the latest commit to the open source project was August 5, 2017.
 Leuski understandably stopped working on the project and nobody has stepped up to take it over. Users must then use the dictionaries supplied with cocoAspell, rather than dictionaries by Apple or others.  Below are two documents from 2019, a short description by Koch, and a longer description on installing the code by Schulz.
@@ -5981,7 +5986,7 @@ Eventually I learned the story, which is amusing. When Apple originally sold Mac
 Then later, Apple grew more conscientious about unicode, and now their keyboards really output a Unicode Yen.
 Luckily, Donald Knuth had not hardwired the backslash character into TeX, but had made that character configurable. Since the Japanese were used to using the yen symbol, they just recompiled TeX so commands started with yen. However, this required that all of the style and package files be slightly edited to also use a yen.
 
-Because of the strong input from Japan, TeXShop has a few Preference items which only affect users in Japan. I do not understand these items. For instance, the list of invisible characters which can be shown contains a ``Japanese space''. The Misc2 category has an item about pTeX (for Japan), and an item labeled ``Automatic UTF-8-Mac to UTF-8 Conversion''. The TeX Live Ghostscript installer also installs a few special files for CJK users.
+Because of the strong input from Japan, TeXShop has a few Preference items which only affect users in Japan. I do not understand these items. For instance, the list of invisible characters which can be shown contains a ``Japanese space''. The Typesetting category has an item about pTeX (for Japan), and an item labeled ``Automatic UTF-8-Mac to UTF-8 Conversion''. The TeX Live Ghostscript installer also installs a few special files for CJK users.
 Other users can ignore these items.
 
 Starting with TeXShop 5.60, when a file is saved in a Japanese encoding, the backslash and the tilde are always written as the bytes 0x5C and 0x7E which \TeX\ expects. Before, a backslash or tilde typed in a file using the MacJapanese or Shift JIS X0213 encoding could be saved as a full-width character or as the byte 0x80, and a yen sign typed as a backslash in a file using Windows Shift JIS, EUC-JP, or ISO-2022-JP could be saved as a question mark.
@@ -6166,7 +6171,7 @@ A special preference titled ``Ghostscript Options'' under the Typesetting catego
 
 The flag only affects the two TeXShop operations described in the initial paragraph of this section. It has no effect if the user has selected the Apple distiller rather than Ghostscript for conversion operations. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
 
-The DVI typesetting chain is controlled by the Preference items ``TeX + dvips + distiller'' under the Engine category.
+The DVI typesetting chain is controlled by the Preference items ``TeX + dvips + distiller'' under the Typesetting category.
 These items call a script named {\em simpdftex} in TeXLive to control the typesetting process. This script recognizes many optional flags. A few are set by default. One of the optional flags not set by default is named
 {\em --distilleropts}; it allows a user to send  flags directly to the distiller (i.e., Ghostscript) portion of the chain. 
 If TeXShop discovers that this flag has been set by the user in TeXShop Preferences, then it does not add the
@@ -6302,7 +6307,7 @@ Here is a complete list.
 \begin{verbatim}
      Tells the typesetting engine to find the binary program in
      the location "Alternate Path" set in TeXShop Preferences
-     under the Engine category. This is mainly used by ConTeXT,
+     under the Typesetting category. This is mainly used by ConTeXT,
      which provides an alternate distribution containing only
      files required by ConTeXt.
 \end{verbatim}
@@ -6486,9 +6491,9 @@ When the Preview window first appears, its drawer is hidden. A hidden preference
 \end{verbatim}
 
 \subsubsection{<Preferences for Automatic Saving>}
-By default, automatic saving is on. I strongly recommend leaving it on, but it can be turned off. Starting with TeXShop 5.60, use the item {\bf Enable Autosave and Versions} under the Misc1 category of TeXShop Settings instead of the former hidden preference AutoSaveEnabled.
+By default, automatic saving is on. I strongly recommend leaving it on, but it can be turned off. Starting with TeXShop 5.60, use the item {\bf Enable Autosave and Versions} under the Documents and Saving category of TeXShop Settings instead of the former hidden preference AutoSaveEnabled.
 
-Before the days of Automatic Saving, TeXShop could be configured to save a backup file whenever it saves or typesets a source file. Starting with TeXShop 5.60, this is the item {\bf Keep the previous file as ``name\textasciitilde'' when saving} under the Misc1 category, which replaces the former hidden preference KeepBackup.
+Before the days of Automatic Saving, TeXShop could be configured to save a backup file whenever it saves or typesets a source file. Starting with TeXShop 5.60, this is the item {\bf Keep the previous file as ``name\textasciitilde'' when saving} under the Documents and Saving category, which replaces the former hidden preference KeepBackup.
 
 
 \subsubsection{<Preferences for the Matrix Panel>}
@@ -6575,7 +6580,7 @@ Latex3 programmers use '\_', ':' and '@' in their commands. The item {\bf Color 
 
 \subsubsection{<Preferences to Control Spell Checking>}
 
-TeXShop Preferences under the Source category at bottom left has an item for Spell Checking. This item is explained in the main part of this Manual. There are some hidden preferences to fine tune this behavior. Starting with TeXShop 5.60, they are used only when TeX-aware spell checking is turned off; TeX-aware spell checking is configured with the file SpellingExclusions.txt instead.
+TeXShop Preferences under the Spelling category has an item for Spell Checking. This item is explained in the main part of this Manual. There are some hidden preferences to fine tune this behavior. Starting with TeXShop 5.60, they are used only when LaTeX-aware spell checking is turned off; LaTeX-aware spell checking is configured with the file SpellingExclusions.txt instead.
 
 The list of specialized TeX commands can be extended.. The first command below adds one more element to the existing array of user supplied exceptions. The second command erases the array so the user can start over. Note that neither command affects TeXShop's default list of special commands.
 \begin{verbatim}
@@ -6629,7 +6634,7 @@ TeXShop has two magic comment lines for tabs, ``useTabs'' and ``useTabsWithFiles
 
 \subsubsection{<Preferences for Save Dialog>}
 
-The optional menu to select the encoding was removed from the Save Dialog. Starting with TeXShop 5.60, it can be brought back with the item {\bf Show Encoding in Save Dialog} under the Misc1 category of TeXShop Settings, which replaces the former hidden preference EncodingMenuInSaveDialog.
+The optional menu to select the encoding was removed from the Save Dialog. Starting with TeXShop 5.60, it can be brought back with the item {\bf Show Encoding in Save Dialog} under the Documents and Saving category of TeXShop Settings, which replaces the former hidden preference EncodingMenuInSaveDialog.
 
 
 \subsubsection{<Preferences for the Preview Window>}
@@ -6972,7 +6977,7 @@ Localization must be done by native speakers. Nine languages including English a
 
 The TeXShop program icon is by Thiemo Gamma. Designing icons is the most difficult task a programmer can face; I've never been able to come close. Thiemo's icon showed up in my mailbox one day and I immediately switched to it.  I know that Apple's current style is square with rounded corners, but Thiemo's icon will remain.
 
-Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the Misc2 category of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
+Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the Appearance category of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
 
 
 \end{document}

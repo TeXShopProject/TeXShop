@@ -509,25 +509,12 @@
                             <menuItem isSeparatorItem="YES" id="543">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Auto Completion" id="936">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Auto Completion" id="937">
-                                    <items>
-                                        <menuItem title="Toggle On/Off" id="938" identifier="TSShortcut.changeAutoComplete:.0">
+                            <menuItem title="Auto Completion" id="938" identifier="TSShortcut.changeAutoComplete:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="changeAutoComplete:" target="-1" id="940"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Edit Auto Completion File..." id="939" identifier="TSShortcut.openAutoCompletionListEditor:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openAutoCompletionListEditor:" target="934" id="941"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
                             <menuItem title="Completare" id="539">
                                 <menu key="submenu" title="Completare" id="540">
                                     <items>
@@ -578,11 +565,7 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Deschide Fișierul de Completare..." id="542" identifier="TSShortcut.openCommandCompletionList:.0">
-                                            <connections>
-                                                <action selector="openCommandCompletionList:" target="-1" id="546"/>
-                                            </connections>
-                                        </menuItem>
+
                                     </items>
                                 </menu>
                             </menuItem>
@@ -1657,6 +1640,5 @@ Gw
                 </subviews>
             </view>
         </window>
-        <customObject id="934" customClass="TSAutoCompletionListEditor"/>
     </objects>
 </document>

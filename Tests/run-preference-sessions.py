@@ -73,7 +73,7 @@ static NSUInteger begins;
 @interface TSDockIconController:NSObject @end
 @implementation TSDockIconController
 + (id)sharedController {static id x;if(!x)x=[self new];return x;}
-- (void)installInPreferencesPane:(id)pane {if(![pane isEqual:@"misc-2"]) abort();}
+- (void)installInPreferencesPane:(id)pane {if(![pane isEqual:@"appearance"]) abort();}
 - (void)restoreSavedIcon {}
 @end
 static NSUInteger resourceLookups, confirmations;
@@ -147,7 +147,7 @@ int main(int argc,char **argv){@autoreleasepool{
  p.settingsController=[Shell new];p.endingPreferences=YES;p.inputErrorPresented=YES;[p showPreferences:nil];
  check(!p.endingPreferences && !p.inputErrorPresented && p->_prefsWindow.fronts==1,"reopen resets ending state before editing");
  p->_prefsWindow.miniaturized=YES;p.endingPreferences=YES;[p showPreferences:nil];check(p.endingPreferences && p->_prefsWindow.fronts==2,"minimized settings brought forward without restarting session");p->_prefsWindow.miniaturized=NO;p.endingPreferences=NO;
- check(begins==1 && [requestedPane isEqual:@"misc-2"],"opening starts category session and routes Dock to misc2");
+ check(begins==1 && [requestedPane isEqual:@"appearance"],"opening starts category session and routes Dock to misc2");
  NSMenuItem *invalid=[[NSMenuItem alloc]initWithTitle:@"invalid" action:NULL keyEquivalent:@""];invalid.tag=0;
  NSUInteger count=p.finishCalls;[p setDefaults:invalid];
  check(p.finishCalls==count+1,"profile entry first commits pending field before resolving profile");

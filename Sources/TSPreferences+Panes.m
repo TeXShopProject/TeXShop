@@ -12,6 +12,8 @@
 #import "TSPrefFooterController.h"
 #import "TSPrefThemeNameController.h"
 #import "TSSettingsCategory.h"
+#import "TSPrefPaneLayout.h"
+#include "TSSettingsPaneClassification.inc"
 @implementation TSPreferences (Panes)
 - (NSArray<TSPrefPaneController *> *)makeSettingsPanes
 {
@@ -232,5 +234,9 @@
     stylePanel = themeName.stylePanel;
     styleTitle = themeName.styleTitle;
     return @[source, editor, preview, console, typesetting, engines, miscOne, miscTwo, themes, footer, themeName];
+}
+- (NSDictionary<TSSettingsCategoryID, NSViewController *> *)classifySettingsPanes:(NSArray<TSPrefPaneController *> *)panes
+{
+    return [TSSettingsPaneComposer compose:panes preferences:self];
 }
 @end

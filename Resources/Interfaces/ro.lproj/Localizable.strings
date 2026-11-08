@@ -149,7 +149,6 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "Este selectată cea mai nouă instalare detectată. Puteți alege alta din lista de mai jos. Comenzile motoarelor personalizate și calea alternativă rămân neschimbate.";
 "Not found (current setting will be kept)" = "Nu a fost găsit (se păstrează configurarea actuală)";
 "Version unavailable" = "Necunoscută";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instalați o distribuție TeX, apoi porniți configurarea automată din Configurări > Motor.";
 "Use These Paths" = "Folosește aceste căi";
 
 /* Menu keyboard shortcut customization */
@@ -220,3 +219,28 @@
 "The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
 
 "Replace" = "Replace";
+
+"General" = "General";
+"Documents and Saving" = "Documente și salvare";
+"Editor" = "Editor";
+"Spell Checking" = "Ortografie";
+"Appearance" = "Aspect";
+"Typesetting" = "Compunere";
+"Console" = "Consolă";
+"Updates" = "Actualizări";
+"Defaults for New Documents" = "Valori pentru documente noi";
+"Matching Brackets" = "Potrivirea parantezelor";
+"Spelling While Typing" = "Verificare în timpul tastării";
+"Use LaTeX-aware spell checking (recommended)" = "Folosește verificarea adaptată la LaTeX (recomandat)";
+"Use legacy spell checking" = "Folosește verificarea tradițională";
+"LaTeX Spell Checking" = "Ortografie LaTeX";
+"Edit Key Bindings…" = "Editează asocierile de taste…";
+"Key Bindings" = "Asocieri de taste";
+"Edit Command Completion…" = "Editează completarea comenzilor…";
+"Command Completion" = "Completarea comenzilor";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Când Tab activează completarea comenzilor, tasta este rezervată acesteia și nu poate fi atribuită unei scurtături de meniu.";
+"Source and Preview Windows" = "Ferestrele sursei și previzualizării";
+"Comment Lines and Hidden Settings" = "Linii de comentarii și configurări ascunse";
+"Advanced" = "Avansat";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instalați o distribuție TeX, apoi rulați configurarea automată în Configurări > Tehnoredactare.";

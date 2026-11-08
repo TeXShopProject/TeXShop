@@ -3,6 +3,7 @@
 from pathlib import Path
 import json, subprocess, tempfile, os
 from pane_fixtures import bundles
+from settings_contract import load
 import argparse
 parser=argparse.ArgumentParser();parser.add_argument("--app",type=Path);args=parser.parse_args()
 r = Path(__file__).resolve().parents[1]
@@ -15,7 +16,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-settings-panes-') as temp:
         language=bundle.stem;localization=r/'Resources/Interfaces'/(language+'.lproj')
         resources=bundle/'Contents/Resources'
         # Frozen migration contract; never derive expected actions, tags or translations from the inputs under test.
-        expected=json.loads((r/'Tests/Fixtures/SettingsPaneContract.json').read_text())[language]
+        expected=load(r/'Tests/Fixtures/SettingsPaneContract.json')[language]
         for table, values in expected['Tables'].items():
             actual=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(localization/(table+'.strings'))]))
             assert actual == values, f'{language}/{table}: localized contract changed'

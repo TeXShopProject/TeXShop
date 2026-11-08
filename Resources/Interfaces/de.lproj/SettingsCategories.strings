@@ -2,8 +2,15 @@
 "editor" = "Editor";
 "preview" = "Vorschau";
 "console" = "Konsole";
-"typesetting" = "Schriftsatz";
+"typesetting" = "Satz";
 "engines" = "Programme";
 "misc-1" = "Div. 1";
 "misc-2" = "Div. 2";
 "themes" = "Themes";
+
+"general" = "Allgemein";
+"documents" = "Dokumente und Sichern";
+"spelling" = "Rechtschreibprüfung";
+"appearance" = "Erscheinungsbild";
+"keyboard" = "Tastatur";
+"updates" = "Updates";

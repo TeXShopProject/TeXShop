@@ -7,3 +7,10 @@
 "misc-1" = "詳細1";
 "misc-2" = "詳細2";
 "themes" = "テーマ";
+
+"general" = "一般";
+"documents" = "書類と保存";
+"spelling" = "スペルチェック";
+"appearance" = "外観";
+"keyboard" = "キーボード";
+"updates" = "アップデート";

@@ -191,3 +191,28 @@
 "The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
 
 "Replace" = "Replace";
+
+"General" = "General";
+"Documents and Saving" = "Documents and Saving";
+"Editor" = "Editor";
+"Spell Checking" = "Spell Checking";
+"Appearance" = "Appearance";
+"Typesetting" = "Typesetting";
+"Console" = "Console";
+"Updates" = "Updates";
+"Defaults for New Documents" = "Defaults for New Documents";
+"Matching Brackets" = "Matching Brackets";
+"Spelling While Typing" = "Spelling While Typing";
+"Use LaTeX-aware spell checking (recommended)" = "Use LaTeX-aware spell checking (recommended)";
+"Use legacy spell checking" = "Use legacy spell checking";
+"LaTeX Spell Checking" = "LaTeX Spell Checking";
+"Edit Key Bindings…" = "Edit Key Bindings…";
+"Key Bindings" = "Key Bindings";
+"Edit Command Completion…" = "Edit Command Completion…";
+"Command Completion" = "Command Completion";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut.";
+"Source and Preview Windows" = "Source and Preview Windows";
+"Comment Lines and Hidden Settings" = "Comment Lines and Hidden Settings";
+"Advanced" = "Advanced";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Install a TeX distribution, then run Auto Setup in Settings > Typesetting.";

@@ -149,7 +149,6 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "Die neueste gefundene Installation ist ausgewählt. Sie können unten eine andere auswählen. Eigene Programmbefehle und der alternative Pfad bleiben unverändert.";
 "Not found (current setting will be kept)" = "Nicht gefunden (die aktuelle Einstellung bleibt erhalten)";
 "Version unavailable" = "Unbekannt";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Installieren Sie eine TeX-Distribution und starten Sie dann die automatische Einrichtung unter Einstellungen > Programme.";
 "Use These Paths" = "Diese Pfade verwenden";
 
 /* Menu keyboard shortcut customization */
@@ -220,3 +219,28 @@
 "The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
 
 "Replace" = "Replace";
+
+"General" = "Allgemein";
+"Documents and Saving" = "Dokumente und Sichern";
+"Editor" = "Editor";
+"Spell Checking" = "Rechtschreibprüfung";
+"Appearance" = "Erscheinungsbild";
+"Typesetting" = "Satz";
+"Console" = "Konsole";
+"Updates" = "Updates";
+"Defaults for New Documents" = "Vorgaben für neue Dokumente";
+"Matching Brackets" = "Klammerzuordnung";
+"Spelling While Typing" = "Rechtschreibprüfung bei der Eingabe";
+"Use LaTeX-aware spell checking (recommended)" = "LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)";
+"Use legacy spell checking" = "Bisherige Rechtschreibprüfung verwenden";
+"LaTeX Spell Checking" = "LaTeX-Rechtschreibprüfung";
+"Edit Key Bindings…" = "Tastenbelegungen bearbeiten…";
+"Key Bindings" = "Tastenbelegungen";
+"Edit Command Completion…" = "Befehlsvervollständigung bearbeiten…";
+"Command Completion" = "Befehlsvervollständigung";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Wenn Tab die Befehlsvervollständigung auslöst, ist Tab dafür reserviert und kann keinem Menübefehl zugewiesen werden.";
+"Source and Preview Windows" = "Quelltext- und Vorschaufenster";
+"Comment Lines and Hidden Settings" = "Kommentarzeilen und verborgene Einstellungen";
+"Advanced" = "Erweitert";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Installieren Sie eine TeX-Distribution und starten Sie die automatische Einrichtung unter Einstellungen > Schriftsatz.";

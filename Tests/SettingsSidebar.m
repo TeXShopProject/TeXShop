@@ -5,6 +5,9 @@
 #import "TSShortcutPaneController.h"
 #import "TSPrefPaneController.h"
 #import "TSPrefFooterController.h"
+#import "TSPreferences.h"
+#import "TSPrefPaneLayout.h"
+#include "TSSettingsPaneClassification.inc"
 @interface TSSettingsWindowController (Testing)
 @property (strong, readonly) NSTableView *categoryTable;
 @property (strong, readonly) NSSegmentedControl *navigationControl;
@@ -55,11 +58,14 @@ static TSMemoryDefaults *fixtureDefaults;
 @property (strong) NSMapTable *inputRules;
 @property (strong) NSControl *errorField;
 @property NSUInteger commits,fonts;
+@property NSButton *legacySpellCheckButton;
+- (NSDictionary *)classifySettingsPanes:(NSArray *)panes;
 @end
 @interface Owner (FixturePanes)
 - (NSArray<TSPrefPaneController *> *)makeSettingsPanes;
 @end
 @implementation Owner
+- (NSDictionary *)classifySettingsPanes:(NSArray *)panes { return [TSSettingsPaneComposer compose:panes preferences:(TSPreferences *)self]; }
 // PRODUCTION_PREPARE
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key {if(value)self.outlets[key]=value;}
 // PRODUCTION_VALIDATE
@@ -76,11 +82,6 @@ static TSMemoryDefaults *fixtureDefaults;
 @implementation EditingField
 - (NSText *)currentEditor { return [NSText new]; }
 @end
-static NSDictionary *HostPanes(NSArray<TSPrefPaneController *> *panes) {
- NSMutableDictionary *result=[NSMutableDictionary dictionary];
- for(TSPrefPaneController *pane in panes) if(pane.categoryIdentifier.length)result[pane.categoryIdentifier]=pane;
- return result;
-}
 static NSView *Footer(NSArray<TSPrefPaneController *> *panes) { for(TSPrefPaneController *pane in panes)if([pane isKindOfClass:TSPrefFooterController.class])return pane.view;abort(); }
 @implementation Owner (FixturePanes)
 - (NSArray<TSPrefPaneController *> *)makeSettingsPanes {
@@ -135,7 +136,7 @@ int main(int argc,char **argv){@autoreleasepool{
    Check(extent.height>0 && pane.height>0,@"large screen has a usable scrollable viewport");
    largeScreen=NO;
   }
-  Check(integration.preferencePanes.count==11 && [integration.settingsController viewForCategoryIdentifier:@"source"].window==integration->_prefsWindow,@"production retains eager pane owners in the host window");
+  Check(integration.preferencePanes.count==11 && [integration.settingsController viewForCategoryIdentifier:@"general"].window==integration->_prefsWindow,@"production retains eager pane owners in the host window");
   Owner *owner=[Owner new];owner.outlets=[NSMutableDictionary new];owner.valid=YES;
   NSArray *loadedPanes=[owner makeSettingsPanes];
   TSMemoryDefaults *memory=[TSMemoryDefaults new];[memory setObject:@"unknown" forKey:@"TSSettingsSelectedCategory"];[memory setObject:@"sentinel" forKey:@"TexCommand"];
@@ -145,10 +146,10 @@ int main(int argc,char **argv){@autoreleasepool{
   TestController *c=[[TestController alloc]initWithDefaults:memory];c.settingsDelegate=owner;
   owner->_prefsWindow=c.window;
   EditingField *editing=[EditingField new];owner.inputRules=[NSMapTable strongToStrongObjectsMapTable];[owner.inputRules setObject:@YES forKey:editing];
-  NSDictionary *panes=HostPanes(loadedPanes);NSView *footer=Footer(loadedPanes);
+  NSDictionary *panes=[owner classifySettingsPanes:loadedPanes];NSView *footer=Footer(loadedPanes);
   [c hostPaneControllers:panes footer:footer];
   Check([[memory stringForKey:@"TSSettingsSelectedCategory"] isEqual:@"console"],@"assembly never overwrites persisted category");
-  [c beginSession];Check([c.history.currentIdentifier isEqual:@"console"] && c.categoryTable.selectedRow==3,@"fresh controller restores saved category");
+  [c beginSession];Check([c.history.currentIdentifier isEqual:@"console"] && c.categoryTable.selectedRow==7,@"fresh controller restores saved category");
   [c.window.contentView layoutSubtreeIfNeeded];
   Check(NSEqualRects(c.window.frame,savedFrame) && !c.shouldCascadeWindows,@"restore frame after complete assembly without cascading");
   Check((c.window.styleMask & NSWindowStyleMaskFullSizeContentView)!=0,@"full height content enabled");
@@ -159,13 +160,13 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(fabs(NSMaxY(sidebarInWindow)-NSHeight(c.window.contentView.bounds))<1,@"sidebar reaches titlebar top");
   Check(c.contentScroll.documentView.isFlipped && fabs(c.contentScroll.documentVisibleRect.origin.y)<1,@"content starts at top in tall window");
   Check(c.window.toolbar.items.count==2 && [c.window.toolbar.items[0] isKindOfClass:NSTrackingSeparatorToolbarItem.class] && c.window.toolbar.items[1].navigational,@"tracking divider and navigational toolbar");
-  NSArray *expected=@[@"source",@"editor",@"preview",@"console",@"typesetting",@"engines",@"misc-1",@"misc-2",@"themes"];
-  Check([c.categoryIdentifiers isEqual:[expected arrayByAddingObject:@"keyboard"]],@"stable ordered category identifiers");
+  NSArray *expected=@[@"general",@"documents",@"editor",@"spelling",@"appearance",@"preview",@"typesetting",@"console",@"updates"];
+  Check([c.categoryIdentifiers isEqual:(@[@"general",@"documents",@"editor",@"spelling",@"appearance",@"preview",@"typesetting",@"console",@"keyboard",@"updates"])],@"stable ordered category identifiers");
   for(NSUInteger i=0;i<expected.count;i++) Check([c viewForCategoryIdentifier:expected[i]]==[(NSViewController *)panes[expected[i]] view],@"category maps to original localized pane");
   [memory setObject:@"unknown" forKey:@"TSSettingsSelectedCategory"];
   Check([c viewForCategoryIdentifier:@"console"].window==c.window,@"selected controls use the host window");
   Check(c.categoryTable.numberOfRows==10,@"sidebar includes all categories");
-  [c beginSession];Check([c.history.currentIdentifier isEqual:@"source"] && c.categoryTable.selectedRow==0,@"unknown category falls back to source");
+  [c beginSession];Check([c.history.currentIdentifier isEqual:@"general"] && c.categoryTable.selectedRow==0,@"unknown category falls back to source");
 
 
   Check(c.window.firstResponder==c.categoryTable,@"begin session focuses sidebar");
@@ -176,13 +177,13 @@ int main(int argc,char **argv){@autoreleasepool{
    Check(c.categoryTable.selectedRow==step && c.window.firstResponder==c.categoryTable,@"consecutive window arrows preserve sidebar focus");
    Check(owner.commits==beforeArrows+(NSUInteger)step,@"one production validation per category change");
   }
-  NSUInteger beforeSame=owner.commits;[c selectCategoryIdentifier:@"console"];
+  NSUInteger beforeSame=owner.commits;[c selectCategoryIdentifier:@"spelling"];
   Check(owner.commits==beforeSame,@"reselect does not validate or release panels");
   [c.window makeFirstResponder:nil];[c endSession];[c beginSession];
   Check(c.window.firstResponder==c.categoryTable,@"reopen restores sidebar focus");
-  [c selectCategoryIdentifier:@"source"];
+  [c selectCategoryIdentifier:@"general"];
 
-  Check([c viewForCategoryIdentifier:@"themes"].fittingSize.height>700,@"both theme color groups remain scrollable");
+  Check([c viewForCategoryIdentifier:@"appearance"].fittingSize.height>700,@"both theme color groups remain scrollable");
   // Selection-query callbacks must never navigate or validate.
   NSUInteger queryCount=c.history.count,queryCommits=owner.commits;
   for(NSInteger row=0;row<9;row++) [(id<NSTableViewDelegate>)c tableView:c.categoryTable shouldSelectRow:row];
@@ -196,16 +197,16 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(NSEqualRects(frame,c.window.frame),@"navigation never resizes window");
   Check(memory.values.count==2 && [[memory stringForKey:@"TexCommand"]isEqual:@"sentinel"],@"navigation only saves UI category state");
   [c goBack:nil];Check(c.categoryTable.selectedRow==7 && [c.navigationControl isEnabledForSegment:1],@"back syncs sidebar/buttons");
-  [c goForward:nil];Check(c.categoryTable.selectedRow==8 && ![c.navigationControl isEnabledForSegment:1],@"forward syncs sidebar/buttons");
-  owner.valid=NO;NSUInteger count=c.history.count;[c goBack:nil];Check(c.categoryTable.selectedRow==8 && c.history.count==count,@"invalid field blocks history changes");
-  Check(![c selectCategoryIdentifier:@"preview"] && c.categoryTable.selectedRow==8,@"invalid field blocks sidebar changes");
+  [c goForward:nil];Check(c.categoryTable.selectedRow==9 && ![c.navigationControl isEnabledForSegment:1],@"forward syncs sidebar/buttons");
+  owner.valid=NO;NSUInteger count=c.history.count;[c goBack:nil];Check(c.categoryTable.selectedRow==9 && c.history.count==count,@"invalid field blocks history changes");
+  Check(![c selectCategoryIdentifier:@"preview"] && c.categoryTable.selectedRow==9,@"invalid field blocks sidebar changes");
   owner.valid=YES;
   [c goBack:nil];owner.valid=NO;[c goForward:nil];Check(c.categoryTable.selectedRow==7,@"invalid field blocks forward");
-  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==7 && [c.history.currentIdentifier isEqual:@"misc-2"],@"invalid sidebar selection restored");
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==7 && [c.history.currentIdentifier isEqual:@"console"],@"invalid sidebar selection restored");
   owner.valid=YES;testSheet=[NSWindow new];[c goForward:nil];Check(c.categoryTable.selectedRow==7,@"sheet blocks forward");testSheet=nil;
-  Segment *segment=[Segment new];segment.testSegment=1;Check(c.navigationControl.target==c && c.navigationControl.action==@selector(navigate:),@"toolbar action wired");[c navigate:segment];Check(c.categoryTable.selectedRow==8,@"forward toolbar segment");
+  Segment *segment=[Segment new];segment.testSegment=1;Check(c.navigationControl.target==c && c.navigationControl.action==@selector(navigate:),@"toolbar action wired");[c navigate:segment];Check(c.categoryTable.selectedRow==9,@"forward toolbar segment");
   segment.testSegment=0;[c navigate:segment];Check(c.categoryTable.selectedRow==7,@"back toolbar segment");[c goForward:nil];
-  testSheet=[NSWindow new];[c goBack:nil];Check(c.categoryTable.selectedRow==8 && ![c selectCategoryIdentifier:@"source"],@"sheet blocks both routes");testSheet=nil;
+  testSheet=[NSWindow new];[c goBack:nil];Check(c.categoryTable.selectedRow==9 && ![c selectCategoryIdentifier:@"general"],@"sheet blocks both routes");testSheet=nil;
   testKeyWindow=YES;
   NSEvent *back=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand timestamp:0 windowNumber:0 context:nil characters:@"[" charactersIgnoringModifiers:@"[" isARepeat:NO keyCode:33];
   Check([c.window performKeyEquivalent:back] && c.categoryTable.selectedRow==7,@"Command bracket follows window history");
@@ -213,21 +214,21 @@ int main(int argc,char **argv){@autoreleasepool{
   [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==2 && c.history.forwardIdentifier==nil,@"sidebar route synchronizes once and truncates forward history");
   NSEvent *down=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0 windowNumber:0 context:nil characters:@"\uF701" charactersIgnoringModifiers:@"\uF701" isARepeat:NO keyCode:125];
   [c.categoryTable keyDown:down];Check(c.categoryTable.selectedRow==3,@"arrow key uses validated category route");
-  [c selectCategoryIdentifier:@"preview"];
+  [c selectCategoryIdentifier:@"editor"];
   NSUInteger visits=c.history.count;[c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.history.count==visits,@"reselect is not duplicate history");
   [c endSession];[c beginSession];Check(c.history.count==1 && !c.history.backIdentifier && !c.history.forwardIdentifier,@"reopen resets history and preserves category");
   [c endSession];[memory setObject:@"console" forKey:@"TSSettingsSelectedCategory"];[c beginSession];
   Check([c.history.currentIdentifier isEqual:@"console"] && c.history.count==1,@"reopening reads saved category without retaining history");
   [c changeFont:(NSFontManager *)owner];Check(owner.fonts==1,@"font is explicitly forwarded to preference owner");
 
-  [c.window setContentSize:NSMakeSize(660,440)];[c.window.contentView layoutSubtreeIfNeeded];
+  [c.window setContentSize:NSMakeSize(1040,440)];[c.window.contentView layoutSubtreeIfNeeded];
   [c.contentScroll.contentView scrollToPoint:NSMakePoint(0,200)];
   NSPoint scrolled=c.contentScroll.contentView.bounds.origin;
   Check(scrolled.y>0,@"fixture is scrolled before rejection");
   owner.valid=NO;NSUInteger rejectedHistory=c.history.count;
   // Simulate a validation failure with focus already in a field, not the sidebar.
   NSTextField *focusField=[[NSTextField alloc]initWithFrame:NSMakeRect(0,0,100,20)];
-  [[c viewForCategoryIdentifier:c.history.currentIdentifier ?: @"source"] addSubview:focusField];[c.window makeFirstResponder:focusField];
+  [[c viewForCategoryIdentifier:c.history.currentIdentifier ?: @"general"] addSubview:focusField];[c.window makeFirstResponder:focusField];
   NSResponder *failedFocus=c.window.firstResponder;
   [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];
   Check(NSEqualPoints(c.contentScroll.contentView.bounds.origin,scrolled) && c.history.count==rejectedHistory,@"rejected selection preserves scroll and history");
@@ -239,16 +240,16 @@ int main(int argc,char **argv){@autoreleasepool{
   [c selectCategoryIdentifier:@"preview"];
   Check(fabs(c.contentScroll.contentView.bounds.origin.y)<1,@"successful category switch resets scroll");
   Check(c.window.firstResponder!=c.categoryTable,@"navigation from content does not force sidebar focus");
-  [c selectCategoryIdentifier:@"engines"];[c endSession];
+  [c selectCategoryIdentifier:@"preview"];[c endSession];
   // A new controller reads what actual navigation saved, without injecting defaults.
   TestController *fresh=[[TestController alloc]initWithDefaults:memory];fresh.settingsDelegate=owner;
   [fresh hostPaneControllers:panes footer:footer];owner->_prefsWindow=fresh.window;[fresh beginSession];
-  Check([fresh.history.currentIdentifier isEqual:@"engines"] && fresh.categoryTable.selectedRow==5,@"navigation persists for a fresh controller");
+  Check([fresh.history.currentIdentifier isEqual:@"preview"] && fresh.categoryTable.selectedRow==5,@"navigation persists for a fresh controller");
   [c hostPaneControllers:panes footer:footer];owner->_prefsWindow=c.window;[c beginSession];
 
   for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
    c.window.appearance=[NSAppearance appearanceNamed:appearance];
-   for(NSValue *size in @[[NSValue valueWithSize:NSMakeSize(960,650)],[NSValue valueWithSize:NSMakeSize(660,440)]]){
+   for(NSValue *size in @[[NSValue valueWithSize:NSMakeSize(1200,780)],[NSValue valueWithSize:NSMakeSize(1040,440)]]){
     [c.window setContentSize:size.sizeValue];[c.window.contentView layoutSubtreeIfNeeded];
     for(NSString*identifier in expected){
      [c selectCategoryIdentifier:identifier];[c.window.contentView layoutSubtreeIfNeeded];

@@ -146,7 +146,6 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "已选中检测到的最新版本。您可以在下方选择其他候选项。自定义引擎命令和备用路径保持不变。";
 "Not found (current setting will be kept)" = "未找到（将保留当前设置）";
 "Version unavailable" = "未知";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "请先安装 TeX 发行版，然后在“设置 > 引擎”中运行自动设置。";
 "Use These Paths" = "使用这些路径";
 
 /* Menu keyboard shortcut customization */
@@ -217,3 +216,29 @@
 "The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
 
 "Replace" = "Replace";
+
+"General" = "通用";
+"Documents and Saving" = "文稿与保存";
+"Editor" = "编辑器";
+"Spell Checking" = "拼写检查";
+"Appearance" = "外观";
+"Preview" = "预览";
+"Typesetting" = "排版";
+"Console" = "控制台";
+"Updates" = "更新";
+"Defaults for New Documents" = "新文稿的默认设置";
+"Matching Brackets" = "括号匹配";
+"Spelling While Typing" = "键入时检查拼写";
+"Use LaTeX-aware spell checking (recommended)" = "使用考虑 LaTeX 结构的拼写检查（推荐）";
+"Use legacy spell checking" = "使用传统拼写检查";
+"LaTeX Spell Checking" = "LaTeX 拼写检查";
+"Edit Key Bindings…" = "编辑按键绑定文件…";
+"Key Bindings" = "按键绑定";
+"Edit Command Completion…" = "编辑命令补全文件…";
+"Command Completion" = "命令补全";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "使用 Tab 触发命令补全时，Tab 将保留用于补全，不能分配给菜单快捷键。";
+"Source and Preview Windows" = "源文件和预览窗口";
+"Comment Lines and Hidden Settings" = "注释行与隐藏设置";
+"Advanced" = "高级";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "安装 TeX 发行版，然后在设置 > 排版中运行自动设置。";

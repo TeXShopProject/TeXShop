@@ -506,25 +506,12 @@
                             <menuItem isSeparatorItem="YES" id="543">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Key Bindings" id="1081">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Key Bindings" id="1082">
-                                    <items>
-                                        <menuItem title="Toggle On/Off" id="1087" identifier="TSShortcut.changeAutoComplete:.0">
+                            <menuItem title="Key Bindings" id="1087" identifier="TSShortcut.changeAutoComplete:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="changeAutoComplete:" target="-1" id="1090"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Edit Key Bindings File..." id="1083" identifier="TSShortcut.openAutoCompletionListEditor:.0">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openAutoCompletionListEditor:" target="1085" id="1086"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
                             <menuItem title="Command Completion" id="539">
                                 <menu key="submenu" title="Command Completion" id="540">
                                     <items>
@@ -575,11 +562,7 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Edit Command Completion File..." id="542" identifier="TSShortcut.openCommandCompletionList:.0">
-                                            <connections>
-                                                <action selector="openCommandCompletionList:" target="-1" id="546"/>
-                                            </connections>
-                                        </menuItem>
+
                                     </items>
                                 </menu>
                             </menuItem>
@@ -1655,7 +1638,6 @@ Gw
                 </subviews>
             </view>
         </window>
-        <customObject id="1085" customClass="TSAutoCompletionListEditor"/>
         <menuItem title="Show HTML Window" id="kVv-aY-dDk">
             <modifierMask key="keyEquivalentModifierMask"/>
         </menuItem>

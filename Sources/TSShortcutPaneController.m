@@ -1,5 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSShortcutInternal.h"
+@interface TSShortcutContentView : NSView
+@end
+@implementation TSShortcutContentView
+- (BOOL)isFlipped { return YES; }
+@end
+
 @interface TSShortcutKeySearchView : NSView
 @property (copy, nullable) BOOL (^handleEvent)(NSEvent *event);
 @end
@@ -74,6 +80,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 @property (strong, nullable, readonly) NSWindow *window;
 @property NSTextField *hint;
 @property NSTableView *table;
+@property NSLayoutConstraint *tableContentHeight;
 @property NSSearchField *search;
 @property NSArray<TSShortcutCommand *> *visibleCommands;
 @property NSArray<NSButton *> *selectionButtons;
@@ -150,6 +157,34 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     NSStackView *buttons = [NSStackView stackViewWithViews:@[primary,secondary]];
     buttons.orientation = NSUserInterfaceLayoutOrientationVertical; buttons.alignment = NSLayoutAttributeLeading; buttons.spacing = 8;
     for (NSView *view in @[self.searchMode,self.search,hint,scroll,buttons,self.keySearchView]) { view.translatesAutoresizingMaskIntoConstraints = NO; [content addSubview:view]; }
+    NSView *header = self.settingsHeader;
+    if (header != nil) {
+        // Input settings and command rows share one vertical scroll document.
+        // Search and actions stay available even on a short display.
+        NSView *document = [TSShortcutContentView new];
+        document.translatesAutoresizingMaskIntoConstraints = NO;
+        NSTableHeaderView *columns = self.table.headerView;
+        self.table.headerView = nil;
+        scroll.documentView = document;
+        for (NSView *part in @[header, columns, self.table]) {
+            part.translatesAutoresizingMaskIntoConstraints = NO;
+            [document addSubview:part];
+            [NSLayoutConstraint activateConstraints:@[
+                [part.leadingAnchor constraintEqualToAnchor:document.leadingAnchor],
+                [part.trailingAnchor constraintEqualToAnchor:document.trailingAnchor]]];
+        }
+        self.tableContentHeight = [self.table.heightAnchor constraintEqualToConstant:0];
+        NSLayoutConstraint *width = [document.widthAnchor constraintEqualToAnchor:scroll.contentView.widthAnchor];
+        width.priority = NSLayoutPriorityDefaultHigh;
+        [NSLayoutConstraint activateConstraints:@[
+            width, [document.widthAnchor constraintGreaterThanOrEqualToConstant:660],
+            [header.topAnchor constraintEqualToAnchor:document.topAnchor],
+            [columns.topAnchor constraintEqualToAnchor:header.bottomAnchor constant:12],
+            [columns.heightAnchor constraintEqualToConstant:24],
+            [self.table.topAnchor constraintEqualToAnchor:columns.bottomAnchor],
+            self.tableContentHeight,
+            [self.table.bottomAnchor constraintEqualToAnchor:document.bottomAnchor]]];
+    }
     [NSLayoutConstraint activateConstraints:@[
         [self.searchMode.topAnchor constraintEqualToAnchor:content.topAnchor constant:16],
         [self.searchMode.trailingAnchor constraintEqualToAnchor:content.trailingAnchor constant:-20],
@@ -172,6 +207,14 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     ]];
     [self reloadCommands];
 }
+- (void)reloadTable {
+    [self.table reloadData];
+    if (self.tableContentHeight != nil) {
+        NSInteger count = self.table.numberOfRows;
+        self.tableContentHeight.constant = count > 0 ? NSMaxY([self.table rectOfRow:count - 1]) : 0;
+        [self.view layoutSubtreeIfNeeded];
+    }
+}
 - (void)reloadFunctionCommands {
     self.hint.stringValue = NSLocalizedString(@"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors.", @"");
     if (self.store.unavailableCommands.count)
@@ -183,7 +226,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         if (!query.length || [command.path localizedCaseInsensitiveContainsString:query]) [visible addObject:command];
     }
     self.visibleCommands = visible;
-    [self.table reloadData];
+    [self reloadTable];
     for (NSButton *button in self.selectionButtons) button.enabled = [self selectedCommand] != nil;
 }
 - (void)controlTextDidChange:(NSNotification *)notification { if (!self.searchingByKey) { [self reloadCommands]; } }
@@ -260,7 +303,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         NSAccessibilityPostNotificationWithUserInfo(self.keySearchView, NSAccessibilityAnnouncementRequestedNotification,
             @{NSAccessibilityAnnouncementKey:value, NSAccessibilityPriorityKey:@(NSAccessibilityPriorityMedium)});
     }
-    [self.table reloadData];
+    [self reloadTable];
     NSInteger first = self.searchMatches.count > 0 ? (self.searchMatches[0].macro != nil ? 1 : 0) : -1;
     if (first >= 0) { [self.table selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)first] byExtendingSelection:NO]; [self.table scrollRowToVisible:first]; }
     [self updateSelectionButtons];

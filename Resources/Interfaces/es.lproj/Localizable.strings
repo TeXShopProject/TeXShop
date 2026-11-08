@@ -149,7 +149,6 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "Se ha seleccionado la instalación más reciente detectada. Puede elegir otra a continuación. Los comandos de motores personalizados y la ruta alternativa no se modificarán.";
 "Not found (current setting will be kept)" = "No encontrado (se conservará el ajuste actual)";
 "Version unavailable" = "Desconocida";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instale una distribución de TeX y ejecute la configuración automática en Ajustes > Motor.";
 "Use These Paths" = "Usar estas rutas";
 
 /* Menu keyboard shortcut customization */
@@ -220,3 +219,29 @@
 "The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
 
 "Replace" = "Replace";
+
+"General" = "General";
+"Documents and Saving" = "Documentos y guardado";
+"Editor" = "Editor";
+"Spell Checking" = "Ortografía";
+"Appearance" = "Apariencia";
+"Preview" = "Vista previa";
+"Typesetting" = "Composición";
+"Console" = "Consola";
+"Updates" = "Actualizaciones";
+"Defaults for New Documents" = "Valores para documentos nuevos";
+"Matching Brackets" = "Correspondencia de paréntesis";
+"Spelling While Typing" = "Ortografía al escribir";
+"Use LaTeX-aware spell checking (recommended)" = "Usar corrección adaptada a LaTeX (recomendado)";
+"Use legacy spell checking" = "Usar la corrección tradicional";
+"LaTeX Spell Checking" = "Ortografía de LaTeX";
+"Edit Key Bindings…" = "Editar combinaciones de teclas…";
+"Key Bindings" = "Combinaciones de teclas";
+"Edit Command Completion…" = "Editar autocompletado de comandos…";
+"Command Completion" = "Autocompletado de comandos";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Si Tab activa el autocompletado de comandos, queda reservado para ello y no se puede asignar a un atajo de menú.";
+"Source and Preview Windows" = "Ventanas de fuente y vista previa";
+"Comment Lines and Hidden Settings" = "Líneas de comentario y ajustes ocultos";
+"Advanced" = "Avanzado";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instale una distribución TeX y ejecute la configuración automática en Ajustes > Composición.";

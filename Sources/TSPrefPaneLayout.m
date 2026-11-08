@@ -8,30 +8,47 @@ typedef NS_ENUM(NSInteger, TSSettingsRowKind) {
 @property (copy, readonly) NSArray<NSString *> *identifiers;
 @property (readonly) TSSettingsRowKind kind;
 @property (readonly) NSUInteger indentation;
+- (instancetype)initWithControls:(NSArray<NSString *> *)identifiers kind:(TSSettingsRowKind)kind indentation:(NSUInteger)indentation NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 + (instancetype)controls:(NSArray<NSString *> *)identifiers kind:(TSSettingsRowKind)kind indentation:(NSUInteger)indentation;
 @end
 @implementation TSSettingsLayoutRow
 + (instancetype)controls:(NSArray<NSString *> *)identifiers kind:(TSSettingsRowKind)kind indentation:(NSUInteger)indentation
 {
-    TSSettingsLayoutRow *row = [self new];
-    row->_identifiers = [identifiers copy]; row->_kind = kind; row->_indentation = indentation;
-    return row;
+    return [[self alloc] initWithControls:identifiers kind:kind indentation:indentation];
+}
+- (instancetype)initWithControls:(NSArray<NSString *> *)identifiers kind:(TSSettingsRowKind)kind indentation:(NSUInteger)indentation
+{
+    self = [super init];
+    if (self == nil) return nil;
+    _identifiers = [identifiers copy]; _kind = kind; _indentation = indentation;
+    return self;
 }
 @end
 @interface TSSettingsLayoutGroup : NSObject
 @property (copy, readonly) NSArray<TSSettingsLayoutRow *> *rows;
 @property (copy, readonly) NSArray<NSArray<NSString *> *> *cells;
+- (instancetype)initWithRows:(NSArray<TSSettingsLayoutRow *> *)rows cells:(NSArray<NSArray<NSString *> *> *)cells NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 + (instancetype)rows:(NSArray<TSSettingsLayoutRow *> *)rows;
 + (instancetype)grid:(NSArray<NSArray<NSString *> *> *)cells;
 @end
 @implementation TSSettingsLayoutGroup
+- (instancetype)initWithRows:(NSArray<TSSettingsLayoutRow *> *)rows cells:(NSArray<NSArray<NSString *> *> *)cells
+{
+    self = [super init];
+    if (self == nil) return nil;
+    _rows = [rows copy]; _cells = [cells copy]; return self;
+}
 + (instancetype)rows:(NSArray<TSSettingsLayoutRow *> *)rows
 {
-    TSSettingsLayoutGroup *group = [self new]; group->_rows = [rows copy]; group->_cells = @[]; return group;
+    return [[self alloc] initWithRows:rows cells:@[]];
 }
 + (instancetype)grid:(NSArray<NSArray<NSString *> *> *)cells
 {
-    TSSettingsLayoutGroup *group = [self new]; group->_rows = @[]; group->_cells = [cells copy]; return group;
+    return [[self alloc] initWithRows:@[] cells:cells];
 }
 @end
 @implementation TSSettingsGroupStyle
@@ -84,6 +101,8 @@ typedef NS_ENUM(NSInteger, TSSettingsRowKind) {
             width += ceil(ideal);
         }
         [matrix.widthAnchor constraintGreaterThanOrEqualToConstant:width].active = YES;
+        NSLayoutConstraint *fittingWidth = [matrix.widthAnchor constraintEqualToConstant:width];
+        fittingWidth.priority = 249; fittingWidth.active = YES;
     } else if ([view isKindOfClass:NSColorWell.class]) {
         [view.widthAnchor constraintEqualToConstant:60].active = YES;
         [view.heightAnchor constraintEqualToConstant:24].active = YES;
@@ -193,6 +212,9 @@ typedef NS_ENUM(NSInteger, TSSettingsRowKind) {
             [body.centerYAnchor constraintEqualToAnchor:container.centerYAnchor],
             [container.heightAnchor constraintGreaterThanOrEqualToAnchor:body.heightAnchor],
             [container.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
+        NSLayoutConstraint *fittingHeight = [container.heightAnchor constraintEqualToConstant:0];
+        fittingHeight.priority = 249; fittingHeight.active = YES;
+        container.identifier = [@"row." stringByAppendingString:row.identifiers.firstObject ?: @""];
         if (row.kind == TSSettingsRowField) [first.widthAnchor constraintEqualToConstant:170].active = YES;
         [rows addObject:container];
     }

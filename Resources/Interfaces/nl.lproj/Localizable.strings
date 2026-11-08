@@ -42,7 +42,7 @@
 "Magnification Panel" = "Magnification Panel";
 "Omit Shell Escape" = "Omit Shell Escape";
 "Warning: Using Shell Escape" = "Warning: Using Shell Escape";
-"Preview" = "Preview";
+"Preview" = "Voorvertoning";
 "Display Format" = "Display Format";// mitsu 1.29b
 "Magnification" = "Magnification";// mitsu 1.29b
 "Copy Format" = "Copy Format";// mitsu 1.29b
@@ -146,7 +146,6 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "De nieuwste gevonden installatie is geselecteerd. U kunt hieronder een andere kiezen. Aangepaste enginecommando’s en het alternatieve pad blijven ongewijzigd.";
 "Not found (current setting will be kept)" = "Niet gevonden (de huidige instelling blijft behouden)";
 "Version unavailable" = "Onbekend";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Installeer een TeX-distributie en start daarna de automatische configuratie via Instellingen > Engine.";
 "Use These Paths" = "Deze paden gebruiken";
 
 /* Menu keyboard shortcut customization */
@@ -217,3 +216,28 @@
 "The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
 
 "Replace" = "Replace";
+
+"General" = "Algemeen";
+"Documents and Saving" = "Documenten en bewaren";
+"Editor" = "Editor";
+"Spell Checking" = "Spellingcontrole";
+"Appearance" = "Weergave";
+"Typesetting" = "Zetten";
+"Console" = "Console";
+"Updates" = "Updates";
+"Defaults for New Documents" = "Standaarden voor nieuwe documenten";
+"Matching Brackets" = "Overeenkomende haakjes";
+"Spelling While Typing" = "Spellingcontrole tijdens typen";
+"Use LaTeX-aware spell checking (recommended)" = "LaTeX-bewuste spellingcontrole gebruiken (aanbevolen)";
+"Use legacy spell checking" = "Traditionele spellingcontrole gebruiken";
+"LaTeX Spell Checking" = "LaTeX-spellingcontrole";
+"Edit Key Bindings…" = "Toetsbindingen bewerken…";
+"Key Bindings" = "Toetsbindingen";
+"Edit Command Completion…" = "Commandoaanvulling bewerken…";
+"Command Completion" = "Commandoaanvulling";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Wanneer Tab commandoaanvulling activeert, is Tab daarvoor gereserveerd en kan de toets niet aan een menusneltoets worden toegewezen.";
+"Source and Preview Windows" = "Bron- en voorvertoningsvensters";
+"Comment Lines and Hidden Settings" = "Commentaarregels en verborgen instellingen";
+"Advanced" = "Geavanceerd";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Installeer een TeX-distributie en voer automatische configuratie uit bij Instellingen > Zetwerk.";

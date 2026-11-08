@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 @interface TSShortcutPaneController : NSViewController <TSSettingsKeyboardPane>
 @property (readonly) BOOL searchingByKey;
+@property (strong, nullable) NSView *settingsHeader;
 - (instancetype)initWithShortcuts:(TSKeyboardShortcuts *)shortcuts NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

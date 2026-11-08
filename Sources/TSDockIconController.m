@@ -1,4 +1,4 @@
-// Dock appearance is independent of editor color themes, so the choices live on Misc2.
+// Dock choices appear with fonts and color themes in Appearance.
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSDockIconController.h"
 #import "TSPrefPaneLayout.h"
@@ -39,9 +39,9 @@
     [self.defaults setObject:self.selection forKey:TSDockIconKey];
     [self updatePreview];
 }
-- (void)installInPreferencesPane:(NSView *)misc {
-    if (misc == nil || self.buttons.count != 0) return;
-    NSStackView *body = [misc.subviews.firstObject isKindOfClass:NSStackView.class] ? (NSStackView *)misc.subviews.firstObject : nil;
+- (void)installInPreferencesPane:(NSView *)pane {
+    if (pane == nil || self.buttons.count != 0) return;
+    NSStackView *body = [pane.subviews.firstObject isKindOfClass:NSStackView.class] ? (NSStackView *)pane.subviews.firstObject : nil;
     if (body == nil) return;
     NSBox *group = [NSBox new];
     [TSSettingsGroupStyle applyToBox:group];
@@ -75,6 +75,12 @@
         option.orientation = NSUserInterfaceLayoutOrientationVertical;
         option.alignment = NSLayoutAttributeCenterX;
         option.spacing = 6;
+        // Give wrapping captions a definite width in each equally sized column.
+        caption.translatesAutoresizingMaskIntoConstraints = NO;
+        [caption.widthAnchor constraintEqualToAnchor:option.widthAnchor].active = YES;
+        [caption setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+        NSLayoutConstraint *fittingHeight = [option.heightAnchor constraintEqualToConstant:0];
+        fittingHeight.priority = 249; fittingHeight.active = YES;
         [options addObject:option];
     }
     NSStackView *choices = [NSStackView stackViewWithViews:options];

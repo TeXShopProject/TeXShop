@@ -82,7 +82,8 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResignedKey:) name:NSWindowDidResignKeyNotification object:window];
     window.toolbarStyle = NSWindowToolbarStyleUnified;
     window.titlebarSeparatorStyle = NSTitlebarSeparatorStyleAutomatic;
-    window.contentMinSize = NSMakeSize(660, 440);
+    NSScreen *screen = window.screen ?: NSScreen.mainScreen;
+    window.contentMinSize = NSMakeSize(screen != nil ? MIN(1040, NSWidth(screen.visibleFrame)) : 1040, 520);
     self.splitController = [NSSplitViewController new];
     NSViewController *sidebar = [NSViewController new];
     sidebar.view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 220, 600)];
@@ -161,7 +162,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     [self.categoryTable reloadData];
     self.synchronizingSelection = NO;
     NSWindow *window = self.window;
-    NSSize wanted = NSMakeSize(960, 700);
+    NSSize wanted = NSMakeSize(1040, 780);
     NSScreen *screen = window.screen ?: NSScreen.mainScreen;
     if (screen != nil) {
         wanted.width = MIN(wanted.width, NSWidth(screen.visibleFrame));
@@ -184,7 +185,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     NSLayoutConstraint *width = [document.widthAnchor constraintEqualToAnchor:self.contentScroll.contentView.widthAnchor];
     width.priority = NSLayoutPriorityDefaultHigh;
     [NSLayoutConstraint activateConstraints:@[
-        width, [document.widthAnchor constraintGreaterThanOrEqualToConstant:620],
+        width, [document.widthAnchor constraintGreaterThanOrEqualToConstant:700],
         [pane.leadingAnchor constraintEqualToAnchor:document.leadingAnchor],
         [pane.trailingAnchor constraintEqualToAnchor:document.trailingAnchor],
         [pane.topAnchor constraintEqualToAnchor:document.topAnchor],
@@ -200,7 +201,7 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 - (void)endSession
 {
     if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; }
-    [self.history resetWithIdentifier:self.history.currentIdentifier ?: TSSettingsCategorySource];
+    [self.history resetWithIdentifier:self.history.currentIdentifier ?: TSSettingsCategoryGeneral];
     [self updateNavigation];
 }
 - (BOOL)selectCategoryIdentifier:(NSString *)identifier

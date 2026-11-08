@@ -14,7 +14,7 @@
 - (TSSettingsCategoryID)selectedCategoryInIdentifiers:(NSArray<TSSettingsCategoryID> *)identifiers
 {
     NSString *identifier = [self.defaults stringForKey:TSSettingsSelectedCategoryKey];
-    if (identifier == nil || ![identifiers containsObject:identifier]) { return TSSettingsCategorySource; }
+    if (identifier == nil || ![identifiers containsObject:identifier]) { return identifiers.firstObject ?: TSSettingsCategoryGeneral; }
     return identifier;
 }
 - (void)saveSelectedCategory:(TSSettingsCategoryID)identifier

@@ -153,7 +153,6 @@
 
 "Version unavailable" = "不明";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "TeX環境をインストールしてから、設定の「内部設定」で「自動設定」を実行してください。";
 
 "Use These Paths" = "この設定を使用";
 
@@ -241,3 +240,28 @@
 "The theme “%@” already exists. Replace it?" = "テーマ「%@」はすでにあります。置き換えますか？";
 
 "Replace" = "置き換える";
+
+"General" = "一般";
+"Documents and Saving" = "書類と保存";
+"Editor" = "エディタ";
+"Spell Checking" = "スペルチェック";
+"Appearance" = "外観";
+"Typesetting" = "タイプセット";
+"Console" = "コンソール";
+"Updates" = "アップデート";
+"Defaults for New Documents" = "新しい書類の初期値";
+"Matching Brackets" = "括弧の対応";
+"Spelling While Typing" = "入力中のスペルチェック";
+"Use LaTeX-aware spell checking (recommended)" = "LaTeXの構造を考慮する（推奨）";
+"Use legacy spell checking" = "従来方式を使う";
+"LaTeX Spell Checking" = "LaTeXのスペルチェック";
+"Edit Key Bindings…" = "キーバインドファイルを編集…";
+"Key Bindings" = "キーバインド";
+"Edit Command Completion…" = "コマンド補完ファイルを編集…";
+"Command Completion" = "コマンド補完";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Tabでコマンド補完を呼び出す場合、Tabは補完用に予約され、メニューのショートカットには割り当てられません。";
+"Source and Preview Windows" = "ソースとプレビューのウインドウ";
+"Comment Lines and Hidden Settings" = "コメント行と隠し設定";
+"Advanced" = "詳細";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "TeX環境をインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。";

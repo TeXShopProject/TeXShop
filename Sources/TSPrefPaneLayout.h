@@ -7,5 +7,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 @interface TSPrefPaneLayout : NSObject
 + (void)arrangeView:(NSView *)view;
++ (void)attachRows:(NSArray<NSView *> *)rows toView:(NSView *)view;
++ (void)prepareControl:(NSView *)view;
++ (NSStackView *)stackWithViews:(NSArray<NSView *> *)views orientation:(NSUserInterfaceLayoutOrientation)orientation;
 @end
 NS_ASSUME_NONNULL_END

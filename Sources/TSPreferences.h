@@ -27,6 +27,7 @@
 
 #import <AppKit/AppKit.h>
 
+@class TSAutoCompletionListEditor, HelpDocuments;
 @interface TSPreferences : NSObject
 {
 	IBOutlet NSWindow	*_prefsWindow;			/*" connected to the window "*/
@@ -237,6 +238,13 @@
 }
 
 @property NSUInteger themeOperationGeneration;
+@property (strong, nullable) NSButton *legacySpellCheckButton;
+@property (strong, nullable) TSAutoCompletionListEditor *keyBindingEditor;
+@property (strong, nullable) HelpDocuments *settingsHelpDocuments;
+- (IBAction)displayCommentLines:(id)sender;
+- (IBAction)editKeyBindings:(id _Nullable)sender;
+- (IBAction)legacySpellCheckPressed:(NSButton * _Nullable)sender;
+- (void)updateSettingsDependenciesFromDefaults:(NSUserDefaults * _Nonnull)defaults;
 @property (retain) NSFont		*documentFont;			/*" used to track the font that the user has selected for the document window "*/
 @property (retain) NSFont		*consoleFont;			/*" used to track the font that the user has selected for the console window "*/
 @property (retain) NSDictionary *fontAttributes;         /*" used to track the font attributes that the user has selected for the document window "*/

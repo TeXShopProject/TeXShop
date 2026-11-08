@@ -52,7 +52,11 @@ static int refreshes;
     NSButtonCell *_spellCheckCommands, *_spellCheckParameters, *_spellCheckComments;
 }
 @end
+@interface PreferenceProbe (LegacyProbe)
+@property NSButton *legacySpellCheckButton;
+@end
 @implementation PreferenceProbe
+- (NSButton *)legacySpellCheckButton { return nil; }
 - (void)cancelForColor {}
 - (void)cancelEnginePathDiscovery {}
 - (void)updateControlsFromUserDefaults:(NSUserDefaults *)defaults { [self updateSpellingControlsFromDefaults:defaults]; }

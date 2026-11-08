@@ -42,7 +42,7 @@
 "Magnification Panel" = "Magnification Panel";
 "Omit Shell Escape" = "Omit Shell Escape";
 "Warning: Using Shell Escape" = "Warning: Using Shell Escape";
-"Preview" = "Preview";
+"Preview" = "Pré-visualização";
 "Display Format" = "Display Format";// mitsu 1.29b
 "Magnification" = "Magnification";// mitsu 1.29b
 "Copy Format" = "Copy Format";// mitsu 1.29b
@@ -148,7 +148,6 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "A instalação mais recente encontrada está selecionada. Pode escolher outra abaixo. Os comandos dos motores personalizados e o caminho alternativo permanecem inalterados.";
 "Not found (current setting will be kept)" = "Não encontrado (a definição atual será mantida)";
 "Version unavailable" = "Desconhecida";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instale uma distribuição TeX e execute a configuração automática em Definições > Motor.";
 "Use These Paths" = "Usar estes caminhos";
 
 /* Menu keyboard shortcut customization */
@@ -219,3 +218,28 @@
 "The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
 
 "Replace" = "Replace";
+
+"General" = "Geral";
+"Documents and Saving" = "Documentos e gravação";
+"Editor" = "Editor";
+"Spell Checking" = "Ortografia";
+"Appearance" = "Aparência";
+"Typesetting" = "Composição";
+"Console" = "Consola";
+"Updates" = "Atualizações";
+"Defaults for New Documents" = "Predefinições para novos documentos";
+"Matching Brackets" = "Correspondência de parênteses";
+"Spelling While Typing" = "Verificação ao escrever";
+"Use LaTeX-aware spell checking (recommended)" = "Usar verificação adaptada ao LaTeX (recomendado)";
+"Use legacy spell checking" = "Usar verificação tradicional";
+"LaTeX Spell Checking" = "Ortografia LaTeX";
+"Edit Key Bindings…" = "Editar associações de teclas…";
+"Key Bindings" = "Associações de teclas";
+"Edit Command Completion…" = "Editar conclusão de comandos…";
+"Command Completion" = "Conclusão de comandos";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Quando Tab aciona a conclusão de comandos, fica reservado para ela e não pode ser atribuído a um atalho de menu.";
+"Source and Preview Windows" = "Janelas de código e pré-visualização";
+"Comment Lines and Hidden Settings" = "Linhas de comentário e definições ocultas";
+"Advanced" = "Avançadas";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instale uma distribuição TeX e execute a configuração automática em Definições > Composição.";

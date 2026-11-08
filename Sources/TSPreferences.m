@@ -43,6 +43,8 @@
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
+#import "TSAutoCompletionListEditor.h"
+#import "HelpDocuments.h"
 #import "TSPreviewWindow.h"
 #import "TSAppDelegate.h" // mitsu 1.29 (O)
 #import "TSDocument.h"
@@ -151,7 +153,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     self.inputErrorPresented = NO;
     _prefsWindow.delegate = self;
     [self configurePreferenceInputs];
-    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController viewForCategoryIdentifier:TSSettingsCategoryMiscTwo]];
+    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController viewForCategoryIdentifier:TSSettingsCategoryAppearance]];
     [[TSDockIconController sharedController] restoreSavedIcon];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
@@ -174,14 +176,15 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     NSWindow *newWindow = controller.window;
     if (newWindow == nil) return NO;
     controller.settingsDelegate = self;
+    NSDictionary<TSSettingsCategoryID, NSViewController *> *panes = [self classifySettingsPanes:self.preferencePanes];
+    NSView *keyboardOptions = panes[TSSettingsCategoryKeyboard].view;
     controller.keyboardPaneProvider = ^NSViewController<TSSettingsKeyboardPane> * {
-        return [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts sharedController]];
+        TSShortcutPaneController *keyboard = [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts sharedController]];
+        keyboard.settingsHeader = keyboardOptions;
+        return keyboard;
     };
-    NSMutableDictionary<TSSettingsCategoryID, NSViewController *> *panes = [NSMutableDictionary dictionary];
     NSView *footer = nil;
     for (TSPrefPaneController *pane in self.preferencePanes) {
-        TSSettingsCategoryID identifier = pane.categoryIdentifier;
-        if (identifier != nil) { panes[identifier] = pane; }
         if ([pane isKindOfClass:TSPrefFooterController.class]) { footer = pane.view; }
     }
     if (footer == nil) { return NO; }
@@ -699,6 +702,7 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 
      
     [SUD setBool: [(NSCell *)sender state]  forKey:BlockCursorKey];
+    [self updateSettingsDependenciesFromDefaults:SUD];
 }
 
 /*" This method is connected to the 'use font for log and macro editor' checkbox.
@@ -1114,6 +1118,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     else
         result = YES;
 	[SUD setBool:result forKey:SourceAndPreviewInSameWindowKey];
+    [self updateSettingsDependenciesFromDefaults:SUD];
 }
 
 - (IBAction)sourceOnLeftChanged:sender
@@ -1227,6 +1232,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 {
 
 	[SUD setBool:([(NSCell *)sender state]==NSOnState) forKey:PdfColorMapKey];
+    [self updateSettingsDependenciesFromDefaults:SUD];
 }
 
 - (IBAction)colorParam1Changed:sender
@@ -1339,7 +1345,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
             for (NSView *view in choices.subviews) [view setFrameOrigin:NSMakePoint(view.frame.origin.x, view.frame.origin.y - top)];
             [choices setFrameSize:NSMakeSize(560, 340 - top)];
             alert.accessoryView = choices;
-            if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Engine.", @"")];
+            if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Typesetting.", @"")];
             [alert addButtonWithTitle:NSLocalizedString(hasPaths ? @"Use These Paths" : @"OK", @"")];
             if (hasPaths) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
             void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
@@ -1601,10 +1607,38 @@ person script. See also: DefaultTypesetMode.
     [SUD setBool:[(NSButton *)sender state] forKey:MiniaturizeRootFileKey];
 }
 
+- (void)setSettingsControl:(NSControl *)control enabled:(BOOL)enabled
+{
+    if (control == nil) return;
+    control.enabled = enabled;
+    NSView *row = control.superview;
+    while (row != nil && ![row.identifier hasPrefix:@"row."]) row = row.superview;
+    if (row == nil) return;
+    NSMutableArray<NSView *> *pending = [NSMutableArray arrayWithObject:row];
+    while (pending.count) {
+        NSView *view = pending.lastObject; [pending removeLastObject];
+        if ([view isKindOfClass:NSControl.class]) ((NSControl *)view).enabled = enabled;
+        [pending addObjectsFromArray:view.subviews];
+    }
+}
+- (void)updateSettingsDependenciesFromDefaults:(NSUserDefaults *)defaults
+{
+    BOOL block = [defaults boolForKey:BlockCursorKey];
+    [self setSettingsControl:BlockCursorColorWell enabled:block];
+    [self setSettingsControl:_blockSideMatrix enabled:block];
+    [self setSettingsControl:_blockWidthMatrix enabled:block];
+    [self setSettingsControl:_colorParam1Popup enabled:[defaults boolForKey:PdfColorMapKey]];
+    BOOL unified = [defaults boolForKey:SourceAndPreviewInSameWindowKey];
+    [self setSettingsControl:useLeftSourceButton enabled:unified];
+    [self setSettingsControl:useRightSourceButton enabled:unified];
+    [self setSettingsControl:_keepBackupButton enabled:![defaults boolForKey:AutoSaveEnabledKey]];
+}
+
 - (void)updateSpellingControlsFromDefaults:(NSUserDefaults *)defaults
 {
     BOOL enabled = [defaults boolForKey:@"TeXAwareSpellChecking"];
     _texAwareSpellCheckButton.state = enabled ? NSControlStateValueOn : NSControlStateValueOff;
+    if (self.legacySpellCheckButton != nil) self.legacySpellCheckButton.state = enabled ? NSControlStateValueOff : NSControlStateValueOn;
     // The exclusion rules apply only to TeX-aware spell checking.
     _editSpellingExclusionsButton.enabled = enabled;
     _spellCheckCommands.enabled = !enabled;
@@ -1615,6 +1649,25 @@ person script. See also: DefaultTypesetMode.
 - (IBAction)texAwareSpellCheckPressed:(NSButton *)sender
 {
     [SUD setBool:(sender.state == NSControlStateValueOn) forKey:@"TeXAwareSpellChecking"];
+    [self updateSpellingControlsFromDefaults:SUD];
+    [TSSpellSupport preferencesDidChange];
+}
+
+- (IBAction)editKeyBindings:(id)sender
+{
+    if (self.keyBindingEditor == nil) self.keyBindingEditor = [TSAutoCompletionListEditor new];
+    [self.keyBindingEditor openAutoCompletionListEditor:sender];
+}
+
+- (IBAction)displayCommentLines:(id)sender
+{
+    if (self.settingsHelpDocuments == nil) self.settingsHelpDocuments = [HelpDocuments new];
+    [self.settingsHelpDocuments displayCommentLines:sender];
+}
+
+- (IBAction)legacySpellCheckPressed:(NSButton *)sender
+{
+    [SUD setBool:NO forKey:@"TeXAwareSpellChecking"];
     [self updateSpellingControlsFromDefaults:SUD];
     [TSSpellSupport preferencesDidChange];
 }
@@ -2404,6 +2457,7 @@ This method retrieves the application preferences from the defaults object and s
 	[_saveRelatedButton setState:[defaults boolForKey:SaveRelatedKey]];
     [_useTransparencyButton setState:[defaults boolForKey:UseTransparencyKey]];
     [_syncTabButton setState:[defaults boolForKey:SyncUseTabsKey]];
+    [self updateSettingsDependenciesFromDefaults:defaults];
 }
 
 /*" %{This method is not to be called from outside of this class}

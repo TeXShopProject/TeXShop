@@ -2,8 +2,15 @@
 "editor" = "Editor";
 "preview" = "Preview";
 "console" = "Console";
-"typesetting" = "Typeset";
+"typesetting" = "Typesetting";
 "engines" = "Engine";
 "misc-1" = "Misc1";
 "misc-2" = "Misc2";
 "themes" = "Themes";
+
+"general" = "General";
+"documents" = "Documents and Saving";
+"spelling" = "Spell Checking";
+"appearance" = "Appearance";
+"keyboard" = "Keyboard";
+"updates" = "Updates";

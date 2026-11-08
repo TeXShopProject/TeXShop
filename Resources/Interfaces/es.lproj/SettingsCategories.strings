@@ -1,9 +1,16 @@
 "source" = "Código";
 "editor" = "Editor";
-"preview" = "PDF";
+"preview" = "Vista previa";
 "console" = "Consola";
 "typesetting" = "Composición";
 "engines" = "Motor";
 "misc-1" = "Misc1";
 "misc-2" = "Misc2";
 "themes" = "Modos";
+
+"general" = "General";
+"documents" = "Documentos y guardado";
+"spelling" = "Ortografía";
+"appearance" = "Apariencia";
+"keyboard" = "Teclado";
+"updates" = "Actualizaciones";

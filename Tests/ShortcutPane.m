@@ -14,7 +14,8 @@ static NSString *Localized(NSBundle *bundle,SEL cmd,NSString *key,NSString *valu
 static void CheckButtons(NSView *view,NSView *root){
  for(NSView *child in view.subviews){
   if([child isKindOfClass:NSButton.class]) {NSRect rect=[child convertRect:child.bounds toView:root];REQUIRE(NSMinX(rect)>=0 && NSMaxX(rect)<=NSWidth(root.bounds)+1 && NSMinY(rect)>=0 && NSMaxY(rect)<=NSHeight(root.bounds)+1);REQUIRE(NSWidth(child.frame)+1>=child.intrinsicContentSize.width);}
-  CheckButtons(child,root);
+  if([child isKindOfClass:NSClipView.class]) CheckButtons(((NSClipView *)child).documentView,((NSClipView *)child).documentView);
+  else CheckButtons(child,root);
  }
 }
 static NSString *fixtureCharacters;
@@ -108,7 +109,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSMenuItem *first=Item(@"First",@"f",C),*second=Item(@"Second",@"f",C),*equals=Item(@"Equals",@"=",C);
  for(NSMenuItem *item in @[first,second,equals])[menu addItem:item];
  NSDictionary *oldEntry=@{@"key":@"y",@"modifiers":@(C)};
- [TSIsolatedAppKitDefaults setObject:@{@"TSShortcut.First":@{@"key":@"k",@"modifiers":@(C)},@"TSShortcut.showKeyboardShortcuts:.0":oldEntry} forKey:TSMenuShortcutOverridesKey];
+ [TSIsolatedAppKitDefaults setObject:@{@"TSShortcut.First":@{@"key":@"k",@"modifiers":@(C)},@"TSShortcut.showKeyboardShortcuts:.0":oldEntry,@"TSShortcut.openAutoCompletionListEditor:.0":oldEntry,@"TSShortcut.openCommandCompletionList:.0":oldEntry} forKey:TSMenuShortcutOverridesKey];
  TSKeyboardShortcuts *coordinator=[TSKeyboardShortcuts new];
  [coordinator startObservingMenu];
  REQUIRE([first.keyEquivalent isEqual:@"k"] && ![coordinator isKindOfClass:NSWindowController.class]);
@@ -118,7 +119,9 @@ int main(int argc,char **argv){@autoreleasepool{
  TSShortcutCommand *firstCommand=coordinator.store.commands.firstObject;
  REQUIRE([coordinator.store setKey:@"j" modifiers:C forCommand:firstCommand]==nil);
  REQUIRE([TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][@"TSShortcut.showKeyboardShortcuts:.0"] isEqual:oldEntry]);
+ for(NSString *removed in @[@"TSShortcut.openAutoCompletionListEditor:.0",@"TSShortcut.openCommandCompletionList:.0"]) REQUIRE([TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey][removed] isEqual:oldEntry]);
  [coordinator.store restoreAll];
+ REQUIRE([TSIsolatedAppKitDefaults.values[TSMenuShortcutOverridesKey] count]==0);
  NSArray *macros=@[Macro(@"First macro",@"f",C,0),Macro(@"Free",@"z",C,1),Macro(@"Later free",@"z",C,2),Macro(@"JIS",@"-",C|S,3)];
  coordinator.macroProvider=^{return macros;};
  NSMenu *liveMacros=[NSMenu new];NSMenuItem *macroRoot=Item(@"Macros",@"",0);macroRoot.submenu=liveMacros;[main addItem:macroRoot];
@@ -166,7 +169,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSView *legacy=[[NSView alloc]initWithFrame:NSMakeRect(0,0,700,600)];NSTabView *tabs=[[NSTabView alloc]initWithFrame:legacy.bounds];[legacy addSubview:tabs];
  for(NSUInteger i=0;i<9;i++){NSTabViewItem *tab=[[NSTabViewItem alloc]initWithIdentifier:@(i)];tab.label=[NSString stringWithFormat:@"Pane %lu",i];tab.view=[NSView new];[tabs addTabViewItem:tab];}
  NSMutableDictionary *panes=[NSMutableDictionary dictionary];
- NSArray *ids=@[TSSettingsCategorySource,TSSettingsCategoryEditor,TSSettingsCategoryPreview,TSSettingsCategoryConsole,TSSettingsCategoryTypesetting,TSSettingsCategoryEngines,TSSettingsCategoryMiscOne,TSSettingsCategoryMiscTwo,TSSettingsCategoryThemes];
+ NSArray *ids=@[TSSettingsCategoryGeneral,TSSettingsCategoryDocuments,TSSettingsCategoryEditor,TSSettingsCategorySpelling,TSSettingsCategoryAppearance,TSSettingsCategoryPreview,TSSettingsCategoryTypesetting,TSSettingsCategoryConsole,TSSettingsCategoryUpdates];
  for(NSUInteger n=0;n<ids.count;n++){NSViewController *pane=[NSViewController new];pane.view=[tabs tabViewItemAtIndex:n].view;pane.title=ids[n];panes[ids[n]]=pane;}
  NSView *footer=[NSView new];[footer.heightAnchor constraintEqualToConstant:50].active=YES;
  [shell hostPaneControllers:panes footer:footer];
@@ -218,14 +221,14 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSUInteger reason=0;reason<4;reason++){
   [shell selectCategoryIdentifier:TSSettingsCategoryKeyboard];pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];REQUIRE(pane.searchingByKey);
   if(reason==0)[pane changeSearchMode:pane.searchMode];
-  if(reason==1)[shell selectCategoryIdentifier:TSSettingsCategorySource];
+  if(reason==1)[shell selectCategoryIdentifier:TSSettingsCategoryGeneral];
   if(reason==2)[NSNotificationCenter.defaultCenter postNotificationName:NSWindowDidResignKeyNotification object:shell.window];
   if(reason==3)[shell endSession];
   REQUIRE(!pane.searchingByKey);
  }
  REQUIRE(created==1);
- [shell beginSession];[shell selectCategoryIdentifier:TSSettingsCategorySource];[shell selectCategoryIdentifier:TSSettingsCategoryKeyboard];
- fixtureCharacters=@"[";REQUIRE([shell.window performKeyEquivalent:Event(@"5",C|O,23)] && [shell.history.currentIdentifier isEqual:TSSettingsCategorySource]);
+ [shell beginSession];[shell selectCategoryIdentifier:TSSettingsCategoryGeneral];[shell selectCategoryIdentifier:TSSettingsCategoryKeyboard];
+ fixtureCharacters=@"[";REQUIRE([shell.window performKeyEquivalent:Event(@"5",C|O,23)] && [shell.history.currentIdentifier isEqual:TSSettingsCategoryGeneral]);
  fixtureCharacters=@"]";REQUIRE([shell.window performKeyEquivalent:Event(@"6",C|O,22)] && [shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);
  pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];fixtureCharacters=@"[";
  [shell.window performKeyEquivalent:Event(@"5",C|O,23)];REQUIRE([shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);
@@ -288,9 +291,23 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSString *language in translations){@autoreleasepool{
   localizedStrings=translations[language];
   TSShortcutPaneController *translated=[[TSShortcutPaneController alloc]initWithShortcuts:coordinator];
+  NSView *inputHeader=[NSView new];
+  [inputHeader.heightAnchor constraintEqualToConstant:348].active=YES;
+  NSButton *inputButton=[NSButton buttonWithTitle:@"Input fixture" target:nil action:NULL];
+  inputButton.frame=NSMakeRect(16,16,160,30);[inputHeader addSubview:inputButton];
+  translated.settingsHeader=inputHeader;
   NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,340) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];host.contentView=translated.view;
   [host.contentView layoutSubtreeIfNeeded];CheckButtons(translated.view,translated.view);
   REQUIRE(NSHeight(translated.table.enclosingScrollView.frame)>40);
+  REQUIRE(translated.table.enclosingScrollView.documentView==inputHeader.superview);
+  REQUIRE(translated.table.superview==inputHeader.superview);
+  REQUIRE(fabs(NSHeight(translated.table.frame)-NSMaxY([translated.table rectOfRow:translated.table.numberOfRows-1]))<1);
+  [translated.table scrollRowToVisible:translated.table.numberOfRows-1];
+  REQUIRE(NSIntersectsRect(translated.table.visibleRect,[translated.table rectOfRow:translated.table.numberOfRows-1]));
+  translated.search.stringValue=@"missing command fixture";[translated reloadCommands];
+  REQUIRE(translated.table.numberOfRows==0 && NSHeight(translated.table.frame)==0);
+  [inputHeader scrollRectToVisible:inputHeader.bounds];
+  REQUIRE(NSIntersectsRect(inputHeader.visibleRect,inputButton.frame));
   REQUIRE(NSContainsRect(translated.view.bounds,translated.table.enclosingScrollView.frame));
   REQUIRE(NSWidth(translated.searchMode.frame)+1>=translated.searchMode.intrinsicContentSize.width);
   fprintf(stdout,"PASS: %s pane controls fit minimum content size\n",language.UTF8String);

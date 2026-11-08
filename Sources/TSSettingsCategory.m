@@ -10,6 +10,11 @@ TSSettingsCategoryID const TSSettingsCategoryMiscOne = @"misc-1";
 TSSettingsCategoryID const TSSettingsCategoryMiscTwo = @"misc-2";
 TSSettingsCategoryID const TSSettingsCategoryThemes = @"themes";
 TSSettingsCategoryID const TSSettingsCategoryKeyboard = @"keyboard";
+TSSettingsCategoryID const TSSettingsCategoryGeneral = @"general";
+TSSettingsCategoryID const TSSettingsCategoryDocuments = @"documents";
+TSSettingsCategoryID const TSSettingsCategorySpelling = @"spelling";
+TSSettingsCategoryID const TSSettingsCategoryAppearance = @"appearance";
+TSSettingsCategoryID const TSSettingsCategoryUpdates = @"updates";
 @implementation TSSettingsCategory
 - (instancetype)initWithIdentifier:(TSSettingsCategoryID)identifier symbolName:(NSString *)symbolName color:(NSColor *)color startsGroup:(BOOL)startsGroup
 {
