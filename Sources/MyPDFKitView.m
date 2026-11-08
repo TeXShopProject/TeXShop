@@ -43,6 +43,7 @@
 
 #import "MyPDFKitView.h"
 #import "TSExternalPDFReload.h"
+#import "TSLinkPreviewGeometry.h"
 #import "MyPDFView.h"
 #import "globals.h"
 #import "TSDocument.h"
@@ -4240,15 +4241,11 @@ if (! self.skipLinks)
     PDFDestination  *theDestination;
     PDFPage         *linkedPage;
     NSPoint         linkedPoint;
-    NSRect          aRect, bRect, vRect;
-    NSInteger       H = 120, W = 400;
-    NSInteger       leftSide, rightSide;
-    NSRect          pageBounds;
-    BOOL            largerSize, pushUp, longTerm;
+    NSRect          aRect, bRect;
+    BOOL            largerSize, pushUp;
     
     largerSize = NO;
     pushUp = NO;
-  //  longTerm = NO;
     
     NSNumber *timerNumberObject = (NSNumber *)theTimer.userInfo[0];
     NSInteger aTimerNumber = [(NSNumber *)theTimer.userInfo[0] integerValue];
@@ -4276,12 +4273,14 @@ if (! self.skipLinks)
         theDestination = [(PDFAnnotationLink *)theAnnotation destination];
         if (theDestination) {
             linkedPage = [theDestination page];
-            pageBounds = [linkedPage boundsForBox: kPDFDisplayBoxMediaBox];
-            linkedPoint = [theDestination point];
-            //NSLog(@"page origin %f and %f", pageBounds.origin.x, pageBounds.origin.y);
-            //NSLog(@"page bounds %f and %f", pageBounds.size.width, pageBounds.size.height);
-            //NSLog(@"destination %f %f", linkedPoint.x, linkedPoint.y);
-            
+            NSSize imageSize;
+            CGAffineTransform pageTransform;
+            if (!TSLinkPreviewPageGeometry(linkedPage, &imageSize, &pageTransform)) {
+                self.handlingLink = 0;
+                return;
+            }
+            linkedPoint = TSLinkPreviewDestinationPoint([theDestination point], imageSize, pageTransform);
+
             if ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask)
                 largerSize = YES;
             if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
@@ -4291,116 +4290,20 @@ if (! self.skipLinks)
             
             
              
-            // aRect = where text comes from
-            if (linkedPoint.x <= (pageBounds.size.width / 2.0))
-                
-            {
-               // NSLog(@"less than");
-                
-                aRect.origin.x =  linkedPoint.x - 5 ;
-                aRect.origin.y = linkedPoint.y - H + 10   ;
-                aRect.size.height = H;
-                aRect.size.width = W;
-                
-                if (largerSize) {
-                   // aRect.origin.x =  linkedPoint.x - 5 ;
-                    aRect.origin.x =  linkedPoint.x - 10 ;
-                    aRect.origin.y = linkedPoint.y - 3 * H  +10  ;
-                    aRect.size.height =  3 * H;
-                    //aRect.size.width = 1.1 * W;
-                    aRect.size.width = 1.1 * W + 5;
-                    }
+            NSView *documentView = self.documentView;
+            NSRect textBounds = NSZeroRect;
+            if (isfinite(linkedPoint.x) && isfinite(linkedPoint.y))
+                textBounds = TSLinkPreviewTextBounds(linkedPage, imageSize, linkedPoint, pageTransform, largerSize);
+            if (!TSLinkPreviewHasHorizontalDestination([theDestination point], pageTransform) &&
+                !NSIsEmptyRect(textBounds))
+                linkedPoint.x = NSMinX(textBounds);
+            if (!TSLinkPreviewRects(imageSize, linkedPoint, textBounds, documentView.visibleRect,
+                                    mouseLocDocumentView, largerSize, pushUp, documentView.isFlipped,
+                                    &aRect, &bRect)) {
+                self.handlingLink = 0;
+                return;
             }
-            
-            // Special Test
-            
-            
-           else // was if  (linkedPoint.x > (pageBounds.size.width / 2.0))
-           {
-               //NSLog(@"otherwise");
-               aRect.origin.x =  linkedPoint.x - 5 ;
-               aRect.origin.y = linkedPoint.y - H + 10   ;
-               //aRect.origin.x =  linkedPoint.x - W - 5;
-               //aRect.origin.y = linkedPoint.y - H * 0.6; //0.6;
-               aRect.size.height = H;
-               aRect.size.width = W;
-           }
-            
-            
-            
-            
-            
-            
-         /*
-            {
-                aRect.origin.x =  linkedPoint.x - W - 5;
-                aRect.origin.y = linkedPoint.y - H * 0.6; //0.6;
-                aRect.size.height = H;
-                aRect.size.width = W;
-                
-                if (largerSize) {
-                    aRect.origin.x =  linkedPoint.x - W - 10 ;
-                    aRect.origin.y = linkedPoint.y - 3 * H * 0.2  -10  ;
-                    aRect.size.height =  3 * H;
-                    //aRect.size.width = 1.1 * W;
-                    aRect.size.width = 1.1 * W + 5;
-                    }
-            }
-            */
-            
-               
-            
-            
-            
-            // bRect = position on viewing screen
-            bRect.origin.x = mouseLocDocumentView.x + 10;
-            bRect.origin.y = mouseLocDocumentView.y - 2 * H / 3.0 - 10;
-            bRect.size.height = 2 * H / 3.0;
-            bRect.size.width = 2 * W / 3.0;
-           
-            if (pushUp)
-                bRect.origin.y = bRect.origin.y + bRect.size.height + 10;
-            
-            if (largerSize) {
-                
-                bRect.origin.x = mouseLocDocumentView.x - 5;
-                bRect.origin.y = mouseLocDocumentView.y  - 3 * H - 10 ;
-                bRect.size.height = 3 * H ;
-                // // bRect.size.width = 1.1 * W ;
-                bRect.size.width = 1.1 * W + 5;
-                
-                // bRect.origin.x = mouseLocDocumentView.x - 5;
-                // bRect.origin.y = mouseLocDocumentView.y  - 2.5 * H - 10 ;
-                // bRect.size.height = 2.5 * H ;
-                // // bRect.size.width = 1.1 * W ;
-                // bRect.size.width = W; // + 5;
-                
-                
-                if (pushUp)
-                    bRect.origin.y = bRect.origin.y + bRect.size.height + 10;
-                }
-            
-            
-            
-            
-// added by Terada (from this line)
-            if ([self documentView].isFlipped)
-                bRect.origin.y = pushUp ? mouseLocDocumentView.y - bRect.size.height : mouseLocDocumentView.y + 10;
-// added by Terada (until this line)
-            // Now make Tristan Hubsch modification
-            
-            
-            vRect = [self documentView].visibleRect;
-            leftSide = vRect.origin.x;
-            rightSide = vRect.origin.x + vRect.size.width;
-            if (bRect.origin.x < (leftSide + 5))
-                bRect.origin.x = leftSide + 5;
-            else if (bRect.origin.x + bRect.size.width > (rightSide - 5))
-                bRect.origin.x = rightSide - 5 - bRect.size.width;
-            
-            
-            NSData    *myData = [linkedPage dataRepresentation];
-            NSImage *myImageNew = [[NSImage alloc] initWithData: myData];
+            NSImage *myImageNew = TSLinkPreviewImage(linkedPage, imageSize);
             OverView *theOverView = [[OverView alloc] initWithFrame: [[self documentView] frame] ];
             if (self.overView) {
                 [self.overView removeFromSuperview];
