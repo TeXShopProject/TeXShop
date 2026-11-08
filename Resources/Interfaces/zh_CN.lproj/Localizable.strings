@@ -106,7 +106,6 @@
 "Split Window" = "分割窗口";
 "New Document" = "新文件";
 "Link Popups" = "链接预览";
-"Source" = "源代码";
 "Syntax Color expl3 Code" = "高亮 expl3 代码";
 "PDF File Has No Annotations" = "PDF 文件未发现批注";
 
@@ -151,8 +150,6 @@
 "Use These Paths" = "使用这些路径";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "键盘快捷键";
-"Keyboard Shortcuts…" = "键盘快捷键…";
 "Search commands" = "搜索命令";
 "Command" = "命令";
 "Shortcut" = "快捷键";
@@ -170,7 +167,6 @@
 "This shortcut is already used by “%@”." = "此快捷键已被“%@”使用。";
 "Use Command or Control with a key, or a function key (F1–F20)." = "请将 Command 或 Control 与一个按键组合使用，或使用功能键（F1–F20）。";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "选择命令以更改其快捷键。更改立即生效。宏和文本输入按键绑定使用各自的编辑器。";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除此窗口中所做的更改。现有的 KeyEquivalents.plist 设置将保留。";
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
@@ -214,3 +210,6 @@
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除自定菜单快捷键。KeyEquivalents.plist 中的设置将保留。";
 
 "Existing assignments are shown. This key cannot be assigned to a new shortcut." = "显示现有分配。此按键不能分配给新的快捷键。";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "匹配项：%lu";

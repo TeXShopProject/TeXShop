@@ -4,6 +4,7 @@ Uses in-memory defaults; does not start TeXShop or touch spelling dictionaries.
 """
 from pathlib import Path
 import plistlib, subprocess, tempfile
+from pane_fixtures import bundles, sources
 root = Path(__file__).resolve().parents[1]
 def method(path, signature):
     source = (root / path).read_text()
@@ -138,7 +139,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-spelling-preference-') as td:
     subprocess.run([str(t/'probe')],check=True)
 
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa',
-        str(root/'Tests/SpellCheck/preferences.m'),'-o',str(t/'nibs')],check=True)
-    nibs = sorted((root/'Resources/Interfaces').glob('*/Preferences.nib/keyedobjects*.nib'))
-    assert len(nibs) == 24
+        '-I',str(root/'Sources'),str(root/'Tests/SpellCheck/preferences.m'),*map(str,sources(root,('Source',))),'-o',str(t/'nibs')],check=True)
+    nibs = bundles(root,t,('Source',))
+    assert len(nibs) == 12
     subprocess.run([str(t/'nibs'), *map(str,nibs)],check=True)

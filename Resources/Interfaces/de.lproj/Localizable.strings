@@ -110,7 +110,6 @@
 "Split Window" = "Geteiltes Fenster";
 "New Document" = "Neues Dokument";
 "Link Popups" = "Link Popups";
-"Source" = "Quelltext";
 "Syntax Color expl3 Code" = "expl3-Syntax farblich hervorheben";
 "PDF File Has No Annotations" = "PDF-Datei hat keine Anmerkungen";
 
@@ -154,8 +153,6 @@
 "Use These Paths" = "Diese Pfade verwenden";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "Tastaturkurzbefehle";
-"Keyboard Shortcuts…" = "Tastaturkurzbefehle…";
 "Search commands" = "Befehle suchen";
 "Command" = "Befehl";
 "Shortcut" = "Kurzbefehl";
@@ -173,7 +170,6 @@
 "This shortcut is already used by “%@”." = "Dieser Kurzbefehl wird bereits von „%@“ verwendet.";
 "Use Command or Control with a key, or a function key (F1–F20)." = "Verwenden Sie eine Taste mit Command oder Control oder eine Funktionstaste (F1–F20).";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Wählen Sie einen Befehl, um seinen Kurzbefehl zu ändern. Änderungen werden sofort wirksam. Makros und Texteingabe-Tastenbelegungen haben eigene Editoren.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Ihre Änderungen in diesem Fenster werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
@@ -217,3 +213,6 @@
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Eigene Menükurzbefehle werden entfernt. Bestehende Einstellungen in KeyEquivalents.plist bleiben erhalten.";
 
 "Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Vorhandene Zuweisungen werden angezeigt. Diese Taste kann keinem neuen Kurzbefehl zugewiesen werden.";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "Treffer: %lu";

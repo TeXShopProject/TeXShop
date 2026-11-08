@@ -1,0 +1,287 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="25079.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+  <dependencies>
+    <deployment version="101000" identifier="macosx" />
+    <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="25079.1" />
+    <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0" />
+  </dependencies>
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="TSPrefMiscOneController">
+      <connections>
+        <outlet property="BlockCursorColorWell" destination="Wrg-WR-c6H" id="SPY-H8-l6J" />
+        <outlet property="blockCursorButton" destination="RtB-ZN-uCk" id="nEg-xR-8fy" />
+        <outlet property="blockSideMatrix" destination="l7y-UX-7WO" id="Mn1-fT-wtN" />
+        <outlet property="blockWidthMatrix" destination="uve-Zu-06Q" id="dDK-7o-RT3" />
+        <outlet property="colorMapButton" destination="437" id="457" />
+        <outlet property="colorParam1Popup" destination="434" id="458" />
+        <outlet property="imageCopyTypePopup" destination="405" id="456" />
+        <outlet property="autoSaveEnabledButton" destination="RVR-YO-Xhy" id="Ghk-Ii-qus" />
+        <outlet property="keepBackupButton" destination="jhC-up-cya" id="vzo-ev-Zxm" />
+        <outlet property="saveEncodingMenuButton" destination="5xa-en-KkV" id="QZ8-E1-cUi" />
+        <outlet property="view" destination="400" id="settings-root-view" />
+      </connections>
+    </customObject>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder" />
+    <customObject id="-3" userLabel="Application" customClass="NSObject" />
+    <customView key="view" id="400" identifier="settings.400">
+      <rect key="frame" x="10" y="33" width="652" height="623" />
+      <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+      <subviews>
+        <box fixedFrame="YES" title="Image Copy Type" translatesAutoresizingMaskIntoConstraints="NO" id="386" identifier="settings.386">
+          <rect key="frame" x="137" y="553" width="363" height="58" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="g8D-eJ-1Uv" identifier="settings.g8D-eJ-1Uv">
+            <rect key="frame" x="0.0" y="0.0" width="363" height="46" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="405" identifier="settings.405">
+                <rect key="frame" x="54" y="9" width="210" height="26" />
+                <autoresizingMask key="autoresizingMask" />
+                <popUpButtonCell key="cell" type="push" title="PDF" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="31" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="416" id="899">
+                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="message" />
+                  <menu key="menu" title="OtherViews" id="377">
+                    <items>
+                      <menuItem title="PDF" state="on" tag="31" id="416" />
+                      <menuItem title="TIFF (uncompressed)" tag="1" id="380" />
+                      <menuItem title="TIFF (LZW)" tag="2" id="409" />
+                      <menuItem title="TIFF (PackBits)" tag="3" id="404" />
+                      <menuItem title="JPEG (High)" tag="11" id="375" />
+                      <menuItem title="JPEG (Medium)" tag="13" id="423" />
+                      <menuItem title="JPEG (Low)" tag="15" id="407" />
+                      <menuItem title="PNG" tag="21" id="395" />
+                    </items>
+                  </menu>
+                </popUpButtonCell>
+                <connections>
+                  <action selector="imageCopyTypeChanged:" target="-2" id="455" />
+                </connections>
+              </popUpButton>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Color Mapping" translatesAutoresizingMaskIntoConstraints="NO" id="447" identifier="settings.447">
+          <rect key="frame" x="137" y="452" width="363" height="89" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="N8d-Su-fXT" identifier="settings.N8d-Su-fXT">
+            <rect key="frame" x="0.0" y="0.0" width="363" height="77" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="439" identifier="settings.439">
+                <rect key="frame" x="24" y="14" width="162" height="17" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Foreground Prominence:" id="904">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <popUpButton toolTip="Higher value emphasizes forecolor. No effect for PDF or EPS formats." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="434" identifier="settings.434">
+                <rect key="frame" x="190" y="9" width="123" height="26" />
+                <autoresizingMask key="autoresizingMask" />
+                <popUpButtonCell key="cell" type="push" title="0 (normal)" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="428" id="902">
+                  <behavior key="behavior" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="message" />
+                  <menu key="menu" title="OtherViews" id="442">
+                    <items>
+                      <menuItem title="-2" tag="-2" id="438" />
+                      <menuItem title="-1" tag="-1" id="435" />
+                      <menuItem title="0 (normal)" state="on" id="428" />
+                      <menuItem title="1" tag="1" id="440" />
+                      <menuItem title="2" tag="2" id="436" />
+                      <menuItem title="3" tag="3" id="441" />
+                      <menuItem title="4" tag="4" id="427" />
+                      <menuItem title="5" tag="5" id="431" />
+                    </items>
+                  </menu>
+                </popUpButtonCell>
+                <connections>
+                  <action selector="colorParam1Changed:" target="-2" id="454" />
+                </connections>
+              </popUpButton>
+              <button toolTip="Check if you want to map black and white to different colors" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="437" identifier="settings.437">
+                <rect key="frame" x="17" y="50" width="142" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Use Color Mapping" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="903">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="colorMapChanged:" target="-2" id="451" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Saving Documents" translatesAutoresizingMaskIntoConstraints="NO" id="5ba-33-JZx" identifier="settings.5ba-33-JZx">
+          <rect key="frame" x="137" y="87" width="363" height="130" />
+          <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+          <view key="contentView" id="C6J-2i-mg2" identifier="settings.C6J-2i-mg2">
+            <rect key="frame" x="0.0" y="0.0" width="363" height="118" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RVR-YO-Xhy" identifier="settings.RVR-YO-Xhy">
+                <rect key="frame" x="28" y="92" width="327" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Enable Autosave and Versions" bezelStyle="regularSquare" imagePosition="left" inset="2" id="PVm-Il-A7W">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                  <connections>
+                    <action selector="autoSaveEnabledPressed:" target="-2" id="exg-2q-6qE" />
+                  </connections>
+                </buttonCell>
+              </button>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N8r-9Y-N2R" identifier="settings.N8r-9Y-N2R">
+                <rect key="frame" x="44" y="60" width="305" height="30" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" lineBreakMode="wordWrapping" title="A macOS feature that overwrites the file automatically while you edit. Takes effect after TeXShop restarts." id="sto-5E-9Q5">
+                  <font key="font" metaFont="smallSystem" />
+                  <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhC-up-cya" identifier="settings.jhC-up-cya">
+                <rect key="frame" x="46" y="34" width="309" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Keep the previous file as “name~” when saving" bezelStyle="regularSquare" imagePosition="left" inset="2" id="hmg-EV-KUC">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                  <connections>
+                    <action selector="keepBackupPressed:" target="-2" id="m6v-am-51U" />
+                  </connections>
+                </buttonCell>
+              </button>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5xa-en-KkV" identifier="settings.5xa-en-KkV">
+                <rect key="frame" x="28" y="10" width="327" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Show Encoding in Save Dialog" bezelStyle="regularSquare" imagePosition="left" inset="2" id="jjy-QZ-C0q">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                  <connections>
+                    <action selector="saveEncodingMenuPressed:" target="-2" id="wkl-jC-b2B" />
+                  </connections>
+                </buttonCell>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Insertion Cursor" translatesAutoresizingMaskIntoConstraints="NO" id="cSu-im-H1E" identifier="settings.cSu-im-H1E">
+          <rect key="frame" x="137" y="229" width="363" height="211" />
+          <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+          <view key="contentView" id="ohZ-7S-ijU" identifier="settings.ohZ-7S-ijU">
+            <rect key="frame" x="0.0" y="0.0" width="363" height="199" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sHY-8y-Sax" identifier="settings.sHY-8y-Sax">
+                <rect key="frame" x="28" y="141" width="96" height="16" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" lineBreakMode="clipping" title="Cursor Color:" id="XCi-5f-wnn">
+                  <font key="font" usesAppearanceFont="YES" />
+                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RtB-ZN-uCk" identifier="settings.RtB-ZN-uCk">
+                <rect key="frame" x="28" y="172" width="144" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Use Block Cursor" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Nie-mP-dxR">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                  <connections>
+                    <action selector="blockCursorPressed:" target="-2" id="sKx-M3-4Cc" />
+                  </connections>
+                </buttonCell>
+              </button>
+              <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wrg-WR-c6H" identifier="settings.Wrg-WR-c6H">
+                <rect key="frame" x="123" y="134" width="92" height="28" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB" />
+                <connections>
+                  <action selector="BlockCursorColorChanged:" target="-2" id="PGV-Mz-BcB" />
+                </connections>
+              </colorWell>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uve-Zu-06Q" identifier="settings.uve-Zu-06Q">
+                <rect key="frame" x="175.5" y="11" width="125" height="38" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="125" height="18" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="tg5-uf-NZU">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="One Character" imagePosition="left" alignment="left" inset="2" id="i6L-IX-ZLk">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Two Characters" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="shH-XU-nyE">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="blockWidthPressed:" target="-2" id="Xqz-70-Lpv" />
+                </connections>
+              </matrix>
+              <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SWN-Un-R10" identifier="settings.SWN-Un-R10">
+                <rect key="frame" x="28" y="23" width="146" height="16" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" lineBreakMode="clipping" title="Width for Left or Right:" id="4k3-5Y-CEt">
+                  <font key="font" usesAppearanceFont="YES" />
+                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7y-UX-7WO" identifier="settings.l7y-UX-7WO">
+                <rect key="frame" x="175.5" y="63" width="67" height="58" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="67" height="18" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="kCh-5t-39X">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Left" imagePosition="left" alignment="left" inset="2" id="qMw-aC-Ilj">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Center" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="g92-sP-oZU">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Right" imagePosition="left" alignment="left" tag="2" inset="2" id="CBT-8e-Ayl">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="blockSidePressed:" target="-2" id="CsW-vR-Krr" />
+                </connections>
+              </matrix>
+              <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QEw-MD-Er9" identifier="settings.QEw-MD-Er9">
+                <rect key="frame" x="28" y="85" width="136" height="16" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" lineBreakMode="clipping" title="Side of Insertion Line:" id="xvd-dM-RGh">
+                  <font key="font" usesAppearanceFont="YES" />
+                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+      </subviews>
+    </customView>
+  </objects>
+</document>

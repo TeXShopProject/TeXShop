@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise production macro save/validation methods with no visible UI or real preferences."""
 from pathlib import Path
+from shortcut_sources import production_source
 import subprocess
 import tempfile
 import sys
@@ -23,7 +24,7 @@ parts = {
 }
 def run_case(name, changes=()):
     sources = dict(parts)
-    sources['TSKeyboardShortcuts.m'] = (root / 'Sources/TSKeyboardShortcuts.m').read_text()
+    sources['TSKeyboardShortcuts.m'] = production_source(root)
     for filename, before, after in changes:
         assert sources[filename].count(before) == 1, (name, filename, before)
         sources[filename] = sources[filename].replace(before, after)

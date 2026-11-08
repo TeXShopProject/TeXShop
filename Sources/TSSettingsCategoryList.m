@@ -4,16 +4,16 @@
 + (instancetype)standardList
 {
     return [[self alloc] initWithCategories:@[
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategorySource symbolName:@"doc.text" color:NSColor.systemBlueColor startsGroup:NO legacyIndex:0],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryEditor symbolName:@"text.cursor" color:NSColor.systemOrangeColor startsGroup:NO legacyIndex:1],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryPreview symbolName:@"doc.richtext" color:NSColor.systemCyanColor startsGroup:YES legacyIndex:2],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryConsole symbolName:@"terminal" color:NSColor.systemGrayColor startsGroup:NO legacyIndex:3],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryTypesetting symbolName:@"textformat" color:NSColor.systemPurpleColor startsGroup:YES legacyIndex:4],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryEngines symbolName:@"gearshape.2" color:NSColor.systemGrayColor startsGroup:NO legacyIndex:5],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryMiscOne symbolName:@"slider.horizontal.3" color:NSColor.systemIndigoColor startsGroup:YES legacyIndex:6],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryMiscTwo symbolName:@"switch.2" color:NSColor.systemTealColor startsGroup:NO legacyIndex:7],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryThemes symbolName:@"paintpalette" color:NSColor.systemPinkColor startsGroup:NO legacyIndex:8],
-        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryKeyboard symbolName:@"keyboard" color:NSColor.systemOrangeColor startsGroup:YES legacyIndex:NSNotFound]]];
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategorySource symbolName:@"doc.text" color:NSColor.systemBlueColor startsGroup:NO],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryEditor symbolName:@"text.cursor" color:NSColor.systemOrangeColor startsGroup:NO],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryPreview symbolName:@"doc.richtext" color:NSColor.systemCyanColor startsGroup:YES],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryConsole symbolName:@"terminal" color:NSColor.systemGrayColor startsGroup:NO],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryTypesetting symbolName:@"textformat" color:NSColor.systemPurpleColor startsGroup:YES],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryEngines symbolName:@"gearshape.2" color:NSColor.systemGrayColor startsGroup:NO],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryMiscOne symbolName:@"slider.horizontal.3" color:NSColor.systemIndigoColor startsGroup:YES],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryMiscTwo symbolName:@"switch.2" color:NSColor.systemTealColor startsGroup:NO],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryThemes symbolName:@"paintpalette" color:NSColor.systemPinkColor startsGroup:NO],
+        [[TSSettingsCategory alloc] initWithIdentifier:TSSettingsCategoryKeyboard symbolName:@"keyboard" color:NSColor.systemOrangeColor startsGroup:YES]]];
 }
 - (instancetype)initWithCategories:(NSArray<TSSettingsCategory *> *)categories
 {

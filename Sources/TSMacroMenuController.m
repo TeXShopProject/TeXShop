@@ -46,7 +46,7 @@ static void TSCollectShortcutEntries(NSArray *items, NSIndexPath *parent, NSStri
         NSString *name = item[NAME_KEY];
         if (![name isKindOfClass:NSString.class]) { return; }
         NSIndexPath *path = [parent indexPathByAddingIndex:index];
-        NSString *title = prefix.length > 0 ? [prefix stringByAppendingFormat:@" ▸ %@", name] : name;
+        NSString *title = prefix.length > 0 ? [prefix stringByAppendingFormat:@" › %@", name] : name;
         NSArray *children = item[SUBMENU_KEY];
         if ([children isKindOfClass:NSArray.class]) {
             TSCollectShortcutEntries(children, path, title, entries);
@@ -68,7 +68,7 @@ static id sharedMacroMenuController = nil;
     NSMutableArray<TSShortcutMacro *> *entries = [NSMutableArray array];
     NSArray *children = self.macroDict[SUBMENU_KEY];
     if ([children isKindOfClass:NSArray.class]) {
-        TSCollectShortcutEntries(children, [NSIndexPath indexPathWithIndexes:NULL length:0], @"", entries);
+        TSCollectShortcutEntries(children, [NSIndexPath indexPathWithIndexes:NULL length:0], NSLocalizedString(@"Macros", @""), entries);
     }
     return [entries copy];
 }

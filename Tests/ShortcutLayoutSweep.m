@@ -1,5 +1,5 @@
 #pragma clang diagnostic ignored "-Wnullability-completeness"
-#import "../Sources/TSKeyboardShortcuts.m"
+#import "TSKeyboardShortcuts.m"
 #import "ShortcutRecordingBaseline.h"
 #import "TestAppKitIsolation.h"
 static NSString *searchUnshifted;

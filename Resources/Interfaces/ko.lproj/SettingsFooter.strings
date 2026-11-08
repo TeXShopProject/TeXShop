@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+"1091.title" = "OtherViews";
+"1092.title" = "Legacy pTeX (EUC)";
+"1093.title" = "Legacy pTeX (Shift JIS) ";
+"1094.title" = "pTeX (shell script)";
+"1095.title" = "pTeX (latexmk)";
+"1096.title" = "pTeX (ptex2pdf)";
+"1097.title" = "upTeX (shell script)";
+"1098.title" = "upTeX (latexmk)";
+"1099.title" = "upTeX (ptex2pdf)";
+"1100.title" = "TeXShop 기본";
+"1101.title" = "설정 프로파일";
+"LIV-SV-CEL.title" = "Changes are saved automatically.";

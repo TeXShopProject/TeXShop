@@ -17,8 +17,7 @@ FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategoryKeyboard;
 @property (copy, readonly) NSString *symbolName;
 @property (copy, readonly) NSColor *color;
 @property (readonly) BOOL startsGroup;
-@property (readonly) NSUInteger legacyIndex;
-- (instancetype)initWithIdentifier:(TSSettingsCategoryID)identifier symbolName:(NSString *)symbolName color:(NSColor *)color startsGroup:(BOOL)startsGroup legacyIndex:(NSUInteger)legacyIndex NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithIdentifier:(TSSettingsCategoryID)identifier symbolName:(NSString *)symbolName color:(NSColor *)color startsGroup:(BOOL)startsGroup NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 @end

@@ -3,6 +3,7 @@
 No TeXShop launch, real preference writes or input-source selection changes.
 """
 from pathlib import Path
+from shortcut_sources import production_source
 import subprocess
 import tempfile
 import sys
@@ -52,7 +53,7 @@ print('PASS: deferred launch installation, PDF search call sites and stable spli
 
 with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
     (Path(td) / 'MacroKeyProduction.inc').write_text(macro[macro.index('NSString *getKeyEquivalentFromString('):])
-    production=(root/'Sources/TSKeyboardShortcuts.m').read_text()
+    production=production_source(root)
     (Path(td)/'TSKeyboardShortcuts.m').write_text(production)
     binary = Path(td) / 'shortcuts'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Carbon', '-I', td, '-I',str(root/'Sources'),

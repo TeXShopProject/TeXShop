@@ -394,7 +394,6 @@
 		52A4037008AE1F6C0070F041 /* Encodings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52A4036E08AE1F6C0070F041 /* Encodings.strings */; };
 		52B13E4808A8182F00756E5E /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E4708A8182F00756E5E /* MainMenu.nib */; };
 		52B13E4A08A8183B00756E5E /* TSDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E4908A8183B00756E5E /* TSDocument.nib */; };
-		52B13E4C08A8183B00756E5E /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E4B08A8183B00756E5E /* Preferences.nib */; };
 		52B13E4E08A8183B00756E5E /* completionpanel1.2.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E4D08A8183B00756E5E /* completionpanel1.2.nib */; };
 		52B13E5008A8183B00756E5E /* FindPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E4F08A8183B00756E5E /* FindPanel.nib */; };
 		52B13E5208A8183B00756E5E /* MacroEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E5108A8183B00756E5E /* MacroEditor.nib */; };
@@ -407,6 +406,39 @@
 		E18300000000000000000002 = {isa = PBXBuildFile; fileRef = E18200000000000000000210; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000003 = {isa = PBXBuildFile; fileRef = E18200000000000000000310; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000004 = {isa = PBXBuildFile; fileRef = E18200000000000000000410; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		F5BAC2E9ED1431D54CC853B8 = {isa = PBXBuildFile; fileRef = 9E2B2A2E258A950674839CF0; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		0E1D12D0E21A008917374A1E = {isa = PBXBuildFile; fileRef = 83392E91D403FD331C9F5227; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		606589B6401E6D11869F9676 = {isa = PBXBuildFile; fileRef = C887033427B86E6D68775FD5; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		1B6906536FA308D7521926AC = {isa = PBXBuildFile; fileRef = 1C41561D8526C276A6777DAF; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		59D00431562CC5D5284F572A = {isa = PBXBuildFile; fileRef = C37E9B8BD9B42C465E1499E1; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		229516F92B6CD437F5EC545D = {isa = PBXBuildFile; fileRef = 0DA9C47DC56DE56839F542D7; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		AD3A7863EC92B9A0EB27EBAC = {isa = PBXBuildFile; fileRef = FFEABD46FD6CFA475B43C550; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		7FBE1154734DEEFF44F66B0B = {isa = PBXBuildFile; fileRef = 2C040BA0587C97E5FC9EDCFB; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		69C1D5A66B7C5F39CF451952 = {isa = PBXBuildFile; fileRef = 914FD14BA7F8207FD7668B1B; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		C5E5755DAF0C7FF0A1D9B0EC = {isa = PBXBuildFile; fileRef = 9F44724C28EB6026DDE69D43; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		CAF846602608D27C8AF12314 = {isa = PBXBuildFile; fileRef = AD4BAFA1B2474C7584091E35; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		10AD58DE127E1BE737804176 = {isa = PBXBuildFile; fileRef = D179A39DAF6B708875BC62AF; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		15E8103885B6859D7BDB8BCA = {isa = PBXBuildFile; fileRef = 6A18C345080B640F64D9DAD7; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		9C4FE249828AFAEDE06BEB54 = {isa = PBXBuildFile; fileRef = 0731721CBFD6F17AD0DD4F24; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		ED635084DB6403693BED4C9A = {isa = PBXBuildFile; fileRef = F4EB4ACA7ED000B71ADE66E6; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		BCC3EA04E08B38760A6DFA77 = {isa = PBXBuildFile; fileRef = 197586F0A4601BC5C8BCBB2E; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		6557BE8AC597BF69E384ECD7 = {isa = PBXBuildFile; fileRef = 3F36D4D0A156D4E499455DB0; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		74D2A5947C2DD85F835BB9DE = {isa = PBXBuildFile; fileRef = 9F49BE4A6403EFC7BED1FE8F; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		8CD3CD5CE098B44C82C78055 = {isa = PBXBuildFile; fileRef = 7A5D3AFB511E81E0D1A4BA2D; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		6B0B0109B658522DFA2140E9 = {isa = PBXBuildFile; fileRef = FD8A3D5420C9AFA5596D2537; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5DA0EA3040F181A5BCB9F158 = {isa = PBXBuildFile; fileRef = 990A808007D20F765F7FE0C6; };
+		189C8934525E8ADC82973F88 = {isa = PBXBuildFile; fileRef = F52642F891C51F4B3DC14DC6; };
+		6238AF3CA7ADC85CC19714C5 = {isa = PBXBuildFile; fileRef = A9323445DF3DF72222E931D8; };
+		071F5C0A37BF3C101D7D1383 = {isa = PBXBuildFile; fileRef = B09BD3059910CBD66090E52A; };
+		D56C4AF2B0A51C2AC9D839A7 = {isa = PBXBuildFile; fileRef = 688B0CC26F55F9608394F6C6; };
+		B498D5031422A02D6EC189A5 = {isa = PBXBuildFile; fileRef = 560B5B73FB1B181B75991C27; };
+		432455DCDD9140C98898DACF = {isa = PBXBuildFile; fileRef = 137953CD7A2A727D012D4C92; };
+		A889E8489214BFBB4CC8BDA6 = {isa = PBXBuildFile; fileRef = 5AD71523ECFDA5FF1247B811; };
+		92E7A1E675C3463521E74343 = {isa = PBXBuildFile; fileRef = 70B23652136601E3B33364A8; };
+		B747999248C60A025937CED0 = {isa = PBXBuildFile; fileRef = E55B71FC15FC1E286C7B4535; };
+		07C669D2A85D945E43F6A90F = {isa = PBXBuildFile; fileRef = 9C1A1390768C69BE4A3AAFA0; };
+		6807CF7100956134488CB6B6 = {isa = PBXBuildFile; fileRef = 717DB6D9B0CBF322A1841F96; };
+		7C333AA4836C970F7E40D31C = {isa = PBXBuildFile; fileRef = 31E91C29EB2B7A00320EA3FD; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -1095,6 +1127,197 @@
 		E18200000000000000000310 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsSidebarRow.m; sourceTree = "<group>"; };
 		E18200000000000000000400 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsContentView.h; sourceTree = "<group>"; };
 		E18200000000000000000410 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsContentView.m; sourceTree = "<group>"; };
+		9BEADA65F9CB4B3EC9B86C51 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefConsoleController.h"; sourceTree = SOURCE_ROOT; };
+		9E2B2A2E258A950674839CF0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefConsoleController.m"; sourceTree = SOURCE_ROOT; };
+		163BED1EC1254A6DDD5193A1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefEditorController.h"; sourceTree = SOURCE_ROOT; };
+		83392E91D403FD331C9F5227 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefEditorController.m"; sourceTree = SOURCE_ROOT; };
+		2562A3FC75062C43264AF527 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefEnginesController.h"; sourceTree = SOURCE_ROOT; };
+		C887033427B86E6D68775FD5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefEnginesController.m"; sourceTree = SOURCE_ROOT; };
+		4B75A852E8A0E9E52C7BEF2C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefFooterController.h"; sourceTree = SOURCE_ROOT; };
+		1C41561D8526C276A6777DAF = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefFooterController.m"; sourceTree = SOURCE_ROOT; };
+		C13B87CD470F4FA81D5F2052 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefMiscOneController.h"; sourceTree = SOURCE_ROOT; };
+		C37E9B8BD9B42C465E1499E1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefMiscOneController.m"; sourceTree = SOURCE_ROOT; };
+		0DFD50A8720DED31EF34BD2C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefMiscTwoController.h"; sourceTree = SOURCE_ROOT; };
+		0DA9C47DC56DE56839F542D7 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefMiscTwoController.m"; sourceTree = SOURCE_ROOT; };
+		7CD635C71691DED09407018A = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefPaneController.h"; sourceTree = SOURCE_ROOT; };
+		FFEABD46FD6CFA475B43C550 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefPaneController.m"; sourceTree = SOURCE_ROOT; };
+		9ED9A49A7AF7D1A871F0B1E1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefPreviewController.h"; sourceTree = SOURCE_ROOT; };
+		2C040BA0587C97E5FC9EDCFB = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefPreviewController.m"; sourceTree = SOURCE_ROOT; };
+		33AEA6DC59052A7DD79C0727 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefSourceController.h"; sourceTree = SOURCE_ROOT; };
+		914FD14BA7F8207FD7668B1B = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefSourceController.m"; sourceTree = SOURCE_ROOT; };
+		770E98589B1F2DF5CDE16E95 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefThemeNameController.h"; sourceTree = SOURCE_ROOT; };
+		9F44724C28EB6026DDE69D43 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefThemeNameController.m"; sourceTree = SOURCE_ROOT; };
+		460EB15296A97AFEC0252926 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefThemesController.h"; sourceTree = SOURCE_ROOT; };
+		AD4BAFA1B2474C7584091E35 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefThemesController.m"; sourceTree = SOURCE_ROOT; };
+		49FEAF4B2E1C4BA0FBE8CF8D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefTypesettingController.h"; sourceTree = SOURCE_ROOT; };
+		D179A39DAF6B708875BC62AF = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefTypesettingController.m"; sourceTree = SOURCE_ROOT; };
+		77F061C6FC654AF63846C6A8 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefPaneLayout.h"; sourceTree = SOURCE_ROOT; };
+		6A18C345080B640F64D9DAD7 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefPaneLayout.m"; sourceTree = SOURCE_ROOT; };
+		0731721CBFD6F17AD0DD4F24 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutAlerts.m"; sourceTree = SOURCE_ROOT; };
+		F4EB4ACA7ED000B71ADE66E6 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutModels.m"; sourceTree = SOURCE_ROOT; };
+		197586F0A4601BC5C8BCBB2E = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutPaneController.m"; sourceTree = SOURCE_ROOT; };
+		3F36D4D0A156D4E499455DB0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutSearch.m"; sourceTree = SOURCE_ROOT; };
+		9F49BE4A6403EFC7BED1FE8F = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutStore.m"; sourceTree = SOURCE_ROOT; };
+		7A5D3AFB511E81E0D1A4BA2D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutUtilities.m"; sourceTree = SOURCE_ROOT; };
+		2EB5A58F0470E139A9CBD9FE = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSShortcutInternal.h"; sourceTree = SOURCE_ROOT; };
+		64C0EB54C63BE7688986FD9F = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPreferences+Panes.h"; sourceTree = SOURCE_ROOT; };
+		FD8A3D5420C9AFA5596D2537 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPreferences+Panes.m"; sourceTree = SOURCE_ROOT; };
+		431DCA0173805C7E39E23833 = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsConsole.xib"; sourceTree = SOURCE_ROOT; };
+		6487D0CF2B512EB800A5CAA8 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		AEB7B1C47D75750C239A59A7 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		C3712689BD3BE57E22C43301 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		FC1434C38EDAAD7236FD6DF3 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		DA58D7053263251B5D880AA7 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		2F4C146E123843D4990BFC82 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		666BA65FABE4640133074171 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		6456682CC5F3A75AC013B03B = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		F52B9735CFD515C00262539A = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		D04C9C47D71C0770AFED96C1 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		AAC794F10084FB641DB1F1C5 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
+		10EE5ED8E155ADB2DDBD7463 = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsEditor.xib"; sourceTree = SOURCE_ROOT; };
+		2DB0F0564F9D4349428F6406 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		1596A96825A4A52134739C10 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		D75E0AEE0757D139B79A9FF9 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		4A6A55FEACB5049612E4DADA = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		CD11CF7785E50052DC287C68 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		925EC2F0AEDBA79D3EC43BE7 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		E5318E42FD81415DE4F45795 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		7F6D94CBB4AC17DB77A65B3F = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		1A5EB828303F858D57B11EE2 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		78FE58BF8BE776F2D6E14714 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		DA47C62CCA26C3F1FEE24CE6 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsEditor.strings"; sourceTree = SOURCE_ROOT; };
+		3CEB5920AA1052F95074B23C = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsEngines.xib"; sourceTree = SOURCE_ROOT; };
+		38BEDC6505497797DFB3509E = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		CA456FF36FC4A2C338B1D801 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		30620C3536AA0887B537002A = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		42962B054EA12577ABC45756 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		A4C10B8E462D27D79B5CBA34 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		D556DBDC3D76C72A770DB2CD = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		957FF766AAFA2725D2494EEC = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		495C95B619CA0B4C86F8F875 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		FA338463E2BBD70D216737FA = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		6EDD0D559CE3B757A81C7132 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		36543880D9BCBC8041A688F9 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsEngines.strings"; sourceTree = SOURCE_ROOT; };
+		75FA24A7442AF450130F872F = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsFooter.xib"; sourceTree = SOURCE_ROOT; };
+		7121B372F382FB3C380204F9 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		3B19691524C89F0EDABAF35A = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		856C90C0CD24210E5933BA56 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		FC83DD6E4475D704E05A2A7A = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		AFE9B564077678378611129F = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		E315B7CED3C03C88E3F09B35 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		FB304322DE08D2EB3D2082E4 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		F4D34416699B1407D4EE7BB1 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		DC2B965E0FFA6CACC92345FF = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		42B33B6F8730BD994042F436 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		831BEC14DD08A7FA9901CABE = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsFooter.strings"; sourceTree = SOURCE_ROOT; };
+		3A3D8744B2429E511532B6C0 = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsMiscOne.xib"; sourceTree = SOURCE_ROOT; };
+		02ED9C43EF15689F79096090 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		3A8D8B1F73EA00852C974FB0 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		2C380C00F0F9F3D7474FCE2B = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		78D223FBB2086A50A8BFE3AF = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		C9242EBCB4007AC62CA1125F = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		5FAD328057322C5B0C2550A7 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		C73C078E8821547F74D7027C = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		C917B2ED7EBA8731ED3CBF15 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		ABB45949098F148CDE34A68B = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		97FFDF294186EB2D07CECD8D = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		3FE119E186DF949DF009D994 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsMiscOne.strings"; sourceTree = SOURCE_ROOT; };
+		4708CD6CA588FC77BDF9207A = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsMiscTwo.xib"; sourceTree = SOURCE_ROOT; };
+		5C99392A2A8CA98A55E8DB47 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		F0E4FF88746C89BB28A83BFA = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		3602794C6BB383A846566FE5 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		713F3C60BE522FCF592283FB = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		06BB4F10B61056B1885CDBDD = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		580F426076557073EF0A0561 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		ACCBCEBE950E6C9F0049B1E4 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		7402AD7EA841F3EE9CFD8492 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		EC2E8BD245FAFEEFCC978305 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		281B73A3B6BFFC289478859F = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		C4EAE779A269EDB85D1BD59B = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsMiscTwo.strings"; sourceTree = SOURCE_ROOT; };
+		D0A291CD74D65632F3853F5C = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsPreview.xib"; sourceTree = SOURCE_ROOT; };
+		928E98EC6D013E06EB4C6A82 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		21BCBADB7234D7B66A7E7E31 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		576665EFA971346FDD527F3D = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		B54A4519EDF5FC23C99DACBB = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		7A62C17AA6339231B57A9E31 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		4BE912116E8A0427F8DF7A2B = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		89271A013281366ACA054261 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		7D6A40DBBA87B6626CBF13AE = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		B4F123333DF9C4D70515ACD2 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		98712D5D93F944A3C482B0A2 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		A3AC0B9F4DE952666814DD4F = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsPreview.strings"; sourceTree = SOURCE_ROOT; };
+		6895D3CCC2B86921687AA601 = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsSource.xib"; sourceTree = SOURCE_ROOT; };
+		3D3800D829A78730B1BCF5A4 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		CD64817F9CBF13F4648BF4F3 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		7E8A6CAC04674D8527C5C800 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		DF49F29E1506BF93D08748F3 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		2875057FD5BB42EB794B843D = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		F94727EF0B1B67B166E9F5F0 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		539E911F43A309370542E80C = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		1068DDDC266538DC39420DF0 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		7FA253DBFFE35D92933445B8 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		FBFB3502311779C1EBC9660D = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		515AFDF322D051C25E2F7C04 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsSource.strings"; sourceTree = SOURCE_ROOT; };
+		7BF700213831717BF565B87E = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsThemeName.xib"; sourceTree = SOURCE_ROOT; };
+		6F4637B5329A8540422765D2 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		E06E2A1B33FA2E5BDEAD9797 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		4B942A5E0397BF3D32320B08 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		D41509CE983D1D2441CB6511 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		5EA7A0D71B3A25DEFBEB74F4 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		343FB39FB7FF73EB01156607 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		3A7BC325F11957287DC8D7FC = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		C892BA8FCAB5837670A45846 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		DB41335FAB90B3D24CF2473A = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		DD74D5BF8B5E76463D770835 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		D7C27CAAC1C373678C361E86 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
+		11EA0006B76EE0FA11B9D4A8 = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsThemes.xib"; sourceTree = SOURCE_ROOT; };
+		DF9C16D838C32CE2962FE7B8 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		42571A4181873ADCD7640881 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		10A369465AB72E72C2BE44D3 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		B3F2157326D29D2F81325C2D = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		61F5DDAF923D56C8E62E80F8 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		6FE2F32AE0FE58C6C88C2D44 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		2EA3096EEB4FAFD47305F592 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		DACCFC9F97347CF0F0D48A60 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		2E685A13BE232B4AFC49E811 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		DB91F5E28B4140739A5826E9 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		33BDF60D69B0CBFA4B9F539A = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
+		4D2656E751F2650DC1D1091F = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsTypesetting.xib"; sourceTree = SOURCE_ROOT; };
+		F6B943ABB43ADDA735321DB5 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		BBD01BEE45C8305BB230D31A = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		0C776B593CC4A3429405232B = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		B24AEC3A7BECEB84C0EEB6FF = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		893411E4E10CA38EBB382E2D = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		08B088D87F0AA0B6F529A681 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		4A38CC1169A65FA9489A5CC1 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		2B04BD1BB3612FDA4985B71F = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		CEDD42800C0ACB2D0307DE6D = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		B4E669E786F9BBFB3ABF6FB6 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		7C0930B98E94F3C96D4ACF3D = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		2963A263783B799C744E272A = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		949F3C7EC95CE8AB2577A6C6 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		EE6A616FFA8C9E0D0EAAC6B3 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		1E72B5CBF1E3E003B6CFCF61 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		F294D3B631FD01E113A15CAF = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		F14687354AE07B33F8253481 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		A9707ED51D9C79419438B2D7 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		090E431CE4DC9939C265519F = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		DEEADB694443236A6B92FFAE = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		CC81D6A165BF1402D77EB2BC = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		8A460D124D05AEC5BC4547E1 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		4E94B67148A4B66B07FC9938 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsCategories.strings"; sourceTree = SOURCE_ROOT; };
+		D2A15E73EC96C6DCE80CDFEA = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		2452B42CFAF4EED925F54D11 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		603B8123F95357E9943B2A4C = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		D13895535AB03385C9BF3709 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr"; path = "Resources/Interfaces/fr.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		ADDA315D2E615DB757D111D7 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it"; path = "Resources/Interfaces/it.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		B5033CCACD5C70B1D04907C4 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja"; path = "Resources/Interfaces/ja.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		677A27AB6E9F48E5CB83DAE9 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko"; path = "Resources/Interfaces/ko.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		4A02AC1A7633ACCDC9BAC018 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nl"; path = "Resources/Interfaces/nl.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		E6BE1EAE2157D3D98B114942 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt"; path = "Resources/Interfaces/pt.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		546CCEDEDAB7BAFC12D095AE = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		308DECD82B3AD64A8BD2373E = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro"; path = "Resources/Interfaces/ro.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
+		33F02F0596EB228D0C74EB89 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh_CN"; path = "Resources/Interfaces/zh_CN.lproj/SettingsDock.strings"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1247,6 +1470,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* CocoaDocApp */ = {
 			isa = PBXGroup;
 			children = (
+				BEE2C92FF50430D4B3A23A8C,
 				40E81A6729A0788D0014D82A /* Manual.pdf */,
 				4020276425D06FD70039F253 /* TeX.mdimporter */,
 				40C0FF2E217AA3D100DF8F67 /* TeXShop.entitlements */,
@@ -1713,6 +1937,7 @@
 			path = Panelpicture;
 			sourceTree = "<group>";
 		};
+		BEE2C92FF50430D4B3A23A8C = {isa = PBXGroup; children = (9BEADA65F9CB4B3EC9B86C51, 9E2B2A2E258A950674839CF0, 163BED1EC1254A6DDD5193A1, 83392E91D403FD331C9F5227, 2562A3FC75062C43264AF527, C887033427B86E6D68775FD5, 4B75A852E8A0E9E52C7BEF2C, 1C41561D8526C276A6777DAF, C13B87CD470F4FA81D5F2052, C37E9B8BD9B42C465E1499E1, 0DFD50A8720DED31EF34BD2C, 0DA9C47DC56DE56839F542D7, 7CD635C71691DED09407018A, FFEABD46FD6CFA475B43C550, 9ED9A49A7AF7D1A871F0B1E1, 2C040BA0587C97E5FC9EDCFB, 33AEA6DC59052A7DD79C0727, 914FD14BA7F8207FD7668B1B, 770E98589B1F2DF5CDE16E95, 9F44724C28EB6026DDE69D43, 460EB15296A97AFEC0252926, AD4BAFA1B2474C7584091E35, 49FEAF4B2E1C4BA0FBE8CF8D, D179A39DAF6B708875BC62AF, 77F061C6FC654AF63846C6A8, 6A18C345080B640F64D9DAD7, 0731721CBFD6F17AD0DD4F24, F4EB4ACA7ED000B71ADE66E6, 197586F0A4601BC5C8BCBB2E, 3F36D4D0A156D4E499455DB0, 9F49BE4A6403EFC7BED1FE8F, 7A5D3AFB511E81E0D1A4BA2D, 2EB5A58F0470E139A9CBD9FE, 64C0EB54C63BE7688986FD9F, FD8A3D5420C9AFA5596D2537, 990A808007D20F765F7FE0C6, F52642F891C51F4B3DC14DC6, A9323445DF3DF72222E931D8, B09BD3059910CBD66090E52A, 688B0CC26F55F9608394F6C6, 560B5B73FB1B181B75991C27, 137953CD7A2A727D012D4C92, 5AD71523ECFDA5FF1247B811, 70B23652136601E3B33364A8, E55B71FC15FC1E286C7B4535, 9C1A1390768C69BE4A3AAFA0, 717DB6D9B0CBF322A1841F96, 31E91C29EB2B7A00320EA3FD,); name = "Settings Panes"; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1868,13 +2093,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DA0EA3040F181A5BCB9F158,
+				189C8934525E8ADC82973F88,
+				6238AF3CA7ADC85CC19714C5,
+				071F5C0A37BF3C101D7D1383,
+				D56C4AF2B0A51C2AC9D839A7,
+				B498D5031422A02D6EC189A5,
+				432455DCDD9140C98898DACF,
+				A889E8489214BFBB4CC8BDA6,
+				92E7A1E675C3463521E74343,
+				B747999248C60A025937CED0,
+				07C669D2A85D945E43F6A90F,
+				6807CF7100956134488CB6B6,
+				7C333AA4836C970F7E40D31C,
+
 				ED0C00000000000000000003,
 				40E81A6929A0788D0014D82A /* Manual.pdf in Resources */,
 				4078807D0519249A006979EA /* Credits.rtf in Resources */,
 				52B13E4808A8182F00756E5E /* MainMenu.nib in Resources */,
 				52B13E5008A8183B00756E5E /* FindPanel.nib in Resources */,
 				E18100000000000000000005,
-				52B13E4C08A8183B00756E5E /* Preferences.nib in Resources */,
 				52B13E4E08A8183B00756E5E /* completionpanel1.2.nib in Resources */,
 				40C1E9EB25CB9FE10091614B /* TeXLiveDocumentation.pdf in Resources */,
 				52B13E4A08A8183B00756E5E /* TSDocument.nib in Resources */,
@@ -2127,6 +2365,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5BAC2E9ED1431D54CC853B8,
+				0E1D12D0E21A008917374A1E,
+				606589B6401E6D11869F9676,
+				1B6906536FA308D7521926AC,
+				59D00431562CC5D5284F572A,
+				229516F92B6CD437F5EC545D,
+				AD3A7863EC92B9A0EB27EBAC,
+				7FBE1154734DEEFF44F66B0B,
+				69C1D5A66B7C5F39CF451952,
+				C5E5755DAF0C7FF0A1D9B0EC,
+				CAF846602608D27C8AF12314,
+				10AD58DE127E1BE737804176,
+				15E8103885B6859D7BDB8BCA,
+				9C4FE249828AFAEDE06BEB54,
+				ED635084DB6403693BED4C9A,
+				BCC3EA04E08B38760A6DFA77,
+				6557BE8AC597BF69E384ECD7,
+				74D2A5947C2DD85F835BB9DE,
+				8CD3CD5CE098B44C82C78055,
+				6B0B0109B658522DFA2140E9,
+
 				EA1100000000000000000001,
 				E16E00000000000000000001,
 				E17000000000000000000001,
@@ -2732,6 +2991,19 @@
 			name = ToolbarItems.strings;
 			sourceTree = "<group>";
 		};
+		990A808007D20F765F7FE0C6 = {isa = PBXVariantGroup; children = (431DCA0173805C7E39E23833, 6487D0CF2B512EB800A5CAA8, AEB7B1C47D75750C239A59A7, C3712689BD3BE57E22C43301, FC1434C38EDAAD7236FD6DF3, DA58D7053263251B5D880AA7, 2F4C146E123843D4990BFC82, 666BA65FABE4640133074171, 6456682CC5F3A75AC013B03B, F52B9735CFD515C00262539A, D04C9C47D71C0770AFED96C1, AAC794F10084FB641DB1F1C5,); name = "SettingsConsole.xib"; sourceTree = "<group>"; };
+		F52642F891C51F4B3DC14DC6 = {isa = PBXVariantGroup; children = (10EE5ED8E155ADB2DDBD7463, 2DB0F0564F9D4349428F6406, 1596A96825A4A52134739C10, D75E0AEE0757D139B79A9FF9, 4A6A55FEACB5049612E4DADA, CD11CF7785E50052DC287C68, 925EC2F0AEDBA79D3EC43BE7, E5318E42FD81415DE4F45795, 7F6D94CBB4AC17DB77A65B3F, 1A5EB828303F858D57B11EE2, 78FE58BF8BE776F2D6E14714, DA47C62CCA26C3F1FEE24CE6,); name = "SettingsEditor.xib"; sourceTree = "<group>"; };
+		A9323445DF3DF72222E931D8 = {isa = PBXVariantGroup; children = (3CEB5920AA1052F95074B23C, 38BEDC6505497797DFB3509E, CA456FF36FC4A2C338B1D801, 30620C3536AA0887B537002A, 42962B054EA12577ABC45756, A4C10B8E462D27D79B5CBA34, D556DBDC3D76C72A770DB2CD, 957FF766AAFA2725D2494EEC, 495C95B619CA0B4C86F8F875, FA338463E2BBD70D216737FA, 6EDD0D559CE3B757A81C7132, 36543880D9BCBC8041A688F9,); name = "SettingsEngines.xib"; sourceTree = "<group>"; };
+		B09BD3059910CBD66090E52A = {isa = PBXVariantGroup; children = (75FA24A7442AF450130F872F, 7121B372F382FB3C380204F9, 3B19691524C89F0EDABAF35A, 856C90C0CD24210E5933BA56, FC83DD6E4475D704E05A2A7A, AFE9B564077678378611129F, E315B7CED3C03C88E3F09B35, FB304322DE08D2EB3D2082E4, F4D34416699B1407D4EE7BB1, DC2B965E0FFA6CACC92345FF, 42B33B6F8730BD994042F436, 831BEC14DD08A7FA9901CABE,); name = "SettingsFooter.xib"; sourceTree = "<group>"; };
+		688B0CC26F55F9608394F6C6 = {isa = PBXVariantGroup; children = (3A3D8744B2429E511532B6C0, 02ED9C43EF15689F79096090, 3A8D8B1F73EA00852C974FB0, 2C380C00F0F9F3D7474FCE2B, 78D223FBB2086A50A8BFE3AF, C9242EBCB4007AC62CA1125F, 5FAD328057322C5B0C2550A7, C73C078E8821547F74D7027C, C917B2ED7EBA8731ED3CBF15, ABB45949098F148CDE34A68B, 97FFDF294186EB2D07CECD8D, 3FE119E186DF949DF009D994,); name = "SettingsMiscOne.xib"; sourceTree = "<group>"; };
+		560B5B73FB1B181B75991C27 = {isa = PBXVariantGroup; children = (4708CD6CA588FC77BDF9207A, 5C99392A2A8CA98A55E8DB47, F0E4FF88746C89BB28A83BFA, 3602794C6BB383A846566FE5, 713F3C60BE522FCF592283FB, 06BB4F10B61056B1885CDBDD, 580F426076557073EF0A0561, ACCBCEBE950E6C9F0049B1E4, 7402AD7EA841F3EE9CFD8492, EC2E8BD245FAFEEFCC978305, 281B73A3B6BFFC289478859F, C4EAE779A269EDB85D1BD59B,); name = "SettingsMiscTwo.xib"; sourceTree = "<group>"; };
+		137953CD7A2A727D012D4C92 = {isa = PBXVariantGroup; children = (D0A291CD74D65632F3853F5C, 928E98EC6D013E06EB4C6A82, 21BCBADB7234D7B66A7E7E31, 576665EFA971346FDD527F3D, B54A4519EDF5FC23C99DACBB, 7A62C17AA6339231B57A9E31, 4BE912116E8A0427F8DF7A2B, 89271A013281366ACA054261, 7D6A40DBBA87B6626CBF13AE, B4F123333DF9C4D70515ACD2, 98712D5D93F944A3C482B0A2, A3AC0B9F4DE952666814DD4F,); name = "SettingsPreview.xib"; sourceTree = "<group>"; };
+		5AD71523ECFDA5FF1247B811 = {isa = PBXVariantGroup; children = (6895D3CCC2B86921687AA601, 3D3800D829A78730B1BCF5A4, CD64817F9CBF13F4648BF4F3, 7E8A6CAC04674D8527C5C800, DF49F29E1506BF93D08748F3, 2875057FD5BB42EB794B843D, F94727EF0B1B67B166E9F5F0, 539E911F43A309370542E80C, 1068DDDC266538DC39420DF0, 7FA253DBFFE35D92933445B8, FBFB3502311779C1EBC9660D, 515AFDF322D051C25E2F7C04,); name = "SettingsSource.xib"; sourceTree = "<group>"; };
+		70B23652136601E3B33364A8 = {isa = PBXVariantGroup; children = (7BF700213831717BF565B87E, 6F4637B5329A8540422765D2, E06E2A1B33FA2E5BDEAD9797, 4B942A5E0397BF3D32320B08, D41509CE983D1D2441CB6511, 5EA7A0D71B3A25DEFBEB74F4, 343FB39FB7FF73EB01156607, 3A7BC325F11957287DC8D7FC, C892BA8FCAB5837670A45846, DB41335FAB90B3D24CF2473A, DD74D5BF8B5E76463D770835, D7C27CAAC1C373678C361E86,); name = "SettingsThemeName.xib"; sourceTree = "<group>"; };
+		E55B71FC15FC1E286C7B4535 = {isa = PBXVariantGroup; children = (11EA0006B76EE0FA11B9D4A8, DF9C16D838C32CE2962FE7B8, 42571A4181873ADCD7640881, 10A369465AB72E72C2BE44D3, B3F2157326D29D2F81325C2D, 61F5DDAF923D56C8E62E80F8, 6FE2F32AE0FE58C6C88C2D44, 2EA3096EEB4FAFD47305F592, DACCFC9F97347CF0F0D48A60, 2E685A13BE232B4AFC49E811, DB91F5E28B4140739A5826E9, 33BDF60D69B0CBFA4B9F539A,); name = "SettingsThemes.xib"; sourceTree = "<group>"; };
+		9C1A1390768C69BE4A3AAFA0 = {isa = PBXVariantGroup; children = (4D2656E751F2650DC1D1091F, F6B943ABB43ADDA735321DB5, BBD01BEE45C8305BB230D31A, 0C776B593CC4A3429405232B, B24AEC3A7BECEB84C0EEB6FF, 893411E4E10CA38EBB382E2D, 08B088D87F0AA0B6F529A681, 4A38CC1169A65FA9489A5CC1, 2B04BD1BB3612FDA4985B71F, CEDD42800C0ACB2D0307DE6D, B4E669E786F9BBFB3ABF6FB6, 7C0930B98E94F3C96D4ACF3D,); name = "SettingsTypesetting.xib"; sourceTree = "<group>"; };
+		717DB6D9B0CBF322A1841F96 = {isa = PBXVariantGroup; children = (2963A263783B799C744E272A, 949F3C7EC95CE8AB2577A6C6, EE6A616FFA8C9E0D0EAAC6B3, 1E72B5CBF1E3E003B6CFCF61, F294D3B631FD01E113A15CAF, F14687354AE07B33F8253481, A9707ED51D9C79419438B2D7, 090E431CE4DC9939C265519F, DEEADB694443236A6B92FFAE, CC81D6A165BF1402D77EB2BC, 8A460D124D05AEC5BC4547E1, 4E94B67148A4B66B07FC9938,); name = "SettingsCategories.strings"; sourceTree = "<group>"; };
+		31E91C29EB2B7A00320EA3FD = {isa = PBXVariantGroup; children = (D2A15E73EC96C6DCE80CDFEA, 2452B42CFAF4EED925F54D11, 603B8123F95357E9943B2A4C, D13895535AB03385C9BF3709, ADDA315D2E615DB757D111D7, B5033CCACD5C70B1D04907C4, 677A27AB6E9F48E5CB83DAE9, 4A02AC1A7633ACCDC9BAC018, E6BE1EAE2157D3D98B114942, 546CCEDEDAB7BAFC12D095AE, 308DECD82B3AD64A8BD2373E, 33F02F0596EB228D0C74EB89,); name = "SettingsDock.strings"; sourceTree = "<group>"; };
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */

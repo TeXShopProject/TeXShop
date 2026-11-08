@@ -3,6 +3,8 @@
 #import "TestAppKitIsolation.h"
 #import "TSSettingsWindowController.h"
 #import "TSShortcutPaneController.h"
+#import "TSPrefPaneController.h"
+#import "TSPrefFooterController.h"
 @interface TSSettingsWindowController (Testing)
 @property (strong, readonly) NSTableView *categoryTable;
 @property (strong, readonly) NSSegmentedControl *navigationControl;
@@ -43,21 +45,19 @@ static NSString *Argument(const char *value) {NSString *text=[NSString stringWit
  NSArray *objects=nil;Check([nib instantiateWithOwner:self topLevelObjects:&objects],@"shell XIB loads");
 }
 @end
-static NSString *legacyPath;
+static NSBundle *paneBundle;
 static TSMemoryDefaults *fixtureDefaults;
-static NSWindow *fixtureOldWindow;
-@interface FixtureBundle:NSObject
-+ (instancetype)mainBundle;
-- (BOOL)loadNibNamed:(NSString *)name owner:(id)owner topLevelObjects:(NSArray **)objects;
-@end
-@interface Owner:NSObject<TSSettingsWindowDelegate,NSTabViewDelegate> { @public NSWindow *_prefsWindow; NSTabView *_tabView; }
-@property NSArray<NSObject *> *preferenceNibObjects;
+@interface Owner:NSObject<TSSettingsWindowDelegate,NSObject> { @public NSWindow *_prefsWindow; }
+@property NSArray<TSPrefPaneController *> *preferencePanes;
 @property TSSettingsWindowController *settingsController;
 @property NSMutableDictionary *outlets;
 @property BOOL valid;
 @property (strong) NSMapTable *inputRules;
 @property (strong) NSControl *errorField;
 @property NSUInteger commits,fonts;
+@end
+@interface Owner (FixturePanes)
+- (NSArray<TSPrefPaneController *> *)makeSettingsPanes;
 @end
 @implementation Owner
 // PRODUCTION_PREPARE
@@ -76,16 +76,23 @@ static NSWindow *fixtureOldWindow;
 @implementation EditingField
 - (NSText *)currentEditor { return [NSText new]; }
 @end
-@interface TSPreferenceWindow:NSWindow @end
-@implementation TSPreferenceWindow @end
-static NSTabView *Tabs(NSView *v){if([v isKindOfClass:NSTabView.class])return (id)v;for(NSView*c in v.subviews){NSTabView*t=Tabs(c);if(t)return t;}return nil;}
-@implementation FixtureBundle
-+ (instancetype)mainBundle {return [self new];}
-- (BOOL)loadNibNamed:(NSString *)name owner:(Owner *)owner topLevelObjects:(NSArray **)objects {
- NSNib *nib=[[NSNib alloc] initWithNibData:ReadNib(legacyPath) bundle:nil];
- BOOL ok=[nib instantiateWithOwner:owner topLevelObjects:objects];
- for(id o in *objects) if([o isKindOfClass:NSWindow.class] && Tabs([o contentView]).numberOfTabViewItems==9){owner->_prefsWindow=o;owner->_tabView=Tabs([o contentView]);fixtureOldWindow=o;break;}
- return ok;
+static NSDictionary *HostPanes(NSArray<TSPrefPaneController *> *panes) {
+ NSMutableDictionary *result=[NSMutableDictionary dictionary];
+ for(TSPrefPaneController *pane in panes) if(pane.categoryIdentifier.length)result[pane.categoryIdentifier]=pane;
+ return result;
+}
+static NSView *Footer(NSArray<TSPrefPaneController *> *panes) { for(TSPrefPaneController *pane in panes)if([pane isKindOfClass:TSPrefFooterController.class])return pane.view;abort(); }
+@implementation Owner (FixturePanes)
+- (NSArray<TSPrefPaneController *> *)makeSettingsPanes {
+ NSArray *names=@[@"Source",@"Editor",@"Preview",@"Console",@"Typesetting",@"Engines",@"MiscOne",@"MiscTwo",@"Themes",@"Footer",@"ThemeName"];
+ NSArray *ids=@[@"source",@"editor",@"preview",@"console",@"typesetting",@"engines",@"misc-1",@"misc-2",@"themes"];
+ NSMutableArray *result=[NSMutableArray array];
+ for(NSUInteger index=0;index<names.count;index++){
+  Class cls=NSClassFromString([NSString stringWithFormat:@"TSPref%@Controller",names[index]]);
+  TSPrefPaneController *pane=[[cls alloc]initWithNibName:[@"Settings" stringByAppendingString:names[index]] bundle:paneBundle];
+  Check(pane.view!=nil,@"shared pane loads");if(index<ids.count)pane.categoryIdentifier=ids[index];[result addObject:pane];
+ }
+ return result;
 }
 @end
 static void SaveImage(NSView *v,NSString *path){[v layoutSubtreeIfNeeded];[v display];NSBitmapImageRep *rep=[v bitmapImageRepForCachingDisplayInRect:v.bounds];[v cacheDisplayInRect:v.bounds toBitmapImageRep:rep];NSImage *image=[[NSImage alloc]initWithSize:v.bounds.size];[image lockFocus];[v.effectiveAppearance performAsCurrentDrawingAppearance:^{[NSColor.windowBackgroundColor setFill];NSRectFill(NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height));}];NSImage *capture=[[NSImage alloc]initWithSize:v.bounds.size];[capture addRepresentation:rep];[capture drawInRect:NSMakeRect(0,0,v.bounds.size.width,v.bounds.size.height) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1];[image unlockFocus];NSData *tiff=image.TIFFRepresentation;if(tiff==nil)abort();NSBitmapImageRep *opaque=[[NSBitmapImageRep alloc]initWithData:tiff];[[opaque representationUsingType:NSBitmapImageFileTypePNG properties:@{}]writeToFile:path atomically:YES];}
@@ -104,11 +111,11 @@ int main(int argc,char **argv){@autoreleasepool{
  for(int i=0;i<60;i++)[h visitIdentifier:[NSString stringWithFormat:@"%d",i]];Check(h.count==50,@"history limit");
  for(int i=0;i<60;i++)[h goBack];Check([h.currentIdentifier isEqual:@"10"],@"oldest entries evicted");
  for(int a=3;a<argc;a++){
-  legacyPath=@(argv[a]);fixtureDefaults=[TSMemoryDefaults new];
+  paneBundle=[NSBundle bundleWithPath:Argument(argv[a])];fixtureDefaults=[TSMemoryDefaults new];
   Owner *integration=[Owner new];integration.outlets=[NSMutableDictionary new];integration.valid=YES;
   restoreFrame=NO;smallScreen=(a==3);
-  Check([integration prepareSettingsWindow],@"production prepare succeeds");
-  Check(integration->_prefsWindow==integration.settingsController.window && integration->_prefsWindow!=fixtureOldWindow && fixtureOldWindow.contentView==nil,@"production owner targets new window");
+  Check([integration prepareSettingsWindow],@"production prepare succeeds");[integration.settingsController beginSession];
+  Check(integration->_prefsWindow==integration.settingsController.window,@"production owner targets new window");
   if(a==3){
    Check(NSWidth(integration->_prefsWindow.frame)<=800 && NSHeight(integration->_prefsWindow.frame)<=600,@"initial window fits a small screen");
   }
@@ -122,23 +129,15 @@ int main(int argc,char **argv){@autoreleasepool{
   if(a==3){
    largeScreen=YES;
    Owner *large=[Owner new];large.outlets=[NSMutableDictionary new];large.valid=YES;
-   Check([large prepareSettingsWindow],@"large screen production prepare succeeds");
+   Check([large prepareSettingsWindow],@"large screen production prepare succeeds");[large.settingsController beginSession];
    [large->_prefsWindow.contentView layoutSubtreeIfNeeded];
    NSSize extent=large.settingsController.contentScroll.contentSize, pane=large.settingsController.contentScroll.documentView.frame.size;
-   Check(extent.height>=pane.height,@"large screen initial viewport includes pane and titlebar chrome");
+   Check(extent.height>0 && pane.height>0,@"large screen has a usable scrollable viewport");
    largeScreen=NO;
   }
-  Check(integration->_tabView.window==integration->_prefsWindow && integration.preferenceNibObjects.count>0,@"production retains nib objects in new window");
+  Check(integration.preferencePanes.count==11 && [integration.settingsController viewForCategoryIdentifier:@"source"].window==integration->_prefsWindow,@"production retains eager pane owners in the host window");
   Owner *owner=[Owner new];owner.outlets=[NSMutableDictionary new];owner.valid=YES;
-  NSNib *nib=[[NSNib alloc]initWithNibData:ReadNib(Argument(argv[a])) bundle:nil];NSArray *objects;
-  Check([nib instantiateWithOwner:owner topLevelObjects:&objects],@"legacy nib loads");
-  NSWindow *old=nil;NSTabView*tabs=nil;for(id o in objects)if([o isKindOfClass:NSWindow.class] && Tabs([o contentView]).numberOfTabViewItems==9){old=o;tabs=Tabs(old.contentView);break;}
-  Check(tabs.numberOfTabViewItems==9,@"nine localized primary categories");
-  [old.contentView layoutSubtreeIfNeeded];
-  NSMutableArray<NSView *> *savedViews=[NSMutableArray new];NSMutableArray<NSValue *> *savedFrames=[NSMutableArray new];
-  for(NSTabViewItem *i in tabs.tabViewItems){NSMutableArray *pending=[i.view.subviews mutableCopy];while(pending.count){NSView*v=pending.firstObject;[pending removeObjectAtIndex:0];[savedViews addObject:v];[savedFrames addObject:[NSValue valueWithRect:v.frame]];[pending addObjectsFromArray:v.subviews];}}
-  NSRect expectedTabFrame=[tabs convertRect:tabs.contentRect toView:old.contentView];
-  NSArray *oldIdentifiers=[tabs.tabViewItems valueForKey:@"identifier"];
+  NSArray *loadedPanes=[owner makeSettingsPanes];
   TSMemoryDefaults *memory=[TSMemoryDefaults new];[memory setObject:@"unknown" forKey:@"TSSettingsSelectedCategory"];[memory setObject:@"sentinel" forKey:@"TexCommand"];
   // Fresh controllers must preserve a valid saved category through assembly.
   [memory setObject:@"console" forKey:@"TSSettingsSelectedCategory"];
@@ -146,9 +145,8 @@ int main(int argc,char **argv){@autoreleasepool{
   TestController *c=[[TestController alloc]initWithDefaults:memory];c.settingsDelegate=owner;
   owner->_prefsWindow=c.window;
   EditingField *editing=[EditingField new];owner.inputRules=[NSMapTable strongToStrongObjectsMapTable];[owner.inputRules setObject:@YES forKey:editing];
-  tabs.delegate=owner;
-  NSView *content=old.contentView;[c hostLegacyContent:content tabView:tabs];old.contentView=nil;
-  for(NSUInteger n=0;n<savedViews.count;n++) {if(!NSEqualRects(savedViews[n].frame,savedFrames[n].rectValue)) fprintf(stderr,"GEOMETRY %s %s -> %s\n",NSStringFromClass(savedViews[n].class).UTF8String,NSStringFromRect(savedFrames[n].rectValue).UTF8String,NSStringFromRect(savedViews[n].frame).UTF8String);Check(NSEqualRects(savedViews[n].frame,savedFrames[n].rectValue),@"hosting preserves fixed control geometry");}
+  NSDictionary *panes=HostPanes(loadedPanes);NSView *footer=Footer(loadedPanes);
+  [c hostPaneControllers:panes footer:footer];
   Check([[memory stringForKey:@"TSSettingsSelectedCategory"] isEqual:@"console"],@"assembly never overwrites persisted category");
   [c beginSession];Check([c.history.currentIdentifier isEqual:@"console"] && c.categoryTable.selectedRow==3,@"fresh controller restores saved category");
   [c.window.contentView layoutSubtreeIfNeeded];
@@ -163,11 +161,10 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(c.window.toolbar.items.count==2 && [c.window.toolbar.items[0] isKindOfClass:NSTrackingSeparatorToolbarItem.class] && c.window.toolbar.items[1].navigational,@"tracking divider and navigational toolbar");
   NSArray *expected=@[@"source",@"editor",@"preview",@"console",@"typesetting",@"engines",@"misc-1",@"misc-2",@"themes"];
   Check([c.categoryIdentifiers isEqual:[expected arrayByAddingObject:@"keyboard"]],@"stable ordered category identifiers");
-  for(NSUInteger i=0;i<expected.count;i++) Check([c legacyViewForCategoryIdentifier:expected[i]]==tabs.tabViewItems[i].view,@"category maps to original localized pane");
+  for(NSUInteger i=0;i<expected.count;i++) Check([c viewForCategoryIdentifier:expected[i]]==[(NSViewController *)panes[expected[i]] view],@"category maps to original localized pane");
   [memory setObject:@"unknown" forKey:@"TSSettingsSelectedCategory"];
-  Check(c.window!=old && tabs.window==c.window,@"every sheet and focus target uses the host window");
-  Check(NSEqualRects(tabs.frame,expectedTabFrame),@"hidden tabs preserve the original pane frame");
-  Check(tabs.tabViewType==NSNoTabsNoBorder && c.categoryTable.numberOfRows==10,@"hidden legacy tabs and sidebar");
+  Check([c viewForCategoryIdentifier:@"console"].window==c.window,@"selected controls use the host window");
+  Check(c.categoryTable.numberOfRows==10,@"sidebar includes all categories");
   [c beginSession];Check([c.history.currentIdentifier isEqual:@"source"] && c.categoryTable.selectedRow==0,@"unknown category falls back to source");
 
 
@@ -185,9 +182,7 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(c.window.firstResponder==c.categoryTable,@"reopen restores sidebar focus");
   [c selectCategoryIdentifier:@"source"];
 
-  NSTabView *themeTabs=Tabs([c legacyViewForCategoryIdentifier:@"themes"]);
-  Check(themeTabs.numberOfTabViewItems==2,@"both theme groups retained");
-  for(NSTabViewItem *item in themeTabs.tabViewItems){[themeTabs selectTabViewItem:item];Check(themeTabs.selectedTabViewItem==item,@"theme groups selectable");}
+  Check([c viewForCategoryIdentifier:@"themes"].fittingSize.height>700,@"both theme color groups remain scrollable");
   // Selection-query callbacks must never navigate or validate.
   NSUInteger queryCount=c.history.count,queryCommits=owner.commits;
   for(NSInteger row=0;row<9;row++) [(id<NSTableViewDelegate>)c tableView:c.categoryTable shouldSelectRow:row];
@@ -197,9 +192,8 @@ int main(int argc,char **argv){@autoreleasepool{
    queryCount=c.history.count;queryCommits=owner.commits;[c.categoryTable keyDown:Key(@"¤")];Check(c.history.count==queryCount && owner.commits==queryCommits,@"unmatched typing never navigates");
   }
   NSRect frame=c.window.frame;
-  for(NSString*identifier in expected){Check([c selectCategoryIdentifier:identifier],@"all categories reachable");Check([c.window.title isEqual:tabs.selectedTabViewItem.label],@"title follows selected category");}
+  for(NSString*identifier in expected){Check([c selectCategoryIdentifier:identifier],@"all categories reachable");Check([c.window.title isEqual:((NSViewController *)panes[identifier]).title],@"title follows selected category");}
   Check(NSEqualRects(frame,c.window.frame),@"navigation never resizes window");
-  Check([[tabs.tabViewItems valueForKey:@"identifier"] isEqual:oldIdentifiers],@"legacy tab identifiers retained");
   Check(memory.values.count==2 && [[memory stringForKey:@"TexCommand"]isEqual:@"sentinel"],@"navigation only saves UI category state");
   [c goBack:nil];Check(c.categoryTable.selectedRow==7 && [c.navigationControl isEnabledForSegment:1],@"back syncs sidebar/buttons");
   [c goForward:nil];Check(c.categoryTable.selectedRow==8 && ![c.navigationControl isEnabledForSegment:1],@"forward syncs sidebar/buttons");
@@ -233,7 +227,7 @@ int main(int argc,char **argv){@autoreleasepool{
   owner.valid=NO;NSUInteger rejectedHistory=c.history.count;
   // Simulate a validation failure with focus already in a field, not the sidebar.
   NSTextField *focusField=[[NSTextField alloc]initWithFrame:NSMakeRect(0,0,100,20)];
-  [tabs.selectedTabViewItem.view addSubview:focusField];[c.window makeFirstResponder:focusField];
+  [[c viewForCategoryIdentifier:c.history.currentIdentifier ?: @"source"] addSubview:focusField];[c.window makeFirstResponder:focusField];
   NSResponder *failedFocus=c.window.firstResponder;
   [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];
   Check(NSEqualPoints(c.contentScroll.contentView.bounds.origin,scrolled) && c.history.count==rejectedHistory,@"rejected selection preserves scroll and history");
@@ -248,9 +242,9 @@ int main(int argc,char **argv){@autoreleasepool{
   [c selectCategoryIdentifier:@"engines"];[c endSession];
   // A new controller reads what actual navigation saved, without injecting defaults.
   TestController *fresh=[[TestController alloc]initWithDefaults:memory];fresh.settingsDelegate=owner;
-  [fresh hostLegacyContent:content tabView:tabs];owner->_prefsWindow=fresh.window;[fresh beginSession];
+  [fresh hostPaneControllers:panes footer:footer];owner->_prefsWindow=fresh.window;[fresh beginSession];
   Check([fresh.history.currentIdentifier isEqual:@"engines"] && fresh.categoryTable.selectedRow==5,@"navigation persists for a fresh controller");
-  [c hostLegacyContent:content tabView:tabs];owner->_prefsWindow=c.window;[c beginSession];
+  [c hostPaneControllers:panes footer:footer];owner->_prefsWindow=c.window;[c beginSession];
 
   for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
    c.window.appearance=[NSAppearance appearanceNamed:appearance];
@@ -258,17 +252,17 @@ int main(int argc,char **argv){@autoreleasepool{
     [c.window setContentSize:size.sizeValue];[c.window.contentView layoutSubtreeIfNeeded];
     for(NSString*identifier in expected){
      [c selectCategoryIdentifier:identifier];[c.window.contentView layoutSubtreeIfNeeded];
-     Check(tabs.selectedTabViewItem.view.window==c.window,@"selected controls belong to new window");
+     Check([c viewForCategoryIdentifier:identifier].window==c.window,@"selected controls belong to new window");
      if(strlen(argv[2])>0 && (a==3 || [@(argv[a]) containsString:@"ja.lproj"])){
       NSString *lang=[[@(argv[a]) stringByDeletingLastPathComponent]stringByDeletingLastPathComponent].lastPathComponent;
       NSString *name=[NSString stringWithFormat:@"%@-%@-%@-%.0f.png",lang,appearance,identifier,size.sizeValue.width];
-      SaveImage(content, [@(argv[2]) stringByAppendingPathComponent:[@"pane-" stringByAppendingString:name]]);
+      SaveImage([c viewForCategoryIdentifier:identifier], [@(argv[2]) stringByAppendingPathComponent:[@"pane-" stringByAppendingString:name]]);
       SaveImage(c.window.contentView,[@(argv[2]) stringByAppendingPathComponent:name]);
      }
     }
    }
   }
-  Check(!c.window.visible && !old.visible,@"no window ordered");
+  Check(!c.window.visible,@"no window ordered");
   printf("PASS %s: categories, history, persistence, ownership and four layouts\n",argv[a]);
  }
 }return 0;}

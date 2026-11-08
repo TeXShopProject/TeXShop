@@ -1,4 +1,3 @@
-#import "TSShortcutPaneController.h"
 /*
  * SUUpdate = KOCHSU
  * TeXShop - TeX editor for Mac OS
@@ -23,6 +22,10 @@
  * Created by dirk on Thu Dec 07 2000.
  *
  */
+#import "TSShortcutPaneController.h"
+#import "TSPreferences+Panes.h"
+#import "TSPrefFooterController.h"
+
 
 #import "UseMitsu.h"
 #import "UseSparkle.h"
@@ -63,9 +66,9 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
     TSSettingsFontNone, TSSettingsFontDocument, TSSettingsFontConsole
 };
 
-@interface TSPreferences () <NSWindowDelegate, NSTabViewDelegate, NSTextFieldDelegate, TSSettingsWindowDelegate>
+@interface TSPreferences () <NSWindowDelegate, NSTextFieldDelegate, TSSettingsWindowDelegate>
 @property (strong) TSSettingsWindowController *settingsController;
-@property (copy) NSArray<NSObject *> *preferenceNibObjects;
+@property (copy) NSArray<TSPrefPaneController *> *preferencePanes;
 @property TSSettingsFontDestination fontEditingContext;
 @property (strong) NSMapTable<NSControl *, TSPreferenceInput *> *inputRules;
 @property (weak) NSControl *editingField;
@@ -147,9 +150,8 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     self.endingPreferences = NO;
     self.inputErrorPresented = NO;
     _prefsWindow.delegate = self;
-    _tabView.delegate = self;
     [self configurePreferenceInputs];
-    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController legacyViewForCategoryIdentifier:TSSettingsCategoryMiscTwo]];
+    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController viewForCategoryIdentifier:TSSettingsCategoryMiscTwo]];
     [[TSDockIconController sharedController] restoreSavedIcon];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
@@ -167,12 +169,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (BOOL)prepareSettingsWindow
 {
     if (self.settingsController != nil) return YES;
-    NSArray<NSObject *> *objects = nil;
-    if (![NSBundle.mainBundle loadNibNamed:@"Preferences" owner:self topLevelObjects:&objects]) return NO;
-    self.preferenceNibObjects = objects;
-    NSWindow *oldWindow = _prefsWindow;
-    NSView *content = oldWindow.contentView;
-    if (content == nil || _tabView.numberOfTabViewItems != 9) return NO;
+    self.preferencePanes = [self makeSettingsPanes];
     TSSettingsWindowController *controller = [[TSSettingsWindowController alloc] initWithDefaults:SUD];
     NSWindow *newWindow = controller.window;
     if (newWindow == nil) return NO;
@@ -180,9 +177,14 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     controller.keyboardPaneProvider = ^NSViewController<TSSettingsKeyboardPane> * {
         return [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts sharedController]];
     };
-    oldWindow.delegate = nil;
-    [controller hostLegacyContent:content tabView:_tabView];
-    oldWindow.contentView = nil;
+    NSMutableDictionary<TSSettingsCategoryID, NSViewController *> *panes = [NSMutableDictionary dictionary];
+    NSView *footer = nil;
+    for (TSPrefPaneController *pane in self.preferencePanes) {
+        if (pane.categoryIdentifier.length > 0) { panes[pane.categoryIdentifier] = pane; }
+        if ([pane isKindOfClass:TSPrefFooterController.class]) { footer = pane.view; }
+    }
+    if (footer == nil) { return NO; }
+    [controller hostPaneControllers:panes footer:footer];
     _prefsWindow = newWindow;
     self.settingsController = controller;
     return YES;
@@ -316,51 +318,6 @@ Clicking this button will bring up the font panel.
     [_prefsWindow makeFirstResponder:_prefsWindow];
     [[NSFontManager sharedFontManager] setSelectedFont:self.documentFont isMultiple:NO];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:self];
-}
-
-// Below was part of an attempt to set additional attributes of the source panel. This was a failure.
-// So we retreat to the original method.
-
-
-
-// the next section was commented out even when the original code with a sample window was
-// active; this code was a central part of the failed attempt to set attributes
-     /*
-     
-     NSDictionary *fontAttributes;
-     NSFontManager *fontManager;
-     NSData    *attributesData;
-     
-     
-     NSTextStorage* textViewContent = [_fontTextView textStorage];
-    NSRange area = NSMakeRange(0, [textViewContent length]);
-    [textViewContent invalidateAttributesInRange:area];
-
-    
-      attributesData = [SUD objectForKey:DocumentFontAttributesKey];
-     if (attributesData != nil)
-     {
- //    NSLog(@"got here");
-     fontAttributes = [NSUnarchiver unarchiveObjectWithData:attributesData];
-     if (fontAttributes != nil)
-     {
-  //   NSLog(@"and here");
-     myAttributedString = _fontTextView.textStorage;
-     thelength = [myAttributedString length];
-     myRange.location = 0;
-     myRange.length = thelength;
-     NSRange area = NSMakeRange(0, thelength);
-     [myAttributedString setAttributes: fontAttributes range: area];
-     }
-     }
-     */
-
-
-// We leave the code below present so IB files need not be changed
-// this code will never be called
-- (IBAction)closeSamplePanel: (id)sender
-{
-    [NSApp endSheet:_samplePanel];
 }
 
 - (IBAction)changeConsoleResize:sender
@@ -1999,10 +1956,6 @@ A tag of 0 means "no", a tag of 1 means "yes".
 {
     if (notification.object == _prefsWindow) [self tearDownPreferenceEditing];
 }
-- (BOOL)tabView:(NSTabView *)tabView shouldSelectTabViewItem:(NSTabViewItem *)item
-{
-    return [self settingsMayChangeCategory];
-}
 - (void)releasePreferencePanels
 {
     [self deactivatePreferenceColorWells];
@@ -2017,6 +1970,8 @@ A tag of 0 means "no", a tag of 1 means "yes".
 - (void)tearDownPreferenceEditing
 {
     self.endingPreferences = YES;
+    self.themeOperationGeneration++;
+    if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];
     [self cancelEnginePathDiscovery];
     [self releasePreferencePanels];
     self.editingField = nil;
@@ -2026,6 +1981,8 @@ A tag of 0 means "no", a tag of 1 means "yes".
 - (void)finishPreferencesForTermination
 {
     self.endingPreferences = YES;
+    self.themeOperationGeneration++;
+    if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];
     [self finishPreferenceEditing:NO];
     // Do not invoke formatter delegates or actions that could display a sheet.
     for (NSControl *field in self.inputRules) [field abortEditing];

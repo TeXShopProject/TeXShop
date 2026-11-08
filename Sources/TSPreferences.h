@@ -40,8 +40,6 @@
 	IBOutlet NSMatrix       *_findMatrix;                   /* connected to Find Panel */
     IBOutlet NSMatrix       *_lineSizeMatrix;               /* connected to Line Number Size */
     IBOutlet NSMatrix       *_wrapMatrix;                    /* connected to Wrap Panel */
-    IBOutlet NSPanel    *_samplePanel;
-    IBOutlet NSTextView *_fontTextView;
     IBOutlet NSPanel    *stylePanel;
     // for Color
     IBOutlet NSTextField *styleTitle;
@@ -110,7 +108,6 @@
 //	IBOutlet NSColorWell	*_consoleBackgroundColorWell;
 //	IBOutlet NSColorWell	*_consoleForegroundColorWell;
 //	IBOutlet NSColorWell	*_highlightBracesColorWell;
-	IBOutlet NSTabView		*_tabView;
 	IBOutlet NSMatrix		*_consoleResizeMatrix;
     IBOutlet NSMatrix       *_blockWidthMatrix;
     IBOutlet NSMatrix       *_blockSideMatrix;
@@ -239,6 +236,7 @@
     
 }
 
+@property NSUInteger themeOperationGeneration;
 @property (retain) NSFont		*documentFont;			/*" used to track the font that the user has selected for the document window "*/
 @property (retain) NSFont		*consoleFont;			/*" used to track the font that the user has selected for the console window "*/
 @property (retain) NSDictionary *fontAttributes;         /*" used to track the font attributes that the user has selected for the document window "*/
@@ -330,7 +328,6 @@
 - (IBAction)changeConsoleResize:sender;
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender;
 - (IBAction)sourceOnLeftChanged:sender;
-- (IBAction)closeSamplePanel:sender;
 
 
 
@@ -386,9 +383,16 @@
 - (void)updateConsoleFontTextField;
 
 
+- (IBAction)consoleWindowPosChanged:(id)sender;
+- (IBAction)consoleWindowPosDefault:(id)sender;
+- (IBAction)lineNumberButtonPressed:(id)sender;
+- (IBAction)useTransparencyPressed:(id)sender;
+
 @end
 
 @interface TSPreferences (Color)
+- (IBAction)XMLCommentChanged:(id)sender;
+- (void)requestNameForThemeColors:(NSDictionary<NSString *, id> *)colors;
 - (void)deactivatePreferenceColorWells;
 - (IBAction)themeSelectionChanged:(id)sender;
 

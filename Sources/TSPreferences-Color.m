@@ -288,48 +288,7 @@ NSInteger stringSort(id s1, id s2, void *context)
 - (IBAction)NewStyleFromPrefs:sender
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    NSInteger result;
-    NSString *theTitle;
-    NSMutableDictionary *prefsDictionary;
-    
-    result = [NSApp runModalForWindow: stylePanel];
-    // [packageHelpPanel close];
-    if (result == 0) {
-        theTitle = [styleTitle stringValue];
-        [stylePanel close];
-    }
-    else {
-        [stylePanel close];
-        return;
-    }
-    
-    if ([theTitle isEqualToString:@""])
-        return;
-    theTitle = [theTitle stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([theTitle isEqualToString:@""])
-        return;
-    
-    NSString *newColorPath = [ColorPath stringByExpandingTildeInPath];
-    NSString* ourColorPath = [[[newColorPath stringByAppendingString:@"/"] stringByAppendingString: theTitle] stringByAppendingString: @".plist"];
-    
-    NSURL *safeURL = [[self themeStore] URLForTitle:theTitle];
-    if (safeURL == nil) { [self showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")]; return; }
-    ourColorPath = safeURL.path;
-    if ([fileManager fileExistsAtPath:ourColorPath])
-    {
-        // dialog asking if should overwrite existing file; return if NO; otherwise continue
-        NSAlert *alert = [NSAlert alertWithMessageText:@"Alert" defaultButton:@"Continue" alternateButton:@"Cancel" otherButton:nil informativeTextWithFormat:NSLocalizedString(@"File already exists", @"File already exists")];
-        result = [alert runModal];
-        if (! result)
-            return;
-    }
-    
-    
-    prefsDictionary = [NSMutableDictionary dictionaryWithCapacity:19];
-    [prefsDictionary setObject: theTitle forKey:@"Title"];
-     
+    NSMutableDictionary *prefsDictionary = [NSMutableDictionary dictionaryWithCapacity:19];
     [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"EditorText" withRed: [SUD doubleForKey:foreground_RKey]
                                           Green: [SUD doubleForKey:foreground_GKey] Blue: [SUD doubleForKey:foreground_BKey] Alpha: 1.0];
     [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"EditorBackground" withRed: [SUD doubleForKey:background_RKey]
@@ -387,7 +346,7 @@ NSInteger stringSort(id s1, id s2, void *context)
                                       Alpha: [SUD doubleForKey:PdfBack_AKey]];
     
     
-    [self saveNewTheme:prefsDictionary title:theTitle];
+    [self requestNameForThemeColors:prefsDictionary];
 
 }
 
@@ -399,60 +358,48 @@ NSInteger stringSort(id s1, id s2, void *context)
         [self showPreferenceError:NSLocalizedString(@"Reopen Settings or select a readable theme before editing or duplicating it.", @"")];
         return;
     }
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [self requestNameForThemeColors:self.lastSavedEditingColors];
+}
 
-    NSInteger result;
-    NSString *theTitle;
-    
-    result = [NSApp runModalForWindow: stylePanel];
-    // [packageHelpPanel close];
-    if (result == 0) {
-        theTitle = [styleTitle stringValue];
-        [stylePanel close];
-    }
-    else {
-        [stylePanel close];
-        return;
-    }
-    
-    if ([theTitle isEqualToString:@""])
-        return;
-    theTitle = [theTitle stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([theTitle isEqualToString:@""])
-        return;
-    
-    NSString *newColorPath = [ColorPath stringByExpandingTildeInPath];
-    NSString* ourColorPath = [[[newColorPath stringByAppendingString:@"/"] stringByAppendingString: theTitle] stringByAppendingString: @".plist"];
-    
-    NSURL *safeURL = [[self themeStore] URLForTitle:theTitle];
-    if (safeURL == nil) { [self showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")]; return; }
-    ourColorPath = safeURL.path;
-    if ([fileManager fileExistsAtPath:ourColorPath])
-    {
-        // dialog asking if should overwrite existing file; return if NO; otherwise continue
-        NSAlert *alert = [NSAlert alertWithMessageText:@"Alert" defaultButton:@"Continue" alternateButton:@"Cancel" otherButton:nil informativeTextWithFormat:NSLocalizedString(@"File already exists", @"File already exists")];
-        result = [alert runModal];
-        if (! result)
+- (void)requestNameForThemeColors:(NSDictionary<NSString *, id> *)colors
+{
+    if (_prefsWindow == nil || stylePanel == nil || _prefsWindow.attachedSheet != nil) return;
+    NSUInteger generation = ++self.themeOperationGeneration;
+    NSDictionary<NSString *, id> *snapshot = [colors copy];
+    styleTitle.stringValue = @"";
+    [stylePanel setContentSize:NSMakeSize(420, stylePanel.contentView.fittingSize.height)];
+    [_prefsWindow beginSheet:stylePanel completionHandler:^(NSModalResponse response) {
+        if (response != NSModalResponseOK || generation != self.themeOperationGeneration) return;
+        NSString *title = [self->styleTitle.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        if (title.length == 0) return;
+        NSURL *url = [[self themeStore] URLForTitle:title];
+        if (url == nil) {
+            [self showPreferenceError:NSLocalizedString(@"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed.", @"")];
             return;
-    }
-    
-    
-    if (self.lastSavedEditingColors == nil) return;
-    [self saveNewTheme:self.lastSavedEditingColors title:theTitle];
-
+        }
+        if (![NSFileManager.defaultManager fileExistsAtPath:url.path]) {
+            [self saveNewTheme:snapshot title:title];
+            return;
+        }
+        NSAlert *alert = [NSAlert new];
+        alert.messageText = NSLocalizedString(@"File already exists", @"");
+        [alert addButtonWithTitle:NSLocalizedString(@"Continue", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+        [alert beginSheetModalForWindow:self->_prefsWindow completionHandler:^(NSModalResponse answer) {
+            if (answer == NSAlertFirstButtonReturn && generation == self.themeOperationGeneration) [self saveNewTheme:snapshot title:title];
+        }];
+    }];
 }
 
-- (void) okForStylePanel: sender
+- (void)okForStylePanel:(id)sender
 {
-    [NSApp stopModalWithCode: 0];
+    if (stylePanel.sheetParent == _prefsWindow) [_prefsWindow endSheet:stylePanel returnCode:NSModalResponseOK];
 }
 
-- (void) cancelForStylePanel: sender
+- (void)cancelForStylePanel:(id)sender
 {
-    [NSApp stopModalWithCode:1];
+    if (stylePanel.sheetParent == _prefsWindow) [_prefsWindow endSheet:stylePanel returnCode:NSModalResponseCancel];
 }
-
-
 
 // Actual Colors
 - (IBAction)SourceTextColorChanged:sender

@@ -16,14 +16,22 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
 @property (strong, readwrite) NSSegmentedControl *navigationControl;
 @property (strong) NSSplitViewController *splitController;
 @property (strong) NSScrollView *contentScroll;
-@property (strong) NSTabView *legacyTabs;
-@property (strong) NSView *legacyContent;
+@property (copy) NSDictionary<TSSettingsCategoryID, NSViewController *> *panes;
+@property (strong) NSLayoutConstraint *contentBottom;
 @property BOOL synchronizingSelection;
 @property (strong, nullable) NSViewController<TSSettingsKeyboardPane> *keyboardPane;
 @property (strong, nullable) NSScrollView *keyboardScroll;
 - (BOOL)handleKeySearchEvent:(NSEvent *)event;
 @end
 @implementation TSSettingsWindow
+- (void)sendEvent:(NSEvent *)event
+{
+    // Keep recording consistent after clicking a result row. Capture ordinary
+    // characters and arrows before the table performs type selection/navigation.
+    if (event.type == NSEventTypeKeyDown && self.isKeyWindow && self.attachedSheet == nil &&
+        [self.settingsController handleKeySearchEvent:event]) return;
+    [super sendEvent:event];
+}
 - (BOOL)performKeyEquivalent:(NSEvent *)event
 {
     TSSettingsWindowController *controller = self.settingsController;
@@ -114,11 +122,12 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     self.contentScroll.autohidesScrollers = YES;
     self.contentScroll.drawsBackground = NO;
     [content.view addSubview:self.contentScroll];
+    self.contentBottom = [self.contentScroll.bottomAnchor constraintEqualToAnchor:content.view.bottomAnchor];
     [NSLayoutConstraint activateConstraints:@[
         [self.contentScroll.leadingAnchor constraintEqualToAnchor:content.view.leadingAnchor],
         [self.contentScroll.trailingAnchor constraintEqualToAnchor:content.view.trailingAnchor],
         [self.contentScroll.topAnchor constraintEqualToAnchor:content.view.safeAreaLayoutGuide.topAnchor],
-        [self.contentScroll.bottomAnchor constraintEqualToAnchor:content.view.bottomAnchor]]];
+        self.contentBottom]];
     [self.splitController addSplitViewItem:[NSSplitViewItem splitViewItemWithViewController:content]];
     window.contentViewController = self.splitController;
     NSImage *backImage = [NSImage imageWithSystemSymbolName:@"chevron.left" accessibilityDescription:NSLocalizedString(@"Back", @"")];
@@ -134,42 +143,24 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     toolbar.allowsUserCustomization = NO;
     window.toolbar = toolbar;
 }
-- (void)hostLegacyContent:(NSView *)content tabView:(NSTabView *)tabs
+- (void)hostPaneControllers:(NSDictionary<TSSettingsCategoryID, NSViewController *> *)panes footer:(NSView *)footer
 {
     (void)self.window;
-    self.legacyContent = content;
-    self.legacyTabs = tabs;
-    [content removeFromSuperview];
-    content.translatesAutoresizingMaskIntoConstraints = YES;
-    content.autoresizingMask = NSViewNotSizable;
-    // Removing the tab strip must not resize the old fixed-layout panes.
-    NSRect paneFrame = [tabs convertRect:tabs.contentRect toView:content];
-    NSMutableArray<NSView *> *views = [NSMutableArray array];
-    NSMutableArray<NSValue *> *frames = [NSMutableArray array];
-    for (NSTabViewItem *item in tabs.tabViewItems) {
-        NSMutableArray<NSView *> *pending = [NSMutableArray arrayWithArray:item.view.subviews ?: @[]];
-        while (pending.count > 0) {
-            NSView *view = pending.firstObject;
-            if (view == nil) { break; }
-            [pending removeObjectAtIndex:0];
-            [views addObject:view]; [frames addObject:[NSValue valueWithRect:view.frame]];
-            [pending addObjectsFromArray:view.subviews];
-        }
-    }
-    tabs.tabViewType = NSNoTabsNoBorder;
-    tabs.translatesAutoresizingMaskIntoConstraints = YES;
-    tabs.autoresizingMask = NSViewNotSizable;
-    tabs.frame = paneFrame;
-    for (NSUInteger index = 0; index < views.count; index++) views[index].frame = frames[index].rectValue;
-    self.contentScroll.documentView = [[TSSettingsContentView alloc] initWithContent:content];
+    self.panes = panes;
+    NSView *parent = self.contentScroll.superview;
+    footer.translatesAutoresizingMaskIntoConstraints = NO;
+    [parent addSubview:footer];
+    self.contentBottom.active = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [footer.leadingAnchor constraintEqualToAnchor:parent.leadingAnchor],
+        [footer.trailingAnchor constraintEqualToAnchor:parent.trailingAnchor],
+        [footer.bottomAnchor constraintEqualToAnchor:parent.bottomAnchor],
+        [self.contentScroll.bottomAnchor constraintEqualToAnchor:footer.topAnchor]]];
     self.synchronizingSelection = YES;
     [self.categoryTable reloadData];
     self.synchronizingSelection = NO;
-    // Set the initial size after hosting; restore the user frame only after all layout setup.
     NSWindow *window = self.window;
-    if (window == nil) { return; }
-    CGFloat chrome = NSHeight(window.contentView.bounds) - NSHeight(window.contentLayoutRect);
-    NSSize wanted = NSMakeSize(MAX(960, NSWidth(content.frame) + 220), NSHeight(content.frame) + chrome);
+    NSSize wanted = NSMakeSize(960, 700);
     NSScreen *screen = window.screen ?: NSScreen.mainScreen;
     if (screen != nil) {
         wanted.width = MIN(wanted.width, NSWidth(screen.visibleFrame));
@@ -178,15 +169,25 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     [window setContentSize:wanted];
     [window setFrameAutosaveName:@"SettingsSidebarWindow"];
     window.initialFirstResponder = self.categoryTable;
-    [self.window recalculateKeyViewLoop];
+    [window recalculateKeyViewLoop];
 }
-- (NSView *)legacyViewForCategoryIdentifier:(NSString *)identifier
+- (NSView *)viewForCategoryIdentifier:(NSString *)identifier
 {
-    TSSettingsCategory *category = [self.categoryList categoryForIdentifier:identifier];
-    if (category == nil) { return nil; }
-    NSUInteger index = category.legacyIndex;
-    if (index >= (NSUInteger)self.legacyTabs.numberOfTabViewItems) return nil;
-    return [self.legacyTabs tabViewItemAtIndex:index].view;
+    return self.panes[identifier].view;
+}
+- (void)displayPane:(NSView *)pane
+{
+    TSSettingsContentView *document = [[TSSettingsContentView alloc] initWithContent:pane];
+    document.translatesAutoresizingMaskIntoConstraints = NO;
+    self.contentScroll.documentView = document;
+    NSLayoutConstraint *width = [document.widthAnchor constraintEqualToAnchor:self.contentScroll.contentView.widthAnchor];
+    width.priority = NSLayoutPriorityDefaultHigh;
+    [NSLayoutConstraint activateConstraints:@[
+        width, [document.widthAnchor constraintGreaterThanOrEqualToConstant:620],
+        [pane.leadingAnchor constraintEqualToAnchor:document.leadingAnchor],
+        [pane.trailingAnchor constraintEqualToAnchor:document.trailingAnchor],
+        [pane.topAnchor constraintEqualToAnchor:document.topAnchor],
+        [pane.bottomAnchor constraintEqualToAnchor:document.bottomAnchor]]];
 }
 - (void)beginSession
 {
@@ -242,7 +243,8 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
         if (parent != nil && pane != nil) {
             NSScrollView *scroll = [NSScrollView new];
             scroll.translatesAutoresizingMaskIntoConstraints = NO;
-            scroll.hasVerticalScroller = YES; scroll.hasHorizontalScroller = YES;
+            scroll.hasVerticalScroller = NO; scroll.hasHorizontalScroller = YES;
+            scroll.autohidesScrollers = YES;
             self.keyboardScroll = scroll;
             TSSettingsContentView *document = [[TSSettingsContentView alloc] initWithContent:pane];
             document.translatesAutoresizingMaskIntoConstraints = NO;
@@ -251,14 +253,14 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
             [parent addSubview:scroll];
             NSLayoutConstraint *width = [document.widthAnchor constraintEqualToAnchor:scroll.contentView.widthAnchor];
             NSLayoutConstraint *height = [document.heightAnchor constraintEqualToAnchor:scroll.contentView.heightAnchor];
-            width.priority = NSLayoutPriorityDefaultHigh; height.priority = NSLayoutPriorityDefaultHigh;
+            width.priority = NSLayoutPriorityDefaultHigh;
             [NSLayoutConstraint activateConstraints:@[
                 [scroll.leadingAnchor constraintEqualToAnchor:self.contentScroll.leadingAnchor],
                 [scroll.trailingAnchor constraintEqualToAnchor:self.contentScroll.trailingAnchor],
                 [scroll.topAnchor constraintEqualToAnchor:self.contentScroll.topAnchor],
                 [scroll.bottomAnchor constraintEqualToAnchor:self.contentScroll.bottomAnchor],
                 [document.widthAnchor constraintGreaterThanOrEqualToConstant:700],
-                [document.heightAnchor constraintGreaterThanOrEqualToConstant:570], width, height,
+                width, height,
                 [pane.leadingAnchor constraintEqualToAnchor:document.leadingAnchor],
                 [pane.trailingAnchor constraintEqualToAnchor:document.trailingAnchor],
                 [pane.topAnchor constraintEqualToAnchor:document.topAnchor],
@@ -270,15 +272,13 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     if (keyboard) {
         self.window.title = NSLocalizedString(@"Keyboard", @"");
     } else {
-        if (category.legacyIndex >= (NSUInteger)self.legacyTabs.numberOfTabViewItems) { return; }
-        id<NSTabViewDelegate> delegate = self.legacyTabs.delegate;
-        self.legacyTabs.delegate = nil;
-        [self.legacyTabs selectTabViewItemAtIndex:category.legacyIndex];
-        self.legacyTabs.delegate = delegate;
-        self.window.title = [self.legacyTabs tabViewItemAtIndex:category.legacyIndex].label;
+        NSViewController *pane = self.panes[identifier];
+        if (pane == nil) { return; }
+        [self displayPane:pane.view];
+        self.window.title = pane.title ?: @"";
     }
     [self synchronizeSidebarSelection];
-    [self.legacyContent setAccessibilityLabel:self.window.title];
+    [self.contentScroll.documentView setAccessibilityLabel:self.window.title];
     [self.stateStore saveSelectedCategory:identifier];
     [self.contentScroll.contentView scrollToPoint:NSZeroPoint];
     [self.contentScroll reflectScrolledClipView:self.contentScroll.contentView];
@@ -339,8 +339,9 @@ static NSToolbarItemIdentifier const TSSettingsNavigation = @"settings.navigatio
     if (row < 0 || row >= (NSInteger)self.categoryList.categories.count) { return nil; }
     TSSettingsCategory *category = self.categoryList.categories[(NSUInteger)row];
     if ([category.identifier isEqualToString:TSSettingsCategoryKeyboard]) { return [TSSettingsSidebarRow cellForCategory:category title:NSLocalizedString(@"Keyboard", @"")]; }
-    if (category.legacyIndex >= (NSUInteger)self.legacyTabs.numberOfTabViewItems) { return nil; }
-    return [TSSettingsSidebarRow cellForCategory:category title:[self.legacyTabs tabViewItemAtIndex:category.legacyIndex].label];
+    NSViewController *pane = self.panes[category.identifier];
+    if (pane == nil) { return nil; }
+    return [TSSettingsSidebarRow cellForCategory:category title:pane.title ?: @""];
 }
 - (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar { return @[TSSettingsDivider,TSSettingsNavigation]; }
 - (NSArray<NSToolbarItemIdentifier> *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar { return @[TSSettingsDivider,TSSettingsNavigation]; }

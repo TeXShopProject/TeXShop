@@ -1,6 +1,3 @@
-#import "TSShortcutPaneController.h"
-#import "TSMacroEditor.h"
-#import "TSKeyboardShortcuts.h"
 /*
  * TeXShop - TeX editor for Mac OS
  * Copyright (C) 2000-2005 Richard Koch
@@ -24,6 +21,10 @@
  * Created by dirk on Tue Jan 23 2001.
  *
  */
+#import "TSShortcutPaneController.h"
+#import "TSMacroEditor.h"
+#import "TSKeyboardShortcuts.h"
+
 
 #import "TSAppDelegate.h"
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>

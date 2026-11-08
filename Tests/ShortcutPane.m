@@ -5,6 +5,8 @@
 #import "TSSettingsCategory.h"
 #import "TSMacroTreeNode.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
+static NSUInteger forwardedWindowEvents;
+static void AppKitSendEventProbe(id receiver, SEL selector, NSEvent *event) { forwardedWindowEvents++; }
 static NSString *nibPath;
 static NSDictionary *localizedStrings;
 static IMP originalLocalization;
@@ -37,6 +39,7 @@ static void CheckEventPriority(void) {
  const NSUInteger C=NSEventModifierFlagCommand,S=NSEventModifierFlagShift;
  // Before / nested Macros / After mirrors the application's top-level order.
  NSArray<NSDictionary *> *cases=@[
+  @{@"input":@"{",@"plain":@"[",@"flags":@(C|S),@"before":@[@"{",@(C)],@"macros":@[@[@"{",@(C|S)]],@"winner":@"before"},
   @{@"input":@"+",@"plain":@"=",@"flags":@(C|S),@"after":@[@"=",@(C|S)],@"macros":@[@[@"+",@(C)]],@"winner":@"macro0"},
   @{@"input":@"?",@"plain":@"/",@"flags":@(C|S),@"after":@[@"?",@(C)],@"macros":@[@[@"?",@(C|S)]],@"winner":@"macro0"},
   @{@"input":@"=",@"plain":@"0",@"flags":@(C|S),@"before":@[@"=",@(C)],@"macros":@[@[@"0",@(C|S)]],@"winner":@"before"},
@@ -162,7 +165,11 @@ int main(int argc,char **argv){@autoreleasepool{
  Shell *shell=[[Shell alloc]initWithDefaults:TSIsolatedAppKitDefaults];Delegate *delegate=[Delegate new];shell.settingsDelegate=delegate;
  NSView *legacy=[[NSView alloc]initWithFrame:NSMakeRect(0,0,700,600)];NSTabView *tabs=[[NSTabView alloc]initWithFrame:legacy.bounds];[legacy addSubview:tabs];
  for(NSUInteger i=0;i<9;i++){NSTabViewItem *tab=[[NSTabViewItem alloc]initWithIdentifier:@(i)];tab.label=[NSString stringWithFormat:@"Pane %lu",i];tab.view=[NSView new];[tabs addTabViewItem:tab];}
- [shell hostLegacyContent:legacy tabView:tabs];
+ NSMutableDictionary *panes=[NSMutableDictionary dictionary];
+ NSArray *ids=@[TSSettingsCategorySource,TSSettingsCategoryEditor,TSSettingsCategoryPreview,TSSettingsCategoryConsole,TSSettingsCategoryTypesetting,TSSettingsCategoryEngines,TSSettingsCategoryMiscOne,TSSettingsCategoryMiscTwo,TSSettingsCategoryThemes];
+ for(NSUInteger n=0;n<ids.count;n++){NSViewController *pane=[NSViewController new];pane.view=[tabs tabViewItemAtIndex:n].view;pane.title=ids[n];panes[ids[n]]=pane;}
+ NSView *footer=[NSView new];[footer.heightAnchor constraintEqualToConstant:50].active=YES;
+ [shell hostPaneControllers:panes footer:footer];
  __block NSUInteger created=0;__block ProbePane *pane;
  shell.keyboardPaneProvider=^{created++;pane=[[ProbePane alloc]initWithShortcuts:coordinator];return pane;};
  [shell beginSession];REQUIRE(created==0);
@@ -173,14 +180,26 @@ int main(int argc,char **argv){@autoreleasepool{
  NSDictionary *saved=[TSIsolatedAppKitDefaults.values copy];
  pane.searchMode.selectedSegment=1;[pane changeSearchMode:pane.searchMode];
  REQUIRE(pane.searchingByKey && !pane.search.editable && shell.window.firstResponder==pane.keySearchView);
+ REQUIRE([pane.keySearchView.accessibilityValue isEqual:@"Press a key"]);
  for(NSString *key in @[@"q",@"w",@",",@"h",@"[",@"]"]){fixtureCharacters=key;REQUIRE([shell.window performKeyEquivalent:Event(key,C,0)] && pane.searchingByKey && [shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);}
  fixtureCharacters=@"f";[shell.window keyDown:Event(@"f",C,3)];REQUIRE(pane.searchMatches.count==3 && pane.table.selectedRow==0 && [pane macroHeaderRow]==2);
  REQUIRE(pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
+ NSTextField *inactive=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:3];
+ REQUIRE([inactive.stringValue containsString:@"conflicts with"] && [inactive.stringValue containsString:first.title]);
+ REQUIRE([pane.keySearchView.accessibilityValue containsString:@"priority"]);
+ REQUIRE([pane.keySearchView.accessibilityValue containsString:@"Matches: 3"]);
+ NSScrollView *outer=pane.view.enclosingScrollView;
+ REQUIRE(outer!=nil && !outer.hasVerticalScroller && pane.table.enclosingScrollView.hasVerticalScroller);
+
  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];[pane updateSelectionButtons];
  REQUIRE(!pane.selectionButtons[0].enabled && pane.macroButton.enabled);
  fixtureCharacters=@"z";[shell.window performKeyEquivalent:Event(@"z",C,6)];REQUIRE(pane.searchMatches.count==2 && pane.searchMatches[0].winner && !pane.searchMatches[1].winner && pane.table.selectedRow==1 && [pane macroHeaderRow]==0);
  fixtureCharacters=@"x";[shell.window performKeyEquivalent:Event(@"x",C,7)];REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"No command"]);
- REQUIRE([shell.window makeFirstResponder:pane.table]);fixtureCharacters=@"x";[shell.window keyDown:Event(@"x",0,7)];REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"cannot be used"] && forwardedKeys==0);
+ REQUIRE([shell.window makeFirstResponder:pane.table]);fixtureCharacters=@"x";
+ IMP appKitSendEvent=method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(sendEvent:)),(IMP)AppKitSendEventProbe);
+ forwardedWindowEvents=0;[shell.window sendEvent:Event(@"x",0,7)];
+ method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(sendEvent:)),appKitSendEvent);
+ REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"cannot be used"] && forwardedKeys==0 && forwardedWindowEvents==0);
  // Existing non-assignable shortcuts remain searchable, but new assignments stay restricted.
  NSMenuItem *rotate=Item(@"Rotate",@"c",O),*switchViews=Item(@"Switch views",@"2",O);
  [menu addItem:rotate];[menu addItem:switchViews];
@@ -269,8 +288,10 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSString *language in translations){@autoreleasepool{
   localizedStrings=translations[language];
   TSShortcutPaneController *translated=[[TSShortcutPaneController alloc]initWithShortcuts:coordinator];
-  NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,570) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];host.contentView=translated.view;
+  NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,340) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];host.contentView=translated.view;
   [host.contentView layoutSubtreeIfNeeded];CheckButtons(translated.view,translated.view);
+  REQUIRE(NSHeight(translated.table.enclosingScrollView.frame)>40);
+  REQUIRE(NSContainsRect(translated.view.bounds,translated.table.enclosingScrollView.frame));
   REQUIRE(NSWidth(translated.searchMode.frame)+1>=translated.searchMode.intrinsicContentSize.width);
   fprintf(stdout,"PASS: %s pane controls fit minimum content size\n",language.UTF8String);
  }}

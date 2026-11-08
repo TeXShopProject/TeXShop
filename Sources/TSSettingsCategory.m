@@ -11,12 +11,12 @@ TSSettingsCategoryID const TSSettingsCategoryMiscTwo = @"misc-2";
 TSSettingsCategoryID const TSSettingsCategoryThemes = @"themes";
 TSSettingsCategoryID const TSSettingsCategoryKeyboard = @"keyboard";
 @implementation TSSettingsCategory
-- (instancetype)initWithIdentifier:(TSSettingsCategoryID)identifier symbolName:(NSString *)symbolName color:(NSColor *)color startsGroup:(BOOL)startsGroup legacyIndex:(NSUInteger)legacyIndex
+- (instancetype)initWithIdentifier:(TSSettingsCategoryID)identifier symbolName:(NSString *)symbolName color:(NSColor *)color startsGroup:(BOOL)startsGroup
 {
     self = [super init];
     if (self == nil) { return nil; }
     _identifier = [identifier copy]; _symbolName = [symbolName copy]; _color = [color copy];
-    _startsGroup = startsGroup; _legacyIndex = legacyIndex;
+    _startsGroup = startsGroup;
     return self;
 }
 @end

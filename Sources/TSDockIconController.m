@@ -21,11 +21,7 @@
     return self;
 }
 - (NSString *)text:(NSString *)key {
-    NSArray *languages = [NSUserDefaults.standardUserDefaults stringArrayForKey:@"AppleLanguages"] ?: NSLocale.preferredLanguages;
-    NSString *language = [NSBundle preferredLocalizationsFromArray:@[@"en", @"ja"] forPreferences:languages].firstObject;
-    NSString *path = [self.bundle.resourcePath stringByAppendingPathComponent:[NSString stringWithFormat:@"DockIcons/%@.lproj/DockIcons.strings", language]];
-    NSDictionary *strings = [NSDictionary dictionaryWithContentsOfFile:path];
-    return strings[key] ?: key;
+    return [self.bundle localizedStringForKey:key value:key table:@"SettingsDock"];
 }
 - (void)restoreSavedIcon {
     self.selection = TSDockIconName([self.defaults stringForKey:TSDockIconKey]);
@@ -44,48 +40,68 @@
 }
 - (void)installInPreferencesPane:(NSView *)misc {
     if (misc == nil || self.buttons.count != 0) return;
-    CGFloat middle = NSMidX(misc.bounds);
-    NSBox *column = nil;
-    for (NSView *view in misc.subviews)
-        if ([view isKindOfClass:NSBox.class] && NSMidX(view.frame) < middle && (!column || NSMinY(view.frame) < NSMinY(column.frame)))
-            column = (NSBox *)view;
-    if (!column) return;
-    CGFloat left = NSMinX(column.frame), top = NSMinY(column.frame) - 12, bottom = 4;
-    CGFloat right = NSMaxX(column.frame);
-    for (NSView *view in misc.subviews)
-        if (NSMidX(view.frame) >= middle && NSMinY(view.frame) < top)
-            right = MIN(right, NSMinX(view.frame) - 8);
-    CGFloat height = MIN(top - bottom, 96);
-    if (height < 80 || right - left < 200) return;
-    NSBox *group = [[NSBox alloc] initWithFrame:NSMakeRect(left, top - height, right - left, height)];
-    group.title = [self text:@"Dock Icon While Running"];
+    NSStackView *body = [misc.subviews.firstObject isKindOfClass:NSStackView.class] ? (NSStackView *)misc.subviews.firstObject : nil;
+    if (body == nil) return;
+    NSBox *group = [NSBox new];
+    group.titlePosition = NSNoTitle;
+    group.boxType = NSBoxCustom;
+    group.borderWidth = 0;
+    group.fillColor = NSColor.controlBackgroundColor;
+    group.cornerRadius = 8;
+    if (@available(macOS 26.0, *)) { group.cornerRadius = 12; }
     group.identifier = @"DockIconChoices";
     group.toolTip = [self text:@"Applies while TeXShop is running. The standard icon returns after quitting."];
-    group.autoresizingMask = NSViewMinYMargin;
-    [misc addSubview:group];
-    NSView *panel = group.contentView;
+    group.translatesAutoresizingMaskIntoConstraints = NO;
+    NSMutableArray<NSView *> *options = [NSMutableArray array];
     NSArray *titles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
     NSArray *details = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
-    CGFloat cellWidth = MIN(panel.bounds.size.width / 5, 72);
-    CGFloat iconHeight = MIN(38, NSHeight(panel.bounds) - 32);
     for (NSInteger index = 0; index < 5; index++) {
-        CGFloat center = (index + 0.5) * cellWidth;
         NSString *label = [self text:titles[index]];
         NSString *tip = [NSString stringWithFormat:@"%@ — %@\n%@", label, [self text:details[index]], group.toolTip];
         NSButton *button = [NSButton radioButtonWithTitle:@"" target:self action:@selector(chooseIcon:)];
         button.tag = index;
-        button.frame = NSMakeRect(center - 10, 3, 20, 22);
         button.accessibilityLabel = label;
         button.toolTip = tip;
-        [panel addSubview:button]; [self.buttons addObject:button];
+        [self.buttons addObject:button];
         NSButton *image = [NSButton buttonWithImage:TSDockIconImage(self.bundle, TSDockIconNames()[index]) target:self action:@selector(chooseIcon:)];
         image.tag = index;
-        image.frame = NSMakeRect(center - 16, 28, 32, iconHeight);
         image.bordered = NO;
         image.imageScaling = NSImageScaleProportionallyUpOrDown;
         image.accessibilityLabel = label;
         image.toolTip = tip;
-        [panel addSubview:image];
+        image.translatesAutoresizingMaskIntoConstraints = NO;
+        [image.widthAnchor constraintEqualToConstant:40].active = YES;
+        [image.heightAnchor constraintEqualToConstant:40].active = YES;
+        NSTextField *caption = [NSTextField wrappingLabelWithString:label];
+        caption.alignment = NSTextAlignmentCenter;
+        NSStackView *option = [NSStackView stackViewWithViews:@[image,button,caption]];
+        option.orientation = NSUserInterfaceLayoutOrientationVertical;
+        option.alignment = NSLayoutAttributeCenterX;
+        option.spacing = 6;
+        [options addObject:option];
     }
+    NSStackView *choices = [NSStackView stackViewWithViews:options];
+    choices.distribution = NSStackViewDistributionFillEqually;
+    choices.alignment = NSLayoutAttributeTop;
+    choices.spacing = 12;
+    NSTextField *heading = [NSTextField wrappingLabelWithString:[self text:@"Dock Icon While Running"]];
+    heading.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
+    NSTextField *explanation = [NSTextField wrappingLabelWithString:group.toolTip ?: @""];
+    NSStackView *stack = [NSStackView stackViewWithViews:@[heading,choices,explanation]];
+    stack.orientation = NSUserInterfaceLayoutOrientationVertical;
+    stack.alignment = NSLayoutAttributeLeading;
+    stack.spacing = 12;
+    stack.translatesAutoresizingMaskIntoConstraints = NO;
+    [group addSubview:stack];
+    [NSLayoutConstraint activateConstraints:@[
+        [stack.leadingAnchor constraintEqualToAnchor:group.leadingAnchor constant:24],
+        [stack.trailingAnchor constraintEqualToAnchor:group.trailingAnchor constant:-24],
+        [stack.topAnchor constraintEqualToAnchor:group.topAnchor constant:24],
+        [stack.bottomAnchor constraintEqualToAnchor:group.bottomAnchor constant:-24],
+        [choices.widthAnchor constraintEqualToAnchor:stack.widthAnchor],
+        [heading.widthAnchor constraintEqualToAnchor:stack.widthAnchor],
+        [explanation.widthAnchor constraintEqualToAnchor:stack.widthAnchor]]];
+    [body addArrangedSubview:group];
+    [group.widthAnchor constraintEqualToAnchor:body.widthAnchor].active = YES;
 }
 @end

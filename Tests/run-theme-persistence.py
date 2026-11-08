@@ -5,9 +5,12 @@ import tempfile,subprocess,sys
 R=Path(__file__).resolve().parents[1];source=(R/'Sources/TSPreferences-Color.m').read_text()
 def method(sig):
  a=source.index('\n'+sig)+1;return source[a:source.index('\n}',a)+2]
-methods='\n'.join(map(method,['- (IBAction)SaveEditedStyle:', '- (void)saveNewTheme:', '- (IBAction)themeSelectionChanged:', '- (IBAction)EditingStyleChoice:', '- (IBAction)SaveNewStyle:', '- (void)setThemeEditingEnabled:']))
+methods='\n'.join(map(method,['- (IBAction)SaveEditedStyle:', '- (void)saveNewTheme:', '- (IBAction)themeSelectionChanged:', '- (IBAction)EditingStyleChoice:', '- (IBAction)SaveNewStyle:', '- (void)requestNameForThemeColors:', '- (void)okForStylePanel:', '- (void)cancelForStylePanel:', '- (void)setThemeEditingEnabled:']))
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
 mutations={
+ 'sheet-generation':('generation != self.themeOperationGeneration','NO'),
+ 'overwrite-generation':('answer == NSAlertFirstButtonReturn && generation == self.themeOperationGeneration','answer == NSAlertFirstButtonReturn'),
+ 'sheet-cancel':('response != NSModalResponseOK ||','NO ||'),
  'failure-dictionary':('EditingColors = [saved mutableCopy];',';'),
  'failure-fallback':('[[self themeStore] readTitle:title] ?: self.lastSavedEditingColors','[[self themeStore] readTitle:title]'),
  'save-notify':('[NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];',';'),
@@ -45,23 +48,38 @@ static NSUInteger reloads;
 - (void)selectItemWithTitle:(NSString *)title{self.titleOfSelectedItem=title;}
 @end
 static NSString *ColorPath;
-@interface FakePanel:NSObject @end
+@interface FakePanel:NSObject
+@property FakePanel *attachedSheet;
+@property FakePanel *sheetParent;
+@property NSView *contentView;
+@property(copy) void (^completion)(NSModalResponse);
+- (void)beginSheet:(FakePanel *)sheet completionHandler:(void (^)(NSModalResponse))handler;
+- (void)endSheet:(FakePanel *)sheet returnCode:(NSModalResponse)response;
+- (void)setContentSize:(NSSize)size;
+@end
 @implementation FakePanel
-- (void)close {}
+- (void)beginSheet:(FakePanel *)sheet completionHandler:(void (^)(NSModalResponse))handler { self.attachedSheet=sheet;sheet.sheetParent=self;self.completion=handler; }
+- (void)endSheet:(FakePanel *)sheet returnCode:(NSModalResponse)response { void (^done)(NSModalResponse)=self.completion;self.completion=nil;self.attachedSheet=nil;sheet.sheetParent=nil;if(done)done(response); }
+- (void)setContentSize:(NSSize)size {}
 @end
-@interface FakeApp:NSObject @end
-@implementation FakeApp
-- (NSInteger)runModalForWindow:(id)window {return 0;}
+static void (^alertCompletion)(NSModalResponse);
+@interface FakeAlert:NSObject
+@property(copy) NSString *messageText;
+- (void)addButtonWithTitle:(NSString *)title;
+- (void)beginSheetModalForWindow:(FakePanel *)parent completionHandler:(void (^)(NSModalResponse))handler;
 @end
-static FakeApp *app;
-#undef NSApp
-#define NSApp app
+@implementation FakeAlert
+- (void)addButtonWithTitle:(NSString *)title {}
+- (void)beginSheetModalForWindow:(FakePanel *)parent completionHandler:(void (^)(NSModalResponse))handler { alertCompletion=[handler copy]; }
+@end
+#define NSAlert FakeAlert
 @interface Field:NSObject
 @property(copy) NSString *stringValue;
 @end
 @implementation Field @end
-@interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *EditingStyle,*LiteStyle,*DarkStyle; Field *styleTitle; FakePanel *stylePanel; }
+@interface Probe:NSObject { @public NSMutableDictionary *EditingColors; Popup *EditingStyle,*LiteStyle,*DarkStyle; Field *styleTitle; FakePanel *stylePanel,*_prefsWindow; }
 @property(copy) NSDictionary *lastSavedEditingColors;
+@property NSUInteger themeOperationGeneration;
 @property TSThemeFileStore *store;
 @property NSUInteger errors,fills;
 @end
@@ -75,7 +93,7 @@ static void check(BOOL ok,const char *why){if(!ok){fprintf(stderr,"FAIL: %s\n",w
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();memory=[TSMemoryDefaults new];Probe *p=[Probe new];
  NSURL *root=[NSURL fileURLWithPath:@(argv[1]) isDirectory:YES];
- p.store=[[TSThemeFileStore alloc]initWithDirectory:root];ColorPath=root.path;app=[FakeApp new];p->stylePanel=[FakePanel new];p->styleTitle=[Field new];
+ p.store=[[TSThemeFileStore alloc]initWithDirectory:root];ColorPath=root.path;p->_prefsWindow=[FakePanel new];p->stylePanel=[FakePanel new];p->styleTitle=[Field new];
  NSDictionary *original=@{@"Title":@"Original",@"EditorText":@[@0.1,@0.2,@0.3,@1]};
  check([p.store writeColors:original title:@"Original" error:NULL],"seed file");
  p->EditingStyle=[Popup new];p->LiteStyle=[Popup new];p->DarkStyle=[Popup new];
@@ -94,13 +112,37 @@ int main(int argc,char **argv){@autoreleasepool{
  [p SaveEditedStyle:nil];
  check(p.errors==1 && [p->EditingColors isEqual:saved] && notifications==1 && reloads==1,"failed save restores last successful dictionary without applying it");
  p->EditingColors[@"EditorText"]=@[@0.4,@0.4,@0.4,@1];
- p->styleTitle.stringValue=@"Clone";
  [p SaveNewStyle:nil];
+ check(p->_prefsWindow.attachedSheet==p->stylePanel && [p->styleTitle.stringValue isEqual:@""],"clone uses a cleared name sheet");
+ p->styleTitle.stringValue=@"Clone";
+ [p okForStylePanel:nil];
  check([[[p.store readTitle:@"Clone"] objectForKey:@"EditorText"] isEqual:saved[@"EditorText"]],"clone after failed save excludes unsaved colors");
  check([p->EditingStyle.titleOfSelectedItem isEqual:@"Clone"] && [p->LiteStyle.items containsObject:@"Clone"],"successful clone updates all lists and editing selection");
  NSDictionary *before=[p->EditingColors copy];NSArray *items=[p->LiteStyle.items copy];
  [p saveNewTheme:p.lastSavedEditingColors title:@"Original"];
  check(p.errors==2 && [p->EditingColors isEqual:before] && [p->EditingStyle.titleOfSelectedItem isEqual:@"Clone"] && [items isEqual:p->LiteStyle.items],"failed clone leaves original dictionary and lists intact");
+
+ NSUInteger errors=p.errors; NSDictionary *clone=[p.store readTitle:@"Clone"];
+ [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Cancelled";[p cancelForStylePanel:nil];
+ check([p.store readTitle:@"Cancelled"]==nil,"cancel creates no file");
+ [p SaveNewStyle:nil];p->styleTitle.stringValue=@"../Bad";[p okForStylePanel:nil];
+ check(p.errors==errors+1,"invalid title rejected before saving");
+ [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Clone";[p okForStylePanel:nil];
+ check(alertCompletion!=nil,"collision asks on a sheet");alertCompletion(NSAlertSecondButtonReturn);alertCompletion=nil;
+ check([[p.store readTitle:@"Clone"] isEqual:clone],"overwrite cancellation leaves disk intact");
+ NSDictionary *replacement=@{@"Title":@"Snapshot",@"EditorText":@[@0.2,@0.5,@0.8,@1]};
+ p.lastSavedEditingColors=replacement;[p SaveNewStyle:nil];p.lastSavedEditingColors=clone;
+ p->styleTitle.stringValue=@"Snapshot";[p okForStylePanel:nil];
+ check([[[p.store readTitle:@"Snapshot"] objectForKey:@"EditorText"] isEqual:replacement[@"EditorText"]],"in-flight clone keeps the captured saved colors");
+ [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Clone";[p okForStylePanel:nil];
+ check(alertCompletion!=nil,"overwrite awaits confirmation");p.themeOperationGeneration++;
+ alertCompletion(NSAlertFirstButtonReturn);alertCompletion=nil;
+ check([[p.store readTitle:@"Clone"] isEqual:clone],"late overwrite after teardown does not save");
+ [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Late";p.themeOperationGeneration++;[p okForStylePanel:nil];
+ check([p.store readTitle:@"Late"]==nil,"late name completion after teardown does not save");
+ [p SaveNewStyle:nil];p->styleTitle.stringValue=@"Clone";[p okForStylePanel:nil];
+ alertCompletion(NSAlertFirstButtonReturn);alertCompletion=nil;
+ check([[[p.store readTitle:@"Clone"] objectForKey:@"EditorText"] isEqual:replacement[@"EditorText"]],"confirmed overwrite saves the snapshot");
  NSUInteger count=notifications,reloaded=reloads;
  p->DarkStyle.titleOfSelectedItem=nil;[SUD setObject:@"Missing" forKey:DefaultDarkThemeKey];
  [p themeSelectionChanged:p->LiteStyle];
@@ -118,4 +160,4 @@ int main(int argc,char **argv){@autoreleasepool{
 with tempfile.TemporaryDirectory(prefix='texshop-theme-persistence-') as td:
  t=Path(td);(t/'probe.m').write_text(program);(t/'Colors').mkdir()
  subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-I',str(R/'Sources'),'-I',str(R/'Tests'),'-framework','Cocoa',str(t/'probe.m'),str(R/'Sources/TSThemeFileStore.m'),'-o',str(t/'probe')],check=True)
- subprocess.run([str(t/'probe'),str(t/'Colors')],check=True)
+ subprocess.run([str(t/'probe'),str(t/'Colors')],check=True,timeout=60)

@@ -1,0 +1,431 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="25079.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+  <dependencies>
+    <deployment version="101000" identifier="macosx" />
+    <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="25079.1" />
+    <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0" />
+  </dependencies>
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="TSPrefMiscTwoController">
+      <connections>
+        <outlet property="XMLchapter" destination="Fww-AH-Uix" id="uBC-Ja-0GE" />
+        <outlet property="XMLconclusion" destination="pUb-HQ-m1i" id="L2J-BB-0o0" />
+        <outlet property="XMLexercises" destination="dNI-hB-T5a" id="ZgP-Lj-7UY" />
+        <outlet property="XMLfigure" destination="3T5-e8-Mcd" id="0VI-Oa-x5g" />
+        <outlet property="XMLintroduction" destination="ZIN-eZ-jRd" id="V8y-vv-pJW" />
+        <outlet property="XMLmark" destination="9KW-ea-Zni" id="4KK-F4-Koy" />
+        <outlet property="XMLproject" destination="Ejc-g3-EPJ" id="ph5-p2-VOh" />
+        <outlet property="XMLsection" destination="J9Y-VM-xKk" id="1Y4-rD-e0B" />
+        <outlet property="XMLsubsection" destination="leH-sT-cbJ" id="7gY-7E-pzQ" />
+        <outlet property="XMLsubsubsection" destination="ct9-Gf-9nT" id="x4R-gH-kJO" />
+        <outlet property="XMLtable" destination="F6b-YV-mvL" id="gji-6Q-ytU" />
+        <outlet property="alternateEngineTextField" destination="gZB-h1-n7P" id="JqO-fq-T0B" />
+        <outlet property="convertUTFButton" destination="sPQ-5E-qId" id="qJj-IM-dId" />
+        <outlet property="distillerMatrix" destination="eiU-B8-j8t" id="o2B-Mg-2X0" />
+        <outlet property="latexScriptCommandTextField" destination="KBV-98-EKO" id="2pL-Wh-2wM" />
+        <outlet property="miniaturizeRootFileButton" destination="4J7-3F-0ja" id="H19-zo-8gu" />
+        <outlet property="openRootFileButton" destination="UtV-tr-Xnu" id="fug-bq-F4l" />
+        <outlet property="ptexUtfOutputButton" destination="spX-dz-ROL" id="zPa-1d-KNl" />
+        <outlet property="sparkleAutomaticButton" destination="Tu2-Zu-ut5" id="Uy8-e4-eBh" />
+        <outlet property="sparkleIntervalMatrix" destination="ssL-3D-6IR" id="DAc-Md-cc9" />
+        <outlet property="texScriptCommandTextField" destination="10b-du-keV" id="yfs-jZ-nNH" />
+        <outlet property="view" destination="e2r-eO-p5f" id="settings-root-view" />
+      </connections>
+    </customObject>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder" />
+    <customObject id="-3" userLabel="Application" customClass="NSObject" />
+    <customView key="view" id="e2r-eO-p5f" identifier="settings.e2r-eO-p5f">
+      <rect key="frame" x="10" y="33" width="652" height="623" />
+      <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+      <subviews>
+        <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="SXg-YM-OVa" identifier="settings.SXg-YM-OVa">
+          <rect key="frame" x="22" y="329.5" width="141" height="70" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="aFF-a7-Car" identifier="settings.aFF-a7-Car">
+            <rect key="frame" x="0.0" y="0.0" width="141" height="58" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eiU-B8-j8t" identifier="settings.eiU-B8-j8t">
+                <rect key="frame" x="17" y="9" width="117" height="38" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="117" height="18" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="SCh-Ca-qiI">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Ghostscript" imagePosition="left" alignment="left" state="on" inset="2" id="i9l-Ll-3us">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="distillerChanged:" target="-2" id="76m-Wl-WTu" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="radio" title="Apple Distiller" imagePosition="left" alignment="left" tag="1" inset="2" id="kY2-vG-FLS">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="distillerChanged:" target="-2" id="yXt-xS-HQf" />
+                      </connections>
+                    </buttonCell>
+                  </column>
+                </cells>
+              </matrix>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="During File Save" translatesAutoresizingMaskIntoConstraints="NO" id="03p-fB-1K3" identifier="settings.03p-fB-1K3">
+          <rect key="frame" x="22" y="267.5" width="346" height="50" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="CTJ-d3-TKI" identifier="settings.CTJ-d3-TKI">
+            <rect key="frame" x="0.0" y="0.0" width="346" height="38" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sPQ-5E-qId" identifier="settings.sPQ-5E-qId">
+                <rect key="frame" x="18" y="9" width="299" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Automatic UTF-8-Mac to UTF-8 Conversion" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="K8n-in-y4T">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="convertUTFPressed:" target="-2" id="B1Y-zm-MmI" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Project Root File" translatesAutoresizingMaskIntoConstraints="NO" id="Kin-Cw-xVc" identifier="settings.Kin-Cw-xVc">
+          <rect key="frame" x="22" y="180.5" width="346" height="75" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="Lly-xe-Cer" identifier="settings.Lly-xe-Cer">
+            <rect key="frame" x="0.0" y="0.0" width="346" height="63" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UtV-tr-Xnu" identifier="settings.UtV-tr-Xnu">
+                <rect key="frame" x="18" y="34" width="320" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Open root file automatically on opening a child" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="YtS-5V-eM9">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                  <connections>
+                    <action selector="openRootFilePressed:" target="-2" id="FWw-kZ-nhP" />
+                  </connections>
+                </buttonCell>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4J7-3F-0ja" identifier="settings.4J7-3F-0ja">
+                <rect key="frame" x="18" y="9" width="299" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Miniaturize the opened root window" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="h3F-qB-MHw">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="miniaturizeRootFilePressed:" target="-2" id="wWR-DW-xCu" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Sparkle Updater" translatesAutoresizingMaskIntoConstraints="NO" id="e3h-Wk-X7D" identifier="settings.e3h-Wk-X7D">
+          <rect key="frame" x="372" y="153" width="243" height="119" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="87n-8B-bOH" identifier="settings.87n-8B-bOH">
+            <rect key="frame" x="0.0" y="0.0" width="243" height="107" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autorecalculatesCellSize="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ssL-3D-6IR" identifier="settings.ssL-3D-6IR">
+                <rect key="frame" x="38" y="11" width="79" height="58" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="71" height="18" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="A9l-al-gxE">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Daily" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="GUV-qt-mM2">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Weekly" imagePosition="left" alignment="left" tag="2" inset="2" id="oSw-pG-JGB">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Monthly" imagePosition="left" alignment="left" tag="3" inset="2" id="naM-Et-WMn">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="sparkleInterval:" target="-2" id="mIF-Ma-xsa" />
+                </connections>
+              </matrix>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tu2-Zu-ut5" identifier="settings.Tu2-Zu-ut5">
+                <rect key="frame" x="17" y="78" width="320" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Automatically check for updates" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="2x0-tc-yWg">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="sparkleAutomaticCheck:" target="-2" id="8wr-Q0-c3k" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="pTeX support (for Japan)" translatesAutoresizingMaskIntoConstraints="NO" id="SS5-tZ-cDa" identifier="settings.SS5-tZ-cDa">
+          <rect key="frame" x="187" y="349.5" width="181" height="50" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="7EH-Vl-zSo" identifier="settings.7EH-Vl-zSo">
+            <rect key="frame" x="0.0" y="0.0" width="181" height="38" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="spX-dz-ROL" identifier="settings.spX-dz-ROL">
+                <rect key="frame" x="18" y="9" width="116" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="utf export" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ahm-aK-Qi9">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="ptexUtfOutputPressed:" target="-2" id="Wh5-QQ-bA1" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Personal Script" translatesAutoresizingMaskIntoConstraints="NO" id="Eb6-59-PxD" identifier="settings.Eb6-59-PxD">
+          <rect key="frame" x="12" y="494.5" width="356" height="116.5" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="buj-8D-9FL" identifier="settings.buj-8D-9FL">
+            <rect key="frame" x="0.0" y="0.0" width="356" height="104.5" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0GI-vh-5wv" identifier="settings.0GI-vh-5wv">
+                <rect key="frame" x="15" y="31.5" width="153" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="LaTeX Program (no default)" id="8Bw-D6-HlO">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10b-du-keV" identifier="settings.10b-du-keV">
+                <rect key="frame" x="19" y="56" width="325" height="21" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="HxA-qk-3oZ">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="texScriptProgramChanged:" target="-2" id="kBQ-Fq-9BY" />
+                </connections>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e8o-CH-MrS" identifier="settings.e8o-CH-MrS">
+                <rect key="frame" x="14" y="76.5" width="142" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" id="mPz-qG-Toi">
+                  <font key="font" metaFont="message" size="11" />
+                  <string key="title">TeX Program (no default)</string>
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KBV-98-EKO" identifier="settings.KBV-98-EKO">
+                <rect key="frame" x="19" y="11" width="325" height="21" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="zCf-b6-rJv">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="latexScriptProgramChanged:" target="-2" id="fhT-Pc-uic" />
+                </connections>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Alternate Engine" translatesAutoresizingMaskIntoConstraints="NO" id="vEF-zd-SJl" identifier="settings.vEF-zd-SJl">
+          <rect key="frame" x="12" y="411.5" width="356" height="71" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="Vy2-Hl-YOQ" identifier="settings.Vy2-Hl-YOQ">
+            <rect key="frame" x="0.0" y="0.0" width="356" height="59" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ETt-2N-toX" identifier="settings.ETt-2N-toX">
+                <rect key="frame" x="16" y="35" width="123" height="14" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="(default: pdflatexmk)" id="a5N-7n-3da">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZB-h1-n7P" identifier="settings.gZB-h1-n7P">
+                <rect key="frame" x="18" y="11" width="327" height="21" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Nm3-EN-nuZ">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="alternateEngineChanged:" target="-2" id="WDL-xY-voj" />
+                </connections>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="XML Tag Choices" translatesAutoresizingMaskIntoConstraints="NO" id="DU3-gi-QzY" identifier="settings.DU3-gi-QzY">
+          <rect key="frame" x="398" y="284" width="217" height="327" />
+          <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+          <view key="contentView" id="x37-2g-Y5J" identifier="settings.x37-2g-Y5J">
+            <rect key="frame" x="0.0" y="0.0" width="217" height="315" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fww-AH-Uix" identifier="settings.Fww-AH-Uix">
+                <rect key="frame" x="27" y="284" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="chapter" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="5c4-N7-glC">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLChapterButtonChanged:" target="-2" id="tQ2-R3-CYm" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J9Y-VM-xKk" identifier="settings.J9Y-VM-xKk">
+                <rect key="frame" x="27" y="256.5" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="section" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Ggu-ax-oma">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLSectionButtonChanged:" target="-2" id="fQP-89-dOa" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="leH-sT-cbJ" identifier="settings.leH-sT-cbJ">
+                <rect key="frame" x="27" y="228.5" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="subsection" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="fDa-Qp-dfQ">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLSubsectionButtonChanged:" target="-2" id="EK3-N4-uG2" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ct9-Gf-9nT" identifier="settings.ct9-Gf-9nT">
+                <rect key="frame" x="27" y="201" width="115" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="subsubsection " bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="6Fu-n9-vh6">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLSubsubsectionButtonChanged:" target="-2" id="W0C-oS-bzz" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pUb-HQ-m1i" identifier="settings.pUb-HQ-m1i">
+                <rect key="frame" x="27" y="145.5" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="conclusion" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="ERD-h5-S0j">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLConclusionButtonChanged:" target="-2" id="sdf-Bc-BtB" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dNI-hB-T5a" identifier="settings.dNI-hB-T5a">
+                <rect key="frame" x="27" y="118" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="exercises" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="pkV-qe-XIq">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLExercisesButtonChanged:" target="-2" id="cbE-cx-Pla" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ejc-g3-EPJ" identifier="settings.Ejc-g3-EPJ">
+                <rect key="frame" x="27" y="90" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="project" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="J50-iI-WzV">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLProjectButtonChanged:" target="-2" id="zJ5-Rj-K0F" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3T5-e8-Mcd" identifier="settings.3T5-e8-Mcd">
+                <rect key="frame" x="27" y="62.5" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="figure" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="WeQ-Qd-mPg">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLFigureButtonChanged:" target="-2" id="pAu-1o-Xvm" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F6b-YV-mvL" identifier="settings.F6b-YV-mvL">
+                <rect key="frame" x="27" y="34.5" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="table" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="R9c-Rj-59Z">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLTableButtonChanged:" target="-2" id="U1U-9T-1fr" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9KW-ea-Zni" identifier="settings.9KW-ea-Zni">
+                <rect key="frame" x="27" y="7" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="personal mark" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="2Mp-Uf-8n2">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLMarkButtonChanged:" target="-2" id="rNJ-yZ-8zS" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZIN-eZ-jRd" identifier="settings.ZIN-eZ-jRd">
+                <rect key="frame" x="27" y="173" width="108" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="introduction" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="xaE-Ux-0eA">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="XMLIntroductionButtonChanged:" target="-2" id="3WR-uM-leu" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+      </subviews>
+    </customView>
+  </objects>
+</document>

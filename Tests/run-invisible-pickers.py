@@ -2,6 +2,7 @@
 """Load every compiled preferences nib and exercise marker choices with isolated defaults."""
 from pathlib import Path
 import subprocess, tempfile, re
+from pane_fixtures import bundles, sources
 root=Path(__file__).resolve().parents[1]
 source=(root/'Sources/TSPreferences.m').read_text()
 def method(sig):
@@ -24,6 +25,7 @@ program=r'''
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
 #import "TSInvisibleCharacters.h"
+#import "TSPrefEditorController.h"
 #import "MemoryDefaults.h"
 static NSUserDefaults *settings;
 #define SUD settings
@@ -49,18 +51,23 @@ int main(int argc,char **argv){@autoreleasepool{
  NSArray *expected=@[@[@"␣",@"·"],@[@"□",@"■"],@[@"↵",@"¶",@"↩",@"⏎"],@[@"‣",@"▹",@"⇥"]];
  for(int n=1;n<argc;n++){
   TSPreferences *owner=[TSPreferences new];
-  NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:@(argv[n])] bundle:nil];NSArray *objects;
-  Check([nib instantiateWithOwner:owner topLevelObjects:&objects],@"compiled nib loads");
+  NSBundle *bundle=[NSBundle bundleWithPath:@(argv[n])];
+  TSPrefEditorController *pane=[[TSPrefEditorController alloc]initWithNibName:@"SettingsEditor" bundle:bundle];
+  Check(pane.view!=nil,@"shared editor pane loads");pane.preferences=owner;
+  BRIDGE
+  NSWindow *window=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,1600) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
+  [window.contentView addSubview:pane.view];
+  [NSLayoutConstraint activateConstraints:@[[pane.view.widthAnchor constraintEqualToConstant:650],[pane.view.topAnchor constraintEqualToAnchor:window.contentView.topAnchor],[pane.view.leadingAnchor constraintEqualToAnchor:window.contentView.leadingAnchor]]];
+  [window.contentView layoutSubtreeIfNeeded];
   NSArray *popups=@[owner->_SpaceCharacterKindPopup,owner->_FullwidthSpaceCharacterKindPopup,owner->_NewLineCharacterKindPopup,owner->_TabCharacterKindPopup];
   NSArray *buttons=@[owner->_showSpaceCharacterButton,owner->_showFullwidthSpaceCharacterButton,owner->_showNewLineCharacterButton,owner->_showTabCharacterButton];
   for(int i=0;i<4;i++){[settings setInteger:1 forKey:keys[i]];[settings setBool:YES forKey:show[i]];[(NSButton *)buttons[i] setState:NSControlStateValueOn];}
   [owner updateInvisibleCharacterControls:settings];
   for(int i=0;i<4;i++){
    NSPopUpButton *p=popups[i];NSButton *b=buttons[i];
-   NSView *box=p.superview.superview;
-   Check(box.frame.size.width>100 && box.frame.size.height>100,@"visible settings box bounds");
+   Check(NSWidth(pane.view.frame)>600,@"editor pane has usable width");
    Check(NSContainsRect(p.superview.bounds,p.frame),@"popup stays inside settings box");
-   Check([p isKindOfClass:NSPopUpButton.class] && p.target==owner && p.action==@selector(invisibleCharacterChanged:),@"popup wiring");
+   Check([p isKindOfClass:NSPopUpButton.class] && p.target==pane && p.action==@selector(invisibleCharacterChanged:),@"popup wiring");
    Check([p.itemTitles isEqual:expected[i]],@"compiled menu glyphs and order");
    Check([TSInvisibleMarkers(keys[i]) isEqual:p.itemTitles],@"rendering and UI choices agree");
    Check(p.selectedTag==1 && p.enabled,@"existing second choice preserved");
@@ -110,17 +117,17 @@ int main(int argc,char **argv){@autoreleasepool{
   [settings setInteger:2 forKey:TSInvisibleExtendedKey(keys[3])]; [settings setInteger:1 forKey:keys[3]];
   [owner reloadControls:settings]; Check(tab.selectedTag==1,@"historical second choice overrides stale extended value");
   [((TSMemoryDefaults *)settings).values removeAllObjects];
-  for(id o in objects)if([o isKindOfClass:NSWindow.class])[o orderOut:nil];
+  [pane.view removeFromSuperview];
  }
 
  puts("PASS: all compiled nibs; historical choices, added glyphs, immediate saving, disabled rows and invalid settings");
 }return 0;}
-'''.replace('CONSTANTS',constants).replace('IVARS',ivars).replace('METHODS',methods)
+'''.replace('CONSTANTS',constants).replace('IVARS',ivars).replace('METHODS',methods).replace('BRIDGE','\n'.join(f'owner->_{k}CharacterKindPopup=pane.{k}CharacterKindPopup;owner->_show{k}CharacterButton=pane.show{k}CharacterButton;' for k in keys))
 with tempfile.TemporaryDirectory(prefix='texshop-invisible-') as td:
  t=Path(td);(t/'probe.m').write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-I',str(root/'Sources'),'-I',str(root/'Tests'),str(t/'probe.m'),'-o',str(t/'probe')],check=True)
- nibs=sorted((root/'Resources/Interfaces').glob('*.lproj/Preferences.nib/keyedobjects*.nib'))
- assert len(nibs)==24
+ subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-I',str(root/'Sources'),'-I',str(root/'Tests'),str(t/'probe.m'),*map(str,sources(root,('Editor',))),'-o',str(t/'probe')],check=True)
+ nibs=bundles(root,t,('Editor',))
+ assert len(nibs)==12
  subprocess.run([str(t/'probe'),*map(str,nibs)],check=True)
 
 with tempfile.TemporaryDirectory(prefix="texshop-marker-draw-") as td:

@@ -2,6 +2,7 @@
 """Exercise production layout actions with real PDFKit and isolated preferences."""
 from pathlib import Path
 import subprocess, tempfile, plistlib, sys
+from pane_fixtures import bundles, sources
 root=Path(__file__).resolve().parents[1]
 def method(source, signature):
  a=source.index(signature); return source[a:source.index('\n}',a)+2]
@@ -24,6 +25,7 @@ program=r'''
 #import <PDFKit/PDFKit.h>
 #import "TSPreviewLayout.h"
 #import "MemoryDefaults.h"
+#import "TSPrefPreviewController.h"
 static NSUserDefaults *defaults;
 #define SUD defaults
 static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
@@ -228,13 +230,14 @@ int main(int argc,char **argv){@autoreleasepool{
  REGRESSION
  // Nib + actual preferences action, without loading TeXShop or its user settings.
  TSPreferences *owner=[TSPreferences new];owner.outlets=[NSMutableDictionary new];
- NSString *nibFile=[@(argv[1]) stringByAppendingPathComponent:@"keyedobjects-101300.nib"];if(![NSFileManager.defaultManager fileExistsAtPath:nibFile])nibFile=[@(argv[1]) stringByAppendingPathComponent:@"keyedobjects.nib"];
- NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:nibFile] bundle:nil];NSArray *objects;
- Check([nib instantiateWithOwner:owner topLevelObjects:&objects],@"Load Preferences nib");
+ TSPrefPreviewController *pane=[[TSPrefPreviewController alloc] initWithNibName:@"SettingsPreview" bundle:[NSBundle bundleWithPath:@(argv[1])]];
+ pane.preferences=(id)owner;[pane loadView];owner->_displayAsBookButton=pane.displayAsBookButton;
  NSButton *cover=owner->_displayAsBookButton;Check(cover && cover.action==@selector(displayAsBookChanged:),@"Cover outlet and action");
- [defaults setBool:NO forKey:DisplayAsBookKey];cover.state=NSControlStateValueOn;[owner displayAsBookChanged:cover];
+ [defaults setBool:NO forKey:DisplayAsBookKey];cover.state=NSControlStateValueOff;[cover performClick:nil];
  Check([defaults boolForKey:DisplayAsBookKey],@"Cover preference saved");Check([defaults boolForKey:DisplayAsBookKey],@"cover preference remains saved");
- for(id o in objects)if([o isKindOfClass:NSWindow.class]){NSWindow *w=o;NSTabView *tabs=Tabs(w.contentView);if(tabs.numberOfTabViewItems!=9)continue;[tabs selectTabViewItemAtIndex:2];w.appearance=[NSAppearance appearanceNamed:NSAppearanceNameAqua];[w orderOut:nil];[w.contentView layoutSubtreeIfNeeded];[w displayIfNeeded];if(argc>2 && strcmp(argv[2],"-")!=0){Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(w.contentView,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);Snapshot(cover.superview.superview,[@(argv[2]) stringByAppendingPathComponent:@"arrangement-settings.png"]);}[w orderOut:nil];}
+ NSWindow *settings=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,620,900) styleMask:0 backing:NSBackingStoreBuffered defer:NO];
+ settings.releasedWhenClosed=NO;settings.contentView=pane.view;[pane.view layoutSubtreeIfNeeded];
+ if(argc>2 && strcmp(argv[2],"-")!=0) Snapshot(pane.view,[@(argv[2]) stringByAppendingPathComponent:@"preferences.png"]);
  d.myPDFKitView.document=nil;Check(![d validatePreviewLayoutItem:Choice(@selector(changePreviewLayout:),1)],@"No PDF disables actions");
  NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, immediate preferences");
 }}
@@ -248,8 +251,9 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  for l in ('en','ja'):
   res=app/f'Contents/Resources/{l}.lproj';res.mkdir(parents=True);shutil.copy(root/f'Resources/Interfaces/{l}.lproj/ToolbarItems.strings',res)
  source=Path(tmp)/'Test.m';source.write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules','-I'+str(root/'Sources'),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','PDFKit',str(source),'-o',str(mac/'LayoutTest')],check=True)
- nib=root/f'Resources/Interfaces/{"Base" if lang=="en" else lang}.lproj/Preferences.nib'
+ subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules','-I'+str(root/'Sources'),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),'-o',str(mac/'LayoutTest')],check=True)
+ fixture=Path(tmp)/'Fixtures';fixture.mkdir()
+ nib=next(b for b in bundles(root,fixture,names=['Preview']) if b.stem==('Base' if lang=='en' else lang))
  snapshot=next((a.split('=',1)[1] for a in sys.argv if a.startswith('--snapshots=')),None)
  args=[str(mac/'LayoutTest'),str(nib)]
  if snapshot:Path(snapshot).mkdir(parents=True,exist_ok=True)

@@ -109,7 +109,6 @@
 "Split Window" = "Split Window";
 "New Document" = "Novo Documento";
 "Link Popups" = "Pop-ups de links";
-"Source" = "Source";
 "Syntax Color expl3 Code" = "Código exp da cor da sintaxe";
 "PDF File Has No Annotations" = "PDF File Has No Annotations";
 
@@ -153,8 +152,6 @@
 "Use These Paths" = "Usar estes caminhos";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "Atalhos de teclado";
-"Keyboard Shortcuts…" = "Atalhos de teclado…";
 "Search commands" = "Pesquisar comandos";
 "Command" = "Comando";
 "Shortcut" = "Atalho";
@@ -172,7 +169,6 @@
 "This shortcut is already used by “%@”." = "Este atalho já é usado por «%@».";
 "Use Command or Control with a key, or a function key (F1–F20)." = "Use uma tecla com Comando ou Controlo, ou uma tecla de função (F1–F20).";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selecione um comando para alterar o respetivo atalho. As alterações são imediatas. As macros e os atalhos de introdução de texto têm editores próprios.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "As alterações feitas nesta janela serão removidas. As definições existentes em KeyEquivalents.plist serão preservadas.";
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
@@ -216,3 +212,6 @@
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Os atalhos de menu personalizados serão removidos. As definições de KeyEquivalents.plist serão mantidas.";
 
 "Existing assignments are shown. This key cannot be assigned to a new shortcut." = "São apresentadas as atribuições existentes. Esta tecla não pode ser atribuída a um novo atalho.";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "Resultados: %lu";

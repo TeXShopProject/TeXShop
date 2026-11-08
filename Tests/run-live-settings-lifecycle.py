@@ -6,13 +6,15 @@ ROOT=Path(__file__).resolve().parents[1]
 source=(ROOT/'Sources/TSPreferences.m').read_text()
 def method(sig):
  a=source.index('\n'+sig)+1;return source[a:source.index('\n}',a)+2]
-names=['- (BOOL)settingsMayChangeCategory', '- (void)presentInputErrorForField:', '- (BOOL)commitPreferenceField:', '- (void)controlTextDidBeginEditing:', '- (BOOL)control:', '- (BOOL)finishPreferenceEditing:', '- (BOOL)windowShouldClose:', '- (void)windowWillClose:', '- (BOOL)tabView:', '- (void)releasePreferencePanels', '- (void)tearDownPreferenceEditing', '- (void)finishPreferencesForTermination', '- (void)cancelEnginePathDiscovery']
+names=['- (BOOL)settingsMayChangeCategory', '- (void)presentInputErrorForField:', '- (BOOL)commitPreferenceField:', '- (void)controlTextDidBeginEditing:', '- (BOOL)control:', '- (BOOL)finishPreferenceEditing:', '- (BOOL)windowShouldClose:', '- (void)windowWillClose:', '- (void)releasePreferencePanels', '- (void)tearDownPreferenceEditing', '- (void)finishPreferencesForTermination', '- (void)cancelEnginePathDiscovery']
 methods='\n'.join(map(method,names))
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
 mutations={
  'persist':('BOOL changed = [value storeInDefaults:SUD forKey:rule.key];','BOOL changed = NO;'),
  'close-validation':('window != _prefsWindow || [self finishPreferenceEditing:YES]','YES'),
  'tab-validation':('if (![self finishPreferenceEditing:YES]) return NO;',';'),
+ 'theme-generation':('self.themeOperationGeneration++;',';'),
+ 'theme-sheet':('if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];',';'),
  'generation':('self.enginePathSearchGeneration++;',';'),
  'font-ownership':('self.ownsFontPanel && manager.target == nil','YES'),
  'terminate-ui':('[self finishPreferenceEditing:NO];','[self finishPreferenceEditing:YES];'),
@@ -47,10 +49,12 @@ static TSMemoryDefaults *memory;
 @property NSUInteger resigns,closes;
 - (BOOL)makeFirstResponder:(id)object;
 - (void)close;
+- (void)endSheet:(id)sheet returnCode:(NSModalResponse)response;
 @end
 @implementation Window
 - (BOOL)makeFirstResponder:(id)object {self.resigns++;return YES;}
 - (void)close {self.closes++;}
+- (void)endSheet:(id)sheet returnCode:(NSModalResponse)response {if(sheet!=self.attachedSheet || response!=NSModalResponseCancel)abort();self.attachedSheet=nil;}
 @end
 @interface FakeFontManager : NSObject
 @property id target;
@@ -81,7 +85,7 @@ static FakeAlert *shown;
 @property(weak) NSControl *editingField;
 @property(copy) NSString *editingOriginalText;
 @property BOOL inputErrorPresented,ownsFontPanel,endingPreferences,initialEnginePathSearchPending;
-@property NSUInteger enginePathSearchGeneration,colorTeardowns;
+@property NSUInteger enginePathSearchGeneration,colorTeardowns,themeOperationGeneration;
 @property Field *enginePathSearchButton;
 @end
 @implementation Probe
@@ -107,7 +111,7 @@ int main(void){@autoreleasepool{
  check([p control:(id)f textShouldEndEditing:(id)f.currentEditor] && [SUD integerForKey:@"tabs"]==20 && changes==1,"focus commits exactly once");
  [p commitPreferenceField:(id)f showError:YES reflect:YES];check(changes==1,"Return action does not duplicate reflection");
  p->_prefsWindow.attachedSheet=[NSObject new];
- check(![p windowShouldClose:(id)p->_prefsWindow] && ![p tabView:nil shouldSelectTabViewItem:nil],"attached sheet blocks close and tab even with valid input");
+ check(![p windowShouldClose:(id)p->_prefsWindow] && ![p settingsMayChangeCategory],"attached sheet blocks close and tab even with valid input");
  p->_prefsWindow.attachedSheet=nil;
  f.currentEditor.string=@"99";
  check([p windowShouldClose:(id)p->_prefsWindow] && [SUD integerForKey:@"tabs"]==50 && [f.stringValue isEqual:@"50"] && p->_prefsWindow.resigns==1,"close clamps saves and ends field editing");
@@ -117,11 +121,11 @@ int main(void){@autoreleasepool{
  shown.completion(NSAlertSecondButtonReturn);
  check([f.stringValue isEqual:@"50"] && [f.currentEditor.string isEqual:@"50"],"restore just the invalid field");
  f.currentEditor.string=@"bad";
- check(![p tabView:nil shouldSelectTabViewItem:nil],"invalid input prevents navigation");
+ check(![p settingsMayChangeCategory],"invalid input prevents navigation");
  shown.completion(NSAlertFirstButtonReturn);
  check([f.currentEditor.string isEqual:@"bad"],"continue editing retains unfinished input");
  f.currentEditor.string=@"7";
- check([p tabView:nil shouldSelectTabViewItem:nil] && [SUD integerForKey:@"tabs"]==7 && p.colorTeardowns==1,"valid navigation commits and detaches panels");
+ check([p settingsMayChangeCategory] && [SUD integerForKey:@"tabs"]==7 && p.colorTeardowns==1,"valid navigation commits and detaches panels");
  FakeFontManager *manager=[FakeFontManager sharedFontManager];manager.panel=[Window new];
  manager.target=[NSObject new];p.ownsFontPanel=YES;p->_prefsWindow.isMainWindow=YES;
  [p releasePreferencePanels];check(manager.panel.closes==0 && manager.target!=nil,"document-owned font panel untouched");
@@ -130,13 +134,17 @@ int main(void){@autoreleasepool{
  manager.target=nil;p.ownsFontPanel=YES;p->_prefsWindow.isMainWindow=YES;
  [p releasePreferencePanels];check(manager.panel.closes==1 && manager.target==nil,"only owned font session closed");
  p.initialEnginePathSearchPending=YES;p.enginePathSearchButton=[Field new];p.enginePathSearchButton.enabled=NO;
+ p->_prefsWindow.attachedSheet=[NSObject new];
  [p windowWillClose:[NSNotification notificationWithName:NSWindowWillCloseNotification object:p->_prefsWindow]];
+ check(p.themeOperationGeneration==1 && !p->_prefsWindow.attachedSheet,"close cancels its sheet and invalidates delayed theme callbacks");
  check(p.enginePathSearchGeneration==1 && !p.initialEnginePathSearchPending && p.endingPreferences,"close invalidates asynchronous results");
  check([SUD integerForKey:@"tabs"]==7,"closing keeps saved values");
  [p tearDownPreferenceEditing];check(manager.panel.closes==1,"teardown is idempotent for owned panels");
  p.endingPreferences=NO;f.currentEditor.string=@"bad";
  Field *valid=edit(p,@"second",@"12");NSUInteger before=alerts, beforeChanges=changes, beforeResigns=p->_prefsWindow.resigns;
+ p->_prefsWindow.attachedSheet=[NSObject new];NSUInteger themeGeneration=p.themeOperationGeneration;
  [p finishPreferencesForTermination];
+ check(p.themeOperationGeneration>themeGeneration && !p->_prefsWindow.attachedSheet,"termination cancels sheet and invalidates theme callbacks");
  check(alerts==before && [SUD integerForKey:@"tabs"]==7 && [SUD integerForKey:@"second"]==12,"termination commits only valid fields without UI");
  check(changes==beforeChanges && p->_prefsWindow.resigns==beforeResigns,"termination performs no reflection or responder transition");
  check(f.aborts==1 && valid.aborts==1 && p.endingPreferences,"termination discards active editors");

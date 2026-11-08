@@ -110,7 +110,6 @@
 "Split Window" = "Diviser la fenêtre";
 "New Document" = "Nouveau document";
 "Link Popups" = "Pop-up pour les liens";
-"Source" = "Source";
 "Syntax Color expl3 Code" = "Coloration syntaxique du code expl3";
 "PDF File Has No Annotations" = "Fichier PDF sans annotations";
 
@@ -154,8 +153,6 @@
 "Use These Paths" = "Utiliser ces chemins";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "Raccourcis clavier";
-"Keyboard Shortcuts…" = "Raccourcis clavier…";
 "Search commands" = "Rechercher des commandes";
 "Command" = "Commande";
 "Shortcut" = "Raccourci";
@@ -173,7 +170,6 @@
 "This shortcut is already used by “%@”." = "Ce raccourci est déjà utilisé par « %@ ».";
 "Use Command or Control with a key, or a function key (F1–F20)." = "Utilisez une touche avec Commande ou Contrôle, ou une touche de fonction (F1–F20).";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Sélectionnez une commande pour modifier son raccourci. Les changements sont immédiats. Les macros et les raccourcis de saisie ont leurs propres éditeurs.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Les modifications faites dans cette fenêtre seront supprimées. Les réglages existants de KeyEquivalents.plist seront conservés.";
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
@@ -217,3 +213,6 @@
 "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Les raccourcis de menu personnalisés seront supprimés. Les réglages de KeyEquivalents.plist seront conservés.";
 
 "Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Les affectations existantes sont affichées. Cette touche ne peut pas être attribuée à un nouveau raccourci.";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "Résultats : %lu";

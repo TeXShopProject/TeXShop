@@ -24,10 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithWindowNibName:(NSNibName)name owner:(id)owner NS_UNAVAILABLE;
 - (instancetype)initWithWindowNibPath:(NSString *)path owner:(id)owner NS_UNAVAILABLE;
 - (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
-/// Keeps the nib's owner, identifiers, controls and profile selector intact.
-- (void)hostLegacyContent:(NSView *)content tabView:(NSTabView *)tabs;
+/// Category controllers retain their controls and use stable identifiers.
+- (void)hostPaneControllers:(NSDictionary<TSSettingsCategoryID, NSViewController *> *)panes footer:(NSView *)footer;
 - (void)changeFont:(nullable id)sender;
-- (nullable NSView *)legacyViewForCategoryIdentifier:(TSSettingsCategoryID)identifier;
+- (nullable NSView *)viewForCategoryIdentifier:(TSSettingsCategoryID)identifier;
 - (void)beginSession;
 - (void)endSession;
 - (BOOL)selectCategoryIdentifier:(TSSettingsCategoryID)identifier;
