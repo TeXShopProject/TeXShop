@@ -72,7 +72,8 @@
 
 - (void)updateConsoleColors:(NSNotification *)notification
 {
-    BOOL dark = [[self.outputText.effectiveAppearance bestMatchFromAppearancesWithNames:
+    // The content view receives the appearance change before its child text view.
+    BOOL dark = [[self.window.contentView.effectiveAppearance bestMatchFromAppearancesWithNames:
         @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     TSColorSupport *colors = [TSColorSupport sharedInstance];
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);

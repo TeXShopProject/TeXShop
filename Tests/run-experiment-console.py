@@ -7,7 +7,7 @@ no TeXShop user settings are read and no windows are shown.
 from pathlib import Path
 import subprocess, tempfile, os, argparse
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter"])
+parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance"])
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -25,6 +25,12 @@ if args.mutation == "no-window-load":
 elif args.mutation == "no-yen-filter":
     assert "command = filterYenToBackslash(command);" in controller
     controller = controller.replace("command = filterYenToBackslash(command);", "command = command;", 1)
+elif args.mutation == "no-appearance-hook":
+    assert "[self.controller updateConsoleColors:nil];" in controller
+    controller = controller.replace("[self.controller updateConsoleColors:nil];", "", 1)
+elif args.mutation == "stale-child-appearance":
+    assert "self.window.contentView.effectiveAppearance" in controller
+    controller = controller.replace("self.window.contentView.effectiveAppearance", "self.outputText.effectiveAppearance", 1)
 prefix = r'''
 #import <Cocoa/Cocoa.h>
 #import "TSExperimentJob.h"
@@ -96,6 +102,11 @@ int main(void) { @autoreleasepool {
     check(!console.commandField.enabled && !console.stopButton.enabled, @"idle console controls disabled");
     check(console.outputText.font.pointSize == 15, @"console font preference applied");
     check([console.window.frameAutosaveName isEqualToString:@"ExperimentConsole"], @"separate frame autosave name");
+    // CFFIXED_USER_HOME alone does not isolate NSWindow frame autosaving on every macOS.
+    [console.window setFrameAutosaveName:@""];
+    check(console.window.frameAutosaveName.length == 0, @"frame autosaving disabled before resizing");
+    console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    [console updateConsoleColors:nil];
     [console appendText:@"initial output"];
     check([console.outputText.string isEqualToString:@"initial output"], @"production appendText stores text");
     NSScrollView *output = console.outputText.enclosingScrollView;
@@ -106,15 +117,14 @@ int main(void) { @autoreleasepool {
         check(NSMaxX(console.commandField.frame)<=NSWidth(console.window.contentView.bounds), @"input fits resized console");
     }
     console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
-    [console updateConsoleColors:nil];
-    check([console.outputText.backgroundColor isEqual:NSColor.blackColor] && [console.outputText.textColor isEqual:NSColor.whiteColor], @"dark console theme applied");
+    check([console.outputText.backgroundColor isEqual:NSColor.blackColor] && [console.outputText.textColor isEqual:NSColor.whiteColor], @"dark console theme applied through appearance hook");
+    check([[console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] isEqual:NSColor.whiteColor], @"appearance hook recolors existing output");
     NSDictionary *preview = @{@"ConsoleBackground":NSColor.blueColor, @"ConsoleText":NSColor.yellowColor};
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:nil userInfo:preview];
     check([console.outputText.backgroundColor isEqual:NSColor.blueColor], @"live theme preview applied");
     check([[console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] isEqual:NSColor.yellowColor], @"existing output recolored");
     console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-    [console updateConsoleColors:nil];
-    check([console.outputText.backgroundColor isEqual:NSColor.whiteColor], @"light console theme restored");
+    check([console.outputText.backgroundColor isEqual:NSColor.whiteColor] && [console.outputText.textColor isEqual:NSColor.blackColor], @"light console theme restored through appearance hook");
     NSString *artifacts = NSProcessInfo.processInfo.environment[@"CONSOLE_ARTIFACTS"];
     if (artifacts) {
         [console.window setContentSize:NSMakeSize(504,430)];
@@ -123,7 +133,6 @@ int main(void) { @autoreleasepool {
         for (NSString *mode in @[@"light", @"dark"]) {
             BOOL dark = [mode isEqualToString:@"dark"];
             console.window.appearance = [NSAppearance appearanceNamed:dark ? NSAppearanceNameDarkAqua : NSAppearanceNameAqua];
-            [console updateConsoleColors:nil];
             NSView *content = console.window.contentView;
             [content layoutSubtreeIfNeeded];
             NSBitmapImageRep *bitmap = [content bitmapImageRepForCachingDisplayInRect:content.bounds];

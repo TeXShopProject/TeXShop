@@ -5,14 +5,25 @@ The document is a recording double; no TeXShop settings or windows are opened.
 """
 from pathlib import Path
 import os
+import argparse
 import subprocess
 import tempfile
 
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--mutation', choices=['live-menu-pointer'])
+args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/TSTextView.m').read_text(encoding='latin1')
 a = source.index('- (void)doSyncForMenu:')
 b = source.index('- (void)mouseUp:', a)
 methods = source[a:b]
+a = source.index('- (NSMenu *)menuForEvent:')
+menu_method = source[a:source.index('\n}', a) + 2]
+if args.mutation == 'live-menu-pointer':
+    old = '[theEvent.window convertPointToScreen:theEvent.locationInWindow]'
+    assert old in menu_method
+    menu_method = menu_method.replace(old, '[NSEvent mouseLocation]', 1)
+methods += '\n' + menu_method
 program = r'''
 #import <Cocoa/Cocoa.h>
 // Keep the live pointer deliberately away from every recorded click.
@@ -103,8 +114,17 @@ int main() { @autoreleasepool {
  check(doc.calls==before,"master document handles redirected sync"); doc.master=NO;
  doc.root=YES; [view doSyncFinal:screenPoint(view,point)];
  check(doc.calls==before,"root document handles redirected sync"); doc.root=NO;
- menuPoint=screenPoint(view,point); [view doSyncForMenu:0];
- check(doc.calls==before+1 && doc.receivedLine==1,"context-menu sync uses its stored position");
+ // Use the production menuForEvent: and its actual Sync item, not a fabricated menuPoint.
+ point=pointForIndex(view,6); // Second source line, distinct from the far-away live pointer.
+ NSEvent *menuEvent=[NSEvent mouseEventWithType:NSEventTypeRightMouseDown
+  location:[view convertPoint:point toView:nil] modifierFlags:0 timestamp:2
+  windowNumber:window.windowNumber context:nil eventNumber:2 clickCount:1 pressure:1];
+ NSMenu *menu=[view menuForEvent:menuEvent];
+ check(menu != nil && menu.numberOfItems >= 3,"production context menu is constructed");
+ NSMenuItem *syncItem=menu.numberOfItems ? [menu itemAtIndex:0] : nil;
+ check(syncItem.action == @selector(doSyncForMenu:),"context menu exposes the Sync action");
+ [NSApp sendAction:syncItem.action to:view from:syncItem];
+ check(doc.calls==before+1 && doc.receivedLine==2,"context-menu sync uses the right-click event position");
  TSTextView *second=[[TSTextView alloc] initWithFrame:NSMakeRect(380,40,280,500)];
  [window.contentView addSubview:second]; second.document=doc;
  // Each split pane has its own layout manager over the same text storage.
@@ -140,4 +160,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-source-sync-') as tmp:
     subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa',str(src),'-o',str(exe)],check=True)
     result = subprocess.run([str(exe)],env=dict(os.environ,CFFIXED_USER_HOME=tmp),capture_output=True,text=True,timeout=30)
     print(result.stdout + result.stderr, end='')
-    raise SystemExit(result.returncode)
+    if args.mutation:
+        assert result.returncode == 1 and 'FAIL: context-menu sync uses the right-click event position' in result.stderr
+        print('PASS: detected', args.mutation)
+    else:
+        raise SystemExit(result.returncode)
