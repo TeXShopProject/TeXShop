@@ -1,3 +1,4 @@
+#import "TestAppKitIsolation.h"
 // Production methods with memory-only defaults, temporary files and invisible UI doubles.
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 #import "TSKeyboardShortcuts.m"
@@ -176,7 +177,7 @@ static void CheckAssignmentOrder(void) {
     REQUIRE([assignments[2][1] length] && [assignments[3][1] length]); assignments=nil;
 }
 int main(int argc, char **argv) { @autoreleasepool {
-    [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     CheckEscape(); CheckAssignmentOrder();
     NSEvent *punctuation=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand|NSEventModifierFlagShift timestamp:0 windowNumber:0 context:nil characters:@"{" charactersIgnoringModifiers:@"{" isARepeat:NO keyCode:33];
     REQUIRE([TSRecordedBinding(punctuation,@"[") isEqual:TSBinding(@"{",NSEventModifierFlagCommand)]);

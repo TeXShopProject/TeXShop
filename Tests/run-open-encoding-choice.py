@@ -28,6 +28,7 @@ if mutation == 'kept-sync':
     assert old in code; code = code.replace(old, '')
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <objc/runtime.h>
 // Stand-ins for the encoding menu of the Open panel and for the panel itself.
 @interface MenuStandIn : NSObject
@@ -107,7 +108,7 @@ static void openAll(TSDocumentController *c, NSArray *urls) {
     check(pending == 0, @"every opening finished");
 }
 int main(int argc, char **argv) { @autoreleasepool {
-    [NSApplication sharedApplication];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     gRead = [NSMutableDictionary dictionary];
     TSDocumentController *c = [TSDocumentController new];
     check([NSDocumentController sharedDocumentController] == c, @"the probe controller is the shared controller");
@@ -153,5 +154,5 @@ int main(int argc, char **argv) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-open-choice-') as folder:
     p = Path(folder); (p/'test.m').write_text(program, encoding='latin1')
     out = p/'files'; out.mkdir()
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-Wno-deprecated-declarations', '-framework', 'Cocoa', str(p/'test.m'), '-o', str(p/'test')], check=True)
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-fobjc-arc', '-Wno-deprecated-declarations', '-framework', 'Cocoa', str(p/'test.m'), '-o', str(p/'test')], check=True)
     subprocess.run([str(p/'test'), str(out)], check=True, timeout=60)

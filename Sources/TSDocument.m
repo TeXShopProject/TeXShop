@@ -30,6 +30,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSDocument.h"
+#import "TSExperimentConsoleController.h"
 #include <sys/xattr.h>
 #import <OgreKit/OgreKit.h> // zenitani 1.35 (A)
 
@@ -269,10 +270,7 @@ withDarkColors = NO;
 
 - (BOOL)experimentActive
 {
-    if ([scrapWindow isVisible] && [scrapPDFWindow isVisible])
-        return YES;
-    else
-        return NO;
+    return [self experimentHasKeyWindow];
 }
 
 - (void)activateExperimentWindow
@@ -3015,6 +3013,7 @@ else {
 
 - (void)close
 {
+    [self closeExperiment];
     [self cancelWatchFile];
     [self stopExternalPDFObservation];
     if (self.annotationsExist)
@@ -10377,6 +10376,10 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 
 - (void)displayConsole: (id)sender
 {
+    if ([self experimentHasKeyWindow]) {
+        [self showExperimentConsole];
+        return;
+    }
 	NSString	*theSource;
 	
 	// Show Console in the console itself returns to the window it was shown from.
@@ -11399,6 +11402,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             [textWindow orderOut:self];
             [self.pdfKitWindow orderOut:self];
             useFullSplitWindow = YES;
+            // The PDF is visible in the combined window even though its own
+            // window remains hidden. Preserve its position on the next reload.
+            self.pdfKitWindow.previewClosed = NO;
             [myDrawer setParentWindow: fullSplitWindow];
             // [self setWindow: fullSplitWindow];
             

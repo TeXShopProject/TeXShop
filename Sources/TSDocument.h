@@ -37,6 +37,7 @@
 #import "TSColorSupport.h"
 
 @class TSFileChangeMonitor;
+@class TSExperimentConsoleController;
 
 #define NUMBEROFERRORS	20
 
@@ -441,7 +442,7 @@ enum RootCommand
 @property (retain) NSPipe              *inputPipe;
 @property (retain) NSPipe              *outputPipe;
 @property (retain) NSTask              *texTask;
-@property (retain) NSTask              *scrapTask;
+@property (strong) TSExperimentConsoleController *experimentConsole;
 @property (retain) NSTask              *bibTask;
 @property (retain) NSTask              *indexTask;
 @property (retain) NSTask              *metaFontTask;
@@ -541,8 +542,8 @@ enum RootCommand
 
 
 // forScrap
-@property (retain)  NSURL       *scrapDirectoryURL;
-@property (retain)  NSString    *scrapImagePath;
+@property NSStringEncoding scrapEffectiveEncoding;
+@property NSInteger scrapScript;
 @property (retain)  NSString    *scrapEncoding;
 @property (retain)  NSString    *scrapProgram;
 @property (retain)  NSString    *scrapMenuEngine;
@@ -1083,4 +1084,10 @@ enum RootCommand
 - (void)changePreviewArrangement:(id)sender;
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
 - (void)updatePreviewLayoutControls;
+@end
+
+@interface TSDocument (Experiment)
+- (BOOL)experimentHasKeyWindow;
+- (void)showExperimentConsole;
+- (void)closeExperiment;
 @end

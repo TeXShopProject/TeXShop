@@ -21,6 +21,7 @@ if args.mutation:
     old,new=mutations[args.mutation]; assert old in support; support=support.replace(old,new)
 program=r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <objc/runtime.h>
 #import <stdatomic.h>
 #import "TSSpellExclusions.h"
@@ -72,7 +73,7 @@ static id SpellingState(NSTextView *v, NSUInteger i) {
  return [v.layoutManager temporaryAttribute:NSSpellingStateAttributeName atCharacterIndex:i effectiveRange:NULL];
 }
 int main(int argc,char **argv) { @autoreleasepool {
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];
  Method method=class_getInstanceMethod(TSSpellExclusions.class,@selector(maskForText:));
  sMaskForText=method_setImplementation(method,(IMP)CountingMaskForText);
  NSTextStorage *s=[[NSTextStorage alloc] initWithString:@"\\label{zzbad}"];
@@ -152,7 +153,7 @@ int main(int argc,char **argv) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='ts-spell-review-') as td:
  p=Path(td);(p/'test.m').write_text(program);(p/'support.m').write_text(support)
  rules=p/'rules.txt';rules.write_text('command-names yes\nskip-args 1 label\n')
- subprocess.run(['xcrun','clang','-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),'-I'+str(root/'Tests/SpellCheck'),
+ subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),'-I'+str(root/'Tests/SpellCheck'),
      '-framework','Cocoa',str(p/'test.m'),str(p/'support.m'),str(root/'Sources/TSSpellExclusions.m'),'-o',str(p/'test')],check=True)
  result=subprocess.run([str(p/'test')],env=dict(os.environ,TSSPELL_RULES=str(rules)),timeout=120)
  if args.mutation:
@@ -160,7 +161,7 @@ with tempfile.TemporaryDirectory(prefix='ts-spell-review-') as td:
   print('PASS: mutation %s detected (exit %d).'%(args.mutation,result.returncode))
   raise SystemExit(0)
  if result.returncode!=0: raise SystemExit(result.returncode)
- subprocess.run(['xcrun','clang','-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),'-framework','Foundation',str(root/'Tests/SpellCheck/mask.m'),str(root/'Sources/TSSpellExclusions.m'),'-o',str(p/'mask')],check=True)
+ subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),'-framework','Foundation',str(root/'Tests/SpellCheck/mask.m'),str(root/'Sources/TSSpellExclusions.m'),'-o',str(p/'mask')],check=True)
  result=subprocess.check_output([str(p/'mask'),str(root/'Resources/TeXShop/SpellCheck/SpellingExclusions.txt'),str(root/'Tests/SpellCheck/cases.tex')])
  if result!=(root/'Tests/SpellCheck/cases.expected.txt').read_bytes(): raise SystemExit('FAIL: masking fixture')
  print('PASS: submitted masking-engine fixture')

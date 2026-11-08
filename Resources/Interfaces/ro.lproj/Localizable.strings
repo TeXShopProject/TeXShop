@@ -278,3 +278,26 @@
 "No Settings Found" = "Nicio configurare găsită";
 
 "Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Modificările făcute în această fereastră vor fi eliminate. Configurările existente din KeyEquivalents.plist se păstrează.";
+
+/* Independent Experiment console */
+"Experiment input" = "Intrare pentru experiment";
+"Stop Experiment" = "Oprește experimentul";
+"%@ — Experiment Console" = "%@ — Consola experimentului";
+"Experiment stopped.\n" = "Experiment oprit.\n";
+
+/* Explicit fallback for shared keys without a translation. */
+"Assign" = "Assign";
+"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
+"Macro shortcut conflicts" = "Macro shortcut conflicts";
+"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
+"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
+"Return to Editing" = "Return to Editing";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
+"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";

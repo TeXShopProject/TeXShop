@@ -1,3 +1,4 @@
+#import "TestAppKitIsolation.h"
 // Measure file-backed snapshots and validate their lifetime in isolation.
 #import "TSExternalPDFReload.h"
 #import <mach/mach.h>
@@ -22,7 +23,7 @@ int main(int argc,char **argv) { @autoreleasepool {
         }}
         CGPDFContextClose(pdf);CGContextRelease(pdf);CGColorSpaceRelease(rgb);return 0;
     }
-    [NSApplication sharedApplication];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     double before=Footprint();__weak PDFDocument *weakDocument; NSString *privatePath;
     @autoreleasepool {
         PDFDocument *document;

@@ -59,6 +59,7 @@ def methods(rev, variant):
 
 PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <objc/runtime.h>
 #import <fcntl.h>
 #import <unistd.h>
@@ -238,7 +239,7 @@ static NSString *Disk(NSString *p){ return [NSString stringWithContentsOfFile:p 
 static int CountFDs(void){int n=0;for(int fd=0;fd<4096;fd++) if(fcntl(fd,F_GETFD)!=-1) n++; return n;}
 static NSString *Short(NSString *s){ return s.length>40? [NSString stringWithFormat:@"<%lu chars>",(unsigned long)s.length] : s; }
 int main(int argc,char **argv){@autoreleasepool{
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];
  Method m=class_getClassMethod([NSData class],@selector(dataWithContentsOfURL:options:error:));
  origDWCOU=(void*)method_getImplementation(m); method_setImplementation(m,(IMP)countingDWCOU);
  Method am=class_getInstanceMethod([TSFileChangeMonitor class],NSSelectorFromString(@"acceptData:fingerprint:generation:"));
@@ -512,7 +513,7 @@ for suffix in ['m', 'h']:
             content = re.sub(r'\b'+name+r'\(', 'TSProbe'+name.capitalize()+'(', content)
     (OUT / ('TSFileChangeMonitor.' + suffix)).write_text(content)
 exe = OUT / 'probe'
-subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I'+str(OUT),
+subprocess.run(['xcrun', 'clang', '-I', str(REPO/'Tests'), '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I'+str(OUT),
                 '-DV5', '-DV6', str(m), str(OUT/'TSFileChangeMonitor.m'), '-o', str(exe)], check=True)
 for mode in modes:
     with tempfile.TemporaryDirectory(dir=OUT) as td:

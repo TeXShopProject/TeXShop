@@ -8,6 +8,7 @@ a=s.index('- (void) saveAnnotations:');b=s.index('- (PDFDocument *)constructOutp
 method=s[a:b].replace('NSSavePanel','SavePanelProbe').replace('NSAlert *','AlertProbe *').replace('[[NSAlert alloc]','[[AlertProbe alloc]')
 if '--mutation' in sys.argv: method=method.replace('self.myDocument.annotationsExist = NO;', ';')
 source=r'''#import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 static NSInteger response=NSModalResponseOK; static BOOL writeOK=YES, found=YES;static NSUInteger writes,alerts;
 @interface PDFDocument:NSObject
 - (BOOL)writeToURL:(NSURL *)url;
@@ -61,7 +62,7 @@ NSString *nameValue;NSURL *locationURL;
 @end
 static void Check(BOOL b,NSString *s){if(!b){NSLog(@"FAIL: %@",s);exit(1);}}
 int main(){@autoreleasepool {
-[NSApplication sharedApplication];Probe *p=[Probe new];
+TSInstallAppKitIsolation(); [NSApplication sharedApplication];Probe *p=[Probe new];
 for(int full=0;full<2;full++) for(int success=0;success<2;success++) for(int cancel=0;cancel<2;cancel++) {
 p.myDocument.annotationsExist=YES;[p.myDocument.SaveAllCheckBox setIntValue:full];
 response=cancel?NSModalResponseCancel:NSModalResponseOK;writeOK=success;found=YES;writes=0;
@@ -77,5 +78,5 @@ puts("PASS: production saveAnnotations full/annotated-only, success/failure/canc
 '''
 with tempfile.TemporaryDirectory(prefix='texshop-annotation-') as tmp:
  p=Path(tmp);(p/'main.m').write_text(source)
- subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-unused-variable','-framework','Cocoa',str(p/'main.m'),'-o',str(p/'probe')],check=True)
+ subprocess.run(['xcrun','clang', '-I', str(r/'Tests'),'-fobjc-arc','-Wno-unused-variable','-framework','Cocoa',str(p/'main.m'),'-o',str(p/'probe')],check=True)
  subprocess.run([str(p/'probe')],check=True,timeout=20)

@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 # added by Terada: Test the application reload methods in an independent PDFKit view.
 from pathlib import Path
-import subprocess, tempfile, sys
+import os, subprocess, tempfile, sys
 root=Path(__file__).resolve().parents[1]
 s=(root/'Sources/MyPDFKitView.m').read_bytes().decode('utf-8', errors='replace')
 def method(signature):
     start=s.rindex(signature);return s[start:s.index('\n}',start)+2]
 methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:'])
+window_source=(root/'Sources/TSPreviewWindow.m').read_text()
+def window_method(signature):
+    start=window_source.index(signature)
+    return window_source[start:window_source.index('\n}',start)+2]
+window_methods='\n'.join(window_method(x) for x in ['- (void)close', '- (void)orderWindow:'])
 program=r'''
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
@@ -28,14 +33,30 @@ static NSInteger screenUpdates=0;
 #define NSDisableScreenUpdates() (screenUpdates++)
 #define NSEnableScreenUpdates() (screenUpdates--)
 #import "HideView.h"
-@interface TestWindow:NSObject
-@property (weak) id delegate;
-@property BOOL noPdfFile,previewClosed,windowIsSplit;
+// Exercise the production close/order methods without displaying a real window.
+@interface WindowOrdering:NSObject
+@property (getter=isVisible) BOOL visible;
+@property BOOL refuseOrdering;
+@property NSInteger relativeWindowNumber;
+- (void)close;
+- (void)orderWindow:(NSWindowOrderingMode)place relativeTo:(NSInteger)number;
 @end
-@implementation TestWindow
+@implementation WindowOrdering
+- (void)close {[self orderWindow:NSWindowOut relativeTo:0];}
+- (void)orderWindow:(NSWindowOrderingMode)place relativeTo:(NSInteger)number {
+ self.relativeWindowNumber=number;
+ if (!self.refuseOrdering) self.visible=(place!=NSWindowOut);
+}
+@end
+@class TestDocument;
+@interface TestWindow:WindowOrdering
+@property (weak) id delegate;
+@property BOOL noPdfFile,previewClosed,windowIsSplit,willClose;
+@property (weak) TestDocument *myDocument;
 @end
 @interface TestDocument:NSObject
 @property BOOL externalEditor,pdfSinglePage,previewDisplaysRTL,previewDisplaysAsBook;
+@property BOOL annotationsExist,skipTextWindow;
 @property NSInteger stringWindowAlignment;
 @property NSInteger numberingCorrection;
 @property TestWindow *pdfKitWindow;
@@ -45,6 +66,11 @@ static NSInteger screenUpdates=0;
 @implementation TestDocument
 - (void)updatePreviewLayoutControls {}
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime {}
+- (void)callSaveAnnotations {}
+- (void)close {}
+@end
+@implementation TestWindow
+WINDOW_METHODS
 @end
 @interface RecoveryView:PDFView {
     BOOL _pdfViewReady;
@@ -56,6 +82,7 @@ static NSInteger screenUpdates=0;
     NSTextField *totalPage,*stotalPage,*totalPage1,*currentPage0,*scurrentPage,*currentPage1;
     BOOL drawMark,secondNeedsInitialization;
     NSRect secondVisibleRect,secondFullRect;
+    TSExternalPDFPosition secondViewport;
 }
 @property BOOL firstTime,oldUsed,doScroll,skipLinks,globalLongTerm;
 @property NSInteger handlingLink,timerNumber,stringAlignment;
@@ -129,11 +156,40 @@ int main(int argc,char**argv){@autoreleasepool{
  NSUInteger white=0;for(NSInteger y=0;y<bitmap.pixelsHigh;y+=8)for(NSInteger x=0;x<bitmap.pixelsWide;x+=8){NSColor *c=[[bitmap colorAtX:x y:y]colorUsingColorSpace:NSColorSpace.deviceRGBColorSpace];if(c.redComponent>.95&&c.greenComponent>.95&&c.blueComponent>.95)white++;}
  check(white>100,@"灰色の画像に遮られずPDFの白いページが描画される");
  check(screenUpdates==0,@"画面更新の抑制解除");
+ if (mode.integerValue==kPDFDisplaySinglePage && v.document.pageCount>=3) {
+  v.myPDFWindow.myDocument=v.myDocument;
+  for (NSNumber *ordering in @[@(NSWindowAbove),@(NSWindowBelow)]) {
+   [v.myPDFWindow close];
+   check(v.myPDFWindow.previewClosed && !v.myPDFWindow.isVisible,@"Closing preserves pending initial-page state");
+   [v.myPDFWindow orderWindow:NSWindowOut relativeTo:0];
+   check(v.myPDFWindow.previewClosed,@"Ordering out does not clear close state");
+   v.myPDFWindow.refuseOrdering=YES;
+   [v.myPDFWindow orderWindow:ordering.integerValue relativeTo:7];
+   check(v.myPDFWindow.previewClosed,@"Unsuccessful reopening does not clear close state");
+   v.myPDFWindow.refuseOrdering=NO;
+   [v.myPDFWindow orderWindow:ordering.integerValue relativeTo:7];
+   check(!v.myPDFWindow.previewClosed && v.myPDFWindow.relativeWindowNumber==7,@"Reopening clears close state without becoming main");
+   [v goToPage:[v.document pageAtIndex:1]];
+   // The user can navigate again after SyncTeX and before typesetting finishes.
+   [v goToPage:[v.document pageAtIndex:2]];
+   [v reShowWithPath:live];
+   check([v.document indexForPage:v.currentPage]==2,@"Reload preserves the most recent page after reopening");
+  }
+  [v.myPDFWindow close];
+  [v reShowWithPath:live];
+  check([v.document indexForPage:v.currentPage]==0 && !v.myPDFWindow.previewClosed,@"Reload while still closed retains initial-page behavior");
+  v.myPDFWindow.noPdfFile=YES;
+  [v.myPDFWindow orderWindow:NSWindowAbove relativeTo:0];
+  check(v.myPDFWindow.noPdfFile,@"Reopening does not discard first-PDF initialization");
+  [v reShowWithPath:live];
+  check(!v.myPDFWindow.noPdfFile && [v.document indexForPage:v.currentPage]==0,@"First PDF initializes at the beginning");
  }
- printf("PASS: invalid-to-valid reload, both panes, four display modes, data/URL loading\n");
+ }
+ printf("PASS: invalid-to-valid reload, both panes, four display modes, data/URL loading, close/reopen position preservation\n");
 }}
-'''.replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
+'''.replace('WINDOW_METHODS',window_methods.replace('TSDocument *theDocument', 'TestDocument *theDocument')).replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
 with tempfile.TemporaryDirectory(prefix='texshop-recovery-') as directory:
     p=Path(directory);(p/'test.m').write_text(program)
+    (p/'home'/'Library'/'Preferences').mkdir(parents=True)
     subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(p/'test')],check=True)
-    subprocess.run([str(p/'test'),*(sys.argv[1:] or [str(p/'good.pdf'),str(p/'bad.pdf')]),str(p/'live.pdf')],check=True)
+    subprocess.run([str(p/'test'),*(sys.argv[1:] or [str(p/'good.pdf'),str(p/'bad.pdf')]),str(p/'live.pdf')],env=dict(os.environ,HOME=str(p/'home'),CFFIXED_USER_HOME=str(p/'home')),check=True)

@@ -24,6 +24,7 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 \subsection{Typesetting and stability}
 
 \begin{itemize}
+\item Run Experiment jobs in a separate console with independent input, cancellation and cleanup, so they do not interfere with normal typesetting. Closing or replacing an Experiment cancels only its own job.
 \item \textbf{Critical fix:} Fix a problem where Stop reported that typesetting had been aborted but left TeX running. Starting another typesetting job now also stops the previous job and its child processes.
 \item Handle failures to launch typesetting tools and missing command-search paths more reliably, and avoid an indefinite wait when stopping helper processes.
 \item Show a sheet when a specified TeX root file cannot be found.
@@ -44,6 +45,9 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 \subsection{External file changes and PDF preview}
 
 \begin{itemize}
+\item Preserve the page-relative position in both PDF panes after reloading, including content insets on macOS Tahoe. Preserve it across single-page and two-page navigation on macOS 27 when native PDFKit moves the viewport; skip the workaround when PDFKit already keeps the position. Up and Down arrows scroll within an enlarged page at a consistent on-screen step and stop at its edge.
+\item Keep PDF link previews within page and viewport bounds, with surrounding text and the appropriate column visible even for destinations near an edge.
+\item Preserve the preview position when a window is closed and reopened during typesetting, including the combined source-and-preview window.
 \item Make source-file monitoring continue after automatic reloads and file replacement by external editors, including atomic saves. Preserve unsaved edits and the undo history for TeXShop’s own saves. This includes the contribution from ddd3h in PR \#1.
 \item When Automatic Preview Update is enabled, detect PDFs changed by other applications and reload the preview while preserving the page position and zoom. Avoid replacing unsaved PDF annotations, and retry when an external writer temporarily leaves an incomplete PDF.
 \item Move file-change checks off the main thread to keep the interface responsive.
@@ -87,6 +91,7 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 \subsection{Settings and themes}
 
 \begin{itemize}
+\item Add Search Settings to find localized settings and menu commands, with navigation to the matching controls.
 \item Existing KeyEquivalents.plist entries for the former Key Bindings submenu’s first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings \(\rightarrow\) Keyboard and cannot be assigned by their former menu titles.
 \item Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, and Updates.
 \item Spell Checking offers “Use LaTeX-aware spell checking (recommended)” with “Edit LaTeX exclusion rules…” beneath it, or “Use legacy spell checking” with three indented options. Changing the method keeps the inactive options and their values. “Check Spelling” is independent.
@@ -110,6 +115,7 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 \subsection{Help and source distribution}
 
 \begin{itemize}
+\item Update the manual’s RaiseHook example for amsmath equations with hyperref 7.01q or later, following Uwe Schmock’s proposal, and explain which link targets consume the adjustment.
 \item Add help for LaTeX-aware spell checking, repair broken help links, and update the hidden-settings reference.
 \item Fix a resource filename that could prevent building TeXShop from an extracted source archive.
 \end{itemize}

@@ -451,6 +451,8 @@
 		114EC7BFAFEC6285D86B24A1 /* SettingsThemeName.strings in Copy Base Search Tables */ = {isa = PBXBuildFile; fileRef = 717070D53586674B8A9B4BE2; };
 		D59C2D86C52AED3AF583DCF3 /* SettingsThemes.strings in Copy Base Search Tables */ = {isa = PBXBuildFile; fileRef = CBADA976F33F8F26A1408D0B; };
 		952A90BE333C4EBFF9D4C07C /* SettingsTypesetting.strings in Copy Base Search Tables */ = {isa = PBXBuildFile; fileRef = AEEE6196401A6C5434151BC3; };
+		AE9800010000000000000001 /* TSExperimentJob.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9800010000000000000002 /* TSExperimentJob.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		AE9800020000000000000001 /* TSExperimentConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9800020000000000000002 /* TSExperimentConsoleController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -1343,6 +1345,10 @@
 		717070D53586674B8A9B4BE2 /* SettingsThemeName.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = "Resources/Interfaces/Base.lproj/SettingsThemeName.strings"; sourceTree = SOURCE_ROOT; };
 		CBADA976F33F8F26A1408D0B /* SettingsThemes.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = "Resources/Interfaces/Base.lproj/SettingsThemes.strings"; sourceTree = SOURCE_ROOT; };
 		AEEE6196401A6C5434151BC3 /* SettingsTypesetting.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = "Resources/Interfaces/Base.lproj/SettingsTypesetting.strings"; sourceTree = SOURCE_ROOT; };
+		AE9800010000000000000002 /* TSExperimentJob.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSExperimentJob.m; sourceTree = "<group>"; };
+		AE9800010000000000000003 /* TSExperimentJob.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSExperimentJob.h; sourceTree = "<group>"; };
+		AE9800020000000000000002 /* TSExperimentConsoleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSExperimentConsoleController.m; sourceTree = "<group>"; };
+		AE9800020000000000000003 /* TSExperimentConsoleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSExperimentConsoleController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1767,6 +1773,10 @@
 				AABB05910000000000000002 /* TSFileChangeMonitor.m */,
 				AABB05910000000000000003 /* TSFileChangeMonitor.h */,
 				403F25E90F20770F001031A0 /* TSDocument-Console.m */,
+				AE9800010000000000000002 /* TSExperimentJob.m */,
+				AE9800010000000000000003 /* TSExperimentJob.h */,
+				AE9800020000000000000002 /* TSExperimentConsoleController.m */,
+				AE9800020000000000000003 /* TSExperimentConsoleController.h */,
 				40770A9E195F1AB700A67050 /* TSDocument-Scrap.m */,
 				520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */,
 				520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */,
@@ -2450,6 +2460,8 @@
 				4078818E0519249A006979EA /* TSMacroOutlineController.m in Sources */,
 				4078818F0519249A006979EA /* TSDocumentController.m in Sources */,
 				407881900519249A006979EA /* MyPDFView.m in Sources */,
+				AE9800010000000000000001 /* TSExperimentJob.m in Sources */,
+				AE9800020000000000000001 /* TSExperimentConsoleController.m in Sources */,
 				40770A9F195F1AB700A67050 /* TSDocument-Scrap.m in Sources */,
 				40B7DEAC057139E2002872F2 /* TSDocumentScripting.m in Sources */,
 				40067E60288F16CA00756801 /* TSDocument-HTML.m in Sources */,

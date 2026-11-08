@@ -1,9 +1,10 @@
+#import "TestAppKitIsolation.h"
 // Verify runtime Tags lookup in each compiled MainMenu.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 static void IgnoreOutlet(id self,SEL cmd,id value,NSString *key) {}
 int main(int argc,char **argv){@autoreleasepool{
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];
  for(NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSAutoCompletionListEditor",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]){
   Class c=objc_allocateClassPair(NSObject.class,name.UTF8String,0);
   class_addMethod(c,@selector(setValue:forUndefinedKey:),(IMP)IgnoreOutlet,"v@:@@");objc_registerClassPair(c);}

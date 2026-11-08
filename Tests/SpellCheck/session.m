@@ -1,3 +1,4 @@
+#import "../TestAppKitIsolation.h"
 // Never learns, ignores or removes dictionary entries.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
@@ -298,7 +299,7 @@ static void TestSuggestionSync(void) {
     puts("PASS: suggestion sync, explicit Change All/Undo, stale-state rejection and observer lifecycle");
 }
 int main(void) {@autoreleasepool {
-    [SessionApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
+    TSInstallAppKitIsolation(); [SessionApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     NSTextView *a=View(@"zzqqa zzqqa"), *b=View(@"zzqqb zzqqb");
     Review(a); [(SessionApplication *)NSApp setReviewWindow:b.window]; [b.window makeMainWindow]; [b.window makeFirstResponder:b];
     [TSSpellSupport changeAll:nil];

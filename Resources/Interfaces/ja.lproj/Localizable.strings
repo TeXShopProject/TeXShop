@@ -299,3 +299,12 @@
 "No Settings Found" = "一致する設定がありません";
 
 "Edits the shared file for all documents. The checkbox sets the default for new documents." = "全書類で使う共通ファイルを編集します。チェックボックスは新しい書類の初期値を設定します。";
+/* Independent Experiment console */
+"Experiment input" = "実験への入力";
+"Stop Experiment" = "実験を中止";
+"%@ — Experiment Console" = "%@ — 実験コンソール";
+"Experiment stopped.\n" = "実験を中止しました。\n";
+
+/* Explicit fallback for shared keys without a translation. */
+"Path: %@\nDateigröße: %d bytes\nErstellungsdatum: %@\nÄnderungsdatum: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
+"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved.";
