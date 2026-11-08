@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['legacy-reload', 'legacy-second', 'skip-last-page'])
+parser.add_argument('--mutation', choices=['legacy-reload', 'legacy-second', 'skip-last-page', 'legacy-constraints', 'unconstrained'])
 parser.add_argument('--artifacts', type=Path, help='Keep the generated Objective-C and executable for cross-OS testing')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -128,8 +128,9 @@ int main(void) { @autoreleasepool {
     // A toolbar extending into the content produces the insets associated with
     // repeated upward drift even when the PDF has exactly the same pages.
     ViewportToolbar *toolbarDelegate = [ViewportToolbar new];
+    for (NSNumber *style in @[@(NSScrollerStyleLegacy), @(NSScrollerStyleOverlay)])
     for (NSInteger mode=0;mode<4;mode++) {
-        context=[NSString stringWithFormat:@"insets mode=%ld",mode];
+        context=[NSString stringWithFormat:@"insets style=%@ mode=%ld",style,mode];
         NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,500,500)
             styleMask:NSWindowStyleMaskTitled|NSWindowStyleMaskFullSizeContentView
             backing:NSBackingStoreBuffered defer:NO]; window.releasedWhenClosed=NO;
@@ -140,7 +141,9 @@ int main(void) { @autoreleasepool {
         [window.contentView addSubview:view];
         view.myPDFWindow=[TestWindow new]; view.myDocument=[TestDocument new];
         view.myDocument.pdfKitWindow=view.myPDFWindow;
-        view.document=document(bytes,4,0); view.displayMode=mode;view.scaleFactor=1.25;
+        view.document=document(bytes,4,0); view.displayMode=mode;
+        view.documentView.enclosingScrollView.scrollerStyle=style.integerValue;
+        view.scaleFactor=1.25;
         [view goToPage:[view.document pageAtIndex:3]]; pump();
         NSScrollView *scroll=view.documentView.enclosingScrollView;
         check(scroll.contentInsets.top>0,@"toolbar test actually has a top inset");
@@ -156,6 +159,35 @@ int main(void) { @autoreleasepool {
         [view reShowWithDocument:document(bytes,6,0)];pump();
         sameViewport(before,view,@"appending pages retains formerly final page viewport");
         view.document=nil;[view removeFromSuperview];[window close];
+    }
+    // A new typeset PDF may use smaller paper. Keeping the old page coordinates
+    // must not scroll the entire replacement page out of view.
+    for (NSInteger mode=0;mode<4;mode++) {
+        context=[NSString stringWithFormat:@"smaller paper mode=%ld",mode];
+        NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,400,400)
+            styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+        window.releasedWhenClosed=NO;
+        RecoveryView *view=[[RecoveryView alloc] initWithFrame:window.contentView.bounds];
+        [window.contentView addSubview:view];
+        view.myPDFWindow=[TestWindow new]; view.myDocument=[TestDocument new];
+        view.myDocument.pdfKitWindow=view.myPDFWindow;
+        view.document=document(bytes,4,0); view.displayMode=mode; view.scaleFactor=2;
+        TSExternalPDFPosition start={YES,NO,0,NSMakePoint(500,700),2};
+        TSExternalPDFRestore(view,start); pump();
+        PDFDocument *smaller=document(bytes,4,0);
+        for (NSUInteger n=0;n<smaller.pageCount;n++) {
+            PDFPage *page=[smaller pageAtIndex:n];
+            [page setBounds:NSMakeRect(0,0,150,200) forBox:kPDFDisplayBoxMediaBox];
+            [page setBounds:NSMakeRect(0,0,150,200) forBox:kPDFDisplayBoxCropBox];
+        }
+        [view reShowWithDocument:smaller]; pump();
+        NSClipView *clip=view.documentView.enclosingScrollView.contentView;
+        NSRect visible=[view convertRect:clip.bounds fromView:clip];
+        PDFPage *page=[smaller pageAtIndex:0];
+        NSRect pageRect=[view convertRect:[page boundsForBox:view.displayBox] fromPage:page];
+        check(!NSIsEmptyRect(NSIntersectionRect(visible,pageRect)),
+              @"smaller replacement paper remains visible after clamping");
+        view.document=nil; [view removeFromSuperview]; [window close];
     }
     // Follow the actual typesetting sequence, including the separately saved
     // lower pane rather than only the first view's document replacement.
@@ -187,12 +219,19 @@ int main(void) { @autoreleasepool {
         }
         top.document=nil;bottom.document=nil;[top removeFromSuperview];[bottom removeFromSuperview];[window close];
     }
-    puts("PASS: four display modes, changed page counts, zoom, rotation, horizontal/vertical, book/RTL, resize, auto fit, last-page fallback, insets, retained last page, split panes");
+    puts("PASS: four display modes, changed page counts, zoom, rotation, horizontal/vertical, book/RTL, resize, auto fit, last-page fallback, both scroller styles with insets, smaller paper, retained last page, split panes");
 } return 0; }
 '''
 with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
     temp = Path(directory)
     (temp / 'test.m').write_text(program)
+    if args.mutation in ('legacy-constraints', 'unconstrained'):
+        header = (root / 'Sources/TSExternalPDFReload.h').read_text()
+        start = header.index('    // PDFKit on Tahoe')
+        end = header.index('    [clip scrollToPoint:target.origin];', start)
+        replacement = ('    target = [clip constrainBoundsRect:target];\n'
+                       if args.mutation == 'legacy-constraints' else '')
+        (temp/'TSExternalPDFReload.h').write_text(header[:start] + replacement + header[end:])
     subprocess.run(['xcrun', 'clang', '-mmacosx-version-min=14.6', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     '-I'+str(root/'Sources'), str(temp/'test.m'), str(root/'Sources/HideView.m'),
                     str(root/'Sources/TSExternalPDFSnapshot.m'), '-o', str(temp/'test')], check=True)
@@ -203,4 +242,6 @@ with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
         args.artifacts.mkdir(parents=True, exist_ok=True)
         shutil.copy2(temp/'test.m', args.artifacts/'test.m')
         shutil.copy2(temp/'test', args.artifacts/'test')
+        if (temp/'TSExternalPDFReload.h').exists():
+            shutil.copy2(temp/'TSExternalPDFReload.h', args.artifacts/'TSExternalPDFReload.h')
     subprocess.run([str(temp/'test')], check=True, timeout=120, env=environment)
