@@ -8,7 +8,7 @@ import subprocess
 import tempfile
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['native-corners', 'raw-page-delta', 'continuous-restore'])
+parser.add_argument('--mutation', choices=['native-corners', 'raw-page-delta', 'continuous-restore', 'always-restore'])
 parser.add_argument('--artifacts', type=Path, help='Keep the generated Objective-C and executable for cross-OS testing')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -24,10 +24,18 @@ elif args.mutation == 'raw-page-delta':
     methods = methods.replace('if (self.displayMode == kPDFDisplayTwoUp) {', 'if (NO) {')
 elif args.mutation == 'continuous-restore':
     methods = methods.replace('if (self.displayMode == kPDFDisplaySinglePage || self.displayMode == kPDFDisplayTwoUp) {', 'if (YES) {')
+elif args.mutation == 'always-restore':
+    methods = methods.replace('if (actual.valid && actual.pageIndex == viewport.pageIndex &&', 'if (NO && actual.valid && actual.pageIndex == viewport.pageIndex &&')
+# Count only restoration requested by the production action, not native simulation.
+methods = methods.replace('TSExternalPDFRestore(self, viewport);', 'CountedRestore(self, viewport);')
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
 #import "TSExternalPDFReload.h"
+static NSUInteger restorationCount;
+static void CountedRestore(PDFView *view, TSExternalPDFPosition position) {
+ restorationCount++; TSExternalPDFRestore(view, position);
+}
 #define PDF_SINGLE_PAGE_STYLE 1
 #define PDF_TWO_PAGE_STYLE 2
 @interface NavigationView:PDFView { NSInteger pageStyle; }
@@ -59,6 +67,22 @@ METHODS
 -(void)goToPreviousPage:(id)sender {
  self.reportAlternate=NO;[super goToPreviousPage:sender];self.reportRight=YES;self.reportAlternate=YES;
 }
+@end
+// Model a future PDFKit that retains the page-relative position itself.
+@interface FixedNativeView : NavigationView
+@property CGFloat nativeDrift;
+@end
+@implementation FixedNativeView
+-(void)simulateNativeStep:(BOOL)forward sender:(id)sender {
+ TSExternalPDFPosition position=TSExternalPDFCapture(self);
+ if(forward) [super goToNextPage:sender]; else [super goToPreviousPage:sender];
+ NSInteger stride=self.displayMode==kPDFDisplayTwoUp?2:1;
+ position.pageIndex=(NSUInteger)((NSInteger)position.pageIndex+(forward?stride:-stride));
+ position.pagePoint.y+=self.nativeDrift;
+ TSExternalPDFRestore(self,position);
+}
+-(void)goToNextPage:(id)sender { [self simulateNativeStep:YES sender:sender]; }
+-(void)goToPreviousPage:(id)sender { [self simulateNativeStep:NO sender:sender]; }
 @end
 static NSString *context;
 static void check(BOOL ok, NSString *message) { if(!ok){fprintf(stderr,"FAIL: %s [%s]\n",message.UTF8String,context.UTF8String);exit(1);} }
@@ -117,6 +141,25 @@ int main(void) { @autoreleasepool {
   view.document=nil;control.document=nil;[view nextPage:nil];[view previousPage:nil];
   [view removeFromSuperview];[control removeFromSuperview];[w close];
  }
+ // A native fix must bypass restoration, while a visible drift still needs it.
+ if(workaroundOS) for(NSNumber *mode in @[@(kPDFDisplaySinglePage),@(kPDFDisplayTwoUp)])
+ for(NSInteger style=0;style<2;style++) for(NSNumber *drift in @[@0,@0.1,@10]) {
+  context=[NSString stringWithFormat:@"future native fix mode=%@ style=%ld drift=%@",mode,style,drift];
+  NSWindow *w=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,500,500) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];w.releasedWhenClosed=NO;
+  FixedNativeView *v=[[FixedNativeView alloc]initWithFrame:w.contentView.bounds];[w.contentView addSubview:v];
+  v.document=documents[0];v.displayMode=mode.integerValue;v.scaleFactor=2;v.nativeDrift=drift.doubleValue;
+  v.documentView.enclosingScrollView.scrollerStyle=style;
+  TSExternalPDFPosition start={YES,NO,2,NSMakePoint(300,400),2};TSExternalPDFRestore(v,start);pump();
+  for(NSNumber *forward in @[@YES,@NO]) {
+   TSExternalPDFPosition expected=TSExternalPDFCapture(v);
+   expected.pageIndex+=(forward.boolValue?1:-1)*(mode.integerValue==kPDFDisplayTwoUp?2:1);
+   restorationCount=0;
+   [v stepPageForward:forward.boolValue sender:nil];pump();
+   equal(expected,v,@"native fix or workaround retains position");
+   check(restorationCount==(drift.doubleValue>1?1:0),@"skip redundant restoration but correct visible drift");
+  }
+  v.document=nil;[v removeFromSuperview];[w close];
+ }
  // Native currentPage can name the right page while the viewport is on
  // the left. This is why raw currentPage index differences are not enough.
  if (workaroundOS) for(NSInteger style=0;style<2;style++) {
@@ -158,7 +201,7 @@ int main(void) { @autoreleasepool {
   [v previousPage:nil];pump();check(v.autoScales,@"auto-fit remains enabled on return");
   v.document=nil;[v removeFromSuperview];[w close];
  }
- puts("PASS: native page-navigation actions; single/two-up; book/RTL; legacy/overlay; rotation; page sizes; boundaries; nil document; auto-fit; continuous native behavior");
+ puts("PASS: native page-navigation actions; single/two-up; book/RTL; legacy/overlay; rotation; page sizes; boundaries; future native fix and restoration count; nil document; auto-fit; continuous native behavior");
 }return 0;}
 '''.replace('METHODS', methods)
 with tempfile.TemporaryDirectory(prefix='texshop-navigation-') as directory:

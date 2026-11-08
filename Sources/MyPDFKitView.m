@@ -2279,6 +2279,15 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     if (self.displayMode == kPDFDisplayTwoUp && self.displaysAsBook && newPage == 0)
         target = 0; // The cover spread has no right-hand companion.
     viewport.pageIndex = (NSUInteger)MAX(0, MIN(target, (NSInteger)self.document.pageCount - 1));
+    // Let native navigation stand if PDFKit already preserved the viewport.
+    // Compare in view points so the tolerance does not grow with zoom.
+    TSExternalPDFPosition actual = TSExternalPDFCapture(self);
+    if (actual.valid && actual.pageIndex == viewport.pageIndex &&
+        actual.autoScales == viewport.autoScales &&
+        (viewport.autoScales || actual.scale == viewport.scale) && actual.scale > 0 &&
+        hypot(actual.pagePoint.x - viewport.pagePoint.x,
+              actual.pagePoint.y - viewport.pagePoint.y) * actual.scale <= 0.5)
+        return;
     TSExternalPDFRestore(self, viewport);
 }
 
