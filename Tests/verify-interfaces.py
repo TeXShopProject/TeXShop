@@ -5,7 +5,8 @@ import subprocess, sys, xml.etree.ElementTree as ET
 root=Path(__file__).resolve().parents[1]
 bundle=Path(sys.argv[1]) if len(sys.argv)>1 else None
 ORIGINAL_SOURCES='db040b9'  # Initial import of the original TeXShop 5.58 sources
-for kind in ('Preferences','TSDocument'):
+# Preferences.nib remains only as a historical migration fixture.
+for kind in ('TSDocument',):
     for path in sorted((root/'Resources/Interfaces').glob(f'*/{kind}.nib/designable.nib')):
         relative=path.relative_to(root)
         current=ET.parse(path).getroot()
@@ -48,3 +49,5 @@ for kind in ('Preferences','TSDocument'):
                 assert abs(h-max(tops)-12)<.01,(path,view.get('id'))
             assert not any('name' in f.attrib for f in current.findall('.//font')),path
         print(path.parent.parent.name,kind,'OK')
+
+subprocess.run([sys.executable,str(root/"Tests/run-settings-panes.py"),*(["--app",str(bundle)] if bundle else [])],check=True)

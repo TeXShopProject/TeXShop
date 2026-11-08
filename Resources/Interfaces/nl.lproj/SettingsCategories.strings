@@ -1,0 +1,16 @@
+"source" = "Bron";
+"editor" = "Editor";
+"preview" = "Voorvertoning";
+"console" = "Console";
+"typesetting" = "Zetten";
+"engines" = "Engine";
+"misc-1" = "Misc1";
+"misc-2" = "Misc2";
+"themes" = "Themes";
+
+"general" = "Algemeen";
+"documents" = "Documenten en bewaren";
+"spelling" = "Spellingcontrole";
+"appearance" = "Weergave";
+"keyboard" = "Toetsenbord";
+"updates" = "Updates";

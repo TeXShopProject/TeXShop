@@ -110,7 +110,6 @@
 "Split Window" = "Scindează Fereastra";
 "New Document" = "Document nou";
 "Link Popups" = "Ferestre pop-up";
-"Source" = "Source";
 "Syntax Color expl3 Code" = "Sintaxă Cod expl culoare";
 "PDF File Has No Annotations" = "PDF File Has No Annotations";
 
@@ -150,12 +149,9 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "Este selectată cea mai nouă instalare detectată. Puteți alege alta din lista de mai jos. Comenzile motoarelor personalizate și calea alternativă rămân neschimbate.";
 "Not found (current setting will be kept)" = "Nu a fost găsit (se păstrează configurarea actuală)";
 "Version unavailable" = "Necunoscută";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instalați o distribuție TeX, apoi porniți configurarea automată din Configurări > Motor.";
 "Use These Paths" = "Folosește aceste căi";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "Scurtături de tastatură";
-"Keyboard Shortcuts…" = "Scurtături de tastatură…";
 "Search commands" = "Caută comenzi";
 "Command" = "Comandă";
 "Shortcut" = "Scurtătură";
@@ -173,10 +169,133 @@
 "This shortcut is already used by “%@”." = "Această scurtătură este deja folosită de „%@”.";
 "Use Command or Control with a key, or a function key (F1–F20)." = "Folosiți o tastă cu Command sau Control, ori o tastă funcțională (F1–F20).";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selectați o comandă pentru a-i modifica scurtătura. Modificările se aplică imediat. Macrocomenzile și scurtăturile de introducere a textului au editoare proprii.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Modificările făcute în această fereastră vor fi eliminate. Configurările existente din KeyEquivalents.plist se păstrează.";
+
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "The selected profile is invalid.";
+"Apply Settings Profile?" = "Apply Settings Profile?";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+"Apply Profile" = "Apply Profile";
+"Settings could not be saved" = "Settings could not be saved";
+"Enter a valid setting" = "Enter a valid setting";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+"Continue Editing" = "Continue Editing";
+"Restore This Field" = "Restore This Field";
+"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Alegeți alt nume pentru temă. Nu sunt permise numele care încep cu punct, separatorii de cale, caracterele de control sau legăturile simbolice.";
+"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+
+"Back" = "Înapoi";
+
+"Forward" = "Înainte";
+
+"Settings Categories" = "Categorii de configurări";
+
+"Navigation History" = "Istoric de navigare";
+
+"Back (⌘[)" = "Înapoi (⌘[)";
+
+"Forward (⌘])" = "Înainte (⌘])";
+
+"Keyboard" = "Tastatură";
+"Search by Function" = "Caută după funcție";
+"Search by Key" = "Caută după tastă";
+"Show in Macro Editor" = "Arată în editorul de macrocomenzi";
+"Assigned" = "Atribuit";
+"Inactive for this key" = "Inactiv pentru această tastă";
+"Assignment priority is shown; whether a command can run depends on the document." = "Este afișată prioritatea atribuirii. Executarea comenzii depinde de document.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "Tastele folosite de sistem nu pot fi detectate. Escape oprește înregistrarea.";
+"No command uses this key." = "Nicio comandă nu folosește această tastă.";
+"Press a key" = "Apăsați o tastă";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Această tastă nu poate fi folosită drept scurtătură. Folosiți Command sau Control cu o tastă, ori F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Scurtăturile de meniu personalizate vor fi eliminate. Configurările din KeyEquivalents.plist vor fi păstrate.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Sunt afișate atribuirile existente. Această tastă nu poate fi atribuită unei scurtături noi.";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "Rezultate: %lu";
+
+"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+
+"Replace" = "Replace";
+
+"General" = "General";
+"Documents and Saving" = "Documente și salvare";
+"Editor" = "Editor";
+"Spell Checking" = "Ortografie";
+"Appearance" = "Aspect";
+"Typesetting" = "Compunere";
+"Console" = "Consolă";
+"Updates" = "Actualizări";
+"Defaults for New Documents" = "Valori pentru documente noi";
+"Matching Brackets" = "Potrivirea parantezelor";
+"Spelling While Typing" = "Verificare în timpul tastării";
+"Use LaTeX-aware spell checking (recommended)" = "Folosește verificarea adaptată la LaTeX (recomandat)";
+"Use legacy spell checking" = "Folosește verificarea tradițională";
+"LaTeX Spell Checking" = "Ortografie LaTeX";
+"Edit Key Bindings…" = "Editează asocierile de taste…";
+"Key Bindings" = "Asocieri de taste";
+"Edit Command Completion…" = "Editează completarea comenzilor…";
+"Command Completion" = "Completarea comenzilor";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Când Tab activează completarea comenzilor, tasta este rezervată acesteia și nu poate fi atribuită unei scurtături de meniu.";
+"Source and Preview Windows" = "Ferestrele sursei și previzualizării";
+"Comment Lines and Hidden Settings" = "Linii de comentarii și configurări ascunse";
+"Advanced" = "Avansat";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instalați o distribuție TeX, apoi rulați configurarea automată în Configurări > Tehnoredactare.";
+
+"Completion trigger" = "Tastă de activare";
+
+"This key is reserved for command completion." = "Această tastă este rezervată completării comenzilor.";
+
+"Encoding" = "Codificare";
+
+"Saving Documents" = "Salvarea documentelor";
+
+"Page Display" = "Afișarea paginilor";
+
+"PDF Interaction" = "Interacțiune PDF";
+
+"PDF Appearance" = "Aspect PDF";
+
+"HTML Preview" = "Previzualizare HTML";
+
+"Typesetting Defaults" = "Valori implicite de tehnoredactare";
+
+"Synchronization" = "Sincronizare";
+
+"Tools" = "Instrumente";
+
+"Expanded" = "Extins";
+
+"Collapsed" = "Restrâns";
+
+"Search Settings" = "Caută în configurări";
+
+"Settings results: %lu" = "Categorii găsite: %lu";
+
+"No Settings Found" = "Nicio configurare găsită";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 
 /* Independent Experiment console */
 "Experiment input" = "Intrare pentru experiment";
 "Stop Experiment" = "Oprește experimentul";
 "%@ — Experiment Console" = "%@ — Consola experimentului";
 "Experiment stopped.\n" = "Experiment oprit.\n";
+
+/* Explicit fallback for shared keys without a translation. */
+"Assign" = "Assign";
+"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
+"Macro shortcut conflicts" = "Macro shortcut conflicts";
+"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
+"Return to Editing" = "Return to Editing";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
+"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";

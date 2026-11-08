@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="25079.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+  <dependencies>
+    <deployment version="101000" identifier="macosx" />
+    <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="25079.1" />
+    <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0" />
+  </dependencies>
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="TSPrefConsoleController">
+      <connections>
+        <outlet property="consoleFontTextField" destination="754" id="807" />
+        <outlet property="consoleMatrix" destination="777" id="833" />
+        <outlet property="consoleResizeMatrix" destination="764" id="810" />
+        <outlet property="consoleWindowPosButton" destination="ySw-P2-zn6" id="0hU-V7-Qp0" />
+        <outlet property="consoleWindowPosMatrix" destination="fMM-Lh-WMT" id="TFM-Wx-9yy" />
+        <outlet property="macroButton" destination="Ot0-Z2-OiZ" id="HGp-uq-9zS" />
+        <outlet property="view" destination="706" id="settings-root-view" />
+      </connections>
+    </customObject>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder" />
+    <customObject id="-3" userLabel="Application" customClass="NSObject" />
+    <customView key="view" id="706" identifier="settings.706">
+      <rect key="frame" x="10" y="33" width="652" height="623" />
+      <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+      <subviews>
+        <box fixedFrame="YES" title="Console Font" translatesAutoresizingMaskIntoConstraints="NO" id="752" identifier="settings.752">
+          <rect key="frame" x="123" y="531" width="370" height="80" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="fU9-qN-0Tl" identifier="settings.fU9-qN-0Tl">
+            <rect key="frame" x="0.0" y="0.0" width="370" height="68" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="755" identifier="settings.755">
+                <rect key="frame" x="14" y="28" width="76" height="32" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="push" title="Set ..." bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="906">
+                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="changeConsoleFont:" target="-2" id="808" />
+                </connections>
+              </button>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="754" identifier="settings.754">
+                <rect key="frame" x="95" y="38" width="324" height="17" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Helvetica 12" id="905">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ot0-Z2-OiZ" identifier="settings.Ot0-Z2-OiZ">
+                <rect key="frame" x="19" y="11" width="181" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Use Also for Macro Editor" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Zuj-f0-WHa">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                  <connections>
+                    <action selector="MacroPressed:" target="-2" id="Ldi-I4-ro6" />
+                  </connections>
+                </buttonCell>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Console Position" translatesAutoresizingMaskIntoConstraints="NO" id="WQX-9X-AFi" identifier="settings.WQX-9X-AFi">
+          <rect key="frame" x="123" y="419" width="370" height="100" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="42C-eP-vDT" identifier="settings.42C-eP-vDT">
+            <rect key="frame" x="0.0" y="0.0" width="370" height="88" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ySw-P2-zn6" identifier="settings.ySw-P2-zn6">
+                <rect key="frame" x="39" y="6" width="195" height="32" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="push" title="Set with current position" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="mNl-sx-FY0">
+                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="consoleWindowPosDefault:" target="-2" id="3VN-GM-KEW" />
+                </connections>
+              </button>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fMM-Lh-WMT" identifier="settings.fMM-Lh-WMT">
+                <rect key="frame" x="17" y="40" width="238" height="37" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="238" height="18" />
+                <size key="intercellSpacing" width="0.0" height="1" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="Xc7-Tx-Uz2">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Remember last position on close" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="ga2-ik-lSC">
+                      <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="All consoles start at fixed position" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="PqO-5d-lRv">
+                      <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="consoleWindowPosChanged:" target="-2" id="gNT-We-AqS" />
+                </connections>
+              </matrix>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Console Resize" translatesAutoresizingMaskIntoConstraints="NO" id="772" identifier="settings.772">
+          <rect key="frame" x="123" y="337" width="370" height="70" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="BCz-G7-Yrz" identifier="settings.BCz-G7-Yrz">
+            <rect key="frame" x="0.0" y="0.0" width="370" height="58" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="764" identifier="settings.764">
+                <rect key="frame" x="148" y="346" width="147" height="38" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="147" height="18" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="923">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="Arbitrary Resize" imagePosition="left" alignment="left" state="on" inset="2" id="766">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="Vertical Resize Only" imagePosition="left" alignment="left" tag="1" inset="2" id="765">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="changeConsoleResize:" target="-2" id="811" />
+                </connections>
+              </matrix>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Show Console" translatesAutoresizingMaskIntoConstraints="NO" id="828" identifier="settings.828">
+          <rect key="frame" x="123" y="256" width="370" height="69" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="a7e-iG-Bgc" identifier="settings.a7e-iG-Bgc">
+            <rect key="frame" x="0.0" y="0.0" width="370" height="57" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="777" identifier="settings.777">
+                <rect key="frame" x="24" y="9" width="148" height="37" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="148" height="18" />
+                <size key="intercellSpacing" width="0.0" height="1" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="924">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="always" imagePosition="left" alignment="left" state="on" inset="2" id="830">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="when error occurs" imagePosition="left" alignment="left" tag="1" inset="2" id="831">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="consoleBehaviorChanged:" target="-2" id="832" />
+                </connections>
+              </matrix>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+      </subviews>
+    </customView>
+  </objects>
+</document>

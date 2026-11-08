@@ -26,6 +26,7 @@ if args.mutation == 'live-menu-pointer':
 methods += '\n' + menu_method
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 // Keep the live pointer deliberately away from every recorded click.
 @interface NSEvent (TestPointer)
 @end
@@ -84,7 +85,7 @@ static NSEvent *click(TSTextView *view, NSPoint point, NSEventModifierFlags flag
   modifierFlags:flags timestamp:1 windowNumber:view.window.windowNumber context:nil eventNumber:1 clickCount:1 pressure:1];
 }
 int main() { @autoreleasepool {
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];
  NSWindow *window=[[NSWindow alloc] initWithContentRect:NSMakeRect(170,200,700,600) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
  window.releasedWhenClosed=NO;
  RecordingDocument *doc=[RecordingDocument new];
@@ -157,8 +158,9 @@ int main() { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-source-sync-') as tmp:
     src, exe = Path(tmp)/'test.m', Path(tmp)/'test'
     src.write_text(program)
-    subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa',str(src),'-o',str(exe)],check=True)
-    result = subprocess.run([str(exe)],env=dict(os.environ,CFFIXED_USER_HOME=tmp),capture_output=True,text=True,timeout=30)
+    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa',str(src),'-o',str(exe)],check=True)
+    (Path(tmp)/'home/Library/Preferences').mkdir(parents=True)
+    result = subprocess.run([str(exe)],env=dict(os.environ,HOME=str(Path(tmp)/'home'),CFFIXED_USER_HOME=str(Path(tmp)/'home')),capture_output=True,text=True,timeout=30)
     print(result.stdout + result.stderr, end='')
     if args.mutation:
         assert result.returncode == 1 and 'FAIL: context-menu sync uses the right-click event position' in result.stderr

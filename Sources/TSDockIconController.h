@@ -4,8 +4,5 @@
 + (instancetype)sharedController;
 - (instancetype)initWithBundle:(NSBundle *)bundle defaults:(NSUserDefaults *)defaults;
 - (void)restoreSavedIcon;
-- (void)installInPreferences:(NSTabView *)tabs;
-- (void)beginEditing;
-- (void)acceptEditing;
-- (void)cancelEditing;
+- (void)installInPreferencesPane:(NSView *)pane;
 @end

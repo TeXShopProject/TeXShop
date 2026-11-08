@@ -109,7 +109,6 @@
 "Split Window" = "Split Window";
 "New Document" = "Novo Documento";
 "Link Popups" = "Pop-ups de links";
-"Source" = "Source";
 "Syntax Color expl3 Code" = "Código exp da cor da sintaxe";
 "PDF File Has No Annotations" = "PDF File Has No Annotations";
 
@@ -149,12 +148,9 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "A instalação mais recente encontrada está selecionada. Pode escolher outra abaixo. Os comandos dos motores personalizados e o caminho alternativo permanecem inalterados.";
 "Not found (current setting will be kept)" = "Não encontrado (a definição atual será mantida)";
 "Version unavailable" = "Desconhecida";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "Instale uma distribuição TeX e execute a configuração automática em Definições > Motor.";
 "Use These Paths" = "Usar estes caminhos";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "Atalhos de teclado";
-"Keyboard Shortcuts…" = "Atalhos de teclado…";
 "Search commands" = "Pesquisar comandos";
 "Command" = "Comando";
 "Shortcut" = "Atalho";
@@ -172,10 +168,134 @@
 "This shortcut is already used by “%@”." = "Este atalho já é usado por «%@».";
 "Use Command or Control with a key, or a function key (F1–F20)." = "Use uma tecla com Comando ou Controlo, ou uma tecla de função (F1–F20).";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selecione um comando para alterar o respetivo atalho. As alterações são imediatas. As macros e os atalhos de introdução de texto têm editores próprios.";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "As alterações feitas nesta janela serão removidas. As definições existentes em KeyEquivalents.plist serão preservadas.";
+
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "The selected profile is invalid.";
+"Apply Settings Profile?" = "Apply Settings Profile?";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+"Apply Profile" = "Apply Profile";
+"Settings could not be saved" = "Settings could not be saved";
+"Enter a valid setting" = "Enter a valid setting";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+"Continue Editing" = "Continue Editing";
+"Restore This Field" = "Restore This Field";
+"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Escolha outro nome para o tema. Não são permitidos nomes que comecem por um ponto, separadores de caminho, caracteres de controlo ou ligações simbólicas.";
+"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+
+"Back" = "Retroceder";
+
+"Forward" = "Avançar";
+
+"Settings Categories" = "Categorias de definições";
+
+"Navigation History" = "Histórico de navegação";
+
+"Back (⌘[)" = "Retroceder (⌘[)";
+
+"Forward (⌘])" = "Avançar (⌘])";
+
+"Keyboard" = "Teclado";
+"Search by Function" = "Pesquisar por função";
+"Search by Key" = "Pesquisar por tecla";
+"Show in Macro Editor" = "Mostrar no editor de macros";
+"Assigned" = "Atribuído";
+"Inactive for this key" = "Inativo para esta tecla";
+"Assignment priority is shown; whether a command can run depends on the document." = "É apresentada a prioridade de atribuição. A execução do comando depende do documento.";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "As teclas usadas pelo sistema não podem ser detetadas. Escape termina a gravação.";
+"No command uses this key." = "Nenhum comando usa esta tecla.";
+"Press a key" = "Prima uma tecla";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla não pode ser usada como atalho. Use Comando ou Controlo com uma tecla, ou F1–F20.";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Os atalhos de menu personalizados serão removidos. As definições de KeyEquivalents.plist serão mantidas.";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "São apresentadas as atribuições existentes. Esta tecla não pode ser atribuída a um novo atalho.";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "Resultados: %lu";
+
+"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+
+"Replace" = "Replace";
+
+"General" = "Geral";
+"Documents and Saving" = "Documentos e gravação";
+"Editor" = "Editor";
+"Spell Checking" = "Ortografia";
+"Appearance" = "Aparência";
+"Typesetting" = "Composição";
+"Console" = "Consola";
+"Updates" = "Atualizações";
+"Defaults for New Documents" = "Predefinições para novos documentos";
+"Matching Brackets" = "Correspondência de parênteses";
+"Spelling While Typing" = "Verificação ao escrever";
+"Use LaTeX-aware spell checking (recommended)" = "Usar verificação adaptada ao LaTeX (recomendado)";
+"Use legacy spell checking" = "Usar verificação tradicional";
+"LaTeX Spell Checking" = "Ortografia LaTeX";
+"Edit Key Bindings…" = "Editar associações de teclas…";
+"Key Bindings" = "Associações de teclas";
+"Edit Command Completion…" = "Editar conclusão de comandos…";
+"Command Completion" = "Conclusão de comandos";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "Quando Tab aciona a conclusão de comandos, fica reservado para ela e não pode ser atribuído a um atalho de menu.";
+"Source and Preview Windows" = "Janelas de código e pré-visualização";
+"Comment Lines and Hidden Settings" = "Linhas de comentário e definições ocultas";
+"Advanced" = "Avançadas";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instale uma distribuição TeX e execute a configuração automática em Definições > Composição.";
+
+"Completion trigger" = "Tecla de ativação";
+
+"This key is reserved for command completion." = "Esta tecla está reservada para completar comandos.";
+
+"Encoding" = "Codificação";
+
+"Saving Documents" = "Guardar documentos";
+
+"Page Display" = "Apresentação de páginas";
+
+"PDF Interaction" = "Interação com PDF";
+
+"PDF Appearance" = "Aspeto do PDF";
+
+"HTML Preview" = "Pré-visualização HTML";
+
+"Typesetting Defaults" = "Predefinições de composição";
+
+"Synchronization" = "Sincronização";
+
+"Tools" = "Ferramentas";
+
+"Expanded" = "Expandido";
+
+"Collapsed" = "Recolhido";
+
+"Search Settings" = "Pesquisar definições";
+
+"Settings results: %lu" = "Categorias encontradas: %lu";
+
+"No Settings Found" = "Nenhuma definição encontrada";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 
 /* Independent Experiment console */
 "Experiment input" = "Entrada da experiência";
 "Stop Experiment" = "Parar experiência";
 "%@ — Experiment Console" = "%@ — Consola da experiência";
 "Experiment stopped.\n" = "Experiência interrompida.\n";
+
+/* Explicit fallback for shared keys without a translation. */
+"Assign" = "Assign";
+"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
+"Macro shortcut conflicts" = "Macro shortcut conflicts";
+"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
+"Return to Editing" = "Return to Editing";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
+"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+"Variant" = "Variant";

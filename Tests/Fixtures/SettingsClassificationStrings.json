@@ -1,0 +1,612 @@
+{
+  "format": 3,
+  "languages": [
+    "ja",
+    "de",
+    "fr",
+    "es",
+    "it",
+    "nl",
+    "pt",
+    "pt-PT",
+    "ro",
+    "ko",
+    "zh_CN",
+    "Base"
+  ],
+  "strings": {
+    "General": {
+      "default": "General",
+      "overrides": {
+        "ja": "一般",
+        "de": "Allgemein",
+        "fr": "Général",
+        "it": "Generali",
+        "nl": "Algemeen",
+        "pt": "Geral",
+        "pt-PT": "Geral",
+        "ko": "일반",
+        "zh_CN": "通用"
+      }
+    },
+    "Documents and Saving": {
+      "default": "Documents and Saving",
+      "overrides": {
+        "ja": "書類と保存",
+        "de": "Dokumente und Sichern",
+        "fr": "Documents et enregistrement",
+        "es": "Documentos y guardado",
+        "it": "Documenti e salvataggio",
+        "nl": "Documenten en bewaren",
+        "pt": "Documentos e salvamento",
+        "pt-PT": "Documentos e gravação",
+        "ro": "Documente și salvare",
+        "ko": "문서 및 저장",
+        "zh_CN": "文稿与保存"
+      }
+    },
+    "Editor": {
+      "default": "Editor",
+      "overrides": {
+        "ja": "エディタ",
+        "fr": "Éditeur",
+        "ko": "편집기",
+        "zh_CN": "编辑器"
+      }
+    },
+    "Spell Checking": {
+      "default": "Spell Checking",
+      "overrides": {
+        "ja": "スペルチェック",
+        "de": "Rechtschreibprüfung",
+        "fr": "Orthographe",
+        "es": "Ortografía",
+        "it": "Ortografia",
+        "nl": "Spellingcontrole",
+        "pt": "Ortografia",
+        "pt-PT": "Ortografia",
+        "ro": "Ortografie",
+        "ko": "맞춤법 검사",
+        "zh_CN": "拼写检查"
+      }
+    },
+    "Appearance": {
+      "default": "Appearance",
+      "overrides": {
+        "ja": "外観",
+        "de": "Erscheinungsbild",
+        "fr": "Apparence",
+        "es": "Apariencia",
+        "it": "Aspetto",
+        "nl": "Weergave",
+        "pt": "Aparência",
+        "pt-PT": "Aparência",
+        "ro": "Aspect",
+        "ko": "모양",
+        "zh_CN": "外观"
+      }
+    },
+    "Preview": {
+      "default": "Preview",
+      "overrides": {
+        "ja": "プレビュー",
+        "de": "Vorschau",
+        "fr": "Aperçu",
+        "es": "Vista previa",
+        "it": "Anteprima",
+        "nl": "Voorvertoning",
+        "pt": "Pré-visualização",
+        "pt-PT": "Pré-visualização",
+        "ro": "Previzualizare",
+        "ko": "미리보기",
+        "zh_CN": "预览"
+      }
+    },
+    "Typesetting": {
+      "default": "Typesetting",
+      "overrides": {
+        "ja": "タイプセット",
+        "de": "Satz",
+        "fr": "Composition",
+        "es": "Composición",
+        "it": "Composizione",
+        "nl": "Zetten",
+        "pt": "Composição",
+        "pt-PT": "Composição",
+        "ro": "Compunere",
+        "ko": "조판",
+        "zh_CN": "排版"
+      }
+    },
+    "Console": {
+      "default": "Console",
+      "overrides": {
+        "ja": "コンソール",
+        "de": "Konsole",
+        "es": "Consola",
+        "pt-PT": "Consola",
+        "ro": "Consolă",
+        "ko": "콘솔",
+        "zh_CN": "控制台"
+      }
+    },
+    "Keyboard": {
+      "default": "Keyboard",
+      "overrides": {
+        "ja": "キーボード",
+        "de": "Tastatur",
+        "fr": "Clavier",
+        "es": "Teclado",
+        "it": "Tastiera",
+        "nl": "Toetsenbord",
+        "pt": "Teclado",
+        "pt-PT": "Teclado",
+        "ro": "Tastatură",
+        "ko": "키보드",
+        "zh_CN": "键盘"
+      }
+    },
+    "Updates": {
+      "default": "Updates",
+      "overrides": {
+        "ja": "アップデート",
+        "fr": "Mises à jour",
+        "es": "Actualizaciones",
+        "it": "Aggiornamenti",
+        "pt": "Atualizações",
+        "pt-PT": "Atualizações",
+        "ro": "Actualizări",
+        "ko": "업데이트",
+        "zh_CN": "更新"
+      }
+    },
+    "Defaults for New Documents": {
+      "default": "Defaults for New Documents",
+      "overrides": {
+        "ja": "新しい書類の初期値",
+        "de": "Vorgaben für neue Dokumente",
+        "fr": "Réglages des nouveaux documents",
+        "es": "Valores para documentos nuevos",
+        "it": "Impostazioni per i nuovi documenti",
+        "nl": "Standaarden voor nieuwe documenten",
+        "pt": "Padrões para novos documentos",
+        "pt-PT": "Predefinições para novos documentos",
+        "ro": "Valori pentru documente noi",
+        "ko": "새 문서의 기본값",
+        "zh_CN": "新文稿的默认设置"
+      }
+    },
+    "Matching Brackets": {
+      "default": "Matching Brackets",
+      "overrides": {
+        "ja": "括弧の対応",
+        "de": "Klammerzuordnung",
+        "fr": "Correspondance des parenthèses",
+        "es": "Correspondencia de paréntesis",
+        "it": "Corrispondenza delle parentesi",
+        "nl": "Overeenkomende haakjes",
+        "pt": "Correspondência de parênteses",
+        "pt-PT": "Correspondência de parênteses",
+        "ro": "Potrivirea parantezelor",
+        "ko": "괄호 짝 맞추기",
+        "zh_CN": "括号匹配"
+      }
+    },
+    "Spelling While Typing": {
+      "default": "Spelling While Typing",
+      "overrides": {
+        "ja": "入力中のスペルチェック",
+        "de": "Rechtschreibprüfung bei der Eingabe",
+        "fr": "Vérification pendant la saisie",
+        "es": "Ortografía al escribir",
+        "it": "Controllo durante la digitazione",
+        "nl": "Spellingcontrole tijdens typen",
+        "pt": "Verificação ao digitar",
+        "pt-PT": "Verificação ao escrever",
+        "ro": "Verificare în timpul tastării",
+        "ko": "입력 중 맞춤법 검사",
+        "zh_CN": "键入时检查拼写"
+      }
+    },
+    "Use LaTeX-aware spell checking (recommended)": {
+      "default": "Use LaTeX-aware spell checking (recommended)",
+      "overrides": {
+        "ja": "LaTeXの構造を考慮する（推奨）",
+        "de": "LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)",
+        "fr": "Utiliser la vérification adaptée à LaTeX (recommandé)",
+        "es": "Usar corrección adaptada a LaTeX (recomendado)",
+        "it": "Usa il controllo adatto a LaTeX (consigliato)",
+        "nl": "LaTeX-bewuste spellingcontrole gebruiken (aanbevolen)",
+        "pt": "Usar verificação adaptada ao LaTeX (recomendado)",
+        "pt-PT": "Usar verificação adaptada ao LaTeX (recomendado)",
+        "ro": "Folosește verificarea adaptată la LaTeX (recomandat)",
+        "ko": "LaTeX 구조를 고려한 맞춤법 검사 사용(권장)",
+        "zh_CN": "使用考虑 LaTeX 结构的拼写检查（推荐）"
+      }
+    },
+    "Use legacy spell checking": {
+      "default": "Use legacy spell checking",
+      "overrides": {
+        "ja": "従来方式を使う",
+        "de": "Bisherige Rechtschreibprüfung verwenden",
+        "fr": "Utiliser la vérification classique",
+        "es": "Usar la corrección tradicional",
+        "it": "Usa il controllo tradizionale",
+        "nl": "Traditionele spellingcontrole gebruiken",
+        "pt": "Usar verificação tradicional",
+        "pt-PT": "Usar verificação tradicional",
+        "ro": "Folosește verificarea tradițională",
+        "ko": "기존 맞춤법 검사 사용",
+        "zh_CN": "使用传统拼写检查"
+      }
+    },
+    "LaTeX Spell Checking": {
+      "default": "LaTeX Spell Checking",
+      "overrides": {
+        "ja": "LaTeXのスペルチェック",
+        "de": "LaTeX-Rechtschreibprüfung",
+        "fr": "Orthographe LaTeX",
+        "es": "Ortografía de LaTeX",
+        "it": "Ortografia LaTeX",
+        "nl": "LaTeX-spellingcontrole",
+        "pt": "Ortografia LaTeX",
+        "pt-PT": "Ortografia LaTeX",
+        "ro": "Ortografie LaTeX",
+        "ko": "LaTeX 맞춤법 검사",
+        "zh_CN": "LaTeX 拼写检查"
+      }
+    },
+    "Edit Key Bindings…": {
+      "default": "Edit Key Bindings…",
+      "overrides": {
+        "ja": "キーバインドファイルを編集…",
+        "de": "Tastenbelegungen bearbeiten…",
+        "fr": "Modifier les raccourcis de saisie…",
+        "es": "Editar combinaciones de teclas…",
+        "it": "Modifica le associazioni dei tasti…",
+        "nl": "Toetsbindingen bewerken…",
+        "pt": "Editar associações de teclas…",
+        "pt-PT": "Editar associações de teclas…",
+        "ro": "Editează asocierile de taste…",
+        "ko": "키 바인딩 파일 편집…",
+        "zh_CN": "编辑按键绑定文件…"
+      }
+    },
+    "Key Bindings": {
+      "default": "Key Bindings",
+      "overrides": {
+        "ja": "キーバインド",
+        "de": "Tastenbelegungen",
+        "fr": "Raccourcis de saisie",
+        "es": "Combinaciones de teclas",
+        "it": "Associazioni dei tasti",
+        "nl": "Toetsbindingen",
+        "pt": "Associações de teclas",
+        "pt-PT": "Associações de teclas",
+        "ro": "Asocieri de taste",
+        "ko": "키 바인딩",
+        "zh_CN": "按键绑定"
+      }
+    },
+    "Edit Command Completion…": {
+      "default": "Edit Command Completion…",
+      "overrides": {
+        "ja": "コマンド補完ファイルを編集…",
+        "de": "Befehlsvervollständigung bearbeiten…",
+        "fr": "Modifier la complétion des commandes…",
+        "es": "Editar autocompletado de comandos…",
+        "it": "Modifica il completamento dei comandi…",
+        "nl": "Commandoaanvulling bewerken…",
+        "pt": "Editar conclusão de comandos…",
+        "pt-PT": "Editar conclusão de comandos…",
+        "ro": "Editează completarea comenzilor…",
+        "ko": "명령어 완성 파일 편집…",
+        "zh_CN": "编辑命令补全文件…"
+      }
+    },
+    "Command Completion": {
+      "default": "Command Completion",
+      "overrides": {
+        "ja": "コマンド補完",
+        "de": "Befehlsvervollständigung",
+        "fr": "Complétion des commandes",
+        "es": "Autocompletado de comandos",
+        "it": "Completamento dei comandi",
+        "nl": "Commandoaanvulling",
+        "pt": "Conclusão de comandos",
+        "pt-PT": "Conclusão de comandos",
+        "ro": "Completarea comenzilor",
+        "ko": "명령어 완성",
+        "zh_CN": "命令补全"
+      }
+    },
+    "When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut.": {
+      "default": "When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut.",
+      "overrides": {
+        "ja": "Tabでコマンド補完を呼び出す場合、Tabは補完用に予約され、メニューのショートカットには割り当てられません。",
+        "de": "Wenn Tab die Befehlsvervollständigung auslöst, ist Tab dafür reserviert und kann keinem Menübefehl zugewiesen werden.",
+        "fr": "Lorsque Tab déclenche la complétion, cette touche lui est réservée et ne peut pas être affectée à un raccourci de menu.",
+        "es": "Si Tab activa el autocompletado de comandos, queda reservado para ello y no se puede asignar a un atajo de menú.",
+        "it": "Quando Tab attiva il completamento dei comandi, il tasto è riservato e non può essere assegnato a una scorciatoia di menu.",
+        "nl": "Wanneer Tab commandoaanvulling activeert, is Tab daarvoor gereserveerd en kan de toets niet aan een menusneltoets worden toegewezen.",
+        "pt": "Quando Tab aciona a conclusão de comandos, fica reservado para ela e não pode ser atribuído a um atalho de menu.",
+        "pt-PT": "Quando Tab aciona a conclusão de comandos, fica reservado para ela e não pode ser atribuído a um atalho de menu.",
+        "ro": "Când Tab activează completarea comenzilor, tasta este rezervată acesteia și nu poate fi atribuită unei scurtături de meniu.",
+        "ko": "Tab으로 명령어 완성을 실행하면 Tab은 완성용으로 예약되어 메뉴 단축키에 지정할 수 없습니다.",
+        "zh_CN": "使用 Tab 触发命令补全时，Tab 将保留用于补全，不能分配给菜单快捷键。"
+      }
+    },
+    "Source and Preview Windows": {
+      "default": "Source and Preview Windows",
+      "overrides": {
+        "ja": "ソースとプレビューのウインドウ",
+        "de": "Quelltext- und Vorschaufenster",
+        "fr": "Fenêtres de source et d’aperçu",
+        "es": "Ventanas de fuente y vista previa",
+        "it": "Finestre di sorgente e anteprima",
+        "nl": "Bron- en voorvertoningsvensters",
+        "pt": "Janelas de código e pré-visualização",
+        "pt-PT": "Janelas de código e pré-visualização",
+        "ro": "Ferestrele sursei și previzualizării",
+        "ko": "소스 및 미리보기 윈도우",
+        "zh_CN": "源文件和预览窗口"
+      }
+    },
+    "Comment Lines and Hidden Settings": {
+      "default": "Comment Lines and Hidden Settings",
+      "overrides": {
+        "ja": "コメント行と隠し設定",
+        "de": "Kommentarzeilen und verborgene Einstellungen",
+        "fr": "Lignes de commentaire et réglages masqués",
+        "es": "Líneas de comentario y ajustes ocultos",
+        "it": "Righe di commento e impostazioni nascoste",
+        "nl": "Commentaarregels en verborgen instellingen",
+        "pt": "Linhas de comentário e ajustes ocultos",
+        "pt-PT": "Linhas de comentário e definições ocultas",
+        "ro": "Linii de comentarii și configurări ascunse",
+        "ko": "주석 행 및 숨겨진 설정",
+        "zh_CN": "注释行与隐藏设置"
+      }
+    },
+    "Advanced": {
+      "default": "Advanced",
+      "overrides": {
+        "ja": "詳細",
+        "de": "Erweitert",
+        "fr": "Avancé",
+        "es": "Avanzado",
+        "it": "Avanzate",
+        "nl": "Geavanceerd",
+        "pt": "Avançado",
+        "pt-PT": "Avançadas",
+        "ro": "Avansat",
+        "ko": "고급",
+        "zh_CN": "高级"
+      }
+    },
+    "Install a TeX distribution, then run Auto Setup in Settings > Typesetting.": {
+      "default": "Install a TeX distribution, then run Auto Setup in Settings > Typesetting.",
+      "overrides": {
+        "ja": "TeX環境をインストールしてから、設定の「タイプセット」で「自動設定」を実行してください。",
+        "de": "Installieren Sie eine TeX-Distribution und starten Sie die automatische Einrichtung unter Einstellungen > Schriftsatz.",
+        "fr": "Installez une distribution TeX, puis lancez la configuration automatique dans Réglages > Composition.",
+        "es": "Instale una distribución TeX y ejecute la configuración automática en Ajustes > Composición.",
+        "it": "Installare una distribuzione TeX, quindi avviare la configurazione automatica in Impostazioni > Composizione.",
+        "nl": "Installeer een TeX-distributie en voer automatische configuratie uit bij Instellingen > Zetwerk.",
+        "pt": "Instale uma distribuição TeX e execute a configuração automática em Ajustes > Composição.",
+        "pt-PT": "Instale uma distribuição TeX e execute a configuração automática em Definições > Composição.",
+        "ro": "Instalați o distribuție TeX, apoi rulați configurarea automată în Configurări > Tehnoredactare.",
+        "ko": "TeX 배포판을 설치한 다음 설정 > 조판에서 자동 설정을 실행하십시오.",
+        "zh_CN": "安装 TeX 发行版，然后在设置 > 排版中运行自动设置。"
+      }
+    },
+    "Completion trigger": {
+      "default": "Completion trigger",
+      "overrides": {
+        "ja": "呼び出すキー",
+        "de": "Auslösetaste",
+        "fr": "Touche de déclenchement",
+        "es": "Tecla de activación",
+        "it": "Tasto di attivazione",
+        "nl": "Activeringstoets",
+        "pt": "Tecla de ativação",
+        "pt-PT": "Tecla de ativação",
+        "ro": "Tastă de activare",
+        "ko": "호출 키",
+        "zh_CN": "触发按键"
+      }
+    },
+    "This key is reserved for command completion.": {
+      "default": "This key is reserved for command completion.",
+      "overrides": {
+        "ja": "予約済みのキーです（コマンド補完の呼び出し）。",
+        "de": "Diese Taste ist für die Befehlsvervollständigung reserviert.",
+        "fr": "Cette touche est réservée à la complétion des commandes.",
+        "es": "Esta tecla está reservada para completar comandos.",
+        "it": "Questo tasto è riservato al completamento dei comandi.",
+        "nl": "Deze toets is gereserveerd voor commandoaanvulling.",
+        "pt": "Esta tecla está reservada para completar comandos.",
+        "pt-PT": "Esta tecla está reservada para completar comandos.",
+        "ro": "Această tastă este rezervată completării comenzilor.",
+        "ko": "명령어 완성을 위해 예약된 키입니다.",
+        "zh_CN": "此按键已保留用于命令补全。"
+      }
+    },
+    "Encoding": {
+      "default": "Encoding",
+      "overrides": {
+        "ja": "文字コード",
+        "de": "Kodierung",
+        "fr": "Encodage",
+        "es": "Codificación",
+        "it": "Codifica",
+        "nl": "Codering",
+        "pt": "Codificação",
+        "pt-PT": "Codificação",
+        "ro": "Codificare",
+        "ko": "문자 인코딩",
+        "zh_CN": "字符编码"
+      }
+    },
+    "Saving Documents": {
+      "default": "Saving Documents",
+      "overrides": {
+        "ja": "保存",
+        "de": "Dokumente sichern",
+        "fr": "Enregistrement des documents",
+        "es": "Guardar documentos",
+        "it": "Salvataggio documenti",
+        "nl": "Documenten bewaren",
+        "pt": "Salvar documentos",
+        "pt-PT": "Guardar documentos",
+        "ro": "Salvarea documentelor",
+        "ko": "문서 저장",
+        "zh_CN": "保存文稿"
+      }
+    },
+    "Page Display": {
+      "default": "Page Display",
+      "overrides": {
+        "ja": "ページ表示",
+        "de": "Seitendarstellung",
+        "fr": "Affichage des pages",
+        "es": "Visualización de páginas",
+        "it": "Visualizzazione pagine",
+        "nl": "Paginaweergave",
+        "pt": "Exibição de páginas",
+        "pt-PT": "Apresentação de páginas",
+        "ro": "Afișarea paginilor",
+        "ko": "페이지 표시",
+        "zh_CN": "页面显示"
+      }
+    },
+    "PDF Interaction": {
+      "default": "PDF Interaction",
+      "overrides": {
+        "ja": "PDFの操作",
+        "de": "PDF-Bedienung",
+        "fr": "Interaction PDF",
+        "es": "Interacción con PDF",
+        "it": "Interazione PDF",
+        "nl": "PDF-bediening",
+        "pt": "Interação com PDF",
+        "pt-PT": "Interação com PDF",
+        "ro": "Interacțiune PDF",
+        "ko": "PDF 조작",
+        "zh_CN": "PDF操作"
+      }
+    },
+    "PDF Appearance": {
+      "default": "PDF Appearance",
+      "overrides": {
+        "ja": "PDFの外観",
+        "de": "PDF-Darstellung",
+        "fr": "Apparence PDF",
+        "es": "Aspecto del PDF",
+        "it": "Aspetto PDF",
+        "nl": "PDF-vormgeving",
+        "pt": "Aparência do PDF",
+        "pt-PT": "Aspeto do PDF",
+        "ro": "Aspect PDF",
+        "ko": "PDF 모양",
+        "zh_CN": "PDF外观"
+      }
+    },
+    "HTML Preview": {
+      "default": "HTML Preview",
+      "overrides": {
+        "ja": "HTMLプレビュー",
+        "de": "HTML-Vorschau",
+        "fr": "Aperçu HTML",
+        "es": "Vista previa HTML",
+        "it": "Anteprima HTML",
+        "nl": "HTML-voorvertoning",
+        "pt": "Pré-visualização HTML",
+        "pt-PT": "Pré-visualização HTML",
+        "ro": "Previzualizare HTML",
+        "ko": "HTML 미리보기",
+        "zh_CN": "HTML预览"
+      }
+    },
+    "Typesetting Defaults": {
+      "default": "Typesetting Defaults",
+      "overrides": {
+        "ja": "タイプセットの初期値",
+        "de": "Satzvorgaben",
+        "fr": "Valeurs de composition",
+        "es": "Valores de composición",
+        "it": "Impostazioni di composizione",
+        "nl": "Zetwerkstandaarden",
+        "pt": "Padrões de composição",
+        "pt-PT": "Predefinições de composição",
+        "ro": "Valori implicite de tehnoredactare",
+        "ko": "조판 기본값",
+        "zh_CN": "排版默认值"
+      }
+    },
+    "Synchronization": {
+      "default": "Synchronization",
+      "overrides": {
+        "ja": "同期",
+        "de": "Synchronisierung",
+        "fr": "Synchronisation",
+        "es": "Sincronización",
+        "it": "Sincronizzazione",
+        "nl": "Synchronisatie",
+        "pt": "Sincronização",
+        "pt-PT": "Sincronização",
+        "ro": "Sincronizare",
+        "ko": "동기화",
+        "zh_CN": "同步"
+      }
+    },
+    "Tools": {
+      "default": "Tools",
+      "overrides": {
+        "ja": "ツール",
+        "de": "Werkzeuge",
+        "fr": "Outils",
+        "es": "Herramientas",
+        "it": "Strumenti",
+        "nl": "Hulpmiddelen",
+        "pt": "Ferramentas",
+        "pt-PT": "Ferramentas",
+        "ro": "Instrumente",
+        "ko": "도구",
+        "zh_CN": "工具"
+      }
+    },
+    "Expanded": {
+      "default": "Expanded",
+      "overrides": {
+        "ja": "展開",
+        "de": "Erweitert",
+        "fr": "Développé",
+        "es": "Expandido",
+        "it": "Espanso",
+        "nl": "Uitgeklapt",
+        "pt": "Expandido",
+        "pt-PT": "Expandido",
+        "ro": "Extins",
+        "ko": "펼침",
+        "zh_CN": "展开"
+      }
+    },
+    "Collapsed": {
+      "default": "Collapsed",
+      "overrides": {
+        "ja": "折りたたみ",
+        "de": "Reduziert",
+        "fr": "Réduit",
+        "es": "Contraído",
+        "it": "Compresso",
+        "nl": "Ingeklapt",
+        "pt": "Recolhido",
+        "pt-PT": "Recolhido",
+        "ro": "Restrâns",
+        "ko": "접힘",
+        "zh_CN": "折叠"
+      }
+    }
+  }
+}

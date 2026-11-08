@@ -30,6 +30,7 @@ elif args.mutation == 'always-restore':
 methods = methods.replace('TSExternalPDFRestore(self, viewport);', 'CountedRestore(self, viewport);')
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <PDFKit/PDFKit.h>
 #import "TSExternalPDFReload.h"
 static NSUInteger restorationCount;
@@ -102,7 +103,7 @@ static PDFDocument *makePDF(BOOL varied, NSInteger rotation, NSUInteger count) {
  }return pdf;
 }
 int main(void) { @autoreleasepool {
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation(); [NSApplication sharedApplication];
  BOOL workaroundOS=NO; if (@available(macOS 27.0,*)) workaroundOS=YES;
  NSArray *documents=@[makePDF(NO,0,8),makePDF(NO,90,8),makePDF(YES,0,8),makePDF(YES,90,8)];
  for(NSInteger mode=0;mode<4;mode++)for(NSInteger style=0;style<2;style++)
@@ -206,13 +207,13 @@ int main(void) { @autoreleasepool {
 '''.replace('METHODS', methods)
 with tempfile.TemporaryDirectory(prefix='texshop-navigation-') as directory:
     temp=Path(directory)
-    (temp/'home').mkdir()
+    (temp/'home'/'Library'/'Preferences').mkdir(parents=True)
     (temp/'test.m').write_text(program)
-    subprocess.run(['xcrun','clang','-mmacosx-version-min=14.6','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
+    subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-mmacosx-version-min=14.6','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
                     '-I'+str(root/'Sources'),str(temp/'test.m'),'-o',str(temp/'test')],check=True)
     if args.artifacts:
         args.artifacts.mkdir(parents=True, exist_ok=True)
         shutil.copy2(temp/'test.m', args.artifacts/'test.m')
         shutil.copy2(temp/'test', args.artifacts/'test')
     subprocess.run([str(temp/'test')],check=True,timeout=180,
-                   env=dict(os.environ,CFFIXED_USER_HOME=str(temp/'home')))
+                   env=dict(os.environ,HOME=str(temp/'home'),CFFIXED_USER_HOME=str(temp/'home')))

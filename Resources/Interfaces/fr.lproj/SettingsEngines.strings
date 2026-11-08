@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+"1020.title" = "Commande pour la Recherche";
+"1024.title" = "kpsetool (Par défaut : kpsetool -w -n latex tex)";
+"1027.title" = "Moteur BibTeX";
+"1030.title" = "Par défaut : bibtex";
+"1063.title" = "défaut";
+"1068.title" = "défaut";
+"1069.title" = "TeX";
+"1071.title" = "défaut";
+"1074.title" = "défaut";
+"1075.title" = "LaTeX ";
+"200.title" = "TeX + dvips + distiller";
+"215.title" = "Réglage des chemins";
+"54.title" = "pdfTeX";
+"878.title" = "LaTeX ";
+"880.title" = "TeX";
+"882.title" = "Avertissement de Shell Escape";
+"887.title" = "Sauvegarder le fichier PostScript";
+"889.title" = "(pdf)TeX & dvips (par défaut: /Library/TeX/texbin OR /usr/texbin)";
+"891.title" = "Distiller (ghostscript) (par défaut: /usr/local/bin)";
+"BYT-g3-3p0.title" = "Chemin alternatif (par défaut : ~/bin/context/tex/texmf-osx-arm64/bin)";
+"engine-auto-cell.title" = "Configuration automatique…";

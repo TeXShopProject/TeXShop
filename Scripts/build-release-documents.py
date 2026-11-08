@@ -89,6 +89,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--notes-dir', type=Path, default=ROOT / 'Documentation/Releases')
     parser.add_argument('--versions', nargs='+', default=['5.60', '5.59'])
+    parser.add_argument('--changes-only', action='store_true', help='Rebuild Changes without regenerating the unchanged About PDF')
     parser.add_argument('--latex', default='pdflatex')
     args = parser.parse_args()
     texts = []
@@ -127,7 +128,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix='texshop-release-docs-') as temp:
         output = Path(temp)
         built = []
-        for tex in [changes_source, about_source]:
+        for tex in ([changes_source] if args.changes_only else [changes_source, about_source]):
             for _ in range(2):
                 subprocess.run([args.latex, '-interaction=nonstopmode', '-halt-on-error',
                                 '-no-shell-escape', f'-output-directory={output}', tex.name],

@@ -10,15 +10,15 @@
 
 <BODY>
 	<div id="content_border">
-		<P>La sincronizaci&oacute;n es una importante utilidad incorporada en Textures, una implementaci&oacute;n comercial de TeX para Macintosh Classic desarrollada por Blue Sky TeX Systems. Al usar la sincronizaci&oacute;n, un autor puede hacer clic en la ventana del dvi previsto e, inmediatamente, el cursor aparece en el correspondiente lugar de la ventana de c&oacute;digo. Blue Sky ha prometido una versi&oacute;n nativa para MacOS X de Textures, pero todav&iacute;a no la ha lanzado. La implementaci&oacute;n de la sincronizaci&oacute;n en Textures es admirada por su habilidad para localizar el correspondiente punto en el c&oacute;digo.</P> 
+		<P>La sincronizaci&oacute;n es una importante utilidad incorporada en Textures, una implementaci&oacute;n comercial de TeX para Macintosh Classic desarrollada por Blue Sky TeX Systems. Al usar la sincronizaci&oacute;n, un autor puede hacer clic en la ventana del dvi previsto e, inmediatamente, el cursor aparece en el correspondiente lugar de la ventana de c&oacute;digo. Blue Sky ha prometido una versi&oacute;n nativa para MacOS X de Textures, pero todav&iacute;a no la ha lanzado. La implementaci&oacute;n de la sincronizaci&oacute;n en Textures es admirada por su habilidad para localizar el correspondiente punto en el c&oacute;digo.</P>
 
 <P>Desde esa implementaci&oacute;n, varios sistemas TeX han incorporado, aproximadamente, la misma utilidad. Para ello han usado estilos adicionales que tambi&eacute;n hac&iacute;an que TeX escribiera informaci&oacute;n extra en el archivo dvi. Ninguna de estas aproximaciones (incluyendo los m&eacute;todos incorporados en TeXShop, y que describimos m&aacute;s adelante) es tan precisa como el m&eacute;todo de Textures.</P>
 
 <P>Desde la versi&oacute;n 2.18, TeXShop proporciona sincronizaci&oacute;n entre el c&oacute;digo usando una nueva tecnolog&iacute;a denominada SyncTeX introducida por J&eacute;r&ocirc;me Laurens; cuando esta tecnolog&iacute;a no est&aacute; disponible, TeXShop  utiliza un antiguo m&eacute;todo de sincoronizaci&oacute;n basado en b&uacute;squedas, y que fue introducido en TeXShop 2.0. Para usar la sincronizaci&oacute;n, haz click sobre una frase de la ventana con c&oacute;digo mientras pulsas la tecla comando de Apple; el pdf se desplaza, en su correspondiente ventana, hasta el lugar oportuno, y la frase aparece destacada, rodeada por un c&iacute;rculo rojo. De manera similar, si haces comando-click en la ventana con el pdf, la ventana con el c&oacute;digo se abre (si es necesario), el texto se desplaza hasta el lugar apropiado, y la frase aparece resaltada en amarillo.</P>
 
 <p>Si instalas TeXShop por primera, el m&eacute;todo basado en SyncTeX est&aacute; activo por defecto. Sin embargo, los usuarios que hayan instalado previamente una versi&oacute;n antigua de TeXShop, y luego la hayan actualizado, necesitar&aacute;n cambiar tres &iacute;tems en los ajustes para lograr que SyncTeX funcione.
-En el apartado &laquo;Misc&raquo; de los ajustes, pon que el m&eacute;todo de sincronizaci&oacute;n sea SyncTeX.
-Y, en el apartado &laquo;Motor&raquo;, cambia los dos &iacute;tems correspondientes a pdfTeX por</p>
+En la categor&iacute;a &laquo;Composición&raquo; de los ajustes, pon que el m&eacute;todo de sincronizaci&oacute;n sea SyncTeX.
+Y, en la categor&iacute;a &laquo;Composición&raquo;, cambia los dos &iacute;tems correspondientes a pdfTeX por</p>
 <dl>
 	<dd> pdftex --shell-escape --synctex=1
 	<dd> pdflatex --shell-escape --synctex=1
@@ -33,8 +33,8 @@ Y, en el apartado &laquo;Motor&raquo;, cambia los dos &iacute;tems correspondien
 <p>Por defecto, TeXShop primero intenta SyncTeX. Pero si SyncTeX falla o el archivo &laquo;.synctex&raquo; no existe, TeXShop utiliza el m&eacute;todo de sincronizaci&oacute;n basado en b&uacute;squedas.</p>
 
 
-<p>En realidad, TeXShop proporciona sincronizaci&oacute;n de tres maneras: SyncTeX, b&uacute;squedas, and PdfSync. 
-El tipo de sincron&iacute;a que se quiere usar se establece en el apartado &laquo;Misc&raquo; en los ajustes. 
+<p>En realidad, TeXShop proporciona sincronizaci&oacute;n de tres maneras: SyncTeX, b&uacute;squedas, and PdfSync.
+El tipo de sincron&iacute;a que se quiere usar se establece en la categor&iacute;a &laquo;Composición&raquo; en los ajustes.
 Las opciones &laquo;PdfSync&raquo; y &laquo;B&uacute;squedas&raquo; se corresponden, respectivamente, con los m&eacute;todos basado en b&uacute;squedas y en pdfsync, mientras que la opci&oacute;n &laquo;Ambos&raquo; utiliza el m&eacute;todo de b&uacute;squedas y, si &eacute;ste falla, pdfsync.
 Esta complejidad se debe a razones hist&oacute;ricas. Pdfsync era una antigua tecnolog&iacute;a que ha sido reemplazada por SyncTeX, y que ya no explicaremos aqu&iacute;.</p>
 
@@ -43,7 +43,7 @@ Esta complejidad se debe a razones hist&oacute;ricas. Pdfsync era una antigua te
 	<dd> --synctex=1
 </dl>
 
-<p>Por ejemplo, para usar SyncTeX con pdftex y pdflatex, el apartado &laquo;Motor&raquo; de la ventana de Ajustes debe establecer las llamadas a TeX y LaTeX mediante</p>
+<p>Por ejemplo, para usar SyncTeX con pdftex y pdflatex, la categor&iacute;a &laquo;Composición&raquo; de la ventana de Ajustes debe establecer las llamadas a TeX y LaTeX mediante</p>
 <dl>
 	<dd> pdftex --shell-escape --synctex=1
 	<dd> pdflatex --shell-escape --synctex=1

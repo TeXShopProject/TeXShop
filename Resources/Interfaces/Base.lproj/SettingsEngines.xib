@@ -1,0 +1,355 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="25079.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+  <dependencies>
+    <deployment version="101000" identifier="macosx" />
+    <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="25079.1" />
+    <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0" />
+  </dependencies>
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="TSPrefEnginesController">
+      <connections>
+        <outlet property="altPathField" destination="oMY-Ya-GFE" id="sSb-uQ-3BE" />
+        <outlet property="bibTeXengineField" destination="1028" id="1033" />
+        <outlet property="escapeWarningButton" destination="325" id="326" />
+        <outlet property="gsBinPathField" destination="255" id="258" />
+        <outlet property="kpsetoolField" destination="1022" id="1025" />
+        <outlet property="latexCommandTextField" destination="53" id="99" />
+        <outlet property="latexGSCommandTextField" destination="199" id="206" />
+        <outlet property="savePSButton" destination="225" id="227" />
+        <outlet property="tetexBinPathField" destination="217" id="219" />
+        <outlet property="texCommandTextField" destination="51" id="98" />
+        <outlet property="texGSCommandTextField" destination="202" id="205" />
+        <outlet property="view" destination="13" id="settings-root-view" />
+      </connections>
+    </customObject>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder" />
+    <customObject id="-3" userLabel="Application" customClass="NSObject" />
+    <customView key="view" id="13" identifier="settings.13">
+      <rect key="frame" x="10" y="33" width="652" height="623" />
+      <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+      <subviews>
+        <box fixedFrame="YES" title="Path settings" translatesAutoresizingMaskIntoConstraints="NO" id="215" identifier="settings.215">
+          <rect key="frame" x="69" y="409.0" width="491" height="202.0" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="C6f-GQ-WQW" identifier="settings.C6f-GQ-WQW">
+            <rect key="frame" x="0.0" y="0.0" width="491" height="190.0" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="engine-auto-button" identifier="settings.engine-auto-button">
+                <rect key="frame" x="18" y="8" width="250" height="28" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="push" title="Auto Setup…" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="engine-auto-cell">
+                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="discoverEnginePaths:" target="-2" id="engine-auto-action" />
+                </connections>
+              </button>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="256" identifier="settings.256">
+                <rect key="frame" x="15" y="119.5" width="424" height="14" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Distiller (ghostscript) (default: /usr/local/bin)" id="891">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="217" identifier="settings.217">
+                <rect key="frame" x="18" y="141.0" width="437" height="22" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="888">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="tetexBinPathChanged:" target="-2" id="220" />
+                </connections>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="218" identifier="settings.218">
+                <rect key="frame" x="15" y="166.5" width="424" height="14" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)" id="889">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PsG-fR-sPc" identifier="settings.PsG-fR-sPc">
+                <rect key="frame" x="15" y="72.0" width="424" height="14" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)" id="BYT-g3-3p0">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="255" identifier="settings.255">
+                <rect key="frame" x="18" y="94.0" width="437" height="22" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="890">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="gsBinPathChanged:" target="-2" id="257" />
+                </connections>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oMY-Ya-GFE" identifier="settings.oMY-Ya-GFE">
+                <rect key="frame" x="18" y="47.0" width="437" height="22" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="SJ3-tf-6Eu">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="altPathChanged:" target="-2" id="MlP-6U-6b3" />
+                </connections>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="pdfTeX" translatesAutoresizingMaskIntoConstraints="NO" id="54" identifier="settings.54">
+          <rect key="frame" x="69" y="229.5" width="224" height="167.5" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="gPH-WT-0Et" identifier="settings.gPH-WT-0Et">
+            <rect key="frame" x="0.0" y="0.0" width="224" height="155.5" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="50" identifier="settings.50">
+                <rect key="frame" x="14" y="57.5" width="36" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="LaTeX " id="878">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="51" identifier="settings.51">
+                <rect key="frame" x="17" y="92" width="186" height="21" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="879">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="texProgramChanged:" target="-2" id="118" />
+                </connections>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="52" identifier="settings.52">
+                <rect key="frame" x="14" y="116.5" width="30" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="TeX" id="880">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="53" identifier="settings.53">
+                <rect key="frame" x="17" y="33" width="186" height="21" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="881">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="latexProgramChanged:" target="-2" id="119" />
+                </connections>
+              </textField>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="325" identifier="settings.325">
+                <rect key="frame" x="15" y="9" width="174" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Shell Escape Warning" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="882">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="escapeWarningChanged:" target="-2" id="327" />
+                </connections>
+              </button>
+              <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1062" identifier="settings.1062">
+                <rect key="frame" x="49" y="124.5" width="56" height="19" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="roundRect" title="Default" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1063">
+                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="cellTitle" />
+                </buttonCell>
+                <connections>
+                  <action selector="defaultEngineCall:" target="-2" id="1076" />
+                </connections>
+              </button>
+              <button tag="1" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1070" identifier="settings.1070">
+                <rect key="frame" x="52" y="65.5" width="56" height="19" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="roundRect" title="Default" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1071">
+                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="cellTitle" />
+                </buttonCell>
+                <connections>
+                  <action selector="defaultEngineCall:" target="-2" id="1077" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="TeX + dvips + distiller" translatesAutoresizingMaskIntoConstraints="NO" id="200" identifier="settings.200">
+          <rect key="frame" x="313" y="229.5" width="247" height="167.5" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="Vh1-Vx-3JF" identifier="settings.Vh1-Vx-3JF">
+            <rect key="frame" x="0.0" y="0.0" width="247" height="155.5" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="202" identifier="settings.202">
+                <rect key="frame" x="19" y="92" width="211" height="21" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="886">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="texGSProgramChanged:" target="-2" id="203" />
+                </connections>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="199" identifier="settings.199">
+                <rect key="frame" x="19" y="33" width="211" height="21" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="884">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="latexGSProgramChanged:" target="-2" id="204" />
+                </connections>
+              </textField>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="225" identifier="settings.225">
+                <rect key="frame" x="17" y="9" width="143" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Save Postscript File" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="887">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="savePSPressed:" target="-2" id="226" />
+                </connections>
+              </button>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1066" identifier="settings.1066">
+                <rect key="frame" x="21" y="116.5" width="30" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="TeX" id="1069">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <button tag="2" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1067" identifier="settings.1067">
+                <rect key="frame" x="57" y="124.5" width="56" height="19" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="roundRect" title="Default" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1068">
+                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="cellTitle" />
+                </buttonCell>
+                <connections>
+                  <action selector="defaultEngineCall:" target="-2" id="1078" />
+                </connections>
+              </button>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1072" identifier="settings.1072">
+                <rect key="frame" x="21" y="57.5" width="36" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="LaTeX " id="1075">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <button tag="3" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1073" identifier="settings.1073">
+                <rect key="frame" x="59" y="65.5" width="56" height="19" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="roundRect" title="Default" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1074">
+                  <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="cellTitle" />
+                </buttonCell>
+                <connections>
+                  <action selector="defaultEngineCall:" target="-2" id="1079" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Search command" translatesAutoresizingMaskIntoConstraints="NO" id="1020" identifier="settings.1020">
+          <rect key="frame" x="69" y="145.5" width="491" height="72" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="DBm-wM-PDK" identifier="settings.DBm-wM-PDK">
+            <rect key="frame" x="0.0" y="0.0" width="491" height="60" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1021" identifier="settings.1021">
+                <rect key="frame" x="15" y="22" width="478" height="28" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="kpsetool (default: kpsetool -w -n latex tex)" id="1024">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1022" identifier="settings.1022">
+                <rect key="frame" x="18" y="11" width="437" height="22" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="1023">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="kpsetoolChanged:" target="-2" id="1026" />
+                </connections>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="BibTeX Engine" translatesAutoresizingMaskIntoConstraints="NO" id="1027" identifier="settings.1027">
+          <rect key="frame" x="69" y="61.5" width="491" height="72" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="xP2-FB-CFh" identifier="settings.xP2-FB-CFh">
+            <rect key="frame" x="0.0" y="0.0" width="491" height="60" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1029" identifier="settings.1029">
+                <rect key="frame" x="15" y="22" width="478" height="28" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="default: bibtex" id="1030">
+                  <font key="font" metaFont="message" size="11" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1028" identifier="settings.1028">
+                <rect key="frame" x="18" y="11" width="437" height="22" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="1031">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="bibTeXengineChanged:" target="-2" id="1034" />
+                </connections>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+      </subviews>
+    </customView>
+  </objects>
+</document>

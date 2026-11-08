@@ -8,16 +8,20 @@
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 	</HEAD>
 <BODY>
+<p>Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose &#8220;Use LaTeX-aware spell checking (recommended)&#8221; with &#8220;Edit LaTeX exclusion rules&#8230;&#8221;, or &#8220;Use legacy spell checking&#8221; with three indented options. Changing the method preserves all child values. &#8220;Check Spelling&#8221; is independent. Keyboard places key bindings and command completion above shortcut search and the scrolling list. On a short window the input groups can be expanded one at a time. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings. Disabled controls retain their saved values; an obsolete remembered category opens General.</p>
+
 <div id="content_border">
-<P>Starting with TeXShop 5.60, the easiest way is to choose &quot;Keyboard Shortcuts&hellip;&quot; in the TeXShop menu, just below &quot;Settings&hellip;&quot;. The window lists the menu commands and their shortcuts, and a search field finds a command by name. Select a command and press &quot;Change&hellip;&quot; (or double-click it), then press the new shortcut and choose &quot;Apply&quot;; press Escape to cancel. A shortcut must use the Command or Control key, or be a function key F1&ndash;F20. If the shortcut is already used by another command, TeXShop says so and does not change it. &quot;Remove Shortcut&quot;, &quot;Restore Default&quot;, and &quot;Restore All&hellip;&quot; remove or restore shortcuts. Changes take effect immediately and are kept when TeXShop restarts.</P>
+<p>Choose Settings and select Keyboard. Search by Function finds command names and menu paths. Search by Key records a key and lists matching menu commands and macros, marking assignment priority rather than whether the command can run in the current document. Searching changes no assignments and executes no commands, even for Command-Q or Command-W. System-reserved keys cannot be detected. Plain Escape, clicking the mode control again, changing categories, switching windows, or closing Settings ends recording. Macro rows are read-only. Show in Macro Editor selects the macro while preserving unsaved edits; if edits make its identity ambiguous, the current selection remains.</p>
+<P>Choose Settings and select Keyboard to edit menu shortcuts. Select a command and press &quot;Change&hellip;&quot; (or double-click it), then press the new shortcut and choose &quot;Apply&quot;; press Escape to cancel. A shortcut must use the Command or Control key, or be a function key F1&ndash;F20. If the shortcut is already used by another command, TeXShop says so and does not change it. &quot;Remove Shortcut&quot;, &quot;Restore Default&quot;, and &quot;Restore All&hellip;&quot; remove or restore shortcuts. Changes take effect immediately and are kept when TeXShop restarts.</P>
 <P>If another menu command uses the default shortcut, Restore Default refuses to restore it; change the other command first.</P>
-<P>Menu commands take precedence over macros, using their customized shortcuts when present. Macros can use keys freed by customization. Assigning or restoring a menu shortcut used by a macro asks for confirmation; the macro remains available in the menu, but its shortcut becomes inactive without changing its file. The Macro Editor marks inactive shortcuts and shows the conflicting command and key. Saving asks only about newly assigned or changed conflicting keys, including imported macros. You can return to editing, save with those keys inactive, or remove the conflicting keys and save. Existing unchanged conflicts do not interrupt saving. Among macros, the first occurrence of a key takes precedence. &#8220;Shortcut Unavailable&#8221; applies only to conflicts between menu commands. In the Preview window, Command-F and Command-G follow Find and Find Next, including custom assignments and removal.</P>
+<P>For the same key and modifiers, menu commands take precedence over macros, using their customized shortcuts when present. Macros can use keys freed by customization. Assigning or restoring a menu shortcut used by a macro asks for confirmation; the macro remains available in the menu, but its shortcut becomes inactive without changing its file. The Macro Editor marks inactive shortcuts and shows the conflicting command and key. Saving asks only about newly assigned or changed conflicting keys, including imported macros. You can return to editing, save with those keys inactive, or remove the conflicting keys and save. Existing unchanged conflicts do not interrupt saving. Among macros, the first occurrence of a key takes precedence. &#8220;Shortcut Unavailable&#8221; applies only to conflicts between menu commands. In the Preview window, Command-F and Command-G follow Find and Find Next, including custom assignments and removal.</P>
 <P>Shortcuts set in KeyEquivalents.plist, described below, remain the defaults, and &quot;Restore All&hellip;&quot; does not change that file. Shortcuts for macros are set in the Macro Editor, and key bindings that insert text are set in the Key Bindings editor.</P>
 		<P>The keyboard menu shortcuts for TeXShop can be redefined. To do this, read the comments at the top of the file &quot;KeyEquivalents.plist&quot; and make appropriate changes. To do so, edit the file 
 	<dl>
 	<dd>~/Library/TeXShop/Menus/KeyEquivalents.plist
 	</dl>
  with TeXShop. Be sure to edit and save in UTF-8 format if you use Unicode characters.</P>
+<p lang="en">Clicking a result row keeps key recording active. Only the result list scrolls vertically. Inactive results identify the winning assignment and key; macro paths use separators between groups.</p>
 </div>		
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
@@ -36,10 +40,13 @@
 			<li><a href="configure_panel.htm">Modifying the Latex Panel</a>
 			<li><a href="configure_autocompletion.htm">Modifying Key Bindings</a>
 			<li><a href="configure_menushortcuts.htm">Redefining Keyboard Menu Shortcuts</a>
-			
+
 			<li><a href="configure_macros.htm">Modifying the Macros Menu</a>
 		</ul>
 	</div>
-	
-	</BODY>
+
+
+<h3 id="settings-search">Search Settings</h3>
+<p>Use Search Settings above the sidebar to find categories, labels, options and menu commands. Words separated by spaces must all occur in the same category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to reveal and highlight its controls without changing their values. Clearing the query returns to the category used before searching. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording. Personal paths, entered values and user-created theme names are not searched.</p>
+</BODY>
 </HTML>

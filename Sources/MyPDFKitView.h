@@ -100,7 +100,6 @@
 	BOOL							showSync;
 //	NSMutableArray					*sourceFiles;
 
-	double							oldMagnification;
 
 	BOOL							downOverLink;
 	NSRect							rect;  // to simulate cacheImageInRect

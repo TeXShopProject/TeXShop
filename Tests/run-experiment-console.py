@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Exercise the production Experiment controller with real AppKit windows and text views.
 
-Uses real child processes and encoding helpers. Window ordering and frame autosaving are suppressed;
+Uses real child processes and encoding helpers. Window ordering and frame persistence are suppressed;
 no TeXShop user settings are read and no windows are shown.
 """
 from pathlib import Path
@@ -35,6 +35,7 @@ if args.mutation == "no-console-alpha":
     controller = controller.replace('self.window.alphaValue = TSExperimentWindowAlpha(theme, @"ConsoleAlpha");', '')
 prefix = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import "TSExperimentJob.h"
 #import "TSColorSupport.h"
 #import "TSEncodingSupport.h"
@@ -77,11 +78,9 @@ tests = r'''
 // Keep the production initializer, window getter, loadWindow and appendText.
 // Suppress window ordering and keep frame autosave bookkeeping in memory.
 static NSUInteger backCount;
-static NSString *testFrameAutosaveName;
+static NSString *requestedFrameName;
 @implementation TSExperimentConsoleWindow (HeadlessOrdering)
-// Preserve the requested name for assertions without touching standard defaults.
-- (BOOL)setFrameAutosaveName:(NSString *)name { testFrameAutosaveName = [name copy]; return YES; }
-- (NSString *)frameAutosaveName { return testFrameAutosaveName ?: @""; }
+- (BOOL)setFrameAutosaveName:(NSString *)name { requestedFrameName = [name copy]; return NO; }
 - (void)makeKeyAndOrderFront:(id)sender { }
 - (void)orderFront:(id)sender { }
 - (void)orderBack:(id)sender { backCount++; }
@@ -99,7 +98,7 @@ static NSURL *directory(void) {
 }
 static BOOL exists(NSURL *d) { return [[NSFileManager defaultManager] fileExistsAtPath:d.path]; }
 int main(void) { @autoreleasepool {
-    [NSApplication sharedApplication];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     liteColors = @{@"ConsoleBackground":NSColor.whiteColor, @"ConsoleText":NSColor.blackColor};
     darkColors = @{@"ConsoleBackground":NSColor.blackColor, @"ConsoleText":NSColor.whiteColor, @"ConsoleAlpha":@[@0,@0,@0,@.85]};
     TSExperimentConsoleController *console = [TSExperimentConsoleController new];
@@ -107,10 +106,7 @@ int main(void) { @autoreleasepool {
     check(console.outputText != nil && console.commandField != nil && console.stopButton != nil, @"production controls exist");
     check(!console.commandField.enabled && !console.stopButton.enabled, @"idle console controls disabled");
     check(console.outputText.font.pointSize == 15, @"console font preference applied");
-    check([console.window.frameAutosaveName isEqualToString:@"ExperimentConsole"], @"separate frame autosave name");
-    // CFFIXED_USER_HOME alone does not isolate NSWindow frame autosaving on every macOS.
-    [console.window setFrameAutosaveName:@""];
-    check(console.window.frameAutosaveName.length == 0, @"frame autosaving disabled before resizing");
+    check([requestedFrameName isEqualToString:@"ExperimentConsole"] && console.window.frameAutosaveName.length == 0, @"separate frame autosave name");
     console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     [console updateConsoleColors:nil];
     [console appendText:@"initial output"];
@@ -201,8 +197,9 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-console-') as tmp:
     src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
     src.write_text(prefix + controller + tests)
-    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Sources'), str(src), str(root / 'Sources/TSExperimentJob.m'), '-o', str(exe)], check=True)
-    env = dict(os.environ, CFFIXED_USER_HOME=tmp)
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Sources'), str(src), str(root / 'Sources/TSExperimentJob.m'), '-o', str(exe)], check=True)
+    (Path(tmp)/'home'/'Library'/'Preferences').mkdir(parents=True)
+    env = dict(os.environ, HOME=str(Path(tmp)/'home'), CFFIXED_USER_HOME=str(Path(tmp)/'home'))
     if args.artifacts:
         args.artifacts.mkdir(parents=True, exist_ok=True)
         env["CONSOLE_ARTIFACTS"] = str(args.artifacts.resolve())

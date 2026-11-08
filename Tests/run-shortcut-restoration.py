@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Check default restoration without showing windows or changing the active layout/settings."""
 from pathlib import Path
+from shortcut_sources import production_source
 import subprocess, tempfile, sys
 root=Path(__file__).resolve().parents[1]
-production=(root/'Sources/TSKeyboardShortcuts.m').read_text()
+production=production_source(root)
 paths=sorted((root/'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
 assert len(paths)==36
 with tempfile.TemporaryDirectory(prefix='texshop-shortcut-restore-') as td:

@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 # added by Terada: Independently test PDFView drawing, CPU tile coordinates, and vector printing.
+"""Default/--headless: isolated CPU checks. --screen [PDF]: explicitly displays a window."""
+import argparse
+parser=argparse.ArgumentParser(description=__doc__)
+modes=parser.add_mutually_exclusive_group()
+modes.add_argument('--headless',action='store_true')
+modes.add_argument('--screen',action='store_true')
+parser.add_argument('pdf',nargs='?')
+args=parser.parse_args()
+if args.pdf and not args.screen: parser.error('a PDF path requires --screen; this displays a window')
 from pathlib import Path
 import subprocess, tempfile, sys, os
 root=Path(__file__).resolve().parents[1]
@@ -8,6 +17,7 @@ start=s.index('- (void)drawPage:(PDFPage *)page toContext:')
 method=s[start:s.index('\n}',start)+2]
 program=r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <PDFKit/PDFKit.h>
 #import "TSPDFScreenRendering.h"
 static NSUInteger draws=0;
@@ -34,7 +44,8 @@ static NSData *sample(void){
  CGPDFContextBeginPage(c,NULL);shape(c);CGPDFContextEndPage(c);CGPDFContextClose(c);CGContextRelease(c);CGDataConsumerRelease(consumer);return d;
 }
 int main(int argc,char**argv){@autoreleasepool{
- [NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
+ BOOL screen = argc>1 && strcmp(argv[1],"--screen")==0;
+ if(!screen) TSInstallAppKitIsolation();[NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
  // Keep original vector drawing for non-screen contexts.
  SafeView *printView=[SafeView new];PDFDocument*sampleDoc=[[PDFDocument alloc]initWithData:sample()];
  NSMutableData*out=[NSMutableData data];CGDataConsumerRef consumer=CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)out);CGRect box=CGRectMake(0,0,400,600);CGContextRef pdf=CGPDFContextCreate(consumer,&box,NULL);
@@ -48,7 +59,8 @@ int main(int argc,char**argv){@autoreleasepool{
  shape(a);TSDrawPDFScreenTiles(b,^(CGContextRef c){shape(c);});
  size_t bytes=CGBitmapContextGetBytesPerRow(a)*1400;check(memcmp(CGBitmapContextGetData(a),CGBitmapContextGetData(b),bytes)==0,@"Matching pixels for scale, rotation, clipping, and tile boundaries");CGContextRelease(a);CGContextRelease(b);
  }
- PDFDocument*d=argc>1?[[PDFDocument alloc]initWithURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:argv[1]]]]:sampleDoc;check(d.pageCount>0,@"Input PDF");
+ if (!screen) { puts("PASS: headless tile pixels, rotation, clipping, vector printing; screen/Metal check requires a displayed window"); return 0; }
+ PDFDocument*d=argc>2?[[PDFDocument alloc]initWithURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:argv[2]]]]:sampleDoc;check(d.pageCount>0,@"Input PDF");
  NSWindow*w=[[NSWindow alloc]initWithContentRect:NSMakeRect(50,50,800,950) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
  PDFView*v=[[SafeView alloc]initWithFrame:w.contentView.bounds];w.contentView=v;v.document=d;v.displayMode=kPDFDisplaySinglePage;v.scaleFactor=1.5;[w orderFront:nil];
  for(NSUInteger p=0;p<d.pageCount;p++){[v goToPage:[d pageAtIndex:p]];[v display];[[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.15]];}
@@ -57,5 +69,5 @@ int main(int argc,char**argv){@autoreleasepool{
 '''.replace('METHOD',method)
 with tempfile.TemporaryDirectory(prefix='texshop-screen-render-') as folder:
     p=Path(folder);(p/'test.m').write_text(program)
-    subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),'-o',str(p/'test')],check=True)
+    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),'-o',str(p/'test')],check=True)
     subprocess.run([str(p/'test'),*sys.argv[1:]],env={**os.environ,'MTL_DEBUG_LAYER':'1'},check=True)

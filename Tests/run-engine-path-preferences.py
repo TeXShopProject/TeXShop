@@ -7,11 +7,11 @@ import xml.etree.ElementTree as ET
 
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/TSPreferences.m').read_text(encoding='latin1')
-methods = source[source.index('- (void)cancelEnginePathDiscovery'):source.index('- (IBAction)tetexBinPathChanged:sender')]
+methods = source[source.index('- (void)cancelEnginePathDiscovery'):source.index('- (IBAction)tetexBinPathChanged:')]
 # Exercise the production entry guards without loading the entire Preferences nib.
-entry = source[source.index('- (IBAction)showPreferences:sender'):]
-entry = entry[:entry.index('\tif (_prefsWindow == nil)')]
-methods += '\n' + entry + '[_prefsWindow makeKeyAndOrderFront:sender];\n}\n'
+entry = source[source.index('- (IBAction)showPreferences:'):]
+entry = entry[:entry.index('    if (![self prepareSettingsWindow])')]
+methods += '\n' + entry + '_tetexBinPathField.stringValue = [SUD stringForKey:TetexBinPath]; _gsBinPathField.stringValue = [SUD stringForKey:GSBinPath]; [_prefsWindow makeKeyAndOrderFront:sender];\n}\n'
 for nib in (root / 'Resources/Interfaces').glob('*.lproj/Preferences.nib/designable.nib'):
     actions = ET.parse(nib).findall('.//button/connections/action[@selector="discoverEnginePaths:"]')
     assert len(actions) == 1 and actions[0].get('target') == '-2', nib

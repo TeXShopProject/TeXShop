@@ -1,0 +1,539 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="25079.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+  <dependencies>
+    <deployment version="101000" identifier="macosx" />
+    <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="25079.1" />
+    <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0" />
+  </dependencies>
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="TSPrefEditorController">
+      <connections>
+        <outlet property="FullwidthSpaceCharacterKindPopup" destination="956" id="1007" />
+        <outlet property="NewLineCharacterKindPopup" destination="955" id="1008" />
+        <outlet property="SpaceCharacterKindPopup" destination="957" id="1006" />
+        <outlet property="TabCharacterKindPopup" destination="954" id="1009" />
+        <outlet property="alwaysHighlightButton" destination="1035" id="1038" />
+        <outlet property="autoCompleteButton" destination="842" id="853" />
+        <outlet property="autoSpellCorrectButton" destination="PhR-Vr-jce" id="QHr-l4-BUz" />
+        <outlet property="beepButton" destination="938" id="1010" />
+        <outlet property="bibDeskCompleteButton" destination="843" id="855" />
+        <outlet property="editorAddBracketsButton" destination="CPb-hk-Gqb" id="Y0K-n7-XDJ" />
+        <outlet property="flashBackgroundButton" destination="937" id="1011" />
+        <outlet property="highlightContentButton" destination="939" id="1012" />
+        <outlet property="lineNumberButton" destination="845" id="859" />
+        <outlet property="midEastButton" destination="846" id="862" />
+        <outlet property="parensMatchButton" destination="840" id="849" />
+        <outlet property="selectActivateButton" destination="844" id="857" />
+        <outlet property="showFullwidthSpaceCharacterButton" destination="960" id="1003" />
+        <outlet property="showIndicatorForMoveButton" destination="936" id="1013" />
+        <outlet property="showInvisibleCharactersButton" destination="1043" id="1045" />
+        <outlet property="showNewLineCharacterButton" destination="959" id="1004" />
+        <outlet property="showSpaceCharacterButton" destination="961" id="1002" />
+        <outlet property="showTabCharacterButton" destination="958" id="1005" />
+        <outlet property="spellCheckButton" destination="841" id="851" />
+        <outlet property="syntaxColorButton" destination="839" id="847" />
+        <outlet property="makeatletterButton" destination="cgA-o7-Bdw" id="gAl-rH-u7H" />
+        <outlet property="expl3SyntaxColorButton" destination="f1k-jx-ley" id="Kwn-ll-x0H" />
+        <outlet property="syntaxColorLineButton" destination="3gb-2l-vK7" id="Tew-l7-r5A" />
+        <outlet property="tabIndentButton" destination="9oZ-Jg-MfD" id="07w-LG-QB8" />
+        <outlet property="tagMenuButton" destination="XoX-gZ-pO3" id="g11-t0-Ho4" />
+        <outlet property="wrapMatrix" destination="TUV-ZL-JgG" id="gT6-a3-Viq" />
+        <outlet property="firstParagraphIndentField" destination="G3h-FQ-M95" id="KzT-fp-OyH" />
+        <outlet property="interlineSpacingField" destination="F9P-G9-BX2" id="3G9-wx-9np" />
+        <outlet property="remainingParagraphIndentField" destination="JeQ-iL-Koo" id="Xhr-bp-PbT" />
+        <outlet property="tabIndentField" destination="gri-fr-HQh" id="aoZ-Wq-ofs" />
+        <outlet property="view" destination="gq7-pV-IeW" id="settings-root-view" />
+      </connections>
+    </customObject>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder" />
+    <customObject id="-3" userLabel="Application" customClass="NSObject" />
+    <customView key="view" id="gq7-pV-IeW" identifier="settings.gq7-pV-IeW">
+      <rect key="frame" x="10" y="33" width="652" height="623" />
+      <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+      <subviews>
+        <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Parens Matching Settings" translatesAutoresizingMaskIntoConstraints="NO" id="935" identifier="settings.935">
+          <rect key="frame" x="318" y="473" width="235" height="138" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="xo6-RL-dNk" identifier="settings.xo6-RL-dNk">
+            <rect key="frame" x="0.0" y="0.0" width="235" height="126" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="939" identifier="settings.939">
+                <rect key="frame" x="17" y="99" width="220" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Highlight Enclosed Characters" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="942">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="highlightChanged:" target="-2" id="1017" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="938" identifier="settings.938">
+                <rect key="frame" x="17" y="33" width="180" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Beep for Isolated Parens" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="943">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="highlightChanged:" target="-2" id="1018" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="937" identifier="settings.937">
+                <rect key="frame" x="17" y="11" width="261" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Flash Back for Isolated Parens" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="944">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="highlightChanged:" target="-2" id="1019" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="936" identifier="settings.936">
+                <rect key="frame" x="17" y="77" width="182" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Show Indicator in Moving" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="945">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="highlightChanged:" target="-2" id="1016" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1035" identifier="settings.1035">
+                <rect key="frame" x="17" y="53" width="182" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Blink Highlight" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1036">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="highlightChanged:" target="-2" id="1037" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Editor" translatesAutoresizingMaskIntoConstraints="NO" id="63" identifier="settings.63">
+          <rect key="frame" x="46" y="281" width="262" height="330" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="c39-PI-VV1" identifier="settings.c39-PI-VV1">
+            <rect key="frame" x="0.0" y="0.0" width="262" height="318" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" mode="highlight" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="621" identifier="settings.621">
+                <rect key="frame" x="26" y="9" width="252" height="258" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="252" height="18" />
+                <size key="intercellSpacing" width="0.0" height="2" />
+                <buttonCell key="prototype" type="check" title="Switch" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="915">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="check" title="Syntax Coloring" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="839">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="syntaxColorPressed:" target="-2" id="848" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="@ as Part of Command Names" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="cgA-o7-Bdw">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="makeatletterChanged:" target="-2" id="5aH-Pk-2Or" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Color expl3 Code by Default" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="f1k-jx-ley">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="expl3SyntaxColorPressed:" target="-2" id="M7q-Sq-4Zm" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Parens Matching" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="1" inset="2" id="840">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="parensMatchPressed:" target="-2" id="850" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Check Spelling" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="2" inset="2" id="841">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="spellCheckPressed:" target="-2" id="852" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Key Bindings" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="3" inset="2" id="842">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="autoCompletePressed:" target="-2" id="854" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="BibDesk Completions" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="4" inset="2" id="843">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="bibDeskCompletePressed:" target="-2" id="856" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Select on Activate" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="5" inset="2" id="844">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="selectActivatePressed:" target="-2" id="858" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Line Numbers" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="6" inset="2" id="845">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="lineNumberButtonPressed:" target="-2" id="860" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Arabic, Hebrew, Persian" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="7" inset="2" id="846">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="midEastButtonPressed:" target="-2" id="861" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Tags Menu in Menubar" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="XoX-gZ-pO3">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="tagMenuButtonPressed:" target="-2" id="bnn-dH-ubm" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Correct Spelling" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="PhR-Vr-jce">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="spellCorrectPressed:" target="-2" id="pvj-zk-2Vc" />
+                      </connections>
+                    </buttonCell>
+                    <buttonCell type="check" title="Editor Can Add Brackets" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="CPb-hk-Gqb">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                      <connections>
+                        <action selector="editorAddBracketsPressed:" target="-2" id="xIE-Va-r6e" />
+                      </connections>
+                    </buttonCell>
+                  </column>
+                </cells>
+              </matrix>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9oZ-Jg-MfD" identifier="settings.9oZ-Jg-MfD">
+                <rect key="frame" x="26" y="291" width="203" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Use Tabs for Indent Menu" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="pdc-GP-Cbb">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="useTabPressed:" target="-2" id="rSV-n2-rNq" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3gb-2l-vK7" identifier="settings.3gb-2l-vK7">
+                <rect key="frame" x="26" y="271" width="203" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Highlight Current Line" bezelStyle="regularSquare" imagePosition="left" inset="2" id="87S-PS-ZQu">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="syntaxColorLinePressed:" target="-2" id="kqj-Qb-Qw6" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box autoresizesSubviews="NO" fixedFrame="YES" borderType="line" title="Show Invisible Characters" translatesAutoresizingMaskIntoConstraints="NO" id="933" identifier="settings.933">
+          <rect key="frame" x="52" y="111" width="256" height="158" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="1BU-WH-vph" identifier="settings.1BU-WH-vph">
+            <rect key="frame" x="0.0" y="0.0" width="256" height="146" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="961" identifier="settings.961">
+                <rect key="frame" x="16" y="119" width="141" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Space" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="962">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="invisibleCharacterChanged:" target="-2" id="994" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="960" identifier="settings.960">
+                <rect key="frame" x="16" y="93" width="148" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Japanese Space" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="963">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="invisibleCharacterChanged:" target="-2" id="995" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="959" identifier="settings.959">
+                <rect key="frame" x="16" y="67" width="139" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Newline" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="964">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="invisibleCharacterChanged:" target="-2" id="996" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="958" identifier="settings.958">
+                <rect key="frame" x="16" y="41" width="111" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="Tab" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="965">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="invisibleCharacterChanged:" target="-2" id="997" />
+                </connections>
+              </button>
+              <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="957" identifier="settings.957">
+                <rect key="frame" x="171" y="115" width="74" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <popUpButtonCell key="cell" type="push" title="␣" bezelStyle="rounded" alignment="center" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="inv-957-item-0" id="inv-957-cell">
+                  <behavior key="behavior" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="system" size="15" />
+                  <menu key="menu" title="" id="inv-957-menu">
+                    <items>
+                      <menuItem title="␣" tag="0" id="inv-957-item-0" />
+                      <menuItem title="·" tag="1" id="inv-957-item-1" />
+                    </items>
+                  </menu>
+                </popUpButtonCell>
+                <connections>
+                  <action selector="invisibleCharacterChanged:" target="-2" id="inv-957-action" />
+                </connections>
+              </popUpButton>
+              <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="956" identifier="settings.956">
+                <rect key="frame" x="171" y="89" width="74" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <popUpButtonCell key="cell" type="push" title="□" bezelStyle="rounded" alignment="center" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="inv-956-item-0" id="inv-956-cell">
+                  <behavior key="behavior" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="system" size="15" />
+                  <menu key="menu" title="" id="inv-956-menu">
+                    <items>
+                      <menuItem title="□" tag="0" id="inv-956-item-0" />
+                      <menuItem title="■" tag="1" id="inv-956-item-1" />
+                    </items>
+                  </menu>
+                </popUpButtonCell>
+                <connections>
+                  <action selector="invisibleCharacterChanged:" target="-2" id="inv-956-action" />
+                </connections>
+              </popUpButton>
+              <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="955" identifier="settings.955">
+                <rect key="frame" x="171" y="63" width="74" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <popUpButtonCell key="cell" type="push" title="↵" bezelStyle="rounded" alignment="center" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="inv-955-item-0" id="inv-955-cell">
+                  <behavior key="behavior" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="system" size="15" />
+                  <menu key="menu" title="" id="inv-955-menu">
+                    <items>
+                      <menuItem title="↵" tag="0" id="inv-955-item-0" />
+                      <menuItem title="¶" tag="1" id="inv-955-item-1" />
+                      <menuItem title="↩" tag="2" id="inv-955-item-2" />
+                      <menuItem title="⏎" tag="3" id="inv-955-item-3" />
+                    </items>
+                  </menu>
+                </popUpButtonCell>
+                <connections>
+                  <action selector="invisibleCharacterChanged:" target="-2" id="inv-955-action" />
+                </connections>
+              </popUpButton>
+              <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="954" identifier="settings.954">
+                <rect key="frame" x="171" y="37" width="74" height="26" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <popUpButtonCell key="cell" type="push" title="‣" bezelStyle="rounded" alignment="center" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="inv-954-item-0" id="inv-954-cell">
+                  <behavior key="behavior" lightByBackground="YES" lightByGray="YES" />
+                  <font key="font" metaFont="system" size="15" />
+                  <menu key="menu" title="" id="inv-954-menu">
+                    <items>
+                      <menuItem title="‣" tag="0" id="inv-954-item-0" />
+                      <menuItem title="▹" tag="1" id="inv-954-item-1" />
+                      <menuItem title="⇥" tag="2" id="inv-954-item-2" />
+                    </items>
+                  </menu>
+                </popUpButtonCell>
+                <connections>
+                  <action selector="invisibleCharacterChanged:" target="-2" id="inv-954-action" />
+                </connections>
+              </popUpButton>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1043" identifier="settings.1043">
+                <rect key="frame" x="16" y="11" width="117" height="18" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <buttonCell key="cell" type="check" title="On by Default" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="1044">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="showInvisibleCharacterButtonPressed:" target="-2" id="1046" />
+                </connections>
+              </button>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Wrap Lines" translatesAutoresizingMaskIntoConstraints="NO" id="4a3-VM-Tgq" identifier="settings.4a3-VM-Tgq">
+          <rect key="frame" x="318" y="371" width="235" height="90" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="YHA-fP-2KS" identifier="settings.YHA-fP-2KS">
+            <rect key="frame" x="0.0" y="0.0" width="235" height="78" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TUV-ZL-JgG" identifier="settings.TUV-ZL-JgG">
+                <rect key="frame" x="29" y="9" width="139" height="58" />
+                <autoresizingMask key="autoresizingMask" />
+                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
+                <size key="cellSize" width="139" height="18" />
+                <size key="intercellSpacing" width="4" height="2" />
+                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="1LL-Ls-rVW">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <cells>
+                  <column>
+                    <buttonCell type="radio" title="None" imagePosition="left" alignment="left" inset="2" id="EgL-0e-rdg">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="by Word" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="LJw-Jj-VBR">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                    <buttonCell type="radio" title="by Character" imagePosition="left" alignment="left" tag="2" inset="2" id="UXo-9g-NNW">
+                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                      <font key="font" metaFont="system" />
+                    </buttonCell>
+                  </column>
+                </cells>
+                <connections>
+                  <action selector="wrapPanelChanged:" target="-2" id="GJb-la-fYt" />
+                </connections>
+              </matrix>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+        <box fixedFrame="YES" title="Style" translatesAutoresizingMaskIntoConstraints="NO" id="Gj7-Yx-1Hv" identifier="settings.Gj7-Yx-1Hv">
+          <rect key="frame" x="318" y="191" width="235" height="168" />
+          <autoresizingMask key="autoresizingMask" />
+          <view key="contentView" id="WI3-rY-4zR" identifier="settings.WI3-rY-4zR">
+            <rect key="frame" x="0.0" y="0.0" width="235" height="156" />
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+            <subviews>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JeQ-iL-Koo" identifier="settings.JeQ-iL-Koo">
+                <rect key="frame" x="140" y="51" width="69" height="22" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="wjw-cI-2Pv">
+                  <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="Hg9-tH-W6t" />
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="remainingParagraphIndentPressed:" target="-2" id="KOu-eg-xMc" />
+                </connections>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F9P-G9-BX2" identifier="settings.F9P-G9-BX2">
+                <rect key="frame" x="140" y="15" width="69" height="22" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="rdP-2R-ukS">
+                  <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="pN6-ag-Twu" />
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="interlineSpacingPressed:" target="-2" id="CVQ-b3-P3Z" />
+                </connections>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hvY-fo-Je9" identifier="settings.hvY-fo-Je9">
+                <rect key="frame" x="15" y="81" width="116" height="34" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" title="First Line Paragraph Indent:" id="LYC-Qf-9zP">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LSg-IX-MdN" identifier="settings.LSg-IX-MdN">
+                <rect key="frame" x="15" y="42" width="116" height="34" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" title="Remaining Lines Paragraph Indent:" id="YsC-bl-8G6">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="atO-Td-bwy" identifier="settings.atO-Td-bwy">
+                <rect key="frame" x="15" y="0" width="116" height="26" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" title="Interline Spacing:" id="674-8W-hQ6">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G3h-FQ-M95" identifier="settings.G3h-FQ-M95">
+                <rect key="frame" x="140" y="87" width="69" height="22" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="f4P-u2-9Fy">
+                  <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="MLr-yN-mCU" />
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="firstParagraphIndentPressed:" target="-2" id="MPo-Te-rq8" />
+                </connections>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9yz-Dw-vpr" identifier="settings.9yz-Dw-vpr">
+                <rect key="frame" x="15" y="115" width="90" height="21" />
+                <autoresizingMask key="autoresizingMask" />
+                <textFieldCell key="cell" selectable="YES" title="Tab Size:" id="ojN-Oi-8cl">
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+              </textField>
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gri-fr-HQh" identifier="settings.gri-fr-HQh">
+                <rect key="frame" x="140" y="123" width="69" height="22" />
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="lp4-mJ-sZL">
+                  <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="Q5n-yn-SJU" />
+                  <font key="font" metaFont="system" />
+                  <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog" />
+                  <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                </textFieldCell>
+                <connections>
+                  <action selector="tabIndentPressed:" target="-2" id="W01-wK-XwI" />
+                </connections>
+              </textField>
+            </subviews>
+          </view>
+          <font key="titleFont" metaFont="system" />
+        </box>
+      </subviews>
+    </customView>
+  </objects>
+</document>

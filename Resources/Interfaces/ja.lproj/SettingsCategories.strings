@@ -1,0 +1,16 @@
+"source" = "書類";
+"editor" = "エディタ";
+"preview" = "プレビュー";
+"console" = "コンソール";
+"typesetting" = "タイプセット";
+"engines" = "内部設定";
+"misc-1" = "詳細1";
+"misc-2" = "詳細2";
+"themes" = "テーマ";
+
+"general" = "一般";
+"documents" = "書類と保存";
+"spelling" = "スペルチェック";
+"appearance" = "外観";
+"keyboard" = "キーボード";
+"updates" = "アップデート";

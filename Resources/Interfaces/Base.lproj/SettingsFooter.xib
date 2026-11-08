@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="25079.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+  <dependencies>
+    <deployment version="101000" identifier="macosx" />
+    <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="25079.1" />
+    <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0" />
+  </dependencies>
+  <objects>
+    <customObject id="-2" userLabel="File's Owner" customClass="TSPrefFooterController">
+      <connections>
+        <outlet property="view" destination="settings-footer" id="settings-root-view" />
+      </connections>
+    </customObject>
+    <customObject id="-1" userLabel="First Responder" customClass="FirstResponder" />
+    <customObject id="-3" userLabel="Application" customClass="NSObject" />
+    <customView id="settings-footer" key="view" identifier="settings.settings-footer">
+      <rect key="frame" x="0" y="0" width="700" height="60" />
+      <subviews>
+        <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1089" identifier="settings.1089">
+          <rect key="frame" x="19" y="22" width="161" height="26" />
+          <autoresizingMask key="autoresizingMask" />
+          <popUpButtonCell key="cell" type="push" title="Set Default Values" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="1101" id="1090">
+            <behavior key="behavior" lightByBackground="YES" lightByGray="YES" />
+            <font key="font" metaFont="message" />
+            <menu key="menu" title="OtherViews" id="1091">
+              <items>
+                <menuItem title="Set Default Values" hidden="YES" id="1101" />
+                <menuItem title="Regular" tag="1" id="1100">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1102" />
+                  </connections>
+                </menuItem>
+                <menuItem title="upTeX (ptex2pdf)" tag="2" id="1099">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1104" />
+                  </connections>
+                </menuItem>
+                <menuItem title="upTeX (latexmk)" tag="3" id="1098">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1105" />
+                  </connections>
+                </menuItem>
+                <menuItem title="upTeX (shell script)" tag="4" id="1097">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1106" />
+                  </connections>
+                </menuItem>
+                <menuItem title="pTeX (ptex2pdf)" tag="5" id="1096">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1112" />
+                  </connections>
+                </menuItem>
+                <menuItem title="pTeX (latexmk)" tag="6" id="1095">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1108" />
+                  </connections>
+                </menuItem>
+                <menuItem title="pTeX (shell script)" tag="7" id="1094">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1109" />
+                  </connections>
+                </menuItem>
+                <menuItem title="Legacy pTeX (Shift JIS) " tag="8" id="1093">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1110" />
+                  </connections>
+                </menuItem>
+                <menuItem title="Legacy pTeX (EUC)" tag="9" id="1092">
+                  <connections>
+                    <action selector="setDefaults:" target="-2" id="1111" />
+                  </connections>
+                </menuItem>
+              </items>
+            </menu>
+          </popUpButtonCell>
+        </popUpButton>
+        <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LIV-SV-NOT" identifier="settings.LIV-SV-NOT">
+          <rect key="frame" x="340" y="24" width="330" height="22" />
+          <autoresizingMask key="autoresizingMask" />
+          <textFieldCell key="cell" title="Changes are saved automatically." id="LIV-SV-CEL">
+            <font key="font" metaFont="system" size="11" />
+            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
+          </textFieldCell>
+        </textField>
+      </subviews>
+    </customView>
+  </objects>
+</document>

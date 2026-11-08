@@ -30,6 +30,7 @@ if mutation == 'unlocked':
     assert old in methods; methods = methods.replace(old, '')
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <objc/runtime.h>
 #define XMLINDEX 42
 #define EncodingMenuInSaveDialogKey @"EncodingMenuInSaveDialog"
@@ -104,7 +105,7 @@ METHODS
 @end
 static void check(BOOL v, NSString *m) { if (!v) { fprintf(stderr, "FAIL %s\n", m.UTF8String); exit(1); } }
 int main(int argc, char **argv) { @autoreleasepool {
-    [NSApplication sharedApplication];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     [NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
     // Never show a real open or save panel.
     for (Class c in @[[NSSavePanel class], [NSOpenPanel class]]) {
@@ -182,6 +183,6 @@ int main(int argc, char **argv) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-save-encoding-') as folder:
     p = Path(folder); (p/'test.m').write_text(program, encoding='latin1')
     out = p/'out'; out.mkdir()
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-Wno-deprecated-declarations', '-framework', 'Cocoa',
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-fobjc-arc', '-Wno-deprecated-declarations', '-framework', 'Cocoa',
                     str(p/'test.m'), '-o', str(p/'test')], check=True)
     subprocess.run([str(p/'test'), str(out)], check=True, timeout=30)

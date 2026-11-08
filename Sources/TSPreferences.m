@@ -22,12 +22,20 @@
  * Created by dirk on Thu Dec 07 2000.
  *
  */
+#import "TSShortcutPaneController.h"
+#import "TSPreferences+Panes.h"
+#import "TSPrefFooterController.h"
+
 
 #import "UseMitsu.h"
 #import "UseSparkle.h"
 
-#import "TSPreferences.h"
+#import "TSPreferences+LiveSettings.h"
+#import "TSSettingsWindowController.h"
 #import "TSEnginePathDiscovery.h"
+#import "TSPreferenceProfile.h"
+#import "TSPreferenceInput.h"
+#import "TSColorSupport.h"
 #import "TSInvisibleCharacters.h"
 #import "TSDockIconController.h"
 #import "TSKeyboardShortcuts.h"
@@ -35,6 +43,8 @@
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
+#import "TSAutoCompletionListEditor.h"
+#import "HelpDocuments.h"
 #import "TSPreviewWindow.h"
 #import "TSAppDelegate.h" // mitsu 1.29 (O)
 #import "TSDocument.h"
@@ -54,14 +64,29 @@ static NSString *TSPreferencesDomainName(void)
 }
 
 
-@interface TSPreferences ()
+typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
+    TSSettingsFontNone, TSSettingsFontDocument, TSSettingsFontConsole
+};
+
+@interface TSPreferences () <NSWindowDelegate, NSTextFieldDelegate, TSSettingsWindowDelegate>
+@property (strong) TSSettingsWindowController *settingsController;
+@property (copy) NSArray<TSPrefPaneController *> *preferencePanes;
+@property TSSettingsFontDestination fontEditingContext;
+@property (strong) NSMapTable<NSControl *, TSPreferenceInput *> *inputRules;
+@property (weak) NSControl *editingField;
+@property (copy) NSString *editingOriginalText;
+@property BOOL inputErrorPresented;
+@property BOOL ownsFontPanel;
+@property BOOL endingPreferences;
 @property NSUInteger enginePathSearchGeneration;
 @property BOOL initialEnginePathSearchPending;
 @property (weak) NSButton *enginePathSearchButton;
 - (void)searchEnginePathsForInitialSetup:(BOOL)initial sender:(NSButton *)sender;
+- (void)refreshRuntimePreferences;
 @end
 
 @implementation TSPreferences
+@synthesize legacySpellCheckButton = _legacySpellCheckButton, keyBindingEditor = _keyBindingEditor, settingsHelpDocuments = _settingsHelpDocuments;
 /*"
 Format of the original prefs file:
 
@@ -98,7 +123,6 @@ static id _sharedInstance = nil;
 		return _sharedInstance;
 	}
 	_sharedInstance = self;
-	_undoManager = [[NSUndoManager alloc] init];
 	// setup the default font here so it's defined when we run for the first time.
 	self.documentFont = [NSFont userFontOfSize:12.0];
     self.fontAttributes = nil;
@@ -112,13 +136,7 @@ static id _sharedInstance = nil;
 	return self;
 }
 
-/*
-- (void)dealloc
-{
-	[_undoManager release];
-	[super dealloc];
-}
-*/
+
 
 //==============================================================================
 // target/action methods
@@ -127,80 +145,67 @@ static id _sharedInstance = nil;
 
 Loads the .nib file if necessary, fills all the controls with the values from the user defaults and makes the window visible.
 "*/
-- (IBAction)showPreferences:sender
+- (IBAction)showPreferences:(id)sender
 {
-    if (_prefsWindow.visible) {
-        [_prefsWindow makeKeyAndOrderFront:sender];
-        return;
-    }
+    if ((_prefsWindow.visible || _prefsWindow.miniaturized)) { [_prefsWindow makeKeyAndOrderFront:sender]; return; }
     if (!self.initialEnginePathSearchPending) [self cancelEnginePathDiscovery];
-	if (_prefsWindow == nil) {
-		// we need to load the nib
-		if ([NSBundle loadNibNamed:@"Preferences" owner:self] == NO) {
-			NSRunAlertPanel(@"Error", @"Could not load Preferences.nib", @"shit happens", nil, nil);
-		}
-
-		// fill in all the values here since the window will be brought up for the first time
-		/* koch: I moved this command two lines below, so it will ALWAYS be called
-		when showing preferences: [self updateControlsFromUserDefaults:SUD]; */
-	}
-
-	[SUD synchronize];
-
-    [[TSDockIconController sharedController] installInPreferences:_tabView];
-    [[TSDockIconController sharedController] beginEditing];
+    if (![self prepareSettingsWindow]) return;
+    self.endingPreferences = NO;
+    self.inputErrorPresented = NO;
+    _prefsWindow.delegate = self;
+    [self configurePreferenceInputs];
+    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController viewForCategoryIdentifier:TSSettingsCategoryAppearance]];
+    [[TSDockIconController sharedController] restoreSavedIcon];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
-    
-    //_sourceBackgroundColorWell.enabled = NO;
-    //_sourceBackgroundColorWell.highlighted = NO;
-    //_sourceTextColorWell.enabled = NO;
-    
-	/* the next command causes windows to remember their font in case it is changed, and then
-	the change is cancelled */
-	[[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontRememberNotification object:self];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MagnificationRememberNotification object:self];
-	fontTouched = NO;
-    xmlTagsTouched = NO;
-	consoleFontTouched = NO;
-	consoleBackgroundColorTouched = NO;
-	consoleForegroundColorTouched = NO;
-	sourceBackgroundColorTouched = NO;
-    sourceTextColorTouched = NO;
-	previewBackgroundColorTouched = NO;
-	externalEditorTouched = NO;
-	syntaxColorTouched = NO;
-    syntaxColorLineTouched = NO;
-	oldSyntaxColor = [SUD boolForKey:SyntaxColoringEnabledKey];
-    oldSyntaxLineColor = [SUD boolForKey:SyntaxColorEntryLineKey];
-	autoCompleteTouched = NO;
-	bibDeskCompleteTouched = NO;
-    HtmlHomeTouched = NO;
-	oldAutoComplete = [SUD boolForKey:AutoCompleteEnabledKey];
-	oldBibDeskComplete = [SUD boolForKey:BibDeskCompletionKey];
-    magnificationTouched = NO;
-	// added by mitsu --(G) TSEncodingSupport
-	encodingTouched = NO;
-	commandCompletionCharTouched = NO;
-	highlightTouched = NO; // added by Terada
-	invisibleCharacterTouched = NO; // added by Terada
-	kpsetoolTouched = NO; // added by Terada
-	bibTeXengineTouched = NO; // added by Terada
-	makeatletterTouched = NO; // added by Terada
-    sparkleTouched = NO;
-#ifdef USESPARKLE
-    // Added by Terada: snapshot both updater settings once for Cancel.
-    oldSparkleAutomaticUpdate = [TSSparkleController sharedUpdater].automaticallyChecksForUpdates;
-    oldSparkleInterval = [TSSparkleController sharedUpdater].updateCheckInterval;
-#endif
-	// end addition
-	// prepare undo manager: forget all the old undo information and begin a new group.
-	[_undoManager removeAllActions];
-	[_undoManager beginUndoGrouping];
+    [self.settingsController beginSession];
+    [_prefsWindow makeKeyAndOrderFront:self];
+}
 
-	[_prefsWindow makeKeyAndOrderFront:self];
-    
+- (void)showKeyboardSettings:(id)sender
+{
+    [self showPreferences:sender];
+    if (self.settingsController == nil) { return; }
+    [self.settingsController selectCategoryIdentifier:TSSettingsCategoryKeyboard];
+}
 
+- (BOOL)prepareSettingsWindow
+{
+    if (self.settingsController != nil) return YES;
+    self.preferencePanes = [self makeSettingsPanes];
+    TSSettingsWindowController *controller = [[TSSettingsWindowController alloc] initWithDefaults:SUD];
+    NSWindow *newWindow = controller.window;
+    if (newWindow == nil) return NO;
+    controller.settingsDelegate = self;
+    NSDictionary<TSSettingsCategoryID, NSViewController *> *panes = [self classifySettingsPanes:self.preferencePanes];
+    NSView *keyboardOptions = panes[TSSettingsCategoryKeyboard].view;
+    controller.commandNamesProvider = ^NSArray<NSString *> * {
+        return [[TSKeyboardShortcuts sharedController].store settingsSearchCommandNames] ?: @[];
+    };
+    controller.keyboardPaneProvider = ^NSViewController<TSSettingsKeyboardPane> * {
+        TSShortcutPaneController *keyboard = [[TSShortcutPaneController alloc] initWithShortcuts:[TSKeyboardShortcuts sharedController]];
+        keyboard.settingsHeader = keyboardOptions;
+        return keyboard;
+    };
+    NSView *footer = nil;
+    for (TSPrefPaneController *pane in self.preferencePanes) {
+        if ([pane isKindOfClass:TSPrefFooterController.class]) { footer = pane.view; }
+    }
+    if (footer == nil) { return NO; }
+    [controller hostPaneControllers:panes footer:footer];
+    _prefsWindow = newWindow;
+    self.settingsController = controller;
+    return YES;
+}
+- (BOOL)settingsMayChangeCategory
+{
+    if (![self finishPreferenceEditing:YES]) return NO;
+    [self releasePreferencePanels];
+    return YES;
+}
+- (void)settingsChangeFont:(NSFontManager *)sender
+{
+    [self changeFont:sender];
 }
 
 //==============================================================================
@@ -212,110 +217,97 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 "*/
 
 //-----------------------------------
-- (void)undoDefaultPrefs:(NSDictionary *)oldDefaults;
-//-----------------------------------
+
+
+
+- (IBAction)setDefaults:(NSMenuItem *)sender
 {
-    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
-    BOOL oldMakeatletter = [SUD boolForKey:MakeatletterEnabledKey];
-	[SUD setPersistentDomain:oldDefaults forName:TSPreferencesDomainName()];
-	[SUD synchronize];
-	[self updateControlsFromUserDefaults:SUD];
-    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
-        [TSSpellSupport preferencesDidChange];
-    // Open documents color commands again when @ is no longer, or now, part of their names.
-    if (oldMakeatletter != [SUD boolForKey:MakeatletterEnabledKey])
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object:self];
-    
-    // KOCH
-    // Here is the spot where we need to redraw the document and console with the remembered fonts
-    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontChangedNotification object:self];
-    [[NSNotificationCenter defaultCenter] postNotificationName:ConsoleFontChangedNotification object:self];
+    if (![self finishPreferenceEditing:YES]) return;
+    NSArray<NSString *> *names = @[@"FactoryDefaults", @"Defaults_upTeX_ptex2pdf", @"Defaults_upTeX_latexmk",
+        @"Defaults_upTeX_script", @"Defaults_pTeX_ptex2pdf", @"Defaults_pTeX_latexmk", @"Defaults_pTeX_script",
+        @"Defaults_pTeX_sjis", @"Defaults_pTeX_euc"];
+    NSInteger index = sender.tag - 1;
+    if (index < 0 || (NSUInteger)index >= names.count) return;
+    NSURL *url = [NSBundle.mainBundle URLForResource:names[index] withExtension:@"plist"];
+    if (url == nil) return;
+    NSDictionary<NSString *, id> *profile = [NSDictionary dictionaryWithContentsOfURL:url];
+    NSFont *font = [NSFont userFontOfSize:12.0];
+    if (profile == nil || font == nil) return;
+    NSURL *factoryURL = [NSBundle.mainBundle URLForResource:@"FactoryDefaults" withExtension:@"plist"];
+    NSDictionary<NSString *, id> *factory = factoryURL == nil ? nil : [NSDictionary dictionaryWithContentsOfURL:factoryURL];
+    if (factory == nil) return;
+    TSPreferenceProfile *proposal = [[TSPreferenceProfile alloc] initWithProfile:profile
+        documentFont:[NSArchiver archivedDataWithRootObject:font] registeredDefaults:factory];
+    if (proposal == nil) { [self showPreferenceError:NSLocalizedString(@"The selected profile is invalid.", @"")]; return; }
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = NSLocalizedString(@"Apply Settings Profile?", @"");
+    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@", @""), proposal.enginePath];
+    [alert addButtonWithTitle:NSLocalizedString(@"Apply Profile", @"")].keyEquivalent = @"";
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")].keyEquivalent = @"\e";
+    __weak TSPreferences *weakSelf = self;
+    [alert beginSheetModalForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
+        TSPreferences *strongSelf = weakSelf;
+        if (strongSelf == nil || strongSelf.endingPreferences || response != NSAlertFirstButtonReturn) return;
+        [strongSelf cancelEnginePathDiscovery];
+        [strongSelf releasePreferencePanels];
+        [strongSelf applyPreferenceProfile:proposal font:font];
+    }];
 }
 
 
-- (IBAction)setDefaults:sender
+// Compare effective values, then reuse the notifications of individual actions.
+- (void)applyPreferenceProfile:(TSPreferenceProfile *)proposal font:(NSFont *)font
 {
-    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
-    BOOL oldMakeatletter = [SUD boolForKey:MakeatletterEnabledKey];
-
-	NSString *fileName;
-	NSDictionary *factoryDefaults, *oldDefaults;
-    NSStringEncoding theEncoding;
-
-	// Remember only TeXShop's own persistent domain. dictionaryRepresentation also
-	// contains NSGlobalDomain and the registered defaults, which Cancel (through
-	// undoDefaultPrefs:) then wrote into TeXShop's domain.
-	oldDefaults = [SUD persistentDomainForName:TSPreferencesDomainName()] ?: @{};
-	[_undoManager registerUndoWithTarget:self selector:@selector(undoDefaultPrefs:) object:oldDefaults];
-
-	// register defaults
-	switch ([sender tag]) {
-		case 1: fileName = [[NSBundle mainBundle] pathForResource:@"FactoryDefaults" ofType:@"plist"]; break;
-		case 2: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_upTeX_ptex2pdf" ofType:@"plist"]; break;
-		case 3: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_upTeX_latexmk" ofType:@"plist"]; break;
-		case 4: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_upTeX_script" ofType:@"plist"]; break;
-		case 5: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_pTeX_ptex2pdf" ofType:@"plist"]; break;
-		case 6: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_pTeX_latexmk" ofType:@"plist"]; break;
-		case 7: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_pTeX_script" ofType:@"plist"]; break;
-		case 8: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_pTeX_sjis" ofType:@"plist"]; break;
-		case 9: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_pTeX_euc" ofType:@"plist"]; break;
-			/*
-			 case 2: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_pTeX_Inoue" ofType:@"plist"]; break;
-			 case 3: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_pTeX_Kiriki" ofType:@"plist"]; break;
-			 case 4: fileName = [[NSBundle mainBundle] pathForResource:@"Defaults_pTeX_Ogawa" ofType:@"plist"]; break;
-				 */
-		default: fileName = [[NSBundle mainBundle] pathForResource:@"FactoryDefaults" ofType:@"plist"]; break;
-	}
-	NSParameterAssert(fileName != nil);
-	factoryDefaults = [[NSString stringWithContentsOfFile:fileName usedEncoding: &theEncoding error:NULL] propertyList];
-
-	// A profile replaces the settings of this window, but not what is kept elsewhere:
-	// the keyboard shortcuts of their own window, the App Shortcuts and app language chosen
-	// in System Settings, what Sparkle records about updates (its keys begin with SU), and
-	// the positions of windows, toolbars and split views that AppKit saves. The menus keep
-	// those shortcuts until TeXShop quits.
-	NSMutableDictionary *profile = [NSMutableDictionary dictionaryWithDictionary:factoryDefaults ?: @{}];
-	[oldDefaults enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
-		if (! [key isKindOfClass:[NSString class]] || profile[key] != nil)
-			return;
-		if ([key isEqualToString:TSMenuShortcutOverridesKey] || [key isEqualToString:@"NSUserKeyEquivalents"] ||
-				[key isEqualToString:@"AppleLanguages"] || [key hasPrefix:@"SU"] || [key hasPrefix:@"NSWindow Frame "] ||
-				[key hasPrefix:@"NSToolbar Configuration "] || [key hasPrefix:@"NSSplitView Subview Frames "])
-			profile[key] = value;
-	}];
-	[SUD setPersistentDomain:profile forName:TSPreferencesDomainName()];
-	[SUD synchronize]; /* added by Koch Feb 19, 2001 to fix pref bug when no defaults present */
-
-	// also register the default font. _documentFont was set in -init, dump it here to
-	// the user defaults
-	[SUD setObject:[NSArchiver archivedDataWithRootObject:self.documentFont] forKey:DocumentFontKey];
-    if (self.fontAttributes == nil)
-        [SUD setObject: nil forKey:DocumentFontAttributesKey];
-    else
-        [SUD setObject:[NSArchiver archivedDataWithRootObject:self.fontAttributes] forKey:DocumentFontAttributesKey];
-	// [SUD setObject:[NSArchiver archivedDataWithRootObject:self.consoleFont] forKey:ConsoleFontKey];
-	[SUD synchronize];
-
-	[self updateControlsFromUserDefaults:SUD];
-    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
+    NSMutableDictionary<NSString *, id> *before = [NSMutableDictionary dictionary];
+    for (NSString *key in TSKnownPreferenceKeys()) before[key] = [SUD objectForKey:key] ?: NSNull.null;
+    [proposal applyToDefaults:SUD];
+    NSMutableSet<NSString *> *changed = [NSMutableSet set];
+    for (NSString *key in TSKnownPreferenceKeys())
+        if (![before[key] isEqual:[SUD objectForKey:key] ?: NSNull.null]) [changed addObject:key];
+    self.documentFont = font;
+    self.fontAttributes = nil;
+    [self refreshRuntimePreferences];
+    [self updateControlsFromUserDefaults:SUD];
+    [self PrepareColorPane:SUD];
+    if ([changed containsObject:@"PdfCopyType"]) {
+        [(TSAppDelegate *)NSApp.delegate syncImageCopyTypeMenu];
+    }
+    if ([changed containsObject:@"DockIconStyle"]) [[TSDockIconController sharedController] restoreSavedIcon];
+    NSDictionary<NSNotificationName, NSArray<NSString *> *> *groups = @{
+        DocumentFontChangedNotification: @[@"DocumentFont", @"DocumentFontAttributes", @"tabs", @"SourceFirstLineHeadIndent", @"SourceHeadIndent", @"SourceInterlineSpace"],
+        ConsoleFontChangedNotification: @[@"ConsoleFontName", @"ConsoleFontSize"],
+        DocumentSyntaxColorNotification: @[@"SyntaxColoringEnabled", @"SyntaxColorEntryLine"],
+        DocumentAutoCompleteNotification: @[@"AutoCompleteEnabled"],
+        DocumentBibDeskCompleteNotification: @[@"BibDeskCompletion"],
+        ExternalEditorNotification: @[@"UseExternalEditor"],
+        @"EncodingChangedNotification": @[@"Encoding", @"ptexUtfOutput"],
+        @"CommandCompletionCharNotification": @[@"CommandCompletionChar"],
+        @"NeedsForRecolorNotification": @[@"AlwaysHighlightEnabled", @"ShowIndicatorForMoveEnabled", @"HighlightContentEnabled", @"BeepEnabled", @"FlashBackgroundEnabled", @"CheckBraceEnabled", @"CheckBracketEnabled", @"CheckSquareBracketEnabled", @"CheckParenEnabled", @"MakeatletterEnabled", @"expl3SyntaxColoring", @"ShowInvisibleChractersEnabled", @"ShowSpaceCharacter", @"ShowFullwidthSpaceCharacter", @"ShowNewLineCharacter", @"ShowTabCharacter", @"SpaceCharacterKind", @"FullwidthSpaceCharacterKind", @"NewLineCharacterKind", @"TabCharacterKind", @"SpaceCharacterKindExtended", @"FullwidthSpaceCharacterKindExtended", @"NewLineCharacterKindExtended", @"TabCharacterKindExtended"]
+    };
+    for (NSNotificationName name in groups) {
+        if (![changed intersectsSet:[NSSet setWithArray:groups[name]]]) continue;
+        [NSNotificationCenter.defaultCenter postNotificationName:name object:self];
+    }
+    if ([changed intersectsSet:[NSSet setWithArray:@[@"Encoding", @"ptexUtfOutput"]]])
+        [[TSEncodingSupport sharedInstance] setupForEncoding];
+    if ([changed intersectsSet:[NSSet setWithArray:@[@"TeXAwareSpellChecking", @"TurnOffCommandSpellCheck", @"TurnOffParameterSpellCheck", @"TurnOffCommentSpellCheck", @"ExceptionListExcludesParameters", @"ExtraCommandsNotToCheckParameters", @"ExtraCommandsToCheckParameters"]]])
         [TSSpellSupport preferencesDidChange];
-    if (oldMakeatletter != [SUD boolForKey:MakeatletterEnabledKey])
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object:self];
-    
-    // KOCH
-    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontRememberNotification object:self];
-    self.documentFont = [NSFont userFontOfSize:12.0];
-    [self updateDocumentFontTextField];
-    [SUD setObject:[NSArchiver archivedDataWithRootObject:self.documentFont] forKey:DocumentFontKey];
-    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontChangedNotification object:self];
-    
-    [self updateConsoleFontTextField];
-    self.consoleFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
-    [SUD setObject: [self.consoleFont fontName] forKey:ConsoleFontNameKey];
-    [SUD setFloat: [self.consoleFont pointSize] forKey: ConsoleFontSizeKey];
-    [[NSNotificationCenter defaultCenter] postNotificationName:ConsoleFontChangedNotification object:self];
+    if ([changed intersectsSet:[NSSet setWithArray:@[@"DefaultLiteTheme", @"DefaultDarkTheme"]]]) {
+        [[TSColorSupport sharedInstance] initializeColors];
+        [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+    }
 }
 
+// Refresh the process-wide copies after a group of settings has changed.
+// Individual controls update their own copy at the point of persistence.
+- (void)refreshRuntimePreferences
+{
+    editorCanAddBrackets = [SUD boolForKey:EditorCanAddBracketsKey];
+    PreviewBackgroundColor = [NSColor colorWithCalibratedRed:[SUD floatForKey:PdfPageBack_RKey]
+        green:[SUD floatForKey:PdfPageBack_GKey] blue:[SUD floatForKey:PdfPageBack_BKey] alpha:1];
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
+    [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"")] setHidden:![SUD boolForKey:TagMenuInMenuBarKey]];
+}
 
 //==============================================================================
 // Document pane
@@ -328,152 +320,16 @@ Clicking this button will bring up the font panel.
 - (IBAction)changeDocumentFont:sender
 {
     // self.documentFont = [fontManager convertFont:self.documentFont];
-    // fontTouched = YES;
+    if (![self finishPreferenceEditing:YES]) return;
+    self.ownsFontPanel = YES;
+    self.fontEditingContext = TSSettingsFontDocument;
     [_prefsWindow makeFirstResponder:_prefsWindow];
     [[NSFontManager sharedFontManager] setSelectedFont:self.documentFont isMultiple:NO];
     [[NSFontManager sharedFontManager] orderFrontFontPanel:self];
 }
 
-// Below was part of an attempt to set additional attributes of the source panel. This was a failure.
-// So we retreat to the original method.
-
-/*
-- (IBAction)changeDocumentFont:sender
-{
-    
-    
-	// become first responder so we will see the events that NSFontManager sends
-	// up the responder chain
-    
-    NSData    *fontData;
-    NSFont     *font;
-    NSRange myRange;
-    NSUInteger thelength;
-    
-    
-    
-    if ([[_fontTextView string] isEqualToString:@"Hello"])
-        {
-        thelength = [[_fontTextView string] length];
-        myRange.location = 0;
-        myRange.length = thelength;
-        [_fontTextView replaceCharactersInRange:myRange withString: NSLocalizedString(@"Type sample text here.\nUse several lines to test\ninterline spacing.", @"Type sample text here.\nUse several lines to test\ninterline spacing.") ];
-        }
-    
-    NSDictionary *fontAttributes =  [NSDictionary dictionary];
-    NSMutableAttributedString *myAttributedString;
-    myAttributedString = _fontTextView.textStorage;
-    thelength = [myAttributedString length];
-    if (thelength > 0)
-    {
-        myRange.location = 0;
-        myRange.length = thelength;
-        [myAttributedString setAttributes: fontAttributes range: myRange];
-    }
-    [_fontTextView setTypingAttributes: fontAttributes];
-
-    
-    {
-        fontData = [SUD objectForKey:DocumentFontKey];
-        if (fontData != nil)
-        {
-            font = [NSUnarchiver unarchiveObjectWithData:fontData];
-            [_fontTextView setFont: font];
-        }
-    }
-    
-    [_fontTextView setTextColor: NSColor.textColor];
-    [_fontTextView  setBackgroundColor: NSColor.textBackgroundColor];
-    */
-
-// the next section was commented out even when the original code with a sample window was
-// active; this code was a central part of the failed attempt to set attributes
-     /*
-     
-     NSDictionary *fontAttributes;
-     NSFontManager *fontManager;
-     NSData    *attributesData;
-     
-     
-     NSTextStorage* textViewContent = [_fontTextView textStorage];
-    NSRange area = NSMakeRange(0, [textViewContent length]);
-    [textViewContent invalidateAttributesInRange:area];
-
-    
-      attributesData = [SUD objectForKey:DocumentFontAttributesKey];
-     if (attributesData != nil)
-     {
- //    NSLog(@"got here");
-     fontAttributes = [NSUnarchiver unarchiveObjectWithData:attributesData];
-     if (fontAttributes != nil)
-     {
-  //   NSLog(@"and here");
-     myAttributedString = _fontTextView.textStorage;
-     thelength = [myAttributedString length];
-     myRange.location = 0;
-     myRange.length = thelength;
-     NSRange area = NSMakeRange(0, thelength);
-     [myAttributedString setAttributes: fontAttributes range: area];
-     }
-     }
-     */
-/*
- [NSApp beginSheet: _samplePanel
-       modalForWindow: _prefsWindow
-        modalDelegate: self
-       didEndSelector: @selector(didEndSheet:returnCode:contextInfo:)
-          contextInfo: nil];
-
-	[_prefsWindow makeFirstResponder:_prefsWindow];
-	[[NSFontManager sharedFontManager] setSelectedFont:self.documentFont isMultiple:NO];
-	[[NSFontManager sharedFontManager] orderFrontFontPanel:self];
-}
-
-- (IBAction)closeSamplePanel: (id)sender
-{
-    NSData  *fontData;
-    
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:DocumentFontKey] forKey:DocumentFontKey];
-   // [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:DocumentFontAttributesKey] forKey:DocumentFontAttributesKey];
-    
-    NSDictionary *newTypingAttributes = _fontTextView.typingAttributes;
-    self.fontAttributes = newTypingAttributes;
-    self.documentFont = _fontTextView.font;
-    fontTouched = YES;
-    [self updateDocumentFontTextField];
-    
-    // update the userDefaults
-    fontData = [NSArchiver archivedDataWithRootObject:self.documentFont];
-    [SUD setObject:fontData forKey:DocumentFontKey];
-    [SUD setBool:YES forKey:SaveDocumentFontKey];
-   // FontAttributesData = [NSArchiver archivedDataWithRootObject:self.fontAttributes];
-   // [SUD setObject:FontAttributesData forKey:DocumentFontAttributesKey];
-    
-    
-    // post a notification so all open documents can change their font
-    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontChangedNotification object:self];
-    
-    [NSApp endSheet:_samplePanel];
-//    [self changeFont: [NSFontManager sharedFontManager]];
-}
-
-- (void)didEndSheet:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-    [sheet orderOut:self];
-}
- */
-
-// We leave the code below present so IB files need not be changed
-// this code will never be called
-- (IBAction)closeSamplePanel: (id)sender
-{
-    [NSApp endSheet:_samplePanel];
-}
-
 - (IBAction)changeConsoleResize:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:ConsoleWidthResizeKey] forKey:ConsoleWidthResizeKey];
 	if ([[_consoleResizeMatrix selectedCell] tag] == 0) 
 		[SUD setBool:YES forKey:ConsoleWidthResizeKey];	
 	else 
@@ -488,6 +344,9 @@ Clicking this button will bring up the font panel.
 	
 	// become first responder so we will see the envents that NSFontManager sends
 	// up the responder chain
+	if (![self finishPreferenceEditing:YES]) return;
+    self.ownsFontPanel = YES;
+    self.fontEditingContext = TSSettingsFontConsole;
 	[_prefsWindow makeFirstResponder:_prefsWindow];
 	[[NSFontManager sharedFontManager] setSelectedFont:self.consoleFont isMultiple:NO];
 	[[NSFontManager sharedFontManager] orderFrontFontPanel:self];
@@ -499,18 +358,17 @@ Clicking this button will bring up the font panel.
 "*/
 - (void)changeFont:(id)fontManager
 {
+    if (!self.ownsFontPanel || self.endingPreferences ||
+        !(_prefsWindow.isKeyWindow || _prefsWindow.isMainWindow)) return;
     
     NSData    *fontData;
-    NSString *theTab = [[_tabView selectedTabViewItem] identifier];
+    TSSettingsFontDestination destination = self.fontEditingContext;
 
-	if ([theTab isEqualToString: @"Document"])
+	if (destination == TSSettingsFontDocument)
 		{
 
 		self.documentFont = [fontManager convertFont:self.documentFont];
-		fontTouched = YES;
 
-		// register the undo message first
-		[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:DocumentFontKey] forKey:DocumentFontKey];
 
 		[self updateDocumentFontTextField];
 
@@ -524,15 +382,12 @@ Clicking this button will bring up the font panel.
 
 		}
 		
-	else if ([theTab isEqualToString: @"Console"])
+	else if (destination == TSSettingsFontConsole)
 		{
 		self.consoleFont = [fontManager convertFont:self.consoleFont];
-		[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:ConsoleFontNameKey] forKey:ConsoleFontNameKey];
-		[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:ConsoleFontSizeKey] forKey:ConsoleFontSizeKey];
 		[SUD setObject: [self.consoleFont fontName] forKey:ConsoleFontNameKey];
 		[SUD setFloat: [self.consoleFont pointSize] forKey: ConsoleFontSizeKey];
 		[self updateConsoleFontTextField];
-		consoleFontTouched = YES;
 		[[NSNotificationCenter defaultCenter] postNotificationName:ConsoleFontChangedNotification object:self];
 		}
 }
@@ -543,8 +398,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)sourceWindowPosChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:DocumentWindowPosModeKey] forKey:DocumentWindowPosModeKey];
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:DocumentWindowPosModeKey];
 	if ([[sender selectedCell] tag] == 0)
@@ -562,13 +415,11 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	activeWindow = [[TSWindowManager sharedInstance] activeTextWindow];
 
 	if (activeWindow != nil) {
-		[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:DocumentWindowFixedPosKey] forKey:DocumentWindowFixedPosKey];
 		[SUD setObject:[activeWindow stringWithSavedFrame] forKey:DocumentWindowFixedPosKey];
 
 		// just in case: the radio button must be checked as well.
 		/* koch: the code below is harmless but probably unnecessary since the button can only
 			be pressed if the radio button is in the fixed position mode */
-		[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:DocumentWindowPosModeKey] forKey:DocumentWindowPosModeKey];
 		[SUD setInteger:DocumentWindowPosFixed forKey:DocumentWindowPosModeKey];
 		[_sourceWindowPosMatrix selectCellWithTag:DocumentWindowPosFixed];
 	}
@@ -577,35 +428,24 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 // added by Terada( - (IBAction)highlightChanged: )
 - (IBAction)highlightChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:AlwaysHighlightEnabledKey] forKey:AlwaysHighlightEnabledKey];
 	[SUD setBool:![_alwaysHighlightButton state] forKey:AlwaysHighlightEnabledKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:ShowIndicatorForMoveEnabledKey] forKey:ShowIndicatorForMoveEnabledKey];
 	[SUD setBool:[_showIndicatorForMoveButton state] forKey:ShowIndicatorForMoveEnabledKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:HighlightContentEnabledKey] forKey:HighlightContentEnabledKey];
 	[SUD setBool:[_highlightContentButton state] forKey:HighlightContentEnabledKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:BeepEnabledKey] forKey:BeepEnabledKey];
 	[SUD setBool:[_beepButton state] forKey:BeepEnabledKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:FlashBackgroundEnabledKey] forKey:FlashBackgroundEnabledKey];
 	[SUD setBool:[_flashBackgroundButton state] forKey:FlashBackgroundEnabledKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:CheckBraceEnabledKey] forKey:CheckBraceEnabledKey];
 	[SUD setBool:[_checkBraceButton state] forKey:CheckBraceEnabledKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:CheckBracketEnabledKey] forKey:CheckBracketEnabledKey];
 	[SUD setBool:[_checkBracketButton state] forKey:CheckBracketEnabledKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:CheckSquareBracketEnabledKey] forKey:CheckSquareBracketEnabledKey];
 	[SUD setBool:[_checkSquareBracketButton state] forKey:CheckSquareBracketEnabledKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:CheckParenEnabledKey] forKey:CheckParenEnabledKey];
 	[SUD setBool:[_checkParenButton state] forKey:CheckParenEnabledKey];
 	
-	highlightTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 }
 
@@ -639,29 +479,23 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 // added by Terada( - (IBAction)invisibleCharacterChanged: )
 - (IBAction)invisibleCharacterChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:showTabCharacterKey] forKey:showTabCharacterKey];
 	[SUD setBool:[_showTabCharacterButton state] forKey:showTabCharacterKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:showSpaceCharacterKey] forKey:showSpaceCharacterKey];
 	[SUD setBool:[_showSpaceCharacterButton state] forKey:showSpaceCharacterKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:showFullwidthSpaceCharacterKey] forKey:showFullwidthSpaceCharacterKey];
 	[SUD setBool:[_showFullwidthSpaceCharacterButton state] forKey:showFullwidthSpaceCharacterKey];
 	
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:showNewLineCharacterKey] forKey:showNewLineCharacterKey];
 	[SUD setBool:[_showNewLineCharacterButton state] forKey:showNewLineCharacterKey];
 	
-	TSSetInvisibleIndex(SUD, SpaceCharacterKindKey, [_SpaceCharacterKindPopup selectedItem].tag, _undoManager);
+	TSSetInvisibleIndex(SUD, SpaceCharacterKindKey, [_SpaceCharacterKindPopup selectedItem].tag);
 	
-	TSSetInvisibleIndex(SUD, FullwidthSpaceCharacterKindKey, [_FullwidthSpaceCharacterKindPopup selectedItem].tag, _undoManager);
+	TSSetInvisibleIndex(SUD, FullwidthSpaceCharacterKindKey, [_FullwidthSpaceCharacterKindPopup selectedItem].tag);
 	
-	TSSetInvisibleIndex(SUD, NewLineCharacterKindKey, [_NewLineCharacterKindPopup selectedItem].tag, _undoManager);
+	TSSetInvisibleIndex(SUD, NewLineCharacterKindKey, [_NewLineCharacterKindPopup selectedItem].tag);
 	
-	TSSetInvisibleIndex(SUD, TabCharacterKindKey, [_TabCharacterKindPopup selectedItem].tag, _undoManager);
+	TSSetInvisibleIndex(SUD, TabCharacterKindKey, [_TabCharacterKindPopup selectedItem].tag);
 	
     [self updateInvisibleCharacterControls:SUD];
-	invisibleCharacterTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 	
 }
@@ -669,27 +503,20 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 // added by Terada( - (IBAction)makeatletterChanged: )
 - (IBAction)makeatletterChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:MakeatletterEnabledKey] forKey:MakeatletterEnabledKey];
 	[SUD setBool:[_makeatletterButton state] forKey:MakeatletterEnabledKey];
 	
-	makeatletterTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
 }
 
 // Each document reads this when it opens; the Source menu still turns expl3 coloring on and off for one document.
 - (IBAction)expl3SyntaxColorPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:expl3SyntaxColoringKey] forKey:expl3SyntaxColoringKey];
 	[SUD setBool:(_expl3SyntaxColorButton.state == NSControlStateValueOn) forKey:expl3SyntaxColoringKey];
 }
 
-// Autosave is read once at launch, so a change takes effect after TeXShop restarts.
+// Persist immediately; NSDocument autosave and server watching change at next launch.
 - (IBAction)autoSaveEnabledPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AutoSaveEnabledKey] forKey:AutoSaveEnabledKey];
 	[SUD setBool:(_autoSaveEnabledButton.state == NSControlStateValueOn) forKey:AutoSaveEnabledKey];
 	// A backup file is kept only when Versions is off, which follows autosave.
 	_keepBackupButton.enabled = ![SUD boolForKey:AutoSaveEnabledKey];
@@ -697,50 +524,35 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 
 - (IBAction)keepBackupPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:KeepBackupKey] forKey:KeepBackupKey];
 	[SUD setBool:(_keepBackupButton.state == NSControlStateValueOn) forKey:KeepBackupKey];
 }
 
 - (IBAction)saveEncodingMenuPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:EncodingMenuInSaveDialogKey] forKey:EncodingMenuInSaveDialogKey];
 	[SUD setBool:(_saveEncodingMenuButton.state == NSControlStateValueOn) forKey:EncodingMenuInSaveDialogKey];
 }
 
 // added by Terada( - (IBAction)kpsetoolChanged: )
-- (IBAction)kpsetoolChanged:sender
+- (IBAction)kpsetoolChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:KpsetoolKey] forKey:KpsetoolKey];
-	
-	kpsetoolTouched = YES;
-	[SUD setObject:[_kpsetoolField stringValue] forKey:KpsetoolKey];
+    [self commitPreferenceField:_kpsetoolField showError:YES reflect:YES];
 }
 
 // added by Terada( - (IBAction)bibTeXengineChanged: )
-- (IBAction)bibTeXengineChanged:sender
+- (IBAction)bibTeXengineChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:BibTeXengineKey] forKey:BibTeXengineKey];
-	
-	bibTeXengineTouched = YES;
-	[SUD setObject:[_bibTeXengineField stringValue] forKey:BibTeXengineKey];
+    [self commitPreferenceField:_bibTeXengineField showError:YES reflect:YES];
 }
 
 
 /*" Set Command Completion Key"*/
 - (IBAction)commandCompletionChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:CommandCompletionCharKey] forKey:CommandCompletionCharKey];
 	
 	if ([[sender selectedCell] tag] == 0)
 		[SUD setObject:@"ESCAPE" forKey:CommandCompletionCharKey];
 	else
 		[SUD setObject:@"TAB" forKey:CommandCompletionCharKey];
-	commandCompletionCharTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CommandCompletionCharNotification" object: self];
 	
 }
@@ -750,8 +562,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 /*" Set Find Panel"*/
 - (IBAction)findPanelChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:FindMethodKey] forKey:FindMethodKey];
 
 	if ([[sender selectedCell] tag] == 0)
 		[SUD setInteger:0 forKey:FindMethodKey];
@@ -764,8 +574,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 /*" Set Line Number Size"*/
 - (IBAction)lineSizeChanged:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:LineNumberSizeKey] forKey:LineNumberSizeKey];
 
     if ([[sender selectedCell] tag] == 0)
         [SUD setInteger:0 forKey:LineNumberSizeKey];
@@ -779,8 +587,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 /*" Set Wrap Panel"*/
 - (IBAction)wrapPanelChanged:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:LineBreakModeKey] forKey:LineBreakModeKey];
     
     if ([[sender selectedCell] tag] == 0)
         [SUD setInteger:0 forKey:LineBreakModeKey];
@@ -795,7 +601,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 /*" Make Empty Document on Startup "*/
 - (IBAction)emptyButtonPressed:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:MakeEmptyDocumentKey] forKey:MakeEmptyDocumentKey];
 
 	[SUD setBool:[(NSCell *)sender state] forKey:MakeEmptyDocumentKey];
 }
@@ -803,12 +608,10 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 /*" Configure for External Editor "*/
 - (IBAction)externalEditorButtonPressed:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:UseExternalEditorKey] forKey:UseExternalEditorKey];
 
 	[SUD setBool:[(NSCell *)sender state] forKey:UseExternalEditorKey];
 	 // post a notification so the system will learn about this change
 	[[NSNotificationCenter defaultCenter] postNotificationName:ExternalEditorNotification object:self];
-	externalEditorTouched = YES;
 }
 
 
@@ -819,7 +622,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	NSStringEncoding	theCode;
 
 	oldValue = [SUD stringForKey:EncodingKey];
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:EncodingKey] forKey:EncodingKey];
 
 	theCode = [[sender selectedCell] tag];
 	value = [[TSEncodingSupport sharedInstance] keyForStringEncoding: theCode];
@@ -827,7 +629,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 
 	// added by mitsu --(G) TSEncodingSupport
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"EncodingChangedNotification" object:self];
-	encodingTouched = YES;
 	NSWindow	*activeWindow = [[TSWindowManager sharedInstance] activeTextWindow];
 
 	if ((activeWindow != nil) && (! [value isEqualToString:oldValue]))
@@ -841,10 +642,7 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 /*" Change Window Opening Behavior "*/
 - (IBAction)openAsTabsChanged:sender
 {
-    NSInteger    oldValue, value;
-
-    oldValue = [SUD integerForKey:OpenAsTabsKey];
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:OpenAsTabsKey] forKey:OpenAsTabsKey];
+    NSInteger value;
 
     value = [[sender selectedCell] tag];
     [SUD setInteger:value forKey:OpenAsTabsKey];
@@ -853,125 +651,28 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 
 - (IBAction)tabIndentPressed:(id)sender
 {
-    NSInteger        value;
-    
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:tabsKey] forKey:tabsKey];
-    
-    value = [tabIndentField integerValue];
-    if (value < 2) {
-        value = 2;
-//        [tabIndentField setIntegerValue:2];
-    } else if (value > 50) {
-        value = 50;
-//        [tabIndentField setIntegerValue:50];
-    }
-    [tabIndentField setIntegerValue: value];
-    
-    [SUD setInteger:value forKey:tabsKey];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontChangedNotification object:self];
-
+    [self commitPreferenceField:tabIndentField showError:YES reflect:YES];
 }
 
 - (IBAction)firstParagraphIndentPressed:(id)sender
 {
-    double        value;
-    NSInteger     wholeValue;
-
-    
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:SourceFirstLineHeadIndentKey] forKey:SourceFirstLineHeadIndentKey];
-    
-    value = [firstParagraphIndentField doubleValue];
-    // KOCH
-    wholeValue = value;
-    if (wholeValue < 0)
-        wholeValue = 0;
-    if (wholeValue > 100)
-        wholeValue = 100;
-    [firstParagraphIndentField setIntegerValue:wholeValue];
-    value = wholeValue;
-    /*
-    if (value < 0.0) {
-        value = 0.0;
-        [firstParagraphIndentField setDoubleValue:0];
-    } else if (value > 100.0) {
-        value = 100.0;
-        [firstParagraphIndentField setDoubleValue:100.0];
-    }
-    */
-    
-    [SUD setFloat:value forKey:SourceFirstLineHeadIndentKey];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontChangedNotification object:self];
+    [self commitPreferenceField:firstParagraphIndentField showError:YES reflect:YES];
 }
 
 - (IBAction)remainingParagraphIndentPressed:(id)sender
 {
-    double        value;
-    NSInteger     wholeValue;
-    
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:SourceHeadIndentKey] forKey:SourceHeadIndentKey];
-    
-    value = [remainingParagraphIndentField doubleValue];
-    wholeValue = value;
-    if (wholeValue < 0)
-        wholeValue = 0;
-    if (wholeValue > 100)
-        wholeValue = 100;
-    [remainingParagraphIndentField setIntegerValue:wholeValue];
-    value = wholeValue;
-    /*
-    if (value < 0.0) {
-        value = 0.0;
-        [remainingParagraphIndentField setDoubleValue:0.0];
-    } else if (value > 100.0) {
-        value = 100.0;
-        [remainingParagraphIndentField setDoubleValue:100.0];
-    }
-    */
-    
-    [SUD setFloat:value forKey:SourceHeadIndentKey];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontChangedNotification object:self];
-    
+    [self commitPreferenceField:remainingParagraphIndentField showError:YES reflect:YES];
 }
 
 - (IBAction)interlineSpacingPressed:(id)sender
 {
-    double        value;
-    NSInteger     wholeValue;
-    
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:SourceInterlineSpaceKey] forKey:SourceInterlineSpaceKey];
-    
-    value = [interlineSpacingField doubleValue];
-    wholeValue = value;
-    if (wholeValue < 1)
-        wholeValue = 1;
-    if (wholeValue > 20)
-        wholeValue = 20;
-    [interlineSpacingField setIntegerValue:wholeValue];
-    value = wholeValue;
-    /*
-    if (value < 1.0) {
-        value = 1,0;
-        [interlineSpacingField setDoubleValue:1.0];
-    } else if (value > 20.0) {
-        value = 20.0;
-        [interlineSpacingField setDoubleValue:50.0];
-    }
-    */
-    
-    [SUD setFloat:value forKey:SourceInterlineSpaceKey];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontChangedNotification object:self];
+    [self commitPreferenceField:interlineSpacingField showError:YES reflect:YES];
 }
 
 
 
 - (IBAction)useTabPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:TabIndentKey] forKey:TabIndentKey];
     
     [SUD setBool:[(NSButton*)sender state] forKey:TabIndentKey];
 }
@@ -981,11 +682,8 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)syntaxColorPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:SyntaxColoringEnabledKey] forKey:SyntaxColoringEnabledKey];
 
     [SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:SyntaxColoringEnabledKey];
-    syntaxColorTouched = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:DocumentSyntaxColorNotification object:self];
 }
 
@@ -995,12 +693,9 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)syntaxColorLinePressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:SyntaxColorEntryLineKey] forKey:SyntaxColorEntryLineKey];
 
      
     [SUD setBool: [(NSCell *)sender state]  forKey:SyntaxColorEntryLineKey];
-    syntaxColorLineTouched = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:DocumentSyntaxColorNotification object:self];
 }
 
@@ -1008,19 +703,16 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)blockCursorPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:BlockCursorKey] forKey:BlockCursorKey];
 
      
     [SUD setBool: [(NSCell *)sender state]  forKey:BlockCursorKey];
+    [self updateSettingsDependenciesFromDefaults:SUD];
 }
 
 /*" This method is connected to the 'use font for log and macro editor' checkbox.
 "*/
 - (IBAction)MacroPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:SameFontForMacroKey] forKey:SameFontForMacroKey];
 
      
     [SUD setBool: [(NSCell *)sender state]  forKey:SameFontForMacroKey];
@@ -1031,8 +723,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 {
     NSInteger   selectedValue;
     
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:BlockWidthKey] forKey:BlockWidthKey];
 
     if ([[sender selectedCell] tag] == 0)
         selectedValue = 0;
@@ -1047,8 +737,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 {
     NSInteger   selectedValue;
     
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:BlockSideKey] forKey:BlockSideKey];
 
     /*
     if ([[sender selectedCell] tag] == 0)
@@ -1068,9 +756,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 {
     NSColor *newColor = [[NSColorPanel sharedColorPanel] color];
     
-    [[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:BlockCursorRKey] forKey:BlockCursorRKey];
-    [[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:BlockCursorGKey] forKey:BlockCursorGKey];
-    [[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:BlockCursorBKey] forKey:BlockCursorBKey];
     
     [SUD setFloat: [newColor redComponent] forKey:BlockCursorRKey];
     [SUD setFloat: [newColor greenComponent] forKey:BlockCursorGKey];
@@ -1085,8 +770,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
  "*/
 - (IBAction)consoleWindowPosChanged:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:ConsoleWindowPosModeKey] forKey:ConsoleWindowPosModeKey];
     
     [SUD setInteger:[[sender selectedCell] tag] forKey:ConsoleWindowPosModeKey];
     [_consoleWindowPosMatrix selectCellWithTag:[[sender selectedCell] tag]];
@@ -1137,105 +820,81 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 //    NSLog(@"found one");
     
     if (activeConsole != nil) {
-        [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:ConsoleWindowFixedPosKey] forKey:ConsoleWindowFixedPosKey];
         [SUD setObject:[activeConsole stringWithSavedFrame] forKey:ConsoleWindowFixedPosKey];
         
         // just in case: the radio button must be checked as well.
         /* koch: the code below is harmless but probably unnecessary since the button can only
          be pressed if the radio button is in the fixed position mode */
-        [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:ConsoleWindowPosModeKey] forKey:ConsoleWindowPosModeKey];
         [SUD setInteger:ConsoleWindowPosFixed forKey:ConsoleWindowPosModeKey];
         [_consoleWindowPosMatrix selectCellWithTag:ConsoleWindowPosFixed];
     }
 }
 
 
-- (IBAction)XMLChapterButtonChanged:sender
+- (IBAction)XMLChapterButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLChapterTagKey] forKey:XMLChapterTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLChapterTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLSectionButtonChanged:sender
+- (IBAction)XMLSectionButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLSectionTagKey] forKey:XMLSectionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLSectionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLSubsectionButtonChanged:sender
+- (IBAction)XMLSubsectionButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLSubsectionTagKey] forKey:XMLSubsectionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLSubsectionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLSubsubsectionButtonChanged:sender
+- (IBAction)XMLSubsubsectionButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLSubsubsectionTagKey] forKey:XMLSubsubsectionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLSubsubsectionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLIntroductionButtonChanged:sender
+- (IBAction)XMLIntroductionButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLIntroductionTagKey] forKey:XMLIntroductionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLIntroductionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLConclusionButtonChanged:sender
+- (IBAction)XMLConclusionButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLConclusionTagKey] forKey:XMLConclusionTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLConclusionTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLExercisesButtonChanged:sender
+- (IBAction)XMLExercisesButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLExercisesTagKey] forKey:XMLExercisesTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLExercisesTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLProjectButtonChanged:sender
+- (IBAction)XMLProjectButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLProjectTagKey] forKey:XMLProjectTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLProjectTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLFigureButtonChanged:sender
+- (IBAction)XMLFigureButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLFigureTagKey] forKey:XMLFigureTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLFigureTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLTableButtonChanged:sender
+- (IBAction)XMLTableButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLTableTagKey] forKey:XMLTableTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLTableTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
-- (IBAction)XMLMarkButtonChanged:sender
+- (IBAction)XMLMarkButtonChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:XMLMarkTagKey] forKey:XMLMarkTagKey];
     [SUD setBool:[(NSButton *)sender state] forKey:XMLMarkTagKey];
-    xmlTagsTouched = YES;
+    [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
 }
 
 
@@ -1251,8 +910,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)selectActivatePressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AcceptFirstMouseKey] forKey:AcceptFirstMouseKey];
 
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:AcceptFirstMouseKey];
 }
@@ -1262,8 +919,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)parensMatchPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:ParensMatchingEnabledKey] forKey:ParensMatchingEnabledKey];
 
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:ParensMatchingEnabledKey];
 }
@@ -1272,24 +927,19 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)spellCheckPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:SpellCheckEnabledKey] forKey:SpellCheckEnabledKey];
 
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:SpellCheckEnabledKey];
 }
 
-- (IBAction)editorAddBracketsPressed:(id)sender;
+- (IBAction)editorAddBracketsPressed:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:EditorCanAddBracketsKey] forKey:EditorCanAddBracketsKey];
     
     [SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:EditorCanAddBracketsKey];
+    editorCanAddBrackets = [SUD boolForKey:EditorCanAddBracketsKey];
 }
 
 - (IBAction)spellCorrectPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AutomaticSpellingCorrectionEnabledKey] forKey:AutomaticSpellingCorrectionEnabledKey];
     
     [SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:AutomaticSpellingCorrectionEnabledKey];
 }
@@ -1299,8 +949,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)lineNumberButtonPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:LineNumberEnabledKey] forKey:LineNumberEnabledKey];
 
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:LineNumberEnabledKey];
 }
@@ -1309,8 +957,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
  "*/
 - (IBAction)tagMenuButtonPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:TagMenuInMenuBarKey] forKey:TagMenuInMenuBarKey];
     
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:TagMenuInMenuBarKey];
      [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] setHidden:( ![SUD boolForKey:TagMenuInMenuBarKey])];
@@ -1320,8 +966,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 // added by Terada (-(IBAction)showInvisibleCharacterButtonPressed:)
 - (IBAction)showInvisibleCharacterButtonPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:ShowInvisibleCharactersEnabledKey] forKey:ShowInvisibleCharactersEnabledKey];
 	
 	[SUD setBool:[(NSCell *)sender state] forKey:ShowInvisibleCharactersEnabledKey];
 }
@@ -1330,8 +974,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
  "*/
 - (IBAction)midEastButtonPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:RightJustifyKey] forKey:RightJustifyKey];
 	
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:RightJustifyKey];
 }
@@ -1344,8 +986,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)escapeWarningChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:WarnForShellEscapeKey] forKey:WarnForShellEscapeKey];
 
 	[SUD setBool:[(NSCell *)sender state] forKey:WarnForShellEscapeKey];
 }
@@ -1355,11 +995,8 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)autoCompletePressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AutoCompleteEnabledKey] forKey:AutoCompleteEnabledKey];
 
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:AutoCompleteEnabledKey];
-	autoCompleteTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:DocumentAutoCompleteNotification object:self];
 
 }
@@ -1368,11 +1005,8 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 "*/
 - (IBAction)bibDeskCompletePressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:BibDeskCompletionKey] forKey:BibDeskCompletionKey];
 	
 	[SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:BibDeskCompletionKey];
-	bibDeskCompleteTouched = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:DocumentBibDeskCompleteNotification object:self];
 
 }
@@ -1390,8 +1024,6 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 "*/
 - (IBAction)pdfWindowPosChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:PdfWindowPosModeKey] forKey:PdfWindowPosModeKey];
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:PdfWindowPosModeKey];
 
@@ -1409,8 +1041,6 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 "*/
 - (IBAction)htmlWindowPosChanged:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:HtmlWindowPosModeKey] forKey:HtmlWindowPosModeKey];
 
     [SUD setInteger:[[sender selectedCell] tag] forKey:HtmlWindowPosModeKey];
 
@@ -1430,11 +1060,9 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 	activeWindow = [[TSWindowManager sharedInstance] activePDFWindow];
 
 	if (activeWindow != nil) {
-		[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:PdfWindowFixedPosKey] forKey:PdfWindowFixedPosKey];
 		[SUD setObject:[activeWindow stringWithSavedFrame] forKey:PdfWindowFixedPosKey];
 
 		// just in case: the radio button must be checked as well.
-		[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:PdfWindowPosModeKey] forKey:PdfWindowPosModeKey];
 		[SUD setInteger:DocumentWindowPosFixed forKey:PdfWindowPosModeKey];
 		[_sourceWindowPosMatrix selectCellWithTag:PdfWindowPosFixed];
 	}
@@ -1449,11 +1077,9 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     activeWindow = [[TSWindowManager sharedInstance] activeHTMLWindow];
 
     if (activeWindow != nil) {
-        [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:HtmlWindowFixedPosKey] forKey:HtmlWindowFixedPosKey];
         [SUD setObject:[activeWindow stringWithSavedFrame] forKey:HtmlWindowFixedPosKey];
 
         // just in case: the radio button must be checked as well.
-        // [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:HtmlWindowPosModeKey] forKey:HtmlWindowPosModeKey];
        //  [SUD setInteger:HtmlWindowPosFixed forKey:HtmlWindowPosModeKey];
        //  [_sourceWindowPosMatrix selectCellWithTag:HtmlWindowPosFixed];
     }
@@ -1462,39 +1088,9 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 
 /*" This method is connected to the magnification text field on the Preview pane'.
 "*/
-- (IBAction)magChanged:sender
+- (IBAction)magChanged:(id)sender
 {
-	// NSRunAlertPanel(@"warning", @"not yet implemented", nil, nil, nil);
-
-	// TSPreviewWindow	*activeWindow;
-	double	mag, magnification;
-
-
-	// The comment below fixes a bug; magnification didn't take if no pdf window open
-    // activeWindow = (TSPreviewWindow *)[[TSWindowManager sharedInstance] activePDFWindow];
-	//   if (activeWindow != nil)
-
-	{
-		[[_undoManager prepareWithInvocationTarget:SUD] setFloat:[SUD floatForKey:PdfMagnificationKey] 				forKey:PdfMagnificationKey];
-		mag = [_magTextField doubleValue];
-		if (mag < 20.0) {
-			mag = 20;
-			[_magTextField setDoubleValue:mag];
-			[_magTextField display];
-		}
-		else if (mag > 400.0) {
-			mag = 400;
-			[_magTextField setDoubleValue:mag];
-			[_magTextField display];
-		}
-		magnification = mag / 100.0;
-		[SUD setFloat:magnification forKey:PdfMagnificationKey];
-		magnificationTouched = YES;
-		// post a notification so all open documents can change their magnification
-		[[NSNotificationCenter defaultCenter] postNotificationName:MagnificationChangedNotification object:self];
-
-	}
-
+    [self commitPreferenceField:_magTextField showError:YES reflect:YES];
 }
 
 
@@ -1503,27 +1099,22 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 "*/
 - (IBAction)scrollPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:NoScrollEnabledKey] forKey:NoScrollEnabledKey];
 
 	[SUD setBool:[(NSCell *)sender state] forKey:NoScrollEnabledKey];
 }
 
 - (IBAction)autoPDFChanged:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:PdfRefreshKey] forKey:PdfRefreshKey];
 	[SUD setBool:[(NSCell *)sender state] forKey:PdfRefreshKey];
 }
 
 - (IBAction)antialiasChanged:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AntiAliasKey] forKey:AntiAliasKey];
 	[SUD setBool:[(NSCell *)sender state] forKey:AntiAliasKey];
 }
 
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:SourceAndPreviewInSameWindowKey] forKey:SourceAndPreviewInSameWindowKey];
     NSInteger myTag = [sender tag];
     BOOL result;
     if (myTag == 0)
@@ -1531,11 +1122,11 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     else
         result = YES;
 	[SUD setBool:result forKey:SourceAndPreviewInSameWindowKey];
+    [self updateSettingsDependenciesFromDefaults:SUD];
 }
 
 - (IBAction)sourceOnLeftChanged:sender
 {
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:SwitchSidesKey] forKey:SwitchSidesKey];
     NSInteger myTag = [sender tag];
     BOOL result;
     if (myTag == 0)
@@ -1553,7 +1144,6 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 /*" This method is connected to page style popup button. "*/
 - (IBAction)pageStyleChanged:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:PdfPageStyleKey] forKey:PdfPageStyleKey];
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:PdfPageStyleKey];
 }
@@ -1562,13 +1152,11 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 "*/
 - (IBAction)displayAsBookChanged:(NSButton *)sender
 {
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:DisplayAsBookKey] forKey:DisplayAsBookKey];
     [SUD setBool:sender.state == NSControlStateValueOn forKey:DisplayAsBookKey];
 }
 
 - (IBAction)firstDoublePageChanged:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:PdfFirstPageStyleKey] forKey:PdfFirstPageStyleKey];
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:PdfFirstPageStyleKey];
 }
@@ -1607,7 +1195,6 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 /*" This method is connected to resize option popup button. "*/
 - (IBAction)resizeOptionChanged:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:PdfKitFitSizeKey] forKey:PdfKitFitSizeKey];
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:PdfKitFitSizeKey];
 }
@@ -1617,19 +1204,13 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 - (IBAction)imageCopyTypeChanged:sender
 {
 	// mitsu 1.29b
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD
-integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 	// uncheck menu item Preview=>Copy Format
 	NSMenu *previewMenu = [[[NSApp mainMenu] itemWithTitle:
 						NSLocalizedString(@"Preview", @"Preview")] submenu];
 
 	NSMenu *formatMenu = [[previewMenu itemWithTitle:
 						NSLocalizedString(@"Copy Format", @"Copy Format")] submenu];
-	id item = [formatMenu itemWithTag: [SUD integerForKey:PdfCopyTypeKey]];
-	if (item)
-		[[_undoManager prepareWithInvocationTarget:[NSApp delegate]] changeImageCopyType: item];
-
-	item = [formatMenu itemWithTag: [[sender selectedCell] tag]];
+	id item = [formatMenu itemWithTag: [[sender selectedCell] tag]];
 	if (item)
 		[(TSAppDelegate *)[NSApp delegate] changeImageCopyType: item];
 	// end mitsu 1.29b
@@ -1646,7 +1227,6 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 /*" This method is connected to default mouse mode popup button. "*/
 - (IBAction)mouseModeChanged:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:PdfKitMouseModeKey] forKey:PdfKitMouseModeKey];
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:PdfKitMouseModeKey];
 }
@@ -1654,14 +1234,13 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 /*" This method is connected to default mouse mode popup button. "*/
 - (IBAction)colorMapChanged:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD integerForKey:PdfColorMapKey] forKey:PdfColorMapKey];
 
 	[SUD setBool:([(NSCell *)sender state]==NSOnState) forKey:PdfColorMapKey];
+    [self updateSettingsDependenciesFromDefaults:SUD];
 }
 
 - (IBAction)colorParam1Changed:sender
 {
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:PdfColorParam1Key] forKey:PdfColorParam1Key];
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:PdfColorParam1Key];
 }
@@ -1687,7 +1266,7 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 
 - (IBAction)discoverEnginePaths:(id)sender
 {
-    [_prefsWindow makeFirstResponder:_prefsWindow];
+    if (![self finishPreferenceEditing:YES]) return;
     [self searchEnginePathsForInitialSetup:NO sender:sender];
 }
 
@@ -1714,7 +1293,7 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
             if (generation != self.enginePathSearchGeneration) return;
             self.initialEnginePathSearchPending = NO;
             sender.enabled = YES;
-            // If Settings opened during the initial search, use its sheet and undo group.
+            // If Settings opened during the initial search, use its sheet.
             BOOL applyInitial = initial && !self->_prefsWindow.visible;
             if ((!initial && !self->_prefsWindow.visible) || ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
             NSAlert *alert = [NSAlert new];
@@ -1770,7 +1349,7 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
             for (NSView *view in choices.subviews) [view setFrameOrigin:NSMakePoint(view.frame.origin.x, view.frame.origin.y - top)];
             [choices setFrameSize:NSMakeSize(560, 340 - top)];
             alert.accessoryView = choices;
-            if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Engine.", @"")];
+            if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Typesetting.", @"")];
             [alert addButtonWithTitle:NSLocalizedString(hasPaths ? @"Use These Paths" : @"OK", @"")];
             if (hasPaths) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
             void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
@@ -1784,7 +1363,6 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
                     NSMatrix *matrix = matrices[names[i]];
                     NSString *path = matrix ? found[names[i]][matrix.selectedRow][@"path"] : nil;
                     if (!path || ![TSEnginePathDiscovery directory:path containsPrograms:required[i]]) continue;
-                    if (!applyInitial) [[self->_undoManager prepareWithInvocationTarget:SUD] setObject:snapshot[i] forKey:keys[i]];
                     [SUD setObject:path forKey:keys[i]];
                 }
                 if (!applyInitial) {
@@ -1800,60 +1378,35 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 
 /*" This method is connected to the textField that holds the tetex bin path.
 "*/
-- (IBAction)tetexBinPathChanged:sender
+- (IBAction)tetexBinPathChanged:(id)sender
 {
-    NSString *newValue;
-    
-	// register the undo messages first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:TetexBinPath] 				forKey:TetexBinPath];
-
-    newValue = [[_tetexBinPathField stringValue] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	[SUD setObject: newValue forKey:TetexBinPath];
+    [self commitPreferenceField:_tetexBinPathField showError:YES reflect:YES];
 }
 
 //==============================================================================
 /*" This method is connected to the textField that holds the HtmlHome value
 "*/
-- (IBAction)HtmlHomeChanged:sender
+- (IBAction)HtmlHomeChanged:(id)sender
 {
-    NSString *newValue;
-    
-    // register the undo messages first
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:HtmlHomeKey]                 forKey:HtmlHomeKey];
-
-    newValue = [[_HtmlHomeField stringValue] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    [SUD setObject: newValue forKey:HtmlHomeKey];
+    [self commitPreferenceField:_HtmlHomeField showError:YES reflect:YES];
 }
 
 
 //==============================================================================
 /*" This method is connected to the textField that holds the alternate path.
 "*/
-- (IBAction)altPathChanged:sender
+- (IBAction)altPathChanged:(id)sender
 {
-    NSString *newValue;
-    
-    // register the undo messages first
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:AltPathKey] forKey:AltPathKey];
-
-    newValue = [[_altPathField stringValue] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    [SUD setObject: newValue forKey:AltPathKey];
+    [self commitPreferenceField:_altPathField showError:YES reflect:YES];
 }
 
 
 //==============================================================================
 /*" This method is connected to the textField that holds the gs bin path.
 "*/
-- (IBAction)gsBinPathChanged:sender
+- (IBAction)gsBinPathChanged:(id)sender
 {
-     NSString *newValue;
-    
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:GSBinPath] 				forKey:GSBinPath];
-    
-    newValue = [[_gsBinPathField stringValue] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-	[SUD setObject: newValue forKey:GSBinPath];
+    [self commitPreferenceField:_gsBinPathField showError:YES reflect:YES];
 }
 
 //==============================================================================
@@ -1861,50 +1414,36 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 //==============================================================================
 /*" This method is connected to the textField that holds the TeX command. It is located on the TeX pane.
 "*/
-- (IBAction)texProgramChanged:sender
+- (IBAction)texProgramChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:TexCommandKey] forKey:TexCommandKey];
-
-	[SUD setObject:[_texCommandTextField stringValue] forKey:TexCommandKey];
+    [self commitPreferenceField:_texCommandTextField showError:YES reflect:YES];
 }
 
 /*" This method is connected to the textField that holds the LaTeX command. It is located on the TeX pane.
 "*/
-- (IBAction)latexProgramChanged:sender
+- (IBAction)latexProgramChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:LatexCommandKey] forKey:LatexCommandKey];
-
-	[SUD setObject:[_latexCommandTextField stringValue] forKey:LatexCommandKey];
+    [self commitPreferenceField:_latexCommandTextField showError:YES reflect:YES];
 }
 
 /*" This method is connected to the textField that holds the tex + ghostscript command. It is located on the TeX pane.
 "*/
-- (IBAction)texGSProgramChanged:sender
+- (IBAction)texGSProgramChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:TexGSCommandKey] forKey:TexGSCommandKey];
-
-	[SUD setObject:[_texGSCommandTextField stringValue] forKey:TexGSCommandKey];
+    [self commitPreferenceField:_texGSCommandTextField showError:YES reflect:YES];
 }
 
 /*" This method is connected to the textField that holds the latextex + ghostscript command. It is located on the TeX pane.
 "*/
-- (IBAction)latexGSProgramChanged:sender
+- (IBAction)latexGSProgramChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:LatexGSCommandKey] forKey:LatexGSCommandKey];
-
-	[SUD setObject:[_latexGSCommandTextField stringValue] forKey:LatexGSCommandKey];
+    [self commitPreferenceField:_latexGSCommandTextField showError:YES reflect:YES];
 }
 
 /*" This method is connected to the 'save postscript' checkbox.
 "*/
 - (IBAction)savePSPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:SavePSEnabledKey] forKey:SavePSEnabledKey];
 
 	[SUD setBool:[(NSCell *)sender state] forKey:SavePSEnabledKey];
 }
@@ -1915,13 +1454,10 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 "*/
 - (IBAction)sparkleAutomaticCheck:sender
 {
-    sparkleTouched = YES;
 
     
     BOOL theValue = [(NSCell *) sender state];
     
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:SparkleAutomaticUpdateKey] forKey:SparkleAutomaticUpdateKey];
     [_sparkleIntervalMatrix setEnabled: theValue];
     [SUD setBool:theValue forKey:SparkleAutomaticUpdateKey];
     
@@ -1932,11 +1468,8 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 
 - (IBAction)sparkleInterval:sender
 {
-    sparkleTouched = YES;
 
     
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:SparkleIntervalKey] forKey:SparkleIntervalKey];
     
     [SUD setInteger:[[sender selectedCell] tag] forKey:SparkleIntervalKey];
     
@@ -1965,32 +1498,23 @@ integerForKey:PdfCopyTypeKey] forKey:PdfCopyTypeKey];
 
 /*" This method is connected to the textField that holds the tex script command. It is located on the TeX pane.
 "*/
-- (IBAction)texScriptProgramChanged:sender
+- (IBAction)texScriptProgramChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:TexScriptCommandKey] forKey:TexScriptCommandKey];
-
-	[SUD setObject:[_texScriptCommandTextField stringValue] forKey:TexScriptCommandKey];
+    [self commitPreferenceField:_texScriptCommandTextField showError:YES reflect:YES];
 }
 
 /*" This method is connected to the textField that holds the latex script command. It is located on the TeX pane.
 "*/
-- (IBAction)latexScriptProgramChanged:sender
+- (IBAction)latexScriptProgramChanged:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:LatexScriptCommandKey] forKey:LatexScriptCommandKey];
-
-	[SUD setObject:[_latexScriptCommandTextField stringValue] forKey:LatexScriptCommandKey];
+    [self commitPreferenceField:_latexScriptCommandTextField showError:YES reflect:YES];
 }
 
 /*" This method is connected to the textField that holds the alternate engine command. It is located on the Misc pane.
 "*/
-- (IBAction)alternateEngineChanged:sender
+- (IBAction)alternateEngineChanged:(id)sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD objectForKey:AlternateEngineKey] forKey:AlternateEngineKey];
-
-    [SUD setObject:[_alternateEngineTextField stringValue] forKey:AlternateEngineKey];
+    [self commitPreferenceField:_alternateEngineTextField showError:YES reflect:YES];
 }
 
 
@@ -2000,8 +1524,6 @@ A tag of 0 means use TeX, a tag of 1 means use LaTeX.
 "*/
 - (IBAction)defaultProgramChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:DefaultCommandKey] forKey:DefaultCommandKey];
 
 	// since the default program values map identically to the tags of the NSButtonCells,
 	// we can use the tag directly here.
@@ -2016,14 +1538,9 @@ A tag of 0 means use TeX, a tag of 1 means use LaTeX.
 		[_engineTextField setEnabled: NO];
 }
 
-- (IBAction)setEngine:sender
+- (IBAction)setEngine:(id)sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setObject:[SUD stringForKey:DefaultEngineKey] forKey:DefaultEngineKey];
-
-	// since the default program values map identically to the tags of the NSButtonCells,
-	// we can use the tag directly here.
-	[SUD setObject:[sender stringValue] forKey:DefaultEngineKey];
+    [self commitPreferenceField:_engineTextField showError:YES reflect:YES];
 }
 
 /*" This method is connected to the "Default Script" matrix on the TeX pane.
@@ -2034,8 +1551,6 @@ person script. See also: DefaultTypesetMode.
 "*/
 - (IBAction)defaultScriptChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD boolForKey:DefaultScriptKey] forKey:DefaultScriptKey];
 
 	// since the default program values map identically to the tags of the NSButtonCells,
 	// we can use the tag directly here.
@@ -2044,28 +1559,16 @@ person script. See also: DefaultTypesetMode.
 
 - (IBAction)syncChanged: sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:SyncMethodKey] forKey:SyncMethodKey];
 
 	// since the default program values map identically to the tags of the NSButtonCells,
 	// we can use the tag directly here.
 	[SUD setInteger:[[sender selectedCell] tag] forKey:SyncMethodKey];
 }
 
-/* // comment out by Terada
-- (IBAction)defaultBibtexChanged:sender
-{
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:BibtexCommandKey] forKey:BibtexCommandKey];
 
-	[SUD setInteger:[[sender selectedCell] tag] forKey:BibtexCommandKey];
-}
-*/
 
 - (IBAction)distillerChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD integerForKey:DistillerCommandKey] forKey:DistillerCommandKey];
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:DistillerCommandKey];
 }
@@ -2073,8 +1576,6 @@ person script. See also: DefaultTypesetMode.
 // zenitani 1.35 (C)
 - (IBAction)ptexUtfOutputPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:ptexUtfOutputEnabledKey] forKey:ptexUtfOutputEnabledKey];
 
 	[SUD setBool:[(NSCell *)sender state] forKey:ptexUtfOutputEnabledKey];
 
@@ -2085,8 +1586,6 @@ person script. See also: DefaultTypesetMode.
 // koch, 4/10/2011
 - (IBAction)convertUTFPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AutomaticUTF8MACtoUTF8ConversionKey] forKey:AutomaticUTF8MACtoUTF8ConversionKey];
     [SUD setBool:[(NSButton *)sender state] forKey:AutomaticUTF8MACtoUTF8ConversionKey];
  
 /*
@@ -2102,24 +1601,48 @@ person script. See also: DefaultTypesetMode.
 
 - (IBAction)openRootFilePressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:AutoOpenRootFileKey] forKey:AutoOpenRootFileKey];
     
     [SUD setBool:[(NSButton *)sender state] forKey:AutoOpenRootFileKey];
 }
 
 - (IBAction)miniaturizeRootFilePressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:MiniaturizeRootFileKey] forKey:MiniaturizeRootFileKey];
     
     [SUD setBool:[(NSButton *)sender state] forKey:MiniaturizeRootFileKey];
+}
+
+- (void)setSettingsControl:(NSControl *)control enabled:(BOOL)enabled
+{
+    if (control == nil) return;
+    control.enabled = enabled;
+    NSView *row = control.superview;
+    while (row != nil && ![row.identifier hasPrefix:@"row."]) row = row.superview;
+    if (row == nil) return;
+    NSMutableArray<NSView *> *pending = [NSMutableArray arrayWithObject:row];
+    while (pending.count) {
+        NSView *view = pending.lastObject; [pending removeLastObject];
+        if ([view isKindOfClass:NSControl.class]) ((NSControl *)view).enabled = enabled;
+        [pending addObjectsFromArray:view.subviews];
+    }
+}
+- (void)updateSettingsDependenciesFromDefaults:(NSUserDefaults *)defaults
+{
+    BOOL block = [defaults boolForKey:BlockCursorKey];
+    [self setSettingsControl:BlockCursorColorWell enabled:block];
+    [self setSettingsControl:_blockSideMatrix enabled:block];
+    [self setSettingsControl:_blockWidthMatrix enabled:block];
+    [self setSettingsControl:_colorParam1Popup enabled:[defaults boolForKey:PdfColorMapKey]];
+    BOOL unified = [defaults boolForKey:SourceAndPreviewInSameWindowKey];
+    [self setSettingsControl:useLeftSourceButton enabled:unified];
+    [self setSettingsControl:useRightSourceButton enabled:unified];
+    [self setSettingsControl:_keepBackupButton enabled:![defaults boolForKey:AutoSaveEnabledKey]];
 }
 
 - (void)updateSpellingControlsFromDefaults:(NSUserDefaults *)defaults
 {
     BOOL enabled = [defaults boolForKey:@"TeXAwareSpellChecking"];
     _texAwareSpellCheckButton.state = enabled ? NSControlStateValueOn : NSControlStateValueOff;
+    if (self.legacySpellCheckButton != nil) self.legacySpellCheckButton.state = enabled ? NSControlStateValueOff : NSControlStateValueOn;
     // The exclusion rules apply only to TeX-aware spell checking.
     _editSpellingExclusionsButton.enabled = enabled;
     _spellCheckCommands.enabled = !enabled;
@@ -2129,9 +1652,26 @@ person script. See also: DefaultTypesetMode.
 
 - (IBAction)texAwareSpellCheckPressed:(NSButton *)sender
 {
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:@"TeXAwareSpellChecking"]
-                                                   forKey:@"TeXAwareSpellChecking"];
     [SUD setBool:(sender.state == NSControlStateValueOn) forKey:@"TeXAwareSpellChecking"];
+    [self updateSpellingControlsFromDefaults:SUD];
+    [TSSpellSupport preferencesDidChange];
+}
+
+- (IBAction)editKeyBindings:(id)sender
+{
+    if (self.keyBindingEditor == nil) self.keyBindingEditor = [TSAutoCompletionListEditor new];
+    [self.keyBindingEditor openAutoCompletionListEditor:sender];
+}
+
+- (IBAction)displayCommentLines:(id)sender
+{
+    if (self.settingsHelpDocuments == nil) self.settingsHelpDocuments = [HelpDocuments new];
+    [self.settingsHelpDocuments displayCommentLines:sender];
+}
+
+- (IBAction)legacySpellCheckPressed:(NSButton *)sender
+{
+    [SUD setBool:NO forKey:@"TeXAwareSpellChecking"];
     [self updateSpellingControlsFromDefaults:SUD];
     [TSSpellSupport preferencesDidChange];
 }
@@ -2143,16 +1683,12 @@ person script. See also: DefaultTypesetMode.
 
 - (IBAction)spellCheckCommandPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:TurnOffCommandSpellCheckKey] forKey:TurnOffCommandSpellCheckKey];
     
     [SUD setBool:[(NSCell *)[sender selectedCell] state] forKey:TurnOffCommandSpellCheckKey];
 }
 
 - (IBAction)spellCheckParameterPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:TurnOffParameterSpellCheckKey] forKey:TurnOffParameterSpellCheckKey];
     
     [SUD setBool:[(NSCell *)[sender selectedCell] state]  forKey:TurnOffParameterSpellCheckKey];
     
@@ -2160,8 +1696,6 @@ person script. See also: DefaultTypesetMode.
 
 - (IBAction)spellCheckCommentPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setBool:[SUD boolForKey:TurnOffCommentSpellCheckKey] forKey:TurnOffCommentSpellCheckKey];
     
     [SUD setBool:[(NSCell *)[sender selectedCell] state]  forKey:TurnOffCommentSpellCheckKey];
 }
@@ -2175,8 +1709,6 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
 "*/
 - (IBAction)consoleBehaviorChanged:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD boolForKey:ConsoleBehaviorKey] forKey:ConsoleBehaviorKey];
 
 	// since the default program values map identically to the tags of the NSButtonCells,
 	// we can use the tag directly here.
@@ -2188,9 +1720,7 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
     
     NSString *language = [[sender selectedItem] title];
     
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger: [SUD integerForKey: spellingAutomaticDefaultKey] forKey: spellingAutomaticDefaultKey];
     
-    [[_undoManager prepareWithInvocationTarget:SUD] setObject: [SUD objectForKey: spellingLanguageDefaultKey] forKey: spellingLanguageDefaultKey];
     
     if ([language isEqualToString: @"Automatic Language"])
     {
@@ -2211,12 +1741,11 @@ A tag of 0 means "Activate Preview"; a tag of 1 means "Continue Editing".
 "*/
 - (IBAction)afterTypesettingChanged:sender;
 {
-	BOOL	oldBoolValue, newBoolValue;
-    NSInteger oldValue, newValue;
+	BOOL newBoolValue;
+    NSInteger newValue;
 	NSInteger		tagValue;
 	
-	oldBoolValue = [SUD boolForKey:BringPdfFrontOnTypesetKey];
-    oldValue = [SUD integerForKey:BringFrontOnTypesetKey];
+
 	tagValue = [[sender selectedCell] tag];
     
     if (tagValue == 1)
@@ -2228,9 +1757,6 @@ A tag of 0 means "Activate Preview"; a tag of 1 means "Continue Editing".
     if (newValue > 2)
         newValue = 0;
     
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setBool:oldBoolValue forKey:BringPdfFrontOnTypesetKey];
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:oldValue forKey:BringFrontOnTypesetKey];
     
 	[SUD setBool:newBoolValue forKey:BringPdfFrontOnTypesetKey];
     [SUD setInteger:newValue forKey: BringFrontOnTypesetKey];
@@ -2243,8 +1769,6 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
 "*/
 - (IBAction)saveRelatedButtonPressed:sender
 {
-	// register the undo message first
-	[[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD boolForKey:SaveRelatedKey] forKey:SaveRelatedKey];
 
 	// since the default program values map identically to the tags of the NSButtonCells,
 	// we can use the tag directly here.
@@ -2253,8 +1777,6 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
 
 - (IBAction)useTransparencyPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD boolForKey:UseTransparencyKey] forKey:UseTransparencyKey];
 
     // since the default program values map identically to the tags of the NSButtonCells,
     // we can use the tag directly here.
@@ -2267,8 +1789,6 @@ A tag of 0 means "no", a tag of 1 means "yes".
 "*/
 - (IBAction)syncTabButtonPressed:sender
 {
-    // register the undo message first
-    [[_undoManager prepareWithInvocationTarget:SUD] setInteger:[SUD boolForKey:SyncUseTabsKey] forKey:SyncUseTabsKey];
 
     // since the default program values map identically to the tags of the NSButtonCells,
     // we can use the tag directly here.
@@ -2281,145 +1801,11 @@ A tag of 0 means "no", a tag of 1 means "yes".
 //==============================================================================
 /*" This method is connected to the OK button.
 "*/
-- (IBAction)okButtonPressed:sender
-{
-    [self cancelEnginePathDiscovery];
-    [[TSDockIconController sharedController] acceptEditing];
-	// save everything to the user defaults
 
-    [self okForColor];
-    
- /* WARNING: the next seven commands were added by koch on March 17.
-		They are needed because the TextBox fields do not send a command
-		until the return key is pressed. But pressing the return key also
-		closes preferences. Users will instead modify the text and then
-		click elsewhere to modify other preferences, only to discover that
-		these preferences weren't changed. A user sent email asking how to
-		activate pdfelatex in the old TeXShop, so I tried it on
-		the new program and couldn't! */
-// See mitsu change below instead
-//        [self tabsChanged: self];
-//        [self texProgramChanged: self];
-//        [self latexProgramChanged: self];
-//        [self texGSProgramChanged: self];
-//        [self latexGSProgramChanged: self];
-//        [self texScriptProgramChanged: self];
-//        [self latexScriptProgramChanged: self];
-
-// added by mitsu --(M) Path Settings on "okButtonPressed:" in TSPreferences
-// This is a simpler way to reflect changes in the controls
-	[_prefsWindow makeFirstResponder: _prefsWindow];
-// end addition
-
-	[SUD synchronize];
-
-    [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] setHidden:( ![SUD boolForKey:TagMenuInMenuBarKey])];
-
-    editorCanAddBrackets = [SUD boolForKey: EditorCanAddBracketsKey];
-    
-    if (xmlTagsTouched)
-        [(TSAppDelegate *)[[NSApplication sharedApplication] delegate] updateXMLTabs];
-    
- 	// close the window
-	// [_prefsWindow performClose:self];
-    [_prefsWindow close];
-}
 
 /*" This method is connected to the Cancel button.
 "*/
-- (IBAction)cancelButtonPressed:sender
-{
-    [self cancelEnginePathDiscovery];
-    BOOL oldTeXAwareSpelling = [SUD boolForKey:@"TeXAwareSpellChecking"];
-    [self cancelForColor];
-    // undo everyting
-	[_undoManager endUndoGrouping];
-	[_undoManager undo];
-    if (oldTeXAwareSpelling != [SUD boolForKey:@"TeXAwareSpellChecking"])
-        [TSSpellSupport preferencesDidChange];
-    [[TSDockIconController sharedController] cancelEditing];
 
-     [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] setHidden:( ![SUD boolForKey:TagMenuInMenuBarKey])];
-	// close the window
-	// [_prefsWindow performClose:self];
-    [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"Tags")] setHidden:( ![SUD boolForKey:TagMenuInMenuBarKey])];
-     [_prefsWindow close];
-	
-//	[PreviewBackgroundColor release];
-	PreviewBackgroundColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:PdfPageBack_RKey]
-													   green: [SUD floatForKey:PdfPageBack_GKey] blue: [SUD floatForKey:PdfPageBack_BKey]
-													   alpha: 1];
-//	[PreviewBackgroundColor retain];
-	
-	/* koch: undo font changes */
-	if (externalEditorTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:ExternalEditorNotification object:self];
-	if (fontTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:DocumentFontRevertNotification object:self];
-	if (consoleFontTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:ConsoleFontChangedNotification object:self];
-	if (consoleBackgroundColorTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:ConsoleBackgroundColorChangedNotification object:self];
-	if (consoleForegroundColorTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:ConsoleForegroundColorChangedNotification object:self];
-	if (sourceBackgroundColorTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:SourceBackgroundColorChangedNotification object:self];
-    if (sourceTextColorTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:SourceTextColorChangedNotification object:self];
-	if (previewBackgroundColorTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:PreviewBackgroundColorChangedNotification object:self];
-	if (magnificationTouched)
-		[[NSNotificationCenter defaultCenter] postNotificationName:MagnificationRevertNotification object:self];
-	
-	/* below we must reset a preference because it will not be undone in time */
-	if (syntaxColorTouched) {
-		[SUD setBool:oldSyntaxColor forKey:SyntaxColoringEnabledKey];
-		[[NSNotificationCenter defaultCenter] postNotificationName:DocumentSyntaxColorNotification object:self];
-	}
-    if (syntaxColorLineTouched) {
-        [SUD setBool:oldSyntaxLineColor forKey:SyntaxColorEntryLineKey];
-        [[NSNotificationCenter defaultCenter] postNotificationName:DocumentSyntaxColorNotification object:self];
-    }
-	if (autoCompleteTouched) {
-		[SUD setBool:oldAutoComplete forKey:AutoCompleteEnabledKey];
-		[[NSNotificationCenter defaultCenter] postNotificationName:DocumentAutoCompleteNotification object:self];
-	}
-	if (bibDeskCompleteTouched) {
-		[SUD setBool:oldBibDeskComplete forKey:BibDeskCompletionKey];
-		[[NSNotificationCenter defaultCenter] postNotificationName:DocumentBibDeskCompleteNotification object:self];
-	}
-    
-#ifdef USESPARKLE
-    if (sparkleTouched) {
-        [[TSSparkleController sharedUpdater] setAutomaticallyChecksForUpdates: oldSparkleAutomaticUpdate];
-        
-        [[TSSparkleController sharedUpdater] setUpdateCheckInterval:oldSparkleInterval];
-    }
-#endif
-   
-    
-	// added by mitsu --(G) TSEncodingSupport
-	if (encodingTouched) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"EncodingChangedNotification" object: self ];
-	}
-	if (commandCompletionCharTouched) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CommandCompletionCharNotification" object: self];
-	}
-	// added by Terada
-	if (highlightTouched || invisibleCharacterTouched || makeatletterTouched) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"NeedsForRecolorNotification" object: self];
-	}
-    
-    [self cancelForColor];
-    
-	// end addition
-
-	// The user defaults have changed. Force update of the user interface.
-	/* koch: The code below doesn't take because the undo manager doesn't actually
-		undo here. It calls undo during the next event loop. So the code below is called too soon.
-		I called it again when the preference panel is shown. */
-	//    [self updateControlsFromUserDefaults:SUD];
-}
 
 //==============================================================================
 // notification methods
@@ -2494,6 +1880,173 @@ A tag of 0 means "no", a tag of 1 means "yes".
 	[SUD synchronize];
 }
 
+- (void)addPreferenceField:(NSControl *)field rule:(TSPreferenceInput *)rule
+{
+    if (field == nil) return;
+    [self.inputRules setObject:rule forKey:field];
+    // The common validator owns both regular editing and no-UI termination.
+    field.formatter = nil;
+    if ([field isKindOfClass:NSTextField.class]) ((NSTextField *)field).delegate = self;
+}
+- (void)configurePreferenceInputs
+{
+    self.inputRules = [NSMapTable strongToStrongObjectsMapTable];
+    [self addPreferenceField:tabIndentField rule:[[TSPreferenceInput alloc] initWithKey:tabsKey
+        kind:TSPreferenceInputInteger minimum:2 maximum:50 allowsEmpty:NO notification:DocumentFontChangedNotification]];
+    [self addPreferenceField:firstParagraphIndentField rule:[[TSPreferenceInput alloc] initWithKey:SourceFirstLineHeadIndentKey
+        kind:TSPreferenceInputInteger minimum:0 maximum:100 allowsEmpty:NO notification:DocumentFontChangedNotification]];
+    [self addPreferenceField:remainingParagraphIndentField rule:[[TSPreferenceInput alloc] initWithKey:SourceHeadIndentKey
+        kind:TSPreferenceInputInteger minimum:0 maximum:100 allowsEmpty:NO notification:DocumentFontChangedNotification]];
+    [self addPreferenceField:interlineSpacingField rule:[[TSPreferenceInput alloc] initWithKey:SourceInterlineSpaceKey
+        kind:TSPreferenceInputInteger minimum:1 maximum:20 allowsEmpty:NO notification:DocumentFontChangedNotification]];
+    [self addPreferenceField:_magTextField rule:[[TSPreferenceInput alloc] initWithKey:PdfMagnificationKey
+        kind:TSPreferenceInputPercentage minimum:20 maximum:400 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_HtmlHomeField rule:[[TSPreferenceInput alloc] initWithKey:HtmlHomeKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
+    [self addPreferenceField:_engineTextField rule:[[TSPreferenceInput alloc] initWithKey:DefaultEngineKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_texCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:TexCommandKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_latexCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:LatexCommandKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_texGSCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:TexGSCommandKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_latexGSCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:LatexGSCommandKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_tetexBinPathField rule:[[TSPreferenceInput alloc] initWithKey:TetexBinPath
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_gsBinPathField rule:[[TSPreferenceInput alloc] initWithKey:GSBinPath
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_altPathField rule:[[TSPreferenceInput alloc] initWithKey:AltPathKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
+    [self addPreferenceField:_kpsetoolField rule:[[TSPreferenceInput alloc] initWithKey:KpsetoolKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_bibTeXengineField rule:[[TSPreferenceInput alloc] initWithKey:BibTeXengineKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil]];
+    [self addPreferenceField:_texScriptCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:TexScriptCommandKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
+    [self addPreferenceField:_latexScriptCommandTextField rule:[[TSPreferenceInput alloc] initWithKey:LatexScriptCommandKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
+    [self addPreferenceField:_alternateEngineTextField rule:[[TSPreferenceInput alloc] initWithKey:AlternateEngineKey
+        kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:YES notification:nil]];
+}
+
+- (void)showPreferenceError:(NSString *)message
+{
+    if (self.endingPreferences || _prefsWindow == nil || _prefsWindow.attachedSheet != nil) return;
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = NSLocalizedString(@"Settings could not be saved", @"");
+    alert.informativeText = message;
+    [alert beginSheetModalForWindow:_prefsWindow completionHandler:nil];
+}
+- (void)presentInputErrorForField:(NSControl *)field
+{
+    if (self.inputErrorPresented || self.endingPreferences || _prefsWindow.attachedSheet != nil) return;
+    self.inputErrorPresented = YES;
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = NSLocalizedString(@"Enter a valid setting", @"");
+    alert.informativeText = NSLocalizedString(@"Correct this field, or restore its last saved value. Other settings are already saved.", @"");
+    [alert addButtonWithTitle:NSLocalizedString(@"Continue Editing", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Restore This Field", @"")];
+    NSString *original = self.editingOriginalText ?: field.stringValue;
+    __weak TSPreferences *weakSelf = self;
+    [alert beginSheetModalForWindow:_prefsWindow completionHandler:^(NSModalResponse response) {
+        TSPreferences *strongSelf = weakSelf;
+        if (strongSelf == nil) return;
+        strongSelf.inputErrorPresented = NO;
+        if (strongSelf.endingPreferences) return;
+        if (response == NSAlertSecondButtonReturn) {
+            field.stringValue = original;
+            NSText *editor = field.currentEditor;
+            if (editor != nil) editor.string = original;
+        }
+    }];
+}
+- (BOOL)commitPreferenceField:(NSControl *)field showError:(BOOL)showError reflect:(BOOL)reflect
+{
+    if (field == nil) return YES;
+    TSPreferenceInput *rule = [self.inputRules objectForKey:field];
+    if (rule == nil) return YES;
+    NSText *editor = field.currentEditor;
+    NSString *text = editor != nil ? editor.string : field.stringValue;
+    TSPreferenceInputValue *value = [rule validatedValue:text];
+    if (value == nil) {
+        if (showError) [self presentInputErrorForField:field];
+        return NO;
+    }
+    BOOL changed = [value storeInDefaults:SUD forKey:rule.key];
+    field.stringValue = [rule displayStringForValue:value];
+    if (editor != nil) editor.string = field.stringValue;
+    self.editingOriginalText = field.stringValue;
+    if (reflect && changed && rule.notification != nil)
+        [NSNotificationCenter.defaultCenter postNotificationName:rule.notification object:self];
+    return YES;
+}
+- (void)controlTextDidBeginEditing:(NSNotification *)notification
+{
+    NSControl *field = notification.object;
+    if ([self.inputRules objectForKey:field] == nil) return;
+    self.editingField = field;
+    self.editingOriginalText = field.stringValue;
+}
+- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)editor
+{
+    return [self commitPreferenceField:control showError:YES reflect:YES];
+}
+- (BOOL)finishPreferenceEditing:(BOOL)showError
+{
+    if (showError && _prefsWindow.attachedSheet != nil) return NO;
+    BOOL valid = YES;
+    for (NSControl *field in self.inputRules) {
+        if (field.currentEditor != nil && ![self commitPreferenceField:field showError:showError reflect:showError]) {
+            valid = NO;
+            if (showError) return NO;
+        }
+    }
+    if (showError) return [_prefsWindow makeFirstResponder:nil];
+    return valid;
+}
+- (BOOL)windowShouldClose:(NSWindow *)window
+{
+    return window != _prefsWindow || [self finishPreferenceEditing:YES];
+}
+- (void)windowWillClose:(NSNotification *)notification
+{
+    if (notification.object == _prefsWindow) [self tearDownPreferenceEditing];
+}
+- (void)releasePreferencePanels
+{
+    [self deactivatePreferenceColorWells];
+    NSFontManager *manager = [NSFontManager sharedFontManager];
+    if (self.ownsFontPanel && manager.target == nil &&
+        (_prefsWindow.isKeyWindow || _prefsWindow.isMainWindow)) {
+        [[manager fontPanel:NO] close];
+    }
+    self.ownsFontPanel = NO;
+    self.fontEditingContext = TSSettingsFontNone;
+}
+- (void)tearDownPreferenceEditing
+{
+    self.endingPreferences = YES;
+    self.themeOperationGeneration++;
+    if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];
+    [self cancelEnginePathDiscovery];
+    [self releasePreferencePanels];
+    self.editingField = nil;
+    self.editingOriginalText = nil;
+    [self.settingsController endSession];
+}
+- (void)finishPreferencesForTermination
+{
+    self.endingPreferences = YES;
+    self.themeOperationGeneration++;
+    if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];
+    [self finishPreferenceEditing:NO];
+    // Do not invoke formatter delegates or actions that could display a sheet.
+    for (NSControl *field in self.inputRules) [field abortEditing];
+    [self tearDownPreferenceEditing];
+}
+
 //==============================================================================
 // helpers
 //==============================================================================
@@ -2508,7 +2061,7 @@ This method retrieves the application preferences from the defaults object and s
 	double	magnification;
 	NSInteger		mag, tabSize;
 	NSInteger		myTag, myInteger;
-	BOOL	myBool;
+
 	NSNumber    *myNumber;
     
     fontData = [defaults objectForKey:DocumentFontKey];
@@ -2517,6 +2070,7 @@ This method retrieves the application preferences from the defaults object and s
 		self.documentFont = [NSUnarchiver unarchiveObjectWithData:fontData];
 	}
     
+    self.fontAttributes = nil;
     attributesData = [defaults objectForKey:DocumentFontAttributesKey];
     if (attributesData != nil)
     {
@@ -2907,6 +2461,7 @@ This method retrieves the application preferences from the defaults object and s
 	[_saveRelatedButton setState:[defaults boolForKey:SaveRelatedKey]];
     [_useTransparencyButton setState:[defaults boolForKey:UseTransparencyKey]];
     [_syncTabButton setState:[defaults boolForKey:SyncUseTabsKey]];
+    [self updateSettingsDependenciesFromDefaults:defaults];
 }
 
 /*" %{This method is not to be called from outside of this class}

@@ -27,6 +27,7 @@
 
 #import <AppKit/AppKit.h>
 
+@class TSAutoCompletionListEditor, HelpDocuments;
 @interface TSPreferences : NSObject
 {
 	IBOutlet NSWindow	*_prefsWindow;			/*" connected to the window "*/
@@ -40,13 +41,9 @@
 	IBOutlet NSMatrix       *_findMatrix;                   /* connected to Find Panel */
     IBOutlet NSMatrix       *_lineSizeMatrix;               /* connected to Line Number Size */
     IBOutlet NSMatrix       *_wrapMatrix;                    /* connected to Wrap Panel */
-    IBOutlet NSPanel    *_samplePanel;
-    IBOutlet NSTextView *_fontTextView;
     IBOutlet NSPanel    *stylePanel;
     // for Color
     IBOutlet NSTextField *styleTitle;
-    NSString *oldLiteStyle;
-    NSString *oldDarkStyle;
 
     IBOutlet NSButton       *_tabIndentButton;		    /*" connected to "Use Tab" "*/
     IBOutlet NSButton       *_syntaxColorLineButton;    /*" connected to "Syntax Active Line Coloring" "*/
@@ -112,7 +109,6 @@
 //	IBOutlet NSColorWell	*_consoleBackgroundColorWell;
 //	IBOutlet NSColorWell	*_consoleForegroundColorWell;
 //	IBOutlet NSColorWell	*_highlightBracesColorWell;
-	IBOutlet NSTabView		*_tabView;
 	IBOutlet NSMatrix		*_consoleResizeMatrix;
     IBOutlet NSMatrix       *_blockWidthMatrix;
     IBOutlet NSMatrix       *_blockSideMatrix;
@@ -156,42 +152,6 @@
     IBOutlet NSButtonCell   *_spellCheckParameters;
     IBOutlet NSButtonCell   *_spellCheckComments;
 
-	NSUndoManager		*_undoManager;			/*" used for discarding all changes when the cancel button was pressed "*/
-//	NSFont			*_documentFont;			/*" used to track the font that the user has selected for the document window "*/
-//	NSFont			*_consoleFont;			/*" used to track the font that the user has selected for the console window "*/
-	BOOL			fontTouched;			/*" if user fiddled with fonts and then cancelled,
-																we restore the old one "*/
-	BOOL			consoleFontTouched;
-	BOOL			consoleBackgroundColorTouched;
-	BOOL			consoleForegroundColorTouched;
-	BOOL			sourceBackgroundColorTouched;
-    BOOL            sourceTextColorTouched;
-	BOOL			previewBackgroundColorTouched;
-	BOOL			syntaxColorTouched;		/*" if user fiddled with syntax and then cancelled,
-																we restore the old one "*/
-    BOOL            syntaxColorLineTouched;        /*" if user fiddled with syntax and then cancelled,
-                                                                we restore the old one "*/
-	BOOL			oldSyntaxColor;			/*" value when preferences shown "*/
-    BOOL            oldSyntaxLineColor;
-	BOOL			autoCompleteTouched;
-	BOOL			bibDeskCompleteTouched;
-    BOOL            HtmlHomeTouched;
-	BOOL			oldAutoComplete;
-	BOOL			oldBibDeskComplete;
-    BOOL            oldSparkleAutomaticUpdate;
-    NSTimeInterval  oldSparkleInterval;
-	BOOL			magnificationTouched;
-	BOOL			externalEditorTouched;
-	BOOL			encodingTouched;
-	BOOL			commandCompletionCharTouched;
-	BOOL            invisibleCharacterTouched; // added by Terada
-	BOOL            highlightTouched; // added by Terada
-	BOOL            kpsetoolTouched; // added by Terada
-	BOOL            bibTeXengineTouched; // added by Terada
-	BOOL            makeatletterTouched; // added by Terada
-    BOOL            sparkleTouched;
-    BOOL            xmlTagsTouched;
-   
     IBOutlet NSPopUpButton  *dictionaryPopup;
 	IBOutlet NSButton *_displayAsBookButton;
 	IBOutlet NSPopUpButton	*_pageStylePopup;// mitsu 1.29 (O) /*" connected to page style popup button "*/
@@ -277,6 +237,14 @@
     
 }
 
+@property NSUInteger themeOperationGeneration;
+@property (strong) NSButton *legacySpellCheckButton;
+@property (strong) TSAutoCompletionListEditor *keyBindingEditor;
+@property (strong) HelpDocuments *settingsHelpDocuments;
+- (IBAction)displayCommentLines:(id)sender;
+- (IBAction)editKeyBindings:(id)sender;
+- (IBAction)legacySpellCheckPressed:(NSButton *)sender;
+- (void)updateSettingsDependenciesFromDefaults:(NSUserDefaults *)defaults;
 @property (retain) NSFont		*documentFont;			/*" used to track the font that the user has selected for the document window "*/
 @property (retain) NSFont		*consoleFont;			/*" used to track the font that the user has selected for the console window "*/
 @property (retain) NSDictionary *fontAttributes;         /*" used to track the font attributes that the user has selected for the document window "*/
@@ -286,6 +254,7 @@
 //------------------------------------------------------------------------------
 // target/action methods
 //------------------------------------------------------------------------------
+- (void)showKeyboardSettings:(id)sender;
 - (IBAction)showPreferences:sender;
 - (IBAction)discoverEnginePaths:(id)sender;
 - (void)discoverInitialEnginePaths;
@@ -367,7 +336,6 @@
 - (IBAction)changeConsoleResize:sender;
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender;
 - (IBAction)sourceOnLeftChanged:sender;
-- (IBAction)closeSamplePanel:sender;
 
 
 
@@ -382,8 +350,6 @@
 - (IBAction)colorParam1Changed:sender; // mitsu 1.29 (O)
 #endif
 
-- (IBAction)okButtonPressed:sender;
-- (IBAction)cancelButtonPressed:sender;
 - (IBAction)setDefaults:sender;
 
 - (IBAction)highlightChanged:sender; // added by Terada
@@ -424,9 +390,19 @@
 - (void)updateDocumentFontTextField;
 - (void)updateConsoleFontTextField;
 
+
+- (IBAction)consoleWindowPosChanged:(id)sender;
+- (IBAction)consoleWindowPosDefault:(id)sender;
+- (IBAction)lineNumberButtonPressed:(id)sender;
+- (IBAction)useTransparencyPressed:(id)sender;
+
 @end
 
 @interface TSPreferences (Color)
+- (IBAction)XMLCommentChanged:(id)sender;
+- (void)requestNameForThemeColors:(NSDictionary<NSString *, id> *)colors;
+- (void)deactivatePreferenceColorWells;
+- (IBAction)themeSelectionChanged:(id)sender;
 
 - (void)PrepareColorPane:(NSUserDefaults *)defaults;
 
@@ -480,22 +456,22 @@
 - (IBAction)XMLParameterChanged:sender;
 - (IBAction)XMLValueChanged:sender;
 
-- (IBAction)XMLChapterButtonChanged:sender;
-- (IBAction)XMLSectionButtonChanged:sender;
-- (IBAction)XMLSubsectionButtonChanged:sender;
-- (IBAction)XMLSubsubsectionButtonChanged:sender;
-- (IBAction)XMLIntroductionButtonChanged:sender;
-- (IBAction)XMLConclusionButtonChanged:sender;
-- (IBAction)XMLExercisesButtonChanged:sender;
-- (IBAction)XMLProjectButtonChanged:sender;
-- (IBAction)XMLFigureButtonChanged:sender;
-- (IBAction)XMLTableButtonChanged:sender;
-- (IBAction)XMLMarkButtonChanged:sender;
+- (IBAction)XMLChapterButtonChanged:(id)sender;
+- (IBAction)XMLSectionButtonChanged:(id)sender;
+- (IBAction)XMLSubsectionButtonChanged:(id)sender;
+- (IBAction)XMLSubsubsectionButtonChanged:(id)sender;
+- (IBAction)XMLIntroductionButtonChanged:(id)sender;
+- (IBAction)XMLConclusionButtonChanged:(id)sender;
+- (IBAction)XMLExercisesButtonChanged:(id)sender;
+- (IBAction)XMLProjectButtonChanged:(id)sender;
+- (IBAction)XMLFigureButtonChanged:(id)sender;
+- (IBAction)XMLTableButtonChanged:(id)sender;
+- (IBAction)XMLMarkButtonChanged:(id)sender;
 
 - (IBAction)okForStylePanel:sender;
 - (IBAction)cancelForStylePanel:sender;
-- (void)okForColor;
-- (void)cancelForColor;
+
+
 
 
 

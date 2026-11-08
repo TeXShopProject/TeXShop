@@ -2,6 +2,14 @@
 # Terada: Update XML and compiled nibs together, removing obsolete OS-specific variants.
 from pathlib import Path
 import sys, tempfile, subprocess, shutil
+if '--check-settings' in sys.argv[1:]:
+    with tempfile.TemporaryDirectory(prefix='texshop-compile-settings-') as td:
+        for xib in sorted(Path('Resources/Interfaces/Base.lproj').glob('Settings*.xib')):
+            subprocess.run(['xcrun','ibtool','--compile',str(Path(td)/(xib.stem+'.nib')),str(xib)],check=True)
+            print(xib.name, 'compiled in temporary directory')
+    raise SystemExit(0)
+if 'Preferences' in sys.argv[1:]:
+    raise SystemExit('Preferences.nib is historical. Use --check-settings for shared XIBs; Xcode builds product nibs.')
 with tempfile.TemporaryDirectory() as td:
     for name in sys.argv[1:]:
         for path in sorted(Path('Resources/Interfaces').glob(f'*/{name}.nib/designable.nib')):

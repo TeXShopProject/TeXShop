@@ -54,7 +54,7 @@ elif mutation:
     raise SystemExit('unknown mutation ' + mutation)
 
 # The color panel is replaced by a stub so the probe never opens a real panel.
-actions = [a.replace('[NSColorPanel sharedColorPanel]', 'colorPanel') for a in actions]
+actions = [a.replace('NSColorPanel.sharedColorPanelExists', 'YES').replace('[NSColorPanel sharedColorPanel]', 'colorPanel') for a in actions]
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -81,6 +81,8 @@ METHODS
     NSMutableDictionary *EditingColors; FakeWindow *_prefsWindow; }
 @end
 @implementation Prefs
+- (void)SaveEditedStyle:(id)sender {}
+- (void)deactivatePreferenceColorWells { [colorPanel close]; }
 HELPERS
 - (void)fillDark:(BOOL)withDarkColors
 {

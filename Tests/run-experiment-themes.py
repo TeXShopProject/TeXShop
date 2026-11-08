@@ -37,6 +37,7 @@ if args.mutation == 'filter-gamma':
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
 prefix = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 #import <Quartz/Quartz.h>
 #import "TSColorSupport.h"
 #import "TSExperimentTheme.h"
@@ -95,7 +96,7 @@ static PDFDocument *document(void) {
 }
 static BOOL inverted(ScrapPDFKitView *view) { return view.documentView.enclosingScrollView.contentFilters.count == 3; }
 int main(void) { @autoreleasepool {
-    [NSApplication sharedApplication];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     testDefaults = [ExperimentMemoryDefaults new];
     liteColors = @{@"EditorBackground":NSColor.whiteColor, @"EditorText":NSColor.blackColor,
         @"EditorInsertionPoint":NSColor.blueColor, @"PreviewBackground":NSColor.grayColor,
@@ -204,9 +205,10 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-themes-') as tmp:
     src, exe = Path(tmp)/'test.m', Path(tmp)/'test'
     src.write_text(prefix + pdf + tests)
-    subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa','-framework','Quartz',
+    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','Quartz',
         '-I',str(root/'Sources'),str(src),'-o',str(exe)], check=True)
-    result = subprocess.run([str(exe)],env=dict(os.environ,CFFIXED_USER_HOME=tmp),capture_output=True,text=True,timeout=30)
+    (Path(tmp)/'home/Library/Preferences').mkdir(parents=True)
+    result = subprocess.run([str(exe)],env=dict(os.environ,HOME=str(Path(tmp)/'home'),CFFIXED_USER_HOME=str(Path(tmp)/'home')),capture_output=True,text=True,timeout=30)
     if args.mutation:
         assert result.returncode == 1 and 'FAIL:' in result.stderr, result.stdout + result.stderr
         print('PASS: detected', args.mutation)

@@ -1,3 +1,4 @@
+#import "TestAppKitIsolation.h"
 // Production methods with memory-only defaults, temporary files and invisible UI doubles.
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 #import "TSKeyboardShortcuts.m"
@@ -126,7 +127,7 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 - (void)reflectChangesInEditor:(BOOL)force {} // No live field editor in these save-path tests.
 - (BOOL)saveNodes:(id)nodes toFile:(NSString *)path { return [super saveNodes:nodes toFile:self.failWrite ? [path stringByAppendingPathComponent:@"missing/file"] : path]; }
 @end
-@interface TestShortcuts : TSKeyboardShortcuts
+@interface TestShortcuts : TSShortcutPaneController
 @property TSShortcutCommand *selection;
 @property BOOL consent;
 @property int confirmations;
@@ -136,13 +137,13 @@ static void CaptureSheet(id self, SEL cmd, NSWindow *window, void (^handler)(NSM
 @end
 @implementation TestShortcuts
 - (TSShortcutCommand *)selectedCommand { return self.selection; }
-- (BOOL)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
-    if (![self.store macrosUsingKey:key modifiers:flags].count) return YES;
-    self.confirmations++; return self.consent;
+- (void)confirmMacrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags completion:(void (^)(BOOL))completion {
+    if (![self.store macrosUsingKey:key modifiers:flags].count) { completion(YES); return; }
+    self.confirmations++; completion(self.consent);
 }
 - (void)showError:(NSString *)error { self.error=error; }
-- (NSWindow *)window { return nil; }
-- (BOOL)isWindowLoaded { return self.pretendLoaded; }
+- (NSWindow *)window { static NSWindow *inert; if (!inert) inert=[NSWindow new]; return inert; }
+- (BOOL)isViewLoaded { return self.pretendLoaded; }
 - (void)reloadCommands { self.commandReloads++; }
 @end
 static NSDictionary *Candidate(NSString *path, NSString *key, NSUInteger flags) { return @{@"path":path,@"key":key,@"modifiers":@(flags)}; }
@@ -176,7 +177,7 @@ static void CheckAssignmentOrder(void) {
     REQUIRE([assignments[2][1] length] && [assignments[3][1] length]); assignments=nil;
 }
 int main(int argc, char **argv) { @autoreleasepool {
-    [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     CheckEscape(); CheckAssignmentOrder();
     NSEvent *punctuation=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand|NSEventModifierFlagShift timestamp:0 windowNumber:0 context:nil characters:@"{" charactersIgnoringModifiers:@"{" isARepeat:NO keyCode:33];
     REQUIRE([TSRecordedBinding(punctuation,@"[") isEqual:TSBinding(@"{",NSEventModifierFlagCommand)]);
@@ -213,7 +214,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(macroMenu.itemArray[5].keyEquivalent.length==0);
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"freed",@"f",cmd)]].count==0);
     REQUIRE([store macrosUsingKey:@"f" modifiers:cmd].count==1 && [store macrosAffectedByRestoringAll].count==1);
-    TestShortcuts *ui=[TestShortcuts new]; ui.store=store; ui.selection=findCommand;
+    TestShortcuts *ui=[[TestShortcuts alloc] initWithShortcuts:coordinator]; ui.store=store; ui.selection=findCommand;
     [ui restoreShortcut:nil]; REQUIRE(ui.confirmations==1 && [find.keyEquivalent isEqual:@"k"]);
     ui.consent=YES; [ui restoreShortcut:nil]; REQUIRE(ui.confirmations==2 && [find.keyEquivalent isEqual:@"f"] && macroMenu.itemArray[2].keyEquivalent.length==0);
     REQUIRE(![store setKey:@"k" modifiers:cmd forCommand:findCommand]); [coordinator refreshMenuAndMacros];
@@ -232,7 +233,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([find.keyEquivalent isEqual:@"f"] && !macroMenu.itemArray[2].keyEquivalent.length && [macroMenu.itemArray[3].keyEquivalent isEqual:@"z"]);
     // An engine-only rebuild must reapply saved menu keys and refresh an open settings list.
     find.keyEquivalent=@"x"; [macros setupMainMacroMenu]; REQUIRE([find.keyEquivalent isEqual:@"f"]);
-    ui.pretendLoaded=YES; [ui beginMenuRebuild]; [ui endMenuRebuild]; REQUIRE(ui.commandReloads>0); ui.pretendLoaded=NO;
+    ui.pretendLoaded=YES; [coordinator beginMenuRebuild]; [coordinator endMenuRebuild]; REQUIRE(ui.commandReloads>0); ui.pretendLoaded=NO;
     NSDictionary *validMacros=macros.macroDict;
     macros.macroDict=@{@"submenu":@[@42]};
     BOOL caught=NO; @try { [macros setupMainMacroMenu]; } @catch(NSException *e) { caught=YES; }

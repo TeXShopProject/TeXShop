@@ -15,6 +15,7 @@ elif mutation == 'natural-is-left':
     helper = helper.replace('if (direction != NSWritingDirectionLeftToRight)', 'if (NO)')
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
 static NSString *RightJustifyKey = @"RightJustify", *RightJustifyIfAnyKey = @"RightJustifyIfAny";
 @interface Defaults : NSObject @end
 @implementation Defaults
@@ -31,7 +32,7 @@ BLOCK
 }
 static NSUInteger edits;
 int main(void) { @autoreleasepool {
-    [NSApplication sharedApplication]; defaults = [Defaults new];
+    TSInstallAppKitIsolation(); [NSApplication sharedApplication]; defaults = [Defaults new];
     NSTextView *tv = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 500, 400)];
     [tv.textStorage replaceCharactersInRange:NSMakeRange(0, 0) withString:@"\\\\section{Intro}\nשלום עולם\nplain text\nسلام\n\n"];
     [[NSNotificationCenter defaultCenter] addObserverForName:NSTextStorageDidProcessEditingNotification object:tv.textStorage queue:nil usingBlock:^(NSNotification *n) { edits++; }];
@@ -83,7 +84,7 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-justify-') as tmp:
     src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
     src.write_text(program)
-    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', str(src), '-o', str(exe)], check=True)
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', str(src), '-o', str(exe)], check=True)
     r = subprocess.run([str(exe)], capture_output=True, text=True)
     print(r.stdout.strip())
     if mutation:

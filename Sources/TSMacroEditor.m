@@ -22,6 +22,7 @@
  *
  */
 
+#import "TSMacroSelection.h"
 #import "TSMacroEditor.h"
 
 #import "TSMacroOutlineController.h"
@@ -67,6 +68,26 @@ static TSFilterMode savedFilter = kNoFilterMode;
 {
 }
 
+
+- (void)openMacroEditorSelectingMacroAtIndexPath:(NSIndexPath *)path name:(NSString *)name key:(NSString *)key
+{
+    [self openMacroEditor:nil];
+    if (window == nil || outlineView == nil || outlineController == nil || [window attachedSheet] != nil) { return; }
+    if (![window makeFirstResponder:window]) { return; }
+    // Commit current fields to the in-memory tree only; never save or discard edits.
+    [self reflectChangesInEditor:YES];
+    TSMacroTreeNode *root = [outlineController rootOfTree];
+    if (root == nil) { return; }
+    TSMacroTreeNode *node = [TSMacroSelection nodeInRoot:root indexPath:path name:name key:key];
+    if (node == nil) { return; }
+    NSMutableArray<TSMacroTreeNode *> *parents = [NSMutableArray array];
+    for (TSMacroTreeNode *parent = node.nodeParent; parent != nil && parent != root; parent = parent.nodeParent) { [parents addObject:parent]; }
+    for (TSMacroTreeNode *parent in parents.reverseObjectEnumerator) { [outlineView expandItem:parent]; }
+    NSInteger row = [outlineView rowForItem:node];
+    if (row < 0) { return; }
+    [outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row] byExtendingSelection:NO];
+    [outlineView scrollRowToVisible:row];
+}
 
 - (IBAction)openMacroEditor: (id)sender
 {

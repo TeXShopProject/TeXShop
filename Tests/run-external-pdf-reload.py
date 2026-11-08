@@ -38,6 +38,7 @@ if mutation in mutations:
     old,new=mutations[mutation]; assert old in controller; controller=controller.replace(old,new)
 program=fixture+r'''
 #import "TSExternalPDFReload.h"
+#import "TSPreferenceProfile.h"
 #include <stdatomic.h>
 #include <sys/xattr.h>
 #include <fcntl.h>
@@ -134,9 +135,9 @@ int main(int argc,char **argv){@autoreleasepool{
    Check([PDF(12,[@(argv[3]) integerValue])writeToFile:@(argv[2]) atomically:[@(argv[4])boolValue]],@"External writer saved PDF");
    return 0;
  }
- [NSApplication sharedApplication];
+ TSInstallAppKitIsolation();[NSApplication sharedApplication];
  BOOL rtlBook=![NSProcessInfo.processInfo.arguments containsObject:@"--ltr"];
- [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} forName:NSArgumentDomain];
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} mutableCopy];
  NSString *path=[@(argv[1]) stringByAppendingPathComponent:@"test.PDF"];
  NSData *first=PDF(12,1),*changed=PDF(12,2);
  for(NSNumber *fit in @[@NO,@YES]) for(NSNumber *mode in @[@(kPDFDisplaySinglePage),@(kPDFDisplaySinglePageContinuous),@(kPDFDisplayTwoUp),@(kPDFDisplayTwoUpContinuous)]) {
@@ -153,15 +154,15 @@ int main(int argc,char **argv){@autoreleasepool{
  [v goToDestination:[[PDFDestination alloc]initWithPage:[v.document pageAtIndex:(v==d.myPDFKitView?4:8)] atPoint:NSMakePoint(170,520)]];
  }
  Pump(.1);
- [SUD setVolatileDomain:@{@"PdfRefresh":@NO} forName:NSArgumentDomain];
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@NO} mutableCopy];
  [d startExternalPDFObservation];Check(d.pdfRefreshTimer==nil && d.pdfActivity==nil,@"Disabled observation has no timer/activity");
- [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@NO,@"RefreshTime":@0.5} forName:NSArgumentDomain];
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@NO,@"RefreshTime":@0.5} mutableCopy];
  d.documentType=isPDF; [d configureExternalPDFObservation];
  Check(!d.pdfRefreshTimer && !d.pdfActivity,@"PDF-only opt-out prevents startup");
  d.documentType=3;[d configureExternalPDFObservation];[d startExternalPDFObservation];
  Check(!d.pdfRefreshTimer && !d.pdfActivity,@"Image document cannot observe a sibling PDF");
  d.documentType=isPDF;
- [SUD setVolatileDomain:@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} forName:NSArgumentDomain];
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} mutableCopy];
  [d startExternalPDFObservation];Check([[d externalPDFPath]isEqualToString:path],@"Uppercase PDF path");
  [d.pdfRefreshTimer invalidate];
  TSExternalPDFPosition one=TSExternalPDFCapture(d.myPDFKitView),two=TSExternalPDFCapture(d.myPDFKitView2);
@@ -333,5 +334,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-external-pdf-') as td:
   assert header.count(old)==1 and header.count('%lld:%ld", path')==1
   (p/'TSExternalPDFReload.h').write_text(header.replace(old,'info->st_mtimespec.tv_nsec, (long long)info->st_ctimespec.tv_sec, info->st_ctimespec.tv_nsec];').replace('%lld:%ld", path','%lld:%ld:%lld:%ld", path'))
  elif mutation and mutation not in mutations: raise SystemExit('unknown mutation')
- subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(snapshot),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSPreferenceProfile.m'),str(snapshot),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test'),td]+(['--ltr'] if '--ltr' in sys.argv else []),env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)

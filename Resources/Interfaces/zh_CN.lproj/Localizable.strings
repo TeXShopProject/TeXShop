@@ -106,7 +106,6 @@
 "Split Window" = "分割窗口";
 "New Document" = "新文件";
 "Link Popups" = "链接预览";
-"Source" = "源代码";
 "Syntax Color expl3 Code" = "高亮 expl3 代码";
 "PDF File Has No Annotations" = "PDF 文件未发现批注";
 
@@ -117,7 +116,6 @@
 "Forget learned words" = "忘记已学习的单词";
 "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "此文稿中的以下单词已为%@学习。请选择要忘记的单词。按住 Shift 或 Command 键点按可选择多个。";
 "Forget Selected" = "忘记所选单词";
-"Cancel" = "取消";
 "Forgot %lu word." = "已忘记 %lu 个单词。";
 "Forgot %lu words." = "已忘记 %lu 个单词。";
 "No learned words in this document" = "此文稿中没有已学习的单词";
@@ -147,12 +145,9 @@
 "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "已选中检测到的最新版本。您可以在下方选择其他候选项。自定义引擎命令和备用路径保持不变。";
 "Not found (current setting will be kept)" = "未找到（将保留当前设置）";
 "Version unavailable" = "未知";
-"Install a TeX distribution, then run Auto Setup in Settings > Engine." = "请先安装 TeX 发行版，然后在“设置 > 引擎”中运行自动设置。";
 "Use These Paths" = "使用这些路径";
 
 /* Menu keyboard shortcut customization */
-"Keyboard Shortcuts" = "键盘快捷键";
-"Keyboard Shortcuts…" = "键盘快捷键…";
 "Search commands" = "搜索命令";
 "Command" = "命令";
 "Shortcut" = "快捷键";
@@ -170,10 +165,134 @@
 "This shortcut is already used by “%@”." = "此快捷键已被“%@”使用。";
 "Use Command or Control with a key, or a function key (F1–F20)." = "请将 Command 或 Control 与一个按键组合使用，或使用功能键（F1–F20）。";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "选择命令以更改其快捷键。更改立即生效。宏和文本输入按键绑定使用各自的编辑器。";
-"Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除此窗口中所做的更改。现有的 KeyEquivalents.plist 设置将保留。";
+
+/* Immediate settings: new text uses English fallback outside en/ja. */
+"The selected profile is invalid." = "The selected profile is invalid.";
+"Apply Settings Profile?" = "Apply Settings Profile?";
+"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+"Apply Profile" = "Apply Profile";
+"Settings could not be saved" = "Settings could not be saved";
+"Enter a valid setting" = "Enter a valid setting";
+"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+"Continue Editing" = "Continue Editing";
+"Restore This Field" = "Restore This Field";
+"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "请指定其他主题名称。不允许使用以点开头的名称、路径分隔符、控制字符或符号链接。";
+"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+
+"Back" = "后退";
+
+"Forward" = "前进";
+
+"Settings Categories" = "设置类别";
+
+"Navigation History" = "导航历史记录";
+
+"Back (⌘[)" = "后退 (⌘[)";
+
+"Forward (⌘])" = "前进 (⌘])";
+
+"Keyboard" = "键盘";
+"Search by Function" = "按功能搜索";
+"Search by Key" = "按按键搜索";
+"Show in Macro Editor" = "在宏编辑器中显示";
+"Assigned" = "已分配";
+"Inactive for this key" = "此按键无效";
+"Assignment priority is shown; whether a command can run depends on the document." = "显示按键分配的优先级。命令能否执行取决于文稿状态。";
+"Keys used by the system cannot be detected. Press Escape to stop recording." = "无法检测系统使用的按键。按 Esc 结束录制。";
+"No command uses this key." = "没有命令使用此按键。";
+"Press a key" = "请按键";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与 Command 或 Control 组合使用，或使用 F1–F20。";
+"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除自定菜单快捷键。KeyEquivalents.plist 中的设置将保留。";
+
+"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "显示现有分配。此按键不能分配给新的快捷键。";
+
+/* Number of key search results, announced by VoiceOver. */
+"Matches: %lu" = "匹配项：%lu";
+
+"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+
+"Replace" = "Replace";
+
+"General" = "通用";
+"Documents and Saving" = "文稿与保存";
+"Editor" = "编辑器";
+"Spell Checking" = "拼写检查";
+"Appearance" = "外观";
+"Typesetting" = "排版";
+"Console" = "控制台";
+"Updates" = "更新";
+"Defaults for New Documents" = "新文稿的默认设置";
+"Matching Brackets" = "括号匹配";
+"Spelling While Typing" = "键入时检查拼写";
+"Use LaTeX-aware spell checking (recommended)" = "使用考虑 LaTeX 结构的拼写检查（推荐）";
+"Use legacy spell checking" = "使用传统拼写检查";
+"LaTeX Spell Checking" = "LaTeX 拼写检查";
+"Edit Key Bindings…" = "编辑按键绑定文件…";
+"Key Bindings" = "按键绑定";
+"Edit Command Completion…" = "编辑命令补全文件…";
+"Command Completion" = "命令补全";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "使用 Tab 触发命令补全时，Tab 将保留用于补全，不能分配给菜单快捷键。";
+"Source and Preview Windows" = "源文件和预览窗口";
+"Comment Lines and Hidden Settings" = "注释行与隐藏设置";
+"Advanced" = "高级";
+
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "安装 TeX 发行版，然后在设置 > 排版中运行自动设置。";
+
+"Completion trigger" = "触发按键";
+
+"This key is reserved for command completion." = "此按键已保留用于命令补全。";
+
+"Encoding" = "字符编码";
+
+"Saving Documents" = "保存文稿";
+
+"Page Display" = "页面显示";
+
+"PDF Interaction" = "PDF操作";
+
+"PDF Appearance" = "PDF外观";
+
+"HTML Preview" = "HTML预览";
+
+"Typesetting Defaults" = "排版默认值";
+
+"Synchronization" = "同步";
+
+"Tools" = "工具";
+
+"Expanded" = "展开";
+
+"Collapsed" = "折叠";
+
+"Search Settings" = "搜索设置";
+
+"Settings results: %lu" = "找到的设置类别：%lu";
+
+"No Settings Found" = "未找到设置";
+
+"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 
 /* Independent Experiment console */
 "Experiment input" = "实验台输入";
 "Stop Experiment" = "停止实验台";
 "%@ — Experiment Console" = "%@ — 实验台控制台";
 "Experiment stopped.\n" = "实验台已停止。\n";
+
+/* Explicit fallback for shared keys without a translation. */
+"A new version of TeXShop is available (version %@). Would you like to download it now?" = "A new version of TeXShop is available (version %@). Would you like to download it now?";
+"Assign" = "Assign";
+"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
+"Macro shortcut conflicts" = "Macro shortcut conflicts";
+"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
+"Return to Editing" = "Return to Editing";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
+"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";

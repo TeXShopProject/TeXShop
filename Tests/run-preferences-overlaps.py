@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""No two controls of the Preferences window overlap or touch, in any localization.
+"""Check common panes in all languages without showing windows.
 
-Renders each tab (and the theme tab's inner tabs) of every compiled Preferences.nib,
-and the controls around the tabs, offscreen in the light and dark appearances, and
-measures what each control actually draws, so controls whose bezel is drawn outside
-their frame on current macOS are caught too. Controls must also stay off box titles
-and inside their box without being cut off, and their text must fit, whichever item
-a popup menu shows. Controls of a kind stacked in a view must line up, and labels
-must not start with spaces. Every tab must yield a reasonable number of controls
-that draw something, so the check cannot pass by measuring nothing."""
+Default: current pane action/tag/string, text fit, containment and stack geometry.
+--legacy: historical fixed-tab pixel fixture only; not current product coverage.
+Use PANE_DRAWINGS with the default mode for offscreen light/dark captures.
+"""
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
+# The old nibs remain historical fixtures; product geometry is checked on the shared panes.
+if '--legacy' not in sys.argv:
+    subprocess.run([sys.executable,str(root/'Tests/run-settings-panes.py'),*sys.argv[1:]],check=True)
+    raise SystemExit(0)
 nibs = sorted(str(p) for p in (root / 'Resources/Interfaces').glob('*.lproj/Preferences.nib'))
 with tempfile.TemporaryDirectory() as td:
     exe = Path(td) / 'PreferencesOverlaps'
@@ -27,7 +27,7 @@ if len(stats) != expected:
 for l in stats:
     fields = dict(kv.split('=') for kv in l.split('\tSTAT ')[1].split())
     controls, empty = int(fields['controls']), int(fields['empty'])
-    if controls < 3 or empty * 10 > controls:
+    if controls < (2 if '\tbar\t' in l else 3) or empty * 10 > controls:
         problems.append(f'too few controls measured: {l}')
 for l in problems:
     print(l)
