@@ -4416,7 +4416,10 @@ if (!self.skipLinks && !self.globalLongTerm)
         return event;
     if (event.type == NSEventTypeFlagsChanged && (event.modifierFlags & NSEventModifierFlagOption))
         self.globalLongTerm = YES;
-    if (event.type == NSEventTypeKeyDown && [event.charactersIgnoringModifiers isEqualToString:@"\033"]) {
+    if (self.globalLongTerm && event.type == NSEventTypeKeyDown
+        && !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl
+                                    | NSEventModifierFlagOption | NSEventModifierFlagShift))
+        && [event.charactersIgnoringModifiers isEqualToString:@"\033"]) {
         [self doKillPopup];
         return nil;
     }
@@ -4466,7 +4469,6 @@ if (!self.skipLinks && !self.globalLongTerm)
 {
     NSInteger aTimerNumber = [(NSNumber *)theTimer.userInfo[0] integerValue];
     if (aTimerNumber != self.timerNumber || self.handlingLink != 2) return;
-    if ([NSEvent modifierFlags] & NSEventModifierFlagOption) self.globalLongTerm = YES;
     if (!self.globalLongTerm) [self doKillPopup];
 }
 
@@ -4904,6 +4906,7 @@ if (!self.skipLinks && !self.globalLongTerm)
 // earses the frame of selected rectangle and cleans up the cached image
 - (void)cleanupMarquee: (BOOL)terminate
 {
+    if (self.handlingLink) { [self doKillPopup]; return; }
     // for Mavericks
    //  if (atLeastMavericks) {
     {
