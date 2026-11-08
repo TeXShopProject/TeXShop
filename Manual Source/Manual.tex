@@ -2621,7 +2621,7 @@ If you click in the contents of the Preview window while the Control key is down
 
 \subsection{Modifying Popup Windows}
 \label{Modifying_Popup_Windows_Section}
-The details of the small window created by hovering over a link can be changed by holding down any combination of three modifier keys  before moving a mouse to the link. These modifying keys have been selected so their names give a mnemonic for the effect they create. The SHIFT key shifts the small window to appear above the link, rather than  below it. The COMMAND key commands that a bigger window with larger text be displayed. The OPTION key selects the optional behavior that the small window will remain on the screen until the mouse moves. (If a user forgets to push the option key, it can be pushed later; if it is down at the four second mark, the window will remain open.)
+The details of the small window created by hovering over a link can be changed by holding down any combination of three modifier keys  before moving a mouse to the link. These modifying keys have been selected so their names give a mnemonic for the effect they create. The SHIFT key shifts the small window to appear above the link, rather than  below it. The COMMAND key commands that a bigger window with larger text be displayed. The OPTION key pins the popup on screen, so you can move the pointer to explain the relationship between the linked text and the surrounding page. Release Option and the popup stays visible; press Escape to dismiss it. Option can also be pressed while an ordinary popup is already visible to pin it. Shift and Command can still be combined with Option. Clicking in the preview, changing pages or zoom, switching windows, reloading the PDF, or closing the preview also dismisses the popup. Release the modifier keys before pressing Escape; modified Escape shortcuts retain their usual behavior.
 
 
 
@@ -4039,7 +4039,7 @@ If there is an internal link created by the \texttt{hyperref} package, then ther
 If this popup window covers something important, press the shift key when hovering over the link to shift the window up.
 By default, the popup window disappears after four seconds or when you move the mouse.
 This is probably long enough for you, but not for your audience.
-So exercise the option to display the popup window longer by pressing the option key when hovering over the link or when the four-seconds timer is about to run out.
+So exercise the option to pin the popup window by pressing the option key when hovering over the link, or while the popup is visible. You can then move the pointer freely while explaining; press Escape to close the popup.
 When the default popup window it too small -- no problem.
 You are in command, so press the command key when hovering over the link for a larger window!
 Of course, any combination of the three modifier keys also works as expected.
@@ -4050,13 +4050,12 @@ The position of the popup window is mostly relative to the location where you en
 Hence a shifted vertical placement of the popup window (by about a baseline skip) is easy and sometimes helpful.
 
 It's your responsibility to arrange by scrolling for sufficient vertical space so that the interesting part of the popup window is visible, in particular when you use the shift key for an upper placement.
-If you use the option for an extended duration of the popup view, then there is enough time for a careful gesture on the trackpad to ``scroll'' the preview including the popup. 
+With the popup pinned, there is enough time for a careful gesture on the trackpad to ``scroll'' the preview including the popup.
 \item
 In case \ref{PWT_LaTeX_Source}, make sure to place an internal link to every previous location in the order you want to show these.
 \item
-Sometimes during online teaching, case \ref{PWT_Online}, you might be tempted to use the mouse pointer to explain a correspondence between aspects in the popup window and the current situation  -- however, this doesn't work, because the popup window disappears as soon as you move the mouse.
-There is no old-fashioned stick or modern laser pointer to help you out.
-However, here is a solution, see also \cref{Options_Splitting_Horizontally_Section}: Scroll the Preview so that the link is in the upper half of the window.
+During online teaching, case \ref{PWT_Online}, you can press Option while the popup is visible to keep it on screen, then move the pointer to explain the correspondence between its contents and the current page. Press Escape to dismiss the popup.
+For a larger, independently scrollable view, you can also split the Preview; see \cref{Options_Splitting_Horizontally_Section}. Scroll the Preview so that the link is in the upper half of the window.
 Hold down the shift key and toggle ``Split Window'' in the Window menu (or the context menu) or click in the toolbar the symbol consisting of two rectangles stacked on top of each other.
 This splits the Preview window into equal parts and duplicates the upper part of the full view into the lower part.
 Follow the internal link in the lower part.

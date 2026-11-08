@@ -107,6 +107,8 @@ WINDOW_METHODS
 -(void)reShowForSecond;
 @end
 @implementation RecoveryView
+-(void)doKillPopup {self.handlingLink=0; self.globalLongTerm=NO; self.timerNumber++;}
+-(void)increaseTimerNumber {self.timerNumber++;}
 -(void)updateDarkModeInversion {}
 -(void)scaleChanged:(id)sender {}
 -(BOOL)doReleaseDocument{return self.releaseDocument;}
