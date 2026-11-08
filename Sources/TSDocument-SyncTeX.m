@@ -30,8 +30,24 @@
 #import "MyDragView.h"
 #import "MyPDFKitView.h"
 #import "synctex_parser.h"
+#import <stdlib.h>
+#import <string.h>
 
 
+
+// A failed resolution must not be mistaken for a canonical pathname.
+static NSString *TSSyncTeXResolvedPath(NSString *path)
+{
+    if (!path.length) return nil;
+    const char *filePath = path.fileSystemRepresentation;
+    if (!filePath) return nil;
+    char *resolved = realpath(filePath, NULL);
+    if (!resolved) return nil; // Includes ELOOP, ENOENT and EACCES.
+    NSString *result = [NSFileManager.defaultManager stringWithFileSystemRepresentation:resolved
+        length:strlen(resolved)];
+    free(resolved);
+    return result;
+}
 
 // Match filesystem aliases without changing the input name passed back to SyncTeX.
 static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
@@ -39,28 +55,25 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 {
     if (!scanner || !sourcePath.length || !rootPath.length)
         return NULL;
-    NSString *source = [sourcePath stringByStandardizingPath];
-    NSString *resolvedSource = nil;
-    // Prefer the recorded spelling before trying symlink-equivalent paths.
-    for (NSInteger pass = 0; pass < 2; pass++) {
-        if (pass == 1)
-            resolvedSource = [source stringByResolvingSymlinksInPath];
-        for (synctex_node_p node = synctex_scanner_input(scanner); node;
-             node = synctex_node_sibling(node)) {
-            const char *name = synctex_scanner_get_name(scanner, synctex_node_tag(node));
-            if (!name)
-                continue;
-            NSString *input = [NSString stringWithUTF8String:name];
-            if (!input.length)
-                continue;
-            NSString *candidate = input.isAbsolutePath ? input : [rootPath stringByAppendingPathComponent:input];
-            candidate = [candidate stringByStandardizingPath];
-            if ((pass == 0 && [source isEqualToString:candidate]) ||
-                (pass == 1 && [resolvedSource isEqualToString:[candidate stringByResolvingSymlinksInPath]]))
-                return name;
-        }
+    NSString *source = [sourcePath stringByExpandingTildeInPath];
+    // Do not collapse ".." before realpath: its meaning can depend on a symlink.
+    NSString *resolvedSource = TSSyncTeXResolvedPath(source);
+    if (!resolvedSource) return NULL;
+    const char *aliasMatch = NULL;
+    for (synctex_node_p node = synctex_scanner_input(scanner); node;
+         node = synctex_node_sibling(node)) {
+        const char *name = synctex_scanner_get_name(scanner, synctex_node_tag(node));
+        if (!name) continue;
+        NSString *input = [NSString stringWithUTF8String:name];
+        if (!input.length) continue;
+        NSString *candidate = input.isAbsolutePath ? input : [rootPath stringByAppendingPathComponent:input];
+        NSString *resolvedCandidate = TSSyncTeXResolvedPath(candidate);
+        if (!resolvedCandidate || ![resolvedSource isEqualToString:resolvedCandidate]) continue;
+        // Prefer an exact spelling even when an equivalent alias appeared earlier.
+        if ([source isEqualToString:candidate]) return name;
+        if (!aliasMatch) aliasMatch = name;
     }
-    return NULL;
+    return aliasMatch;
 }
 
 @implementation TSDocument (SyncTeX)
