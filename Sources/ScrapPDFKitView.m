@@ -79,7 +79,8 @@
 
 - (void) reShowWithPath: (NSString *)imagePath
 {
-	PDFDocument     *pdfDoc;
+    PDFDocument *pdfDoc = [[PDFDocument alloc] initWithData:[NSData dataWithContentsOfFile:imagePath]];
+    if (!pdfDoc || pdfDoc.pageCount == 0) return;
 	BOOL            needsInitialization;
     NSRect          tempRect;
     NSRect          visibleRectA, fullRectA;
@@ -117,7 +118,7 @@
         }
 
     
-    pdfDoc = [[PDFDocument alloc] initWithURL: [NSURL fileURLWithPath: imagePath]];
+    // The data-backed snapshot remains valid after the temporary directory is removed.
     [self setDocument: pdfDoc];
     
     if (needsInitialization) {

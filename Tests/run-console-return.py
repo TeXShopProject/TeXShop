@@ -42,6 +42,10 @@ static Win *KeyWindow(void) { return gKey; }
     NSTextStorage *_textStorage;
 }
 @property (weak) NSWindow *consoleReturnWindow;
+@property BOOL experimentContext;
+@property NSUInteger experimentConsoleCalls;
+- (BOOL)experimentHasKeyWindow;
+- (void)showExperimentConsole;
 @property (strong) Win *pdfKitWindow;
 - (BOOL)checkMasterFile:(NSString *)s forTask:(int)t;
 - (BOOL)checkRootFile_forTask:(int)t;
@@ -59,6 +63,8 @@ enum { RootForConsole = 1 };
 }
 @end
 @implementation Doc
+- (BOOL)experimentHasKeyWindow { return self.experimentContext; }
+- (void)showExperimentConsole { self.experimentConsoleCalls++; }
 - (BOOL)checkMasterFile:(NSString *)s forTask:(int)t { return NO; }
 - (BOOL)checkRootFile_forTask:(int)t { return NO; }
 METHODS
@@ -92,6 +98,10 @@ int main(void) { @autoreleasepool {
     [d->outputWindow makeKeyAndOrderFront:nil]; CMD0; Expect(@"combined window mode -> combined", d->fullSplitWindow);
     d->useFullSplitWindow = NO; d->fullSplitWindow.isVisible = NO; d->textWindow.isVisible = NO;
     [d->outputWindow makeKeyAndOrderFront:nil]; CMD0; Expect(@"no source window -> preview", d.pdfKitWindow);
+    d.experimentContext = YES;
+    Win *before = gKey; CMD0;
+    Expect(@"Experiment routing leaves ordinary console unchanged", before);
+    if (d.experimentConsoleCalls != 1) failures++;
     return failures ? 1 : 0;
 } }
 '''.replace('METHODS', methods)

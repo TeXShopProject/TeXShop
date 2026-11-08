@@ -195,3 +195,9 @@
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "このキーはマクロ“%@”（%@）と重なっています。そちらは一覧で後にあるため、そのキーが無効になります。";
 
 "This shortcut is already used by:\n%@" = "このショートカットは次のコマンドで使用されています：\n%@";
+
+/* Independent Experiment console */
+"Experiment input" = "実験への入力";
+"Stop Experiment" = "実験を中止";
+"%@ — Experiment Console" = "%@ — 実験コンソール";
+"Experiment stopped.\n" = "実験を中止しました。\n";

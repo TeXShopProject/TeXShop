@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""Exercise the production Experiment controller with real AppKit windows and text views.
+
+Uses real child processes and encoding helpers. Window ordering alone is suppressed;
+no TeXShop user settings are read and no windows are shown.
+"""
+from pathlib import Path
+import subprocess, tempfile, os, argparse
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter"])
+args = parser.parse_args()
+root = Path(__file__).resolve().parents[1]
+def cut(text, start, end):
+    a = text.index(start)
+    return text[a:text.index(end, a)]
+enc = (root / 'Sources/TSEncodingSupport.m').read_text(encoding='latin1')
+helpers = cut(enc, '// UTF-8 in which each byte that does not start or continue a valid character is replaced', '// The byte order mark that starts data')
+japanese = cut(enc, '// Japanese encodings read the byte 0x5C', '- (BOOL)ptexUtfOutputCheck:')
+filters = enc[enc.index('// replace backslashes by yens'):].rstrip() + '\n'
+controller = (root / 'Sources/TSExperimentConsoleController.m').read_text().replace('#import "TSEncodingSupport.h"', '').replace('#import "globals.h"', '')
+if args.mutation == "no-window-load":
+    assert "[self loadWindow];" in controller
+    controller = controller.replace("[self loadWindow];", "", 1)
+elif args.mutation == "no-yen-filter":
+    assert "command = filterYenToBackslash(command);" in controller
+    controller = controller.replace("command = filterYenToBackslash(command);", "command = command;", 1)
+prefix = r'''
+#import <Cocoa/Cocoa.h>
+#import "TSExperimentJob.h"
+#import "TSEncodingSupport.h"
+typedef enum { kNoFilterMode = 0, kMacJapaneseFilterMode = 1, kOtherJapaneseFilterMode = 2 } TSFilterMode;
+static TSFilterMode g_shouldFilter = kNoFilterMode;
+static NSString *yenString = @"\u00a5";
+@implementation TSEncodingSupport
++ (instancetype)sharedInstance { static TSEncodingSupport *s; if (!s) s = [self new]; return s; }
+HELPERS
+JAPANESE
+@end
+FILTERS
+static BOOL behind;
+@interface TestDefaults : NSObject
+- (BOOL)boolForKey:(NSString *)key;
+- (NSString *)stringForKey:(NSString *)key;
+- (float)floatForKey:(NSString *)key;
+@end
+@implementation TestDefaults
+- (NSString *)stringForKey:(NSString *)key { return @"Menlo"; }
+- (float)floatForKey:(NSString *)key { return 15; }
+- (BOOL)boolForKey:(NSString *)key { return [key isEqualToString:@"ConsoleBehavior"] ? behind : YES; }
+@end
+#define SUD ((TestDefaults *)[TestDefaults new])
+#define ConsoleFontNameKey @"ConsoleFontName"
+#define ConsoleFontSizeKey @"ConsoleFontSize"
+#define ConsoleFontChangedNotification @"ConsoleFontChanged"
+#define ConsoleBehaviorKey @"ConsoleBehavior"
+#define BringPdfFrontOnTypesetKey @"BringPdfFront"
+'''.replace('HELPERS', helpers).replace('JAPANESE', japanese).replace('FILTERS', filters)
+tests = r'''
+// Keep the production initializer, window getter, loadWindow and appendText.
+// Suppress only operations that would make a window appear on screen.
+static NSUInteger backCount;
+@implementation TSExperimentConsoleWindow (HeadlessOrdering)
+- (void)makeKeyAndOrderFront:(id)sender { }
+- (void)orderFront:(id)sender { }
+- (void)orderBack:(id)sender { backCount++; }
+@end
+static void check(BOOL ok, NSString *label) { if (!ok) { fprintf(stderr, "FAIL: %s\n", label.UTF8String); exit(1); } }
+static BOOL waitFor(BOOL (^test)(void)) {
+    NSDate *end = [NSDate dateWithTimeIntervalSinceNow:5];
+    while (!test() && end.timeIntervalSinceNow > 0) [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    return test();
+}
+static NSURL *directory(void) {
+    NSURL *d = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:NSUUID.UUID.UUIDString]];
+    check([[NSFileManager defaultManager] createDirectoryAtURL:d withIntermediateDirectories:YES attributes:nil error:NULL], @"temporary directory");
+    return d;
+}
+static BOOL exists(NSURL *d) { return [[NSFileManager defaultManager] fileExistsAtPath:d.path]; }
+int main(void) { @autoreleasepool {
+    [NSApplication sharedApplication];
+    TSExperimentConsoleController *console = [TSExperimentConsoleController new];
+    check(console.window != nil && console.isWindowLoaded, @"production initializer creates window");
+    check(console.outputText != nil && console.commandField != nil && console.stopButton != nil, @"production controls exist");
+    check(!console.commandField.enabled && !console.stopButton.enabled, @"idle console controls disabled");
+    check(console.outputText.font.pointSize == 15, @"console font preference applied");
+    check([console.window.frameAutosaveName isEqualToString:@"ExperimentConsole"], @"separate frame autosave name");
+    [console appendText:@"initial output"];
+    check([console.outputText.string isEqualToString:@"initial output"], @"production appendText stores text");
+    NSURL *dir = directory();
+    behind = YES;
+    __block BOOL completed = NO;
+    [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"printf prompt; read line; printf '%s' \"$line\"; printf pdf > file.pdf"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Sample" completion:^(NSURL *pdf) {
+        check(exists(pdf), @"PDF exists during callback"); completed = YES;
+    }];
+    check(backCount == 1, @"background preference orders new console behind");
+    check(waitFor(^BOOL{ return [console.outputText.string isEqualToString:@"prompt"]; }), @"prompt reaches separate console");
+    console.commandField.stringValue = @"hello"; [console sendCommand:nil];
+    check(waitFor(^BOOL{ return completed; }), @"input completes job");
+    check([console.outputText.string isEqualToString:@"prompthello\nhello"], @"echo and engine output retained");
+    check(!console.commandField.enabled && !console.stopButton.enabled && !exists(dir), @"completion disables input and removes temporary directory");
+    // Yen mode displays yen signs but sends TeX ASCII backslashes.
+    dir = directory(); completed = NO; g_shouldFilter = kMacJapaneseFilterMode;
+    [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"printf prompt; read -r line; printf '%s' \"$line\" | od -An -tx1"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Yen" completion:^(NSURL *pdf) { completed = YES; }];
+    check(waitFor(^BOOL{ return [console.outputText.string isEqualToString:@"prompt"]; }), @"yen prompt");
+    console.commandField.stringValue = @"¥a"; [console sendCommand:nil];
+    check(waitFor(^BOOL{ return completed; }), @"yen job completes");
+    check([console.outputText.string containsString:@"¥a\n"] && [console.outputText.string containsString:@"5c  61"], @"yen display and ASCII backslash bytes");
+    g_shouldFilter = kNoFilterMode;
+    // Closing/replacing an Experiment cancels its job and suppresses stale completion.
+    dir = directory(); completed = NO;
+    [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"sleep 10; printf pdf > file.pdf"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Sample" completion:^(NSURL *pdf) { completed = YES; }];
+    NSURL *old = dir; dir = directory();
+    [console startExecutable:@"/bin/echo" arguments:@[@"replacement"] environment:@{} directory:dir encoding:NSUTF8StringEncoding title:@"Sample" completion:nil];
+    check(!exists(old), @"replacement removes old directory");
+    check(waitFor(^BOOL{ return !console.job.active; }), @"replacement completes");
+    check(!completed && !exists(dir), @"stale result suppressed and replacement cleaned up");
+    dir = directory();
+    [console startExecutable:@"/not/a/real/engine" arguments:@[] environment:@{} directory:dir encoding:NSUTF8StringEncoding title:@"Sample" completion:nil];
+    check(!exists(dir) && !console.commandField.enabled, @"failed launch cleanup");
+    // A split UTF-8 character must survive a pause longer than the prompt flush timer.
+    console.outputText.string = @""; console.carry = nil; console.encoding = NSUTF8StringEncoding;
+    NSData *utf8 = [@"日本語" dataUsingEncoding:NSUTF8StringEncoding];
+    [console appendData:[utf8 subdataWithRange:NSMakeRange(0, 1)] atEnd:NO];
+    NSDate *end = [NSDate dateWithTimeIntervalSinceNow:0.4];
+    while (end.timeIntervalSinceNow > 0) [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    check(console.outputText.string.length == 0, @"paused partial UTF-8 is not replaced");
+    [console appendData:[utf8 subdataWithRange:NSMakeRange(1, utf8.length - 1)] atEnd:YES];
+    check([console.outputText.string isEqualToString:@"日本語"], @"UTF-8 survives split prompt");
+    // Closing the source/document invalidates callbacks and cancels the independent job.
+    dir = directory(); completed = NO;
+    [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"sleep 10"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Sample" completion:^(NSURL *pdf) { completed = YES; }];
+    [console invalidate];
+    check(!console.window.isVisible && !exists(dir) && !console.job && !completed, @"invalidate closes and cleans only this Experiment");
+    puts("PASS: real controller input/output, background visibility, output decoding, completion, replacement, failed launch and close cleanup (production AppKit controls, no displayed windows)");
+} return 0; }
+'''
+with tempfile.TemporaryDirectory(prefix='texshop-experiment-console-') as tmp:
+    src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
+    src.write_text(prefix + controller + tests)
+    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Sources'), str(src), str(root / 'Sources/TSExperimentJob.m'), '-o', str(exe)], check=True)
+    env = dict(os.environ, CFFIXED_USER_HOME=tmp)
+    result = subprocess.run([str(exe)], env=env, capture_output=True, text=True, timeout=30)
+    if args.mutation:
+        assert result.returncode == 1 and "FAIL:" in result.stderr, result.stdout + result.stderr
+        print("PASS: detected", args.mutation)
+    else:
+        if result.returncode:
+            raise SystemExit(result.stdout + result.stderr)
+        print(result.stdout.strip())

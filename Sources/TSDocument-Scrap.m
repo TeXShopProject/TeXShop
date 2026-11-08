@@ -23,6 +23,7 @@
 #import "UseMitsu.h"
 
 #import "TSDocument.h"
+#import "TSExperimentConsoleController.h"
 #import "TSTextView.h"
 
 #import "MyPDFView.h"
@@ -42,11 +43,40 @@
 {
     if ([notification object] == scrapWindow)
     {
-        [outputWindow close];
-        [scrapPDFWindow close];
+        [self closeExperiment];
     }
 }
 
+
+- (BOOL)experimentHasKeyWindow
+{
+    return scrapWindow.isKeyWindow || scrapPDFWindow.isKeyWindow ||
+        (self.experimentConsole.isWindowLoaded && self.experimentConsole.window.isKeyWindow);
+}
+
+- (TSExperimentConsoleController *)ensureExperimentConsole
+{
+    if (!self.experimentConsole) {
+        self.experimentConsole = [[TSExperimentConsoleController alloc] init];
+        __weak TSDocument *weakSelf = self;
+        self.experimentConsole.typesetHandler = ^{ [weakSelf typesetScrap:nil]; };
+        self.experimentConsole.returnHandler = ^{ [weakSelf activateExperimentWindow]; };
+    }
+    return self.experimentConsole;
+}
+
+- (void)showExperimentConsole
+{
+    [[self ensureExperimentConsole] toggleFromWindow:NSApp.keyWindow];
+}
+
+- (void)closeExperiment
+{
+    [self.experimentConsole invalidate];
+    self.experimentConsole = nil;
+    [scrapPDFWindow close];
+    [scrapPDFKitView setDocument:nil];
+}
 
 - (NSString *)getFilePath
 {
@@ -128,7 +158,7 @@
 - (IBAction) typesetScrap:(id)sender
 {
     NSString            *theSource, *theHeader, *newSource;
-    NSRange             beginDoc, header, lineheader;
+    NSRange             beginDoc;
     NSData              *theData;
     NSError             *error;
     NSString            *filePath, *fileLocation;
@@ -146,6 +176,7 @@
         theDocument = self;
     self.scrapMenuEngine = [[theDocument programButton] titleOfSelectedItem];
     self.scrapDVI = [theDocument useDVI];
+    self.scrapScript = theDocument->whichScript;
     
     theSource = [[theDocument textView] string];
     
@@ -157,10 +188,7 @@
         theHeader = theSource;
     else
     {
-        header.location = 0;
-        header.length = beginDoc.location - 1;
-        lineheader = [theSource lineRangeForRange: header];
-        theHeader = [theSource substringToIndex: lineheader.length];
+        theHeader = [theSource substringToIndex:beginDoc.location];
     }
     newSource = [theHeader stringByAppendingString:@"\n\\begin{document}\n"];
     newSource = [newSource stringByAppendingString: [scrapTextView string]];
@@ -171,19 +199,27 @@
     if (self.scrapEncoding != nil)
         encoding = [[TSEncodingSupport sharedInstance] stringEncodingForKey: self.scrapEncoding];
     else
-        encoding = _encoding;
-   theData = [newSource dataUsingEncoding:encoding];
+        encoding = [theDocument encoding];
+    if (encoding == NSUnicodeStringEncoding) encoding = NSUTF8StringEncoding;
+    self.scrapEffectiveEncoding = encoding;
+    theData = [[TSEncodingSupport sharedInstance] dataForText:newSource encoding:encoding byteOrderMark:TSNoByteOrderMark];
+    if (!theData) { NSBeep(); return; }
     
  
 // The following code comes from http://nshipster.com/nstemporarydirectory/
     
-    self.scrapDirectoryURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]] isDirectory:YES];
-    [[NSFileManager defaultManager] createDirectoryAtURL:self.scrapDirectoryURL withIntermediateDirectories:YES attributes:nil error:&error];
-    NSURL *fileURL = [self.scrapDirectoryURL URLByAppendingPathComponent:@"file.tex"];
-    
-    error = nil;
-    [theData writeToURL:fileURL options:NSDataWritingAtomic error:&error];
-    
+    NSURL *directory = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]] isDirectory:YES];
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:directory withIntermediateDirectories:YES attributes:nil error:&error]) {
+        [self presentError:error];
+        return;
+    }
+    NSURL *fileURL = [directory URLByAppendingPathComponent:@"file.tex"];
+    if (![theData writeToURL:fileURL options:NSDataWritingAtomic error:&error]) {
+        [[NSFileManager defaultManager] removeItemAtURL:directory error:NULL];
+        [self presentError:error];
+        return;
+    }
+
     [self typesetFile: fileURL withAdditionalPath:fileLocation];
     
 }
@@ -358,42 +394,13 @@
     NSString        *tempPath;
     NSString        *theProgramWithFlags;
     
-     [self killRunningTasks];
     
     env = [self environmentWithNewPath: additionalPath];
     
     sourcePath = [fileURL path];
     
-    self.scrapImagePath = [[sourcePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"pdf"];
     
     args = [NSMutableArray array];
-    
-    self.outputPipe = [NSPipe pipe];
-    self.readHandle = [self.outputPipe fileHandleForReading];
-    // [self.readHandle readInBackgroundAndNotify];
-    [self.readHandle waitForDataInBackgroundAndNotify];
-    self.inputPipe = [NSPipe pipe];
-    self.writeHandle = [self.inputPipe fileHandleForWriting];
-    
-    consoleCleanStart = YES;
-    [outputText setSelectable: YES];
-    [outputText selectAll:self];
-    [outputText replaceCharactersInRange: [outputText selectedRange] withString:@""];
-    [texCommand setStringValue:@""];
-    [outputText setSelectable: NO];
-    typesetStart = NO;
-    [outputWindow makeFirstResponder: texCommand];
-    [outputWindow setTitle: [[[self.scrapImagePath lastPathComponent] stringByDeletingPathExtension]
-                             stringByAppendingString:@" console"]];
-    if ([SUD boolForKey:ConsoleBehaviorKey]) {
-        if (![outputWindow isVisible])
-            [outputWindow orderBack: self];
-    } else {
-        if ([SUD boolForKey: BringPdfFrontOnTypesetKey])
-            [outputWindow makeKeyAndOrderFront: self];
-        else
-            [outputWindow orderFront: self]; 
-    }
     
     // Note: the NSDocument variable whichScript is set to 100 for pdflatex, 101 for tex + dvi and 102 for personal script
     // Note: scrapMenuEngine is the engine in the pulldown menu next to Typeset in the source toolbar
@@ -408,9 +415,9 @@
         userEngine = [[self.scrapMenuEngine stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
         if ([userEngine isEqualToString: @"latex"])
             {
-            if (whichScript == 102)
+            if (self.scrapScript == 102)
                 userEngine = @"personallatex";
-            else if (whichScript == 101)
+            else if (self.scrapScript == 101)
                 userEngine = @"latex";
             else
                 userEngine = @"pdflatex";
@@ -420,25 +427,14 @@
         userEngine = self.scrapProgram;
             
          
-    if ([userEngine isEqualToString: @"plaintex"])
-                      return;
-    else if ([userEngine isEqualToString: @"tex"])
-                      return;
-    else if ([userEngine isEqualToString: @"metapost"])
-                      return;
-//    else if ([userEngine isEqualToString: @"context"])
-//                      return;
-    else if ([userEngine isEqualToString: @"personaltex"])
-                      return;
-    // else if ([userEngine isEqualToString: @"personallatex"])
-    //                  userEngine = @"pdflatex";
-    else if ([userEngine isEqualToString: @"bibtex"])
-                      userEngine = @"pdflatex";
-    else if ([userEngine isEqualToString: @"makeindex"])
-                      userEngine = @"pdflatex";
-    
-    self.scrapTask = [[NSTask alloc] init];
-    
+    if ([@[@"plaintex", @"tex", @"metapost", @"personaltex"] containsObject:userEngine ?: @""]) {
+        [[NSFileManager defaultManager] removeItemAtURL:[fileURL URLByDeletingLastPathComponent] error:NULL];
+        NSBeep();
+        return;
+    }
+    if ([userEngine isEqualToString:@"bibtex"] || [userEngine isEqualToString:@"makeindex"])
+        userEngine = @"pdflatex";
+
 //  Fixed to use settings in Preferences RMK
     
 //  LatexScriptCommandKey
@@ -486,51 +482,21 @@
             [args addObject: sourcePath];
             }
 
-    [self.scrapTask setLaunchPath: enginePath];
-	[self.scrapTask setArguments: args];
-	[self.scrapTask setCurrentDirectoryPath: [sourcePath stringByDeletingLastPathComponent]];
-	[self.scrapTask setEnvironment: env];
-	[self.scrapTask setStandardOutput: self.outputPipe];
-	[self.scrapTask setStandardError: self.outputPipe];
-	[self.scrapTask setStandardInput: self.inputPipe];
-	[self.scrapTask launch];
-
+    __weak TSDocument *weakSelf = self;
+    TSExperimentConsoleController *console = [self ensureExperimentConsole];
+    if (!console.isWindowLoaded || NSApp.keyWindow != console.window)
+        console.returnWindow = NSApp.keyWindow;
+    [console startExecutable:enginePath ?: @"" arguments:args environment:env
+                  directory:[fileURL URLByDeletingLastPathComponent]
+                   encoding:self.scrapEffectiveEncoding title:scrapWindow.title ?: @"TeXShop"
+                 completion:^(NSURL *pdfURL) {
+        TSDocument *document = weakSelf;
+        if (!document) return;
+        if (![[NSFileManager defaultManager] fileExistsAtPath:pdfURL.path]) return;
+        [document->scrapPDFKitView reShowWithPath:pdfURL.path];
+        [document->scrapPDFWindow setHidesOnDeactivate:YES];
+        [document->scrapPDFWindow makeKeyAndOrderFront:nil];
+    }];
 }
-
-/*
-
-- (void)checkScrapTaskStatus:(NSNotification *)notification
-{
-     NSInteger		status;
-     NSError         *error;
-    
-   // return;
-    
-    if ([notification object] != self.scrapTask)
-        return;
-    
-    error = nil;
-  //  [[NSFileManager defaultManager] removeItemAtURL:self.scrapDirectoryURL error:&error];
-    self.scrapDirectoryURL = nil;
-    [outputText setSelectable: YES];
-    status = [[notification object] terminationStatus];
-    [self.writeHandle closeFile];
-    self.inputPipe = 0;
-    self.scrapTask = nil;
-    
-    if ((status == 0) || (status == 1)) {
-        
-         if ([[NSFileManager defaultManager] fileExistsAtPath: self.scrapImagePath]) 
-                [scrapPDFKitView reShowWithPath: self.scrapImagePath];
-        
-        [scrapPDFWindow setHidesOnDeactivate:YES];
-         [scrapPDFWindow makeKeyAndOrderFront:self];
-         
-    }
-    
-    self.scrapImagePath = nil;
-}
-*/
-
 
 @end

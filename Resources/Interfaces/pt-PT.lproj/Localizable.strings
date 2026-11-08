@@ -173,3 +173,9 @@
 "Use Command or Control with a key, or a function key (F1–F20)." = "Use uma tecla com Comando ou Controlo, ou uma tecla de função (F1–F20).";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selecione um comando para alterar o respetivo atalho. As alterações são imediatas. As macros e os atalhos de introdução de texto têm editores próprios.";
 "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "As alterações feitas nesta janela serão removidas. As definições existentes em KeyEquivalents.plist serão preservadas.";
+
+/* Independent Experiment console */
+"Experiment input" = "Entrada da experiência";
+"Stop Experiment" = "Parar experiência";
+"%@ — Experiment Console" = "%@ — Consola da experiência";
+"Experiment stopped.\n" = "Experiência interrompida.\n";

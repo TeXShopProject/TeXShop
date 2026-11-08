@@ -174,3 +174,9 @@
 "Use Command or Control with a key, or a function key (F1–F20)." = "Folosiți o tastă cu Command sau Control, ori o tastă funcțională (F1–F20).";
 "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selectați o comandă pentru a-i modifica scurtătura. Modificările se aplică imediat. Macrocomenzile și scurtăturile de introducere a textului au editoare proprii.";
 "Your changes in this window will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Modificările făcute în această fereastră vor fi eliminate. Configurările existente din KeyEquivalents.plist se păstrează.";
+
+/* Independent Experiment console */
+"Experiment input" = "Intrare pentru experiment";
+"Stop Experiment" = "Oprește experimentul";
+"%@ — Experiment Console" = "%@ — Consola experimentului";
+"Experiment stopped.\n" = "Experiment oprit.\n";
