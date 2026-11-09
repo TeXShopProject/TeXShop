@@ -3,6 +3,7 @@ import re,json,html,urllib.parse
 from datetime import date
 repo=Path(__file__).resolve().parents[1];root=repo/'website';meta=json.loads((repo/'Documentation/HistoricalReleases/manifest.json').read_text())
 dates=json.loads((repo/'Documentation/HistoricalReleases/release-dates.json').read_text())
+year_inferences=json.loads((repo/'Documentation/HistoricalReleases/year-inferences.json').read_text())
 overrides=json.loads((repo/'Documentation/HistoricalReleases/requirements-overrides.json').read_text())
 projects={x['tag']:x for x in json.loads((repo/'Documentation/HistoricalReleases/project-settings-audit.json').read_text())}
 statuses=json.loads((repo/'Documentation/HistoricalReleases/release-status.json').read_text())
@@ -137,7 +138,7 @@ for ja in (False,True):
   if cpu_note:
    version_contents += f'<small class="release-milestone-note">{html.escape(cpu_note["ja" if ja else "en"])}</small>'; version_class='release-version first-release-version'
   tds=[f'<div class="{version_class}">{img}<div>{version_contents}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
-  year=dateinfo['date'][:4] if dateinfo else 'unreleased'
+  year=dateinfo['date'][:4] if dateinfo else year_inferences[r['tag']]['year']
   if dateinfo and dateinfo.get('end_date',dateinfo['date'])[:4]!=year:
    year+='–'+dateinfo['end_date'][:4]
   rows.append((year,dateinfo['date'] if dateinfo else '', '<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>'))
@@ -155,14 +156,12 @@ for ja in (False,True):
   groups.setdefault(year,[]).append((release_date,row))
  def group_order(year):
   if year=='latest':return (9999,9999)
-  if year=='unreleased':return (0,0)
   bounds=year.split('–')
   return (int(bounds[-1]),int(bounds[0]))
  sections=[];year_links=[]
  for year in sorted(groups,key=group_order,reverse=True):
   section_id='releases-'+year.replace('–','-')
   if year=='latest':label='最新バージョン' if ja else 'Latest Version'
-  elif year=='unreleased':label='未公開のバージョン' if ja else 'Unreleased Versions'
   else:label=year+('年' if ja else '')
   year_links.append(f'<a href="#{section_id}">{label}</a>')
   # Preserve version order within each year, including dates known only to the year.

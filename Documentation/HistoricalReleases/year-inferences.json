@@ -1,0 +1,455 @@
+{
+  "v3.40": {
+    "year": "2014",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v3.39",
+        "date": "2014-08-12",
+        "source": "https://web.archive.org/web/20140814081735id_/http://pages.uoregon.edu/koch/texshop/texshop.html"
+      },
+      "newer": {
+        "tag": "v3.41",
+        "date": "2014-09-03",
+        "source": "https://web.archive.org/web/20140905024328id_/http://pages.uoregon.edu/koch/texshop/texshop.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v3.33": {
+    "year": "2014",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v3.32",
+        "date": "2014-04-07",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2014-April/052290.html"
+      },
+      "newer": {
+        "tag": "v3.34",
+        "date": "2014-04-16",
+        "source": "https://web.archive.org/web/20140417195050id_/http://pages.uoregon.edu/koch/texshop/texshop.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v3.31": {
+    "year": "2014",
+    "basis": "source-archive-and-version-sequence",
+    "bounds": {
+      "older": {
+        "tag": "v3.26",
+        "date": "2013-11-05",
+        "source": "https://web.archive.org/web/20131216063042id_/http://pages.uoregon.edu:80/koch/texshop/texshop.html"
+      },
+      "newer": {
+        "tag": "v3.32",
+        "date": "2014-04-07",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2014-April/052290.html"
+      }
+    },
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.31/texshopsource-3.31.zip",
+    "sha256": "05a0ff13c2a34525b4994497d888433cafc6107ad898ab6783c6be1b936ffc74",
+    "archive_entries": [
+      {
+        "path": "texshop-3.31/OgreKit.framework/Versions/A/Resources/Info.plist",
+        "modified": "2012-05-05T12:02:08"
+      },
+      {
+        "path": "texshop-3.31/Resources/Info.plist",
+        "modified": "2014-03-25T16:22:16"
+      },
+      {
+        "path": "texshop-3.31/Sources/TSDocument.m",
+        "modified": "2014-03-23T20:40:36"
+      },
+      {
+        "path": "texshop-3.31/Sparkle.framework/Versions/A/Resources/Info.plist",
+        "modified": "2013-10-17T03:19:28"
+      },
+      {
+        "path": "texshop-3.31/TeXShop.xcodeproj/project.pbxproj",
+        "modified": "2014-03-25T16:22:18"
+      }
+    ],
+    "note": "Year of the archived development snapshot inferred from source/project timestamps and the surrounding dated versions. ZIP timestamps are not a public release date; no day or month is asserted."
+  },
+  "v3.30": {
+    "year": "2014",
+    "basis": "source-archive-and-version-sequence",
+    "bounds": {
+      "older": {
+        "tag": "v3.26",
+        "date": "2013-11-05",
+        "source": "https://web.archive.org/web/20131216063042id_/http://pages.uoregon.edu:80/koch/texshop/texshop.html"
+      },
+      "newer": {
+        "tag": "v3.32",
+        "date": "2014-04-07",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2014-April/052290.html"
+      }
+    },
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.30/texshopsource-3.30.zip",
+    "sha256": "9cfc776f99080290836041e074b3d4bfa4818a20ec73ab386f797e5927f1dc4a",
+    "archive_entries": [
+      {
+        "path": "texshop-3.30/OgreKit.framework/Versions/A/Resources/Info.plist",
+        "modified": "2012-05-05T12:02:08"
+      },
+      {
+        "path": "texshop-3.30/Resources/Info.plist",
+        "modified": "2014-03-23T09:55:14"
+      },
+      {
+        "path": "texshop-3.30/Sources/TSDocument.m",
+        "modified": "2014-03-23T20:40:36"
+      },
+      {
+        "path": "texshop-3.30/Sparkle.framework/Versions/A/Resources/Info.plist",
+        "modified": "2013-10-17T03:19:28"
+      },
+      {
+        "path": "texshop-3.30/TeXShop.xcodeproj/project.pbxproj",
+        "modified": "2014-03-23T20:25:40"
+      }
+    ],
+    "note": "Year of the archived development snapshot inferred from source/project timestamps and the surrounding dated versions. ZIP timestamps are not a public release date; no day or month is asserted."
+  },
+  "v3.29": {
+    "year": "2014",
+    "basis": "source-archive-and-version-sequence",
+    "bounds": {
+      "older": {
+        "tag": "v3.26",
+        "date": "2013-11-05",
+        "source": "https://web.archive.org/web/20131216063042id_/http://pages.uoregon.edu:80/koch/texshop/texshop.html"
+      },
+      "newer": {
+        "tag": "v3.32",
+        "date": "2014-04-07",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2014-April/052290.html"
+      }
+    },
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.29/texshopsource-3.29.zip",
+    "sha256": "20f3772b2f8796e0342ac67b7a02391ca2359bdb354e00d584a24b240f3358ae",
+    "archive_entries": [
+      {
+        "path": "texshop-3.29/OgreKit.framework/Versions/A/Resources/Info.plist",
+        "modified": "2012-05-05T12:02:08"
+      },
+      {
+        "path": "texshop-3.29/Resources/Info.plist",
+        "modified": "2014-03-18T08:54:44"
+      },
+      {
+        "path": "texshop-3.29/Sources/TSDocument.m",
+        "modified": "2014-03-10T11:58:06"
+      },
+      {
+        "path": "texshop-3.29/Sparkle.framework/Versions/A/Resources/Info.plist",
+        "modified": "2013-10-17T03:19:28"
+      },
+      {
+        "path": "texshop-3.29/TeXShop.xcodeproj/project.pbxproj",
+        "modified": "2014-03-23T09:44:34"
+      }
+    ],
+    "note": "Year of the archived development snapshot inferred from source/project timestamps and the surrounding dated versions. ZIP timestamps are not a public release date; no day or month is asserted."
+  },
+  "v3.28": {
+    "year": "2014",
+    "basis": "source-archive-and-version-sequence",
+    "bounds": {
+      "older": {
+        "tag": "v3.26",
+        "date": "2013-11-05",
+        "source": "https://web.archive.org/web/20131216063042id_/http://pages.uoregon.edu:80/koch/texshop/texshop.html"
+      },
+      "newer": {
+        "tag": "v3.32",
+        "date": "2014-04-07",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2014-April/052290.html"
+      }
+    },
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.28/texshopsource-3.28.zip",
+    "sha256": "e1d2c44658b782f4532ebdbb78b48ee94c1f3550f6bd377fb1bc5ab89f9d976c",
+    "archive_entries": [
+      {
+        "path": "texshop-3.28/OgreKit.framework/Versions/A/Resources/Info.plist",
+        "modified": "2012-05-05T12:02:08"
+      },
+      {
+        "path": "texshop-3.28/Resources/Info.plist",
+        "modified": "2014-03-10T11:57:46"
+      },
+      {
+        "path": "texshop-3.28/Sources/TSDocument.m",
+        "modified": "2014-03-10T11:58:06"
+      },
+      {
+        "path": "texshop-3.28/Sparkle.framework/Versions/A/Resources/Info.plist",
+        "modified": "2013-10-17T03:19:28"
+      },
+      {
+        "path": "texshop-3.28/TeXShop.xcodeproj/project.pbxproj",
+        "modified": "2014-03-17T20:09:00"
+      }
+    ],
+    "note": "Year of the archived development snapshot inferred from source/project timestamps and the surrounding dated versions. ZIP timestamps are not a public release date; no day or month is asserted."
+  },
+  "v3.27": {
+    "year": "2013",
+    "basis": "source-archive-and-version-sequence",
+    "bounds": {
+      "older": {
+        "tag": "v3.26",
+        "date": "2013-11-05",
+        "source": "https://web.archive.org/web/20131216063042id_/http://pages.uoregon.edu:80/koch/texshop/texshop.html"
+      },
+      "newer": {
+        "tag": "v3.32",
+        "date": "2014-04-07",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2014-April/052290.html"
+      }
+    },
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.27/texshopsource-3.27.zip",
+    "sha256": "5b3855d0f62f3ef6681f0f9e74b2dab6bd93ff7023a26b41f5ac2b6fc8ffc22e",
+    "archive_entries": [
+      {
+        "path": "texshop-3.27/OgreKit.framework/Versions/A/Resources/Info.plist",
+        "modified": "2012-05-05T12:02:08"
+      },
+      {
+        "path": "texshop-3.27/Resources/Info.plist",
+        "modified": "2013-11-07T14:00:20"
+      },
+      {
+        "path": "texshop-3.27/Sources/TSDocument.m",
+        "modified": "2013-10-26T09:03:46"
+      },
+      {
+        "path": "texshop-3.27/Sparkle.framework/Versions/A/Resources/Info.plist",
+        "modified": "2013-10-17T03:19:28"
+      },
+      {
+        "path": "texshop-3.27/TeXShop.xcodeproj/project.pbxproj",
+        "modified": "2013-11-07T14:00:20"
+      }
+    ],
+    "note": "Year of the archived development snapshot inferred from source/project timestamps and the surrounding dated versions. ZIP timestamps are not a public release date; no day or month is asserted."
+  },
+  "v3.20": {
+    "year": "2013",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v3.18",
+        "date": "2013-05-26",
+        "source": "https://web.archive.org/web/20130615041004id_/http://pages.uoregon.edu:80/koch/texshop/texshop.html"
+      },
+      "newer": {
+        "tag": "v3.21",
+        "date": "2013-07-20",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2013-July/051312.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v3.19": {
+    "year": "2013",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v3.18",
+        "date": "2013-05-26",
+        "source": "https://web.archive.org/web/20130615041004id_/http://pages.uoregon.edu:80/koch/texshop/texshop.html"
+      },
+      "newer": {
+        "tag": "v3.21",
+        "date": "2013-07-20",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2013-July/051312.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v3.13": {
+    "year": "2013",
+    "basis": "source-archive-and-version-sequence",
+    "bounds": {
+      "older": {
+        "tag": "v3.12",
+        "date": "2012-10-12",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2012-October/050150.html"
+      },
+      "newer": {
+        "tag": "v3.14",
+        "date": "2013-04-29",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2013-April/050785.html"
+      }
+    },
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.13/texshopsource-3.13.zip",
+    "sha256": "6a0fe62be5a97d7007d6bf220976bf578a565b025205de997ccb55693b835629",
+    "archive_entries": [
+      {
+        "path": "texshop-3.13/OgreKit.framework/Versions/A/Resources/Info.plist",
+        "modified": "2012-05-05T12:02:08"
+      },
+      {
+        "path": "texshop-3.13/Resources/Info.plist",
+        "modified": "2013-04-26T15:30:44"
+      },
+      {
+        "path": "texshop-3.13/Sources/TSDocument.m",
+        "modified": "2013-04-26T16:07:04"
+      },
+      {
+        "path": "texshop-3.13/Sparkle.framework/Versions/A/Resources/Info.plist",
+        "modified": "2008-09-13T20:47:22"
+      },
+      {
+        "path": "texshop-3.13/TeXShop.xcodeproj/project.pbxproj",
+        "modified": "2013-04-26T15:30:44"
+      }
+    ],
+    "note": "Year of the archived development snapshot inferred from source/project timestamps and the surrounding dated versions. ZIP timestamps are not a public release date; no day or month is asserted."
+  },
+  "v2.35": {
+    "year": "2010",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v2.34",
+        "date": "2010-06-03",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2010-June/044118.html"
+      },
+      "newer": {
+        "tag": "v2.36",
+        "date": "2010-07-09",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2010-July/044540.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v2.32": {
+    "year": "2010",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v2.31",
+        "date": "2010-02-18",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2010-February/042951.html"
+      },
+      "newer": {
+        "tag": "v2.33",
+        "date": "2010-03-03",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2010-March/043098.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v2.24": {
+    "year": "2009",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v2.20",
+        "date": "2009-01-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-January/038996.html"
+      },
+      "newer": {
+        "tag": "v2.25",
+        "date": "2009-02-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-February/039458.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v2.23": {
+    "year": "2009",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v2.20",
+        "date": "2009-01-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-January/038996.html"
+      },
+      "newer": {
+        "tag": "v2.25",
+        "date": "2009-02-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-February/039458.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v2.22": {
+    "year": "2009",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v2.20",
+        "date": "2009-01-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-January/038996.html"
+      },
+      "newer": {
+        "tag": "v2.25",
+        "date": "2009-02-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-February/039458.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v2.21": {
+    "year": "2009",
+    "basis": "neighboring-version-years",
+    "bounds": {
+      "older": {
+        "tag": "v2.20",
+        "date": "2009-01-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-January/038996.html"
+      },
+      "newer": {
+        "tag": "v2.25",
+        "date": "2009-02-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-February/039458.html"
+      }
+    },
+    "note": "Inferred development year from the surrounding dated versions; not a public release date."
+  },
+  "v2.19": {
+    "year": "2009",
+    "basis": "source-archive-and-version-sequence",
+    "bounds": {
+      "older": {
+        "tag": "v2.18",
+        "date": "2008-09-06",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2008-September/036505.html"
+      },
+      "newer": {
+        "tag": "v2.20",
+        "date": "2009-01-26",
+        "source": "https://email.esm.psu.edu/pipermail/macosx-tex/2009-January/038996.html"
+      }
+    },
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.19/texshopsource-2.19.zip",
+    "sha256": "a18663236a73ed43c6bc12716811e062e1881052b58b01ec637d97886d2c11c2",
+    "archive_entries": [
+      {
+        "path": "texshop2.19/OgreKit.framework/Versions/A/Resources/Info.plist",
+        "modified": "2007-08-05T17:00:18"
+      },
+      {
+        "path": "texshop2.19/Resources/Info.plist",
+        "modified": "2007-12-08T11:54:50"
+      },
+      {
+        "path": "texshop2.19/Sources/TSDocument.m",
+        "modified": "2009-01-11T10:25:50"
+      },
+      {
+        "path": "texshop2.19/TeXShop.xcodeproj/project.pbxproj",
+        "modified": "2009-01-11T10:46:02"
+      }
+    ],
+    "note": "Year of the archived development snapshot inferred from source/project timestamps and the surrounding dated versions. ZIP timestamps are not a public release date; no day or month is asserted."
+  }
+}
