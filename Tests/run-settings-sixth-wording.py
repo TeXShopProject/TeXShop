@@ -36,10 +36,18 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
     for lang in ['en','ja','de','es','ko']:
         path=f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
         cases.append((path,{'en':b'numeric field','ja':'数値欄'.encode('cp932'),'de':b'Zahlenfeld','es':b'campo num','ko':b'&#'}[lang],b'REMOVED'))
+    # Reverting the new commit semantics must fail independently of field presence.
+    for path in ['Manual Source/Manual.tex','Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex']:
+        cases.append((path,b'typed and pasted' if path!='Manual Source/Manual.tex' else b'Typed and pasted',b'CHANGED'))
+    for path in ['Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
+        cases.append((path,'打鍵と貼り付け'.encode(),b'CHANGED'))
+    for lang,old,encoding in [('en','typed and pasted','utf-8'),('ja','打鍵と貼り付け','cp932'),('de','getippten und eingefügten','latin-1'),('es','escrito y el pegado','latin-1')]:
+        cases.append((f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm',old.encode(encoding),b'CHANGED'))
+    cases.append(('Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'&#51649;&#51217;',b'CHANGED'))
     for path,old,new in cases:
         p=T/path;original=p.read_bytes();assert old in original,path
         # Korean help uses decimal entities; remove the numeric-entry paragraph only.
-        if '/ko.' in path:
+        if '/ko.' in path and old==b'&#':
             import re
             updated=re.sub(rb'<p>[^<]*0[^<]*100[^<]*</p>',b'<p>REMOVED</p>',original)
             assert updated!=original

@@ -6692,7 +6692,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -6803,7 +6803,7 @@
           "555.title": "Externer Editor",
           "348.title": "OtherViews",
           "111.title": "Zoom for new PDFs",
-          "337.title": "PDF auswählen",
+          "337.title": "PDF-Auswahl",
           "342.title": "Änderung der Fenstergröße",
           "910.title": "Radio",
           "865.title": "100",
@@ -7656,7 +7656,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -8450,7 +8450,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "PDF auswählen",
+          "value": "PDF-Auswahl",
           "index": 4
         },
         {
@@ -9993,7 +9993,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -10957,7 +10957,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -13294,7 +13294,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -13405,7 +13405,7 @@
           "555.title": "Éditeur externe",
           "348.title": "OtherViews",
           "111.title": "Zoom for new PDFs",
-          "337.title": "Sélectionner le PDF",
+          "337.title": "Sélectionner",
           "342.title": "Nouvelle taille de la fenêtre",
           "910.title": "Radio",
           "865.title": "100",
@@ -14258,7 +14258,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -15052,7 +15052,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Sélectionner le PDF",
+          "value": "Sélectionner",
           "index": 4
         },
         {
@@ -16595,7 +16595,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -16706,7 +16706,7 @@
           "555.title": "Editor esterno",
           "348.title": "OtherViews",
           "111.title": "Zoom for new PDFs",
-          "337.title": "Seleziona PDF",
+          "337.title": "Selezione",
           "342.title": "Dopo un ridimensionamento",
           "910.title": "Radio",
           "865.title": "100",
@@ -17559,7 +17559,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -18353,7 +18353,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Seleziona PDF",
+          "value": "Selezione",
           "index": 4
         },
         {
@@ -23197,7 +23197,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -24161,7 +24161,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -26443,7 +26443,7 @@
           "YsC-bl-8G6.title": "Inspringing overige alinearegels:",
           "965.title": "Tab",
           "LYC-Qf-9zP.title": "Inspringing eerste alinearegel:",
-          "pdc-GP-Cbb.title": "Use Tabs for Indent Menu",
+          "pdc-GP-Cbb.title": "Tabs gebruiken voor inspringmenu",
           "943.title": "Geluid bij losse haakjes",
           "842.title": "Automatisch aanvullen",
           "PhR-Vr-jce.title": "Spelling corrigeren",
@@ -26464,7 +26464,7 @@
           "839.title": "Kleur taalelementen",
           "945.title": "Indicator bij verplaatsen tonen",
           "844.title": "Selecteren bij activeren",
-          "ojN-Oi-8cl.title": "Tab Indent:",
+          "ojN-Oi-8cl.title": "Tabbreedte:",
           "inv-955-item-2.title": "↩",
           "Gj7-Yx-1Hv.title": "Editorstijl",
           "1036.title": "Markering laten knipperen",
@@ -26498,7 +26498,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -26563,7 +26563,7 @@
           "03p-fB-1K3.title": "During File Save",
           "e3h-Wk-X7D.title": "Sparkle Updater",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "pTeX-ondersteuning",
+          "SS5-tZ-cDa.title": "pTeX-ondersteuning (voor Japan)",
           "vEF-zd-SJl.title": "Alternatieve engine",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "mPz-qG-Toi.title": "TeX-programma (geen standaard)",
@@ -26600,7 +26600,7 @@
           "MEp-AF-AgT.title": "One Window Mode",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "In afzonderlijke vensters openen",
-          "505.title": "Pages Flow from Left to Right",
+          "505.title": "Pagina’s lopen van links naar rechts",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "Rechts",
           "330.title": "Default Mouse Mode",
@@ -26615,7 +26615,7 @@
           "865.title": "100",
           "jgT-n6-lh0.title": "Text und Linien glätten",
           "tVs-uh-QcM.title": "Alle vensters op vaste positie openen",
-          "507.title": "Pages Flow from Right to Left",
+          "507.title": "Pagina’s lopen van rechts naar links",
           "343.title": "Twee pagina’s",
           "911.title": "Radio",
           "332.title": "Vergroten",
@@ -27078,7 +27078,7 @@
           "view": "settings.9oZ-Jg-MfD",
           "kind": "cell",
           "property": "title",
-          "value": "Use Tabs for Indent Menu"
+          "value": "Tabs gebruiken voor inspringmenu"
         },
         {
           "key": "943.title",
@@ -27244,7 +27244,7 @@
           "view": "settings.9yz-Dw-vpr",
           "kind": "cell",
           "property": "title",
-          "value": "Tab Indent:"
+          "value": "Tabbreedte:"
         },
         {
           "key": "inv-955-item-2.title",
@@ -27462,7 +27462,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -27931,7 +27931,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "pTeX-ondersteuning"
+          "value": "pTeX-ondersteuning (voor Japan)"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -28191,7 +28191,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pages Flow from Left to Right",
+          "value": "Pagina’s lopen van links naar rechts",
           "row": 0,
           "column": 0
         },
@@ -28301,7 +28301,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pages Flow from Right to Left",
+          "value": "Pagina’s lopen van rechts naar links",
           "row": 1,
           "column": 0
         },
@@ -29564,7 +29564,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "pTeX-ondersteuning"
+          "title": "pTeX-ondersteuning (voor Japan)"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -29744,7 +29744,7 @@
           "YsC-bl-8G6.title": "Avanço das restantes linhas:",
           "965.title": "Tab",
           "LYC-Qf-9zP.title": "Avanço da primeira linha do parágrafo:",
-          "pdc-GP-Cbb.title": "Use Tab",
+          "pdc-GP-Cbb.title": "Usar tabulações no menu de indentação",
           "943.title": "Emitir som para parênteses isolados",
           "842.title": "Preenchimento automático",
           "PhR-Vr-jce.title": "Corrigir a ortografia",
@@ -29765,7 +29765,7 @@
           "839.title": "Colorir a sintaxe",
           "945.title": "Mostrar indicador ao deslocar",
           "844.title": "Selecionar ao ativar",
-          "ojN-Oi-8cl.title": "Tab Indent:",
+          "ojN-Oi-8cl.title": "Largura da tabulação:",
           "inv-955-item-2.title": "↩",
           "Gj7-Yx-1Hv.title": "Estilo do editor",
           "1036.title": "Piscar o realce",
@@ -29799,7 +29799,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -29864,7 +29864,7 @@
           "03p-fB-1K3.title": "During File Save",
           "e3h-Wk-X7D.title": "Sparkle Updater",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "Suporte a pTeX",
+          "SS5-tZ-cDa.title": "Suporte a pTeX (para o Japão)",
           "vEF-zd-SJl.title": "Motor alternativo",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "mPz-qG-Toi.title": "Programa TeX (nenhum por omissão):",
@@ -29901,7 +29901,7 @@
           "MEp-AF-AgT.title": "One Window Mode",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "Abrir em janelas separadas",
-          "505.title": "Pages Flow from Left to Right",
+          "505.title": "Páginas da esquerda para a direita",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "Direita",
           "330.title": "Default Mouse Mode",
@@ -29916,7 +29916,7 @@
           "865.title": "100",
           "jgT-n6-lh0.title": "Suavizar texto e ilustrações",
           "tVs-uh-QcM.title": "Abrir todas as janelas numa posição fixa",
-          "507.title": "Pages Flow from Right to Left",
+          "507.title": "Páginas da direita para a esquerda",
           "343.title": "Duas páginas",
           "911.title": "Radio",
           "332.title": "Ampliar",
@@ -30379,7 +30379,7 @@
           "view": "settings.9oZ-Jg-MfD",
           "kind": "cell",
           "property": "title",
-          "value": "Use Tab"
+          "value": "Usar tabulações no menu de indentação"
         },
         {
           "key": "943.title",
@@ -30545,7 +30545,7 @@
           "view": "settings.9yz-Dw-vpr",
           "kind": "cell",
           "property": "title",
-          "value": "Tab Indent:"
+          "value": "Largura da tabulação:"
         },
         {
           "key": "inv-955-item-2.title",
@@ -30763,7 +30763,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -31232,7 +31232,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "Suporte a pTeX"
+          "value": "Suporte a pTeX (para o Japão)"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -31492,7 +31492,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pages Flow from Left to Right",
+          "value": "Páginas da esquerda para a direita",
           "row": 0,
           "column": 0
         },
@@ -31602,7 +31602,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pages Flow from Right to Left",
+          "value": "Páginas da direita para a esquerda",
           "row": 1,
           "column": 0
         },
@@ -32865,7 +32865,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "Suporte a pTeX"
+          "title": "Suporte a pTeX (para o Japão)"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -33100,7 +33100,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legado pTeX (Shift JIS) ",
+          "1093.title": "Legado pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legado pTeX (EUC)",
@@ -34064,7 +34064,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legado pTeX (Shift JIS) ",
+          "value": "Legado pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -36346,7 +36346,7 @@
           "YsC-bl-8G6.title": "Indentarea celorlalte rânduri:",
           "965.title": "Tab",
           "LYC-Qf-9zP.title": "Indentarea primului rând:",
-          "pdc-GP-Cbb.title": "Use Tab",
+          "pdc-GP-Cbb.title": "Folosește tabulatori pentru meniul de indentare",
           "943.title": "Semnal sonor pentru paranteze izolate",
           "842.title": "Completare Automată",
           "PhR-Vr-jce.title": "Corectează ortografia",
@@ -36367,7 +36367,7 @@
           "839.title": "Colorarea Sintaxei",
           "945.title": "Arată indicatorul la deplasare",
           "844.title": "Selectează la activare",
-          "ojN-Oi-8cl.title": "Tab Indent:",
+          "ojN-Oi-8cl.title": "Lățimea tabulatorului:",
           "inv-955-item-2.title": "↩",
           "Gj7-Yx-1Hv.title": "Stilul editorului",
           "1036.title": "Evidențiere intermitentă",
@@ -36401,7 +36401,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -36466,7 +36466,7 @@
           "03p-fB-1K3.title": "During File Save",
           "e3h-Wk-X7D.title": "Sparkle Updater",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "Suport pTeX",
+          "SS5-tZ-cDa.title": "Suport pTeX (pentru Japonia)",
           "vEF-zd-SJl.title": "Motor alternativ",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "mPz-qG-Toi.title": "TeX Program (no default)",
@@ -36503,7 +36503,7 @@
           "MEp-AF-AgT.title": "One Window Mode",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "Deschide în ferestre separate",
-          "505.title": "Pages Flow from Left to Right",
+          "505.title": "Pagini de la stânga la dreapta",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "Dreapta",
           "330.title": "Efectul Mausului",
@@ -36518,7 +36518,7 @@
           "865.title": "100",
           "jgT-n6-lh0.title": "Netezește textul și liniile",
           "tVs-uh-QcM.title": "Deschide toate ferestrele în poziția fixată",
-          "507.title": "Pages Flow from Right to Left",
+          "507.title": "Pagini de la dreapta la stânga",
           "343.title": "Pagină Dublă",
           "911.title": "Radio",
           "332.title": "Mărire",
@@ -36981,7 +36981,7 @@
           "view": "settings.9oZ-Jg-MfD",
           "kind": "cell",
           "property": "title",
-          "value": "Use Tab"
+          "value": "Folosește tabulatori pentru meniul de indentare"
         },
         {
           "key": "943.title",
@@ -37147,7 +37147,7 @@
           "view": "settings.9yz-Dw-vpr",
           "kind": "cell",
           "property": "title",
-          "value": "Tab Indent:"
+          "value": "Lățimea tabulatorului:"
         },
         {
           "key": "inv-955-item-2.title",
@@ -37365,7 +37365,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -37834,7 +37834,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "Suport pTeX"
+          "value": "Suport pTeX (pentru Japonia)"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -38094,7 +38094,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pages Flow from Left to Right",
+          "value": "Pagini de la stânga la dreapta",
           "row": 0,
           "column": 0
         },
@@ -38204,7 +38204,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pages Flow from Right to Left",
+          "value": "Pagini de la dreapta la stânga",
           "row": 1,
           "column": 0
         },
@@ -39467,7 +39467,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "Suport pTeX"
+          "title": "Suport pTeX (pentru Japonia)"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -39702,7 +39702,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -40666,7 +40666,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {

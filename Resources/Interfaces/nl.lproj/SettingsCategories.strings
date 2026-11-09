@@ -76,7 +76,7 @@
 "catalog.editor.0.5.title" = "Regelomloop";
 "catalog.editor.0.6.title" = "Tags-menu in menubalk";
 "group.editor.1.title" = "Editorstijl";
-"catalog.editor.1.0.title" = "Tab Indent:";
+"catalog.editor.1.0.title" = "Tabbreedte:";
 "catalog.editor.1.0.unit" = "tekens";
 "catalog.editor.1.1.title" = "Tabs gebruiken voor inspringmenu";
 "catalog.editor.1.2.title" = "Inspringing eerste alinearegel:";
@@ -266,7 +266,7 @@
 "catalog.typesetting.8.0.note" = "Standaard: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "BibTeX-engine";
 "catalog.typesetting.8.1.note" = "Standaard: bibtex";
-"group.typesetting.9.title" = "pTeX-ondersteuning";
+"group.typesetting.9.title" = "pTeX-ondersteuning (voor Japan)";
 "catalog.typesetting.9.0.title" = "Ondersteuning voor het otf-pakket";
 "group.console.0.title" = "Lettertype";
 "catalog.console.0.0.title" = "Lettertype console";

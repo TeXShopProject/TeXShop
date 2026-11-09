@@ -73,7 +73,7 @@
       "catalog.appearance.2.0.column.2": "Dekking",
       "group.appearance.0.title": "Thema’s",
       "group.console.1.title": "Acties",
-      "group.typesetting.9.title": "pTeX-ondersteuning",
+      "group.typesetting.9.title": "pTeX-ondersteuning (voor Japan)",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Huidige positie gebruiken",
       "group.editor.5.title": "Onzichtbare tekens",
@@ -171,7 +171,7 @@
       "catalog.appearance.2.0.column.2": "Opacidade",
       "group.appearance.0.title": "Temas",
       "group.console.1.title": "Ações",
-      "group.typesetting.9.title": "Suporte a pTeX",
+      "group.typesetting.9.title": "Suporte a pTeX (para o Japão)",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Usar a posição atual",
       "group.editor.5.title": "Carateres invisíveis",
@@ -207,7 +207,7 @@
       "catalog.editor.4.1.choice.1": "( )"
     },
     "ja": {
-      "catalog.typesetting.3.0.title": "pdfTeX"
+      "catalog.typesetting.3.0.title": "(pdf)TeX"
     },
     "ko": {
       "catalog.appearance.5.0.item.0": "( )",
@@ -260,7 +260,7 @@
       "catalog.editor.6.1.title": "Culoarea cursorului:",
       "group.console.1.title": "Acțiuni",
       "catalog.appearance.9.0.item.4": "Valoare",
-      "group.typesetting.9.title": "Suport pTeX",
+      "group.typesetting.9.title": "Suport pTeX (pentru Japonia)",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Folosește poziția actuală",
       "group.editor.5.title": "Caractere invizibile",

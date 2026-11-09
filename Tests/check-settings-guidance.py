@@ -226,3 +226,20 @@ for lang,term in {'en':'numeric field','ja':'数値欄','de':'Zahlenfeld','es':'
 
 for filename in ["Documentation/Releases/5.60-ja.md","website/release-notes-ja.html"]:
     assert "数値欄" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
+
+# Seventh audit: invalid typed text stays intact until commit, as pasted text does.
+for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex']:
+    assert 'Reject invalid opacity input, including decimals, when editing finishes, with the same behavior for typed and pasted text.' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)
+for filename in ['Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
+    assert '打鍵と貼り付け' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)
+assert 'Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule.' in manual, 'Opacity commit guidance in manual'
+for lang,terms in {
+    'en':['Invalid text, including decimal values','typed and pasted input follow the same rule'],
+    'ja':['小数などの無効な入力は、確定時に元の値へ戻します','打鍵と貼り付けで同じ規則'],
+    'de':['Ungültige Eingaben einschließlich Dezimalzahlen','getippten und eingefügten Text gilt dieselbe Regel'],
+    'es':['las entradas no válidas, incluidos los decimales','El texto escrito y el pegado siguen la misma regla'],
+    'ko':['소수 등 잘못된 입력은 편집을 마칠 때 이전 값으로 돌아갑니다','직접 입력한 텍스트와 붙여넣은 텍스트에 같은 규칙이 적용됩니다'],
+}.items():
+    text=read_help(ROOT/f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm',lang)
+    for term in terms: assert term in text,('Opacity commit guidance',lang,term)
+print('PASS: typed/pasted opacity validation guidance in five helps, manual and six release copies')

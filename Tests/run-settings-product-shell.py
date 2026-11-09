@@ -5,7 +5,7 @@ import argparse,subprocess,tempfile,shutil,re,json
 from pane_fixtures import bundles,sources
 from shortcut_sources import NAMES
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*[str(r/'Sources'/n) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').glob('TSSettings*.m'))),'-o',str(t/'probe')]
@@ -32,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   if a.output and (not a.capture_languages or bundle.stem in a.capture_languages):folder=a.output/bundle.stem;folder.mkdir(parents=True,exist_ok=True);command.append(str(folder))
   print('LANGUAGE',bundle.stem,flush=True);subprocess.run(command,check=True,timeout=120)
 
-  if a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations or a.sixth_audit_mutations:
+  if a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations or a.sixth_audit_mutations or a.seventh_audit_mutations:
    cases=[
     ('profile-transient-clear','TSPreferences.m','[self.settingsChangeNotes valuesReplaced];',';'),
     ('encoding-sheet','TSPreferences.m','[self.settingsChangeNotes recordUserChangeForKey:EncodingKey previousValue:oldValue ?: @""];','NSBeginCriticalAlertSheet(@"Encoding",nil,nil,nil,nil,nil,NULL,NULL,NULL,@"Warning");'),
@@ -132,7 +132,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
      ('opacity-field-letters','TSPrefPaneLayout.m','return [magnitude rangeOfCharacterFromSet:other].location == NSNotFound ? normalized : nil;','return normalized;','Opacity entry refuses letters, signs and decimals'),
      ('opacity-field-fullwidth','TSPrefPaneLayout.m','[string.precomposedStringWithCompatibilityMapping stringByTrimmingCharactersInSet:','[string stringByTrimmingCharactersInSet:','Full-width opacity digits follow the other numeric fields'),
      ('opacity-field-negative','TSPrefPaneLayout.m','NSInteger percent = 0;','NSInteger percent = [digits hasPrefix:@"-"] ? -5 : 0;','Negative opacity is clamped to zero'),
-     ('opacity-field-long','TSPrefPaneLayout.m','if (digits == nil) {','if (digits == nil || digits.length > 3) {','Typed opacity moves the slider and saves once'),
+     ('opacity-field-long','TSPrefPaneLayout.m','NSString *digits = [*partial precomposedStringWithCompatibilityMapping];','NSString *digits = [*partial precomposedStringWithCompatibilityMapping]; if(digits.length>3)return NO;','Opacity retains the complete typed or pasted text until commit'),
+     ('opacity-field-partial','TSPrefPaneLayout.m','NSString *digits = [*partial precomposedStringWithCompatibilityMapping];','NSString *digits = [TSOpacityFormatter normalizedDigits:*partial]; if(digits==nil)return NO;','Opacity retains the complete typed or pasted text until commit'),
+     ('opacity-field-overflow','TSPrefPaneLayout.m',"percent = MIN(100, percent * 10 + [digits characterAtIndex:i] - '0');","percent = percent * 10 + [digits characterAtIndex:i] - '0';\n    percent = MIN(100,percent);",'Typed opacity moves the slider and saves once'),
      ('opacity-field-correction','TSPrefPaneLayout.m','self.field.objectValue=@(percent);','self.field.objectValue=@100;','Typed opacity moves the slider and saves once'),
      ('opacity-field-sync','TSPrefPaneLayout.m','    [self applyPercent:entered];\n','',
       'Explicitly entering the displayed integer replaces a fractional opacity'),
@@ -152,6 +154,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ]
     cases=[]
     for name,file,old,new,message in sixth:cases.append((name,file,old,new));expected[name]=message
+   if a.seventh_audit_mutations:
+    cases=[('sidebar-width-plus-six','TSSettingsSidebarRow.m','width - 40','width - 34'),('search-placeholder-overflow','TSSettingsWindowController.m','self.settingsSearchField.placeholderString = NSLocalizedString(@"Search Settings", @"");','self.settingsSearchField.placeholderString = @"Search all settings with a deliberately overlong placeholder";')]
+    expected['sidebar-width-plus-six']='Long localized sidebar names fit at every supported width'
+    expected['search-placeholder-overflow']='Search placeholder fits every supported sidebar width'
    if a.mutation_start:cases=cases[next(i for i,c in enumerate(cases) if c[0]==a.mutation_start):]
    if a.mutation_only:cases=[c for c in cases if c[0]==a.mutation_only];assert cases
    for name,filename,old,new in cases:

@@ -463,11 +463,9 @@ static NSColor *TSSettingsCardColor(void)
               originalString:(NSString *)original originalSelectedRange:(NSRange)originalSelection
             errorDescription:(NSString * _Nullable *)error
 {
-    NSString *digits = [TSOpacityFormatter normalizedDigits:*partial];
-    if (digits == nil) {
-        if (self.rejectionHandler != nil) self.rejectionHandler();
-        return NO;
-    }
+    // Keep the complete edit, including invalid characters. Dropping a decimal
+    // separator while typing would silently turn 65.5 into 655 at commit time.
+    NSString *digits = [*partial precomposedStringWithCompatibilityMapping];
     if (![digits isEqualToString:*partial]) {
         *partial = digits;
         if (selection != NULL) *selection = NSMakeRange(digits.length, 0);

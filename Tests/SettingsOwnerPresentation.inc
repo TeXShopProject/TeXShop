@@ -21,6 +21,26 @@ static void CountPresentedControls(NSView *view, NSUInteger counts[4]) {
     for (NSView *child in view.subviews) CountPresentedControls(child, counts);
 }
 static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
+    // A fixed wrapping label exercises measurement even in languages whose own
+    // category names all fit on one line (notably Japanese).
+    for(NSInteger width=158;width<=330;width++){
+        NSString *title=@"Documents et enregistrement";
+        TSSettingsCategory *category=[TSSettingsCategoryList standardList].categories.firstObject;
+        NSTableCellView *cell=[TSSettingsSidebarRow cellForCategory:category title:title];
+        CGFloat height=[TSSettingsSidebarRow heightForTitle:title cellWidth:width];
+        cell.frame=NSMakeRect(0,0,width,height);[cell layoutSubtreeIfNeeded];
+        NSTextField *label=cell.textField;
+        NSRect rect=[label frameForAlignmentRect:NSMakeRect(0,0,width-40,1)];
+        CGFloat needed=[label.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(rect),CGFLOAT_MAX)].height;
+        Check(needed<=NSHeight(label.bounds)+1 && NSHeight(label.bounds)<=height-5,@"Long localized sidebar names fit at every supported width");
+    }
+    NSSearchField *search=[shell valueForKey:@"settingsSearchField"];
+    for(NSInteger sidebarWidth=190;sidebarWidth<=330;sidebarWidth++){
+        NSRect textRect=[(NSSearchFieldCell *)search.cell searchTextRectForBounds:NSMakeRect(0,0,sidebarWidth-20,NSHeight(search.bounds))];
+        CGFloat needed=[search.placeholderString sizeWithAttributes:@{NSFontAttributeName:search.font}].width;
+        Check(needed<=NSWidth(textRect),@"Search placeholder fits every supported sidebar width");
+    }
+
     for(TSSettingsCategory *category in [TSSettingsCategoryList standardList].categories){
         NSString *title=[fixture localizedStringForKey:category.identifier value:nil table:@"SettingsCategories"];
         for(NSInteger columnWidth=158;columnWidth<=330;columnWidth++){

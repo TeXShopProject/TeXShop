@@ -14,11 +14,17 @@ static BOOL CountOpacityWrite(id store,SEL selector,NSDictionary *colors,NSStrin
 }
 static void CaptureOpacityMigration(id owner,SEL selector,NSDictionary *colors){opacityMigrated=[colors copy];}
 static NSUInteger opacityRejections;
-static void TypeOpacity(NSTextField *field,NSString *text){
+static void EnterOpacity(NSTextField *field,NSString *text,BOOL typing){
     [field selectText:nil];NSTextView *editor=(NSTextView *)field.currentEditor;
     Check(editor!=nil,@"Opacity field uses the AppKit field editor");
-    [editor selectAll:nil];[editor insertText:text replacementRange:editor.selectedRange];
+    [editor selectAll:nil];
+    if(typing){
+        [editor insertText:@"" replacementRange:editor.selectedRange];
+        for(NSUInteger i=0;i<text.length;i++)[editor insertText:[text substringWithRange:NSMakeRange(i,1)] replacementRange:editor.selectedRange];
+    }else [editor insertText:text replacementRange:editor.selectedRange];
+    Check([editor.string isEqual:text.precomposedStringWithCompatibilityMapping],@"Opacity retains the complete typed or pasted text until commit");
 }
+static void TypeOpacity(NSTextField *field,NSString *text){EnterOpacity(field,text,NO);}
 static void EndOpacity(NSTextField *field){[field.window makeFirstResponder:nil];}
 static double StoredOpacity(TSPreferences *owner,NSString *key){return [[owner valueForKey:@"EditingColors"][key][3]doubleValue];}
 static void CheckOpacityField(TSPreferences *owner,TSSettingsWindowController *shell,NSColorWell *well,NSArray *rgb,NSString *key,NSString *path){
@@ -44,12 +50,14 @@ static void CheckOpacityField(TSPreferences *owner,TSSettingsWindowController *s
     TypeOpacity(field,@"12");EndOpacity(field);
     Check(opacityWrites==writes+1 && fabs(StoredOpacity(owner,key)-0.12)<1e-9,@"Explicitly entering the displayed integer replaces a fractional opacity");
     struct {__unsafe_unretained NSString *text; double expected; BOOL rejected;} cases[]={
-        {@"65",65,NO},{@"150",100,NO},{@" 65 ",65,NO},{@"-5",0,NO},{@"99999",100,NO},{@"00065",65,NO},{@"7",7,NO},{@"0",0,NO},
-        {@"abc",-1,YES},{@"\uFF16\uFF15",65,NO},{@"65.5",-1,YES},{@"65,5",-1,YES},{@"-",-1,YES},{@"+",-1,YES},{@".",-1,YES},{@"   ",-1,YES},
+        {@"65",65,NO},{@"150",100,NO},{@" 65 ",65,NO},{@"-5",0,NO},{@"99999",100,NO},{@"9999999999999999999",100,NO},{@"18446744073709551615",100,NO},{@"999999999999999999999999999999",100,NO},{@"00065",65,NO},{@"7",7,NO},{@"0",0,NO},
+        {@"abc",-1,YES},{@"\uFF16\uFF15",65,NO},{@"1e2",-1,YES},{@"+5",-1,YES},{@"−5",-1,YES},{@"65.5",-1,YES},{@"65,5",-1,YES},{@"-",-1,YES},{@"+",-1,YES},{@".",-1,YES},{@"   ",-1,YES},
     };
-    for(NSUInteger i=0;i<sizeof(cases)/sizeof(cases[0]);i++){
+    for(NSNumber *typing in @[@NO,@YES])for(NSUInteger i=0;i<sizeof(cases)/sizeof(cases[0]);i++){
         double before=slider.doubleValue;NSUInteger w=opacityWrites,r=opacityRejections;
-        TypeOpacity(field,cases[i].text);EndOpacity(field);
+        EnterOpacity(field,cases[i].text,typing.boolValue);
+        if(typing.boolValue)[(NSTextView *)field.currentEditor insertNewline:nil];
+        EndOpacity(field);
         if(cases[i].rejected){
             Check(opacityRejections>r && opacityWrites==w && slider.doubleValue==before,@"Opacity entry refuses letters, signs and decimals");
             Check([field.stringValue isEqual:[NSString stringWithFormat:@"%ld",lround(before)]],@"Refused opacity entry shows the stored value again");

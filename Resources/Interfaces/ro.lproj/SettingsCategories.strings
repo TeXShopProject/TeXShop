@@ -76,9 +76,9 @@
 "catalog.editor.0.5.title" = "Împarte rândurile";
 "catalog.editor.0.6.title" = "Meniul de etichete în bara de meniuri";
 "group.editor.1.title" = "Stilul editorului";
-"catalog.editor.1.0.title" = "Tab Indent:";
+"catalog.editor.1.0.title" = "Lățimea tabulatorului:";
 "catalog.editor.1.0.unit" = "caractere";
-"catalog.editor.1.1.title" = "Use Tab";
+"catalog.editor.1.1.title" = "Folosește tabulatori pentru meniul de indentare";
 "catalog.editor.1.2.title" = "Indentarea primului rând:";
 "catalog.editor.1.2.unit" = "pt";
 "catalog.editor.1.3.title" = "Indentarea celorlalte rânduri:";
@@ -253,7 +253,7 @@
 "catalog.typesetting.5.1.title" = "LaTeX ";
 "catalog.typesetting.5.1.button" = "default";
 "catalog.typesetting.5.2.title" = "Salvează fișierul PostScript";
-"group.typesetting.6.title" = "Script Personal";
+"group.typesetting.6.title" = "Script personal";
 "catalog.typesetting.6.0.title" = "Programul TeX";
 "catalog.typesetting.6.0.note" = "Implicit: gol";
 "catalog.typesetting.6.1.title" = "Programul LaTeX";
@@ -266,7 +266,7 @@
 "catalog.typesetting.8.0.note" = "Implicit: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Implicit: bibtex";
-"group.typesetting.9.title" = "Suport pTeX";
+"group.typesetting.9.title" = "Suport pTeX (pentru Japonia)";
 "catalog.typesetting.9.0.title" = "Suport pentru pachetul otf";
 "group.console.0.title" = "Font";
 "catalog.console.0.0.title" = "Fontul consolei";

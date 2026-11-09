@@ -11,7 +11,7 @@
     "SettingsPreview.strings": {
       "V7d-ht-Pe3.title": "Rechts",
       "1uj-kt-7Pj.title": "Links",
-      "337.title": "PDF auswählen"
+      "337.title": "PDF-Auswahl"
     },
     "SettingsThemes.strings": {
       "dDq-0W-EuL.title": "( )"
@@ -59,7 +59,7 @@
     "SettingsPreview.strings": {
       "V7d-ht-Pe3.title": "Droite",
       "1uj-kt-7Pj.title": "Gauche",
-      "337.title": "Sélectionner le PDF"
+      "337.title": "Sélectionner"
     },
     "SettingsThemes.strings": {
       "dDq-0W-EuL.title": "( )"
@@ -83,7 +83,7 @@
     "SettingsPreview.strings": {
       "V7d-ht-Pe3.title": "Destra",
       "1uj-kt-7Pj.title": "Sinistra",
-      "337.title": "Seleziona PDF"
+      "337.title": "Selezione"
     },
     "SettingsThemes.strings": {
       "dDq-0W-EuL.title": "( )"
@@ -98,7 +98,7 @@
   },
   "ja": {
     "SettingsCategories.strings": {
-      "catalog.typesetting.3.0.title": "pdfTeX"
+      "catalog.typesetting.3.0.title": "(pdf)TeX"
     },
     "SettingsThemes.strings": {
       "dDq-0W-EuL.title": "( )"
@@ -134,7 +134,7 @@
       "catalog.appearance.2.0.column.2": "Dekking",
       "group.appearance.0.title": "Thema’s",
       "group.console.1.title": "Acties",
-      "group.typesetting.9.title": "pTeX-ondersteuning",
+      "group.typesetting.9.title": "pTeX-ondersteuning (voor Japan)",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Huidige positie gebruiken",
       "group.editor.5.title": "Onzichtbare tekens",
@@ -191,7 +191,7 @@
       "xvd-dM-RGh.title": "Zijde van invoeglijn:"
     },
     "SettingsMiscTwo.strings": {
-      "SS5-tZ-cDa.title": "pTeX-ondersteuning",
+      "SS5-tZ-cDa.title": "pTeX-ondersteuning (voor Japan)",
       "vEF-zd-SJl.title": "Alternatieve engine",
       "GUV-qt-mM2.title": "Dagelijks",
       "h3F-qB-MHw.title": "Geopend hoofdvenster minimaliseren",
@@ -320,7 +320,7 @@
       "catalog.appearance.2.0.column.2": "Opacidade",
       "group.appearance.0.title": "Temas",
       "group.console.1.title": "Ações",
-      "group.typesetting.9.title": "Suporte a pTeX",
+      "group.typesetting.9.title": "Suporte a pTeX (para o Japão)",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Usar a posição atual",
       "group.editor.5.title": "Carateres invisíveis",
@@ -393,7 +393,7 @@
       "xvd-dM-RGh.title": "Lado da linha de inserção:"
     },
     "SettingsMiscTwo.strings": {
-      "SS5-tZ-cDa.title": "Suporte a pTeX",
+      "SS5-tZ-cDa.title": "Suporte a pTeX (para o Japão)",
       "vEF-zd-SJl.title": "Motor alternativo",
       "GUV-qt-mM2.title": "Diariamente",
       "h3F-qB-MHw.title": "Minimizar a janela principal aberta",
@@ -540,7 +540,7 @@
       "catalog.editor.6.1.title": "Culoarea cursorului:",
       "group.console.1.title": "Acțiuni",
       "catalog.appearance.9.0.item.4": "Valoare",
-      "group.typesetting.9.title": "Suport pTeX",
+      "group.typesetting.9.title": "Suport pTeX (pentru Japonia)",
       "catalog.editor.4.1.choice.1": "( )",
       "catalog.general.2.2.button": "Folosește poziția actuală",
       "group.editor.5.title": "Caractere invizibile",
@@ -652,7 +652,7 @@
       "xvd-dM-RGh.title": "Partea liniei de inserare:"
     },
     "SettingsMiscTwo.strings": {
-      "SS5-tZ-cDa.title": "Suport pTeX",
+      "SS5-tZ-cDa.title": "Suport pTeX (pentru Japonia)",
       "vEF-zd-SJl.title": "Motor alternativ",
       "GUV-qt-mM2.title": "Zilnic",
       "h3F-qB-MHw.title": "Minimizează fereastra principală deschisă",

@@ -70,3 +70,10 @@ for lang,tables in translated.items():
         actual=strings(interfaces/f'{lang}.lproj'/table)
         for key,value in expected.items():assert actual[key]==value,(lang,table,key,'sixth audit reviewed wording')
 print('PASS: translated choices, group names and approved semantics in every language')
+
+translated=json.loads((r/"Tests/Fixtures/SettingsSeventhWording.json").read_text())
+for lang,tables in translated.items():
+    for table,expected in tables.items():
+        actual=strings(interfaces/f"{lang}.lproj"/table)
+        for key,value in expected.items():assert actual[key]==value,(lang,table,key,"seventh audit reviewed wording")
+print("PASS: seventh audit wording decisions and translated legacy choices")

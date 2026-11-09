@@ -76,9 +76,9 @@
 "catalog.editor.0.5.title" = "Ajustar linhas";
 "catalog.editor.0.6.title" = "Menu de etiquetas na barra de menus";
 "group.editor.1.title" = "Estilo do editor";
-"catalog.editor.1.0.title" = "Tab Indent:";
+"catalog.editor.1.0.title" = "Largura da tabulação:";
 "catalog.editor.1.0.unit" = "caracteres";
-"catalog.editor.1.1.title" = "Use Tab";
+"catalog.editor.1.1.title" = "Usar tabulações no menu de indentação";
 "catalog.editor.1.2.title" = "Avanço da primeira linha do parágrafo:";
 "catalog.editor.1.2.unit" = "pt";
 "catalog.editor.1.3.title" = "Avanço das restantes linhas do parágrafo:";
@@ -266,7 +266,7 @@
 "catalog.typesetting.8.0.note" = "Predefinição: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Predefinição: bibtex";
-"group.typesetting.9.title" = "Suporte a pTeX";
+"group.typesetting.9.title" = "Suporte a pTeX (para o Japão)";
 "catalog.typesetting.9.0.title" = "Suporte para o pacote otf";
 "group.console.0.title" = "Tipo de letra";
 "catalog.console.0.0.title" = "Tipo de letra da consola";
