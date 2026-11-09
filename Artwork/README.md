@@ -21,25 +21,22 @@ lettering and placement.
 - `TeXShop.icon`: Icon Composer source; macOS supplies the outer mask. Its
   layer list runs front to back: lettering first, opaque frame last. Verify
   the built app’s `Contents/Resources/TeXShop.icns` as well as the PNG preview.
-- `TeXShop.icns`: Legacy rounded-square fallback.
 - `Icon-preview.png`: Fallback preview including standard icon padding.
-- `GitHub-avatar.png`: Full-bleed square avatar.
-- `TeXShop.iconset`: Legacy raster sizes.
+- `GitHub-avatar.png`: Avatar with the same outer shape as the app icon, nearly
+  filling the square, on a transparent background.
 - `Classic-TeX-outline.json`: Traced classic lettering, in original canvas coordinates.
 - `Icon-mask-outline.json`: The macOS 26 icon shape, and the same shape moved inward
   by the rim and its highlight, recorded by `trace-icon-mask.py` from an Icon
   Composer export.
-- `TeX-logo-outline.json`: Earlier lettering from the maintainer’s vector artwork,
-  retained for provenance but no longer used by the generator.
 
 Regenerate the white-frame design on macOS 13 or later from the repository root:
 
 ```sh
 swift Artwork/generate-icon.swift
-iconutil -c icns Artwork/TeXShop.iconset -o Artwork/TeXShop.icns
 ```
 
-Copy `Artwork/Icon-preview.png` to `Resources/DockIcons/current.png`. If a new macOS changes the icon shape, run
+The command also writes `Resources/DockIcons/current.png` (a copy of the preview)
+and the 512-pixel website icon `website/assets/texshop.png`. If a new macOS changes the icon shape, run
 `python3 Artwork/trace-icon-mask.py` (Xcode 26 or later, Pillow, NumPy and SciPy)
 before the Swift command.
 
@@ -50,4 +47,4 @@ in the script. Ordinary regeneration uses the stored outlines and needs no
 tracing dependencies.
 
 The Xcode target uses `TeXShop.icon` and the app-icon name `TeXShop`.
-`Resources/DockIcons/current.png` is a copy of the chosen fallback. Website and published avatar updates are separate.
+Deploying the website and uploading the avatar are separate steps.
