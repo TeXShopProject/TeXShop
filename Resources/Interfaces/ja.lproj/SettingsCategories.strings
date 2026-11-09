@@ -198,12 +198,6 @@
 "catalog.appearance.9.0.item.3" = "属性";
 "catalog.appearance.9.0.item.4" = "値";
 "group.appearance.10.title" = "起動中の Dock アイコン";
-"catalog.appearance.10.0.title" = "TeXShop の起動中に適用します。終了後は標準のアイコンに戻ります。";
-"catalog.appearance.10.0.item.0" = "1.0 以前";
-"catalog.appearance.10.0.item.1" = "1.0–3.13";
-"catalog.appearance.10.0.item.2" = "3.14–3.38";
-"catalog.appearance.10.0.item.3" = "3.39–5.58";
-"catalog.appearance.10.0.item.4" = "5.60–";
 "group.preview.0.title" = "表示";
 "catalog.preview.0.0.title" = "ページレイアウト";
 "catalog.preview.0.1.title" = "ウインドウのリサイズ後";

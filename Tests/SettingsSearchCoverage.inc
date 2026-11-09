@@ -64,8 +64,14 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
     NSTextField *name=(NSTextField *)SearchFind(row,@"label.catalog-row");
     if(name.stringValue.length)Check([result.title isEqual:name.stringValue],@"Result name is the visible row name, never its note");
    }
-   if([entry.targetIdentifier isEqual:@"shortcut.key"])Check([result.title isEqual:[resources localizedStringForKey:@"Search by Key" value:nil table:@"Localizable"]],@"Key-search result uses its setting name, never a reservation warning");
+   if([entry.targetIdentifier isEqual:@"DockIconChoices"])Check([result.title isEqual:[resources localizedStringForKey:@"group.appearance.10.title" value:nil table:@"SettingsCategories"]],@"Dock result uses the visible group name, never removed guidance");
   }
+ }
+ // Labels sharing a target must use the name that matches the actual query.
+ for(TSSettingsSearchEntry *entry in index.entries)if(entry.weight==TSSettingsSearchWeightLabel){
+  BOOL found=NO;for(TSSettingsSearchResult *result in [index resultsForQuery:entry.text])if([result.targetIdentifier isEqual:entry.targetIdentifier] && [result.category isEqual:entry.category]){
+   Check([TSSettingsNormalizedText(result.title) isEqual:TSSettingsNormalizedText(entry.text)],[NSString stringWithFormat:@"Matching labels win for %@: expected %@, got %@",entry.targetIdentifier,entry.text,result.title]);found=YES;
+  }Check(found,@"Each visible label finds its own target");
  }
  Check([index resultsForQuery:@"unfindable-93762"].count==0,@"Unknown query has no results");
  Check([index resultsForQuery:@"\u3000 \n"].count==0,@"Empty normalized query has no results");

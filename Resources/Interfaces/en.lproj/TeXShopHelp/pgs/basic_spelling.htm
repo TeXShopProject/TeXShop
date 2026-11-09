@@ -1,24 +1,20 @@
-<HTML>
+<html>
+<head>
+<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<title>Checking Spelling</title>
+<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
+<meta content="spelling; aspell; continuous spell checking; excalibur; zaccone" name="description"/>
+<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+</head>
+<body>
 
-<HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-<TITLE>Checking Spelling</TITLE>
-<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-<META NAME="description" CONTENT="spelling; aspell; continuous spell checking; excalibur; zaccone">
-<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-<p>Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose &#8220;Use LaTeX-aware spell checking (recommended)&#8221; with &#8220;Edit LaTeX exclusion rules&#8230;&#8221;, or &#8220;Use legacy spell checking&#8221; with three indented options. Changing the method preserves all child values. &#8220;Check Spelling&#8221; is independent. Keyboard places key bindings and command completion above shortcut search and the scrolling list. All three groups remain open. The shortcut list uses the remaining height and scrolls independently. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings. Disabled controls retain their saved values; an obsolete remembered category opens General.</p>
-
-	<div id="content_border">
-		<P>Cocoa programs automatically inherit spell checking technology by Apple. TeXShop supports continuous spell checking, which can be toggled on or off with a menu command. A setting selects the initial position of this toggle.</p>
-		<p> The Apple spell checker does not understand LaTeX commands and marks many such commands as misspelled. However, Apple's technology allows third parties to add extra spell servers to the operating system, which then become available as transparent extensions of Apple's system. One of these third party servers, cocoAspell, supports LaTeX and is often installed by TeX users. This speller was written by Anton Leuski, using Kevin Adkinson's ispell for Unix machines as a foundation. To obtain it, go to</P>
-
-		<p>
-		<dl>
-			<dd><a href="http://people.ict.usc.edu/~leuski/cocoaspell/">http://people.ict.usc.edu/~leuski/cocoaspell/</a>
-		</dl>
+<div id="content_border">
+<p>Cocoa programs automatically inherit spell checking technology by Apple. TeXShop supports continuous spell checking, which can be toggled on or off with a menu command. A setting selects the initial position of this toggle.</p>
+<p> The Apple spell checker does not understand LaTeX commands and marks many such commands as misspelled. However, Apple's technology allows third parties to add extra spell servers to the operating system, which then become available as transparent extensions of Apple's system. One of these third party servers, cocoAspell, supports LaTeX and is often installed by TeX users. This speller was written by Anton Leuski, using Kevin Adkinson's ispell for Unix machines as a foundation. To obtain it, go to</p>
+<p>
+<dl>
+<dd><a href="http://people.ict.usc.edu/~leuski/cocoaspell/">http://people.ict.usc.edu/~leuski/cocoaspell/</a>
+</dd></dl>
 	and download the free installer which makes installing a breeze. The installer  provides an English dictionary, but Leuski's site contains a link to a site with free dictionaries for over 90 extra languages. 
 	<p> After installing cocoAspell, it is important to configure it for TeX. That is done with the  Spelling Preference Pane which the cocoAspell installer adds to Apple's System Preferences panel. Use this pane to select active cocoAspell dictionaries. For each selected dictionary, click the TeX/LaTeX filter switch
 	in the Spelling Pane panel to turn on LaTeX filtering.
@@ -29,20 +25,19 @@
 
 	<p> The dictionary section of TeXShop Settings selects the default dictionary used when new files are opened in TeXShop, but does not change the dictionary used by files that are already open.
 
-	<p> Dictionaries are listed in Settings using the ISO 639-1 and ISO 639-2 standards, rather than the localized names in Apple's "Spelling & Grammar" panel.
+	<p> Dictionaries are listed in Settings using the ISO 639-1 and ISO 639-2 standards, rather than the localized names in Apple's "Spelling &amp; Grammar" panel.
 
 	<p> Once TeXShop dictionary settings are set up, users can open several source files in TeXShop.
 	Each will be assigned the Default Dictionary. But these dictionaries can be changed using the
-	"Spelling & Grammar" menu item in the TeXShop Edit menu. If desired, each file can use a separate dictionary. For instance, a user might be writing customer letters in English, French, German, and Japanese and could assign such dictionaries to the four source files. In that case, click randomly among the source files and notice that the "Spelling and Grammar" panel switches to the appropriate dictionary each time the corresponding source file becomes active.
+	"Spelling &amp; Grammar" menu item in the TeXShop Edit menu. If desired, each file can use a separate dictionary. For instance, a user might be writing customer letters in English, French, German, and Japanese and could assign such dictionaries to the four source files. In that case, click randomly among the source files and notice that the "Spelling and Grammar" panel switches to the appropriate dictionary each time the corresponding source file becomes active.
 
 	<p> When files are closed, this association is lost, so users who write in multiple languages will need to reselect the appropriate dictionary when each file is opened. 
 
 	<p> However, it is possible to fix the dictionary used when a file is first opened with the magic comment
 	<dd>
-	<dl> % !TEX spellcheck = de-DE
-	</dd>
-
-	<p> In this example, the magic states that a German dictionary should be used whenever this file is opened. The dictionary, however, can still be changed after the file opens by using "Spelling & Grammar."
+<dl> % !TEX spellcheck = de-DE
+	</dl></dd>
+<p> In this example, the magic states that a German dictionary should be used whenever this file is opened. The dictionary, however, can still be changed after the file opens by using "Spelling &amp; Grammar."
 	The next time the file is closed and opened again, it will use the German dictionary.	
 
 	<p> The line is
@@ -53,81 +48,76 @@ recognized when the document is opened, so the first time it is added to a sourc
 French (Canadian) has regional designation "CA". So to select a French dictionary in Canada, "spellcheck = fr" will work, and "spellcheck = fr-CA" would be even better.
 Since these are ISO standards, similar commands will work on other platforms, although TeXShop only runs on the Mac. The language standards are described in 
 <dl>
-			<dd><a href="http://www.loc.gov/standards/iso639-2/php/English_list.php">http://www.loc.gov/standards/iso639-2/php/English_list.php</a>
-		</dl>
+<dd><a href="http://www.loc.gov/standards/iso639-2/php/English_list.php">http://www.loc.gov/standards/iso639-2/php/English_list.php</a>
+</dd></dl>
 and the regional standards are at
 <dl>
-			<dd><a href="http:www.iso.ch">http:www.iso.ch</a>
-		</dl>
+<dd><a href="http:www.iso.ch">http:www.iso.ch</a>
+</dd></dl>
 although this second site is difficult to use.
 
-<p> Specifying a cocoAspell dictionary is slightly tricky. The Spelling Preference Pane installed by cocoAspell lists all cocoAspell dictionaries, including active dictionaries. Names in this list are the names to be used following "spellcheck". When these dictionaries appear in Apple's list in the Language & Text panel, they often have different names. Those names don't work.
+<p> Specifying a cocoAspell dictionary is slightly tricky. The Spelling Preference Pane installed by cocoAspell lists all cocoAspell dictionaries, including active dictionaries. Names in this list are the names to be used following "spellcheck". When these dictionaries appear in Apple's list in the Language &amp; Text panel, they often have different names. Those names don't work.
 
 <p> For example, there  is a ocoAspell dictionary named German. If the German dictionary is selected in the Spelling Preference Panel, then the resulting dictionary will be listed in Apple's panel as Deutch (Aspell). In this case 
 <dl>
-			<dd>% !TEX spellcheck = de
-		</dl>
+<dd>% !TEX spellcheck = de
+		</dd></dl>
 will select Apple's German dictionary and 
 <dl>
-			<dd>% !TEX spellcheck = German
-		</dl>
+<dd>% !TEX spellcheck = German
+		</dd></dl>
 will select the cocoAspell German dictionary, while
 <dl>
-			<dd>% !TEX spellcheck = Deutsch (Aspell)
-		</dl>
+<dd>% !TEX spellcheck = Deutsch (Aspell)
+		</dd></dl>
 will select nothing. 
 
 <p> Similarly there is a cocoAspell dictionary named German (Germany) in the Spelling Preference Pane. To select it, the appropriate command is
 <dl>
-			<dd>% !TEX spellcheck = German (Germany)
-		</dl>
-
-<p> Originally, TeXShop did nothing special for dictionaries and users just used "Spelling & Grammar."
-Later a partial implementation of the above design was introduced. Finally, the full implementation was introduced in TeXShop 3.81. A very small number of users prefer the original design in which TeXShop just accepted the default behavior of "Spelling & Grammar." If you are one of these users, you can switch back to the original behavior using the hidden default
+<dd>% !TEX spellcheck = German (Germany)
+		</dd></dl>
+<p> Originally, TeXShop did nothing special for dictionaries and users just used "Spelling &amp; Grammar."
+Later a partial implementation of the above design was introduced. Finally, the full implementation was introduced in TeXShop 3.81. A very small number of users prefer the original design in which TeXShop just accepted the default behavior of "Spelling &amp; Grammar." If you are one of these users, you can switch back to the original behavior using the hidden default
 
 	<dl>
-	<dd> defaults write TeXShop OriginalSpelling YES
-	</dl>
-
-		<p>An alternate LaTeX spell checker named Excalibur is sometimes used. This spell checker was written by Rick Zaccone; it can open TeXShop files. To obtain it, go to</p>
-		<dl>
-			<dd><a href="http://www.eg.bucknell.edu/%7eexcalibr/excalibur.html">http://www.eg.bucknell.edu/~excalibr/excalibur.html</a>
-		</dl>
+<dd> defaults write TeXShop OriginalSpelling YES
+	</dd></dl>
+<p>An alternate LaTeX spell checker named Excalibur is sometimes used. This spell checker was written by Rick Zaccone; it can open TeXShop files. To obtain it, go to</p>
+<dl>
+<dd><a href="http://www.eg.bucknell.edu/%7eexcalibr/excalibur.html">http://www.eg.bucknell.edu/~excalibr/excalibur.html</a>
+</dd></dl>
 Zaccone's program is not a spell service; instead source files are spell checked by opening them in this program as a separate step in the authoring process.
 
-	</div>		
+	</p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p><p><a href="basic_preferences.htm#settings-search">Using Settings and Search Settings</a></p></div>
 <div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
+<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
 <div id="header_chapter">Basic Help</div><div id="header_title">Checking Spelling</div>
+<div id="menu_border">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminaries</a>
+<li><a href="basic_installtetex.htm">Installing TeX Live</a>
+<li><a href="basic_installtexshop.htm">Installing TeXShop</a>
+<li><a href="basic_typesetting.htm">Typesetting Documents</a>
+<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>
+<li><a href="basic_spelling.htm">Checking Spelling</a>
+<li><a href="basic_latexpanel.htm">Latex Panel</a>
+<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
+<li><a href="basic_macros.htm">Macros</a>
+<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
+<li><a href="basic_graphics.htm">Including Graphics</a>
+<li><a href="basic_printing.htm">Printing</a>
+<li><a href="basic_preferences.htm">Changing Settings</a>
+<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
+<li><a href="basic_edittricks.htm">Editing Tricks</a>
+<li><a href="basic_autocompletion.htm">Key Bindings</a>
+<li><a href="basic_commandcompletion.htm">Command Completion </a>
+<li><a href="basic_miscellaneous.htm">Miscellaneous </a>
+<li><a href="basic_bugs.htm">Sending Bug Reports</a>
+<li><a href="basic_websites.htm">Useful Web Sites</a>
+<li><a href="basic_license.htm">License</a>
+</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</div>
 
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_miscellaneous.htm">Miscellaneous </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
 
-<h3 id="settings-search">Search Settings</h3>
-<p>Use Search Settings above the sidebar to find settings, options and menu commands. Results show each setting with its category name. Words separated by spaces must describe the same setting, optionally qualified by its category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Typing a query leaves the current pane in place. Selecting a result scrolls to and highlights that setting without changing its value, and adds the visit to normal history. Clearing the query keeps the current pane. Back and Forward follow the history during search without clearing the query. A menu-command match opens Keyboard and filters its Search by Function list. Search by Key has priority while recording. Personal paths, entered values and user-created theme names are not searched.</p>
-</BODY>
-
-</HTML>
+</body>
+</html>

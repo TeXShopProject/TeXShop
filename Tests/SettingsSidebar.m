@@ -1,10 +1,13 @@
 // Complete production-owner regression; included by SettingsProductShell.m.
 // Boundary substitutes report key/visible/sheet state without ordering windows.
 static NSWindow *navigationTestWindow, *navigationTestSheet;
-static BOOL navigationTestKey, navigationTestVisible;
+static NSRect NavigationSmallScreen(id receiver,SEL selector){return NSMakeRect(0,0,800,650);}
+static BOOL NavigationRestoreFrame(id receiver,SEL selector,NSString *name){[(NSWindow *)receiver setFrame:NSMakeRect(25,35,960,680) display:NO];return YES;}
+static BOOL navigationTestKey, navigationTestVisible, navigationTestMiniaturized;
 static NSUInteger navigationFrontRequests;
 static BOOL NavigationKey(id receiver,SEL selector){return receiver==navigationTestWindow && navigationTestKey;}
 static BOOL NavigationVisible(id receiver,SEL selector){return receiver==navigationTestWindow && navigationTestVisible;}
+static BOOL NavigationMiniaturized(id receiver,SEL selector){return receiver==navigationTestWindow && navigationTestMiniaturized;}
 static id NavigationSheet(id receiver,SEL selector){return receiver==navigationTestWindow?navigationTestSheet:nil;}
 static void NavigationFront(id receiver,SEL selector,id sender){if(receiver==navigationTestWindow)navigationFrontRequests++;}
 static NSEvent *NavigationKeyEvent(NSString *characters,NSEventModifierFlags flags,NSUInteger code){return [NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:flags timestamp:0 windowNumber:navigationTestWindow.windowNumber context:nil characters:characters charactersIgnoringModifiers:characters isARepeat:NO keyCode:code];}
@@ -27,26 +30,46 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     [h visitIdentifier:@"d"];Check(!h.forwardIdentifier && h.count==3,@"A new visit truncates forward history");[h visitIdentifier:@"d"];Check(h.count==3,@"Repeat visits do not duplicate history");
     for(int i=0;i<60;i++)[h visitIdentifier:[NSString stringWithFormat:@"%d",i]];Check(h.count==50,@"History has a fifty-entry bound");
     for(int i=0;i<60;i++)[h goBack];Check([h.currentIdentifier isEqual:@"10"],@"The oldest entries are evicted");
+    Method screenFrame=class_getInstanceMethod(NSScreen.class,@selector(visibleFrame));IMP oldScreenFrame=method_setImplementation(screenFrame,(IMP)NavigationSmallScreen);
+    TSSettingsWindowController *small=[[TSSettingsWindowController alloc]initWithDefaults:TSIsolatedAppKitDefaults];
+    NSView *footer=[NSView new];footer.hidden=YES;[small hostPaneControllers:@{} footer:footer];
+    Check(NSWidth(small.window.frame)<=800 && NSHeight(small.window.frame)<=650 && small.window.contentMinSize.width<=800,@"New settings window fits a small screen");
+    method_setImplementation(screenFrame,oldScreenFrame);
+    Method frameName=class_getInstanceMethod(NSWindow.class,@selector(setFrameAutosaveName:));IMP oldFrameName=method_setImplementation(frameName,(IMP)NavigationRestoreFrame);
+    TSSettingsWindowController *restored=[[TSSettingsWindowController alloc]initWithDefaults:TSIsolatedAppKitDefaults];[restored hostPaneControllers:@{} footer:footer];
+    Check(NSEqualRects(restored.window.frame,NSMakeRect(25,35,960,680)),@"Host setup respects the frame returned by AppKit restoration");
+    method_setImplementation(frameName,oldFrameName);
+    [shell.window.contentView layoutSubtreeIfNeeded];
+    NSView *sidebar=shell.settingsSearchField.superview,*content=shell.contentScroll.superview;
+    Check(NSMaxY(shell.settingsSearchField.frame)<=NSMaxY(sidebar.safeAreaRect)-5 && NSMaxY(shell.contentScroll.frame)<=NSMaxY(content.safeAreaRect)+1,@"Search and content remain below their titlebar safe areas");
     NSDictionary *saved=[TSIsolatedAppKitDefaults.values copy];
     [TSIsolatedAppKitDefaults setObject:@"unknown" forKey:TSSettingsSelectedCategoryKey];[shell beginSession];
     Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryGeneral] && shell.categoryTable.selectedRow==0,@"Unknown stored ID opens General");
     NSSegmentedControl *navigation=[shell valueForKey:@"navigationControl"];
     Check(shell.window.firstResponder==shell.categoryTable && ![navigation isEnabledForSegment:0] && ![navigation isEnabledForSegment:1],@"Reopening focuses the sidebar with no history arrows");
+    Check(!shell.shouldCascadeWindows && shell.window.title.length>0,@"Settings has a title and disables cascading");
     Check(shell.window.toolbar.items.count==2 && [shell.window.toolbar.items[0] isKindOfClass:NSTrackingSeparatorToolbarItem.class] && shell.window.toolbar.items[1].navigational,@"Toolbar has its tracking divider and navigational control");
     NSRect frame=shell.window.frame;
     for(NSString *category in shell.categoryIdentifiers)[shell selectCategoryIdentifier:category];
     Check(NSEqualRects(frame,shell.window.frame),@"Category navigation does not resize the window");
-    [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];[shell selectCategoryIdentifier:TSSettingsCategoryEditor];[shell selectCategoryIdentifier:TSSettingsCategoryConsole];
+    [shell selectCategoryIdentifier:TSSettingsCategoryKeyboard];Check(shell.window.contentMinSize.height>=560,@"Keyboard minimum fits its input sections");
+    [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];Check(shell.window.contentMinSize.height==560,@"Leaving Keyboard restores the ordinary minimum height");
+    [shell selectCategoryIdentifier:TSSettingsCategoryEditor];[shell selectCategoryIdentifier:TSSettingsCategoryConsole];
     navigationTestWindow=shell.window;
     Method key=class_getInstanceMethod(NSWindow.class,@selector(isKeyWindow)),sheet=class_getInstanceMethod(NSWindow.class,@selector(attachedSheet));
     IMP oldKey=method_setImplementation(key,(IMP)NavigationKey),oldSheet=method_setImplementation(sheet,(IMP)NavigationSheet);
     navigationTestSheet=[[NSWindow alloc]initWithContentRect:NSZeroRect styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
     NSUInteger count=shell.history.count;
     [shell goBack:nil];Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryConsole] && ![shell selectCategoryIdentifier:TSSettingsCategoryGeneral] && shell.history.count==count,@"Attached sheet blocks both history and sidebar navigation");
+    Check(![owner finishPreferenceEditing:YES],@"An attached sheet blocks the owner editing transaction");
     navigationTestSheet=nil;navigationTestKey=YES;
     Check([shell.window performKeyEquivalent:NavigationKeyEvent(@"[",NSEventModifierFlagCommand,33)] && [shell.history.currentIdentifier isEqual:TSSettingsCategoryEditor],@"Command-left-bracket follows real history in the key settings window");
     navigationTestKey=NO;[shell.window performKeyEquivalent:NavigationKeyEvent(@"[",NSEventModifierFlagCommand,33)];Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryEditor],@"Inactive settings window does not consume history shortcut");
     navigationTestKey=YES;Check([shell.window performKeyEquivalent:NavigationKeyEvent(@"]",NSEventModifierFlagCommand,30)] && [shell.history.currentIdentifier isEqual:TSSettingsCategoryConsole],@"Command-right-bracket follows forward history");
+    [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];[shell.window makeFirstResponder:shell.categoryTable];
+    NSString *typed=[fixture localizedStringForKey:TSSettingsCategoryUpdates value:nil table:@"SettingsCategories"];
+    [shell.categoryTable keyDown:NavigationKeyEvent(typed,0,0)];
+    Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryUpdates],@"Typing a localized category name selects its sidebar row");
     [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];[shell.window makeFirstResponder:shell.categoryTable];
     [shell.categoryTable keyDown:NavigationKeyEvent(@"\uF701",NSEventModifierFlagFunction|NSEventModifierFlagNumericPad,125)];
     Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryDocuments],@"Arrow keys navigate the actual sidebar");
@@ -57,6 +80,10 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     IMP oldVisible=method_setImplementation(visible,(IMP)NavigationVisible),oldFront=method_setImplementation(front,(IMP)NavigationFront);
     navigationTestVisible=YES;NSDictionary *before=[TSIsolatedAppKitDefaults dictionaryRepresentation];NSMapTable *rules=[owner valueForKey:@"inputRules"];
     [owner showPreferences:nil];Check(navigationFrontRequests==1 && [owner valueForKey:@"inputRules"]==rules && [[TSIsolatedAppKitDefaults dictionaryRepresentation]isEqual:before],@"Showing an already-open panel only brings it forward");
+    navigationTestVisible=NO;navigationTestMiniaturized=YES;
+    Method mini=class_getInstanceMethod(NSWindow.class,@selector(isMiniaturized));IMP oldMini=method_setImplementation(mini,(IMP)NavigationMiniaturized);
+    [owner showPreferences:nil];Check(navigationFrontRequests==2 && [owner valueForKey:@"inputRules"]==rules,@"Showing a miniaturized panel only brings the existing session forward");
+    method_setImplementation(mini,oldMini);navigationTestMiniaturized=NO;
     navigationTestVisible=NO;method_setImplementation(visible,oldVisible);method_setImplementation(front,oldFront);
     // Forwarding and ownership are tested without asking NSFontManager to open a panel.
     SettingsFontProbe *font=[SettingsFontProbe new];font.converted=[NSFont userFontOfSize:17];
@@ -80,9 +107,10 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     NSPoint scrolled=shell.contentScroll.contentView.bounds.origin;Check(scrolled.y>0,@"Tall Editor pane is scrolled before validation test");
     Method alertMethod=class_getInstanceMethod(NSAlert.class,@selector(beginSheetModalForWindow:completionHandler:));IMP oldAlert=method_setImplementation(alertMethod,(IMP)CaptureOwnerAlert);
     NSTextField *tabs=[owner valueForKey:@"tabIndentField"];EditOwnerField(owner,tabs,@"bad");
-    NSResponder *focused=shell.window.firstResponder;NSUInteger rejectedCount=shell.history.count;
+    NSResponder *focused=shell.window.firstResponder;NSUInteger rejectedCount=shell.history.count, rejectedAlerts=ownerAlertCount;
     [shell.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryEditor] && shell.categoryTable.selectedRow==3 && shell.history.count==rejectedCount && NSEqualPoints(scrolled,shell.contentScroll.contentView.bounds.origin),@"Rejected real sidebar selection restores row and preserves scroll/history");
+    Check(ownerAlertCount==rejectedAlerts+1,@"A real category selection validates the invalid edit exactly once");
     Check(shell.window.firstResponder==focused,@"Rejected selection retains the invalid field's editor");
     FinishOwnerAlert(NSAlertSecondButtonReturn);Check([shell selectCategoryIdentifier:TSSettingsCategoryPreview],@"Restored field permits the next category");
     Check(fabs(shell.contentScroll.contentView.bounds.origin.y)<1 && shell.window.firstResponder!=shell.categoryTable,@"Successful content navigation resets scroll without stealing sidebar focus");

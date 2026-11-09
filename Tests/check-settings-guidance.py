@@ -13,11 +13,11 @@ CATEGORIES = ('general', 'documents', 'editor', 'spelling', 'appearance',
 # Quoted names and HTML-wrapped names must be checked too. Source *menu* and
 # theme *settings* remain valid; the removed sidebar categories do not.
 QUOTE = r'["“”„«»\x27`]*'
-ENGLISH = (rf'\b(?:Source|Engines?|Misc ?[12]?|Themes){QUOTE}\s+'
+ENGLISH = (rf'\b(?:Source|Engines?|Misc\.? ?[12]?|Themes){QUOTE}\s+'
            rf'(?:configuration\s+)?(?:tab|category|pane|flag)\b|'
            rf'\b(?:tab|category|pane)\s+{QUOTE}(?:Source|Engines?|Misc\d?|Themes)\b')
 CATEGORY_RULES = {
-    'en': ENGLISH + r'|(?i:\b(?:Source|Engines?|Misc ?[12]?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)',
+    'en': ENGLISH + r'|(?i:\b(?:Source|Engines?|Misc\.? ?[12]?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)',
     'ko': ENGLISH + r'|(?i:\b(?:Source|Engines?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)' + r'|(문서|엔진설정|기타1|기타2)\s*(?:\(Engine\)\s*)?(탭|범주|카테고리|tab)',
     'ja': r'「詳細」タブ|「(?:内部設定|詳細1|詳細2|書類|ソース|テーマ)」(?:タブ|カテゴリ|パネル|項目)|「(?:内部設定|詳細1|詳細2)」|内部設定\s*>',
     'de': rf'\bunter\s+{QUOTE}Programme\b|\bTitel\s+Programme\b|(?:Registerkarte)\s+{QUOTE}(?:Programme|Themes|Quelltext)\b|\b(?:Quelltext|Programme|Div\. ?[12]){QUOTE}[- ]?(?:Reiter|Kategorie|Tab|Bereich)\b|(?:Reiter|Kategorie)\s+{QUOTE}(?:Quelltext|Programme|Div\.)',
@@ -27,7 +27,7 @@ REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Compl
                 r'Key Bindings menu|Vervollständigungsdatei öffnen|Autovervollständigung-Datei|'
                 r'Abrir archivo de compleciones|Editar archivo de autocompleciones|'
                 r'補完用語ファイルを開く|補完用語ファイルの編集|キーバインドファイルの編集')
-OLD_UI = (r'one at a time|一つずつ開け|하나씩 펼칠|jeweils eine Eingabegruppe|un grupo de entrada a la vez|'
+OLD_UI = (r'Both theme color groups appear in one pane|Keyboard results use one vertical scroll area|approved compact layout|30-point sidebar|承認済みのコンパクト|both color groups|テーマの2つの色グループ|A pulldown menu at the bottom of the Settings window|one at a time|一つずつ開け|하나씩 펼칠|jeweils eine Eingabegruppe|un grupo de entrada a la vez|'
           r'Edit Rules|Check Spelling While Typing is independent|share one vertical scroll area|'
           r'LaTeXに対応したスペルチェック|従来のスペルチェック|同じ縦スクロール領域|'
           r'einen vertikalen Scrollbereich|un área de desplazamiento vertical|'
@@ -51,7 +51,7 @@ def plain(text):
 
 def check_obsolete(text, language, path):
     text = plain(text)
-    arrows = r'(?:Settings|Preferences|設定|설정|환경설정|Einstellungen|Ajustes|Preferencias)\s*[>→]\s*[「“"«]*(?:Source|Misc\s*[12]|Engines?|Themes|内部設定|詳細[12]|ソース|テーマ|기타[12]|엔진설정|Quelltext|Programme|Div\.\s*[12]|Código|Motor|Modos)\b'
+    arrows = r'(?:Settings|Preferences|設定|설정|환경설정|Einstellungen|Ajustes|Preferencias)\s*[>→›▸]\s*[「“"«]*(?:Source|Misc\.?\s*[12]|Engines?|Themes|内部設定|詳細[12]|ソース|テーマ|기타[12]|엔진설정|Quelltext|Programme|Div\.\s*[12]|Código|Motor|Modos)\b'
     for pattern in (CATEGORY_RULES[language], REMOVED_MENU, OLD_UI, arrows):
         match = re.search(pattern, text)
         assert match is None, (str(path), text[max(0, match.start()-60):match.end()+60])
@@ -75,15 +75,31 @@ for language in LANGUAGES:
     if language in ('en', 'ko'):
         route = 'Settings > Typesetting > Lookup Commands and BibTeX > BibTeX Engine' if language == 'en' else 'Settings > 조판 > 검색 명령과 BibTeX > BibTeX 엔진'
         assert route in pages['advanced_bibtex'], (language, 'BibTeX Engine route')
-    for name in ('basic_preferences', 'basic_spelling', 'configure_menushortcuts', 'configure_prefchanges'):
-        text = pages[name]
-        assert 'id="settings-search"' in text, (language, name, 'global search instructions')
-        if language=='ja':
-            for key in ('Search by Function','Search by Key'): assert labels[key] in text, (language,name,key)
-        for key in CATEGORIES:
-            assert categories[key] in text, (language, name, key)
-        for key in ('Use LaTeX-aware spell checking (recommended)', 'Use legacy spell checking'):
-            assert labels[key] in text, (language, name, key)
+    overview=pages['basic_preferences']
+    assert 'id="settings-search"' in overview,(language,'central search instructions')
+    for key in CATEGORIES: assert categories[key] in overview,(language,'overview',key)
+    for name in ('basic_spelling','configure_menushortcuts','configure_prefchanges'):
+        assert 'id="settings-search"' not in pages[name],(language,name,'duplicate search section')
+        assert 'basic_preferences.htm#settings-search' in pages[name],(language,name,'central overview link')
+    for key in ('Use LaTeX-aware spell checking (recommended)','Use legacy spell checking'):
+        assert labels[key] in overview,(language,'spelling overview',key)
+    if language=='ja':
+        for key in ('Search by Function','Search by Key','Clear Shortcut','Restore Default'):
+            if key in labels:assert labels[key] in pages['configure_menushortcuts'],(language,key)
+        assert '割り当てを解除' not in pages['configure_menushortcuts'] and '初期状態に戻す' not in pages['configure_menushortcuts']
+    # Check the DOM location, not just whether the added paragraph exists.
+    from html.parser import HTMLParser
+    class ContentParser(HTMLParser):
+        def __init__(self):super().__init__();self.stack=[];self.outside=[]
+        def handle_starttag(self,tag,attrs):
+            attrs=dict(attrs)
+            if tag in ('p','h3') and any(t=='body' for t,i in self.stack) and not any(i=='content_border' for t,i in self.stack):self.outside.append(tag)
+            if tag not in ('br','hr','img','meta','link','input'):self.stack.append((tag,attrs.get('id')))
+        def handle_endtag(self,tag):
+            for i in range(len(self.stack)-1,-1,-1):
+                if self.stack[i][0]==tag:self.stack=self.stack[:i];break
+    for name in ('basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden'):
+        parser=ContentParser();parser.feed(pages[name]);assert not parser.outside,(language,name,'body text outside content_border',parser.outside)
     for name, key in (('basic_autocompletion', 'Edit Key Bindings…'), ('basic_commandcompletion', 'Edit Command Completion…')):
         # Older de/es key-binding articles do not name an editor command; their
         # command-completion article does, and must use the current button label.
@@ -93,9 +109,16 @@ for language in LANGUAGES:
 ja_unicode=read_help(ROOT/'Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/advanced_unicode.htm','ja')
 assert strings(ROOT/'Resources/Interfaces/ja.lproj/SettingsMiscTwo.strings')['ahm-aK-Qi9.title'] in ja_unicode
 
+for suffix,language in [('', 'en'),('-ja','ja')]:
+    check_obsolete((ROOT/('Documentation/Releases/5.60'+suffix+'.md')).read_text(),language,'current release Markdown')
+    web=(ROOT/('website/release-notes'+suffix+'.html')).read_text()
+    current=re.search(r'<article[^>]*id="v5.60"[^>]*>(.*?)</article>',web,re.S)
+    assert current is not None
+    check_obsolete(current[1],language,'current website release')
 manual = (ROOT / 'Manual Source/Manual.tex').read_text()
 check_obsolete(manual, 'en', 'Manual.tex')
 assert '\\section{Settings for the Source Window}' in manual
+assert 'After making a selection, TeXShop must be restarted' not in manual, 'Find Panel restart guidance must distinguish OgreKit'
 font_route = manual.split("To change the font in the Source Window,", 1)[1].split("Choose a font and size", 1)[0]
 assert r"{\em Editor}" in font_route and r"{\em Appearance}" not in font_route, "Source font belongs to Editor"
 for file in ('Documentation/Releases/5.60.md', 'website/release-notes.html', 'Manual Source/Manual.tex'):
@@ -111,7 +134,7 @@ for file in ('Documentation/Releases/5.60-ja.md', 'website/release-notes-ja.html
     assert '入力設定とショートカット一覧は同じ縦スクロール領域' not in text
 contract = json.loads((ROOT / 'Tests/Fixtures/SettingsCategoryGroups.json').read_text())
 assert 'catalog' in contract['source'].lower()
-print(f'PASS: {page_count} current help pages in five languages, 20 category overviews, manual, editing routes and original encodings')
+print(f'PASS: {page_count} current help pages in five languages, five central category overviews and 25 DOM layouts, manual, editing routes and original encodings')
 
 # Release changes must belong to the version's Settings section, not its footer.
 from html.parser import HTMLParser
@@ -138,3 +161,9 @@ for suffix,heading,phrase in [('', 'Settings and themes', 'Add Search Settings')
     parser=ReleaseParser();parser.feed((ROOT/('website/release-notes'+suffix+'.html')).read_text())
     assert any(a=='v5.60' and h==heading and ul and phrase in text for a,h,ul,text in parser.items), (suffix,'release article/list section')
 print('PASS: release notes have one Settings item inside v5.60 and the matching Markdown section')
+
+comment=(ROOT/'DocumentSources/CommentLinesRevised/CommentLines.tex').read_text()
+for key in ('ApplePersistence','WatchServer','ExtraCommandsNotToCheckParameters','ExtraCommandsToCheckParameters'):
+    section=comment.split('defaults write TeXShop '+key,1)[1].split('\\item',1)[0]
+    assert 'Restart TeXShop' in section,(key,'hidden-setting restart documentation')
+print('PASS: four startup-only hidden settings are documented in CommentLines')

@@ -172,7 +172,7 @@ add(TSSettingsCategoryAppearance, @"settings.88L-Tw-ww4", @"SettingsCategories",
 add(TSSettingsCategoryAppearance, @"settings.N5y-1z-ygl", @"SettingsCategories", @"catalog.appearance.9.0.item.3", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"settings.UIf-La-lmG", @"SettingsCategories", @"catalog.appearance.9.0.item.4", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"heading.group.appearance.10", @"SettingsCategories", @"group.appearance.10.title", TSSettingsSearchWeightHeading);
-add(TSSettingsCategoryAppearance, @"DockIconChoices", @"SettingsCategories", @"catalog.appearance.10.0.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryAppearance, @"DockIconChoices", @"SettingsCategories", @"group.appearance.10.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"heading.group.preview.0", @"SettingsCategories", @"group.preview.0.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.0", @"SettingsCategories", @"catalog.preview.0.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.1", @"SettingsCategories", @"catalog.preview.0.1.title", TSSettingsSearchWeightLabel);

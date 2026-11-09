@@ -46,5 +46,9 @@ int main(void){@autoreleasepool{
  for(TSSettingsSearchResult *result in [index resultsForQuery:@"General"])Check([result.targetIdentifier hasPrefix:@"row.catalog.general."]);
  Check([[[index resultsForQuery:@"shared"] firstObject].targetIdentifier isEqual:@"row.catalog.general.0.0"]);
  Check([[[index resultsForQuery:@"shared"] firstObject].title isEqual:@"shared"]);
+ NSArray *labels=@[@"コマンド",@"ショートカット",@"機能で検索",@"キーで検索",@"Search by Function",@"Search by Key"];
+ NSMutableArray *sameTarget=[NSMutableArray array];for(NSString *text in labels)[sameTarget addObject:[[TSSettingsSearchEntry alloc]initWithCategory:@"keyboard" target:@"shared-target" text:text weight:TSSettingsSearchWeightLabel command:NO]];
+ [index setValue:sameTarget forKey:@"entries"];
+ for(NSString *text in labels)Check([[[index resultsForQuery:text]firstObject].title isEqual:text]);
  puts("PASS: normalization, item AND, category qualification, weighting, ties and command matching");
 }return 0;}

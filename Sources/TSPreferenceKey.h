@@ -7,3 +7,5 @@ static TSPreferenceKey const TSCommandCompletionCharacterKey = @"CommandCompleti
 
 // Shared by preference controls and the shortcut provider.
 static NSNotificationName const TSCompletionChangedNotification = @"CommandCompletionCharNotification";
+
+static NSNotificationName const TSFindMethodChangedNotification = @"TSFindMethodChangedNotification";

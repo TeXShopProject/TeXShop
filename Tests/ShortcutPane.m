@@ -169,6 +169,12 @@ int main(int argc,char **argv){@autoreleasepool{
   }
  }];
 
+ // Independent raw Shift distinction through the actual key-search route.
+ for(NSNumber *macroFlags in @[@(C),@(C|S)]){
+  NSArray *shiftMacros=@[Macro(@"Shift distinction",@"x",macroFlags.unsignedIntegerValue,90)];
+  REQUIRE([TSShortcutSearch matchesKey:@"x" modifiers:macroFlags.unsignedIntegerValue store:coordinator.store macros:shiftMacros].count==1);
+  REQUIRE([TSShortcutSearch matchesKey:@"x" modifiers:(macroFlags.unsignedIntegerValue^S) store:coordinator.store macros:shiftMacros].count==0);
+ }
  NSArray<TSShortcutMatch *> *hits=[TSShortcutSearch matchesKey:@"f" modifiers:C store:coordinator.store macros:macros];
  REQUIRE(hits.count==3 && hits[0].menuItem==first && hits[0].winner && !hits[1].winner && !hits[2].winner);
  REQUIRE([coordinator.store conflictForKey:@"f" modifiers:C except:nil restoring:nil]!=nil);

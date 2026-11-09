@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSSettingsChangeNote.h"
+#import "TSPreferenceKey.h"
 
 static NSMutableDictionary<NSString *, id> *launchValues;
 void TSSettingsRememberLaunchValue(NSString *key, id value) {
@@ -22,10 +23,12 @@ NSDictionary<NSString *, id> *TSSettingsLaunchValues(void) { return [launchValue
     NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     NSImage *symbol = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle.fill" accessibilityDescription:nil];
     NSImageView *icon = [NSImageView new];
-    icon.image = [symbol imageWithSymbolConfiguration:[NSImageSymbolConfiguration configurationWithPointSize:font.pointSize weight:NSFontWeightRegular]];
-    icon.contentTintColor = NSColor.systemRedColor; icon.accessibilityElement = NO;
+    NSImageSymbolConfiguration *configuration = [[NSImageSymbolConfiguration configurationWithPointSize:font.pointSize weight:NSFontWeightRegular]
+        configurationByApplyingConfiguration:[NSImageSymbolConfiguration configurationPreferringMulticolor]];
+    icon.image = [symbol imageWithSymbolConfiguration:configuration];
+    icon.identifier = @"settings.warning-symbol.multicolor"; icon.accessibilityElement = NO;
     NSTextField *label = [NSTextField wrappingLabelWithString:text];
-    label.font = font; label.textColor = NSColor.systemRedColor;
+    label.font = font; label.textColor = NSColor.labelColor;
     [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
     [self addArrangedSubview:icon]; [self addArrangedSubview:label];
     self.accessibilityLabel = text; self.hidden = YES;
@@ -68,10 +71,10 @@ typedef NS_ENUM(NSUInteger, TSSettingsNoteValueKind) { TSSettingsNoteBoolean, TS
     };
     NSString *restart=@"Takes effect after you restart TeXShop.";
     _categories=@{
-        @"spelling":@[rule(@"spelling",@"TeXAwareSpellChecking",@"row.catalog.spelling.1.0",@"This does not turn spell checking while typing on or off.",TSSettingsNoteBoolean,NO,^BOOL{return YES;})],
+        @"spelling":@[rule(@"spelling",TSTeXAwareSpellCheckingKey,@"row.catalog.spelling.1.0",@"This does not turn spell checking while typing on or off.",TSSettingsNoteBoolean,NO,^BOOL{return YES;})],
         @"preview":@[rule(@"preview",@"PdfMagnification",@"row.catalog.preview.0.2",@"Open PDFs keep their zoom. The new value applies to PDFs opened from now on.",TSSettingsNoteDouble,NO,^BOOL{return weakSelf.hasPDFWindow();})],
         @"documents":@[rule(@"documents",@"Encoding",@"row.catalog.documents.0.0",@"Currently open files retain their old encoding.",TSSettingsNoteString,NO,^BOOL{return weakSelf.hasSourceWindow();}),rule(@"documents",@"AutoSaveEnabled",@"row.catalog.documents.1.0",restart,TSSettingsNoteBoolean,YES,^BOOL{return YES;})],
-        @"editor":@[rule(@"editor",@"FindMethod",@"row.catalog.editor.7.0",restart,TSSettingsNoteInteger,YES,^BOOL{return YES;})]
+        @"editor":@[rule(@"editor",@"FindMethod",@"row.catalog.editor.7.0",restart,TSSettingsNoteInteger,YES,^BOOL{return [weakSelf.launch[@"FindMethod"] integerValue] == 2 || [weakSelf.defaults integerForKey:@"FindMethod"] == 2;})]
     };
     return self;
 }
@@ -116,7 +119,7 @@ typedef NS_ENUM(NSUInteger, TSSettingsNoteValueKind) { TSSettingsNoteBoolean, TS
 - (void)valuesReplaced { [self leaveCategory]; }
 - (void)refreshRestartNotes {
     for(NSArray<TSSettingsNoteRule *> *rules in self.categories.allValues)for(TSSettingsNoteRule *rule in rules)if(rule.restart){
-        id initial=self.launch[rule.key];BOOL show=self.open && initial!=nil && ![[self currentValueForKey:rule.key] isEqual:initial];
+        id initial=self.launch[rule.key];BOOL show=self.open && initial!=nil && ![[self currentValueForKey:rule.key] isEqual:initial] && rule.condition();
         [rule.view setShown:show announce:YES];
     }
 }

@@ -81,9 +81,15 @@ int main(int argc, const char **argv) { @autoreleasepool {
     [host layoutSubtreeIfNeeded];
     NSView *detail=Find(noted,@"note.catalog-row");NSRect detailRect=[detail.superview convertRect:[detail alignmentRectForFrame:detail.frame] toView:noted];
     NSRect choiceRect=[wideChoice convertRect:wideChoice.bounds toView:noted];
-    Check(NSMinX(detailRect)>=11 && NSMaxX(detailRect)<=NSMinX(choiceRect)-15 && NSHeight(detailRect)<70,[NSString stringWithFormat:@"A note fills the label column beside the vertically centered popup: %@ row %@",NSStringFromRect(detailRect),NSStringFromRect(noted.frame)]);
+    Check(NSMinX(detailRect)>=11 && fabs(NSMaxX(detailRect)-(NSWidth(noted.bounds)-12))<1 && NSHeight(detailRect)<70,[NSString stringWithFormat:@"A long note fills the row below the accessory: %@ row %@",NSStringFromRect(detailRect),NSStringFromRect(noted.frame)]);
     Check(NSIsEmptyRect(NSIntersectionRect(detailRect,choiceRect)),@"Notes do not overlap controls");
-    Check(fabs(NSMidY(choiceRect)-NSMidY(noted.bounds))<1,@"Accessory is vertically centered beside the title and note");
+    NSView *name=Find(noted,@"label.catalog-row");NSRect nameRect=[name convertRect:name.bounds toView:noted];
+    Check(fabs(NSMidY(choiceRect)-NSMidY(nameRect))<1,@"Accessory follows the title when the note spans the row");
+    NSButton *button=[NSButton buttonWithTitle:@"Reset" target:nil action:NULL];
+    NSView *shortNote=[TSPrefPaneLayout catalogRowWithTitle:@"Quick keys" note:@"Restore defaults." accessory:button expands:NO indent:0];
+    [host addSubview:shortNote];[NSLayoutConstraint activateConstraints:@[[shortNote.widthAnchor constraintEqualToConstant:500],[shortNote.topAnchor constraintEqualToAnchor:noted.bottomAnchor],[shortNote.leadingAnchor constraintEqualToAnchor:host.leadingAnchor]]];[host layoutSubtreeIfNeeded];
+    NSRect buttonRect=[button convertRect:button.bounds toView:shortNote];
+    Check(fabs(NSMidY(buttonRect)-NSMidY(shortNote.bounds))<1,@"Short button explanation centers the accessory beside both lines");
     Check(NSMinY(choiceRect)>=5.9 && NSMaxY(choiceRect)<=NSHeight(noted.bounds)-5.9,@"Accessory has six-point vertical inset");
     NSTextField *number=[NSTextField textFieldWithString:@"20"];[number.widthAnchor constraintEqualToConstant:64].active=YES;
     NSTextField *unit=[NSTextField labelWithString:@"pt"];

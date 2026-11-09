@@ -75,7 +75,9 @@ static void SaveNote(TSSettingsWindowController *shell,NSView *row,NSString *dir
 #include "SettingsOwnerSpelling.inc"
 #include "SettingsSidebar.m"
 #include "SettingsOwnerLifecycle.inc"
+#include "SettingsOwnerSearch.inc"
 #include "SettingsOwnerThemeWells.inc"
+#include "SettingsOwnerOpacity.inc"
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();[NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
  testDockTile=[ProductDockTile new];testDockTile.size=NSMakeSize(128,128);testDockTile.badgeLabel=@"7";
@@ -96,6 +98,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSDictionary *theme=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"LiteTheme" withExtension:@"plist"]];Check(theme.count>10,@"Bundled theme fixture loads");[owner setValue:[theme mutableCopy] forKey:@"EditingColors"];
  for(NSString *name in @[@"LiteStyle",@"DarkStyle",@"EditingStyle"]){NSPopUpButton *menu=[owner valueForKey:name];[menu removeAllItems];[menu addItemsWithTitles:@[@"LiteTheme",@"DarkTheme"]];[menu selectItemAtIndex:[name isEqual:@"DarkStyle"]?1:0];}
  [owner FillInColorWells];
+ Check([factory[AutoSaveEnabledKey] isEqual:@"YES"] && ![[owner valueForKey:@"keepBackupButton"]isEnabled],@"Factory string YES disables backup at first opening");
  TSSettingsWindowController *shell=owner.settingsController;Check(shell.categoryIdentifiers.count==10,@"Ten approved categories");
  // Each category refresh is independent; repeated refresh cannot persist values.
  NSArray<NSArray<NSString *> *> *refreshCases=@[
@@ -145,7 +148,8 @@ int main(int argc,char **argv){@autoreleasepool{
   NSString *key=rule[@"key"],*category=rule[@"category"];id original=[TSIsolatedAppKitDefaults objectForKey:key];
   for(NSNumber *value in rule[@"values"]){
    [TSIsolatedAppKitDefaults setObject:value forKey:key];[owner updateSettingsCategory:category fromDefaults:TSIsolatedAppKitDefaults];
-   BOOL enabled=[rule[@"enabled_values"]containsObject:value];
+   id normalized=[rule[@"value_kind"]isEqual:@"boolean"]?@([value boolValue]):@([value integerValue]);
+   BOOL enabled=[rule[@"enabled_values"]containsObject:normalized];
    for(NSString *outlet in rule[@"outlets"]){NSControl *control=[owner valueForKey:outlet];Check(control!=nil && control.enabled==enabled,[NSString stringWithFormat:@"Ledger dependency %@=%@ -> %@",key,value,outlet]);}
    NSArray *labelRows=rule[@"label_rows"] ?: ([rule[@"label_row"]isKindOfClass:NSString.class]?@[rule[@"label_row"]]:@[]);
    for(NSString *labelRow in labelRows){
@@ -181,7 +185,8 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(Find(pane,@"category.header")!=nil,@"Real pane preserves its overview card");
   if([category isEqual:TSSettingsCategoryKeyboard]){
    for(NSString *group in @[@"group.bindings",@"group.completion",@"group.shortcuts"]){NSView *section=Find(pane,group);Check(section!=nil && !section.hidden,@"Real keyboard provider keeps all three sections visible");}
-   Check(Find(pane,@"shortcut.commands")!=nil && Find(pane,@"shortcut.restore-all")!=nil,@"Real menu shortcut table and actions are installed inside the third card");
+   NSView *shortcuts=Find(pane,@"group.shortcuts");
+   Check(Find(shortcuts,@"shortcut.commands")!=nil && Find(shortcuts,@"shortcut.restore-all")!=nil,@"Real menu shortcut table and actions are installed inside the third card");
   }
   for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
    shell.window.appearance=[NSAppearance appearanceNamed:appearance];[shell.window.contentView layoutSubtreeIfNeeded];
@@ -243,7 +248,7 @@ int main(int argc,char **argv){@autoreleasepool{
  SaveNote(shell,spellingNote.superview.superview,argc>2?@(argv[2]):nil,@"spelling");
  NSMutableDictionary *replacement=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];
  replacement[AutoSaveEnabledKey]=@(![TSIsolatedAppKitDefaults boolForKey:AutoSaveEnabledKey]);
- replacement[FindMethodKey]=@([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==1?2:1);
+ replacement[FindMethodKey]=@([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==2?0:2);
  replacement[EncodingKey]=@"MacOSRoman";replacement[PdfMagnificationKey]=@1.75;
  NSFont *profileFont=[NSFont userFontOfSize:12];
  TSPreferenceProfile *profile=[[TSPreferenceProfile alloc]initWithProfile:replacement documentFont:[NSArchiver archivedDataWithRootObject:profileFont] registeredDefaults:factory];
@@ -263,7 +268,9 @@ int main(int argc,char **argv){@autoreleasepool{
  CheckOwnerSpelling(owner,shell);
  CheckOwnerNavigation(owner,shell);
  CheckOwnerLifecycle(owner,shell);
+ CheckOwnerSearch(owner,shell);
  CheckOwnerThemeWells(owner,shell,theme);
+ CheckOwnerOpacity(owner,shell,theme);
  // Complete production editing callbacks: untouched focus, Return, validation and teardown.
  NSMapTable *inputRules=[owner valueForKey:@"inputRules"];Check(inputRules.count==19,@"All nineteen production input rules are installed");
  NSTextField *tabsField=[owner valueForKey:@"tabIndentField"],*gsField=[owner valueForKey:@"gsBinPathField"],*zoomField=[owner valueForKey:@"magTextField"];
@@ -300,11 +307,12 @@ int main(int argc,char **argv){@autoreleasepool{
   NSDictionary *values=[NSDictionary dictionaryWithContentsOfFile:[[fixture.resourcePath stringByAppendingPathComponent:@"Profiles"]stringByAppendingPathComponent:file]];
   TSPreferenceProfile *proposal=[[TSPreferenceProfile alloc]initWithProfile:values documentFont:[NSArchiver archivedDataWithRootObject:profileFont] registeredDefaults:factory];Check(proposal!=nil,@"Each shipped profile validates");
   [owner applyPreferenceProfile:proposal font:profileFont];
+  Check([[owner valueForKey:@"keepBackupButton"]isEnabled]==![TSIsolatedAppKitDefaults boolForKey:AutoSaveEnabledKey],@"Every shipped profile applies autosave dependency using its effective Boolean");
   Check(editorCanAddBrackets==[TSIsolatedAppKitDefaults boolForKey:EditorCanAddBracketsKey],@"Real profile refresh updates the process-wide copy");
   [effects removeAllObjects];[owner applyPreferenceProfile:proposal font:profileFont];Check(effects.count==0,@"Unchanged profile emits no runtime notifications");
-  for(NSString *key in @[MakeatletterEnabledKey,expl3SyntaxColoringKey,ShowInvisibleCharactersEnabledKey]){
+  for(NSString *key in @[AlwaysHighlightEnabledKey,ShowIndicatorForMoveEnabledKey,HighlightContentEnabledKey,BeepEnabledKey,FlashBackgroundEnabledKey,CheckBraceEnabledKey,CheckBracketEnabledKey,CheckSquareBracketEnabledKey,CheckParenEnabledKey,MakeatletterEnabledKey,expl3SyntaxColoringKey,ShowInvisibleCharactersEnabledKey]){
    [TSIsolatedAppKitDefaults setBool:![TSIsolatedAppKitDefaults boolForKey:key] forKey:key];[effects removeAllObjects];[owner applyPreferenceProfile:proposal font:profileFont];
-   Check([effects containsObject:@"NeedsForRecolorNotification"],@"Every profile recolors changed makeatletter, expl3 and invisible characters");
+   Check([effects containsObject:@"NeedsForRecolorNotification"],[NSString stringWithFormat:@"Profile sends recolor for changed %@",key]);
   }
   Check(![effects containsObject:@"MagnificationChangedNotification"],@"Profile leaves current PDF magnification to document state");
  }

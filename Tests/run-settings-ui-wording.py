@@ -25,6 +25,16 @@ for lang,expected in fixture['languages'].items():
     for (table,key),value in zip(reviewed['keys'],reviewed['languages'][lang]):assert strings(panes/(table+'.strings'))[key]==value,(lang,key)
     assert actual['New shortcut']==reviewed['languages'][lang][3],(lang,'recording label')
     category_strings=strings(panes/'SettingsCategories.strings')
+    dock_contract=json.loads((r/'Tests/Fixtures/SettingsDockLabels.json').read_text())
+    translated=dock_contract['languages']['Base' if lang=='en' else lang]
+    for key,value in zip(dock_contract['category_keys'],translated):assert category_strings[key]==value,(lang,key)
+    dock=strings(panes/'SettingsDock.strings')
+    assert set(dock)==set(dock_contract['dock_keys']),(lang,'Dock key set excludes obsolete instructions')
+    for key,value in zip(dock_contract['dock_keys'],translated[3:]):assert dock[key]==value,(lang,key)
+    assert not any(k.startswith('catalog.appearance.10.0.') for k in category_strings),(lang,'unused Dock row keys')
+    conversion=json.loads((r/'Tests/Fixtures/SettingsConversionNotes.json').read_text())
+    if lang in conversion:
+        for key,value in conversion[lang].items():assert category_strings[key]==value,(lang,'approved conversion explanation',key)
     for key,value in zip(terminology['keys'],terminology['languages']['Base' if lang=='en' else lang]):assert category_strings[key]==value,(lang,key)
     assert not set(retired)&actual.keys(),(lang,'retired UI keys')
     for key,value in zip(guidance['keys'],guidance['languages'][lang]):assert actual[key]==value,(lang,key)

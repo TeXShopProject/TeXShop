@@ -5,7 +5,8 @@
     "kind": 1,
     "minimum": 2,
     "maximum": 50,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": "DocumentFontChangedNotification"
   },
   {
     "outlet": "firstParagraphIndentField",
@@ -13,7 +14,8 @@
     "kind": 1,
     "minimum": 0,
     "maximum": 100,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": "DocumentFontChangedNotification"
   },
   {
     "outlet": "remainingParagraphIndentField",
@@ -21,7 +23,8 @@
     "kind": 1,
     "minimum": 0,
     "maximum": 100,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": "DocumentFontChangedNotification"
   },
   {
     "outlet": "interlineSpacingField",
@@ -29,7 +32,8 @@
     "kind": 1,
     "minimum": 1,
     "maximum": 20,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": "DocumentFontChangedNotification"
   },
   {
     "outlet": "magTextField",
@@ -37,7 +41,8 @@
     "kind": 2,
     "minimum": 20,
     "maximum": 400,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "HtmlHomeField",
@@ -45,7 +50,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": true
+    "allowsEmpty": true,
+    "notification": null
   },
   {
     "outlet": "engineTextField",
@@ -53,7 +59,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "texCommandTextField",
@@ -61,7 +68,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "latexCommandTextField",
@@ -69,7 +77,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "texGSCommandTextField",
@@ -77,7 +86,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "latexGSCommandTextField",
@@ -85,7 +95,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "tetexBinPathField",
@@ -93,7 +104,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "gsBinPathField",
@@ -101,7 +113,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "altPathField",
@@ -109,7 +122,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": true
+    "allowsEmpty": true,
+    "notification": null
   },
   {
     "outlet": "kpsetoolField",
@@ -117,7 +131,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "bibTeXengineField",
@@ -125,7 +140,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": false
+    "allowsEmpty": false,
+    "notification": null
   },
   {
     "outlet": "texScriptCommandTextField",
@@ -133,7 +149,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": true
+    "allowsEmpty": true,
+    "notification": null
   },
   {
     "outlet": "latexScriptCommandTextField",
@@ -141,7 +158,8 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": true
+    "allowsEmpty": true,
+    "notification": null
   },
   {
     "outlet": "alternateEngineTextField",
@@ -149,6 +167,7 @@
     "kind": 0,
     "minimum": 0,
     "maximum": 0,
-    "allowsEmpty": true
+    "allowsEmpty": true,
+    "notification": null
   }
 ]

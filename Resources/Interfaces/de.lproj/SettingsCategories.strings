@@ -64,7 +64,7 @@
 "catalog.documents.1.1.title" = "Beim Sichern die vorherige Datei als „Name~“ behalten";
 "catalog.documents.1.2.title" = "Verbundene Dateien sichern";
 "catalog.documents.1.2.note" = "Beim Sichern eines Dokuments auch geöffnete Dateien desselben Projekts sichern.";
-"catalog.documents.1.3.title" = "Automatische Konvertierung UTF-8-Mac zu UTF-8";
+"catalog.documents.1.3.title" = "UTF-8-MAC automatisch in UTF-8 umwandeln";
 "group.editor.0.title" = "Darstellung";
 "catalog.editor.0.0.title" = "Dokument-Schriftart";
 "catalog.editor.0.1.title" = "Syntax farblich hervorheben";
@@ -197,13 +197,7 @@
 "catalog.appearance.9.0.item.2" = "Escape";
 "catalog.appearance.9.0.item.3" = "Attribut";
 "catalog.appearance.9.0.item.4" = "Wert";
-"group.appearance.10.title" = "Dock Icon While Running";
-"catalog.appearance.10.0.title" = "Gilt, solange TeXShop geöffnet ist. Nach dem Beenden erscheint wieder das Standardsymbol.";
-"catalog.appearance.10.0.item.0" = "Before 1.0";
-"catalog.appearance.10.0.item.1" = "1.0–3.13";
-"catalog.appearance.10.0.item.2" = "3.14–3.38";
-"catalog.appearance.10.0.item.3" = "3.39–5.58";
-"catalog.appearance.10.0.item.4" = "5.60–";
+"group.appearance.10.title" = "Dock-Symbol während der Laufzeit";
 "group.preview.0.title" = "Darstellung";
 "catalog.preview.0.0.title" = "PDF-Darstellung";
 "catalog.preview.0.1.title" = "Nach Größenänderung des Fensters";
@@ -273,7 +267,7 @@
 "catalog.typesetting.8.1.title" = "BibTeX Engine";
 "catalog.typesetting.8.1.note" = "default: bibtex";
 "group.typesetting.9.title" = "pTeX-Unterstützung (für japanische Benutzer)";
-"catalog.typesetting.9.0.title" = "UTF-Export";
+"catalog.typesetting.9.0.title" = "Unterstützung für das otf-Paket";
 "group.console.0.title" = "Schrift";
 "catalog.console.0.0.title" = "Konsolen-Schriftart";
 "catalog.console.0.1.title" = "Auch für den Makro-Editor verwenden";

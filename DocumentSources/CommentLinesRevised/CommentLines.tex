@@ -226,11 +226,11 @@ Show the results of math expressions while typing (macOS 15 and later). 0 turns 
 \item[\texttt{defaults write TeXShop OriginalSpelling YES}] \hfill \\
 Use the standard Apple spell checking language handling instead of switching the dictionary for each document.
 \item[\texttt{defaults write TeXShop ExtraCommandsNotToCheckParameters -array '\textbackslash mycite'}] \hfill \\
-With TeX-aware spell checking off and the option not to check parameters on, do not check the spelling of the parameters of these commands either. Each name includes its backslash.
+With TeX-aware spell checking off and the option not to check parameters on, do not check the spelling of the parameters of these commands either. Each name includes its backslash. Restart TeXShop after changing this setting.
 \item[\texttt{defaults write TeXShop ExceptionListExcludesParameters YES}] \hfill \\
 With TeX-aware spell checking off and the option not to check parameters on, check no parameters except those of \textbackslash emph, \textbackslash verbatim and the commands in ExtraCommandsToCheckParameters.
 \item[\texttt{defaults write TeXShop ExtraCommandsToCheckParameters -array '\textbackslash mycaption'}] \hfill \\
-The commands whose parameters are still checked when ExceptionListExcludesParameters is YES.
+The commands whose parameters are still checked when ExceptionListExcludesParameters is YES. Restart TeXShop after changing this setting.
 \end{description}
 
 {\em Tags and Labels}
@@ -315,12 +315,15 @@ The same with any editor, using a script /usr/local/bin/othereditor that you pro
 
 {\em Windows and Saving}
 \begin{description}
+\item[\texttt{defaults write TeXShop ApplePersistence NO}] \hfill \\
+Turn off macOS document persistence. Restart TeXShop after changing this setting.
+
 \item[\texttt{defaults write TeXShop OpenWithSourceInFront YES}] \hfill \\
 When a document is opened, bring the source window in front of the Preview window.
 \item[\texttt{defaults write TeXShop TabsAlsoForInputFiles YES}] \hfill \\
 Make the magic line useTabs also put the files of \verb|\input| commands in tabs.
 \item[\texttt{defaults write TeXShop WatchServer NO}] \hfill \\
-Do not watch for changes made by other programs to source files on a server. TeXShop watches only while Autosave and Versions is on in TeXShop Settings.
+Do not watch for changes made by other programs to source files on a server. TeXShop watches only while Autosave and Versions is on in TeXShop Settings. Restart TeXShop after changing this setting.
 \item[\texttt{defaults write TeXShop IgnoreStartOnReboot YES}] \hfill \\
 Do not reopen TeXShop automatically when you log in, even if it was running when you logged out.
 \end{description}

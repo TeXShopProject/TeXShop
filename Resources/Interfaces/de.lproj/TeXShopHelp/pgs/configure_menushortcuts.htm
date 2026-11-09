@@ -1,51 +1,43 @@
-<HTML>
-
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Tastaturk&uuml;rzel neu festlegen</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL">
-		<META NAME="description" CONTENT="Definieren Sie neue Tastaturk&uuml;rzel in TeXShop.">
-				<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-<p>Die Einstellungen haben zehn Kategorien: Allgemein, Dokumente und Sichern, Editor, Rechtschreibprüfung, Erscheinungsbild, Vorschau, Satz, Konsole, Tastatur, Updates. Unter Rechtschreibprüfung wählen Sie &#8222;LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)&#8220; mit &#8222;LaTeX-Ausschlussregeln bearbeiten&#8230;&#8220; oder &#8222;Bisherige Rechtschreibprüfung verwenden&#8220; mit drei eingerückten Optionen. Beim Wechsel bleiben die Werte erhalten; die Prüfung während der Eingabe ist unabhängig. Unter Tastatur stehen Tastenbelegungen und Befehlsvervollständigung über der Suche; nur die Liste scrollt vertikal. Alle drei Bereiche bleiben geöffnet. Die Kurzbefehlsliste nutzt die verbleibende Höhe und scrollt unabhängig. Ist Tab die Vervollständigungstaste, zeigt die Tastensuche eine Reservierungsmeldung und die betreffende Einstellung. Allgemein enthält den Link zu Kommentarzeilen und verborgenen Einstellungen.</p>
-
+<html>
+<head>
+<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<title>Tastaturkürzel neu festlegen</title>
+<meta content="Copyright (c) 2003 Richard Koch und Martin Kerz unter der GNU FDL" name="copyright"/>
+<meta content="Definieren Sie neue Tastaturkürzel in TeXShop." name="description"/>
+<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+</head>
+<body>
 
 <div id="content_border">
-<p>&#214;ffnen Sie &#8222;Einstellungen&#8220; und w&#228;hlen Sie &#8222;Tastatur&#8220;. &#8222;Nach Funktion suchen&#8220; findet Befehlsnamen und Men&#252;pfade. &#8222;Nach Taste suchen&#8220; erfasst einen Tastendruck und zeigt passende Men&#252;befehle und Makros mit der Priorit&#228;t ihrer Belegung. Die Verf&#252;gbarkeit eines Befehls h&#228;ngt vom Dokument ab. Systemweit reservierte Tasten lassen sich nicht erfassen. Escape, ein erneuter Klick auf den Suchmodus, ein Kategorie- oder Fensterwechsel und das Schlie&#223;en der Einstellungen beenden die Aufzeichnung. Makrozeilen sind schreibgesch&#252;tzt. &#8222;Im Makroeditor anzeigen&#8220; w&#228;hlt das Makro aus und erh&#228;lt ungespeicherte &#196;nderungen. Ist die Zuordnung dadurch mehrdeutig, bleibt die aktuelle Auswahl bestehen.</p>
-<P>W&auml;hlen Sie in den Einstellungen die Kategorie &bdquo;Tastatur&ldquo;, um Men&uuml;kurzbefehle zu bearbeiten. W&auml;hlen Sie einen Befehl, klicken Sie auf &bdquo;&Auml;ndern&hellip;&ldquo; (oder doppelklicken Sie ihn), dr&uuml;cken Sie den neuen Kurzbefehl und w&auml;hlen Sie &bdquo;Anwenden&ldquo;; mit Escape brechen Sie ab. Ein Kurzbefehl muss die Befehls- oder Control-Taste verwenden oder eine Funktionstaste F1&ndash;F20 sein. Wird er schon von einem anderen Befehl verwendet, meldet TeXShop das und &auml;ndert nichts. Mit &bdquo;Kurzbefehl entfernen&ldquo;, &bdquo;Standard wiederherstellen&ldquo; und &bdquo;Alle zur&uuml;cksetzen&hellip;&ldquo; werden Kurzbefehle entfernt oder wiederhergestellt. &Auml;nderungen wirken sofort und bleiben nach einem Neustart erhalten.</P>
-<P>Wenn ein anderer Men&#252;befehl das Standardtastenk&#252;rzel verwendet, kann es nicht wiederhergestellt werden. &#196;ndern Sie zuerst das Tastenk&#252;rzel des anderen Befehls.</P>
-<P>Bei derselben Taste und denselben Modifikatortasten haben Men&#252;befehle mit ihren aktuellen, gegebenenfalls angepassten Kurzbefehlen Vorrang vor Makros. Durch Anpassung frei gewordene Tasten k&#246;nnen Makros verwenden. Wird einem Men&#252;befehl eine von einem Makro verwendete Taste zugewiesen oder wiederhergestellt, wird vorher nachgefragt. Das Makro bleibt &#252;ber das Men&#252; ausf&#252;hrbar; nur sein Kurzbefehl wird inaktiv, ohne seine Datei zu &#228;ndern. Der Makro-Editor markiert inaktive Kurzbefehle und nennt den konkurrierenden Befehl und seine Tasten. Beim Speichern wird nur bei neu vergebenen oder ge&#228;nderten kollidierenden Tasten nachgefragt, auch bei importierten Makros. Man kann weiter bearbeiten, unver&#228;ndert mit inaktiven Tasten speichern oder die kollidierenden Tasten entfernen und speichern. Bereits vorhandene, unver&#228;nderte Konflikte unterbrechen das Speichern nicht. Bei Makros mit derselben Taste hat das erste Vorrang. &#8222;Kurzbefehl nicht verf&#252;gbar&#8220; betrifft nur Konflikte zwischen Men&#252;befehlen. Im Vorschaufenster folgen Befehl-F und Befehl-G weiterhin Suchen und Weitersuchen, einschlie&#223;lich ge&#228;nderter oder entfernter Kurzbefehle.</P>
-<P>Die in KeyEquivalents.plist (siehe unten) festgelegten Kurzbefehle bleiben die Standardwerte; &bdquo;Alle zur&uuml;cksetzen&hellip;&ldquo; &auml;ndert diese Datei nicht. Kurzbefehle f&uuml;r Makros werden im Makro-Editor festgelegt, Tastenbelegungen f&uuml;r die Texteingabe in ihrem eigenen Editor.</P>
-		<P>Tastaturk&uuml;rzel f&uuml;r TeXShop k&ouml;nnen neu festgelegt werden. Wie man dies macht wird in den Kommentaren am Anfang der Datei &bdquo;KeyEquivalents.plist&ldquo; erkl&auml;rt. &Ouml;ffnen Sie einfach die Datei &bdquo;~/Library/TeXShop/Menus/KeyEquivalents.plist&ldquo; mit TeXShop. Stellen Sie sicher die Datei in der Kodierung UTF-8 zu sichern wenn Sie Unicode Zeichen benutzen.</P>
-<p>Beim Klicken auf eine Ergebniszeile bleibt die Tastenaufzeichnung aktiv. Die drei Bereiche sind stets ge&#246;ffnet. Inaktive Ergebnisse nennen die vorrangige Belegung und deren Taste; Gruppen in Makropfaden werden durch Trennzeichen getrennt.</p>
-</div>		
+<p>Öffnen Sie &#8222;Einstellungen&#8220; und wählen Sie &#8222;Tastatur&#8220;. &#8222;Nach Funktion suchen&#8220; findet Befehlsnamen und Menüpfade. &#8222;Nach Taste suchen&#8220; erfasst einen Tastendruck und zeigt passende Menübefehle und Makros mit der Priorität ihrer Belegung. Die Verfügbarkeit eines Befehls hängt vom Dokument ab. Systemweit reservierte Tasten lassen sich nicht erfassen. Escape, ein erneuter Klick auf den Suchmodus, ein Kategorie- oder Fensterwechsel und das Schließen der Einstellungen beenden die Aufzeichnung. Makrozeilen sind schreibgeschützt. &#8222;Im Makroeditor anzeigen&#8220; wählt das Makro aus und erhält ungespeicherte Änderungen. Ist die Zuordnung dadurch mehrdeutig, bleibt die aktuelle Auswahl bestehen.</p>
+<p>Wählen Sie in den Einstellungen die Kategorie &#8222;Tastatur&#8220;, um Menükurzbefehle zu bearbeiten. Wählen Sie einen Befehl, klicken Sie auf &#8222;Ändern&#8230;&#8220; (oder doppelklicken Sie ihn), drücken Sie den neuen Kurzbefehl und wählen Sie &#8222;Anwenden&#8220;; mit Escape brechen Sie ab. Ein Kurzbefehl muss die Befehls- oder Control-Taste verwenden oder eine Funktionstaste F1&#8211;F20 sein. Wird er schon von einem anderen Befehl verwendet, meldet TeXShop das und ändert nichts. Mit &#8222;Kurzbefehl entfernen&#8220;, &#8222;Standard wiederherstellen&#8220; und &#8222;Alle zurücksetzen&#8230;&#8220; werden Kurzbefehle entfernt oder wiederhergestellt. Änderungen wirken sofort und bleiben nach einem Neustart erhalten.</p>
+<p>Wenn ein anderer Menübefehl das Standardtastenkürzel verwendet, kann es nicht wiederhergestellt werden. Ändern Sie zuerst das Tastenkürzel des anderen Befehls.</p>
+<p>Bei derselben Taste und denselben Modifikatortasten haben Menübefehle mit ihren aktuellen, gegebenenfalls angepassten Kurzbefehlen Vorrang vor Makros. Durch Anpassung frei gewordene Tasten können Makros verwenden. Wird einem Menübefehl eine von einem Makro verwendete Taste zugewiesen oder wiederhergestellt, wird vorher nachgefragt. Das Makro bleibt über das Menü ausführbar; nur sein Kurzbefehl wird inaktiv, ohne seine Datei zu ändern. Der Makro-Editor markiert inaktive Kurzbefehle und nennt den konkurrierenden Befehl und seine Tasten. Beim Speichern wird nur bei neu vergebenen oder geänderten kollidierenden Tasten nachgefragt, auch bei importierten Makros. Man kann weiter bearbeiten, unverändert mit inaktiven Tasten speichern oder die kollidierenden Tasten entfernen und speichern. Bereits vorhandene, unveränderte Konflikte unterbrechen das Speichern nicht. Bei Makros mit derselben Taste hat das erste Vorrang. &#8222;Kurzbefehl nicht verfügbar&#8220; betrifft nur Konflikte zwischen Menübefehlen. Im Vorschaufenster folgen Befehl-F und Befehl-G weiterhin Suchen und Weitersuchen, einschließlich geänderter oder entfernter Kurzbefehle.</p>
+<p>Die in KeyEquivalents.plist (siehe unten) festgelegten Kurzbefehle bleiben die Standardwerte; &#8222;Alle zurücksetzen&#8230;&#8220; ändert diese Datei nicht. Kurzbefehle für Makros werden im Makro-Editor festgelegt, Tastenbelegungen für die Texteingabe in ihrem eigenen Editor.</p>
+<p>Tastaturkürzel für TeXShop können neu festgelegt werden. Wie man dies macht wird in den Kommentaren am Anfang der Datei &#8222;KeyEquivalents.plist&#8220; erklärt. Öffnen Sie einfach die Datei &#8222;~/Library/TeXShop/Menus/KeyEquivalents.plist&#8220; mit TeXShop. Stellen Sie sicher die Datei in der Kodierung UTF-8 zu sichern wenn Sie Unicode Zeichen benutzen.</p>
+<p>Beim Klicken auf eine Ergebniszeile bleibt die Tastenaufzeichnung aktiv. Die drei Bereiche sind stets geöffnet. Inaktive Ergebnisse nennen die vorrangige Belegung und deren Taste; Gruppen in Makropfaden werden durch Trennzeichen getrennt.</p>
+<p><a href="basic_preferences.htm#settings-search">Einstellungen verwenden und durchsuchen</a></p></div>
 <div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
+<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
 <div id="header_chapter">Wie konfiguriere ich TeXShop?</div>
-<div id="header_title">Tastaturk&uuml;rzel neu festlegen</div>
+<div id="header_title">Tastaturkürzel neu festlegen</div>
+<div id="menu_border">
+<ul>
+<li><a href="configure_preliminaries.htm">Einleitung</a>
+<li><a href="configure_correctinstall.htm">Alles richtig installiert?</a>
+<li><a href="configure_prefchanges.htm">Empfohlene Änderung von Einstellungen</a>
+<li><a href="configure_convertgraphics.htm">Grafikformate automatisch konvertieren</a>
+<li><a href="configure_defaults.htm">Standardeinstellungen</a>
+<li><a href="configure_latextemplate.htm">Die Standard-LaTeX-Vorlage</a>
+<li><a href="configure_hidden.htm">Versteckte Einstellungen</a>
+<li><a href="configure_plist.htm">.plist-Dateien</a>
+<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a>
+<li><a href="configure_autocompletion.htm">Die automatische Vervollständigung anpassen</a>
+<li><a href="configure_menushortcuts.htm">Tastaturkürzel neu festlegen</a>
+<li><a href="configure_macros.htm">Das Makro-Menü verändern</a>
+</li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</div>
 
 
-	<div id="menu_border">
-		<ul>
-			<LI><a href="configure_preliminaries.htm">Einleitung</a>
-			<li><a href="configure_correctinstall.htm">Alles richtig installiert?</a>
-			<li><a href="configure_prefchanges.htm">Empfohlene &Auml;nderung von Einstellungen</a>
-			<LI><a href="configure_convertgraphics.htm">Grafikformate automatisch konvertieren</a>
-			<LI><a href="configure_defaults.htm">Standardeinstellungen</a>
-			<LI><a href="configure_latextemplate.htm">Die Standard-LaTeX-Vorlage</a>
-			<li><a href="configure_hidden.htm">Versteckte Einstellungen</a>
-			<li><a href="configure_plist.htm">.plist-Dateien</a>
-			<li><a href="configure_panel.htm">Die LaTeX Palette anpassen</a>
-			<li><a href="configure_autocompletion.htm">Die automatische Vervollst&auml;ndigung anpassen</a>
-			<li><a href="configure_menushortcuts.htm">Tastaturk&uuml;rzel neu festlegen</a>
-			<li><a href="configure_macros.htm">Das Makro-Men&uuml; ver&auml;ndern</a>
-		</ul>
-	</div>
-
-
-<h3 id="settings-search">Einstellungen suchen</h3>
-<p>Das Suchfeld über der Seitenleiste findet Einstellungen, Optionen und Menübefehle. Jedes Ergebnis zeigt den Namen der Einstellung und ihrer Kategorie. Durch Leerzeichen getrennte Wörter müssen dieselbe Einstellung beschreiben; der Kategoriename kann die Suche eingrenzen. Groß- und Kleinschreibung, lateinische Akzente, Zeichen voller Breite sowie Hiragana und Katakana werden vereinheitlicht. Beim Eingeben bleibt die aktuelle Ansicht erhalten. Ein ausgewähltes Ergebnis wird sichtbar gemacht und hervorgehoben, ohne seinen Wert zu ändern; der Besuch wird dem normalen Verlauf hinzugefügt. Das Leeren der Suche lässt die aktuelle Ansicht unverändert. Zurück und Vorwärts folgen auch während der Suche dem Verlauf, ohne die Suchanfrage zu löschen. Ein Menübefehl öffnet Tastatur und filtert die Funktionssuche. Die Tastenaufzeichnung hat Vorrang. Persönliche Pfade, eingegebene Werte und eigene Themennamen werden nicht durchsucht.</p>
-</BODY>
-</HTML>
+</body>
+</html>

@@ -11,11 +11,12 @@ with tempfile.TemporaryDirectory(prefix='texshop-search-core-') as td:
   return subprocess.run([str(p)],capture_output=True,text=True,timeout=30)
  result=run();print(result.stdout);assert result.returncode==0,result.stderr
  if '--mutations' in sys.argv:
-  cases=[('note-as-title','TSSettingsSearch.m','return @"";','return self.entries.firstObject.text ?: @"";'),('canonical-substring','TSSettingsSearchText.h','options:NSLiteralSearch','options:0'),('compatibility-token-boundary','TSSettingsSearchText.h','[query componentsSeparatedByCharactersInSet:','[query.precomposedStringWithCompatibilityMapping componentsSeparatedByCharactersInSet:')]
+  cases=[('matched-label','TSSettingsSearch.m','if (preferred != nil) {','if (NO) {'),('note-as-title','TSSettingsSearch.m','return @"";','return self.entries.firstObject.text ?: @"";'),('canonical-substring','TSSettingsSearchText.h','options:NSLiteralSearch','options:0'),('compatibility-token-boundary','TSSettingsSearchText.h','[query componentsSeparatedByCharactersInSet:','[query.precomposedStringWithCompatibilityMapping componentsSeparatedByCharactersInSet:')]
   for name,file,old,new in cases:
    stage=t/name;stage.mkdir()
    for f in ['TSSettingsSearch.m','TSSettingsSearch.h','TSSettingsSearchText.h']:shutil.copy2(r/'Sources'/f,stage/f)
    path=stage/file;source=path.read_text();assert old in source;path.write_text(source.replace(old,new,1))
-   result=run(stage);assert result.returncode and 'FAIL' in result.stderr,(name,result.stdout,result.stderr)
+   result=run(stage);expected={'matched-label':'title isEqual:text','note-as-title':'title].length==0','canonical-substring':'such as','compatibility-token-boundary':'count==1'}[name]
+   assert result.returncode and expected in result.stderr,(name,result.stdout,result.stderr)
    print('DETECTED',name,result.stderr.strip())
   result=run();assert result.returncode==0,result.stderr;print('NORMAL CONTROL search core')

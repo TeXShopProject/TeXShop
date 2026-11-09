@@ -150,7 +150,10 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
         for(NSDictionary *item in model[@"items"]){
             NSTextField *label=[self label:text(item[@"title"]) small:NO];
             NSMutableArray *wells=[NSMutableArray array];
-            for(NSString *key in item[@"controls"]){NSView *well=[self take:key from:views];[self prepare:well];well.accessibilityLabel=label.stringValue;[wells addObject:well];}
+            for(NSString *key in item[@"controls"]){NSView *well=[self take:key from:views];[self prepare:well];well.accessibilityLabel=label.stringValue;
+                SEL action=[well isKindOfClass:NSColorWell.class]?[(NSColorWell *)well action]:NULL;
+                if(action==@selector(SourceAlphaChanged:) || action==@selector(ConsoleAlphaChanged:) || action==@selector(PreviewAlphaChanged:))well=[TSPrefPaneLayout opacityForColorWell:(NSColorWell *)well];
+                [wells addObject:well];}
             if(table){[cells addObject:label];NSUInteger i=0;for(NSNumber *occupied in item[@"occupied"])[cells addObject:occupied.boolValue?wells[i++]:NSGridCell.emptyContentView];}
             else [cells addObject:[self horizontal:@[TSCatalogRequired(wells.firstObject),label] spacing:8]];
         }

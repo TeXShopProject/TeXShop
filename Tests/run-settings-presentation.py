@@ -20,5 +20,6 @@ with tempfile.TemporaryDirectory(prefix='texshop-presentation-') as folder:
         text=original.read_text()
         for name,old,new in changes:
             assert text.count(old)==1,(name,text.count(old));changed=Path(folder)/'TSPrefPaneLayout.m';changed.write_text(text.replace(old,new));result=run(changed)
-            assert result.returncode and 'FAIL:' in result.stderr,(name,result.stderr);print('DETECTED',name,result.stderr.strip(),flush=True)
+            expected={'top-aligned-accessory':'Short button explanation centers the accessory','invisible-card':'Rendered card pixels differ','missing-separators':'Rendered rows have a visible separator'}[name]
+            assert result.returncode and 'FAIL: '+expected in result.stderr,(name,result.stderr);print('DETECTED',name,result.stderr.strip(),flush=True)
         result=run(original);assert result.returncode==0;print('NORMAL CONTROL',result.stdout,flush=True)

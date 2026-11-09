@@ -26,7 +26,7 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
             NSTableCellView *cell=[TSSettingsSidebarRow cellForCategory:category title:title];
             CGFloat height=[TSSettingsSidebarRow heightForTitle:title cellWidth:width.doubleValue];
             cell.frame=NSMakeRect(0,0,width.doubleValue,height);[cell layoutSubtreeIfNeeded];
-            NSTextField *label=cell.textField;
+            NSTextField *label=cell.textField;label.font=[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold];[cell layoutSubtreeIfNeeded];
             // Measure the constrained table width, not AppKit’s temporary intrinsic cell expansion.
             CGFloat textWidth=width.doubleValue-40;
             NSSize natural=[title boundingRectWithSize:NSMakeSize(textWidth,CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:label.font}].size;
@@ -55,7 +55,8 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
         for (NSUInteger index = 0; index < groups.count; index++) {
             NSDictionary *reference = category[@"groups"][index];
             TSSettingsGroupView *group = groups[index];
-            Check(Find(group,@"card.background") != nil, @"Every catalog group has its rounded filled card");
+            NSView *card=Find(group,@"card.background");
+            Check(card != nil && !card.hidden && !card.hiddenOrHasHiddenAncestor && NSWidth(card.bounds)>100 && NSHeight(card.bounds)>=38, @"Every catalog group has its visible rounded filled card");
             if ([fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"])
                 Check([group.title isEqual:reference[@"title"]], [NSString stringWithFormat:@"Catalog group order/name %@ #%lu: %@",identifier,(unsigned long)index,group.title]);
             for (NSDictionary *row in reference[@"rows"]) {

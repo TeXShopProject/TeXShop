@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)new NS_UNAVAILABLE;
 @end
 @interface TSPrefPaneLayout : NSObject
++ (NSView *)opacityForColorWell:(NSColorWell *)well;
 + (NSView *)switchForButton:(NSButton *)button;
 + (NSView *)choiceForControls:(NSArray<NSView *> *)controls;
 + (NSView *)catalogRowWithTitle:(NSString *)title note:(NSString *)note accessory:(NSView *)accessory expands:(BOOL)expands indent:(NSUInteger)indent;

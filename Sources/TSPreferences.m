@@ -572,6 +572,7 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 		[SUD setInteger:1 forKey:FindMethodKey];
     else
         [SUD setInteger:2 forKey:FindMethodKey];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithObject:FindMethodKey]];
     [self.settingsChangeNotes recordUserChangeForKey:FindMethodKey previousValue:previousNoteValue];
 }
 
@@ -1617,10 +1618,12 @@ person script. See also: DefaultTypesetMode.
 // only the accessory depends on it. Per-document defaults have no parent rule.
 - (void)updateSettingsDependenciesForCategory:(TSSettingsCategoryID)category defaults:(NSUserDefaults *)defaults
 {
+    typedef NS_ENUM(NSUInteger, TSDependencyKind) { TSDependencyBoolean, TSDependencyInteger };
     typedef struct {
         __unsafe_unretained TSSettingsCategoryID category;
         __unsafe_unretained TSPreferenceKey key;
         NSInteger enabledValue;
+        TSDependencyKind kind;
         __unsafe_unretained id endpoint;
         BOOL wholeRow;
     } Rule;
@@ -1641,7 +1644,8 @@ person script. See also: DefaultTypesetMode.
     for (NSUInteger i = 0; i < sizeof(rules)/sizeof(rules[0]); i++) {
         Rule rule = rules[i];
         if (category && ![category isEqual:rule.category]) continue;
-        BOOL enabled = [defaults integerForKey:rule.key] == rule.enabledValue;
+        NSInteger value = rule.kind == TSDependencyBoolean ? [defaults boolForKey:rule.key] : [defaults integerForKey:rule.key];
+        BOOL enabled = value == rule.enabledValue;
 #ifdef USESPARKLE
         if ([rule.key isEqual:SparkleAutomaticUpdateKey] && defaults == SUD && [TSSparkleController sharedUpdater])
             enabled = [TSSparkleController sharedUpdater].automaticallyChecksForUpdates;

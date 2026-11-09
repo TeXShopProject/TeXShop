@@ -64,7 +64,7 @@
 "catalog.documents.1.1.title" = "Conservar el archivo anterior como “nombre~”";
 "catalog.documents.1.2.title" = "Guardar relacionados";
 "catalog.documents.1.2.note" = "Al guardar un documento, guardar también los archivos abiertos del mismo proyecto.";
-"catalog.documents.1.3.title" = "Conversión automática de UTF-8-Mac a UTF-8";
+"catalog.documents.1.3.title" = "Convertir automáticamente UTF-8-MAC a UTF-8";
 "group.editor.0.title" = "Visualización";
 "catalog.editor.0.0.title" = "Tipografía para el documento";
 "catalog.editor.0.1.title" = "Colores para sintaxis";
@@ -197,13 +197,7 @@
 "catalog.appearance.9.0.item.2" = "Escape";
 "catalog.appearance.9.0.item.3" = "Atributo";
 "catalog.appearance.9.0.item.4" = "Valor";
-"group.appearance.10.title" = "Dock Icon While Running";
-"catalog.appearance.10.0.title" = "Se aplica mientras TeXShop está abierto. Al cerrarlo vuelve el icono estándar.";
-"catalog.appearance.10.0.item.0" = "Before 1.0";
-"catalog.appearance.10.0.item.1" = "1.0–3.13";
-"catalog.appearance.10.0.item.2" = "3.14–3.38";
-"catalog.appearance.10.0.item.3" = "3.39–5.58";
-"catalog.appearance.10.0.item.4" = "5.60–";
+"group.appearance.10.title" = "Icono del Dock durante la ejecución";
 "group.preview.0.title" = "Visualización";
 "catalog.preview.0.0.title" = "Mostrar páginas";
 "catalog.preview.0.1.title" = "Después de redimensionar la ventana";
@@ -273,7 +267,7 @@
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Por defecto: bibtex";
 "group.typesetting.9.title" = "Soporte pTeX (japonés) ";
-"catalog.typesetting.9.0.title" = "Exportar utf";
+"catalog.typesetting.9.0.title" = "Compatibilidad con el paquete otf";
 "group.console.0.title" = "Tipografía";
 "catalog.console.0.0.title" = "Tipografía para la consola";
 "catalog.console.0.1.title" = "Usar también en editor de macros";

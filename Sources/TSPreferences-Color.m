@@ -736,6 +736,18 @@ NSInteger stringSort(id s1, id s2, void *context)
     
 }
 
+// Opacity controls change only the stored alpha. Avoid converting the retained
+// RGB through a different NSColor space when adjusting a percentage.
+- (void)changeWindowAlphaForKey:(NSString *)key fromWell:(NSColorWell *)well
+{
+    NSArray *existing=EditingColors[key];
+    if(existing.count==4){
+        NSMutableArray *components=[existing mutableCopy];
+        components[3]=@(well.color.alphaComponent);
+        EditingColors[key]=components;
+    }
+}
+
 - (IBAction)SourceAlphaChanged:sender
 {
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
@@ -747,7 +759,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SourceAlpha" fromColorWell:sender];
+    [self changeWindowAlphaForKey:@"SourceAlpha" fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }
@@ -763,7 +775,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [colorSupport changeColorValueInDictionary: EditingColors forKey: @"PreviewAlpha" fromColorWell:sender];
+    [self changeWindowAlphaForKey:@"PreviewAlpha" fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }
@@ -779,7 +791,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [colorSupport changeColorValueInDictionary: EditingColors forKey: @"ConsoleAlpha" fromColorWell:sender];
+    [self changeWindowAlphaForKey:@"ConsoleAlpha" fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }

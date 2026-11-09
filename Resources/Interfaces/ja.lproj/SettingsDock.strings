@@ -1,7 +1,6 @@
-"Dock Icon While Running" = "起動中のDockアイコン";
-"Original" = "初期版";
-"Classic Triangle" = "旧三角アイコン";
-"Retina Triangle" = "Retina版三角アイコン";
-"Classic Circle" = "丸形アイコン";
-"Current (Default)" = "現在のアイコン（標準）";
-"Before 1.0" = "1.0 以前";
+"Original" = "初代";
+"Classic Triangle" = "従来の三角";
+"Retina Triangle" = "Retinaの三角";
+"Classic Circle" = "従来の丸";
+"Current (Default)" = "現在（標準）";
+"Before 1.0" = "1.0より前";

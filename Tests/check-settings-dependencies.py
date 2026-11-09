@@ -22,8 +22,9 @@ for rule in rules:
     for outlet in rule['outlets']:
         assert outlet not in outlets and re.fullmatch(r'[A-Za-z][A-Za-z0-9]*', outlet)
         outlets.add(outlet)
-        lines.append('        {TSSettingsCategory%s, %s, %d, _%s, %s},' % (
+        lines.append('        {TSSettingsCategory%s, %s, %d, %s, _%s, %s},' % (
             rule['category'].capitalize(), rule['key_symbol'], int(rule['enabled_values'][0]),
+            'TSDependencyBoolean' if rule['value_kind']=='boolean' else 'TSDependencyInteger',
             outlet, 'YES' if rule['whole_row'] else 'NO'))
 text = '\n'.join(lines)+'\n'
 target = root/'Sources/TSSettingsDependencies.inc'

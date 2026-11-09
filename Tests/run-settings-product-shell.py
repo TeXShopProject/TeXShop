@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Compile the complete production Settings owner; all windows stay unordered."""
 from pathlib import Path
-import argparse,subprocess,tempfile,shutil,re
+import argparse,subprocess,tempfile,shutil,re,json
 from pane_fixtures import bundles,sources
 from shortcut_sources import NAMES
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*[str(r/'Sources'/n) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').glob('TSSettings*.m'))),'-o',str(t/'probe')]
@@ -32,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   if a.output:folder=a.output/bundle.stem;folder.mkdir(parents=True,exist_ok=True);command.append(str(folder))
   print('LANGUAGE',bundle.stem,flush=True);subprocess.run(command,check=True,timeout=120)
 
-  if a.mutations or a.additional_mutations:
+  if a.mutations or a.additional_mutations or a.audit_mutations:
    cases=[
     ('profile-transient-clear','TSPreferences.m','[self.settingsChangeNotes valuesReplaced];',';'),
     ('encoding-sheet','TSPreferences.m','[self.settingsChangeNotes recordUserChangeForKey:EncodingKey previousValue:oldValue ?: @""];','NSBeginCriticalAlertSheet(@"Encoding",nil,nil,nil,nil,nil,NULL,NULL,NULL,@"Warning");'),
@@ -76,6 +76,29 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ('theme-appearance-default','TSPreferences-Color.m','fromDictionary: EditingColors isWindowDark: withDarkColors','fromDictionary: EditingColors isWindowDark: NO'),
     ('theme-marker-refresh','TSPreferences-Color.m','[self refreshInheritedBracketColorWells];',';'),
    ])
+   if a.audit_mutations:cases=[]
+   audit_cases=[
+    ('close-generation','TSPreferences.m','self.endingPreferences = YES;\n    self.themeOperationGeneration++;\n    if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];\n    [self cancelEnginePathDiscovery];','self.endingPreferences = YES;\n    [self cancelEnginePathDiscovery];','Closing invalidates pending theme operations'),
+    ('sheet-edit-guard','TSPreferences.m','if (showError && _prefsWindow.attachedSheet != nil) return NO;',';','An attached sheet blocks the owner editing transaction'),
+    ('reopen-ending','TSPreferences.m','self.endingPreferences = NO;','self.endingPreferences = YES;','Showing a closed panel starts a fresh editing session'),
+    ('cascade','TSSettingsWindowController.m','self.shouldCascadeWindows = NO;','self.shouldCascadeWindows = YES;','Settings has a title and disables cascading'),
+    ('empty-title','TSSettingsWindowController.m','self.window.title = pane.title ?: @"";','self.window.title = @"";','Settings has a title and disables cascading'),
+    ('tab-notification','TSPreferences.m','kind:TSPreferenceInputInteger minimum:2 maximum:50 allowsEmpty:NO notification:TSPreferenceNotificationForKey(tabsKey)','kind:TSPreferenceInputInteger minimum:2 maximum:50 allowsEmpty:NO notification:nil','Input notification contract'),
+    ('keyboard-card-hidden','TSShortcutPaneController.m','[TSPrefPaneLayout decorateGroupsInView:group];','[TSPrefPaneLayout decorateGroupsInView:group]; [self viewWithIdentifier:@"card.background" inView:group].hidden=YES;','Every catalog group has its visible rounded filled card'),
+    ('autosave-string','TSSettingsDependencies.inc','AutoSaveEnabledKey, 0, TSDependencyBoolean','AutoSaveEnabledKey, 0, TSDependencyInteger','Factory string YES'),
+    ('live-find-action','TSPreferences.m','[self applyEffectsForPreferenceKeys:[NSSet setWithObject:FindMethodKey]];',';','Actual find action delivers one live-view notification'),
+    ('opacity-scale','TSPrefPaneLayout.m','sender.doubleValue/100.0','sender.doubleValue/1.0','Opacity action preserves RGB'),
+    ('opacity-read','TSPrefPaneLayout.m','self.source.color.alphaComponent*100','round(self.source.color.alphaComponent*100)','Loading a theme preserves fractional opacity'),
+    ('opacity-no-action','TSPrefPaneLayout.m','self.source.color=[self.source.color colorWithAlphaComponent:sender.doubleValue/100.0];\n    [self.source sendAction:self.source.action to:self.source.target];','self.source.color=[self.source.color colorWithAlphaComponent:sender.doubleValue/100.0];','Opacity action preserves RGB'),
+   ]
+   prep='if (preparations & TSPreferencePrepareEncoding) [[TSEncodingSupport sharedInstance] setupForEncoding];'
+   source=(r/'Sources/TSPreferences.m').read_text()
+   if prep in source:
+    old=source[source.index(prep):source.index('TSPostPreferenceNotifications(changed, self);')+len('TSPostPreferenceNotifications(changed, self);')]
+    audit_cases.append(('encoding-order','TSPreferences.m',old,old.replace(prep,'')+'\n    '+prep,'Encoding is prepared before profile notifications'))
+   expected=json.loads((r/'Tests/Fixtures/SettingsOwnerMutationFailures.json').read_text())
+   for name,file,old,new,message in audit_cases:
+    cases.append((name,file,old,new));expected[name]=message
    if a.mutation_start:cases=cases[next(i for i,c in enumerate(cases) if c[0]==a.mutation_start):]
    for name,filename,old,new in cases:
     source=(r/'Sources'/filename).read_text()
@@ -92,7 +115,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
       copied=stage/unit;shutil.copy2(r/'Sources'/unit,copied);replacements[str(r/'Sources'/unit)]=copied
     build(replacements)
     result=subprocess.run([str(t/'probe'),str(bundle)],capture_output=True,text=True,timeout=120)
-    assert result.returncode and 'FAIL:' in result.stderr,(name,result.stdout,result.stderr)
+    assert result.returncode and 'FAIL: '+expected[name] in result.stderr,(name,expected[name],result.stdout,result.stderr)
     if a.output:(a.output/(name+'-'+bundle.stem+'.log')).write_text(result.stdout+result.stderr)
     print('DETECTED',name,result.stderr.strip(),flush=True)
    build();subprocess.run([str(t/'probe'),str(bundle)],check=True,timeout=120);print('NORMAL CONTROL',bundle.stem,flush=True)

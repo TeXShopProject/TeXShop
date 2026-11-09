@@ -17,10 +17,12 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcut-pane-') as td:
  result=run();print(result.stdout,flush=True);assert result.returncode==0,result.stderr
  original=production_source(r)
  # Mandatory raw-macro Shift mutation: never use AppKit synthetic JIS dispatch as an oracle.
- mutations=[('raw-macro-shift','TSBinding(macro.key, macro.modifiers) isEqual:binding','TSBinding(macro.key, macro.modifiers & ~NSEventModifierFlagShift) isEqual:binding')]
+ mutations=[('search-both-shift','TSShortcutBinding *binding = TSBinding(key, flags);\n    [macros enumerateObjectsUsingBlock:', 'TSShortcutBinding *binding = TSBinding(key, flags & ~NSEventModifierFlagShift);\n    [macros enumerateObjectsUsingBlock:'),('raw-macro-shift','TSBinding(macro.key, macro.modifiers) isEqual:binding','TSBinding(macro.key, macro.modifiers & ~NSEventModifierFlagShift) isEqual:binding')]
  if '--mutations' in sys.argv:
   mutations += [('hidden-menu','if (match.menuItem.hidden && !match.menuItem.allowsKeyEquivalentWhenHidden) continue;',';'),('empty-initial-list','self.searchingByKey && self.searchEvent != nil ? (NSInteger)self.searchMatches.count','self.searchingByKey ? (NSInteger)self.searchMatches.count'),('modifier-only-event','if (event.type != NSEventTypeKeyDown) { return YES; }',';')]
  for name,old,new in mutations:
-  assert original.count(old)==1,(name,original.count(old));(p/'TSKeyboardShortcuts.m').write_text(original.replace(old,new));result=run()
+  assert original.count(old)==1,(name,original.count(old));changed=original.replace(old,new)
+  if name=='search-both-shift':changed=changed.replace('TSBinding(macro.key, macro.modifiers) isEqual:binding','TSBinding(macro.key, macro.modifiers & ~NSEventModifierFlagShift) isEqual:binding')
+  (p/'TSKeyboardShortcuts.m').write_text(changed);result=run()
   assert result.returncode and 'FAIL' in result.stderr,(name,result.stderr);print('DETECTED',name,result.stderr.strip(),flush=True)
  (p/'TSKeyboardShortcuts.m').write_text(original);result=run();assert result.returncode==0,result.stderr;print('NORMAL CONTROL',result.stdout,flush=True)

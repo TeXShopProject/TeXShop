@@ -5,9 +5,10 @@
 - (BOOL)finishPreferenceEditing:(BOOL)showError;
 @end
 static NSUInteger ownerAlertCount;
+static NSAlert *capturedOwnerAlert;
 static void (^ownerAlertCompletion)(NSModalResponse);
 static void CaptureOwnerAlert(NSAlert *alert, SEL selector, NSWindow *window, void (^completion)(NSModalResponse)) {
-    ownerAlertCount++;
+    ownerAlertCount++;capturedOwnerAlert=alert;
     Check(ownerAlertCompletion == nil, @"One outstanding validation warning");
     ownerAlertCompletion = [completion copy];
 }
@@ -33,6 +34,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     for(NSDictionary *entry in contract){
         NSTextField *field=[owner valueForKey:entry[@"outlet"]];TSPreferenceInput *rule=[rules objectForKey:field];
         Check(rule && [rule.key isEqual:entry[@"key"]] && rule.kind==[entry[@"kind"]integerValue] && rule.minimum==[entry[@"minimum"]doubleValue] && rule.maximum==[entry[@"maximum"]doubleValue] && rule.allowsEmpty==[entry[@"allowsEmpty"]boolValue],[NSString stringWithFormat:@"Independent rule contract for %@",entry[@"outlet"]]);
+        Check((entry[@"notification"]==NSNull.null && rule.notification==nil) || [rule.notification isEqual:entry[@"notification"]], [NSString stringWithFormat:@"Input notification contract for %@",entry[@"outlet"]]);
         Check(field.delegate==owner && field.formatter==nil,@"Original formatters cannot bypass the unified input validator");
     }
     NSDictionary *saved = [TSIsolatedAppKitDefaults.values copy];
@@ -41,9 +43,12 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     NSTextField *tabs = [owner valueForKey:@"tabIndentField"];
     NSTextField *gs = [owner valueForKey:@"gsBinPathField"];
     [TSIsolatedAppKitDefaults setObject:@"" forKey:GSBinPath];
+    __block NSUInteger tabNotifications=0;
+    id tabObserver=[NSNotificationCenter.defaultCenter addObserverForName:DocumentFontChangedNotification object:owner queue:nil usingBlock:^(NSNotification *n){tabNotifications++;Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==20,@"Tab width is stored before notifying documents");}];
     EditOwnerField(owner, tabs, @"20");
     Check([shell selectCategoryIdentifier:TSSettingsCategoryTypesetting], @"Navigation commits tab width through the field editor");
-    Check([TSIsolatedAppKitDefaults integerForKey:tabsKey] == 20, @"Tab width is committed as 20");
+    Check([TSIsolatedAppKitDefaults integerForKey:tabsKey] == 20 && tabNotifications==1, @"Tab width commits and notifies documents once");
+    [NSNotificationCenter.defaultCenter removeObserver:tabObserver];
     [gs selectText:nil];
     Check(gs.currentEditor != nil && [gs.currentEditor.string isEqual:@""], @"Focus enters the untouched empty GS field");
     NSDictionary *beforeFocus = [TSIsolatedAppKitDefaults dictionaryRepresentation];
@@ -81,6 +86,9 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     FinishOwnerAlert(NSAlertSecondButtonReturn);
     EditOwnerField(owner,tabs,@"22");alerts=ownerAlertCount;[owner setDefaults:profileChoice];
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22 && ownerAlertCount==alerts+1 && ![[owner valueForKey:@"inputErrorPresented"]boolValue],@"Valid edit commits before profile confirmation");
+    NSString *expectedPath=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist"]][@"TetexBinPath"];
+    Check(expectedPath.length && [capturedOwnerAlert.informativeText containsString:expectedPath],@"Profile confirmation displays the proposed TeX engine path");
+    Check(![capturedOwnerAlert.buttons.firstObject.keyEquivalent isEqual:@"\r"] && [capturedOwnerAlert.buttons.lastObject.keyEquivalent isEqual:@"\e"],@"Profile confirmation reserves Escape for Cancel and never applies on Return");
     FinishOwnerAlert(NSAlertSecondButtonReturn);
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22,@"Cancelling the profile preserves the committed edit");
     // Applying a confirmed profile ends the field editor; a later focus change

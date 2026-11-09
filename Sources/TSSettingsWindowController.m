@@ -339,11 +339,6 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
             NSLayoutConstraint *height = [document.heightAnchor constraintEqualToAnchor:scroll.contentView.heightAnchor];
             // Keep all input groups and the list's minimum visible without a
             // second vertical scroller. Width wrapping participates in fitting.
-            CGFloat minimum = MAX(560, pane.fittingSize.height + 28);
-            NSSize minSize = self.window.contentMinSize; minSize.height = minimum;
-            self.window.contentMinSize = minSize;
-            NSSize size = self.window.contentView.bounds.size;
-            if (size.height < minimum) [self.window setContentSize:NSMakeSize(size.width, minimum)];
             width.priority = NSLayoutPriorityDefaultHigh;
             [NSLayoutConstraint activateConstraints:@[
                 [scroll.leadingAnchor constraintEqualToAnchor:self.contentScroll.leadingAnchor],
@@ -358,6 +353,11 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
                 [pane.bottomAnchor constraintEqualToAnchor:document.bottomAnchor]]];
         }
     }
+    CGFloat minimum = keyboard && self.keyboardPane != nil ? MAX(560, self.keyboardPane.view.fittingSize.height + 28) : 560;
+    NSSize minSize = self.window.contentMinSize; minSize.height = minimum;
+    self.window.contentMinSize = minSize;
+    NSSize size = self.window.contentView.bounds.size;
+    if (size.height < minimum) [self.window setContentSize:NSMakeSize(size.width, minimum)];
     self.contentScroll.hidden = keyboard;
     if (self.keyboardScroll != nil) { self.keyboardScroll.hidden = !keyboard; }
     if (keyboard) {

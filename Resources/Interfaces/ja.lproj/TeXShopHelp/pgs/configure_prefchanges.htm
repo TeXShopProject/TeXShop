@@ -1,71 +1,56 @@
-<HTML>
+<html>
+<head>
+<meta content="text/html;charset=Shift_JIS" http-equiv="content-type"/>
+<title>おすすめの設定変更</title>
+<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
+<meta content="ウインドウとセキュリティの設定について" name="description"/>
+<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+</head>
+<body>
 
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>おすすめの設定変更</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="ウインドウとセキュリティの設定について">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
+<div id="content_border"><p>「一般」の「設定プロファイル」で、設定をまとめて適用できます。適用前にプロファイルを確認してください。確認画面はEscapeで取り消せます。Returnでは適用されません。元のテーマを残すには、編集前に複製してください。新しいテーマには名前を付け、同名のテーマを置き換える場合は確認します。テーマは保存に成功してから開いている書類に反映され、保存に失敗した場合は保存済みの色に戻ります。</p><p>「オートセーブとバージョン」はTeXShopの再起動後に有効になります。標準の検索パネルと検索バーの切り替えは、開いている書類のソース・コンソール・ログにその場で反映します。OgreKitへの切り替えとOgreKitからの切り替えは再起動後に有効になります。</p>
 
-<BODY>
-<p>設定には「一般」「書類と保存」「エディタ」「スペルチェック」「外観」「プレビュー」「タイプセット」「コンソール」「キーボード」「アップデート」の10分類があります。「スペルチェック」では「LaTeXの構造を考慮する（推奨）」と「従来方式を使う」のどちらかを選びます。新方式の下には「LaTeXの除外規則を編集…」、従来方式の下には字下げした3項目があります。方式を変えても子項目の値は保持します。入力中のスペルチェックは独立した設定です。「キーボード」ではキーバインドとコマンド補完を検索欄より上に置き、ショートカット一覧だけを縦にスクロールします。3つの区画は常に開いています。一覧には残りの高さを使い、一覧だけを縦にスクロールします。Tabを補完キーにしてキー検索でTabを押すと、予約の説明と補完キーの設定行を表示します。「一般」からコメント行と隠し設定の説明を開けます。無効な子項目の保存値を保持し、廃止された分類を記憶していた場合は「一般」を開きます。</p>
-
-<div id="content_border">
-<p>設定画面は、左側でカテゴリを選ぶサイズ変更可能なウィンドウになりました。「戻る」「進む」または Commandと左右の角括弧キーでカテゴリの移動履歴をたどれます。設定画面がアクティブな間は、これらのキーをメニューのショートカットより優先します。狭い画面では内容をスクロールしてください。最後のカテゴリは記憶しますが、履歴は閉じると消えます。以前の説明にある設定の「タブ」は、サイドバーのカテゴリを指します。テーマの色グループは「外観」にまとめて表示します。プロファイルの確認は Escape で取り消せます。Return では適用しません。</p>
 <p>Optionで入力する角括弧もCommandキーと組み合わせて移動に使えます。「戻る」「進む」ボタンも利用できます。</p>
-<p lang="ja">TeXShop 5.60から、設定の変更はその場で保存されます。入力欄はReturnまたはフォーカス移動で確定します。閉じる操作やカテゴリ移動でも検証し、不正な入力で保存済みの値を上書きしません。設定全体のOK・キャンセルはありません。プレビューの倍率設定は新しく開くPDFの既定値で、既に開いているPDFの倍率は変えません。ソース・コンソールのフォント変更は開いているウインドウにも反映します。テーマは保存に成功してから文書へ反映し、失敗時は保存済みの色に戻します。原本を残すには編集前に複製してください。設定プロファイルは確認後、既知のエンジン・編集・表示・隠し設定とDockアイコンを初期化します。ショートカット・言語・ウインドウ配置・自動更新・テーマファイル・未知の設定は保持し、テーマ選択は変わることがあります。</p>
-
 
 <p>
 TeXShop が提供するデフォルトの設定のいくつかは変更したほうがよいでしょう。こうした変更の中には、個々のモニタの特質に依存していて、実際に使ってみるまでは設定しかねるものもあります。
 </p>
-
 <p>
 デフォルトでは、ソースウインドウとプレビューウインドウは、最後に閉じたときの位置で開かれます。１度に１つの文書しか扱わないときは、これでもいいでしょう。しかし通常は、前もって決めておいた最適な位置でソースウインドウとプレビューウインドウを開くのがいいでしょう。位置決めのために、簡単な文書をタイプセットします。そしてソースウインドウとプレビューウインドウの位置とサイズを調節してください。使っているモニタが十分に大きければ、横に並べて配置するのが最良です。TeXShop の設定を開きます。「一般」カテゴリで「いつも同じ位置で開く」を選び、「現在の位置に設定」をクリックしてください。「プレビュー」カテゴリでも同じ変更を行ないます。
 </p>
-
 <p>
 プレビューウインドウの倍率を設定するのにもいい機会です。プレビューウインドウの上部にあるスケール・ボタンで最適な倍率を選んでください。そして設定の「プレビュー」カテゴリで倍率を入力して「設定」ボタンを押します。
 </p>
-
 <p>
 最後に、セキュリティ問題に触れるべきかもしれません。デフォルトで TeXShop は、タイプセット時に他のプログラムを呼び出すことを pdftex と pdflatex に許可しています。処理できない形式のグラフィック・イラストがあると pdftex は、自動的に変換プログラムを呼び出して利用可能な形式の画像ファイルに変換します。たとえば、eps ファイルは pdf に変換され、tif ファイルは png ファイルに変換されます。
 </p>
-
 <p>
 しかしながらこの設定では pdftex に、<b>いかなる</b>プログラムを呼び出すことをも許可してしまいます。あるユーザがあなたに TeX のソースファイルをメールで送ってきて、タイプセット中にそれが、あなたのシステムに対してよからぬことをしでかす──というのも、ありうることではあります。これが心配な場合には、設定の「タイプセット」カテゴリで「Shell Escape を警告」と書いてあるボックスにチェックを入れてください。このチェックが入っていると、あるファイルを TeXShop で初めてタイプセットするときに、そのファイルに対してこの機能をオフにできるダイアログボックスが表示されます──そのため pdftex は、タイプセット時に他のプログラムを呼び出せなくなります。したがってあなた自身のファイルについては自動変換が使えますが、他人からのソースファイルに対しては安全を講じることができます。
 </p>
 
+<p><a href="basic_preferences.htm#settings-search">設定の使い方と設定の検索</a></p><p>自動保存の変更もその場で保存しますが、動作への反映はTeXShopの再起動後です。</p></div>
+<div id="header_background"></div>
+<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
+<div id="header_chapter">TeXShop の設定はどうすればよいか？</div>
+<div id="header_title">おすすめの設定変更</div>
+<div id="menu_border">
+<ul>
+<li><a href="configure_preliminaries.htm">まえがき</a>
+<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
+<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
+<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
+<li><a href="configure_defaults.htm">初期設定について</a>
+<li><a href="configure_latextemplate.htm">デフォルトの LaTeX テンプレート</a>
+<li><a href="configure_hidden.htm">隠れた設定項目</a>
+<li><a href="configure_plist.htm">.plist ファイル</a>
+<li><a href="configure_panel.htm">LaTeX パネルを一部変更する</a>
+<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
+<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
+<li><a href="configure_macros.htm">マクロメニューを変更する</a>
+</li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</div>
 
-<p>設定項目は縦に並ぶグループとして表示され、長いラベルは折り返します。テーマの2つの色グループは同じペイン内に並びます。新しいテーマの名前は設定に付属するシートで入力し、同名のテーマを置き換える場合は別途確認します。取り消すと既存のファイルは変わりません。</p>
-</div>		
-		<div id="header_background"></div>
-		<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-		<div id="header_chapter">TeXShop の設定はどうすればよいか？</div>
-		<div id="header_title">おすすめの設定変更</div>
-		<div id="menu_border">
-			<UL>
-				<li><a href="configure_preliminaries.htm">まえがき</a>
-				<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
-				<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
-				<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
-				<li><a href="configure_defaults.htm">初期設定について</a>
 
-				<li><a href="configure_latextemplate.htm">デフォルトの LaTeX テンプレート</a>
-				<li><a href="configure_hidden.htm">隠れた設定項目</a>
-				<li><a href="configure_plist.htm">.plist ファイル</a>
-				<li><a href="configure_panel.htm">LaTeX パネルを一部変更する</a>
-				<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
 
-				<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-				<li><a href="configure_macros.htm">マクロメニューを変更する</a>
-			</UL>
-		</div>
-<p>自動保存の変更もその場で保存しますが、動作への反映はTeXShopの再起動後です。</p>
-
-<h3 id="settings-search">設定を検索</h3>
-<p>サイドバー上部の「設定を検索」で、設定項目、選択肢、メニューコマンドを探せます。結果には項目名と所属カテゴリ名を表示します。空白で区切った語は同じ項目に一致する必要があり、カテゴリ名で絞り込むこともできます。大文字・小文字、欧文のアクセント、全角・半角、ひらがな・カタカナの違いを吸収します。語を入力しただけでは表示中のペインは変わりません。結果を選ぶとその行まで移動して強調し、通常の履歴に移動を追加します。設定値や無効な項目の状態は変えません。検索語を消しても表示中のペインに留まります。検索中も戻る・進むは履歴に従って移動し、検索語は消しません。メニューコマンドの結果は「キーボード」の「機能で検索」で絞り込みます。キー記録中は「キーで検索」が優先されます。入力した値、個人のパス、自分で作ったテーマ名は検索しません。</p>
-</BODY>
-
-</HTML>
+</body>
+</html>

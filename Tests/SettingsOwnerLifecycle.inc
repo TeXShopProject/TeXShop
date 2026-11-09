@@ -1,5 +1,6 @@
 @interface TSPreferences (LifecycleRegression)
 - (void)releasePreferencePanels;
+- (void)windowWillClose:(NSNotification *)note;
 - (void)tearDownPreferenceEditing;
 - (void)setAllThemeEditingEnabled:(BOOL)enabled;
 @end
@@ -56,6 +57,14 @@ static void CheckOwnerLifecycle(TSPreferences *owner,TSSettingsWindowController 
     [owner setValue:@NO forKey:@"endingPreferences"];[owner setValue:@NO forKey:@"inputErrorPresented"];[shell beginSession];[shell selectCategoryIdentifier:TSSettingsCategoryEditor];
     EditOwnerField(owner,tabs,@"23");[owner finishPreferencesForTermination];
     Check(ownerAlertCount==count && [TSIsolatedAppKitDefaults integerForKey:tabsKey]==23 && tabs.currentEditor==nil,@"Termination commits valid editing without showing a warning");
+    NSUInteger generation=[[owner valueForKey:@"themeOperationGeneration"]unsignedIntegerValue];
+    [owner windowWillClose:[NSNotification notificationWithName:NSWindowWillCloseNotification object:shell.window]];
+    Check([[owner valueForKey:@"themeOperationGeneration"]unsignedIntegerValue]==generation+1 && [[owner valueForKey:@"endingPreferences"]boolValue],@"Closing invalidates pending theme operations and ends the session");
+    Method front=class_getInstanceMethod(NSWindow.class,@selector(makeKeyAndOrderFront:));
+    IMP oldFront=method_setImplementation(front,(IMP)NavigationFront);
+    [owner showPreferences:nil];
+    Check(![[owner valueForKey:@"endingPreferences"]boolValue],@"Showing a closed panel starts a fresh editing session");
+    method_setImplementation(front,oldFront);
     method_setImplementation(alert,oldAlert);method_setImplementation(fontMethod,oldFont);
     method_setImplementation(key,oldKey);method_setImplementation(main,oldMain);navigationTestWindow=nil;lifecycleFontManager=nil;
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner setValue:@NO forKey:@"endingPreferences"];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];[shell beginSession];

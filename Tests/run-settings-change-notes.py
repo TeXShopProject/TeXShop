@@ -17,10 +17,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-change-notes-') as directory:
     result=run();print(result.stderr,result.stdout,flush=True);assert result.returncode==0
     if args.mutations:
         mutations=[
+            ('find-always-restart','return [weakSelf.launch[@"FindMethod"] integerValue] == 2 || [weakSelf.defaults integerForKey:@"FindMethod"] == 2;','return YES;'),
+            ('find-ignore-launch','return [weakSelf.launch[@"FindMethod"] integerValue] == 2 || [weakSelf.defaults integerForKey:@"FindMethod"] == 2;','return [weakSelf.defaults integerForKey:@"FindMethod"] == 2;'),
+            ('warning-red','label.textColor = NSColor.labelColor;','label.textColor = NSColor.systemRedColor;'),
             ('announcement-priority','@(NSAccessibilityPriorityMedium)','@(NSAccessibilityPriorityLow)'),
             ('category-clear','if(!rule.restart)[rule.view setShown:NO announce:NO];','if(NO)[rule.view setShown:NO announce:NO];'),
             ('close-clear','[rule.view setShown:NO announce:NO]; }','[rule.view setShown:YES announce:NO]; }'),
-            ('always-condition','&& rule.condition();','&& YES;'),
+            ('always-condition','![current isEqual:original] && rule.condition();','![current isEqual:original] && YES;'),
             ('ignore-original','![current isEqual:original] && rule.condition()','YES && rule.condition()'),
             ('same-value','if([current isEqual:value])return;','if(NO)return;'),
             ('restart-category','[self refreshRestartNotes];',';'),

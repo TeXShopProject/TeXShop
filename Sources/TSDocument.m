@@ -1,3 +1,6 @@
+#import "TSFindInterface.h"
+#import "TSPreferenceKey.h"
+#import "TSSettingsChangeNote.h"
 #import "TSPreferenceProfile.h"
 /*
  * TeXShop - TeX editor for Mac OS
@@ -980,6 +983,18 @@ withDarkColors = NO;
 			return YES;
 		else
 			return NO;
+}
+
+- (void)findInterfacePreferencesChanged:(NSNotification *)notification
+{
+    NSInteger current = [SUD integerForKey:FindMethodKey];
+    NSNumber *initial = TSSettingsLaunchValues()[FindMethodKey];
+    if (current == 2 || (initial != nil && initial.integerValue == 2)) return;
+    BOOL incremental = [SUD boolForKey:IncrementalSearchKey];
+    TSConfigureFindInterface(textView1, current, incremental);
+    TSConfigureFindInterface(textView2, current, incremental);
+    TSConfigureFindInterface(outputText, current, incremental);
+    TSConfigureFindInterface(self.logTextView, current, incremental);
 }
 
 - (void)setupConsole;
@@ -3546,6 +3561,7 @@ if ( ! skipTextWindow) {
     
 if ( ! skipTextWindow)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setDocumentFontBoth:) name:DocumentFontChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(findInterfacePreferencesChanged:) name:TSFindMethodChangedNotification object:nil];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setConsoleFontFromPreferences:) name:ConsoleFontChangedNotification object:nil];
 	

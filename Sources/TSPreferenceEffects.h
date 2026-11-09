@@ -45,6 +45,7 @@ static inline NSArray<NSNotificationName> *TSPreferenceNotificationsForKeys(NSSe
         SourceColorChangedNotification: @[DefaultLiteThemeKey, DefaultDarkThemeKey],
         TSPreferenceEncodingChangedNotification: @[EncodingKey, ptexUtfOutputEnabledKey],
         TSCompletionChangedNotification: @[CommandCompletionCharKey],
+        TSFindMethodChangedNotification: @[FindMethodKey, IncrementalSearchKey],
         TSPreferenceNeedsRecolorNotification: @[AlwaysHighlightEnabledKey, ShowIndicatorForMoveEnabledKey, HighlightContentEnabledKey, BeepEnabledKey, FlashBackgroundEnabledKey, CheckBraceEnabledKey, CheckBracketEnabledKey, CheckSquareBracketEnabledKey, CheckParenEnabledKey, MakeatletterEnabledKey, expl3SyntaxColoringKey, ShowInvisibleCharactersEnabledKey, showSpaceCharacterKey, showFullwidthSpaceCharacterKey, showNewLineCharacterKey, showTabCharacterKey, SpaceCharacterKindKey, FullwidthSpaceCharacterKindKey, NewLineCharacterKindKey, TabCharacterKindKey, TSInvisibleExtendedKey(SpaceCharacterKindKey), TSInvisibleExtendedKey(FullwidthSpaceCharacterKindKey), TSInvisibleExtendedKey(NewLineCharacterKindKey), TSInvisibleExtendedKey(TabCharacterKindKey)]
     };
     NSMutableOrderedSet<NSNotificationName> *result = [NSMutableOrderedSet orderedSet];

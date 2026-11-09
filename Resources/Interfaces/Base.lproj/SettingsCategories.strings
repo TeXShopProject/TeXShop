@@ -64,7 +64,7 @@
 "catalog.documents.1.1.title" = "Keep the previous file as “name~” when saving";
 "catalog.documents.1.2.title" = "Save related files";
 "catalog.documents.1.2.note" = "Also save open files in the same project when saving a document.";
-"catalog.documents.1.3.title" = "Automatic UTF-8-Mac to UTF-8 Conversion";
+"catalog.documents.1.3.title" = "Automatically convert UTF-8-MAC to UTF-8";
 "group.editor.0.title" = "Display";
 "catalog.editor.0.0.title" = "Document Font";
 "catalog.editor.0.1.title" = "Syntax Coloring";
@@ -198,12 +198,6 @@
 "catalog.appearance.9.0.item.3" = "Attribute";
 "catalog.appearance.9.0.item.4" = "Value";
 "group.appearance.10.title" = "Dock Icon While Running";
-"catalog.appearance.10.0.title" = "Applies while TeXShop is running. The standard icon returns after quitting.";
-"catalog.appearance.10.0.item.0" = "Before 1.0";
-"catalog.appearance.10.0.item.1" = "1.0–3.13";
-"catalog.appearance.10.0.item.2" = "3.14–3.38";
-"catalog.appearance.10.0.item.3" = "3.39–5.58";
-"catalog.appearance.10.0.item.4" = "5.60–";
 "group.preview.0.title" = "Display";
 "catalog.preview.0.0.title" = "Default Page Style";
 "catalog.preview.0.1.title" = "After resizing the window";
@@ -273,7 +267,7 @@
 "catalog.typesetting.8.1.title" = "BibTeX Engine";
 "catalog.typesetting.8.1.note" = "default: bibtex";
 "group.typesetting.9.title" = "pTeX support (for Japan)";
-"catalog.typesetting.9.0.title" = "utf export";
+"catalog.typesetting.9.0.title" = "otf Package Support";
 "group.console.0.title" = "Font";
 "catalog.console.0.0.title" = "Console Font";
 "catalog.console.0.1.title" = "Use Also for Macro Editor";

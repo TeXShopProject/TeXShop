@@ -16,7 +16,8 @@
       ],
       "label_row": null,
       "key_symbol": "DocumentWindowPosModeKey",
-      "whole_row": false
+      "whole_row": false,
+      "value_kind": "integer"
     },
     {
       "category": "general",
@@ -33,7 +34,8 @@
       ],
       "label_row": null,
       "key_symbol": "PdfWindowPosModeKey",
-      "whole_row": false
+      "whole_row": false,
+      "value_kind": "integer"
     },
     {
       "category": "general",
@@ -50,7 +52,8 @@
       ],
       "label_row": null,
       "key_symbol": "ConsoleWindowPosModeKey",
-      "whole_row": false
+      "whole_row": false,
+      "value_kind": "integer"
     },
     {
       "category": "general",
@@ -67,14 +70,19 @@
       ],
       "label_row": null,
       "key_symbol": "HtmlWindowPosModeKey",
-      "whole_row": false
+      "whole_row": false,
+      "value_kind": "integer"
     },
     {
       "category": "updates",
       "key": "SparkleAutomaticUpdate",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         true
@@ -84,7 +92,8 @@
       ],
       "label_row": "row.catalog.updates.0.1",
       "key_symbol": "SparkleAutomaticUpdateKey",
-      "whole_row": true
+      "whole_row": true,
+      "value_kind": "boolean"
     },
     {
       "category": "typesetting",
@@ -102,14 +111,19 @@
       ],
       "label_row": "row.catalog.typesetting.0.1",
       "key_symbol": "DefaultCommandKey",
-      "whole_row": true
+      "whole_row": true,
+      "value_kind": "integer"
     },
     {
       "category": "documents",
       "key": "AutoSaveEnabled",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         false
@@ -119,14 +133,19 @@
       ],
       "label_row": "row.catalog.documents.1.1",
       "key_symbol": "AutoSaveEnabledKey",
-      "whole_row": true
+      "whole_row": true,
+      "value_kind": "boolean"
     },
     {
       "category": "preview",
       "key": "PdfColorMap",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         true
@@ -136,14 +155,19 @@
       ],
       "label_row": "row.catalog.preview.3.1",
       "key_symbol": "PdfColorMapKey",
-      "whole_row": true
+      "whole_row": true,
+      "value_kind": "boolean"
     },
     {
       "category": "editor",
       "key": "ShowSpaceCharacter",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         true
@@ -153,14 +177,19 @@
       ],
       "label_row": null,
       "key_symbol": "showSpaceCharacterKey",
-      "whole_row": false
+      "whole_row": false,
+      "value_kind": "boolean"
     },
     {
       "category": "editor",
       "key": "ShowFullwidthSpaceCharacter",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         true
@@ -170,14 +199,19 @@
       ],
       "label_row": null,
       "key_symbol": "showFullwidthSpaceCharacterKey",
-      "whole_row": false
+      "whole_row": false,
+      "value_kind": "boolean"
     },
     {
       "category": "editor",
       "key": "ShowNewLineCharacter",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         true
@@ -187,14 +221,19 @@
       ],
       "label_row": null,
       "key_symbol": "showNewLineCharacterKey",
-      "whole_row": false
+      "whole_row": false,
+      "value_kind": "boolean"
     },
     {
       "category": "editor",
       "key": "ShowTabCharacter",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         true
@@ -204,14 +243,19 @@
       ],
       "label_row": null,
       "key_symbol": "showTabCharacterKey",
-      "whole_row": false
+      "whole_row": false,
+      "value_kind": "boolean"
     },
     {
       "category": "spelling",
       "key": "TeXAwareSpellChecking",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         true
@@ -221,14 +265,19 @@
       ],
       "label_row": null,
       "key_symbol": "TSTeXAwareSpellCheckingKey",
-      "whole_row": true
+      "whole_row": true,
+      "value_kind": "boolean"
     },
     {
       "category": "spelling",
       "key": "TeXAwareSpellChecking",
       "values": [
         false,
-        true
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
       ],
       "enabled_values": [
         false
@@ -245,7 +294,8 @@
         "row.catalog.spelling.1.3",
         "row.catalog.spelling.1.4",
         "row.catalog.spelling.1.5"
-      ]
+      ],
+      "value_kind": "boolean"
     }
   ]
 }

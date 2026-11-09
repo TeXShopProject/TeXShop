@@ -7,7 +7,7 @@
     CGFloat available = MAX(1, width - 40);
     NSRect text = [title boundingRectWithSize:NSMakeSize(available, CGFLOAT_MAX)
         options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-        attributes:@{NSFontAttributeName:[NSFont systemFontOfSize:NSFont.systemFontSize]}];
+        attributes:@{NSFontAttributeName:[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold]}];
     return MAX(30, ceil(NSHeight(text)) + 6);
 }
 + (NSTableCellView *)cellForCategory:(TSSettingsCategory *)category title:(NSString *)title

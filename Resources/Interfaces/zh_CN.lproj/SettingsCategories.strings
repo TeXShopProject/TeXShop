@@ -64,7 +64,7 @@
 "catalog.documents.1.1.title" = "存储时将之前的文件保留为“名称~”";
 "catalog.documents.1.2.title" = "存储相关文件";
 "catalog.documents.1.2.note" = "保存文档时，同时保存同一项目中已打开的文件。";
-"catalog.documents.1.3.title" = "自动转换 UTF-8-Mac 为 UTF-8 ";
+"catalog.documents.1.3.title" = "自动将 UTF-8-MAC 转换为 UTF-8";
 "group.editor.0.title" = "显示";
 "catalog.editor.0.0.title" = "文档字体";
 "catalog.editor.0.1.title" = "语法高亮";
@@ -197,13 +197,7 @@
 "catalog.appearance.9.0.item.2" = "转义符";
 "catalog.appearance.9.0.item.3" = "属性";
 "catalog.appearance.9.0.item.4" = "值";
-"group.appearance.10.title" = "Dock Icon While Running";
-"catalog.appearance.10.0.title" = "在 TeXShop 运行期间生效。退出后恢复标准图标。";
-"catalog.appearance.10.0.item.0" = "Before 1.0";
-"catalog.appearance.10.0.item.1" = "1.0–3.13";
-"catalog.appearance.10.0.item.2" = "3.14–3.38";
-"catalog.appearance.10.0.item.3" = "3.39–5.58";
-"catalog.appearance.10.0.item.4" = "5.60–";
+"group.appearance.10.title" = "运行时的 Dock 图标";
 "group.preview.0.title" = "显示";
 "catalog.preview.0.0.title" = "默认页面格式";
 "catalog.preview.0.1.title" = "调整窗口大小后";
@@ -273,7 +267,7 @@
 "catalog.typesetting.8.1.title" = "BibTeX 引擎";
 "catalog.typesetting.8.1.note" = "默认: bibtex";
 "group.typesetting.9.title" = "pTeX 支持 (仅日语用户)";
-"catalog.typesetting.9.0.title" = "utf 输出";
+"catalog.typesetting.9.0.title" = "otf 宏包支持";
 "group.console.0.title" = "字体";
 "catalog.console.0.0.title" = "控制台字体";
 "catalog.console.0.1.title" = "同时在宏编辑器中使用";

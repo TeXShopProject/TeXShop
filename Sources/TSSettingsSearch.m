@@ -120,7 +120,23 @@
                 if (!best) { score = 0; break; }
                 score += best;
             }
-            if (score) [results addObject:[[TSSettingsSearchResult alloc] initWithCategory:category entries:entries score:score]];
+            if (score) {
+                // A target may represent two labelled controls. Name the one
+                // whose label best matches this query, retaining stable ties.
+                TSSettingsSearchEntry *preferred = nil; NSInteger labelScore = 0;
+                for (TSSettingsSearchEntry *entry in entries) {
+                    if (!entry.command && entry.weight != TSSettingsSearchWeightLabel) continue;
+                    NSInteger candidate = [entry.normalizedText isEqual:TSSettingsNormalizedText(query)] ? 1000 : 0;
+                    for (NSString *token in tokens) {
+                        NSRange match = [entry.normalizedText rangeOfString:token options:NSLiteralSearch];
+                        if (match.location != NSNotFound) candidate += entry.normalizedText.length == token.length ? 3 : (match.location == 0 ? 2 : 1);
+                    }
+                    if (candidate > labelScore) { preferred = entry; labelScore = candidate; }
+                }
+                NSMutableArray *namedEntries = [entries mutableCopy];
+                if (preferred != nil) { [namedEntries removeObjectIdenticalTo:preferred]; [namedEntries insertObject:preferred atIndex:0]; }
+                [results addObject:[[TSSettingsSearchResult alloc] initWithCategory:category entries:namedEntries score:score]];
+            }
         }
     }
     [results sortWithOptions:NSSortStable usingComparator:^NSComparisonResult(TSSettingsSearchResult *a, TSSettingsSearchResult *b) {

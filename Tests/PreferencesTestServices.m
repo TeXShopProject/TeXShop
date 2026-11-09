@@ -34,6 +34,7 @@ INERT_CLASS(TSShortcutPaneController,NSViewController)
 + (id)sharedInstance;
 - (NSString *)keyForStringEncoding:(NSStringEncoding)encoding;
 @end
+NSUInteger TSSettingsEncodingPreparations;
 @implementation TSEncodingSupport
 + (id)sharedInstance { static TSEncodingSupport *instance; if(!instance)instance=[self new]; return instance; }
 - (NSString *)keyForStringEncoding:(NSStringEncoding)encoding {
@@ -47,7 +48,7 @@ INERT_CLASS(TSShortcutPaneController,NSViewController)
     }
 }
 - (NSStringEncoding)defaultEncoding { return NSUTF8StringEncoding; }
-- (void)setupForEncoding {}
+- (void)setupForEncoding {TSSettingsEncodingPreparations++;}
 @end
 #ifndef TS_TEST_REAL_PROFILE
 #pragma clang diagnostic push

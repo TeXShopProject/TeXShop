@@ -398,7 +398,76 @@ static NSColor *TSSettingsCardColor(void)
     return self;
 }
 @end
+// A long explanation uses the full row; short explanations share the title column.
+@interface TSSettingsCatalogRow : NSView
+@property (strong) NSTextField *rowName, *rowDetail;
+@property (strong) NSView *rowAccessory;
+@property (strong) NSLayoutConstraint *narrowLabel, *wideLabel, *centerAccessory, *titleAccessory;
+@property BOOL expandedAccessory, fullDescription;
+@property CGFloat leadingInset;
+@end
+@implementation TSSettingsCatalogRow
+- (void)layout {
+    if (self.rowDetail != nil && NSWidth(self.bounds) > 0) {
+        CGFloat available = self.expandedAccessory ? 170 : NSWidth(self.bounds)-self.leadingInset-12-16-self.rowAccessory.fittingSize.width;
+        CGFloat width = [self.rowDetail.stringValue sizeWithAttributes:@{NSFontAttributeName:self.rowDetail.font ?: [NSFont systemFontOfSize:NSFont.smallSystemFontSize]}].width;
+        BOOL full = width > available;
+        if (full != self.fullDescription) {
+            self.fullDescription=full;
+            ((NSStackView *)self.rowName.superview).spacing=full?8:2;
+            [NSLayoutConstraint deactivateConstraints:full ? @[self.narrowLabel,self.centerAccessory] : @[self.wideLabel,self.titleAccessory]];
+            [NSLayoutConstraint activateConstraints:full ? @[self.wideLabel,self.titleAccessory] : @[self.narrowLabel,self.centerAccessory]];
+        }
+    }
+    [super layout];
+}
+@end
+// Retain the existing well/action as the theme persistence boundary. One slider
+// action forwards once, preserving RGB and every existing save/error behavior.
+@interface TSSettingsOpacityPresentation : NSStackView
+@property (strong) NSColorWell *source;
+@property (strong) NSSlider *slider;
+@property (strong) NSTextField *percentage;
+- (instancetype)initWithWell:(NSColorWell *)well;
+@end
+@implementation TSSettingsOpacityPresentation
+- (instancetype)initWithWell:(NSColorWell *)well {
+    self=[super initWithFrame:NSZeroRect];if(!self)return nil;
+    self.translatesAutoresizingMaskIntoConstraints=NO;
+    self.orientation=NSUserInterfaceLayoutOrientationHorizontal;self.alignment=NSLayoutAttributeCenterY;self.spacing=4;
+    _source=well;well.hidden=YES;well.accessibilityElement=NO;
+    [well removeConstraints:well.constraints];well.translatesAutoresizingMaskIntoConstraints=NO;[self addSubview:well];
+    [NSLayoutConstraint activateConstraints:@[[well.widthAnchor constraintEqualToConstant:0],[well.heightAnchor constraintEqualToConstant:0],[well.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],[well.topAnchor constraintEqualToAnchor:self.topAnchor]]];
+    _slider=[NSSlider sliderWithValue:100 minValue:0 maxValue:100 target:self action:@selector(changed:)];
+    _slider.controlSize=NSControlSizeSmall;_slider.continuous=NO;
+    _slider.identifier=[@"opacity." stringByAppendingString:well.identifier ?: @""];
+    _slider.accessibilityLabel=well.accessibilityLabel;
+    _percentage=[NSTextField labelWithString:@"100%"];
+    _percentage.font=[NSFont monospacedDigitSystemFontOfSize:NSFont.smallSystemFontSize weight:NSFontWeightRegular];_percentage.alignment=NSTextAlignmentRight;
+    _percentage.accessibilityElement=NO;_percentage.accessibilityIdentifier=@"settings.user-data";
+    [self addArrangedSubview:_slider];[self addArrangedSubview:_percentage];
+    [_slider.widthAnchor constraintEqualToConstant:60].active=YES;[_percentage.widthAnchor constraintEqualToConstant:36].active=YES;
+    for(NSString *key in @[@"color",@"enabled"])[well addObserver:self forKeyPath:key options:0 context:NULL];
+    [self synchronize];return self;
+}
+- (void)dealloc {for(NSString *key in @[@"color",@"enabled"])[self.source removeObserver:self forKeyPath:key];}
+- (void)synchronize {
+    self.slider.doubleValue=self.source.color.alphaComponent*100;
+    self.slider.enabled=self.source.enabled;
+    self.percentage.stringValue=[NSString stringWithFormat:@"%.0f%%",self.slider.doubleValue];
+    self.slider.accessibilityValue=self.percentage.stringValue;
+    self.percentage.textColor=self.source.enabled?NSColor.secondaryLabelColor:NSColor.disabledControlTextColor;
+}
+- (void)observeValueForKeyPath:(NSString *)path ofObject:(id)object change:(NSDictionary *)change context:(void *)context {[self synchronize];}
+- (void)changed:(NSSlider *)sender {
+    if(!self.source.enabled){[self synchronize];return;}
+    self.source.color=[self.source.color colorWithAlphaComponent:sender.doubleValue/100.0];
+    [self.source sendAction:self.source.action to:self.source.target];
+    [self synchronize];
+}
+@end
 @implementation TSPrefPaneLayout
++ (NSView *)opacityForColorWell:(NSColorWell *)well {return [[TSSettingsOpacityPresentation alloc]initWithWell:well];}
 #include "TSSettingsPaneComposition.inc"
 + (NSView *)switchForButton:(NSButton *)button
 {
@@ -421,12 +490,12 @@ static NSColor *TSSettingsCardColor(void)
     [label setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
     return label;
 }
-// Match the catalog: the name and its explanation form the left column;
-// the accessory is centered vertically with its own six-point insets.
+// Keep short descriptions beside the accessory and wrap long ones below it.
 + (NSView *)catalogRowWithTitle:(NSString *)title note:(NSString *)note accessory:(NSView *)accessory expands:(BOOL)expands indent:(NSUInteger)indent
 {
-    NSView *view = [NSView new]; view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSTextField *name = [self catalogLabel:title secondary:NO]; name.identifier = @"label.catalog-row";
+    TSSettingsCatalogRow *view = [TSSettingsCatalogRow new]; view.translatesAutoresizingMaskIntoConstraints = NO;
+    view.expandedAccessory=expands;view.leadingInset=12+24*indent;view.rowAccessory=accessory;
+    NSTextField *name = [self catalogLabel:title secondary:NO]; name.identifier = @"label.catalog-row";view.rowName=name;
     NSStackView *label = [self stackWithViews:@[name] orientation:NSUserInterfaceLayoutOrientationVertical];
     label.identifier = @"label.catalog-stack"; label.spacing = 2;
     label.distribution = NSStackViewDistributionFill;
@@ -434,13 +503,18 @@ static NSColor *TSSettingsCardColor(void)
     [label setHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
     if (note.length) {
         NSTextField *detail = [self catalogLabel:note secondary:YES]; detail.identifier = @"note.catalog-row";
-        [label addArrangedSubview:detail];
+        [label addArrangedSubview:detail];view.rowDetail=detail;
     }
-    for (NSView *child in label.arrangedSubviews) [child.widthAnchor constraintEqualToAnchor:label.widthAnchor].active = YES;
+    for (NSView *child in label.arrangedSubviews) if(child!=name)[child.widthAnchor constraintEqualToAnchor:label.widthAnchor].active = YES;
+    view.narrowLabel=[name.widthAnchor constraintEqualToAnchor:label.widthAnchor];view.narrowLabel.active=YES;
+    view.wideLabel=[label.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12];
+    view.centerAccessory=[accessory.centerYAnchor constraintEqualToAnchor:view.centerYAnchor];
+    view.titleAccessory=[accessory.centerYAnchor constraintEqualToAnchor:name.centerYAnchor];
     [label setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
     [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
     [label setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
     [view addSubview:label]; [view addSubview:accessory]; accessory.translatesAutoresizingMaskIntoConstraints = NO;
+    view.centerAccessory.active=YES;
     [accessory setContentCompressionResistancePriority:751 forOrientation:NSLayoutConstraintOrientationHorizontal];
     [NSLayoutConstraint activateConstraints:@[
         [label.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:12+24*indent],
@@ -448,13 +522,12 @@ static NSColor *TSSettingsCardColor(void)
         [label.topAnchor constraintGreaterThanOrEqualToAnchor:view.topAnchor constant:9],
         [label.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor constant:-9],
         [accessory.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12],
-        [accessory.centerYAnchor constraintEqualToAnchor:view.centerYAnchor],
         [accessory.topAnchor constraintGreaterThanOrEqualToAnchor:view.topAnchor constant:6],
         [accessory.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor constant:-6],
-        [accessory.leadingAnchor constraintEqualToAnchor:label.trailingAnchor constant:16],
+        [accessory.leadingAnchor constraintEqualToAnchor:name.trailingAnchor constant:16],
         [view.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
     if (expands) {
-        [label.widthAnchor constraintEqualToConstant:170].active = YES;
+        [name.widthAnchor constraintEqualToConstant:170].active = YES;
         [accessory setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
     } else {
         [accessory setContentHuggingPriority:752 forOrientation:NSLayoutConstraintOrientationHorizontal];
