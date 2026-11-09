@@ -157,12 +157,12 @@
 "Use These Paths" = "この設定を使用";
 
 /* Menu keyboard shortcut customization */
-"Search commands" = "コマンドを検索";
+"Search commands" = "機能を検索";
 "Command" = "コマンド";
 "Shortcut" = "ショートカット";
 "Change…" = "変更…";
-"Remove Shortcut" = "割り当てを解除";
-"Restore Default" = "初期状態に戻す";
+"Remove Shortcut" = "解除";
+"Restore Default" = "元に戻す";
 "Restore All…" = "すべて元に戻す…";
 "Restore All" = "すべて元に戻す";
 "Change Shortcut" = "ショートカットを変更";
@@ -224,8 +224,6 @@
 "Show in Macro Editor" = "マクロエディタで表示";
 "Assigned" = "割り当て有効";
 "Inactive for this key" = "このキーでは無効";
-"Whether a command can run depends on the document." = "コマンドが実行できるかどうかは、書類の状態によって決まります。";
-"Some keys are reserved by macOS." = "一部のキーは macOS が使用します。";
 "No command uses this key." = "このキーを使うコマンドはありません。";
 "Press a key" = "キーを押してください";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "ショートカットに使えないキーです。⌘か⌃と組み合わせるか、F1〜F20を使ってください。";

@@ -151,7 +151,11 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
     shortcut.title = NSLocalizedString(@"Shortcut", @""); shortcut.width = 110; shortcut.minWidth = 90;
     [self.table addTableColumn:command]; [self.table addTableColumn:shortcut];
     scroll.documentView = self.table;
-    [scroll.heightAnchor constraintEqualToConstant:250].active = YES;
+    // The command list absorbs the space left by the three always-open groups.
+    [scroll.heightAnchor constraintGreaterThanOrEqualToConstant:80].active = YES;
+    NSLayoutConstraint *compactList = [scroll.heightAnchor constraintEqualToConstant:80];
+    compactList.priority = 1; compactList.active = YES;
+    [scroll setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationVertical];
     self.table.headerView.identifier = @"shortcut.columns";
     NSButton *edit = [self button:@"Change…" action:@selector(editShortcut:)];
     NSButton *clear = [self button:@"Remove Shortcut" action:@selector(removeShortcut:)];
@@ -299,7 +303,7 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
         self.search.stringValue = [TSShortcutStore displayKey:key modifiers:flags];
         NSArray<TSShortcutMacro *> *macros = self.shortcuts.macroProvider != nil ? self.shortcuts.macroProvider() : @[];
         self.searchMatches = [TSShortcutSearch matchesEvent:event store:store macros:macros];
-        reservedCompletion = flags == 0 && [key isEqualToString:@"\t"] && ![[store.defaults stringForKey:@"CommandCompletionChar"] isEqualToString:@"ESCAPE"];
+        reservedCompletion = flags == 0 && [key isEqualToString:@"\t"] && ![[store.defaults stringForKey:TSCommandCompletionCharacterKey] isEqualToString:@"ESCAPE"];
         if (reservedCompletion) {
             self.searchMatches = @[];
             self.searchMessage = NSLocalizedString(@"This key is reserved for command completion.", @"");
@@ -308,10 +312,10 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
                 ? NSLocalizedString(@"This key cannot be assigned to a new shortcut.", @"")
                 : NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
         } else {
-            self.searchMessage = self.searchMatches.count == 0 ? NSLocalizedString(@"No command uses this key.", @"") : NSLocalizedString(@"Whether a command can run depends on the document.", @"");
+            self.searchMessage = self.searchMatches.count == 0 ? NSLocalizedString(@"No command uses this key.", @"") : @"";
         }
     }
-    self.hint.stringValue = [self.searchMessage stringByAppendingFormat:@"\n%@", NSLocalizedString(@"Some keys are reserved by macOS.", @"")];
+    self.hint.stringValue = self.searchMessage;
     NSString *value = self.search.stringValue.length ? [self.search.stringValue stringByAppendingFormat:@". %@", self.searchMessage] : self.searchMessage;
     if (self.searchEvent != nil) value = [value stringByAppendingFormat:@". %@", [NSString localizedStringWithFormat:NSLocalizedString(@"Matches: %lu", @"Number of key search results"), (unsigned long)self.searchMatches.count]];
     self.keySearchView.accessibilityValue = value;

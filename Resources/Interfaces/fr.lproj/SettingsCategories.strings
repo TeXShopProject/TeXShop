@@ -291,3 +291,7 @@
 "group.updates.0.title" = "Vérification automatique";
 "catalog.updates.0.0.title" = "Vérification automatique des mises à jour";
 "catalog.updates.0.1.title" = "Intervalle de vérification";
+
+"catalog.documents.1.3.note" = "À l’enregistrement, réunit les caractères stockés séparément (comme か + ゛) en un seul caractère (が).";
+
+"catalog.typesetting.9.0.note" = "À l’enregistrement, remplace les caractères hors JIS X 0208 par \\UTF{XXXX} (ou \\CID{numéro} pour les variantes de glyphes). À l’ouverture, reconvertit \\UTF{…} en caractères. Pour les documents pTeX utilisant le paquet otf.";

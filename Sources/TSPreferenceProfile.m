@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPreferenceProfile.h"
 #import "globals.h"
+#import "TSDockIcon.h"
 static TSPreferenceKey const TSProfileKeyDarkModeInvertPreview = @"DarkModeInvertPreview";
 
 static TSPreferenceKey const TSProfileKeyAppleLanguages = @"AppleLanguages";
@@ -9,7 +10,6 @@ static TSPreferenceKey const TSProfileKeyAutoReloadExternalPDF = @"AutoReloadExt
 static TSPreferenceKey const TSProfileKeyContiguousTextLayout = @"ContiguousTextLayout";
 static TSPreferenceKey const TSProfileKeyConvertToBackslash = @"ConvertToBackslash";
 static TSPreferenceKey const TSProfileKeyConvertToYen = @"ConvertToYen";
-static TSPreferenceKey const TSProfileKeyDockIconStyle = @"DockIconStyle";
 static TSPreferenceKey const TSProfileKeyFullwidthSpaceCharacterKindExtended = @"FullwidthSpaceCharacterKindExtended";
 static TSPreferenceKey const TSProfileKeyNSUserKeyEquivalents = @"NSUserKeyEquivalents";
 static TSPreferenceKey const TSProfileKeyNewLineCharacterKindExtended = @"NewLineCharacterKindExtended";
@@ -18,7 +18,6 @@ static TSPreferenceKey const TSProfileKeyTSMenuShortcutOverrides = @"TSMenuShort
 TSPreferenceKey const TSSettingsSelectedCategoryKey = @"TSSettingsSelectedCategory";
 static TSPreferenceKey const TSProfileKeyTSPreviewAppearanceMode = @"TSPreviewAppearanceMode";
 static TSPreferenceKey const TSProfileKeyTabCharacterKindExtended = @"TabCharacterKindExtended";
-static TSPreferenceKey const TSProfileKeyTeXAwareSpellChecking = @"TeXAwareSpellChecking";
 
 static NSUInteger profileApplicationDepth;
 BOOL TSPreferenceProfileIsApplying(void) { return profileApplicationDepth != 0; }
@@ -96,7 +95,7 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             DefaultScriptKey,
             DisplayAsBookKey,
             DistillerCommandKey,
-            TSProfileKeyDockIconStyle,
+            TSDockIconKey,
             DocumentFontKey,
             DocumentFontAttributesKey,
             DocumentSplitWindowPositionKey,
@@ -243,7 +242,7 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             tabsAlsoForInputFilesKey,
             TagMenuInMenuBarKey,
             TagSectionsKey,
-            TSProfileKeyTeXAwareSpellChecking,
+            TSTeXAwareSpellCheckingKey,
             TetexBinPath,
             TexCommandKey,
             TexGSCommandKey,

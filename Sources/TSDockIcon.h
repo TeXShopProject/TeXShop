@@ -3,17 +3,17 @@
 #import <Cocoa/Cocoa.h>
 
 static NSString * const TSDockIconKey = @"DockIconStyle";
-static NSArray<NSString *> *TSDockIconNames(void) {
+static inline NSArray<NSString *> *TSDockIconNames(void) {
     return @[@"original", @"triangle", @"retina", @"round", @"current"];
 }
-static NSString *TSDockIconName(id value) {
+static inline NSString *TSDockIconName(id value) {
     return [TSDockIconNames() containsObject:value ?: @""] ? value : @"current";
 }
-static NSImage *TSDockIconImage(NSBundle *bundle, NSString *name) {
+static inline NSImage *TSDockIconImage(NSBundle *bundle, NSString *name) {
     NSString *path = [bundle pathForResource:TSDockIconName(name) ofType:@"png" inDirectory:@"DockIcons"];
     return path ? [[NSImage alloc] initWithContentsOfFile:path] : nil;
 }
-static void TSApplyDockImage(NSDockTile *tile, NSImage *image) {
+static inline void TSApplyDockImage(NSDockTile *tile, NSImage *image) {
     if (!tile) return;
     if (image) {
         NSImageView *view = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, tile.size.width, tile.size.height)];
@@ -27,7 +27,7 @@ static void TSApplyDockImage(NSDockTile *tile, NSImage *image) {
     [tile display];
 }
 
-static void TSApplyDockIcon(NSDockTile *tile, NSBundle *bundle, NSString *name) {
+static inline void TSApplyDockIcon(NSDockTile *tile, NSBundle *bundle, NSString *name) {
     name = TSDockIconName(name);
     TSApplyDockImage(tile, [name isEqualToString:@"current"] ? nil : TSDockIconImage(bundle, name));
 }

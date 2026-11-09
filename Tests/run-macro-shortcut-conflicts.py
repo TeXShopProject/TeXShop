@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Exercise production macro save/validation methods with no visible UI or real preferences."""
 from pathlib import Path
-from shortcut_sources import production_source
+from shortcut_sources import production_source, companion_sources
 import subprocess
 import tempfile
 import sys
@@ -36,7 +36,7 @@ def run_case(name, changes=()):
                         '-Wno-deprecated-declarations', '-Wno-nullability-completeness', '-framework', 'Cocoa', '-framework', 'Carbon',
                         '-I', td, '-I', str(root / 'Sources'),
                         str(root / 'Tests/MacroShortcutConflicts.m'),
-                        str(root / 'Sources/TSMacroTreeNode.m'), str(root / 'Sources/TSPrefPaneLayout.m'), '-o', str(binary)], check=True)
+                        str(root / 'Sources/TSMacroTreeNode.m'), *companion_sources(root), '-o', str(binary)], check=True)
         result = subprocess.run([str(binary), td], capture_output=True, text=True, timeout=20)
         if changes:
             assert result.returncode != 0 and 'FAIL ' in result.stderr, (name, result.stdout, result.stderr)
@@ -49,6 +49,7 @@ run_case('baseline')
 if '--mutations' in sys.argv:
     k='TSKeyboardShortcuts.m'; e='MacroEditorProduction.inc'; m='MacroMenuProduction.inc'
     cases = {
+        'ignore Shift on both comparison sides': [(k, 'return [[TSShortcutBinding alloc] initWithKey:key modifiers:flags];', 'return [[TSShortcutBinding alloc] initWithKey:key modifiers:flags & ~NSEventModifierFlagShift];')],
         'fold Shift-minus into equals': [(k, 'flags &= TSShortcutModifiers;', 'if ([key isEqual:@"-"] && (flags & NSEventModifierFlagShift)) { key=@"="; flags &= ~NSEventModifierFlagShift; } flags &= TSShortcutModifiers;')],
         'macros block custom menu keys': [(k, 'if (!item.submenu && item.action != TSMacroAction()) [planned', 'if (!item.submenu) [planned')],
         'do not clear installed macro keys before assignment': [(k, 'if (item.action == TSMacroAction()) item.keyEquivalent = @"";', 'if (NO) item.keyEquivalent = @"";')],
@@ -94,6 +95,7 @@ if '--mutations' in sys.argv:
         'PDF drops legacy shifted punctuation': [(k, 'return [TSEventBindings(event, [event charactersByApplyingModifiers:0]) containsObject:', 'return [TSRecordedBinding(event, [event charactersByApplyingModifiers:0]) isEqual:')],
         'leave Shift for dead keys': [(k, 'key.length == 1 &&\n        ![key isEqual:unshifted]', 'key.length == 1 && unshifted.length == 1 &&\n        ![key isEqual:unshifted]')],
     }
-    for name, changes in cases.items(): run_case(name, changes)
+    for name, changes in cases.items():
+        if "--shift-only" not in sys.argv or name=="ignore Shift on both comparison sides": run_case(name, changes)
 for lang in ('en', 'ja'):
     subprocess.run(['plutil', '-lint', str(root / f'Resources/Interfaces/{lang}.lproj/Localizable.strings')], check=True)

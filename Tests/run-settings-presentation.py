@@ -16,7 +16,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-presentation-') as folder:
     original=args.layout or root/'Sources/TSPrefPaneLayout.m'
     result=run(original);assert result.returncode==0,(result.stdout,result.stderr);print(result.stdout,flush=True)
     if args.mutations:
-        changes=[('narrow-note','[label.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12]', '[label.widthAnchor constraintEqualToConstant:120]'),('invisible-card','self.layer.backgroundColor=TSSettingsCardColor().CGColor;','self.layer.backgroundColor=NSColor.clearColor.CGColor;'),('missing-separators','[line stroke];','/* omitted separator */')]
+        changes=[('top-aligned-accessory','[accessory.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]','[accessory.topAnchor constraintEqualToAnchor:view.topAnchor constant:6]'),('invisible-card','self.layer.backgroundColor=TSSettingsCardColor().CGColor;','self.layer.backgroundColor=NSColor.clearColor.CGColor;'),('missing-separators','[line stroke];','/* omitted separator */')]
         text=original.read_text()
         for name,old,new in changes:
             assert text.count(old)==1,(name,text.count(old));changed=Path(folder)/'TSPrefPaneLayout.m';changed.write_text(text.replace(old,new));result=run(changed)

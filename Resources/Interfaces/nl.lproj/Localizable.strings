@@ -200,8 +200,6 @@
 "Show in Macro Editor" = "Toon in macro-editor";
 "Assigned" = "Toegewezen";
 "Inactive for this key" = "Inactief voor deze toets";
-"Whether a command can run depends on the document." = "Of een commando kan worden uitgevoerd, hangt af van het document.";
-"Some keys are reserved by macOS." = "Sommige toetsen zijn gereserveerd voor macOS.";
 "No command uses this key." = "Geen commando gebruikt deze toets.";
 "Press a key" = "Druk op een toets";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Deze toets kan niet als sneltoets worden gebruikt. Gebruik Command of Control met een toets, of F1–F20.";

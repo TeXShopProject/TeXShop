@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import subprocess,tempfile,sys
-from shortcut_sources import NAMES
+from shortcut_sources import NAMES, companion_sources
 r=Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='texshop-shortcut-launch-') as directory:
  d=Path(directory);source=r/'Sources/TSKeyboardShortcuts.m'
- command=['xcrun','clang','-fobjc-arc','-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/ShortcutLaunch.m'),*[str(r/'Sources'/n) for n in NAMES],str(r/'Sources/TSPrefPaneLayout.m'),'-o',str(d/'probe')]
+ command=['xcrun','clang','-fobjc-arc','-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/ShortcutLaunch.m'),*[str(r/'Sources'/n) for n in NAMES],*companion_sources(r),'-o',str(d/'probe')]
  def run(path):
   subprocess.run([str(path) if x==str(source) else x for x in command],check=True)
   return subprocess.run([str(d/'probe')],capture_output=True,text=True,timeout=10)

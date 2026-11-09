@@ -5,5 +5,3 @@
 "Classic Circle" = "丸形アイコン";
 "Current (Default)" = "現在のアイコン（標準）";
 "Before 1.0" = "1.0 以前";
-
-"Applies while TeXShop is running. The standard icon returns after quitting." = "TeXShopの起動中に適用します。終了後は標準アイコンに戻ります。";

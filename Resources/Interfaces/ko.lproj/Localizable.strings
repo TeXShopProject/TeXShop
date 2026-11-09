@@ -203,8 +203,6 @@
 "Show in Macro Editor" = "매크로 편집기에서 보기";
 "Assigned" = "할당됨";
 "Inactive for this key" = "이 키에서는 비활성";
-"Whether a command can run depends on the document." = "명령 실행 가능 여부는 문서 상태에 따라 달라집니다.";
-"Some keys are reserved by macOS." = "일부 키는 macOS에서 사용합니다.";
 "No command uses this key." = "이 키를 사용하는 명령이 없습니다.";
 "Press a key" = "키를 누르세요";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "이 키는 단축키로 사용할 수 없습니다. Command 또는 Control과 조합하거나 F1–F20을 사용하세요.";

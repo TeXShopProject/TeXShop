@@ -54,9 +54,9 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
 }
 + (NSTextField *)label:(NSString *)text small:(BOOL)small
 {
-    NSTextField *label=[NSTextField wrappingLabelWithString:text];label.translatesAutoresizingMaskIntoConstraints=NO;
+    TSSettingsLabel *label=[TSSettingsLabel wrappingLabelWithString:text];label.translatesAutoresizingMaskIntoConstraints=NO;
     label.font=[NSFont systemFontOfSize:small?NSFont.smallSystemFontSize:NSFont.systemFontSize];
-    if(small)label.textColor=NSColor.secondaryLabelColor;
+    label.enabledTextColor=small?NSColor.secondaryLabelColor:NSColor.labelColor;
     [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];return label;
 }
 + (NSView *)horizontal:(NSArray<NSView *> *)views spacing:(CGFloat)spacing
@@ -66,6 +66,10 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
 + (void)prepare:(NSView *)view
 {
     view.translatesAutoresizingMaskIntoConstraints=NO;
+    if([view isKindOfClass:NSPopUpButton.class] || [view isKindOfClass:NSButton.class]) {
+        ((NSControl *)view).controlSize=NSControlSizeRegular;
+        ((NSControl *)view).font=[NSFont systemFontOfSize:NSFont.systemFontSize];
+    }
     if([view isKindOfClass:NSColorWell.class]){
         ((NSColorWell *)view).colorWellStyle=NSColorWellStyleMinimal;
         [view.widthAnchor constraintEqualToConstant:44].active=YES;[view.heightAnchor constraintEqualToConstant:24].active=YES;
@@ -116,7 +120,13 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
         accessory=[self horizontal:controls spacing:8];
     }else if([kind isEqual:@"button"] || [kind isEqual:@"link"] || [kind isEqual:@"radio"]){
         NSButton *button=(NSButton *)controls.firstObject;button.title=title;
-        if([kind isEqual:@"radio"])[button setButtonType:NSButtonTypeRadio];
+        if([kind isEqual:@"radio"]){
+            // A check cell from a nib retains its checkbox bezel when only its
+            // type changes. Replace the cell, retaining the typed outlet itself.
+            NSButton *radio=[NSButton radioButtonWithTitle:title target:button.target action:button.action];
+            radio.state=button.state;radio.tag=button.tag;radio.enabled=button.enabled;
+            button.cell=radio.cell;
+        }
         if([kind isEqual:@"link"]){button.bordered=NO;button.attributedTitle=[[NSAttributedString alloc]initWithString:title attributes:@{NSForegroundColorAttributeName:NSColor.linkColor,NSFontAttributeName:[NSFont systemFontOfSize:NSFont.systemFontSize]}];}
         NSView *content=button;
         if(note.length || [kind isEqual:@"radio"]){
@@ -170,8 +180,8 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
     [self splitMatrix:(NSMatrix *)[self take:@"settings.cp7-bc-avh" from:views] identifiers:@[@"settings.cell.teg-0p-Q8J",@"settings.cell.3eF-XA-ahc",@"settings.cell.8Wq-gx-FqO"] into:views];
     NSButton *legacy=[NSButton radioButtonWithTitle:@"" target:preferences action:@selector(legacySpellCheckPressed:)];legacy.identifier=@"settings.legacy-spelling";preferences.legacySpellCheckButton=legacy;views[@"settings.legacy-spelling"]=legacy;
     NSArray *newIDs=@[@"settings.edit-bindings",@"settings.edit-completion",@"settings.hidden-settings-help",@"settings.save-theme"];
-    NSArray *actions=@[NSStringFromSelector(@selector(editKeyBindings:)),NSStringFromSelector(@selector(openCommandCompletionList:)),NSStringFromSelector(@selector(displayCommentLines:)),NSStringFromSelector(@selector(SaveEditedStyle:))];
-    for(NSUInteger i=0;i<newIDs.count;i++){NSButton *b=[NSButton buttonWithTitle:@"" target:i==1?nil:preferences action:NSSelectorFromString(actions[i])];b.identifier=newIDs[i];views[newIDs[i]]=b;}
+    SEL actions[]={@selector(editKeyBindings:),@selector(openCommandCompletionList:),@selector(displayCommentLines:),@selector(SaveEditedStyle:)};
+    for(NSUInteger i=0;i<newIDs.count;i++){NSButton *b=[NSButton buttonWithTitle:@"" target:i==1?nil:preferences action:actions[i]];b.identifier=newIDs[i];views[newIDs[i]]=b;}
     NSMutableDictionary *result=[NSMutableDictionary dictionary];
     for(NSDictionary *category in TSSettingsCatalogLayout()){
         NSString *cid=category[@"id"];NSMutableArray *groups=[NSMutableArray array];

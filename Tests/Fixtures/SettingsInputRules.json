@@ -1,0 +1,154 @@
+[
+  {
+    "outlet": "tabIndentField",
+    "key": "tabs",
+    "kind": 1,
+    "minimum": 2,
+    "maximum": 50,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "firstParagraphIndentField",
+    "key": "SourceFirstLineHeadIndent",
+    "kind": 1,
+    "minimum": 0,
+    "maximum": 100,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "remainingParagraphIndentField",
+    "key": "SourceHeadIndent",
+    "kind": 1,
+    "minimum": 0,
+    "maximum": 100,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "interlineSpacingField",
+    "key": "SourceInterlineSpace",
+    "kind": 1,
+    "minimum": 1,
+    "maximum": 20,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "magTextField",
+    "key": "PdfMagnification",
+    "kind": 2,
+    "minimum": 20,
+    "maximum": 400,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "HtmlHomeField",
+    "key": "HtmlHome",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": true
+  },
+  {
+    "outlet": "engineTextField",
+    "key": "DefaultEngine",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "texCommandTextField",
+    "key": "TexCommand",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "latexCommandTextField",
+    "key": "LatexCommand",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "texGSCommandTextField",
+    "key": "TexGSCommand",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "latexGSCommandTextField",
+    "key": "LatexGSCommand",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "tetexBinPathField",
+    "key": "TetexBinPath",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "gsBinPathField",
+    "key": "GSBinPath",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "altPathField",
+    "key": "AltPath",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": true
+  },
+  {
+    "outlet": "kpsetoolField",
+    "key": "Kpsetool",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "bibTeXengineField",
+    "key": "BibTeXengine",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": false
+  },
+  {
+    "outlet": "texScriptCommandTextField",
+    "key": "TexScriptCommand",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": true
+  },
+  {
+    "outlet": "latexScriptCommandTextField",
+    "key": "LatexScriptCommand",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": true
+  },
+  {
+    "outlet": "alternateEngineTextField",
+    "key": "AlternateEngine",
+    "kind": 0,
+    "minimum": 0,
+    "maximum": 0,
+    "allowsEmpty": true
+  }
+]

@@ -21,11 +21,11 @@ add(TSSettingsCategoryGeneral, @"heading.group.general.3", @"SettingsCategories"
 add(TSSettingsCategoryGeneral, @"row.catalog.general.3.0", @"SettingsCategories", @"catalog.general.3.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.3.1", @"SettingsCategories", @"catalog.general.3.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"heading.group.general.4", @"SettingsCategories", @"group.general.4.title", TSSettingsSearchWeightHeading);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.4.0", @"SettingsCategories", @"catalog.general.4.0.title", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsCategories", @"catalog.general.4.0.title", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsCategories", @"catalog.general.4.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsCategories", @"catalog.general.4.1.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"heading.group.general.5", @"SettingsCategories", @"group.general.5.title", TSSettingsSearchWeightHeading);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.5.0", @"SettingsCategories", @"catalog.general.5.0.title", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryGeneral, @"row.catalog.general.5.1", @"SettingsCategories", @"catalog.general.5.0.title", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.5.1", @"SettingsCategories", @"catalog.general.5.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryDocuments, @"heading.group.encoding", @"SettingsCategories", @"group.encoding.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryDocuments, @"row.catalog.documents.0.0", @"SettingsCategories", @"catalog.documents.0.0.title", TSSettingsSearchWeightLabel);
@@ -185,7 +185,7 @@ add(TSSettingsCategoryPreview, @"row.catalog.preview.0.5", @"SettingsCategories"
 add(TSSettingsCategoryPreview, @"heading.group.preview.1", @"SettingsCategories", @"group.preview.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.1.0", @"SettingsCategories", @"catalog.preview.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.1.1", @"SettingsCategories", @"catalog.preview.1.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryPreview, @"row.catalog.preview.1.2", @"SettingsCategories", @"catalog.preview.1.2.title", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryPreview, @"row.catalog.preview.1.0", @"SettingsCategories", @"catalog.preview.1.2.title", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryPreview, @"heading.group.preview.2", @"SettingsCategories", @"group.preview.2.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.2.0", @"SettingsCategories", @"catalog.preview.2.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.2.0", @"SettingsCategories", @"catalog.preview.2.0.note", TSSettingsSearchWeightDescription);
@@ -260,7 +260,6 @@ add(TSSettingsCategoryKeyboard, @"heading.group.shortcuts", @"SettingsCategories
 add(TSSettingsCategoryUpdates, @"heading.group.updates.0", @"SettingsCategories", @"group.updates.0.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryUpdates, @"row.catalog.updates.0.0", @"SettingsCategories", @"catalog.updates.0.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryUpdates, @"row.catalog.updates.0.1", @"SettingsCategories", @"catalog.updates.0.1.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryAppearance, @"DockIconChoices", @"SettingsDock", @"Applies while TeXShop is running. The standard icon returns after quitting.", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"DockIconChoices", @"SettingsDock", @"Classic Circle", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"DockIconChoices", @"SettingsDock", @"Classic Triangle", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryAppearance, @"DockIconChoices", @"SettingsDock", @"Current (Default)", TSSettingsSearchWeightLabel);
@@ -365,8 +364,7 @@ add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"E
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.2", @"Localizable", @"Edit Command Completion…", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"shortcut.edit", @"Localizable", @"Change…", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.columns", @"Localizable", @"Command", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryKeyboard, @"shortcut.key", @"Localizable", @"Some keys are reserved by macOS.", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryKeyboard, @"shortcut.key", @"Localizable", @"Press a key", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryKeyboard, @"shortcut.key", @"Localizable", @"Search by Key", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.remove", @"Localizable", @"Remove Shortcut", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.restore-all", @"Localizable", @"Restore All…", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.restore", @"Localizable", @"Restore Default", TSSettingsSearchWeightLabel);
@@ -375,7 +373,7 @@ add(TSSettingsCategoryKeyboard, @"shortcut.mode", @"Localizable", @"Search by Ke
 add(TSSettingsCategoryKeyboard, @"shortcut.function", @"Localizable", @"Search commands", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.columns", @"Localizable", @"Shortcut", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.macro", @"Localizable", @"Show in Macro Editor", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryKeyboard, @"shortcut.key", @"Localizable", @"This key is reserved for command completion.", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryKeyboard, @"shortcut.key", @"Localizable", @"This key is reserved for command completion.", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.2", @"SettingsPreview", @"866.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.4", @"SettingsPreview", @"867.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryPreview, @"row.catalog.preview.0.1", @"SettingsPreview", @"339.title", TSSettingsSearchWeightChoice);
@@ -515,3 +513,10 @@ add(TSSettingsCategoryAppearance, @"settings.hCM-4U-XkM", @"SettingsCategories",
 add(TSSettingsCategoryAppearance, @"settings.2U5-cN-QJw", @"SettingsCategories", @"catalog.appearance.2.0.column.2", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"settings.c9R-58-ggg", @"SettingsCategories", @"catalog.appearance.2.0.column.2", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"settings.cnt-Xt-iQF", @"SettingsCategories", @"catalog.appearance.2.0.column.2", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryDocuments, @"row.catalog.documents.1.3", @"SettingsCategories", @"catalog.documents.1.3.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryTypesetting, @"row.catalog.typesetting.9.0", @"SettingsCategories", @"catalog.typesetting.9.0.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryEditor, @"row.catalog.editor.0.4", @"SettingsCategories", @"catalog.editor.0.1.note", TSSettingsSearchWeightDescription);
+add(TSSettingsCategoryEditor, @"row.catalog.editor.0.5", @"SettingsCategories", @"catalog.editor.0.1.note", TSSettingsSearchWeightDescription);
+
+add(TSSettingsCategoryEditor, @"row.catalog.editor.8.0", @"SettingsCategories", @"group.editor.8.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryAppearance, @"row.catalog.appearance.1.1", @"SettingsCategories", @"group.appearance.1.title", TSSettingsSearchWeightLabel);

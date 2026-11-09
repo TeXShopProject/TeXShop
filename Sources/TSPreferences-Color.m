@@ -281,8 +281,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         return;
     }
     self.lastSavedEditingColors = [EditingColors copy];
-    [[TSColorSupport sharedInstance] initializeColors];
-    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
 }
 
 - (IBAction)NewStyleFromPrefs:sender
@@ -1094,8 +1093,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     }
     [EditingStyle selectItemWithTitle:title];
     [self FillInColorWells];
-    [[TSColorSupport sharedInstance] initializeColors];
-    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
 }
 - (IBAction)themeSelectionChanged:(id)sender
 {
@@ -1104,8 +1102,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     NSString *title = popup.titleOfSelectedItem;
     if (title == nil) return;
     [SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];
-    [[TSColorSupport sharedInstance] initializeColors];
-    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
 }
 - (BOOL)deactivateColorWellsInView:(NSView *)view
 {

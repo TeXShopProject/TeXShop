@@ -291,3 +291,7 @@
 "group.updates.0.title" = "Comprobación automática";
 "catalog.updates.0.0.title" = "Búsqueda automática de actualizaciones:";
 "catalog.updates.0.1.title" = "Intervalo de comprobación";
+
+"catalog.documents.1.3.note" = "Al guardar, combina caracteres almacenados por separado (como か + ゛) en un solo carácter (が).";
+
+"catalog.typesetting.9.0.note" = "Al guardar, sustituye los caracteres que no pertenecen a JIS X 0208 por \\UTF{XXXX} (o \\CID{número} para variantes de glifos). Al abrir, convierte \\UTF{…} de nuevo en caracteres. Para documentos pTeX que usan el paquete otf.";

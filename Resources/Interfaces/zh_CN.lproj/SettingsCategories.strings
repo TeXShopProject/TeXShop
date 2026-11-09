@@ -291,3 +291,7 @@
 "group.updates.0.title" = "自动检查";
 "catalog.updates.0.0.title" = "自动检查更新";
 "catalog.updates.0.1.title" = "检查间隔";
+
+"catalog.documents.1.3.note" = "保存时，将分开存储的字符（例如 か + ゛）合并为一个字符（が）。";
+
+"catalog.typesetting.9.0.note" = "保存时，将 JIS X 0208 以外的字符替换为 \\UTF{XXXX}（字形变体等替换为 \\CID{编号}）；打开时，将 \\UTF{…} 转回字符。适用于使用 otf 宏包的 pTeX 文稿。";

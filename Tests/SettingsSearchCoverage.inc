@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+static NSView *SearchFind(NSView *view,NSString *identifier){if([view.identifier isEqual:identifier])return view;for(NSView *child in view.subviews){NSView *found=SearchFind(child,identifier);if(found)return found;}return nil;}
 static NSUInteger searchChecks;
 static NSView *searchExcludedView;
 static BOOL HasCategory(TSSettingsSearch *index,NSString *query,NSString *category) {
@@ -49,6 +50,23 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
  }
  BOOL hasChoices=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:@"row.catalog.editor.0.3"] && entry.weight==30)hasChoices=YES;
  Check(hasChoices,@"Radio matrix options have choice weight");
+ // Every target has a fixed setting name, even when found through its help text.
+ NSMutableSet *targets=[NSMutableSet set];
+ for(TSSettingsSearchEntry *entry in index.entries){
+  if(!entry.targetIdentifier.length || [entry.targetIdentifier isEqual:@"category.description"])continue;
+  NSString *identity=[entry.category stringByAppendingString:entry.targetIdentifier];
+  if([targets containsObject:identity])continue;[targets addObject:identity];
+  for(TSSettingsSearchResult *result in [index resultsForQuery:entry.text]){
+   if(![result.category isEqual:entry.category] || ![result.targetIdentifier isEqual:entry.targetIdentifier])continue;
+   Check(result.title.length>0,@"Every result has an explicit setting name");
+   if([entry.targetIdentifier hasPrefix:@"row.catalog."]){
+    NSView *row=SearchFind(panes[entry.category].view,entry.targetIdentifier);
+    NSTextField *name=(NSTextField *)SearchFind(row,@"label.catalog-row");
+    if(name.stringValue.length)Check([result.title isEqual:name.stringValue],@"Result name is the visible row name, never its note");
+   }
+   if([entry.targetIdentifier isEqual:@"shortcut.key"])Check([result.title isEqual:[resources localizedStringForKey:@"Search by Key" value:nil table:@"Localizable"]],@"Key-search result uses its setting name, never a reservation warning");
+  }
+ }
  Check([index resultsForQuery:@"unfindable-93762"].count==0,@"Unknown query has no results");
  Check([index resultsForQuery:@"\u3000 \n"].count==0,@"Empty normalized query has no results");
  for(NSString *category in order){

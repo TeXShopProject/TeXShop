@@ -202,8 +202,6 @@
 "Show in Macro Editor" = "Mostrar en el editor de macros";
 "Assigned" = "Asignado";
 "Inactive for this key" = "Inactivo para esta tecla";
-"Whether a command can run depends on the document." = "La posibilidad de ejecutar un comando depende del documento.";
-"Some keys are reserved by macOS." = "Algunas teclas están reservadas por macOS.";
 "No command uses this key." = "Ningún comando usa esta tecla.";
 "Press a key" = "Pulse una tecla";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla no se puede usar como atajo. Use Comando o Control con una tecla, o F1–F20.";

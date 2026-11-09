@@ -2,72 +2,48 @@
   "retired": [
     "Keys used by the system cannot be detected. Press Escape to stop recording.",
     "Assignment priority is shown; whether a command can run depends on the document.",
-    "Existing assignments are shown. This key cannot be assigned to a new shortcut."
+    "Existing assignments are shown. This key cannot be assigned to a new shortcut.",
+    "Some keys are reserved by macOS.",
+    "Whether a command can run depends on the document."
   ],
   "keys": [
-    "Some keys are reserved by macOS.",
-    "Whether a command can run depends on the document.",
     "This key cannot be assigned to a new shortcut."
   ],
   "languages": {
     "en": [
-      "Some keys are reserved by macOS.",
-      "Whether a command can run depends on the document.",
       "This key cannot be assigned to a new shortcut."
     ],
     "ja": [
-      "一部のキーは macOS が使用します。",
-      "コマンドが実行できるかどうかは、書類の状態によって決まります。",
       "このキーは新しいショートカットには割り当てられません。"
     ],
     "de": [
-      "Einige Tasten sind für macOS reserviert.",
-      "Ob ein Befehl ausgeführt werden kann, hängt vom Dokument ab.",
       "Diese Taste kann keinem neuen Tastaturkurzbefehl zugewiesen werden."
     ],
     "es": [
-      "Algunas teclas están reservadas por macOS.",
-      "La posibilidad de ejecutar un comando depende del documento.",
       "Esta tecla no se puede asignar a un nuevo atajo."
     ],
     "fr": [
-      "Certaines touches sont réservées par macOS.",
-      "La possibilité d’exécuter une commande dépend du document.",
       "Cette touche ne peut pas être affectée à un nouveau raccourci."
     ],
     "it": [
-      "Alcuni tasti sono riservati a macOS.",
-      "La possibilità di eseguire un comando dipende dal documento.",
       "Questo tasto non può essere assegnato a una nuova scorciatoia."
     ],
     "ko": [
-      "일부 키는 macOS에서 사용합니다.",
-      "명령 실행 가능 여부는 문서 상태에 따라 달라집니다.",
       "이 키는 새 단축키에 할당할 수 없습니다."
     ],
     "nl": [
-      "Sommige toetsen zijn gereserveerd voor macOS.",
-      "Of een commando kan worden uitgevoerd, hangt af van het document.",
       "Deze toets kan niet aan een nieuwe sneltoets worden toegewezen."
     ],
     "pt-PT": [
-      "Algumas teclas estão reservadas pelo macOS.",
-      "A possibilidade de executar um comando depende do documento.",
       "Esta tecla não pode ser atribuída a um novo atalho."
     ],
     "pt": [
-      "Algumas teclas são reservadas pelo macOS.",
-      "A possibilidade de executar um comando depende do documento.",
       "Esta tecla não pode ser atribuída a um novo atalho."
     ],
     "ro": [
-      "Unele taste sunt rezervate de macOS.",
-      "Posibilitatea de a executa o comandă depinde de document.",
       "Această tastă nu poate fi atribuită unei scurtături noi."
     ],
     "zh_CN": [
-      "部分按键由 macOS 使用。",
-      "命令能否执行取决于文稿状态。",
       "此按键不能分配给新的快捷键。"
     ]
   }

@@ -288,18 +288,18 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     [self refreshRuntimePreferences];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];
-    if ([changed containsObject:PdfCopyTypeKey]) {
-        [(TSAppDelegate *)NSApp.delegate syncImageCopyTypeMenu];
-    }
-    if ([changed containsObject:@"DockIconStyle"]) [[TSDockIconController sharedController] restoreSavedIcon];
+    [self applyEffectsForPreferenceKeys:changed];
+}
+
+- (void)applyEffectsForPreferenceKeys:(NSSet<NSString *> *)changed
+{
+    TSPreferencePreparation preparations = TSPreferencePreparationsForKeys(changed);
+    if (preparations & TSPreferencePreparePDFCopy) [(TSAppDelegate *)NSApp.delegate syncImageCopyTypeMenu];
+    if (preparations & TSPreferencePrepareDock) [[TSDockIconController sharedController] restoreSavedIcon];
+    if (preparations & TSPreferencePrepareEncoding) [[TSEncodingSupport sharedInstance] setupForEncoding];
+    if (preparations & TSPreferencePrepareSpelling) [TSSpellSupport preferencesDidChange];
+    if (preparations & TSPreferencePrepareTheme) [[TSColorSupport sharedInstance] initializeColors];
     TSPostPreferenceNotifications(changed, self);
-    if ([changed intersectsSet:[NSSet setWithArray:@[EncodingKey, ptexUtfOutputEnabledKey]]])
-        [[TSEncodingSupport sharedInstance] setupForEncoding];
-    if ([changed intersectsSet:[NSSet setWithArray:@[@"TeXAwareSpellChecking", TurnOffCommandSpellCheckKey, TurnOffParameterSpellCheckKey, TurnOffCommentSpellCheckKey, @"ExceptionListExcludesParameters", @"ExtraCommandsNotToCheckParameters", @"ExtraCommandsToCheckParameters"]]])
-        [TSSpellSupport preferencesDidChange];
-    if ([changed intersectsSet:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]]) {
-        [[TSColorSupport sharedInstance] initializeColors];
-    }
 }
 
 // Refresh the process-wide copies after a group of settings has changed.
@@ -404,10 +404,7 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 {
 
 	[SUD setInteger:[[sender selectedCell] tag] forKey:DocumentWindowPosModeKey];
-	if ([[sender selectedCell] tag] == 0)
-		[_docWindowPosButton setEnabled: YES];
-	else
-		[_docWindowPosButton setEnabled: NO];
+    [self updateSettingsDependenciesForCategory:TSSettingsCategoryGeneral defaults:SUD];
 }
 
 /*" This method is connected to the 'use current pos as default' button on the 'Document' pane.
@@ -461,8 +458,6 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
                          _showNewLineCharacterButton, _showTabCharacterButton];
     NSArray *keys = @[SpaceCharacterKindKey, FullwidthSpaceCharacterKindKey,
                       NewLineCharacterKindKey, TabCharacterKindKey];
-    NSArray *showKeys = @[showSpaceCharacterKey, showFullwidthSpaceCharacterKey,
-                          showNewLineCharacterKey, showTabCharacterKey];
     for (NSUInteger n = 0; n < popups.count; n++) {
         NSPopUpButton *popup = popups[n];
         NSButton *button = buttons[n];
@@ -476,8 +471,9 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
         popup.menu.font = popup.font;
         popup.accessibilityLabel = button.title;
         [popup selectItemAtIndex:TSInvisibleStoredIndex(defaults, keys[n])];
-        popup.enabled = [defaults boolForKey:showKeys[n]];
+
     }
+    [self updateSettingsDependenciesForCategory:TSSettingsCategoryEditor defaults:defaults];
 }
 
 // added by Terada( - (IBAction)invisibleCharacterChanged: )
@@ -524,7 +520,7 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
     id previousNoteValue = @([SUD boolForKey:AutoSaveEnabledKey]);
 	[SUD setBool:(_autoSaveEnabledButton.state == NSControlStateValueOn) forKey:AutoSaveEnabledKey];
 	// A backup file is kept only when Versions is off, which follows autosave.
-	_keepBackupButton.enabled = ![SUD boolForKey:AutoSaveEnabledKey];
+	[self updateSettingsDependenciesForCategory:TSSettingsCategoryDocuments defaults:SUD];
     [self.settingsChangeNotes recordUserChangeForKey:AutoSaveEnabledKey previousValue:previousNoteValue];
 }
 
@@ -636,7 +632,7 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 	[SUD setObject:value forKey:EncodingKey];
 
 	// added by mitsu --(G) TSEncodingSupport
-	TSPostPreferenceNotifications([NSSet setWithArray:@[EncodingKey]], self);
+	[self applyEffectsForPreferenceKeys:[NSSet setWithObject:EncodingKey]];
     [self.settingsChangeNotes recordUserChangeForKey:EncodingKey previousValue:oldValue ?: @""];
 // end addition
 
@@ -777,11 +773,7 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
     
     [SUD setInteger:[[sender selectedCell] tag] forKey:ConsoleWindowPosModeKey];
     [_consoleWindowPosMatrix selectCellWithTag:[[sender selectedCell] tag]];
-    
-    if ([[sender selectedCell] tag] == 0)
-       [_consoleWindowPosButton setEnabled: YES];
-    else
-         [_consoleWindowPosButton setEnabled: NO];
+    [self updateSettingsDependenciesForCategory:TSSettingsCategoryGeneral defaults:SUD];
 }
 
 /*" This method is connected to the 'use current pos as default' button on the 'Document' pane.
@@ -1032,10 +1024,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 	[SUD setInteger:[[sender selectedCell] tag] forKey:PdfWindowPosModeKey];
 
 	/* koch: button enabled only if appropriate */
-	if ([[sender selectedCell] tag] == 0)
-		[_pdfWindowPosButton setEnabled: YES];
-	else
-		[_pdfWindowPosButton setEnabled: NO];
+    [self updateSettingsDependenciesForCategory:TSSettingsCategoryGeneral defaults:SUD];
 }
 
 //==============================================================================
@@ -1049,10 +1038,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     [SUD setInteger:[[sender selectedCell] tag] forKey:HtmlWindowPosModeKey];
 
     /* koch: button enabled only if appropriate */
-    if ([[sender selectedCell] tag] == 0)
-        [_htmlWindowPosButton setEnabled: YES];
-    else
-        [_htmlWindowPosButton setEnabled: NO];
+    [self updateSettingsDependenciesForCategory:TSSettingsCategoryGeneral defaults:SUD];
 }
 
 /*" This method is connected to the 'use current pos as default' button.
@@ -1462,11 +1448,11 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
     
     BOOL theValue = [(NSCell *) sender state];
     
-    [_sparkleIntervalMatrix setEnabled: theValue];
     [SUD setBool:theValue forKey:SparkleAutomaticUpdateKey];
     
     
     [[TSSparkleController sharedUpdater] setAutomaticallyChecksForUpdates: theValue ];
+    [self updateSettingsDependenciesForCategory:TSSettingsCategoryUpdates defaults:SUD];
     
 }
 
@@ -1533,13 +1519,13 @@ A tag of 0 means use TeX, a tag of 1 means use LaTeX.
 	// we can use the tag directly here.
 	[SUD setInteger:[[sender selectedCell] tag] forKey:DefaultCommandKey];
 	if ([[sender selectedCell] tag] == 2) {
-		[_engineTextField setEnabled: YES];
+		[self updateSettingsDependenciesForCategory:TSSettingsCategoryTypesetting defaults:SUD];
 		[_engineTextField setEditable: YES];
 		[_engineTextField setSelectable: YES];
 		[_engineTextField selectText:self];
 	}
 	else
-		[_engineTextField setEnabled: NO];
+		[self updateSettingsDependenciesForCategory:TSSettingsCategoryTypesetting defaults:SUD];
 }
 
 - (IBAction)setEngine:(id)sender
@@ -1582,10 +1568,7 @@ person script. See also: DefaultTypesetMode.
 {
 
 	[SUD setBool:[(NSCell *)sender state] forKey:ptexUtfOutputEnabledKey];
-    TSPostPreferenceNotifications([NSSet setWithObject:ptexUtfOutputEnabledKey], self);
-
-	// zenitani 2.10 (A) UTF-8 + utf.sty situation
-	[[TSEncodingSupport sharedInstance] setupForEncoding];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithObject:ptexUtfOutputEnabledKey]];
 }
 
 // koch, 4/10/2011
@@ -1630,36 +1613,65 @@ person script. See also: DefaultTypesetMode.
         [pending addObjectsFromArray:view.subviews];
     }
 }
+// A rule names its source value, typed outlet and whether the whole row or
+// only the accessory depends on it. Per-document defaults have no parent rule.
+- (void)updateSettingsDependenciesForCategory:(TSSettingsCategoryID)category defaults:(NSUserDefaults *)defaults
+{
+    typedef struct {
+        __unsafe_unretained TSSettingsCategoryID category;
+        __unsafe_unretained TSPreferenceKey key;
+        NSInteger enabledValue;
+        __unsafe_unretained id endpoint;
+        BOOL wholeRow;
+    } Rule;
+    Rule rules[] = {
+#include "TSSettingsDependencies.inc"
+    };
+    // These defaults can also be changed on existing documents through menus.
+    // Their subordinate values stay editable regardless of the default choice.
+    if (category == nil || [category isEqual:TSSettingsCategoryEditor]) {
+        [self setSettingsControl:BlockCursorColorWell enabled:YES];
+        [self setSettingsControl:_blockSideMatrix enabled:YES];
+        [self setSettingsControl:_blockWidthMatrix enabled:YES];
+    }
+    if (category == nil || [category isEqual:TSSettingsCategoryGeneral]) {
+        [self setSettingsControl:useLeftSourceButton enabled:YES];
+        [self setSettingsControl:useRightSourceButton enabled:YES];
+    }
+    for (NSUInteger i = 0; i < sizeof(rules)/sizeof(rules[0]); i++) {
+        Rule rule = rules[i];
+        if (category && ![category isEqual:rule.category]) continue;
+        BOOL enabled = [defaults integerForKey:rule.key] == rule.enabledValue;
+#ifdef USESPARKLE
+        if ([rule.key isEqual:SparkleAutomaticUpdateKey] && defaults == SUD && [TSSparkleController sharedUpdater])
+            enabled = [TSSparkleController sharedUpdater].automaticallyChecksForUpdates;
+#endif
+        [rule.endpoint setEnabled:enabled];
+        NSControl *control = [rule.endpoint isKindOfClass:NSCell.class] ? [(NSCell *)rule.endpoint controlView] : rule.endpoint;
+        if (rule.wholeRow) [self setSettingsControl:control enabled:enabled];
+    }
+}
 - (void)updateSettingsDependenciesFromDefaults:(NSUserDefaults *)defaults
 {
-    [self setSettingsControl:BlockCursorColorWell enabled:YES];
-    [self setSettingsControl:_blockSideMatrix enabled:YES];
-    [self setSettingsControl:_blockWidthMatrix enabled:YES];
-    [self setSettingsControl:_colorParam1Popup enabled:[defaults boolForKey:PdfColorMapKey]];
-    [self setSettingsControl:useLeftSourceButton enabled:YES];
-    [self setSettingsControl:useRightSourceButton enabled:YES];
-    [self setSettingsControl:_keepBackupButton enabled:![defaults boolForKey:AutoSaveEnabledKey]];
+    [self updateSettingsDependenciesForCategory:nil defaults:defaults];
 }
 
 - (void)updateSpellingControlsFromDefaults:(NSUserDefaults *)defaults
 {
-    BOOL enabled = [defaults boolForKey:@"TeXAwareSpellChecking"];
+    BOOL enabled = [defaults boolForKey:TSTeXAwareSpellCheckingKey];
     _texAwareSpellCheckButton.state = enabled ? NSControlStateValueOn : NSControlStateValueOff;
     if (self.legacySpellCheckButton != nil) self.legacySpellCheckButton.state = enabled ? NSControlStateValueOff : NSControlStateValueOn;
     // The exclusion rules apply only to TeX-aware spell checking.
-    _editSpellingExclusionsButton.enabled = enabled;
-    _spellCheckCommands.enabled = !enabled;
-    _spellCheckParameters.enabled = !enabled;
-    _spellCheckComments.enabled = !enabled;
+    [self updateSettingsDependenciesForCategory:TSSettingsCategorySpelling defaults:defaults];
 }
 
 - (IBAction)texAwareSpellCheckPressed:(NSButton *)sender
 {
-    id previousNoteValue = @([SUD boolForKey:@"TeXAwareSpellChecking"]);
-    [SUD setBool:(sender.state == NSControlStateValueOn) forKey:@"TeXAwareSpellChecking"];
+    id previousNoteValue = @([SUD boolForKey:TSTeXAwareSpellCheckingKey]);
+    [SUD setBool:(sender.state == NSControlStateValueOn) forKey:TSTeXAwareSpellCheckingKey];
     [self updateSpellingControlsFromDefaults:SUD];
-    [TSSpellSupport preferencesDidChange];
-    [self.settingsChangeNotes recordUserChangeForKey:@"TeXAwareSpellChecking" previousValue:previousNoteValue];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithObject:TSTeXAwareSpellCheckingKey]];
+    [self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];
 }
 
 - (IBAction)editKeyBindings:(id)sender
@@ -1676,11 +1688,11 @@ person script. See also: DefaultTypesetMode.
 
 - (IBAction)legacySpellCheckPressed:(NSButton *)sender
 {
-    id previousNoteValue = @([SUD boolForKey:@"TeXAwareSpellChecking"]);
-    [SUD setBool:NO forKey:@"TeXAwareSpellChecking"];
+    id previousNoteValue = @([SUD boolForKey:TSTeXAwareSpellCheckingKey]);
+    [SUD setBool:NO forKey:TSTeXAwareSpellCheckingKey];
     [self updateSpellingControlsFromDefaults:SUD];
-    [TSSpellSupport preferencesDidChange];
-    [self.settingsChangeNotes recordUserChangeForKey:@"TeXAwareSpellChecking" previousValue:previousNoteValue];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithObject:TSTeXAwareSpellCheckingKey]];
+    [self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];
 }
 
 - (IBAction)editSpellingExclusions:(id)sender

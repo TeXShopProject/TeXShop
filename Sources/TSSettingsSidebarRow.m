@@ -2,14 +2,22 @@
 #import "TSSettingsSidebarRow.h"
 #import "TSPrefPaneLayout.h"
 @implementation TSSettingsSidebarRow
++ (CGFloat)heightForTitle:(NSString *)title cellWidth:(CGFloat)width
+{
+    CGFloat available = MAX(1, width - 40);
+    NSRect text = [title boundingRectWithSize:NSMakeSize(available, CGFLOAT_MAX)
+        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+        attributes:@{NSFontAttributeName:[NSFont systemFontOfSize:NSFont.systemFontSize]}];
+    return MAX(30, ceil(NSHeight(text)) + 6);
+}
 + (NSTableCellView *)cellForCategory:(TSSettingsCategory *)category title:(NSString *)title
 {
     NSTableCellView *cell = [[NSTableCellView alloc] init];
     NSTextField *label = [NSTextField wrappingLabelWithString:title];
     label.translatesAutoresizingMaskIntoConstraints = NO;
-    label.maximumNumberOfLines = 1;
+    label.maximumNumberOfLines = 2;
     label.font = [NSFont systemFontOfSize:NSFont.systemFontSize];
-    label.lineBreakMode = NSLineBreakByTruncatingTail;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
     cell.textField = label;
     TSSettingsIconView *icon = [[TSSettingsIconView alloc] initWithSymbolName:category.symbolName color:category.color size:22];
     icon.translatesAutoresizingMaskIntoConstraints = NO; icon.accessibilityElement = NO;
@@ -31,7 +39,7 @@
     category.textColor = NSColor.secondaryLabelColor;
     for (NSTextField *label in @[name, category]) {
         label.translatesAutoresizingMaskIntoConstraints = NO;
-        label.lineBreakMode = NSLineBreakByTruncatingTail;
+        label.lineBreakMode = NSLineBreakByWordWrapping;
         [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
         [cell addSubview:label];
         [NSLayoutConstraint activateConstraints:@[[label.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor constant:8], [label.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-8]]];

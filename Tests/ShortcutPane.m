@@ -230,10 +230,11 @@ int main(int argc,char **argv){@autoreleasepool{
  REQUIRE(pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
  NSTextField *inactive=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:3];
  REQUIRE([inactive.stringValue containsString:@"conflicts with"] && [inactive.stringValue containsString:first.title]);
- REQUIRE([pane.keySearchView.accessibilityValue containsString:@"depends"]);
+ REQUIRE(![pane.keySearchView.accessibilityValue containsString:@"depends"]);
  REQUIRE([pane.keySearchView.accessibilityValue containsString:@"Matches: 3"]);
  NSScrollView *outer=pane.view.enclosingScrollView;
- REQUIRE(outer!=nil && outer.hasVerticalScroller && pane.table.enclosingScrollView.hasVerticalScroller);
+ REQUIRE(outer!=nil && !outer.hasVerticalScroller && pane.table.enclosingScrollView.hasVerticalScroller);
+ REQUIRE(fabs(outer.documentView.frame.size.height-outer.contentView.bounds.size.height)<1);
 
  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];[pane updateSelectionButtons];
  REQUIRE(!pane.selectionButtons[0].enabled && pane.macroButton.enabled);

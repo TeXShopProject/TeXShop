@@ -47,6 +47,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 @property (copy) NSDictionary<TSSettingsCategoryID, NSViewController *> *panes;
 @property (strong) NSLayoutConstraint *contentBottom;
 @property BOOL synchronizingSelection;
+@property CGFloat lastSidebarWidth;
 @property (copy, nullable) TSSettingsCategoryID displayedCategory;
 @property (strong, nullable) NSViewController<TSSettingsKeyboardPane> *keyboardPane;
 @property (strong, nullable) NSScrollView *keyboardScroll;
@@ -100,6 +101,13 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 - (void)setSearchBundle:(NSBundle *)bundle { _searchBundle = bundle; self.categoryTextIndex = nil; }
 - (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
 - (void)windowResignedKey:(NSNotification *)notification { if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; } }
+- (void)sidebarFrameChanged:(NSNotification *)notification
+{
+    CGFloat width = self.categoryTable.tableColumns.firstObject.width;
+    if (fabs(width - self.lastSidebarWidth) < 0.5) return;
+    self.lastSidebarWidth = width;
+    [self.categoryTable noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.categoryTable.numberOfRows)]];
+}
 - (BOOL)handleKeySearchEvent:(NSEvent *)event {
     if (![self.history.currentIdentifier isEqualToString:TSSettingsCategoryKeyboard] || self.keyboardPane == nil) { return NO; }
     return [self.keyboardPane handleKeySearchEvent:event];
@@ -138,6 +146,8 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     column.width = 210;
     [self.categoryTable addTableColumn:column];
     listScroll.documentView = self.categoryTable;
+    self.categoryTable.postsFrameChangedNotifications = YES;
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(sidebarFrameChanged:) name:NSViewFrameDidChangeNotification object:self.categoryTable];
     self.settingsSearchField = [NSSearchField new];
     self.settingsSearchField.translatesAutoresizingMaskIntoConstraints = NO;
     self.settingsSearchField.placeholderString = NSLocalizedString(@"Search Settings", @"");
@@ -316,7 +326,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
         if (parent != nil && pane != nil) {
             NSScrollView *scroll = [NSScrollView new];
             scroll.translatesAutoresizingMaskIntoConstraints = NO;
-            scroll.hasVerticalScroller = YES; scroll.hasHorizontalScroller = YES;
+            scroll.hasVerticalScroller = NO; scroll.hasHorizontalScroller = YES;
             scroll.automaticallyAdjustsContentInsets = NO;
             scroll.autohidesScrollers = YES;
             self.keyboardScroll = scroll;
@@ -326,8 +336,14 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
             scroll.documentView = document;
             [parent addSubview:scroll];
             NSLayoutConstraint *width = [document.widthAnchor constraintEqualToAnchor:scroll.contentView.widthAnchor];
-            NSLayoutConstraint *height = [document.heightAnchor constraintGreaterThanOrEqualToAnchor:scroll.contentView.heightAnchor];
-            height.priority = NSLayoutPriorityDefaultLow;
+            NSLayoutConstraint *height = [document.heightAnchor constraintEqualToAnchor:scroll.contentView.heightAnchor];
+            // Keep all input groups and the list's minimum visible without a
+            // second vertical scroller. Width wrapping participates in fitting.
+            CGFloat minimum = MAX(560, pane.fittingSize.height + 28);
+            NSSize minSize = self.window.contentMinSize; minSize.height = minimum;
+            self.window.contentMinSize = minSize;
+            NSSize size = self.window.contentView.bounds.size;
+            if (size.height < minimum) [self.window setContentSize:NSMakeSize(size.width, minimum)];
             width.priority = NSLayoutPriorityDefaultHigh;
             [NSLayoutConstraint activateConstraints:@[
                 [scroll.leadingAnchor constraintEqualToAnchor:self.contentScroll.leadingAnchor],
@@ -410,7 +426,10 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 {
     if (self.searchQuery.length) return 44;
     if (row < 0 || row >= (NSInteger)[self visibleIdentifiers].count) { return 30; }
-    return [self visibleIdentifiers][(NSUInteger)row].length ? 30 : 8;
+    TSSettingsCategoryID identifier = [self visibleIdentifiers][(NSUInteger)row];
+    if (!identifier.length) return 8;
+    NSString *title = [identifier isEqual:TSSettingsCategoryKeyboard] ? NSLocalizedString(@"Keyboard", @"") : self.panes[identifier].title ?: @"";
+    return [TSSettingsSidebarRow heightForTitle:title cellWidth:tableView.tableColumns.firstObject.width];
 }
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {

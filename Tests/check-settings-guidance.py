@@ -27,7 +27,8 @@ REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Compl
                 r'Key Bindings menu|Vervollständigungsdatei öffnen|Autovervollständigung-Datei|'
                 r'Abrir archivo de compleciones|Editar archivo de autocompleciones|'
                 r'補完用語ファイルを開く|補完用語ファイルの編集|キーバインドファイルの編集')
-OLD_UI = (r'Edit Rules|Check Spelling While Typing is independent|share one vertical scroll area|'
+OLD_UI = (r'one at a time|一つずつ開け|하나씩 펼칠|jeweils eine Eingabegruppe|un grupo de entrada a la vez|'
+          r'Edit Rules|Check Spelling While Typing is independent|share one vertical scroll area|'
           r'LaTeXに対応したスペルチェック|従来のスペルチェック|同じ縦スクロール領域|'
           r'einen vertikalen Scrollbereich|un área de desplazamiento vertical|'
           r'機能で探す|キーで探す|UTF パッケージ対応|Customizing Menu Shortcuts|'
@@ -50,7 +51,8 @@ def plain(text):
 
 def check_obsolete(text, language, path):
     text = plain(text)
-    for pattern in (CATEGORY_RULES[language], REMOVED_MENU, OLD_UI):
+    arrows = r'(?:Settings|Preferences|設定|설정|환경설정|Einstellungen|Ajustes|Preferencias)\s*[>→]\s*[「“"«]*(?:Source|Misc\s*[12]|Engines?|Themes|内部設定|詳細[12]|ソース|テーマ|기타[12]|엔진설정|Quelltext|Programme|Div\.\s*[12]|Código|Motor|Modos)\b'
+    for pattern in (CATEGORY_RULES[language], REMOVED_MENU, OLD_UI, arrows):
         match = re.search(pattern, text)
         assert match is None, (str(path), text[max(0, match.start()-60):match.end()+60])
 
@@ -71,7 +73,7 @@ for language in LANGUAGES:
         pages[path.stem] = text
         page_count += 1
     if language in ('en', 'ko'):
-        route = 'Settings > Typesetting > Tools > BibTeX Engine' if language == 'en' else 'Settings > 조판 > 도구 > BibTeX 엔진'
+        route = 'Settings > Typesetting > Lookup Commands and BibTeX > BibTeX Engine' if language == 'en' else 'Settings > 조판 > 검색 명령과 BibTeX > BibTeX 엔진'
         assert route in pages['advanced_bibtex'], (language, 'BibTeX Engine route')
     for name in ('basic_preferences', 'basic_spelling', 'configure_menushortcuts', 'configure_prefchanges'):
         text = pages[name]

@@ -203,8 +203,6 @@
 "Show in Macro Editor" = "Afficher dans l’éditeur de macros";
 "Assigned" = "Attribué";
 "Inactive for this key" = "Inactif pour cette touche";
-"Whether a command can run depends on the document." = "La possibilité d’exécuter une commande dépend du document.";
-"Some keys are reserved by macOS." = "Certaines touches sont réservées par macOS.";
 "No command uses this key." = "Aucune commande n’utilise cette touche.";
 "Press a key" = "Appuyez sur une touche";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Cette touche ne peut pas servir de raccourci. Utilisez Commande ou Contrôle avec une touche, ou F1–F20.";

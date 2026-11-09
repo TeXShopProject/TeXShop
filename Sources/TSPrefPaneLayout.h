@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import <Cocoa/Cocoa.h>
 NS_ASSUME_NONNULL_BEGIN
+@interface TSSettingsLabel : NSTextField
+@property (nonatomic, strong) NSColor *enabledTextColor;
+@end
 @interface TSSettingsIconView : NSView
 - (instancetype)initWithSymbolName:(NSString *)symbolName color:(NSColor *)color size:(CGFloat)size;
 @end

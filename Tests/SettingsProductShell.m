@@ -13,6 +13,7 @@
 #import "TSPreferenceInput.h"
 #import "TSColorSupport.h"
 #import "TSSettingsChangeNote.h"
+#import "TSPrefPaneLayout.h"
 @interface TSPreferences (Probe)
 - (BOOL)prepareSettingsWindow;
 - (void)FillInColorWells;
@@ -31,9 +32,10 @@
 @implementation HelpDocuments @end
 @interface TSAutoCompletionListEditor:NSObject @end
 @implementation TSAutoCompletionListEditor @end
+static NSUInteger spellRefreshes;
 @interface TSSpellSupport:NSObject @end
 @implementation TSSpellSupport
-+ (void)preferencesDidChange {}
++ (void)preferencesDidChange { spellRefreshes++; }
 @end
 @interface TSSettingsWindowController (Probe)
 - (CGFloat)tableView:(NSTableView *)table heightOfRow:(NSInteger)row;
@@ -65,6 +67,15 @@ static void SaveNote(TSSettingsWindowController *shell,NSView *row,NSString *dir
   Save(row,[directory stringByAppendingPathComponent:[NSString stringWithFormat:@"notice-%@-%@.png",name,appearance]]);
  }
 }
+#include "SettingsOwnerEditing.inc"
+#include "SettingsOwnerEffects.inc"
+#include "SettingsOwnerPresentation.inc"
+#include "SettingsOwnerInvisible.inc"
+#include "SettingsOwnerRuntime.inc"
+#include "SettingsOwnerSpelling.inc"
+#include "SettingsSidebar.m"
+#include "SettingsOwnerLifecycle.inc"
+#include "SettingsOwnerThemeWells.inc"
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();[NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
  testDockTile=[ProductDockTile new];testDockTile.size=NSMakeSize(128,128);testDockTile.badgeLabel=@"7";
@@ -129,16 +140,22 @@ int main(int argc,char **argv){@autoreleasepool{
  [TSIsolatedAppKitDefaults setObject:factory[SwitchSidesKey] ?: @NO forKey:SwitchSidesKey];
  [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
  NSData *dependencyData=[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsDependencies" withExtension:@"json"]];
- NSDictionary *dependencyLedger=[NSJSONSerialization JSONObjectWithData:dependencyData options:0 error:NULL];Check([dependencyLedger[@"rules"]count]==8,@"Independent dependency ledger loads");
+ NSDictionary *dependencyLedger=[NSJSONSerialization JSONObjectWithData:dependencyData options:0 error:NULL];Check([dependencyLedger[@"rules"]count]==14,@"Independent dependency ledger loads");
  for(NSDictionary *rule in dependencyLedger[@"rules"]){
   NSString *key=rule[@"key"],*category=rule[@"category"];id original=[TSIsolatedAppKitDefaults objectForKey:key];
   for(NSNumber *value in rule[@"values"]){
    [TSIsolatedAppKitDefaults setObject:value forKey:key];[owner updateSettingsCategory:category fromDefaults:TSIsolatedAppKitDefaults];
    BOOL enabled=[rule[@"enabled_values"]containsObject:value];
    for(NSString *outlet in rule[@"outlets"]){NSControl *control=[owner valueForKey:outlet];Check(control!=nil && control.enabled==enabled,[NSString stringWithFormat:@"Ledger dependency %@=%@ -> %@",key,value,outlet]);}
-   if([rule[@"label_row"]isKindOfClass:NSString.class]){
-    NSView *row=Find([shell viewForCategoryIdentifier:category],rule[@"label_row"]);NSTextField *label=(NSTextField *)Find(row,@"label.catalog-row");
-    Check(label!=nil && label.enabled==enabled,@"Dependent row label follows its control");
+   NSArray *labelRows=rule[@"label_rows"] ?: ([rule[@"label_row"]isKindOfClass:NSString.class]?@[rule[@"label_row"]]:@[]);
+   for(NSString *labelRow in labelRows){
+    NSView *row=Find([shell viewForCategoryIdentifier:category],labelRow);NSTextField *label=(NSTextField *)Find(row,@"label.catalog-row");
+    Check(label!=nil && label.enabled==enabled,[NSString stringWithFormat:@"Dependent row %@ follows %@=%@",labelRow,key,value]);
+    Check([label.textColor isEqual:enabled?NSColor.labelColor:NSColor.disabledControlTextColor],@"Dependent name uses the actual enabled or disabled text color");
+    if(argc>2){
+     [shell selectCategoryIdentifier:category];
+     SaveNote(shell,row,@(argv[2]),[NSString stringWithFormat:@"dependency-%@-%@-%@",key,value,labelRow]);
+    }
    }
   }
   if(original)[TSIsolatedAppKitDefaults setObject:original forKey:key];else[TSIsolatedAppKitDefaults removeObjectForKey:key];
@@ -155,7 +172,7 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(fabs(NSWidth(sidebar.viewController.view.frame)-feasible)<2,[NSString stringWithFormat:@"Sidebar width %.1f requested %@, window %@",NSWidth(sidebar.viewController.view.frame),sidebarWidth,windowWidth]);
   Check(NSMinX(shell.settingsSearchField.frame)>=0 && NSMaxX(shell.settingsSearchField.frame)<=NSWidth(sidebar.viewController.view.bounds),@"Search field fits narrow sidebar");
   Check(shell.categoryTable.rowHeight==30 && shell.categoryTable.headerView==nil,@"Sidebar uses compact rows with no table heading");
-  for(NSInteger row=0;row<shell.categoryTable.numberOfRows;row++){CGFloat height=[shell tableView:shell.categoryTable heightOfRow:row];Check(height==30 || height==8,@"Category spacing uses 30-point rows and 8-point empty gaps");}
+  for(NSInteger row=0;row<shell.categoryTable.numberOfRows;row++){CGFloat height=[shell tableView:shell.categoryTable heightOfRow:row];Check(height==8 || (height>=30 && height<=42),@"Category spacing uses compact one-line or necessary two-line rows");}
  }
  [shell.window setContentSize:NSMakeSize(1040,780)];[shell.splitController.splitView setPosition:220 ofDividerAtIndex:0];
  for(NSString *category in shell.categoryIdentifiers){
@@ -172,16 +189,23 @@ int main(int argc,char **argv){@autoreleasepool{
    Check(!shell.window.visible,@"No test window is ordered");
   }
   printf("PANE %s %.1f %.1f\n",category.UTF8String,NSWidth(pane.frame),NSHeight(pane.frame));
-  if(argc>2){
+  if(argc>2 || [fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
+   NSView *originalParent=pane.superview;NSArray *originalConstraints=[originalParent.constraints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSLayoutConstraint *c,NSDictionary *bindings){return c.firstItem==pane || c.secondItem==pane;}]];
    [pane removeFromSuperview];NSWindow *comparison=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,570,900) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:NO];
    NSView *host=comparison.contentView;[host addSubview:pane];pane.translatesAutoresizingMaskIntoConstraints=NO;
    NSArray *geometry=@[[pane.widthAnchor constraintEqualToConstant:570],[pane.leadingAnchor constraintEqualToAnchor:host.leadingAnchor],[pane.topAnchor constraintEqualToAnchor:host.topAnchor]];[NSLayoutConstraint activateConstraints:geometry];
    for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
     comparison.appearance=[NSAppearance appearanceNamed:appearance];[host layoutSubtreeIfNeeded];
-    Save(pane,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"comparison-%@-%@.png",category,appearance]]);
+    if(argc>2)Save(pane,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"comparison-%@-%@.png",category,appearance]]);
    }
    printf("COMPARISON %s %.1f %.1f\n",category.UTF8String,NSWidth(pane.frame),NSHeight(pane.frame));
-   [NSLayoutConstraint deactivateConstraints:geometry];[pane removeFromSuperview];shell.contentScroll.documentView=pane;
+   if([fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
+    NSDictionary *heights=[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsHeightReference" withExtension:@"json"]] options:0 error:NULL];
+    double reference=[heights[@"categories"][category][@"height"]doubleValue];
+    Check(reference>0 && NSHeight(pane.frame)<=reference*[heights[@"maximum_ratio"]doubleValue],@"Content height is within 1.15 of the independent approved mockup");
+   }
+
+   [NSLayoutConstraint deactivateConstraints:geometry];[pane removeFromSuperview];[originalParent addSubview:pane];[NSLayoutConstraint activateConstraints:originalConstraints];[shell.window.contentView layoutSubtreeIfNeeded];
   }
 
  }
@@ -231,6 +255,15 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSArray *entry in restartRows){[shell selectCategoryIdentifier:entry[0]];SaveNote(shell,Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),argc>2?@(argv[2]):nil,[entry[0]isEqual:TSSettingsCategoryDocuments]?@"autosave-restart":@"find-restart");}
  [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];[shell endSession];[shell beginSession];
  for(NSArray *entry in restartRows)Check(!Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Profile restart warnings survive category transition and reopening");
+ CheckOwnerPresentation(shell);
+ CheckOwnerEffects(owner,factory,theme);
+ CheckOwnerEditing(owner,shell);
+ CheckOwnerInvisible(owner,shell);
+ CheckOwnerRuntime(owner);
+ CheckOwnerSpelling(owner,shell);
+ CheckOwnerNavigation(owner,shell);
+ CheckOwnerLifecycle(owner,shell);
+ CheckOwnerThemeWells(owner,shell,theme);
  // Complete production editing callbacks: untouched focus, Return, validation and teardown.
  NSMapTable *inputRules=[owner valueForKey:@"inputRules"];Check(inputRules.count==19,@"All nineteen production input rules are installed");
  NSTextField *tabsField=[owner valueForKey:@"tabIndentField"],*gsField=[owner valueForKey:@"gsBinPathField"],*zoomField=[owner valueForKey:@"magTextField"];

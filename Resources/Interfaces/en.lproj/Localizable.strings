@@ -176,8 +176,6 @@
 "Show in Macro Editor" = "Show in Macro Editor";
 "Assigned" = "Assigned";
 "Inactive for this key" = "Inactive for this key";
-"Whether a command can run depends on the document." = "Whether a command can run depends on the document.";
-"Some keys are reserved by macOS." = "Some keys are reserved by macOS.";
 "No command uses this key." = "No command uses this key.";
 "Press a key" = "Press a key";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.";

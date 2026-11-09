@@ -199,8 +199,6 @@
 "Show in Macro Editor" = "在宏编辑器中显示";
 "Assigned" = "已分配";
 "Inactive for this key" = "此按键无效";
-"Whether a command can run depends on the document." = "命令能否执行取决于文稿状态。";
-"Some keys are reserved by macOS." = "部分按键由 macOS 使用。";
 "No command uses this key." = "没有命令使用此按键。";
 "Press a key" = "请按键";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与 Command 或 Control 组合使用，或使用 F1–F20。";

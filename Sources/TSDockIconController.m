@@ -49,13 +49,12 @@
     TSSettingsGroupView *group = nil;
     for (NSView *candidate in body.arrangedSubviews) if ([candidate.identifier isEqual:@"group.appearance.10"]) group=(TSSettingsGroupView *)candidate;
     if (group == nil) return;
-    group.toolTip = [self text:@"Applies while TeXShop is running. The standard icon returns after quitting."];
     NSMutableArray<NSView *> *options = [NSMutableArray array];
     NSArray *titles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
     NSArray *details = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
     for (NSInteger index = 0; index < 5; index++) {
         NSString *label = [self text:titles[index]];
-        NSString *tip = [NSString stringWithFormat:@"%@ — %@\n%@", label, [self text:details[index]], group.toolTip];
+        NSString *tip = [NSString stringWithFormat:@"%@ — %@", label, [self text:details[index]]];
         NSImage *artwork=[TSDockIconImage(self.bundle,TSDockIconNames()[index]) copy];artwork.size=NSMakeSize(52,52);
         NSButton *button=[NSButton buttonWithImage:artwork target:self action:@selector(chooseIcon:)];
         button.tag=index;button.bordered=NO;button.imageScaling=NSImageScaleNone;
@@ -83,11 +82,8 @@
     choices.distribution = NSStackViewDistributionFillEqually;
     choices.alignment = NSLayoutAttributeTop;
     choices.spacing = 6;
-    NSTextField *explanation = [NSTextField wrappingLabelWithString:group.toolTip ?: @""];
-    explanation.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];explanation.textColor=NSColor.secondaryLabelColor;
-    NSStackView *stack=[TSPrefPaneLayout stackWithViews:@[explanation,choices] orientation:NSUserInterfaceLayoutOrientationVertical];stack.spacing=12;
+    NSStackView *stack=[TSPrefPaneLayout stackWithViews:@[choices] orientation:NSUserInterfaceLayoutOrientationVertical];
     [choices.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active=YES;
-    [explanation.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active=YES;
     NSView *row=[TSPrefPaneLayout catalogContent:stack trailing:NO indent:0];row.identifier=@"DockIconChoices";
     [stack.trailingAnchor constraintEqualToAnchor:row.trailingAnchor constant:-12].active=YES;
     NSStackView *rows=(NSStackView *)group.contentView.subviews.firstObject;

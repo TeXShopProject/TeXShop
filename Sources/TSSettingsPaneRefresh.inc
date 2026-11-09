@@ -3,10 +3,6 @@
 - (void)refreshGeneralSettingsFromDefaults:(NSUserDefaults *)defaults
 {
     [_sourceWindowPosMatrix selectCellWithTag:[defaults integerForKey:DocumentWindowPosModeKey]];
-    if ([defaults integerForKey:DocumentWindowPosModeKey] == 0)
-        [_docWindowPosButton setEnabled:YES];
-    else
-        [_docWindowPosButton setEnabled:NO];
     [_openEmptyButton setState:[defaults boolForKey:MakeEmptyDocumentKey]];
     [_externalEditorButton setState:[defaults boolForKey:UseExternalEditorKey]];
     [_openRootFileButton setState:[defaults boolForKey:AutoOpenRootFileKey]];
@@ -17,20 +13,8 @@
     useLeftSourceButton.state = ![defaults boolForKey:SwitchSidesKey];
     [_openAsTabsMatrix selectItemWithTag:[defaults integerForKey:OpenAsTabsKey]];
     [_consoleWindowPosMatrix selectCellWithTag:[defaults integerForKey:ConsoleWindowPosModeKey]];
-    if ([defaults integerForKey:ConsoleWindowPosModeKey] == 0)
-        [_consoleWindowPosButton setEnabled:YES];
-    else
-        [_consoleWindowPosButton setEnabled:NO];
     [_pdfWindowPosMatrix selectCellWithTag:[defaults integerForKey:PdfWindowPosModeKey]];
-    if ([defaults integerForKey:PdfWindowPosModeKey] == 0)
-        [_pdfWindowPosButton setEnabled:YES];
-    else
-        [_pdfWindowPosButton setEnabled:NO];
     [_htmlWindowPosMatrix selectCellWithTag:[defaults integerForKey:HtmlWindowPosModeKey]];
-    if ([defaults integerForKey:HtmlWindowPosModeKey] == 0)
-        [_htmlWindowPosButton setEnabled:YES];
-    else
-        [_htmlWindowPosButton setEnabled:NO];
     [self setSettingsControl:useLeftSourceButton enabled:YES];
     [self setSettingsControl:useRightSourceButton enabled:YES];
 }
@@ -40,13 +24,11 @@
     [_convertUTFButton setState:[defaults boolForKey:AutomaticUTF8MACtoUTF8ConversionKey]];
     [_autoSaveEnabledButton setState:[defaults boolForKey:AutoSaveEnabledKey]];
     [_keepBackupButton setState:[defaults boolForKey:KeepBackupKey]];
-    _keepBackupButton.enabled = ![defaults boolForKey:AutoSaveEnabledKey];
     [_saveEncodingMenuButton setState:[defaults boolForKey:EncodingMenuInSaveDialogKey]];
     [_defaultEncodeMatrix removeAllItems];
     [[TSEncodingSupport sharedInstance] addEncodingsToMenu:[_defaultEncodeMatrix menu] withTarget:0 action:0];
     [_defaultEncodeMatrix selectItemWithTag:[[TSEncodingSupport sharedInstance] defaultEncoding]];
     [_saveRelatedButton setState:[defaults boolForKey:SaveRelatedKey]];
-    [self setSettingsControl:_keepBackupButton enabled:![defaults boolForKey:AutoSaveEnabledKey]];
 }
 
 - (void)refreshEditorSettingsFromDefaults:(NSUserDefaults *)defaults
@@ -249,7 +231,6 @@
     [_colorParam1Popup selectItemAtIndex:itemIndex];
 #endif
     [_HtmlHomeField setStringValue:[defaults stringForKey:HtmlHomeKey] ?: @""];
-    [self setSettingsControl:_colorParam1Popup enabled:[defaults boolForKey:PdfColorMapKey]];
 }
 
 - (void)refreshTypesettingSettingsFromDefaults:(NSUserDefaults *)defaults
@@ -293,12 +274,9 @@
     [_engineTextField setStringValue:[defaults stringForKey:DefaultEngineKey] ?: @""];
     if ([defaults integerForKey:DefaultCommandKey] == 2)
     {
-        [_engineTextField setEnabled:YES];
         [_engineTextField setEditable:YES];
         [_engineTextField setSelectable:YES];
     }
-    else
-        [_engineTextField setEnabled:NO];
     if ([defaults integerForKey:DefaultCommandKey] == 2)
         [_engineTextField setEditable:YES];
     [_defaultScriptMatrix selectCellWithTag:[defaults integerForKey:DefaultScriptKey]];
@@ -336,14 +314,14 @@
 - (void)refreshUpdatesSettingsFromDefaults:(NSUserDefaults *)defaults
 {
     [_sparkleAutomaticButton setState:[defaults boolForKey:SparkleAutomaticUpdateKey]];
-    [_sparkleIntervalMatrix setEnabled:[defaults boolForKey:SparkleAutomaticUpdateKey]];
+
     [_sparkleIntervalMatrix selectCellWithTag:[defaults integerForKey:SparkleIntervalKey]];
 #ifdef USESPARKLE
     if (defaults == SUD && [TSSparkleController sharedUpdater] != nil)
     {
         SPUUpdater *updater = [TSSparkleController sharedUpdater];
         [_sparkleAutomaticButton setState:updater.automaticallyChecksForUpdates];
-        [_sparkleIntervalMatrix setEnabled:updater.automaticallyChecksForUpdates];
+
         NSTimeInterval interval = updater.updateCheckInterval;
         [_sparkleIntervalMatrix selectCellWithTag:(interval < 604800 ? 1 : (interval < 2629800 ? 2 : 3))];
     }
@@ -355,51 +333,61 @@
     if ([identifier isEqual:TSSettingsCategoryGeneral])
     {
         [self refreshGeneralSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategoryDocuments])
     {
         [self refreshDocumentsSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategoryEditor])
     {
         [self refreshEditorSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategorySpelling])
     {
         [self refreshSpellingSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategoryAppearance])
     {
         [self refreshAppearanceSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategoryPreview])
     {
         [self refreshPreviewSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategoryTypesetting])
     {
         [self refreshTypesettingSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategoryConsole])
     {
         [self refreshConsoleSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategoryKeyboard])
     {
         [self refreshKeyboardSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
     if ([identifier isEqual:TSSettingsCategoryUpdates])
     {
         [self refreshUpdatesSettingsFromDefaults:defaults];
+        [self updateSettingsDependenciesForCategory:identifier defaults:defaults];
         return;
     }
 }

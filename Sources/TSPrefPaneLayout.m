@@ -2,6 +2,19 @@
 #import "TSPrefPaneLayout.h"
 #import <QuartzCore/QuartzCore.h>
 
+@implementation TSSettingsLabel
+- (void)setEnabled:(BOOL)enabled
+{
+    [super setEnabled:enabled];
+    self.textColor = enabled ? (self.enabledTextColor ?: NSColor.labelColor) : NSColor.disabledControlTextColor;
+}
+- (void)setEnabledTextColor:(NSColor *)color
+{
+    _enabledTextColor = color;
+    self.textColor = self.enabled ? color : NSColor.disabledControlTextColor;
+}
+@end
+
 @interface TSSettingsIconView ()
 @property (copy) NSString *symbolName;
 @property (strong) NSColor *tileColor;
@@ -400,53 +413,53 @@ static NSColor *TSSettingsCardColor(void)
 }
 + (NSTextField *)catalogLabel:(NSString *)text secondary:(BOOL)secondary
 {
-    NSTextField *label = [NSTextField wrappingLabelWithString:text];
+    TSSettingsLabel *label = [TSSettingsLabel wrappingLabelWithString:text];
     label.translatesAutoresizingMaskIntoConstraints = NO;
     label.font = [NSFont systemFontOfSize:secondary ? NSFont.smallSystemFontSize : NSFont.systemFontSize];
-    label.textColor = secondary ? NSColor.secondaryLabelColor : NSColor.labelColor;
+    label.enabledTextColor = secondary ? NSColor.secondaryLabelColor : NSColor.labelColor;
     [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [label setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
     return label;
 }
-// The title and control share the first line. Explanatory and change notes
-// use the complete row width below them, including beside wide popups.
+// Match the catalog: the name and its explanation form the left column;
+// the accessory is centered vertically with its own six-point insets.
 + (NSView *)catalogRowWithTitle:(NSString *)title note:(NSString *)note accessory:(NSView *)accessory expands:(BOOL)expands indent:(NSUInteger)indent
 {
     NSView *view = [NSView new]; view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSView *firstLine = [NSView new]; firstLine.translatesAutoresizingMaskIntoConstraints = NO;
     NSTextField *name = [self catalogLabel:title secondary:NO]; name.identifier = @"label.catalog-row";
-    [name setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
-    [firstLine addSubview:name]; [firstLine addSubview:accessory]; accessory.translatesAutoresizingMaskIntoConstraints = NO;
-    NSStackView *label = [self stackWithViews:@[firstLine] orientation:NSUserInterfaceLayoutOrientationVertical];
+    NSStackView *label = [self stackWithViews:@[name] orientation:NSUserInterfaceLayoutOrientationVertical];
     label.identifier = @"label.catalog-stack"; label.spacing = 2;
+    label.distribution = NSStackViewDistributionFill;
+    [label setHuggingPriority:750 forOrientation:NSLayoutConstraintOrientationVertical];
+    [label setHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
     if (note.length) {
         NSTextField *detail = [self catalogLabel:note secondary:YES]; detail.identifier = @"note.catalog-row";
         [label addArrangedSubview:detail];
     }
     for (NSView *child in label.arrangedSubviews) [child.widthAnchor constraintEqualToAnchor:label.widthAnchor].active = YES;
-    [view addSubview:label];
+    [label setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [label setContentHuggingPriority:1 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [view addSubview:label]; [view addSubview:accessory]; accessory.translatesAutoresizingMaskIntoConstraints = NO;
     [accessory setContentCompressionResistancePriority:751 forOrientation:NSLayoutConstraintOrientationHorizontal];
     [NSLayoutConstraint activateConstraints:@[
         [label.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:12+24*indent],
-        [label.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12],
-        [label.topAnchor constraintEqualToAnchor:view.topAnchor constant:9],
-        [label.bottomAnchor constraintEqualToAnchor:view.bottomAnchor constant:-9],
-        [name.leadingAnchor constraintEqualToAnchor:firstLine.leadingAnchor],
-        [name.centerYAnchor constraintEqualToAnchor:firstLine.centerYAnchor],
-        [name.topAnchor constraintGreaterThanOrEqualToAnchor:firstLine.topAnchor],
-        [name.bottomAnchor constraintLessThanOrEqualToAnchor:firstLine.bottomAnchor],
-        [accessory.trailingAnchor constraintEqualToAnchor:firstLine.trailingAnchor],
-        [accessory.centerYAnchor constraintEqualToAnchor:firstLine.centerYAnchor],
-        [accessory.topAnchor constraintGreaterThanOrEqualToAnchor:firstLine.topAnchor],
-        [accessory.bottomAnchor constraintLessThanOrEqualToAnchor:firstLine.bottomAnchor],
-        [firstLine.heightAnchor constraintGreaterThanOrEqualToConstant:20],
+        [label.centerYAnchor constraintEqualToAnchor:view.centerYAnchor],
+        [label.topAnchor constraintGreaterThanOrEqualToAnchor:view.topAnchor constant:9],
+        [label.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor constant:-9],
+        [accessory.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-12],
+        [accessory.centerYAnchor constraintEqualToAnchor:view.centerYAnchor],
+        [accessory.topAnchor constraintGreaterThanOrEqualToAnchor:view.topAnchor constant:6],
+        [accessory.bottomAnchor constraintLessThanOrEqualToAnchor:view.bottomAnchor constant:-6],
+        [accessory.leadingAnchor constraintEqualToAnchor:label.trailingAnchor constant:16],
         [view.heightAnchor constraintGreaterThanOrEqualToConstant:38]]];
     if (expands) {
-        [name.widthAnchor constraintEqualToConstant:170].active = YES;
-        [accessory.leadingAnchor constraintEqualToAnchor:name.trailingAnchor constant:16].active = YES;
+        [label.widthAnchor constraintEqualToConstant:170].active = YES;
         [accessory setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
     } else {
         [accessory setContentHuggingPriority:752 forOrientation:NSLayoutConstraintOrientationHorizontal];
-        [accessory.leadingAnchor constraintEqualToAnchor:name.trailingAnchor constant:16].active = YES;
+        if ([accessory isKindOfClass:NSStackView.class])
+            [(NSStackView *)accessory setHuggingPriority:752 forOrientation:NSLayoutConstraintOrientationHorizontal];
     }
     NSLayoutConstraint *fit = [view.heightAnchor constraintEqualToConstant:38]; fit.priority=249; fit.active=YES;
     return view;
@@ -469,6 +482,7 @@ static NSColor *TSSettingsCardColor(void)
 {
     NSStackView *stack = [NSStackView stackViewWithViews:views];
     stack.orientation = orientation;
+    if (orientation == NSUserInterfaceLayoutOrientationHorizontal) stack.distribution = NSStackViewDistributionFill;
     stack.alignment = orientation == NSUserInterfaceLayoutOrientationVertical ? NSLayoutAttributeLeading : NSLayoutAttributeCenterY;
     stack.spacing = orientation == NSUserInterfaceLayoutOrientationVertical ? 0 : 8;
     stack.translatesAutoresizingMaskIntoConstraints = NO;

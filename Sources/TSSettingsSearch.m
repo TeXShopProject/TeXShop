@@ -2,7 +2,7 @@
 #import "TSSettingsSearch.h"
 @implementation TSSettingsSearchEntry
 @synthesize category = _category, targetIdentifier = _targetIdentifier, text = _text, normalizedText = _normalizedText, weight = _weight, command = _command;
-- (instancetype)initWithCategory:(TSSettingsCategoryID)category target:(NSString *)target text:(NSString *)text weight:(NSInteger)weight command:(BOOL)command
+- (instancetype)initWithCategory:(TSSettingsCategoryID)category target:(NSString *)target text:(NSString *)text weight:(TSSettingsSearchWeight)weight command:(BOOL)command
 {
     self = [super init];
     if (self == nil) return nil;
@@ -22,11 +22,10 @@
 }
 - (NSString *)title
 {
-    TSSettingsSearchEntry *label = self.entries.firstObject;
     for (TSSettingsSearchEntry *entry in self.entries)
-        if (entry.weight == TSSettingsSearchWeightLabel) return entry.text;
-        else if (entry.weight > label.weight) label = entry;
-    return label.text ?: @"";
+        if (entry.command || entry.weight == TSSettingsSearchWeightLabel) return entry.text;
+    // Descriptions and choices qualify a named setting; they are never its title.
+    return @"";
 }
 - (NSString *)targetIdentifier { return self.entries.firstObject.targetIdentifier ?: @""; }
 @end
@@ -38,7 +37,7 @@
     if (self == nil) return nil;
     _categoryOrder = [order copy];
     NSMutableArray<TSSettingsSearchEntry *> *entries = [NSMutableArray array];
-    void (^add)(TSSettingsCategoryID, NSString *, NSString *, NSString *, NSInteger) = ^(TSSettingsCategoryID category, NSString *target, NSString *table, NSString *key, NSInteger weight) {
+    void (^add)(TSSettingsCategoryID, NSString *, NSString *, NSString *, TSSettingsSearchWeight) = ^(TSSettingsCategoryID category, NSString *target, NSString *table, NSString *key, TSSettingsSearchWeight weight) {
         NSString *text = [bundle localizedStringForKey:key value:key table:table];
         if (text.length) [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:category target:target text:text weight:weight command:NO]];
     };
@@ -64,7 +63,7 @@
     NSArray<NSString *> *dockPeriods = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
     NSString *(^dockText)(NSString *) = ^(NSString *key) { return [bundle localizedStringForKey:key value:key table:@"SettingsDock"]; };
     for (NSUInteger i = 0; i < dockTitles.count; i++) {
-        NSString *tip = [NSString stringWithFormat:@"%@ — %@\n%@", dockText(dockTitles[i]), dockText(dockPeriods[i]), dockText(@"Applies while TeXShop is running. The standard icon returns after quitting.")];
+        NSString *tip = [NSString stringWithFormat:@"%@ — %@", dockText(dockTitles[i]), dockText(dockPeriods[i])];
         [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryAppearance target:@"DockIconChoices" text:tip weight:TSSettingsSearchWeightDescription command:NO]];
     }
     for (NSString *category in order) add(category, @"", @"SettingsCategories", category, TSSettingsSearchWeightCategory);
@@ -105,7 +104,7 @@
             for (NSString *token in tokens) {
                 NSInteger best = 0;
                 for (TSSettingsSearchEntry *entry in entries) {
-                    NSRange range = [entry.normalizedText rangeOfString:token];
+                    NSRange range = [entry.normalizedText rangeOfString:token options:NSLiteralSearch];
                     if (range.location == NSNotFound) continue;
                     NSInteger bonus = entry.normalizedText.length == token.length ? TSSettingsSearchBonusExact : (range.location == 0 ? TSSettingsSearchBonusPrefix : TSSettingsSearchBonusSubstring);
                     best = MAX(best, entry.weight + bonus);
@@ -113,7 +112,7 @@
                 // Category text can find or qualify its settings. Tokens from
                 // unrelated settings still cannot complete an AND query.
                 for (TSSettingsSearchEntry *entry in categoryText) {
-                    NSRange range = [entry.normalizedText rangeOfString:token];
+                    NSRange range = [entry.normalizedText rangeOfString:token options:NSLiteralSearch];
                     if (range.location == NSNotFound) continue;
                     NSInteger bonus = entry.normalizedText.length == token.length ? TSSettingsSearchBonusExact : (range.location == 0 ? TSSettingsSearchBonusPrefix : TSSettingsSearchBonusSubstring);
                     best = MAX(best, entry.weight + bonus);
