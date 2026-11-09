@@ -39,8 +39,7 @@ swift Artwork/generate-icon.swift
 iconutil -c icns Artwork/TeXShop.iconset -o Artwork/TeXShop.icns
 ```
 
-Copy `Artwork/TeXShop.icns` to the root `icon.icns` and `Artwork/Icon-preview.png`
-to `Resources/DockIcons/current.png`. If a new macOS changes the icon shape, run
+Copy `Artwork/Icon-preview.png` to `Resources/DockIcons/current.png`. If a new macOS changes the icon shape, run
 `python3 Artwork/trace-icon-mask.py` (Xcode 26 or later, Pillow, NumPy and SciPy)
 before the Swift command.
 
@@ -51,5 +50,4 @@ in the script. Ordinary regeneration uses the stored outlines and needs no
 tracing dependencies.
 
 The Xcode target uses `TeXShop.icon` and the app-icon name `TeXShop`.
-The root `icon.icns` and `Resources/DockIcons/current.png` are copies of the
-chosen fallback. Website and published avatar updates are separate.
+`Resources/DockIcons/current.png` is a copy of the chosen fallback. Website and published avatar updates are separate.
