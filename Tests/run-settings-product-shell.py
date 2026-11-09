@@ -158,7 +158,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     sixth=[
      ('sidebar-width-plus-six','TSSettingsSidebarRow.m','width - 40','width - 34','Long localized sidebar names fit at every supported width'),
      ('column-word-break','TSSettingsPaneClassification.inc','[header.widthAnchor constraintGreaterThanOrEqualToConstant:width].active=YES;',';','Localized color column headings fit without breaking words'),
-     ('highlight-no-inset','TSSettingsWindowController.m','NSInsetRect(bounds, -6, -3)','NSInsetRect(bounds, -6, -3)','Color row highlight leaves padding around names and percent fields'),
+     ('highlight-no-inset','TSSettingsWindowController.m','NSInsetRect(bounds, -6, -3)','NSInsetRect(bounds, 0, -2)','Color row highlight leaves padding around names and percent fields'),
      ('opacity-rounded-equality','TSPrefPaneLayout.m','if(!self.fieldWasEdited || entered==self.slider.doubleValue)','if(lround(entered)==lround(self.slider.doubleValue))','Explicitly entering the displayed integer replaces a fractional opacity'),
      ('opacity-settings-old-reader','TSPreferences-Color.m','SourceAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemeSourceAlphaKey);','SourceAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey:TSThemeSourceAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];','Invalid theme opacity loads safely and consistently'),
     ]
@@ -171,6 +171,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    if a.mutation_start:cases=cases[next(i for i,c in enumerate(cases) if c[0]==a.mutation_start):]
    if a.mutation_only:cases=[c for c in cases if c[0]==a.mutation_only];assert cases
    for name,filename,old,new in cases:
+    assert old != new, (name, 'Mutation must change the source')
     source=(r/'Sources'/filename).read_text()
     count=source.count(old)
     assert count>0,(name,count)
