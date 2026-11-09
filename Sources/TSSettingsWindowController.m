@@ -591,7 +591,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
                 if (contains && ![highlightedGridRows containsObject:key]) {
                     [highlightedGridRows addObject:key];
                     bounds.origin.x = 0; bounds.size.width = NSWidth(grid.bounds);
-                    TSSettingsSearchHighlight *overlay = [[TSSettingsSearchHighlight alloc] initWithFrame:NSInsetRect(bounds, 0, -2)];
+                    TSSettingsSearchHighlight *overlay = [[TSSettingsSearchHighlight alloc] initWithFrame:NSInsetRect(bounds, -6, -3)];
                     overlay.autoresizingMask = NSViewWidthSizable;
                     [grid addSubview:overlay]; [self.searchHighlights addObject:overlay];
                 }

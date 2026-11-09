@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "Zoom par défaut des PDF nouvellement ouverts.";
-"1uj-kt-7Pj.title" = "Source sur la gauche";
+"1uj-kt-7Pj.title" = "Gauche";
 "228.title" = "Changer les boutons page";
 "328.title" = "Dérouler";
 "329.title" = "Style de la page par défaut";
@@ -10,7 +10,7 @@
 "333.title" = "Page simple";
 "335.title" = "Agrandissement maximal";
 "336.title" = "OtherViews";
-"337.title" = "Sélectionner";
+"337.title" = "Sélectionner le PDF";
 "339.title" = "Adapter à la fenêtre";
 "341.title" = "OtherViews";
 "342.title" = "Nouvelle taille de la fenêtre";
@@ -40,7 +40,7 @@
 "MEp-AF-AgT.title" = "Mode Fenêtre seule";
 "Sb3-3h-ll4.title" = "Radio";
 "SfP-Ak-pn3.title" = "Utiliser des fenêtres séparées";
-"V7d-ht-Pe3.title" = "Source sur la droite";
+"V7d-ht-Pe3.title" = "Droite";
 "YrC-m9-abH.title" = "Position de la fenêtre HTML";
 "Zdh-Ch-Ndh.title" = "Enregistrer la position";
 "jgT-n6-lh0.title" = "Lisser le texte et les dessins au trait";

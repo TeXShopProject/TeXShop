@@ -215,3 +215,14 @@ for filename in ('Documentation/Releases/5.60-ja.md','website/release-notes-ja.h
 ko=html.unescape((ROOT/'Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm').read_text())
 assert '카테고리' not in ko and '범주' in ko,'Korean category terminology is consistent'
 print('PASS: six release copies and Korean category terminology')
+
+for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex']:
+    text=(ROOT/filename).read_text()
+    assert 'slider or a numeric field' in text,('Opacity numeric field in release notes',filename)
+assert 'slider and a numeric field' in manual,'Opacity numeric field in manual'
+for lang,term in {'en':'numeric field','ja':'数値欄','de':'Zahlenfeld','es':'campo numérico','ko':'숫자 입력 필드'}.items():
+    page=ROOT/f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
+    assert term in read_help(page,lang),('Opacity numeric field in help',lang)
+
+for filename in ["Documentation/Releases/5.60-ja.md","website/release-notes-ja.html"]:
+    assert "数値欄" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)

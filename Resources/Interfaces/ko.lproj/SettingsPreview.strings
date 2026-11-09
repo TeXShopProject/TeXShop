@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "새로 여는 PDF의 기본 확대율입니다.";
-"1uj-kt-7Pj.title" = "편집 창을 왼쪽에";
+"1uj-kt-7Pj.title" = "왼쪽";
 "228.title" = "페이지 버튼";
 "328.title" = "스크롤";
 "329.title" = "페이지 형식";
@@ -40,7 +40,7 @@
 "MEp-AF-AgT.title" = "단일 창 모드";
 "Sb3-3h-ll4.title" = "Radio";
 "SfP-Ak-pn3.title" = "별도 창으로";
-"V7d-ht-Pe3.title" = "편집 창을 오른쪽에 ";
+"V7d-ht-Pe3.title" = "오른쪽";
 "YrC-m9-abH.title" = "HTML 창 위치";
 "Zdh-Ch-Ndh.title" = "현재 위치 저장";
 "jgT-n6-lh0.title" = "텍스트와 라인아트를 부드럽게";

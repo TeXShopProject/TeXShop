@@ -27,4 +27,4 @@ with tempfile.TemporaryDirectory(prefix='texshop-row-translations-') as temp:
         path.write_bytes(original)
         print('DETECTED untranslated row',lang,flush=True)
     result=check();assert result.returncode==0,result.stderr
-    print('NORMAL CONTROL: reviewed translations in all three languages')
+    print('NORMAL CONTROL: reviewed translations in all reviewed languages')

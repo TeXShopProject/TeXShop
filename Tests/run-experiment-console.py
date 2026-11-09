@@ -32,7 +32,7 @@ elif args.mutation == "stale-child-appearance":
     assert "self.window.contentView.effectiveAppearance" in controller
     controller = controller.replace("self.window.contentView.effectiveAppearance", "self.outputText.effectiveAppearance", 1)
 if args.mutation == "no-console-alpha":
-    controller = controller.replace('self.window.alphaValue = TSExperimentWindowAlpha(theme, @"ConsoleAlpha");', '')
+    controller = controller.replace('self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeConsoleAlphaKey);', '')
 prefix = r'''
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
@@ -125,6 +125,11 @@ int main(void) { @autoreleasepool {
     NSDictionary *preview = @{@"ConsoleBackground":NSColor.blueColor, @"ConsoleText":NSColor.yellowColor, @"ConsoleAlpha":@[@0,@0,@0,@.75]};
     [[NSNotificationCenter defaultCenter] postNotificationName:SourceColorChangedNotification object:nil userInfo:preview];
     check(fabs(console.window.alphaValue-.75)<.001, @"live console transparency");
+    for(id invalid in @[@"bad",NSNull.null,@[@0],@[@0,@0,@0,@"0.5"],@[@0,@0,@0,@(-0.1)],@[@0,@0,@0,@1.1],@[@0,@0,@0,@(NAN)],@[@0,@0,@0,@(INFINITY)]]){
+        NSMutableDictionary *bad=[preview mutableCopy];bad[@"ConsoleAlpha"]=invalid;
+        [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:nil userInfo:bad];
+        check(console.window.alphaValue==1,@"invalid console opacity uses the common opaque fallback");
+    }
     check([console.outputText.backgroundColor isEqual:NSColor.blueColor], @"live theme preview applied");
     check([[console.outputText.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] isEqual:NSColor.yellowColor], @"existing output recolored");
     console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];

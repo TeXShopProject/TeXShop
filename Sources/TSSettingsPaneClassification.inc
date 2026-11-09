@@ -146,7 +146,16 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
     }else if([kind isEqual:@"colors"] || [kind isEqual:@"colortable"]){
         NSMutableArray *cells=[NSMutableArray array];
         BOOL table=[kind isEqual:@"colortable"];
-        if(table){[cells addObject:NSGridCell.emptyContentView];for(NSString *column in model[@"columns"])[cells addObject:[self label:text(column) small:YES]];}
+        if(table){
+            [cells addObject:NSGridCell.emptyContentView];
+            for(NSString *column in model[@"columns"]){
+                NSTextField *header=[self label:text(column) small:YES];
+                header.maximumNumberOfLines=1;header.lineBreakMode=NSLineBreakByClipping;
+                CGFloat width=ceil([header.stringValue sizeWithAttributes:@{NSFontAttributeName:TSCatalogRequired(header.font)}].width)+4;
+                [header.widthAnchor constraintGreaterThanOrEqualToConstant:width].active=YES;
+                [cells addObject:header];
+            }
+        }
         for(NSDictionary *item in model[@"items"]){
             NSTextField *label=[self label:text(item[@"title"]) small:NO];
             NSMutableArray *wells=[NSMutableArray array];

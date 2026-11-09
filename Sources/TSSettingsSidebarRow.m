@@ -5,10 +5,10 @@
 + (CGFloat)heightForTitle:(NSString *)title cellWidth:(CGFloat)width
 {
     CGFloat available = MAX(1, width - 40);
-    NSRect text = [title boundingRectWithSize:NSMakeSize(available, CGFLOAT_MAX)
-        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-        attributes:@{NSFontAttributeName:[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightRegular]}];
-    return MAX(30, ceil(NSHeight(text)) + 6);
+    NSTextField *label = [NSTextField wrappingLabelWithString:title];
+    label.font = [NSFont systemFontOfSize:NSFont.systemFontSize];
+    CGFloat frameWidth = NSWidth([label frameForAlignmentRect:NSMakeRect(0, 0, available, 1)]);
+    return MAX(30, ceil([label.cell cellSizeForBounds:NSMakeRect(0, 0, frameWidth, CGFLOAT_MAX)].height) + 6);
 }
 + (NSTableCellView *)cellForCategory:(TSSettingsCategory *)category title:(NSString *)title
 {

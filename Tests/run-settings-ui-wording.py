@@ -63,3 +63,10 @@ row_contract=json.loads((r/'Tests/Fixtures/SettingsRowTranslations.json').read_t
 for lang,expected_rows in row_contract['rows'].items():
     actual=strings(interfaces/f'{lang}.lproj'/'SettingsCategories.strings')
     for key,value in expected_rows.items():assert actual[key]==value,(lang,'translated row name',key)
+
+translated=json.loads((r/'Tests/Fixtures/SettingsSixthWording.json').read_text())
+for lang,tables in translated.items():
+    for table,expected in tables.items():
+        actual=strings(interfaces/f'{lang}.lproj'/table)
+        for key,value in expected.items():assert actual[key]==value,(lang,table,key,'sixth audit reviewed wording')
+print('PASS: translated choices, group names and approved semantics in every language')

@@ -5,7 +5,7 @@ import argparse,subprocess,tempfile,shutil,re,json
 from pane_fixtures import bundles,sources
 from shortcut_sources import NAMES
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*[str(r/'Sources'/n) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').glob('TSSettings*.m'))),'-o',str(t/'probe')]
@@ -32,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   if a.output and (not a.capture_languages or bundle.stem in a.capture_languages):folder=a.output/bundle.stem;folder.mkdir(parents=True,exist_ok=True);command.append(str(folder))
   print('LANGUAGE',bundle.stem,flush=True);subprocess.run(command,check=True,timeout=120)
 
-  if a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations:
+  if a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations or a.sixth_audit_mutations:
    cases=[
     ('profile-transient-clear','TSPreferences.m','[self.settingsChangeNotes valuesReplaced];',';'),
     ('encoding-sheet','TSPreferences.m','[self.settingsChangeNotes recordUserChangeForKey:EncodingKey previousValue:oldValue ?: @""];','NSBeginCriticalAlertSheet(@"Encoding",nil,nil,nil,nil,nil,NULL,NULL,NULL,@"Warning");'),
@@ -111,9 +111,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
      ('opacity-missing-save','TSPreferences-Color.m','EditingColors[key]=@[@0,@0,@0,@(well.color.alphaComponent)];','return;','Absent alpha is created and saved once on edit'),
     ]
     for key in ['Source','Console','Preview']:
-     third.append(('opacity-missing-'+key,'TSPreferences-Color.m',key+'AlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"'+key+'Alpha"] ?: [NSColor colorWithWhite:0 alpha:1]',key+'AlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"'+key+'Alpha"]','Absent alpha opens without exception and displays full opacity'))
+     third.append(('opacity-missing-'+key,'TSPreferences-Color.m',key+'AlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSTheme'+key+'AlphaKey)',key+'AlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: TSTheme'+key+'AlphaKey]','Absent alpha opens without exception and displays full opacity'))
     for name,file,old,new,message in third:cases.append((name,file,old,new));expected[name]=message
-   if a.mutation_start:cases=cases[next(i for i,c in enumerate(cases) if c[0]==a.mutation_start):]
    if a.fourth_audit_mutations:cases=[('search-height-minus-one','TSSettingsSidebarRow.m','CGFloat height=10;','CGFloat height=9;')];expected['search-height-minus-one']='Wrapped search result names and categories fit the row'
    if a.fifth_audit_mutations:
     fifth=[
@@ -129,17 +128,31 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    if a.opacity_field_mutations:
     field=[
      ('opacity-field-formatter','TSPrefPaneLayout.m','_field.formatter=[TSOpacityFormatter new];',';','Opacity has an editable whole-percentage field'),
-     ('opacity-field-clamp','TSPrefPaneLayout.m','NSInteger percent = digits.length > 3 ? 100 : MIN(100, digits.integerValue);','NSInteger percent = digits.integerValue;','Opacity entry above 100 is clamped to 100'),
-     ('opacity-field-letters','TSPrefPaneLayout.m','return [normalized rangeOfCharacterFromSet:other].location == NSNotFound ? normalized : nil;','return normalized;','Opacity entry refuses letters, signs and decimals'),
-     ('opacity-field-fullwidth','TSPrefPaneLayout.m','[string.precomposedStringWithCompatibilityMapping stringByTrimmingCharactersInSet:','[string stringByTrimmingCharactersInSet:','Full-width opacity digits are accepted'),
+     ('opacity-field-clamp','TSPrefPaneLayout.m',"percent = MIN(100, percent * 10 + [digits characterAtIndex:i] - '0');","percent = percent * 10 + [digits characterAtIndex:i] - '0';",'Opacity entry above 100 is clamped to 100'),
+     ('opacity-field-letters','TSPrefPaneLayout.m','return [magnitude rangeOfCharacterFromSet:other].location == NSNotFound ? normalized : nil;','return normalized;','Opacity entry refuses letters, signs and decimals'),
+     ('opacity-field-fullwidth','TSPrefPaneLayout.m','[string.precomposedStringWithCompatibilityMapping stringByTrimmingCharactersInSet:','[string stringByTrimmingCharactersInSet:','Full-width opacity digits follow the other numeric fields'),
+     ('opacity-field-negative','TSPrefPaneLayout.m','NSInteger percent = 0;','NSInteger percent = [digits hasPrefix:@"-"] ? -5 : 0;','Negative opacity is clamped to zero'),
+     ('opacity-field-long','TSPrefPaneLayout.m','if (digits == nil) {','if (digits == nil || digits.length > 3) {','Typed opacity moves the slider and saves once'),
+     ('opacity-field-correction','TSPrefPaneLayout.m','self.field.objectValue=@(percent);','self.field.objectValue=@100;','Typed opacity moves the slider and saves once'),
      ('opacity-field-sync','TSPrefPaneLayout.m','    [self applyPercent:entered];\n','',
-      'Typed opacity moves the slider and saves once'),
-     ('opacity-field-passthrough','TSPrefPaneLayout.m','if(lround(entered)==lround(self.slider.doubleValue)){[self synchronize];return;}',';','Passing through the opacity field keeps the stored fractional alpha'),
-     ('opacity-field-empty','TSPrefPaneLayout.m','    if(formatter.rejectionHandler!=nil)formatter.rejectionHandler();\n','','Empty opacity entry is refused and shows the stored value'),
+      'Explicitly entering the displayed integer replaces a fractional opacity'),
+     ('opacity-field-passthrough','TSPrefPaneLayout.m','if(!self.fieldWasEdited || entered==self.slider.doubleValue){[self synchronize];return;}',';','Passing through the opacity field keeps the stored fractional alpha'),
+     ('opacity-field-empty','TSPrefPaneLayout.m','    if(formatter.rejectionHandler!=nil)formatter.rejectionHandler();\n','','Opacity entry refuses letters, signs and decimals'),
      ('opacity-field-disabled','TSPrefPaneLayout.m','self.slider.enabled=enabled;self.field.enabled=enabled;','self.slider.enabled=enabled;','Disabled opacity disables its numeric field'),
     ]
     cases=[]
     for name,file,old,new,message in field:cases.append((name,file,old,new));expected[name]=message
+   if a.sixth_audit_mutations:
+    sixth=[
+     ('sidebar-width-plus-six','TSSettingsSidebarRow.m','width - 40','width - 34','Long localized sidebar names fit at every supported width'),
+     ('column-word-break','TSSettingsPaneClassification.inc','[header.widthAnchor constraintGreaterThanOrEqualToConstant:width].active=YES;',';','Localized color column headings fit without breaking words'),
+     ('highlight-no-inset','TSSettingsWindowController.m','NSInsetRect(bounds, -6, -3)','NSInsetRect(bounds, 0, -2)','Color row highlight leaves padding around names and percent fields'),
+     ('opacity-rounded-equality','TSPrefPaneLayout.m','if(!self.fieldWasEdited || entered==self.slider.doubleValue)','if(lround(entered)==lround(self.slider.doubleValue))','Explicitly entering the displayed integer replaces a fractional opacity'),
+     ('opacity-settings-old-reader','TSPreferences-Color.m','SourceAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemeSourceAlphaKey);','SourceAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey:TSThemeSourceAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];','Invalid theme opacity loads safely and consistently'),
+    ]
+    cases=[]
+    for name,file,old,new,message in sixth:cases.append((name,file,old,new));expected[name]=message
+   if a.mutation_start:cases=cases[next(i for i,c in enumerate(cases) if c[0]==a.mutation_start):]
    if a.mutation_only:cases=[c for c in cases if c[0]==a.mutation_only];assert cases
    for name,filename,old,new in cases:
     source=(r/'Sources'/filename).read_text()

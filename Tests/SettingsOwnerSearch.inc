@@ -50,6 +50,11 @@ static void CheckOwnerSearch(TSPreferences *owner,TSSettingsWindowController *sh
     // Each merged color result must mark only its own grid row.
     NSGridView *grid=(NSGridView *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryAppearance],@"settings.color-table");
     Check(grid.numberOfRows==5,@"Color table retains header and four named rows");
+    for(NSInteger c=1;c<4;c++){
+        NSTextField *header=(NSTextField *)[grid cellAtColumnIndex:c rowIndex:0].contentView;
+        CGFloat required=[header.stringValue sizeWithAttributes:@{NSFontAttributeName:header.font}].width;
+        Check(header.maximumNumberOfLines==1 && NSWidth(header.bounds)>=required,@"Localized color column headings fit without breaking words");
+    }
     NSArray *targets=@[@"settings.L8Q-Ov-EVr",@"settings.Kx3-n3-dsv",@"settings.FoL-zy-obh",@"settings.hCM-4U-XkM"];
     for(NSUInteger i=0;i<4;i++){
         NSString *name=[fixture localizedStringForKey:[NSString stringWithFormat:@"catalog.appearance.2.0.item.%lu",(unsigned long)i] value:nil table:@"SettingsCategories"];
@@ -57,6 +62,12 @@ static void CheckOwnerSearch(TSPreferences *owner,TSSettingsWindowController *sh
         NSArray<NSView *> *marks=[shell valueForKey:@"searchHighlights"];
         Check(marks.count==1 && marks[0].superview==grid,@"Merged color search highlights only its selected grid row");
         NSRect selected=marks[0].frame;
+        for(NSInteger c=0;c<4;c++){
+            NSView *content=[grid cellAtColumnIndex:c rowIndex:i+1].contentView;
+            if(content==nil || content==NSGridCell.emptyContentView)continue;
+            NSRect bounds=[content convertRect:content.bounds toView:grid];
+            Check(NSContainsRect(NSInsetRect(selected,4,2),bounds),@"Color row highlight leaves padding around names and percent fields");
+        }
         for(NSInteger j=1;j<5;j++){
             NSView *label=[grid cellAtColumnIndex:0 rowIndex:j].contentView;
             NSRect bounds=[label convertRect:label.bounds toView:grid];

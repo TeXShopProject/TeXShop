@@ -97,7 +97,7 @@
 "catalog.editor.4.0.title" = "Hilfe bei Klammerung";
 "catalog.editor.4.1.title" = "Klammern";
 "catalog.editor.4.1.choice.0" = "{ }";
-"catalog.editor.4.1.choice.1" = "für (";
+"catalog.editor.4.1.choice.1" = "( )";
 "catalog.editor.4.1.choice.2" = "[ ]";
 "catalog.editor.4.1.choice.3" = "< >";
 "catalog.editor.4.2.title" = "Umschlossene Zeichen hervorheben";
@@ -171,7 +171,7 @@
 "catalog.appearance.4.0.item.3" = "Markierung";
 "catalog.appearance.4.0.item.4" = "Index";
 "group.appearance.5.title" = "Farben: Klammern";
-"catalog.appearance.5.0.item.0" = "für (";
+"catalog.appearance.5.0.item.0" = "( )";
 "catalog.appearance.5.0.item.1" = "{ }";
 "catalog.appearance.5.0.item.2" = "[ ]";
 "group.appearance.6.title" = "Farben: expl3";

@@ -423,8 +423,8 @@ static NSColor *TSSettingsCardColor(void)
 }
 @end
 // Opacity is entered as a whole percentage, as in the standard color panel.
-// Full-width digits and surrounding spaces are normalized; any other character
-// is refused while typing or pasting. Values above 100 are clamped to 100.
+// Surrounding spaces and full-width digits follow the other numeric fields.
+// Decimals are refused; integers outside the range are clamped.
 @implementation TSOpacityFormatter
 - (instancetype)init
 {
@@ -436,7 +436,8 @@ static NSColor *TSSettingsCardColor(void)
 {
     NSString *normalized = [string.precomposedStringWithCompatibilityMapping stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
     NSCharacterSet *other = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
-    return [normalized rangeOfCharacterFromSet:other].location == NSNotFound ? normalized : nil;
+    NSString *magnitude = [normalized hasPrefix:@"-"] ? [normalized substringFromIndex:1] : normalized;
+    return [magnitude rangeOfCharacterFromSet:other].location == NSNotFound ? normalized : nil;
 }
 - (nullable NSString *)stringForObjectValue:(nullable id)value
 {
@@ -447,12 +448,14 @@ static NSColor *TSSettingsCardColor(void)
 - (BOOL)getObjectValue:(out id _Nullable *)value forString:(NSString *)string errorDescription:(out NSString * _Nullable *)error
 {
     NSString *digits = [TSOpacityFormatter normalizedDigits:string];
-    if (digits.length == 0) {
+    if (digits.length == 0 || [digits isEqual:@"-"]) {
         if (error != NULL) *error = @"Opacity must be a whole number from 0 to 100.";
         return NO;
     }
     // Long digit strings are clamped without overflowing the integer conversion.
-    NSInteger percent = digits.length > 3 ? 100 : MIN(100, digits.integerValue);
+    NSInteger percent = 0;
+    if (![digits hasPrefix:@"-"]) for (NSUInteger i = 0; i < digits.length; i++)
+        percent = MIN(100, percent * 10 + [digits characterAtIndex:i] - '0');
     if (value != NULL) *value = @(percent);
     return YES;
 }
@@ -461,7 +464,7 @@ static NSColor *TSSettingsCardColor(void)
             errorDescription:(NSString * _Nullable *)error
 {
     NSString *digits = [TSOpacityFormatter normalizedDigits:*partial];
-    if (digits == nil || digits.length > 3) {
+    if (digits == nil) {
         if (self.rejectionHandler != nil) self.rejectionHandler();
         return NO;
     }
@@ -482,6 +485,7 @@ static NSColor *TSSettingsCardColor(void)
 @property (strong) NSSlider *slider;
 @property (strong) NSTextField *field;
 @property (strong) NSTextField *unit;
+@property BOOL fieldWasEdited;
 - (instancetype)initWithWell:(NSColorWell *)well;
 @end
 @implementation TSSettingsOpacityPresentation
@@ -517,6 +521,7 @@ static NSColor *TSSettingsCardColor(void)
 }
 - (void)dealloc {for(NSString *key in @[@"color",@"enabled"])[self.source removeObserver:self forKeyPath:key];}
 - (void)synchronize {
+    self.fieldWasEdited=NO;
     double percent=self.source.color.alphaComponent*100;
     BOOL enabled=self.source.enabled;
     self.slider.doubleValue=percent;
@@ -540,12 +545,14 @@ static NSColor *TSSettingsCardColor(void)
     [self synchronize];
 }
 - (void)changed:(NSSlider *)sender {[self applyPercent:sender.doubleValue];}
+- (void)controlTextDidBeginEditing:(NSNotification *)note { self.fieldWasEdited=NO; }
+- (void)controlTextDidChange:(NSNotification *)note { self.fieldWasEdited=YES; }
 // A field that was only passed through keeps the stored fractional value.
 - (void)fieldChanged:(NSTextField *)sender {
     id value=sender.objectValue;
     if(![value isKindOfClass:NSNumber.class] || !self.source.enabled){[self synchronize];return;}
     double entered=[value doubleValue];
-    if(lround(entered)==lround(self.slider.doubleValue)){[self synchronize];return;}
+    if(!self.fieldWasEdited || entered==self.slider.doubleValue){[self synchronize];return;}
     [self applyPercent:entered];
 }
 // Empty input cannot be formatted: refuse it and show the stored value again.

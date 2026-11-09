@@ -1,0 +1,779 @@
+{
+  "Base": {},
+  "de": {
+    "SettingsCategories.strings": {
+      "catalog.appearance.5.0.item.0": "( )",
+      "catalog.editor.4.1.choice.1": "( )"
+    },
+    "SettingsMiscOne.strings": {
+      "g92-sP-oZU.title": "Beide Seiten"
+    },
+    "SettingsPreview.strings": {
+      "V7d-ht-Pe3.title": "Rechts",
+      "1uj-kt-7Pj.title": "Links",
+      "337.title": "PDF auswählen"
+    },
+    "SettingsThemes.strings": {
+      "dDq-0W-EuL.title": "( )"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "785.title": "PDF durchsuchen"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "TeXShop-Standard"
+    }
+  },
+  "es": {
+    "SettingsCategories.strings": {
+      "catalog.appearance.5.0.item.0": "( )",
+      "catalog.editor.4.1.choice.1": "( )"
+    },
+    "SettingsMiscOne.strings": {
+      "g92-sP-oZU.title": "Ambos lados"
+    },
+    "SettingsPreview.strings": {
+      "V7d-ht-Pe3.title": "Derecha",
+      "1uj-kt-7Pj.title": "Izquierda",
+      "337.title": "Seleccionar PDF"
+    },
+    "SettingsThemes.strings": {
+      "dDq-0W-EuL.title": "( )"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "785.title": "Buscar en PDF"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "Estándar de TeXShop"
+    }
+  },
+  "fr": {
+    "SettingsCategories.strings": {
+      "catalog.appearance.5.0.item.0": "( )",
+      "catalog.editor.4.1.choice.1": "( )"
+    },
+    "SettingsMiscOne.strings": {
+      "g92-sP-oZU.title": "Des deux côtés"
+    },
+    "SettingsPreview.strings": {
+      "V7d-ht-Pe3.title": "Droite",
+      "1uj-kt-7Pj.title": "Gauche",
+      "337.title": "Sélectionner le PDF"
+    },
+    "SettingsThemes.strings": {
+      "dDq-0W-EuL.title": "( )"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "785.title": "Rechercher dans le PDF"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "Standard TeXShop"
+    }
+  },
+  "it": {
+    "SettingsCategories.strings": {
+      "catalog.appearance.5.0.item.0": "( )",
+      "catalog.editor.4.1.choice.1": "( )"
+    },
+    "SettingsMiscOne.strings": {
+      "g92-sP-oZU.title": "Entrambi i lati"
+    },
+    "SettingsPreview.strings": {
+      "V7d-ht-Pe3.title": "Destra",
+      "1uj-kt-7Pj.title": "Sinistra",
+      "337.title": "Seleziona PDF"
+    },
+    "SettingsThemes.strings": {
+      "dDq-0W-EuL.title": "( )"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "785.title": "Cerca nel PDF"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "Standard TeXShop"
+    }
+  },
+  "ja": {
+    "SettingsCategories.strings": {
+      "catalog.typesetting.3.0.title": "pdfTeX"
+    },
+    "SettingsThemes.strings": {
+      "dDq-0W-EuL.title": "( )"
+    }
+  },
+  "ko": {
+    "SettingsCategories.strings": {
+      "catalog.appearance.5.0.item.0": "( )",
+      "catalog.editor.4.1.choice.1": "( )"
+    },
+    "SettingsMiscOne.strings": {
+      "g92-sP-oZU.title": "양쪽"
+    },
+    "SettingsPreview.strings": {
+      "V7d-ht-Pe3.title": "오른쪽",
+      "1uj-kt-7Pj.title": "왼쪽"
+    },
+    "SettingsThemes.strings": {
+      "dDq-0W-EuL.title": "( )"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "785.title": "PDF 검색"
+    }
+  },
+  "nl": {
+    "SettingsCategories.strings": {
+      "themes": "Thema’s",
+      "group.preview.1.title": "Indeling van dubbele pagina’s",
+      "catalog.appearance.2.0.column.1": "Achtergrond",
+      "catalog.appearance.5.0.item.0": "( )",
+      "group.editor.6.title": "Invoegpunt",
+      "catalog.appearance.2.0.column.2": "Dekking",
+      "group.appearance.0.title": "Thema’s",
+      "group.console.1.title": "Acties",
+      "group.typesetting.9.title": "pTeX-ondersteuning",
+      "catalog.editor.4.1.choice.1": "( )",
+      "catalog.general.2.2.button": "Huidige positie gebruiken",
+      "group.editor.5.title": "Onzichtbare tekens",
+      "catalog.general.2.0.button": "Huidige positie gebruiken",
+      "group.editor.2.title": "Typen",
+      "catalog.general.2.3.button": "Huidige positie gebruiken",
+      "group.editor.1.title": "Editorstijl",
+      "catalog.general.2.1.button": "Huidige positie gebruiken",
+      "catalog.appearance.2.0.column.0": "Voorgrond"
+    },
+    "SettingsConsole.strings": {
+      "Zuj-f0-WHa.title": "Ook gebruiken voor macro-editor"
+    },
+    "SettingsEditor.strings": {
+      "963.title": "Japanse spatie",
+      "964.title": "Regeleinde",
+      "942.title": "Ingesloten tekens markeren",
+      "YsC-bl-8G6.title": "Inspringing overige alinearegels:",
+      "LYC-Qf-9zP.title": "Inspringing eerste alinearegel:",
+      "943.title": "Geluid bij losse haakjes",
+      "PhR-Vr-jce.title": "Spelling corrigeren",
+      "87S-PS-ZQu.title": "Huidige regel markeren",
+      "944.title": "Achtergrond laten flitsen bij losse haakjes",
+      "674-8W-hQ6.title": "Regelafstand:",
+      "1044.title": "Standaard ingeschakeld",
+      "XoX-gZ-pO3.title": "Tags-menu in menubalk",
+      "945.title": "Indicator bij verplaatsen tonen",
+      "Gj7-Yx-1Hv.title": "Editorstijl",
+      "1036.title": "Markering laten knipperen",
+      "962.title": "Spatie"
+    },
+    "SettingsEngines.strings": {
+      "1027.title": "BibTeX-engine",
+      "882.title": "Waarschuwing voor shell escape"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "TeXShop-standaard"
+    },
+    "SettingsMiscOne.strings": {
+      "XCi-5f-wnn.title": "Cursorkleur:",
+      "904.title": "Nadruk op voorgrond:",
+      "375.title": "JPEG (hoog)",
+      "380.title": "TIFF (ongecomprimeerd)",
+      "Nie-mP-dxR.title": "Blokcursor gebruiken",
+      "qMw-aC-Ilj.title": "Links",
+      "cSu-im-H1E.title": "Invoegcursor",
+      "CBT-8e-Ayl.title": "Rechts",
+      "407.title": "JPEG (laag)",
+      "423.title": "JPEG (gemiddeld)",
+      "i6L-IX-ZLk.title": "Eén teken",
+      "g92-sP-oZU.title": "Beide zijden",
+      "4k3-5Y-CEt.title": "Breedte links of rechts:",
+      "shH-XU-nyE.title": "Twee tekens",
+      "xvd-dM-RGh.title": "Zijde van invoeglijn:"
+    },
+    "SettingsMiscTwo.strings": {
+      "SS5-tZ-cDa.title": "pTeX-ondersteuning",
+      "vEF-zd-SJl.title": "Alternatieve engine",
+      "GUV-qt-mM2.title": "Dagelijks",
+      "h3F-qB-MHw.title": "Geopend hoofdvenster minimaliseren",
+      "2x0-tc-yWg.title": "Automatisch naar updates zoeken",
+      "oSw-pG-JGB.title": "Wekelijks",
+      "naM-Et-WMn.title": "Maandelijks"
+    },
+    "SettingsPreview.strings": {
+      "346.title": "Doorlopende dubbele pagina’s",
+      "335.title": "Sterk vergroten",
+      "Zdh-Ch-Ndh.title": "Huidige positie gebruiken",
+      "sa2-VV-W1K.title": "Positie bij sluiten bewaren",
+      "347.title": "Doorlopende pagina’s",
+      "SfP-Ak-pn3.title": "In afzonderlijke vensters openen",
+      "V7d-ht-Pe3.title": "Rechts",
+      "337.title": "PDF selecteren",
+      "tVs-uh-QcM.title": "Alle vensters op vaste positie openen",
+      "343.title": "Twee pagina’s",
+      "332.title": "Vergroten",
+      "501.title": "Indeling van dubbele pagina’s",
+      "636.title": "Tekst selecteren",
+      "339.title": "Aan venster aanpassen",
+      "328.title": "Scrollen",
+      "344.title": "Vaste vergroting",
+      "1uj-kt-7Pj.title": "Links",
+      "48.title": "Alle vensters op vaste positie openen",
+      "333.title": "Enkele pagina",
+      "45.title": "Positie bij sluiten bewaren",
+      "637.title": "Werkelijke grootte",
+      "vOt-2m-d2s.title": "Samenvoegen in één venster",
+      "preview-cover-cell.title": "Eerste pagina apart als omslag tonen",
+      "p2D-Mi-Gyc.title": "Start-URL"
+    },
+    "SettingsSource.strings": {
+      "8Wq-gx-FqO.title": "Commentaar overslaan",
+      "ENd-QB-0Uf.title": "Woordenboek",
+      "Mo3-zf-BYT.title": "Nooit",
+      "927.title": "Escape-toets",
+      "928.title": "Tab-toets",
+      "583.title": "Apple-zoekbalk",
+      "Xrb-Fe-9cg.title": "Klein",
+      "aig-4m-gAG.title": "Nieuwe vensters als tabbladen openen",
+      "teg-0p-Q8J.title": "LaTeX-commando’s overslaan",
+      "aI9-3B-vVE.title": "Automatisch",
+      "eIA-mh-q2u.title": "Grootte van regelnummers",
+      "odm-Dy-TNW.title": "Groot",
+      "ypQ-Gc-HUa.title": "Altijd",
+      "3eF-XA-ahc.title": "Geselecteerde parameters overslaan"
+    },
+    "SettingsThemeName.strings": {
+      "ZJe-8t-Rwa.title": "Naam:",
+      "jJY-ql-JXD.title": "Annuleren"
+    },
+    "SettingsThemes.strings": {
+      "dAq-I3-00S.title": "Afbeelding kopiëren",
+      "rad-zH-Nv2.title": "Te bewerken thema",
+      "m2P-eK-MuA.title": "Ingesloten tekst",
+      "2wp-bc-jxK.title": "Tekst",
+      "29d-sK-CAr.title": "Thema voor lichte modus",
+      "Sb2-DV-n4h.title": "Onzichtbare tekens",
+      "M3K-Bv-8B1.title": "Brontekst",
+      "fbI-WL-RD5.title": "Achtergrond",
+      "7hF-dm-sw0.title": "Thema’s",
+      "Qws-5c-CFu.title": "Attribuut",
+      "cPa-5P-FPE.title": "Markering",
+      "yPD-Wd-E6K.title": "Brontekst",
+      "55d-iy-6im.title": "Dekking",
+      "O6J-e1-meg.title": "Escape-teken",
+      "AHf-yj-qsp.title": "Commando",
+      "J68-pe-b8Y.title": "Thema voor donkere modus",
+      "olb-4z-mYu.title": "Logboek",
+      "dDq-0W-EuL.title": "( )",
+      "Z9i-kS-FGf.title": "Voorgrond",
+      "brV-c3-Y89.title": "Voetnoot",
+      "rpP-GF-uJp.title": "Invoegpunt",
+      "Odq-MM-jdm.title": "Commentaar",
+      "Xkh-fT-Rfi.title": "Huidige regel",
+      "s3b-sE-3Ix.title": "Waarde",
+      "tQ6-6v-qml.title": "Flits",
+      "oZx-IF-VfJ.title": "Voorvertoning",
+      "usk-lT-OCT.title": "Achtergrond",
+      "xz1-SF-It8.title": "Accolades",
+      "ycd-ZH-bzw.title": "Acties",
+      "z0I-4l-zwC.title": "Commentaar"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "YQv-fE-Uzg.title": "Als tabblad in hoofdvenster openen",
+      "bYh-V5-ri6.title": "In huidig venster blijven",
+      "785.title": "PDF doorzoeken"
+    }
+  },
+  "pt": {
+    "SettingsCategories.strings": {
+      "catalog.appearance.5.0.item.0": "( )",
+      "catalog.editor.4.1.choice.1": "( )"
+    },
+    "SettingsMiscOne.strings": {
+      "g92-sP-oZU.title": "Ambos os lados"
+    },
+    "SettingsPreview.strings": {
+      "V7d-ht-Pe3.title": "Direita",
+      "1uj-kt-7Pj.title": "Esquerda",
+      "337.title": "Selecionar PDF"
+    },
+    "SettingsThemes.strings": {
+      "dDq-0W-EuL.title": "( )"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "785.title": "Pesquisar PDF"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "Padrão do TeXShop"
+    }
+  },
+  "pt-PT": {
+    "SettingsCategories.strings": {
+      "themes": "Temas",
+      "group.preview.1.title": "Disposição de páginas duplas",
+      "catalog.appearance.2.0.column.1": "Fundo",
+      "group.general.4.title": "Definir valores predefinidos",
+      "catalog.appearance.5.0.item.0": "( )",
+      "group.preview.3.title": "Mapeamento de cores",
+      "group.editor.6.title": "Ponto de inserção",
+      "catalog.appearance.2.0.column.2": "Opacidade",
+      "group.appearance.0.title": "Temas",
+      "group.console.1.title": "Ações",
+      "group.typesetting.9.title": "Suporte a pTeX",
+      "catalog.editor.4.1.choice.1": "( )",
+      "catalog.general.2.2.button": "Usar a posição atual",
+      "group.editor.5.title": "Carateres invisíveis",
+      "catalog.general.2.0.button": "Usar a posição atual",
+      "group.editor.2.title": "Escrita",
+      "catalog.general.2.3.button": "Usar a posição atual",
+      "group.bindings.title": "Preenchimento automático",
+      "group.editor.1.title": "Estilo do editor",
+      "catalog.general.2.1.button": "Usar a posição atual",
+      "catalog.appearance.2.0.column.0": "Primeiro plano"
+    },
+    "SettingsConsole.strings": {
+      "765.title": "Redimensionar apenas na vertical",
+      "Zuj-f0-WHa.title": "Usar também no editor de macros",
+      "766.title": "Redimensionar livremente",
+      "772.title": "Redimensionar a consola",
+      "906.title": "Definir…",
+      "752.title": "Tipo de letra da consola"
+    },
+    "SettingsEditor.strings": {
+      "963.title": "Espaço japonês",
+      "4a3-VM-Tgq.title": "Quebrar linhas",
+      "UXo-9g-NNW.title": "Por caráter",
+      "964.title": "Nova linha",
+      "942.title": "Realçar os carateres entre parênteses",
+      "EgL-0e-rdg.title": "Nenhum",
+      "LJw-Jj-VBR.title": "Por palavra",
+      "YsC-bl-8G6.title": "Avanço das restantes linhas:",
+      "LYC-Qf-9zP.title": "Avanço da primeira linha do parágrafo:",
+      "943.title": "Emitir som para parênteses isolados",
+      "842.title": "Preenchimento automático",
+      "PhR-Vr-jce.title": "Corrigir a ortografia",
+      "87S-PS-ZQu.title": "Realçar a linha atual",
+      "944.title": "Fazer o fundo piscar para parênteses isolados",
+      "674-8W-hQ6.title": "Espaçamento entre linhas:",
+      "1044.title": "Ativo por predefinição",
+      "843.title": "Completar com o BibDesk",
+      "XoX-gZ-pO3.title": "Menu de etiquetas na barra de menus",
+      "945.title": "Mostrar indicador ao deslocar",
+      "844.title": "Selecionar ao ativar",
+      "Gj7-Yx-1Hv.title": "Estilo do editor",
+      "1036.title": "Piscar o realce",
+      "962.title": "Espaço",
+      "845.title": "Números de linha"
+    },
+    "SettingsEngines.strings": {
+      "1027.title": "Motor BibTeX",
+      "882.title": "Aviso de shell escape"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "Padrão do TeXShop",
+      "1101.title": "Definir valores predefinidos"
+    },
+    "SettingsMiscOne.strings": {
+      "XCi-5f-wnn.title": "Cor do cursor:",
+      "447.title": "Mapeamento de cores",
+      "904.title": "Destaque do primeiro plano:",
+      "375.title": "JPEG (alta)",
+      "380.title": "TIFF (sem compressão)",
+      "Nie-mP-dxR.title": "Usar cursor de bloco",
+      "qMw-aC-Ilj.title": "Esquerda",
+      "cSu-im-H1E.title": "Cursor de inserção",
+      "CBT-8e-Ayl.title": "Direita",
+      "407.title": "JPEG (baixa)",
+      "423.title": "JPEG (média)",
+      "i6L-IX-ZLk.title": "Um caráter",
+      "g92-sP-oZU.title": "Ambos os lados",
+      "4k3-5Y-CEt.title": "Largura à esquerda ou à direita:",
+      "shH-XU-nyE.title": "Dois carateres",
+      "xvd-dM-RGh.title": "Lado da linha de inserção:"
+    },
+    "SettingsMiscTwo.strings": {
+      "SS5-tZ-cDa.title": "Suporte a pTeX",
+      "vEF-zd-SJl.title": "Motor alternativo",
+      "GUV-qt-mM2.title": "Diariamente",
+      "h3F-qB-MHw.title": "Minimizar a janela principal aberta",
+      "2x0-tc-yWg.title": "Procurar atualizações automaticamente",
+      "oSw-pG-JGB.title": "Semanalmente",
+      "naM-Et-WMn.title": "Mensalmente"
+    },
+    "SettingsPreview.strings": {
+      "346.title": "Páginas duplas contínuas",
+      "335.title": "Ampliar mais",
+      "Zdh-Ch-Ndh.title": "Usar a posição atual",
+      "sa2-VV-W1K.title": "Guardar a posição ao fechar",
+      "347.title": "Páginas contínuas",
+      "SfP-Ak-pn3.title": "Abrir em janelas separadas",
+      "V7d-ht-Pe3.title": "Direita",
+      "337.title": "Selecionar PDF",
+      "tVs-uh-QcM.title": "Abrir todas as janelas numa posição fixa",
+      "343.title": "Duas páginas",
+      "332.title": "Ampliar",
+      "501.title": "Disposição de páginas duplas",
+      "871.title": "Atualizar a pré-visualização automaticamente",
+      "636.title": "Selecionar texto",
+      "339.title": "Ajustar à janela",
+      "328.title": "Deslocar",
+      "344.title": "Ampliação fixa",
+      "1uj-kt-7Pj.title": "Esquerda",
+      "333.title": "Página única",
+      "637.title": "Tamanho real",
+      "vOt-2m-d2s.title": "Unir numa única janela",
+      "preview-cover-cell.title": "Mostrar a primeira página como capa",
+      "p2D-Mi-Gyc.title": "URL inicial"
+    },
+    "SettingsSource.strings": {
+      "8Wq-gx-FqO.title": "Ignorar comentários",
+      "ENd-QB-0Uf.title": "Dicionário",
+      "582.title": "Painel de pesquisa Apple",
+      "Mo3-zf-BYT.title": "Nunca",
+      "927.title": "Tecla Escape",
+      "928.title": "Tecla Tab",
+      "583.title": "Barra de pesquisa Apple",
+      "Xrb-Fe-9cg.title": "Pequeno",
+      "aig-4m-gAG.title": "Abrir novas janelas como separadores",
+      "teg-0p-Q8J.title": "Ignorar comandos LaTeX",
+      "aI9-3B-vVE.title": "Automaticamente",
+      "eIA-mh-q2u.title": "Tamanho dos números de linha",
+      "odm-Dy-TNW.title": "Grande",
+      "ypQ-Gc-HUa.title": "Sempre",
+      "1080.title": "Painel de pesquisa OgreKit",
+      "3eF-XA-ahc.title": "Ignorar os parâmetros selecionados"
+    },
+    "SettingsThemeName.strings": {
+      "ZJe-8t-Rwa.title": "Título:",
+      "jJY-ql-JXD.title": "Cancelar"
+    },
+    "SettingsThemes.strings": {
+      "dAq-I3-00S.title": "Cópia de imagem",
+      "rad-zH-Nv2.title": "Tema a editar",
+      "m2P-eK-MuA.title": "Texto entre parênteses",
+      "2wp-bc-jxK.title": "Texto",
+      "29d-sK-CAr.title": "Tema do modo claro",
+      "Sb2-DV-n4h.title": "Carateres invisíveis",
+      "kuS-x2-ZGi.title": "Consola",
+      "M3K-Bv-8B1.title": "Código-fonte",
+      "fbI-WL-RD5.title": "Fundo",
+      "7hF-dm-sw0.title": "Temas",
+      "Qws-5c-CFu.title": "Atributo",
+      "cPa-5P-FPE.title": "Marcador",
+      "yPD-Wd-E6K.title": "Código-fonte",
+      "55d-iy-6im.title": "Opacidade",
+      "O6J-e1-meg.title": "Caráter de escape",
+      "AHf-yj-qsp.title": "Comando",
+      "J68-pe-b8Y.title": "Tema do modo escuro",
+      "olb-4z-mYu.title": "Registo",
+      "OFK-Td-Bas.title": "Índice",
+      "dDq-0W-EuL.title": "( )",
+      "Z9i-kS-FGf.title": "Primeiro plano",
+      "lAb-Fn-Tpo.title": "Marcador",
+      "brV-c3-Y89.title": "Nota de rodapé",
+      "rpP-GF-uJp.title": "Ponto de inserção",
+      "Odq-MM-jdm.title": "Comentário",
+      "Xkh-fT-Rfi.title": "Linha atual",
+      "s3b-sE-3Ix.title": "Valor",
+      "tQ6-6v-qml.title": "Clarão",
+      "8Xd-ca-aMe.title": "Etiqueta",
+      "oZx-IF-VfJ.title": "Pré-visualização",
+      "usk-lT-OCT.title": "Fundo",
+      "xz1-SF-It8.title": "Chavetas",
+      "ycd-ZH-bzw.title": "Ações",
+      "z0I-4l-zwC.title": "Comentário"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "YQv-fE-Uzg.title": "Abrir como separador na janela principal",
+      "823.title": "Método de sincronização",
+      "590.title": "Comando indicado abaixo",
+      "680.title": "Continuar a editar",
+      "675.title": "Após a composição",
+      "785.title": "Pesquisar PDF",
+      "679.title": "Trazer a pré-visualização para a frente",
+      "bYh-V5-ri6.title": "Permanecer na janela atual"
+    }
+  },
+  "ro": {
+    "SettingsCategories.strings": {
+      "catalog.general.2.0.title": "Sursă",
+      "catalog.general.1.2.title": "Deschide ferestrele noi ca file",
+      "catalog.console.1.1.title": "Redimensionarea consolei",
+      "catalog.typesetting.5.2.title": "Salvează fișierul PostScript",
+      "themes": "Teme",
+      "source": "Sursă",
+      "catalog.typesetting.8.1.title": "Motor BibTeX",
+      "group.preview.1.title": "Aranjarea paginilor duble",
+      "catalog.appearance.2.0.column.1": "Fundal",
+      "group.general.4.title": "Stabilește valorile implicite",
+      "catalog.appearance.3.0.item.0": "Punct de inserare",
+      "catalog.editor.0.3.title": "Dimensiunea numerelor de linie",
+      "catalog.appearance.5.0.item.0": "( )",
+      "catalog.editor.4.6.title": "Clipește fundalul pentru paranteze izolate",
+      "catalog.editor.1.3.title": "Indentarea celorlalte rânduri:",
+      "catalog.spelling.1.4.title": "Omite parametrii selectați",
+      "catalog.console.0.1.title": "Folosește și pentru editorul de macrocomenzi",
+      "catalog.typesetting.0.2.title": "Script personal",
+      "catalog.appearance.3.0.item.2": "Rândul curent",
+      "catalog.appearance.2.0.item.1": "Consolă",
+      "catalog.preview.2.0.title": "Actualizează automat previzualizarea",
+      "catalog.appearance.4.0.item.1": "Comandă",
+      "group.editor.6.title": "Punct de inserare",
+      "catalog.editor.5.1.title": "Spațiu",
+      "catalog.appearance.2.0.column.2": "Opacitate",
+      "catalog.console.0.0.title": "Fontul consolei",
+      "catalog.appearance.7.0.item.0": "Caractere invizibile",
+      "catalog.appearance.9.0.item.0": "Comentariu",
+      "catalog.appearance.2.0.item.3": "Previzualizare",
+      "catalog.spelling.0.1.title": "Corectează ortografia",
+      "catalog.appearance.4.0.item.3": "Marcaj",
+      "catalog.editor.0.5.title": "Împarte rândurile",
+      "catalog.appearance.7.0.item.2": "Acolade",
+      "catalog.typesetting.1.0.title": "După tehnoredactare",
+      "catalog.appearance.9.0.item.2": "Caracter de escape",
+      "group.appearance.0.title": "Teme",
+      "catalog.preview.0.5.title": "Netezește textul și liniile",
+      "catalog.editor.4.3.title": "Evidențiere intermitentă",
+      "catalog.preview.1.1.title": "Arată prima pagină separat, ca o copertă",
+      "catalog.editor.6.1.title": "Culoarea cursorului:",
+      "group.console.1.title": "Acțiuni",
+      "catalog.appearance.9.0.item.4": "Valoare",
+      "group.typesetting.9.title": "Suport pTeX",
+      "catalog.editor.4.1.choice.1": "( )",
+      "catalog.general.2.2.button": "Folosește poziția actuală",
+      "group.editor.5.title": "Caractere invizibile",
+      "catalog.updates.0.0.title": "Caută automat actualizări",
+      "catalog.editor.0.2.title": "Numere de linie",
+      "catalog.editor.5.3.title": "Rând nou",
+      "catalog.editor.2.0.title": "Selectează la activare",
+      "catalog.spelling.1.3.title": "Omite comenzile LaTeX",
+      "catalog.editor.4.5.title": "Semnal sonor pentru paranteze izolate",
+      "catalog.typesetting.2.0.title": "Metoda de sincronizare",
+      "catalog.editor.1.2.title": "Indentarea primului rând:",
+      "catalog.editor.6.3.title": "Lățimea la stânga sau la dreapta:",
+      "catalog.general.2.0.button": "Folosește poziția actuală",
+      "catalog.editor.5.0.title": "Activat implicit",
+      "catalog.appearance.3.0.item.1": "Clipire",
+      "group.editor.2.title": "Tastare",
+      "catalog.appearance.2.0.item.0": "Sursă",
+      "catalog.appearance.4.0.item.0": "Comentariu",
+      "catalog.preview.5.0.title": "URL inițial",
+      "catalog.editor.0.4.title": "Evidențiază rândul curent",
+      "catalog.typesetting.0.3.title": "Motor alternativ",
+      "catalog.general.3.1.title": "Minimizează fereastra principală deschisă",
+      "catalog.appearance.2.0.item.2": "Jurnal",
+      "catalog.appearance.4.0.item.2": "Notă de subsol",
+      "catalog.editor.4.2.title": "Evidențiază caracterele dintre paranteze",
+      "catalog.general.2.3.button": "Folosește poziția actuală",
+      "catalog.appearance.7.0.item.1": "Textul dintre paranteze",
+      "catalog.spelling.1.5.title": "Omite comentariile",
+      "catalog.editor.6.0.title": "Folosește un cursor bloc",
+      "catalog.appearance.0.1.title": "Tema modului întunecat",
+      "catalog.appearance.9.0.item.1": "Etichetă",
+      "catalog.keyboard.1.1.title": "Completări BibDesk",
+      "catalog.editor.5.2.title": "Spațiu japonez",
+      "catalog.typesetting.4.2.title": "Avertisment shell escape",
+      "catalog.editor.1.4.title": "Spațierea rândurilor:",
+      "catalog.appearance.9.0.item.3": "Atribut",
+      "catalog.editor.0.6.title": "Meniul de etichete în bara de meniuri",
+      "catalog.spelling.0.2.title": "Dicționar",
+      "catalog.general.2.2.title": "Consolă",
+      "catalog.appearance.0.0.title": "Tema modului luminos",
+      "group.editor.1.title": "Stilul editorului",
+      "catalog.appearance.1.0.title": "Tema de editat",
+      "catalog.preview.0.2.button": "Stabilește",
+      "catalog.general.2.1.button": "Folosește poziția actuală",
+      "catalog.appearance.2.0.column.0": "Prim-plan",
+      "catalog.editor.4.4.title": "Arată indicatorul la deplasare",
+      "catalog.general.2.1.title": "Previzualizare",
+      "catalog.editor.6.2.title": "Partea liniei de inserare:"
+    },
+    "SettingsConsole.strings": {
+      "831.title": "la apariția unei erori",
+      "765.title": "Redimensionare doar verticală",
+      "Zuj-f0-WHa.title": "Folosește și pentru editorul de macrocomenzi",
+      "766.title": "Redimensionare liberă",
+      "772.title": "Redimensionarea consolei",
+      "906.title": "Stabilește…",
+      "mNl-sx-FY0.title": "Folosește poziția actuală",
+      "830.title": "întotdeauna",
+      "752.title": "Fontul consolei"
+    },
+    "SettingsEditor.strings": {
+      "963.title": "Spațiu japonez",
+      "4a3-VM-Tgq.title": "Împarte rândurile",
+      "UXo-9g-NNW.title": "După caracter",
+      "964.title": "Rând nou",
+      "942.title": "Evidențiază caracterele dintre paranteze",
+      "EgL-0e-rdg.title": "Niciuna",
+      "LJw-Jj-VBR.title": "După cuvânt",
+      "YsC-bl-8G6.title": "Indentarea celorlalte rânduri:",
+      "LYC-Qf-9zP.title": "Indentarea primului rând:",
+      "943.title": "Semnal sonor pentru paranteze izolate",
+      "PhR-Vr-jce.title": "Corectează ortografia",
+      "87S-PS-ZQu.title": "Evidențiază rândul curent",
+      "944.title": "Clipește fundalul pentru paranteze izolate",
+      "674-8W-hQ6.title": "Spațierea rândurilor:",
+      "1044.title": "Activat implicit",
+      "843.title": "Completări BibDesk",
+      "XoX-gZ-pO3.title": "Meniul de etichete în bara de meniuri",
+      "945.title": "Arată indicatorul la deplasare",
+      "844.title": "Selectează la activare",
+      "Gj7-Yx-1Hv.title": "Stilul editorului",
+      "1036.title": "Evidențiere intermitentă",
+      "962.title": "Spațiu",
+      "845.title": "Numere de linie"
+    },
+    "SettingsEngines.strings": {
+      "1027.title": "Motor BibTeX",
+      "882.title": "Avertisment shell escape",
+      "887.title": "Salvează fișierul PostScript"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "Standard TeXShop",
+      "1101.title": "Stabilește valorile implicite"
+    },
+    "SettingsMiscOne.strings": {
+      "XCi-5f-wnn.title": "Culoarea cursorului:",
+      "375.title": "JPEG (calitate ridicată)",
+      "380.title": "TIFF (necomprimat)",
+      "Nie-mP-dxR.title": "Folosește un cursor bloc",
+      "qMw-aC-Ilj.title": "Stânga",
+      "cSu-im-H1E.title": "Cursorul de inserare",
+      "CBT-8e-Ayl.title": "Dreapta",
+      "407.title": "JPEG (calitate redusă)",
+      "423.title": "JPEG (calitate medie)",
+      "i6L-IX-ZLk.title": "Un caracter",
+      "g92-sP-oZU.title": "Ambele părți",
+      "4k3-5Y-CEt.title": "Lățimea la stânga sau la dreapta:",
+      "shH-XU-nyE.title": "Două caractere",
+      "xvd-dM-RGh.title": "Partea liniei de inserare:"
+    },
+    "SettingsMiscTwo.strings": {
+      "SS5-tZ-cDa.title": "Suport pTeX",
+      "vEF-zd-SJl.title": "Motor alternativ",
+      "GUV-qt-mM2.title": "Zilnic",
+      "h3F-qB-MHw.title": "Minimizează fereastra principală deschisă",
+      "2x0-tc-yWg.title": "Caută automat actualizări",
+      "oSw-pG-JGB.title": "Săptămânal",
+      "naM-Et-WMn.title": "Lunar"
+    },
+    "SettingsPreview.strings": {
+      "335.title": "Mărire mare",
+      "Zdh-Ch-Ndh.title": "Folosește poziția actuală",
+      "sa2-VV-W1K.title": "Păstrează poziția la închidere",
+      "SfP-Ak-pn3.title": "Deschide în ferestre separate",
+      "V7d-ht-Pe3.title": "Dreapta",
+      "864.title": "Folosește poziția actuală",
+      "337.title": "Selectează PDF",
+      "jgT-n6-lh0.title": "Netezește textul și liniile",
+      "tVs-uh-QcM.title": "Deschide toate ferestrele în poziția fixată",
+      "332.title": "Mărire",
+      "866.title": "Stabilește",
+      "501.title": "Aranjarea paginilor duble",
+      "871.title": "Actualizează automat previzualizarea",
+      "636.title": "Selectează textul",
+      "328.title": "Derulare",
+      "1uj-kt-7Pj.title": "Stânga",
+      "637.title": "Dimensiune reală",
+      "vOt-2m-d2s.title": "Unește într-o singură fereastră",
+      "preview-cover-cell.title": "Arată prima pagină separat, ca o copertă",
+      "p2D-Mi-Gyc.title": "URL inițial"
+    },
+    "SettingsSource.strings": {
+      "874.title": "Folosește poziția actuală",
+      "8Wq-gx-FqO.title": "Omite comentariile",
+      "ENd-QB-0Uf.title": "Dicționar",
+      "582.title": "Panoul de căutare Apple",
+      "Mo3-zf-BYT.title": "Niciodată",
+      "927.title": "Tasta Escape",
+      "928.title": "Tasta Tab",
+      "583.title": "Bara de căutare Apple",
+      "Xrb-Fe-9cg.title": "Mic",
+      "aig-4m-gAG.title": "Deschide ferestrele noi ca file",
+      "teg-0p-Q8J.title": "Omite comenzile LaTeX",
+      "aI9-3B-vVE.title": "Automat",
+      "eIA-mh-q2u.title": "Dimensiunea numerelor de linie",
+      "odm-Dy-TNW.title": "Mare",
+      "ypQ-Gc-HUa.title": "Întotdeauna",
+      "1080.title": "Panoul de căutare OgreKit",
+      "3eF-XA-ahc.title": "Omite parametrii selectați"
+    },
+    "SettingsThemeName.strings": {
+      "ZJe-8t-Rwa.title": "Titlu:",
+      "jJY-ql-JXD.title": "Anulează"
+    },
+    "SettingsThemes.strings": {
+      "dAq-I3-00S.title": "Copierea imaginii",
+      "rad-zH-Nv2.title": "Tema de editat",
+      "m2P-eK-MuA.title": "Textul dintre paranteze",
+      "29d-sK-CAr.title": "Tema modului luminos",
+      "Sb2-DV-n4h.title": "Caractere invizibile",
+      "kuS-x2-ZGi.title": "Consolă",
+      "M3K-Bv-8B1.title": "Sursă",
+      "fbI-WL-RD5.title": "Fundal",
+      "7hF-dm-sw0.title": "Teme",
+      "Qws-5c-CFu.title": "Atribut",
+      "cPa-5P-FPE.title": "Marcaj",
+      "yPD-Wd-E6K.title": "Sursă",
+      "55d-iy-6im.title": "Opacitate",
+      "O6J-e1-meg.title": "Caracter de escape",
+      "AHf-yj-qsp.title": "Comandă",
+      "J68-pe-b8Y.title": "Tema modului întunecat",
+      "olb-4z-mYu.title": "Jurnal",
+      "dDq-0W-EuL.title": "( )",
+      "Z9i-kS-FGf.title": "Prim-plan",
+      "lAb-Fn-Tpo.title": "Marcaj",
+      "brV-c3-Y89.title": "Notă de subsol",
+      "rpP-GF-uJp.title": "Punct de inserare",
+      "Odq-MM-jdm.title": "Comentariu",
+      "Xkh-fT-Rfi.title": "Rândul curent",
+      "s3b-sE-3Ix.title": "Valoare",
+      "tQ6-6v-qml.title": "Clipire",
+      "8Xd-ca-aMe.title": "Etichetă",
+      "oZx-IF-VfJ.title": "Previzualizare",
+      "usk-lT-OCT.title": "Fundal",
+      "xz1-SF-It8.title": "Acolade",
+      "ycd-ZH-bzw.title": "Acțiuni",
+      "z0I-4l-zwC.title": "Comentariu"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "YQv-fE-Uzg.title": "Deschide ca filă în fereastra principală",
+      "823.title": "Metoda de sincronizare",
+      "190.title": "Script personal",
+      "590.title": "Comanda de mai jos",
+      "680.title": "Continuă editarea",
+      "675.title": "După tehnoredactare",
+      "785.title": "Caută în PDF",
+      "679.title": "Adu previzualizarea în prim-plan",
+      "bYh-V5-ri6.title": "Rămâi în fereastra curentă"
+    }
+  },
+  "zh_CN": {
+    "SettingsCategories.strings": {
+      "catalog.appearance.5.0.item.0": "( )",
+      "catalog.editor.4.1.choice.1": "( )"
+    },
+    "SettingsMiscOne.strings": {
+      "g92-sP-oZU.title": "两侧"
+    },
+    "SettingsPreview.strings": {
+      "V7d-ht-Pe3.title": "右",
+      "1uj-kt-7Pj.title": "左",
+      "337.title": "选择 PDF"
+    },
+    "SettingsThemes.strings": {
+      "dDq-0W-EuL.title": "( )"
+    },
+    "SettingsTypesetting.strings": {
+      "191.title": "pdfTeX",
+      "785.title": "搜索 PDF"
+    },
+    "SettingsFooter.strings": {
+      "1100.title": "TeXShop 标准"
+    }
+  }
+}

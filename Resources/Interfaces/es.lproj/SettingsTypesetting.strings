@@ -4,7 +4,7 @@
 "187.title" = "TeX + DVI";
 "188.title" = "Script por defecto";
 "190.title" = "Personal Script";
-"191.title" = "Pdftex";
+"191.title" = "pdfTeX";
 "314.title" = "Al guardar";
 "588.title" = "TeX";
 "589.title" = "LaTeX";
@@ -12,7 +12,7 @@
 "675.title" = "Tras componer páginas";
 "679.title" = "Pdf previsto al frente";
 "680.title" = "Continuar editando";
-"785.title" = "Búsqueda";
+"785.title" = "Buscar en PDF";
 "786.title" = "SyncTeX";
 "823.title" = "Tipo de sincronía";
 "898.title" = "Guardar relacionados";

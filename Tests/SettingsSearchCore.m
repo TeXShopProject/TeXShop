@@ -42,8 +42,10 @@ int main(void){@autoreleasepool{
  Check([index resultsForQuery:@"ONLYCOMMAND missing"].count==0);
  Check([index resultsForQuery:@"shared unrelated"].count==0);
  Check([index resultsForQuery:@"General shared"].count==1);
- Check([index resultsForQuery:@"General"].count==2);
- for(TSSettingsSearchResult *result in [index resultsForQuery:@"General"])Check([result.targetIdentifier hasPrefix:@"row.catalog.general."]);
+ NSArray *general=[index resultsForQuery:@"General"];
+ Check(general.count==1);
+ Check([general[0] targetIdentifier].length==0 && [[general[0] title]isEqual:@"General"]);
+ Check([index resultsForQuery:@"General unrelated"].count==1);
  Check([[[index resultsForQuery:@"shared"] firstObject].targetIdentifier isEqual:@"row.catalog.general.0.0"]);
  Check([[[index resultsForQuery:@"shared"] firstObject].title isEqual:@"shared"]);
  NSArray *labels=@[@"コマンド",@"ショートカット",@"機能で検索",@"キーで検索",@"Search by Function",@"Search by Key"];

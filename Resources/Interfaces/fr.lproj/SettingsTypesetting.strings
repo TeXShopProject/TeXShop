@@ -4,7 +4,7 @@
 "187.title" = "TeX + DVI";
 "188.title" = "Script par défaut";
 "190.title" = "Script personnel";
-"191.title" = "Pdftex";
+"191.title" = "pdfTeX";
 "314.title" = "Pendant la sauvegarde des fichiers";
 "588.title" = "TeX";
 "589.title" = "LaTeX";
@@ -12,7 +12,7 @@
 "675.title" = "Après composition";
 "679.title" = "Amener l'aperçu devant";
 "680.title" = "Continuer l'édition";
-"785.title" = "Recherche";
+"785.title" = "Rechercher dans le PDF";
 "786.title" = "SyncTeX";
 "823.title" = "Méthode de synchronisation";
 "898.title" = "Fichiers apparentés sauvegardés";

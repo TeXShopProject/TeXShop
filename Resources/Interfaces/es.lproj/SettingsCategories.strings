@@ -97,7 +97,7 @@
 "catalog.editor.4.0.title" = "Equilibrar paréntesis";
 "catalog.editor.4.1.title" = "Delimitadores";
 "catalog.editor.4.1.choice.0" = "{ }";
-"catalog.editor.4.1.choice.1" = "for ( ";
+"catalog.editor.4.1.choice.1" = "( )";
 "catalog.editor.4.1.choice.2" = "[ ]";
 "catalog.editor.4.1.choice.3" = "< >";
 "catalog.editor.4.2.title" = "Realzar caracteres encerrados";
@@ -171,7 +171,7 @@
 "catalog.appearance.4.0.item.3" = "Marcador";
 "catalog.appearance.4.0.item.4" = "Índice";
 "group.appearance.5.title" = "Colores: delimitadores";
-"catalog.appearance.5.0.item.0" = "for ( ";
+"catalog.appearance.5.0.item.0" = "( )";
 "catalog.appearance.5.0.item.1" = "{ }";
 "catalog.appearance.5.0.item.2" = "[ ]";
 "group.appearance.6.title" = "Colores: expl3";

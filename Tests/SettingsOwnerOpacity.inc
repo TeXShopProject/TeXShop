@@ -30,16 +30,22 @@ static void CheckOpacityField(TSPreferences *owner,TSSettingsWindowController *s
     formatter.rejectionHandler=^{opacityRejections++;};
     id value=nil;
     Check([formatter getObjectValue:&value forString:@"150" errorDescription:NULL] && [value integerValue]==100,@"Opacity entry above 100 is clamped to 100");
-    Check([formatter getObjectValue:&value forString:@"\uFF16\uFF15" errorDescription:NULL] && [value integerValue]==65,@"Full-width opacity digits are accepted");
-    for(NSString *bad in @[@"abc",@"-5",@"65.5",@"+3",@"6a"])Check(![formatter getObjectValue:&value forString:bad errorDescription:NULL],@"Opacity entry refuses letters, signs and decimals");
+    Check([formatter getObjectValue:&value forString:@"\uFF16\uFF15" errorDescription:NULL] && [value integerValue]==65,@"Full-width opacity digits follow the other numeric fields");
+    TSPreferenceInput *numericRule=[[TSPreferenceInput alloc]initWithKey:@"test" kind:TSPreferenceInputInteger minimum:0 maximum:100 allowsEmpty:NO notification:nil];
+    Check([numericRule validatedValue:@"\uFF16\uFF15"].numberValue.integerValue==65,@"Full-width opacity digits follow the other numeric fields");
+    Check([formatter getObjectValue:&value forString:@"-5" errorDescription:NULL] && [value integerValue]==0,@"Negative opacity is clamped to zero");
+    for(NSString *bad in @[@"abc",@"-",@"+",@".",@"",@"   ",@"65.5",@"65,5",@"+3",@"6a"])Check(![formatter getObjectValue:&value forString:bad errorDescription:NULL],@"Opacity entry refuses letters, signs and decimals");
     // Start from a known fractional alpha, then exercise typed entry through the real field editor.
     well.color=[NSColor colorWithSRGBRed:[rgb[0]doubleValue] green:[rgb[1]doubleValue] blue:[rgb[2]doubleValue] alpha:0.1234];
     NSUInteger writes=opacityWrites;
+    double savedBefore=StoredOpacity(owner,key);
     [field selectText:nil];EndOpacity(field);
-    Check(opacityWrites==writes && fabs(StoredOpacity(owner,key)-[[owner valueForKey:@"EditingColors"][key][3]doubleValue])<1e-12 && fabs(well.color.alphaComponent-0.1234)<1e-9,@"Passing through the opacity field keeps the stored fractional alpha");
+    Check(opacityWrites==writes && fabs(StoredOpacity(owner,key)-savedBefore)<1e-12 && fabs(well.color.alphaComponent-0.1234)<1e-9,@"Passing through the opacity field keeps the stored fractional alpha");
+    TypeOpacity(field,@"12");EndOpacity(field);
+    Check(opacityWrites==writes+1 && fabs(StoredOpacity(owner,key)-0.12)<1e-9,@"Explicitly entering the displayed integer replaces a fractional opacity");
     struct {__unsafe_unretained NSString *text; double expected; BOOL rejected;} cases[]={
-        {@"65",65,NO},{@"150",100,NO},{@" 42 ",42,NO},{@"\uFF16\uFF15",65,NO},{@"7",7,NO},{@"0",0,NO},
-        {@"abc",-1,YES},{@"-5",-1,YES},{@"65.5",-1,YES},{@"9999",-1,YES},
+        {@"65",65,NO},{@"150",100,NO},{@" 65 ",65,NO},{@"-5",0,NO},{@"99999",100,NO},{@"00065",65,NO},{@"7",7,NO},{@"0",0,NO},
+        {@"abc",-1,YES},{@"\uFF16\uFF15",65,NO},{@"65.5",-1,YES},{@"65,5",-1,YES},{@"-",-1,YES},{@"+",-1,YES},{@".",-1,YES},{@"   ",-1,YES},
     };
     for(NSUInteger i=0;i<sizeof(cases)/sizeof(cases[0]);i++){
         double before=slider.doubleValue;NSUInteger w=opacityWrites,r=opacityRejections;
@@ -59,6 +65,8 @@ static void CheckOpacityField(TSPreferences *owner,TSSettingsWindowController *s
     double before=slider.doubleValue;NSUInteger w=opacityWrites,r=opacityRejections;
     TypeOpacity(field,@"");EndOpacity(field);
     Check(opacityRejections>r && opacityWrites==w && slider.doubleValue==before && [field.stringValue isEqual:[NSString stringWithFormat:@"%ld",lround(before)]],@"Empty opacity entry is refused and shows the stored value");
+    w=opacityWrites;TypeOpacity(field,@"47");[(NSTextView *)field.currentEditor insertNewline:nil];EndOpacity(field);
+    Check(opacityWrites==w+1 && fabs(StoredOpacity(owner,key)-0.47)<1e-9,@"Return followed by focus departure saves opacity exactly once");
     slider.doubleValue=30;[slider sendAction:slider.action to:slider.target];
     Check([field.stringValue isEqual:@"30"],@"Slider changes update the opacity field");
     well.enabled=NO;Check(!field.enabled && !slider.enabled,@"Disabled opacity disables its numeric field");
@@ -103,7 +111,7 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
         well.enabled=NO;slider.doubleValue=42;NSUInteger writes=opacityWrites;[slider sendAction:slider.action to:slider.target];
         Check(!slider.enabled && slider.doubleValue==100 && opacityWrites==writes,@"Disabled opacity cannot write and restores its displayed value");well.enabled=YES;
     }
-    CheckOpacityField(owner,shell,[owner valueForKey:outlets[0]],theme[keys[0]],keys[0],path);
+    for(NSUInteger i=0;i<3;i++)CheckOpacityField(owner,shell,[owner valueForKey:outlets[i]],theme[keys[i]],keys[i],path);
     Method localeMethod=class_getClassMethod(NSLocale.class,@selector(currentLocale));
     IMP oldLocale=method_setImplementation(localeMethod,(IMP)OpacityLocale);
     for(NSString *localeID in @[@"de_DE",@"fr_FR",@"en_US"]){
@@ -116,6 +124,7 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
         Check([slider.accessibilityValue isEqual:[formatter stringFromNumber:@0.85]],@"Opacity percentage follows the current regional format");
         if(![localeID isEqual:@"en_US"])Check([slider.accessibilityValue rangeOfCharacterFromSet:NSCharacterSet.whitespaceCharacterSet].location!=NSNotFound,@"German and French percentages include their localized spacing");
         Check([@"100" sizeWithAttributes:@{NSFontAttributeName:field.font}].width+8<=NSWidth(field.frame),@"Localized percentages fit their label width");
+        CheckOpacityField(owner,shell,well,theme[keys[0]],keys[0],path);
     }
     method_setImplementation(localeMethod,oldLocale);opacityTestLocale=nil;
     NSMutableDictionary *missing=[theme mutableCopy];for(NSString *key in keys)[missing removeObjectForKey:key];
@@ -130,6 +139,17 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
         NSArray *rgba=[NSDictionary dictionaryWithContentsOfFile:path][keys[i]];
         Check(rgba.count==4 && fabs([rgba[3]doubleValue]-0.65)<1e-9 && opacityWrites==writes+1,@"Absent alpha is created and saved once on edit");
         [owner EditingStyleChoice:nil];Check(fabs(slider.doubleValue-65)<1e-9,@"Created alpha survives reload");
+    }
+    for(NSUInteger i=0;i<3;i++)for(id invalid in @[@"bad",@{},NSNull.null,@[@0],@[@0,@0,@0,@"0.5"],@[@0,@0,@0,NSNull.null],@[@0,@0,@0,@(-0.1)],@[@0,@0,@0,@1.1],@[@0,@0,@0,@(NAN)],@[@0,@0,@0,@(INFINITY)]]){
+        NSMutableDictionary *bad=[theme mutableCopy];bad[keys[i]]=invalid;
+        [owner setValue:bad forKey:@"EditingColors"];
+        NSUInteger writes=opacityWrites;
+        BOOL loaded=YES;@try{[owner FillInColorWells];}@catch(NSException *exception){loaded=NO;}
+        Check(loaded,@"Invalid theme opacity loads safely and consistently");
+        NSColorWell *well=[owner valueForKey:outlets[i]];
+        NSSlider *slider=(NSSlider *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryAppearance],[@"opacity." stringByAppendingString:well.identifier]);
+        NSTextField *field=(NSTextField *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryAppearance],[@"opacity-value." stringByAppendingString:well.identifier]);
+        Check(well.color.alphaComponent==1 && slider.doubleValue==100 && field.integerValue==100 && opacityWrites==writes,@"Invalid theme opacity loads safely and consistently");
     }
     method_setImplementation(write,opacityOriginalWrite);method_setImplementation(key,oldKey);navigationTestWindow=nil;
     [NSNotificationCenter.defaultCenter removeObserver:observer];

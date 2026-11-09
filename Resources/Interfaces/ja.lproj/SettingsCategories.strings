@@ -234,7 +234,7 @@
 "catalog.typesetting.2.1.title" = "Sync で開く新しい書類を、ルートウインドウのタブで開く";
 "catalog.typesetting.2.1.note" = "通常はオフにします。";
 "group.typesetting.3.title" = "パス";
-"catalog.typesetting.3.0.title" = "(pdf)TeX";
+"catalog.typesetting.3.0.title" = "pdfTeX";
 "catalog.typesetting.3.0.note" = "デフォルト: /Library/TeX/texbin または /usr/texbin";
 "catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
 "catalog.typesetting.3.1.note" = "デフォルト: /usr/local/bin";

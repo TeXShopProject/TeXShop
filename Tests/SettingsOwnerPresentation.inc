@@ -23,18 +23,20 @@ static void CountPresentedControls(NSView *view, NSUInteger counts[4]) {
 static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
     for(TSSettingsCategory *category in [TSSettingsCategoryList standardList].categories){
         NSString *title=[fixture localizedStringForKey:category.identifier value:nil table:@"SettingsCategories"];
-        for(NSNumber *width in @[@158,@188,@298]){
+        for(NSInteger columnWidth=158;columnWidth<=330;columnWidth++){
+            NSNumber *width=@(columnWidth);
             NSTableCellView *cell=[TSSettingsSidebarRow cellForCategory:category title:title];
             CGFloat height=[TSSettingsSidebarRow heightForTitle:title cellWidth:width.doubleValue];
             cell.frame=NSMakeRect(0,0,width.doubleValue,height);[cell layoutSubtreeIfNeeded];
             NSTextField *label=cell.textField;label.font=[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightRegular];[cell layoutSubtreeIfNeeded];
             // Measure the constrained table width, not AppKit’s temporary intrinsic cell expansion.
             CGFloat textWidth=width.doubleValue-40;
-            NSSize natural=[title boundingRectWithSize:NSMakeSize(textWidth,CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:label.font}].size;
+            CGFloat measuredWidth=NSWidth([label frameForAlignmentRect:NSMakeRect(0,0,textWidth,1)]);
+            NSSize natural=[label.cell cellSizeForBounds:NSMakeRect(0,0,measuredWidth,CGFLOAT_MAX)];
             Check(label.maximumNumberOfLines==2 && label.lineBreakMode==NSLineBreakByWordWrapping && natural.height<=NSHeight(label.bounds)+1 && NSHeight(label.bounds)<=height-5,@"Long localized sidebar names fit at every supported width");
             CGFloat single=[title sizeWithAttributes:@{NSFontAttributeName:label.font}].width;
             if([fixture.bundlePath.lastPathComponent isEqual:@"de.bundle"] && [category.identifier isEqual:@"spelling"])Check(single<=textWidth,@"German spelling title fits without splitting its word");
-            Check(single>textWidth || height==30,[NSString stringWithFormat:@"One-line sidebar %@ width=%g label=%g natural=%g height=%g",title,width.doubleValue,textWidth,single,height]);
+            Check(natural.height>24 || height==30,[NSString stringWithFormat:@"One-line sidebar %@ width=%g label=%g natural=%g height=%g",title,width.doubleValue,textWidth,single,height]);
         }
     }
     NSDictionary *labels=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"SettingsCategories" withExtension:@"strings"]];

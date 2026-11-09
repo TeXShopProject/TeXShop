@@ -97,7 +97,7 @@
 "catalog.editor.4.0.title" = "괄호 여닫기 체크";
 "catalog.editor.4.1.title" = "괄호";
 "catalog.editor.4.1.choice.0" = "{ }";
-"catalog.editor.4.1.choice.1" = "괄호 (";
+"catalog.editor.4.1.choice.1" = "( )";
 "catalog.editor.4.1.choice.2" = "[ ]";
 "catalog.editor.4.1.choice.3" = "< >";
 "catalog.editor.4.2.title" = "괄호 여닫기 하일라이트";
@@ -171,7 +171,7 @@
 "catalog.appearance.4.0.item.3" = "마커";
 "catalog.appearance.4.0.item.4" = "인덱스";
 "group.appearance.5.title" = "색상: 괄호";
-"catalog.appearance.5.0.item.0" = "괄호 (";
+"catalog.appearance.5.0.item.0" = "( )";
 "catalog.appearance.5.0.item.1" = "{ }";
 "catalog.appearance.5.0.item.2" = "[ ]";
 "group.appearance.6.title" = "색상: expl3";

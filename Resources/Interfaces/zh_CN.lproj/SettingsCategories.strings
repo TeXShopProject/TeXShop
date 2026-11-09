@@ -97,7 +97,7 @@
 "catalog.editor.4.0.title" = "配对括号";
 "catalog.editor.4.1.title" = "括号";
 "catalog.editor.4.1.choice.0" = "{ }";
-"catalog.editor.4.1.choice.1" = "用于 (";
+"catalog.editor.4.1.choice.1" = "( )";
 "catalog.editor.4.1.choice.2" = "[ ]";
 "catalog.editor.4.1.choice.3" = "< >";
 "catalog.editor.4.2.title" = "高亮已配对字符";
@@ -171,7 +171,7 @@
 "catalog.appearance.4.0.item.3" = "标记";
 "catalog.appearance.4.0.item.4" = "索引";
 "group.appearance.5.title" = "颜色：括号";
-"catalog.appearance.5.0.item.0" = "用于 (";
+"catalog.appearance.5.0.item.0" = "( )";
 "catalog.appearance.5.0.item.1" = "{ }";
 "catalog.appearance.5.0.item.2" = "[ ]";
 "group.appearance.6.title" = "颜色：expl3";

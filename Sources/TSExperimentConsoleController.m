@@ -80,7 +80,7 @@
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
     self.outputText.backgroundColor = [colors colorForKey:@"ConsoleBackground" fromDictionary:theme isWindowDark:dark];
     self.outputText.textColor = [colors colorForKey:@"ConsoleText" fromDictionary:theme isWindowDark:dark];
-    self.window.alphaValue = TSExperimentWindowAlpha(theme, @"ConsoleAlpha");
+    self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeConsoleAlphaKey);
 }
 
 - (void)loadWindow
