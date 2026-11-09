@@ -12,4 +12,4 @@ with tempfile.TemporaryDirectory(prefix="texshop-link-preview-") as directory:
         "-I" + str(root / "Sources"), str(root / "Tests/LinkPreviewGeometry.m"),
         "-o", str(executable),
     ], check=True)
-    subprocess.run([str(executable)], check=True)
+    subprocess.run([str(executable), str(root / "Manual Source/Manual.pdf")], check=True)
