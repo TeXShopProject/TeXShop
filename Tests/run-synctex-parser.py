@@ -29,7 +29,7 @@ def main():
                     '-I', ROOT / 'Sources', '-I', ROOT / '3rdparty/zlib/zlib-1.4',
                     ROOT / 'Tests/SyncTeXParser.c', ROOT / 'Sources/synctex_parser.c',
                     ROOT / 'Sources/synctex_parser_old.c',
-                    ROOT / 'Sources/synctex_parser_utils.c', ROOT / 'Resources/Binaries/libz.a',
+                    ROOT / 'Sources/synctex_parser_utils.c', ROOT / '3rdparty/zlib/libz.a',
                     '-o', executable)
                 executables.append(executable)
         for engine, text, queries in [

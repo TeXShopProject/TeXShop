@@ -523,7 +523,7 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 	synctexPipe = [[NSPipe pipe] retain];
 	synctexHandle = [synctexPipe fileHandleForReading];
 	[synctexTask setStandardOutput: synctexPipe];
-	enginePath = [[NSBundle mainBundle] pathForResource:@"synctexwrap" ofType:nil];
+	enginePath = [[NSBundle mainBundle] pathForResource:@"synctexwrap" ofType:nil inDirectory:@"Shellscripts"];
 	[synctexTask setLaunchPath:enginePath];
 	args = [NSMutableArray array];
 	
@@ -858,7 +858,7 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 	self.synctexHandle = [self.synctexPipe fileHandleForReading];
 	[self.synctexTask setStandardOutput: self.synctexPipe];
 	enginePath = [[NSBundle mainBundle] pathForResource:@"synctex" ofType:nil];
-	// enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil];
+	// enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil inDirectory:@"Shellscripts"];
 	[self.synctexTask setLaunchPath:enginePath];
 	
 /*
@@ -1648,7 +1648,7 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 	self.synctexHandle = [self.synctexPipe fileHandleForReading];
 	[self.synctexTask setStandardOutput: self.synctexPipe];
 	enginePath = [[NSBundle mainBundle] pathForResource:@"synctex_2010" ofType:nil];
-	// enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil];
+	// enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil inDirectory:@"Shellscripts"];
 	[self.synctexTask setLaunchPath:enginePath];
 	
 	args = [NSMutableArray array];
@@ -2091,7 +2091,7 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
 	synctexHandle = [synctexPipe fileHandleForReading];
 	[synctexTask setStandardOutput: synctexPipe];
 	enginePath = [[NSBundle mainBundle] pathForResource:@"synctex" ofType:nil];
-	// enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil];
+	// enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil inDirectory:@"Shellscripts"];
 	[synctexTask setLaunchPath:enginePath];
 	
 	args = [NSMutableArray array];
@@ -2617,7 +2617,7 @@ static const char *TSSyncTeXInputNameForSource(synctex_scanner_p scanner,
      synctexHandle = [synctexPipe fileHandleForReading];
      [synctexTask setStandardOutput: synctexPipe];
      enginePath = [[NSBundle mainBundle] pathForResource:@"synctex" ofType:nil];
-     // enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil];
+     // enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil inDirectory:@"Shellscripts"];
      [synctexTask setLaunchPath:enginePath];
      
      args = [NSMutableArray array];

@@ -805,14 +805,14 @@ if ([itemIdent isEqual: kSplitKKTID]) {
     if ([itemIdent isEqual: kUpdateTID]) {
     
         return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-                                         imageName:@"UpdateAction.png" target:self action:@selector(doUpdate:)];
+                                         imageName:@"UpdateAction" target:self action:@selector(doUpdate:)];
     }
     
     
     if ([itemIdent isEqual: skUpdateTID]) {
         
         return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-                                             imageName:@"UpdateAction.png" target:self action:@selector(doUpdate:)];
+                                             imageName:@"UpdateAction" target:self action:@selector(doUpdate:)];
     }
 
 

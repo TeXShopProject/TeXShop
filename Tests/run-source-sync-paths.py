@@ -93,7 +93,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-sync-path-', dir='/tmp') as tem
     run('xcrun', 'clang', '-fobjc-arc', '-framework', 'Foundation',
         '-I', ROOT / 'Sources', '-I', ROOT / '3rdparty/zlib/zlib-1.4',
         native, ROOT / 'Sources/synctex_parser.c', ROOT / 'Sources/synctex_parser_utils.c',
-        ROOT / 'Resources/Binaries/libz.a', '-o', exe)
+        ROOT / '3rdparty/zlib/libz.a', '-o', exe)
     env = dict(os.environ, PATH=str(TEX) + os.pathsep + os.environ.get('PATH', ''))
     requests = [short / 'document folder/test.tex', tex, alias / 'test.tex', file_alias, alias2 / 'test.tex', file_alias2,
                 parent_alias / '../test.tex']
