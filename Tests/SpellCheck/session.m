@@ -298,6 +298,56 @@ static void TestSuggestionSync(void) {
     [TSSpellSupport preferencesDidChange]; app.inputEvent=nil;
     puts("PASS: suggestion sync, explicit Change All/Undo, stale-state rejection and observer lifecycle");
 }
+// The panel's Change replaces the selection of the view it is sent to. Refuse it
+// unless that view still shows the word the review found.
+static NSTextField *Status(void) {
+    for (NSView *view in SessionChecker.sharedSpellChecker.accessoryView.subviews)
+        if ([view isKindOfClass:NSTextField.class] && view != Replacement()) return (NSTextField *)view;
+    abort();
+}
+static BOOL Refused(NSTextView *v) { return [TSSpellSupport refuseStaleChangeInTextView:v]; }
+static void TestChangeGuard(NSTextView *a, NSTextView *b) {
+    [TSSpellSupport preferencesDidChange];
+    a.string=@"zzqqa zzqqa"; b.string=@"zzqqb zzqqb";
+    NSCAssert(!Refused(a), @"without a review Change works as usual");
+    Review(a);
+    NSCAssert(!Refused(a) && Status().stringValue.length==0, @"Change works on the word just found");
+    NSCAssert(![TSSpellSupport skipsSearchAfterRefusedChange], @"the search after an allowed Change goes ahead");
+    a.selectedRange=NSMakeRange(6,5);
+    NSCAssert(Refused(a), @"Change refused after selecting other text");
+    NSCAssert(Status().stringValue.length>0, @"the refusal says what to do");
+    NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"refusal leaves the text alone");
+    // The panel's Change button searches on at once; that search is skipped,
+    // only once, and only until the action is over.
+    NSCAssert([TSSpellSupport skipsSearchAfterRefusedChange], @"the search after a refusal is skipped");
+    NSCAssert(![TSSpellSupport skipsSearchAfterRefusedChange], @"only that one search is skipped");
+    NSCAssert(Refused(a), @"still refused");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.05]];
+    NSCAssert(![TSSpellSupport skipsSearchAfterRefusedChange], @"a later Find Next is not skipped");
+    Review(a); [a.textStorage replaceCharactersInRange:NSMakeRange(6,1) withString:@"x"];
+    NSCAssert(NSEqualRanges(a.selectedRange,NSMakeRange(0,5)) && Refused(a), @"Change refused after an edit");
+    a.string=@"zzqqa zzqqa"; Review(a);
+    NSTextView *split=[[SessionTextView alloc] initWithFrame:NSMakeRect(0,0,10,10)];
+    // A second pane shows the same text, here with the same selection.
+    split.string=a.string; [a.window.contentView addSubview:split]; [a.window makeFirstResponder:split];
+    split.selectedRange=a.selectedRange;
+    NSCAssert(Refused(split), @"Change refused in another pane");
+    [a.window makeFirstResponder:a];
+    NSCAssert(!Refused(a), @"Change works again back in the reviewed pane");
+    [split removeFromSuperview];
+    [(SessionApplication *)NSApp setReviewWindow:b.window]; [b.window makeMainWindow]; [b.window makeFirstResponder:b];
+    b.selectedRange=NSMakeRange(0,5);
+    NSCAssert(Refused(b), @"Change refused in another document");
+    NSCAssert([b.string isEqual:@"zzqqb zzqqb"], @"other document left alone");
+    Review(a); a.selectedRange=NSMakeRange(6,5); [TSSpellSupport endReview];
+    NSCAssert(!Refused(a), @"the system's own search ends the review");
+    NSCAssert(Replacement().stringValue.length==0 && Status().stringValue.length==0, @"ending the review clears the replacement");
+    Replacement().stringValue=@"fixed"; [TSSpellSupport changeAll:nil];
+    NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"Change All does nothing after the review ended");
+    Review(a); a.selectedRange=NSMakeRange(6,5); [TSSpellSupport preferencesDidChange];
+    NSCAssert(!Refused(a), @"a mode change ends the review");
+    puts("PASS: Change refused for another selection, edit, pane or document; system search and mode change end the review");
+}
 int main(void) {@autoreleasepool {
     TSInstallAppKitIsolation(); [SessionApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     NSTextView *a=View(@"zzqqa zzqqa"), *b=View(@"zzqqb zzqqb");
@@ -334,5 +384,6 @@ int main(void) {@autoreleasepool {
     [TSSpellSupport preferencesDidChange];
     NSCAssert(SessionChecker.sharedSpellChecker.accessoryView == otherAccessory, @"do not remove someone else's accessory");
     TestSuggestionSync();
+    TestChangeGuard(a,b);
     puts("PASS: switched/edited documents and mode changes protected; current Change All and Undo work");
 }return 0;}
