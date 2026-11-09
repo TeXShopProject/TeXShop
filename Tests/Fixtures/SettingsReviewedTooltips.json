@@ -1,0 +1,91 @@
+{
+  "keys": [
+    [
+      "SettingsSource",
+      "ts-aware-spelling.ibShadowedToolTip"
+    ],
+    [
+      "SettingsMiscOne",
+      "434.ibShadowedToolTip"
+    ],
+    [
+      "SettingsMiscOne",
+      "437.ibShadowedToolTip"
+    ]
+  ],
+  "languages": {
+    "en": [
+      "Use exclusion rules for LaTeX documents.",
+      "Higher values emphasize text when copying raster images.",
+      "Map black and white to different colors.",
+      "New shortcut"
+    ],
+    "ja": [
+      "LaTeX 文書では除外規則を使います。",
+      "ビットマップ画像をコピーするときの文字の濃さです。大きな値ほど文字が強調されます。",
+      "白黒を別の色に割り当てます。",
+      "新しいショートカット"
+    ],
+    "de": [
+      "Ausschlussregeln für LaTeX-Dokumente verwenden.",
+      "Höhere Werte betonen den Text beim Kopieren von Rasterbildern.",
+      "Schwarz und Weiß anderen Farben zuordnen.",
+      "Neuer Kurzbefehl"
+    ],
+    "es": [
+      "Usar reglas de exclusión para documentos LaTeX.",
+      "Los valores más altos resaltan el texto al copiar imágenes de mapa de bits.",
+      "Asignar otros colores al blanco y negro.",
+      "Nuevo atajo"
+    ],
+    "fr": [
+      "Utiliser les règles d’exclusion pour les documents LaTeX.",
+      "Les valeurs élevées accentuent le texte lors de la copie d’images matricielles.",
+      "Associer le noir et le blanc à d’autres couleurs.",
+      "Nouveau raccourci"
+    ],
+    "it": [
+      "Usa le regole di esclusione per i documenti LaTeX.",
+      "Valori più alti accentuano il testo quando si copiano immagini raster.",
+      "Associa il bianco e il nero ad altri colori.",
+      "Nuova scorciatoia"
+    ],
+    "ko": [
+      "LaTeX 문서에 제외 규칙을 사용합니다.",
+      "비트맵 이미지를 복사할 때 값이 클수록 텍스트가 강조됩니다.",
+      "검정과 흰색을 다른 색으로 매핑합니다.",
+      "새 단축키"
+    ],
+    "nl": [
+      "Uitsluitingsregels voor LaTeX-documenten gebruiken.",
+      "Hogere waarden benadrukken tekst bij het kopiëren van rasterafbeeldingen.",
+      "Zwart en wit aan andere kleuren koppelen.",
+      "Nieuwe sneltoets"
+    ],
+    "pt": [
+      "Usar regras de exclusão para documentos LaTeX.",
+      "Valores maiores realçam o texto ao copiar imagens rasterizadas.",
+      "Associar preto e branco a outras cores.",
+      "Novo atalho"
+    ],
+    "pt-PT": [
+      "Usar regras de exclusão para documentos LaTeX.",
+      "Valores mais elevados realçam o texto ao copiar imagens rasterizadas.",
+      "Associar o preto e o branco a outras cores.",
+      "Novo atalho"
+    ],
+    "ro": [
+      "Folosește reguli de excludere pentru documentele LaTeX.",
+      "Valorile mai mari accentuează textul la copierea imaginilor raster.",
+      "Asociază alb și negru cu alte culori.",
+      "Scurtătură nouă"
+    ],
+    "zh_CN": [
+      "对 LaTeX 文档使用排除规则。",
+      "复制位图图像时，数值越大，文字越突出。",
+      "将黑白映射为其他颜色。",
+      "新快捷键"
+    ]
+  },
+  "retired_recording_key": "Press the new shortcut (Escape to cancel)."
+}

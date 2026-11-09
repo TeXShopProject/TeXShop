@@ -40,7 +40,7 @@
     self.backgroundColor = [colors colorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark];
     self.textColor = [colors colorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark];
     self.insertionPointColor = [colors colorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark];
-    self.window.alphaValue = TSExperimentWindowAlpha(theme, @"SourceAlpha");
+    self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeSourceAlphaKey);
 }
 
 - (void)viewDidMoveToWindow

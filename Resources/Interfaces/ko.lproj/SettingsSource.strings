@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Apple 표준 찾기 패널";
 "583.title" = "Apple 찾기 바";
-"585.title" = "찾기 바꾸기 패널 (재실행 후 적용)";
+"585.title" = "검색 패널";
 "872.title" = "선택...";
 "873.title" = "Helvetica 12";
 "874.title" = "현재 위치 저장";
@@ -29,10 +29,10 @@
 "951.title" = "[ ]";
 "952.title" = "( )";
 "953.title" = "< >";
-"ENd-QB-0Uf.title" = "Dictionary";
+"ENd-QB-0Uf.title" = "사전";
 "Glg-x8-6YO.title" = "Radio";
 "Mo3-zf-BYT.title" = "안 함";
-"Xrb-Fe-9cg.title" = " 작게";
+"Xrb-Fe-9cg.title" = "작게";
 "aI9-3B-vVE.title" = "자동";
 "aig-4m-gAG.title" = "윈도우 대신 탭에서 열기";
 "eIA-mh-q2u.title" = "행 번호 크기";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "크게";
 "teg-0p-Q8J.title" = "LaTeX 명령 제외";
 "ts-aware-spelling-cell.title" = "LaTeX 인식 맞춤법 검사";
-"ts-aware-spelling.ibShadowedToolTip" = "LaTeX 문서에 제외 규칙을 사용합니다. 끄면 아래의 기존 옵션을 사용합니다. 입력 중 맞춤법 검사 설정은 변경하지 않습니다.";
+"ts-aware-spelling.ibShadowedToolTip" = "LaTeX 문서에 제외 규칙을 사용합니다.";
 "ts-edit-spelling-cell.title" = "LaTeX 제외 규칙 편집…";
 "ts-edit-spelling.ibShadowedToolTip" = "LaTeX 맞춤법 검사에 사용하는 제외 규칙을 편집합니다.";
 "uAi-0W-9KI.title" = "Switch";

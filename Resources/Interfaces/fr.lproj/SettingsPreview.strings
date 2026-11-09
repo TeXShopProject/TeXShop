@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
-"113.ibShadowedToolTip" = "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.";
-"1uj-kt-7Pj.title" = "Source sur la gauche";
+"113.ibShadowedToolTip" = "Zoom par défaut des PDF nouvellement ouverts.";
+"1uj-kt-7Pj.title" = "Gauche";
 "228.title" = "Changer les boutons page";
 "328.title" = "Dérouler";
 "329.title" = "Style de la page par défaut";
@@ -40,13 +40,13 @@
 "MEp-AF-AgT.title" = "Mode Fenêtre seule";
 "Sb3-3h-ll4.title" = "Radio";
 "SfP-Ak-pn3.title" = "Utiliser des fenêtres séparées";
-"V7d-ht-Pe3.title" = "Source sur la droite";
+"V7d-ht-Pe3.title" = "Droite";
 "YrC-m9-abH.title" = "Position de la fenêtre HTML";
 "Zdh-Ch-Ndh.title" = "Enregistrer la position";
 "jgT-n6-lh0.title" = "Lisser le texte et les dessins au trait";
 "p2D-Mi-Gyc.title" = "URL personnelle";
-"preview-cover-cell.title" = "Show first page alone as cover";
+"preview-cover-cell.title" = "Afficher la première page seule comme couverture";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "sa2-VV-W1K.title" = "Conserver la dernière position";
 "tVs-uh-QcM.title" = "Choisir une position fixe";
-"vOt-2m-d2s.title" = " Utiliser une seule fenêtre";
+"vOt-2m-d2s.title" = "Utiliser une seule fenêtre";

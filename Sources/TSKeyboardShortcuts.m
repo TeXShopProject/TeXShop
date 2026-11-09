@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSShortcutInternal.h"
-NSString * const TSRebuildMacrosNotification = @"TSRebuildMacros";
-NSString * const TSMacroShortcutsChangedNotification = @"TSMacroShortcutsChanged";
+NSNotificationName const TSRebuildMacrosNotification = @"TSRebuildMacros";
+NSNotificationName const TSMacroShortcutsChangedNotification = @"TSMacroShortcutsChanged";
 @interface TSKeyboardShortcuts ()
 @property (strong, readwrite, nullable) TSShortcutStore *store;
 @property BOOL menuRefreshPending;
@@ -16,6 +16,13 @@ NSString * const TSMacroShortcutsChangedNotification = @"TSMacroShortcutsChanged
     static dispatch_once_t once;
     dispatch_once(&once, ^{ controller = [[self alloc] init]; });
     return controller;
+}
+- (void)startAfterLaunchWithConfiguration:(void (^)(TSKeyboardShortcuts *shortcuts))configuration {
+    // Find-menu providers finish their launch observers before overrides are installed.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        configuration(self);
+        [self startObservingMenu];
+    });
 }
 - (void)startObservingMenu {
     if (self.store != nil) { [self refreshMenuAndMacros]; return; }

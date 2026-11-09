@@ -110,6 +110,16 @@ static NSMenu *MainMenu(void) {
 static void IgnoreShortcutOutlet(id self, SEL cmd, id value, NSString *key) {}
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
+    NSMutableString *mutableKey=[@"q" mutableCopy];
+    TSShortcutBinding *value=[[TSShortcutBinding alloc]initWithKey:mutableKey modifiers:NSEventModifierFlagCommand];
+    [mutableKey appendString:@"changed"];
+    REQUIRE([value.key isEqual:@"q"] && value.modifiers==NSEventModifierFlagCommand);
+    REQUIRE([value copy]==value && [value isEqualToDictionary:Saved(@"q")]);
+    NSData *serialized=[NSPropertyListSerialization dataWithPropertyList:@{@"fixture":value} format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
+    REQUIRE(serialized!=nil);
+    NSDictionary *decoded=[NSPropertyListSerialization propertyListWithData:serialized options:NSPropertyListImmutable format:NULL error:NULL];
+    REQUIRE([decoded[@"fixture"] isEqual:Saved(@"q")]);
+
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     if (argc > 1) {
         for (NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSAutoCompletionListEditor",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]) {
@@ -277,11 +287,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSMenuItem *left=Item(@"TSShortcut.left",@"G",cmd), *right=Item(@"TSShortcut.right",@"g",cmd|shift);
     [menu addItem:left]; [menu addItem:right];
     store=[[TSShortcutStore alloc] initWithMenu:NSApp.mainMenu defaults:(id)[ShortcutMemoryDefaults new]];
-    // Restoring a default must not create a collision, even with another default.
-    TSShortcutCommand *lc=Command(store,left.identifier), *rc=Command(store,right.identifier);
-    lc.defaultKey=@"G"; lc.defaultModifiers=cmd; rc.defaultKey=@"g"; rc.defaultModifiers=cmd|shift;
-    right.keyEquivalentModifierMask=cmd|shift; right.keyEquivalent=@"g";
+    // Restoring a default must not create a collision with a live menu key.
+    TSShortcutCommand *lc=Command(store,left.identifier);
+    REQUIRE([lc.defaultKey isEqual:@"G"] && lc.defaultModifiers==cmd);
     REQUIRE(![store setKey:@"z" modifiers:cmd forCommand:lc]);
+    // Reproduce a live menu change after applying our override. AppKit may
+    // suppress a duplicate when the original menu snapshot is collected.
+    right.keyEquivalentModifierMask=cmd|shift; right.keyEquivalent=@"g";
     REQUIRE([store restoreCommand:lc] != nil);
     REQUIRE([left.keyEquivalent isEqual:@"z"]);
     // A new custom collision must still prevent individual restoration.
@@ -289,7 +301,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     [menu removeItem:right];
     NSMenuItem *custom=Item(nil,@"G",cmd); [menu addItem:custom];
     REQUIRE([store restoreCommand:lc] != nil);
-    puts("PASS: JIS comparison, distinct raw display, baseline overlap restoration and custom conflict rejection");
+    puts("PASS: JIS comparison, distinct raw display, live overlap restoration and custom conflict rejection");
     REQUIRE(![TSShortcutStore isAllowedKey:@"a" modifiers:0]);
     REQUIRE([TSShortcutStore isAllowedKey:@"\uf704" modifiers:0]);
     REQUIRE(![TSShortcutStore isAllowedKey:@"ab" modifiers:cmd]);

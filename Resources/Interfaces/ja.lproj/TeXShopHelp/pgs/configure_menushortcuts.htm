@@ -1,60 +1,49 @@
-<HTML>
-
-<HEAD>
-			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>メニュー項目のショートカットキーを再定義する</TITLE>
-			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="ショートカットキーを変更する方法について">
-			<link href="../sty/screen.css" rel="stylesheet" media="all">
-</HEAD>
-
-<BODY>
-<p>設定には「一般」「書類と保存」「エディタ」「スペルチェック」「外観」「プレビュー」「タイプセット」「コンソール」「キーボード」「アップデート」の10分類があります。「スペルチェック」では「LaTeXの構造を考慮する（推奨）」と「従来方式を使う」のどちらかを選びます。新方式の下には「LaTeXの除外規則を編集…」、従来方式の下には字下げした3項目があります。方式を変えても子項目の値は保持します。入力中のスペルチェックは独立した設定です。「キーボード」ではキーバインドとコマンド補完を検索欄より上に置き、ショートカット一覧だけを縦にスクロールします。高さが足りないときは入力設定を一つずつ開けます。Tabを補完キーにしてキー検索でTabを押すと、予約の説明と補完キーの設定行を表示します。「一般」からコメント行と隠し設定の説明を開けます。無効な子項目の保存値を保持し、廃止された分類を記憶していた場合は「一般」を開きます。</p>
+<html>
+<head>
+<meta content="text/html;charset=Shift_JIS" http-equiv="content-type"/>
+<title>メニュー項目のショートカットキーを再定義する</title>
+<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
+<meta content="ショートカットキーを変更する方法について" name="description"/>
+<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+</head>
+<body>
 
 <div id="content_border">
-<p>「設定」の「キーボード」で変更します。「機能で検索」はコマンド名やメニューの階層で、「キーで検索」は押したキーで絞り込みます。キーの割当ての優先順位を示し、今の書類で実行できるかとは区別します。検索だけでは設定を変更せず、Command-QやCommand-Wも実行しません。システムが使うキーは検出できません。修飾なしのEsc、切り替えの再クリック、カテゴリ移動、別のウインドウへの移動、設定を閉じる操作で記録を終了します。マクロの行は読み取り専用です。「マクロエディタで表示」は未保存の編集を保って該当マクロを選び、編集によって対象が一意に決まらなくなった場合は選択を変えません。</p>
+<p>「設定」の「キーボード」で、「機能で検索」はコマンド名やメニューの階層、「キーで検索」は押したキーで絞り込み、割当ての優先順位を表示します。修飾なしのEsc、切り替えの再クリック、カテゴリ移動、別のウインドウへの移動、設定を閉じる操作で記録を終了します。マクロを編集するには「マクロエディタで表示」を選びます。</p>
 <p>
-「設定…」を開き、「キーボード」カテゴリを選ぶと、メニューコマンドのショートカットを変更できます。コマンドを選んで「変更…」を押し（ダブルクリックでもかまいません）、新しいショートカットのキーを押して「適用」を選びます。Escape キーで取り消せます。ショートカットには Command キーか Control キーを含めるか、ファンクションキー F1～F20 を使います。ほかのコマンドがすでに使っているショートカットは、そのことを知らせて変更しません。「割り当てを解除」「初期状態に戻す」「すべて元に戻す…」で、ショートカットを外したり元に戻したりできます。変更はすぐに反映され、TeXShop を起動し直しても保たれます。
+「設定…」を開き、「キーボード」カテゴリを選ぶと、メニューコマンドのショートカットを変更できます。コマンドを選んで「変更…」を押し（ダブルクリックでもかまいません）、新しいショートカットのキーを押して「適用」を選びます。Escape キーで取り消せます。ショートカットには Command キーか Control キーを含めるか、ファンクションキー F1～F20 を使います。ほかのコマンドがすでに使っているショートカットは、そのことを知らせて変更しません。「解除」「元に戻す」「すべて元に戻す…」で、ショートカットを外したり元に戻したりできます。変更はすぐに反映され、TeXShop を起動し直しても保たれます。
 </p>
-<P>ほかのメニューコマンドが既定のキーを使っている間は、「初期状態に戻す」で復元できません。先にそのコマンドの割り当てを変更してください。</P>
-<P>同じキーと修飾キーの場合は、メニューコマンドのキー（変更した場合はカスタムキー）がマクロより優先されます。カスタマイズで空いたキーはマクロで使えます。マクロが使用中のキーをメニューに割り当てる、または初期状態に戻す場合は確認します。マクロ自体はメニューから実行できますが、そのキーは無効になります。マクロのファイルは変更しません。マクロエディタでは無効なキーに印を付け、競合する相手とキーを表示します。保存時の確認は、新しく割り当てた・変更したキーの競合だけが対象です。取り込んだマクロも含みます。「編集に戻る」「このまま保存（重なるキーは無効）」「重なるキーを外して保存」から選べます。以前からの競合でキーを変更していなければ、保存を止めません。マクロ同士では先に並ぶものが優先されます。「割り当てできません」はメニューコマンド同士の競合だけに使われます。プレビューのCommand-FとCommand-Gは「検索パネル...」「次を検索」のカスタム割り当てや解除にも従います。</P>
-
+<p>ほかのメニューコマンドが既定のキーを使っている間は、「元に戻す」で復元できません。先にそのコマンドの割り当てを変更してください。</p>
+<p>同じキーと修飾キーの場合は、メニューコマンドのキー（変更した場合はカスタムキー）がマクロより優先されます。カスタマイズで空いたキーはマクロで使えます。マクロが使用中のキーをメニューに割り当てる、または元に戻す場合は確認します。マクロ自体はメニューから実行できますが、そのキーは無効になります。マクロエディタでは無効なキーに印を付け、競合する相手とキーを表示します。保存時の確認は、新しく割り当てた・変更したキーの競合だけが対象です。取り込んだマクロも含みます。「編集に戻る」「このまま保存（重なるキーは無効）」「重なるキーを外して保存」から選べます。マクロ同士では先に並ぶものが優先されます。「割り当てできません」はメニューコマンド同士の競合だけに使われます。プレビューのCommand-FとCommand-Gは「検索パネル...」「次を検索」のカスタム割り当てや解除にも従います。</p>
 <p>
-下で説明する KeyEquivalents.plist で設定したショートカットは、引き続き既定値として使われます。「すべて元に戻す…」もこのファイルは変更しません。マクロのショートカットはマクロエディタで、文字を入力するキーバインドはキーバインドの編集画面で設定します。
+下で説明する KeyEquivalents.plist で設定したショートカットは、引き続き既定値として使われます。マクロのショートカットはマクロエディタで、文字を入力するキーバインドはキーバインドの編集画面で設定します。
 </p>
-
-
 <p>
 TeXShop のメニュー項目のショートカットキーは再定義することができます。再定義するには「KeyEquivalents.plist」というファイルの冒頭にあるコメントを読み、適切な変更を施します。TeXShop を使ってファイル──~/Library/TeXShop/Menus/KeyEquivalents.plist を編集します。もし Unicode 文字を使用するのであれば、かならず UTF-8 形式で編集し保存してください。
 </p>
-
 <p>結果の行をクリックしてもキーの記録は続きます。一覧だけが縦にスクロールします。無効な結果には優先される相手とキーを表示し、マクロの階層は区切り記号で分けます。</p>
-</div>		
-		<div id="header_background"></div>
-		<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-		<div id="header_chapter">TeXShop の設定はどうすればよいか？</div>
-		<div id="header_title">メニュー項目のショートカットキーを再定義する</div>
-		<div id="menu_border">
-			<UL>
-				<li><a href="configure_preliminaries.htm">まえがき</a>
-				<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
-				<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
-				<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
-				<li><a href="configure_defaults.htm">初期設定について</a>
+<p><a href="basic_preferences.htm#settings-search">設定の使い方と設定の検索</a></p></div>
+<div id="header_background"></div>
+<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
+<div id="header_chapter">TeXShop の設定はどうすればよいか？</div>
+<div id="header_title">メニュー項目のショートカットキーを再定義する</div>
+<div id="menu_border">
+<ul>
+<li><a href="configure_preliminaries.htm">まえがき</a>
+<li><a href="configure_correctinstall.htm">きちんとインストールしましたか？</a>
+<li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
+<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
+<li><a href="configure_defaults.htm">初期設定について</a>
+<li><a href="configure_latextemplate.htm">デフォルトの LaTeX テンプレート</a>
+<li><a href="configure_hidden.htm">隠れた設定項目</a>
+<li><a href="configure_plist.htm">.plist ファイル</a>
+<li><a href="configure_panel.htm">LaTeX パネルを一部変更する</a>
+<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
+<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
+<li><a href="configure_macros.htm">マクロメニューを変更する</a>
+</li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</div>
 
-				<li><a href="configure_latextemplate.htm">デフォルトの LaTeX テンプレート</a>
-				<li><a href="configure_hidden.htm">隠れた設定項目</a>
-				<li><a href="configure_plist.htm">.plist ファイル</a>
-				<li><a href="configure_panel.htm">LaTeX パネルを一部変更する</a>
-				<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
 
-				<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
-				<li><a href="configure_macros.htm">マクロメニューを変更する</a>
-			</UL>
-		</div>
-
-<h3 id="settings-search">設定を検索</h3>
-<p>サイドバー上部の「設定を検索」で、カテゴリ名、項目名、選択肢、メニューコマンドを探せます。空白で区切った語は、同じカテゴリ内ですべて一致する必要があります。大文字・小文字、欧文のアクセント、全角・半角、ひらがな・カタカナの違いを吸収します。結果を選ぶと該当箇所へ移動して強調します。設定値や無効な項目の状態は変えません。検索語を消すと検索前のカテゴリに戻ります。メニューコマンドに一致した場合は「キーボード」の「機能で検索」に同じ語を入れます。キー記録中は「キーで検索」が優先されます。入力した値、個人のパス、自分で作ったテーマ名は検索しません。</p>
-</BODY>
-
-</HTML>
+</body>
+</html>

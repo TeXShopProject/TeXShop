@@ -76,6 +76,7 @@ static void CheckActions(TSPrefPaneController *pane, NSArray<NSDictionary *> *ex
     pane.preferences=nil;
 }
 static void CheckGeometry(NSView *view) {
+    Check(![view.identifier isEqual:@"heading.settings.3cH-6c-fhq"] && ![view.identifier isEqual:@"heading.settings.PTb-79-UFr"],@"Retired Basic and Additional theme headings are absent");
     if (view.hidden) return;
     for(NSView *child in view.subviews) {
         if(child.hidden)continue;
@@ -147,25 +148,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
         CheckStrings(pane, expected[name]);
         CheckStrings(pane, expected[[name stringByAppendingString:@"Tags"]]);
         CheckActions(pane, expected[[name stringByAppendingString:@"Actions"]]);
-        TSDockIconController *dock=nil;
-        if ([name isEqual:@"MiscTwo"]) {
-            TSMemoryDefaults *defaults=[TSMemoryDefaults new];
-            dock=[[TSDockIconController alloc]initWithBundle:bundle defaults:defaults];
-            [dock installInPreferencesPane:view];[dock installInPreferencesPane:view];
-            NSArray<NSButton *> *buttons=[dock valueForKey:@"buttons"];
-            Check(buttons.count==5,@"Dock installs exactly five choices once");
-            for(NSUInteger index=0;index<buttons.count;index++) {
-                NSImage *image=TSDockIconImage(bundle,TSDockIconNames()[index]);
-                Check(image!=nil,@"Dock asset is present");
-                [buttons[index] performClick:nil];
-                Check([[defaults stringForKey:TSDockIconKey] isEqual:TSDockIconNames()[index]],@"Dock choice saves immediately in memory");
-                Check((dockTile.contentView!=nil)==(index!=4) && [dockTile.badgeLabel isEqual:@"7"],@"Dock drawing and badge use only the isolated tile");
-                TSDockIconController *fresh=[[TSDockIconController alloc]initWithBundle:bundle defaults:defaults];[fresh restoreSavedIcon];
-                Check([[fresh valueForKey:@"selection"] isEqual:TSDockIconNames()[index]],@"Dock selection survives a fresh controller");
-            }
-            [defaults setObject:@"invalid" forKey:TSDockIconKey];[dock restoreSavedIcon];
-            Check(dockTile.contentView==nil,@"Unknown Dock style falls back");
-        }
+        // Dock behavior is exercised on the final Appearance category in SettingsProductShell.m.
         unsigned int count = 0;
         objc_property_t *properties = class_copyPropertyList(cls, &count);
         for (unsigned int index = 0; index < count; index++) {

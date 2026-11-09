@@ -1,61 +1,54 @@
-<HTML>
+<html>
+<head>
+<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<title>Recomendaciones de cambios en los ajustes</title>
+<meta content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU" name="copyright"/>
+<meta content="cambios en ajustes; colocar ventana de código y del PDF previsto; aumento; magnification; seguridad; aviso shell-escape" name="description"/>
+<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+</head>
+<body>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Recomendaciones de cambios en los ajustes</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="cambios en ajustes; colocar ventana de c&oacute;digo y del PDF previsto; aumento; magnification; seguridad; aviso shell-escape">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
+<div id="content_border"><p>En General, elige Perfil de ajustes para aplicar un conjunto de ajustes. Confirma el perfil con Aplicar; Escape cancela. Para conservar un tema original, duplícalo antes de editarlo. Al crear un tema se pide un nombre; reemplazar un tema existente requiere confirmación. Los colores se actualizan en los documentos abiertos cuando se guardan correctamente. Si falla el guardado, se restauran los últimos colores guardados.</p><p>El guardado automático y las versiones se activan al reiniciar TeXShop. El cambio entre el panel de búsqueda estándar y la barra de búsqueda se aplica inmediatamente al código, la consola y el registro de los documentos abiertos. Los cambios hacia o desde OgreKit se activan al reiniciar TeXShop.</p>
 
-<BODY>
-<p>Los ajustes tienen diez categorías: General, Documentos y guardado, Editor, Ortografía, Apariencia, Vista previa, Composición, Consola, Teclado, Actualizaciones. En Ortografía, elija «Usar corrección adaptada a LaTeX (recomendado)», con «Editar exclusiones de LaTeX&#8230;», o «Usar la corrección tradicional», con tres opciones subordinadas. Al cambiar de modo se conservan los valores; la revisión al escribir es independiente. En Teclado, las combinaciones de teclas y el autocompletado están encima de la búsqueda; solo la lista se desplaza verticalmente. En ventanas bajas puede desplegarse un grupo de entrada a la vez. Si Tab completa comandos, buscar Tab muestra el aviso de reserva y la opción correspondiente. General enlaza con las líneas de comentario y los ajustes ocultos.</p>
 
-	<div id="content_border">
-<p lang="en">Settings uses a resizable window with a category sidebar and Back/Forward navigation. Command-left bracket and Command-right bracket navigate Settings while that window is active, taking precedence over menu shortcuts there. The last category is remembered; navigation history is cleared when Settings closes. Select categories with the mouse or arrow keys, then use Tab to reach their controls. Scroll the content when the window is small. References in older help to Settings tabs now mean sidebar categories. Theme color groups are shown together in Appearance. Escape cancels profile confirmation; Return does not apply it.</p>
-<p lang="en">Command-bracket navigation also supports brackets produced with Option. Back and Forward buttons are available on every layout.</p>
-<p lang="en">Starting with TeXShop 5.60, Settings changes are saved immediately. Press Return or leave a text field to validate it. Closing Settings or changing categories also validates unfinished input; invalid input does not replace the last saved value. There is no whole-window OK or Cancel. The Preview zoom setting is the default for newly opened PDFs; existing PDFs keep their zoom. Source and console font changes update open windows. Theme edits are saved before documents refresh; duplicate a theme before editing to retain the original. If saving fails, the last saved colors are restored. A settings profile asks for confirmation before resetting known engine, editing, display, hidden settings and the running Dock icon. Shortcuts, language, window layouts, automatic updates, theme files and unknown settings are preserved; theme selections may change.</p>
 
-		<P>
-Los usuarios pueden querer cambiar algunos de los ajustes previamente establecidos por TeXShop. Algunos de estos cambios depender&aacute;n de determinadas caracter&iacute;sticas individuales, y no se pueden establecer hasta no haber usado el programa.
-</P>
-		<p>
-Por defecto, TeXShop abre la ventana de c&oacute;digo y la del pdf previsto en la posici&oacute;n en que las mostr&oacute; por &uacute;ltima vez. Esto s&oacute;lo tiene sentido cuando estamos manejando un solo documento cada vez. Usualmente, es mejor abrir ambas ventanas en un lugrar &oacute;ptimo predeterminado. Para ver qu&eacute; es lo que ocurre, compila un documento. Entonces, pon el tama&ntilde;o y posici&oacute;n de la ventana donde quieras. Si la pantalla es grande, lo mejor es ponerlas una junto a otra. En la categor&iacute;a &laquo;General&raquo;, selecciona &laquo;Comenzar con posici&oacute;n fija&raquo; y haz click en &laquo;Establecer con posici&oacute;n actual&raquo;. Haz el mismo cambio en la categor&iacute;a &laquo;Vista previa&raquo;.
-</p>
-		<p>
-
-</p>
-		<p>
-Finalmente, puedes querer enfrentarte con un posible problema de seguridad. Por defecto, TeXShop est&aacute; configurado para permitir que pdftex y pdflatex llamen a otros programas cuando est&aacute;n componiendo. Cuando pdftex encuentra una ilustraci&oacute;n en un formato que no entiende, autom&aacute;ticamente llama a un programa de conversiones gr&aacute;ficas, para que convierta el gr&aacute;fico en un formato &uacute;til. Por ejemplo, los archivos eps se convierten en pdf, y los archivos tif en png.
+<p>
+Los usuarios pueden querer cambiar algunos de los ajustes previamente establecidos por TeXShop. Algunos de estos cambios dependerán de determinadas características individuales, y no se pueden establecer hasta no haber usado el programa.
 </p>
 <p>
-Sin embargo, la configuraci&oacute;n permite a pdftex llamar a CUALQUIER programa. Es concebible que otro usuario te env&iacute;e un archivo tex que, al compilarlo, le haga a tu sistema cosas no muy agradables. Si est&aacute;s precupado por que te pueda ocurrir esto, vete a la categor&iacute;a &laquo;Composici&oacute;n&raquo; de los Ajustes y selecciona la opci&oacute;n &laquo;Avisos shell-escape&raquo;. Cuando este bot&oacute;n est&aacute; marcado, la primera vez que TeXShop compila una archivo tex en una sesi&oacute;n, aparece un di&aacute;logo que te permite desactivar la comunicaci&oacute;n entre pdftex y otros programas durante toda la compilaci&oacute;n del archivo. As&iacute;, puedes continuar consiguiendo la conversi&oacute;n autom&aacute;tica en tus propios archivos, pero actuar de manera segura cuando los hayas recibido de otros.
+Por defecto, TeXShop abre la ventana de código y la del pdf previsto en la posición en que las mostró por última vez. Esto sólo tiene sentido cuando estamos manejando un solo documento cada vez. Usualmente, es mejor abrir ambas ventanas en un lugrar óptimo predeterminado. Para ver qué es lo que ocurre, compila un documento. Entonces, pon el tamaño y posición de la ventana donde quieras. Si la pantalla es grande, lo mejor es ponerlas una junto a otra. En la categoría «General», selecciona «Comenzar con posición fija» y haz click en «Establecer con posición actual». Haz el mismo cambio en la categoría «Vista previa».
 </p>
-<p lang="en">Settings use vertically stacked groups with wrapping labels. Themes shows both color groups in one pane. Creating a theme uses a name sheet attached to Settings; replacing an existing theme requires confirmation. Cancelling either sheet leaves existing files unchanged.</p>
-</div>
+<p>
+</p>
+<p>
+Finalmente, puedes querer enfrentarte con un posible problema de seguridad. Por defecto, TeXShop está configurado para permitir que pdftex y pdflatex llamen a otros programas cuando están componiendo. Cuando pdftex encuentra una ilustración en un formato que no entiende, automáticamente llama a un programa de conversiones gráficas, para que convierta el gráfico en un formato útil. Por ejemplo, los archivos eps se convierten en pdf, y los archivos tif en png.
+</p>
+<p>
+Sin embargo, la configuración permite a pdftex llamar a CUALQUIER programa. Es concebible que otro usuario te envíe un archivo tex que, al compilarlo, le haga a tu sistema cosas no muy agradables. Si estás precupado por que te pueda ocurrir esto, vete a la categoría «Composición» de los Ajustes y selecciona la opción «Avisos shell-escape». Cuando este botón está marcado, la primera vez que TeXShop compila una archivo tex en una sesión, aparece un diálogo que te permite desactivar la comunicación entre pdftex y otros programas durante toda la compilación del archivo. Así, puedes continuar consiguiendo la conversión automática en tus propios archivos, pero actuar de manera segura cuando los hayas recibido de otros.
+</p>
+
+<p><a href="basic_preferences.htm#settings-search">Uso y búsqueda de ajustes</a></p></div>
 <div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">&iquest;C&oacute;mo configuro TeXShop?</div><div id="header_title">Recomendaciones de cambios en los ajustes</div>
-		<div id="menu_border">
-		<UL>
-			<LI><a href="configure_preliminaries.htm">Preliminares</a>
-			<LI><a href="configure_correctinstall.htm">&iquest;Has instalado TeXShop correctamente?</a>
-			<LI><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
-			<LI><a href="configure_convertgraphics.htm">Conversi&oacute;n autom&aacute;tica de formatos gr&aacute;ficos</a>
-			<LI><a href="configure_defaults.htm">Ajustes predeterminados</a>
-			<LI><a href="configure_latextemplate.htm">Plantilla LaTeX predeterminada</a>
-			<li><a href="configure_hidden.htm">Ajustes ocultos</a>
-			<li><a href="configure_plist.htm">Archivos .plist</a>
-			<li><a href="configure_panel.htm">Modificaci&oacute;n del panel LaTeX</a>
-			<li><a href="configure_autocompletion.htm">Modificaci&oacute;n de la autocompleci&oacute;n</a>
-			<li><a href="configure_menushortcuts.htm">Redefinici&oacute;n de atajos de teclado de men&uacute;s</a>
-			<li><a href="configure_macros.htm">Modificaci&oacute;n del men&uacute; Macros</a>
-		</UL>
-	</div>
-	<p lang="en">Auto Save changes are saved immediately but take effect after restarting TeXShop.</p>
+<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
+<div id="header_chapter">¿Cómo configuro TeXShop?</div><div id="header_title">Recomendaciones de cambios en los ajustes</div>
+<div id="menu_border">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a>
+<li><a href="configure_correctinstall.htm">¿Has instalado TeXShop correctamente?</a>
+<li><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
+<li><a href="configure_convertgraphics.htm">Conversión automática de formatos gráficos</a>
+<li><a href="configure_defaults.htm">Ajustes predeterminados</a>
+<li><a href="configure_latextemplate.htm">Plantilla LaTeX predeterminada</a>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a>
+<li><a href="configure_plist.htm">Archivos .plist</a>
+<li><a href="configure_panel.htm">Modificación del panel LaTeX</a>
+<li><a href="configure_autocompletion.htm">Modificación de la autocompleción</a>
+<li><a href="configure_menushortcuts.htm">Redefinición de atajos de teclado de menús</a>
+<li><a href="configure_macros.htm">Modificación del menú Macros</a>
+</li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</div>
 
-<h3 id="settings-search">Buscar ajustes</h3>
-<p>El campo situado sobre la barra lateral busca categorías, etiquetas, opciones y comandos de menú. Todas las palabras separadas por espacios deben aparecer en una misma categoría. La búsqueda ignora las diferencias entre mayúsculas y minúsculas, acentos latinos, caracteres de ancho completo e hiragana y katakana. Al seleccionar un resultado se muestran y resaltan los controles sin cambiar sus valores. Al borrar la consulta se vuelve a la categoría anterior. Un comando de menú abre Teclado y utiliza la misma consulta en la búsqueda por función. La grabación de teclas tiene prioridad. No se buscan rutas personales, valores introducidos ni nombres de temas creados por el usuario.</p>
-</BODY>
 
-</HTML>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1091.title" = "OtherViews";
 "1092.title" = "旧 pTeX (EUC)";
-"1093.title" = "旧 pTeX (Shift JIS) ";
+"1093.title" = "旧 pTeX (Shift JIS)";
 "1094.title" = "pTeX (シェルスクリプト)";
 "1095.title" = "pTeX (latexmk)";
 "1096.title" = "pTeX (ptex2pdf)";
@@ -10,4 +10,3 @@
 "1099.title" = "upTeX (ptex2pdf)";
 "1100.title" = "TeXShop 標準";
 "1101.title" = "設定プロファイル";
-"LIV-SV-CEL.title" = "設定の変更はすぐに保存されます。";

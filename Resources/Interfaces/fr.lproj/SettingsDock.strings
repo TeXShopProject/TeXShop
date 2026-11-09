@@ -1,3 +1,6 @@
-
-
-"Applies while TeXShop is running. The standard icon returns after quitting." = "Applies while TeXShop is running. The standard icon returns after quitting.";
+"Original" = "Origine";
+"Classic Triangle" = "Triangle classique";
+"Retina Triangle" = "Triangle Retina";
+"Classic Circle" = "Cercle classique";
+"Current (Default)" = "Actuelle (par défaut)";
+"Before 1.0" = "Avant la version 1.0";

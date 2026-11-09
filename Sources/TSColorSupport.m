@@ -299,8 +299,8 @@ static id sharedColorSupport = nil;
     CGFloat aRed, aGreen, aBlue, anAlpha;
     NSNumber *redNumber, *greenNumber, *blueNumber, *alphaNumber;
     
-    NSColor *theColor = ((NSColorWell *)theWell).color;
-    // NSColor *theColor = [newColor colorUsingColorSpace: NSColorSpace.genericRGBColorSpace];
+    NSColor *theColor = [((NSColorWell *)theWell).color colorUsingColorSpace:NSColorSpace.genericRGBColorSpace];
+    if (theColor == nil) return;
     [theColor getRed: &aRed green: &aGreen blue: &aBlue alpha: &anAlpha];
     redNumber = [NSNumber numberWithDouble: aRed];
     greenNumber = [NSNumber numberWithDouble: aGreen];

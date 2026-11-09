@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Apple Find Panel";
 "583.title" = "Apple Find Bar";
-"585.title" = "Find Panel (after restart)";
+"585.title" = "Find Panel";
 "872.title" = "Set ...";
 "873.title" = "Helvetica 12";
 "874.title" = "Set with current position";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "Large";
 "teg-0p-Q8J.title" = "Do not check LaTeX commands";
 "ts-aware-spelling-cell.title" = "LaTeX-aware spell checking";
-"ts-aware-spelling.ibShadowedToolTip" = "Use exclusion rules for LaTeX documents. Turn off to use the legacy options below. Does not change Check Spelling While Typing.";
+"ts-aware-spelling.ibShadowedToolTip" = "Use exclusion rules for LaTeX documents.";
 "ts-edit-spelling-cell.title" = "Edit LaTeX exclusion rules…";
 "ts-edit-spelling.ibShadowedToolTip" = "Edit the exclusion rules used by LaTeX-aware spell checking.";
 "uAi-0W-9KI.title" = "Switch";

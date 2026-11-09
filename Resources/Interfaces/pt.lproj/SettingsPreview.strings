@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
-"113.ibShadowedToolTip" = "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.";
-"1uj-kt-7Pj.title" = "Código fonte no lado esquerdo";
+"113.ibShadowedToolTip" = "Zoom padrão para PDFs recém-abertos.";
+"1uj-kt-7Pj.title" = "Esquerda";
 "228.title" = "Botões de mudança de página";
 "328.title" = "Rolar";
 "329.title" = "Estilo de visualização padrão";
@@ -10,7 +10,7 @@
 "333.title" = "Página simples";
 "335.title" = "Ampliar (amplo)";
 "336.title" = "OtherViews";
-"337.title" = "Selecionar pdf";
+"337.title" = "Selecionar PDF";
 "339.title" = "Ajustar à janela";
 "341.title" = "OtherViews";
 "342.title" = "Método de ampliação";
@@ -40,12 +40,12 @@
 "MEp-AF-AgT.title" = "No modo de janela única";
 "Sb3-3h-ll4.title" = "Radio";
 "SfP-Ak-pn3.title" = "Usar janelas separadas";
-"V7d-ht-Pe3.title" = "Código fonte no lado direito";
+"V7d-ht-Pe3.title" = "Direita";
 "YrC-m9-abH.title" = "Posição da janela HTML";
 "Zdh-Ch-Ndh.title" = "Escolher a posição atual";
 "jgT-n6-lh0.title" = "Suavizar texto e ilustrações";
 "p2D-Mi-Gyc.title" = "URL inicial";
-"preview-cover-cell.title" = "Show first page alone as cover";
+"preview-cover-cell.title" = "Mostrar a primeira página sozinha como capa";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "sa2-VV-W1K.title" = "Lembrar-se da última posição";
 "tVs-uh-QcM.title" = "Abrir sempre em uma posição fixa";

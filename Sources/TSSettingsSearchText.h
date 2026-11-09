@@ -20,7 +20,7 @@ static inline NSString *TSSettingsNormalizedText(NSString *text)
 static inline NSArray<NSString *> *TSSettingsQueryTokens(NSString *query)
 {
     NSMutableArray<NSString *> *tokens = [NSMutableArray array];
-    for (NSString *part in [query.precomposedStringWithCompatibilityMapping componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]) {
+    for (NSString *part in [query componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]) {
         NSString *token = TSSettingsNormalizedText(part);
         if (token.length) [tokens addObject:token];
     }
@@ -29,7 +29,7 @@ static inline NSArray<NSString *> *TSSettingsQueryTokens(NSString *query)
 static inline BOOL TSSettingsTextMatches(NSString *text, NSArray<NSString *> *tokens)
 {
     NSString *normalized = TSSettingsNormalizedText(text);
-    for (NSString *token in tokens) if (![normalized containsString:token]) return NO;
+    for (NSString *token in tokens) if ([normalized rangeOfString:token options:NSLiteralSearch].location == NSNotFound) return NO;
     return YES;
 }
 NS_ASSUME_NONNULL_END

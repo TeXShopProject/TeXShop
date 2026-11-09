@@ -77,7 +77,7 @@
                   <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
                 </textFieldCell>
               </textField>
-              <popUpButton toolTip="Higher value emphasizes forecolor. No effect for PDF or EPS formats." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="434" identifier="settings.434">
+              <popUpButton toolTip="Higher values emphasize text when copying raster images." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="434" identifier="settings.434">
                 <rect key="frame" x="190" y="9" width="123" height="26" />
                 <autoresizingMask key="autoresizingMask" />
                 <popUpButtonCell key="cell" type="push" title="0 (normal)" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="428" id="902">
@@ -100,7 +100,7 @@
                   <action selector="colorParam1Changed:" target="-2" id="454" />
                 </connections>
               </popUpButton>
-              <button toolTip="Check if you want to map black and white to different colors" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="437" identifier="settings.437">
+              <button toolTip="Map black and white to different colors." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="437" identifier="settings.437">
                 <rect key="frame" x="17" y="50" width="142" height="18" />
                 <autoresizingMask key="autoresizingMask" />
                 <buttonCell key="cell" type="check" title="Use Color Mapping" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="903">
@@ -136,7 +136,7 @@
               <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N8r-9Y-N2R" identifier="settings.N8r-9Y-N2R">
                 <rect key="frame" x="44" y="60" width="305" height="30" />
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                <textFieldCell key="cell" lineBreakMode="wordWrapping" title="A macOS feature that overwrites the file automatically while you edit. Takes effect after TeXShop restarts." id="sto-5E-9Q5">
+                <textFieldCell key="cell" lineBreakMode="wordWrapping" title="A macOS feature that overwrites the file automatically while you edit." id="sto-5E-9Q5">
                   <font key="font" metaFont="smallSystem" />
                   <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
                   <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
@@ -254,7 +254,7 @@
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
-                    <buttonCell type="radio" title="Center" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="g92-sP-oZU">
+                    <buttonCell type="radio" title="Both Sides" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="g92-sP-oZU">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>

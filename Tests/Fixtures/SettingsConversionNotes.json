@@ -1,0 +1,10 @@
+{
+  "ja": {
+    "catalog.documents.1.3.note": "保存するときに、濁点・半濁点などが分かれた文字（か＋゛）を1文字（が）にまとめます。",
+    "catalog.typesetting.9.0.note": "保存するときに、JIS X 0208 にない文字を \\UTF{XXXX}（異体字などは \\CID{番号}）に置き換え、開くときに \\UTF{…} を文字に戻します。otf パッケージを使う pTeX の原稿向けです。"
+  },
+  "en": {
+    "catalog.documents.1.3.note": "When saving, combines characters stored in separate parts (such as か + ゛) into single characters (が).",
+    "catalog.typesetting.9.0.note": "When saving, replaces characters outside JIS X 0208 with \\UTF{XXXX} (or \\CID{number} for glyph variants), and turns \\UTF{…} back into characters when opening. For pTeX documents that use the otf package."
+  }
+}

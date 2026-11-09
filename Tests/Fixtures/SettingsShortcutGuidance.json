@@ -1,0 +1,50 @@
+{
+  "retired": [
+    "Keys used by the system cannot be detected. Press Escape to stop recording.",
+    "Assignment priority is shown; whether a command can run depends on the document.",
+    "Existing assignments are shown. This key cannot be assigned to a new shortcut.",
+    "Some keys are reserved by macOS.",
+    "Whether a command can run depends on the document."
+  ],
+  "keys": [
+    "This key cannot be assigned to a new shortcut."
+  ],
+  "languages": {
+    "en": [
+      "This key cannot be assigned to a new shortcut."
+    ],
+    "ja": [
+      "このキーは新しいショートカットには割り当てられません。"
+    ],
+    "de": [
+      "Diese Taste kann keinem neuen Tastaturkurzbefehl zugewiesen werden."
+    ],
+    "es": [
+      "Esta tecla no se puede asignar a un nuevo atajo."
+    ],
+    "fr": [
+      "Cette touche ne peut pas être affectée à un nouveau raccourci."
+    ],
+    "it": [
+      "Questo tasto non può essere assegnato a una nuova scorciatoia."
+    ],
+    "ko": [
+      "이 키는 새 단축키에 할당할 수 없습니다."
+    ],
+    "nl": [
+      "Deze toets kan niet aan een nieuwe sneltoets worden toegewezen."
+    ],
+    "pt-PT": [
+      "Esta tecla não pode ser atribuída a um novo atalho."
+    ],
+    "pt": [
+      "Esta tecla não pode ser atribuída a um novo atalho."
+    ],
+    "ro": [
+      "Această tastă nu poate fi atribuită unei scurtături noi."
+    ],
+    "zh_CN": [
+      "此按键不能分配给新的快捷键。"
+    ]
+  }
+}

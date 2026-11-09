@@ -5,13 +5,13 @@
 NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT const NSEventModifierFlags TSShortcutModifiers;
 NSString * _Nullable TSTranslateKey(CFDataRef _Nullable data, UInt16 keyCode, BOOL shifted, UInt32 keyboardType);
-NSDictionary *TSBinding(NSString * _Nullable key, NSEventModifierFlags flags);
+TSShortcutBinding *TSBinding(NSString * _Nullable key, NSEventModifierFlags flags);
 NSString *TSShortcutCharacterForEvent(NSEvent *event);
-NSDictionary *TSRecordedBinding(NSEvent *event, NSString * _Nullable unshifted);
-NSArray<NSDictionary *> *TSEventBindings(NSEvent *event, NSString * _Nullable unshifted);
+TSShortcutBinding *TSRecordedBinding(NSEvent *event, NSString * _Nullable unshifted);
+NSArray<TSShortcutBinding *> *TSEventBindings(NSEvent *event, NSString * _Nullable unshifted);
 BOOL TSRestorationSymbol(NSString *key);
 NSString *TSRestorationCharacters(CFDataRef _Nullable data, UInt16 code, NSEventModifierFlags flags, UInt32 keyboardType);
-NSArray<NSDictionary *> *TSRestorationBindings(NSString *key, NSEventModifierFlags flags, CFDataRef _Nullable data, UInt32 keyboardType);
+NSArray<TSShortcutBinding *> *TSRestorationBindings(NSString *key, NSEventModifierFlags flags, CFDataRef _Nullable data, UInt32 keyboardType);
 void TSVisitMenu(NSMenu * _Nullable menu, NSString *path, void (^visit)(NSMenuItem *, NSString *));
 NSString * _Nullable TSFindCommandID(NSMenuItem *item);
 void TSPrepareMenuIdentifiers(NSMenu *menu);

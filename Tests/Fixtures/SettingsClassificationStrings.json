@@ -575,38 +575,6 @@
         "ko": "도구",
         "zh_CN": "工具"
       }
-    },
-    "Expanded": {
-      "default": "Expanded",
-      "overrides": {
-        "ja": "展開",
-        "de": "Erweitert",
-        "fr": "Développé",
-        "es": "Expandido",
-        "it": "Espanso",
-        "nl": "Uitgeklapt",
-        "pt": "Expandido",
-        "pt-PT": "Expandido",
-        "ro": "Extins",
-        "ko": "펼침",
-        "zh_CN": "展开"
-      }
-    },
-    "Collapsed": {
-      "default": "Collapsed",
-      "overrides": {
-        "ja": "折りたたみ",
-        "de": "Reduziert",
-        "fr": "Réduit",
-        "es": "Contraído",
-        "it": "Compresso",
-        "nl": "Ingeklapt",
-        "pt": "Recolhido",
-        "pt-PT": "Recolhido",
-        "ro": "Restrâns",
-        "ko": "접힘",
-        "zh_CN": "折叠"
-      }
     }
   }
 }

@@ -1,47 +1,42 @@
-<HTML>
+<html>
+<head>
+<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<title>Redefinición de atajos de teclado de menús</title>
+<meta content="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU" name="copyright"/>
+<meta content="atajos de teclado; KeyEquivalents.plist" name="description"/>
+<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+</head>
+<body>
 
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Redefinici&oacute;n de atajos de teclado de men&uacute;s</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch bajo licencia FDL de GNU">
-		<META NAME="description" CONTENT="atajos de teclado; KeyEquivalents.plist">
-		<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-<p>Los ajustes tienen diez categorías: General, Documentos y guardado, Editor, Ortografía, Apariencia, Vista previa, Composición, Consola, Teclado, Actualizaciones. En Ortografía, elija «Usar corrección adaptada a LaTeX (recomendado)», con «Editar exclusiones de LaTeX&#8230;», o «Usar la corrección tradicional», con tres opciones subordinadas. Al cambiar de modo se conservan los valores; la revisión al escribir es independiente. En Teclado, las combinaciones de teclas y el autocompletado están encima de la búsqueda; solo la lista se desplaza verticalmente. En ventanas bajas puede desplegarse un grupo de entrada a la vez. Si Tab completa comandos, buscar Tab muestra el aviso de reserva y la opción correspondiente. General enlaza con las líneas de comentario y los ajustes ocultos.</p>
-
-	<div id="content_border">
-<p lang="en">Choose Settings and select Keyboard. Search by Function finds command names and menu paths. Search by Key records a key and lists matching menu commands and macros, marking assignment priority rather than whether the command can run in the current document. Searching changes no assignments and executes no commands, even for Command-Q or Command-W. System-reserved keys cannot be detected. Plain Escape, clicking the mode control again, changing categories, switching windows, or closing Settings ends recording. Macro rows are read-only. Show in Macro Editor selects the macro while preserving unsaved edits; if edits make its identity ambiguous, the current selection remains.</p>
-<P>Abre Ajustes y selecciona Teclado para editar los atajos de los men&uacute;s. Selecciona un comando y pulsa &laquo;Cambiar&hellip;&raquo; (o haz doble clic), pulsa el nuevo atajo y elige &laquo;Aplicar&raquo;; pulsa Escape para cancelar. Un atajo debe usar la tecla Comando o Control, o ser una tecla de funci&oacute;n F1&ndash;F20. Si otro comando ya usa el atajo, TeXShop lo indica y no lo cambia. &laquo;Eliminar atajo&raquo;, &laquo;Restaurar predeterminado&raquo; y &laquo;Restaurar todos&hellip;&raquo; eliminan o restauran atajos. Los cambios se aplican de inmediato y se conservan al reiniciar TeXShop.</P>
-<P>Si otro comando de men&#250; usa el atajo predeterminado, no se puede restaurar. Cambie primero el atajo del otro comando.</P>
-<P>Con la misma tecla y los mismos modificadores, los comandos del men&#250; tienen prioridad sobre las macros, con sus atajos personalizados cuando los haya. Las macros pueden usar teclas liberadas mediante la personalizaci&#243;n. Antes de asignar o restaurar a un comando una tecla usada por una macro, se pide confirmaci&#243;n. La macro sigue disponible en el men&#250;, pero su atajo queda inactivo sin modificar su archivo. El editor de macros marca los atajos inactivos e indica el comando y la tecla en conflicto. Al guardar solo se pregunta por teclas en conflicto nuevas o modificadas, incluidas las de macros importadas. Se puede volver a editar, guardar manteniendo las teclas inactivas o quitar las teclas en conflicto y guardar. Los conflictos anteriores sin cambios no interrumpen el guardado. Entre macros, la primera tiene prioridad. &#171;Atajo no disponible&#187; solo se aplica a conflictos entre comandos del men&#250;. En la vista previa, Comando-F y Comando-G siguen los atajos de Buscar y Buscar siguiente, incluida su modificaci&#243;n o eliminaci&#243;n.</P>
-<P>Los atajos definidos en KeyEquivalents.plist (ver m&aacute;s abajo) siguen siendo los predeterminados, y &laquo;Restaurar todos&hellip;&raquo; no modifica ese archivo. Los atajos de las macros se definen en el editor de macros, y las asignaciones de teclas que insertan texto, en su propio editor.</P>
-		<P>Se pueden cambiar los atajos de teclado de los men&uacute;s de TeXShop. Para hacerlo, lee los comentarios al comienzo del archivo &laquo;KeyEquivalents.plist&raquo; y efect&uacute;a los cambios apropiados. Estos cambios se hacen editando el archivo ~/Library/TeXShop/Menus/KeyEquivalents.plist con TeXShop. Aseg&uacute;rate de editar y guardar el archivo con formato UTF-8 si usas caracteres Unicode.</P>
-<p lang="en">Clicking a result row keeps key recording active. Only the result list scrolls vertically. Inactive results identify the winning assignment and key; macro paths use separators between groups.</p>
-</div>
+<div id="content_border">
+<p>Abre Ajustes y selecciona Teclado. Buscar por función encuentra nombres de comandos y rutas de menús. Buscar por tecla registra una pulsación y muestra los comandos y macros coincidentes con su prioridad de asignación. Escape, pulsar de nuevo el modo de búsqueda, cambiar de categoría o ventana y cerrar Ajustes finalizan la captura. Elige Mostrar en el editor de macros para editar una macro.</p>
+<p>Abre Ajustes y selecciona Teclado para editar los atajos de los menús. Selecciona un comando y pulsa «Cambiar&#8230;» (o haz doble clic), pulsa el nuevo atajo y elige «Aplicar»; pulsa Escape para cancelar. Un atajo debe usar la tecla Comando o Control, o ser una tecla de función F1&#8211;F20. Si otro comando ya usa el atajo, TeXShop lo indica y no lo cambia. «Eliminar atajo», «Restaurar predeterminado» y «Restaurar todos&#8230;» eliminan o restauran atajos. Los cambios se aplican de inmediato y se conservan al reiniciar TeXShop.</p>
+<p>Si otro comando de menú usa el atajo predeterminado, no se puede restaurar. Cambie primero el atajo del otro comando.</p>
+<p>Con la misma tecla y los mismos modificadores, los comandos del menú tienen prioridad sobre las macros, con sus atajos personalizados cuando los haya. Las macros pueden usar teclas liberadas mediante la personalización. Antes de asignar o restaurar a un comando una tecla usada por una macro, se pide confirmación. La macro sigue disponible en el menú, pero su atajo queda inactivo. El editor de macros marca los atajos inactivos e indica el comando y la tecla en conflicto. Al guardar solo se pregunta por teclas en conflicto nuevas o modificadas, incluidas las de macros importadas. Se puede volver a editar, guardar manteniendo las teclas inactivas o quitar las teclas en conflicto y guardar. Entre macros, la primera tiene prioridad. «Atajo no disponible» solo se aplica a conflictos entre comandos del menú. En la vista previa, Comando-F y Comando-G siguen los atajos de Buscar y Buscar siguiente, incluida su modificación o eliminación.</p>
+<p>Los atajos definidos en KeyEquivalents.plist (ver más abajo) siguen siendo los predeterminados. Los atajos de las macros se definen en el editor de macros, y las asignaciones de teclas que insertan texto, en su propio editor.</p>
+<p>Se pueden cambiar los atajos de teclado de los menús de TeXShop. Para hacerlo, lee los comentarios al comienzo del archivo «KeyEquivalents.plist» y efectúa los cambios apropiados. Estos cambios se hacen editando el archivo ~/Library/TeXShop/Menus/KeyEquivalents.plist con TeXShop. Asegúrate de editar y guardar el archivo con formato UTF-8 si usas caracteres Unicode.</p>
+<p>Al pulsar una fila de resultados, la captura de teclas sigue activa. Los resultados inactivos indican la asignación prioritaria y su tecla; las rutas de macros separan los grupos con delimitadores.</p>
+<p><a href="basic_preferences.htm#settings-search">Uso y búsqueda de ajustes</a></p></div>
 <div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-<div id="header_chapter">&iquest;C&oacute;mo configuro TeXShop?</div><div id="header_title">Redefinici&oacute;n de atajos de teclado de men&uacute;s</div>
-		<div id="menu_border">
-		<UL>
-			<LI><a href="configure_preliminaries.htm">Preliminares</a>
-			<LI><a href="configure_correctinstall.htm">&iquest;Has instalado TeXShop correctamente?</a>
-			<LI><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
-			<LI><a href="configure_convertgraphics.htm">Conversi&oacute;n autom&aacute;tica de formatos gr&aacute;ficos</a>
-			<LI><a href="configure_defaults.htm">Ajustes predeterminados</a>
-			<LI><a href="configure_latextemplate.htm">Plantilla LaTeX predeterminada</a>
-			<li><a href="configure_hidden.htm">Ajustes ocultos</a>
-			<li><a href="configure_plist.htm">Archivos .plist</a>
-			<li><a href="configure_panel.htm">Modificaci&oacute;n del panel LaTeX</a>
-			<li><a href="configure_autocompletion.htm">Modificaci&oacute;n de la autocompleci&oacute;n</a>
-			<li><a href="configure_menushortcuts.htm">Redefinici&oacute;n de atajos de teclado de men&uacute;s</a>
-			<li><a href="configure_macros.htm">Modificaci&oacute;n del men&uacute; Macros</a>
-		</UL>
-	</div>
+<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
+<div id="header_chapter">¿Cómo configuro TeXShop?</div><div id="header_title">Redefinición de atajos de teclado de menús</div>
+<div id="menu_border">
+<ul>
+<li><a href="configure_preliminaries.htm">Preliminares</a>
+<li><a href="configure_correctinstall.htm">¿Has instalado TeXShop correctamente?</a>
+<li><a href="configure_prefchanges.htm">Recomendaciones de cambios en los ajustes</a>
+<li><a href="configure_convertgraphics.htm">Conversión automática de formatos gráficos</a>
+<li><a href="configure_defaults.htm">Ajustes predeterminados</a>
+<li><a href="configure_latextemplate.htm">Plantilla LaTeX predeterminada</a>
+<li><a href="configure_hidden.htm">Ajustes ocultos</a>
+<li><a href="configure_plist.htm">Archivos .plist</a>
+<li><a href="configure_panel.htm">Modificación del panel LaTeX</a>
+<li><a href="configure_autocompletion.htm">Modificación de la autocompleción</a>
+<li><a href="configure_menushortcuts.htm">Redefinición de atajos de teclado de menús</a>
+<li><a href="configure_macros.htm">Modificación del menú Macros</a>
+</li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</div>
 
-<h3 id="settings-search">Buscar ajustes</h3>
-<p>El campo situado sobre la barra lateral busca categorías, etiquetas, opciones y comandos de menú. Todas las palabras separadas por espacios deben aparecer en una misma categoría. La búsqueda ignora las diferencias entre mayúsculas y minúsculas, acentos latinos, caracteres de ancho completo e hiragana y katakana. Al seleccionar un resultado se muestran y resaltan los controles sin cambiar sus valores. Al borrar la consulta se vuelve a la categoría anterior. Un comando de menú abre Teclado y utiliza la misma consulta en la búsqueda por función. La grabación de teclas tiene prioridad. No se buscan rutas personales, valores introducidos ni nombres de temas creados por el usuario.</p>
-</BODY>
 
-</HTML>
+</body>
+</html>

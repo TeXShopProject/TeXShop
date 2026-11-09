@@ -260,6 +260,10 @@ int main(int argc, char **argv) { @autoreleasepool {
     [menu removeItem:dynamic];[coordinator refreshMenuAndMacros];
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"abs",@"\\",cmd|shift)]].count==0);
     REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"one",@"T",cmd),Candidate(@"two",@"t",cmd|shift)]].count==1);
+    REQUIRE(![[TSShortcutStore normalizedKey:@"x" modifiers:cmd] isEqual:[TSShortcutStore normalizedKey:@"x" modifiers:cmd|shift]]);
+    REQUIRE(![[TSShortcutStore normalizedKey:@"x" modifiers:cmd|shift] isEqual:[TSShortcutStore normalizedKey:@"x" modifiers:cmd]]);
+    REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"plain",@"x",cmd),Candidate(@"shifted",@"x",cmd|shift)]].count==0);
+    REQUIRE([store conflictsForMacroShortcuts:@[Candidate(@"shifted",@"x",cmd|shift),Candidate(@"plain",@"x",cmd)]].count==0);
     puts("PASS: services excluded; dynamically present menu keys counted without making them editable; ASCII Shift comparison");
 
     // Observe real AppKit notifications; visual validation changes must not rebuild.

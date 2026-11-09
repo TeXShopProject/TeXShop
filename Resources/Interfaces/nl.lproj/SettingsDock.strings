@@ -1,3 +1,6 @@
-
-
-"Applies while TeXShop is running. The standard icon returns after quitting." = "Applies while TeXShop is running. The standard icon returns after quitting.";
+"Original" = "Oorspronkelijk";
+"Classic Triangle" = "Klassieke driehoek";
+"Retina Triangle" = "Retina-driehoek";
+"Classic Circle" = "Klassieke cirkel";
+"Current (Default)" = "Huidig (standaard)";
+"Before 1.0" = "Vóór 1.0";

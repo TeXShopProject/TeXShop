@@ -9,14 +9,11 @@
 "BCt-qg-0VZ.title" = "シンタックスハイライト";
 "BmX-0m-4y7.title" = "{";
 "EUV-vV-ULj.title" = "XML構文";
-"F86-wI-vOl.label" = "基本";
 "GMo-pb-qym.title" = "SyncTeX";
 "H91-VW-6OK.title" = "expl3";
 "J68-pe-b8Y.title" = "ダークモード時のテーマ";
 "J9P-9m-Ehr.title" = "旧バージョンの設定から移行";
 "JAR-4h-Udf.title" = "msg";
-"L8F-o2-roK.label" = " 追加";
-"LIV-TH-CEL.title" = "変更はすぐに保存されます。編集前に複製できます。";
 "M3K-Bv-8B1.title" = "ソース";
 "O6J-e1-meg.title" = "エスケープ";
 "OFK-Td-Bas.title" = "索引";
@@ -33,7 +30,7 @@
 "cPa-5P-FPE.title" = "記号類";
 "cXx-KS-HoL.title" = "__Variable";
 "dAq-I3-00S.title" = "画像コピー";
-"dDq-0W-EuL.title" = "(";
+"dDq-0W-EuL.title" = "( )";
 "fbI-WL-RD5.title" = "背景";
 "ftM-jT-ZvT.title" = "プレビュー上 ";
 "iOU-s7-VWK.title" = "Variable";

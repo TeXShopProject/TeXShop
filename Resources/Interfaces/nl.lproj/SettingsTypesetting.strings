@@ -4,7 +4,7 @@
 "187.title" = "TeX + DVI";
 "188.title" = "Standaard script";
 "190.title" = "Eigen script";
-"191.title" = "Pdftex";
+"191.title" = "pdfTeX";
 "314.title" = "Bestanden opslaan";
 "588.title" = "TeX";
 "589.title" = "LaTeX";
@@ -12,7 +12,7 @@
 "675.title" = "Na zetten";
 "679.title" = "Toon voorvertoning";
 "680.title" = "Doorgaan met editor";
-"785.title" = "Zoeken";
+"785.title" = "PDF doorzoeken";
 "786.title" = "SyncTeX";
 "823.title" = "Synchroniseermethode";
 "898.title" = "Sla verwante bestanden op";
@@ -22,6 +22,6 @@
 "922.title" = "Radio";
 "O6H-3y-7Ca.title" = "(Should be OFF for most users.)";
 "W5U-9S-4OG.title" = "If Sync Opens a New Window";
-"YQv-fE-Uzg.title" = "Open as Tab in Root Window";
-"bYh-V5-ri6.title" = "Stay in Current Window";
+"YQv-fE-Uzg.title" = "Als tabblad in hoofdvenster openen";
+"bYh-V5-ri6.title" = "In huidig venster blijven";
 "xwP-lA-zVw.title" = "Use -dALLOWPSTRANSPARENCY";

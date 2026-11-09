@@ -146,7 +146,7 @@
 /* Engine path discovery */
 "Set Up TeX Engine Paths" = "Configura i percorsi dei motori TeX";
 "Detected Engine Paths" = "Percorsi dei motori rilevati";
-"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "È selezionata l’installazione più recente rilevata. Puoi sceglierne un’altra qui sotto. I comandi dei motori personalizzati e il percorso alternativo restano invariati.";
+
 "Not found (current setting will be kept)" = "Non trovato (verrà mantenuta l’impostazione attuale)";
 "Version unavailable" = "Sconosciuta";
 "Use These Paths" = "Usa questi percorsi";
@@ -164,20 +164,19 @@
 "Apply" = "Applica";
 "Shortcut Unavailable" = "Abbreviazione non disponibile";
 "Restore all keyboard shortcuts?" = "Ripristinare tutte le abbreviazioni da tastiera?";
-"Press the new shortcut (Escape to cancel)." = "Premi la nuova abbreviazione (Esc per annullare).";
+"New shortcut" = "Nuova scorciatoia";
 "This command is no longer available." = "Questo comando non è più disponibile.";
 "This shortcut is already used by “%@”." = "Questa abbreviazione è già usata da “%@”.";
-"Use Command or Control with a key, or a function key (F1–F20)." = "Usa un tasto con Comando o Controllo, oppure un tasto funzione (F1–F20).";
-"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Seleziona un comando per modificarne l’abbreviazione. Le modifiche sono immediate. Le macro e le combinazioni per l’inserimento del testo hanno editor dedicati.";
+
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
 "Apply Settings Profile?" = "Apply Settings Profile?";
-"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+
 "Apply Profile" = "Apply Profile";
 "Settings could not be saved" = "Settings could not be saved";
 "Enter a valid setting" = "Enter a valid setting";
-"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+
 "Continue Editing" = "Continue Editing";
 "Restore This Field" = "Restore This Field";
 "The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
@@ -204,14 +203,12 @@
 "Show in Macro Editor" = "Mostra nell’editor di macro";
 "Assigned" = "Assegnato";
 "Inactive for this key" = "Inattivo per questo tasto";
-"Assignment priority is shown; whether a command can run depends on the document." = "È mostrata la priorità di assegnazione. L’esecuzione del comando dipende dal documento.";
-"Keys used by the system cannot be detected. Press Escape to stop recording." = "I tasti usati dal sistema non possono essere rilevati. Esc termina la registrazione.";
 "No command uses this key." = "Nessun comando usa questo tasto.";
 "Press a key" = "Premi un tasto";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Questo tasto non può essere usato come scorciatoia. Usa Comando o Controllo con un tasto, oppure F1–F20.";
-"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Le scorciatoie personalizzate dei menu saranno rimosse. Le impostazioni di KeyEquivalents.plist saranno mantenute.";
 
-"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Sono mostrate le assegnazioni esistenti. Questo tasto non può essere assegnato a una nuova abbreviazione.";
+
+"This key cannot be assigned to a new shortcut." = "Questo tasto non può essere assegnato a una nuova scorciatoia.";
 
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Risultati: %lu";
@@ -267,17 +264,14 @@
 
 "Tools" = "Strumenti";
 
-"Expanded" = "Espanso";
 
-"Collapsed" = "Compresso";
 
-"Search Settings" = "Cerca nelle impostazioni";
+"Search Settings" = "Cerca";
 
-"Settings results: %lu" = "Categorie trovate: %lu";
+"Settings results: %lu" = "Impostazioni trovate: %lu";
 
 "No Settings Found" = "Nessuna impostazione trovata";
 
-"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 
 /* Independent Experiment console */
 "Experiment input" = "Input dell’esperimento";
@@ -292,10 +286,29 @@
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "Return to Editing" = "Return to Editing";
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
-"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+
 "These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
 "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
 "This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+
+"The newest detected installation is selected. You can choose another candidate below." = "È selezionata l’installazione più recente rilevata. Puoi sceglierne un’altra qui sotto.";
+
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Le seguenti macro usano questa abbreviazione. Assegnandola al comando del menu, le loro abbreviazioni saranno disattivate.\n\n%@";
+
+"This does not turn spell checking while typing on or off." = "Questa impostazione non attiva né disattiva il controllo ortografico durante la digitazione.";
+
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "I PDF aperti mantengono il proprio zoom. Il nuovo valore si applica ai PDF aperti da questo momento.";
+
+"Takes effect after you restart TeXShop." = "Ha effetto dopo il riavvio di TeXShop.";
+
+"Custom menu shortcuts will be removed." = "Le scorciatoie personalizzate dei menu saranno rimosse.";
+
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+
+/* System spelling dictionary selection. */
+"Automatic Language" = "Rilevamento automatico della lingua";

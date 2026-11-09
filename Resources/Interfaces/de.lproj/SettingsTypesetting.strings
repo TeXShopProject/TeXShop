@@ -4,7 +4,7 @@
 "187.title" = "TeX + DVI";
 "188.title" = "Standardskript";
 "190.title" = "Persönliches Skript";
-"191.title" = "Pdftex";
+"191.title" = "pdfTeX";
 "314.title" = "Beim Sichern";
 "588.title" = "TeX";
 "589.title" = "LaTeX";
@@ -12,7 +12,7 @@
 "675.title" = "Nach dem Setzen";
 "679.title" = "Vorschau anzeigen";
 "680.title" = "Weiter bearbeiten";
-"785.title" = "Suche";
+"785.title" = "PDF durchsuchen";
 "786.title" = "SyncTeX";
 "823.title" = "Art der Synchronisierung";
 "898.title" = "Verbundene Dateien sichern";

@@ -67,12 +67,9 @@
             [TSSettingsLayoutRow controls:@[@"settings.1027"] kind:TSSettingsRowSection indentation:0], // BibTeX Engine
         ]],
         @"settings.C6f-GQ-WQW": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.218"] kind:TSSettingsRowControls indentation:0], // (pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)
-            [TSSettingsLayoutRow controls:@[@"settings.217"] kind:TSSettingsRowControls indentation:0], // tetexBinPathField
-            [TSSettingsLayoutRow controls:@[@"settings.256"] kind:TSSettingsRowControls indentation:0], // Distiller (ghostscript) (default: /usr/local/bin)
-            [TSSettingsLayoutRow controls:@[@"settings.255"] kind:TSSettingsRowControls indentation:0], // gsBinPathField
-            [TSSettingsLayoutRow controls:@[@"settings.PsG-fR-sPc"] kind:TSSettingsRowControls indentation:0], // Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)
-            [TSSettingsLayoutRow controls:@[@"settings.oMY-Ya-GFE"] kind:TSSettingsRowControls indentation:0], // altPathField
+            [TSSettingsLayoutRow controls:@[@"settings.218", @"settings.217"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.256", @"settings.255"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.PsG-fR-sPc", @"settings.oMY-Ya-GFE"] kind:TSSettingsRowField indentation:0],
             [TSSettingsLayoutRow controls:@[@"settings.engine-auto-button"] kind:TSSettingsRowControls indentation:0], // Auto Setup…
         ]],
         @"settings.gPH-WT-0Et": [TSSettingsLayoutGroup rows:@[
@@ -90,15 +87,13 @@
             [TSSettingsLayoutRow controls:@[@"settings.225"] kind:TSSettingsRowControls indentation:0], // savePSButton
         ]],
         @"settings.DBm-wM-PDK": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.1021"] kind:TSSettingsRowControls indentation:0], // kpsetool (default: kpsetool -w -n latex tex)
-            [TSSettingsLayoutRow controls:@[@"settings.1022"] kind:TSSettingsRowControls indentation:0], // kpsetoolField
+            [TSSettingsLayoutRow controls:@[@"settings.1021", @"settings.1022"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.xP2-FB-CFh": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.1029"] kind:TSSettingsRowControls indentation:0], // default: bibtex
-            [TSSettingsLayoutRow controls:@[@"settings.1028"] kind:TSSettingsRowControls indentation:0], // bibTeXengineField
+            [TSSettingsLayoutRow controls:@[@"settings.1029", @"settings.1028"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.settings-footer": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.1089", @"settings.LIV-SV-NOT"] kind:TSSettingsRowControls indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.1089"] kind:TSSettingsRowControls indentation:0],
         ]],
         @"settings.400": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.386"] kind:TSSettingsRowSection indentation:0], // Image Copy Type
@@ -153,27 +148,17 @@
             [TSSettingsLayoutRow controls:@[@"settings.spX-dz-ROL"] kind:TSSettingsRowControls indentation:0], // ptexUtfOutputButton
         ]],
         @"settings.buj-8D-9FL": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.e8o-CH-MrS"] kind:TSSettingsRowControls indentation:0],
-            [TSSettingsLayoutRow controls:@[@"settings.10b-du-keV"] kind:TSSettingsRowControls indentation:0], // texScriptCommandTextField
-            [TSSettingsLayoutRow controls:@[@"settings.0GI-vh-5wv"] kind:TSSettingsRowControls indentation:0], // LaTeX Program (no default)
-            [TSSettingsLayoutRow controls:@[@"settings.KBV-98-EKO"] kind:TSSettingsRowControls indentation:0], // latexScriptCommandTextField
+            [TSSettingsLayoutRow controls:@[@"settings.e8o-CH-MrS", @"settings.10b-du-keV"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.0GI-vh-5wv", @"settings.KBV-98-EKO"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.Vy2-Hl-YOQ": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.ETt-2N-toX"] kind:TSSettingsRowControls indentation:0], // (default: pdflatexmk)
-            [TSSettingsLayoutRow controls:@[@"settings.gZB-h1-n7P"] kind:TSSettingsRowControls indentation:0], // alternateEngineTextField
+            [TSSettingsLayoutRow controls:@[@"settings.ETt-2N-toX", @"settings.gZB-h1-n7P"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.x37-2g-Y5J": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.Fww-AH-Uix"] kind:TSSettingsRowControls indentation:0], // XMLchapter
-            [TSSettingsLayoutRow controls:@[@"settings.J9Y-VM-xKk"] kind:TSSettingsRowControls indentation:0], // XMLsection
-            [TSSettingsLayoutRow controls:@[@"settings.leH-sT-cbJ"] kind:TSSettingsRowControls indentation:0], // XMLsubsection
-            [TSSettingsLayoutRow controls:@[@"settings.ct9-Gf-9nT"] kind:TSSettingsRowControls indentation:0], // XMLsubsubsection
-            [TSSettingsLayoutRow controls:@[@"settings.ZIN-eZ-jRd"] kind:TSSettingsRowControls indentation:0], // XMLintroduction
-            [TSSettingsLayoutRow controls:@[@"settings.pUb-HQ-m1i"] kind:TSSettingsRowControls indentation:0], // XMLconclusion
-            [TSSettingsLayoutRow controls:@[@"settings.dNI-hB-T5a"] kind:TSSettingsRowControls indentation:0], // XMLexercises
-            [TSSettingsLayoutRow controls:@[@"settings.Ejc-g3-EPJ"] kind:TSSettingsRowControls indentation:0], // XMLproject
-            [TSSettingsLayoutRow controls:@[@"settings.3T5-e8-Mcd"] kind:TSSettingsRowControls indentation:0], // XMLfigure
-            [TSSettingsLayoutRow controls:@[@"settings.F6b-YV-mvL"] kind:TSSettingsRowControls indentation:0], // XMLtable
-            [TSSettingsLayoutRow controls:@[@"settings.9KW-ea-Zni"] kind:TSSettingsRowControls indentation:0], // XMLmark
+            [TSSettingsLayoutRow controls:@[@"settings.Fww-AH-Uix", @"settings.J9Y-VM-xKk", @"settings.leH-sT-cbJ"] kind:TSSettingsRowControls indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.ct9-Gf-9nT", @"settings.ZIN-eZ-jRd", @"settings.pUb-HQ-m1i"] kind:TSSettingsRowControls indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.dNI-hB-T5a", @"settings.Ejc-g3-EPJ", @"settings.3T5-e8-Mcd"] kind:TSSettingsRowControls indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.F6b-YV-mvL", @"settings.9KW-ea-Zni"] kind:TSSettingsRowControls indentation:0],
         ]],
         @"settings.10": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.228"] kind:TSSettingsRowSection indentation:0], // Change Page Buttons
@@ -295,15 +280,11 @@
             [TSSettingsLayoutRow controls:@[@"settings.qWb-pL-mS9"] kind:TSSettingsRowSection indentation:0],
         ]],
         @"settings.BGc-hx-w5D": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.cy6-ep-C9P"] kind:TSSettingsRowControls indentation:0], // Lite Mode Theme
-            [TSSettingsLayoutRow controls:@[@"settings.xpQ-zQ-oZe"] kind:TSSettingsRowControls indentation:0], // LiteStyle
-            [TSSettingsLayoutRow controls:@[@"settings.zWc-ak-WM8"] kind:TSSettingsRowControls indentation:0], // Dark Mode Theme
-            [TSSettingsLayoutRow controls:@[@"settings.eo2-De-DNv"] kind:TSSettingsRowControls indentation:0], // DarkStyle
-            [TSSettingsLayoutRow controls:@[@"settings.FOl-CH-y3R"] kind:TSSettingsRowControls indentation:0], // Theme to Edit
-            [TSSettingsLayoutRow controls:@[@"settings.O5R-pm-csa"] kind:TSSettingsRowControls indentation:0], // EditingStyle
+            [TSSettingsLayoutRow controls:@[@"settings.cy6-ep-C9P", @"settings.xpQ-zQ-oZe"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.zWc-ak-WM8", @"settings.eo2-De-DNv"] kind:TSSettingsRowField indentation:0],
+            [TSSettingsLayoutRow controls:@[@"settings.FOl-CH-y3R", @"settings.O5R-pm-csa"] kind:TSSettingsRowField indentation:0],
         ]],
         @"settings.RA7-3r-O6n": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.LIV-TH-NOT"] kind:TSSettingsRowControls indentation:0], // Changes save immediately. Duplicate before editing.
             [TSSettingsLayoutRow controls:@[@"settings.8bu-du-vzc"] kind:TSSettingsRowControls indentation:0], // Create New Theme
             [TSSettingsLayoutRow controls:@[@"settings.uXA-S0-9dP"] kind:TSSettingsRowControls indentation:0], // New Theme from Settings
         ]],

@@ -15,7 +15,7 @@
 {
     NSObject *value = self.textValue ?: (NSObject *)self.numberValue;
     BOOL changed = ![[defaults objectForKey:key] isEqual:value];
-    [defaults setObject:value forKey:key];
+    if (changed) [defaults setObject:value forKey:key];
     return changed;
 }
 @end
@@ -48,6 +48,15 @@
     if (self.kind == TSPreferenceInputInteger) return [[TSPreferenceInputValue alloc] initWithText:nil number:@((NSInteger)number)];
     return [[TSPreferenceInputValue alloc] initWithText:nil number:@(number / 100.0)];
 }
+- (NSString *)displayStringFromDefaults:(NSUserDefaults *)defaults
+{
+    // Restoration is based on this field's key, including empty/missing values.
+    // Do not validate or clamp a previously stored value while restoring it.
+    if (self.kind == TSPreferenceInputText) return [defaults stringForKey:self.key] ?: @"";
+    NSObject *stored = [defaults objectForKey:self.key];
+    NSNumber *number = [stored isKindOfClass:NSNumber.class] ? (NSNumber *)stored : nil;
+    return [self displayStringForValue:[[TSPreferenceInputValue alloc] initWithText:nil number:number]];
+}
 - (NSString *)displayStringForValue:(nullable TSPreferenceInputValue *)value
 {
     if (self.kind == TSPreferenceInputText) return value.textValue ?: @"";
@@ -58,5 +67,35 @@
     formatter.maximumFractionDigits = 6;
     NSNumber *number = self.kind == TSPreferenceInputPercentage ? @(value.numberValue.doubleValue * 100) : value.numberValue;
     return [formatter stringFromNumber:number] ?: @"";
+}
+@end
+
+@interface TSPreferenceEditing ()
+@property (weak, readwrite, nullable) NSControl *editedField;
+@end
+@implementation TSPreferenceEditing
+- (void)markEdited:(NSControl *)field { self.editedField = field; }
+- (void)clear { self.editedField = nil; }
+- (BOOL)commitField:(NSControl *)field rule:(TSPreferenceInput *)rule defaults:(NSUserDefaults *)defaults reflect:(BOOL)reflect sender:(NSObject *)sender
+{
+    if (self.editedField != field) return YES;
+    NSText *editor = field.currentEditor;
+    TSPreferenceInputValue *value = [rule validatedValue:editor != nil ? editor.string : field.stringValue];
+    if (value == nil) return NO;
+    BOOL changed = [value storeInDefaults:defaults forKey:rule.key];
+    field.stringValue = [rule displayStringForValue:value];
+    if (editor != nil) editor.string = field.stringValue;
+    self.editedField = nil;
+    NSNotificationName notification = rule.notification;
+    if (reflect && changed && notification != nil) [NSNotificationCenter.defaultCenter postNotificationName:notification object:sender];
+    return YES;
+}
+- (void)restoreField:(NSControl *)field rule:(TSPreferenceInput *)rule defaults:(NSUserDefaults *)defaults
+{
+    NSString *original = [rule displayStringFromDefaults:defaults];
+    field.stringValue = original;
+    NSText *editor = field.currentEditor;
+    if (editor != nil) editor.string = original;
+    self.editedField = nil;
 }
 @end

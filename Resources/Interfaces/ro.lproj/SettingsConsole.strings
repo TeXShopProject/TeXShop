@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"752.title" = "Console Font";
-"765.title" = "Vertical Resize Only";
-"766.title" = "Arbitrary Resize";
-"772.title" = "Console Resize";
+"752.title" = "Fontul consolei";
+"765.title" = "Redimensionare doar verticală";
+"766.title" = "Redimensionare liberă";
+"772.title" = "Redimensionarea consolei";
 "828.title" = "Show Console";
-"830.title" = "always";
-"831.title" = "when error occurs";
+"830.title" = "întotdeauna";
+"831.title" = "la apariția unei erori";
 "905.title" = "Helvetica 12";
-"906.title" = "Set ...";
+"906.title" = "Stabilește…";
 "923.title" = "Radio";
 "924.title" = "Radio";
 "PqO-5d-lRv.title" = "Toate ferestrele apar la poziția fixată";
 "WQX-9X-AFi.title" = "Poziția Ferestrei Console";
 "Xc7-Tx-Uz2.title" = "Radio";
-"Zuj-f0-WHa.title" = "Use Also for Macro Editor";
+"Zuj-f0-WHa.title" = "Folosește și pentru editorul de macrocomenzi";
 "ga2-ik-lSC.title" = "Înregistrează ultima poziție la închidere";
-"mNl-sx-FY0.title" = "Set with current position";
+"mNl-sx-FY0.title" = "Folosește poziția actuală";

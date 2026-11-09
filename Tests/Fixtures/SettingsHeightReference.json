@@ -1,0 +1,47 @@
+{
+  "provenance": "Approved SettingsPanelLab full-light captures, 570 points at 2x. Includes user-approved notes; Keyboard follows 2026-11-09 remaining-height decision.",
+  "width": 570,
+  "maximum_ratio": 1.15,
+  "categories": {
+    "appearance": {
+      "height": 1746.0,
+      "reference_sha256": "f8806b84a4675cc0d0968bcae828b22882de5517b964420568e14f3797d238bc"
+    },
+    "console": {
+      "height": 346.0,
+      "reference_sha256": "a0c829362a6eb96f8249271bc895a53974b32313a3023e6f212d1699b00c757a"
+    },
+    "documents": {
+      "height": 462.0,
+      "reference_sha256": "f4649a246b0d2012a6e1c44cc2012a3740629917c4ede3403b808592cdddfe90"
+    },
+    "editor": {
+      "height": 1980.0,
+      "reference_sha256": "77df752d700e420572769693536139e15f42f43835cfb19b1bfa5abbec830f9f"
+    },
+    "general": {
+      "height": 951.0,
+      "reference_sha256": "3a7a9c2e5c737e3d271463c951012672e70e157ace176f99d7f517e0b259cd4e"
+    },
+    "keyboard": {
+      "height": 773.0,
+      "reference_sha256": "11d120126c9f687ad77dca70b88ac75449580a242ddf453b77fb40f6b55c79a2"
+    },
+    "preview": {
+      "height": 916.0,
+      "reference_sha256": "4b4f5df0463a80a25ecd0a0dbac0acdf6065d3250b7fc876abfabc17bf767df1"
+    },
+    "spelling": {
+      "height": 559.0,
+      "reference_sha256": "d692a7a8b6cebc09eab5b2c34003bd52076505cbfbfd04ec71aac882cbaac870"
+    },
+    "typesetting": {
+      "height": 1629.0,
+      "reference_sha256": "d4f560fc245793ed6b40c8bfaca053dbc83768b7d13c396a015dbe02b781e308"
+    },
+    "updates": {
+      "height": 225.0,
+      "reference_sha256": "af58af3412011d845d0bac857ae8fc2c9376a28f9ae04aa3a937b4bd9f661fa9"
+    }
+  }
+}

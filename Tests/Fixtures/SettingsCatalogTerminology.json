@@ -1,0 +1,57 @@
+{
+  "reason": "Tab width is measured in characters; the Console group sets the console font. Match catalog.json semantics in every locale.",
+  "keys": [
+    "catalog.editor.1.0.unit",
+    "group.console.0.title"
+  ],
+  "languages": {
+    "Base": [
+      "characters",
+      "Font"
+    ],
+    "de": [
+      "Zeichen",
+      "Schrift"
+    ],
+    "es": [
+      "caracteres",
+      "Tipografía"
+    ],
+    "fr": [
+      "caractères",
+      "Police"
+    ],
+    "it": [
+      "caratteri",
+      "Font"
+    ],
+    "ja": [
+      "文字",
+      "フォント"
+    ],
+    "ko": [
+      "문자",
+      "서체"
+    ],
+    "nl": [
+      "tekens",
+      "Lettertype"
+    ],
+    "pt": [
+      "caracteres",
+      "Fonte"
+    ],
+    "pt-PT": [
+      "caracteres",
+      "Tipo de letra"
+    ],
+    "ro": [
+      "caractere",
+      "Font"
+    ],
+    "zh_CN": [
+      "字符",
+      "字体"
+    ]
+  }
+}
