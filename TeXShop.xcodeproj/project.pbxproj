@@ -99,7 +99,6 @@
 		404D7902199FF471008B8D64 /* TSFullSplitWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D7900199FF471008B8D64 /* TSFullSplitWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4054643E19AE9630006EE9D5 /* GlyphPopoverMulti.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4054643C19AE9630006EE9D5 /* GlyphPopoverMulti.xib */; };
 		4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4054643D19AE9630006EE9D5 /* GlyphPopoverSingle.xib */; };
-		4054C5211995828C00F7D7A5 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4054C5201995828C00F7D7A5 /* icon.icns */; };
 		405A6A2F1992F47F00E3E80B /* Defaults_pTeX_latexmk.plist in Resources */ = {isa = PBXBuildFile; fileRef = 405A6A2E1992F47F00E3E80B /* Defaults_pTeX_latexmk.plist */; };
 		405A6A311992F48C00E3E80B /* Defaults_pTeX_ptex2pdf.plist in Resources */ = {isa = PBXBuildFile; fileRef = 405A6A301992F48C00E3E80B /* Defaults_pTeX_ptex2pdf.plist */; };
 		405A6A331992F49400E3E80B /* Defaults_upTeX_latexmk.plist in Resources */ = {isa = PBXBuildFile; fileRef = 405A6A321992F49400E3E80B /* Defaults_upTeX_latexmk.plist */; };
@@ -668,7 +667,6 @@
 		404D7900199FF471008B8D64 /* TSFullSplitWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSFullSplitWindow.m; sourceTree = "<group>"; };
 		4054643C19AE9630006EE9D5 /* GlyphPopoverMulti.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlyphPopoverMulti.xib; sourceTree = "<group>"; };
 		4054643D19AE9630006EE9D5 /* GlyphPopoverSingle.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlyphPopoverSingle.xib; sourceTree = "<group>"; };
-		4054C5201995828C00F7D7A5 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = ../../icon.icns; sourceTree = "<group>"; };
 		405A6A2E1992F47F00E3E80B /* Defaults_pTeX_latexmk.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_pTeX_latexmk.plist; sourceTree = "<group>"; };
 		405A6A301992F48C00E3E80B /* Defaults_pTeX_ptex2pdf.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_pTeX_ptex2pdf.plist; sourceTree = "<group>"; };
 		405A6A321992F49400E3E80B /* Defaults_upTeX_latexmk.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_upTeX_latexmk.plist; sourceTree = "<group>"; };
@@ -1385,7 +1383,6 @@
 				40E55A8B073B2A3000860060 /* pdf.icns */,
 				4009C6D60D0BAA9C00B23013 /* hiero.icns */,
 				EF5590000000000000000002 /* TeXShop.icon */,
-				4054C5201995828C00F7D7A5 /* icon.icns */,
 				40BC8E881922D7E900F3EF2D /* IconsTeX.icns */,
 				40BC8E861922D7DD00F3EF2D /* IconsPDF.icns */,
 				F5ECC3100214673901DF2474 /* LaTeXAction.tiff */,
@@ -2338,7 +2335,6 @@
 				40473F970C682727009311CF /* Delimiters.pdf in Resources */,
 				40473F980C682727009311CF /* European.pdf in Resources */,
 				EF5590000000000000000001 /* TeXShop.icon in Resources */,
-				4054C5211995828C00F7D7A5 /* icon.icns in Resources */,
 				40473F990C682727009311CF /* HG.pdf in Resources */,
 				40473F9A0C682727009311CF /* LargeOperators.pdf in Resources */,
 				40473F9B0C682727009311CF /* MathAccents.pdf in Resources */,
