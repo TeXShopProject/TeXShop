@@ -33,6 +33,10 @@
     document. The panel's Change would then replace the wrong text. NO when
     no review is in progress. "*/
 + (BOOL)refuseStaleChangeInTextView:(NSTextView *)textView;
+/*" YES once, right after a refused Change: the panel's Change button goes on
+    to look for the next misspelling, and that search is to be skipped so that
+    the selection and the notice stay. A later Find Next is not affected. "*/
++ (BOOL)skipsSearchAfterRefusedChange;
 /*" Forget the review, when the system's own search is used instead. "*/
 + (void)endReview;
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)textView mask:(TSSpellMask *)mask;

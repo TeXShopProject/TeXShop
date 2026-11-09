@@ -217,7 +217,8 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 // The panel's Change button replaces the current selection. If the user has
 // selected other text since the misspelling was shown, in this pane or another
-// one, do nothing, as Change All does.
+// one, do nothing, as Change All does. The button then asks for the next
+// misspelling (-checkSpelling: below), which is skipped too.
 - (void)changeSpelling:(id)sender
 {
     if ([TSSpellSupport refuseStaleChangeInTextView:self]) return;
@@ -226,6 +227,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 - (void)checkSpelling:(id)sender
 {
+    if ([TSSpellSupport skipsSearchAfterRefusedChange]) return;
     if (![self usesTeXAwareSpellChecking] || ([NSEvent modifierFlags] & NSEventModifierFlagOption)) {
         [TSSpellSupport endReview];
         [super checkSpelling:sender];

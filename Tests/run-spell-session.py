@@ -4,7 +4,7 @@ import argparse, os, subprocess, tempfile
 from pathlib import Path
 from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('--mutation',choices=['responder','text','selection','panel-responder','no-sole','preload-multiple','all-editors','same-event','up-arrow','auto-hidden','auto-review','auto-accessory','auto-column','auto-guesses','change-view','change-current','change-no-review','change-status','end-review']);args=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--mutation',choices=['responder','text','selection','panel-responder','no-sole','preload-multiple','all-editors','same-event','up-arrow','auto-hidden','auto-review','auto-accessory','auto-column','auto-guesses','change-view','change-current','change-no-review','change-status','end-review','skip-unset','skip-sticky','skip-once']);args=p.parse_args()
 s='#import "SessionChecker.h"\n#define NSSpellChecker SessionChecker\n'+(root/'Sources/Editor/TSSpellSupport.m').read_text()
 removed={'responder':'view.window.firstResponder == view &&',
          'text':'[view.string isEqualToString:sReviewText] &&',
@@ -16,6 +16,9 @@ mutations = {
     'change-current': ('textView == sReviewView && ReviewIsCurrent(textView)', 'textView == sReviewView'),
     'change-no-review': ('sReviewWord.length == 0 || (textView', '(textView'),
     'change-status': ('ReviewIsCurrent(textView))) return NO;\n    sReplacementStatus.stringValue', 'ReviewIsCurrent(textView))) return NO;\n    if (0) sReplacementStatus.stringValue'),
+    'skip-unset': ('    sSkipSearchAfterRefusal = YES;\n', ''),
+    'skip-sticky': ('    dispatch_async(dispatch_get_main_queue(), ^{ sSkipSearchAfterRefusal = NO; });\n', ''),
+    'skip-once': ('    sSkipSearchAfterRefusal = NO;\n    return skip;', '    return skip;'),
     'end-review': ('    sReviewWord = nil;\n    sReviewText = nil;\n    sReplacementField.stringValue', '    sReviewText = nil;\n    sReplacementField.stringValue'),
     'all-editors': ('(sReplacementField.currentEditor &&\n             panel.firstResponder == sReplacementField.currentEditor)', '[panel.firstResponder isKindOfClass:NSTextView.class]'),
     'same-event': ('event == sPanelUpdateEvent ||', ''),

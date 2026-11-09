@@ -312,10 +312,18 @@ static void TestChangeGuard(NSTextView *a, NSTextView *b) {
     NSCAssert(!Refused(a), @"without a review Change works as usual");
     Review(a);
     NSCAssert(!Refused(a) && Status().stringValue.length==0, @"Change works on the word just found");
+    NSCAssert(![TSSpellSupport skipsSearchAfterRefusedChange], @"the search after an allowed Change goes ahead");
     a.selectedRange=NSMakeRange(6,5);
     NSCAssert(Refused(a), @"Change refused after selecting other text");
     NSCAssert(Status().stringValue.length>0, @"the refusal says what to do");
     NSCAssert([a.string isEqual:@"zzqqa zzqqa"], @"refusal leaves the text alone");
+    // The panel's Change button searches on at once; that search is skipped,
+    // only once, and only until the action is over.
+    NSCAssert([TSSpellSupport skipsSearchAfterRefusedChange], @"the search after a refusal is skipped");
+    NSCAssert(![TSSpellSupport skipsSearchAfterRefusedChange], @"only that one search is skipped");
+    NSCAssert(Refused(a), @"still refused");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.05]];
+    NSCAssert(![TSSpellSupport skipsSearchAfterRefusedChange], @"a later Find Next is not skipped");
     Review(a); [a.textStorage replaceCharactersInRange:NSMakeRange(6,1) withString:@"x"];
     NSCAssert(NSEqualRanges(a.selectedRange,NSMakeRange(0,5)) && Refused(a), @"Change refused after an edit");
     a.string=@"zzqqa zzqqa"; Review(a);
