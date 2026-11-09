@@ -5,7 +5,7 @@ import argparse,subprocess,tempfile,shutil,re,json,os
 from pane_fixtures import bundles,sources
 from shortcut_sources import NAMES
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');p.add_argument('--visible-text-output',type=Path);p.add_argument('--visible-text-mutation',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');p.add_argument('--visible-text-output',type=Path);p.add_argument('--visible-text-mutation',action='store_true');p.add_argument('--visible-text-whitespace-mutation',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*[str(r/'Sources'/n) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').glob('TSSettings*.m'))),'-o',str(t/'probe')]
@@ -28,11 +28,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   profiles=bundle/'Contents/Resources/Profiles';profiles.mkdir()
   for profile in sorted((r/'Resources/Shellscripts').glob('*Defaults*.plist')):shutil.copy2(profile,profiles/profile.name)
   shutil.copy2(shell,bundle/'Contents/Resources/SettingsWindow.nib')
-  if a.visible_text_mutation and bundle.stem=='fr':
+  if (a.visible_text_mutation or a.visible_text_whitespace_mutation) and bundle.stem=='fr':
    path=bundle/'Contents/Resources/fr.lproj/SettingsCategories.strings'
    values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(path)]))
    assert values['group.editor.2.title']=='Saisie'
-   values['group.editor.2.title']='Typing'
+   values['group.editor.2.title']='Typing' if a.visible_text_mutation else ' Saisie '
    path.write_text('\n'.join(json.dumps(k,ensure_ascii=False)+' = '+json.dumps(v,ensure_ascii=False)+';' for k,v in values.items())+'\n')
   env=dict(os.environ)
   if a.visible_text_output:

@@ -78,7 +78,7 @@
 "group.editor.1.title" = "Style";
 "catalog.editor.1.0.title" = "Taille des tabulations :";
 "catalog.editor.1.0.unit" = "caractères";
-"catalog.editor.1.1.title" = "Utiliser des tabulations pour indenter ";
+"catalog.editor.1.1.title" = "Utiliser des tabulations pour indenter";
 "catalog.editor.1.2.title" = "Indentation première ligne paragraphe :";
 "catalog.editor.1.2.unit" = "pt";
 "catalog.editor.1.3.title" = "Indentation lignes suiv. paragraphe :";
@@ -143,7 +143,7 @@
 "catalog.spelling.1.2.title" = "Ancienne méthode";
 "catalog.spelling.1.3.title" = "Ignorer les commandes LaTeX";
 "catalog.spelling.1.4.title" = "Ne pas vérifier les paramètres";
-"catalog.spelling.1.5.title" = " Ne pas vérifier les commentaires";
+"catalog.spelling.1.5.title" = "Ne pas vérifier les commentaires";
 "group.appearance.0.title" = "Thèmes";
 "catalog.appearance.0.0.title" = "Thème pour Mode clair";
 "catalog.appearance.0.1.title" = "Thème pour Mode sombre";

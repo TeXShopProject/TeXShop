@@ -38,7 +38,7 @@
 "eIA-mh-q2u.title" = "Tamanho do número da linha";
 "kgx-Sa-LDF.title" = "Verificação ortográfica";
 "odm-Dy-TNW.title" = "Grande";
-"teg-0p-Q8J.title" = "Não verificar comandos LaTeX ";
+"teg-0p-Q8J.title" = "Não verificar comandos LaTeX";
 "ts-aware-spelling-cell.title" = "Ortografia adaptada ao LaTeX";
 "ts-aware-spelling.ibShadowedToolTip" = "Usar regras de exclusão para documentos LaTeX.";
 "ts-edit-spelling-cell.title" = "Editar exclusões de LaTeX…";

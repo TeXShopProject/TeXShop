@@ -69,7 +69,7 @@
 "catalog.editor.0.0.title" = "Font del Documento";
 "catalog.editor.0.1.title" = "Sintassi Colorata";
 "catalog.editor.0.1.note" = "Valore iniziale per i nuovi documenti. Per i documenti aperti, usare il menu Sorgente.";
-"catalog.editor.0.2.title" = " Numeri di linea";
+"catalog.editor.0.2.title" = "Numeri di linea";
 "catalog.editor.0.2.note" = "Valore iniziale per i nuovi documenti. Per i documenti aperti, usare il menu Sorgente.";
 "catalog.editor.0.3.title" = "Dimensione numeri di linea";
 "catalog.editor.0.4.title" = "Evidenzia la linea corrente";
@@ -215,7 +215,7 @@
 "catalog.preview.2.0.title" = "Aggiornam. anteprima automatico";
 "catalog.preview.2.0.note" = "Ricaricare i PDF modificati quando si usa un editor esterno per il sorgente.";
 "group.preview.3.title" = "Mappatura dei colori";
-"catalog.preview.3.0.title" = "Usa Color Mapping";
+"catalog.preview.3.0.title" = "Usa la mappatura dei colori";
 "catalog.preview.3.1.title" = "Risalto del primo piano:";
 "group.preview.4.title" = "Copia delle immagini";
 "catalog.preview.4.0.title" = "Copia immagine usando il formato";

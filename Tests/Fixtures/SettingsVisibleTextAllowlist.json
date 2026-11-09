@@ -324,7 +324,6 @@
       {"text": "subsection", "id": "settings.leH-sT-cbJ", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
       {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
       {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
-      {"text": "Alpha", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
       {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
     ],

@@ -6774,7 +6774,7 @@
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Das geöffnete Stammfenster verkleinern",
           "A9l-al-gxE.title": "Radio",
-          "2Mp-Uf-8n2.title": " Individuelle Markierung",
+          "2Mp-Uf-8n2.title": "Individuelle Markierung",
           "2x0-tc-yWg.title": "Automatisch nach Aktualisierungen suchen",
           "oSw-pG-JGB.title": "Wöchentlich",
           "8Bw-D6-HlO.title": "LaTeX-Programm (keine Voreinstellung)",
@@ -8246,7 +8246,7 @@
           "view": "settings.9KW-ea-Zni",
           "kind": "cell",
           "property": "title",
-          "value": " Individuelle Markierung"
+          "value": "Individuelle Markierung"
         },
         {
           "key": "2x0-tc-yWg.title",
@@ -10058,7 +10058,7 @@
           "03p-fB-1K3.title": "Al guardar",
           "e3h-Wk-X7D.title": "Actualizador Sparkle",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "Soporte pTeX (japonés) ",
+          "SS5-tZ-cDa.title": "Soporte pTeX (japonés)",
           "vEF-zd-SJl.title": "Motor alternativo",
           "DU3-gi-QzY.title": "Elección de marcas XML",
           "mPz-qG-Toi.title": "Programa TeX (nada por defecto)",
@@ -11426,7 +11426,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "Soporte pTeX (japonés) "
+          "value": "Soporte pTeX (japonés)"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -13059,7 +13059,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "Soporte pTeX (japonés) "
+          "title": "Soporte pTeX (japonés)"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -13239,7 +13239,7 @@
           "YsC-bl-8G6.title": "Indentation lignes suiv. paragraphe :",
           "965.title": "Tabulation",
           "LYC-Qf-9zP.title": "Indentation première ligne paragraphe :",
-          "pdc-GP-Cbb.title": "Utiliser des tabulations pour indenter ",
+          "pdc-GP-Cbb.title": "Utiliser des tabulations pour indenter",
           "943.title": "Biper pour les parenthèses isolées",
           "842.title": "Raccourcis clavier",
           "PhR-Vr-jce.title": "Correction automatique",
@@ -13428,7 +13428,7 @@
           "45.title": "Conserver la dernière position",
           "867.title": "Ne pas faire défiler",
           "637.title": "Taille réelle",
-          "vOt-2m-d2s.title": " Utiliser une seule fenêtre",
+          "vOt-2m-d2s.title": "Utiliser une seule fenêtre",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Style de la page par défaut",
           "113.ibShadowedToolTip": "Zoom par défaut des PDF nouvellement ouverts.",
@@ -13449,7 +13449,7 @@
           "874.title": "Enregistrer la position",
           "kgx-Sa-LDF.title": "Vérifier l'orthographe",
           "953.title": "< >",
-          "8Wq-gx-FqO.title": " Ne pas vérifier les commentaires",
+          "8Wq-gx-FqO.title": "Ne pas vérifier les commentaires",
           "19.title": "Position de la fenêtre-source",
           "ENd-QB-0Uf.title": "Dictionnaire",
           "262.title": "Encodage",
@@ -13874,7 +13874,7 @@
           "view": "settings.9oZ-Jg-MfD",
           "kind": "cell",
           "property": "title",
-          "value": "Utiliser des tabulations pour indenter "
+          "value": "Utiliser des tabulations pour indenter"
         },
         {
           "key": "943.title",
@@ -15230,7 +15230,7 @@
           "view": "settings.MBq-SG-G54",
           "kind": "cell",
           "property": "title",
-          "value": " Utiliser une seule fenêtre"
+          "value": "Utiliser une seule fenêtre"
         },
         {
           "key": "preview-cover-note-cell.title",
@@ -15365,7 +15365,7 @@
           "view": "settings.cp7-bc-avh",
           "kind": "matrix",
           "property": "title",
-          "value": " Ne pas vérifier les commentaires",
+          "value": "Ne pas vérifier les commentaires",
           "row": 2,
           "column": 0
         },
@@ -16566,7 +16566,7 @@
           "Gj7-Yx-1Hv.title": "Stile",
           "1036.title": "Evidenziazione lampeggiante",
           "962.title": "Spazio",
-          "845.title": " Numeri di linea",
+          "845.title": "Numeri di linea",
           "935.title": "Impostazioni dei delimitatori",
           "inv-954-item-2.title": "⇥",
           "63.title": "Editor"
@@ -16613,7 +16613,7 @@
           "447.title": "Mappatura dei colori",
           "436.title": "2",
           "409.title": "TIFF (LZW)",
-          "903.title": "Usa Color Mapping",
+          "903.title": "Usa la mappatura dei colori",
           "441.title": "3",
           "5ba-33-JZx.title": "Salvataggio documenti",
           "PVm-Il-A7W.title": "Attiva salvataggio automatico e versioni",
@@ -16635,7 +16635,7 @@
           "434.ibShadowedToolTip": "Valori più alti accentuano il testo quando si copiano immagini raster.",
           "377.title": "OtherViews",
           "437.ibShadowedToolTip": "Associa il bianco e il nero ad altri colori.",
-          "CBT-8e-Ayl.title": " A destra",
+          "CBT-8e-Ayl.title": "A destra",
           "407.title": "JPEG (bassa qualità)",
           "hmg-EV-KUC.title": "Mantieni il file precedente come “nome~” al salvataggio",
           "423.title": "JPEG (qualità media)",
@@ -16696,7 +16696,7 @@
           "347.title": "Continuo",
           "MEp-AF-AgT.title": "Modalità Finestra Unica",
           "336.title": "OtherViews",
-          "SfP-Ak-pn3.title": " Usa finestre separate",
+          "SfP-Ak-pn3.title": "Usa finestre separate",
           "505.title": "Impaginazione anteprima da sinistra a destra",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "Destra",
@@ -16860,7 +16860,7 @@
           "823.title": "Metodo di sincronizzazione",
           "190.title": "Script personale",
           "590.title": "Comando ad hoc",
-          "680.title": " Rimani nella finestra sorgente",
+          "680.title": "Rimani nella finestra sorgente",
           "919.title": "Radio",
           "786.title": "SyncTeX",
           "675.title": "Dopo la compilazione",
@@ -17377,7 +17377,7 @@
           "view": "settings.621",
           "kind": "matrix",
           "property": "title",
-          "value": " Numeri di linea",
+          "value": "Numeri di linea",
           "row": 8,
           "column": 0
         },
@@ -17686,7 +17686,7 @@
           "view": "settings.437",
           "kind": "cell",
           "property": "title",
-          "value": "Usa Color Mapping"
+          "value": "Usa la mappatura dei colori"
         },
         {
           "key": "441.title",
@@ -17851,7 +17851,7 @@
           "view": "settings.l7y-UX-7WO",
           "kind": "matrix",
           "property": "title",
-          "value": " A destra",
+          "value": "A destra",
           "row": 2,
           "column": 0
         },
@@ -18281,7 +18281,7 @@
           "view": "settings.G6V-Sw-jFT",
           "kind": "cell",
           "property": "title",
-          "value": " Usa finestre separate"
+          "value": "Usa finestre separate"
         },
         {
           "key": "505.title",
@@ -19436,7 +19436,7 @@
           "view": "settings.678",
           "kind": "matrix",
           "property": "title",
-          "value": " Rimani nella finestra sorgente",
+          "value": "Rimani nella finestra sorgente",
           "row": 1,
           "column": 0
         },
@@ -23369,7 +23369,7 @@
           "928.title": "Tab 키",
           "583.title": "Apple 찾기 바",
           "ts-edit-spelling.ibShadowedToolTip": "LaTeX 맞춤법 검사에 사용하는 제외 규칙을 편집합니다.",
-          "Xrb-Fe-9cg.title": " 작게",
+          "Xrb-Fe-9cg.title": "작게",
           "929.title": "Radio",
           "aig-4m-gAG.title": "윈도우 대신 탭에서 열기",
           "934.title": "괄호 여닫기 체크와 색상",
@@ -23441,7 +23441,7 @@
           "m2P-eK-MuA.title": "괄호 안의 내용",
           "2wp-bc-jxK.title": "텍스트",
           "OFK-Td-Bas.title": "인덱스",
-          "55d-iy-6im.title": "Alpha",
+          "55d-iy-6im.title": "불투명도",
           "dDq-0W-EuL.title": "( )",
           "arA-mu-ATY.title": "괄호 [",
           "jw1-hy-rHZ.title": "key",
@@ -25401,7 +25401,7 @@
           "view": "settings.yo8-RP-pZK",
           "kind": "matrix",
           "property": "title",
-          "value": " 작게",
+          "value": "작게",
           "row": 0,
           "column": 0
         },
@@ -25895,7 +25895,7 @@
           "view": "settings.ae7-a9-Qgg",
           "kind": "cell",
           "property": "title",
-          "value": "Alpha"
+          "value": "불투명도"
         },
         {
           "key": "dDq-0W-EuL.title",
@@ -33146,7 +33146,7 @@
           "423.title": "JPEG (Média)",
           "sto-5E-9Q5.title": "Recurso do macOS que sobrescreve o arquivo automaticamente durante a edição.",
           "tg5-uf-NZU.title": "Radio",
-          "i6L-IX-ZLk.title": " Um caractere",
+          "i6L-IX-ZLk.title": "Um caractere",
           "g92-sP-oZU.title": "Ambos os lados",
           "4k3-5Y-CEt.title": "Largura para esquerda ou direita:",
           "435.title": "-1",
@@ -33277,7 +33277,7 @@
           "aig-4m-gAG.title": "Abrir novas janelas como abas",
           "934.title": "Garantir correspondência de",
           "950.title": "{ }",
-          "teg-0p-Q8J.title": "Não verificar comandos LaTeX ",
+          "teg-0p-Q8J.title": "Não verificar comandos LaTeX",
           "912.title": "Radio",
           "585.title": "Painel de busca",
           "aI9-3B-vVE.title": "Automaticamente",
@@ -34402,7 +34402,7 @@
           "view": "settings.uve-Zu-06Q",
           "kind": "matrix",
           "property": "title",
-          "value": " Um caractere",
+          "value": "Um caractere",
           "row": 0,
           "column": 0
         },
@@ -35341,7 +35341,7 @@
           "view": "settings.cp7-bc-avh",
           "kind": "matrix",
           "property": "title",
-          "value": "Não verificar comandos LaTeX ",
+          "value": "Não verificar comandos LaTeX",
           "row": 0,
           "column": 0
         },

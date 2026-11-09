@@ -266,7 +266,7 @@
 "catalog.typesetting.8.0.note" = "Predeterminado: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Predeterminado: bibtex";
-"group.typesetting.9.title" = "Soporte pTeX (japonés) ";
+"group.typesetting.9.title" = "Soporte pTeX (japonés)";
 "catalog.typesetting.9.0.title" = "Compatibilidad con el paquete otf";
 "group.console.0.title" = "Tipografía";
 "catalog.console.0.0.title" = "Tipografía para la consola";

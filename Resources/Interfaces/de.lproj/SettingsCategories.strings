@@ -131,7 +131,7 @@
 "catalog.editor.8.0.choice.7" = "project";
 "catalog.editor.8.0.choice.8" = "figure";
 "catalog.editor.8.0.choice.9" = "table";
-"catalog.editor.8.0.choice.10" = " Individuelle Markierung";
+"catalog.editor.8.0.choice.10" = "Individuelle Markierung";
 "group.spelling.0.title" = "Rechtschreibprüfung bei Eingabe";
 "catalog.spelling.0.0.title" = "Rechtschreibung während der Eingabe prüfen";
 "catalog.spelling.0.1.title" = "AutoKorrektur";

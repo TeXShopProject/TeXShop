@@ -155,7 +155,7 @@
 "group.appearance.2.title" = "색상: 윈도우";
 "catalog.appearance.2.0.column.0" = "전경색";
 "catalog.appearance.2.0.column.1" = "배경색";
-"catalog.appearance.2.0.column.2" = "Alpha";
+"catalog.appearance.2.0.column.2" = "불투명도";
 "catalog.appearance.2.0.item.0" = "소스";
 "catalog.appearance.2.0.item.1" = "콘솔";
 "catalog.appearance.2.0.item.2" = "로그";
