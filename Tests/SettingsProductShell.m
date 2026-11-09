@@ -229,6 +229,15 @@ int main(int argc,char **argv){@autoreleasepool{
    }
    queryIndex++;
   }
+  NSArray *colorTargets=@[@"settings.L8Q-Ov-EVr",@"settings.Kx3-n3-dsv",@"settings.FoL-zy-obh",@"settings.hCM-4U-XkM"];
+  for(NSUInteger index=0;index<colorTargets.count;index++){
+   NSString *name=[fixture localizedStringForKey:[NSString stringWithFormat:@"catalog.appearance.2.0.item.%lu",(unsigned long)index] value:nil table:@"SettingsCategories"];
+   [shell setSettingsSearchQuery:name];shell.settingsSearchField.stringValue=name;ChooseOwnerResult(shell,colorTargets[index]);
+   for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
+    shell.window.appearance=[NSAppearance appearanceNamed:appearance];[shell.window.contentView layoutSubtreeIfNeeded];
+    Save(shell.window.contentView,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"color-result-%lu-%@.png",(unsigned long)index,appearance]]);
+   }
+  }
   [shell setSettingsSearchQuery:@""];
  }
  NSMutableDictionary *current=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];[current removeObjectForKey:TSSettingsSelectedCategoryKey];NSMutableDictionary *before=[saved mutableCopy];[before removeObjectForKey:TSSettingsSelectedCategoryKey];Check([current isEqual:before],@"Opening and navigating changes only remembered category");
@@ -245,7 +254,10 @@ int main(int argc,char **argv){@autoreleasepool{
  TSDockIconController *dock=[TSDockIconController sharedController];
  [dock installInPreferencesPane:[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance]];
  NSArray<NSButton *> *dockButtons=[dock valueForKey:@"buttons"];Check(dockButtons.count==5,@"Appearance installs exactly five Dock choices once");
+ NSArray *expectedDockYears=@[@"2000–2001",@"2001–2013",@"2013–2014",@"2014–2026",@"2026–"];
  for(NSUInteger index=0;index<dockButtons.count;index++){
+  NSTextField *caption=(NSTextField *)Find(dockButtons[index].superview,@"dock.years");
+  Check(dockButtons[index].superview.subviews.count==2 && dockButtons[index].accessibilityLabel.length>0 && [caption.stringValue isEqual:expectedDockYears[index]],@"Dock options have an accessible image and the approved year-only caption");
   Check(TSDockIconImage(fixture,TSDockIconNames()[index])!=nil,@"Dock artwork exists");[dockButtons[index]performClick:nil];
   Check([[TSIsolatedAppKitDefaults stringForKey:TSDockIconKey]isEqual:TSDockIconNames()[index]],@"Actual Dock action saves only in memory");
   Check((testDockTile.contentView!=nil)==(index!=4)&&[testDockTile.badgeLabel isEqual:@"7"],@"Actual Dock drawing preserves the badge on the isolated tile");
@@ -341,6 +353,7 @@ int main(int argc,char **argv){@autoreleasepool{
  Check(editing.editedField==nil,@"Actual termination clears edited-field ownership");
  Check([[TSIsolatedAppKitDefaults stringForKey:TSDockIconKey]isEqual:@"round"],@"Preference termination preserves the saved Dock choice for next launch");
  Check([[owner valueForKey:@"endingPreferences"]boolValue] && ![[owner valueForKey:@"ownsFontPanel"]boolValue],@"Actual termination releases preference editing ownership");
+ if(argc>2)WriteWordingReview(shell,@(argv[2]));
  [shell endSession];Check(!shell.window.visible,@"Closing session stays headless");
  puts("PASS: actual owner, complete localized shell, real keyboard provider, sidebar width limits and inert navigation");
 }return 0;}

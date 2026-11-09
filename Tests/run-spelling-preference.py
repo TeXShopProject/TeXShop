@@ -6,16 +6,9 @@ from pathlib import Path
 import plistlib, subprocess, tempfile
 from pane_fixtures import bundles, sources
 root = Path(__file__).resolve().parents[1]
+from production_fragments import method as production_method, verify_embedded
 def method(path, signature):
-    source = (root / path).read_text()
-    start = source.index(signature)
-    opening = source.index('{', start)
-    depth = 1
-    end = opening + 1
-    while depth:
-        depth += (source[end] == '{') - (source[end] == '}')
-        end += 1
-    return source[start:end]
+    return production_method((root/path).read_text(),signature)
 scope = method('Sources/TSTextView.m', '- (BOOL)usesTeXAwareSpellChecking')
 for p in (root / 'Resources/Shellscripts').glob('*Defaults*.plist'):
     assert plistlib.loads(p.read_bytes())['TeXAwareSpellChecking'] is True, p
@@ -82,6 +75,7 @@ int main(void) { @autoreleasepool {
     puts("PASS: default ON, explicit OFF, live saving, independent continuous spelling, and TeX-only scope");
 } }
 '''.replace('SCOPE', scope)
+verify_embedded(program,[('spelling scope',(root/'Sources/TSTextView.m').read_text(),scope)])
 subprocess.run([__import__('sys').executable,str(root/'Tests/run-settings-product-shell.py'),*__import__('sys').argv[1:]],check=True)
 with tempfile.TemporaryDirectory(prefix='texshop-spelling-preference-') as td:
     t = Path(td); (t/'probe.m').write_text(program)

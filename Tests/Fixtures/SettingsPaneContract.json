@@ -3391,7 +3391,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "Legacy pTeX (Shift JIS) ",
+          "1093.title": "Legacy pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "Legacy pTeX (EUC)",
@@ -3400,7 +3400,7 @@
           "1094.title": "pTeX (shell script)",
           "1099.title": "upTeX (ptex2pdf)",
           "1091.title": "OtherViews",
-          "1100.title": "Regular",
+          "1100.title": "TeXShop Standard",
           "1096.title": "pTeX (ptex2pdf)"
         },
         "SettingsMiscOne": {
@@ -3438,7 +3438,7 @@
           "sto-5E-9Q5.title": "A macOS feature that overwrites the file automatically while you edit.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "One Character",
-          "g92-sP-oZU.title": "Center",
+          "g92-sP-oZU.title": "Both Sides",
           "4k3-5Y-CEt.title": "Width for Left or Right:",
           "435.title": "-1",
           "jjy-QZ-C0q.title": "Show Encoding in Save Dialog",
@@ -3493,22 +3493,22 @@
           "MEp-AF-AgT.title": "One Window Mode",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "Use Separate Windows",
-          "505.title": "Pages Flow Left to Right",
+          "505.title": "Left to Right",
           "341.title": "OtherViews",
-          "V7d-ht-Pe3.title": "Source on the Right",
+          "V7d-ht-Pe3.title": "Right",
           "330.title": "Default Mouse Mode",
           "864.title": "Set with current position",
           "5HT-3x-Zr6.title": "Display",
           "555.title": "External Editor",
           "348.title": "OtherViews",
           "111.title": "Zoom for new PDFs",
-          "337.title": "Select Pdf",
+          "337.title": "Select PDF",
           "342.title": "Magnification Method",
           "910.title": "Radio",
           "865.title": "100",
           "jgT-n6-lh0.title": "Smooth text and line art",
           "tVs-uh-QcM.title": "All windows start at fixed position",
-          "507.title": "Pages Flow Right to Left",
+          "507.title": "Right to Left",
           "343.title": "Two Page",
           "911.title": "Radio",
           "332.title": "Magnify",
@@ -3519,7 +3519,7 @@
           "339.title": "Fit to Window",
           "328.title": "Scroll",
           "344.title": "Fixed Magnification",
-          "1uj-kt-7Pj.title": "Source on the Left",
+          "1uj-kt-7Pj.title": "Left",
           "48.title": "All windows start at fixed position",
           "333.title": "Single Page",
           "45.title": "Remember last position on close",
@@ -3636,7 +3636,7 @@
           "2wp-bc-jxK.title": "Text",
           "OFK-Td-Bas.title": "Index",
           "55d-iy-6im.title": "Alpha",
-          "dDq-0W-EuL.title": "for ( ",
+          "dDq-0W-EuL.title": "( )",
           "arA-mu-ATY.title": "for [",
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Escape",
@@ -3647,7 +3647,7 @@
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
           "187.title": "TeX + DVI",
           "163-F5-v8Z.title": "Ghostscript Options",
-          "191.title": "Pdftex",
+          "191.title": "pdfTeX",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Open as Tab in Root Window",
@@ -3660,7 +3660,7 @@
           "919.title": "Radio",
           "786.title": "SyncTeX",
           "675.title": "After Typesetting",
-          "785.title": "Search",
+          "785.title": "Search PDF",
           "922.title": "Radio",
           "xwP-lA-zVw.title": "Use -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
@@ -4355,7 +4355,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Legacy pTeX (Shift JIS) ",
+          "value": "Legacy pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -4426,7 +4426,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "Regular",
+          "value": "TeXShop Standard",
           "index": 1
         },
         {
@@ -4702,7 +4702,7 @@
           "view": "settings.l7y-UX-7WO",
           "kind": "matrix",
           "property": "title",
-          "value": "Center",
+          "value": "Both Sides",
           "row": 1,
           "column": 0
         },
@@ -5084,7 +5084,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pages Flow Left to Right",
+          "value": "Left to Right",
           "row": 0,
           "column": 0
         },
@@ -5100,7 +5100,7 @@
           "view": "settings.zvK-4Q-HJ5",
           "kind": "cell",
           "property": "title",
-          "value": "Source on the Right"
+          "value": "Right"
         },
         {
           "key": "330.title",
@@ -5149,7 +5149,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Select Pdf",
+          "value": "Select PDF",
           "index": 4
         },
         {
@@ -5194,7 +5194,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pages Flow Right to Left",
+          "value": "Right to Left",
           "row": 1,
           "column": 0
         },
@@ -5279,7 +5279,7 @@
           "view": "settings.iRm-g2-CpD",
           "kind": "cell",
           "property": "title",
-          "value": "Source on the Left"
+          "value": "Left"
         },
         {
           "key": "48.title",
@@ -6096,7 +6096,7 @@
           "view": "settings.rB4-mR-LTa",
           "kind": "cell",
           "property": "title",
-          "value": "for ( "
+          "value": "( )"
         },
         {
           "key": "arA-mu-ATY.title",
@@ -6163,7 +6163,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "Pdftex",
+          "value": "pdfTeX",
           "row": 0,
           "column": 0
         },
@@ -6264,7 +6264,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "Search",
+          "value": "Search PDF",
           "row": 0,
           "column": 0
         },
@@ -19896,7 +19896,7 @@
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "旧 pTeX (Shift JIS) ",
+          "1093.title": "旧 pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
           "1092.title": "旧 pTeX (EUC)",
@@ -19947,7 +19947,7 @@
           "4k3-5Y-CEt.title": "左右時のブロック長:",
           "435.title": "-1",
           "jjy-QZ-C0q.title": "保存ダイアログにエンコーディングを表示",
-          "shH-XU-nyE.title": " 2文字分",
+          "shH-XU-nyE.title": "2文字分",
           "440.title": "1",
           "xvd-dM-RGh.title": "ブロックの位置:"
         },
@@ -19997,10 +19997,10 @@
           "347.title": "連続ページ",
           "MEp-AF-AgT.title": "統合ウインドウの挙動",
           "336.title": "OtherViews",
-          "SfP-Ak-pn3.title": "ソースとプレビューを分離",
-          "505.title": "ページを左から右へ",
+          "SfP-Ak-pn3.title": "別々のウインドウで開く",
+          "505.title": "左から右へ",
           "341.title": "OtherViews",
-          "V7d-ht-Pe3.title": "ソースウインドウが右",
+          "V7d-ht-Pe3.title": "右",
           "330.title": "マウスモード",
           "864.title": "現在の位置に設定",
           "5HT-3x-Zr6.title": "ディスプレイ",
@@ -20013,7 +20013,7 @@
           "865.title": "100",
           "jgT-n6-lh0.title": "テキストとラインアートを滑らかに表示",
           "tVs-uh-QcM.title": "いつも同じ位置で開く",
-          "507.title": "ページを右から左へ",
+          "507.title": "右から左へ",
           "343.title": "見開きページ",
           "911.title": "Radio",
           "332.title": "拡大鏡",
@@ -20021,16 +20021,16 @@
           "501.title": "見開きの配置",
           "871.title": "プレビューの自動更新",
           "636.title": "文字選択",
-          "339.title": "ウィンドウに合わせる",
+          "339.title": "ウインドウに合わせる",
           "328.title": "スクロール",
           "344.title": "固定倍率",
-          "1uj-kt-7Pj.title": "ソースウインドウが左",
+          "1uj-kt-7Pj.title": "左",
           "48.title": "いつも同じ位置で開く",
           "333.title": "単一ページ",
           "45.title": "閉じたときの位置を保存",
           "867.title": "スクロールしない",
           "637.title": "実際の大きさ",
-          "vOt-2m-d2s.title": "ソースとプレビューを統合",
+          "vOt-2m-d2s.title": "1つのウインドウに統合",
           "preview-cover-note-cell.title": "これから開く文書に適用。マジックコメントと\nPDF内の表示方向を優先します。",
           "329.title": "ページレイアウト",
           "113.ibShadowedToolTip": "新しく開くPDFの既定倍率です。",
@@ -20159,13 +20159,13 @@
           "314.title": "ファイル保存時に",
           "898.title": "関連ファイルも保存する",
           "823.title": "Sync 方式",
-          "190.title": "デフォルトのスクリプト",
+          "190.title": "パーソナルスクリプト",
           "590.title": "次のコマンドを利用",
           "680.title": "編集を続ける",
           "919.title": "Radio",
           "786.title": "SyncTeX",
           "675.title": "タイプセット後の動作",
-          "785.title": "PDFを検索",
+          "785.title": "PDF を検索",
           "922.title": "Radio",
           "xwP-lA-zVw.title": "-dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
@@ -20860,7 +20860,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "旧 pTeX (Shift JIS) ",
+          "value": "旧 pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -21238,7 +21238,7 @@
           "view": "settings.uve-Zu-06Q",
           "kind": "matrix",
           "property": "title",
-          "value": " 2文字分",
+          "value": "2文字分",
           "row": 1,
           "column": 0
         },
@@ -21582,14 +21582,14 @@
           "view": "settings.G6V-Sw-jFT",
           "kind": "cell",
           "property": "title",
-          "value": "ソースとプレビューを分離"
+          "value": "別々のウインドウで開く"
         },
         {
           "key": "505.title",
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "ページを左から右へ",
+          "value": "左から右へ",
           "row": 0,
           "column": 0
         },
@@ -21605,7 +21605,7 @@
           "view": "settings.zvK-4Q-HJ5",
           "kind": "cell",
           "property": "title",
-          "value": "ソースウインドウが右"
+          "value": "右"
         },
         {
           "key": "330.title",
@@ -21699,7 +21699,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "ページを右から左へ",
+          "value": "右から左へ",
           "row": 1,
           "column": 0
         },
@@ -21760,7 +21760,7 @@
           "view": "settings.334",
           "kind": "menuItem",
           "property": "title",
-          "value": "ウィンドウに合わせる",
+          "value": "ウインドウに合わせる",
           "index": 2
         },
         {
@@ -21784,7 +21784,7 @@
           "view": "settings.iRm-g2-CpD",
           "kind": "cell",
           "property": "title",
-          "value": "ソースウインドウが左"
+          "value": "左"
         },
         {
           "key": "48.title",
@@ -21832,7 +21832,7 @@
           "view": "settings.MBq-SG-G54",
           "kind": "cell",
           "property": "title",
-          "value": "ソースとプレビューを統合"
+          "value": "1つのウインドウに統合"
         },
         {
           "key": "preview-cover-note-cell.title",
@@ -22719,7 +22719,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "デフォルトのスクリプト",
+          "value": "パーソナルスクリプト",
           "row": 2,
           "column": 0
         },
@@ -22769,7 +22769,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "PDFを検索",
+          "value": "PDF を検索",
           "row": 0,
           "column": 0
         },

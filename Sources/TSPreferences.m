@@ -241,12 +241,9 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (IBAction)setDefaults:(NSMenuItem *)sender
 {
     if (![self finishPreferenceEditing:YES]) return;
-    NSArray<NSString *> *names = @[@"FactoryDefaults", @"Defaults_upTeX_ptex2pdf", @"Defaults_upTeX_latexmk",
-        @"Defaults_upTeX_script", @"Defaults_pTeX_ptex2pdf", @"Defaults_pTeX_latexmk", @"Defaults_pTeX_script",
-        @"Defaults_pTeX_sjis", @"Defaults_pTeX_euc"];
-    NSInteger index = sender.tag - 1;
-    if (index < 0 || (NSUInteger)index >= names.count) return;
-    NSURL *url = [NSBundle.mainBundle URLForResource:names[index] withExtension:@"plist"];
+    NSString *name = TSPreferenceProfileNameForTag((TSPreferenceProfileTag)sender.tag);
+    if (name == nil) return;
+    NSURL *url = [NSBundle.mainBundle URLForResource:name withExtension:@"plist"];
     if (url == nil) return;
     NSDictionary<NSString *, id> *profile = [NSDictionary dictionaryWithContentsOfURL:url];
     NSFont *font = [NSFont userFontOfSize:12.0];

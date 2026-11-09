@@ -427,6 +427,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     if (self.searchQuery.length && row>=0 && row<(NSInteger)self.searchResults.count) {
         TSSettingsSearchResult *result=self.searchResults[(NSUInteger)row];
         NSString *category=[result.category isEqual:TSSettingsCategoryKeyboard] ? NSLocalizedString(@"Keyboard", @"") : self.panes[result.category].title ?: @"";
+        if (!result.targetIdentifier.length) return [TSSettingsSidebarRow heightForTitle:result.title cellWidth:tableView.tableColumns.firstObject.width];
         return [TSSettingsSidebarRow heightForSearchTitle:result.title categoryTitle:category cellWidth:tableView.tableColumns.firstObject.width];
     }
     if (row < 0 || row >= (NSInteger)[self visibleIdentifiers].count) { return 30; }
@@ -445,7 +446,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     if (self.searchQuery.length) category = [[TSSettingsCategory alloc] initWithIdentifier:category.identifier symbolName:category.symbolName color:category.color startsGroup:NO];
     NSViewController *pane = self.panes[category.identifier];
     NSString *title = [category.identifier isEqualToString:TSSettingsCategoryKeyboard] ? NSLocalizedString(@"Keyboard", @"") : (pane.title ?: @"");
-    if (self.searchQuery.length) return [TSSettingsSidebarRow cellForSearchTitle:self.searchResults[(NSUInteger)row].title categoryTitle:title];
+    if (self.searchQuery.length && self.searchResults[(NSUInteger)row].targetIdentifier.length) return [TSSettingsSidebarRow cellForSearchTitle:self.searchResults[(NSUInteger)row].title categoryTitle:title];
     NSTableCellView *cell = [TSSettingsSidebarRow cellForCategory:category title:title];
     if (self.categoryTextIndex == nil) self.categoryTextIndex = [[TSSettingsSearch alloc] initWithBundle:self.searchBundle categoryOrder:self.categoryIdentifiers commandNames:@[]];
     cell.toolTip = [self.categoryTextIndex categoryDescription:category.identifier];
@@ -571,7 +572,32 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     }
     NSMutableArray<NSView *> *matches = [NSMutableArray array];
     TSCollectSearchTargets(root, [NSSet setWithArray:targets], matches);
+    NSMutableSet<NSString *> *highlightedGridRows = [NSMutableSet set];
     for (NSView *match in matches) {
+        NSView *ancestor = match;
+        while (ancestor != nil && ![ancestor.identifier isEqual:@"settings.color-table"]) ancestor = ancestor.superview;
+        if ([ancestor isKindOfClass:NSGridView.class]) {
+            NSGridView *grid = (NSGridView *)ancestor;
+            for (NSInteger r = 0; r < grid.numberOfRows; r++) {
+                BOOL contains = NO; NSRect bounds = NSZeroRect;
+                for (NSInteger c = 0; c < grid.numberOfColumns; c++) {
+                    NSView *content = [grid cellAtColumnIndex:c rowIndex:r].contentView;
+                    if (content == nil || content == NSGridCell.emptyContentView) continue;
+                    contains |= match == content || [match isDescendantOf:content];
+                    NSRect rect = [content convertRect:content.bounds toView:grid];
+                    bounds = NSIsEmptyRect(bounds) ? rect : NSUnionRect(bounds, rect);
+                }
+                NSString *key = [NSString stringWithFormat:@"%p:%ld", grid, (long)r];
+                if (contains && ![highlightedGridRows containsObject:key]) {
+                    [highlightedGridRows addObject:key];
+                    bounds.origin.x = 0; bounds.size.width = NSWidth(grid.bounds);
+                    TSSettingsSearchHighlight *overlay = [[TSSettingsSearchHighlight alloc] initWithFrame:NSInsetRect(bounds, 0, -2)];
+                    overlay.autoresizingMask = NSViewWidthSizable;
+                    [grid addSubview:overlay]; [self.searchHighlights addObject:overlay];
+                }
+            }
+            continue;
+        }
         NSView *row = match;
         while (row.superview != nil && row.superview != root && ![row.identifier hasPrefix:@"row."] && ![row.identifier hasPrefix:@"heading."] && ![row.identifier hasPrefix:@"shortcut."] && ![row isKindOfClass:NSBox.class]) row = row.superview;
         TSSettingsSearchHighlight *overlay = [[TSSettingsSearchHighlight alloc] initWithFrame:row.bounds];

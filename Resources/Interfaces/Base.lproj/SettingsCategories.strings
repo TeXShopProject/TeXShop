@@ -97,7 +97,7 @@
 "catalog.editor.4.0.title" = "Parens Matching";
 "catalog.editor.4.1.title" = "Brackets";
 "catalog.editor.4.1.choice.0" = "{ }";
-"catalog.editor.4.1.choice.1" = "for ( ";
+"catalog.editor.4.1.choice.1" = "( )";
 "catalog.editor.4.1.choice.2" = "[ ]";
 "catalog.editor.4.1.choice.3" = "< >";
 "catalog.editor.4.2.title" = "Highlight Enclosed Characters";
@@ -171,7 +171,7 @@
 "catalog.appearance.4.0.item.3" = "Marker";
 "catalog.appearance.4.0.item.4" = "Index";
 "group.appearance.5.title" = "Colors: Brackets";
-"catalog.appearance.5.0.item.0" = "for ( ";
+"catalog.appearance.5.0.item.0" = "( )";
 "catalog.appearance.5.0.item.1" = "{ }";
 "catalog.appearance.5.0.item.2" = "[ ]";
 "group.appearance.6.title" = "Colors: expl3";

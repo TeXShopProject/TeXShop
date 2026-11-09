@@ -7,7 +7,7 @@
     CGFloat available = MAX(1, width - 40);
     NSRect text = [title boundingRectWithSize:NSMakeSize(available, CGFLOAT_MAX)
         options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-        attributes:@{NSFontAttributeName:[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold]}];
+        attributes:@{NSFontAttributeName:[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightRegular]}];
     return MAX(30, ceil(NSHeight(text)) + 6);
 }
 + (NSTableCellView *)cellForCategory:(TSSettingsCategory *)category title:(NSString *)title
@@ -29,17 +29,19 @@
         [label.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-4], [label.centerYAnchor constraintEqualToAnchor:icon.centerYAnchor]]];
     return cell;
 }
-// Reserve both the wrapped item name and its category, including selected-row weight.
+// Measure the same regular font used by the displayed item name.
 + (CGFloat)heightForSearchTitle:(NSString *)title categoryTitle:(NSString *)categoryTitle cellWidth:(CGFloat)width
 {
     CGFloat available=MAX(1,width-16);
     CGFloat height=10;
     NSArray *texts=@[title,categoryTitle];
-    NSArray *fonts=@[[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold], [NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
+    NSArray *fonts=@[[NSFont systemFontOfSize:NSFont.systemFontSize], [NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
     for(NSUInteger i=0;i<texts.count;i++) {
         NSTextField *label=[NSTextField wrappingLabelWithString:texts[i]];
         label.font=fonts[i];
-        height+=ceil([label.cell cellSizeForBounds:NSMakeRect(0,0,available,CGFLOAT_MAX)].height);
+        // Constraints use alignment rectangles; NSTextField adds its cell insets.
+        CGFloat cellWidth=NSWidth([label frameForAlignmentRect:NSMakeRect(0,0,available,1)]);
+        height+=ceil([label.cell cellSizeForBounds:NSMakeRect(0,0,cellWidth,CGFLOAT_MAX)].height);
     }
     return MAX(44,height);
 }

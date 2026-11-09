@@ -254,7 +254,7 @@
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
-                    <buttonCell type="radio" title="Center" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="g92-sP-oZU">
+                    <buttonCell type="radio" title="Both Sides" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="g92-sP-oZU">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>

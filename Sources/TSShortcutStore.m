@@ -112,6 +112,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 + (NSArray<NSDictionary *> *)menuBindings:(NSMenu *)menu {
     NSMutableArray *result = [NSMutableArray array];
     TSVisitMenu(menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.hidden && !item.allowsKeyEquivalentWhenHidden) return;
         if (!item.submenu && item.action != TSMacroAction() && item.keyEquivalent.length)
             [result addObject:@{@"path":path, @"key":item.keyEquivalent,
                 @"modifiers":@(item.keyEquivalentModifierMask), @"macro":@NO}];

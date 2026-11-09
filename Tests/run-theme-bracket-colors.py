@@ -6,9 +6,7 @@ from pathlib import Path
 import plistlib, re, subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
 
-def method(source, signature):
-    start = source.index(signature)
-    return source[start:source.index('\n}\n', start) + 3]
+from production_fragments import method, verify_embedded
 
 support = (root / 'Sources/TSColorSupport.m').read_text(encoding='latin-1')
 signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:',
@@ -17,7 +15,8 @@ signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFro
               '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:',
               '- (NSColor *)colorForKey: (NSString *)theKey isWindowDark:']
 methods = [method(support, s) for s in signatures if s in support]
-document = (root / 'Sources/TSDocument-Color.m').read_text(encoding='latin-1')
+document_source = (root / 'Sources/TSDocument-Color.m').read_text(encoding='latin-1')
+document=document_source
 start = document.index('mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerParen"];')
 end = document.index('\n', document.index('self.markerColorSquareAttribute =', start)) + 1
 document = document[start:end]
@@ -25,6 +24,7 @@ prefs = (root / 'Sources/TSPreferences-Color.m').read_text(encoding='latin-1')
 helper = method(prefs, '- (NSColor *)editingColorForKey:') if '- (NSColor *)editingColorForKey:' in prefs else ''
 wells = re.search(r'^[ \t]*markerParenColorWell\.color = .*?^[ \t]*markerSquareColorWell\.color = [^\n]*\n', method(prefs, '- (void)FillInColorWells'), re.M | re.S).group(0)
 
+fragments=[('complete method:'+m.split('{')[0],support,m) for m in methods]+[('document bracket assignments',document_source,document),('editing helper',prefs,helper),('editing wells',prefs,wells)]
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 if mutation == 'no-fallback':
     methods = [m.replace('theColorArray = [theDictionary objectForKey: @"SyntaxMarker"];', ';') for m in methods]
@@ -129,6 +129,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     return failures ? 1 : 0;
 } }
 '''.replace('METHODS', '\n'.join(methods)).replace('DOCUMENT', document).replace('HELPER', helper).replace('WELLS', wells)
+if not mutation:verify_embedded(program,fragments)
+else:
+    for label,source,fragment in fragments:assert source.count(fragment)==1,(label,'mutation baseline')
 with tempfile.TemporaryDirectory(prefix='texshop-theme-') as tmp:
     tmp = Path(tmp)
     legacy = tmp / 'Legacy.plist'

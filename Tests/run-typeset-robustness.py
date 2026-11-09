@@ -16,6 +16,8 @@ import subprocess
 import sys
 
 root = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
+from production_fragments import method as production_method, verify_embedded
+fragments=[]
 sources = root / 'Sources'
 
 
@@ -48,15 +50,17 @@ def matching_brace(src, i):
 
 def method(name, signature):
     src = (sources / name).read_text(errors='replace')
-    start = src.index(signature)
-    return src[start:matching_brace(src, src.index('{', start))]
+    fragment=production_method(src,signature)
+    fragments.append(('complete method:'+signature,src,fragment))
+    return fragment
 
 
 def block(name, after, marker):
     """The statement starting at `marker` (searched after `after`) up to its closing brace."""
     src = (sources / name).read_text(errors='replace')
     start = src.index(marker, src.index(after))
-    return src[start:matching_brace(src, src.index('{', start))]
+    fragment=src[start:matching_brace(src, src.index('{', start))]
+    fragments.append(('statement block:'+marker,src,fragment));return fragment
 
 
 def optional_method(name, signature):
@@ -71,7 +75,8 @@ def span(name, after, start_marker, end_marker):
     src = (sources / name).read_text(errors='replace')
     start = src.index(start_marker, src.index(after))
     end = src.index(end_marker, start) + len(end_marker)
-    return src[start:end]
+    fragment=src[start:end]
+    fragments.append(('statement span:'+start_marker,src,fragment));return fragment
 
 
 jobs = 'TSDocument-Jobs.m'
@@ -546,6 +551,8 @@ if pieces['PROCESS_GROUP_HELPERS'].strip():
     program = '#define HAVE_PROCESS_GROUP_HELPERS\n' + program
 for key, value in pieces.items():
     program = program.replace('\n' + key + '\n', '\n' + value + '\n')
+
+verify_embedded(program,[f for f in fragments if not f[0].startswith('statement span:')]+[('help path fragment',(sources/'HelpDocuments.m').read_text(errors='replace'),pieces['HELP_PATH'])])
 
 # A job task for the process group checks: argv[1] receives the pid of a child that
 # ignores SIGTERM and appends to argv[2] every 10 ms; the task itself ignores SIGTERM

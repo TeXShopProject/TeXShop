@@ -224,7 +224,7 @@
 "group.typesetting.0.title" = "既定";
 "catalog.typesetting.0.0.title" = "デフォルトのコマンド";
 "catalog.typesetting.0.1.title" = "利用するコマンド";
-"catalog.typesetting.0.2.title" = "デフォルトのスクリプト";
+"catalog.typesetting.0.2.title" = "パーソナルスクリプト";
 "catalog.typesetting.0.3.title" = "代替エンジン";
 "catalog.typesetting.0.3.note" = "デフォルト: pdflatexmk";
 "group.typesetting.1.title" = "タイプセット後";

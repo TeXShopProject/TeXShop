@@ -24,6 +24,7 @@
 #import "TSDocument.h"
 #import "globals.h"
 #import "TSColorSupport.h"
+#import "TSThemeAlpha.h"
 #import "MyPDFKitView.h"
 
 
@@ -347,18 +348,10 @@
     myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorInvisibleChar"];
     InvisibleColor = myColor;
     
-    myArray = [colorDictionary objectForKey:@"PreviewAlpha"];
-    myNumber = myArray.count >= 4 ? myArray[3] : @1;
-    self.pdfKitWindow.alphaValue = [myNumber floatValue];
-    
-    myArray = [colorDictionary objectForKey:@"SourceAlpha"];
-    myNumber = myArray.count >= 4 ? myArray[3] : @1;
-    textWindow.alphaValue = [myNumber floatValue];
-    fullSplitWindow.alphaValue = [myNumber floatValue];
-    
-    myArray = [colorDictionary objectForKey:@"ConsoleAlpha"];
-    myNumber = myArray.count >= 4 ? myArray[3] : @1;
-    outputWindow.alphaValue = [myNumber floatValue];
+    self.pdfKitWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemePreviewAlphaKey);
+    textWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemeSourceAlphaKey);
+    fullSplitWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemeSourceAlphaKey);
+    outputWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemeConsoleAlphaKey);
     
     myColor = [[TSColorSupport sharedInstance] colorAndAlphaFromDictionary:colorDictionary andKey: @"ImageForeground"];
     ImageForegroundColor = myColor;

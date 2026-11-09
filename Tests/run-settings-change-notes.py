@@ -11,15 +11,15 @@ with tempfile.TemporaryDirectory(prefix='texshop-change-notes-') as directory:
     shutil.copytree(r/'Resources/Interfaces/Base.lproj',resources/'Base.lproj',ignore=shutil.ignore_patterns('*.xib'))
     shutil.copytree(r/'Resources/Interfaces/en.lproj',resources/'en.lproj',ignore=shutil.ignore_patterns('*.nib','TeXShopHelp','*.pdf'))
     original=r/'Sources/TSSettingsChangeNote.m'
-    command=['xcrun','clang','-fobjc-arc','-DNSAccessibilityPostNotificationWithUserInfo=TSProbeAnnouncement','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsChangeNotes.m'),str(original),str(r/'Sources/TSSettingsSearch.m'),str(r/'Sources/TSSettingsCategory.m'),'-o',str(d/'probe')]
+    command=['xcrun','clang','-fobjc-arc','-DNSAccessibilityPostNotificationWithUserInfo=TSProbeAnnouncement','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsChangeNotes.m'),str(original),str(r/'Sources/globals.m'),str(r/'Sources/TSSettingsSearch.m'),str(r/'Sources/TSSettingsCategory.m'),'-o',str(d/'probe')]
     def run(source=None, strings=bundle):
         subprocess.run([str(source) if x==str(original) and source else x for x in command],check=True)
         return subprocess.run([str(d/'probe'),str(strings)],capture_output=True,text=True,timeout=60)
     result=run();print(result.stderr,result.stdout,flush=True);assert result.returncode==0
     if args.mutations:
         mutations=[
-            ('find-always-restart','return [weakSelf.launch[@"FindMethod"] integerValue] == 2 || [weakSelf.defaults integerForKey:@"FindMethod"] == 2;','return YES;'),
-            ('find-ignore-launch','return [weakSelf.launch[@"FindMethod"] integerValue] == 2 || [weakSelf.defaults integerForKey:@"FindMethod"] == 2;','return [weakSelf.defaults integerForKey:@"FindMethod"] == 2;'),
+            ('find-always-restart','return [weakSelf.launch[FindMethodKey] integerValue] == 2 || [weakSelf.defaults integerForKey:FindMethodKey] == 2;','return YES;'),
+            ('find-ignore-launch','return [weakSelf.launch[FindMethodKey] integerValue] == 2 || [weakSelf.defaults integerForKey:FindMethodKey] == 2;','return [weakSelf.defaults integerForKey:FindMethodKey] == 2;'),
             ('warning-red','label.textColor = NSColor.labelColor;','label.textColor = NSColor.systemRedColor;'),
             ('announcement-priority','@(NSAccessibilityPriorityMedium)','@(NSAccessibilityPriorityLow)'),
             ('category-clear','if(!rule.restart)[rule.view setShown:NO announce:NO];','if(NO)[rule.view setShown:NO announce:NO];'),

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSSettingsSearch.h"
+#import "TSDockIcon.h"
 @implementation TSSettingsSearchEntry
 @synthesize category = _category, targetIdentifier = _targetIdentifier, text = _text, normalizedText = _normalizedText, weight = _weight, command = _command;
 - (instancetype)initWithCategory:(TSSettingsCategoryID)category target:(NSString *)target text:(NSString *)text weight:(TSSettingsSearchWeight)weight command:(BOOL)command
@@ -65,6 +66,7 @@
     for (NSUInteger i = 0; i < dockTitles.count; i++) {
         NSString *tip = [NSString stringWithFormat:@"%@ — %@", dockText(dockTitles[i]), dockText(dockPeriods[i])];
         [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryAppearance target:@"DockIconChoices" text:tip weight:TSSettingsSearchWeightDescription command:NO]];
+        [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryAppearance target:@"DockIconChoices" text:TSDockIconYears()[i] weight:TSSettingsSearchWeightChoice command:NO]];
     }
     for (NSString *category in order) add(category, @"", @"SettingsCategories", category, TSSettingsSearchWeightCategory);
     for (NSString *category in order) {

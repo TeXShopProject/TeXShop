@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSSettingsChangeNote.h"
 #import "TSPreferenceKey.h"
+#import "globals.h"
 
 static NSMutableDictionary<NSString *, id> *launchValues;
 void TSSettingsRememberLaunchValue(NSString *key, id value) {
@@ -72,9 +73,9 @@ typedef NS_ENUM(NSUInteger, TSSettingsNoteValueKind) { TSSettingsNoteBoolean, TS
     NSString *restart=@"Takes effect after you restart TeXShop.";
     _categories=@{
         @"spelling":@[rule(@"spelling",TSTeXAwareSpellCheckingKey,@"row.catalog.spelling.1.0",@"This does not turn spell checking while typing on or off.",TSSettingsNoteBoolean,NO,^BOOL{return YES;})],
-        @"preview":@[rule(@"preview",@"PdfMagnification",@"row.catalog.preview.0.2",@"Open PDFs keep their zoom. The new value applies to PDFs opened from now on.",TSSettingsNoteDouble,NO,^BOOL{return weakSelf.hasPDFWindow();})],
-        @"documents":@[rule(@"documents",@"Encoding",@"row.catalog.documents.0.0",@"Currently open files retain their old encoding.",TSSettingsNoteString,NO,^BOOL{return weakSelf.hasSourceWindow();}),rule(@"documents",@"AutoSaveEnabled",@"row.catalog.documents.1.0",restart,TSSettingsNoteBoolean,YES,^BOOL{return YES;})],
-        @"editor":@[rule(@"editor",@"FindMethod",@"row.catalog.editor.7.0",restart,TSSettingsNoteInteger,YES,^BOOL{return [weakSelf.launch[@"FindMethod"] integerValue] == 2 || [weakSelf.defaults integerForKey:@"FindMethod"] == 2;})]
+        @"preview":@[rule(@"preview",PdfMagnificationKey,@"row.catalog.preview.0.2",@"Open PDFs keep their zoom. The new value applies to PDFs opened from now on.",TSSettingsNoteDouble,NO,^BOOL{return weakSelf.hasPDFWindow();})],
+        @"documents":@[rule(@"documents",EncodingKey,@"row.catalog.documents.0.0",@"Currently open files retain their old encoding.",TSSettingsNoteString,NO,^BOOL{return weakSelf.hasSourceWindow();}),rule(@"documents",AutoSaveEnabledKey,@"row.catalog.documents.1.0",restart,TSSettingsNoteBoolean,YES,^BOOL{return YES;})],
+        @"editor":@[rule(@"editor",FindMethodKey,@"row.catalog.editor.7.0",restart,TSSettingsNoteInteger,YES,^BOOL{return [weakSelf.launch[FindMethodKey] integerValue] == 2 || [weakSelf.defaults integerForKey:FindMethodKey] == 2;})]
     };
     return self;
 }

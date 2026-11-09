@@ -25,7 +25,7 @@
             <menu key="menu" title="OtherViews" id="1091">
               <items>
                 <menuItem title="Set Default Values" hidden="YES" id="1101" />
-                <menuItem title="Regular" tag="1" id="1100">
+                <menuItem title="TeXShop Standard" tag="1" id="1100">
                   <connections>
                     <action selector="setDefaults:" target="-2" id="1102" />
                   </connections>
@@ -60,7 +60,7 @@
                     <action selector="setDefaults:" target="-2" id="1109" />
                   </connections>
                 </menuItem>
-                <menuItem title="Legacy pTeX (Shift JIS) " tag="8" id="1093">
+                <menuItem title="Legacy pTeX (Shift JIS)" tag="8" id="1093">
                   <connections>
                     <action selector="setDefaults:" target="-2" id="1110" />
                   </connections>

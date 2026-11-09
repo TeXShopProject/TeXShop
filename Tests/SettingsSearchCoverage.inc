@@ -42,6 +42,10 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
  TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:resources categoryOrder:order commandNames:@[@"Unique Command 93762"]];
  Check([TSSettingsNormalizedText(@"ＰＤＦ　Éditeur … はんかく ｶﾅ") isEqual:TSSettingsNormalizedText(@"pdf editeur ... ハンカク カナ")],@"Compatibility, kana, accents, whitespace and case");
  Check(![TSSettingsNormalizedText(@"パス") isEqual:TSSettingsNormalizedText(@"ハス")],@"Dakuten distinctions retained");
+ for(NSString *year in @[@"2000–2001",@"2001–2013",@"2013–2014",@"2014–2026",@"2026–"]){
+  BOOL found=NO;for(TSSettingsSearchResult *hit in [index resultsForQuery:year])if([hit.category isEqual:@"appearance"] && [hit.targetIdentifier isEqual:@"DockIconChoices"])found=YES;
+  Check(found,@"Every visible Dock year finds its choice row");
+ }
  // Independent roles: a boolean's title is a row name (50), while
  // matrix/button choices (e.g. line-number size) remain choices (30).
  for(NSArray *contract in @[@[@"row.catalog.general.0.0",@"catalog.general.0.0.title",@50],@[@"row.catalog.editor.0.2",@"catalog.editor.0.2.title",@50]]){

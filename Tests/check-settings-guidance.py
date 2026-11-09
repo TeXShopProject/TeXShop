@@ -204,3 +204,14 @@ for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','
     assert warning in text,('Current release warning copies agree',filename)
     for retired in ('All three groups remain open','Changing the method keeps the inactive options and their values','with all three groups open','without discarding unsaved edits'):
         assert retired not in text,('Retired redundant release explanation',filename,retired)
+
+# Fifth audit: public release copies describe both category entrances and merged color rows.
+search_copy='Category names and descriptions also provide one entry that opens the top of the pane. Color controls on the same row share one result.'
+for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex'):
+    assert search_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
+ja_copy='カテゴリ名や説明に一致した場合は、ペインの先頭へ移る入口を1件表示します。同じ行の色設定は1件の結果にまとめます。'
+for filename in ('Documentation/Releases/5.60-ja.md','website/release-notes-ja.html'):
+    assert ja_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
+ko=html.unescape((ROOT/'Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm').read_text())
+assert '카테고리' not in ko and '범주' in ko,'Korean category terminology is consistent'
+print('PASS: six release copies and Korean category terminology')

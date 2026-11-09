@@ -6,6 +6,9 @@ static NSString * const TSDockIconKey = @"DockIconStyle";
 static inline NSArray<NSString *> *TSDockIconNames(void) {
     return @[@"original", @"triangle", @"retina", @"round", @"current"];
 }
+static inline NSArray<NSString *> *TSDockIconYears(void) {
+    return @[@"2000–2001", @"2001–2013", @"2013–2014", @"2014–2026", @"2026–"];
+}
 static inline NSString *TSDockIconName(id value) {
     return [TSDockIconNames() containsObject:value ?: @""] ? value : @"current";
 }

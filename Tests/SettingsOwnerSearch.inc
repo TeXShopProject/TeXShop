@@ -47,6 +47,23 @@ static void CheckOwnerSearch(TSPreferences *owner,TSSettingsWindowController *sh
     NSView *row=[keyboard valueForKey:@"highlightedCompletionRow"];
     Check(row!=nil && row.window==shell.window && row.layer.backgroundColor!=nil,@"Tab reservation highlights the real completion control in the current window");
     [keyboard stopKeySearch];Check([keyboard valueForKey:@"highlightedCompletionRow"]==nil && row.layer.backgroundColor==nil,@"Stopping key search clears the real completion highlight");
+    // Each merged color result must mark only its own grid row.
+    NSGridView *grid=(NSGridView *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryAppearance],@"settings.color-table");
+    Check(grid.numberOfRows==5,@"Color table retains header and four named rows");
+    NSArray *targets=@[@"settings.L8Q-Ov-EVr",@"settings.Kx3-n3-dsv",@"settings.FoL-zy-obh",@"settings.hCM-4U-XkM"];
+    for(NSUInteger i=0;i<4;i++){
+        NSString *name=[fixture localizedStringForKey:[NSString stringWithFormat:@"catalog.appearance.2.0.item.%lu",(unsigned long)i] value:nil table:@"SettingsCategories"];
+        [shell setSettingsSearchQuery:name];ChooseOwnerResult(shell,targets[i]);[shell.window.contentView layoutSubtreeIfNeeded];
+        NSArray<NSView *> *marks=[shell valueForKey:@"searchHighlights"];
+        Check(marks.count==1 && marks[0].superview==grid,@"Merged color search highlights only its selected grid row");
+        NSRect selected=marks[0].frame;
+        for(NSInteger j=1;j<5;j++){
+            NSView *label=[grid cellAtColumnIndex:0 rowIndex:j].contentView;
+            NSRect bounds=[label convertRect:label.bounds toView:grid];
+            Check(NSIntersectsRect(selected,bounds)==(j==(NSInteger)i+1),@"Color highlight identifies one named row without neighboring rows");
+        }
+    }
+    [shell setSettingsSearchQuery:@""];
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];[shell beginSession];
     puts("PASS: real search editing, cancel, Escape, blanks, focus, history, row highlight, sheets, validation and Tab reservation");
 }

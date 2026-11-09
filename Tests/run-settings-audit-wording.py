@@ -5,7 +5,7 @@ import tempfile,subprocess,shutil,re,json
 R=Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  T=Path(td)
- for folder in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','Manual Source','DocumentSources/CommentLinesRevised']:
+ for folder in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','Manual Source','DocumentSources/CommentLinesRevised','ChangesDocument']:
   for p in (R/folder).rglob('*'):
    if p.is_file() and p.suffix in ['.strings','.htm','.html','.json','.md','.tex','.pdf']:
     dest=T/p.relative_to(R);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,dest)
@@ -15,6 +15,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for run in [guidance,wording]:
   result=run();assert result.returncode==0,result.stderr
  cases=[]
+ for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex','Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
+  phrase='同じ行の色設定は1件の結果にまとめます。' if '-ja.' in filename else 'Color controls on the same row share one result.'
+  cases.append(('release-search-'+filename,filename,phrase.encode(),b'REMOVED',guidance,'Release category and color-row guidance'))
+ cases.append(('ko-category','Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm',''.join('&#'+str(ord(c))+';' for c in '범주').encode(),''.join('&#'+str(ord(c))+';' for c in '카테고리').encode(),guidance,'Korean category terminology'))
+
  for lang in ['en','ja','de','es','ko']:
   for name in ['basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden']:
    cases.append((f'outside-{lang}-{name}',f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm',b'</body>',b'<p>fixture paragraph</p></body>',guidance,'body text outside content_border'))

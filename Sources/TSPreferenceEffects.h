@@ -20,7 +20,7 @@ typedef NS_OPTIONS(NSUInteger, TSPreferencePreparation) {
 static inline TSPreferencePreparation TSPreferencePreparationsForKeys(NSSet<TSPreferenceKey> *changed) {
     NSDictionary<NSNumber *, NSArray<TSPreferenceKey> *> *groups = @{
         @(TSPreferencePrepareEncoding): @[EncodingKey, ptexUtfOutputEnabledKey],
-        @(TSPreferencePrepareSpelling): @[TSTeXAwareSpellCheckingKey, TurnOffCommandSpellCheckKey, TurnOffParameterSpellCheckKey, TurnOffCommentSpellCheckKey, @"ExceptionListExcludesParameters", @"ExtraCommandsNotToCheckParameters", @"ExtraCommandsToCheckParameters"],
+        @(TSPreferencePrepareSpelling): @[TSTeXAwareSpellCheckingKey, TurnOffCommandSpellCheckKey, TurnOffParameterSpellCheckKey, TurnOffCommentSpellCheckKey, ExceptionListExcludesParametersKey, ExtraCommandsNotToCheckParametersKey, ExtraCommandsToCheckParametersKey],
         @(TSPreferencePrepareTheme): @[DefaultLiteThemeKey, DefaultDarkThemeKey],
         @(TSPreferencePrepareDock): @[TSDockIconKey],
         @(TSPreferencePreparePDFCopy): @[PdfCopyTypeKey]

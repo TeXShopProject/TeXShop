@@ -104,3 +104,5 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 @media(prefers-color-scheme:dark){:root:not([data-theme]) .latest-release-tag{background:#254c33;color:#d4f3dd}}
 .downloads+footer{max-width:1050px}
 @media(max-width:1100px){.downloads+footer{margin-inline:25px}}
+
+.icon-history-years{display:block;font-size:.85em;line-height:1.5;margin-top:2px}

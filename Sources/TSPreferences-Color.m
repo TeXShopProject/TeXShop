@@ -25,6 +25,7 @@
 #import "TSPreferences+LiveSettings.h"
 #import "globals.h"
 #import "TSColorSupport.h"
+#import "TSThemeAlpha.h"
 #import "TSThemeFileStore.h"
 
 
@@ -208,9 +209,9 @@ NSInteger stringSort(id s1, id s2, void *context)
         
     EditorReverseSyncColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorReverseSync"];
     PreviewDirectSyncColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewDirectSync"];
-    SourceAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
-    PreviewAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
-    ConsoleAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
+    SourceAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: TSThemeSourceAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];
+    PreviewAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: TSThemePreviewAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];
+    ConsoleAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: TSThemeConsoleAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];
     ImageForegroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ImageForeground"];
     ImageBackgroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ImageBackground"];
     
@@ -331,11 +332,11 @@ NSInteger stringSort(id s1, id s2, void *context)
     [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"PreviewBackground" withRed: [SUD doubleForKey:PdfPageBack_RKey]
                                       Green: [SUD doubleForKey:PdfPageBack_GKey] Blue: [SUD doubleForKey:PdfPageBack_BKey] Alpha: 1.0];
     
-    [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"SourceAlpha" withRed: 1.0
+    [colorSupport setColorValueInDictionary: prefsDictionary forKey: TSThemeSourceAlphaKey withRed: 1.0
                                       Green: 1.0 Blue: 1.0 Alpha: [SUD doubleForKey: SourceWindowAlphaKey]];
-    [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"PreviewAlpha" withRed: 1.0
+    [colorSupport setColorValueInDictionary: prefsDictionary forKey: TSThemePreviewAlphaKey withRed: 1.0
                                       Green: 1.0  Blue: 2.0 Alpha: [SUD doubleForKey: PreviewWindowAlphaKey]];
-    [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"ConsoleAlpha" withRed: 1.0
+    [colorSupport setColorValueInDictionary: prefsDictionary forKey: TSThemeConsoleAlphaKey withRed: 1.0
                                       Green: 1.0 Blue: 1.0 Alpha: [SUD doubleForKey: ConsoleWindowAlphaKey]];
     [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"ImageForeground" withRed: [SUD doubleForKey:PdfFore_RKey]
                                       Green: [SUD doubleForKey:PdfFore_GKey] Blue: [SUD doubleForKey:PdfFore_BKey]
@@ -757,11 +758,11 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
+        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: TSThemeSourceAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [self changeWindowAlphaForKey:@"SourceAlpha" fromWell:sender];
+    [self changeWindowAlphaForKey:TSThemeSourceAlphaKey fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }
@@ -773,11 +774,11 @@ NSInteger stringSort(id s1, id s2, void *context)
    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
+        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: TSThemePreviewAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [self changeWindowAlphaForKey:@"PreviewAlpha" fromWell:sender];
+    [self changeWindowAlphaForKey:TSThemePreviewAlphaKey fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }
@@ -789,11 +790,11 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
+        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: TSThemeConsoleAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [self changeWindowAlphaForKey:@"ConsoleAlpha" fromWell:sender];
+    [self changeWindowAlphaForKey:TSThemeConsoleAlphaKey fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }

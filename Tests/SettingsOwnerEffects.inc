@@ -8,6 +8,9 @@ extern NSUInteger TSSettingsEncodingPreparations;
 @end
 // Observe the completed transaction, not merely which notification was sent.
 static void CheckOwnerEffects(TSPreferences *owner, NSDictionary *factory, NSDictionary *baseTheme) {
+    NSArray *profileNames=@[@"FactoryDefaults",@"Defaults_upTeX_ptex2pdf",@"Defaults_upTeX_latexmk",@"Defaults_upTeX_script",@"Defaults_pTeX_ptex2pdf",@"Defaults_pTeX_latexmk",@"Defaults_pTeX_script",@"Defaults_pTeX_sjis",@"Defaults_pTeX_euc"];
+    for(NSInteger tag=1;tag<=9;tag++)Check([TSPreferenceProfileNameForTag((TSPreferenceProfileTag)tag)isEqual:profileNames[tag-1]],@"Named profile tags preserve all nine resource mappings");
+    for(NSNumber *tag in @[@(-1),@0,@10,@999])Check(TSPreferenceProfileNameForTag((TSPreferenceProfileTag)tag.integerValue)==nil,@"Unknown profile tags are rejected");
     id<NSApplicationDelegate> oldDelegate=NSApp.delegate;SettingsPreparationDelegate *preparation=[SettingsPreparationDelegate new];NSApp.delegate=preparation;
     NSDictionary *saved = [TSIsolatedAppKitDefaults.values copy];
     NSDictionary *savedLite = liteColors, *savedDark = darkColors;

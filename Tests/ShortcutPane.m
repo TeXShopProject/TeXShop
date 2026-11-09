@@ -132,7 +132,10 @@ int main(int argc,char **argv){@autoreleasepool{
  TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(keyDown:)),(IMP)RejectForwardedKey);
  class_addMethod(TSSettingsWindow.class,@selector(isKeyWindow),(IMP)IsKey,"B@:");
  CheckEventPriority();
- { NSMenu *hiddenMenu=[NSMenu new];NSMenuItem *hidden=Item(@"Hidden",@"h",C);[hiddenMenu addItem:hidden];TSShortcutStore *hiddenStore=[[TSShortcutStore alloc]initWithMenu:hiddenMenu defaults:TSIsolatedAppKitDefaults];hidden.hidden=YES;hidden.allowsKeyEquivalentWhenHidden=NO;REQUIRE([TSShortcutSearch matchesKey:@"h" modifiers:C store:hiddenStore macros:@[]].count==0);hidden.allowsKeyEquivalentWhenHidden=YES;REQUIRE([TSShortcutSearch matchesKey:@"h" modifiers:C store:hiddenStore macros:@[]].count==1); }
+ { NSMenu *hiddenMenu=[NSMenu new];NSMenuItem *hidden=Item(@"Hidden",@"h",C);[hiddenMenu addItem:hidden];TSShortcutStore *hiddenStore=[[TSShortcutStore alloc]initWithMenu:hiddenMenu defaults:TSIsolatedAppKitDefaults];hidden.hidden=YES;hidden.allowsKeyEquivalentWhenHidden=NO;REQUIRE([TSShortcutSearch matchesKey:@"h" modifiers:C store:hiddenStore macros:@[]].count==0);NSArray *candidate=@[@{@"key":@"h",@"modifiers":@(C)}];
+ REQUIRE([hiddenStore conflictsForMacroShortcuts:candidate].count==0);
+ hidden.allowsKeyEquivalentWhenHidden=YES;REQUIRE([hiddenStore conflictsForMacroShortcuts:candidate].count==1);
+ REQUIRE([TSShortcutSearch matchesKey:@"h" modifiers:C store:hiddenStore macros:@[]].count==1); }
 
  NSMenu *main=[NSMenu new],*menu=[NSMenu new];NSMenuItem *root=[[NSMenuItem alloc]initWithTitle:@"Actions" action:NULL keyEquivalent:@""];root.submenu=menu;[main addItem:root];NSApp.mainMenu=main;
  NSMenuItem *first=Item(@"First",@"f",C),*second=Item(@"Second",@"f",C),*equals=Item(@"Equals",@"=",C);

@@ -811,7 +811,7 @@
                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rB4-mR-LTa" identifier="settings.rB4-mR-LTa">
                           <rect key="frame" x="115" y="36" width="30" height="14" />
                           <autoresizingMask key="autoresizingMask" />
-                          <textFieldCell key="cell" lineBreakMode="clipping" title="for ( " id="dDq-0W-EuL">
+                          <textFieldCell key="cell" lineBreakMode="clipping" title="( )" id="dDq-0W-EuL">
                             <font key="font" metaFont="message" size="11" />
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

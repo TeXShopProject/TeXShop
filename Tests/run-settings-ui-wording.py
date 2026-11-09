@@ -58,3 +58,8 @@ assert 'catalog.editor.7.0.note' not in index and 'shortcut.hint' not in index
 for text in retired:assert text.replace('\n','\\n') not in index
 for text in keys[:3]:assert text not in index
 print('PASS: 12 languages, approved inline notices, original encoding translations, retired UI keys and index exclusions')
+
+row_contract=json.loads((r/'Tests/Fixtures/SettingsRowTranslations.json').read_text())
+for lang,expected_rows in row_contract['rows'].items():
+    actual=strings(interfaces/f'{lang}.lproj'/'SettingsCategories.strings')
+    for key,value in expected_rows.items():assert actual[key]==value,(lang,'translated row name',key)

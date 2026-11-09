@@ -158,7 +158,7 @@
 "catalog.appearance.2.0.column.2" = "Alpha";
 "catalog.appearance.2.0.item.0" = "Quelltext";
 "catalog.appearance.2.0.item.1" = "Konsole";
-"catalog.appearance.2.0.item.2" = "Log";
+"catalog.appearance.2.0.item.2" = "Protokoll";
 "catalog.appearance.2.0.item.3" = "Vorschau";
 "group.appearance.3.title" = "Farben: Quelltext";
 "catalog.appearance.3.0.item.0" = "Eingabe";
@@ -168,7 +168,7 @@
 "catalog.appearance.4.0.item.0" = "Kommentar";
 "catalog.appearance.4.0.item.1" = "Befehl";
 "catalog.appearance.4.0.item.2" = "Fußnote";
-"catalog.appearance.4.0.item.3" = "Marker";
+"catalog.appearance.4.0.item.3" = "Markierung";
 "catalog.appearance.4.0.item.4" = "Index";
 "group.appearance.5.title" = "Farben: Klammern";
 "catalog.appearance.5.0.item.0" = "für (";
@@ -194,7 +194,7 @@
 "group.appearance.9.title" = "Farben: XML-Syntax";
 "catalog.appearance.9.0.item.0" = "Kommentar";
 "catalog.appearance.9.0.item.1" = "Tag";
-"catalog.appearance.9.0.item.2" = "Escape";
+"catalog.appearance.9.0.item.2" = "Escape-Zeichen";
 "catalog.appearance.9.0.item.3" = "Attribut";
 "catalog.appearance.9.0.item.4" = "Wert";
 "group.appearance.10.title" = "Dock-Symbol während der Laufzeit";
@@ -209,7 +209,7 @@
 "catalog.preview.0.5.title" = "Schriftglättung für Text und Linien";
 "group.preview.1.title" = "Doppelseiten-Modus";
 "catalog.preview.1.0.title" = "Seitenrichtung";
-"catalog.preview.1.1.title" = "Show first page alone as cover";
+"catalog.preview.1.1.title" = "Erste Seite einzeln als Deckblatt anzeigen";
 "catalog.preview.1.2.title" = "Gilt für künftig geöffnete Dokumente. Magische Kommentare und die Leserichtung im PDF haben Vorrang.";
 "group.preview.2.title" = "Aktualisierung";
 "catalog.preview.2.0.title" = "Vorschau autom. aktualisieren";
@@ -264,7 +264,7 @@
 "group.typesetting.8.title" = "Suchbefehle und BibTeX";
 "catalog.typesetting.8.0.title" = "kpsetool";
 "catalog.typesetting.8.0.note" = "Vorgabe: kpsetool -w -n latex tex";
-"catalog.typesetting.8.1.title" = "BibTeX Engine";
+"catalog.typesetting.8.1.title" = "BibTeX-Programm";
 "catalog.typesetting.8.1.note" = "Vorgabe: bibtex";
 "group.typesetting.9.title" = "pTeX-Unterstützung (für japanische Benutzer)";
 "catalog.typesetting.9.0.title" = "Unterstützung für das otf-Paket";

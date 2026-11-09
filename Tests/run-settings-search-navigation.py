@@ -8,7 +8,7 @@ expected_failures={'back-clears-query': 'Back navigates while keeping search act
 with tempfile.TemporaryDirectory(prefix='texshop-search-navigation-') as directory:
     p=Path(directory)
     subprocess.run(['xcrun','ibtool','--compile',str(p/'SettingsWindow.nib'),str(r/'Resources/SettingsWindow.xib')],check=True)
-    sources=sorted((r/'Sources').glob('TSSettings*.m'))+[r/'Sources/TSPrefPaneLayout.m']
+    sources=sorted((r/'Sources').glob('TSSettings*.m'))+[r/'Sources/TSPrefPaneLayout.m',r/'Sources/globals.m']
     compile_command=['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Wno-unused-parameter','-Werror','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsSearchNavigation.m'),*map(str,sources),'-o',str(p/'probe')]
     subprocess.run(compile_command,check=True)
     subprocess.run([str(p/'probe'),str(p/'SettingsWindow.nib')],check=True,timeout=60)

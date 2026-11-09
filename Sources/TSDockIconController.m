@@ -52,6 +52,7 @@
     NSMutableArray<NSView *> *options = [NSMutableArray array];
     NSArray *titles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
     NSArray *details = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
+    NSArray<NSString *> *years = TSDockIconYears();
     for (NSInteger index = 0; index < 5; index++) {
         NSString *label = [self text:titles[index]];
         NSString *tip = [NSString stringWithFormat:@"%@ — %@", label, [self text:details[index]]];
@@ -62,18 +63,14 @@
         button.translatesAutoresizingMaskIntoConstraints=NO;button.wantsLayer=YES;button.layer.cornerRadius=12;
         [button.widthAnchor constraintEqualToConstant:64].active=YES;[button.heightAnchor constraintEqualToConstant:64].active=YES;
         [self.buttons addObject:button];
-        NSTextField *caption = [NSTextField wrappingLabelWithString:label];
-        caption.alignment = NSTextAlignmentCenter;
-        caption.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-        NSTextField *period=[NSTextField labelWithString:[self text:details[index]]];period.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];period.textColor=NSColor.secondaryLabelColor;
-        NSStackView *option = [NSStackView stackViewWithViews:@[button,caption,period]];
+        NSTextField *caption = [NSTextField labelWithString:years[index]];
+        caption.identifier = @"dock.years";
+        caption.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+        caption.textColor = NSColor.secondaryLabelColor;
+        NSStackView *option = [NSStackView stackViewWithViews:@[button, caption]];
+        option.spacing = 4;
         option.orientation = NSUserInterfaceLayoutOrientationVertical;
         option.alignment = NSLayoutAttributeCenterX;
-        option.spacing = 4;
-        // Give wrapping captions a definite width in each equally sized column.
-        caption.translatesAutoresizingMaskIntoConstraints = NO;
-        [caption.widthAnchor constraintEqualToAnchor:option.widthAnchor].active = YES;
-        [caption setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
         NSLayoutConstraint *fittingHeight = [option.heightAnchor constraintEqualToConstant:0];
         fittingHeight.priority = 249; fittingHeight.active = YES;
         [options addObject:option];

@@ -158,7 +158,7 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
             else [cells addObject:[self horizontal:@[TSCatalogRequired(wells.firstObject),label] spacing:8]];
         }
         NSGridView *grid=[self grid:cells columns:table?4:2 spacing:table?28:24];
-        if(table){grid.rowSpacing=8;grid.rowAlignment=NSGridRowAlignmentNone;[grid columnAtIndex:0].width=110;for(NSInteger c=1;c<4;c++)[grid columnAtIndex:c].xPlacement=NSGridCellPlacementCenter;for(NSInteger r=0;r<grid.numberOfRows;r++)[grid rowAtIndex:r].yPlacement=NSGridCellPlacementCenter;}
+        if(table){grid.identifier=@"settings.color-table";grid.rowSpacing=8;grid.rowAlignment=NSGridRowAlignmentNone;[grid columnAtIndex:0].width=110;for(NSInteger c=1;c<4;c++)[grid columnAtIndex:c].xPlacement=NSGridCellPlacementCenter;for(NSInteger r=0;r<grid.numberOfRows;r++)[grid rowAtIndex:r].yPlacement=NSGridCellPlacementCenter;}
         else { [grid columnAtIndex:0].width=230; [grid columnAtIndex:1].width=230; }
         row=[TSPrefPaneLayout catalogContent:grid trailing:NO indent:indent];
     }

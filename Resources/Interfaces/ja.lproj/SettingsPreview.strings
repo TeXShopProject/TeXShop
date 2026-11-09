@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "新規PDFの倍率";
 "113.ibShadowedToolTip" = "新しく開くPDFの既定倍率です。";
-"1uj-kt-7Pj.title" = "ソースウインドウが左";
+"1uj-kt-7Pj.title" = "左";
 "228.title" = "ページボタン";
 "328.title" = "スクロール";
 "329.title" = "ページレイアウト";
@@ -11,7 +11,7 @@
 "335.title" = "拡大鏡 (大)";
 "336.title" = "OtherViews";
 "337.title" = "範囲指定";
-"339.title" = "ウィンドウに合わせる";
+"339.title" = "ウインドウに合わせる";
 "341.title" = "OtherViews";
 "342.title" = "ウィンドウのリサイズ後";
 "343.title" = "見開きページ";
@@ -23,8 +23,8 @@
 "47.title" = "プレビューウインドウの位置";
 "48.title" = "いつも同じ位置で開く";
 "501.title" = "見開きの配置";
-"505.title" = "ページを左から右へ";
-"507.title" = "ページを右から左へ";
+"505.title" = "左から右へ";
+"507.title" = "右から左へ";
 "555.title" = "外部エディタ";
 "5HT-3x-Zr6.title" = "ディスプレイ";
 "636.title" = "文字選択";
@@ -39,8 +39,8 @@
 "FSn-iA-3oc.title" = "ソースとプレビューの開き方";
 "MEp-AF-AgT.title" = "統合ウインドウの挙動";
 "Sb3-3h-ll4.title" = "Radio";
-"SfP-Ak-pn3.title" = "ソースとプレビューを分離";
-"V7d-ht-Pe3.title" = "ソースウインドウが右";
+"SfP-Ak-pn3.title" = "別々のウインドウで開く";
+"V7d-ht-Pe3.title" = "右";
 "YrC-m9-abH.title" = "HTMLウインドウの位置";
 "Zdh-Ch-Ndh.title" = "現在の位置に設定";
 "jgT-n6-lh0.title" = "テキストとラインアートを滑らかに表示";
@@ -49,4 +49,4 @@
 "preview-cover-note-cell.title" = "これから開く文書に適用。マジックコメントと\nPDF内の表示方向を優先します。";
 "sa2-VV-W1K.title" = "閉じたときの位置を保存";
 "tVs-uh-QcM.title" = "いつも同じ位置で開く";
-"vOt-2m-d2s.title" = "ソースとプレビューを統合";
+"vOt-2m-d2s.title" = "1つのウインドウに統合";

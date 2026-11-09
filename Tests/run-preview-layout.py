@@ -4,8 +4,10 @@ from pathlib import Path
 import subprocess, tempfile, plistlib, sys
 from pane_fixtures import bundles, sources
 root=Path(__file__).resolve().parents[1]
+from production_fragments import method as production_method, verify_embedded
+fragments=[]
 def method(source, signature):
- a=source.index(signature); return source[a:source.index('\n}',a)+2]
+ fragment=production_method(source,signature);fragments.append(('complete method:'+signature,source,fragment));return fragment
 toolbar=(root/'Sources/TSToolbarController.m').read_text()
 view=(root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
 doc=(root/'Sources/TSDocument.m').read_text()
@@ -245,6 +247,7 @@ int main(int argc,char **argv){@autoreleasepool{
 }}
 '''
 for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('REGRESSION',(root/'Tests/PreviewLayoutRegression.inc').read_text()),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:'))]:program=program.replace(key,value)
+verify_embedded(program,[f for f in fragments if f[0] not in ['complete method:- (BOOL)readFromURL:', 'complete method:- (NSStringEncoding)dataEncoding:', 'complete method:- (void) doTemplate:']]+[('preview initialization',doc,initialize)])
 lang=next((a for a in sys.argv[1:] if a in ('en','ja')),'en')
 with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  app=Path(tmp)/'LayoutTest.app';mac=app/'Contents/MacOS';mac.mkdir(parents=True)

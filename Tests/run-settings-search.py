@@ -36,6 +36,7 @@ if mutations:
 if mutations:
  engine=(r/'Sources/TSSettingsSearch.m').read_text()
  cases=[('category-cascade','if (score && ownMatch)', 'if (score)', 'Category-only matches produce one named category doorway'),('category-doorway','if (categoryScore) [results addObject:', 'if (NO && categoryScore) [results addObject:', 'Category-only matches produce one named category doorway'),('theme-row-duplicates','(visualRows[entry.targetIdentifier] ?: entry.targetIdentifier)','entry.targetIdentifier','A visual theme row has one result retaining all color targets')]
+ cases.append(('dock-year', 'text:TSDockIconYears()[i] weight:TSSettingsSearchWeightChoice', 'text:@"" weight:TSSettingsSearchWeightChoice', 'Every visible Dock year finds its choice row'))
  with tempfile.TemporaryDirectory(prefix='texshop-search-categories-') as td:
   for name,old,new,diagnostic in cases:
    assert engine.count(old)==1
