@@ -229,7 +229,7 @@ for filename in ["Documentation/Releases/5.60-ja.md","website/release-notes-ja.h
 
 # Seventh audit: invalid typed text stays intact until commit, as pasted text does.
 for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex']:
-    assert 'Reject invalid opacity input, including decimals, when editing finishes, with the same behavior for typed and pasted text.' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)
+    assert 'Invalid opacity input, including decimals, is rejected when editing finishes; typed and pasted text follow the same rule.' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)
 for filename in ['Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
     assert '打鍵と貼り付け' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)
 assert 'Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule.' in manual, 'Opacity commit guidance in manual'

@@ -82,7 +82,8 @@
       "catalog.general.2.3.button": "Huidige positie gebruiken",
       "group.editor.1.title": "Editorstijl",
       "catalog.general.2.1.button": "Huidige positie gebruiken",
-      "catalog.appearance.2.0.column.0": "Voorgrond"
+      "catalog.appearance.2.0.column.0": "Voorgrond",
+      "catalog.editor.8.0.choice.10": "Persoonlijke markering"
     },
     "pt-PT": {
       "catalog.general.2.0.title": "Código-fonte",
@@ -181,7 +182,8 @@
       "group.bindings.title": "Preenchimento automático",
       "group.editor.1.title": "Estilo do editor",
       "catalog.general.2.1.button": "Usar a posição atual",
-      "catalog.appearance.2.0.column.0": "Primeiro plano"
+      "catalog.appearance.2.0.column.0": "Primeiro plano",
+      "catalog.editor.8.0.choice.10": "Marca pessoal"
     },
     "de": {
       "catalog.typesetting.8.1.title": "BibTeX-Programm",
@@ -308,7 +310,8 @@
       "catalog.appearance.2.0.column.0": "Prim-plan",
       "catalog.editor.4.4.title": "Arată indicatorul la deplasare",
       "catalog.general.2.1.title": "Previzualizare",
-      "catalog.editor.6.2.title": "Partea liniei de inserare:"
+      "catalog.editor.6.2.title": "Partea liniei de inserare:",
+      "catalog.editor.8.0.choice.10": "Marcaj personal"
     },
     "zh_CN": {
       "catalog.appearance.5.0.item.0": "( )",
