@@ -422,12 +422,66 @@ static NSColor *TSSettingsCardColor(void)
     [super layout];
 }
 @end
-// Retain the existing well/action as the theme persistence boundary. One slider
-// action forwards once, preserving RGB and every existing save/error behavior.
-@interface TSSettingsOpacityPresentation : NSStackView
+// Opacity is entered as a whole percentage, as in the standard color panel.
+// Full-width digits and surrounding spaces are normalized; any other character
+// is refused while typing or pasting. Values above 100 are clamped to 100.
+@implementation TSOpacityFormatter
+- (instancetype)init
+{
+    self = [super init];
+    if (self != nil) _rejectionHandler = ^{ NSBeep(); };
+    return self;
+}
++ (nullable NSString *)normalizedDigits:(NSString *)string
+{
+    NSString *normalized = [string.precomposedStringWithCompatibilityMapping stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    NSCharacterSet *other = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+    return [normalized rangeOfCharacterFromSet:other].location == NSNotFound ? normalized : nil;
+}
+- (nullable NSString *)stringForObjectValue:(nullable id)value
+{
+    if (![value isKindOfClass:NSNumber.class]) return nil;
+    double percent = MIN(100, MAX(0, [value doubleValue]));
+    return [NSString stringWithFormat:@"%ld", lround(percent)];
+}
+- (BOOL)getObjectValue:(out id _Nullable *)value forString:(NSString *)string errorDescription:(out NSString * _Nullable *)error
+{
+    NSString *digits = [TSOpacityFormatter normalizedDigits:string];
+    if (digits.length == 0) {
+        if (error != NULL) *error = @"Opacity must be a whole number from 0 to 100.";
+        return NO;
+    }
+    // Long digit strings are clamped without overflowing the integer conversion.
+    NSInteger percent = digits.length > 3 ? 100 : MIN(100, digits.integerValue);
+    if (value != NULL) *value = @(percent);
+    return YES;
+}
+- (BOOL)isPartialStringValid:(NSString * _Nonnull *)partial proposedSelectedRange:(NSRangePointer)selection
+              originalString:(NSString *)original originalSelectedRange:(NSRange)originalSelection
+            errorDescription:(NSString * _Nullable *)error
+{
+    NSString *digits = [TSOpacityFormatter normalizedDigits:*partial];
+    if (digits == nil || digits.length > 3) {
+        if (self.rejectionHandler != nil) self.rejectionHandler();
+        return NO;
+    }
+    if (![digits isEqualToString:*partial]) {
+        *partial = digits;
+        if (selection != NULL) *selection = NSMakeRange(digits.length, 0);
+        return NO;
+    }
+    return YES;
+}
+@end
+
+// Retain the existing well/action as the theme persistence boundary. The slider
+// and the numeric field forward one action each, preserving RGB and every
+// existing save/error behavior.
+@interface TSSettingsOpacityPresentation : NSStackView <NSTextFieldDelegate>
 @property (strong) NSColorWell *source;
 @property (strong) NSSlider *slider;
-@property (strong) NSTextField *percentage;
+@property (strong) NSTextField *field;
+@property (strong) NSTextField *unit;
 - (instancetype)initWithWell:(NSColorWell *)well;
 @end
 @implementation TSSettingsOpacityPresentation
@@ -442,32 +496,64 @@ static NSColor *TSSettingsCardColor(void)
     _slider.controlSize=NSControlSizeSmall;_slider.continuous=NO;
     _slider.identifier=[@"opacity." stringByAppendingString:well.identifier ?: @""];
     _slider.accessibilityLabel=well.accessibilityLabel;
-    _percentage=[NSTextField labelWithString:@"100%"];
-    _percentage.font=[NSFont monospacedDigitSystemFontOfSize:NSFont.smallSystemFontSize weight:NSFontWeightRegular];_percentage.alignment=NSTextAlignmentRight;
-    _percentage.accessibilityElement=NO;_percentage.accessibilityIdentifier=@"settings.user-data";
-    [self addArrangedSubview:_slider];[self addArrangedSubview:_percentage];
-    [_slider.widthAnchor constraintEqualToConstant:60].active=YES;[_percentage.widthAnchor constraintEqualToConstant:36].active=YES;
+    _field=[NSTextField textFieldWithString:@"100"];
+    _field.controlSize=NSControlSizeSmall;
+    _field.font=[NSFont monospacedDigitSystemFontOfSize:NSFont.smallSystemFontSize weight:NSFontWeightRegular];_field.alignment=NSTextAlignmentRight;
+    _field.formatter=[TSOpacityFormatter new];
+    _field.delegate=self;_field.target=self;_field.action=@selector(fieldChanged:);
+    _field.cell.sendsActionOnEndEditing=YES;
+    _field.identifier=[@"opacity-value." stringByAppendingString:well.identifier ?: @""];
+    _field.accessibilityIdentifier=@"settings.user-data";
+    _field.accessibilityLabel=well.accessibilityLabel;
+    _unit=[NSTextField labelWithString:@"%"];
+    _unit.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];_unit.accessibilityElement=NO;
+    // The unit belongs to the value, like the former percentage label: it is not a searchable setting name.
+    _unit.accessibilityIdentifier=@"settings.user-data";
+    [self addArrangedSubview:_slider];[self addArrangedSubview:_field];[self addArrangedSubview:_unit];
+    [self setCustomSpacing:6 afterView:_slider];[self setCustomSpacing:2 afterView:_field];
+    [_slider.widthAnchor constraintEqualToConstant:60].active=YES;[_field.widthAnchor constraintEqualToConstant:36].active=YES;
     for(NSString *key in @[@"color",@"enabled"])[well addObserver:self forKeyPath:key options:0 context:NULL];
     [self synchronize];return self;
 }
 - (void)dealloc {for(NSString *key in @[@"color",@"enabled"])[self.source removeObserver:self forKeyPath:key];}
 - (void)synchronize {
-    self.slider.doubleValue=self.source.color.alphaComponent*100;
-    self.slider.enabled=self.source.enabled;
+    double percent=self.source.color.alphaComponent*100;
+    BOOL enabled=self.source.enabled;
+    self.slider.doubleValue=percent;
+    self.slider.enabled=enabled;self.field.enabled=enabled;
+    self.field.objectValue=@(percent);
+    NSText *editor=self.field.currentEditor;
+    if(editor!=nil)editor.string=self.field.stringValue;
     NSNumberFormatter *formatter=[NSNumberFormatter new];
     formatter.numberStyle=NSNumberFormatterPercentStyle;
     formatter.maximumFractionDigits=0;
     formatter.locale=NSLocale.currentLocale;
-    self.percentage.stringValue=[formatter stringFromNumber:@(self.slider.doubleValue/100.0)] ?: @"";
-    self.slider.accessibilityValue=self.percentage.stringValue;
-    self.percentage.textColor=self.source.enabled?NSColor.secondaryLabelColor:NSColor.disabledControlTextColor;
+    NSString *spoken=[formatter stringFromNumber:@(percent/100.0)] ?: @"";
+    self.slider.accessibilityValue=spoken;
+    self.unit.textColor=enabled?NSColor.secondaryLabelColor:NSColor.disabledControlTextColor;
 }
 - (void)observeValueForKeyPath:(NSString *)path ofObject:(id)object change:(NSDictionary *)change context:(void *)context {[self synchronize];}
-- (void)changed:(NSSlider *)sender {
+- (void)applyPercent:(double)percent {
     if(!self.source.enabled){[self synchronize];return;}
-    self.source.color=[self.source.color colorWithAlphaComponent:sender.doubleValue/100.0];
+    self.source.color=[self.source.color colorWithAlphaComponent:MIN(100,MAX(0,percent))/100.0];
     [self.source sendAction:self.source.action to:self.source.target];
     [self synchronize];
+}
+- (void)changed:(NSSlider *)sender {[self applyPercent:sender.doubleValue];}
+// A field that was only passed through keeps the stored fractional value.
+- (void)fieldChanged:(NSTextField *)sender {
+    id value=sender.objectValue;
+    if(![value isKindOfClass:NSNumber.class] || !self.source.enabled){[self synchronize];return;}
+    double entered=[value doubleValue];
+    if(lround(entered)==lround(self.slider.doubleValue)){[self synchronize];return;}
+    [self applyPercent:entered];
+}
+// Empty input cannot be formatted: refuse it and show the stored value again.
+- (BOOL)control:(NSControl *)control didFailToFormatString:(NSString *)string errorDescription:(nullable NSString *)error {
+    TSOpacityFormatter *formatter=(TSOpacityFormatter *)self.field.formatter;
+    if(formatter.rejectionHandler!=nil)formatter.rejectionHandler();
+    [self synchronize];
+    return YES;
 }
 @end
 @implementation TSPrefPaneLayout

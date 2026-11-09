@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import <Cocoa/Cocoa.h>
 NS_ASSUME_NONNULL_BEGIN
+// Whole-percentage opacity input (0–100). Refused input calls rejectionHandler,
+// which beeps by default.
+@interface TSOpacityFormatter : NSFormatter
+@property (nonatomic, copy, nullable) void (^rejectionHandler)(void);
++ (nullable NSString *)normalizedDigits:(NSString *)string;
+@end
 @interface TSSettingsLabel : NSTextField
 @property (nonatomic, strong) NSColor *enabledTextColor;
 @end

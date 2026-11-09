@@ -5,7 +5,7 @@ import argparse,subprocess,tempfile,shutil,re,json
 from pane_fixtures import bundles,sources
 from shortcut_sources import NAMES
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*[str(r/'Sources'/n) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').glob('TSSettings*.m'))),'-o',str(t/'probe')]
@@ -32,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   if a.output and (not a.capture_languages or bundle.stem in a.capture_languages):folder=a.output/bundle.stem;folder.mkdir(parents=True,exist_ok=True);command.append(str(folder))
   print('LANGUAGE',bundle.stem,flush=True);subprocess.run(command,check=True,timeout=120)
 
-  if a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations:
+  if a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations:
    cases=[
     ('profile-transient-clear','TSPreferences.m','[self.settingsChangeNotes valuesReplaced];',';'),
     ('encoding-sheet','TSPreferences.m','[self.settingsChangeNotes recordUserChangeForKey:EncodingKey previousValue:oldValue ?: @""];','NSBeginCriticalAlertSheet(@"Encoding",nil,nil,nil,nil,nil,NULL,NULL,NULL,@"Warning");'),
@@ -87,9 +87,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ('keyboard-card-hidden','TSShortcutPaneController.m','[TSPrefPaneLayout decorateGroupsInView:group];','[TSPrefPaneLayout decorateGroupsInView:group]; [self viewWithIdentifier:@"card.background" inView:group].hidden=YES;','Every catalog group has its visible rounded filled card'),
     ('autosave-string','TSSettingsDependencies.inc','AutoSaveEnabledKey, 0, TSDependencyBoolean','AutoSaveEnabledKey, 0, TSDependencyInteger','Factory string YES'),
     ('live-find-action','TSPreferences.m','[self applyEffectsForPreferenceKeys:[NSSet setWithObject:FindMethodKey]];',';','Actual find action delivers one live-view notification'),
-    ('opacity-scale','TSPrefPaneLayout.m','sender.doubleValue/100.0','sender.doubleValue/1.0','Opacity action preserves RGB'),
+    ('opacity-scale','TSPrefPaneLayout.m','MIN(100,MAX(0,percent))/100.0','MIN(100,MAX(0,percent))/1.0','Opacity action preserves RGB'),
     ('opacity-read','TSPrefPaneLayout.m','self.source.color.alphaComponent*100','round(self.source.color.alphaComponent*100)','Loading a theme preserves fractional opacity'),
-    ('opacity-no-action','TSPrefPaneLayout.m','self.source.color=[self.source.color colorWithAlphaComponent:sender.doubleValue/100.0];\n    [self.source sendAction:self.source.action to:self.source.target];','self.source.color=[self.source.color colorWithAlphaComponent:sender.doubleValue/100.0];','Opacity action preserves RGB'),
+    ('opacity-no-action','TSPrefPaneLayout.m','self.source.color=[self.source.color colorWithAlphaComponent:MIN(100,MAX(0,percent))/100.0];\n    [self.source sendAction:self.source.action to:self.source.target];','self.source.color=[self.source.color colorWithAlphaComponent:MIN(100,MAX(0,percent))/100.0];','Opacity action preserves RGB'),
    ]
    prep='if (preparations & TSPreferencePrepareEncoding) [[TSEncodingSupport sharedInstance] setupForEncoding];'
    source=(r/'Sources/TSPreferences.m').read_text()
@@ -126,6 +126,20 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ]
     cases=[]
     for name,file,old,new,message in fifth:cases.append((name,file,old,new));expected[name]=message
+   if a.opacity_field_mutations:
+    field=[
+     ('opacity-field-formatter','TSPrefPaneLayout.m','_field.formatter=[TSOpacityFormatter new];',';','Opacity has an editable whole-percentage field'),
+     ('opacity-field-clamp','TSPrefPaneLayout.m','NSInteger percent = digits.length > 3 ? 100 : MIN(100, digits.integerValue);','NSInteger percent = digits.integerValue;','Opacity entry above 100 is clamped to 100'),
+     ('opacity-field-letters','TSPrefPaneLayout.m','return [normalized rangeOfCharacterFromSet:other].location == NSNotFound ? normalized : nil;','return normalized;','Opacity entry refuses letters, signs and decimals'),
+     ('opacity-field-fullwidth','TSPrefPaneLayout.m','[string.precomposedStringWithCompatibilityMapping stringByTrimmingCharactersInSet:','[string stringByTrimmingCharactersInSet:','Full-width opacity digits are accepted'),
+     ('opacity-field-sync','TSPrefPaneLayout.m','    [self applyPercent:entered];\n','',
+      'Typed opacity moves the slider and saves once'),
+     ('opacity-field-passthrough','TSPrefPaneLayout.m','if(lround(entered)==lround(self.slider.doubleValue)){[self synchronize];return;}',';','Passing through the opacity field keeps the stored fractional alpha'),
+     ('opacity-field-empty','TSPrefPaneLayout.m','    if(formatter.rejectionHandler!=nil)formatter.rejectionHandler();\n','','Empty opacity entry is refused and shows the stored value'),
+     ('opacity-field-disabled','TSPrefPaneLayout.m','self.slider.enabled=enabled;self.field.enabled=enabled;','self.slider.enabled=enabled;','Disabled opacity disables its numeric field'),
+    ]
+    cases=[]
+    for name,file,old,new,message in field:cases.append((name,file,old,new));expected[name]=message
    if a.mutation_only:cases=[c for c in cases if c[0]==a.mutation_only];assert cases
    for name,filename,old,new in cases:
     source=(r/'Sources'/filename).read_text()
