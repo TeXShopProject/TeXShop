@@ -10132,7 +10132,7 @@
           "329.title": "Mostrar páginas",
           "113.ibShadowedToolTip": "Zoom predeterminado para los PDF que se abran.",
           "228.title": "Botones cambio de página",
-          "preview-cover-cell.title": "Show first page alone as cover",
+          "preview-cover-cell.title": "Mostrar la primera página sola como portada",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posición de ventana HTML",
           "p2D-Mi-Gyc.title": "URL base"
@@ -10256,7 +10256,7 @@
           "314.title": "Al guardar",
           "898.title": "Guardar relacionados",
           "823.title": "Tipo de sincronía",
-          "190.title": "Personal Script",
+          "190.title": "Script personal",
           "590.title": "Este otro comando:",
           "680.title": "Continuar editando",
           "919.title": "Radio",
@@ -11964,7 +11964,7 @@
           "view": "settings.preview-cover-button",
           "kind": "cell",
           "property": "title",
-          "value": "Show first page alone as cover"
+          "value": "Mostrar la primera página sola como portada"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -12816,7 +12816,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "Personal Script",
+          "value": "Script personal",
           "row": 2,
           "column": 0
         },
@@ -13433,7 +13433,7 @@
           "329.title": "Style de la page par défaut",
           "113.ibShadowedToolTip": "Zoom par défaut des PDF nouvellement ouverts.",
           "228.title": "Changer les boutons page",
-          "preview-cover-cell.title": "Show first page alone as cover",
+          "preview-cover-cell.title": "Afficher la première page seule comme couverture",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Position de la fenêtre HTML",
           "p2D-Mi-Gyc.title": "URL personnelle"
@@ -15265,7 +15265,7 @@
           "view": "settings.preview-cover-button",
           "kind": "cell",
           "property": "title",
-          "value": "Show first page alone as cover"
+          "value": "Afficher la première page seule comme couverture"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -16510,14 +16510,14 @@
           "923.title": "Radio",
           "772.title": "Ridimensionamento console",
           "WQX-9X-AFi.title": "Posizione Finestra Console",
-          "906.title": "Set ...",
+          "906.title": "Imposta…",
           "924.title": "Radio",
           "828.title": "Mostra Console",
           "Xc7-Tx-Uz2.title": "Radio",
           "PqO-5d-lRv.title": "Posizione predefinita",
           "mNl-sx-FY0.title": "Imposta la posizione",
           "830.title": "Sempre",
-          "752.title": "Console Font"
+          "752.title": "Font della console"
         },
         "SettingsEditor": {
           "963.title": "Spazio giapponese",
@@ -16559,12 +16559,12 @@
           "inv-956-item-0.title": "□",
           "XoX-gZ-pO3.title": "Etichette nella barra dei menù",
           "839.title": "Sintassi Colorata",
-          "945.title": "Show Indicator in Moving",
-          "844.title": "Select on Activate",
+          "945.title": "Mostra indicatore durante lo spostamento",
+          "844.title": "Seleziona all’attivazione",
           "ojN-Oi-8cl.title": "Ampiezza tabulazione",
           "inv-955-item-2.title": "↩",
           "Gj7-Yx-1Hv.title": "Stile",
-          "1036.title": "Blink Highlight",
+          "1036.title": "Evidenziazione lampeggiante",
           "962.title": "Spazio",
           "845.title": " Numeri di linea",
           "935.title": "Impostazioni dei delimitatori",
@@ -16610,7 +16610,7 @@
         "SettingsMiscOne": {
           "XCi-5f-wnn.title": "Colore cursore:",
           "395.title": "PNG",
-          "447.title": "Color Mapping",
+          "447.title": "Mappatura dei colori",
           "436.title": "2",
           "409.title": "TIFF (LZW)",
           "903.title": "Usa Color Mapping",
@@ -16623,9 +16623,9 @@
           "431.title": "5",
           "404.title": "TIFF (PackBits)",
           "386.title": "Copia immagine usando il formato",
-          "375.title": "JPEG (High)",
+          "375.title": "JPEG (alta qualità)",
           "438.title": "-2",
-          "380.title": "TIFF (uncompressed)",
+          "380.title": "TIFF (non compresso)",
           "Nie-mP-dxR.title": "Usa cursore a blocco",
           "416.title": "PDF",
           "427.title": "4",
@@ -16636,9 +16636,9 @@
           "377.title": "OtherViews",
           "437.ibShadowedToolTip": "Associa il bianco e il nero ad altri colori.",
           "CBT-8e-Ayl.title": " A destra",
-          "407.title": "JPEG (Low)",
+          "407.title": "JPEG (bassa qualità)",
           "hmg-EV-KUC.title": "Mantieni il file precedente come “nome~” al salvataggio",
-          "423.title": "JPEG (Medium)",
+          "423.title": "JPEG (qualità media)",
           "sto-5E-9Q5.title": "Funzione di macOS che sovrascrive automaticamente il file durante la modifica.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "Un carattere",
@@ -16734,7 +16734,7 @@
           "329.title": "Vista documento",
           "113.ibShadowedToolTip": "Zoom predefinito per i PDF appena aperti.",
           "228.title": "Pulsanti Cambio Pagina",
-          "preview-cover-cell.title": "Show first page alone as cover",
+          "preview-cover-cell.title": "Mostra la prima pagina da sola come copertina",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posizione finestra HTML",
           "p2D-Mi-Gyc.title": "URL personale"
@@ -16758,13 +16758,13 @@
           "875.title": "Apri Documento Vuoto",
           "31.title": "Posizione predefinita",
           "566.title": "-- DO NOT LOCALIZE THIS! --",
-          "582.title": "Apple Find Panel",
+          "582.title": "Pannello di ricerca Apple",
           "Mo3-zf-BYT.title": "Mai",
-          "927.title": "Escape Key",
+          "927.title": "Tasto Esc",
           "236.title": "All'avvio",
           "ts-aware-spelling.ibShadowedToolTip": "Usa le regole di esclusione per i documenti LaTeX.",
           "876.title": "Configura per Editor Esterno",
-          "928.title": "Tab Key",
+          "928.title": "Tasto Tab",
           "583.title": "Apple Fine Bar",
           "ts-edit-spelling.ibShadowedToolTip": "Modifica le regole di esclusione del controllo ortografico per LaTeX.",
           "Xrb-Fe-9cg.title": "Piccola",
@@ -16783,7 +16783,7 @@
           "eIA-mh-q2u.title": "Dimensione numeri di linea",
           "odm-Dy-TNW.title": "Grande",
           "ypQ-Gc-HUa.title": "Sempre",
-          "1080.title": "OgreKit Find Panel",
+          "1080.title": "Pannello di ricerca OgreKit",
           "3eF-XA-ahc.title": "Non controllare i parametri selezionati",
           "32.title": "Conserva l'ultima posizione"
         },
@@ -16953,7 +16953,7 @@
           "view": "settings.755",
           "kind": "cell",
           "property": "title",
-          "value": "Set ..."
+          "value": "Imposta…"
         },
         {
           "key": "924.title",
@@ -17006,7 +17006,7 @@
           "view": "settings.752",
           "kind": "view",
           "property": "title",
-          "value": "Console Font"
+          "value": "Font della console"
         }
       ],
       "Editor": [
@@ -17325,14 +17325,14 @@
           "view": "settings.936",
           "kind": "cell",
           "property": "title",
-          "value": "Show Indicator in Moving"
+          "value": "Mostra indicatore durante lo spostamento"
         },
         {
           "key": "844.title",
           "view": "settings.621",
           "kind": "matrix",
           "property": "title",
-          "value": "Select on Activate",
+          "value": "Seleziona all’attivazione",
           "row": 7,
           "column": 0
         },
@@ -17363,7 +17363,7 @@
           "view": "settings.1035",
           "kind": "cell",
           "property": "title",
-          "value": "Blink Highlight"
+          "value": "Evidenziazione lampeggiante"
         },
         {
           "key": "962.title",
@@ -17663,7 +17663,7 @@
           "view": "settings.447",
           "kind": "view",
           "property": "title",
-          "value": "Color Mapping"
+          "value": "Mappatura dei colori"
         },
         {
           "key": "436.title",
@@ -17759,7 +17759,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (High)",
+          "value": "JPEG (alta qualità)",
           "index": 4
         },
         {
@@ -17775,7 +17775,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "TIFF (uncompressed)",
+          "value": "TIFF (non compresso)",
           "index": 1
         },
         {
@@ -17860,7 +17860,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (Low)",
+          "value": "JPEG (bassa qualità)",
           "index": 6
         },
         {
@@ -17875,7 +17875,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (Medium)",
+          "value": "JPEG (qualità media)",
           "index": 5
         },
         {
@@ -18566,7 +18566,7 @@
           "view": "settings.preview-cover-button",
           "kind": "cell",
           "property": "title",
-          "value": "Show first page alone as cover"
+          "value": "Mostra la prima pagina da sola come copertina"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -18727,7 +18727,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple Find Panel",
+          "value": "Pannello di ricerca Apple",
           "row": 0,
           "column": 0
         },
@@ -18744,7 +18744,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escape Key",
+          "value": "Tasto Esc",
           "row": 0,
           "column": 0
         },
@@ -18774,7 +18774,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tab Key",
+          "value": "Tasto Tab",
           "row": 1,
           "column": 0
         },
@@ -18919,7 +18919,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit Find Panel",
+          "value": "Pannello di ricerca OgreKit",
           "row": 2,
           "column": 0
         },
@@ -19723,7 +19723,7 @@
         },
         {
           "id": "heading.settings.447",
-          "title": "Color Mapping"
+          "title": "Mappatura dei colori"
         },
         {
           "id": "heading.settings.5ba-33-JZx",
@@ -19783,7 +19783,7 @@
       "ConsoleHeadings": [
         {
           "id": "heading.settings.752",
-          "title": "Console Font"
+          "title": "Font della console"
         },
         {
           "id": "heading.settings.WQX-9X-AFi",
@@ -23177,19 +23177,19 @@
           "889.title": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)",
           "BYT-g3-3p0.title": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "자동 설정…",
-          "1071.title": "Default",
+          "1071.title": "기본값",
           "1020.title": "명령 찾기",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "BibTeX 엔진",
           "1030.title": "default: bibtex",
           "1024.title": "kpsetool (default: kpsetool -w -n latex tex)",
-          "1063.title": "Default",
+          "1063.title": "기본값",
           "878.title": "LaTeX ",
           "882.title": "Shell Escape시 경고",
-          "1068.title": "Default",
+          "1068.title": "기본값",
           "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
-          "1074.title": "Default",
+          "1074.title": "기본값",
           "887.title": "ps 파일 저장",
           "215.title": "경로 설정",
           "200.title": "TeX + dvips + distiller",
@@ -23225,9 +23225,9 @@
           "431.title": "5",
           "404.title": "TIFF (PackBits)",
           "386.title": "복사할 이미지 형식",
-          "375.title": "JPEG (High)",
+          "375.title": "JPEG (고품질)",
           "438.title": "-2",
-          "380.title": "TIFF (uncompressed)",
+          "380.title": "TIFF (비압축)",
           "Nie-mP-dxR.title": "블럭커서 사용",
           "416.title": "PDF",
           "427.title": "4",
@@ -23238,9 +23238,9 @@
           "377.title": "OtherViews",
           "437.ibShadowedToolTip": "검정과 흰색을 다른 색으로 매핑합니다.",
           "CBT-8e-Ayl.title": "오른쪽",
-          "407.title": "JPEG (Low)",
+          "407.title": "JPEG (저품질)",
           "hmg-EV-KUC.title": "저장할 때 이전 파일을 ‘이름~’으로 남기기",
-          "423.title": "JPEG (Medium)",
+          "423.title": "JPEG (중간 품질)",
           "sto-5E-9Q5.title": "편집 중에 파일을 자동으로 덮어쓰는 macOS 기능입니다.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "1글자",
@@ -23336,7 +23336,7 @@
           "329.title": "페이지 형식",
           "113.ibShadowedToolTip": "새로 여는 PDF의 기본 확대율입니다.",
           "228.title": "페이지 버튼",
-          "preview-cover-cell.title": "Show first page alone as cover",
+          "preview-cover-cell.title": "첫 페이지를 표지로 따로 표시",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML 창 위치",
           "p2D-Mi-Gyc.title": "홈 URL"
@@ -23354,7 +23354,7 @@
           "953.title": "< >",
           "8Wq-gx-FqO.title": "주석문 제외",
           "19.title": "편집창 위치",
-          "ENd-QB-0Uf.title": "Dictionary",
+          "ENd-QB-0Uf.title": "사전",
           "262.title": "인코딩",
           "Glg-x8-6YO.title": "Radio",
           "875.title": "빈 문서 열기",
@@ -23399,8 +23399,8 @@
           "rpP-GF-uJp.title": "삽입",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "각주",
-          "rad-zH-Nv2.title": "Theme to Edit",
-          "Sb2-DV-n4h.title": "Invisible",
+          "rad-zH-Nv2.title": "편집할 테마",
+          "Sb2-DV-n4h.title": "보이지 않는 문자",
           "7hF-dm-sw0.title": "테마",
           "BCt-qg-0VZ.title": "구문",
           "Z9i-kS-FGf.title": "전경색",
@@ -23426,7 +23426,7 @@
           "Odq-MM-jdm.title": "주석",
           "AHf-yj-qsp.title": "명령어",
           "fbI-WL-RD5.title": "배경색",
-          "xz1-SF-It8.title": "Braces",
+          "xz1-SF-It8.title": "중괄호",
           "yPD-Wd-E6K.title": "소스",
           "J68-pe-b8Y.title": "아두운 테마",
           "M3K-Bv-8B1.title": "소스",
@@ -23438,7 +23438,7 @@
           "Rzg-NG-sNa.title": "새 테마",
           "cPa-5P-FPE.title": "마커",
           "2yn-uH-GIB.title": "문자",
-          "m2P-eK-MuA.title": "Enclosed",
+          "m2P-eK-MuA.title": "괄호 안의 내용",
           "2wp-bc-jxK.title": "텍스트",
           "OFK-Td-Bas.title": "인덱스",
           "55d-iy-6im.title": "Alpha",
@@ -24033,7 +24033,7 @@
           "view": "settings.1070",
           "kind": "cell",
           "property": "title",
-          "value": "Default"
+          "value": "기본값"
         },
         {
           "key": "1020.title",
@@ -24082,7 +24082,7 @@
           "view": "settings.1062",
           "kind": "cell",
           "property": "title",
-          "value": "Default"
+          "value": "기본값"
         },
         {
           "key": "878.title",
@@ -24103,7 +24103,7 @@
           "view": "settings.1067",
           "kind": "cell",
           "property": "title",
-          "value": "Default"
+          "value": "기본값"
         },
         {
           "key": "891.title",
@@ -24117,7 +24117,7 @@
           "view": "settings.1073",
           "kind": "cell",
           "property": "title",
-          "value": "Default"
+          "value": "기본값"
         },
         {
           "key": "887.title",
@@ -24361,7 +24361,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (High)",
+          "value": "JPEG (고품질)",
           "index": 4
         },
         {
@@ -24377,7 +24377,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "TIFF (uncompressed)",
+          "value": "TIFF (비압축)",
           "index": 1
         },
         {
@@ -24462,7 +24462,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (Low)",
+          "value": "JPEG (저품질)",
           "index": 6
         },
         {
@@ -24477,7 +24477,7 @@
           "view": "settings.405",
           "kind": "menuItem",
           "property": "title",
-          "value": "JPEG (Medium)",
+          "value": "JPEG (중간 품질)",
           "index": 5
         },
         {
@@ -25168,7 +25168,7 @@
           "view": "settings.preview-cover-button",
           "kind": "cell",
           "property": "title",
-          "value": "Show first page alone as cover"
+          "value": "첫 페이지를 표지로 따로 표시"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -25284,7 +25284,7 @@
           "view": "settings.ENd-QB-0Uf",
           "kind": "view",
           "property": "title",
-          "value": "Dictionary"
+          "value": "사전"
         },
         {
           "key": "262.title",
@@ -25601,14 +25601,14 @@
           "view": "settings.FOl-CH-y3R",
           "kind": "cell",
           "property": "title",
-          "value": "Theme to Edit"
+          "value": "편집할 테마"
         },
         {
           "key": "Sb2-DV-n4h.title",
           "view": "settings.jAj-Fp-hqd",
           "kind": "cell",
           "property": "title",
-          "value": "Invisible"
+          "value": "보이지 않는 문자"
         },
         {
           "key": "7hF-dm-sw0.title",
@@ -25790,7 +25790,7 @@
           "view": "settings.nWQ-m2-MZf",
           "kind": "cell",
           "property": "title",
-          "value": "Braces"
+          "value": "중괄호"
         },
         {
           "key": "yPD-Wd-E6K.title",
@@ -25874,7 +25874,7 @@
           "view": "settings.6CN-Fj-kr5",
           "kind": "cell",
           "property": "title",
-          "value": "Enclosed"
+          "value": "괄호 안의 내용"
         },
         {
           "key": "2wp-bc-jxK.title",
@@ -26363,7 +26363,7 @@
         },
         {
           "id": "heading.settings.ENd-QB-0Uf",
-          "title": "Dictionary"
+          "title": "사전"
         },
         {
           "id": "heading.settings.kgx-Sa-LDF",
@@ -26532,7 +26532,7 @@
           "Nie-mP-dxR.title": "Blokcursor gebruiken",
           "416.title": "PDF",
           "427.title": "4",
-          "428.title": "0 (normal)",
+          "428.title": "0 (normaal)",
           "qMw-aC-Ilj.title": "Links",
           "cSu-im-H1E.title": "Invoegcursor",
           "434.ibShadowedToolTip": "Hogere waarden benadrukken tekst bij het kopiëren van rasterafbeeldingen.",
@@ -26580,7 +26580,7 @@
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Geopend hoofdvenster minimaliseren",
           "A9l-al-gxE.title": "Radio",
-          "2Mp-Uf-8n2.title": "Persoonlijke markering",
+          "2Mp-Uf-8n2.title": "persoonlijke markering",
           "2x0-tc-yWg.title": "Automatisch naar updates zoeken",
           "oSw-pG-JGB.title": "Wekelijks",
           "8Bw-D6-HlO.title": "LaTeX-programma (geen standaard)",
@@ -27709,7 +27709,7 @@
           "view": "settings.434",
           "kind": "menuItem",
           "property": "title",
-          "value": "0 (normal)",
+          "value": "0 (normaal)",
           "index": 2
         },
         {
@@ -28052,7 +28052,7 @@
           "view": "settings.9KW-ea-Zni",
           "kind": "cell",
           "property": "title",
-          "value": "Persoonlijke markering"
+          "value": "persoonlijke markering"
         },
         {
           "key": "2x0-tc-yWg.title",
@@ -29881,7 +29881,7 @@
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Minimizar a janela principal aberta",
           "A9l-al-gxE.title": "Radio",
-          "2Mp-Uf-8n2.title": "Marca pessoal",
+          "2Mp-Uf-8n2.title": "marca pessoal",
           "2x0-tc-yWg.title": "Procurar atualizações automaticamente",
           "oSw-pG-JGB.title": "Semanalmente",
           "8Bw-D6-HlO.title": "Programa LaTeX (nenhum por omissão):",
@@ -31353,7 +31353,7 @@
           "view": "settings.9KW-ea-Zni",
           "kind": "cell",
           "property": "title",
-          "value": "Marca pessoal"
+          "value": "marca pessoal"
         },
         {
           "key": "2x0-tc-yWg.title",
@@ -33239,7 +33239,7 @@
           "329.title": "Estilo de visualização padrão",
           "113.ibShadowedToolTip": "Zoom padrão para PDFs recém-abertos.",
           "228.title": "Botões de mudança de página",
-          "preview-cover-cell.title": "Show first page alone as cover",
+          "preview-cover-cell.title": "Mostrar a primeira página sozinha como capa",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posição da janela HTML",
           "p2D-Mi-Gyc.title": "URL inicial"
@@ -35071,7 +35071,7 @@
           "view": "settings.preview-cover-button",
           "kind": "cell",
           "property": "title",
-          "value": "Show first page alone as cover"
+          "value": "Mostrar a primeira página sozinha como capa"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -36483,7 +36483,7 @@
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Minimizează fereastra principală deschisă",
           "A9l-al-gxE.title": "Radio",
-          "2Mp-Uf-8n2.title": "Marcaj personal",
+          "2Mp-Uf-8n2.title": "marcaj personal",
           "2x0-tc-yWg.title": "Caută automat actualizări",
           "oSw-pG-JGB.title": "Săptămânal",
           "8Bw-D6-HlO.title": "LaTeX Program (no default)",
@@ -37955,7 +37955,7 @@
           "view": "settings.9KW-ea-Zni",
           "kind": "cell",
           "property": "title",
-          "value": "Marcaj personal"
+          "value": "marcaj personal"
         },
         {
           "key": "2x0-tc-yWg.title",
@@ -39841,7 +39841,7 @@
           "329.title": "默认页面格式",
           "113.ibShadowedToolTip": "新打开的 PDF 的默认缩放比例。",
           "228.title": "换页按钮",
-          "preview-cover-cell.title": "Show first page alone as cover",
+          "preview-cover-cell.title": "将第一页单独显示为封面",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML 窗口位置",
           "p2D-Mi-Gyc.title": "主页 URL"
@@ -41673,7 +41673,7 @@
           "view": "settings.preview-cover-button",
           "kind": "cell",
           "property": "title",
-          "value": "Show first page alone as cover"
+          "value": "将第一页单独显示为封面"
         },
         {
           "key": "Sb3-3h-ll4.title",

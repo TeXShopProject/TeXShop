@@ -209,7 +209,7 @@
 "catalog.preview.0.5.title" = "Suavizar texto e ilustrações";
 "group.preview.1.title" = "Modo de página dupla";
 "catalog.preview.1.0.title" = "Direção das páginas";
-"catalog.preview.1.1.title" = "Show first page alone as cover";
+"catalog.preview.1.1.title" = "Mostrar a primeira página sozinha como capa";
 "catalog.preview.1.2.title" = "Aplica-se aos documentos abertos posteriormente. Os comentários especiais e a direção de exibição do PDF têm prioridade.";
 "group.preview.2.title" = "Atualização";
 "catalog.preview.2.0.title" = "Atualizar automaticamente o pdf";

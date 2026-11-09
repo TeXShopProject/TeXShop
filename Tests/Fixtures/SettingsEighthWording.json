@@ -1,26 +1,26 @@
 {
   "nl": {
     "SettingsCategories.strings": {
-      "catalog.editor.8.0.choice.10": "Persoonlijke markering"
+      "catalog.editor.8.0.choice.10": "persoonlijke markering"
     },
     "SettingsMiscTwo.strings": {
-      "2Mp-Uf-8n2.title": "Persoonlijke markering"
+      "2Mp-Uf-8n2.title": "persoonlijke markering"
     }
   },
   "pt-PT": {
     "SettingsCategories.strings": {
-      "catalog.editor.8.0.choice.10": "Marca pessoal"
+      "catalog.editor.8.0.choice.10": "marca pessoal"
     },
     "SettingsMiscTwo.strings": {
-      "2Mp-Uf-8n2.title": "Marca pessoal"
+      "2Mp-Uf-8n2.title": "marca pessoal"
     }
   },
   "ro": {
     "SettingsCategories.strings": {
-      "catalog.editor.8.0.choice.10": "Marcaj personal"
+      "catalog.editor.8.0.choice.10": "marcaj personal"
     },
     "SettingsMiscTwo.strings": {
-      "2Mp-Uf-8n2.title": "Marcaj personal"
+      "2Mp-Uf-8n2.title": "marcaj personal"
     }
   }
 }

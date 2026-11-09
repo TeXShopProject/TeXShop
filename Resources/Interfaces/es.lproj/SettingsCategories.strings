@@ -209,7 +209,7 @@
 "catalog.preview.0.5.title" = "Texto suave y arte lineal";
 "group.preview.1.title" = "Con páginas dobles";
 "catalog.preview.1.0.title" = "Dirección de las páginas";
-"catalog.preview.1.1.title" = "Show first page alone as cover";
+"catalog.preview.1.1.title" = "Mostrar la primera página sola como portada";
 "catalog.preview.1.2.title" = "Se aplica a los documentos que se abran después. Tienen prioridad los comentarios mágicos y la dirección de lectura del PDF.";
 "group.preview.2.title" = "Actualización";
 "catalog.preview.2.0.title" = "Actualizar PDF automáticamente";
@@ -224,7 +224,7 @@
 "group.typesetting.0.title" = "Valores predeterminados";
 "catalog.typesetting.0.0.title" = "Formato por defecto";
 "catalog.typesetting.0.1.title" = "Comando que se utilizará";
-"catalog.typesetting.0.2.title" = "Personal Script";
+"catalog.typesetting.0.2.title" = "Script personal";
 "catalog.typesetting.0.3.title" = "Motor alternativo";
 "catalog.typesetting.0.3.note" = "Predeterminado: pdflatexmk";
 "group.typesetting.1.title" = "Después de componer";

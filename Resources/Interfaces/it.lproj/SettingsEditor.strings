@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1036.title" = "Blink Highlight";
+"1036.title" = "Evidenziazione lampeggiante";
 "1044.title" = "Sempre visibili";
 "1LL-Ls-rVW.title" = "Radio";
 "4a3-VM-Tgq.title" = "Vai a Capo";
@@ -10,7 +10,7 @@
 "841.title" = "Controllo Ortografia";
 "842.title" = "Autocompletamento";
 "843.title" = "Completamento BibDesk";
-"844.title" = "Select on Activate";
+"844.title" = "Seleziona all’attivazione";
 "845.title" = " Numeri di linea";
 "846.title" = "Arabo, Ebraico, Persiano";
 "87S-PS-ZQu.title" = "Evidenzia la linea corrente";
@@ -20,7 +20,7 @@
 "942.title" = "Evidenzia caratteri racchiusi";
 "943.title" = "Suono per parentesi isolate";
 "944.title" = "Lampeggio per parentesi isolate";
-"945.title" = "Show Indicator in Moving";
+"945.title" = "Mostra indicatore durante lo spostamento";
 "962.title" = "Spazio";
 "963.title" = "Spazio giapponese";
 "964.title" = "A capo";

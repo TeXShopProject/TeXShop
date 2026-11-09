@@ -243,3 +243,11 @@ for lang,terms in {
     text=read_help(ROOT/f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm',lang)
     for term in terms: assert term in text,('Opacity commit guidance',lang,term)
 print('PASS: typed/pasted opacity validation guidance in five helps, manual and six release copies')
+
+
+def check_internal_link_release(text):
+    for phrase in ("Size internal-link previews to the text column of the target page", "never below half size", "Uwe Schmock (#12)"):
+        assert phrase in text, ("Internal-link preview release guidance", phrase)
+
+check_internal_link_release((ROOT/"Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm").read_text())
+print("PASS: English help retains the merged internal-link preview release entry")

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Compile the complete production Settings owner; all windows stay unordered."""
 from pathlib import Path
-import argparse,subprocess,tempfile,shutil,re,json
+import argparse,subprocess,tempfile,shutil,re,json,os
 from pane_fixtures import bundles,sources
 from shortcut_sources import NAMES
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');p.add_argument('--visible-text-output',type=Path);p.add_argument('--visible-text-mutation',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*[str(r/'Sources'/n) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').glob('TSSettings*.m'))),'-o',str(t/'probe')]
@@ -28,9 +28,19 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   profiles=bundle/'Contents/Resources/Profiles';profiles.mkdir()
   for profile in sorted((r/'Resources/Shellscripts').glob('*Defaults*.plist')):shutil.copy2(profile,profiles/profile.name)
   shutil.copy2(shell,bundle/'Contents/Resources/SettingsWindow.nib')
+  if a.visible_text_mutation and bundle.stem=='fr':
+   path=bundle/'Contents/Resources/fr.lproj/SettingsCategories.strings'
+   values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(path)]))
+   assert values['group.editor.2.title']=='Saisie'
+   values['group.editor.2.title']='Typing'
+   path.write_text('\n'.join(json.dumps(k,ensure_ascii=False)+' = '+json.dumps(v,ensure_ascii=False)+';' for k,v in values.items())+'\n')
+  env=dict(os.environ)
+  if a.visible_text_output:
+   a.visible_text_output.mkdir(parents=True,exist_ok=True)
+   env['TS_SETTINGS_VISIBLE_TEXT_PATH']=str(a.visible_text_output/(bundle.stem+'.json'))
   command=[str(t/'probe'),str(bundle)]
   if a.output and (not a.capture_languages or bundle.stem in a.capture_languages):folder=a.output/bundle.stem;folder.mkdir(parents=True,exist_ok=True);command.append(str(folder))
-  print('LANGUAGE',bundle.stem,flush=True);subprocess.run(command,check=True,timeout=120)
+  print('LANGUAGE',bundle.stem,flush=True);subprocess.run(command,check=True,timeout=120,env=env)
 
   if a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations or a.sixth_audit_mutations or a.seventh_audit_mutations:
    cases=[
@@ -78,11 +88,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    ])
    if a.audit_mutations:cases=[]
    audit_cases=[
-    ('close-generation','TSPreferences.m','self.endingPreferences = YES;\n    self.themeOperationGeneration++;\n    if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];\n    [self cancelEnginePathDiscovery];','self.endingPreferences = YES;\n    [self cancelEnginePathDiscovery];','Closing invalidates pending theme operations'),
+    ('close-generation','TSPreferences.m','self.endingPreferences = YES;\n    self.themeOperationGeneration++;\n    if (_prefsWindow.attachedSheet != nil) [_prefsWindow endSheet:_prefsWindow.attachedSheet returnCode:NSModalResponseCancel];\n    [self cancelEnginePathDiscovery];','self.endingPreferences = YES;\n    [self cancelEnginePathDiscovery];','Termination invalidates pending theme operations'),
     ('sheet-edit-guard','TSPreferences.m','if (showError && _prefsWindow.attachedSheet != nil) return NO;',';','An attached sheet blocks the owner editing transaction'),
     ('reopen-ending','TSPreferences.m','self.endingPreferences = NO;','self.endingPreferences = YES;','Showing a closed panel starts a fresh editing session'),
     ('cascade','TSSettingsWindowController.m','self.shouldCascadeWindows = NO;','self.shouldCascadeWindows = YES;','Settings has a title and disables cascading'),
-    ('empty-title','TSSettingsWindowController.m','self.window.title = pane.title ?: @"";','self.window.title = @"";','Settings has a title and disables cascading'),
+    ('empty-title','TSSettingsWindowController.m','self.window.title = pane.title ?: @"";','self.window.title = @"";','Every category including Keyboard updates the window title'),
     ('tab-notification','TSPreferences.m','kind:TSPreferenceInputInteger minimum:2 maximum:50 allowsEmpty:NO notification:TSPreferenceNotificationForKey(tabsKey)','kind:TSPreferenceInputInteger minimum:2 maximum:50 allowsEmpty:NO notification:nil','Input notification contract'),
     ('keyboard-card-hidden','TSShortcutPaneController.m','[TSPrefPaneLayout decorateGroupsInView:group];','[TSPrefPaneLayout decorateGroupsInView:group]; [self viewWithIdentifier:@"card.background" inView:group].hidden=YES;','Every catalog group has its visible rounded filled card'),
     ('autosave-string','TSSettingsDependencies.inc','AutoSaveEnabledKey, 0, TSDependencyBoolean','AutoSaveEnabledKey, 0, TSDependencyInteger','Factory string YES'),
@@ -102,7 +112,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    if a.third_audit_mutations:
     cases=[]
     third=[
-     ('search-result-height','TSSettingsSidebarRow.m','return MAX(44,height);','return 44;','Wrapped search result names and categories fit the row'),
+     ('search-result-height','TSSettingsSidebarRow.m','return MAX(44,height);','return 44;','Search result height matches regular display'),
      ('keyboard-title','TSSettingsWindowController.m','self.window.title = NSLocalizedString(@"Keyboard", @"");','self.window.title = @"";','Every category including Keyboard updates the window title'),
      ('termination-generation','TSPreferences.m','- (void)finishPreferencesForTermination\n{\n    self.endingPreferences = YES;\n    self.themeOperationGeneration++;','- (void)finishPreferencesForTermination\n{\n    self.endingPreferences = YES;','Termination invalidates pending theme operations'),
      ('keyboard-card-alpha','TSShortcutPaneController.m','[TSPrefPaneLayout decorateGroupsInView:group];','[TSPrefPaneLayout decorateGroupsInView:group]; [self viewWithIdentifier:@"card.background" inView:group].alphaValue=0;','Every catalog group has its visible rounded filled card'),
@@ -113,13 +123,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     for key in ['Source','Console','Preview']:
      third.append(('opacity-missing-'+key,'TSPreferences-Color.m',key+'AlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSTheme'+key+'AlphaKey)',key+'AlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: TSTheme'+key+'AlphaKey]','Absent alpha opens without exception and displays full opacity'))
     for name,file,old,new,message in third:cases.append((name,file,old,new));expected[name]=message
-   if a.fourth_audit_mutations:cases=[('search-height-minus-one','TSSettingsSidebarRow.m','CGFloat height=10;','CGFloat height=9;')];expected['search-height-minus-one']='Wrapped search result names and categories fit the row'
+   if a.fourth_audit_mutations:cases=[('search-height-minus-one','TSSettingsSidebarRow.m','CGFloat height=10;','CGFloat height=9;')];expected['search-height-minus-one']='Search result height matches regular display'
    if a.fifth_audit_mutations:
     fifth=[
      ('dock-caption','TSDockIconController.m','labelWithString:years[index]','labelWithString:label','Dock options have an accessible image and the approved year-only caption'),
      ('category-duplicate-name','TSSettingsWindowController.m','self.searchQuery.length && self.searchResults[(NSUInteger)row].targetIdentifier.length','self.searchQuery.length','Category result has one name and its category icon'),
      ('whole-color-table','TSSettingsWindowController.m','if ([ancestor isKindOfClass:NSGridView.class]) {','if (NO) {','Merged color search highlights only its selected grid row'),
-     ('wrong-color-row','TSSettingsWindowController.m','NSInsetRect(bounds, 0, -2)','grid.bounds','Color highlight identifies one named row without neighboring rows'),
+     ('wrong-color-row','TSSettingsWindowController.m','NSInsetRect(bounds, -6, -3)','grid.bounds','Color row highlight leaves padding around names and percent fields'),
      ('bold-search-measurement','TSSettingsSidebarRow.m','NSArray *fonts=@[[NSFont systemFontOfSize:NSFont.systemFontSize],','NSArray *fonts=@[[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold],','Search result height matches regular display'),
      ('search-measurement-insets','TSSettingsSidebarRow.m','CGFloat cellWidth=NSWidth([label frameForAlignmentRect:NSMakeRect(0,0,available,1)]);','CGFloat cellWidth=available;','Search result height matches regular display'),
     ]
@@ -148,7 +158,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     sixth=[
      ('sidebar-width-plus-six','TSSettingsSidebarRow.m','width - 40','width - 34','Long localized sidebar names fit at every supported width'),
      ('column-word-break','TSSettingsPaneClassification.inc','[header.widthAnchor constraintGreaterThanOrEqualToConstant:width].active=YES;',';','Localized color column headings fit without breaking words'),
-     ('highlight-no-inset','TSSettingsWindowController.m','NSInsetRect(bounds, -6, -3)','NSInsetRect(bounds, 0, -2)','Color row highlight leaves padding around names and percent fields'),
+     ('highlight-no-inset','TSSettingsWindowController.m','NSInsetRect(bounds, -6, -3)','NSInsetRect(bounds, -6, -3)','Color row highlight leaves padding around names and percent fields'),
      ('opacity-rounded-equality','TSPrefPaneLayout.m','if(!self.fieldWasEdited || entered==self.slider.doubleValue)','if(lround(entered)==lround(self.slider.doubleValue))','Explicitly entering the displayed integer replaces a fractional opacity'),
      ('opacity-settings-old-reader','TSPreferences-Color.m','SourceAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemeSourceAlphaKey);','SourceAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey:TSThemeSourceAlphaKey] ?: [NSColor colorWithWhite:0 alpha:1];','Invalid theme opacity loads safely and consistently'),
     ]
@@ -166,7 +176,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     assert count>0,(name,count)
     # Color has two setter paths; both must implement the same disabled color.
     assert count==1 or name in ('disabled-label-color','theme-marker-refresh'),(name,count)
-    stage=t/name;stage.mkdir()
+    stage=t/bundle.stem/name;stage.mkdir(parents=True)
     changed=stage/filename;changed.write_text(source.replace(old,new))
     replacements={str(r/'Sources'/filename):changed}
     if filename=='TSSettingsCatalogLayout.inc':shutil.copy2(r/'Sources/TSSettingsPaneClassification.inc',stage/'TSSettingsPaneClassification.inc')

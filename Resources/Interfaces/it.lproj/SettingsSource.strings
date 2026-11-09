@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1080.title" = "OgreKit Find Panel";
+"1080.title" = "Pannello di ricerca OgreKit";
 "14.title" = "Font del Documento";
 "19.title" = "Posizione Finestra Sorgente";
 "236.title" = "All'avvio";
@@ -9,7 +9,7 @@
 "32.title" = "Conserva l'ultima posizione";
 "3eF-XA-ahc.title" = "Non controllare i parametri selezionati";
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
-"582.title" = "Apple Find Panel";
+"582.title" = "Pannello di ricerca Apple";
 "583.title" = "Apple Fine Bar";
 "585.title" = "Pannello di ricerca";
 "872.title" = "Imposta...";
@@ -21,8 +21,8 @@
 "912.title" = "Radio";
 "914.title" = "Radio";
 "925.title" = "Completamento attivato da:";
-"927.title" = "Escape Key";
-"928.title" = "Tab Key";
+"927.title" = "Tasto Esc";
+"928.title" = "Tasto Tab";
 "929.title" = "Radio";
 "934.title" = "Evidenzia corrispondenza";
 "950.title" = "{ }";

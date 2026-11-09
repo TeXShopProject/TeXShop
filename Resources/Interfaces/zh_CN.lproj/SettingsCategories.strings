@@ -209,7 +209,7 @@
 "catalog.preview.0.5.title" = "平滑文字和线稿";
 "group.preview.1.title" = "双页模式";
 "catalog.preview.1.0.title" = "页面方向";
-"catalog.preview.1.1.title" = "Show first page alone as cover";
+"catalog.preview.1.1.title" = "将第一页单独显示为封面";
 "catalog.preview.1.2.title" = "适用于此后打开的文档。特殊注释和 PDF 的查看方向优先。";
 "group.preview.2.title" = "刷新";
 "catalog.preview.2.0.title" = "自动更新预览";

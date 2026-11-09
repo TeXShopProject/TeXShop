@@ -79,6 +79,7 @@ static void SaveNote(TSSettingsWindowController *shell,NSView *row,NSString *dir
 #include "SettingsOwnerSearch.inc"
 #include "SettingsOwnerThemeWells.inc"
 #include "SettingsOwnerOpacity.inc"
+#include "SettingsVisibleText.inc"
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();[NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
  testDockTile=[ProductDockTile new];testDockTile.size=NSMakeSize(128,128);testDockTile.badgeLabel=@"7";
@@ -180,6 +181,7 @@ int main(int argc,char **argv){@autoreleasepool{
   for(NSInteger row=0;row<shell.categoryTable.numberOfRows;row++){CGFloat height=[shell tableView:shell.categoryTable heightOfRow:row];Check(height==8 || (height>=30 && height<=42),@"Category spacing uses compact one-line or necessary two-line rows");}
  }
  [shell.window setContentSize:NSMakeSize(1040,780)];[shell.splitController.splitView setPosition:220 ofDividerAtIndex:0];
+ NSMutableArray *visibleText=[NSMutableArray array];
  for(NSString *category in shell.categoryIdentifiers){
   Check([shell selectCategoryIdentifier:category],@"Production delegate permits category navigation");[shell.window.contentView layoutSubtreeIfNeeded];
   NSView *pane=[category isEqual:TSSettingsCategoryKeyboard]?[[shell valueForKey:@"keyboardPane"] view]:[shell viewForCategoryIdentifier:category];
@@ -194,6 +196,7 @@ int main(int argc,char **argv){@autoreleasepool{
    if(argc>2){NSString *directory=@(argv[2]);Save(shell.window.contentView,[directory stringByAppendingPathComponent:[NSString stringWithFormat:@"shell-%@-%@.png",category,appearance]]);Save(pane,[directory stringByAppendingPathComponent:[NSString stringWithFormat:@"full-%@-%@.png",category,appearance]]);}
    Check(!shell.window.visible,@"No test window is ordered");
   }
+  CollectSettingsVisibleText(pane,category,visibleText);
   printf("PANE %s %.1f %.1f\n",category.UTF8String,NSWidth(pane.frame),NSHeight(pane.frame));
   if(argc>2 || [fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"]){
    NSView *originalParent=pane.superview;NSArray *originalConstraints=[originalParent.constraints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSLayoutConstraint *c,NSDictionary *bindings){return c.firstItem==pane || c.secondItem==pane;}]];
@@ -214,6 +217,10 @@ int main(int argc,char **argv){@autoreleasepool{
    [NSLayoutConstraint deactivateConstraints:geometry];[pane removeFromSuperview];[originalParent addSubview:pane];[NSLayoutConstraint activateConstraints:originalConstraints];[shell.window.contentView layoutSubtreeIfNeeded];
   }
 
+ }
+ NSString *visiblePath=NSProcessInfo.processInfo.environment[@"TS_SETTINGS_VISIBLE_TEXT_PATH"];
+ if(visiblePath.length){
+  Check([[NSJSONSerialization dataWithJSONObject:visibleText options:NSJSONWritingPrettyPrinted error:NULL] writeToFile:visiblePath atomically:YES],@"Visible wording inventory is written");
  }
  if(argc>2){
   [shell.splitController.splitView setPosition:190 ofDividerAtIndex:0];[shell.window.contentView layoutSubtreeIfNeeded];

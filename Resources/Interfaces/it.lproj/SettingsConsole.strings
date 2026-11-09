@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"752.title" = "Console Font";
+"752.title" = "Font della console";
 "765.title" = "Solo verticale";
 "766.title" = "Arbitrario";
 "772.title" = "Ridimensionamento console";
@@ -7,7 +7,7 @@
 "830.title" = "Sempre";
 "831.title" = "In caso di errore";
 "905.title" = "Helvetica 12";
-"906.title" = "Set ...";
+"906.title" = "Imposta…";
 "923.title" = "Radio";
 "924.title" = "Radio";
 "PqO-5d-lRv.title" = "Posizione predefinita";

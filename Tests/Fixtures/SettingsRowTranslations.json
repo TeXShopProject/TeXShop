@@ -83,7 +83,7 @@
       "group.editor.1.title": "Editorstijl",
       "catalog.general.2.1.button": "Huidige positie gebruiken",
       "catalog.appearance.2.0.column.0": "Voorgrond",
-      "catalog.editor.8.0.choice.10": "Persoonlijke markering"
+      "catalog.editor.8.0.choice.10": "persoonlijke markering"
     },
     "pt-PT": {
       "catalog.general.2.0.title": "Código-fonte",
@@ -183,7 +183,7 @@
       "group.editor.1.title": "Estilo do editor",
       "catalog.general.2.1.button": "Usar a posição atual",
       "catalog.appearance.2.0.column.0": "Primeiro plano",
-      "catalog.editor.8.0.choice.10": "Marca pessoal"
+      "catalog.editor.8.0.choice.10": "marca pessoal"
     },
     "de": {
       "catalog.typesetting.8.1.title": "BibTeX-Programm",
@@ -311,7 +311,7 @@
       "catalog.editor.4.4.title": "Arată indicatorul la deplasare",
       "catalog.general.2.1.title": "Previzualizare",
       "catalog.editor.6.2.title": "Partea liniei de inserare:",
-      "catalog.editor.8.0.choice.10": "Marcaj personal"
+      "catalog.editor.8.0.choice.10": "marcaj personal"
     },
     "zh_CN": {
       "catalog.appearance.5.0.item.0": "( )",

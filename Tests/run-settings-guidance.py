@@ -11,3 +11,11 @@ for old in ['Settings → Source','Settings > Misc 1','Preferences → Misc 2','
     else:raise AssertionError('Obsolete route survived: '+old)
 for language,text in [('en','Settings → Editor'),('ja','設定 → エディタ'),('ko','설정 → 도구'),('de','Einstellungen → Editor'),('es','Ajustes → Editor')]:check(text,language,'normal control')
 print('NORMAL CONTROL current routes')
+
+release=(root/"Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm").read_text()
+missing="\n".join(line for line in release.splitlines() if "Size internal-link previews" not in line)
+try:checks["check_internal_link_release"](missing)
+except AssertionError:print("DETECTED missing merged internal-link preview release entry")
+else:raise AssertionError("Missing release entry survived")
+checks["check_internal_link_release"](release)
+print("NORMAL CONTROL merged release guidance")
