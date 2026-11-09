@@ -45,6 +45,7 @@
 #import "MyPDFKitView.h"
 #import "TSExternalPDFReload.h"
 #import "TSLinkPreviewGeometry.h"
+#import "TSLinkPreviewView.h"
 #import "MyPDFView.h"
 #import "globals.h"
 #import "TSDocument.h"
@@ -68,6 +69,7 @@
 {
     TSExternalPDFPosition secondViewport;
     id linkPreviewEventMonitor;
+    TSLinkPreviewView *linkPreview;
 }
 
 - (void)dealloc
@@ -4055,7 +4057,13 @@ The system then remembers the new number and sends is to the Timer which will di
 
 - (void) mouseMoved: (NSEvent *) theEvent
 {
-   
+    // A pinned popup shows how it can be moved or resized.
+    NSCursor *previewCursor = [linkPreview cursorAtPoint:
+        [self.documentView convertPoint:theEvent.locationInWindow fromView:nil]];
+    if (previewCursor) {
+        [previewCursor set];
+        return;
+    }
     
 if (!self.skipLinks && !self.globalLongTerm)
     
@@ -4367,21 +4375,14 @@ if (!self.skipLinks && !self.globalLongTerm)
             }
             NSImage *myImageNew = TSLinkPreviewImage(linkedPage, imageSize);
             if (!myImageNew) { self.handlingLink = 0; return; }
-            OverView *theOverView = [[OverView alloc] initWithFrame: [[self documentView] frame] ];
             if (self.overView) {
                 [self.overView removeFromSuperview];
                 self.overView = nil;
             }
-            self.overView =  theOverView;
-            [[self documentView] addSubview: [self overView]];
-            
-            [[self overView] setDrawRubberBand: NO];
-            [[self overView] setDrawMagnifiedRect: NO];
-            [[self overView] setDrawMagnifiedImage: YES];
-            [[self overView] setSelectionRect: bRect];
-            [[self overView] setMagnifiedRect: aRect];
-            [[self overView] setMagnifiedImage: myImageNew];
-            [[self overView] setNeedsDisplayInRect: [[self documentView] visibleRect]];
+            [linkPreview removeFromSuperview];
+            linkPreview = [[TSLinkPreviewView alloc] initWithFrame:bRect image:myImageNew source:aRect
+                                                          pageSize:imageSize];
+            [documentView addSubview:linkPreview];
             
             // theSelection = [linkedPage selectionForRect: aRect];
             // outputString = [theSelection string];
@@ -4389,6 +4390,7 @@ if (!self.skipLinks && !self.globalLongTerm)
             // NSLog(outputString);
             self.handlingLink = 2;
             self.globalLongTerm = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+            linkPreview.pinned = self.globalLongTerm;
             [self observeLinkPreviewEvents];
             NSArray *info = [NSArray arrayWithObjects: timerNumberObject, nil];
             [NSTimer scheduledTimerWithTimeInterval:4.0
@@ -4415,8 +4417,10 @@ if (!self.skipLinks && !self.globalLongTerm)
 {
     if (!self.window || event.window != self.window || self.handlingLink != 2)
         return event;
-    if (event.type == NSEventTypeFlagsChanged && (event.modifierFlags & NSEventModifierFlagOption))
+    if (event.type == NSEventTypeFlagsChanged && (event.modifierFlags & NSEventModifierFlagOption)) {
         self.globalLongTerm = YES;
+        linkPreview.pinned = YES;
+    }
     if (self.globalLongTerm && event.type == NSEventTypeKeyDown
         && !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl
                                     | NSEventModifierFlagOption | NSEventModifierFlagShift))
@@ -4460,6 +4464,8 @@ if (!self.skipLinks && !self.globalLongTerm)
         linkPreviewEventMonitor = nil;
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:nil];
+    [linkPreview removeFromSuperview];
+    linkPreview = nil;
     [self.overView removeFromSuperview];
     self.overView = nil;
     self.globalLongTerm = NO;

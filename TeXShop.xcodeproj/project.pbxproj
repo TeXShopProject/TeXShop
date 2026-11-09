@@ -77,6 +77,7 @@
 		40367BB513DFB3B70098E009 /* TeXShopHelp in Resources */ = {isa = PBXBuildFile; fileRef = 40367BB313DFB3B70098E009 /* TeXShopHelp */; };
 		403B423A178CB65400E38A72 /* OverView.h in Headers */ = {isa = PBXBuildFile; fileRef = 403B4238178CB65400E38A72 /* OverView.h */; };
 		403B423B178CB65400E38A72 /* OverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 403B4239178CB65400E38A72 /* OverView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		F29CAC13458CF5539134DBD6 /* TSLinkPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA13866BF3622A550CEA0B84 /* TSLinkPreviewView.m */; };
 		403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 403E76BD218E7008006975A8 /* TeXShop.scriptSuite */; };
 		403F25EA0F20770F001031A0 /* TSDocument-Console.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F25E90F20770F001031A0 /* TSDocument-Console.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4040A2C9135BE98200AC4C27 /* TSAutoCompletionListEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */; };
@@ -474,6 +475,8 @@
 		403649E2211BDA800086DDD1 /* TSPreferenceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPreferenceWindow.m; sourceTree = "<group>"; };
 		403B4238178CB65400E38A72 /* OverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverView.h; sourceTree = "<group>"; };
 		403B4239178CB65400E38A72 /* OverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverView.m; sourceTree = "<group>"; };
+		C7BA375FEE983C563088CB86 /* TSLinkPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSLinkPreviewView.h; sourceTree = "<group>"; };
+		FA13866BF3622A550CEA0B84 /* TSLinkPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSLinkPreviewView.m; sourceTree = "<group>"; };
 		403E76BD218E7008006975A8 /* TeXShop.scriptSuite */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptSuite; path = TeXShop.scriptSuite; sourceTree = "<group>"; };
 		403F25E90F20770F001031A0 /* TSDocument-Console.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Console.m"; sourceTree = "<group>"; };
 		4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAutoCompletionListEditor.h; sourceTree = "<group>"; };
@@ -1198,6 +1201,8 @@
 				409F89D01960A6A200D6F7AD /* ScrapPDFKitView.m */,
 				40067E5F288F16CA00756801 /* TSDocument-HTML.m */,
 				AE9500010000000000000002 /* TSExternalPDFSnapshot.m */,
+				C7BA375FEE983C563088CB86 /* TSLinkPreviewView.h */,
+				FA13866BF3622A550CEA0B84 /* TSLinkPreviewView.m */,
 				400CD8BE0C66BD4F00C450D6 /* TSMovie.h */,
 				400CD8BF0C66BD4F00C450D6 /* TSMovie.m */,
 				00CFF0F5000AD1F27F000001 /* TSPrintView.h */,
@@ -1935,6 +1940,7 @@
 				40B288D11398A373005C921D /* synctex_parser.c in Sources */,
 				40A3576013CA151400793021 /* TSApplication.m in Sources */,
 				403B423B178CB65400E38A72 /* OverView.m in Sources */,
+				F29CAC13458CF5539134DBD6 /* TSLinkPreviewView.m in Sources */,
 				40BCDA531FF9589200AAC575 /* TSWindowController.m in Sources */,
 				406B626F199934D000C46D2A /* NSText-Extras.m in Sources */,
 			);
