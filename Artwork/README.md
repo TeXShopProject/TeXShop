@@ -22,7 +22,8 @@ lettering and placement.
   layer list runs front to back: lettering first, opaque frame last. Verify
   the built app’s `Contents/Resources/TeXShop.icns` as well as the PNG preview.
 - `Icon-preview.png`: Fallback preview including standard icon padding.
-- `GitHub-avatar.png`: Full-bleed square avatar.
+- `GitHub-avatar.png`: Avatar with the same outer shape as the app icon, nearly
+  filling the square, on a transparent background.
 - `Classic-TeX-outline.json`: Traced classic lettering, in original canvas coordinates.
 - `Icon-mask-outline.json`: The macOS 26 icon shape, and the same shape moved inward
   by the rim and its highlight, recorded by `trace-icon-mask.py` from an Icon

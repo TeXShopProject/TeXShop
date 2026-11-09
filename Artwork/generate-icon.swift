@@ -1,5 +1,5 @@
 // added by Terada: Center the outlined TeX mark on the inherited icon background.
-// Generate Icon Composer artwork, a fallback preview, and a full-bleed web avatar.
+// Generate Icon Composer artwork, a fallback preview, and a web avatar.
 // swift Artwork/generate-icon.swift
 import AppKit
 import CoreText
@@ -83,14 +83,15 @@ let frameSVG="""
 </svg>
 """
 try frameSVG.write(to:asset.appendingPathComponent("Frame.svg"),atomically:true,encoding:.utf8)
-func png(_ pixels:Int, fullBleed:Bool = false)->Data {
+func png(_ pixels:Int, inset:CGFloat = 100)->Data {
     let b=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:pixels,pixelsHigh:pixels,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:0,bitsPerPixel:0)!
     let ctx=NSGraphicsContext(bitmapImageRep:b)!.cgContext
     ctx.scaleBy(x:CGFloat(pixels)/1024,y:CGFloat(pixels)/1024)
-    var bodyTransform=CGAffineTransform(a:824/1024,b:0,c:0,d:824/1024,tx:100,ty:100)
-    let shape=fullBleed ? CGPath(rect:CGRect(x:0,y:0,width:1024,height:1024),transform:nil) : iconShape.copy(using:&bodyTransform)!
+    let body=(1024-2*inset)/1024
+    var bodyTransform=CGAffineTransform(a:body,b:0,c:0,d:body,tx:inset,ty:inset)
+    let shape=iconShape.copy(using:&bodyTransform)!
     ctx.saveGState();ctx.addPath(shape);ctx.clip()
-    if !fullBleed { ctx.translateBy(x:100,y:100);ctx.scaleBy(x:824/1024,y:824/1024) }
+    ctx.translateBy(x:inset,y:inset);ctx.scaleBy(x:body,y:body)
     if whiteFrame {
     let space=CGColorSpace(name:CGColorSpace.sRGB)!
     let rimColors=[CGColor(srgbRed:1,green:1,blue:1,alpha:1),CGColor(srgbRed:245/255,green:246/255,blue:246/255,alpha:1),CGColor(srgbRed:204/255,green:209/255,blue:210/255,alpha:1)]
@@ -111,7 +112,7 @@ func png(_ pixels:Int, fullBleed:Bool = false)->Data {
         ctx.drawLinearGradient(gradient,start:CGPoint(x:512,y:1024),end:CGPoint(x:512,y:0),options:[])
     }
     ctx.restoreGState()
-    if !fullBleed { ctx.translateBy(x:100,y:100);ctx.scaleBy(x:824/1024,y:824/1024) }
+    ctx.translateBy(x:inset,y:inset);ctx.scaleBy(x:body,y:body)
     func color(_ r:CGFloat,_ g:CGFloat,_ b:CGFloat,_ a:CGFloat=1)->CGColor {
         CGColor(srgbRed:r/255,green:g/255,blue:b/255,alpha:a)
     }
@@ -137,7 +138,7 @@ let preview=png(1024)
 try preview.write(to:root.appendingPathComponent("Artwork/Icon-preview.png"))
 try preview.write(to:root.appendingPathComponent("Resources/DockIcons/current.png"))
 try png(512).write(to:root.appendingPathComponent("website/assets/texshop.png"))
-try png(1024,fullBleed:true).write(to:root.appendingPathComponent("Artwork/GitHub-avatar.png"))
+try png(1024,inset:24).write(to:root.appendingPathComponent("Artwork/GitHub-avatar.png"))
 print("Optically centered TeX outline; Icon Composer layers, preview, Dock icon, website icon, and avatar generated.")
 
 let composerURL=root.appendingPathComponent("Artwork/TeXShop.icon/icon.json")
