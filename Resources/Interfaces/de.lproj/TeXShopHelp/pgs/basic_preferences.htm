@@ -47,66 +47,9 @@ für diese Funktion. Die Konvertierungsmethode kann ebenfalls
 direkt in den Öffnen- und Speicherndialogen festgelegt werden</p>
 <p>Für Japan und Korea
 werden besondere Einstellungen unterstützt.</p>
-<p>Die Hintergrundfarbe des
-Quelltext-Fensters kann zurückgesetzt werden. Es gibt keine
-Option in den Einstellungen um dies zu tun. Um den Hintergrund auf die
-Farbwerte (r, g, b) = (.42, .39, .77) zu setzen, führen Sie
-folgenden Befehl im Terminal-Fenster aus:</p>
-<dl>
-<dd>defaults write TeXShop
-background_R 0.42 </dd>
-<dd>defaults write TeXShop
-background_G 0.39 </dd>
-<dd>defaults write TeXShop
-background_B 0.77 </dd>
-</dl>
-<p>Sie können auch die
-Textfarbe des Quelltext-Fensters ändern. Diese Einstellung
-wird jedoch nur beachtet, wenn Sie die Syntaxfärbung
-eingeschaltet haben. Um die Textfarbe auf (r, g, b) = (.42, .39, .77)
-zu setzen, geben Sie folgende Befehle im Terminal ein:</p>
-<dl>
-<dd>defaults
-write TeXShop foreground_R 0.42 </dd>
-<dd>defaults write TeXShop foreground_G
-0.39 </dd>
-<dd>defaults write TeXShop
-foreground_B 0.77</dd>
-</dl>
-Die Farbe des Einsetzpunktes im Quelltextfenster kann geändert
-werden. Um den Einsetzpunkt auf die Farbe (r, g, b) = (.42,
-.39, .77) zu setzen, geben Sie folgendes im Terminal ein:<br/>
-<dl>
-<dd>defaults
-write TeXShop insertionpoint_R 0.42 </dd>
-<dd>defaults write TeXShop insertionpoint_G
-0.39 </dd>
-<dd>defaults write TeXShop insertionpoint_B 0.77</dd>
-</dl>
-<p>Wenn Sie die letzten
-Einstellungen kombinieren, können Sie weißen Text
-auf schwarzem Hintergrund, oder andere Farbschemata festlegen.</p>
-<p>Mit Hilfe einer versteckten
-Einstellung können Sie auch die Tranzparenz von Quelltext-,
-Vorschau- und Konsolen-Fenster ändern:</p>
-<dl>
-<dd>defaults write TeXShop
-ConsoleWindowAlpha 0.75 </dd>
-<dd>defaults write TeXShop
-SourceWindowAlpha 0.75 </dd>
-<dd>defaults write TeXShop
-PreviewWindowAlpha 0.75 </dd>
-</dl>
-<p>Ein Alphawert von 0.00 bedeutet
-hier vollständige Transparenz und 1.00 vollständig
-deckend. Sie sollten diese Einstellung nur mit Bedacht
-verändern!</p>
-<p>Mit Hilfe eines
-Auswahlmenüs unten in den Einstellungen können die
-Einstellungen auf Ihre
-Standardwerte zurück gesetzt werden. Dies ist vor allem in
-Japan sinnvoll, da hier verschiedene Versionen von pTeX benutzt werden.</p>
-<p>Die Einstellungen haben zehn Kategorien: Allgemein, Dokumente und Sichern, Editor, Rechtschreibprüfung, Erscheinungsbild, Vorschau, Satz, Konsole, Tastatur, Updates. Unter Rechtschreibprüfung wählen Sie &#8222;LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)&#8220; mit &#8222;LaTeX-Ausschlussregeln bearbeiten&#8230;&#8220; oder &#8222;Bisherige Rechtschreibprüfung verwenden&#8220; mit drei eingerückten Optionen. Beim Wechsel bleiben die Werte erhalten; die Prüfung während der Eingabe ist unabhängig. Unter Tastatur stehen Tastenbelegungen und Befehlsvervollständigung über der Suche; nur die Liste scrollt vertikal. Alle drei Bereiche bleiben geöffnet. Die Kurzbefehlsliste nutzt die verbleibende Höhe und scrollt unabhängig. Ist Tab die Vervollständigungstaste, zeigt die Tastensuche eine Reservierungsmeldung und die betreffende Einstellung. Allgemein enthält den Link zu Kommentarzeilen und verborgenen Einstellungen.</p><h3 id="settings-search">Einstellungen suchen</h3><p>Das Suchfeld über der Seitenleiste findet Einstellungen, Optionen und Menübefehle. Jedes Ergebnis zeigt den Namen der Einstellung und ihrer Kategorie. Durch Leerzeichen getrennte Wörter müssen dieselbe Einstellung beschreiben; der Kategoriename kann die Suche eingrenzen. Groß- und Kleinschreibung, lateinische Akzente, Zeichen voller Breite sowie Hiragana und Katakana werden vereinheitlicht. Beim Eingeben bleibt die aktuelle Ansicht erhalten. Ein ausgewähltes Ergebnis wird sichtbar gemacht und hervorgehoben, ohne seinen Wert zu ändern; der Besuch wird dem normalen Verlauf hinzugefügt. Das Leeren der Suche lässt die aktuelle Ansicht unverändert. Zurück und Vorwärts folgen auch während der Suche dem Verlauf, ohne die Suchanfrage zu löschen. Ein Menübefehl öffnet Tastatur und filtert die Funktionssuche. Die Tastenaufzeichnung hat Vorrang. Persönliche Pfade, eingegebene Werte und eigene Themennamen werden nicht durchsucht.</p><p>&#8222;Automatisches Sichern und Versionen&#8220; wird nach dem Neustart von TeXShop wirksam. Der Wechsel zwischen dem Standard-Suchfenster und der Suchleiste aktualisiert Quelltext-, Konsolen- und Protokollansichten offener Dokumente sofort. Ein Wechsel zu oder von OgreKit wird nach einem Neustart wirksam.</p></div>
+<p>Unter Erscheinungsbild stellen Sie Hintergrund-, Text- und Cursorfarben sowie die Deckkraft der Quelltext-, Vorschau- und Konsolenfenster ein. Die Deckkraftregler reichen von 0 % bis 100 %.</p>
+<p>Wählen Sie unter Allgemein das Einstellungsprofil, um einen Satz Standardwerte anzuwenden.</p>
+<p>Die Einstellungen haben zehn Kategorien: Allgemein, Dokumente und Sichern, Editor, Rechtschreibung, Erscheinungsbild, Vorschau, Satz, Konsole, Tastatur, Updates. Unter Rechtschreibung wählen Sie &#8222;LaTeX-bewusste Rechtschreibprüfung verwenden (empfohlen)&#8220; mit &#8222;LaTeX-Ausschlussregeln bearbeiten&#8230;&#8220; oder &#8222;Bisherige Rechtschreibprüfung verwenden&#8220; mit drei eingerückten Optionen. Ist Tab die Vervollständigungstaste, zeigt die Tastensuche eine Reservierungsmeldung und die betreffende Einstellung. Allgemein enthält den Link zu Kommentarzeilen und verborgenen Einstellungen.</p><h3 id="settings-search">Einstellungen suchen</h3><p>Das Suchfeld über der Seitenleiste findet Einstellungen, Optionen und Menübefehle. Jedes Ergebnis zeigt den Namen des Eintrags und seine Kategorie. Durch Leerzeichen getrennte Wörter beziehen sich auf denselben Eintrag; der Kategoriename grenzt die Suche ein. Groß- und Kleinschreibung, lateinische Akzente, Zeichen voller Breite sowie Hiragana und Katakana werden vereinheitlicht. Wählen Sie ein Ergebnis, um zu seiner hervorgehobenen Zeile zu wechseln und den Besuch zum Verlauf hinzuzufügen. Beim Leeren der Suche bleibt die angezeigte Kategorie erhalten. Zurück und Vorwärts folgen auch während der Suche dem Verlauf. Ein Menübefehl öffnet Tastatur und filtert die Funktionssuche. Während der Aufzeichnung hat die Tastenerfassung Vorrang.</p><p>&#8222;Automatisches Sichern und Versionen&#8220; wird nach dem Neustart von TeXShop wirksam. Der Wechsel zwischen dem Standard-Suchfenster und der Suchleiste aktualisiert Quelltext-, Konsolen- und Protokollansichten offener Dokumente sofort. Ein Wechsel zu oder von OgreKit wird nach einem Neustart wirksam.</p></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
 <div id="header_chapter">Grundlagen</div>

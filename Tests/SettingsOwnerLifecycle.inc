@@ -52,7 +52,9 @@ static void CheckOwnerLifecycle(TSPreferences *owner,TSSettingsWindowController 
     NSTextField *tabs=[owner valueForKey:@"tabIndentField"];
     EditOwnerField(owner,tabs,@"invalid");NSUInteger count=ownerAlertCount;
     id original=[TSIsolatedAppKitDefaults objectForKey:tabsKey];
+    NSUInteger terminationGeneration=[[owner valueForKey:@"themeOperationGeneration"]unsignedIntegerValue];
     [owner finishPreferencesForTermination];
+    Check([[owner valueForKey:@"themeOperationGeneration"]unsignedIntegerValue]==terminationGeneration+2,@"Termination invalidates pending theme operations");
     Check(ownerAlertCount==count && [[TSIsolatedAppKitDefaults objectForKey:tabsKey]isEqual:original] && tabs.currentEditor==nil,@"Termination discards invalid editing without warning or persistence");
     [owner setValue:@NO forKey:@"endingPreferences"];[owner setValue:@NO forKey:@"inputErrorPresented"];[shell beginSession];[shell selectCategoryIdentifier:TSSettingsCategoryEditor];
     EditOwnerField(owner,tabs,@"23");[owner finishPreferencesForTermination];

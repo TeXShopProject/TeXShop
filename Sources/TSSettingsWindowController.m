@@ -424,7 +424,11 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 }
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-    if (self.searchQuery.length) return 44;
+    if (self.searchQuery.length && row>=0 && row<(NSInteger)self.searchResults.count) {
+        TSSettingsSearchResult *result=self.searchResults[(NSUInteger)row];
+        NSString *category=[result.category isEqual:TSSettingsCategoryKeyboard] ? NSLocalizedString(@"Keyboard", @"") : self.panes[result.category].title ?: @"";
+        return [TSSettingsSidebarRow heightForSearchTitle:result.title categoryTitle:category cellWidth:tableView.tableColumns.firstObject.width];
+    }
     if (row < 0 || row >= (NSInteger)[self visibleIdentifiers].count) { return 30; }
     TSSettingsCategoryID identifier = [self visibleIdentifiers][(NSUInteger)row];
     if (!identifier.length) return 8;

@@ -4,6 +4,8 @@
 - (IBAction)EditingStyleChoice:(id)sender;
 - (void)requestNameForThemeColors:(NSDictionary *)colors;
 @end
+static NSLocale *opacityTestLocale;
+static id OpacityLocale(id cls, SEL cmd) { return opacityTestLocale; }
 static NSUInteger opacityWrites;
 static IMP opacityOriginalWrite;
 static NSDictionary *opacityMigrated;
@@ -47,6 +49,32 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
         }
         well.enabled=NO;slider.doubleValue=42;NSUInteger writes=opacityWrites;[slider sendAction:slider.action to:slider.target];
         Check(!slider.enabled && slider.doubleValue==100 && opacityWrites==writes,@"Disabled opacity cannot write and restores its displayed value");well.enabled=YES;
+    }
+    Method localeMethod=class_getClassMethod(NSLocale.class,@selector(currentLocale));
+    IMP oldLocale=method_setImplementation(localeMethod,(IMP)OpacityLocale);
+    for(NSString *localeID in @[@"de_DE",@"fr_FR",@"en_US"]){
+        opacityTestLocale=[[NSLocale alloc]initWithLocaleIdentifier:localeID];
+        NSColorWell *well=[owner valueForKey:outlets[0]];well.color=[well.color colorWithAlphaComponent:0.85];
+        NSSlider *slider=(NSSlider *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryAppearance],[@"opacity." stringByAppendingString:well.identifier]);
+        NSTextField *percentage=[slider.superview valueForKey:@"percentage"];
+        NSNumberFormatter *formatter=[NSNumberFormatter new];formatter.numberStyle=NSNumberFormatterPercentStyle;formatter.maximumFractionDigits=0;formatter.locale=opacityTestLocale;
+        Check([percentage.stringValue isEqual:[formatter stringFromNumber:@0.85]],@"Opacity percentage follows the current regional format");
+        if(![localeID isEqual:@"en_US"])Check([percentage.stringValue rangeOfCharacterFromSet:NSCharacterSet.whitespaceCharacterSet].location!=NSNotFound,@"German and French percentages include their localized spacing");
+        Check([percentage.stringValue sizeWithAttributes:@{NSFontAttributeName:percentage.font}].width<=36,@"Localized percentages fit their label width");
+    }
+    method_setImplementation(localeMethod,oldLocale);opacityTestLocale=nil;
+    NSMutableDictionary *missing=[theme mutableCopy];for(NSString *key in keys)[missing removeObjectForKey:key];
+    Check([missing writeToFile:path atomically:YES],@"Missing-alpha fixture is saved only in the temporary directory");
+    BOOL loaded=YES;@try { [owner EditingStyleChoice:nil]; } @catch(NSException *exception){loaded=NO;}
+    Check(loaded,@"Absent alpha opens without exception and displays full opacity");
+    for(NSUInteger i=0;i<3;i++){
+        NSColorWell *well=[owner valueForKey:outlets[i]];
+        NSSlider *slider=(NSSlider *)Find([shell viewForCategoryIdentifier:TSSettingsCategoryAppearance],[@"opacity." stringByAppendingString:well.identifier]);
+        Check(slider.doubleValue==100,@"Absent alpha opens without exception and displays full opacity");
+        NSUInteger writes=opacityWrites;slider.doubleValue=65;[slider sendAction:slider.action to:slider.target];
+        NSArray *rgba=[NSDictionary dictionaryWithContentsOfFile:path][keys[i]];
+        Check(rgba.count==4 && fabs([rgba[3]doubleValue]-0.65)<1e-9 && opacityWrites==writes+1,@"Absent alpha is created and saved once on edit");
+        [owner EditingStyleChoice:nil];Check(fabs(slider.doubleValue-65)<1e-9,@"Created alpha survives reload");
     }
     method_setImplementation(write,opacityOriginalWrite);method_setImplementation(key,oldKey);navigationTestWindow=nil;
     [NSNotificationCenter.defaultCenter removeObserver:observer];

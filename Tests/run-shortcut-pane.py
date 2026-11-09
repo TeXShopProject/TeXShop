@@ -2,8 +2,9 @@
 """Exercise production shortcut settings with memory defaults and unordered windows."""
 from pathlib import Path
 from shortcut_sources import production_source, companion_sources
-import subprocess,tempfile,json,sys
+import subprocess,tempfile,json,sys,re
 r=Path(__file__).resolve().parents[1]
+expected_failures={'search-both-shift': '[TSShortcutSearch matchesKey:@"x" modifiers:(macroFlags.unsignedIntegerValue^S) store:coordinator.store macros:shiftMacros].count==0', 'raw-macro-shift': 'winners==1 && [actual isEqual:c[@"winner"]] && macroIndex==macros.count', 'hidden-menu': '[TSShortcutSearch matchesKey:@"h" modifiers:C store:hiddenStore macros:@[]].count==0', 'empty-initial-list': 'translated.searchEvent==nil && translated.table.numberOfRows==(NSInteger)translated.store.settingsSearchCommandNames.count', 'modifier-only-event': 'Modifier-only events must not reach character translation'}
 with tempfile.TemporaryDirectory(prefix='texshop-shortcut-pane-') as td:
  p=Path(td)
  (p/'TSKeyboardShortcuts.m').write_text(production_source(r))
@@ -24,5 +25,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcut-pane-') as td:
   assert original.count(old)==1,(name,original.count(old));changed=original.replace(old,new)
   if name=='search-both-shift':changed=changed.replace('TSBinding(macro.key, macro.modifiers) isEqual:binding','TSBinding(macro.key, macro.modifiers & ~NSEventModifierFlagShift) isEqual:binding')
   (p/'TSKeyboardShortcuts.m').write_text(changed);result=run()
-  assert result.returncode and 'FAIL' in result.stderr,(name,result.stderr);print('DETECTED',name,result.stderr.strip(),flush=True)
+  assert result.returncode and re.search(r'FAIL(?: \d+)?: '+re.escape(expected_failures[name]),result.stderr),(name,result.stderr);print('DETECTED',name,result.stderr.strip(),flush=True)
  (p/'TSKeyboardShortcuts.m').write_text(original);result=run();assert result.returncode==0,result.stderr;print('NORMAL CONTROL',result.stdout,flush=True)

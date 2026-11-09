@@ -34,7 +34,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSArray *documents=@[[FindDocumentProbe new],[FindDocumentProbe new]];
  for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views)TSConfigureFindInterface(view,launch,NO);
  NSInteger effective=launch;
- for(NSNumber *method in @[@1,@0,@2,@0,@1])for(NSNumber *incremental in @[@NO,@YES]){
+ for(NSNumber *method in @[@1,@0,@2,@0,@1])for(NSNumber *incremental in @[@YES,@NO]){
   [SUD setInteger:method.integerValue forKey:FindMethodKey];[SUD setBool:incremental.boolValue forKey:IncrementalSearchKey];
   [NSNotificationCenter.defaultCenter postNotificationName:TSFindMethodChangedNotification object:nil];
   if(launch!=2 && method.integerValue!=2)effective=method.integerValue;
@@ -62,6 +62,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-find-interface-')as tmp:
   cases.append(('bar-flag',program,original.replace('view.usesFindBar = method == 1;','view.usesFindBar = NO;'),'All source split views'))
   cases.append(('panel-flag',program,original.replace('view.usesFindPanel = method != 1;','view.usesFindPanel = YES;'),'All source split views'))
   cases.append(('incremental',program,original.replace('method == 1 && incremental','NO && incremental'),'Incremental searching'))
+  cases.append(('reverse-panel',program.replace('NSInteger current = [SUD integerForKey:FindMethodKey];','NSInteger current = [SUD integerForKey:FindMethodKey]; if (current == 0) return;'),original,'All source split views'))
   for name,body,interface,expected in cases:
    assert body!=program or interface!=original,(name,"No mutation applied")
    results=run(body,interface);assert any(x.returncode and 'FAIL: '+expected in x.stderr for x in results),(name,results);print('DETECTED',name,expected,flush=True)

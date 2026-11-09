@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse, subprocess, tempfile, shutil, plistlib
 p=argparse.ArgumentParser();p.add_argument('--mutations',action='store_true');p.add_argument('--all-languages',action='store_true');args=p.parse_args()
 r=Path(__file__).resolve().parents[1]
+expected_failures={'find-always-restart': 'Panel and bar changes take effect without restart', 'find-ignore-launch': 'Leaving OgreKit for the standard panel needs restart', 'warning-red': 'Warning uses label text and an untinted multicolor symbol', 'announcement-priority': 'Showing a note requests a medium-priority VoiceOver announcement', 'category-clear': 'Category transition clears transient note', 'close-clear': 'Closing hides all notes', 'always-condition': 'No preview means no zoom note', 'ignore-original': 'Returning to session value clears spell note', 'same-value': 'Committing the same zoom does not show a note', 'restart-category': 'Restart notes survive reopening', 'launch-overwritten': 'Launch baseline is captured only once'}
 with tempfile.TemporaryDirectory(prefix='texshop-change-notes-') as directory:
     d=Path(directory);bundle=d/'Strings.bundle';resources=bundle/'Contents/Resources';resources.mkdir(parents=True)
     (bundle/'Contents/Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier':'org.texshop.tests.change-notes','CFBundlePackageType':'BNDL','CFBundleDevelopmentRegion':'en','CFBundleLocalizations':['en']}))
@@ -33,7 +34,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-change-notes-') as directory:
         for name,old,new in mutations:
             assert text.count(old)==1,(name,text.count(old))
             changed=d/'TSSettingsChangeNote.m';changed.write_text(text.replace(old,new));result=run(changed)
-            assert result.returncode and 'FAIL:' in result.stderr,(name,result.returncode,result.stderr)
+            assert result.returncode and 'FAIL: '+expected_failures[name] in result.stderr,(name,result.returncode,result.stderr)
             print('DETECTED',name,result.stderr.strip(),flush=True)
         result=run();assert result.returncode==0;print('NORMAL CONTROL',result.stdout,flush=True)
 

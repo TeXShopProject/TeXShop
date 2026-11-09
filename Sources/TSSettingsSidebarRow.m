@@ -29,16 +29,28 @@
         [label.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-4], [label.centerYAnchor constraintEqualToAnchor:icon.centerYAnchor]]];
     return cell;
 }
+// Reserve both the wrapped item name and its category, including selected-row weight.
++ (CGFloat)heightForSearchTitle:(NSString *)title categoryTitle:(NSString *)categoryTitle cellWidth:(CGFloat)width
+{
+    CGFloat available=MAX(1,width-16);
+    CGFloat height=10;
+    NSArray *texts=@[title,categoryTitle];
+    NSArray *fonts=@[[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold], [NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
+    for(NSUInteger i=0;i<texts.count;i++)height+=ceil([texts[i] boundingRectWithSize:NSMakeSize(available,CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:fonts[i]}].size.height);
+    return MAX(44,height);
+}
 + (NSTableCellView *)cellForSearchTitle:(NSString *)title categoryTitle:(NSString *)categoryTitle
 {
     NSTableCellView *cell = [NSTableCellView new];
-    NSTextField *name = [NSTextField labelWithString:title];
-    NSTextField *category = [NSTextField labelWithString:categoryTitle];
+    NSTextField *name = [NSTextField wrappingLabelWithString:title];
+    NSTextField *category = [NSTextField wrappingLabelWithString:categoryTitle];
     name.font = [NSFont systemFontOfSize:NSFont.systemFontSize];
     category.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     category.textColor = NSColor.secondaryLabelColor;
+    category.identifier=@"search.result.category";
     for (NSTextField *label in @[name, category]) {
         label.translatesAutoresizingMaskIntoConstraints = NO;
+        [label setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
         label.lineBreakMode = NSLineBreakByWordWrapping;
         [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
         [cell addSubview:label];

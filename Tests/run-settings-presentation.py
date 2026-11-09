@@ -17,9 +17,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-presentation-') as folder:
     result=run(original);assert result.returncode==0,(result.stdout,result.stderr);print(result.stdout,flush=True)
     if args.mutations:
         changes=[('top-aligned-accessory','[accessory.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]','[accessory.topAnchor constraintEqualToAnchor:view.topAnchor constant:6]'),('invisible-card','self.layer.backgroundColor=TSSettingsCardColor().CGColor;','self.layer.backgroundColor=NSColor.clearColor.CGColor;'),('missing-separators','[line stroke];','/* omitted separator */')]
+        changes.append(('path-note-full-width','!self.expandedAccessory && width > available','width > available'))
         text=original.read_text()
         for name,old,new in changes:
             assert text.count(old)==1,(name,text.count(old));changed=Path(folder)/'TSPrefPaneLayout.m';changed.write_text(text.replace(old,new));result=run(changed)
-            expected={'top-aligned-accessory':'Short button explanation centers the accessory','invisible-card':'Rendered card pixels differ','missing-separators':'Rendered rows have a visible separator'}[name]
+            expected={'path-note-full-width':'Path explanations stay inside the fixed name column','top-aligned-accessory':'Short button explanation centers the accessory','invisible-card':'Rendered card pixels differ','missing-separators':'Rendered rows have a visible separator'}[name]
             assert result.returncode and 'FAIL: '+expected in result.stderr,(name,result.stderr);print('DETECTED',name,result.stderr.strip(),flush=True)
         result=run(original);assert result.returncode==0;print('NORMAL CONTROL',result.stdout,flush=True)

@@ -46,18 +46,17 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
  // matrix/button choices (e.g. line-number size) remain choices (30).
  for(NSArray *contract in @[@[@"row.catalog.general.0.0",@"catalog.general.0.0.title",@50],@[@"row.catalog.editor.0.2",@"catalog.editor.0.2.title",@50]]){
   NSString *label=[resources localizedStringForKey:contract[1] value:nil table:@"SettingsCategories"];
-  BOOL found=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:contract[0]] && [entry.text isEqual:label]){Check(entry.weight==[contract[2]integerValue],@"Visible switch row names retain label weight");found=YES;}Check(found,@"Independent visible row is indexed");
+  BOOL found=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:contract[0]] && [entry.text isEqual:label] && entry.weight==[contract[2]integerValue]){found=YES;}Check(found,@"Visible switch row names retain label weight");
  }
  BOOL hasChoices=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:@"row.catalog.editor.0.3"] && entry.weight==30)hasChoices=YES;
  Check(hasChoices,@"Radio matrix options have choice weight");
  // Every target has a fixed setting name, even when found through its help text.
- NSMutableSet *targets=[NSMutableSet set];
  for(TSSettingsSearchEntry *entry in index.entries){
   if(!entry.targetIdentifier.length || [entry.targetIdentifier isEqual:@"category.description"])continue;
-  NSString *identity=[entry.category stringByAppendingString:entry.targetIdentifier];
-  if([targets containsObject:identity])continue;[targets addObject:identity];
+  BOOL matched=NO;
   for(TSSettingsSearchResult *result in [index resultsForQuery:entry.text]){
    if(![result.category isEqual:entry.category] || ![result.targetIdentifier isEqual:entry.targetIdentifier])continue;
+   matched=YES;
    Check(result.title.length>0,@"Every result has an explicit setting name");
    if([entry.targetIdentifier hasPrefix:@"row.catalog."]){
     NSView *row=SearchFind(panes[entry.category].view,entry.targetIdentifier);
@@ -66,9 +65,10 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
    }
    if([entry.targetIdentifier isEqual:@"DockIconChoices"])Check([result.title isEqual:[resources localizedStringForKey:@"group.appearance.10.title" value:nil table:@"SettingsCategories"]],@"Dock result uses the visible group name, never removed guidance");
   }
+  Check(matched,@"Every indexed target is found by each of its entries");
  }
  // Labels sharing a target must use the name that matches the actual query.
- for(TSSettingsSearchEntry *entry in index.entries)if(entry.weight==TSSettingsSearchWeightLabel){
+ for(TSSettingsSearchEntry *entry in index.entries)if(entry.weight==TSSettingsSearchWeightLabel && ![entry.targetIdentifier hasPrefix:@"row.catalog."] && ![entry.targetIdentifier isEqual:@"DockIconChoices"]){
   BOOL found=NO;for(TSSettingsSearchResult *result in [index resultsForQuery:entry.text])if([result.targetIdentifier isEqual:entry.targetIdentifier] && [result.category isEqual:entry.category]){
    Check([TSSettingsNormalizedText(result.title) isEqual:TSSettingsNormalizedText(entry.text)],[NSString stringWithFormat:@"Matching labels win for %@: expected %@, got %@",entry.targetIdentifier,entry.text,result.title]);found=YES;
   }Check(found,@"Each visible label finds its own target");

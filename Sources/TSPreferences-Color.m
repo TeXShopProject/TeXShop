@@ -208,9 +208,9 @@ NSInteger stringSort(id s1, id s2, void *context)
         
     EditorReverseSyncColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorReverseSync"];
     PreviewDirectSyncColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewDirectSync"];
-    SourceAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"];
-    PreviewAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"];
-    ConsoleAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"];
+    SourceAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
+    PreviewAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
+    ConsoleAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
     ImageForegroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ImageForeground"];
     ImageBackgroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ImageBackground"];
     
@@ -745,6 +745,8 @@ NSInteger stringSort(id s1, id s2, void *context)
         NSMutableArray *components=[existing mutableCopy];
         components[3]=@(well.color.alphaComponent);
         EditingColors[key]=components;
+    } else {
+        EditingColors[key]=@[@0,@0,@0,@(well.color.alphaComponent)];
     }
 }
 
@@ -755,7 +757,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"];
+        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -771,7 +773,7 @@ NSInteger stringSort(id s1, id s2, void *context)
    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"];
+        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
@@ -787,7 +789,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"];
+        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"] ?: [NSColor colorWithWhite:0 alpha:1];
         ((NSColorWell *)sender).color = oldColor;
         return;
     }

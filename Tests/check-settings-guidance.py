@@ -27,7 +27,7 @@ REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Compl
                 r'Key Bindings menu|Vervollständigungsdatei öffnen|Autovervollständigung-Datei|'
                 r'Abrir archivo de compleciones|Editar archivo de autocompleciones|'
                 r'補完用語ファイルを開く|補完用語ファイルの編集|キーバインドファイルの編集')
-OLD_UI = (r'Both theme color groups appear in one pane|Keyboard results use one vertical scroll area|approved compact layout|30-point sidebar|承認済みのコンパクト|both color groups|テーマの2つの色グループ|A pulldown menu at the bottom of the Settings window|one at a time|一つずつ開け|하나씩 펼칠|jeweils eine Eingabegruppe|un grupo de entrada a la vez|'
+OLD_UI = (r'An obsolete remembered category opens General.|without a separate background process|高さコンパクトな|標準のアプリアイコンに戻り。|Theme color groups are shown together in Appearance.|設定ウインドウの左下にある|Auswahlmenüs unten in den Einstellungen|En la parte de abajo de la ventana de Ajustes|Both theme color groups appear in one pane|Keyboard results use one vertical scroll area|approved compact layout|30-point sidebar|承認済みのコンパクト|both color groups|テーマの2つの色グループ|A pulldown menu at the bottom of the Settings window|one at a time|一つずつ開け|하나씩 펼칠|jeweils eine Eingabegruppe|un grupo de entrada a la vez|'
           r'Edit Rules|Check Spelling While Typing is independent|share one vertical scroll area|'
           r'LaTeXに対応したスペルチェック|従来のスペルチェック|同じ縦スクロール領域|'
           r'einen vertikalen Scrollbereich|un área de desplazamiento vertical|'
@@ -51,7 +51,7 @@ def plain(text):
 
 def check_obsolete(text, language, path):
     text = plain(text)
-    arrows = r'(?:Settings|Preferences|設定|설정|환경설정|Einstellungen|Ajustes|Preferencias)\s*[>→›▸]\s*[「“"«]*(?:Source|Misc\.?\s*[12]|Engines?|Themes|内部設定|詳細[12]|ソース|テーマ|기타[12]|엔진설정|Quelltext|Programme|Div\.\s*[12]|Código|Motor|Modos)\b'
+    arrows = r'(?:Settings|Preferences|設定|설정|환경설정|Einstellungen|Ajustes|Preferencias)\s*[>→›▸»]\s*[「“"«]*(?:Source|Misc\.?\s*[12]|Engines?|Themes|内部設定|詳細[12]|ソース|テーマ|기타[12]|엔진설정|Quelltext|Programme|Div\.\s*[12]|Código|Motor|Modos)\b'
     for pattern in (CATEGORY_RULES[language], REMOVED_MENU, OLD_UI, arrows):
         match = re.search(pattern, text)
         assert match is None, (str(path), text[max(0, match.start()-60):match.end()+60])
@@ -84,20 +84,22 @@ for language in LANGUAGES:
     for key in ('Use LaTeX-aware spell checking (recommended)','Use legacy spell checking'):
         assert labels[key] in overview,(language,'spelling overview',key)
     if language=='ja':
-        for key in ('Search by Function','Search by Key','Clear Shortcut','Restore Default'):
-            if key in labels:assert labels[key] in pages['configure_menushortcuts'],(language,key)
-        assert '割り当てを解除' not in pages['configure_menushortcuts'] and '初期状態に戻す' not in pages['configure_menushortcuts']
+        for key in ('Search by Function','Search by Key','Remove Shortcut','Restore Default','Restore All…'):
+            assert key in labels and '「'+labels[key]+'」' in pages['configure_menushortcuts'],('Japanese shortcut button missing',key)
+        assert '割り当てを解除' not in pages['configure_menushortcuts'] and '初期状態に戻す' not in pages['configure_menushortcuts'], 'Japanese obsolete shortcut button'
     # Check the DOM location, not just whether the added paragraph exists.
     from html.parser import HTMLParser
     class ContentParser(HTMLParser):
         def __init__(self):super().__init__();self.stack=[];self.outside=[]
         def handle_starttag(self,tag,attrs):
-            attrs=dict(attrs)
-            if tag in ('p','h3') and any(t=='body' for t,i in self.stack) and not any(i=='content_border' for t,i in self.stack):self.outside.append(tag)
-            if tag not in ('br','hr','img','meta','link','input'):self.stack.append((tag,attrs.get('id')))
+            if tag not in ('br','hr','img','meta','link','input'):self.stack.append((tag,dict(attrs).get('id')))
         def handle_endtag(self,tag):
             for i in range(len(self.stack)-1,-1,-1):
                 if self.stack[i][0]==tag:self.stack=self.stack[:i];break
+        def handle_data(self,text):
+            if not text.strip() or not any(t=='body' for t,i in self.stack):return
+            allowed={'content_border','header_background','header_logo','header_chapter','header_title','menu_border'}
+            if not any(i in allowed or t in ('script','style') for t,i in self.stack):self.outside.append(text.strip()[:80])
     for name in ('basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden'):
         parser=ContentParser();parser.feed(pages[name]);assert not parser.outside,(language,name,'body text outside content_border',parser.outside)
     for name, key in (('basic_autocompletion', 'Edit Key Bindings…'), ('basic_commandcompletion', 'Edit Command Completion…')):
@@ -167,3 +169,23 @@ for key in ('ApplePersistence','WatchServer','ExtraCommandsNotToCheckParameters'
     section=comment.split('defaults write TeXShop '+key,1)[1].split('\\item',1)[0]
     assert 'Restart TeXShop' in section,(key,'hidden-setting restart documentation')
 print('PASS: four startup-only hidden settings are documented in CommentLines')
+
+# The hidden-settings PDF is part of the shipped documentation contract.
+import hashlib
+hidden=ROOT/'DocumentSources/CommentLinesRevised/CommentLines.pdf'
+from pypdf import PdfReader
+pdf_text=' '.join(' '.join(page.extract_text() for page in PdfReader(hidden).pages).split())
+for key in ('WatchServer','ApplePersistence','ExtraCommandsToCheckParameters','ExtraCommandsNotToCheckParameters'):
+    assert 'defaults write TeXShop '+key in pdf_text,('Hidden PDF current content',key)
+    section=pdf_text.split('defaults write TeXShop '+key,1)[1].split('defaults write TeXShop ',1)[0]
+    assert 'Restart TeXShop after changing this setting.' in section,('Hidden PDF restart instructions',key)
+assert pdf_text.count('Restart TeXShop after changing this setting.')>=4,'Hidden PDF restart instructions'
+for target in ('Base','en'):
+    product=ROOT/f'Resources/Interfaces/{target}.lproj/CommentLines.pdf'
+    assert hidden.read_bytes()==product.read_bytes(),('Hidden PDF distribution identity',target)
+print('PASS: hidden PDF current text and distribution identity')
+
+# The current public English copies carry identical Settings layout wording.
+phrase='Settings has a compact sidebar, overview cards and named groups with switches and right-aligned controls. Settings Profile is in General.'
+for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
+    assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)

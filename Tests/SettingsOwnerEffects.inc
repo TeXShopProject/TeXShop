@@ -51,10 +51,13 @@ static void CheckOwnerEffects(TSPreferences *owner, NSDictionary *factory, NSDic
     [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     NSApp.delegate=oldDelegate;
     __block NSUInteger findChanges=0;
-    id findObserver=[NSNotificationCenter.defaultCenter addObserverForName:TSFindMethodChangedNotification object:owner queue:nil usingBlock:^(NSNotification *note){findChanges++;Check([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==1,@"Find notification observes the committed method");}];
+    __block NSInteger expectedFind=1;
+    id findObserver=[NSNotificationCenter.defaultCenter addObserverForName:TSFindMethodChangedNotification object:owner queue:nil usingBlock:^(NSNotification *note){findChanges++;Check([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==expectedFind,@"Find notification observes the committed method");}];
     NSMatrix *methods=[owner valueForKey:@"findMatrix"];[methods selectCellWithTag:1];
     [owner findPanelChanged:methods];
     Check(findChanges==1,@"Actual find action delivers one live-view notification");
+    expectedFind=0;[methods selectCellWithTag:0];[owner findPanelChanged:methods];
+    Check(findChanges==2,@"Bar to panel action delivers the reverse live-view notification");
     [NSNotificationCenter.defaultCenter removeObserver:findObserver];
     TSIsolatedAppKitDefaults.values=[saved mutableCopy];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     puts("PASS: profile prepares new theme and Dock before notifying exactly once");

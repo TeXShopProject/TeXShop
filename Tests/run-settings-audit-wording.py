@@ -7,7 +7,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  T=Path(td)
  for folder in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','Manual Source','DocumentSources/CommentLinesRevised']:
   for p in (R/folder).rglob('*'):
-   if p.is_file() and p.suffix in ['.strings','.htm','.html','.json','.md','.tex']:
+   if p.is_file() and p.suffix in ['.strings','.htm','.html','.json','.md','.tex','.pdf']:
     dest=T/p.relative_to(R);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,dest)
  check=(R/'Tests/check-settings-guidance.py').read_text().replace('ROOT = Path(__file__).resolve().parents[1]','ROOT = Path('+repr(str(T))+')')
  def guidance():return subprocess.run(['python3','-c',check],capture_output=True,text=True)
@@ -18,16 +18,31 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for lang in ['en','ja','de','es','ko']:
   for name in ['basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden']:
    cases.append((f'outside-{lang}-{name}',f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm',b'</body>',b'<p>fixture paragraph</p></body>',guidance,'body text outside content_border'))
- cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>初期状態に戻す</p></div>'.encode('cp932'),guidance,'AssertionError'),('manual-find','Manual Source/Manual.tex',b'Switching between the Apple Find Panel and Apple Find Bar',b'After making a selection, TeXShop must be restarted. Switching between the Apple Find Panel and Apple Find Bar',guidance,'Find Panel restart guidance')]
+ cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>初期状態に戻す</p></div>'.encode('cp932'),guidance,'Japanese obsolete shortcut button'),('manual-find','Manual Source/Manual.tex',b'Switching between the Apple Find Panel and Apple Find Bar',b'After making a selection, TeXShop must be restarted. Switching between the Apple Find Panel and Apple Find Bar',guidance,'Find Panel restart guidance')]
  for suffix in ['.md','-ja.md']:
   file='Documentation/Releases/5.60'+suffix
   # The checker examines these current release sources directly.
   cases.append(('release-'+suffix,file,b'\n',b'\napproved compact layout\n',guidance,'approved compact layout'))
+ for tag,body in [('ul',b'<ul><li>fixture item</li></ul>'),('div',b'<div>fixture division</div>'),('raw',b'fixture bare text'),('dl',b'<dl><dt>fixture term</dt><dd>fixture definition</dd></dl>')]:
+  cases.append(('outside-'+tag,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'</body>',body+b'</body>',guidance,'body text outside content_border'))
+ for term in ['Theme color groups are shown together in Appearance.','Settings » Themes']:
+  cases.append(('obsolete-'+term,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'<div id="content_border">',('<div id="content_border"><p>'+term+'</p>').encode('ascii',errors='xmlcharrefreplace'),guidance,term))
+ for text in ['解除','すべて元に戻す…']:
+  cases.append(('ja-label-'+text,'Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',text.encode('cp932'),b'REMOVED',guidance,'Japanese shortcut button missing'))
  for name,file,old,new,run,message in cases:
   p=T/file;original=p.read_bytes();assert old in original,name;p.write_bytes(original.replace(old,new,1))
   result=run();p.write_bytes(original)
   assert result.returncode and message in result.stderr,(name,result.stdout,result.stderr)
   print('DETECTED',name,message,flush=True)
+ # Revert all distributed PDF copies together: identity alone cannot catch stale content.
+ hidden=['DocumentSources/CommentLinesRevised/CommentLines.pdf','Resources/Interfaces/Base.lproj/CommentLines.pdf','Resources/Interfaces/en.lproj/CommentLines.pdf']
+ originals={name:(T/name).read_bytes() for name in hidden}
+ stale=subprocess.check_output(['git','show','fda72e9:DocumentSources/CommentLinesRevised/CommentLines.pdf'],cwd=R)
+ for name in hidden:(T/name).write_bytes(stale)
+ result=guidance()
+ for name,data in originals.items():(T/name).write_bytes(data)
+ assert result.returncode and "('Hidden PDF restart instructions', 'WatchServer')" in result.stderr,(result.stdout,result.stderr)
+ print('DETECTED stale hidden PDF copies',flush=True)
  for lang in ['Base','ja']:
   p=T/f'Resources/Interfaces/{lang}.lproj/SettingsDock.strings';original=p.read_bytes()
   p.write_bytes(original+b'\n"obsolete guidance" = "Returns to the standard icon after quitting.";\n')

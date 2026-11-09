@@ -91,6 +91,15 @@ int main(int argc, const char **argv) { @autoreleasepool {
     NSRect buttonRect=[button convertRect:button.bounds toView:shortNote];
     Check(fabs(NSMidY(buttonRect)-NSMidY(shortNote.bounds))<1,@"Short button explanation centers the accessory beside both lines");
     Check(NSMinY(choiceRect)>=5.9 && NSMaxY(choiceRect)<=NSHeight(noted.bounds)-5.9,@"Accessory has six-point vertical inset");
+    for(NSString *pathNote in @[@"Default: /Library/TeX/texbin",@"Default: /a/very/long/default/command/with/arguments"]){
+        NSTextField *path=[NSTextField textFieldWithString:@"/temporary/path"];
+        NSView *pathRow=[TSPrefPaneLayout catalogRowWithTitle:@"Path" note:pathNote accessory:path expands:YES indent:0];
+        [host addSubview:pathRow];[NSLayoutConstraint activateConstraints:@[[pathRow.widthAnchor constraintEqualToConstant:500],[pathRow.topAnchor constraintEqualToAnchor:host.topAnchor],[pathRow.leadingAnchor constraintEqualToAnchor:host.leadingAnchor]]];[host layoutSubtreeIfNeeded];
+        NSView *name=Find(pathRow,@"label.catalog-row"),*note=Find(pathRow,@"note.catalog-row");
+        NSRect titleFrame=[name.superview convertRect:[name alignmentRectForFrame:name.frame] toView:pathRow],noteFrame=[note.superview convertRect:[note alignmentRectForFrame:note.frame] toView:pathRow];
+        Check(fabs(NSWidth(titleFrame)-170)<1 && NSMaxX(noteFrame)<=NSMaxX(titleFrame)+1,@"Path explanations stay inside the fixed name column regardless of length");
+        [pathRow removeFromSuperview];
+    }
     NSTextField *number=[NSTextField textFieldWithString:@"20"];[number.widthAnchor constraintEqualToConstant:64].active=YES;
     NSTextField *unit=[NSTextField labelWithString:@"pt"];
     NSStackView *parts=[TSPrefPaneLayout stackWithViews:@[number,unit] orientation:NSUserInterfaceLayoutOrientationHorizontal];

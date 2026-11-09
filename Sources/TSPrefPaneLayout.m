@@ -411,7 +411,7 @@ static NSColor *TSSettingsCardColor(void)
     if (self.rowDetail != nil && NSWidth(self.bounds) > 0) {
         CGFloat available = self.expandedAccessory ? 170 : NSWidth(self.bounds)-self.leadingInset-12-16-self.rowAccessory.fittingSize.width;
         CGFloat width = [self.rowDetail.stringValue sizeWithAttributes:@{NSFontAttributeName:self.rowDetail.font ?: [NSFont systemFontOfSize:NSFont.smallSystemFontSize]}].width;
-        BOOL full = width > available;
+        BOOL full = !self.expandedAccessory && width > available;
         if (full != self.fullDescription) {
             self.fullDescription=full;
             ((NSStackView *)self.rowName.superview).spacing=full?8:2;
@@ -454,7 +454,11 @@ static NSColor *TSSettingsCardColor(void)
 - (void)synchronize {
     self.slider.doubleValue=self.source.color.alphaComponent*100;
     self.slider.enabled=self.source.enabled;
-    self.percentage.stringValue=[NSString stringWithFormat:@"%.0f%%",self.slider.doubleValue];
+    NSNumberFormatter *formatter=[NSNumberFormatter new];
+    formatter.numberStyle=NSNumberFormatterPercentStyle;
+    formatter.maximumFractionDigits=0;
+    formatter.locale=NSLocale.currentLocale;
+    self.percentage.stringValue=[formatter stringFromNumber:@(self.slider.doubleValue/100.0)] ?: @"";
     self.slider.accessibilityValue=self.percentage.stringValue;
     self.percentage.textColor=self.source.enabled?NSColor.secondaryLabelColor:NSColor.disabledControlTextColor;
 }

@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse, subprocess, tempfile
 parser=argparse.ArgumentParser();parser.add_argument("--mutations",action="store_true");args=parser.parse_args()
 r=Path(__file__).resolve().parents[1]
+expected_failures={'back-clears-query': 'Back navigates while keeping search active', 'search-enables-forward': 'Search cannot enable unavailable forward navigation', 'clear-rewinds-category': 'Clearing search stays in the current pane and does not require a navigation commit', 'category-results': 'Two settings in one category produce separate results', 'highlight-first-result': 'A second result in the same pane changes the target without duplicating category history', 'search-does-not-persist': 'Search navigation persists its current category'}
 with tempfile.TemporaryDirectory(prefix='texshop-search-navigation-') as directory:
     p=Path(directory)
     subprocess.run(['xcrun','ibtool','--compile',str(p/'SettingsWindow.nib'),str(r/'Resources/SettingsWindow.xib')],check=True)
@@ -27,7 +28,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-search-navigation-') as directo
             command=[str(changed) if arg==str(original) else arg for arg in compile_command]
             subprocess.run(command,check=True)
             result=subprocess.run([str(p/'probe'),str(p/'SettingsWindow.nib')],capture_output=True,text=True,timeout=60)
-            assert result.returncode and 'FAIL:' in result.stderr,(name,result.returncode,result.stderr)
+            assert result.returncode and 'FAIL: '+expected_failures[name] in result.stderr,(name,result.returncode,result.stderr)
             print('DETECTED',name,result.stderr.strip(),flush=True)
         subprocess.run(compile_command,check=True)
         subprocess.run([str(p/'probe'),str(p/'SettingsWindow.nib')],check=True,timeout=60)

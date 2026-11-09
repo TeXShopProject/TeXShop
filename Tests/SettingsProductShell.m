@@ -39,6 +39,7 @@ static NSUInteger spellRefreshes;
 @end
 @interface TSSettingsWindowController (Probe)
 - (CGFloat)tableView:(NSTableView *)table heightOfRow:(NSInteger)row;
+- (NSView *)tableView:(NSTableView *)table viewForTableColumn:(NSTableColumn *)column row:(NSInteger)row;
 @property(readonly) NSSplitViewController *splitController;
 @property(readonly) NSTableView *categoryTable;
 @property(readonly) NSScrollView *contentScroll;
@@ -213,6 +214,21 @@ int main(int argc,char **argv){@autoreleasepool{
    [NSLayoutConstraint deactivateConstraints:geometry];[pane removeFromSuperview];[originalParent addSubview:pane];[NSLayoutConstraint activateConstraints:originalConstraints];[shell.window.contentView layoutSubtreeIfNeeded];
   }
 
+ }
+ if(argc>2){
+  NSUInteger queryIndex=0;
+  for(NSString *query in @[@"utf",@"自動",@"Dock"]){
+   Check([shell setSettingsSearchQuery:query],@"Audit search query is accepted");
+   shell.settingsSearchField.stringValue=query;
+   NSMutableArray *items=[NSMutableArray array];for(TSSettingsSearchResult *result in shell.searchResults)[items addObject:@{@"category":result.category,@"target":result.targetIdentifier ?: @"",@"title":result.title}];
+   [[NSJSONSerialization dataWithJSONObject:items options:NSJSONWritingPrettyPrinted error:NULL]writeToFile:[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"search-%lu.json",(unsigned long)queryIndex]] atomically:YES];
+   for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
+    shell.window.appearance=[NSAppearance appearanceNamed:appearance];[shell.window.contentView layoutSubtreeIfNeeded];
+    Save(shell.window.contentView,[@(argv[2]) stringByAppendingPathComponent:[NSString stringWithFormat:@"search-%lu-%@.png",(unsigned long)queryIndex,appearance]]);
+   }
+   queryIndex++;
+  }
+  [shell setSettingsSearchQuery:@""];
  }
  NSMutableDictionary *current=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];[current removeObjectForKey:TSSettingsSelectedCategoryKey];NSMutableDictionary *before=[saved mutableCopy];[before removeObjectForKey:TSSettingsSelectedCategoryKey];Check([current isEqual:before],@"Opening and navigating changes only remembered category");
  [shell selectCategoryIdentifier:TSSettingsCategoryDocuments];

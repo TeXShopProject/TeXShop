@@ -32,9 +32,28 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
             NSSize natural=[title boundingRectWithSize:NSMakeSize(textWidth,CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:label.font}].size;
             Check(label.maximumNumberOfLines==2 && label.lineBreakMode==NSLineBreakByWordWrapping && natural.height<=NSHeight(label.bounds)+1 && NSHeight(label.bounds)<=height-5,@"Long localized sidebar names fit at every supported width");
             CGFloat single=[title sizeWithAttributes:@{NSFontAttributeName:label.font}].width;
+            if([fixture.bundlePath.lastPathComponent isEqual:@"de.bundle"] && [category.identifier isEqual:@"spelling"])Check(single<=textWidth,@"German spelling title fits without splitting its word");
             Check(single>textWidth || height==30,[NSString stringWithFormat:@"One-line sidebar %@ width=%g label=%g natural=%g height=%g",title,width.doubleValue,textWidth,single,height]);
         }
     }
+    for(NSString *query in @[@"utf",@"自動",@"Dock"]){
+        [shell setSettingsSearchQuery:query];
+        for(NSNumber *width in @[@158,@188,@298]){
+            shell.categoryTable.tableColumns.firstObject.width=width.doubleValue;
+            for(NSUInteger i=0;i<shell.searchResults.count;i++){
+                NSTableCellView *cell=(NSTableCellView *)[shell tableView:shell.categoryTable viewForTableColumn:shell.categoryTable.tableColumns.firstObject row:i];
+                CGFloat height=[shell tableView:shell.categoryTable heightOfRow:i];cell.frame=NSMakeRect(0,0,width.doubleValue,height);cell.textField.font=[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold];[cell layoutSubtreeIfNeeded];
+                NSTextField *category=(NSTextField *)Find(cell,@"search.result.category");
+                Check(category.stringValue.length>0,@"Search result retains its category label");
+                for(NSTextField *label in @[cell.textField,category]){
+                    NSRect frame=[label alignmentRectForFrame:label.frame];
+                    CGFloat needed=ceil([label.stringValue boundingRectWithSize:NSMakeSize(width.doubleValue-16,CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:label.font}].size.height);
+                    Check(NSMinY(frame)>=0 && NSMaxY(frame)<=height+1 && NSHeight(frame)>=needed-1,@"Wrapped search result names and categories fit the row");
+                }
+            }
+        }
+    }
+    [shell setSettingsSearchQuery:@""];
     NSArray *notes=@[@[@"general",@"row.catalog.general.1.0"],@[@"editor",@"row.catalog.editor.0.1"],@[@"editor",@"row.catalog.editor.0.2"],@[@"editor",@"row.catalog.editor.0.4"],@[@"editor",@"row.catalog.editor.0.5"],@[@"editor",@"row.catalog.editor.3.1"],@[@"editor",@"row.catalog.editor.6.0"]];
     for(NSArray *entry in notes){NSView *row=Find([shell viewForCategoryIdentifier:entry[0]],entry[1]);Check(Find(row,@"note.catalog-row")!=nil,[NSString stringWithFormat:@"Per-document default explanation retained for %@",entry[1]]);}
     for(NSArray *entry in @[@[@"documents",@"row.catalog.documents.1.3"],@[@"typesetting",@"row.catalog.typesetting.9.0"]]){
@@ -46,6 +65,7 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
     for (NSDictionary *category in catalog[@"categories"]) {
         NSString *identifier = category[@"id"];
         Check([shell selectCategoryIdentifier:identifier], @"Catalog category exists");
+        Check([shell.window.title isEqual:[fixture localizedStringForKey:identifier value:nil table:@"SettingsCategories"]],@"Every category including Keyboard updates the window title");
         [shell.window.contentView layoutSubtreeIfNeeded];
         NSView *pane = [identifier isEqual:@"keyboard"] ? [[shell valueForKey:@"keyboardPane"] view] : [shell viewForCategoryIdentifier:identifier];
         NSStackView *body = (NSStackView *)pane.subviews.firstObject;
@@ -56,7 +76,7 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
             NSDictionary *reference = category[@"groups"][index];
             TSSettingsGroupView *group = groups[index];
             NSView *card=Find(group,@"card.background");
-            Check(card != nil && !card.hidden && !card.hiddenOrHasHiddenAncestor && NSWidth(card.bounds)>100 && NSHeight(card.bounds)>=38, @"Every catalog group has its visible rounded filled card");
+            Check(card != nil && !card.hidden && !card.hiddenOrHasHiddenAncestor && card.alphaValue>0.99 && NSWidth(card.bounds)>100 && NSHeight(card.bounds)>=38, @"Every catalog group has its visible rounded filled card");
             if ([fixture.bundlePath.lastPathComponent isEqual:@"ja.bundle"])
                 Check([group.title isEqual:reference[@"title"]], [NSString stringWithFormat:@"Catalog group order/name %@ #%lu: %@",identifier,(unsigned long)index,group.title]);
             for (NSDictionary *row in reference[@"rows"]) {

@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse,subprocess,tempfile
 r=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--mutations',action='store_true');a=p.parse_args()
+expected_failures={'shared-restore': "step 4: restore GS's saved empty value, not the previous field's 20", 'focus-is-edit': 'step 2/3: untouched empty GS path does not block navigation', 'restore-keeps-dirty': 'step 5: restored invalid legacy value does not trap navigation', 'drop-write': 'step 1: tab width 20 saved'}
 source=(r/'Sources/TSPreferenceInput.m').read_text()
 mutations={
  'shared-restore':('NSString *original = [rule displayStringFromDefaults:defaults];','NSString *original = TSLastCommittedText;'),
@@ -22,5 +23,5 @@ for name in ['baseline']+(list(mutations) if a.mutations else []):
   (t/'TSPreferenceInput.m').write_text(s)
   subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/PreferenceEditing.m'),str(t/'TSPreferenceInput.m'),'-o',str(t/'probe')],check=True)
   run=subprocess.run([str(t/'probe')],capture_output=True,text=True)
-  assert (run.returncode==0 if name=='baseline' else run.returncode==1 and 'FAIL:' in run.stderr),(name,run.stdout,run.stderr)
+  assert (run.returncode==0 if name=='baseline' else run.returncode==1 and 'FAIL: '+expected_failures[name] in run.stderr),(name,run.stdout,run.stderr)
   print(run.stdout.strip() if name=='baseline' else 'DETECTED: '+name+' '+run.stderr.strip(),flush=True)
