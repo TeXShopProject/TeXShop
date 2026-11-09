@@ -1,0 +1,26 @@
+{
+  "nl": {
+    "SettingsCategories.strings": {
+      "catalog.editor.8.0.choice.10": "Persoonlijke markering"
+    },
+    "SettingsMiscTwo.strings": {
+      "2Mp-Uf-8n2.title": "Persoonlijke markering"
+    }
+  },
+  "pt-PT": {
+    "SettingsCategories.strings": {
+      "catalog.editor.8.0.choice.10": "Marca pessoal"
+    },
+    "SettingsMiscTwo.strings": {
+      "2Mp-Uf-8n2.title": "Marca pessoal"
+    }
+  },
+  "ro": {
+    "SettingsCategories.strings": {
+      "catalog.editor.8.0.choice.10": "Marcaj personal"
+    },
+    "SettingsMiscTwo.strings": {
+      "2Mp-Uf-8n2.title": "Marcaj personal"
+    }
+  }
+}
