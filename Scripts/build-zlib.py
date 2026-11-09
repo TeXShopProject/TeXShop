@@ -37,8 +37,7 @@ def main():
         # Copy only after both architecture builds and test suites succeed.
         for source, target in [(products[0], '3rdparty/zlib/libz-arm.a'),
                                (products[1], '3rdparty/zlib/libz-intel.a'),
-                               (combined, '3rdparty/zlib/libz.a'),
-                               (combined, 'Resources/Binaries/libz.a')]:
+                               (combined, '3rdparty/zlib/libz.a')]:
             shutil.copy2(source, ROOT / target)
     print('Updated bundled zlib 1.4 for Apple Silicon and Intel.')
 

@@ -21,6 +21,8 @@ lettering and placement.
 - `TeXShop.icon`: Icon Composer source; macOS supplies the outer mask. Its
   layer list runs front to back: lettering first, opaque frame last. Verify
   the built app’s `Contents/Resources/TeXShop.icns` as well as the PNG preview.
+- `DocumentIcons/`: Icon sets for the document icons in
+  `Resources/DocumentIcons/` (`IconsTeX.icns`, `IconsPDF.icns`).
 - `Icon-preview.png`: Fallback preview including standard icon padding.
 - `GitHub-avatar.png`: Avatar with the same outer shape as the app icon, nearly
   filling the square, on a transparent background.

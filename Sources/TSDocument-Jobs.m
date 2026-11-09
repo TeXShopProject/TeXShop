@@ -53,7 +53,7 @@
     
     self.gsversionTask = [[NSTask alloc] init];
     [self.gsversionTask setEnvironment: [self environmentForSubTask]];
-    enginePath = [[NSBundle mainBundle] pathForResource:@"gstestwrap" ofType:nil];
+    enginePath = [[NSBundle mainBundle] pathForResource:@"gstestwrap" ofType:nil inDirectory:@"Shellscripts"];
     tetexBinPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
     args = [NSMutableArray array];
     [args addObject:tetexBinPath];
@@ -605,9 +605,9 @@ for(NSString *key in enu)
 				[args addObject: @"--keep-psfile"];
 		} else if ([[myFileName pathExtension] isEqualToString:@"ps"]) {
             if ([SUD boolForKey:UseTransparencyKey])
-                enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil];
+                enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
             else
-                enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdfwrap" ofType:nil];
+                enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdfwrap" ofType:nil inDirectory:@"Shellscripts"];
 			if (([SUD integerForKey:DistillerCommandKey] == 1) && (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2))
 				[args addObject: @"Panther"];
 			else
@@ -615,7 +615,7 @@ for(NSString *key in enu)
 			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
 			[args addObject: gsPath];
 		} else if  ([[myFileName pathExtension] isEqualToString:@"eps"]) {
-			enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap" ofType:nil];
+			enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap" ofType:nil inDirectory:@"Shellscripts"];
 			if (([SUD integerForKey:DistillerCommandKey] == 1) && (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2))
 				[args addObject: @"Panther"];
 			else
@@ -1473,14 +1473,14 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     /*
 			if (whichEngineLocal == ContextEngine) {
 				if (theScript == kTypesetViaPDFTeX) {
-					enginePath = [[NSBundle mainBundle] pathForResource:@"contextwrap" ofType:nil];
+					enginePath = [[NSBundle mainBundle] pathForResource:@"contextwrap" ofType:nil inDirectory:@"Shellscripts"];
 					[args addObject: [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"]];
 					if (continuous)
 						[args addObject:@"YES"];
 					else
 						[args addObject:@"NO"];
 				} else {
-					enginePath = [[NSBundle mainBundle] pathForResource:@"contextdviwrap" ofType:nil];
+					enginePath = [[NSBundle mainBundle] pathForResource:@"contextdviwrap" ofType:nil inDirectory:@"Shellscripts"];
 					if (continuous)
 						[args addObject:@"YES"];
 					else
@@ -1503,7 +1503,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
      */
             if (whichEngineLocal == MetapostEngine) {
 				NSString* mpEngineString = @"metapostwrap";
-				enginePath = [[NSBundle mainBundle] pathForResource:mpEngineString ofType:nil];
+				enginePath = [[NSBundle mainBundle] pathForResource:mpEngineString ofType:nil inDirectory:@"Shellscripts"];
 				if (continuous)
 					[args addObject: @"YES"];
 				else
@@ -1539,12 +1539,12 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 					case kTypesetViaGhostScript:
 						if (continuous) {
 							if (withLatex) {
-								enginePath = [[NSBundle mainBundle] pathForResource:@"altpdflatex" ofType:nil];
+								enginePath = [[NSBundle mainBundle] pathForResource:@"altpdflatex" ofType:nil inDirectory:@"Shellscripts"];
 								myEngine = [enginePath stringByAppendingString:@" --maxpfb --tex-path "];
 								myEngine = [myEngine stringByAppendingString: [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath]]; // 1.35 (D)
 																																				  // fixPath = NO;
 							} else {
-								enginePath = [[NSBundle mainBundle] pathForResource:@"altpdftex" ofType:nil];
+								enginePath = [[NSBundle mainBundle] pathForResource:@"altpdftex" ofType:nil inDirectory:@"Shellscripts"];
 								myEngine = [enginePath stringByAppendingString:@" --maxpfb --tex-path "];
 								myEngine = [myEngine stringByAppendingString: [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath]]; // 1.35 (D)
 																																				  // fixPath = NO;
