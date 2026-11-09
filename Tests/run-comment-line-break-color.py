@@ -27,7 +27,8 @@ BLOCK
 static NSDictionary *comment;
 
 // Mirrors colorizeText:range: for comments: whole lines are reset, then
-// everything from an unescaped % to the end of its line is colored.
+// everything from the first % to the end of its line is colored. Unlike the
+// real parser, this ignores escaped percent signs, which these texts lack.
 static void Colorize(NSLayoutManager *manager, NSRange range) {
     NSString *text = manager.textStorage.string;
     NSUInteger lineStart, lineEnd;
