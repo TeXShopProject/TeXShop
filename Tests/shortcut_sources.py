@@ -9,3 +9,7 @@ NAMES = (
 
 def production_source(root: Path) -> str:
     return "\n".join((root / "Sources" / name).read_text() for name in NAMES)
+
+# Production companion units required by the pane included in the shortcut set.
+def companion_sources(root: Path) -> list[str]:
+    return [str(root / "Sources" / "TSPrefPaneLayout.m")]

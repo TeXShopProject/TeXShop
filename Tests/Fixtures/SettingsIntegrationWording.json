@@ -1,0 +1,183 @@
+{
+  "it": {
+    "SettingsSource.strings": {
+      "582.title": "Pannello di ricerca Apple",
+      "927.title": "Tasto Esc",
+      "928.title": "Tasto Tab",
+      "1080.title": "Pannello di ricerca OgreKit"
+    },
+    "SettingsEditor.strings": {
+      "1036.title": "Evidenziazione lampeggiante",
+      "945.title": "Mostra indicatore durante lo spostamento",
+      "844.title": "Seleziona all’attivazione",
+      "845.title": "Numeri di linea"
+    },
+    "SettingsCategories.strings": {
+      "catalog.editor.4.3.title": "Evidenziazione lampeggiante",
+      "catalog.editor.4.4.title": "Mostra indicatore durante lo spostamento",
+      "catalog.editor.2.0.title": "Seleziona all’attivazione",
+      "group.preview.3.title": "Mappatura dei colori",
+      "catalog.console.0.0.title": "Font della console",
+      "group.editor.2.title": "Digitazione",
+      "catalog.preview.1.1.title": "Mostra la prima pagina da sola come copertina",
+      "catalog.preview.3.0.title": "Usa la mappatura dei colori",
+      "catalog.editor.0.2.title": "Numeri di linea"
+    },
+    "SettingsMiscOne.strings": {
+      "447.title": "Mappatura dei colori",
+      "375.title": "JPEG (alta qualità)",
+      "380.title": "TIFF (non compresso)",
+      "407.title": "JPEG (bassa qualità)",
+      "423.title": "JPEG (qualità media)",
+      "903.title": "Usa la mappatura dei colori",
+      "CBT-8e-Ayl.title": "A destra"
+    },
+    "SettingsConsole.strings": {
+      "752.title": "Font della console",
+      "906.title": "Imposta…"
+    },
+    "SettingsPreview.strings": {
+      "preview-cover-cell.title": "Mostra la prima pagina da sola come copertina",
+      "SfP-Ak-pn3.title": "Usa finestre separate"
+    },
+    "SettingsTypesetting.strings": {
+      "680.title": "Rimani nella finestra sorgente"
+    }
+  },
+  "fr": {
+    "SettingsCategories.strings": {
+      "group.editor.2.title": "Saisie",
+      "catalog.preview.1.1.title": "Afficher la première page seule comme couverture",
+      "catalog.spelling.1.5.title": "Ne pas vérifier les commentaires",
+      "catalog.editor.1.1.title": "Utiliser des tabulations pour indenter"
+    },
+    "SettingsPreview.strings": {
+      "preview-cover-cell.title": "Afficher la première page seule comme couverture",
+      "vOt-2m-d2s.title": "Utiliser une seule fenêtre"
+    },
+    "SettingsEditor.strings": {
+      "pdc-GP-Cbb.title": "Utiliser des tabulations pour indenter"
+    },
+    "SettingsSource.strings": {
+      "8Wq-gx-FqO.title": "Ne pas vérifier les commentaires"
+    }
+  },
+  "ko": {
+    "SettingsCategories.strings": {
+      "group.editor.2.title": "입력",
+      "catalog.appearance.1.0.title": "편집할 테마",
+      "catalog.appearance.7.0.item.0": "보이지 않는 문자",
+      "catalog.appearance.7.0.item.1": "괄호 안의 내용",
+      "catalog.appearance.7.0.item.2": "중괄호",
+      "catalog.spelling.0.2.title": "사전",
+      "group.editor.5.title": "보이지 않는 문자",
+      "catalog.preview.0.2.title": "배율",
+      "catalog.typesetting.4.0.button": "기본값",
+      "catalog.typesetting.4.1.button": "기본값",
+      "catalog.typesetting.5.0.button": "기본값",
+      "catalog.typesetting.5.1.button": "기본값",
+      "catalog.preview.1.1.title": "첫 페이지를 표지로 따로 표시",
+      "catalog.appearance.2.0.column.2": "불투명도"
+    },
+    "SettingsThemes.strings": {
+      "rad-zH-Nv2.title": "편집할 테마",
+      "Sb2-DV-n4h.title": "보이지 않는 문자",
+      "m2P-eK-MuA.title": "괄호 안의 내용",
+      "xz1-SF-It8.title": "중괄호",
+      "55d-iy-6im.title": "불투명도"
+    },
+    "SettingsSource.strings": {
+      "ENd-QB-0Uf.title": "사전",
+      "Xrb-Fe-9cg.title": "작게"
+    },
+    "SettingsEngines.strings": {
+      "1063.title": "기본값",
+      "1068.title": "기본값",
+      "1071.title": "기본값",
+      "1074.title": "기본값"
+    },
+    "SettingsPreview.strings": {
+      "preview-cover-cell.title": "첫 페이지를 표지로 따로 표시"
+    },
+    "SettingsMiscOne.strings": {
+      "375.title": "JPEG (고품질)",
+      "380.title": "TIFF (비압축)",
+      "407.title": "JPEG (저품질)",
+      "423.title": "JPEG (중간 품질)"
+    }
+  },
+  "es": {
+    "SettingsTypesetting.strings": {
+      "190.title": "Script personal"
+    },
+    "SettingsCategories.strings": {
+      "catalog.typesetting.0.2.title": "Script personal",
+      "catalog.preview.1.1.title": "Mostrar la primera página sola como portada",
+      "group.typesetting.9.title": "Soporte pTeX (japonés)"
+    },
+    "SettingsPreview.strings": {
+      "preview-cover-cell.title": "Mostrar la primera página sola como portada"
+    },
+    "SettingsMiscTwo.strings": {
+      "SS5-tZ-cDa.title": "Soporte pTeX (japonés)"
+    }
+  },
+  "pt": {
+    "SettingsPreview.strings": {
+      "preview-cover-cell.title": "Mostrar a primeira página sozinha como capa"
+    },
+    "SettingsCategories.strings": {
+      "catalog.preview.1.1.title": "Mostrar a primeira página sozinha como capa",
+      "catalog.spelling.1.3.title": "Não verificar comandos LaTeX"
+    },
+    "SettingsMiscOne.strings": {
+      "i6L-IX-ZLk.title": "Um caractere"
+    },
+    "SettingsSource.strings": {
+      "teg-0p-Q8J.title": "Não verificar comandos LaTeX"
+    }
+  },
+  "zh_CN": {
+    "SettingsPreview.strings": {
+      "preview-cover-cell.title": "将第一页单独显示为封面"
+    },
+    "SettingsCategories.strings": {
+      "catalog.preview.1.1.title": "将第一页单独显示为封面"
+    }
+  },
+  "nl": {
+    "SettingsMiscTwo.strings": {
+      "2Mp-Uf-8n2.title": "persoonlijke markering"
+    },
+    "SettingsCategories.strings": {
+      "catalog.editor.8.0.choice.10": "persoonlijke markering"
+    },
+    "SettingsMiscOne.strings": {
+      "428.title": "0 (normaal)"
+    }
+  },
+  "pt-PT": {
+    "SettingsMiscTwo.strings": {
+      "2Mp-Uf-8n2.title": "marca pessoal"
+    },
+    "SettingsCategories.strings": {
+      "catalog.editor.8.0.choice.10": "marca pessoal"
+    }
+  },
+  "ro": {
+    "SettingsMiscTwo.strings": {
+      "2Mp-Uf-8n2.title": "marcaj personal"
+    },
+    "SettingsCategories.strings": {
+      "catalog.editor.8.0.choice.10": "marcaj personal"
+    }
+  },
+  "de": {
+    "SettingsCategories.strings": {
+      "catalog.editor.8.0.choice.10": "Individuelle Markierung"
+    },
+    "SettingsMiscTwo.strings": {
+      "2Mp-Uf-8n2.title": "Individuelle Markierung"
+    }
+  }
+}

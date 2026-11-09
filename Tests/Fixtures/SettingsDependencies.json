@@ -1,0 +1,301 @@
+{
+  "provenance": "Approved catalog buttonEnabledWhen / parent choices; existing tag 0 means fixed position. User decision 2026-11-09 removes per-document BlockCursor/SourceAndPreview dependencies.",
+  "rules": [
+    {
+      "category": "general",
+      "key": "DocumentWindowPositionMode",
+      "values": [
+        0,
+        1
+      ],
+      "enabled_values": [
+        0
+      ],
+      "outlets": [
+        "docWindowPosButton"
+      ],
+      "label_row": null,
+      "key_symbol": "DocumentWindowPosModeKey",
+      "whole_row": false,
+      "value_kind": "integer"
+    },
+    {
+      "category": "general",
+      "key": "PdfWindowPositionMode",
+      "values": [
+        0,
+        1
+      ],
+      "enabled_values": [
+        0
+      ],
+      "outlets": [
+        "pdfWindowPosButton"
+      ],
+      "label_row": null,
+      "key_symbol": "PdfWindowPosModeKey",
+      "whole_row": false,
+      "value_kind": "integer"
+    },
+    {
+      "category": "general",
+      "key": "ConsoleWindowPosMode",
+      "values": [
+        0,
+        1
+      ],
+      "enabled_values": [
+        0
+      ],
+      "outlets": [
+        "consoleWindowPosButton"
+      ],
+      "label_row": null,
+      "key_symbol": "ConsoleWindowPosModeKey",
+      "whole_row": false,
+      "value_kind": "integer"
+    },
+    {
+      "category": "general",
+      "key": "HtmlWindowPosMode",
+      "values": [
+        0,
+        1
+      ],
+      "enabled_values": [
+        0
+      ],
+      "outlets": [
+        "htmlWindowPosButton"
+      ],
+      "label_row": null,
+      "key_symbol": "HtmlWindowPosModeKey",
+      "whole_row": false,
+      "value_kind": "integer"
+    },
+    {
+      "category": "updates",
+      "key": "SparkleAutomaticUpdate",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "sparkleIntervalMatrix"
+      ],
+      "label_row": "row.catalog.updates.0.1",
+      "key_symbol": "SparkleAutomaticUpdateKey",
+      "whole_row": true,
+      "value_kind": "boolean"
+    },
+    {
+      "category": "typesetting",
+      "key": "DefaultCommand",
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "enabled_values": [
+        2
+      ],
+      "outlets": [
+        "engineTextField"
+      ],
+      "label_row": "row.catalog.typesetting.0.1",
+      "key_symbol": "DefaultCommandKey",
+      "whole_row": true,
+      "value_kind": "integer"
+    },
+    {
+      "category": "documents",
+      "key": "AutoSaveEnabled",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        false
+      ],
+      "outlets": [
+        "keepBackupButton"
+      ],
+      "label_row": "row.catalog.documents.1.1",
+      "key_symbol": "AutoSaveEnabledKey",
+      "whole_row": true,
+      "value_kind": "boolean"
+    },
+    {
+      "category": "preview",
+      "key": "PdfColorMap",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "colorParam1Popup"
+      ],
+      "label_row": "row.catalog.preview.3.1",
+      "key_symbol": "PdfColorMapKey",
+      "whole_row": true,
+      "value_kind": "boolean"
+    },
+    {
+      "category": "editor",
+      "key": "ShowSpaceCharacter",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "SpaceCharacterKindPopup"
+      ],
+      "label_row": null,
+      "key_symbol": "showSpaceCharacterKey",
+      "whole_row": false,
+      "value_kind": "boolean"
+    },
+    {
+      "category": "editor",
+      "key": "ShowFullwidthSpaceCharacter",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "FullwidthSpaceCharacterKindPopup"
+      ],
+      "label_row": null,
+      "key_symbol": "showFullwidthSpaceCharacterKey",
+      "whole_row": false,
+      "value_kind": "boolean"
+    },
+    {
+      "category": "editor",
+      "key": "ShowNewLineCharacter",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "NewLineCharacterKindPopup"
+      ],
+      "label_row": null,
+      "key_symbol": "showNewLineCharacterKey",
+      "whole_row": false,
+      "value_kind": "boolean"
+    },
+    {
+      "category": "editor",
+      "key": "ShowTabCharacter",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "TabCharacterKindPopup"
+      ],
+      "label_row": null,
+      "key_symbol": "showTabCharacterKey",
+      "whole_row": false,
+      "value_kind": "boolean"
+    },
+    {
+      "category": "spelling",
+      "key": "TeXAwareSpellChecking",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "editSpellingExclusionsButton"
+      ],
+      "label_row": null,
+      "key_symbol": "TSTeXAwareSpellCheckingKey",
+      "whole_row": true,
+      "value_kind": "boolean"
+    },
+    {
+      "category": "spelling",
+      "key": "TeXAwareSpellChecking",
+      "values": [
+        false,
+        true,
+        "NO",
+        "YES",
+        "0",
+        "1"
+      ],
+      "enabled_values": [
+        false
+      ],
+      "outlets": [
+        "spellCheckCommands",
+        "spellCheckParameters",
+        "spellCheckComments"
+      ],
+      "label_row": "row.catalog.spelling.1.3",
+      "key_symbol": "TSTeXAwareSpellCheckingKey",
+      "whole_row": true,
+      "label_rows": [
+        "row.catalog.spelling.1.3",
+        "row.catalog.spelling.1.4",
+        "row.catalog.spelling.1.5"
+      ],
+      "value_kind": "boolean"
+    }
+  ]
+}

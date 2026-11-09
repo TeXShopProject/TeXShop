@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Apple Suchmaske";
 "583.title" = "Apple Suchleiste";
-"585.title" = "Suchmaske (nach Neustart)";
+"585.title" = "Suchmaske";
 "872.title" = "Auswählen ...";
 "873.title" = "Helvetica 12";
 "874.title" = "Aktuelle Position merken";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "Groß";
 "teg-0p-Q8J.title" = "LaTeX-Befehle nicht überprüfen";
 "ts-aware-spelling-cell.title" = "LaTeX-bewusste Rechtschreibprüfung";
-"ts-aware-spelling.ibShadowedToolTip" = "Ausschlussregeln für LaTeX-Dokumente verwenden. Deaktivieren, um die bisherigen Optionen unten zu verwenden. Die Rechtschreibprüfung während der Eingabe bleibt unverändert.";
+"ts-aware-spelling.ibShadowedToolTip" = "Ausschlussregeln für LaTeX-Dokumente verwenden.";
 "ts-edit-spelling-cell.title" = "LaTeX-Ausschlussregeln bearbeiten…";
 "ts-edit-spelling.ibShadowedToolTip" = "Die Ausschlussregeln für die LaTeX-bewusste Rechtschreibprüfung bearbeiten.";
 "uAi-0W-9KI.title" = "Switch";

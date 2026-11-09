@@ -2,7 +2,11 @@
 #import "TSShortcutInternal.h"
 @implementation TSShortcutSearch
 + (NSArray<TSShortcutMatch *> *)matchesKey:(NSString *)key modifiers:(NSEventModifierFlags)flags store:(TSShortcutStore *)store macros:(NSArray<TSShortcutMacro *> *)macros {
-    NSMutableArray<TSShortcutMatch *> *matches = [[store menuMatchesKey:key modifiers:flags excluding:nil] mutableCopy];
+    NSMutableArray<TSShortcutMatch *> *matches = [NSMutableArray array];
+    for (TSShortcutMatch *match in [store menuMatchesKey:key modifiers:flags excluding:nil]) {
+        if (match.menuItem.hidden && !match.menuItem.allowsKeyEquivalentWhenHidden) continue;
+        [matches addObject:[[TSShortcutMatch alloc] initWithPath:match.path menuItem:match.menuItem command:match.command macro:nil winner:matches.count == 0]];
+    }
     // Reuse the same raw comparison and file-order ownership used by the macro editor.
     NSMutableArray<NSDictionary *> *candidates = [NSMutableArray array];
     for (TSShortcutMacro *macro in macros) {
@@ -10,7 +14,7 @@
     }
     NSMutableIndexSet *inactive = [NSMutableIndexSet indexSet];
     for (NSDictionary *conflict in [store conflictsForMacroShortcuts:candidates]) { [inactive addIndex:[conflict[@"index"] unsignedIntegerValue]]; }
-    NSDictionary *binding = TSBinding(key, flags);
+    TSShortcutBinding *binding = TSBinding(key, flags);
     [macros enumerateObjectsUsingBlock:^(TSShortcutMacro *macro, NSUInteger index, BOOL *stop) {
         if (macro.key.length == 0 || ![TSBinding(macro.key, macro.modifiers) isEqual:binding]) { return; }
         [matches addObject:[[TSShortcutMatch alloc] initWithPath:macro.path menuItem:nil command:nil macro:macro winner:![inactive containsIndex:index]]];
@@ -23,9 +27,9 @@
     NSMutableSet<NSIndexPath *> *seenMacros = [NSMutableSet set];
     // These are only the recorder's spellings of this input. Ownership stays raw;
     // no restoration aliases or keyboard-layout comparison of assignments is used.
-    for (NSDictionary *binding in TSEventBindings(event, [event charactersByApplyingModifiers:0])) {
-        NSString *key = binding[@"key"] ?: @"";
-        for (TSShortcutMatch *match in [self matchesKey:key modifiers:[binding[@"modifiers"] unsignedIntegerValue] store:store macros:macros]) {
+    for (TSShortcutBinding *binding in TSEventBindings(event, [event charactersByApplyingModifiers:0])) {
+        NSString *key = binding.key;
+        for (TSShortcutMatch *match in [self matchesKey:key modifiers:binding.modifiers store:store macros:macros]) {
             NSMenuItem *item = match.menuItem;
             TSShortcutMacro *macro = match.macro;
             if (item != nil && ![seenMenus containsObject:item]) {
@@ -37,13 +41,13 @@
     }
     // Recorded and shifted input spellings are searched before the unshifted
     // fallback. Keep priority independent of deduplication used to gather results.
-    NSArray<NSDictionary *> *primaryBindings = @[
+    NSArray<TSShortcutBinding *> *primaryBindings = @[
         TSRecordedBinding(event, [event charactersByApplyingModifiers:0]),
         TSBinding(TSShortcutCharacterForEvent(event), event.modifierFlags)
     ];
     NSMapTable<NSMenuItem *, TSShortcutMatch *> *byItem = [NSMapTable strongToStrongObjectsMapTable];
     for (TSShortcutMatch *match in menus) { [byItem setObject:match forKey:match.menuItem]; }
-    NSMutableDictionary<NSDictionary *, TSShortcutMatch *> *activeMacros = [NSMutableDictionary dictionary];
+    NSMutableDictionary<TSShortcutBinding *, TSShortcutMatch *> *activeMacros = [NSMutableDictionary dictionary];
     for (TSShortcutMatch *match in macroMatches) {
         TSShortcutMacro *macro = match.macro;
         if (macro != nil && match.winner) { activeMacros[TSBinding(macro.key, macro.modifiers)] = match; }
@@ -56,7 +60,7 @@
     TSVisitMenu(store.menu, @"", ^(NSMenuItem *item, NSString *path) {
         TSShortcutMatch *match = [byItem objectForKey:item];
         if (match != nil) { [orderedMenus addObject:match]; }
-        NSDictionary *binding = TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask);
+        TSShortcutBinding *binding = TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask);
         if (match == nil && item.action == TSMacroAction() && item.keyEquivalent.length > 0) {
             match = activeMacros[binding];
         }

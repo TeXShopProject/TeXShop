@@ -1,27 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSSettingsSidebarRow.h"
-@interface TSSettingsIconView : NSView
-@property (copy) NSString *symbol;
-@property (strong) NSColor *tileColor;
-@end
-@implementation TSSettingsIconView
-- (void)drawRect:(NSRect)dirtyRect
-{
-    NSBezierPath *tile = [NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:6 yRadius:6];
-    NSColor *top = [self.tileColor blendedColorWithFraction:0.18 ofColor:NSColor.whiteColor] ?: self.tileColor;
-    [[[NSGradient alloc] initWithStartingColor:top endingColor:self.tileColor] drawInBezierPath:tile angle:90];
-    NSImage *symbol = [NSImage imageWithSystemSymbolName:self.symbol accessibilityDescription:nil];
-    if (symbol == nil) { return; }
-    NSImageSymbolConfiguration *configuration = [[NSImageSymbolConfiguration configurationWithPointSize:14 weight:NSFontWeightMedium]
-        configurationByApplyingConfiguration:[NSImageSymbolConfiguration configurationWithPaletteColors:@[NSColor.whiteColor]]];
-    NSImage *image = [symbol imageWithSymbolConfiguration:configuration];
-    if (image == nil || image.size.width <= 0 || image.size.height <= 0) return;
-    CGFloat scale = MIN(18 / image.size.width, 18 / image.size.height);
-    NSSize size = NSMakeSize(image.size.width * scale, image.size.height * scale);
-    [image drawInRect:NSMakeRect(NSMidX(self.bounds)-size.width/2,NSMidY(self.bounds)-size.height/2,size.width,size.height)];
-}
-@end
+#import "TSPrefPaneLayout.h"
 @implementation TSSettingsSidebarRow
++ (CGFloat)heightForTitle:(NSString *)title cellWidth:(CGFloat)width
+{
+    CGFloat available = MAX(1, width - 40);
+    NSTextField *label = [NSTextField wrappingLabelWithString:title];
+    label.font = [NSFont systemFontOfSize:NSFont.systemFontSize];
+    CGFloat frameWidth = NSWidth([label frameForAlignmentRect:NSMakeRect(0, 0, available, 1)]);
+    return MAX(30, ceil([label.cell cellSizeForBounds:NSMakeRect(0, 0, frameWidth, CGFLOAT_MAX)].height) + 6);
+}
 + (NSTableCellView *)cellForCategory:(TSSettingsCategory *)category title:(NSString *)title
 {
     NSTableCellView *cell = [[NSTableCellView alloc] init];
@@ -31,22 +19,53 @@
     label.font = [NSFont systemFontOfSize:NSFont.systemFontSize];
     label.lineBreakMode = NSLineBreakByWordWrapping;
     cell.textField = label;
-    TSSettingsIconView *icon = [TSSettingsIconView new]; icon.symbol = category.symbolName; icon.tileColor = category.color;
+    TSSettingsIconView *icon = [[TSSettingsIconView alloc] initWithSymbolName:category.symbolName color:category.color size:22];
     icon.translatesAutoresizingMaskIntoConstraints = NO; icon.accessibilityElement = NO;
-    BOOL startsGroup = category.startsGroup;
-    if (startsGroup) {
-        NSBox *separator = [NSBox new]; separator.boxType = NSBoxSeparator;
-        separator.translatesAutoresizingMaskIntoConstraints = NO; [cell addSubview:separator];
-        [NSLayoutConstraint activateConstraints:@[[separator.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor constant:6],
-            [separator.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-6],
-            [separator.topAnchor constraintEqualToAnchor:cell.topAnchor constant:3]]];
-    }
     [cell addSubview:icon]; [cell addSubview:label];
     [NSLayoutConstraint activateConstraints:@[
-        [icon.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor constant:6], [icon.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor constant:startsGroup ? 6 : 0],
-        [icon.widthAnchor constraintEqualToConstant:28], [icon.heightAnchor constraintEqualToConstant:28],
+        [icon.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor constant:6], [icon.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor constant:0],
+        [icon.widthAnchor constraintEqualToConstant:22], [icon.heightAnchor constraintEqualToConstant:22],
         [label.leadingAnchor constraintEqualToAnchor:icon.trailingAnchor constant:8],
         [label.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-4], [label.centerYAnchor constraintEqualToAnchor:icon.centerYAnchor]]];
+    return cell;
+}
+// Measure the same regular font used by the displayed item name.
++ (CGFloat)heightForSearchTitle:(NSString *)title categoryTitle:(NSString *)categoryTitle cellWidth:(CGFloat)width
+{
+    CGFloat available=MAX(1,width-16);
+    CGFloat height=10;
+    NSArray *texts=@[title,categoryTitle];
+    NSArray *fonts=@[[NSFont systemFontOfSize:NSFont.systemFontSize], [NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
+    for(NSUInteger i=0;i<texts.count;i++) {
+        NSTextField *label=[NSTextField wrappingLabelWithString:texts[i]];
+        label.font=fonts[i];
+        // Constraints use alignment rectangles; NSTextField adds its cell insets.
+        CGFloat cellWidth=NSWidth([label frameForAlignmentRect:NSMakeRect(0,0,available,1)]);
+        height+=ceil([label.cell cellSizeForBounds:NSMakeRect(0,0,cellWidth,CGFLOAT_MAX)].height);
+    }
+    return MAX(44,height);
+}
++ (NSTableCellView *)cellForSearchTitle:(NSString *)title categoryTitle:(NSString *)categoryTitle
+{
+    NSTableCellView *cell = [NSTableCellView new];
+    NSTextField *name = [NSTextField wrappingLabelWithString:title];
+    NSTextField *category = [NSTextField wrappingLabelWithString:categoryTitle];
+    name.font = [NSFont systemFontOfSize:NSFont.systemFontSize];
+    category.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    category.textColor = NSColor.secondaryLabelColor;
+    category.identifier=@"search.result.category";
+    for (NSTextField *label in @[name, category]) {
+        label.translatesAutoresizingMaskIntoConstraints = NO;
+        [label setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
+        label.lineBreakMode = NSLineBreakByWordWrapping;
+        [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
+        [cell addSubview:label];
+        [NSLayoutConstraint activateConstraints:@[[label.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor constant:8], [label.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor constant:-8]]];
+    }
+    [NSLayoutConstraint activateConstraints:@[[name.topAnchor constraintEqualToAnchor:cell.topAnchor constant:4], [category.topAnchor constraintEqualToAnchor:name.bottomAnchor constant:2], [category.bottomAnchor constraintLessThanOrEqualToAnchor:cell.bottomAnchor constant:-4]]];
+    cell.textField = name;
+    cell.toolTip = [NSString stringWithFormat:@"%@ — %@", title, categoryTitle];
+    cell.accessibilityLabel = cell.toolTip;
     return cell;
 }
 @end

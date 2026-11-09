@@ -1,37 +1,32 @@
-<HTML>
-
-<HEAD>
-		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
-		<TITLE>Changing Settings</TITLE>
-		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="settings; magnify; window position; encoding">
-	<link href="../sty/screen.css" rel="stylesheet" media="all">
-	</HEAD>
-
-<BODY>
-	<div id="content_border">
+<html>
+<head>
+<meta content="text/html;charset=iso-8859-1" http-equiv="content-type"/>
+<title>Changing Settings</title>
+<meta content="Copyright (c) 2003 Richard Koch under the GNU FDL" name="copyright"/>
+<meta content="settings; magnify; window position; encoding" name="description"/>
+<link href="../sty/screen.css" media="all" rel="stylesheet"/>
+</head>
+<body>
+<div id="content_border">
+<p>A match on a category name or description provides one entry to the top of that category. Individual settings match their own labels, options or descriptions. Color fields on the same row share one result.</p>
 <h1> Changing settings in the Settings window</h1>
-<p>Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose &#8220;Use LaTeX-aware spell checking (recommended)&#8221; with &#8220;Edit LaTeX exclusion rules&#8230;&#8221;, or &#8220;Use legacy spell checking&#8221; with three indented options. Changing the method preserves all child values. &#8220;Check Spelling&#8221; is independent. Keyboard places key bindings and command completion above shortcut search and the scrolling list. On a short window the input groups can be expanded one at a time. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings. Disabled controls retain their saved values; an obsolete remembered category opens General.</p>
-
+<p>Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose &#8220;Use LaTeX-aware spell checking (recommended)&#8221; with &#8220;Edit LaTeX exclusion rules&#8230;&#8221;, or &#8220;Use legacy spell checking&#8221; with three indented options. General links to Comment Lines and Hidden Settings.</p>
 <h2>Windows and display</h2>
-		<P>Several items can be changed in the Settings window: the default font for the input window, the default magnification for the output window, and the default position of these windows when they first appear. You can configure the console so it always appears when typesetting, or only appears when there is an error. You can configure the source window so an initial click in the window only activates the
-window, or this initial click also sets the text insertion point.</P>
+<p>Several items can be changed in the Settings window: the default font for the input window, the default magnification for the output window, and the default position of these windows when they first appear. You can configure the console so it always appears when typesetting, or only appears when there is an error. You can configure the source window so an initial click in the window only activates the
+window, or this initial click also sets the text insertion point.</p>
 <h2>Typesetting commands</h2>
-		<p>The Settings window can also be used to change the commands executed when the &quot;TeX&quot; and &quot;LaTeX&quot; buttons are pushed. This is useful because some users prefer a version of TeX called etex, and there are pdf versions of etex called pdfetex and pdfelatex. Obviously the substituted command must produce a pdf output file. If the new programs are in the teTeX binary directory, it is enough to name them in the Settings window; the dialog will also accept fully qualified path names for files which live elsewhere.</p>
+<p>The Settings window can also be used to change the commands executed when the "TeX" and "LaTeX" buttons are pushed. This is useful because some users prefer a version of TeX called etex, and there are pdf versions of etex called pdfetex and pdfelatex. Obviously the substituted command must produce a pdf output file. If the new programs are in the teTeX binary directory, it is enough to name them in the Settings window; the dialog will also accept fully qualified path names for files which live elsewhere.</p>
 <h2>Text encoding</h2>
-		<p>TeXShop editing is done with Apple's Cocoa editing class, which uses Unicode for internal work. When TeXShop files are written to disk, they are usually converted to 8-bit ascii because TeX expects to receive such a file. There are several ways to do the conversion: Mac OS Roman, Iso Latin 1, Iso Latin 2, and others. A setting selects the method used. For many users, the choice will make no difference. Some TeX packages allow users to type accented European characters directly on the keyboard; these packages require the Iso Latin conversion. Thanks to Martin Heusse for providing the original code for this setting. The conversion method can also be selected directly from the Open and Save panels.</p>
+<p>TeXShop editing is done with Apple's Cocoa editing class, which uses Unicode for internal work. When TeXShop files are written to disk, they are usually converted to 8-bit ascii because TeX expects to receive such a file. There are several ways to do the conversion: Mac OS Roman, Iso Latin 1, Iso Latin 2, and others. A setting selects the method used. For many users, the choice will make no difference. Some TeX packages allow users to type accented European characters directly on the keyboard; these packages require the Iso Latin conversion. Thanks to Martin Heusse for providing the original code for this setting. The conversion method can also be selected directly from the Open and Save panels.</p>
 <p> When TeXShop typesets a source file, it displays the result in the preview window, activating this window and bringing it to the front. A setting changes this behavior, showing the result in the preview window but keeping the source window active for further editing. This is particularly useful if you have a large monitor and the source and preview windows do not overlap. To change this setting, choose the Typesetting category in Settings and change the "After Typesetting" item to "Continue Editing."</p>
 <h2>Japanese/Korean settings</h2>
 <p>Users in Japan and Korea will use other conversion settings, also provided.</p>
-<p>A pulldown menu
-at the bottom of the Settings window can be used to reset settings to their default values. This is mainly useful in Japan, since different defaults are available for users of various pTeX distributions.
-</p>
+<p>Choose Settings Profile in General to apply a set of defaults.</p>
 <h2>Invisible character settings</h2>
 <p> The item "Show Invisible Characters" in the Source menu makes certain invisible characters visible: the space character, a special wider space used in Japan, the newline character, and the tab character. The choice of which characters to show and how to represent them is made in the "Show Invisible Characters" section of the Settings window. Most users want invisible characters to be shown only on rare occasions when puzzling things happen, but if you want them to be shown by default, select the "On by Default" item in this section of the Settings window.
 </p>
 <p> The color of invisible character representatives is orange, but this color can be changed by a hidden setting. See the "Hidden Settings" section of Advanced Help.
 </p>
-
 <h2>Brace matching settings</h2>
 <p>TeX makes extensive use of various kinds of braces: parentheses, curly brackets, etc.  A common mistake is to write source in which the braces don't match. TeXShop has brace matching
 code to help avoid this error. The code is configured in the "Parens Targets & Highlight Color" and "Parens Matching Settings" sections of the Settings window.
@@ -43,91 +38,52 @@ code to help avoid this error. The code is configured in the "Parens Targets & H
 <p> The "Highlight Enclosed Characters" item determines whether the background of text between the braces temporarily changes color. The "Show Indicator in Moving" determines whether this code applies when moving the cursor through the source with the arrow keys. The "Blink Highlight" item determines whether the matching brace pair momentarily changes color and then returns to the usual color, or instead changes color until another character is typed.
 Finally, "Beep for Isolated Parens" and "Flash Back for Isolated Parens" cause the user to be notified when a brace is typed which has no matching brace.
 </p>
-
 <p> The color of the temporary background for text inside a brace pair (default is yellow) can be changed by a hidden setting. See the "Hidden Settings" section of Advanced Help.
 </p>
-
 <p> On Snow Leopard and above, matching braces are briefly marked with a yellow badge over the brace; 
 this fulfills a request for greater visibility of the matching characters. This badge can be turned off; see the "Hidden settings" section of Advanced Help
 for details.
 </p>
-
 <h1>Hidden settings</h1>
 <p>Although most of the TeXShop's settings are available in the Settings window, some more low-level settings are only settable using the command line.</p>
 <h2>Background, Text and Cursor Colors</h2>
-	<p>It is possible to reset the background color of the source window. The Settings window does not have an interface to make this change. To set the background to (r, g, b) = (.42, .39, .77), issue the following commands in Terminal:</p>
-		<dl>
-			<dd>defaults write TeXShop background_R 0.42
-			<dd>defaults write TeXShop background_G 0.39
-			<dd>defaults write TeXShop background_B 0.77
-		</dl> 
-
-<p>It is also possible to set the text color in the source window. This setting will only be recognized if syntax coloring is on. To set the forground color to (r, g, b) = (.42, .39, .77), issue the following commands in Terminal:</p>
-		<dl>
-			<dd>defaults write TeXShop foreground_R 0.42
-			<dd>defaults write TeXShop foreground_G 0.39
-			<dd>defaults write TeXShop foreground_B 0.77
-		</dl>
-<p>The color of the insertion point in the source window can be changed. For example, to set this insertion point color to (r, g, b) = (.42, .39, .77), issue the following commands in Terminal:</p>
-		<dl>
-			<dd>defaults write TeXShop insertionpoint_R 0.42
-			<dd>defaults write TeXShop insertionpoint_G 0.39
-			<dd>defaults write TeXShop insertionpoint_B 0.77
-		</dl>
-<p>By using the previous three sets of commands in combination, the source window can be made to display white text on a black
-background or other coloring schemes as desired.</p>
-
-<p> There are hidden settings to set the transparency of the source, preview, and console windows:</p>
-		<dl>
-			<dd>defaults write TeXShop ConsoleWindowAlpha 0.75
-			<dd>defaults write TeXShop SourceWindowAlpha 0.75
-			<dd>defaults write TeXShop PreviewWindowAlpha 0.75
-		</dl>
-<p> Here an alpha value of 0.00 is completely transparent and an alpha value of 1.00 is completely
-opaque. Use these commands cautiously!</p>
-
+<p>Choose Appearance to set the background, text and cursor colors and the opacity of the source, preview and console windows. Opacity uses a slider and a numeric field from 0% to 100%. Enter a whole percentage and press Return or leave the field to apply it. Values outside this range are adjusted to the nearest limit. Invalid text, including decimal values, restores the previous value when you finish editing; typed and pasted input follow the same rule.</p>
 <h2>Adding to the list of file types</h2>
 <p>There is a hidden setting to add file extensions to the list of files that TeXShop recognizes as source files which can be typeset and syntax colored.  This is useful when you want to use syntax coloring when editing TeX files with non-standard extensions. For example,</p>
-		<dl>
-			<dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
-		</dl>
+<dl>
+<dd>defaults write TeXShop OtherTeXExtensions -array-add "lbx"
+		</dd></dl>
 <p>tells TeXShop to syntax color biblatex 'lbx' files.<p>
-
-
-
-	</div>		
+</p></p><h3 id="settings-search">Search Settings</h3><p>Search Settings above the sidebar finds settings, options, and menu commands. Each result shows the item name and category. Space-separated words match the same item; a category name narrows the query. Search normalizes case, Latin accents, full-width characters, hiragana, and katakana. Select a result to scroll to and highlight its row and add the visit to navigation history. Clearing the query keeps the displayed category. Back and Forward follow navigation history during a search. A menu command result opens Keyboard and filters Search by Function. While recording a shortcut, key recording has priority.</p><p>Auto Save and Versions takes effect after restarting TeXShop. Switching between the standard Find Panel and Find Bar updates the source, console and log views of open documents immediately. Switching to or from OgreKit takes effect after restarting TeXShop.</p></div>
 <div id="header_background"></div>
-<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
+<div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
 <div id="header_chapter">Basic Help</div><div id="header_title">Changing Settings</div>
+<div id="menu_border">
+<ul>
+<li><a href="basic_preliminaries.htm">Preliminaries</a>
+<li><a href="basic_installtetex.htm">Installing TeX Live</a>
+<li><a href="basic_installtexshop.htm">Installing TeXShop</a>
+<li><a href="basic_typesetting.htm">Typesetting Documents</a>
+<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>
+<li><a href="basic_spelling.htm">Checking Spelling</a>
+<li><a href="basic_latexpanel.htm">Latex Panel</a>
+<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
+<li><a href="basic_macros.htm">Macros</a>
+<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
+<li><a href="basic_graphics.htm">Including Graphics</a>
+<li><a href="basic_printing.htm">Printing</a>
+<li><a href="basic_preferences.htm">Changing Settings</a>
+<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
+<li><a href="basic_edittricks.htm">Editing Tricks</a>
+<li><a href="basic_autocompletion.htm">Key Bindings</a>
+<li><a href="basic_commandcompletion.htm">Command Completion </a>
+<li><a href="basic_miscellaneous.htm">Miscellaneous </a>
+<li><a href="basic_bugs.htm">Sending Bug Reports</a>
+<li><a href="basic_websites.htm">Useful Web Sites</a>
+<li><a href="basic_license.htm">License</a>
+</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</div>
 
-		<div id="menu_border">
-		<ul>
-				<LI><a href="basic_preliminaries.htm">Preliminaries</a>
-			<LI><a href="basic_installtetex.htm">Installing TeX Live</a>
-			<LI><a href="basic_installtexshop.htm">Installing TeXShop</a>
-			<LI><a href="basic_typesetting.htm">Typesetting Documents</a>
-			<li><a href="basic_alternatetypeset.htm">Alternate Typesetting Mode</a>	
-			<li><a href="basic_spelling.htm">Checking Spelling</a>
-			<li><a href="basic_latexpanel.htm">Latex Panel</a>
-			<li><a href="basic_matrixpanel.htm">Matrix Panel</a>
-			<li><a href="basic_macros.htm">Macros</a>
-			<li><a href="basic_toolbar.htm">Toolbar and Applescript</a>
-			<li><a href="basic_graphics.htm">Including Graphics</a>
-			<li><a href="basic_printing.htm">Printing</a>
-			<li><a href="basic_preferences.htm">Changing Settings</a>
-			<li><a href="basic_templates.htm">Modifying the Templates Menu</a>
-			<li><a href="basic_edittricks.htm">Editing Tricks</a>
-			<li><a href="basic_autocompletion.htm">Key Bindings</a>
-			<li><a href="basic_commandcompletion.htm">Command Completion </a>
-			<li><a href="basic_miscellaneous.htm">Miscellaneous </a>
-			<li><a href="basic_bugs.htm">Sending Bug Reports</a>
-			<li><a href="basic_websites.htm">Useful Web Sites</a>
-			<li><a href="basic_license.htm">License</a>
-		</UL>
-	</div>
 
-<h3 id="settings-search">Search Settings</h3>
-<p>Use Search Settings above the sidebar to find categories, labels, options and menu commands. Words separated by spaces must all occur in the same category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to reveal and highlight its controls without changing their values. Clearing the query returns to the category used before searching. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording. Personal paths, entered values and user-created theme names are not searched.</p>
-</BODY>
-
-</HTML>
+</body>
+</html>

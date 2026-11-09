@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"752.title" = "Console Font";
-"765.title" = "Vertical Resize Only";
-"766.title" = "Arbitrary Resize";
-"772.title" = "Console Resize";
+"752.title" = "Tipo de letra da consola";
+"765.title" = "Redimensionar apenas na vertical";
+"766.title" = "Redimensionar livremente";
+"772.title" = "Redimensionar a consola";
 "828.title" = "Mostrar consola";
 "830.title" = "sempre";
 "831.title" = "em caso de erros";
 "905.title" = "Helvetica 12";
-"906.title" = "Set ...";
+"906.title" = "Definir…";
 "923.title" = "Radio";
 "924.title" = "Radio";
 "PqO-5d-lRv.title" = "Abrir sempre numa posição fixa";
 "WQX-9X-AFi.title" = "Console Position";
 "Xc7-Tx-Uz2.title" = "Radio";
-"Zuj-f0-WHa.title" = "Use Also for Macro Editor";
+"Zuj-f0-WHa.title" = "Usar também no editor de macros";
 "ga2-ik-lSC.title" = "Lembrar-se da última posição";
 "mNl-sx-FY0.title" = "Escolher a posição actual";

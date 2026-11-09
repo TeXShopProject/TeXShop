@@ -334,5 +334,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-external-pdf-') as td:
   assert header.count(old)==1 and header.count('%lld:%ld", path')==1
   (p/'TSExternalPDFReload.h').write_text(header.replace(old,'info->st_mtimespec.tv_nsec, (long long)info->st_ctimespec.tv_sec, info->st_ctimespec.tv_nsec];').replace('%lld:%ld", path','%lld:%ld:%lld:%ld", path'))
  elif mutation and mutation not in mutations: raise SystemExit('unknown mutation')
- subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSPreferenceProfile.m'),str(snapshot),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSPreferenceProfile.m'),str(root/'Sources/globals.m'),str(snapshot),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test'),td]+(['--ltr'] if '--ltr' in sys.argv else []),env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)

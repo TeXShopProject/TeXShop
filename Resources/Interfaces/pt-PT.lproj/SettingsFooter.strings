@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1091.title" = "OtherViews";
 "1092.title" = "Legacy pTeX (EUC)";
-"1093.title" = "Legacy pTeX (Shift JIS) ";
+"1093.title" = "Legacy pTeX (Shift JIS)";
 "1094.title" = "pTeX (shell script)";
 "1095.title" = "pTeX (latexmk)";
 "1096.title" = "pTeX (ptex2pdf)";
 "1097.title" = "upTeX (shell script)";
 "1098.title" = "upTeX (latexmk)";
 "1099.title" = "upTeX (ptex2pdf)";
-"1100.title" = "Regular";
-"1101.title" = "Set Default Values";
-"LIV-SV-CEL.title" = "Changes are saved automatically.";
+"1100.title" = "Padrão do TeXShop";
+"1101.title" = "Definir valores predefinidos";

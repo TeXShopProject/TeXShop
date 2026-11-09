@@ -128,7 +128,7 @@
 
 /* Menu and macro shortcut conflicts */
 "Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
-"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+
 "Assign" = "Assign";
 "These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
@@ -145,11 +145,11 @@
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
 "Apply Settings Profile?" = "Apply Settings Profile?";
-"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+
 "Apply Profile" = "Apply Profile";
 "Settings could not be saved" = "Settings could not be saved";
 "Enter a valid setting" = "Enter a valid setting";
-"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+
 "Continue Editing" = "Continue Editing";
 "Restore This Field" = "Restore This Field";
 "The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
@@ -176,14 +176,12 @@
 "Show in Macro Editor" = "Show in Macro Editor";
 "Assigned" = "Assigned";
 "Inactive for this key" = "Inactive for this key";
-"Assignment priority is shown; whether a command can run depends on the document." = "Assignment priority is shown; whether a command can run depends on the document.";
-"Keys used by the system cannot be detected. Press Escape to stop recording." = "Keys used by the system cannot be detected. Press Escape to stop recording.";
 "No command uses this key." = "No command uses this key.";
 "Press a key" = "Press a key";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.";
-"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved.";
 
-"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Existing assignments are shown. This key cannot be assigned to a new shortcut.";
+
+"This key cannot be assigned to a new shortcut." = "This key cannot be assigned to a new shortcut.";
 
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Matches: %lu";
@@ -239,9 +237,7 @@
 
 "Tools" = "Tools";
 
-"Expanded" = "Expanded";
 
-"Collapsed" = "Collapsed";
 
 "Search Settings" = "Search Settings";
 
@@ -249,7 +245,6 @@
 
 "No Settings Found" = "No Settings Found";
 
-"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 /* Independent Experiment console */
 "Experiment input" = "Experiment input";
 "Stop Experiment" = "Stop Experiment";
@@ -273,7 +268,7 @@
 "None of the words in this document have been learned for %@." = "None of the words in this document have been learned for %@.";
 "Not found (current setting will be kept)" = "Not found (current setting will be kept)";
 "OK" = "OK";
-"Press the new shortcut (Escape to cancel)." = "Press the new shortcut (Escape to cancel).";
+"New shortcut" = "New shortcut";
 "Problems in the spelling exclusions file" = "Problems in the spelling exclusions file";
 "Remove Shortcut" = "Remove Shortcut";
 "Restore All" = "Restore All";
@@ -281,16 +276,34 @@
 "Restore Default" = "Restore Default";
 "Restore all keyboard shortcuts?" = "Restore all keyboard shortcuts?";
 "Search commands" = "Search commands";
-"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors.";
+
 "Set Up TeX Engine Paths" = "Set Up TeX Engine Paths";
 "Shortcut" = "Shortcut";
 "Shortcut Unavailable" = "Shortcut Unavailable";
 "Spell Checking Help" = "Spell Checking Help";
-"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged.";
+
 "The spell checking help could not be found" = "The spell checking help could not be found";
 "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several.";
 "This command is no longer available." = "This command is no longer available.";
 "This shortcut is already used by “%@”." = "This shortcut is already used by “%@”.";
-"Use Command or Control with a key, or a function key (F1–F20)." = "Use Command or Control with a key, or a function key (F1–F20).";
 "Use These Paths" = "Use These Paths";
 "Version unavailable" = "Version unavailable";
+
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+
+"The newest detected installation is selected. You can choose another candidate below." = "The newest detected installation is selected. You can choose another candidate below.";
+
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@";
+
+"This does not turn spell checking while typing on or off." = "This does not turn spell checking while typing on or off.";
+
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "Open PDFs keep their zoom. The new value applies to PDFs opened from now on.";
+
+"Takes effect after you restart TeXShop." = "Takes effect after you restart TeXShop.";
+
+"Custom menu shortcuts will be removed." = "Custom menu shortcuts will be removed.";
+
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+
+/* System spelling dictionary selection. */
+"Automatic Language" = "Automatic Language";

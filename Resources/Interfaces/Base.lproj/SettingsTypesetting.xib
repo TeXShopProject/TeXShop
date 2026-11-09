@@ -44,7 +44,7 @@
                 </buttonCell>
                 <cells>
                   <column>
-                    <buttonCell type="radio" title="Pdftex" imagePosition="left" alignment="left" state="on" tag="100" inset="2" id="191">
+                    <buttonCell type="radio" title="pdfTeX" imagePosition="left" alignment="left" state="on" tag="100" inset="2" id="191">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
@@ -148,7 +148,7 @@
                 </buttonCell>
                 <cells>
                   <column>
-                    <buttonCell type="radio" title="Search" imagePosition="left" alignment="left" tag="1" inset="2" id="785">
+                    <buttonCell type="radio" title="Search PDF" imagePosition="left" alignment="left" tag="1" inset="2" id="785">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                       <connections>

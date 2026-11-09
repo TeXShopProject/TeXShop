@@ -17,14 +17,14 @@ NSString *TSTranslateKey(CFDataRef data, UInt16 keyCode, BOOL shifted, UInt32 ke
     return result == noErr && count == 1 ? [NSString stringWithCharacters:chars length:count] : nil;
 }
 // Compare AppKit key equivalents without consulting a keyboard layout.
-NSDictionary *TSBinding(NSString *key, NSEventModifierFlags flags) {
+TSShortcutBinding *TSBinding(NSString *key, NSEventModifierFlags flags) {
     flags &= TSShortcutModifiers;
-    if (!key.length) return @{@"key":@"", @"modifiers":@0};
+    if (!key.length) return [[TSShortcutBinding alloc] initWithKey:@"" modifiers:0];
     if (key.length == 1 && [key characterAtIndex:0] >= 'A' && [key characterAtIndex:0] <= 'Z') {
         key = key.lowercaseString;
         flags |= NSEventModifierFlagShift;
     }
-    return @{@"key":key, @"modifiers":@(flags)};
+    return [[TSShortcutBinding alloc] initWithKey:key modifiers:flags];
 }
 // Honor the Command layer, including Dvorak–QWERTY Command. Do not use
 // characters directly for Option/Control combinations (for example Option-G = ©).
@@ -51,7 +51,7 @@ NSString *TSShortcutCharacterForEvent(NSEvent *event) {
 }
 // A shifted punctuation character already encodes Shift in AppKit's key
 // equivalent. Canonicalize only captured input, never stored menu/macro bindings.
-NSDictionary *TSRecordedBinding(NSEvent *event, NSString *unshifted) {
+TSShortcutBinding *TSRecordedBinding(NSEvent *event, NSString *unshifted) {
     NSString *key = TSShortcutCharacterForEvent(event);
     NSEventModifierFlags flags = event.modifierFlags & TSShortcutModifiers;
     if ((flags & NSEventModifierFlagShift) && key.length == 1 &&
@@ -62,9 +62,9 @@ NSDictionary *TSRecordedBinding(NSEvent *event, NSString *unshifted) {
 }
 // These spellings describe the captured event only. They are never used to
 // compare saved menu bindings with macro bindings or written to preferences.
-NSArray<NSDictionary *> *TSEventBindings(NSEvent *event, NSString *unshifted) {
+NSArray<TSShortcutBinding *> *TSEventBindings(NSEvent *event, NSString *unshifted) {
     NSString *key = TSShortcutCharacterForEvent(event);
-    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSetWithObject:TSRecordedBinding(event, unshifted)];
+    NSMutableOrderedSet<TSShortcutBinding *> *bindings = [NSMutableOrderedSet orderedSetWithObject:TSRecordedBinding(event, unshifted)];
     [bindings addObject:TSBinding(key, event.modifierFlags)];
     if ((event.modifierFlags & NSEventModifierFlagShift) && key.length == 1 && unshifted.length == 1 &&
         [key characterAtIndex:0] < 0xf700 &&
@@ -91,9 +91,9 @@ NSString *TSRestorationCharacters(CFDataRef data, UInt16 code, NSEventModifierFl
         kUCKeyActionDown, modifiers >> 8, keyboardType, kUCKeyTranslateNoDeadKeysBit, &dead, 8, &count, chars);
     return result == noErr ? [NSString stringWithCharacters:chars length:count] : @"";
 }
-NSArray<NSDictionary *> *TSRestorationBindings(NSString *key, NSEventModifierFlags flags, CFDataRef data, UInt32 keyboardType) {
-    NSDictionary *original = TSBinding(key, flags);
-    NSMutableOrderedSet *bindings = [NSMutableOrderedSet orderedSetWithObject:original];
+NSArray<TSShortcutBinding *> *TSRestorationBindings(NSString *key, NSEventModifierFlags flags, CFDataRef data, UInt32 keyboardType) {
+    TSShortcutBinding *original = TSBinding(key, flags);
+    NSMutableOrderedSet<TSShortcutBinding *> *bindings = [NSMutableOrderedSet orderedSetWithObject:original];
     if (!data || !TSRestorationSymbol(key)) return bindings.array;
     // Reuse the recorder's spellings, including the Command layer and symbols on number keys.
     // This constructs events for comparison only; it never posts them or changes the input source.

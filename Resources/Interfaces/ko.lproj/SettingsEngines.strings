@@ -3,11 +3,11 @@
 "1024.title" = "kpsetool (default: kpsetool -w -n latex tex)";
 "1027.title" = "BibTeX 엔진";
 "1030.title" = "default: bibtex";
-"1063.title" = "Default";
-"1068.title" = "Default";
+"1063.title" = "기본값";
+"1068.title" = "기본값";
 "1069.title" = "TeX";
-"1071.title" = "Default";
-"1074.title" = "Default";
+"1071.title" = "기본값";
+"1074.title" = "기본값";
 "1075.title" = "LaTeX ";
 "200.title" = "TeX + dvips + distiller";
 "215.title" = "경로 설정";

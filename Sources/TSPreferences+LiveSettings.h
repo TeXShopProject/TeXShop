@@ -5,7 +5,13 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface TSPreferences ()
 - (void)finishPreferencesForTermination;
+- (void)applyEffectsForPreferenceKeys:(NSSet<NSString *> *)changed;
+- (void)setAllThemeEditingEnabled:(BOOL)enabled;
 - (void)showPreferenceError:(NSString *)message;
 @property (copy, nullable) NSDictionary<NSString *, id> *lastSavedEditingColors;
 @end
 NS_ASSUME_NONNULL_END
+
+@interface TSPreferences (ThemeEditing)
+- (void)setThemeEditingEnabled:(BOOL)enabled inView:(NSView * _Nonnull)view;
+@end

@@ -79,7 +79,7 @@
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
     self.backgroundColor = [[TSColorSupport sharedInstance] colorForKey:@"PreviewBackground"
         fromDictionary:theme isWindowDark:dark];
-    self.window.alphaValue = TSExperimentWindowAlpha(theme, @"PreviewAlpha");
+    self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemePreviewAlphaKey);
 }
 
 - (void)updateExperimentAppearance:(NSNotification *)notification

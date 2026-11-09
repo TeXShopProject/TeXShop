@@ -14,7 +14,7 @@ mutations={
  'sheet-cancel':('response != NSModalResponseOK ||','NO ||'),
  'failure-dictionary':('EditingColors = [saved mutableCopy];',';'),
  'failure-fallback':('[[self themeStore] readTitle:title] ?: self.lastSavedEditingColors','[[self themeStore] readTitle:title]'),
- 'save-notify':('[NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];',';'),
+ 'save-notify':('[self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];',';'),
  'clone-early':('if (![[self themeStore] writeColors:colors title:title error:&error]) {','if (NO && ![[self themeStore] writeColors:colors title:title error:&error]) {'),
  'selection-store':('[SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];',';'),
 }
@@ -91,6 +91,13 @@ static NSMutableArray *alertButtons;
 - (TSThemeFileStore *)themeStore{return self.store;}
 - (void)showPreferenceError:(NSString *)message{self.errors++;}
 - (void)FillInColorWells{self.fills++;}
+// The file/sheet test observes the coordinator boundary; SettingsOwnerEffects tests
+// the complete production preparation and notification dispatcher independently.
+- (void)applyEffectsForPreferenceKeys:(NSSet<NSString *> *)keys {
+    if (![keys isEqualToSet:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]]) abort();
+    [[TSColorSupport sharedInstance] initializeColors];
+    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+}
 METHODS
 @end
 static void check(BOOL ok,const char *why){if(!ok){fprintf(stderr,"FAIL: %s\n",why);exit(1);}}

@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Painel de localizar da Apple";
 "583.title" = "Barra de localizar da Apple";
-"585.title" = "Painel de localizar (é preciso reiniciar)";
+"585.title" = "Painel de busca";
 "872.title" = "Escolher...";
 "873.title" = "Helvetica 12";
 "874.title" = "Escolher a posição atual";
@@ -38,9 +38,9 @@
 "eIA-mh-q2u.title" = "Tamanho do número da linha";
 "kgx-Sa-LDF.title" = "Verificação ortográfica";
 "odm-Dy-TNW.title" = "Grande";
-"teg-0p-Q8J.title" = "Não verificar comandos LaTeX ";
+"teg-0p-Q8J.title" = "Não verificar comandos LaTeX";
 "ts-aware-spelling-cell.title" = "Ortografia adaptada ao LaTeX";
-"ts-aware-spelling.ibShadowedToolTip" = "Usar regras de exclusão para documentos LaTeX. Desative para usar as opções anteriores abaixo. Não altera a verificação ortográfica durante a digitação.";
+"ts-aware-spelling.ibShadowedToolTip" = "Usar regras de exclusão para documentos LaTeX.";
 "ts-edit-spelling-cell.title" = "Editar exclusões de LaTeX…";
 "ts-edit-spelling.ibShadowedToolTip" = "Editar as regras de exclusão da verificação ortográfica adaptada ao LaTeX.";
 "uAi-0W-9KI.title" = "Switch";

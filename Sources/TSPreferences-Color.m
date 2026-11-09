@@ -25,6 +25,7 @@
 #import "TSPreferences+LiveSettings.h"
 #import "globals.h"
 #import "TSColorSupport.h"
+#import "TSThemeAlpha.h"
 #import "TSThemeFileStore.h"
 
 
@@ -126,7 +127,7 @@ NSInteger stringSort(id s1, id s2, void *context)
 
 - (void)FillInColorWells
 {
-    [self setThemeEditingEnabled:(EditingColors != nil) inView:_prefsWindow.contentView];
+    [self setAllThemeEditingEnabled:(EditingColors != nil)];
     if (EditingColors == nil) return;
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     NSColor *flashColor, *aColor;
@@ -208,9 +209,9 @@ NSInteger stringSort(id s1, id s2, void *context)
         
     EditorReverseSyncColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorReverseSync"];
     PreviewDirectSyncColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewDirectSync"];
-    SourceAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"];
-    PreviewAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"];
-    ConsoleAlphaColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"];
+    SourceAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemeSourceAlphaKey);
+    PreviewAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemePreviewAlphaKey);
+    ConsoleAlphaColorWell.color = TSThemeWindowAlphaColor(EditingColors, TSThemeConsoleAlphaKey);
     ImageForegroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ImageForeground"];
     ImageBackgroundColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ImageBackground"];
     
@@ -281,8 +282,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         return;
     }
     self.lastSavedEditingColors = [EditingColors copy];
-    [[TSColorSupport sharedInstance] initializeColors];
-    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
 }
 
 - (IBAction)NewStyleFromPrefs:sender
@@ -332,11 +332,11 @@ NSInteger stringSort(id s1, id s2, void *context)
     [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"PreviewBackground" withRed: [SUD doubleForKey:PdfPageBack_RKey]
                                       Green: [SUD doubleForKey:PdfPageBack_GKey] Blue: [SUD doubleForKey:PdfPageBack_BKey] Alpha: 1.0];
     
-    [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"SourceAlpha" withRed: 1.0
+    [colorSupport setColorValueInDictionary: prefsDictionary forKey: TSThemeSourceAlphaKey withRed: 1.0
                                       Green: 1.0 Blue: 1.0 Alpha: [SUD doubleForKey: SourceWindowAlphaKey]];
-    [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"PreviewAlpha" withRed: 1.0
+    [colorSupport setColorValueInDictionary: prefsDictionary forKey: TSThemePreviewAlphaKey withRed: 1.0
                                       Green: 1.0  Blue: 2.0 Alpha: [SUD doubleForKey: PreviewWindowAlphaKey]];
-    [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"ConsoleAlpha" withRed: 1.0
+    [colorSupport setColorValueInDictionary: prefsDictionary forKey: TSThemeConsoleAlphaKey withRed: 1.0
                                       Green: 1.0 Blue: 1.0 Alpha: [SUD doubleForKey: ConsoleWindowAlphaKey]];
     [colorSupport setColorValueInDictionary: prefsDictionary forKey: @"ImageForeground" withRed: [SUD doubleForKey:PdfFore_RKey]
                                       Green: [SUD doubleForKey:PdfFore_GKey] Blue: [SUD doubleForKey:PdfFore_BKey]
@@ -737,50 +737,61 @@ NSInteger stringSort(id s1, id s2, void *context)
     
 }
 
+// Opacity controls change only the stored alpha. Avoid converting the retained
+// RGB through a different NSColor space when adjusting a percentage.
+- (void)changeWindowAlphaForKey:(NSString *)key fromWell:(NSColorWell *)well
+{
+    NSArray *existing=EditingColors[key];
+    if([existing isKindOfClass:NSArray.class] && existing.count==4){
+        NSMutableArray *components=[existing mutableCopy];
+        components[3]=@(well.color.alphaComponent);
+        EditingColors[key]=components;
+    } else {
+        EditingColors[key]=@[@0,@0,@0,@(well.color.alphaComponent)];
+    }
+}
+
 - (IBAction)SourceAlphaChanged:sender
 {
-    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"SourceAlpha"];
+        NSColor *oldColor = TSThemeWindowAlphaColor(EditingColors, TSThemeSourceAlphaKey);
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [colorSupport changeColorValueInDictionary: EditingColors forKey: @"SourceAlpha" fromColorWell:sender];
+    [self changeWindowAlphaForKey:TSThemeSourceAlphaKey fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }
 
 - (IBAction)PreviewAlphaChanged:sender
 {
-    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"PreviewAlpha"];
+        NSColor *oldColor = TSThemeWindowAlphaColor(EditingColors, TSThemePreviewAlphaKey);
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [colorSupport changeColorValueInDictionary: EditingColors forKey: @"PreviewAlpha" fromColorWell:sender];
+    [self changeWindowAlphaForKey:TSThemePreviewAlphaKey fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }
 
 - (IBAction)ConsoleAlphaChanged:sender
 {
-    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     
     if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
     {
         [self deactivatePreferenceColorWells];
-        NSColor *oldColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"ConsoleAlpha"];
+        NSColor *oldColor = TSThemeWindowAlphaColor(EditingColors, TSThemeConsoleAlphaKey);
         ((NSColorWell *)sender).color = oldColor;
         return;
     }
-    [colorSupport changeColorValueInDictionary: EditingColors forKey: @"ConsoleAlpha" fromColorWell:sender];
+    [self changeWindowAlphaForKey:TSThemeConsoleAlphaKey fromWell:sender];
     [self SaveEditedStyle:sender];
     
 }
@@ -1069,7 +1080,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     for (NSView *child in view.subviews) {
         if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).action != @selector(BlockCursorColorChanged:))
             [(NSColorWell *)child setEnabled:enabled];
-        if ([child isKindOfClass:NSButton.class] && ((NSButton *)child).action == @selector(SaveNewStyle:))
+        if ([child isKindOfClass:NSButton.class] && (((NSButton *)child).action == @selector(SaveNewStyle:) || ((NSButton *)child).action == @selector(SaveEditedStyle:)))
             [(NSButton *)child setEnabled:enabled];
         [self setThemeEditingEnabled:enabled inView:child];
     }
@@ -1094,8 +1105,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     }
     [EditingStyle selectItemWithTitle:title];
     [self FillInColorWells];
-    [[TSColorSupport sharedInstance] initializeColors];
-    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
 }
 - (IBAction)themeSelectionChanged:(id)sender
 {
@@ -1104,8 +1114,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     NSString *title = popup.titleOfSelectedItem;
     if (title == nil) return;
     [SUD setObject:title forKey:popup == LiteStyle ? DefaultLiteThemeKey : DefaultDarkThemeKey];
-    [[TSColorSupport sharedInstance] initializeColors];
-    [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:self];
+    [self applyEffectsForPreferenceKeys:[NSSet setWithArray:@[DefaultLiteThemeKey, DefaultDarkThemeKey]]];
 }
 - (BOOL)deactivateColorWellsInView:(NSView *)view
 {

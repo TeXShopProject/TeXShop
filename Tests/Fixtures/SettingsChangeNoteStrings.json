@@ -1,0 +1,122 @@
+{
+  "languages": {
+    "en": [
+      "This does not turn spell checking while typing on or off.",
+      "Open PDFs keep their zoom. The new value applies to PDFs opened from now on.",
+      "Takes effect after you restart TeXShop.",
+      "Default zoom for newly opened PDFs.",
+      "Find Panel",
+      "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@"
+    ],
+    "ja": [
+      "入力中のスペルチェックの入／切は、この設定では変わりません。",
+      "開いている PDF の倍率は変わりません。新しく開く PDF から使われます。",
+      "TeXShop を再起動すると有効になります。",
+      "新しく開くPDFの既定倍率です。",
+      "検索パネル",
+      "次のマクロがこのキーを使用しています。メニューのコマンドに割り当てると、マクロのキーは無効になります。\n\n%@"
+    ],
+    "de": [
+      "Dies schaltet die Rechtschreibprüfung während der Eingabe weder ein noch aus.",
+      "Geöffnete PDFs behalten ihren Zoom. Der neue Wert gilt für ab jetzt geöffnete PDFs.",
+      "Wird nach einem Neustart von TeXShop wirksam.",
+      "Standardzoom für neu geöffnete PDFs.",
+      "Suchmaske",
+      "Die folgenden Makros verwenden diesen Kurzbefehl. Wenn Sie ihn dem Menübefehl zuweisen, werden ihre Kurzbefehle inaktiv.\n\n%@"
+    ],
+    "es": [
+      "Esto no activa ni desactiva la revisión ortográfica al escribir.",
+      "Los PDF abiertos conservan su zoom. El nuevo valor se aplica a los PDF que se abran a partir de ahora.",
+      "Se aplica después de reiniciar TeXShop.",
+      "Zoom predeterminado para los PDF que se abran.",
+      "Panel de búsqueda",
+      "Las siguientes macros usan este atajo. Si se asigna al comando del menú, sus atajos quedarán inactivos.\n\n%@"
+    ],
+    "fr": [
+      "Ce réglage n’active ni ne désactive la vérification orthographique pendant la frappe.",
+      "Les PDF ouverts conservent leur zoom. La nouvelle valeur s’applique aux PDF ouverts à partir de maintenant.",
+      "Prend effet après le redémarrage de TeXShop.",
+      "Zoom par défaut des PDF nouvellement ouverts.",
+      "Palette de recherche",
+      "Les macros suivantes utilisent ce raccourci. Si vous l’attribuez à la commande du menu, leurs raccourcis seront désactivés.\n\n%@"
+    ],
+    "it": [
+      "Questa impostazione non attiva né disattiva il controllo ortografico durante la digitazione.",
+      "I PDF aperti mantengono il proprio zoom. Il nuovo valore si applica ai PDF aperti da questo momento.",
+      "Ha effetto dopo il riavvio di TeXShop.",
+      "Zoom predefinito per i PDF appena aperti.",
+      "Pannello di ricerca",
+      "Le seguenti macro usano questa abbreviazione. Assegnandola al comando del menu, le loro abbreviazioni saranno disattivate.\n\n%@"
+    ],
+    "nl": [
+      "Dit schakelt de spellingcontrole tijdens het typen niet in of uit.",
+      "Geopende pdf’s behouden hun zoom. De nieuwe waarde geldt voor pdf’s die vanaf nu worden geopend.",
+      "Wordt van kracht nadat u TeXShop opnieuw start.",
+      "Standaardzoom voor nieuw geopende pdf’s.",
+      "Zoekpaneel",
+      "De volgende macro’s gebruiken deze toetscombinatie. Als u deze aan het menucommando toewijst, worden hun toetscombinaties inactief.\n\n%@"
+    ],
+    "pt-PT": [
+      "Esta definição não ativa nem desativa a verificação ortográfica durante a escrita.",
+      "Os PDF abertos mantêm a ampliação. O novo valor aplica-se aos PDF abertos a partir de agora.",
+      "Entra em vigor após reiniciar o TeXShop.",
+      "Ampliação predefinida dos PDF acabados de abrir.",
+      "Painel de pesquisa",
+      "As seguintes macros usam este atalho. Ao atribuí-lo ao comando do menu, os atalhos das macros ficam inativos.\n\n%@"
+    ],
+    "pt": [
+      "Esta configuração não ativa nem desativa a verificação ortográfica durante a digitação.",
+      "Os PDFs abertos mantêm o zoom. O novo valor se aplica aos PDFs abertos a partir de agora.",
+      "Entra em vigor após reiniciar o TeXShop.",
+      "Zoom padrão para PDFs recém-abertos.",
+      "Painel de busca",
+      "As seguintes macros usam este atalho. Ao atribuí-lo ao comando do menu, os atalhos das macros ficam inativos.\n\n%@"
+    ],
+    "ro": [
+      "Această setare nu activează și nu dezactivează verificarea ortografiei în timpul tastării.",
+      "PDF-urile deschise își păstrează mărirea. Noua valoare se aplică PDF-urilor deschise de acum înainte.",
+      "Intră în vigoare după repornirea TeXShop.",
+      "Mărirea implicită pentru PDF-urile nou deschise.",
+      "Panou de căutare",
+      "Următoarele macrocomenzi folosesc această scurtătură. Dacă o atribuiți comenzii din meniu, scurtăturile macrocomenzilor vor fi dezactivate.\n\n%@"
+    ],
+    "ko": [
+      "이 설정은 입력 중 맞춤법 검사를 켜거나 끄지 않습니다.",
+      "열려 있는 PDF의 확대율은 유지됩니다. 새 값은 지금부터 여는 PDF에 적용됩니다.",
+      "TeXShop을 다시 시작하면 적용됩니다.",
+      "새로 여는 PDF의 기본 확대율입니다.",
+      "검색 패널",
+      "다음 매크로가 이 단축키를 사용합니다. 메뉴 명령에 할당하면 해당 매크로의 단축키가 비활성화됩니다.\n\n%@"
+    ],
+    "zh_CN": [
+      "此设置不会开启或关闭键入时的拼写检查。",
+      "已打开的 PDF 保持当前缩放比例。新值适用于此后打开的 PDF。",
+      "重新启动 TeXShop 后生效。",
+      "新打开的 PDF 的默认缩放比例。",
+      "查找面板",
+      "以下宏使用此快捷键。将其分配给菜单命令后，这些宏的快捷键将停用。\n\n%@"
+    ]
+  },
+  "columns": [
+    "spelling_note",
+    "zoom_note",
+    "restart_note",
+    "zoom_tooltip",
+    "find_heading",
+    "macro_conflict"
+  ],
+  "legacy_encoding_warning": {
+    "en": "Currently open files retain their old encoding.",
+    "ja": "現在開かれているファイルのエンコーディングは変更されません。",
+    "de": "Gerade geöffnete Dateien behalten ihre alte Kodierung.",
+    "es": "Los archivos actualmente abiertos mantienen su codificación antigua.",
+    "fr": "Les fichiers déjà ouverts gardent leurs encodages.",
+    "it": "I file attualmente aperti mantengono la propria codifica.",
+    "nl": "Currently open files retain their old encoding.",
+    "pt-PT": "Currently open files retain their old encoding.",
+    "pt": "Arquivos abertos continuarão a manter a codificação antiga.",
+    "ro": "Currently open files retain their old encoding.",
+    "ko": "Currently open files retain their old encoding.",
+    "zh_CN": "当前打开的文件仍保留旧的编码。"
+  }
+}

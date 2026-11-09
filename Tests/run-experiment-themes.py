@@ -28,9 +28,9 @@ if args.mutation == 'reload-hook':
 if args.mutation == 'menu-validation':
     pdf = pdf.replace('return [super validateMenuItem:item];', 'return YES;')
 if args.mutation == 'source-alpha':
-    source = source.replace('self.window.alphaValue = TSExperimentWindowAlpha(theme, @"SourceAlpha");', '')
+    source = source.replace('self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeSourceAlphaKey);', '')
 if args.mutation == 'preview-alpha':
-    pdf = pdf.replace('self.window.alphaValue = TSExperimentWindowAlpha(theme, @"PreviewAlpha");', '')
+    pdf = pdf.replace('self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemePreviewAlphaKey);', '')
 appearance = (root/'Sources/TSPreviewAppearance.h').read_text()
 if args.mutation == 'filter-gamma':
     appearance = appearance.replace('numberWithDouble:1.6', 'numberWithDouble:1.0')
@@ -187,6 +187,11 @@ int main(void) { @autoreleasepool {
     check(fabs(sourceWindow.alphaValue-.7)<.001 && fabs(pdfWindow.alphaValue-.8)<.001, @"live transparency edit");
     [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:nil];
     check([editor.backgroundColor isEqual:NSColor.whiteColor] && [pdf.backgroundColor isEqual:NSColor.grayColor], @"theme cancel restores saved colors");
+    for(id invalid in @[@"bad",NSNull.null,@[@0],@[@0,@0,@0,@"0.5"],@[@0,@0,@0,@(-0.1)],@[@0,@0,@0,@1.1],@[@0,@0,@0,@(NAN)],@[@0,@0,@0,@(INFINITY)]]){
+        NSMutableDictionary *bad=[custom mutableCopy];bad[@"SourceAlpha"]=invalid;bad[@"PreviewAlpha"]=invalid;
+        [NSNotificationCenter.defaultCenter postNotificationName:SourceColorChangedNotification object:nil userInfo:bad];
+        check(sourceWindow.alphaValue==1 && pdfWindow.alphaValue==1,@"invalid source and preview opacity uses the common opaque fallback");
+    }
     // A later Experiment must adopt the persisted preference and theme immediately.
     ScrapPDFKitView *secondPDF = [[ScrapPDFKitView alloc] initWithFrame:NSMakeRect(0,0,600,480)];
     NSWindow *secondWindow = window(secondPDF); secondPDF.document=document(); pump();
@@ -195,8 +200,8 @@ int main(void) { @autoreleasepool {
     check(!inverted(pdf) && !inverted(secondPDF), @"System choice propagates to all Experiment previews");
     NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]; pump();
     check(inverted(pdf) && inverted(secondPDF), @"System choice follows later system change");
-    check(TSExperimentWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");
-    check(TSExperimentWindowAlpha(@{@"SourceAlpha":@[@0]}, @"SourceAlpha")==1, @"malformed alpha stays opaque");
+    check(TSThemeWindowAlpha(@{}, @"SourceAlpha")==1, @"missing alpha stays opaque");
+    check(TSThemeWindowAlpha(@{@"SourceAlpha":@[@0]}, @"SourceAlpha")==1, @"malformed alpha stays opaque");
     check(!sourceWindow.isVisible && !pdfWindow.isVisible && !secondWindow.isVisible, @"no windows displayed");
     [sourceWindow close]; [pdfWindow close]; [secondWindow close];
     printf("PASS: %d Experiment theme and PDF appearance checks\n", checks);

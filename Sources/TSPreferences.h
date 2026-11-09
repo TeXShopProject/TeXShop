@@ -26,8 +26,10 @@
 #import "UseSparkle.h"
 
 #import <AppKit/AppKit.h>
+#import "TSSettingsCategory.h"
 
 @class TSAutoCompletionListEditor, HelpDocuments;
+@class TSSettingsChangeNotes;
 @interface TSPreferences : NSObject
 {
 	IBOutlet NSWindow	*_prefsWindow;			/*" connected to the window "*/
@@ -237,6 +239,7 @@
     
 }
 
+@property (strong) TSSettingsChangeNotes *settingsChangeNotes;
 @property NSUInteger themeOperationGeneration;
 @property (strong) NSButton *legacySpellCheckButton;
 @property (strong) TSAutoCompletionListEditor *keyBindingEditor;
@@ -387,6 +390,7 @@
 // private API
 //------------------------------------------------------------------------------
 - (void)updateControlsFromUserDefaults:(NSUserDefaults *)defaults;
+- (void)updateSettingsCategory:(TSSettingsCategoryID)identifier fromDefaults:(NSUserDefaults *)defaults;
 - (void)updateDocumentFontTextField;
 - (void)updateConsoleFontTextField;
 

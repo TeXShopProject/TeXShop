@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compile the production provider and editor entry without opening an editor."""
 from pathlib import Path
-from shortcut_sources import production_source
+from shortcut_sources import production_source, companion_sources
 import subprocess,tempfile
 r=Path(__file__).resolve().parents[1]
 menu=(r/'Sources/TSMacroMenuController.m').read_text()
@@ -16,5 +16,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-selection-') as td:
  p=Path(td)
  (p/'TSKeyboardShortcuts.m').write_text(production_source(r))
  for name,s in parts.items():(p/name).write_text(s)
- subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-Wno-deprecated-declarations','-Wno-nullability-completeness','-I',str(p),'-I',str(r/'Sources'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/MacroShortcutSelection.m'),str(r/'Sources/TSMacroTreeNode.m'),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-Wno-deprecated-declarations','-Wno-nullability-completeness','-I',str(p),'-I',str(r/'Sources'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/MacroShortcutSelection.m'),str(r/'Sources/TSMacroTreeNode.m'),*companion_sources(r),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test')],check=True,timeout=20)

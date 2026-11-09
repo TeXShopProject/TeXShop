@@ -142,7 +142,7 @@
 /* Engine path discovery */
 "Set Up TeX Engine Paths" = "设置 TeX 引擎路径";
 "Detected Engine Paths" = "检测到的引擎路径";
-"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "已选中检测到的最新版本。您可以在下方选择其他候选项。自定义引擎命令和备用路径保持不变。";
+
 "Not found (current setting will be kept)" = "未找到（将保留当前设置）";
 "Version unavailable" = "未知";
 "Use These Paths" = "使用这些路径";
@@ -160,20 +160,19 @@
 "Apply" = "应用";
 "Shortcut Unavailable" = "快捷键不可用";
 "Restore all keyboard shortcuts?" = "恢复所有键盘快捷键？";
-"Press the new shortcut (Escape to cancel)." = "请按下新的快捷键（按 Escape 取消）。";
+"New shortcut" = "新快捷键";
 "This command is no longer available." = "此命令已不可用。";
 "This shortcut is already used by “%@”." = "此快捷键已被“%@”使用。";
-"Use Command or Control with a key, or a function key (F1–F20)." = "请将 Command 或 Control 与一个按键组合使用，或使用功能键（F1–F20）。";
-"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "选择命令以更改其快捷键。更改立即生效。宏和文本输入按键绑定使用各自的编辑器。";
+
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
 "Apply Settings Profile?" = "Apply Settings Profile?";
-"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+
 "Apply Profile" = "Apply Profile";
 "Settings could not be saved" = "Settings could not be saved";
 "Enter a valid setting" = "Enter a valid setting";
-"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+
 "Continue Editing" = "Continue Editing";
 "Restore This Field" = "Restore This Field";
 "The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
@@ -200,14 +199,12 @@
 "Show in Macro Editor" = "在宏编辑器中显示";
 "Assigned" = "已分配";
 "Inactive for this key" = "此按键无效";
-"Assignment priority is shown; whether a command can run depends on the document." = "显示按键分配的优先级。命令能否执行取决于文稿状态。";
-"Keys used by the system cannot be detected. Press Escape to stop recording." = "无法检测系统使用的按键。按 Esc 结束录制。";
 "No command uses this key." = "没有命令使用此按键。";
 "Press a key" = "请按键";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与 Command 或 Control 组合使用，或使用 F1–F20。";
-"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "将移除自定菜单快捷键。KeyEquivalents.plist 中的设置将保留。";
 
-"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "显示现有分配。此按键不能分配给新的快捷键。";
+
+"This key cannot be assigned to a new shortcut." = "此按键不能分配给新的快捷键。";
 
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "匹配项：%lu";
@@ -263,17 +260,14 @@
 
 "Tools" = "工具";
 
-"Expanded" = "展开";
 
-"Collapsed" = "折叠";
 
 "Search Settings" = "搜索设置";
 
-"Settings results: %lu" = "找到的设置类别：%lu";
+"Settings results: %lu" = "找到的设置：%lu";
 
 "No Settings Found" = "未找到设置";
 
-"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 
 /* Independent Experiment console */
 "Experiment input" = "实验台输入";
@@ -289,10 +283,29 @@
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "Return to Editing" = "Return to Editing";
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
-"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+
 "These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
 "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
 "This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+
+"The newest detected installation is selected. You can choose another candidate below." = "已选中检测到的最新版本。您可以在下方选择其他候选项。";
+
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "以下宏使用此快捷键。将其分配给菜单命令后，这些宏的快捷键将停用。\n\n%@";
+
+"This does not turn spell checking while typing on or off." = "此设置不会开启或关闭键入时的拼写检查。";
+
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "已打开的 PDF 保持当前缩放比例。新值适用于此后打开的 PDF。";
+
+"Takes effect after you restart TeXShop." = "重新启动 TeXShop 后生效。";
+
+"Custom menu shortcuts will be removed." = "将移除自定菜单快捷键。";
+
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+
+/* System spelling dictionary selection. */
+"Automatic Language" = "自动检测语言";

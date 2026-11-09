@@ -3,6 +3,7 @@
 #import "TSSettingsNavigationHistory.h"
 #import "TSSettingsCategory.h"
 #import "TSSettingsSearch.h"
+#import "TSSettingsChangeNote.h"
 NS_ASSUME_NONNULL_BEGIN
 @protocol TSSettingsKeyboardPane <NSObject>
 - (void)stopKeySearch;
@@ -14,12 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TSSettingsWindowDelegate <NSObject>
 - (BOOL)settingsMayChangeCategory;
 - (void)settingsChangeFont:(NSFontManager *)sender;
+@optional
+- (void)settingsWillDisplayCategory:(TSSettingsCategoryID)identifier;
 @end
 @interface TSSettingsWindowController : NSWindowController
 @property (copy, nullable) NSViewController<TSSettingsKeyboardPane> * _Nullable (^keyboardPaneProvider)(void);
 @property (weak, nullable) id<TSSettingsWindowDelegate> settingsDelegate;
 @property (copy, nullable) NSArray<NSString *> *(^commandNamesProvider)(void);
 @property (nonatomic, strong) NSBundle *searchBundle;
+@property (strong, nullable) TSSettingsChangeNotes *changeNotes;
 @property (copy, readonly) NSString *searchQuery;
 @property (copy, readonly) NSArray<TSSettingsSearchResult *> *searchResults;
 - (BOOL)setSettingsSearchQuery:(NSString *)query;

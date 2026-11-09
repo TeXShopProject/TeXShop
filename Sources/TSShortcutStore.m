@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSShortcutInternal.h"
 NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
+@interface TSShortcutCommand (PathUpdates)
+@property (nonatomic, readwrite, copy) NSString *path;
+@end
 @interface TSShortcutStore ()
 @property NSMenu *menu;
 @property NSUserDefaults *defaults;
-@property NSMutableDictionary *overrides;
-@property (readwrite) NSArray<TSShortcutCommand *> *commands;
-@property (readwrite) NSArray<NSString *> *unavailableCommands;
+@property NSMutableDictionary<NSString *, TSShortcutBinding *> *overrides;
+@property (readwrite, copy) NSArray<TSShortcutCommand *> *commands;
+@property (readwrite, copy) NSArray<NSString *> *unavailableCommands;
 @end
 @implementation TSShortcutStore
 - (NSArray<NSString *> *)settingsSearchCommandNames
@@ -46,10 +49,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
         [seen addObject:identifier];
         TSShortcutCommand *command = [previous objectForKey:item];
         if (!command) {
-            command = [TSShortcutCommand new];
-            command.item = item; command.commandID = identifier;
-            command.defaultKey = item.keyEquivalent; command.defaultModifiers = item.keyEquivalentModifierMask;
-            command.defaultLocalization = item.allowsAutomaticKeyEquivalentLocalization;
+            command = [[TSShortcutCommand alloc] initWithItem:item identifier:identifier path:path];
         }
         command.path = path; [commands addObject:command];
     });
@@ -61,7 +61,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     NSMutableOrderedSet *unavailable = [NSMutableOrderedSet orderedSet];
     for (TSShortcutCommand *command in self.commands)
         if (self.overrides[command.commandID]) [active addObject:command.commandID];
-    NSMapTable *planned = [NSMapTable strongToStrongObjectsMapTable];
+    NSMapTable<NSMenuItem *, TSShortcutBinding *> *planned = [NSMapTable strongToStrongObjectsMapTable];
     BOOL changed;
     do {
         changed = NO;
@@ -69,13 +69,13 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
             if (!item.submenu && item.action != TSMacroAction()) [planned setObject:TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) forKey:item];
         });
         for (TSShortcutCommand *command in self.commands) {
-            NSDictionary *value = [active containsObject:command.commandID] ? self.overrides[command.commandID] : TSBinding(command.defaultKey, command.defaultModifiers);
+            TSShortcutBinding *value = [active containsObject:command.commandID] ? self.overrides[command.commandID] : TSBinding(command.defaultKey, command.defaultModifiers);
             [planned setObject:value forKey:command.item];
         }
         NSMutableSet *rejected = [NSMutableSet set];
         for (TSShortcutCommand *command in self.commands) {
             if (![active containsObject:command.commandID]) continue;
-            NSDictionary *value = [planned objectForKey:command.item];
+            TSShortcutBinding *value = [planned objectForKey:command.item];
             if (![value[@"key"] length]) continue;
             for (NSMenuItem *other in planned.keyEnumerator) {
                 if (other != command.item && [[planned objectForKey:other] isEqual:value]) {
@@ -112,23 +112,24 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 + (NSArray<NSDictionary *> *)menuBindings:(NSMenu *)menu {
     NSMutableArray *result = [NSMutableArray array];
     TSVisitMenu(menu, @"", ^(NSMenuItem *item, NSString *path) {
+        if (item.hidden && !item.allowsKeyEquivalentWhenHidden) return;
         if (!item.submenu && item.action != TSMacroAction() && item.keyEquivalent.length)
             [result addObject:@{@"path":path, @"key":item.keyEquivalent,
                 @"modifiers":@(item.keyEquivalentModifierMask), @"macro":@NO}];
     });
     return result;
 }
-+ (NSDictionary *)normalizedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags { return TSBinding(key, flags); }
++ (TSShortcutBinding *)normalizedKey:(NSString *)key modifiers:(NSEventModifierFlags)flags { return TSBinding(key, flags); }
 - (NSArray<NSDictionary *> *)conflictsForMacroShortcuts:(NSArray<NSDictionary *> *)candidates {
     NSMutableDictionary *reserved = [NSMutableDictionary dictionary];
     for (NSDictionary *entry in [TSShortcutStore menuBindings:self.menu]) {
-        NSDictionary *binding = TSBinding(entry[@"key"], [entry[@"modifiers"] unsignedIntegerValue]);
+        TSShortcutBinding *binding = TSBinding(entry[@"key"], [entry[@"modifiers"] unsignedIntegerValue]);
         if (!reserved[binding]) reserved[binding] = entry;
     }
     NSMutableArray *result = [NSMutableArray array];
     [candidates enumerateObjectsUsingBlock:^(NSDictionary *candidate, NSUInteger index, BOOL *stop) {
-        NSDictionary *binding = TSBinding(candidate[@"key"], [candidate[@"modifiers"] unsignedIntegerValue]);
-        if (![binding[@"key"] length]) return;
+        TSShortcutBinding *binding = TSBinding(candidate[@"key"], [candidate[@"modifiers"] unsignedIntegerValue]);
+        if (!binding.key.length) return;
         NSDictionary *other = reserved[binding];
         if (other) [result addObject:@{@"index":@(index), @"other":other}];
         else {
@@ -151,7 +152,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 - (NSArray<NSString *> *)macrosUsingKey:(NSString *)key modifiers:(NSEventModifierFlags)flags {
     NSMutableOrderedSet *result = [NSMutableOrderedSet orderedSet];
     if (!key.length) return @[];
-    NSDictionary *binding = TSBinding(key, flags);
+    TSShortcutBinding *binding = TSBinding(key, flags);
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item.action == TSMacroAction() && item.keyEquivalent.length &&
             [TSBinding(item.keyEquivalent, item.keyEquivalentModifierMask) isEqual:binding])
@@ -175,15 +176,15 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     return (flags & (NSEventModifierFlagCommand | NSEventModifierFlagControl)) &&
         c >= 0x20 && c != 0x7f && !(c >= 0xd800 && c <= 0xdfff);
 }
-- (void)apply:(NSDictionary *)binding to:(TSShortcutCommand *)command {
+- (void)apply:(TSShortcutBinding *)binding to:(TSShortcutCommand *)command {
     command.item.allowsAutomaticKeyEquivalentLocalization = NO;
     command.item.keyEquivalent = @"";
-    command.item.keyEquivalentModifierMask = [binding[@"modifiers"] unsignedIntegerValue];
-    command.item.keyEquivalent = binding[@"key"] ?: @"";
+    command.item.keyEquivalentModifierMask = binding.modifiers;
+    command.item.keyEquivalent = binding.key;
 }
 - (NSArray<TSShortcutMatch *> *)menuMatchesKey:(NSString *)key modifiers:(NSEventModifierFlags)flags excluding:(NSMenuItem *)excluded {
     if (key.length == 0) { return @[]; }
-    NSDictionary *binding = TSBinding(key, flags);
+    TSShortcutBinding *binding = TSBinding(key, flags);
     NSMutableArray<TSShortcutMatch *> *matches = [NSMutableArray array];
     TSVisitMenu(self.menu, @"", ^(NSMenuItem *item, NSString *path) {
         if (item == excluded || item.submenu != nil || item.action == TSMacroAction() || item.keyEquivalent.length == 0) { return; }
@@ -198,7 +199,7 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
     TSShortcutMatch *match = [self menuMatchesKey:key modifiers:flags excluding:excluded].lastObject;
     return match != nil ? match.path : nil;
 }
-- (NSArray<NSDictionary *> *)restorationBindingsForCommand:(TSShortcutCommand *)command {
+- (NSArray<TSShortcutBinding *> *)restorationBindingsForCommand:(TSShortcutCommand *)command {
     TISInputSourceRef source = TISCopyCurrentKeyboardLayoutInputSource();
     CFDataRef data = source ? TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) : NULL;
     NSArray *bindings = TSRestorationBindings(command.defaultKey, command.defaultModifiers, data, LMGetKbdType());
@@ -230,8 +231,8 @@ NSString * const TSMenuShortcutOverridesKey = @"TSMenuShortcutOverrides";
 }
 - (nullable NSString *)setKey:(NSString *)key modifiers:(NSEventModifierFlags)flags forCommand:(TSShortcutCommand *)command {
     if (![self.commands containsObject:command]) return NSLocalizedString(@"This command is no longer available.", @"");
-    if (![TSShortcutStore isAllowedKey:key modifiers:flags]) return NSLocalizedString(@"Use Command or Control with a key, or a function key (F1–F20).", @"");
-    NSDictionary *binding = TSBinding(key, flags);
+    if (![TSShortcutStore isAllowedKey:key modifiers:flags]) return NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.", @"");
+    TSShortcutBinding *binding = TSBinding(key, flags);
     if ([binding isEqual:TSBinding(command.defaultKey, command.defaultModifiers)]) return [self restoreCommand:command];
     NSString *conflict = [self conflictForKey:key modifiers:flags except:command.item restoring:nil];
     if (conflict) return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is already used by “%@”.", @""), conflict];

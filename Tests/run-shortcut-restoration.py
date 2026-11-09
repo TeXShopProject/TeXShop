@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check default restoration without showing windows or changing the active layout/settings."""
 from pathlib import Path
-from shortcut_sources import production_source
+from shortcut_sources import production_source, companion_sources
 import subprocess, tempfile, sys
 root=Path(__file__).resolve().parents[1]
 production=production_source(root)
@@ -11,7 +11,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcut-restore-') as td:
     binary=Path(td)/'restore'
     def compile_source(source):
         (Path(td)/'TSKeyboardShortcuts.m').write_text(source)
-        subprocess.run(['xcrun','clang','-O2','-fobjc-arc','-Wno-deprecated-declarations','-framework','Cocoa','-framework','Carbon','-I',td,'-I',str(root/'Sources'),str(root/'Tests/ShortcutRestoration.m'),'-o',str(binary)],check=True)
+        subprocess.run(['xcrun','clang','-O2','-fobjc-arc','-Wno-deprecated-declarations','-framework','Cocoa','-framework','Carbon','-I',td,'-I',str(root/'Sources'),str(root/'Tests/ShortcutRestoration.m'),*companion_sources(root),'-o',str(binary)],check=True)
     compile_source(production)
     for path in paths:
         subprocess.run([str(binary),str(path)],check=True)

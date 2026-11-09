@@ -101,7 +101,7 @@
                   <action selector="magChanged:" target="-2" id="117" />
                 </connections>
               </button>
-              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="113" toolTip="Default zoom for newly opened PDFs. Existing PDFs keep their current zoom." identifier="settings.113">
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="113" toolTip="Default zoom for newly opened PDFs." identifier="settings.113">
                 <rect key="frame" x="66" y="14" width="40" height="22" />
                 <autoresizingMask key="autoresizingMask" />
                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="100" drawsBackground="YES" id="865">
@@ -146,7 +146,7 @@
               <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="345" identifier="settings.345">
                 <rect key="frame" x="23" y="9" width="163" height="26" />
                 <autoresizingMask key="autoresizingMask" />
-                <popUpButtonCell key="cell" type="push" title="Select Pdf" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="5" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="337" id="869">
+                <popUpButtonCell key="cell" type="push" title="Select PDF" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="5" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="337" id="869">
                   <behavior key="behavior" lightByBackground="YES" lightByGray="YES" />
                   <font key="font" metaFont="message" />
                   <menu key="menu" title="OtherViews" id="341">
@@ -155,7 +155,7 @@
                       <menuItem title="Select Text" tag="2" id="636" />
                       <menuItem title="Magnify" tag="3" id="332" />
                       <menuItem title="Magnify (Large)" tag="4" id="335" />
-                      <menuItem title="Select Pdf" state="on" tag="5" id="337" />
+                      <menuItem title="Select PDF" state="on" tag="5" id="337" />
                     </items>
                   </menu>
                 </popUpButtonCell>
@@ -265,11 +265,11 @@
                 </buttonCell>
                 <cells>
                   <column>
-                    <buttonCell type="radio" title="Pages Flow Left to Right" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="505">
+                    <buttonCell type="radio" title="Left to Right" imagePosition="left" alignment="left" state="on" tag="1" inset="2" id="505">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
-                    <buttonCell type="radio" title="Pages Flow Right to Left" imagePosition="left" alignment="left" tag="2" inset="2" id="507">
+                    <buttonCell type="radio" title="Right to Left" imagePosition="left" alignment="left" tag="2" inset="2" id="507">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
@@ -370,7 +370,7 @@
               <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iRm-g2-CpD" identifier="settings.iRm-g2-CpD">
                 <rect key="frame" x="19" y="27" width="182" height="32" />
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                <buttonCell key="cell" type="radio" title="Source on the Left" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1uj-kt-7Pj">
+                <buttonCell key="cell" type="radio" title="Left" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1uj-kt-7Pj">
                   <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                   <font key="font" metaFont="system" />
                 </buttonCell>
@@ -381,7 +381,7 @@
               <button tag="1" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zvK-4Q-HJ5" identifier="settings.zvK-4Q-HJ5">
                 <rect key="frame" x="19" y="7" width="182" height="26" />
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
-                <buttonCell key="cell" type="radio" title="Source on the Right" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="V7d-ht-Pe3">
+                <buttonCell key="cell" type="radio" title="Right" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="V7d-ht-Pe3">
                   <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                   <font key="font" metaFont="system" />
                 </buttonCell>

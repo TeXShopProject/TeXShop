@@ -1,0 +1,2033 @@
+{
+ "note": "TeXShop 5.60（master 1f4a1ac）の日本語の設定画面の全項目を、新しいカテゴリへ振り分けたもの。src は ja.lproj/Preferences.nib の部品の id（matrix の各セルは id#番号）。window: は窓の下の部品、code: はコードで足される部品、menu: はメニューから移すもの、new: は新しく足すもの。動作には結び付けていない（スタブ）。",
+ "categories": [
+  {
+   "id": "general",
+   "title": "一般",
+   "symbol": "gearshape",
+   "color": "#888780",
+   "section": 0,
+   "summary": "起動時の動作、ウインドウの開き方と位置、設定プロファイルを設定します。",
+   "groups": [
+    {
+     "title": "起動時",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "新しいファイルを作成する",
+       "on": true,
+       "src": [
+        "238"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "外部エディタでソースを編集",
+       "src": [
+        "272"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "ウインドウ",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "ソースとプレビュー",
+       "choices": [
+        "別々のウインドウで開く",
+        "1つのウインドウに統合"
+       ],
+       "src": [
+        "8iM-xs-rUq",
+        "ogf-6L-hrB"
+       ],
+       "id": "sourceAndPreview"
+      },
+      {
+       "kind": "popup",
+       "title": "統合したウインドウでのソースの位置",
+       "choices": [
+        "左",
+        "右"
+       ],
+       "src": [
+        "V3N-AX-S1n",
+        "yFZ-Bz-ekw"
+       ],
+       "enabledWhen": {
+        "row": "sourceAndPreview",
+        "values": [
+         1
+        ]
+       }
+      },
+      {
+       "kind": "popup",
+       "title": "新しいウインドウをタブで開く",
+       "choices": [
+        "しない",
+        "自動",
+        "すべて"
+       ],
+       "src": [
+        "3re-6m-rUM"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "ウインドウの位置",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "ソース",
+       "choices": [
+        "閉じたときの位置を保存",
+        "いつも同じ位置で開く"
+       ],
+       "button": "現在の位置に設定",
+       "src": [
+        "30",
+        "33"
+       ],
+       "buttonEnabledWhen": [
+        1
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "プレビュー",
+       "choices": [
+        "閉じたときの位置を保存",
+        "いつも同じ位置で開く"
+       ],
+       "button": "現在の位置に設定",
+       "src": [
+        "44",
+        "46"
+       ],
+       "buttonEnabledWhen": [
+        1
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "コンソール",
+       "choices": [
+        "閉じたときの位置を保存",
+        "いつも同じ位置で開く"
+       ],
+       "button": "現在の位置に設定",
+       "src": [
+        "KW4-jC-ZOb",
+        "beJ-DI-R9A"
+       ],
+       "buttonEnabledWhen": [
+        1
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "HTML",
+       "choices": [
+        "閉じたときの位置を保存",
+        "いつも同じ位置で開く"
+       ],
+       "button": "現在の位置に設定",
+       "src": [
+        "XlI-qL-Vhu",
+        "a1O-LZ-CTc"
+       ],
+       "buttonEnabledWhen": [
+        1
+       ]
+      }
+     ]
+    },
+    {
+     "title": "プロジェクトのルートファイル",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "ファイルを開いたときにルートファイルも開く",
+       "src": [
+        "8pX-l6-YF6"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "開いたルートファイルを最小化する",
+       "src": [
+        "irw-yn-ghY"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "設定プロファイル",
+     "rows": [
+      {
+       "kind": "description",
+       "title": "日本語環境向けなどの設定をまとめて適用します。キーボードショートカット、アップデートの設定、ウインドウの配置は保たれます。"
+      },
+      {
+       "kind": "popup",
+       "title": "プロファイル",
+       "choices": [
+        "TeXShop 標準",
+        "upTeX (ptex2pdf)",
+        "upTeX (latexmk)",
+        "upTeX (シェルスクリプト)",
+        "pTeX (ptex2pdf)",
+        "pTeX (latexmk)",
+        "pTeX (シェルスクリプト)",
+        "旧 pTeX (Shift JIS)",
+        "旧 pTeX (EUC)"
+       ],
+       "button": "適用…",
+       "src": [
+        "window:setDefaults"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "詳細",
+     "rows": [
+      {
+       "kind": "description",
+       "title": "設定画面にない隠し設定は、ヘルプの「コメント行と隠し設定」で説明しています。"
+      },
+      {
+       "kind": "link",
+       "title": "コメント行と隠し設定を開く",
+       "src": [
+        "new:hidden-settings-link"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "documents",
+   "title": "書類と保存",
+   "symbol": "doc.text",
+   "color": "#378ADD",
+   "section": 0,
+   "summary": "新しい書類のエンコーディングと、保存の方法を設定します。",
+   "groups": [
+    {
+     "title": "エンコーディング",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "新しい書類のエンコーディング",
+       "choices": [
+        "Unicode (UTF-8)",
+        "Unicode (UTF-16)",
+        "日本語 (Shift JIS)",
+        "日本語 (EUC)",
+        "日本語 (ISO 2022-JP)",
+        "西欧 (Mac OS Roman)",
+        "西欧 (ISO Latin 9)"
+       ],
+       "src": [
+        "278"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "保存ダイアログにエンコーディングを表示",
+       "src": [
+        "7DU-GA-R8r"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "保存",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "オートセーブとバージョンを有効にする",
+       "on": true,
+       "note": "編集中に自動でファイルを上書きする macOS の機能です。TeXShop の再起動後に有効になります。",
+       "src": [
+        "kug-je-PQb"
+       ],
+       "id": "autosave"
+      },
+      {
+       "kind": "switch",
+       "title": "保存時に以前のファイルを「名前~」として残す",
+       "src": [
+        "UQf-Ld-lKZ"
+       ],
+       "enabledWhen": {
+        "row": "autosave",
+        "values": [
+         0
+        ]
+       }
+      },
+      {
+       "kind": "switch",
+       "title": "関連ファイルも保存する",
+       "note": "ファイルを保存するときに、同じプロジェクトの開いているファイルも保存します。",
+       "src": [
+        "316"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "UTF-8-MAC を UTF-8 に自動変換",
+       "src": [
+        "1226"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "editor",
+   "title": "エディタ",
+   "symbol": "character.cursor.ibeam",
+   "color": "#BA7517",
+   "section": 1,
+   "summary": "ソースのウインドウの表示と入力を設定します。",
+   "groups": [
+    {
+     "title": "表示",
+     "rows": [
+      {
+       "kind": "font",
+       "title": "フォント",
+       "value": "Helvetica 12",
+       "src": [
+        "16"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "ソースのカラー表示",
+       "on": true,
+       "src": [
+        "621#1"
+       ],
+       "note": "新しい書類の初期値です。開いている書類では、「ソース」メニューで切り替えます。"
+      },
+      {
+       "kind": "switch",
+       "title": "行番号",
+       "on": true,
+       "src": [
+        "621#9"
+       ],
+       "note": "新しい書類の初期値です。開いている書類では、「ソース」メニューで切り替えます。"
+      },
+      {
+       "kind": "popup",
+       "title": "行番号の文字サイズ",
+       "choices": [
+        "小",
+        "大"
+       ],
+       "src": [
+        "ksw-cZ-1eN"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "現在の行をハイライト",
+       "src": [
+        "Ckn-mH-VpJ"
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "折り返し表示",
+       "choices": [
+        "なし",
+        "単語単位で",
+        "文字単位で"
+       ],
+       "selected": 1,
+       "src": [
+        "X2i-f0-3Hu"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "メニューにタグリストを表示",
+       "on": true,
+       "src": [
+        "621#11"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "書式",
+     "rows": [
+      {
+       "kind": "text",
+       "title": "タブ幅",
+       "value": "4",
+       "unit": "文字",
+       "src": [
+        "tZE-M0-4lA"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "タブでインデント",
+       "src": [
+        "0Ad-oh-5Ny"
+       ]
+      },
+      {
+       "kind": "text",
+       "title": "段落1行目のインデント量",
+       "value": "0",
+       "unit": "pt",
+       "src": [
+        "6Ic-Ft-d2h"
+       ]
+      },
+      {
+       "kind": "text",
+       "title": "段落2行目以降のインデント量",
+       "value": "0",
+       "unit": "pt",
+       "src": [
+        "4dC-45-e52"
+       ]
+      },
+      {
+       "kind": "text",
+       "title": "行間スペース",
+       "value": "0",
+       "unit": "pt",
+       "src": [
+        "rgC-4Z-JXZ"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "入力",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "選択時にカーソルを移動",
+       "src": [
+        "621#8"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "選択中に括弧類を入力したら、選択範囲を囲む",
+       "src": [
+        "621#13"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "右から左に書く言語（Arabic、Hebrew、Persian）",
+       "src": [
+        "621#10"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "構文の色分け",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "@ をコマンド名の一部と見なす",
+       "src": [
+        "621#2"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "expl3 を既定でハイライト",
+       "src": [
+        "621#3"
+       ],
+       "note": "新しい書類の初期値です。開いている書類では、「ソース」メニューで切り替えます。"
+      }
+     ]
+    },
+    {
+     "title": "括弧の対応",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "括弧の対応チェック",
+       "on": true,
+       "src": [
+        "621#4"
+       ]
+      },
+      {
+       "kind": "checks",
+       "title": "対象",
+       "choices": [
+        "{ }",
+        "( )",
+        "[ ]",
+        "< >"
+       ],
+       "src": [
+        "3ei-ml-i52",
+        "2lY-b5-VIL",
+        "4e4-tv-CJD",
+        "Ma4-8U-20J"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "囲まれる部分を強調",
+       "src": [
+        "1136"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "対応する括弧を点滅",
+       "on": true,
+       "src": [
+        "1213"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "移動中も黄色くポップアップ",
+       "src": [
+        "1151"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "孤立括弧を音で警告",
+       "src": [
+        "1138"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "孤立括弧を背景色で警告",
+       "src": [
+        "1140"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "不可視文字",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "ファイルを開いた直後から表示",
+       "src": [
+        "1221"
+       ]
+      },
+      {
+       "kind": "switchpopup",
+       "title": "半角スペース",
+       "choices": [
+        "␣",
+        "·"
+       ],
+       "src": [
+        "1082",
+        "1090"
+       ]
+      },
+      {
+       "kind": "switchpopup",
+       "title": "全角スペース",
+       "choices": [
+        "□",
+        "■"
+       ],
+       "on": true,
+       "src": [
+        "1084",
+        "1100"
+       ]
+      },
+      {
+       "kind": "switchpopup",
+       "title": "改行",
+       "choices": [
+        "↵",
+        "¶",
+        "↩",
+        "⏎"
+       ],
+       "src": [
+        "1086",
+        "1106"
+       ]
+      },
+      {
+       "kind": "switchpopup",
+       "title": "タブ",
+       "choices": [
+        "‣",
+        "▹",
+        "⇥"
+       ],
+       "src": [
+        "1088",
+        "1118"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "カーソル",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "カーソルをブロック状表示",
+       "src": [
+        "rmh-fo-iC3"
+       ],
+       "id": "blockCursor"
+      },
+      {
+       "kind": "color",
+       "title": "ブロックカーソルの色",
+       "value": "#FF8C00",
+       "src": [
+        "bGG-lm-bPK"
+       ],
+       "enabledWhen": {
+        "row": "blockCursor",
+        "values": [
+         1
+        ]
+       }
+      },
+      {
+       "kind": "popup",
+       "title": "ブロックの位置",
+       "choices": [
+        "左",
+        "両側",
+        "右"
+       ],
+       "src": [
+        "gte-rP-nJS"
+       ],
+       "enabledWhen": {
+        "row": "blockCursor",
+        "values": [
+         1
+        ]
+       }
+      },
+      {
+       "kind": "popup",
+       "title": "左右時のブロック長",
+       "choices": [
+        "1文字分",
+        "2文字分"
+       ],
+       "src": [
+        "LKg-Jo-3hh"
+       ],
+       "enabledWhen": {
+        "row": "blockCursor",
+        "values": [
+         1
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "title": "検索",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "検索パネル",
+       "choices": [
+        "Apple 標準検索パネル",
+        "Apple 標準検索バー",
+        "OgreKit 検索パネル"
+       ],
+       "selected": 2,
+       "note": "TeXShop の再起動後に有効になります。",
+       "src": [
+        "581"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "タグリストに表示する XML タグ",
+     "rows": [
+      {
+       "kind": "checkgrid",
+       "title": "",
+       "choices": [
+        "chapter",
+        "section",
+        "subsection",
+        "subsubsection",
+        "introduction",
+        "conclusion",
+        "exercises",
+        "project",
+        "figure",
+        "table",
+        "カスタムマーク"
+       ],
+       "src": [
+        "caV-8m-7b4",
+        "SMq-T6-v55",
+        "1La-Vd-lOJ",
+        "EYy-C8-i88",
+        "SzX-BO-eYh",
+        "OFh-0N-0yO",
+        "af8-ER-k72",
+        "pvC-yP-49o",
+        "Sbq-YG-c8X",
+        "HkJ-W8-Q55",
+        "e9r-yA-3BL"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spelling",
+   "title": "スペルチェック",
+   "symbol": "text.badge.checkmark",
+   "color": "#639922",
+   "section": 1,
+   "summary": "スペルチェックと、LaTeX の構造を考慮するスペルチェックを設定します。",
+   "groups": [
+    {
+     "title": "スペルチェック",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "入力中にスペルチェック",
+       "on": true,
+       "src": [
+        "621#5"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "スペルの自動修正",
+       "src": [
+        "621#12"
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "辞書",
+       "choices": [
+        "自動（言語別）",
+        "英語（アメリカ）",
+        "英語（イギリス）",
+        "ドイツ語",
+        "フランス語"
+       ],
+       "src": [
+        "OZM-Tw-x8R"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "方式",
+     "rows": [
+      {
+       "kind": "radio",
+       "title": "LaTeXの構造を考慮する（推奨）",
+       "value": "spellMode",
+       "selected": 0,
+       "on": true,
+       "note": "コマンド、数式、コメント、参照の引数などを除いて、本文だけを検査します。",
+       "src": [
+        "ts-aware-spelling"
+       ]
+      },
+      {
+       "kind": "button",
+       "title": "LaTeXの除外規則を編集…",
+       "indent": 1,
+       "enabledWhen": {
+        "row": "spellMode",
+        "values": [
+         0
+        ]
+       },
+       "src": [
+        "ts-edit-spelling"
+       ]
+      },
+      {
+       "kind": "radio",
+       "title": "従来の方式",
+       "value": "spellMode",
+       "selected": 1
+      },
+      {
+       "kind": "switch",
+       "title": "LaTeXコマンドを対象外にする",
+       "on": true,
+       "indent": 1,
+       "enabledWhen": {
+        "row": "spellMode",
+        "values": [
+         1
+        ]
+       },
+       "src": [
+        "YGy-QL-IO9#1"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "特定のコマンド引数を対象外にする",
+       "on": true,
+       "indent": 1,
+       "enabledWhen": {
+        "row": "spellMode",
+        "values": [
+         1
+        ]
+       },
+       "src": [
+        "YGy-QL-IO9#2"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "コメントを対象外にする",
+       "on": true,
+       "indent": 1,
+       "enabledWhen": {
+        "row": "spellMode",
+        "values": [
+         1
+        ]
+       },
+       "src": [
+        "YGy-QL-IO9#3"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "appearance",
+   "title": "外観",
+   "symbol": "paintpalette",
+   "color": "#7F77DD",
+   "section": 1,
+   "summary": "配色のテーマと、Dock のアイコンを設定します。",
+   "groups": [
+    {
+     "title": "テーマ",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "ライトモード時のテーマ",
+       "choices": [
+        "TeXShop",
+        "Solarized Light",
+        "GitHub"
+       ],
+       "src": [
+        "EEU-LS-hZT"
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "ダークモード時のテーマ",
+       "choices": [
+        "TeXShop Dark",
+        "Solarized Dark"
+       ],
+       "src": [
+        "WCX-wT-hwy"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "テーマの編集",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "編集するテーマ",
+       "choices": [
+        "TeXShop",
+        "TeXShop Dark",
+        "Solarized Light",
+        "Solarized Dark",
+        "GitHub"
+       ],
+       "src": [
+        "f0m-Ok-bmZ"
+       ]
+      },
+      {
+       "kind": "buttons",
+       "title": "",
+       "choices": [
+        "旧バージョンの設定から移行",
+        "新規テーマを作成",
+        "編集中のテーマに上書き保存"
+       ],
+       "src": [
+        "QdA-w4-ZtO",
+        "OWo-zD-aVB",
+        "kSG-nU-o3l"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "色：ウインドウ",
+     "rows": [
+      {
+       "kind": "colortable",
+       "title": "",
+       "choices": [
+        "文字",
+        "背景",
+        "不透明度"
+       ],
+       "items": [
+        {
+         "title": "ソース",
+         "cells": [
+          "#000000",
+          "#FFFFFF",
+          "#FFFFFF"
+         ],
+         "src": [
+          "ngT-uG-U91",
+          "7aN-b4-sxb",
+          "I3G-xp-jY8"
+         ]
+        },
+        {
+         "title": "コンソール",
+         "cells": [
+          "#000000",
+          "#FFFFFF",
+          "#FFFFFF"
+         ],
+         "src": [
+          "Kpp-Is-jvv",
+          "iHm-Dp-7a2",
+          "FX4-Zp-ZHi"
+         ]
+        },
+        {
+         "title": "ログ",
+         "cells": [
+          "#000000",
+          "#FFFFFF",
+          ""
+         ],
+         "src": [
+          "5DB-Rf-phr",
+          "lhc-Ju-DvO"
+         ]
+        },
+        {
+         "title": "プレビュー",
+         "cells": [
+          "",
+          "#FFFFFF",
+          "#FFFFFF"
+         ],
+         "src": [
+          "moc-D4-iZS",
+          "SrE-dt-SlE"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "色：ソース",
+     "rows": [
+      {
+       "kind": "colors",
+       "title": "",
+       "items": [
+        {
+         "title": "カーソル",
+         "cells": [
+          "#000000"
+         ],
+         "src": [
+          "uIl-Dg-5JB"
+         ]
+        },
+        {
+         "title": "背景の点滅",
+         "cells": [
+          "#FFFF00"
+         ],
+         "src": [
+          "YAY-lx-vy6"
+         ]
+        },
+        {
+         "title": "現在の行",
+         "cells": [
+          "#EEF4FF"
+         ],
+         "src": [
+          "dl3-aa-Pcl"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "色：シンタックスハイライト",
+     "rows": [
+      {
+       "kind": "colors",
+       "title": "",
+       "items": [
+        {
+         "title": "コメント",
+         "cells": [
+          "#CC0000"
+         ],
+         "src": [
+          "36E-G0-z72"
+         ]
+        },
+        {
+         "title": "コマンド",
+         "cells": [
+          "#0000CC"
+         ],
+         "src": [
+          "IMf-h3-TMp"
+         ]
+        },
+        {
+         "title": "脚注",
+         "cells": [
+          "#808080"
+         ],
+         "src": [
+          "ht7-SJ-k3Y"
+         ]
+        },
+        {
+         "title": "記号類",
+         "cells": [
+          "#008000"
+         ],
+         "src": [
+          "6FP-Ky-eIN"
+         ]
+        },
+        {
+         "title": "索引",
+         "cells": [
+          "#AA6600"
+         ],
+         "src": [
+          "D3E-KV-gCh"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "色：括弧類",
+     "rows": [
+      {
+       "kind": "colors",
+       "title": "",
+       "items": [
+        {
+         "title": "( )",
+         "cells": [
+          "#7F3FBF"
+         ],
+         "src": [
+          "ebA-zi-lLO"
+         ]
+        },
+        {
+         "title": "{ }",
+         "cells": [
+          "#007F7F"
+         ],
+         "src": [
+          "FTd-qj-Fms"
+         ]
+        },
+        {
+         "title": "[ ]",
+         "cells": [
+          "#BF5F00"
+         ],
+         "src": [
+          "HR1-sN-He0"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "色：expl3",
+     "rows": [
+      {
+       "kind": "colors",
+       "title": "",
+       "items": [
+        {
+         "title": "Function",
+         "cells": [
+          "#1F5FBF"
+         ],
+         "src": [
+          "1LD-lf-4ZI"
+         ]
+        },
+        {
+         "title": "__Function",
+         "cells": [
+          "#5F8FDF"
+         ],
+         "src": [
+          "bif-vV-iP6"
+         ]
+        },
+        {
+         "title": "key",
+         "cells": [
+          "#9F3F9F"
+         ],
+         "src": [
+          "mPN-pN-gaE"
+         ]
+        },
+        {
+         "title": "Variable",
+         "cells": [
+          "#2F8F2F"
+         ],
+         "src": [
+          "Zra-6t-fbK"
+         ]
+        },
+        {
+         "title": "__Variable",
+         "cells": [
+          "#6FBF6F"
+         ],
+         "src": [
+          "Wf1-Cs-W0W"
+         ]
+        },
+        {
+         "title": "argument",
+         "cells": [
+          "#BF7F3F"
+         ],
+         "src": [
+          "VN0-Hk-vWv"
+         ]
+        },
+        {
+         "title": "msg",
+         "cells": [
+          "#BF3F3F"
+         ],
+         "src": [
+          "fhA-1t-1ir"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "色：強調表示",
+     "rows": [
+      {
+       "kind": "colors",
+       "title": "",
+       "items": [
+        {
+         "title": "不可視文字",
+         "cells": [
+          "#B0B0B0"
+         ],
+         "src": [
+          "176-ah-g8m"
+         ]
+        },
+        {
+         "title": "囲まれた中身",
+         "cells": [
+          "#FFF2B3"
+         ],
+         "src": [
+          "tnp-tY-NAX"
+         ]
+        },
+        {
+         "title": "波括弧",
+         "cells": [
+          "#FFD27F"
+         ],
+         "src": [
+          "1qA-32-Jck"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "色：SyncTeX と画像のコピー",
+     "rows": [
+      {
+       "kind": "colors",
+       "title": "",
+       "items": [
+        {
+         "title": "SyncTeX（プレビュー上）",
+         "cells": [
+          "#FF0000"
+         ],
+         "src": [
+          "X8l-mw-Xb9"
+         ]
+        },
+        {
+         "title": "SyncTeX（ソース上）",
+         "cells": [
+          "#FFFF00"
+         ],
+         "src": [
+          "dOa-qE-k50"
+         ]
+        },
+        {
+         "title": "画像コピーの文字",
+         "cells": [
+          "#000000"
+         ],
+         "src": [
+          "pND-FI-sDy"
+         ]
+        },
+        {
+         "title": "画像コピーの背景",
+         "cells": [
+          "#FFFFFF"
+         ],
+         "src": [
+          "uTg-Np-bMw"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "色：XML 構文",
+     "rows": [
+      {
+       "kind": "colors",
+       "title": "",
+       "items": [
+        {
+         "title": "コメント",
+         "cells": [
+          "#808080"
+         ],
+         "src": [
+          "dFx-HS-hM3"
+         ]
+        },
+        {
+         "title": "タグ",
+         "cells": [
+          "#0000CC"
+         ],
+         "src": [
+          "v28-GY-nH2"
+         ]
+        },
+        {
+         "title": "エスケープ",
+         "cells": [
+          "#CC0000"
+         ],
+         "src": [
+          "mU1-zB-Li8"
+         ]
+        },
+        {
+         "title": "属性",
+         "cells": [
+          "#7F3FBF"
+         ],
+         "src": [
+          "srB-X3-4gv"
+         ]
+        },
+        {
+         "title": "値",
+         "cells": [
+          "#2F8F2F"
+         ],
+         "src": [
+          "aWb-fc-sKb"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "起動中の Dock アイコン",
+     "rows": [
+      {
+       "kind": "dock",
+       "title": "TeXShop の起動中に適用します。終了後は標準のアイコンに戻ります。",
+       "choices": [
+        "初期版",
+        "旧三角アイコン",
+        "Retina版三角アイコン",
+        "丸形アイコン",
+        "現在のアイコン（標準）"
+       ],
+       "items": [
+        {
+         "title": "1.0 以前",
+         "cells": [
+          "original"
+         ]
+        },
+        {
+         "title": "1.0–3.13",
+         "cells": [
+          "triangle"
+         ]
+        },
+        {
+         "title": "3.14–3.38",
+         "cells": [
+          "retina"
+         ]
+        },
+        {
+         "title": "3.39–5.58",
+         "cells": [
+          "round"
+         ]
+        },
+        {
+         "title": "5.60–",
+         "cells": [
+          "current"
+         ]
+        }
+       ],
+       "selected": 4,
+       "src": [
+        "code:TSDockIconController"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "preview",
+   "title": "プレビュー",
+   "symbol": "doc.text.magnifyingglass",
+   "color": "#E24B4A",
+   "section": 2,
+   "summary": "PDF のプレビューの表示と操作を設定します。",
+   "groups": [
+    {
+     "title": "表示",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "ページレイアウト",
+       "choices": [
+        "単一ページ",
+        "見開きページ",
+        "連続ページ",
+        "連続見開きページ"
+       ],
+       "selected": 2,
+       "src": [
+        "340"
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "ウインドウのリサイズ後",
+       "choices": [
+        "実際の大きさ",
+        "固定倍率",
+        "ウインドウに合わせる"
+       ],
+       "src": [
+        "334"
+       ]
+      },
+      {
+       "kind": "text",
+       "title": "倍率",
+       "value": "100",
+       "unit": "%",
+       "button": "設定",
+       "src": [
+        "113",
+        "116"
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "マウスモード",
+       "choices": [
+        "スクロール",
+        "文字選択",
+        "拡大鏡",
+        "拡大鏡 (大)",
+        "範囲指定"
+       ],
+       "src": [
+        "345"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "ページボタンでスクロールしない",
+       "src": [
+        "230"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "テキストとラインアートを滑らかに表示",
+       "on": true,
+       "src": [
+        "fyB-vX-69R"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "見開きの配置",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "ページの方向",
+       "choices": [
+        "左から右へ",
+        "右から左へ"
+       ],
+       "src": [
+        "506"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "先頭ページを表紙として単独表示",
+       "src": [
+        "preview-cover-button"
+       ]
+      },
+      {
+       "kind": "description",
+       "title": "これから開く文書に適用します。マジックコメントと、PDF 内の表示方向が優先されます。"
+      }
+     ]
+    },
+    {
+     "title": "更新",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "プレビューの自動更新",
+       "note": "外部エディタでソースを編集しているときに、PDF が変わったら読み直します。",
+       "src": [
+        "557"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "カラーマップ",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "カラーマップを使う",
+       "src": [
+        "437"
+       ],
+       "id": "colorMap"
+      },
+      {
+       "kind": "popup",
+       "title": "文字色の強め具合",
+       "choices": [
+        "-2",
+        "-1",
+        "0 (標準)",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+       ],
+       "selected": 2,
+       "src": [
+        "434"
+       ],
+       "enabledWhen": {
+        "row": "colorMap",
+        "values": [
+         1
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "title": "画像のコピー",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "フォーマット",
+       "choices": [
+        "PDF",
+        "TIFF (圧縮なし)",
+        "TIFF (LZW)",
+        "TIFF (PackBits)",
+        "JPEG (高画質)",
+        "JPEG (中画質)",
+        "JPEG (低画質)",
+        "PNG"
+       ],
+       "src": [
+        "405"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "HTML",
+     "rows": [
+      {
+       "kind": "path",
+       "title": "ホーム URL",
+       "value": "https://www.google.com",
+       "src": [
+        "Q1c-5s-qjb"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "typesetting",
+   "title": "タイプセット",
+   "symbol": "hammer",
+   "color": "#534AB7",
+   "section": 2,
+   "summary": "既定のエンジンとスクリプト、TeX・Ghostscript の場所、各エンジンのコマンドを設定します。",
+   "groups": [
+    {
+     "title": "既定",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "デフォルトのコマンド",
+       "choices": [
+        "TeX",
+        "LaTeX",
+        "次のコマンドを利用"
+       ],
+       "selected": 1,
+       "src": [
+        "181"
+       ],
+       "id": "defaultCommand"
+      },
+      {
+       "kind": "path",
+       "title": "利用するコマンド",
+       "value": "context",
+       "src": [
+        "592"
+       ],
+       "enabledWhen": {
+        "row": "defaultCommand",
+        "values": [
+         2
+        ]
+       }
+      },
+      {
+       "kind": "popup",
+       "title": "デフォルトのスクリプト",
+       "choices": [
+        "pdfTeX",
+        "TeX + DVI",
+        "パーソナルスクリプト"
+       ],
+       "src": [
+        "186"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "代替エンジン",
+       "value": "pdflatexmk",
+       "note": "デフォルト: pdflatexmk",
+       "src": [
+        "5ec-XS-ht9"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "タイプセット後",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "タイプセット後の動作",
+       "choices": [
+        "プレビューを手前に移動",
+        "編集を続ける",
+        "タイプセット開始ウインドウを手前に"
+       ],
+       "src": [
+        "678"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "ソースとプレビューの同期",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "Sync 方式",
+       "choices": [
+        "PDF を検索",
+        "SyncTeX"
+       ],
+       "selected": 1,
+       "src": [
+        "782"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "Sync で開く新しい書類を、ルートウインドウのタブで開く",
+       "note": "通常はオフにします。",
+       "src": [
+        "snd-4x-vSh"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "パス",
+     "rows": [
+      {
+       "kind": "path",
+       "title": "(pdf)TeX",
+       "value": "/Library/TeX/texbin",
+       "note": "デフォルト: /Library/TeX/texbin または /usr/texbin",
+       "src": [
+        "217"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "Distiller (Ghostscript)",
+       "value": "/usr/local/bin",
+       "note": "デフォルト: /usr/local/bin",
+       "src": [
+        "255"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "別のパス",
+       "value": "~/bin/context/tex/texmf-osx-arm64/bin",
+       "note": "デフォルト: ~/bin/context/tex/texmf-osx-arm64/bin",
+       "src": [
+        "kfQ-Qh-Vcc"
+       ]
+      },
+      {
+       "kind": "button",
+       "title": "自動設定…",
+       "src": [
+        "engine-auto-button"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "pdfTeX",
+     "rows": [
+      {
+       "kind": "path",
+       "title": "TeX",
+       "value": "pdftex --file-line-error --synctex=1",
+       "button": "デフォルト",
+       "src": [
+        "51",
+        "1234"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "LaTeX",
+       "value": "pdflatex --file-line-error --synctex=1",
+       "button": "デフォルト",
+       "src": [
+        "53",
+        "1242"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "Shell Escape を警告",
+       "on": true,
+       "src": [
+        "325"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "TeX + dvipdfmx／TeX + dvips + distiller",
+     "rows": [
+      {
+       "kind": "path",
+       "title": "TeX",
+       "value": "tex --file-line-error --synctex=1",
+       "button": "デフォルト",
+       "src": [
+        "202",
+        "1238"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "LaTeX",
+       "value": "latex --file-line-error --synctex=1",
+       "button": "デフォルト",
+       "src": [
+        "199",
+        "1246"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "PostScript ファイルを保存",
+       "src": [
+        "225"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "パーソナルスクリプト",
+     "rows": [
+      {
+       "kind": "path",
+       "title": "TeX プログラム",
+       "value": "",
+       "note": "デフォルト: 空",
+       "src": [
+        "156"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "LaTeX プログラム",
+       "value": "",
+       "note": "デフォルト: 空",
+       "src": [
+        "152"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Distiller",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "Distiller",
+       "choices": [
+        "Ghostscript",
+        "Apple Distiller"
+       ],
+       "src": [
+        "546"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "Ghostscript オプション -dALLOWPSTRANSPARENCY",
+       "src": [
+        "217-aa-RyX"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "検索用コマンドと BibTeX",
+     "rows": [
+      {
+       "kind": "path",
+       "title": "kpsetool",
+       "value": "kpsetool -w -n latex tex",
+       "note": "デフォルト: kpsetool -w -n latex tex",
+       "src": [
+        "1195"
+       ]
+      },
+      {
+       "kind": "path",
+       "title": "BibTeX エンジン",
+       "value": "bibtex",
+       "note": "デフォルト: bibtex",
+       "src": [
+        "1207"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "pTeX サポート（日本用）",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "otf パッケージ対応",
+       "src": [
+        "573"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "console",
+   "title": "コンソール",
+   "symbol": "terminal",
+   "color": "#2C2C2A",
+   "section": 2,
+   "summary": "タイプセットの出力を表示するコンソールを設定します。",
+   "groups": [
+    {
+     "title": "フォント",
+     "rows": [
+      {
+       "kind": "font",
+       "title": "コンソールのフォント",
+       "value": "Helvetica 12",
+       "src": [
+        "755"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "マクロエディタでも使用",
+       "src": [
+        "bl4-UI-Syu"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "動作",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "コンソールを表示する",
+       "choices": [
+        "常に表示",
+        "エラーがあったとき表示"
+       ],
+       "src": [
+        "777"
+       ]
+      },
+      {
+       "kind": "popup",
+       "title": "コンソールのリサイズ",
+       "choices": [
+        "任意の方向",
+        "垂直方向のみ"
+       ],
+       "src": [
+        "764"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "keyboard",
+   "title": "キーボード",
+   "symbol": "keyboard",
+   "color": "#5F5E5A",
+   "section": 3,
+   "summary": "キーバインド、コマンド補完、メニューのショートカットを設定します。",
+   "groups": [
+    {
+     "title": "キーバインド",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "キーバインドを使う（新しい書類の初期値）",
+       "on": true,
+       "src": [
+        "621#6"
+       ]
+      },
+      {
+       "kind": "button",
+       "title": "キーバインドファイルを編集…",
+       "src": [
+        "menu:openAutoCompletionListEditor"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "コマンド補完",
+     "rows": [
+      {
+       "kind": "popup",
+       "title": "呼び出すキー",
+       "choices": [
+        "Escape キー",
+        "Tab キー"
+       ],
+       "id": "completionKey",
+       "src": [
+        "1073"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "BibDesk 自動補完",
+       "src": [
+        "621#7"
+       ]
+      },
+      {
+       "kind": "button",
+       "title": "コマンド補完ファイルを編集…",
+       "src": [
+        "menu:openCommandCompletionList"
+       ]
+      }
+     ]
+    },
+    {
+     "title": "メニューのショートカット",
+     "rows": [
+      {
+       "kind": "shortcuts",
+       "title": "",
+       "src": [
+        "window:keyboardShortcuts"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "updates",
+   "title": "アップデート",
+   "symbol": "arrow.triangle.2.circlepath",
+   "color": "#1D9E75",
+   "section": 3,
+   "summary": "TeXShop のアップデートを確認する方法を設定します。",
+   "groups": [
+    {
+     "title": "自動確認",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "アップデートを自動的に確認",
+       "on": true,
+       "src": [
+        "AK8-3x-fBj"
+       ],
+       "id": "autoUpdate"
+      },
+      {
+       "kind": "popup",
+       "title": "確認の間隔",
+       "choices": [
+        "毎日",
+        "毎週",
+        "毎月"
+       ],
+       "selected": 1,
+       "src": [
+        "hjb-Wl-tYb"
+       ],
+       "enabledWhen": {
+        "row": "autoUpdate",
+        "values": [
+         1
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

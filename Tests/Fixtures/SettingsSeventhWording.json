@@ -1,0 +1,120 @@
+{
+  "ja": {
+    "SettingsCategories.strings": {
+      "catalog.typesetting.3.0.title": "(pdf)TeX"
+    }
+  },
+  "de": {
+    "SettingsPreview.strings": {
+      "337.title": "PDF-Auswahl"
+    },
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    }
+  },
+  "fr": {
+    "SettingsPreview.strings": {
+      "337.title": "Sélectionner"
+    },
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    },
+    "Localizable.strings": {
+      "Search Settings": "Rechercher"
+    }
+  },
+  "it": {
+    "SettingsPreview.strings": {
+      "337.title": "Selezione"
+    },
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    },
+    "Localizable.strings": {
+      "Search Settings": "Cerca"
+    }
+  },
+  "nl": {
+    "SettingsCategories.strings": {
+      "group.typesetting.9.title": "pTeX-ondersteuning (voor Japan)",
+      "catalog.editor.1.0.title": "Tabbreedte:"
+    },
+    "SettingsMiscTwo.strings": {
+      "SS5-tZ-cDa.title": "pTeX-ondersteuning (voor Japan)"
+    },
+    "SettingsPreview.strings": {
+      "505.title": "Pagina’s lopen van links naar rechts",
+      "507.title": "Pagina’s lopen van rechts naar links"
+    },
+    "SettingsEditor.strings": {
+      "ojN-Oi-8cl.title": "Tabbreedte:",
+      "pdc-GP-Cbb.title": "Tabs gebruiken voor inspringmenu"
+    },
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    }
+  },
+  "pt-PT": {
+    "SettingsCategories.strings": {
+      "group.typesetting.9.title": "Suporte a pTeX (para o Japão)",
+      "catalog.editor.1.0.title": "Largura da tabulação:",
+      "catalog.editor.1.1.title": "Usar tabulações no menu de indentação"
+    },
+    "SettingsMiscTwo.strings": {
+      "SS5-tZ-cDa.title": "Suporte a pTeX (para o Japão)"
+    },
+    "SettingsPreview.strings": {
+      "505.title": "Páginas da esquerda para a direita",
+      "507.title": "Páginas da direita para a esquerda"
+    },
+    "SettingsEditor.strings": {
+      "ojN-Oi-8cl.title": "Largura da tabulação:",
+      "pdc-GP-Cbb.title": "Usar tabulações no menu de indentação"
+    },
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    }
+  },
+  "ro": {
+    "SettingsCategories.strings": {
+      "group.typesetting.9.title": "Suport pTeX (pentru Japonia)",
+      "catalog.editor.1.0.title": "Lățimea tabulatorului:",
+      "catalog.editor.1.1.title": "Folosește tabulatori pentru meniul de indentare",
+      "group.typesetting.6.title": "Script personal"
+    },
+    "SettingsMiscTwo.strings": {
+      "SS5-tZ-cDa.title": "Suport pTeX (pentru Japonia)"
+    },
+    "SettingsPreview.strings": {
+      "505.title": "Pagini de la stânga la dreapta",
+      "507.title": "Pagini de la dreapta la stânga"
+    },
+    "SettingsEditor.strings": {
+      "ojN-Oi-8cl.title": "Lățimea tabulatorului:",
+      "pdc-GP-Cbb.title": "Folosește tabulatori pentru meniul de indentare"
+    },
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    }
+  },
+  "es": {
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    }
+  },
+  "ko": {
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    }
+  },
+  "pt": {
+    "SettingsFooter.strings": {
+      "1093.title": "Legado pTeX (Shift JIS)"
+    }
+  },
+  "zh_CN": {
+    "SettingsFooter.strings": {
+      "1093.title": "Legacy pTeX (Shift JIS)"
+    }
+  }
+}

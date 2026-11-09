@@ -90,7 +90,7 @@ int main(int argc,char **argv) { @autoreleasepool {
     REQUIRE(![TSBinding(@"_",C|S) isEqual:TSBinding(@"_",C)]);
     // The runtime wrapper must use the current layout; this only reads the input source.
     TSShortcutStore *plain=[[TSShortcutStore alloc] initWithMenu:[NSMenu new] defaults:(id)[TSMemoryDefaults new]];
-    TSShortcutCommand *probe=[TSShortcutCommand new];probe.defaultKey=@"=";probe.defaultModifiers=C|S;
+    NSMenuItem *probeItem=[[NSMenuItem alloc]initWithTitle:@"probe" action:NULL keyEquivalent:@"="];probeItem.keyEquivalentModifierMask=C|S;TSShortcutCommand *probe=[[TSShortcutCommand alloc]initWithItem:probeItem identifier:@"probe" path:@"probe"];
     TISInputSourceRef current=TISCopyCurrentKeyboardLayoutInputSource();
     CFDataRef currentData=current?TISGetInputSourceProperty(current,kTISPropertyUnicodeKeyLayoutData):NULL;
     REQUIRE([[plain restorationBindingsForCommand:probe] isEqual:TSRestorationBindings(@"=",C|S,currentData,LMGetKbdType())]);

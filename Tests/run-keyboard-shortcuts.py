@@ -40,8 +40,8 @@ print('PASS: macro rebuild applies effective menu keys before collecting free ke
 # replace the user's real-window checks for launch ordering and split orientation.
 delegate = (root / 'Sources/TSAppDelegate.m').read_text(encoding='latin-1')
 launch = delegate[delegate.index('- (void)applicationDidFinishLaunching:'):]
-assert 'dispatch_async(dispatch_get_main_queue(), ^{\n        TSKeyboardShortcuts *shortcuts = [TSKeyboardShortcuts sharedController];' in launch
-assert '[shortcuts startObservingMenu];' in launch
+assert 'startAfterLaunchWithConfiguration:' in launch
+subprocess.run([sys.executable,str(root/'Tests/run-shortcut-launch.py'),'--mutations'],check=True)
 pdf = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin-1')
 for tag in (1, 2):
     assert f'[TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:{tag}]' in pdf
@@ -57,7 +57,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
     (Path(td)/'TSKeyboardShortcuts.m').write_text(production)
     binary = Path(td) / 'shortcuts'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Carbon', '-I', td, '-I',str(root/'Sources'),
-                    str(root / 'Tests/KeyboardShortcuts.m'), '-o', str(binary)], check=True)
+                    str(root / 'Tests/KeyboardShortcuts.m'), str(root/'Sources/TSPrefPaneLayout.m'), '-o', str(binary)], check=True)
     subprocess.run([str(binary)], check=True)
     paths = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
     assert len(paths) == 36
@@ -72,8 +72,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
             'show only the last conflicting command': (
                 '[conflicts.array componentsJoinedByString:@"\\n"]', 'conflicts.lastObject'),
             'ignore captured spellings when checking conflicts': (
-                'NSArray *bindings = self.capturedBindings ?: @[TSBinding(self.capturedKey, self.capturedModifiers)];',
-                'NSArray *bindings = @[TSBinding(self.capturedKey, self.capturedModifiers)];'),
+                'NSArray<TSShortcutBinding *> *bindings = self.capturedBindings ?: @[TSBinding(self.capturedKey, self.capturedModifiers)];',
+                'NSArray<TSShortcutBinding *> *bindings = @[TSBinding(self.capturedKey, self.capturedModifiers)];'),
             'discard unshifted physical spelling': (
                 '[bindings addObject:TSBinding(unshifted, event.modifierFlags)];', '(void)0;'),
             'discard shifted character spelling': (
@@ -88,7 +88,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
         for name,(before,after) in cases.items():
             assert production.count(before)==1,(name,before)
             (Path(td)/'TSKeyboardShortcuts.m').write_text(production.replace(before,after))
-            subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-nullability-completeness','-framework','Cocoa','-framework','Carbon','-I',td,'-I',str(root/'Sources'),str(root/'Tests/KeyboardShortcuts.m'),'-o',str(binary)],check=True)
+            subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-nullability-completeness','-framework','Cocoa','-framework','Carbon','-I',td,'-I',str(root/'Sources'),str(root/'Tests/KeyboardShortcuts.m'),str(root/'Sources/TSPrefPaneLayout.m'),'-o',str(binary)],check=True)
             detected=False
             for path in paths:
                 result=subprocess.run([str(binary),str(path),str(root/'Resources/TeXShop/Macros/Macros_Latex.plist')],capture_output=True,text=True)

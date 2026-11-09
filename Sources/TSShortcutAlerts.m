@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSKeyboardShortcuts.h"
+#import <Carbon/Carbon.h>
 NSModalResponse TSRunShortcutAlert(NSAlert *alert) {
     id monitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent *(NSEvent *event) {
-        if (NSApp.modalWindow == alert.window && event.keyCode == 53) {
+        if (NSApp.modalWindow == alert.window && event.keyCode == kVK_Escape) {
             [NSApp stopModalWithCode:NSAlertFirstButtonReturn];
             return nil;
         }

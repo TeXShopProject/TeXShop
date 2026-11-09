@@ -147,7 +147,7 @@
 
 "Detected Engine Paths" = "エンジンの検出結果";
 
-"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "検出した中で最も新しい環境を選択しています。以下の候補から別の環境も選べます。エンジンのコマンドと「別のパス」は変更しません。";
+
 
 "Not found (current setting will be kept)" = "見つかりませんでした（現在の設定を保持します）";
 
@@ -157,27 +157,26 @@
 "Use These Paths" = "この設定を使用";
 
 /* Menu keyboard shortcut customization */
-"Search commands" = "コマンドを検索";
+"Search commands" = "機能を検索";
 "Command" = "コマンド";
 "Shortcut" = "ショートカット";
 "Change…" = "変更…";
-"Remove Shortcut" = "割り当てを解除";
-"Restore Default" = "初期状態に戻す";
+"Remove Shortcut" = "解除";
+"Restore Default" = "元に戻す";
 "Restore All…" = "すべて元に戻す…";
 "Restore All" = "すべて元に戻す";
 "Change Shortcut" = "ショートカットを変更";
 "Apply" = "適用";
 "Shortcut Unavailable" = "割り当てできません";
 "Restore all keyboard shortcuts?" = "すべてのショートカットを元に戻しますか？";
-"Press the new shortcut (Escape to cancel)." = "新しいショートカットを押してください（Escでキャンセル）。";
+"New shortcut" = "新しいショートカット";
 "This command is no longer available." = "このコマンドは利用できなくなりました。";
 "This shortcut is already used by “%@”." = "このショートカットは「%@」で使用されています。";
-"Use Command or Control with a key, or a function key (F1–F20)." = "CommandまたはControlとキーを組み合わせるか、ファンクションキー（F1〜F20）を使ってください。";
-"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "コマンドを選択してショートカットを変更できます。変更はすぐに反映されます。マクロと文字入力のキーバインドは、それぞれの専用エディタで編集してください。";
+
 
 /* Menu and macro shortcut conflicts */
 "Assign a shortcut used by macros?" = "マクロが使用しているキーを割り当てますか？";
-"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "次のマクロがこのキーを使用しています。メニューのコマンドに割り当てると、マクロのキーは無効になります。マクロのファイルは変更しません。\n\n%@";
+
 "Assign" = "割り当てる";
 "These macro shortcuts will become inactive:" = "次のマクロのショートカットは無効になります：";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "このキーはマクロ“%@”（%@）が先に使っているため無効です。";
@@ -194,11 +193,11 @@
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "選択した設定プロファイルが正しくありません。";
 "Apply Settings Profile?" = "設定プロファイルを適用しますか？";
-"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "エンジン・編集・表示・既知の隠し設定とDockアイコンを初期化します。ショートカット、システムの言語とキー設定、ウインドウ配置、自動更新、テーマファイル、未知の設定は保持します。テーマの選択は変更されることがあります。TeXエンジンのパス: %@";
+
 "Apply Profile" = "プロファイルを適用";
 "Settings could not be saved" = "設定を保存できませんでした";
 "Enter a valid setting" = "有効な設定値を入力してください";
-"Correct this field, or restore its last saved value. Other settings are already saved." = "この欄を修正するか、最後に保存した値へ戻してください。他の設定はすでに保存されています。";
+
 "Continue Editing" = "編集を続ける";
 "Restore This Field" = "この欄を元に戻す";
 "The theme could not be saved. Its last saved colors have been restored." = "テーマを保存できませんでした。最後に保存した色へ戻しました。";
@@ -225,14 +224,12 @@
 "Show in Macro Editor" = "マクロエディタで表示";
 "Assigned" = "割り当て有効";
 "Inactive for this key" = "このキーでは無効";
-"Assignment priority is shown; whether a command can run depends on the document." = "キーの割当ての優先順位を示しています。コマンドを実行できるかは書類の状態によります。";
-"Keys used by the system cannot be detected. Press Escape to stop recording." = "システムが使っているキーは検出できません。Escで記録を終了します。";
 "No command uses this key." = "このキーを使うコマンドはありません。";
 "Press a key" = "キーを押してください";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "ショートカットに使えないキーです。⌘か⌃と組み合わせるか、F1〜F20を使ってください。";
-"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "メニューのカスタムショートカットを削除します。KeyEquivalents.plistの設定は保持されます。";
 
-"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "既存の割り当てを表示しています。このキーを新しいショートカットに割り当てることはできません。";
+
+"This key cannot be assigned to a new shortcut." = "このキーは新しいショートカットには割り当てられません。";
 
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "一致する項目: %lu";
@@ -288,9 +285,7 @@
 
 "Tools" = "ツール";
 
-"Expanded" = "展開";
 
-"Collapsed" = "折りたたみ";
 
 "Search Settings" = "設定を検索";
 
@@ -298,7 +293,6 @@
 
 "No Settings Found" = "一致する設定がありません";
 
-"Edits the shared file for all documents. The checkbox sets the default for new documents." = "全書類で使う共通ファイルを編集します。チェックボックスは新しい書類の初期値を設定します。";
 /* Independent Experiment console */
 "Experiment input" = "実験への入力";
 "Stop Experiment" = "実験を中止";
@@ -306,3 +300,22 @@
 "Experiment stopped.\n" = "実験を中止しました。\n";
 
 /* Explicit fallback for shared keys without a translation. */
+
+"Edits the shared file for all documents. This setting controls the default for new documents." = "全書類で使う共通ファイルを編集します。この設定は新しい書類の初期値に適用されます。";
+
+"The newest detected installation is selected. You can choose another candidate below." = "検出した中で最も新しい環境を選択しています。以下の候補から別の環境も選べます。";
+
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "次のマクロがこのキーを使用しています。メニューのコマンドに割り当てると、マクロのキーは無効になります。\n\n%@";
+
+"This does not turn spell checking while typing on or off." = "入力中のスペルチェックの入／切は、この設定では変わりません。";
+
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "開いている PDF の倍率は変わりません。新しく開く PDF から使われます。";
+
+"Takes effect after you restart TeXShop." = "TeXShop を再起動すると有効になります。";
+
+"Custom menu shortcuts will be removed." = "メニューのカスタムショートカットを削除します。";
+
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "エンジン・編集・表示・既知の隠し設定とDockアイコンを初期化します。テーマの選択は変更されることがあります。TeXエンジンのパス: %@";
+
+/* System spelling dictionary selection. */
+"Automatic Language" = "言語を自動判別";

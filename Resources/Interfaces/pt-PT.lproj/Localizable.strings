@@ -145,7 +145,7 @@
 /* Engine path discovery */
 "Set Up TeX Engine Paths" = "Configurar caminhos dos motores TeX";
 "Detected Engine Paths" = "Caminhos dos motores encontrados";
-"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "A instalação mais recente encontrada está selecionada. Pode escolher outra abaixo. Os comandos dos motores personalizados e o caminho alternativo permanecem inalterados.";
+
 "Not found (current setting will be kept)" = "Não encontrado (a definição atual será mantida)";
 "Version unavailable" = "Desconhecida";
 "Use These Paths" = "Usar estes caminhos";
@@ -163,20 +163,19 @@
 "Apply" = "Aplicar";
 "Shortcut Unavailable" = "Atalho indisponível";
 "Restore all keyboard shortcuts?" = "Repor todos os atalhos de teclado?";
-"Press the new shortcut (Escape to cancel)." = "Prima o novo atalho (Escape para cancelar).";
+"New shortcut" = "Novo atalho";
 "This command is no longer available." = "Este comando já não está disponível.";
 "This shortcut is already used by “%@”." = "Este atalho já é usado por «%@».";
-"Use Command or Control with a key, or a function key (F1–F20)." = "Use uma tecla com Comando ou Controlo, ou uma tecla de função (F1–F20).";
-"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selecione um comando para alterar o respetivo atalho. As alterações são imediatas. As macros e os atalhos de introdução de texto têm editores próprios.";
+
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
 "Apply Settings Profile?" = "Apply Settings Profile?";
-"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+
 "Apply Profile" = "Apply Profile";
 "Settings could not be saved" = "Settings could not be saved";
 "Enter a valid setting" = "Enter a valid setting";
-"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+
 "Continue Editing" = "Continue Editing";
 "Restore This Field" = "Restore This Field";
 "The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
@@ -203,14 +202,12 @@
 "Show in Macro Editor" = "Mostrar no editor de macros";
 "Assigned" = "Atribuído";
 "Inactive for this key" = "Inativo para esta tecla";
-"Assignment priority is shown; whether a command can run depends on the document." = "É apresentada a prioridade de atribuição. A execução do comando depende do documento.";
-"Keys used by the system cannot be detected. Press Escape to stop recording." = "As teclas usadas pelo sistema não podem ser detetadas. Escape termina a gravação.";
 "No command uses this key." = "Nenhum comando usa esta tecla.";
 "Press a key" = "Prima uma tecla";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Esta tecla não pode ser usada como atalho. Use Comando ou Controlo com uma tecla, ou F1–F20.";
-"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Os atalhos de menu personalizados serão removidos. As definições de KeyEquivalents.plist serão mantidas.";
 
-"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "São apresentadas as atribuições existentes. Esta tecla não pode ser atribuída a um novo atalho.";
+
+"This key cannot be assigned to a new shortcut." = "Esta tecla não pode ser atribuída a um novo atalho.";
 
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Resultados: %lu";
@@ -266,17 +263,14 @@
 
 "Tools" = "Ferramentas";
 
-"Expanded" = "Expandido";
 
-"Collapsed" = "Recolhido";
 
 "Search Settings" = "Pesquisar definições";
 
-"Settings results: %lu" = "Categorias encontradas: %lu";
+"Settings results: %lu" = "Definições encontradas: %lu";
 
 "No Settings Found" = "Nenhuma definição encontrada";
 
-"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 
 /* Independent Experiment console */
 "Experiment input" = "Entrada da experiência";
@@ -291,7 +285,7 @@
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "Return to Editing" = "Return to Editing";
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
-"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+
 "These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
 "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
@@ -299,3 +293,22 @@
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
 "Variant" = "Variant";
+
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+
+"The newest detected installation is selected. You can choose another candidate below." = "A instalação mais recente encontrada está selecionada. Pode escolher outra abaixo.";
+
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "As seguintes macros usam este atalho. Ao atribuí-lo ao comando do menu, os atalhos das macros ficam inativos.\n\n%@";
+
+"This does not turn spell checking while typing on or off." = "Esta definição não ativa nem desativa a verificação ortográfica durante a escrita.";
+
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "Os PDF abertos mantêm a ampliação. O novo valor aplica-se aos PDF abertos a partir de agora.";
+
+"Takes effect after you restart TeXShop." = "Entra em vigor após reiniciar o TeXShop.";
+
+"Custom menu shortcuts will be removed." = "Os atalhos de menu personalizados serão removidos.";
+
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+
+/* System spelling dictionary selection. */
+"Automatic Language" = "Deteção automática do idioma";

@@ -163,14 +163,6 @@
                   <action selector="NewStyleFromPrefs:" target="-2" id="jDj-0b-UUv" />
                 </connections>
               </button>
-              <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LIV-TH-NOT" identifier="settings.LIV-TH-NOT">
-                <rect key="frame" x="17" y="75.0" width="154" height="28" />
-                <autoresizingMask key="autoresizingMask" />
-                <textFieldCell key="cell" lineBreakMode="wordWrapping" title="Changes save immediately. Duplicate before editing." id="LIV-TH-CEL">
-                  <font key="font" metaFont="system" size="10" />
-                  <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
-                </textFieldCell>
-              </textField>
             </subviews>
           </view>
           <font key="titleFont" metaFont="system" />
@@ -180,7 +172,7 @@
           <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
           <font key="font" metaFont="system" />
           <tabViewItems>
-            <tabViewItem label="Regular Colors" identifier="" id="F86-wI-vOl">
+            <tabViewItem label="" identifier="" id="F86-wI-vOl">
               <view key="view" id="3cH-6c-fhq" identifier="settings.3cH-6c-fhq">
                 <rect key="frame" x="10" y="33" width="413" height="527" />
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
@@ -736,7 +728,7 @@
                 </subviews>
               </view>
             </tabViewItem>
-            <tabViewItem label="More Colors" identifier="" id="L8F-o2-roK">
+            <tabViewItem label="" identifier="" id="L8F-o2-roK">
               <view key="view" id="PTb-79-UFr" identifier="settings.PTb-79-UFr">
                 <rect key="frame" x="10" y="33" width="413" height="527" />
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
@@ -819,7 +811,7 @@
                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rB4-mR-LTa" identifier="settings.rB4-mR-LTa">
                           <rect key="frame" x="115" y="36" width="30" height="14" />
                           <autoresizingMask key="autoresizingMask" />
-                          <textFieldCell key="cell" lineBreakMode="clipping" title="for ( " id="dDq-0W-EuL">
+                          <textFieldCell key="cell" lineBreakMode="clipping" title="( )" id="dDq-0W-EuL">
                             <font key="font" metaFont="message" size="11" />
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

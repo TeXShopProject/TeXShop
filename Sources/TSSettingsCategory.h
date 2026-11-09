@@ -18,6 +18,7 @@ FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategorySpelling;
 FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategoryAppearance;
 FOUNDATION_EXPORT TSSettingsCategoryID const TSSettingsCategoryUpdates;
 @interface TSSettingsCategory : NSObject
++ (instancetype)standardCategoryWithIdentifier:(TSSettingsCategoryID)identifier;
 @property (copy, readonly) TSSettingsCategoryID identifier;
 @property (copy, readonly) NSString *symbolName;
 @property (copy, readonly) NSColor *color;

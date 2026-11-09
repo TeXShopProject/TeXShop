@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1020.title" = "Search command";
 "1024.title" = "kpsetool (default: kpsetool -w -n latex tex)";
-"1027.title" = "BibTeX Engine";
+"1027.title" = "BibTeX-engine";
 "1030.title" = "default: bibtex";
 "1063.title" = "standaard";
 "1068.title" = "standaard";
@@ -14,7 +14,7 @@
 "54.title" = "pdfTeX";
 "878.title" = "LaTeX ";
 "880.title" = "TeX";
-"882.title" = "Shell Escape Warning";
+"882.title" = "Waarschuwing voor shell escape";
 "887.title" = "Bewaar Postscript-bestand";
 "889.title" = "(pdf)TeX (standaard: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (ghostscript) (standaard: /usr/local/bin)";
