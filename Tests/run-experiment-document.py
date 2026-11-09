@@ -10,6 +10,7 @@ import argparse
 import os
 import subprocess
 import tempfile
+from source_tree import source_file
 
 MUTATIONS = {
     'inactive-pdf': ('typesetFile', 'if (!document) return;',
@@ -33,7 +34,7 @@ args = parser.parse_args()
 
 
 def method(filename, signature):
-    text = (args.root / 'Sources' / filename).read_text(errors='replace')
+    text = (source_file(args.root, filename)).read_text(errors='replace')
     start = text.index(signature)
     return text[start:text.index('\n}\n', start) + 3]
 

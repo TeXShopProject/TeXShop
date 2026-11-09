@@ -5,13 +5,14 @@ import subprocess, tempfile, plistlib, sys
 from pane_fixtures import bundles, sources
 root=Path(__file__).resolve().parents[1]
 from production_fragments import method as production_method, verify_embedded
+from source_tree import include_args
 fragments=[]
 def method(source, signature):
  fragment=production_method(source,signature);fragments.append(('complete method:'+signature,source,fragment));return fragment
-toolbar=(root/'Sources/TSToolbarController.m').read_text()
-view=(root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
-doc=(root/'Sources/TSDocument.m').read_text()
-prefs=(root/'Sources/TSPreferences.m').read_text()
+toolbar=(root/'Sources/Windows/TSToolbarController.m').read_text()
+view=(root/'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
+doc=(root/'Sources/Document/TSDocument.m').read_text()
+prefs=(root/'Sources/Settings/TSPreferences.m').read_text()
 controller='\n'.join(method(toolbar,s) for s in ['- (BOOL)previewDisplaysAsBook','- (BOOL)previewDisplaysRTL','- (void)changePreviewLayout:', '- (void)changePreviewArrangement:', '- (BOOL)validatePreviewLayoutItem:', '- (void)updatePreviewLayoutControls'])
 viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle', '- (void)setDocument:(PDFDocument *)document'])
 parse=method(doc,'- (void)readPreviewArrangementFromData:')
@@ -256,7 +257,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
  for l in ('en','ja'):
   res=app/f'Contents/Resources/{l}.lproj';res.mkdir(parents=True);shutil.copy(root/f'Resources/Interfaces/{l}.lproj/ToolbarItems.strings',res)
  source=Path(tmp)/'Test.m';source.write_text(program)
- subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules','-I'+str(root/'Sources'),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),'-o',str(mac/'LayoutTest')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-fmodules',*include_args(root),'-I'+str(root/'Tests'),'-framework','Cocoa','-framework','PDFKit',str(source),*map(str,sources(root,['Preview'])),'-o',str(mac/'LayoutTest')],check=True)
  fixture=Path(tmp)/'Fixtures';fixture.mkdir()
  nib=next(b for b in bundles(root,fixture,names=['Preview']) if b.stem==('Base' if lang=='en' else lang))
  snapshot=next((a.split('=',1)[1] for a in sys.argv if a.startswith('--snapshots=')),None)

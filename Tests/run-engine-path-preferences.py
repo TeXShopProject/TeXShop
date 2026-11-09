@@ -7,7 +7,7 @@ from production_fragments import verify_embedded
 import xml.etree.ElementTree as ET
 
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/TSPreferences.m').read_text(encoding='latin1')
+source = (root / 'Sources/Settings/TSPreferences.m').read_text(encoding='latin1')
 methods = source[source.index('- (void)cancelEnginePathDiscovery'):source.index('- (IBAction)tetexBinPathChanged:')]
 # Exercise the production entry guards without loading the entire Preferences nib.
 entry = source[source.index('- (IBAction)showPreferences:'):]

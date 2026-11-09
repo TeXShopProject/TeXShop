@@ -7,7 +7,7 @@ unknown encoding name. No alert is shown: the alert function is replaced by a me
 from pathlib import Path
 import subprocess, tempfile
 root = Path(__file__).resolve().parents[1]
-s = (root/'Sources/TSEncodingSupport.m').read_text(encoding='latin1')
+s = (root/'Sources/App/TSEncodingSupport.m').read_text(encoding='latin1')
 table = s[s.index('typedef struct {'):s.index('+ (void)initialize')]
 a = s.index('// UTF-8 in which each byte that does not start or continue a valid character is replaced')
 helpers = s[a:s.index('// The byte order mark that starts data', a)]

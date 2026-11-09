@@ -243,12 +243,12 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     if (![self finishPreferenceEditing:YES]) return;
     NSString *name = TSPreferenceProfileNameForTag((TSPreferenceProfileTag)sender.tag);
     if (name == nil) return;
-    NSURL *url = [NSBundle.mainBundle URLForResource:name withExtension:@"plist"];
+    NSURL *url = [NSBundle.mainBundle URLForResource:name withExtension:@"plist" subdirectory:@"Defaults"];
     if (url == nil) return;
     NSDictionary<NSString *, id> *profile = [NSDictionary dictionaryWithContentsOfURL:url];
     NSFont *font = [NSFont userFontOfSize:12.0];
     if (profile == nil || font == nil) return;
-    NSURL *factoryURL = [NSBundle.mainBundle URLForResource:@"FactoryDefaults" withExtension:@"plist"];
+    NSURL *factoryURL = [NSBundle.mainBundle URLForResource:@"FactoryDefaults" withExtension:@"plist" subdirectory:@"Defaults"];
     NSDictionary<NSString *, id> *factory = factoryURL == nil ? nil : [NSDictionary dictionaryWithContentsOfURL:factoryURL];
     if (factory == nil) return;
     TSPreferenceProfile *proposal = [[TSPreferenceProfile alloc] initWithProfile:profile
@@ -1886,7 +1886,7 @@ A tag of 0 means "no", a tag of 1 means "yes".
     NSStringEncoding theEncoding;
 
 	// register defaults
-	fileName = [[NSBundle mainBundle] pathForResource:@"FactoryDefaults" ofType:@"plist"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"FactoryDefaults" ofType:@"plist" inDirectory:@"Defaults"];
 	NSParameterAssert(fileName != nil);
 	factoryDefaults = [[NSString stringWithContentsOfFile:fileName usedEncoding: &theEncoding error: NULL] propertyList];
 

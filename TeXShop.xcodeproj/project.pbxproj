@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D8E47C4EB3FAA770E2CF0E59 /* Themes in Resources */ = {isa = PBXBuildFile; fileRef = E02B7D6185C396B053047A24 /* Themes */; };
+		D20D45B3736189BFBE1C0F51 /* Defaults in Resources */ = {isa = PBXBuildFile; fileRef = 0A89878BCF6577E7A8F002E5 /* Defaults */; };
 		7A9051C11D9E4EA1A5210013 = {isa = PBXBuildFile; fileRef = 7A9051C11D9E4EA1A5210011; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		E107B90C6AEA90757B575812 /* contextbackwardsyncwrap in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 4008394F2665406700037D3C /* contextbackwardsyncwrap */; };
 		87ED044C590112494BDD9A75 /* epstopdf in Copy Shell Scripts */ = {isa = PBXBuildFile; fileRef = 66A63DCE0114947700000001 /* epstopdf */; };
@@ -28,7 +30,7 @@
 		A0396FBB8723C84E230BC727 /* Gratzer in Resources */ = {isa = PBXBuildFile; fileRef = AA099DB51E761C0AC6FE6574 /* Gratzer */; };
 		0E796367828B41F3D7D63F43 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9BDF31174EB7027DDA17F7D /* Images.xcassets */; };
 		E3B000000000000000000001 = {isa = PBXBuildFile; fileRef = E3B000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
-		E18100000000000000000005 = {isa = PBXBuildFile; fileRef = E18000000000000000000005; };
+		E18100000000000000000005 = {isa = PBXBuildFile; fileRef = A53A4B59BBE2B72F965B083F /* SettingsWindow.xib */; };
 		E18100000000000000000002 = {isa = PBXBuildFile; fileRef = E18000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18100000000000000000001 = {isa = PBXBuildFile; fileRef = E18000000000000000000001; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		EA1100000000000000000001 = {isa = PBXBuildFile; fileRef = EA1100000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -84,18 +86,12 @@
 		4040A7F6135BEA8200AC4C27 /* AutoCompletionListEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4040A7F4135BEA8200AC4C27 /* AutoCompletionListEditor.nib */; };
 		40415E3D131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40415E3B131CAB3700226AF4 /* TeXShop Tips & Tricks.pdf */; };
 		40473FAE0C68273C009311CF /* Course Supplements in Resources */ = {isa = PBXBuildFile; fileRef = 40473FA90C68273C009311CF /* Course Supplements */; };
-		40496C2926069E2D005E885D /* DarkTheme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40496C2826069E2D005E885D /* DarkTheme.plist */; };
-		40496C2B26069E68005E885D /* LiteTheme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40496C2A26069E67005E885D /* LiteTheme.plist */; };
 		404D1B632891B23400402802 /* TSHTMLWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 404D1B612891B23400402802 /* TSHTMLWindow.h */; };
 		404D1B642891B23400402802 /* TSHTMLWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D1B622891B23400402802 /* TSHTMLWindow.m */; };
 		404D7901199FF471008B8D64 /* TSFullSplitWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 404D78FF199FF471008B8D64 /* TSFullSplitWindow.h */; };
 		404D7902199FF471008B8D64 /* TSFullSplitWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D7900199FF471008B8D64 /* TSFullSplitWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4054643E19AE9630006EE9D5 /* GlyphPopoverMulti.xib in Resources */ = {isa = PBXBuildFile; fileRef = D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */; };
 		4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */ = {isa = PBXBuildFile; fileRef = D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */; };
-		405A6A2F1992F47F00E3E80B /* Defaults_pTeX_latexmk.plist in Resources */ = {isa = PBXBuildFile; fileRef = 405A6A2E1992F47F00E3E80B /* Defaults_pTeX_latexmk.plist */; };
-		405A6A311992F48C00E3E80B /* Defaults_pTeX_ptex2pdf.plist in Resources */ = {isa = PBXBuildFile; fileRef = 405A6A301992F48C00E3E80B /* Defaults_pTeX_ptex2pdf.plist */; };
-		405A6A331992F49400E3E80B /* Defaults_upTeX_latexmk.plist in Resources */ = {isa = PBXBuildFile; fileRef = 405A6A321992F49400E3E80B /* Defaults_upTeX_latexmk.plist */; };
-		405A6A351992F49E00E3E80B /* Defaults_upTeX_ptex2pdf.plist in Resources */ = {isa = PBXBuildFile; fileRef = 405A6A341992F49E00E3E80B /* Defaults_upTeX_ptex2pdf.plist */; };
 		4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4061BA9C1991979600C890DB /* RecentTexFonts.pdf */; };
 		4062E2921D7BC08300DC1518 /* GPLv2 License.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4062E2901D7BC08300DC1518 /* GPLv2 License.pdf */; };
 		406AB0B0136A5E03009F4D8F /* OgreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 406AB0AF136A5E03009F4D8F /* OgreKit.framework */; };
@@ -197,11 +193,6 @@
 		40B42AEF1BBB6D840007C9FB /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40B42AEC1BBB6CC30007C9FB /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		40B7DEAB057139E2002872F2 /* TSDocumentScripting.h in Headers */ = {isa = PBXBuildFile; fileRef = 40B7DEA9057139E2002872F2 /* TSDocumentScripting.h */; };
 		40B7DEAC057139E2002872F2 /* TSDocumentScripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 40B7DEAA057139E2002872F2 /* TSDocumentScripting.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		40BB76881795F29E008C2B40 /* Defaults_pTeX_euc.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40BB76801795F29E008C2B40 /* Defaults_pTeX_euc.plist */; };
-		40BB768B1795F29E008C2B40 /* Defaults_pTeX_script.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40BB76831795F29E008C2B40 /* Defaults_pTeX_script.plist */; };
-		40BB768C1795F29E008C2B40 /* Defaults_pTeX_sjis.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40BB76841795F29E008C2B40 /* Defaults_pTeX_sjis.plist */; };
-		40BB768F1795F29E008C2B40 /* Defaults_upTeX_script.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40BB76871795F29E008C2B40 /* Defaults_upTeX_script.plist */; };
-		40BB76911795F2AB008C2B40 /* FactoryDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40BB76901795F2AB008C2B40 /* FactoryDefaults.plist */; };
 		40BC8E871922D7DD00F3EF2D /* IconsPDF.icns in Resources */ = {isa = PBXBuildFile; fileRef = 40BC8E861922D7DD00F3EF2D /* IconsPDF.icns */; };
 		40BC8E891922D7E900F3EF2D /* IconsTeX.icns in Resources */ = {isa = PBXBuildFile; fileRef = 40BC8E881922D7E900F3EF2D /* IconsTeX.icns */; };
 		40BCDA521FF9589200AAC575 /* TSWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 40BCDA501FF9589100AAC575 /* TSWindowController.h */; };
@@ -373,35 +364,37 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7A9051C11D9E4EA1A5210011 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSSettingsChangeNote.m; sourceTree = SOURCE_ROOT; };
-		7A9051C11D9E4EA1A5210012 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSSettingsChangeNote.h; sourceTree = SOURCE_ROOT; };
+		E02B7D6185C396B053047A24 /* Themes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/Themes; sourceTree = SOURCE_ROOT; };
+		0A89878BCF6577E7A8F002E5 /* Defaults */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/Defaults; sourceTree = SOURCE_ROOT; };
+		7A9051C11D9E4EA1A5210011 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsChangeNote.m; sourceTree = "<group>"; };
+		7A9051C11D9E4EA1A5210012 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsChangeNote.h; sourceTree = "<group>"; };
 		AA099DB51E761C0AC6FE6574 /* Gratzer */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/Gratzer; sourceTree = SOURCE_ROOT; };
 		C9BDF31174EB7027DDA17F7D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources/Images.xcassets; sourceTree = SOURCE_ROOT; };
-		E3B000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSSettingsSearch.m; sourceTree = SOURCE_ROOT; };
-		E18000000000000000000005 = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Resources/SettingsWindow.xib; sourceTree = SOURCE_ROOT; };
-		E18000000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSSettingsWindowController.h; sourceTree = SOURCE_ROOT; };
-		E18000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSSettingsNavigationHistory.h; sourceTree = SOURCE_ROOT; };
-		E18000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSSettingsWindowController.m; sourceTree = SOURCE_ROOT; };
-		E18000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSSettingsNavigationHistory.m; sourceTree = SOURCE_ROOT; };
-		EA1100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSKeyboardShortcuts.m; sourceTree = SOURCE_ROOT; };
-		E2A000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSShortcutPaneController.h; sourceTree = SOURCE_ROOT; };
-		EA1100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSKeyboardShortcuts.h; sourceTree = SOURCE_ROOT; };
-		E16E00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSEnginePathDiscovery.m; sourceTree = SOURCE_ROOT; };
-		E17000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSPreferenceProfile.m; sourceTree = SOURCE_ROOT; };
-		E17200000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSThemeFileStore.m; sourceTree = SOURCE_ROOT; };
-		E17100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSPreferenceInput.m; sourceTree = SOURCE_ROOT; };
-		E16E00000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSEnginePathDiscovery.h; sourceTree = SOURCE_ROOT; };
-		E17000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSPreferenceProfile.h; sourceTree = SOURCE_ROOT; };
-		E17200000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSThemeFileStore.h; sourceTree = SOURCE_ROOT; };
-		E17100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSPreferenceInput.h; sourceTree = SOURCE_ROOT; };
-		E17100000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSPreferenceKey.h; sourceTree = SOURCE_ROOT; };
-		E17100000000000000000005 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPreferences+LiveSettings.h"; sourceTree = SOURCE_ROOT; };
+		E3B000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsSearch.m; sourceTree = "<group>"; };
+		E18000000000000000000005 /* Base */ = {isa = PBXFileReference; name = Base; lastKnownFileType = file.xib; path = Resources/Interfaces/Base.lproj/SettingsWindow.xib; sourceTree = SOURCE_ROOT; };
+		E18000000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsWindowController.h; sourceTree = "<group>"; };
+		E18000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsNavigationHistory.h; sourceTree = "<group>"; };
+		E18000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsWindowController.m; sourceTree = "<group>"; };
+		E18000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsNavigationHistory.m; sourceTree = "<group>"; };
+		EA1100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSKeyboardShortcuts.m; sourceTree = "<group>"; };
+		E2A000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSShortcutPaneController.h; sourceTree = "<group>"; };
+		EA1100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKeyboardShortcuts.h; sourceTree = "<group>"; };
+		E16E00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSEnginePathDiscovery.m; sourceTree = "<group>"; };
+		E17000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPreferenceProfile.m; sourceTree = "<group>"; };
+		E17200000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSThemeFileStore.m; sourceTree = "<group>"; };
+		E17100000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPreferenceInput.m; sourceTree = "<group>"; };
+		E16E00000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSEnginePathDiscovery.h; sourceTree = "<group>"; };
+		E17000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPreferenceProfile.h; sourceTree = "<group>"; };
+		E17200000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSThemeFileStore.h; sourceTree = "<group>"; };
+		E17100000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPreferenceInput.h; sourceTree = "<group>"; };
+		E17100000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPreferenceKey.h; sourceTree = "<group>"; };
+		E17100000000000000000005 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSPreferences+LiveSettings.h"; sourceTree = "<group>"; };
 		AABB05910000000000000003 /* TSFileChangeMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSFileChangeMonitor.h; sourceTree = "<group>"; };
 		AABB05910000000000000002 /* TSFileChangeMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSFileChangeMonitor.m; sourceTree = "<group>"; };
-		ED0C00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSDockIconController.m; sourceTree = SOURCE_ROOT; };
+		ED0C00000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDockIconController.m; sourceTree = "<group>"; };
 		ED0C00000000000000000004 = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources/DockIcons; sourceTree = SOURCE_ROOT; };
-		ED0C00000000000000000006 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSDockIcon.h; sourceTree = SOURCE_ROOT; };
-		ED0C00000000000000000007 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSDockIconController.h; sourceTree = SOURCE_ROOT; };
+		ED0C00000000000000000006 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDockIcon.h; sourceTree = "<group>"; };
+		ED0C00000000000000000007 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDockIconController.h; sourceTree = "<group>"; };
 		00CFF0E9000ACFC67F000001 /* TSConsoleWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSConsoleWindow.h; sourceTree = "<group>"; };
 		00CFF0EB000ACFFC7F000001 /* TSConsoleWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSConsoleWindow.m; sourceTree = "<group>"; };
 		00CFF0ED000AD0B87F000001 /* TSTextEditorWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSTextEditorWindow.h; sourceTree = "<group>"; };
@@ -498,8 +491,6 @@
 		40496C2526067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/First Steps with Mathematical Typesetting.pdf"; sourceTree = "<group>"; };
 		40496C2626067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/GPLv2 License.pdf"; sourceTree = "<group>"; };
 		40496C2726067EDA005E885D /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/Notes on Applescript in TeXShop.pdf"; sourceTree = "<group>"; };
-		40496C2826069E2D005E885D /* DarkTheme.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DarkTheme.plist; sourceTree = "<group>"; };
-		40496C2A26069E67005E885D /* LiteTheme.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LiteTheme.plist; sourceTree = "<group>"; };
 		404CFF162102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = ../Resources/Interfaces/Base.lproj/AutoCompletionListEditor.nib; sourceTree = "<group>"; };
 		404CFF172102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/completionpanel1.2.nib; sourceTree = "<group>"; };
 		404CFF182102A1AB00C77471 /* Base */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Base; path = Base.lproj/FindPanel.nib; sourceTree = "<group>"; };
@@ -515,10 +506,6 @@
 		404D7900199FF471008B8D64 /* TSFullSplitWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSFullSplitWindow.m; sourceTree = "<group>"; };
 		4054643C19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverMulti.xib; sourceTree = "<group>"; };
 		4054643D19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverSingle.xib; sourceTree = "<group>"; };
-		405A6A2E1992F47F00E3E80B /* Defaults_pTeX_latexmk.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_pTeX_latexmk.plist; sourceTree = "<group>"; };
-		405A6A301992F48C00E3E80B /* Defaults_pTeX_ptex2pdf.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_pTeX_ptex2pdf.plist; sourceTree = "<group>"; };
-		405A6A321992F49400E3E80B /* Defaults_upTeX_latexmk.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_upTeX_latexmk.plist; sourceTree = "<group>"; };
-		405A6A341992F49E00E3E80B /* Defaults_upTeX_ptex2pdf.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_upTeX_ptex2pdf.plist; sourceTree = "<group>"; };
 		405F8B43199AF6F50005C0AE /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = Resources/Interfaces/pt.lproj/Movie.nib; sourceTree = "<group>"; };
 		405F8B44199AF7040005C0AE /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "pt-PT"; path = "Resources/Interfaces/pt-PT.lproj/Movie.nib"; sourceTree = "<group>"; };
 		406774A218F7800D00204AF4 /* texloganalyserwrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.csh; path = texloganalyserwrap; sourceTree = "<group>"; };
@@ -770,11 +757,6 @@
 		40B42AEC1BBB6CC30007C9FB /* Sparkle.framework */ = {isa = PBXFileReference; name = Sparkle.framework; lastKnownFileType = wrapper.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		40B7DEA9057139E2002872F2 /* TSDocumentScripting.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSDocumentScripting.h; sourceTree = "<group>"; };
 		40B7DEAA057139E2002872F2 /* TSDocumentScripting.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSDocumentScripting.m; sourceTree = "<group>"; };
-		40BB76801795F29E008C2B40 /* Defaults_pTeX_euc.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_pTeX_euc.plist; sourceTree = "<group>"; };
-		40BB76831795F29E008C2B40 /* Defaults_pTeX_script.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_pTeX_script.plist; sourceTree = "<group>"; };
-		40BB76841795F29E008C2B40 /* Defaults_pTeX_sjis.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_pTeX_sjis.plist; sourceTree = "<group>"; };
-		40BB76871795F29E008C2B40 /* Defaults_upTeX_script.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults_upTeX_script.plist; sourceTree = "<group>"; };
-		40BB76901795F2AB008C2B40 /* FactoryDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FactoryDefaults.plist; sourceTree = "<group>"; };
 		40BC8E861922D7DD00F3EF2D /* IconsPDF.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Resources/DocumentIcons/IconsPDF.icns; sourceTree = SOURCE_ROOT; };
 		40BC8E881922D7E900F3EF2D /* IconsTeX.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Resources/DocumentIcons/IconsTeX.icns; sourceTree = SOURCE_ROOT; };
 		40BCDA501FF9589100AAC575 /* TSWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSWindowController.h; sourceTree = "<group>"; };
@@ -855,41 +837,41 @@
 		E18200000000000000000310 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsSidebarRow.m; sourceTree = "<group>"; };
 		E18200000000000000000400 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsContentView.h; sourceTree = "<group>"; };
 		E18200000000000000000410 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsContentView.m; sourceTree = "<group>"; };
-		9BEADA65F9CB4B3EC9B86C51 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefConsoleController.h"; sourceTree = SOURCE_ROOT; };
-		9E2B2A2E258A950674839CF0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefConsoleController.m"; sourceTree = SOURCE_ROOT; };
-		163BED1EC1254A6DDD5193A1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefEditorController.h"; sourceTree = SOURCE_ROOT; };
-		83392E91D403FD331C9F5227 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefEditorController.m"; sourceTree = SOURCE_ROOT; };
-		2562A3FC75062C43264AF527 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefEnginesController.h"; sourceTree = SOURCE_ROOT; };
-		C887033427B86E6D68775FD5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefEnginesController.m"; sourceTree = SOURCE_ROOT; };
-		4B75A852E8A0E9E52C7BEF2C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefFooterController.h"; sourceTree = SOURCE_ROOT; };
-		1C41561D8526C276A6777DAF = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefFooterController.m"; sourceTree = SOURCE_ROOT; };
-		C13B87CD470F4FA81D5F2052 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefMiscOneController.h"; sourceTree = SOURCE_ROOT; };
-		C37E9B8BD9B42C465E1499E1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefMiscOneController.m"; sourceTree = SOURCE_ROOT; };
-		0DFD50A8720DED31EF34BD2C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefMiscTwoController.h"; sourceTree = SOURCE_ROOT; };
-		0DA9C47DC56DE56839F542D7 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefMiscTwoController.m"; sourceTree = SOURCE_ROOT; };
-		7CD635C71691DED09407018A = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefPaneController.h"; sourceTree = SOURCE_ROOT; };
-		FFEABD46FD6CFA475B43C550 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefPaneController.m"; sourceTree = SOURCE_ROOT; };
-		9ED9A49A7AF7D1A871F0B1E1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefPreviewController.h"; sourceTree = SOURCE_ROOT; };
-		2C040BA0587C97E5FC9EDCFB = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefPreviewController.m"; sourceTree = SOURCE_ROOT; };
-		33AEA6DC59052A7DD79C0727 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefSourceController.h"; sourceTree = SOURCE_ROOT; };
-		914FD14BA7F8207FD7668B1B = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefSourceController.m"; sourceTree = SOURCE_ROOT; };
-		770E98589B1F2DF5CDE16E95 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefThemeNameController.h"; sourceTree = SOURCE_ROOT; };
-		9F44724C28EB6026DDE69D43 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefThemeNameController.m"; sourceTree = SOURCE_ROOT; };
-		460EB15296A97AFEC0252926 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefThemesController.h"; sourceTree = SOURCE_ROOT; };
-		AD4BAFA1B2474C7584091E35 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefThemesController.m"; sourceTree = SOURCE_ROOT; };
-		49FEAF4B2E1C4BA0FBE8CF8D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefTypesettingController.h"; sourceTree = SOURCE_ROOT; };
-		D179A39DAF6B708875BC62AF = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefTypesettingController.m"; sourceTree = SOURCE_ROOT; };
-		77F061C6FC654AF63846C6A8 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPrefPaneLayout.h"; sourceTree = SOURCE_ROOT; };
-		6A18C345080B640F64D9DAD7 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPrefPaneLayout.m"; sourceTree = SOURCE_ROOT; };
-		0731721CBFD6F17AD0DD4F24 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutAlerts.m"; sourceTree = SOURCE_ROOT; };
-		F4EB4ACA7ED000B71ADE66E6 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutModels.m"; sourceTree = SOURCE_ROOT; };
-		197586F0A4601BC5C8BCBB2E = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutPaneController.m"; sourceTree = SOURCE_ROOT; };
-		3F36D4D0A156D4E499455DB0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutSearch.m"; sourceTree = SOURCE_ROOT; };
-		9F49BE4A6403EFC7BED1FE8F = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutStore.m"; sourceTree = SOURCE_ROOT; };
-		7A5D3AFB511E81E0D1A4BA2D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSShortcutUtilities.m"; sourceTree = SOURCE_ROOT; };
-		2EB5A58F0470E139A9CBD9FE = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSShortcutInternal.h"; sourceTree = SOURCE_ROOT; };
-		64C0EB54C63BE7688986FD9F = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sources/TSPreferences+Panes.h"; sourceTree = SOURCE_ROOT; };
-		FD8A3D5420C9AFA5596D2537 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Sources/TSPreferences+Panes.m"; sourceTree = SOURCE_ROOT; };
+		9BEADA65F9CB4B3EC9B86C51 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefConsoleController.h; sourceTree = "<group>"; };
+		9E2B2A2E258A950674839CF0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefConsoleController.m; sourceTree = "<group>"; };
+		163BED1EC1254A6DDD5193A1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefEditorController.h; sourceTree = "<group>"; };
+		83392E91D403FD331C9F5227 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefEditorController.m; sourceTree = "<group>"; };
+		2562A3FC75062C43264AF527 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefEnginesController.h; sourceTree = "<group>"; };
+		C887033427B86E6D68775FD5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefEnginesController.m; sourceTree = "<group>"; };
+		4B75A852E8A0E9E52C7BEF2C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefFooterController.h; sourceTree = "<group>"; };
+		1C41561D8526C276A6777DAF = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefFooterController.m; sourceTree = "<group>"; };
+		C13B87CD470F4FA81D5F2052 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefMiscOneController.h; sourceTree = "<group>"; };
+		C37E9B8BD9B42C465E1499E1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefMiscOneController.m; sourceTree = "<group>"; };
+		0DFD50A8720DED31EF34BD2C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefMiscTwoController.h; sourceTree = "<group>"; };
+		0DA9C47DC56DE56839F542D7 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefMiscTwoController.m; sourceTree = "<group>"; };
+		7CD635C71691DED09407018A = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefPaneController.h; sourceTree = "<group>"; };
+		FFEABD46FD6CFA475B43C550 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefPaneController.m; sourceTree = "<group>"; };
+		9ED9A49A7AF7D1A871F0B1E1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefPreviewController.h; sourceTree = "<group>"; };
+		2C040BA0587C97E5FC9EDCFB = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefPreviewController.m; sourceTree = "<group>"; };
+		33AEA6DC59052A7DD79C0727 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefSourceController.h; sourceTree = "<group>"; };
+		914FD14BA7F8207FD7668B1B = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefSourceController.m; sourceTree = "<group>"; };
+		770E98589B1F2DF5CDE16E95 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefThemeNameController.h; sourceTree = "<group>"; };
+		9F44724C28EB6026DDE69D43 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefThemeNameController.m; sourceTree = "<group>"; };
+		460EB15296A97AFEC0252926 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefThemesController.h; sourceTree = "<group>"; };
+		AD4BAFA1B2474C7584091E35 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefThemesController.m; sourceTree = "<group>"; };
+		49FEAF4B2E1C4BA0FBE8CF8D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefTypesettingController.h; sourceTree = "<group>"; };
+		D179A39DAF6B708875BC62AF = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefTypesettingController.m; sourceTree = "<group>"; };
+		77F061C6FC654AF63846C6A8 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefPaneLayout.h; sourceTree = "<group>"; };
+		6A18C345080B640F64D9DAD7 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPrefPaneLayout.m; sourceTree = "<group>"; };
+		0731721CBFD6F17AD0DD4F24 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSShortcutAlerts.m; sourceTree = "<group>"; };
+		F4EB4ACA7ED000B71ADE66E6 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSShortcutModels.m; sourceTree = "<group>"; };
+		197586F0A4601BC5C8BCBB2E = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSShortcutPaneController.m; sourceTree = "<group>"; };
+		3F36D4D0A156D4E499455DB0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSShortcutSearch.m; sourceTree = "<group>"; };
+		9F49BE4A6403EFC7BED1FE8F = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSShortcutStore.m; sourceTree = "<group>"; };
+		7A5D3AFB511E81E0D1A4BA2D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSShortcutUtilities.m; sourceTree = "<group>"; };
+		2EB5A58F0470E139A9CBD9FE = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSShortcutInternal.h; sourceTree = "<group>"; };
+		64C0EB54C63BE7688986FD9F = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSPreferences+Panes.h"; sourceTree = "<group>"; };
+		FD8A3D5420C9AFA5596D2537 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSPreferences+Panes.m"; sourceTree = "<group>"; };
 		431DCA0173805C7E39E23833 = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "Base"; path = "Resources/Interfaces/Base.lproj/SettingsConsole.xib"; sourceTree = SOURCE_ROOT; };
 		6487D0CF2B512EB800A5CAA8 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de"; path = "Resources/Interfaces/de.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
 		AEB7B1C47D75750C239A59A7 = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es"; path = "Resources/Interfaces/es.lproj/SettingsConsole.strings"; sourceTree = SOURCE_ROOT; };
@@ -1084,6 +1066,320 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4EEC28270594C882A5FAE3F8 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				408F8D7318DB671100277EDB /* GlobalData.h */,
+				408F8D7418DB671100277EDB /* GlobalData.m */,
+				0AC768C70010B25E7F000001 /* globals.h */,
+				0AC768C80010B25E7F000001 /* globals.m */,
+				400CD8B80C66BD3900C450D6 /* HelpDocuments.h */,
+				400CD8B90C66BD3900C450D6 /* HelpDocuments.m */,
+				2A37F4B0FDCFA73011CA2CEA /* main.m */,
+				00E7EAC1001D35FA7F000001 /* TSAppDelegate.h */,
+				00E7EAC2001D35FA7F000001 /* TSAppDelegate.m */,
+				40A3575D13CA151400793021 /* TSApplication.h */,
+				40A3575E13CA151400793021 /* TSApplication.m */,
+				ED0C00000000000000000006 /* TSDockIcon.h */,
+				ED0C00000000000000000007 /* TSDockIconController.h */,
+				ED0C00000000000000000002 /* TSDockIconController.m */,
+				40AA2B8103C79AF800000009 /* TSEncodingSupport.h */,
+				40AA2B8203C79AF800000009 /* TSEncodingSupport.m */,
+				EF5890000000000000000003 /* TSSparkleController.h */,
+				EF5890000000000000000002 /* TSSparkleController.m */,
+				40A56E1C11E67546002BEED6 /* TSStationery.h */,
+				40A56E1D11E67546002BEED6 /* TSStationery.m */,
+				4068429E0405A20000000009 /* UseMitsu.h */,
+				40A33124293BDE8D00F82117 /* UseSparkle.h */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		DE814BD1609C6ECACCC54434 /* Document */ = {
+			isa = PBXGroup;
+			children = (
+				520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */,
+				40770A9E195F1AB700A67050 /* TSDocument-Scrap.m */,
+				4093BBE922CECA7D00D37BD7 /* TSDocument-XML.m */,
+				2A37F4AEFDCFA73011CA2CEA /* TSDocument.h */,
+				407F694D11E65D4F00FD4359 /* TSDocument.m */,
+				40EB71E50400BE1000000009 /* TSDocumentController.h */,
+				40EB71E60400BE1000000009 /* TSDocumentController.m */,
+				40B7DEA9057139E2002872F2 /* TSDocumentScripting.h */,
+				40B7DEAA057139E2002872F2 /* TSDocumentScripting.m */,
+				AABB05910000000000000003 /* TSFileChangeMonitor.h */,
+				AABB05910000000000000002 /* TSFileChangeMonitor.m */,
+			);
+			path = Document;
+			sourceTree = "<group>";
+		};
+		611B6AF034FF2E1DF15D05A8 /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				40162B2A0F1873F200E9336E /* NoodleLineNumberMarker.h */,
+				40162B2B0F1873F200E9336E /* NoodleLineNumberMarker.m */,
+				40162B2C0F1873F200E9336E /* NoodleLineNumberView.h */,
+				40162B2D0F1873F200E9336E /* NoodleLineNumberView.m */,
+				40D5BB2D19632B9C0081BC77 /* ScrapTextView.h */,
+				40D5BB2E19632B9C0081BC77 /* ScrapTextView.m */,
+				40839127060963C800266FAB /* TextFinder.h */,
+				40839128060963C800266FAB /* TextFinder.m */,
+				4016DD862109FC6200745019 /* TSColorSupport.h */,
+				4016DD852109FC6200745019 /* TSColorSupport.m */,
+				40D67167210A5F9C0021D69C /* TSDocument-Color.m */,
+				520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */,
+				346FA9FB1309961900DAA25D /* TSLayoutManager.h */,
+				346FA9FC1309961900DAA25D /* TSLayoutManager.m */,
+				1B07AF9DC05BCC3F8444C4D5 /* TSSpellExclusions.h */,
+				DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */,
+				3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */,
+				02810215E6051B57C001C799 /* TSSpellSupport.m */,
+				F510E36D03916F340100009E /* TSTextView.h */,
+				F510E36E03916F340100009E /* TSTextView.m */,
+			);
+			path = Editor;
+			sourceTree = "<group>";
+		};
+		D4903D8FE8A591CB57821229 /* Macros */ = {
+			isa = PBXGroup;
+			children = (
+				4077C62203C7FAE800000009 /* TSMacroEditor.h */,
+				4077C62303C7FAE800000009 /* TSMacroEditor.m */,
+				4077C62403C7FAE800000009 /* TSMacroMenuController.h */,
+				4077C62503C7FAE800000009 /* TSMacroMenuController.m */,
+				4077C62E03C7FB1E00000009 /* TSMacroOutlineController.h */,
+				4077C62F03C7FB1E00000009 /* TSMacroOutlineController.m */,
+				A2A000010000000000000001 /* TSMacroSelection.h */,
+				4077C62A03C7FB0200000009 /* TSMacroTreeNode.h */,
+				4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */,
+			);
+			path = Macros;
+			sourceTree = "<group>";
+		};
+		16B3298EA352468D9847E75E /* Panels */ = {
+			isa = PBXGroup;
+			children = (
+				4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */,
+				4040A2C8135BE98200AC4C27 /* TSAutoCompletionListEditor.m */,
+				40A9D09019AE7D4400FEFAC6 /* TSGlyphPopoverController.h */,
+				40A9D09119AE7D4400FEFAC6 /* TSGlyphPopoverController.m */,
+				F5B8EA8E01FF59A101DF2474 /* TSLaTeXPanelController.h */,
+				F5B8EA8F01FF59A101DF2474 /* TSLaTeXPanelController.m */,
+				4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */,
+				4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */,
+				4096186205824CF2000D94FD /* TSMatrixPanelController.h */,
+				4096186305824CF2000D94FD /* TSMatrixPanelController.m */,
+				40D1F2BD06040B1700087115 /* TSMatrixTableView.h */,
+				40D1F2BE06040B1700087115 /* TSMatrixTableView.m */,
+			);
+			path = Panels;
+			sourceTree = "<group>";
+		};
+		F356CC42171C4122A4E3237D /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				40DE48211FDC4C04003E1D9A /* HideView.h */,
+				40DE48201FDC4C04003E1D9A /* HideView.m */,
+				401EF0740D0B3F8800203D7B /* MyDragView.h */,
+				401EF0750D0B3F8800203D7B /* MyDragView.m */,
+				4002427828921A3800851717 /* MyHTMLView.h */,
+				4002427728921A3800851717 /* MyHTMLView.m */,
+				40ACD36F2C2787F800436D64 /* MyPDFKitView-Annotations.m */,
+				4076227522075CE200FB6C80 /* MyPDFKitView-ExternalEditor.m */,
+				40AA6A701BCB498D00533975 /* MyPDFKitView-Magnification.m */,
+				407622732207340F00FB6C80 /* MyPDFKitView-TextMate.m */,
+				40CD913407E4CE6C00DE6448 /* MyPDFKitView.h */,
+				40CD913507E4CE6C00DE6448 /* MyPDFKitView.m */,
+				4068429A0405969B00000009 /* MyPDFView.h */,
+				4068429B0405969B00000009 /* MyPDFView.m */,
+				403B4238178CB65400E38A72 /* OverView.h */,
+				403B4239178CB65400E38A72 /* OverView.m */,
+				409F89CF1960A6A200D6F7AD /* ScrapPDFKitView.h */,
+				409F89D01960A6A200D6F7AD /* ScrapPDFKitView.m */,
+				40067E5F288F16CA00756801 /* TSDocument-HTML.m */,
+				AE9500010000000000000002 /* TSExternalPDFSnapshot.m */,
+				400CD8BE0C66BD4F00C450D6 /* TSMovie.h */,
+				400CD8BF0C66BD4F00C450D6 /* TSMovie.m */,
+				00CFF0F5000AD1F27F000001 /* TSPrintView.h */,
+				00CFF0F6000AD1F27F000001 /* TSPrintView.m */,
+			);
+			path = Preview;
+			sourceTree = "<group>";
+		};
+		4D96E83320E395C0F250DCAA /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				9BEADA65F9CB4B3EC9B86C51 /* TSPrefConsoleController.h */,
+				9E2B2A2E258A950674839CF0 /* TSPrefConsoleController.m */,
+				163BED1EC1254A6DDD5193A1 /* TSPrefEditorController.h */,
+				83392E91D403FD331C9F5227 /* TSPrefEditorController.m */,
+				2562A3FC75062C43264AF527 /* TSPrefEnginesController.h */,
+				C887033427B86E6D68775FD5 /* TSPrefEnginesController.m */,
+				E17100000000000000000003 /* TSPreferenceInput.h */,
+				E17100000000000000000002 /* TSPreferenceInput.m */,
+				E17100000000000000000004 /* TSPreferenceKey.h */,
+				E17000000000000000000003 /* TSPreferenceProfile.h */,
+				E17000000000000000000002 /* TSPreferenceProfile.m */,
+				E17100000000000000000005 /* TSPreferences+LiveSettings.h */,
+				64C0EB54C63BE7688986FD9F /* TSPreferences+Panes.h */,
+				FD8A3D5420C9AFA5596D2537 /* TSPreferences+Panes.m */,
+				4080F36B210BA5520034C707 /* TSPreferences-Color.m */,
+				0AC768C30010B1D17F000001 /* TSPreferences.h */,
+				0AC768C40010B1D17F000001 /* TSPreferences.m */,
+				403649E1211BDA800086DDD1 /* TSPreferenceWindow.h */,
+				403649E2211BDA800086DDD1 /* TSPreferenceWindow.m */,
+				4B75A852E8A0E9E52C7BEF2C /* TSPrefFooterController.h */,
+				1C41561D8526C276A6777DAF /* TSPrefFooterController.m */,
+				C13B87CD470F4FA81D5F2052 /* TSPrefMiscOneController.h */,
+				C37E9B8BD9B42C465E1499E1 /* TSPrefMiscOneController.m */,
+				0DFD50A8720DED31EF34BD2C /* TSPrefMiscTwoController.h */,
+				0DA9C47DC56DE56839F542D7 /* TSPrefMiscTwoController.m */,
+				7CD635C71691DED09407018A /* TSPrefPaneController.h */,
+				FFEABD46FD6CFA475B43C550 /* TSPrefPaneController.m */,
+				77F061C6FC654AF63846C6A8 /* TSPrefPaneLayout.h */,
+				6A18C345080B640F64D9DAD7 /* TSPrefPaneLayout.m */,
+				9ED9A49A7AF7D1A871F0B1E1 /* TSPrefPreviewController.h */,
+				2C040BA0587C97E5FC9EDCFB /* TSPrefPreviewController.m */,
+				33AEA6DC59052A7DD79C0727 /* TSPrefSourceController.h */,
+				914FD14BA7F8207FD7668B1B /* TSPrefSourceController.m */,
+				770E98589B1F2DF5CDE16E95 /* TSPrefThemeNameController.h */,
+				9F44724C28EB6026DDE69D43 /* TSPrefThemeNameController.m */,
+				460EB15296A97AFEC0252926 /* TSPrefThemesController.h */,
+				AD4BAFA1B2474C7584091E35 /* TSPrefThemesController.m */,
+				49FEAF4B2E1C4BA0FBE8CF8D /* TSPrefTypesettingController.h */,
+				D179A39DAF6B708875BC62AF /* TSPrefTypesettingController.m */,
+				E18200000000000000000000 /* TSSettingsCategory.h */,
+				E18200000000000000000010 /* TSSettingsCategory.m */,
+				E18200000000000000000100 /* TSSettingsCategoryList.h */,
+				E18200000000000000000110 /* TSSettingsCategoryList.m */,
+				7A9051C11D9E4EA1A5210012 /* TSSettingsChangeNote.h */,
+				7A9051C11D9E4EA1A5210011 /* TSSettingsChangeNote.m */,
+				E18200000000000000000400 /* TSSettingsContentView.h */,
+				E18200000000000000000410 /* TSSettingsContentView.m */,
+				E18000000000000000000003 /* TSSettingsNavigationHistory.h */,
+				E18000000000000000000001 /* TSSettingsNavigationHistory.m */,
+				E3B000000000000000000002 /* TSSettingsSearch.m */,
+				E18200000000000000000300 /* TSSettingsSidebarRow.h */,
+				E18200000000000000000310 /* TSSettingsSidebarRow.m */,
+				E18200000000000000000200 /* TSSettingsStateStore.h */,
+				E18200000000000000000210 /* TSSettingsStateStore.m */,
+				E18000000000000000000004 /* TSSettingsWindowController.h */,
+				E18000000000000000000002 /* TSSettingsWindowController.m */,
+				E17200000000000000000003 /* TSThemeFileStore.h */,
+				E17200000000000000000002 /* TSThemeFileStore.m */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		25DD1CD6DFAF98FBE6AFC225 /* Shortcuts */ = {
+			isa = PBXGroup;
+			children = (
+				EA1100000000000000000003 /* TSKeyboardShortcuts.h */,
+				EA1100000000000000000002 /* TSKeyboardShortcuts.m */,
+				0731721CBFD6F17AD0DD4F24 /* TSShortcutAlerts.m */,
+				2EB5A58F0470E139A9CBD9FE /* TSShortcutInternal.h */,
+				F4EB4ACA7ED000B71ADE66E6 /* TSShortcutModels.m */,
+				E2A000000000000000000001 /* TSShortcutPaneController.h */,
+				197586F0A4601BC5C8BCBB2E /* TSShortcutPaneController.m */,
+				3F36D4D0A156D4E499455DB0 /* TSShortcutSearch.m */,
+				9F49BE4A6403EFC7BED1FE8F /* TSShortcutStore.m */,
+				7A5D3AFB511E81E0D1A4BA2D /* TSShortcutUtilities.m */,
+			);
+			path = Shortcuts;
+			sourceTree = "<group>";
+		};
+		2B831F948D7ED3A2FA006811 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				4017CF9A266454D700981011 /* TSDocument-SyncConTeXt.m */,
+				401B9EC01F8C568300B48034 /* TSDocument-SyncOld.m */,
+				409C33810E566BD200FE3BE3 /* TSDocument-SyncTeX.m */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
+		C764A7454FDA0171AD29BDC9 /* SyncTeX */ = {
+			isa = PBXGroup;
+			children = (
+				40B288CF1398A373005C921D /* synctex_parser.c */,
+				40B288D01398A373005C921D /* synctex_parser.h */,
+				400980DA1F13E44200C02D8C /* synctex_parser_advanced.h */,
+				40356ACD1F8D157F0093399B /* synctex_parser_old.c */,
+				40356ACC1F8D157F0093399B /* synctex_parser_old.h */,
+				40B288CB1398A366005C921D /* synctex_parser_utils.c */,
+				40B288CC1398A366005C921D /* synctex_parser_utils.h */,
+				4088EB2D1F0D26E500F00E00 /* synctex_parser_version.txt */,
+			);
+			path = SyncTeX;
+			sourceTree = "<group>";
+		};
+		BAF32BAE67FB5165EE1435A9 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				C764A7454FDA0171AD29BDC9 /* SyncTeX */,
+			);
+			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		AEE62C6F00E71A95BA0EA6D8 /* Typesetting */ = {
+			isa = PBXGroup;
+			children = (
+				403F25E90F20770F001031A0 /* TSDocument-Console.m */,
+				520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */,
+				E16E00000000000000000003 /* TSEnginePathDiscovery.h */,
+				E16E00000000000000000002 /* TSEnginePathDiscovery.m */,
+				AE9800020000000000000003 /* TSExperimentConsoleController.h */,
+				AE9800020000000000000002 /* TSExperimentConsoleController.m */,
+				AE9800010000000000000003 /* TSExperimentJob.h */,
+				AE9800010000000000000002 /* TSExperimentJob.m */,
+			);
+			path = Typesetting;
+			sourceTree = "<group>";
+		};
+		F8ADDEB91E3D501662EC57A7 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				5217898408A7FAD600FC1D44 /* NSString-Extras.h */,
+				5217898508A7FAD600FC1D44 /* NSString-Extras.m */,
+				406B626C199934CF00C46D2A /* NSText-Extras.h */,
+				406B626D199934D000C46D2A /* NSText-Extras.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		3DD15ABFC472B3328E0B6440 /* Windows */ = {
+			isa = PBXGroup;
+			children = (
+				40E76BEF292FDD0C00CBE5F9 /* CustomModalWindowController.h */,
+				40E76BF0292FDD0C00CBE5F9 /* CustomModalWindowController.m */,
+				00CFF0E9000ACFC67F000001 /* TSConsoleWindow.h */,
+				00CFF0EB000ACFFC7F000001 /* TSConsoleWindow.m */,
+				4098635A0C66CC4D00221E87 /* TSFullscreenWindow.h */,
+				4098635B0C66CC4D00221E87 /* TSFullscreenWindow.m */,
+				404D78FF199FF471008B8D64 /* TSFullSplitWindow.h */,
+				404D7900199FF471008B8D64 /* TSFullSplitWindow.m */,
+				404D1B612891B23400402802 /* TSHTMLWindow.h */,
+				404D1B622891B23400402802 /* TSHTMLWindow.m */,
+				408B6DCE0F3D516C0098CCED /* TSLogWindow.h */,
+				408B6DCF0F3D516C0098CCED /* TSLogWindow.m */,
+				400CD8C00C66BD4F00C450D6 /* TSMovieWindow.h */,
+				400CD8C10C66BD4F00C450D6 /* TSMovieWindow.m */,
+				00CFF0F1000AD1547F000001 /* TSPreviewWindow.h */,
+				00CFF0F2000AD1547F000001 /* TSPreviewWindow.m */,
+				00CFF0ED000AD0B87F000001 /* TSTextEditorWindow.h */,
+				00CFF0EE000AD0B87F000001 /* TSTextEditorWindow.m */,
+				40328ADA1340380800AD2EA7 /* TSToolbar.h */,
+				40328ADB1340380800AD2EA7 /* TSToolbar.m */,
+				F5ECC3200214678B01DF2474 /* TSToolbarController.h */,
+				F5ECC3210214678B01DF2474 /* TSToolbarController.m */,
+				40BCDA501FF9589100AAC575 /* TSWindowController.h */,
+				40BCDA511FF9589100AAC575 /* TSWindowController.m */,
+				00E5E439003E251B7F000001 /* TSWindowManager.h */,
+				00E5E43A003E251B7F000001 /* TSWindowManager.m */,
+			);
+			path = Windows;
+			sourceTree = "<group>";
+		};
 		0273C927FF23CC9B80DF2474 /* DocumentIcons */ = {
 			isa = PBXGroup;
 			children = (
@@ -1191,97 +1487,21 @@
 		2A37F4ABFDCFA73011CA2CEA /* classes */ = {
 			isa = PBXGroup;
 			children = (
-				4068429E0405A20000000009 /* UseMitsu.h */,
-				EF5890000000000000000002 /* TSSparkleController.m */,
-				EF5890000000000000000003 /* TSSparkleController.h */,
-				40A33124293BDE8D00F82117 /* UseSparkle.h */,
-				4040A2CD135BE99500AC4C27 /* TSListEditorTableView.h */,
-				4040A2CE135BE99500AC4C27 /* TSListEditorTableView.m */,
-				4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */,
-				4040A2C8135BE98200AC4C27 /* TSAutoCompletionListEditor.m */,
-				400CD8BE0C66BD4F00C450D6 /* TSMovie.h */,
-				400CD8BF0C66BD4F00C450D6 /* TSMovie.m */,
-				400CD8C00C66BD4F00C450D6 /* TSMovieWindow.h */,
-				400CD8C10C66BD4F00C450D6 /* TSMovieWindow.m */,
-				400CD8B80C66BD3900C450D6 /* HelpDocuments.h */,
-				400CD8B90C66BD3900C450D6 /* HelpDocuments.m */,
-				00CFF0E9000ACFC67F000001 /* TSConsoleWindow.h */,
-				00CFF0EB000ACFFC7F000001 /* TSConsoleWindow.m */,
-				408B6DCE0F3D516C0098CCED /* TSLogWindow.h */,
-				408B6DCF0F3D516C0098CCED /* TSLogWindow.m */,
-				40AA2B8103C79AF800000009 /* TSEncodingSupport.h */,
-				40AA2B8203C79AF800000009 /* TSEncodingSupport.m */,
-				40839127060963C800266FAB /* TextFinder.h */,
-				40839128060963C800266FAB /* TextFinder.m */,
-				40A3575D13CA151400793021 /* TSApplication.h */,
-				40A3575E13CA151400793021 /* TSApplication.m */,
-				00E7EAC1001D35FA7F000001 /* TSAppDelegate.h */,
-				00E7EAC2001D35FA7F000001 /* TSAppDelegate.m */,
-				4016DD862109FC6200745019 /* TSColorSupport.h */,
-				4016DD852109FC6200745019 /* TSColorSupport.m */,
-				403649E1211BDA800086DDD1 /* TSPreferenceWindow.h */,
-				403649E2211BDA800086DDD1 /* TSPreferenceWindow.m */,
-				E18200000000000000000000,
-				E18200000000000000000010,
-				E18200000000000000000100,
-				E18200000000000000000110,
-				E18200000000000000000200,
-				E18200000000000000000210,
-				E18200000000000000000300,
-				E18200000000000000000310,
-				E18200000000000000000400,
-				E18200000000000000000410,
-				E18000000000000000000001,
-				E3B000000000000000000002,
-				7A9051C11D9E4EA1A5210011,
-				7A9051C11D9E4EA1A5210012,
-				E18000000000000000000002,
-				E18000000000000000000003,
-				E18000000000000000000004,
-				E18000000000000000000005,
-				0AC768C30010B1D17F000001 /* TSPreferences.h */,
-				0AC768C40010B1D17F000001 /* TSPreferences.m */,
-				4080F36B210BA5520034C707 /* TSPreferences-Color.m */,
-				00E5E439003E251B7F000001 /* TSWindowManager.h */,
-				00E5E43A003E251B7F000001 /* TSWindowManager.m */,
-				5217898408A7FAD600FC1D44 /* NSString-Extras.h */,
-				5217898508A7FAD600FC1D44 /* NSString-Extras.m */,
-				40A56E1C11E67546002BEED6 /* TSStationery.h */,
-				40A56E1D11E67546002BEED6 /* TSStationery.m */,
+				A53A4B59BBE2B72F965B083F /* SettingsWindow.xib */,
 			);
 			name = classes;
-			sourceTree = "<group>";
-		};
-		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
-			isa = PBXGroup;
-			children = (
-				408F8D7318DB671100277EDB /* GlobalData.h */,
-				408F8D7418DB671100277EDB /* GlobalData.m */,
-				0AC768C70010B25E7F000001 /* globals.h */,
-				0AC768C80010B25E7F000001 /* globals.m */,
-				2A37F4B0FDCFA73011CA2CEA /* main.m */,
-				4088EB2D1F0D26E500F00E00 /* synctex_parser_version.txt */,
-				400980DA1F13E44200C02D8C /* synctex_parser_advanced.h */,
-				40B288CB1398A366005C921D /* synctex_parser_utils.c */,
-				40B288CC1398A366005C921D /* synctex_parser_utils.h */,
-				40B288CF1398A373005C921D /* synctex_parser.c */,
-				40B288D01398A373005C921D /* synctex_parser.h */,
-				40356ACD1F8D157F0093399B /* synctex_parser_old.c */,
-				40356ACC1F8D157F0093399B /* synctex_parser_old.h */,
-			);
-			name = "Other Sources";
 			sourceTree = "<group>";
 		};
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E02B7D6185C396B053047A24 /* Themes */,
+				0A89878BCF6577E7A8F002E5 /* Defaults */,
 				AA099DB51E761C0AC6FE6574 /* Gratzer */,
 				C9BDF31174EB7027DDA17F7D /* Images.xcassets */,
 				ED0C00000000000000000004,
 				027B3F65000AD8447F000001 /* Interfaces */,
 				403E76BD218E7008006975A8 /* TeXShop.scriptSuite */,
-				40496C2A26069E67005E885D /* LiteTheme.plist */,
-				40496C2826069E2D005E885D /* DarkTheme.plist */,
 				4015F924218F458C00F6F883 /* ScriptRunner.app */,
 				40473FA90C68273C009311CF /* Course Supplements */,
 				0273C927FF23CC9B80DF2474 /* DocumentIcons */,
@@ -1304,33 +1524,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4077C67503C7FEB000000009 /* Macro Classes */ = {
-			isa = PBXGroup;
-			children = (
-				4077C62203C7FAE800000009 /* TSMacroEditor.h */,
-				4077C62303C7FAE800000009 /* TSMacroEditor.m */,
-				4077C62403C7FAE800000009 /* TSMacroMenuController.h */,
-				4077C62503C7FAE800000009 /* TSMacroMenuController.m */,
-				4077C62A03C7FB0200000009 /* TSMacroTreeNode.h */,
-				A2A000010000000000000001 /* TSMacroSelection.h */,
-				4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */,
-				4077C62E03C7FB1E00000009 /* TSMacroOutlineController.h */,
-				4077C62F03C7FB1E00000009 /* TSMacroOutlineController.m */,
-			);
-			name = "Macro Classes";
-			sourceTree = "<group>";
-		};
-		40D1F2C706040B4500087115 /* Matrix Classes */ = {
-			isa = PBXGroup;
-			children = (
-				4096186205824CF2000D94FD /* TSMatrixPanelController.h */,
-				4096186305824CF2000D94FD /* TSMatrixPanelController.m */,
-				40D1F2BD06040B1700087115 /* TSMatrixTableView.h */,
-				40D1F2BE06040B1700087115 /* TSMatrixTableView.m */,
-			);
-			name = "Matrix Classes";
-			sourceTree = "<group>";
-		};
 		522BDC370A2A115E007CAB82 /* 3rdparty */ = {
 			isa = PBXGroup;
 			children = (
@@ -1341,15 +1534,6 @@
 		528029DB089D3DD900696FB9 /* Shellscripts */ = {
 			isa = PBXGroup;
 			children = (
-				40BB76901795F2AB008C2B40 /* FactoryDefaults.plist */,
-				40BB76801795F29E008C2B40 /* Defaults_pTeX_euc.plist */,
-				405A6A341992F49E00E3E80B /* Defaults_upTeX_ptex2pdf.plist */,
-				405A6A321992F49400E3E80B /* Defaults_upTeX_latexmk.plist */,
-				405A6A301992F48C00E3E80B /* Defaults_pTeX_ptex2pdf.plist */,
-				405A6A2E1992F47F00E3E80B /* Defaults_pTeX_latexmk.plist */,
-				40BB76831795F29E008C2B40 /* Defaults_pTeX_script.plist */,
-				40BB76841795F29E008C2B40 /* Defaults_pTeX_sjis.plist */,
-				40BB76871795F29E008C2B40 /* Defaults_upTeX_script.plist */,
 				66A63DCE0114947700000001 /* epstopdf */,
 				66A63DCF0114947700000001 /* epstopdfwrap */,
 				40143F70156F52B600CAFAFC /* sipswrap */,
@@ -1374,145 +1558,25 @@
 		5288888E089D06B50095E82D /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				EA1100000000000000000002,
-				EA1100000000000000000003,
-				E2A000000000000000000001,
-				E16E00000000000000000002,
-				E17000000000000000000002,
-				E17200000000000000000002,
-				E17100000000000000000002,
-				E16E00000000000000000003,
-				E17000000000000000000003,
-				E17200000000000000000003,
-				E17100000000000000000003,
-				E17100000000000000000004,
-				E17100000000000000000005,
-				ED0C00000000000000000002,
-				ED0C00000000000000000006,
-				ED0C00000000000000000007,
+				4EEC28270594C882A5FAE3F8 /* App */,
+				DE814BD1609C6ECACCC54434 /* Document */,
+				611B6AF034FF2E1DF15D05A8 /* Editor */,
+				D4903D8FE8A591CB57821229 /* Macros */,
+				16B3298EA352468D9847E75E /* Panels */,
+				F356CC42171C4122A4E3237D /* Preview */,
+				4D96E83320E395C0F250DCAA /* Settings */,
+				25DD1CD6DFAF98FBE6AFC225 /* Shortcuts */,
+				2B831F948D7ED3A2FA006811 /* Sync */,
+				BAF32BAE67FB5165EE1435A9 /* ThirdParty */,
+				AEE62C6F00E71A95BA0EA6D8 /* Typesetting */,
+				F8ADDEB91E3D501662EC57A7 /* Utilities */,
+				3DD15ABFC472B3328E0B6440 /* Windows */,
 				2A37F4ABFDCFA73011CA2CEA /* classes */,
-				52F59A6A08A4E6A000D66FBB /* Document Classes */,
-				52F59AB708A4EA4F00D66FBB /* Text */,
-				52F59AB608A4EA3900D66FBB /* PDF */,
-				52ACCDF308A82AB700FCD428 /* LaTeX Panel */,
-				40D1F2C706040B4500087115 /* Matrix Classes */,
-				4077C67503C7FEB000000009 /* Macro Classes */,
-				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		52ACCDF308A82AB700FCD428 /* LaTeX Panel */ = {
-			isa = PBXGroup;
-			children = (
-				F5B8EA8E01FF59A101DF2474 /* TSLaTeXPanelController.h */,
-				F5B8EA8F01FF59A101DF2474 /* TSLaTeXPanelController.m */,
-			);
-			name = "LaTeX Panel";
-			sourceTree = "<group>";
-		};
-		52F59A6A08A4E6A000D66FBB /* Document Classes */ = {
-			isa = PBXGroup;
-			children = (
-				40E76BEF292FDD0C00CBE5F9 /* CustomModalWindowController.h */,
-				40E76BF0292FDD0C00CBE5F9 /* CustomModalWindowController.m */,
-				2A37F4AEFDCFA73011CA2CEA /* TSDocument.h */,
-				407F694D11E65D4F00FD4359 /* TSDocument.m */,
-				AABB05910000000000000002 /* TSFileChangeMonitor.m */,
-				AABB05910000000000000003 /* TSFileChangeMonitor.h */,
-				403F25E90F20770F001031A0 /* TSDocument-Console.m */,
-				AE9800010000000000000002 /* TSExperimentJob.m */,
-				AE9800010000000000000003 /* TSExperimentJob.h */,
-				AE9800020000000000000002 /* TSExperimentConsoleController.m */,
-				AE9800020000000000000003 /* TSExperimentConsoleController.h */,
-				40770A9E195F1AB700A67050 /* TSDocument-Scrap.m */,
-				520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */,
-				520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */,
-				520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */,
-				409C33810E566BD200FE3BE3 /* TSDocument-SyncTeX.m */,
-				401B9EC01F8C568300B48034 /* TSDocument-SyncOld.m */,
-				4017CF9A266454D700981011 /* TSDocument-SyncConTeXt.m */,
-				40D67167210A5F9C0021D69C /* TSDocument-Color.m */,
-				40067E5F288F16CA00756801 /* TSDocument-HTML.m */,
-				4093BBE922CECA7D00D37BD7 /* TSDocument-XML.m */,
-				40B7DEA9057139E2002872F2 /* TSDocumentScripting.h */,
-				40B7DEAA057139E2002872F2 /* TSDocumentScripting.m */,
-				F5ECC3200214678B01DF2474 /* TSToolbarController.h */,
-				F5ECC3210214678B01DF2474 /* TSToolbarController.m */,
-				40328ADA1340380800AD2EA7 /* TSToolbar.h */,
-				40328ADB1340380800AD2EA7 /* TSToolbar.m */,
-				40EB71E50400BE1000000009 /* TSDocumentController.h */,
-				40EB71E60400BE1000000009 /* TSDocumentController.m */,
-				40BCDA501FF9589100AAC575 /* TSWindowController.h */,
-				40BCDA511FF9589100AAC575 /* TSWindowController.m */,
-				00CFF0F5000AD1F27F000001 /* TSPrintView.h */,
-				00CFF0F6000AD1F27F000001 /* TSPrintView.m */,
-				40162B2A0F1873F200E9336E /* NoodleLineNumberMarker.h */,
-				40162B2B0F1873F200E9336E /* NoodleLineNumberMarker.m */,
-				40162B2C0F1873F200E9336E /* NoodleLineNumberView.h */,
-				40162B2D0F1873F200E9336E /* NoodleLineNumberView.m */,
-				404D78FF199FF471008B8D64 /* TSFullSplitWindow.h */,
-				404D7900199FF471008B8D64 /* TSFullSplitWindow.m */,
-			);
-			name = "Document Classes";
-			sourceTree = "<group>";
-		};
-		52F59AB608A4EA3900D66FBB /* PDF */ = {
-			isa = PBXGroup;
-			children = (
-				4068429A0405969B00000009 /* MyPDFView.h */,
-				4068429B0405969B00000009 /* MyPDFView.m */,
-				40CD913407E4CE6C00DE6448 /* MyPDFKitView.h */,
-				40CD913507E4CE6C00DE6448 /* MyPDFKitView.m */,
-				40AA6A701BCB498D00533975 /* MyPDFKitView-Magnification.m */,
-				4076227522075CE200FB6C80 /* MyPDFKitView-ExternalEditor.m */,
-				407622732207340F00FB6C80 /* MyPDFKitView-TextMate.m */,
-				40ACD36F2C2787F800436D64 /* MyPDFKitView-Annotations.m */,
-				409F89CF1960A6A200D6F7AD /* ScrapPDFKitView.h */,
-				409F89D01960A6A200D6F7AD /* ScrapPDFKitView.m */,
-				40DE48211FDC4C04003E1D9A /* HideView.h */,
-				AE9500010000000000000002 /* TSExternalPDFSnapshot.m */,
-				40DE48201FDC4C04003E1D9A /* HideView.m */,
-				403B4238178CB65400E38A72 /* OverView.h */,
-				403B4239178CB65400E38A72 /* OverView.m */,
-				401EF0740D0B3F8800203D7B /* MyDragView.h */,
-				401EF0750D0B3F8800203D7B /* MyDragView.m */,
-				00CFF0F1000AD1547F000001 /* TSPreviewWindow.h */,
-				00CFF0F2000AD1547F000001 /* TSPreviewWindow.m */,
-				404D1B612891B23400402802 /* TSHTMLWindow.h */,
-				404D1B622891B23400402802 /* TSHTMLWindow.m */,
-				4002427828921A3800851717 /* MyHTMLView.h */,
-				4002427728921A3800851717 /* MyHTMLView.m */,
-				4098635A0C66CC4D00221E87 /* TSFullscreenWindow.h */,
-				4098635B0C66CC4D00221E87 /* TSFullscreenWindow.m */,
-			);
-			name = PDF;
-			sourceTree = "<group>";
-		};
-		52F59AB708A4EA4F00D66FBB /* Text */ = {
-			isa = PBXGroup;
-			children = (
-				00CFF0ED000AD0B87F000001 /* TSTextEditorWindow.h */,
-				00CFF0EE000AD0B87F000001 /* TSTextEditorWindow.m */,
-				F510E36D03916F340100009E /* TSTextView.h */,
-				F510E36E03916F340100009E /* TSTextView.m */,
-				40D5BB2D19632B9C0081BC77 /* ScrapTextView.h */,
-				40D5BB2E19632B9C0081BC77 /* ScrapTextView.m */,
-				346FA9FB1309961900DAA25D /* TSLayoutManager.h */,
-				346FA9FC1309961900DAA25D /* TSLayoutManager.m */,
-				406B626C199934CF00C46D2A /* NSText-Extras.h */,
-				406B626D199934D000C46D2A /* NSText-Extras.m */,
-				40A9D09019AE7D4400FEFAC6 /* TSGlyphPopoverController.h */,
-				40A9D09119AE7D4400FEFAC6 /* TSGlyphPopoverController.m */,
-				1B07AF9DC05BCC3F8444C4D5 /* TSSpellExclusions.h */,
-				DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */,
-				3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */,
-				02810215E6051B57C001C799 /* TSSpellSupport.m */,
-			);
-			name = Text;
-			sourceTree = "<group>";
-		};
-		BEE2C92FF50430D4B3A23A8C = {isa = PBXGroup; children = (9BEADA65F9CB4B3EC9B86C51, 9E2B2A2E258A950674839CF0, 163BED1EC1254A6DDD5193A1, 83392E91D403FD331C9F5227, 2562A3FC75062C43264AF527, C887033427B86E6D68775FD5, 4B75A852E8A0E9E52C7BEF2C, 1C41561D8526C276A6777DAF, C13B87CD470F4FA81D5F2052, C37E9B8BD9B42C465E1499E1, 0DFD50A8720DED31EF34BD2C, 0DA9C47DC56DE56839F542D7, 7CD635C71691DED09407018A, FFEABD46FD6CFA475B43C550, 9ED9A49A7AF7D1A871F0B1E1, 2C040BA0587C97E5FC9EDCFB, 33AEA6DC59052A7DD79C0727, 914FD14BA7F8207FD7668B1B, 770E98589B1F2DF5CDE16E95, 9F44724C28EB6026DDE69D43, 460EB15296A97AFEC0252926, AD4BAFA1B2474C7584091E35, 49FEAF4B2E1C4BA0FBE8CF8D, D179A39DAF6B708875BC62AF, 77F061C6FC654AF63846C6A8, 6A18C345080B640F64D9DAD7, 0731721CBFD6F17AD0DD4F24, F4EB4ACA7ED000B71ADE66E6, 197586F0A4601BC5C8BCBB2E, 3F36D4D0A156D4E499455DB0, 9F49BE4A6403EFC7BED1FE8F, 7A5D3AFB511E81E0D1A4BA2D, 2EB5A58F0470E139A9CBD9FE, 64C0EB54C63BE7688986FD9F, FD8A3D5420C9AFA5596D2537, 990A808007D20F765F7FE0C6, F52642F891C51F4B3DC14DC6, A9323445DF3DF72222E931D8, B09BD3059910CBD66090E52A, 688B0CC26F55F9608394F6C6, 560B5B73FB1B181B75991C27, 137953CD7A2A727D012D4C92, 5AD71523ECFDA5FF1247B811, 70B23652136601E3B33364A8, E55B71FC15FC1E286C7B4535, 9C1A1390768C69BE4A3AAFA0, 717DB6D9B0CBF322A1841F96, 31E91C29EB2B7A00320EA3FD,); name = "Settings Panes"; sourceTree = "<group>"; };
+		BEE2C92FF50430D4B3A23A8C = {isa = PBXGroup; children = (990A808007D20F765F7FE0C6, F52642F891C51F4B3DC14DC6, A9323445DF3DF72222E931D8, B09BD3059910CBD66090E52A, 688B0CC26F55F9608394F6C6, 560B5B73FB1B181B75991C27, 137953CD7A2A727D012D4C92, 5AD71523ECFDA5FF1247B811, 70B23652136601E3B33364A8, E55B71FC15FC1E286C7B4535, 9C1A1390768C69BE4A3AAFA0, 717DB6D9B0CBF322A1841F96, 31E91C29EB2B7A00320EA3FD,); name = "Settings Panes"; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1670,6 +1734,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8E47C4EB3FAA770E2CF0E59 /* Themes in Resources */,
+				D20D45B3736189BFBE1C0F51 /* Defaults in Resources */,
 				A0396FBB8723C84E230BC727 /* Gratzer in Resources */,
 				0E796367828B41F3D7D63F43 /* Images.xcassets in Resources */,
 				5DA0EA3040F181A5BCB9F158,
@@ -1703,21 +1769,15 @@
 				4078807F0519249A006979EA /* InfoPlist.strings in Resources */,
 				4078813C0519249A006979EA /* ToolbarItems.strings in Resources */,
 				52A4037008AE1F6C0070F041 /* Encodings.strings in Resources */,
-				40496C2B26069E68005E885D /* LiteTheme.plist in Resources */,
-				405A6A351992F49E00E3E80B /* Defaults_upTeX_ptex2pdf.plist in Resources */,
 				4078813B0519249A006979EA /* TeXShop.scriptTerminology in Resources */,
 				40E21179289760EE0033BA29 /* more.jpg in Resources */,
 				40AC8583181E0CCF00E69820 /* Notes on Applescript in TeXShop.pdf in Resources */,
 				403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */,
 				40E2117C289761050033BA29 /* READ ME FIRST.pdf in Resources */,
-				405A6A331992F49400E3E80B /* Defaults_upTeX_latexmk.plist in Resources */,
 				40E2117F2897611A0033BA29 /* SamplePage.html in Resources */,
-				405A6A311992F48C00E3E80B /* Defaults_pTeX_ptex2pdf.plist in Resources */,
 				4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */,
 				4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */,
 				4015F925218F458C00F6F883 /* ScriptRunner.app in Resources */,
-				40496C2926069E2D005E885D /* DarkTheme.plist in Resources */,
-				405A6A2F1992F47F00E3E80B /* Defaults_pTeX_latexmk.plist in Resources */,
 				40F80CAE1FAD3A2F00377616 /* Changes.pdf in Resources */,
 				40E76BF4292FDD9200CBE5F9 /* CustomModalWindowController.xib in Resources */,
 				40BC8E871922D7DD00F3EF2D /* IconsPDF.icns in Resources */,
@@ -1738,11 +1798,6 @@
 				4040A7F6135BEA8200AC4C27 /* AutoCompletionListEditor.nib in Resources */,
 				40367BB513DFB3B70098E009 /* TeXShopHelp in Resources */,
 				40DD04301C23893C00422219 /* File Encoding.pdf in Resources */,
-				40BB76881795F29E008C2B40 /* Defaults_pTeX_euc.plist in Resources */,
-				40BB768B1795F29E008C2B40 /* Defaults_pTeX_script.plist in Resources */,
-				40BB768C1795F29E008C2B40 /* Defaults_pTeX_sjis.plist in Resources */,
-				40BB768F1795F29E008C2B40 /* Defaults_upTeX_script.plist in Resources */,
-				40BB76911795F2AB008C2B40 /* FactoryDefaults.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1888,6 +1943,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		A53A4B59BBE2B72F965B083F /* SettingsWindow.xib */ = {isa = PBXVariantGroup; children = (E18000000000000000000005 /* Base */, ); name = SettingsWindow.xib; sourceTree = "<group>"; };
 		D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */ = {isa = PBXVariantGroup; children = (4054643C19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverMulti.xib; sourceTree = "<group>"; };
 		D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */ = {isa = PBXVariantGroup; children = (4054643D19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverSingle.xib; sourceTree = "<group>"; };
 		01E48F61FF2A05357F000001 /* FindPanel.strings */ = {
@@ -2434,6 +2490,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = ("$(inherited)", "$(SRCROOT)/3rdparty/zlib/zlib-1.4");
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Sources/**";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks";
@@ -2481,6 +2538,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = ("$(inherited)", "$(SRCROOT)/3rdparty/zlib/zlib-1.4");
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Sources/**";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks";

@@ -2,6 +2,7 @@
 """Check mockup presentation against original control behavior; never show a window."""
 from pathlib import Path
 import argparse, subprocess, tempfile
+from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument('--layout', type=Path, help='Alternative layout source for isolated mutation checks')
@@ -9,11 +10,11 @@ parser.add_argument('--mutations',action='store_true')
 args = parser.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-presentation-') as folder:
     executable = Path(folder) / 'probe'
-    command=['xcrun', 'clang', '-fobjc-arc', '-Werror', '-Wno-deprecated-declarations', '-mmacosx-version-min=14.6', '-I', str(root/'Sources'), '-I', str(root/'Tests'), '-framework', 'Cocoa', str(root/'Tests/SettingsPresentation.m'), str(args.layout or root/'Sources/TSPrefPaneLayout.m'), str(root/'Sources/TSSettingsCategory.m'), str(root/'Sources/TSSettingsCategoryList.m'), '-o', str(executable)]
+    command=['xcrun', 'clang', '-fobjc-arc', '-Werror', '-Wno-deprecated-declarations', '-mmacosx-version-min=14.6', *include_args(root), '-I', str(root/'Tests'), '-framework', 'Cocoa', str(root/'Tests/SettingsPresentation.m'), str(args.layout or root/'Sources/Settings/TSPrefPaneLayout.m'), str(root/'Sources/Settings/TSSettingsCategory.m'), str(root/'Sources/Settings/TSSettingsCategoryList.m'), '-o', str(executable)]
     def run(source):
-        subprocess.run([str(source) if x==str(args.layout or root/'Sources/TSPrefPaneLayout.m') else x for x in command],check=True)
+        subprocess.run([str(source) if x==str(args.layout or root/'Sources/Settings/TSPrefPaneLayout.m') else x for x in command],check=True)
         return subprocess.run([str(executable),str(root/'Tests/Fixtures/SettingsDesign.json')],capture_output=True,text=True,timeout=30)
-    original=args.layout or root/'Sources/TSPrefPaneLayout.m'
+    original=args.layout or root/'Sources/Settings/TSPrefPaneLayout.m'
     result=run(original);assert result.returncode==0,(result.stdout,result.stderr);print(result.stdout,flush=True)
     if args.mutations:
         changes=[('top-aligned-accessory','[accessory.centerYAnchor constraintEqualToAnchor:view.centerYAnchor]','[accessory.topAnchor constraintEqualToAnchor:view.topAnchor constant:6]'),('invisible-card','self.layer.backgroundColor=TSSettingsCardColor().CGColor;','self.layer.backgroundColor=NSColor.clearColor.CGColor;'),('missing-separators','[line stroke];','/* omitted separator */')]

@@ -13,7 +13,7 @@ CONTROLS = {'button', 'popUpButton', 'textField', 'colorWell', 'matrix', 'button
 
 def declared_methods():
     names = {"closeSamplePanel:"}  # Unused historical panel; absent from product panes.
-    for path in [root / 'Sources/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
+    for path in [root / 'Sources/Settings/TSPreferences.h', *sorted(root.glob('Sources/TSPreferences*.m'))]:
         text = re.sub(r'/\*.*?\*/', '', path.read_text(errors='replace'), flags=re.S)
         text = re.sub(r'//.*', '', text)
         names |= {m + ':' for m in re.findall(r'^\s*-\s*\([^)]*\)\s*(\w+)\s*:', text, re.M)}
@@ -80,7 +80,7 @@ print(f'PASS: {len(nibs)} localized Preferences windows connect {len(base)} outl
 base=ET.parse(root/'Resources/Interfaces/Base.lproj/Preferences.nib/designable.nib')
 old={o.get('property'):o.get('destination') for o in base.findall(".//customObject[@id='-2']/connections/outlet")}
 new={}
-for p in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xib'):
+for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xib') if x.name != 'SettingsWindow.xib']:
  tree=ET.parse(p)
  for outlet in tree.findall(".//customObject[@id='-2']/connections/outlet"):
   name=outlet.get('property')

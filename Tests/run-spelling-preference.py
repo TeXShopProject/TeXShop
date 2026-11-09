@@ -7,10 +7,11 @@ import plistlib, subprocess, tempfile
 from pane_fixtures import bundles, sources
 root = Path(__file__).resolve().parents[1]
 from production_fragments import method as production_method, verify_embedded
+from source_tree import include_args
 def method(path, signature):
     return production_method((root/path).read_text(),signature)
-scope = method('Sources/TSTextView.m', '- (BOOL)usesTeXAwareSpellChecking')
-for p in (root / 'Resources/Shellscripts').glob('*Defaults*.plist'):
+scope = method('Sources/Editor/TSTextView.m', '- (BOOL)usesTeXAwareSpellChecking')
+for p in (root / 'Resources/Defaults').glob('*Defaults*.plist'):
     assert plistlib.loads(p.read_bytes())['TeXAwareSpellChecking'] is True, p
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -75,7 +76,7 @@ int main(void) { @autoreleasepool {
     puts("PASS: default ON, explicit OFF, live saving, independent continuous spelling, and TeX-only scope");
 } }
 '''.replace('SCOPE', scope)
-verify_embedded(program,[('spelling scope',(root/'Sources/TSTextView.m').read_text(),scope)])
+verify_embedded(program,[('spelling scope',(root/'Sources/Editor/TSTextView.m').read_text(),scope)])
 subprocess.run([__import__('sys').executable,str(root/'Tests/run-settings-product-shell.py'),*__import__('sys').argv[1:]],check=True)
 with tempfile.TemporaryDirectory(prefix='texshop-spelling-preference-') as td:
     t = Path(td); (t/'probe.m').write_text(program)
@@ -83,7 +84,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-spelling-preference-') as td:
     subprocess.run([str(t/'probe')],check=True)
 
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa',
-        '-I',str(root/'Sources'),str(root/'Tests/SpellCheck/preferences.m'),*map(str,sources(root,('Source',))),'-o',str(t/'nibs')],check=True)
+        *include_args(root),str(root/'Tests/SpellCheck/preferences.m'),*map(str,sources(root,('Source',))),'-o',str(t/'nibs')],check=True)
     nibs = bundles(root,t,('Source',))
     assert len(nibs) == 12
     subprocess.run([str(t/'nibs'), *map(str,nibs)],check=True)

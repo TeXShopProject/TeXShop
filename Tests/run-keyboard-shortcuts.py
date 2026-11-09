@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 import sys
 import xml.etree.ElementTree as ET
+from source_tree import include_args
 
 root = Path(__file__).resolve().parents[1]
 for path in sorted((root / 'Resources/Interfaces').glob('*/MainMenu.nib/designable.nib')):
@@ -31,21 +32,21 @@ for path in sorted((root / 'Resources/Interfaces').glob('*/MainMenu.nib/designab
         assert links.find('connections/action').get('selector') == 'toggleAutomaticLinkDetection:'
     print(f'PASS: {path.parts[-3]} {len(commands)} unique commands, including typesetting/alternates')
 
-macro = (root / 'Sources/TSMacroMenuController.m').read_text(encoding='latin-1')
+macro = (root / 'Sources/Macros/TSMacroMenuController.m').read_text(encoding='latin-1')
 setup = macro[macro.index('- (void)setupMainMacroMenu'):macro.index('// reload')]
 assert setup.index('beginMenuRebuild') < setup.index('listKeyEquivalents:') < setup.index('endMenuRebuild')
 print('PASS: macro rebuild applies effective menu keys before collecting free keys')
 
 # Guard the call sites as well as the standalone menu model. These checks do not
 # replace the user's real-window checks for launch ordering and split orientation.
-delegate = (root / 'Sources/TSAppDelegate.m').read_text(encoding='latin-1')
+delegate = (root / 'Sources/App/TSAppDelegate.m').read_text(encoding='latin-1')
 launch = delegate[delegate.index('- (void)applicationDidFinishLaunching:'):]
 assert 'startAfterLaunchWithConfiguration:' in launch
 subprocess.run([sys.executable,str(root/'Tests/run-shortcut-launch.py'),'--mutations'],check=True)
-pdf = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin-1')
+pdf = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin-1')
 for tag in (1, 2):
     assert f'[TSKeyboardShortcuts event:theEvent matchesAction:@selector(performFindPanelAction:) tag:{tag}]' in pdf
-document = (root / 'Sources/TSDocument.m').read_text(encoding='latin-1')
+document = (root / 'Sources/Document/TSDocument.m').read_text(encoding='latin-1')
 split = document[document.index('- (void) splitWindow:'):]
 assert split.index('hasPrefix:@"TSShortcut.splitWindow:."') < split.index('[splitView setVertical:vertical]')
 assert 'vertical = [[sender identifier] isEqualToString:@"TSShortcut.splitWindow:.vertical"]' in split
@@ -56,8 +57,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
     production=production_source(root)
     (Path(td)/'TSKeyboardShortcuts.m').write_text(production)
     binary = Path(td) / 'shortcuts'
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Carbon', '-I', td, '-I',str(root/'Sources'),
-                    str(root / 'Tests/KeyboardShortcuts.m'), str(root/'Sources/TSPrefPaneLayout.m'), '-o', str(binary)], check=True)
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Carbon', '-I', td, *include_args(root),
+                    str(root / 'Tests/KeyboardShortcuts.m'), str(root/'Sources/Settings/TSPrefPaneLayout.m'), '-o', str(binary)], check=True)
     subprocess.run([str(binary)], check=True)
     paths = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
     assert len(paths) == 36
@@ -88,7 +89,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcuts-') as td:
         for name,(before,after) in cases.items():
             assert production.count(before)==1,(name,before)
             (Path(td)/'TSKeyboardShortcuts.m').write_text(production.replace(before,after))
-            subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-nullability-completeness','-framework','Cocoa','-framework','Carbon','-I',td,'-I',str(root/'Sources'),str(root/'Tests/KeyboardShortcuts.m'),str(root/'Sources/TSPrefPaneLayout.m'),'-o',str(binary)],check=True)
+            subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-nullability-completeness','-framework','Cocoa','-framework','Carbon','-I',td,*include_args(root),str(root/'Tests/KeyboardShortcuts.m'),str(root/'Sources/Settings/TSPrefPaneLayout.m'),'-o',str(binary)],check=True)
             detected=False
             for path in paths:
                 result=subprocess.run([str(binary),str(path),str(root/'Resources/TeXShop/Macros/Macros_Latex.plist')],capture_output=True,text=True)

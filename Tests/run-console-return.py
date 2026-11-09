@@ -4,8 +4,8 @@ from pathlib import Path
 import re, subprocess, sys, tempfile
 
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/TSDocument.m').read_text(encoding='latin-1')
-tail = (root / 'Sources/TSConsoleWindow.m').read_text(encoding='latin-1')
+source = (root / 'Sources/Document/TSDocument.m').read_text(encoding='latin-1')
+tail = (root / 'Sources/Windows/TSConsoleWindow.m').read_text(encoding='latin-1')
 
 def method(text, signature):
     start = text.index(signature)

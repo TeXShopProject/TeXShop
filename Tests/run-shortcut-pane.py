@@ -3,6 +3,7 @@
 from pathlib import Path
 from shortcut_sources import production_source, companion_sources
 import subprocess,tempfile,json,sys,re
+from source_tree import include_args
 r=Path(__file__).resolve().parents[1]
 expected_failures={'hidden-macro-binding':'[hiddenStore conflictsForMacroShortcuts:candidate].count==0','search-both-shift': '[TSShortcutSearch matchesKey:@"x" modifiers:(macroFlags.unsignedIntegerValue^S) store:coordinator.store macros:shiftMacros].count==0', 'raw-macro-shift': 'winners==1 && [actual isEqual:c[@"winner"]] && macroIndex==macros.count', 'hidden-menu': '[TSShortcutSearch matchesKey:@"h" modifiers:C store:hiddenStore macros:@[]].count==0', 'empty-initial-list': 'translated.searchEvent==nil && translated.table.numberOfRows==(NSInteger)translated.store.settingsSearchCommandNames.count', 'modifier-only-event': 'Modifier-only events must not reach character translation'}
 with tempfile.TemporaryDirectory(prefix='texshop-shortcut-pane-') as td:
@@ -10,8 +11,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcut-pane-') as td:
  (p/'TSKeyboardShortcuts.m').write_text(production_source(r))
  translations={f.parent.name:json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(f)])) for f in (r/'Resources/Interfaces').glob('*.lproj/Localizable.strings')}
  (p/'translations.json').write_text(json.dumps(translations))
- subprocess.run(['xcrun','ibtool','--compile',str(p/'SettingsWindow.nib'),str(r/'Resources/SettingsWindow.xib')],check=True)
- command=['xcrun','clang','-fobjc-arc','-Wno-deprecated-declarations','-Wno-nullability-completeness','-mmacosx-version-min=14.6','-I',str(p),'-I',str(r/'Tests'),'-I',str(r/'Sources'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/ShortcutPane.m'),*[str(f) for f in sorted((r/'Sources').glob('TSSettings*.m'))],*companion_sources(r),str(r/'Sources/TSPreferenceProfile.m'),str(r/'Sources/globals.m'),str(r/'Sources/TSMacroTreeNode.m'),'-o',str(p/'test')]
+ subprocess.run(['xcrun','ibtool','--compile',str(p/'SettingsWindow.nib'),str(r/'Resources/Interfaces/Base.lproj/SettingsWindow.xib')],check=True)
+ command=['xcrun','clang','-fobjc-arc','-Wno-deprecated-declarations','-Wno-nullability-completeness','-mmacosx-version-min=14.6','-I',str(p),'-I',str(r/'Tests'),*include_args(r),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/ShortcutPane.m'),*[str(f) for f in sorted((r/'Sources').rglob('TSSettings*.m'))],*companion_sources(r),str(r/'Sources/Settings/TSPreferenceProfile.m'),str(r/'Sources/App/globals.m'),str(r/'Sources/Macros/TSMacroTreeNode.m'),'-o',str(p/'test')]
  def run():
   subprocess.run(command,check=True)
   return subprocess.run([str(p/'test'),str(p/'SettingsWindow.nib'),str(p/'translations.json')],capture_output=True,text=True,timeout=60)

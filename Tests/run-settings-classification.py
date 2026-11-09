@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse,json,subprocess,tempfile
 from pane_fixtures import bundles,sources
 from encoding_menu_fixture import encoding_menu_fixture
+from source_tree import include_args, source_file
 r=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--snapshots',type=Path);p.add_argument('--search-coverage',action='store_true');p.add_argument('--mutations',action='store_true');p.add_argument('--search-catalog',type=Path);p.add_argument('--search-source',type=Path);args=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
@@ -18,12 +19,12 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  SearchCoverage(panes,bundle);return 0;
  NSMutableDictionary *after=[NSMutableDictionary dictionary];''')
  (t/'test.m').write_text(program)
- extra=[r/'Sources/TSPreferences.m',r/'Sources/TSPreferences-Color.m',r/'Sources/TSColorSupport.m',r/'Sources/TSThemeFileStore.m',r/'Sources/globals.m',r/'Sources/TSPreferenceInput.m',r/'Tests/PreferencesTestServices.m',*sorted((r/'Sources').glob('TSSettings*.m'))]
- compile_command=['xcrun','clang','-fobjc-arc','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*map(str,extra),str(r/'Sources/TSDockIconController.m'),'-o',str(t/'probe')]
+ extra=[r/'Sources/Settings/TSPreferences.m',r/'Sources/Settings/TSPreferences-Color.m',r/'Sources/Editor/TSColorSupport.m',r/'Sources/Settings/TSThemeFileStore.m',r/'Sources/App/globals.m',r/'Sources/Settings/TSPreferenceInput.m',r/'Tests/PreferencesTestServices.m',*sorted((r/'Sources').rglob('TSSettings*.m'))]
+ compile_command=['xcrun','clang','-fobjc-arc','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/Settings/TSPreferences+Panes.m'),*map(str,extra),str(r/'Sources/App/TSDockIconController.m'),'-o',str(t/'probe')]
  if args.search_catalog or args.search_source:
-  (t/'TSSettingsSearch.m').write_text((args.search_source or r/'Sources/TSSettingsSearch.m').read_text())
-  (t/'TSSettingsSearchCatalog.inc').write_text((args.search_catalog or r/'Sources/TSSettingsSearchCatalog.inc').read_text())
-  compile_command=[str(t/'TSSettingsSearch.m') if x==str(r/'Sources/TSSettingsSearch.m') else x for x in compile_command]
+  (t/'TSSettingsSearch.m').write_text((args.search_source or r/'Sources/Settings/TSSettingsSearch.m').read_text())
+  (t/'TSSettingsSearchCatalog.inc').write_text((args.search_catalog or r/'Sources/Settings/TSSettingsSearchCatalog.inc').read_text())
+  compile_command=[str(t/'TSSettingsSearch.m') if x==str(r/'Sources/Settings/TSSettingsSearch.m') else x for x in compile_command]
  subprocess.run(compile_command,check=True)
  from settings_contract import expand
  expected=expand(json.loads((r/'Tests/Fixtures/SettingsClassificationStrings.json').read_text()))
@@ -65,9 +66,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
    ]
    for name,filename,old,new in cases:
     # Whole translation units, including their shared notification header.
-    for copied in ['TSPreferences.m','TSPreferenceEffects.h']:(t/copied).write_text((r/'Sources'/copied).read_text())
-    original=(r/'Sources'/filename).read_text();assert original.count(old)==1,(name,original.count(old));(t/filename).write_text(original.replace(old,new))
-    cmd=[str(t/'TSPreferences.m') if x==str(r/'Sources/TSPreferences.m') else str(t/filename) if x==str(r/'Sources'/filename) else x for x in compile_command]
+    for copied in ['TSPreferences.m','TSPreferenceEffects.h']:(t/copied).write_text((source_file(r, copied)).read_text())
+    original=(source_file(r, filename)).read_text();assert original.count(old)==1,(name,original.count(old));(t/filename).write_text(original.replace(old,new))
+    cmd=[str(t/'TSPreferences.m') if x==str(r/'Sources/Settings/TSPreferences.m') else str(t/filename) if x==str(source_file(r, filename)) else x for x in compile_command]
     subprocess.run(cmd,check=True)
     result=subprocess.run(command,capture_output=True,text=True,timeout=90)
     failure={'cursor-RGB':'Cursor action stores converted RGB from its sender','theme-RGB':'Theme wells store converted RGBA','unread-theme':'Unreadable theme disables offscreen color wells','PDF-position':'Saving PDF position preserves source selection and value','expl3-notification':'Individual action sends exactly the approved runtime notification','invisible-notification':'Invisible-character default requests recoloring'}[name]

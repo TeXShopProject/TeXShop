@@ -6,13 +6,14 @@ import shutil
 from pathlib import Path
 import subprocess
 import tempfile
+from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['native-corners', 'raw-page-delta', 'continuous-restore', 'always-restore'])
 parser.add_argument('--artifacts', type=Path, help='Keep the generated Objective-C and executable for cross-OS testing')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin1')
+source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 def method(signature):
     start = source.rindex(signature)
     return source[start:source.index('\n}', start) + 2]
@@ -210,7 +211,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-navigation-') as directory:
     (temp/'home'/'Library'/'Preferences').mkdir(parents=True)
     (temp/'test.m').write_text(program)
     subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-mmacosx-version-min=14.6','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
-                    '-I'+str(root/'Sources'),str(temp/'test.m'),'-o',str(temp/'test')],check=True)
+                    *include_args(root),str(temp/'test.m'),'-o',str(temp/'test')],check=True)
     if args.artifacts:
         args.artifacts.mkdir(parents=True, exist_ok=True)
         shutil.copy2(temp/'test.m', args.artifacts/'test.m')

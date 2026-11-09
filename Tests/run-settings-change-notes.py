@@ -2,6 +2,7 @@
 """Hidden, memory-only lifecycle checks for production change notes."""
 from pathlib import Path
 import argparse, subprocess, tempfile, shutil, plistlib
+from source_tree import include_args
 p=argparse.ArgumentParser();p.add_argument('--mutations',action='store_true');p.add_argument('--all-languages',action='store_true');args=p.parse_args()
 r=Path(__file__).resolve().parents[1]
 expected_failures={'find-always-restart': 'Panel and bar changes take effect without restart', 'find-ignore-launch': 'Leaving OgreKit for the standard panel needs restart', 'warning-red': 'Warning uses label text and an untinted multicolor symbol', 'announcement-priority': 'Showing a note requests a medium-priority VoiceOver announcement', 'category-clear': 'Category transition clears transient note', 'close-clear': 'Closing hides all notes', 'always-condition': 'No preview means no zoom note', 'ignore-original': 'Returning to session value clears spell note', 'same-value': 'Committing the same zoom does not show a note', 'restart-category': 'Restart notes survive reopening', 'launch-overwritten': 'Launch baseline is captured only once'}
@@ -10,8 +11,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-change-notes-') as directory:
     (bundle/'Contents/Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier':'org.texshop.tests.change-notes','CFBundlePackageType':'BNDL','CFBundleDevelopmentRegion':'en','CFBundleLocalizations':['en']}))
     shutil.copytree(r/'Resources/Interfaces/Base.lproj',resources/'Base.lproj',ignore=shutil.ignore_patterns('*.xib'))
     shutil.copytree(r/'Resources/Interfaces/en.lproj',resources/'en.lproj',ignore=shutil.ignore_patterns('*.nib','TeXShopHelp','*.pdf'))
-    original=r/'Sources/TSSettingsChangeNote.m'
-    command=['xcrun','clang','-fobjc-arc','-DNSAccessibilityPostNotificationWithUserInfo=TSProbeAnnouncement','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsChangeNotes.m'),str(original),str(r/'Sources/globals.m'),str(r/'Sources/TSSettingsSearch.m'),str(r/'Sources/TSSettingsCategory.m'),'-o',str(d/'probe')]
+    original=r/'Sources/Settings/TSSettingsChangeNote.m'
+    command=['xcrun','clang','-fobjc-arc','-DNSAccessibilityPostNotificationWithUserInfo=TSProbeAnnouncement','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsChangeNotes.m'),str(original),str(r/'Sources/App/globals.m'),str(r/'Sources/Settings/TSSettingsSearch.m'),str(r/'Sources/Settings/TSSettingsCategory.m'),'-o',str(d/'probe')]
     def run(source=None, strings=bundle):
         subprocess.run([str(source) if x==str(original) and source else x for x in command],check=True)
         return subprocess.run([str(d/'probe'),str(strings)],capture_output=True,text=True,timeout=60)

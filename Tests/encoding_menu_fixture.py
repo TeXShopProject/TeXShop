@@ -2,7 +2,7 @@
 import re
 
 def encoding_menu_fixture(root):
-    source = (root/'Sources/TSEncodingSupport.m').read_text(encoding='latin1')
+    source = (root/'Sources/App/TSEncodingSupport.m').read_text(encoding='latin1')
     def method(signature):
         start = source.index(signature)
         return source[start:source.index('\n}', start)+2]

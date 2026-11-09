@@ -5,12 +5,13 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['delegate-at-edge', 'all-modes', 'ignore-modifiers', 'ignore-annotation', 'visible-scroller', 'scaled-step'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin1')
+source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 def method(signature):
     start = source.rindex(signature)
     return source[start:source.index('\n}', start) + 2]
@@ -134,6 +135,6 @@ with tempfile.TemporaryDirectory(prefix='texshop-vertical-arrows-') as directory
     (temp/'home'/'Library'/'Preferences').mkdir(parents=True)
     (temp/'test.m').write_text(program)
     subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-mmacosx-version-min=14.6','-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
-                    '-I'+str(root/'Sources'),str(temp/'test.m'),'-o',str(temp/'TeXShopVerticalArrowTest')],check=True)
+                    *include_args(root),str(temp/'test.m'),'-o',str(temp/'TeXShopVerticalArrowTest')],check=True)
     subprocess.run([str(temp/'TeXShopVerticalArrowTest')],check=True,timeout=240,
                    env=dict(os.environ,HOME=str(temp/'home'),CFFIXED_USER_HOME=str(temp/'home')))

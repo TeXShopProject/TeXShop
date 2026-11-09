@@ -16,7 +16,7 @@ from pathlib import Path
 import os, subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
 mutation = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--mutation=')), None)
-s = (root/'Sources/TSEncodingSupport.m').read_text(encoding='latin1')
+s = (root/'Sources/App/TSEncodingSupport.m').read_text(encoding='latin1')
 table = s[s.index('typedef struct {'):s.index('// List of the supported encodings.', s.index('static TSEncoding _availableEncodings[]'))]
 start = s.index('- (BOOL)isAvailableEncoding:(NSStringEncoding)encoding')
 code = s[start:s.index('- (BOOL)ptexUtfOutputCheck:', start)]

@@ -5,10 +5,11 @@ from shortcut_sources import production_source, companion_sources
 import subprocess
 import tempfile
 import sys
+from source_tree import include_args
 
 root = Path(__file__).resolve().parents[1]
-editor = (root / 'Sources/TSMacroEditor.m').read_text()
-menu = (root / 'Sources/TSMacroMenuController.m').read_text()
+editor = (root / 'Sources/Macros/TSMacroEditor.m').read_text()
+menu = (root / 'Sources/Macros/TSMacroMenuController.m').read_text()
 
 def between(text, start, end):
     return text[text.index(start):text.index(end, text.index(start))]
@@ -34,9 +35,9 @@ def run_case(name, changes=()):
         binary = Path(td) / 'conflicts'
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-Wno-incomplete-implementation',
                         '-Wno-deprecated-declarations', '-Wno-nullability-completeness', '-framework', 'Cocoa', '-framework', 'Carbon',
-                        '-I', td, '-I', str(root / 'Sources'),
+                        '-I', td, *include_args(root),
                         str(root / 'Tests/MacroShortcutConflicts.m'),
-                        str(root / 'Sources/TSMacroTreeNode.m'), *companion_sources(root), '-o', str(binary)], check=True)
+                        str(root / 'Sources/Macros/TSMacroTreeNode.m'), *companion_sources(root), '-o', str(binary)], check=True)
         result = subprocess.run([str(binary), td], capture_output=True, text=True, timeout=20)
         if changes:
             assert result.returncode != 0 and 'FAIL ' in result.stderr, (name, result.stdout, result.stderr)

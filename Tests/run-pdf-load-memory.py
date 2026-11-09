@@ -5,14 +5,15 @@ separate processes. No TeXShop preferences or visible application windows.
 """
 import ast, re, subprocess, tempfile, sys
 from pathlib import Path
+from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
-s = (root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
+s = (root/'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 def method(sig):
     a=s.rindex(sig); return s[a:s.index('\n}',a)+2]
 tree=ast.parse((root/'Tests/run-pdf-recovery.py').read_text())
 fixture=max((n.value for n in ast.walk(tree) if isinstance(n,ast.Constant) and isinstance(n.value,str)),key=len)
 fixture=fixture[:fixture.index('static void check(')]
-window_source=(root/'Sources/TSPreviewWindow.m').read_text()
+window_source=(root/'Sources/Windows/TSPreviewWindow.m').read_text()
 def window_method(sig):
     a=window_source.rindex(sig); return window_source[a:window_source.index('\n}',a)+2]
 fixture=fixture.replace('WINDOW_METHODS','\n'.join(window_method(x) for x in ['- (void)close', '- (void)orderWindow:']).replace('TSDocument *theDocument', 'TestDocument *theDocument'))
@@ -84,12 +85,12 @@ int main(int argc,char**argv){@autoreleasepool{
 '''
 with tempfile.TemporaryDirectory(prefix='texshop-pdf-load-') as td:
     t=Path(td);(t/'test.m').write_text(program)
-    base=['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I'+str(root/'Sources')]
-    subprocess.run(base+[str(t/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(t/'test')],check=True)
+    base=['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',*include_args(root)]
+    subprocess.run(base+[str(t/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),'-o',str(t/'test')],check=True)
     for mode in ['fail-show','fail-reload','locked-show','locked-reload']:
         subprocess.run([str(t/'test'),str(t/'locked.pdf'),mode],check=True)
     if '--locked-only' in sys.argv: sys.exit(0)
-    subprocess.run(base+[str(root/'Tests/PDFSnapshot.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(t/'generator')],check=True)
+    subprocess.run(base+[str(root/'Tests/PDFSnapshot.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),'-o',str(t/'generator')],check=True)
     subprocess.run([str(t/'generator'),str(t/'large.pdf'),'generate'],check=True)
     peaks={}
     for mode in ['url','show','reload']:

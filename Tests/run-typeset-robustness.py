@@ -17,6 +17,7 @@ import sys
 
 root = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
 from production_fragments import method as production_method, verify_embedded
+from source_tree import include_args, source_file
 fragments=[]
 sources = root / 'Sources'
 
@@ -49,7 +50,7 @@ def matching_brace(src, i):
 
 
 def method(name, signature):
-    src = (sources / name).read_text(errors='replace')
+    src = source_file(root, name).read_text(errors='replace')
     fragment=production_method(src,signature)
     fragments.append(('complete method:'+signature,src,fragment))
     return fragment
@@ -57,7 +58,7 @@ def method(name, signature):
 
 def block(name, after, marker):
     """The statement starting at `marker` (searched after `after`) up to its closing brace."""
-    src = (sources / name).read_text(errors='replace')
+    src = source_file(root, name).read_text(errors='replace')
     start = src.index(marker, src.index(after))
     fragment=src[start:matching_brace(src, src.index('{', start))]
     fragments.append(('statement block:'+marker,src,fragment));return fragment
@@ -72,7 +73,7 @@ def optional_method(name, signature):
 
 
 def span(name, after, start_marker, end_marker):
-    src = (sources / name).read_text(errors='replace')
+    src = source_file(root, name).read_text(errors='replace')
     start = src.index(start_marker, src.index(after))
     end = src.index(end_marker, start) + len(end_marker)
     fragment=src[start:end]
@@ -552,7 +553,7 @@ if pieces['PROCESS_GROUP_HELPERS'].strip():
 for key, value in pieces.items():
     program = program.replace('\n' + key + '\n', '\n' + value + '\n')
 
-verify_embedded(program,[f for f in fragments if not f[0].startswith('statement span:')]+[('help path fragment',(sources/'HelpDocuments.m').read_text(errors='replace'),pieces['HELP_PATH'])])
+verify_embedded(program,[f for f in fragments if not f[0].startswith('statement span:')]+[('help path fragment',source_file(root, 'HelpDocuments.m').read_text(errors='replace'),pieces['HELP_PATH'])])
 
 # A job task for the process group checks: argv[1] receives the pid of a child that
 # ignores SIGTERM and appends to argv[2] every 10 ms; the task itself ignores SIGTERM
@@ -598,7 +599,7 @@ try:
     bad = temporary / 'not-an-executable'
     bad.write_bytes(b'\x00\x01\x02 not a program\n')
     bad.chmod(0o755)
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I', str(sources), str(sources / 'TSPreferenceInput.m'), str(temporary / 'test.m'),
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', *include_args(root), str(source_file(root, 'TSPreferenceInput.m')), str(temporary / 'test.m'),
                     '-o', str(temporary / 'test')], check=True)
     (temporary / 'job.c').write_text(job_program)
     subprocess.run(['xcrun', 'clang', '-w', str(temporary / 'job.c'), '-o', str(temporary / 'job')], check=True)

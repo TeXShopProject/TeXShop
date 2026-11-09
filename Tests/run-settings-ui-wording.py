@@ -50,10 +50,10 @@ for lang,expected in fixture['languages'].items():
     assert not any(k.startswith('LIV-SV') for k in strings(panes/'SettingsFooter.strings')),(lang,'footer explanation')
     assert not {'F86-wI-vOl.label','L8F-o2-roK.label'} & strings(panes/'SettingsThemes.strings').keys(),(lang,'retired intermediate theme headings')
     assert not any(k.startswith('LIV-TH') for k in strings(panes/'SettingsThemes.strings')),(lang,'theme explanation')
-source=(r/'Sources/TSPreferences.m').read_text();start=source.index('- (IBAction)encodingChanged:');end=source.index('\n}',start)
+source=(r/'Sources/Settings/TSPreferences.m').read_text();start=source.index('- (IBAction)encodingChanged:');end=source.index('\n}',start)
 assert 'NSBeginCriticalAlertSheet' not in source[start:end], 'Encoding warning must be inline'
 assert 'recordUserChangeForKey:EncodingKey' in source[start:end], 'Encoding action must reach the inline note manager'
-index=(r/'Sources/TSSettingsSearchCatalog.inc').read_text()
+index=(r/'Sources/Settings/TSSettingsSearchCatalog.inc').read_text()
 assert 'catalog.editor.7.0.note' not in index and 'shortcut.hint' not in index
 for text in retired:assert text.replace('\n','\\n') not in index
 for text in keys[:3]:assert text not in index

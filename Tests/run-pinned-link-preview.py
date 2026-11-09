@@ -5,12 +5,13 @@ import argparse
 import os
 import subprocess
 import tempfile
+from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'other-window', 'cleanup-state', 'ordinary-escape', 'modified-escape', 'click-cleanup', 'initialize-cleanup'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin1')
+source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 def method(signature):
     start = source.rindex(signature)
     body = source[start:source.index('\n}', start) + 2]
@@ -257,8 +258,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
     native.write_text(program)
     exe = temporary / 'probe'
     subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',
-                    '-I'+str(root/'Sources'),'-I'+str(root/'Tests'),str(native),
-                    str(root/'Sources/OverView.m'),'-o',str(exe)],check=True)
+                    *include_args(root),'-I'+str(root/'Tests'),str(native),
+                    str(root/'Sources/Preview/OverView.m'),'-o',str(exe)],check=True)
     home = temporary/'home'
     (home/'Library/Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home))

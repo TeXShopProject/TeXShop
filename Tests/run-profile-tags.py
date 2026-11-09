@@ -3,6 +3,7 @@
 from pathlib import Path
 import subprocess
 import tempfile
+from source_tree import include_args
 
 r = Path(__file__).resolve().parents[1]
 names = ['FactoryDefaults', 'Defaults_upTeX_ptex2pdf', 'Defaults_upTeX_latexmk',
@@ -19,11 +20,11 @@ int main(void){@autoreleasepool{
 with tempfile.TemporaryDirectory(prefix='texshop-profile-tags-') as temp:
     t = Path(temp)
     (t/'probe.m').write_text(program)
-    original = (r/'Sources/TSPreferenceProfile.h').read_text()
+    original = (r/'Sources/Settings/TSPreferenceProfile.h').read_text()
     def run(header):
         (t/'TSPreferenceProfile.h').write_text(header)
         subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror',
-                        '-I',str(t),'-I',str(r/'Sources'),'-framework','Foundation',
+                        '-I',str(t),*include_args(r),'-framework','Foundation',
                         str(t/'probe.m'),'-o',str(t/'probe')],check=True)
         return subprocess.run([str(t/'probe')],capture_output=True,text=True)
     result=run(original);assert result.returncode==0,result.stderr

@@ -57,7 +57,7 @@ static void CheckOwnerRuntime(TSPreferences *owner) {
     NSMutableDictionary *profileValues=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];
     NSInteger previousCopy=[TSIsolatedAppKitDefaults integerForKey:PdfCopyTypeKey];
     profileValues[PdfCopyTypeKey]=@(previousCopy==1?2:1);
-    NSDictionary *factory=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist"]];
+    NSDictionary *factory=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist" subdirectory:@"Defaults"]];
     NSFont *font=[NSFont userFontOfSize:12];
     TSPreferenceProfile *profile=[[TSPreferenceProfile alloc]initWithProfile:profileValues documentFont:[NSArchiver archivedDataWithRootObject:font] registeredDefaults:factory];
     Check(profile!=nil,@"PDF copy format profile validates");

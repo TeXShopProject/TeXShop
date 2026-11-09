@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess,tempfile,sys
 r=Path(__file__).resolve().parents[1]
-s=(r/'Sources/MyPDFKitView-Annotations.m').read_text()
+s=(r/'Sources/Preview/MyPDFKitView-Annotations.m').read_text()
 a=s.index('- (void) saveAnnotations:');b=s.index('- (PDFDocument *)constructOutput',a)
 method=s[a:b].replace('NSSavePanel','SavePanelProbe').replace('NSAlert *','AlertProbe *').replace('[[NSAlert alloc]','[[AlertProbe alloc]')
 if '--mutation' in sys.argv: method=method.replace('self.myDocument.annotationsExist = NO;', ';')

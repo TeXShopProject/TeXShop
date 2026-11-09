@@ -7,13 +7,14 @@ import gzip
 import re
 import subprocess
 import tempfile
+from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['unresolved-fallback', 'no-exact-preference'])
 args = parser.parse_args()
 ROOT = Path(__file__).resolve().parents[1]
 TEX = Path(os.environ.get('TEXLIVE_BIN', '/Applications/TeXLive/2026/bin/universal-darwin'))
-source = (ROOT / 'Sources/TSDocument-SyncTeX.m').read_text(encoding='latin1')
+source = (ROOT / 'Sources/Sync/TSDocument-SyncTeX.m').read_text(encoding='latin1')
 helper = source[source.index('static NSString *TSSyncTeXResolvedPath'):source.index('@implementation TSDocument (SyncTeX)')]
 if args.mutation == 'unresolved-fallback':
     helper = helper.replace('if (!resolved) return nil;', 'if (!resolved) return path;')
@@ -91,8 +92,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-sync-path-', dir='/tmp') as tem
     native.write_text(program)
     exe = physical / 'check'
     run('xcrun', 'clang', '-fobjc-arc', '-framework', 'Foundation',
-        '-I', ROOT / 'Sources', '-I', ROOT / '3rdparty/zlib/zlib-1.4',
-        native, ROOT / 'Sources/synctex_parser.c', ROOT / 'Sources/synctex_parser_utils.c',
+        *include_args(ROOT), '-I', ROOT / '3rdparty/zlib/zlib-1.4',
+        native, ROOT / 'Sources/ThirdParty/SyncTeX/synctex_parser.c', ROOT / 'Sources/ThirdParty/SyncTeX/synctex_parser_utils.c',
         ROOT / '3rdparty/zlib/libz.a', '-o', exe)
     env = dict(os.environ, PATH=str(TEX) + os.pathsep + os.environ.get('PATH', ''))
     requests = [short / 'document folder/test.tex', tex, alias / 'test.tex', file_alias, alias2 / 'test.tex', file_alias2,

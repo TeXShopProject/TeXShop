@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/TSDocument-Syntax.m').read_text(encoding='latin-1')
+source = (root / 'Sources/Editor/TSDocument-Syntax.m').read_text(encoding='latin-1')
 helper_start = source.index('static BOOL TSParagraphHasAlignment')
 helper = source[helper_start:source.index('\n}\n', helper_start) + 3]
 block_start = source.index('    if ([SUD boolForKey: RightJustifyKey]) {')

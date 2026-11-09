@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 import subprocess
 import tempfile
+from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--check-mutations', action='store_true',
@@ -26,7 +27,7 @@ mutations = {
 }
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-test-') as directory:
     temp = Path(directory)
-    original = (root / 'Sources/TSExperimentJob.m').read_text()
+    original = (root / 'Sources/Typesetting/TSExperimentJob.m').read_text()
     variants = [('original', original, None)]
     if args.check_mutations:
         for name, (before, after, failure) in mutations.items():
@@ -38,7 +39,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-test-') as directory
         source_path.write_text(source)
         executable = str(temp / name)
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fblocks', '-framework', 'Foundation',
-                        '-I', str(root / 'Sources'), str(root / 'Tests/ExperimentJob.m'),
+                        *include_args(root), str(root / 'Tests/ExperimentJob.m'),
                         str(source_path), '-o', executable], check=True)
         result = subprocess.run([executable], capture_output=True, text=True, timeout=45)
         if expected_failure is None:

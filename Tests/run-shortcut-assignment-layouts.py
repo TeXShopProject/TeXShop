@@ -3,11 +3,12 @@
 from pathlib import Path
 import argparse,subprocess,tempfile
 from shortcut_sources import production_source, companion_sources
+from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser();parser.add_argument('--app',type=Path);args=parser.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-assignment-layouts-') as folder:
  temp=Path(folder);(temp/'TSKeyboardShortcuts.m').write_text(production_source(root))
- subprocess.run(['xcrun','clang','-fobjc-arc','-O2','-Wno-deprecated-declarations','-I',folder,'-I',str(root/'Sources'),'-framework','Cocoa','-framework','Carbon',str(root/'Tests/ShortcutAssignmentLayouts.m'),*companion_sources(root),'-o',str(temp/'probe')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-O2','-Wno-deprecated-declarations','-I',folder,*include_args(root),'-framework','Cocoa','-framework','Carbon',str(root/'Tests/ShortcutAssignmentLayouts.m'),*companion_sources(root),'-o',str(temp/'probe')],check=True)
  base=args.app/'Contents/Resources' if args.app else root/'Resources/Interfaces'
  menus=[]
  for lang in ['Base','ja','de']:

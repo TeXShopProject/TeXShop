@@ -2,7 +2,8 @@
 """Test production theme save/clone/selection actions using temporary files and inert controls."""
 from pathlib import Path
 import tempfile,subprocess,sys
-R=Path(__file__).resolve().parents[1];source=(R/'Sources/TSPreferences-Color.m').read_text()
+from source_tree import include_args
+R=Path(__file__).resolve().parents[1];source=(R/'Sources/Settings/TSPreferences-Color.m').read_text()
 def method(sig):
  a=source.index('\n'+sig)+1;return source[a:source.index('\n}',a)+2]
 methods='\n'.join(map(method,['- (IBAction)SaveEditedStyle:', '- (void)saveNewTheme:', '- (IBAction)themeSelectionChanged:', '- (IBAction)EditingStyleChoice:', '- (IBAction)SaveNewStyle:', '- (void)requestNameForThemeColors:', '- (void)okForStylePanel:', '- (void)cancelForStylePanel:', '- (void)setThemeEditingEnabled:']))
@@ -186,5 +187,5 @@ int main(int argc,char **argv){@autoreleasepool{
 '''.replace('METHODS',methods)
 with tempfile.TemporaryDirectory(prefix='texshop-theme-persistence-') as td:
  t=Path(td);(t/'probe.m').write_text(program);(t/'Colors').mkdir()
- subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-I',str(R/'Sources'),'-I',str(R/'Tests'),'-framework','Cocoa',str(t/'probe.m'),str(R/'Sources/TSThemeFileStore.m'),'-o',str(t/'probe')],check=True)
+ subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations',*include_args(R),'-I',str(R/'Tests'),'-framework','Cocoa',str(t/'probe.m'),str(R/'Sources/Settings/TSThemeFileStore.m'),'-o',str(t/'probe')],check=True)
  subprocess.run([str(t/'probe'),str(t/'Colors')],check=True,timeout=60)

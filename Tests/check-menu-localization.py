@@ -53,7 +53,7 @@ def main():
     contract = json.loads((ROOT/'Tests/Fixtures/MenuLocalization.json').read_text())
     routes, exceptions = contract['routes'], contract['exceptions']
     lookups = set()
-    for path in (ROOT/'Sources').glob('*.m'):
+    for path in (ROOT/'Sources').rglob('*.m'):
         lookups.update(re.findall(r'\[NSApp\s+mainMenu\]\s+itemWithTitle:\s*NSLocalizedString\(@"([^"]+)"', path.read_bytes().decode('utf-8', errors='replace')))
     assert lookups == {key for key, parents in routes.items() if not parents}, 'Update explicit top-level lookup coverage'
     tables = {lang: strings(args.resources/f'{lang}.lproj/Localizable.strings') for lang in contract['languages']}

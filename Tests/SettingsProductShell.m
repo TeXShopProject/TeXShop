@@ -86,18 +86,18 @@ int main(int argc,char **argv){@autoreleasepool{
  TSReplaceTestMethod(class_getInstanceMethod(NSApplication.class,@selector(dockTile)),(IMP)IsolatedProductDock);
  fixture=[NSBundle bundleWithPath:@(argv[1])];
  ColorPath=[fixture.resourcePath stringByAppendingPathComponent:@"Themes"];[NSFileManager.defaultManager createDirectoryAtPath:ColorPath withIntermediateDirectories:YES attributes:nil error:NULL];
- for(NSString *name in @[@"LiteTheme",@"DarkTheme"])[NSFileManager.defaultManager copyItemAtPath:[fixture pathForResource:name ofType:@"plist"] toPath:[ColorPath stringByAppendingPathComponent:[name stringByAppendingString:@".plist"]] error:NULL];Check(fixture!=nil,@"Localized product fixture loads");
+ for(NSString *name in @[@"LiteTheme",@"DarkTheme"])[NSFileManager.defaultManager copyItemAtPath:[fixture pathForResource:name ofType:@"plist" inDirectory:@"Themes"] toPath:[ColorPath stringByAppendingPathComponent:[name stringByAppendingString:@".plist"]] error:NULL];Check(fixture!=nil,@"Localized product fixture loads");
  method_setImplementation(class_getClassMethod(NSBundle.class,@selector(mainBundle)),(IMP)MainBundle);
  NSMenu *main=[NSMenu new],*commands=[NSMenu new];NSMenuItem *top=[[NSMenuItem alloc]initWithTitle:@"Commands" action:NULL keyEquivalent:@""];top.submenu=commands;[main addItem:top];
  for(NSString *title in @[@"Typeset",@"Save",@"Print"]){NSMenuItem *item=[[NSMenuItem alloc]initWithTitle:title action:@selector(description) keyEquivalent:@""];item.identifier=[@"TSShortcut.test." stringByAppendingString:title];[commands addItem:item];}NSApp.mainMenu=main;
  [[TSKeyboardShortcuts sharedController]startObservingMenu];
- NSDictionary *factory=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist"]];Check(factory.count>100,@"Factory defaults fixture is complete");[TSIsolatedAppKitDefaults registerDefaults:factory];
+ NSDictionary *factory=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist" subdirectory:@"Defaults"]];Check(factory.count>100,@"Factory defaults fixture is complete");[TSIsolatedAppKitDefaults registerDefaults:factory];
  [TSIsolatedAppKitDefaults setObject:[NSArchiver archivedDataWithRootObject:[NSFont userFontOfSize:12]] forKey:DocumentFontKey];
  TSSettingsRememberLaunchValue(AutoSaveEnabledKey,@([TSIsolatedAppKitDefaults boolForKey:AutoSaveEnabledKey]));TSSettingsRememberLaunchValue(FindMethodKey,@([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]));
  TSPreferences *owner=[TSPreferences new];Check([owner prepareSettingsWindow],@"Production preference owner prepares its own window");[owner configurePreferenceInputs];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
  // Populate the production theme wells from a bundled theme; user theme files
  // and settings are neither read nor written for the comparison screenshots.
- NSDictionary *theme=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"LiteTheme" withExtension:@"plist"]];Check(theme.count>10,@"Bundled theme fixture loads");[owner setValue:[theme mutableCopy] forKey:@"EditingColors"];
+ NSDictionary *theme=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"LiteTheme" withExtension:@"plist" subdirectory:@"Themes"]];Check(theme.count>10,@"Bundled theme fixture loads");[owner setValue:[theme mutableCopy] forKey:@"EditingColors"];
  for(NSString *name in @[@"LiteStyle",@"DarkStyle",@"EditingStyle"]){NSPopUpButton *menu=[owner valueForKey:name];[menu removeAllItems];[menu addItemsWithTitles:@[@"LiteTheme",@"DarkTheme"]];[menu selectItemAtIndex:[name isEqual:@"DarkStyle"]?1:0];}
  [owner FillInColorWells];
  Check([factory[AutoSaveEnabledKey] isEqual:@"YES"] && ![[owner valueForKey:@"keepBackupButton"]isEnabled],@"Factory string YES disables backup at first opening");

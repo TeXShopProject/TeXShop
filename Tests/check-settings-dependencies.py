@@ -27,7 +27,7 @@ for rule in rules:
             'TSDependencyBoolean' if rule['value_kind']=='boolean' else 'TSDependencyInteger',
             outlet, 'YES' if rule['whole_row'] else 'NO'))
 text = '\n'.join(lines)+'\n'
-target = root/'Sources/TSSettingsDependencies.inc'
+target = root/'Sources/Settings/TSSettingsDependencies.inc'
 if args.write_source:
     target.write_text(text)
 assert target.read_text() == text, 'Dependency source differs from the reviewed contract'

@@ -2,6 +2,7 @@
 """Exercise production PDF reload methods with real PDFKit views in isolation."""
 from pathlib import Path
 import ast, os, shutil, subprocess, sys, tempfile
+from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 # --mutation=NAME reverts one behaviour in memory to show that its checks fail.
 mutation = next((a.split('=',1)[1] for a in sys.argv[1:] if a.startswith('--mutation=')), None)
@@ -10,16 +11,16 @@ tree = ast.parse((root/'Tests/run-pdf-recovery.py').read_text())
 fixture = max((n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value,str)),key=len)
 fixture = fixture[:fixture.index('static void check(')]
 fixture = fixture.replace('-(void)reShowWithPath:(NSString*)path;', '-(void)reShowWithPath:(NSString*)path;\n-(void)reShowWithDocument:(PDFDocument*)document;')
-s=(root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
+s=(root/'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 def method(s, signature):
     a=s.rindex(signature); return s[a:s.index('\n}',a)+2]
-window_source=(root/'Sources/TSPreviewWindow.m').read_text()
+window_source=(root/'Sources/Windows/TSPreviewWindow.m').read_text()
 window_methods='\n'.join(method(window_source,x) for x in ['- (void)close', '- (void)orderWindow:'])
 fixture=fixture.replace('WINDOW_METHODS',window_methods.replace('TSDocument *theDocument', 'TestDocument *theDocument'))
 methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:'])
 fixture=fixture.replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (void)makeKeyAndOrderFront:(id)sender {[self orderWindow:NSWindowAbove relativeTo:0];}')
-s=(root/'Sources/TSDocument.m').read_text()
+s=(root/'Sources/Document/TSDocument.m').read_text()
 controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)configureExternalPDFObservation','- (void)stopExternalPDFObservation','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)acceptExternalPDFAtPath:', '- (void)prepareExternalPDFContent', '- (BOOL)externalPDFReloadBlocked'])
 # Count and optionally stall the file checks made by the polling path only.
 controller+='\n'+method(s,'- (void)refreshPDFWindow:').replace('TSExternalPDFState(', 'CheckedState(')
@@ -322,17 +323,17 @@ int main(int argc,char **argv){@autoreleasepool{
 with tempfile.TemporaryDirectory(prefix='texshop-external-pdf-') as td:
  p=Path(td);(p/'home').mkdir();(p/'test.m').write_text(program)
  # Count content digests, and the ones made on the main thread.
- text=(root/'Sources/TSExternalPDFSnapshot.m').read_text()
+ text=(root/'Sources/Preview/TSExternalPDFSnapshot.m').read_text()
  digest='static NSData *TSPDFDigest(NSString *path, NSString *signature, NSString *changeTime)\n{\n'
  assert text.count(digest)==1
  text=text.replace(digest,'#include <stdatomic.h>\nextern atomic_ulong TSTestDigests, TSTestMainDigests;\n'+digest+'    TSTestDigests++; if (NSThread.isMainThread) TSTestMainDigests++;\n')
  snapshot=p/'TSExternalPDFSnapshot.m';snapshot.write_text(text)
  if mutation=='ctime':
   # Put ctime back into the signature; the quoted include then resolves to this copy.
-  header=(root/'Sources/TSExternalPDFReload.h').read_text()
+  header=(root/'Sources/Preview/TSExternalPDFReload.h').read_text()
   old='info->st_mtimespec.tv_nsec];'
   assert header.count(old)==1 and header.count('%lld:%ld", path')==1
   (p/'TSExternalPDFReload.h').write_text(header.replace(old,'info->st_mtimespec.tv_nsec, (long long)info->st_ctimespec.tv_sec, info->st_ctimespec.tv_nsec];').replace('%lld:%ld", path','%lld:%ld:%lld:%ld", path'))
  elif mutation and mutation not in mutations: raise SystemExit('unknown mutation')
- subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSPreferenceProfile.m'),str(root/'Sources/globals.m'),str(snapshot),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','PDFKit',*include_args(root),str(p/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Settings/TSPreferenceProfile.m'),str(root/'Sources/App/globals.m'),str(snapshot),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test'),td]+(['--ltr'] if '--ltr' in sys.argv else []),env=dict(os.environ,CFFIXED_USER_HOME=str(p/'home')),check=True)

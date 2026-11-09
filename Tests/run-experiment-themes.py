@@ -7,13 +7,14 @@ Defaults stay in memory, and no window uses frame autosaving, including failing 
 """
 from pathlib import Path
 import argparse, os, subprocess, tempfile
+from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-source = (root/'Sources/ScrapTextView.m').read_text(encoding='latin1')
+source = (root/'Sources/Editor/ScrapTextView.m').read_text(encoding='latin1')
 source = source[source.index('- (void)updateExperimentColors:'):source.index('- (void)awakeFromNib')]
-pdf = (root/'Sources/ScrapPDFKitView.m').read_text()
+pdf = (root/'Sources/Preview/ScrapPDFKitView.m').read_text()
 for header in ['globals.h', 'TSDocument.h', 'TSEncodingSupport.h']:
     pdf = pdf.replace(f'#import "{header}"', '')
 if args.mutation == 'source-hook':
@@ -31,7 +32,7 @@ if args.mutation == 'source-alpha':
     source = source.replace('self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeSourceAlphaKey);', '')
 if args.mutation == 'preview-alpha':
     pdf = pdf.replace('self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemePreviewAlphaKey);', '')
-appearance = (root/'Sources/TSPreviewAppearance.h').read_text()
+appearance = (root/'Sources/Preview/TSPreviewAppearance.h').read_text()
 if args.mutation == 'filter-gamma':
     appearance = appearance.replace('numberWithDouble:1.6', 'numberWithDouble:1.0')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
@@ -211,7 +212,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-themes-') as tmp:
     src, exe = Path(tmp)/'test.m', Path(tmp)/'test'
     src.write_text(prefix + pdf + tests)
     subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','Quartz',
-        '-I',str(root/'Sources'),str(src),'-o',str(exe)], check=True)
+        *include_args(root),str(src),'-o',str(exe)], check=True)
     (Path(tmp)/'home/Library/Preferences').mkdir(parents=True)
     result = subprocess.run([str(exe)],env=dict(os.environ,HOME=str(Path(tmp)/'home'),CFFIXED_USER_HOME=str(Path(tmp)/'home')),capture_output=True,text=True,timeout=30)
     if args.mutation:

@@ -12,7 +12,7 @@ from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
 mutation = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--mutation=')), None)
-s = (root/'Sources/TSDocument.m').read_text(encoding='latin1')
+s = (root/'Sources/Document/TSDocument.m').read_text(encoding='latin1')
 def method(signature):
     a = s.index(signature); return s[a:s.index('\n}\n', a)+3]
 methods = '\n'.join(method(x) for x in [

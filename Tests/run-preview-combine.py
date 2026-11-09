@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/TSDocument.m').read_text()
+source = (root / 'Sources/Document/TSDocument.m').read_text()
 start = source.index('- (void) doMove: (id)sender;')
 method = source[start:source.index('\n}', start) + 2]
 program = r'''

@@ -86,7 +86,7 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     FinishOwnerAlert(NSAlertSecondButtonReturn);
     EditOwnerField(owner,tabs,@"22");alerts=ownerAlertCount;[owner setDefaults:profileChoice];
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==22 && ownerAlertCount==alerts+1 && ![[owner valueForKey:@"inputErrorPresented"]boolValue],@"Valid edit commits before profile confirmation");
-    NSString *expectedPath=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist"]][@"TetexBinPath"];
+    NSString *expectedPath=[NSDictionary dictionaryWithContentsOfURL:[fixture URLForResource:@"FactoryDefaults" withExtension:@"plist" subdirectory:@"Defaults"]][@"TetexBinPath"];
     Check(expectedPath.length && [capturedOwnerAlert.informativeText containsString:expectedPath],@"Profile confirmation displays the proposed TeX engine path");
     Check(![capturedOwnerAlert.buttons.firstObject.keyEquivalent isEqual:@"\r"] && [capturedOwnerAlert.buttons.lastObject.keyEquivalent isEqual:@"\e"],@"Profile confirmation reserves Escape for Cancel and never applies on Return");
     FinishOwnerAlert(NSAlertSecondButtonReturn);

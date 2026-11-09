@@ -2,12 +2,13 @@
 # added by Terada: Test the application reload methods in an independent PDFKit view.
 from pathlib import Path
 import os, subprocess, tempfile, sys
+from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
-s=(root/'Sources/MyPDFKitView.m').read_bytes().decode('utf-8', errors='replace')
+s=(root/'Sources/Preview/MyPDFKitView.m').read_bytes().decode('utf-8', errors='replace')
 def method(signature):
     start=s.rindex(signature);return s[start:s.index('\n}',start)+2]
 methods='\n'.join(method(x) for x in ['- (void)reShowWithPath:', '- (void)reShowWithDocument:', '- (void)shareDocumentWithSecondView', '- (void)prepareSecond', '- (void) reShowForSecond', '- (void) initializeDisplay', '- (void)removeHideView1:', '- (void)removeHideView2:', '- (void)setDocument:(PDFDocument *)document', '- (instancetype)initWithFrame:'])
-window_source=(root/'Sources/TSPreviewWindow.m').read_text()
+window_source=(root/'Sources/Windows/TSPreviewWindow.m').read_text()
 def window_method(signature):
     start=window_source.index(signature)
     return window_source[start:window_source.index('\n}',start)+2]
@@ -193,5 +194,5 @@ int main(int argc,char**argv){@autoreleasepool{
 with tempfile.TemporaryDirectory(prefix='texshop-recovery-') as directory:
     p=Path(directory);(p/'test.m').write_text(program)
     (p/'home'/'Library'/'Preferences').mkdir(parents=True)
-    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),str(root/'Sources/HideView.m'),str(root/'Sources/TSExternalPDFSnapshot.m'),'-o',str(p/'test')],check=True)
+    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit',*include_args(root),str(p/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),'-o',str(p/'test')],check=True)
     subprocess.run([str(p/'test'),*(sys.argv[1:] or [str(p/'good.pdf'),str(p/'bad.pdf')]),str(p/'live.pdf')],env=dict(os.environ,HOME=str(p/'home'),CFFIXED_USER_HOME=str(p/'home')),check=True)

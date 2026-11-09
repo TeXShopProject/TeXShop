@@ -10,7 +10,7 @@ subprocess.run(command,check=True)
 if mutations:
  expected_failures={'boolean-label-weight':'Visible switch row names retain label weight','radio-choice-weight':'Radio matrix options have choice weight'}
  expected_failures.update({'legacy-label':'Result name is the visible row name','dock-obsolete-label':'Dock result uses the visible group name'})
- source=(r/'Sources/TSSettingsSearchCatalog.inc').read_text()
+ source=(r/'Sources/Settings/TSSettingsSearchCatalog.inc').read_text()
  cases=[('boolean-label-weight','@"catalog.general.0.0.title", TSSettingsSearchWeightLabel','@"catalog.general.0.0.title", TSSettingsSearchWeightChoice'),('radio-choice-weight','@"Xrb-Fe-9cg.title", TSSettingsSearchWeightChoice','@"Xrb-Fe-9cg.title", TSSettingsSearchWeightLabel')]
  cases.extend([('legacy-label','@"ahm-aK-Qi9.title", TSSettingsSearchWeightDescription','@"ahm-aK-Qi9.title", TSSettingsSearchWeightLabel'),('dock-obsolete-label','@"group.appearance.10.title", TSSettingsSearchWeightLabel','@"Dock Icon While Running", TSSettingsSearchWeightLabel')])
  with tempfile.TemporaryDirectory(prefix='texshop-search-roles-') as temp:
@@ -34,7 +34,7 @@ if mutations:
  print('NORMAL CONTROL search roles',flush=True)
 
 if mutations:
- engine=(r/'Sources/TSSettingsSearch.m').read_text()
+ engine=(r/'Sources/Settings/TSSettingsSearch.m').read_text()
  cases=[('category-cascade','if (score && ownMatch)', 'if (score)', 'Category-only matches produce one named category doorway'),('category-doorway','if (categoryScore) [results addObject:', 'if (NO && categoryScore) [results addObject:', 'Category-only matches produce one named category doorway'),('theme-row-duplicates','(visualRows[entry.targetIdentifier] ?: entry.targetIdentifier)','entry.targetIdentifier','A visual theme row has one result retaining all color targets')]
  cases.append(('dock-year', 'text:TSDockIconYears()[i] weight:TSSettingsSearchWeightChoice', 'text:@"" weight:TSSettingsSearchWeightChoice', 'Every visible Dock year finds its choice row'))
  with tempfile.TemporaryDirectory(prefix='texshop-search-categories-') as td:
