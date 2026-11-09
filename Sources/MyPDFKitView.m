@@ -4354,7 +4354,8 @@ if (!self.skipLinks && !self.globalLongTerm)
             NSView *documentView = self.documentView;
             NSRect textBounds = NSZeroRect;
             if (isfinite(linkedPoint.x) && isfinite(linkedPoint.y))
-                textBounds = TSLinkPreviewTextBounds(linkedPage, imageSize, linkedPoint, pageTransform, largerSize);
+                textBounds = TSLinkPreviewColumnBounds(linkedPage, imageSize, pageTransform,
+                    TSLinkPreviewTextBounds(linkedPage, imageSize, linkedPoint, pageTransform, largerSize));
             if (!TSLinkPreviewHasHorizontalDestination([theDestination point], pageTransform) &&
                 !NSIsEmptyRect(textBounds))
                 linkedPoint.x = NSMinX(textBounds);
