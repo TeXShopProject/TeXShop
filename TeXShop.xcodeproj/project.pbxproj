@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A9051C11D9E4EA1A5210013 = {isa = PBXBuildFile; fileRef = 7A9051C11D9E4EA1A5210011; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		E3B000000000000000000001 = {isa = PBXBuildFile; fileRef = E3B000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18100000000000000000005 = {isa = PBXBuildFile; fileRef = E18000000000000000000005; };
 		E18100000000000000000002 = {isa = PBXBuildFile; fileRef = E18000000000000000000002; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
@@ -407,26 +408,26 @@
 		E18300000000000000000002 = {isa = PBXBuildFile; fileRef = E18200000000000000000210; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000003 = {isa = PBXBuildFile; fileRef = E18200000000000000000310; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000004 = {isa = PBXBuildFile; fileRef = E18200000000000000000410; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
-		F5BAC2E9ED1431D54CC853B8 = {isa = PBXBuildFile; fileRef = 9E2B2A2E258A950674839CF0; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		0E1D12D0E21A008917374A1E = {isa = PBXBuildFile; fileRef = 83392E91D403FD331C9F5227; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		606589B6401E6D11869F9676 = {isa = PBXBuildFile; fileRef = C887033427B86E6D68775FD5; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		1B6906536FA308D7521926AC = {isa = PBXBuildFile; fileRef = 1C41561D8526C276A6777DAF; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		59D00431562CC5D5284F572A = {isa = PBXBuildFile; fileRef = C37E9B8BD9B42C465E1499E1; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		229516F92B6CD437F5EC545D = {isa = PBXBuildFile; fileRef = 0DA9C47DC56DE56839F542D7; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		AD3A7863EC92B9A0EB27EBAC = {isa = PBXBuildFile; fileRef = FFEABD46FD6CFA475B43C550; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		7FBE1154734DEEFF44F66B0B = {isa = PBXBuildFile; fileRef = 2C040BA0587C97E5FC9EDCFB; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		69C1D5A66B7C5F39CF451952 = {isa = PBXBuildFile; fileRef = 914FD14BA7F8207FD7668B1B; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		C5E5755DAF0C7FF0A1D9B0EC = {isa = PBXBuildFile; fileRef = 9F44724C28EB6026DDE69D43; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		CAF846602608D27C8AF12314 = {isa = PBXBuildFile; fileRef = AD4BAFA1B2474C7584091E35; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		10AD58DE127E1BE737804176 = {isa = PBXBuildFile; fileRef = D179A39DAF6B708875BC62AF; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		15E8103885B6859D7BDB8BCA = {isa = PBXBuildFile; fileRef = 6A18C345080B640F64D9DAD7; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		9C4FE249828AFAEDE06BEB54 = {isa = PBXBuildFile; fileRef = 0731721CBFD6F17AD0DD4F24; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		ED635084DB6403693BED4C9A = {isa = PBXBuildFile; fileRef = F4EB4ACA7ED000B71ADE66E6; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		BCC3EA04E08B38760A6DFA77 = {isa = PBXBuildFile; fileRef = 197586F0A4601BC5C8BCBB2E; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		6557BE8AC597BF69E384ECD7 = {isa = PBXBuildFile; fileRef = 3F36D4D0A156D4E499455DB0; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		74D2A5947C2DD85F835BB9DE = {isa = PBXBuildFile; fileRef = 9F49BE4A6403EFC7BED1FE8F; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		8CD3CD5CE098B44C82C78055 = {isa = PBXBuildFile; fileRef = 7A5D3AFB511E81E0D1A4BA2D; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		6B0B0109B658522DFA2140E9 = {isa = PBXBuildFile; fileRef = FD8A3D5420C9AFA5596D2537; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		F5BAC2E9ED1431D54CC853B8 = {isa = PBXBuildFile; fileRef = 9E2B2A2E258A950674839CF0; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		0E1D12D0E21A008917374A1E = {isa = PBXBuildFile; fileRef = 83392E91D403FD331C9F5227; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		606589B6401E6D11869F9676 = {isa = PBXBuildFile; fileRef = C887033427B86E6D68775FD5; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		1B6906536FA308D7521926AC = {isa = PBXBuildFile; fileRef = 1C41561D8526C276A6777DAF; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		59D00431562CC5D5284F572A = {isa = PBXBuildFile; fileRef = C37E9B8BD9B42C465E1499E1; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		229516F92B6CD437F5EC545D = {isa = PBXBuildFile; fileRef = 0DA9C47DC56DE56839F542D7; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		AD3A7863EC92B9A0EB27EBAC = {isa = PBXBuildFile; fileRef = FFEABD46FD6CFA475B43C550; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		7FBE1154734DEEFF44F66B0B = {isa = PBXBuildFile; fileRef = 2C040BA0587C97E5FC9EDCFB; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		69C1D5A66B7C5F39CF451952 = {isa = PBXBuildFile; fileRef = 914FD14BA7F8207FD7668B1B; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		C5E5755DAF0C7FF0A1D9B0EC = {isa = PBXBuildFile; fileRef = 9F44724C28EB6026DDE69D43; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		CAF846602608D27C8AF12314 = {isa = PBXBuildFile; fileRef = AD4BAFA1B2474C7584091E35; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		10AD58DE127E1BE737804176 = {isa = PBXBuildFile; fileRef = D179A39DAF6B708875BC62AF; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		15E8103885B6859D7BDB8BCA = {isa = PBXBuildFile; fileRef = 6A18C345080B640F64D9DAD7; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		9C4FE249828AFAEDE06BEB54 = {isa = PBXBuildFile; fileRef = 0731721CBFD6F17AD0DD4F24; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		ED635084DB6403693BED4C9A = {isa = PBXBuildFile; fileRef = F4EB4ACA7ED000B71ADE66E6; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		BCC3EA04E08B38760A6DFA77 = {isa = PBXBuildFile; fileRef = 197586F0A4601BC5C8BCBB2E; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		6557BE8AC597BF69E384ECD7 = {isa = PBXBuildFile; fileRef = 3F36D4D0A156D4E499455DB0; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		74D2A5947C2DD85F835BB9DE = {isa = PBXBuildFile; fileRef = 9F49BE4A6403EFC7BED1FE8F; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		8CD3CD5CE098B44C82C78055 = {isa = PBXBuildFile; fileRef = 7A5D3AFB511E81E0D1A4BA2D; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		6B0B0109B658522DFA2140E9 = {isa = PBXBuildFile; fileRef = FD8A3D5420C9AFA5596D2537; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		5DA0EA3040F181A5BCB9F158 = {isa = PBXBuildFile; fileRef = 990A808007D20F765F7FE0C6; };
 		189C8934525E8ADC82973F88 = {isa = PBXBuildFile; fileRef = F52642F891C51F4B3DC14DC6; };
 		6238AF3CA7ADC85CC19714C5 = {isa = PBXBuildFile; fileRef = A9323445DF3DF72222E931D8; };
@@ -504,6 +505,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7A9051C11D9E4EA1A5210011 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSSettingsChangeNote.m; sourceTree = SOURCE_ROOT; };
+		7A9051C11D9E4EA1A5210012 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSSettingsChangeNote.h; sourceTree = SOURCE_ROOT; };
 		E3B000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sources/TSSettingsSearch.m; sourceTree = SOURCE_ROOT; };
 		E18000000000000000000005 = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Resources/SettingsWindow.xib; sourceTree = SOURCE_ROOT; };
 		E18000000000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sources/TSSettingsWindowController.h; sourceTree = SOURCE_ROOT; };
@@ -1559,6 +1562,8 @@
 				E18200000000000000000410,
 				E18000000000000000000001,
 				E3B000000000000000000002,
+				7A9051C11D9E4EA1A5210011,
+				7A9051C11D9E4EA1A5210012,
 				E18000000000000000000002,
 				E18000000000000000000003,
 				E18000000000000000000004,
@@ -2442,6 +2447,7 @@
 				E18300000000000000000004,
 				E18100000000000000000001,
 				E3B000000000000000000001,
+				7A9051C11D9E4EA1A5210013,
 				E18100000000000000000002,
 				407881810519249A006979EA /* TSPreferences.m in Sources */,
 				407881820519249A006979EA /* globals.m in Sources */,

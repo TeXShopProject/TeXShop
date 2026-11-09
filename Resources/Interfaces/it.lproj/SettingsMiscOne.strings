@@ -12,10 +12,10 @@
 "427.title" = "4";
 "428.title" = "0 (normale)";
 "431.title" = "5";
-"434.ibShadowedToolTip" = "Higher value emphasizes forecolor. No effect for PDF or EPS formats.";
+"434.ibShadowedToolTip" = "Valori più alti accentuano il testo quando si copiano immagini raster.";
 "435.title" = "-1";
 "436.title" = "2";
-"437.ibShadowedToolTip" = "Check if you want to map black and white to different colors";
+"437.ibShadowedToolTip" = "Associa il bianco e il nero ad altri colori.";
 "438.title" = "-2";
 "440.title" = "1";
 "441.title" = "3";
@@ -37,6 +37,6 @@
 "kCh-5t-39X.title" = "Radio";
 "qMw-aC-Ilj.title" = "A sinistra";
 "shH-XU-nyE.title" = "Due caratteri";
-"sto-5E-9Q5.title" = "Funzione di macOS che sovrascrive automaticamente il file durante la modifica. Ha effetto dopo il riavvio di TeXShop.";
+"sto-5E-9Q5.title" = "Funzione di macOS che sovrascrive automaticamente il file durante la modifica.";
 "tg5-uf-NZU.title" = "Radio";
 "xvd-dM-RGh.title" = "Posizione linea d'inserimento:";

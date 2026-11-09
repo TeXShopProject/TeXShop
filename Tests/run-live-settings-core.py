@@ -8,7 +8,7 @@ sources={n:(ROOT/'Sources'/n).read_text() for n in ['TSPreferenceProfile.m','TSP
 mutations={
  'profile-preserve':('TSPreferenceProfile.m','if (TSPreferenceProfilePreservesKey(key)) continue;','if (NO) continue;'),
  'profile-remove':('TSPreferenceProfile.m','else [removals addObject:key];','else {}'),
- 'profile-used':('TSPreferenceProfile.m','updates[TSProfileKeyTSHasBeenUsed] = @YES;','updates[TSProfileKeyTSHasBeenUsed] = @NO;'),
+ 'profile-used':('TSPreferenceProfile.m','updates[TSHasBeenUsedKey] = @YES;','updates[TSHasBeenUsedKey] = @NO;'),
  'profile-path':('TSPreferenceProfile.m','if (![path isKindOfClass:NSString.class] ||','if (NO && (![path isKindOfClass:NSString.class] ||'),
  'profile-notify':('TSPreferenceProfile.m','[NSNotificationCenter.defaultCenter postNotificationName:NSUserDefaultsDidChangeNotification object:defaults];',';'),
  'profile-guard':('TSPreferenceProfile.m','profileApplicationDepth++;',';'),
@@ -145,7 +145,7 @@ int main(int argc,const char **argv) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-live-core-',dir='/private/tmp') as tmp:
  t=Path(tmp);(t/'probe.m').write_text(program)
  for name,body in sources.items():(t/name).write_text(body)
- args=['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-I',str(ROOT/'Sources'),'-I',str(ROOT/'Tests'),'-framework','Cocoa',str(t/'probe.m'),*[str(t/n) for n in sources],'-o',str(t/'probe')]
+ args=['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-I',str(ROOT/'Sources'),'-I',str(ROOT/'Tests'),'-framework','Cocoa',str(t/'probe.m'),*[str(t/n) for n in sources],str(ROOT/'Sources/globals.m'),'-o',str(t/'probe')]
  subprocess.run(args,check=True)
  themes=t/'Colors';themes.mkdir()
  profiles=sorted((ROOT/'Resources/Shellscripts').glob('*Defaults*.plist'));assert len(profiles)==9

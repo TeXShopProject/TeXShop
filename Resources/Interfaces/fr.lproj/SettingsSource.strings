@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Palette Apple";
 "583.title" = "Bannière de recherche Apple";
-"585.title" = "Palette de recherche (après redémarrage)";
+"585.title" = "Palette de recherche";
 "872.title" = "Choisir";
 "873.title" = "Helvetica 12";
 "874.title" = "Enregistrer la position";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "Grand";
 "teg-0p-Q8J.title" = "Ignorer les commandes LaTeX";
 "ts-aware-spelling-cell.title" = "Vérification adaptée à LaTeX";
-"ts-aware-spelling.ibShadowedToolTip" = "Utiliser les règles d’exclusion pour les documents LaTeX. Désactivez cette option pour utiliser les anciennes options ci-dessous. La vérification pendant la frappe reste inchangée.";
+"ts-aware-spelling.ibShadowedToolTip" = "Utiliser les règles d’exclusion pour les documents LaTeX.";
 "ts-edit-spelling-cell.title" = "Modifier les exclusions LaTeX…";
 "ts-edit-spelling.ibShadowedToolTip" = "Modifier les règles d’exclusion de la vérification orthographique adaptée à LaTeX.";
 "uAi-0W-9KI.title" = "Switch";

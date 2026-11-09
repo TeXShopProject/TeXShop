@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Apple zoekpaneel";
 "583.title" = "Apple Find Bar";
-"585.title" = "Zoekpaneel (opnieuw starten vereist)";
+"585.title" = "Zoekpaneel";
 "872.title" = "Stel in...";
 "873.title" = "Helvetica 12";
 "874.title" = "Kies huidige positie";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "Large";
 "teg-0p-Q8J.title" = "Do not check LaTeX commands";
 "ts-aware-spelling-cell.title" = "LaTeX-bewuste spellingcontrole";
-"ts-aware-spelling.ibShadowedToolTip" = "Uitsluitingsregels voor LaTeX-documenten gebruiken. Schakel uit om de eerdere opties hieronder te gebruiken. De spellingcontrole tijdens het typen blijft ongewijzigd.";
+"ts-aware-spelling.ibShadowedToolTip" = "Uitsluitingsregels voor LaTeX-documenten gebruiken.";
 "ts-edit-spelling-cell.title" = "LaTeX-uitsluitingsregels bewerken…";
 "ts-edit-spelling.ibShadowedToolTip" = "Bewerk de uitsluitingsregels voor LaTeX-bewuste spellingcontrole.";
 "uAi-0W-9KI.title" = "Switch";

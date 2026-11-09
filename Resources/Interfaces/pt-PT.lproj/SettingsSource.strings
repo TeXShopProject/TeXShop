@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Apple Find Panel";
 "583.title" = "Apple Find Bar";
-"585.title" = "Find Panel (after restart)";
+"585.title" = "Painel de pesquisa";
 "872.title" = "Escolher...";
 "873.title" = "Helvetica 12";
 "874.title" = "Escolher a posição actual";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "Large";
 "teg-0p-Q8J.title" = "Do not check LaTeX commands";
 "ts-aware-spelling-cell.title" = "Ortografia adaptada ao LaTeX";
-"ts-aware-spelling.ibShadowedToolTip" = "Usar regras de exclusão para documentos LaTeX. Desative para usar as opções anteriores abaixo. Não altera a verificação ortográfica durante a escrita.";
+"ts-aware-spelling.ibShadowedToolTip" = "Usar regras de exclusão para documentos LaTeX.";
 "ts-edit-spelling-cell.title" = "Editar exclusões de LaTeX…";
 "ts-edit-spelling.ibShadowedToolTip" = "Editar as regras de exclusão da verificação ortográfica adaptada ao LaTeX.";
 "uAi-0W-9KI.title" = "Switch";

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
-"113.ibShadowedToolTip" = "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.";
+"113.ibShadowedToolTip" = "Standardzoom für neu geöffnete PDFs.";
 "1uj-kt-7Pj.title" = "Quelltext links";
 "228.title" = "Seitenwechsel";
 "328.title" = "Verschieben";

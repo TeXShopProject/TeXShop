@@ -9,5 +9,5 @@ root = Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='texshop-layout-sweep-') as td:
     binary = Path(td) / 'sweep'
     (Path(td)/'TSKeyboardShortcuts.m').write_text(production_source(root))
-    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-O2', '-Wno-deprecated-declarations', '-I',td,'-I',str(root/'Sources'),'-framework', 'Cocoa', '-framework', 'Carbon', str(root/'Tests/ShortcutLayoutSweep.m'), '-o', str(binary)], check=True)
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-O2', '-Wno-deprecated-declarations', '-I',td,'-I',str(root/'Sources'),'-framework', 'Cocoa', '-framework', 'Carbon', str(root/'Tests/ShortcutLayoutSweep.m'), str(root/'Sources/TSPrefPaneLayout.m'), '-o', str(binary)], check=True)
     subprocess.run([str(binary)], check=True)

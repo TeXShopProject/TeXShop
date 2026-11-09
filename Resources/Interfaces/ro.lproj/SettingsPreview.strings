@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
-"113.ibShadowedToolTip" = "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.";
+"113.ibShadowedToolTip" = "Mărirea implicită pentru PDF-urile nou deschise.";
 "1uj-kt-7Pj.title" = "Source on the Left";
 "228.title" = "Modifică Butoanele Paginii";
 "328.title" = "Scroll";

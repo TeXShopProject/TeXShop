@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
-"113.ibShadowedToolTip" = "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.";
+"113.ibShadowedToolTip" = "새로 여는 PDF의 기본 확대율입니다.";
 "1uj-kt-7Pj.title" = "편집 창을 왼쪽에";
 "228.title" = "페이지 버튼";
 "328.title" = "스크롤";

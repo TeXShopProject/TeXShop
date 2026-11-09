@@ -55,8 +55,8 @@ int main(int argc,char **argv) { @autoreleasepool {
     // Check before creating AppKit objects, so a broken isolation fixture cannot write preferences.
     Require([NSUserDefaults standardUserDefaults] == memoryDefaults, @"All standard defaults must remain in memory");
     BOOL snapshot = argc > 2 && [@(argv[2]) isEqualToString:@"--snapshot"];
-    BOOL preview = snapshot || (argc > 2 && [@(argv[2]) isEqualToString:@"--preview"]);
-    if (!preview) method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(orderWindow:relativeTo:)),(IMP)PreventOrdering);
+    BOOL preview = snapshot;
+    method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(orderWindow:relativeTo:)),(IMP)PreventOrdering);
     [NSApplication sharedApplication];
     if (!preview) [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     NSString *domain = NSBundle.mainBundle.bundleIdentifier;
@@ -144,18 +144,6 @@ int main(int argc,char **argv) { @autoreleasepool {
         }
         return 0;
     }
-    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-    PreviewDelegate *delegate = [PreviewDelegate new]; delegate.controller = controller; NSApp.delegate = delegate;
-    [tabs selectTabViewItemAtIndex:tabs.numberOfTabViewItems - 2];
-    // Disable the original unrelated controls; keep this harness from changing TeXShop preferences.
-    for (NSView *v in window.contentView.subviews) if ([v isKindOfClass:NSButton.class]) {
-        NSButton *b = (id)v; b.enabled = NO;
-    }
-    for (NSUInteger i = 0; i < 2; i++) {
-        NSButton *b = [NSButton buttonWithTitle:@"Close" target:delegate action:i ? @selector(accept:) : @selector(cancel:)];
-        b.frame = NSMakeRect(420+i*90,12,80,28); [window.contentView addSubview:b];
-    }
-    window.title = @"TeXShop Dock Icon Experiment";
-    [window center]; [window makeKeyAndOrderFront:nil]; [NSApp activateIgnoringOtherApps:YES];
-    [NSApp run];
+    fputs("This fixture only supports noninteractive checks and snapshots.\n",stderr);
+    return 2;
 } return 0; }

@@ -53,6 +53,7 @@
 
 
 #import "OgreKit/OgreTextFinder.h"
+#import "TSSettingsChangeNote.h"
 #import "TextFinder.h"
 
 #include <sys/sysctl.h>     // for testForIntel
@@ -212,15 +213,13 @@
     // Rule editing and spelling help remain accessible in either spelling mode.
     [TSSpellSupport installMenuItems];
     // OgreKit replaces the Find submenu during the launch notification.
-    dispatch_async(dispatch_get_main_queue(), ^{
-        TSKeyboardShortcuts *shortcuts = [TSKeyboardShortcuts sharedController];
+    [[TSKeyboardShortcuts sharedController] startAfterLaunchWithConfiguration:^(TSKeyboardShortcuts *shortcuts) {
         shortcuts.showSettings = ^{ [[TSPreferences sharedInstance] showKeyboardSettings:nil]; };
         shortcuts.macroProvider = ^{ return [[TSMacroMenuController sharedInstance] shortcutEntries]; };
         shortcuts.showMacro = ^(TSShortcutMacro *macro) {
             [[TSMacroEditor sharedInstance] openMacroEditorSelectingMacroAtIndexPath:macro.indexPath name:macro.name key:macro.serializedKey];
         };
-        [shortcuts startObservingMenu];
-    });
+    }];
     if (self.shouldDiscoverEnginePaths) {
         [[TSPreferences sharedInstance] discoverInitialEnginePaths];
     }
@@ -750,7 +749,8 @@
     
     userCommandsNotToSpellCheck = [SUD stringArrayForKey: ExtraCommandsNotToCheckParametersKey];
 
-    doAutoSave = [SUD boolForKey:AutoSaveEnabledKey]; // this is a new hidden Preference, which can be used to turn it off
+    doAutoSave = [SUD boolForKey:AutoSaveEnabledKey];
+    TSSettingsRememberLaunchValue(AutoSaveEnabledKey, @(doAutoSave));
     
     activateBauerPatch = doAutoSave && [SUD boolForKey: WatchServerKey] && (( ! [SUD objectForKey:@"ApplePersistence"]) || [SUD boolForKey:@"ApplePersistence"] );
     
@@ -831,6 +831,7 @@
     
 
 
+    TSSettingsRememberLaunchValue(FindMethodKey, @([SUD integerForKey:FindMethodKey]));
 	if ([SUD integerForKey:FindMethodKey] == 2) 
 		[OgreTextFinder sharedTextFinder];  //this line modifies menus and hooks up the OgreTextFinder
 	else 

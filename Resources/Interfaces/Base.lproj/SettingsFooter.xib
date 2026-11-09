@@ -74,14 +74,6 @@
             </menu>
           </popUpButtonCell>
         </popUpButton>
-        <textField fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LIV-SV-NOT" identifier="settings.LIV-SV-NOT">
-          <rect key="frame" x="340" y="24" width="330" height="22" />
-          <autoresizingMask key="autoresizingMask" />
-          <textFieldCell key="cell" title="Changes are saved automatically." id="LIV-SV-CEL">
-            <font key="font" metaFont="system" size="11" />
-            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog" />
-          </textFieldCell>
-        </textField>
       </subviews>
     </customView>
   </objects>

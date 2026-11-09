@@ -3394,7 +3394,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Set Default Values",
@@ -3429,14 +3428,14 @@
           "428.title": "0 (normal)",
           "qMw-aC-Ilj.title": "Left",
           "cSu-im-H1E.title": "Insertion Cursor",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Higher values emphasize text when copying raster images.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Map black and white to different colors.",
           "CBT-8e-Ayl.title": "Right",
           "407.title": "JPEG (Low)",
           "hmg-EV-KUC.title": "Keep the previous file as “name~” when saving",
           "423.title": "JPEG (Medium)",
-          "sto-5E-9Q5.title": "A macOS feature that overwrites the file automatically while you edit. Takes effect after TeXShop restarts.",
+          "sto-5E-9Q5.title": "A macOS feature that overwrites the file automatically while you edit.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "One Character",
           "g92-sP-oZU.title": "Center",
@@ -3529,7 +3528,7 @@
           "vOt-2m-d2s.title": "Use One Window",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Default Page Style",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs.",
           "228.title": "Change Page Buttons",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -3559,7 +3558,7 @@
           "Mo3-zf-BYT.title": "Never",
           "927.title": "Escape Key",
           "236.title": "On Startup",
-          "ts-aware-spelling.ibShadowedToolTip": "Use exclusion rules for LaTeX documents. Turn off to use the legacy options below. Does not change Check Spelling While Typing.",
+          "ts-aware-spelling.ibShadowedToolTip": "Use exclusion rules for LaTeX documents.",
           "876.title": "Configure for External Editor",
           "928.title": "Tab Key",
           "583.title": "Apple Find Bar",
@@ -3571,7 +3570,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "Do not check LaTeX commands",
           "912.title": "Radio",
-          "585.title": "Find Panel (after restart)",
+          "585.title": "Find Panel",
           "aI9-3B-vVE.title": "Automatically",
           "872.title": "Set ...",
           "277.title": "OtherViews",
@@ -3591,7 +3590,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "More Colors",
           "rpP-GF-uJp.title": "Insertion",
           "iOU-s7-VWK.title": "variable",
           "brV-c3-Y89.title": "Footnote",
@@ -3601,7 +3599,6 @@
           "BCt-qg-0VZ.title": "Syntax",
           "Z9i-kS-FGf.title": "Foreground",
           "lAb-Fn-Tpo.title": "Marker",
-          "F86-wI-vOl.label": "Regular Colors",
           "z0I-4l-zwC.title": "Comment",
           "tQ6-6v-qml.title": "Flash",
           "olb-4z-mYu.title": "Log",
@@ -3617,7 +3614,6 @@
           "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Value",
           "oZx-IF-VfJ.title": "Preview",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Console",
           "GMo-pb-qym.title": "Sync",
           "bHA-VU-6ZK.title": "argument",
@@ -4379,13 +4375,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -4637,7 +4626,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Higher values emphasize text when copying raster images."
         },
         {
           "key": "377.title",
@@ -4651,7 +4640,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Map black and white to different colors."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -4690,7 +4679,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "A macOS feature that overwrites the file automatically while you edit. Takes effect after TeXShop restarts."
+          "value": "A macOS feature that overwrites the file automatically while you edit."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -5359,7 +5348,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Default zoom for newly opened PDFs."
         },
         {
           "key": "228.title",
@@ -5567,7 +5556,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Use exclusion rules for LaTeX documents. Turn off to use the legacy options below. Does not change Check Spelling While Typing."
+          "value": "Use exclusion rules for LaTeX documents."
         },
         {
           "key": "876.title",
@@ -5659,7 +5648,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Find Panel (after restart)"
+          "value": "Find Panel"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -5947,13 +5936,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Preview"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -6498,14 +6480,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Actions"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "Regular Colors"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "More Colors"
         }
       ],
       "TypesettingHeadings": [
@@ -6591,7 +6565,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Find Panel (after restart)"
+          "title": "Find Panel"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -6721,7 +6695,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Alle Einstellungen zurücksetzen",
@@ -6756,14 +6729,14 @@
           "428.title": "0 (normal)",
           "qMw-aC-Ilj.title": "Links",
           "cSu-im-H1E.title": "Cursor / Einfügemarke",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Höhere Werte betonen den Text beim Kopieren von Rasterbildern.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Schwarz und Weiß anderen Farben zuordnen.",
           "CBT-8e-Ayl.title": "Rechts",
           "407.title": "JPEG (Niedrig)",
           "hmg-EV-KUC.title": "Beim Sichern die vorherige Datei als „Name~“ behalten",
           "423.title": "JPEG (Mittel)",
-          "sto-5E-9Q5.title": "Eine macOS-Funktion, die die Datei beim Bearbeiten automatisch überschreibt. Wirkt nach einem Neustart von TeXShop.",
+          "sto-5E-9Q5.title": "Eine macOS-Funktion, die die Datei beim Bearbeiten automatisch überschreibt.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "Ein Zeichen",
           "g92-sP-oZU.title": "Mittig",
@@ -6856,7 +6829,7 @@
           "vOt-2m-d2s.title": "Ein gemeinsames Fenster",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "PDF-Darstellung",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Standardzoom für neu geöffnete PDFs.",
           "228.title": "Seitenwechsel",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -6886,7 +6859,7 @@
           "Mo3-zf-BYT.title": "Niemals",
           "927.title": "Escape-Taste",
           "236.title": "Bei Programmstart",
-          "ts-aware-spelling.ibShadowedToolTip": "Ausschlussregeln für LaTeX-Dokumente verwenden. Deaktivieren, um die bisherigen Optionen unten zu verwenden. Die Rechtschreibprüfung während der Eingabe bleibt unverändert.",
+          "ts-aware-spelling.ibShadowedToolTip": "Ausschlussregeln für LaTeX-Dokumente verwenden.",
           "876.title": "Externen Editor benutzen",
           "928.title": "Tabulator-Taste",
           "583.title": "Apple Suchleiste",
@@ -6898,7 +6871,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "LaTeX-Befehle nicht überprüfen",
           "912.title": "Radio",
-          "585.title": "Suchmaske (nach Neustart)",
+          "585.title": "Suchmaske",
           "aI9-3B-vVE.title": "Automatisch",
           "872.title": "Auswählen ...",
           "277.title": "OtherViews",
@@ -6918,7 +6891,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "mehr Farben",
           "rpP-GF-uJp.title": "Eingabe",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Fußnote",
@@ -6928,7 +6900,6 @@
           "BCt-qg-0VZ.title": "Syntax",
           "Z9i-kS-FGf.title": "Vordergrund",
           "lAb-Fn-Tpo.title": "Marker",
-          "F86-wI-vOl.label": "allgemeine Farben",
           "z0I-4l-zwC.title": "Kommentar",
           "tQ6-6v-qml.title": "Aufleuchten",
           "olb-4z-mYu.title": "Log",
@@ -6944,7 +6915,6 @@
           "J9P-9m-Ehr.title": "Neu aus Einstellungen",
           "s3b-sE-3Ix.title": "Wert",
           "oZx-IF-VfJ.title": "Vorschau",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Konsole",
           "GMo-pb-qym.title": "Sync",
           "bHA-VU-6ZK.title": "argument",
@@ -7706,13 +7676,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -7964,7 +7927,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Höhere Werte betonen den Text beim Kopieren von Rasterbildern."
         },
         {
           "key": "377.title",
@@ -7978,7 +7941,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Schwarz und Weiß anderen Farben zuordnen."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -8017,7 +7980,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "Eine macOS-Funktion, die die Datei beim Bearbeiten automatisch überschreibt. Wirkt nach einem Neustart von TeXShop."
+          "value": "Eine macOS-Funktion, die die Datei beim Bearbeiten automatisch überschreibt."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -8686,7 +8649,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Standardzoom für neu geöffnete PDFs."
         },
         {
           "key": "228.title",
@@ -8894,7 +8857,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Ausschlussregeln für LaTeX-Dokumente verwenden. Deaktivieren, um die bisherigen Optionen unten zu verwenden. Die Rechtschreibprüfung während der Eingabe bleibt unverändert."
+          "value": "Ausschlussregeln für LaTeX-Dokumente verwenden."
         },
         {
           "key": "876.title",
@@ -8986,7 +8949,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Suchmaske (nach Neustart)"
+          "value": "Suchmaske"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -9274,13 +9237,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Vorschau"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -9825,14 +9781,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Aktionen"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "allgemeine Farben"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "mehr Farben"
         }
       ],
       "TypesettingHeadings": [
@@ -9918,7 +9866,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Suchmaske (nach Neustart)"
+          "title": "Suchmaske"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -10048,7 +9996,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Valores predeterminados",
@@ -10083,14 +10030,14 @@
           "428.title": "0 (normal)",
           "qMw-aC-Ilj.title": "Izquierda",
           "cSu-im-H1E.title": "Cursor de inserción",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Los valores más altos resaltan el texto al copiar imágenes de mapa de bits.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Asignar otros colores al blanco y negro.",
           "CBT-8e-Ayl.title": "Derecha",
           "407.title": "JPEG (Baja)",
           "hmg-EV-KUC.title": "Conservar el archivo anterior como “nombre~”",
           "423.title": "JPEG (Media)",
-          "sto-5E-9Q5.title": "Función de macOS que sobrescribe el archivo automáticamente mientras se edita. Se aplica al reiniciar TeXShop.",
+          "sto-5E-9Q5.title": "Función de macOS que sobrescribe el archivo automáticamente mientras se edita.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "Un carácter",
           "g92-sP-oZU.title": "Centro",
@@ -10183,7 +10130,7 @@
           "vOt-2m-d2s.title": "Usar una ventana",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Mostrar páginas",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Zoom predeterminado para los PDF que se abran.",
           "228.title": "Botones cambio de página",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -10213,7 +10160,7 @@
           "Mo3-zf-BYT.title": "Nunca",
           "927.title": "Tecla «Escape»",
           "236.title": "Al comenzar",
-          "ts-aware-spelling.ibShadowedToolTip": "Usar reglas de exclusión para documentos LaTeX. Desactive esta opción para usar las opciones anteriores de abajo. No cambia la revisión ortográfica al escribir.",
+          "ts-aware-spelling.ibShadowedToolTip": "Usar reglas de exclusión para documentos LaTeX.",
           "876.title": "Configurar para editor externo",
           "928.title": "Tabulador",
           "583.title": "Barra de búsquedas de Apple",
@@ -10225,7 +10172,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "No comprobar comandos LaTeX",
           "912.title": "Radio",
-          "585.title": "Panel búsquedas (al reiniciar)",
+          "585.title": "Panel de búsqueda",
           "aI9-3B-vVE.title": "Automáticamente",
           "872.title": "Elegir...",
           "277.title": "OtherViews",
@@ -10245,7 +10192,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "Más colores",
           "rpP-GF-uJp.title": "Inserción",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Nota al pie",
@@ -10255,7 +10201,6 @@
           "BCt-qg-0VZ.title": "Sintaxis",
           "Z9i-kS-FGf.title": "Primer plano",
           "lAb-Fn-Tpo.title": "Delimitadores",
-          "F86-wI-vOl.label": "Colores habituales ",
           "z0I-4l-zwC.title": "Comentario",
           "tQ6-6v-qml.title": "Destello",
           "olb-4z-mYu.title": "Log",
@@ -10271,7 +10216,6 @@
           "J9P-9m-Ehr.title": "Nuevo modo desde ajustes",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "PDF",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Consola",
           "GMo-pb-qym.title": "Sincronía",
           "bHA-VU-6ZK.title": "argument",
@@ -11033,13 +10977,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -11291,7 +11228,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Los valores más altos resaltan el texto al copiar imágenes de mapa de bits."
         },
         {
           "key": "377.title",
@@ -11305,7 +11242,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Asignar otros colores al blanco y negro."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -11344,7 +11281,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "Función de macOS que sobrescribe el archivo automáticamente mientras se edita. Se aplica al reiniciar TeXShop."
+          "value": "Función de macOS que sobrescribe el archivo automáticamente mientras se edita."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -12013,7 +11950,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Zoom predeterminado para los PDF que se abran."
         },
         {
           "key": "228.title",
@@ -12221,7 +12158,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Usar reglas de exclusión para documentos LaTeX. Desactive esta opción para usar las opciones anteriores de abajo. No cambia la revisión ortográfica al escribir."
+          "value": "Usar reglas de exclusión para documentos LaTeX."
         },
         {
           "key": "876.title",
@@ -12313,7 +12250,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Panel búsquedas (al reiniciar)"
+          "value": "Panel de búsqueda"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -12601,13 +12538,6 @@
           "kind": "cell",
           "property": "title",
           "value": "PDF"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -13152,14 +13082,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Acciones"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "Colores habituales "
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "Más colores"
         }
       ],
       "TypesettingHeadings": [
@@ -13245,7 +13167,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Panel búsquedas (al reiniciar)"
+          "title": "Panel de búsqueda"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -13375,7 +13297,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Réglages par défaut",
@@ -13410,14 +13331,14 @@
           "428.title": "0 (normal)",
           "qMw-aC-Ilj.title": "Gauche",
           "cSu-im-H1E.title": "Curseur d’insertion",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Les valeurs élevées accentuent le texte lors de la copie d’images matricielles.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Associer le noir et le blanc à d’autres couleurs.",
           "CBT-8e-Ayl.title": "Droite",
           "407.title": "JPEG (bas)",
           "hmg-EV-KUC.title": "Conserver le fichier précédent sous « nom~ »",
           "423.title": "JPEG (moyen)",
-          "sto-5E-9Q5.title": "Fonction de macOS qui écrase automatiquement le fichier pendant la modification. Prend effet après le redémarrage de TeXShop.",
+          "sto-5E-9Q5.title": "Fonction de macOS qui écrase automatiquement le fichier pendant la modification.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "Un caractère",
           "g92-sP-oZU.title": "Centre",
@@ -13510,7 +13431,7 @@
           "vOt-2m-d2s.title": " Utiliser une seule fenêtre",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Style de la page par défaut",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Zoom par défaut des PDF nouvellement ouverts.",
           "228.title": "Changer les boutons page",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -13540,7 +13461,7 @@
           "Mo3-zf-BYT.title": "Jamais",
           "927.title": "Touche Escape",
           "236.title": "Au démarrage",
-          "ts-aware-spelling.ibShadowedToolTip": "Utiliser les règles d’exclusion pour les documents LaTeX. Désactivez cette option pour utiliser les anciennes options ci-dessous. La vérification pendant la frappe reste inchangée.",
+          "ts-aware-spelling.ibShadowedToolTip": "Utiliser les règles d’exclusion pour les documents LaTeX.",
           "876.title": "Configurer pour éditeur externe",
           "928.title": "Touche Tabulation",
           "583.title": "Bannière de recherche Apple",
@@ -13552,7 +13473,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "Ignorer les commandes LaTeX",
           "912.title": "Radio",
-          "585.title": "Palette de recherche (après redémarrage)",
+          "585.title": "Palette de recherche",
           "aI9-3B-vVE.title": "Automatiquement",
           "872.title": "Choisir",
           "277.title": "OtherViews",
@@ -13572,7 +13493,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "Autres couleurs",
           "rpP-GF-uJp.title": "Insertion",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Note en bas de page",
@@ -13582,7 +13502,6 @@
           "BCt-qg-0VZ.title": "Syntaxe",
           "Z9i-kS-FGf.title": "Premier plan",
           "lAb-Fn-Tpo.title": "Marqueur",
-          "F86-wI-vOl.label": "Couleurs standard",
           "z0I-4l-zwC.title": "Commentaire",
           "tQ6-6v-qml.title": "Flash",
           "olb-4z-mYu.title": "Log",
@@ -13598,7 +13517,6 @@
           "J9P-9m-Ehr.title": "Thème depuis les réglages",
           "s3b-sE-3Ix.title": "Valeur",
           "oZx-IF-VfJ.title": "Aperçu",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Console",
           "GMo-pb-qym.title": "Synchro",
           "bHA-VU-6ZK.title": "argument",
@@ -14360,13 +14278,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -14618,7 +14529,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Les valeurs élevées accentuent le texte lors de la copie d’images matricielles."
         },
         {
           "key": "377.title",
@@ -14632,7 +14543,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Associer le noir et le blanc à d’autres couleurs."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -14671,7 +14582,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "Fonction de macOS qui écrase automatiquement le fichier pendant la modification. Prend effet après le redémarrage de TeXShop."
+          "value": "Fonction de macOS qui écrase automatiquement le fichier pendant la modification."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -15340,7 +15251,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Zoom par défaut des PDF nouvellement ouverts."
         },
         {
           "key": "228.title",
@@ -15548,7 +15459,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Utiliser les règles d’exclusion pour les documents LaTeX. Désactivez cette option pour utiliser les anciennes options ci-dessous. La vérification pendant la frappe reste inchangée."
+          "value": "Utiliser les règles d’exclusion pour les documents LaTeX."
         },
         {
           "key": "876.title",
@@ -15640,7 +15551,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Palette de recherche (après redémarrage)"
+          "value": "Palette de recherche"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -15928,13 +15839,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Aperçu"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -16479,14 +16383,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Actions"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "Couleurs standard"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "Autres couleurs"
         }
       ],
       "TypesettingHeadings": [
@@ -16572,7 +16468,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Palette de recherche (après redémarrage)"
+          "title": "Palette de recherche"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -16702,7 +16598,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Imposta default",
@@ -16737,14 +16632,14 @@
           "428.title": "0 (normale)",
           "qMw-aC-Ilj.title": "A sinistra",
           "cSu-im-H1E.title": "Cursore inserimento",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Valori più alti accentuano il testo quando si copiano immagini raster.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Associa il bianco e il nero ad altri colori.",
           "CBT-8e-Ayl.title": " A destra",
           "407.title": "JPEG (Low)",
           "hmg-EV-KUC.title": "Mantieni il file precedente come “nome~” al salvataggio",
           "423.title": "JPEG (Medium)",
-          "sto-5E-9Q5.title": "Funzione di macOS che sovrascrive automaticamente il file durante la modifica. Ha effetto dopo il riavvio di TeXShop.",
+          "sto-5E-9Q5.title": "Funzione di macOS che sovrascrive automaticamente il file durante la modifica.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "Un carattere",
           "g92-sP-oZU.title": "Al centro",
@@ -16837,7 +16732,7 @@
           "vOt-2m-d2s.title": "Usa un’unica finestra",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Vista documento",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Zoom predefinito per i PDF appena aperti.",
           "228.title": "Pulsanti Cambio Pagina",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -16867,7 +16762,7 @@
           "Mo3-zf-BYT.title": "Mai",
           "927.title": "Escape Key",
           "236.title": "All'avvio",
-          "ts-aware-spelling.ibShadowedToolTip": "Usa le regole di esclusione per i documenti LaTeX. Disattiva per usare le opzioni precedenti qui sotto. Non modifica il controllo ortografico durante la digitazione.",
+          "ts-aware-spelling.ibShadowedToolTip": "Usa le regole di esclusione per i documenti LaTeX.",
           "876.title": "Configura per Editor Esterno",
           "928.title": "Tab Key",
           "583.title": "Apple Fine Bar",
@@ -16879,7 +16774,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "Non controllare i comandi LaTeX",
           "912.title": "Radio",
-          "585.title": "Pannello di ricerca (richiede riavvio)",
+          "585.title": "Pannello di ricerca",
           "aI9-3B-vVE.title": "Automaticamente",
           "872.title": "Imposta...",
           "277.title": "OtherViews",
@@ -16899,7 +16794,6 @@
           "RC5-Ef-iJJ.title": "Salva"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "Più colori",
           "rpP-GF-uJp.title": "Inserimento",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Nota a piè di pagina",
@@ -16909,7 +16803,6 @@
           "BCt-qg-0VZ.title": "Sintassi",
           "Z9i-kS-FGf.title": "Primo piano",
           "lAb-Fn-Tpo.title": "Marcatore",
-          "F86-wI-vOl.label": "Colori regolari",
           "z0I-4l-zwC.title": "Commento",
           "tQ6-6v-qml.title": "Lampeggio",
           "olb-4z-mYu.title": "Log",
@@ -16925,7 +16818,6 @@
           "J9P-9m-Ehr.title": "Crea da impostazioni",
           "s3b-sE-3Ix.title": "Valore",
           "oZx-IF-VfJ.title": "Anteprima",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Console",
           "GMo-pb-qym.title": "Sincroni-zzazione",
           "bHA-VU-6ZK.title": "argument",
@@ -17687,13 +17579,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -17945,7 +17830,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Valori più alti accentuano il testo quando si copiano immagini raster."
         },
         {
           "key": "377.title",
@@ -17959,7 +17844,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Associa il bianco e il nero ad altri colori."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -17998,7 +17883,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "Funzione di macOS che sovrascrive automaticamente il file durante la modifica. Ha effetto dopo il riavvio di TeXShop."
+          "value": "Funzione di macOS che sovrascrive automaticamente il file durante la modifica."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -18667,7 +18552,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Zoom predefinito per i PDF appena aperti."
         },
         {
           "key": "228.title",
@@ -18875,7 +18760,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Usa le regole di esclusione per i documenti LaTeX. Disattiva per usare le opzioni precedenti qui sotto. Non modifica il controllo ortografico durante la digitazione."
+          "value": "Usa le regole di esclusione per i documenti LaTeX."
         },
         {
           "key": "876.title",
@@ -18967,7 +18852,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Pannello di ricerca (richiede riavvio)"
+          "value": "Pannello di ricerca"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -19255,13 +19140,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Anteprima"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -19806,14 +19684,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Azioni"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "Colori regolari"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "Più colori"
         }
       ],
       "TypesettingHeadings": [
@@ -19899,7 +19769,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Pannello di ricerca (richiede riavvio)"
+          "title": "Pannello di ricerca"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -20029,7 +19899,6 @@
           "1093.title": "旧 pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "設定の変更はすぐに保存されます。",
           "1092.title": "旧 pTeX (EUC)",
           "1097.title": "upTeX (シェルスクリプト)",
           "1101.title": "設定プロファイル",
@@ -20064,14 +19933,14 @@
           "428.title": "0 (標準)",
           "qMw-aC-Ilj.title": "左",
           "cSu-im-H1E.title": "カーソルの表示",
-          "434.ibShadowedToolTip": "大きな値にするほど文字色を強調します(PDF形式でのコピーでは無効)。",
+          "434.ibShadowedToolTip": "ビットマップ画像をコピーするときの文字の濃さです。大きな値ほど文字が強調されます。",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "黒と白を別の色に置き換えてコピーします。",
+          "437.ibShadowedToolTip": "白黒を別の色に割り当てます。",
           "CBT-8e-Ayl.title": "右",
           "407.title": "JPEG (低画質)",
           "hmg-EV-KUC.title": "保存時に以前のファイルを「名前~」として残す",
           "423.title": "JPEG (中画質)",
-          "sto-5E-9Q5.title": "編集中に自動でファイルを上書きする macOS の機能です。TeXShop の再起動後に有効になります。",
+          "sto-5E-9Q5.title": "編集中に自動でファイルを上書きする macOS の機能です。",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "1文字分",
           "g92-sP-oZU.title": "両側",
@@ -20164,7 +20033,7 @@
           "vOt-2m-d2s.title": "ソースとプレビューを統合",
           "preview-cover-note-cell.title": "これから開く文書に適用。マジックコメントと\nPDF内の表示方向を優先します。",
           "329.title": "ページレイアウト",
-          "113.ibShadowedToolTip": "新しく開くPDFの既定倍率です。開いているPDFの倍率は変わりません。",
+          "113.ibShadowedToolTip": "新しく開くPDFの既定倍率です。",
           "228.title": "ページボタン",
           "preview-cover-cell.title": "先頭ページを表紙として単独表示",
           "Sb3-3h-ll4.title": "Radio",
@@ -20194,7 +20063,7 @@
           "Mo3-zf-BYT.title": "しない",
           "927.title": "Escape キー",
           "236.title": "起動時に",
-          "ts-aware-spelling.ibShadowedToolTip": "LaTeX文書では除外規則を使います。OFFにすると下の従来の設定に戻ります。入力中のスペルチェックのON/OFFは変更しません。",
+          "ts-aware-spelling.ibShadowedToolTip": "LaTeX 文書では除外規則を使います。",
           "876.title": "外部エディタでソースを編集",
           "928.title": "Tab キー",
           "583.title": "Apple 標準検索バー",
@@ -20206,7 +20075,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "LaTeXコマンドを対象外にする",
           "912.title": "Radio",
-          "585.title": "検索パネル（TeXShop再起動後）",
+          "585.title": "検索パネル",
           "aI9-3B-vVE.title": "自動",
           "872.title": "設定...",
           "277.title": "OtherViews",
@@ -20226,7 +20095,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": " 追加",
           "rpP-GF-uJp.title": "カーソル",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "脚注",
@@ -20236,7 +20104,6 @@
           "BCt-qg-0VZ.title": "シンタックスハイライト",
           "Z9i-kS-FGf.title": "文字",
           "lAb-Fn-Tpo.title": "括弧類",
-          "F86-wI-vOl.label": "基本",
           "z0I-4l-zwC.title": "コメント",
           "tQ6-6v-qml.title": "背景の点滅",
           "olb-4z-mYu.title": "ログ",
@@ -20252,7 +20119,6 @@
           "J9P-9m-Ehr.title": "旧バージョンの設定から移行",
           "s3b-sE-3Ix.title": "値",
           "oZx-IF-VfJ.title": "プレビュー",
-          "LIV-TH-CEL.title": "変更はすぐに保存されます。編集前に複製できます。",
           "kuS-x2-ZGi.title": "コンソール",
           "GMo-pb-qym.title": "SyncTeX",
           "bHA-VU-6ZK.title": "argument",
@@ -21014,13 +20880,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "設定の変更はすぐに保存されます。"
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -21272,7 +21131,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "大きな値にするほど文字色を強調します(PDF形式でのコピーでは無効)。"
+          "value": "ビットマップ画像をコピーするときの文字の濃さです。大きな値ほど文字が強調されます。"
         },
         {
           "key": "377.title",
@@ -21286,7 +21145,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "黒と白を別の色に置き換えてコピーします。"
+          "value": "白黒を別の色に割り当てます。"
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -21325,7 +21184,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "編集中に自動でファイルを上書きする macOS の機能です。TeXShop の再起動後に有効になります。"
+          "value": "編集中に自動でファイルを上書きする macOS の機能です。"
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -21994,7 +21853,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "新しく開くPDFの既定倍率です。開いているPDFの倍率は変わりません。"
+          "value": "新しく開くPDFの既定倍率です。"
         },
         {
           "key": "228.title",
@@ -22202,7 +22061,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "LaTeX文書では除外規則を使います。OFFにすると下の従来の設定に戻ります。入力中のスペルチェックのON/OFFは変更しません。"
+          "value": "LaTeX 文書では除外規則を使います。"
         },
         {
           "key": "876.title",
@@ -22294,7 +22153,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "検索パネル（TeXShop再起動後）"
+          "value": "検索パネル"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -22582,13 +22441,6 @@
           "kind": "cell",
           "property": "title",
           "value": "プレビュー"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "変更はすぐに保存されます。編集前に複製できます。"
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -23133,14 +22985,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "動作"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "基本"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": " 追加"
         }
       ],
       "TypesettingHeadings": [
@@ -23226,7 +23070,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "検索パネル（TeXShop再起動後）"
+          "title": "検索パネル"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -23356,7 +23200,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "설정 프로파일",
@@ -23391,14 +23234,14 @@
           "428.title": "0 (표준)",
           "qMw-aC-Ilj.title": "왼쪽",
           "cSu-im-H1E.title": "삽입커서",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "비트맵 이미지를 복사할 때 값이 클수록 텍스트가 강조됩니다.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "검정과 흰색을 다른 색으로 매핑합니다.",
           "CBT-8e-Ayl.title": "오른쪽",
           "407.title": "JPEG (Low)",
           "hmg-EV-KUC.title": "저장할 때 이전 파일을 ‘이름~’으로 남기기",
           "423.title": "JPEG (Medium)",
-          "sto-5E-9Q5.title": "편집 중에 파일을 자동으로 덮어쓰는 macOS 기능입니다. TeXShop을 다시 시작한 후에 적용됩니다.",
+          "sto-5E-9Q5.title": "편집 중에 파일을 자동으로 덮어쓰는 macOS 기능입니다.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "1글자",
           "g92-sP-oZU.title": "가운데",
@@ -23491,7 +23334,7 @@
           "vOt-2m-d2s.title": "단일 창으로",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "페이지 형식",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "새로 여는 PDF의 기본 확대율입니다.",
           "228.title": "페이지 버튼",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -23521,7 +23364,7 @@
           "Mo3-zf-BYT.title": "안 함",
           "927.title": "Escape 키",
           "236.title": "실행할 때",
-          "ts-aware-spelling.ibShadowedToolTip": "LaTeX 문서에 제외 규칙을 사용합니다. 끄면 아래의 기존 옵션을 사용합니다. 입력 중 맞춤법 검사 설정은 변경하지 않습니다.",
+          "ts-aware-spelling.ibShadowedToolTip": "LaTeX 문서에 제외 규칙을 사용합니다.",
           "876.title": "외부 에디터 사용",
           "928.title": "Tab 키",
           "583.title": "Apple 찾기 바",
@@ -23533,7 +23376,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "LaTeX 명령 제외",
           "912.title": "Radio",
-          "585.title": "찾기 바꾸기 패널 (재실행 후 적용)",
+          "585.title": "검색 패널",
           "aI9-3B-vVE.title": "자동",
           "872.title": "선택...",
           "277.title": "OtherViews",
@@ -23553,7 +23396,6 @@
           "RC5-Ef-iJJ.title": "승인"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "확장 구문 색상",
           "rpP-GF-uJp.title": "삽입",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "각주",
@@ -23563,7 +23405,6 @@
           "BCt-qg-0VZ.title": "구문",
           "Z9i-kS-FGf.title": "전경색",
           "lAb-Fn-Tpo.title": "Marker",
-          "F86-wI-vOl.label": "정규 구문 색상",
           "z0I-4l-zwC.title": "주석문",
           "tQ6-6v-qml.title": "플래시",
           "olb-4z-mYu.title": "로그",
@@ -23579,7 +23420,6 @@
           "J9P-9m-Ehr.title": "설정에서 새 테마",
           "s3b-sE-3Ix.title": "값",
           "oZx-IF-VfJ.title": "결과보기",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "콘솔",
           "GMo-pb-qym.title": "Sync",
           "bHA-VU-6ZK.title": "argument",
@@ -24341,13 +24181,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -24599,7 +24432,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "비트맵 이미지를 복사할 때 값이 클수록 텍스트가 강조됩니다."
         },
         {
           "key": "377.title",
@@ -24613,7 +24446,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "검정과 흰색을 다른 색으로 매핑합니다."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -24652,7 +24485,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "편집 중에 파일을 자동으로 덮어쓰는 macOS 기능입니다. TeXShop을 다시 시작한 후에 적용됩니다."
+          "value": "편집 중에 파일을 자동으로 덮어쓰는 macOS 기능입니다."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -25321,7 +25154,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "새로 여는 PDF의 기본 확대율입니다."
         },
         {
           "key": "228.title",
@@ -25529,7 +25362,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "LaTeX 문서에 제외 규칙을 사용합니다. 끄면 아래의 기존 옵션을 사용합니다. 입력 중 맞춤법 검사 설정은 변경하지 않습니다."
+          "value": "LaTeX 문서에 제외 규칙을 사용합니다."
         },
         {
           "key": "876.title",
@@ -25621,7 +25454,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "찾기 바꾸기 패널 (재실행 후 적용)"
+          "value": "검색 패널"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -25909,13 +25742,6 @@
           "kind": "cell",
           "property": "title",
           "value": "결과보기"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -26460,14 +26286,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "작업"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "정규 구문 색상"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "확장 구문 색상"
         }
       ],
       "TypesettingHeadings": [
@@ -26553,7 +26371,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "찾기 바꾸기 패널 (재실행 후 적용)"
+          "title": "검색 패널"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -26683,7 +26501,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Standaardwaarden",
@@ -26718,14 +26535,14 @@
           "428.title": "0 (normal)",
           "qMw-aC-Ilj.title": "Left",
           "cSu-im-H1E.title": "Insertion Cursor",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Hogere waarden benadrukken tekst bij het kopiëren van rasterafbeeldingen.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Zwart en wit aan andere kleuren koppelen.",
           "CBT-8e-Ayl.title": "Right",
           "407.title": "JPEG (Low)",
           "hmg-EV-KUC.title": "Vorig bestand bewaren als ‘naam~’",
           "423.title": "JPEG (Medium)",
-          "sto-5E-9Q5.title": "Een macOS-functie die het bestand tijdens het bewerken automatisch overschrijft. Werkt na een herstart van TeXShop.",
+          "sto-5E-9Q5.title": "Een macOS-functie die het bestand tijdens het bewerken automatisch overschrijft.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "One Character",
           "g92-sP-oZU.title": "Center",
@@ -26818,7 +26635,7 @@
           "vOt-2m-d2s.title": "Use One Window",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Standaard weergavetype",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Standaardzoom voor nieuw geopende pdf’s.",
           "228.title": "Change Page Buttons",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -26848,7 +26665,7 @@
           "Mo3-zf-BYT.title": "Never",
           "927.title": "Escape Key",
           "236.title": "Bij starten",
-          "ts-aware-spelling.ibShadowedToolTip": "Uitsluitingsregels voor LaTeX-documenten gebruiken. Schakel uit om de eerdere opties hieronder te gebruiken. De spellingcontrole tijdens het typen blijft ongewijzigd.",
+          "ts-aware-spelling.ibShadowedToolTip": "Uitsluitingsregels voor LaTeX-documenten gebruiken.",
           "876.title": "Stel in voor externe editor",
           "928.title": "Tab Key",
           "583.title": "Apple Find Bar",
@@ -26860,7 +26677,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "Do not check LaTeX commands",
           "912.title": "Radio",
-          "585.title": "Zoekpaneel (opnieuw starten vereist)",
+          "585.title": "Zoekpaneel",
           "aI9-3B-vVE.title": "Automatically",
           "872.title": "Stel in...",
           "277.title": "OtherViews",
@@ -26880,7 +26697,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "Expl3",
           "rpP-GF-uJp.title": "Insertion",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Footnote",
@@ -26890,7 +26706,6 @@
           "BCt-qg-0VZ.title": "Syntax",
           "Z9i-kS-FGf.title": "Foreground",
           "lAb-Fn-Tpo.title": "Haakjes",
-          "F86-wI-vOl.label": "Normaal",
           "z0I-4l-zwC.title": "Comment",
           "tQ6-6v-qml.title": "Flash",
           "olb-4z-mYu.title": "Log",
@@ -26906,7 +26721,6 @@
           "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Value",
           "oZx-IF-VfJ.title": "Preview",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Console",
           "GMo-pb-qym.title": "Sync",
           "bHA-VU-6ZK.title": "argument",
@@ -27668,13 +27482,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -27926,7 +27733,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Hogere waarden benadrukken tekst bij het kopiëren van rasterafbeeldingen."
         },
         {
           "key": "377.title",
@@ -27940,7 +27747,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Zwart en wit aan andere kleuren koppelen."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -27979,7 +27786,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "Een macOS-functie die het bestand tijdens het bewerken automatisch overschrijft. Werkt na een herstart van TeXShop."
+          "value": "Een macOS-functie die het bestand tijdens het bewerken automatisch overschrijft."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -28648,7 +28455,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Standaardzoom voor nieuw geopende pdf’s."
         },
         {
           "key": "228.title",
@@ -28856,7 +28663,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Uitsluitingsregels voor LaTeX-documenten gebruiken. Schakel uit om de eerdere opties hieronder te gebruiken. De spellingcontrole tijdens het typen blijft ongewijzigd."
+          "value": "Uitsluitingsregels voor LaTeX-documenten gebruiken."
         },
         {
           "key": "876.title",
@@ -28948,7 +28755,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Zoekpaneel (opnieuw starten vereist)"
+          "value": "Zoekpaneel"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -29236,13 +29043,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Preview"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -29787,14 +29587,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Actions"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "Normaal"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "Expl3"
         }
       ],
       "TypesettingHeadings": [
@@ -29880,7 +29672,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Zoekpaneel (opnieuw starten vereist)"
+          "title": "Zoekpaneel"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -30010,7 +29802,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Set Default Values",
@@ -30045,14 +29836,14 @@
           "428.title": "0 (normal)",
           "qMw-aC-Ilj.title": "Left",
           "cSu-im-H1E.title": "Insertion Cursor",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Valores mais elevados realçam o texto ao copiar imagens rasterizadas.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Associar o preto e o branco a outras cores.",
           "CBT-8e-Ayl.title": "Right",
           "407.title": "JPEG (Low)",
           "hmg-EV-KUC.title": "Manter o ficheiro anterior como “nome~”",
           "423.title": "JPEG (Medium)",
-          "sto-5E-9Q5.title": "Funcionalidade do macOS que substitui o ficheiro automaticamente durante a edição. Aplica-se após reiniciar o TeXShop.",
+          "sto-5E-9Q5.title": "Funcionalidade do macOS que substitui o ficheiro automaticamente durante a edição.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "One Character",
           "g92-sP-oZU.title": "Center",
@@ -30145,7 +29936,7 @@
           "vOt-2m-d2s.title": "Use One Window",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Default Page Style",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Ampliação predefinida dos PDF acabados de abrir.",
           "228.title": "Botões de mudança de página",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -30175,7 +29966,7 @@
           "Mo3-zf-BYT.title": "Never",
           "927.title": "Escape Key",
           "236.title": "No início",
-          "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX. Desative para usar as opções anteriores abaixo. Não altera a verificação ortográfica durante a escrita.",
+          "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX.",
           "876.title": "Usar editor externo",
           "928.title": "Tab Key",
           "583.title": "Apple Find Bar",
@@ -30187,7 +29978,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "Do not check LaTeX commands",
           "912.title": "Radio",
-          "585.title": "Find Panel (after restart)",
+          "585.title": "Painel de pesquisa",
           "aI9-3B-vVE.title": "Automatically",
           "872.title": "Escolher...",
           "277.title": "OtherViews",
@@ -30207,7 +29998,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "Cores expl3",
           "rpP-GF-uJp.title": "Insertion",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Footnote",
@@ -30217,7 +30007,6 @@
           "BCt-qg-0VZ.title": "Syntax",
           "Z9i-kS-FGf.title": "Foreground",
           "lAb-Fn-Tpo.title": "Marker",
-          "F86-wI-vOl.label": "Cores",
           "z0I-4l-zwC.title": "Comment",
           "tQ6-6v-qml.title": "Flash",
           "olb-4z-mYu.title": "Log",
@@ -30233,7 +30022,6 @@
           "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Value",
           "oZx-IF-VfJ.title": "Preview",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Console",
           "GMo-pb-qym.title": "Sync",
           "bHA-VU-6ZK.title": "argument",
@@ -30995,13 +30783,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -31253,7 +31034,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Valores mais elevados realçam o texto ao copiar imagens rasterizadas."
         },
         {
           "key": "377.title",
@@ -31267,7 +31048,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Associar o preto e o branco a outras cores."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -31306,7 +31087,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "Funcionalidade do macOS que substitui o ficheiro automaticamente durante a edição. Aplica-se após reiniciar o TeXShop."
+          "value": "Funcionalidade do macOS que substitui o ficheiro automaticamente durante a edição."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -31975,7 +31756,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Ampliação predefinida dos PDF acabados de abrir."
         },
         {
           "key": "228.title",
@@ -32183,7 +31964,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Usar regras de exclusão para documentos LaTeX. Desative para usar as opções anteriores abaixo. Não altera a verificação ortográfica durante a escrita."
+          "value": "Usar regras de exclusão para documentos LaTeX."
         },
         {
           "key": "876.title",
@@ -32275,7 +32056,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Find Panel (after restart)"
+          "value": "Painel de pesquisa"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -32563,13 +32344,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Preview"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -33114,14 +32888,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Actions"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "Cores"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "Cores expl3"
         }
       ],
       "TypesettingHeadings": [
@@ -33207,7 +32973,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Find Panel (after restart)"
+          "title": "Painel de pesquisa"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -33337,7 +33103,6 @@
           "1093.title": "Legado pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legado pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Restaurar valores padrões",
@@ -33372,14 +33137,14 @@
           "428.title": "0 (normal)",
           "qMw-aC-Ilj.title": "Esquerda",
           "cSu-im-H1E.title": "Cursor de inserção",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Valores maiores realçam o texto ao copiar imagens rasterizadas.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Associar preto e branco a outras cores.",
           "CBT-8e-Ayl.title": "Direita",
           "407.title": "JPEG (Baixa)",
           "hmg-EV-KUC.title": "Manter o arquivo anterior como “nome~” ao salvar",
           "423.title": "JPEG (Média)",
-          "sto-5E-9Q5.title": "Recurso do macOS que sobrescreve o arquivo automaticamente durante a edição. Vale após reiniciar o TeXShop.",
+          "sto-5E-9Q5.title": "Recurso do macOS que sobrescreve o arquivo automaticamente durante a edição.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": " Um caractere",
           "g92-sP-oZU.title": "Centro",
@@ -33472,7 +33237,7 @@
           "vOt-2m-d2s.title": "Usar uma única janela",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Estilo de visualização padrão",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Zoom padrão para PDFs recém-abertos.",
           "228.title": "Botões de mudança de página",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -33502,7 +33267,7 @@
           "Mo3-zf-BYT.title": "Nunca",
           "927.title": "Tecla Escape",
           "236.title": "No início",
-          "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX. Desative para usar as opções anteriores abaixo. Não altera a verificação ortográfica durante a digitação.",
+          "ts-aware-spelling.ibShadowedToolTip": "Usar regras de exclusão para documentos LaTeX.",
           "876.title": "Usar editor externo",
           "928.title": "Tecla Tab",
           "583.title": "Barra de localizar da Apple",
@@ -33514,7 +33279,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "Não verificar comandos LaTeX ",
           "912.title": "Radio",
-          "585.title": "Painel de localizar (é preciso reiniciar)",
+          "585.title": "Painel de busca",
           "aI9-3B-vVE.title": "Automaticamente",
           "872.title": "Escolher...",
           "277.title": "OtherViews",
@@ -33534,7 +33299,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "Outras cores",
           "rpP-GF-uJp.title": "Inserção",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Nota de rodapé",
@@ -33544,7 +33308,6 @@
           "BCt-qg-0VZ.title": "Sintaxe",
           "Z9i-kS-FGf.title": "Primeiro plano",
           "lAb-Fn-Tpo.title": "Pontuação",
-          "F86-wI-vOl.label": "Cores",
           "z0I-4l-zwC.title": "Comentário",
           "tQ6-6v-qml.title": "Piscar",
           "olb-4z-mYu.title": "Log",
@@ -33560,7 +33323,6 @@
           "J9P-9m-Ehr.title": "Novo tema a partir dos ajustes",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "Pré visualização",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Console",
           "GMo-pb-qym.title": "Sinc",
           "bHA-VU-6ZK.title": "argument",
@@ -34322,13 +34084,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -34580,7 +34335,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Valores maiores realçam o texto ao copiar imagens rasterizadas."
         },
         {
           "key": "377.title",
@@ -34594,7 +34349,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Associar preto e branco a outras cores."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -34633,7 +34388,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "Recurso do macOS que sobrescreve o arquivo automaticamente durante a edição. Vale após reiniciar o TeXShop."
+          "value": "Recurso do macOS que sobrescreve o arquivo automaticamente durante a edição."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -35302,7 +35057,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Zoom padrão para PDFs recém-abertos."
         },
         {
           "key": "228.title",
@@ -35510,7 +35265,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Usar regras de exclusão para documentos LaTeX. Desative para usar as opções anteriores abaixo. Não altera a verificação ortográfica durante a digitação."
+          "value": "Usar regras de exclusão para documentos LaTeX."
         },
         {
           "key": "876.title",
@@ -35602,7 +35357,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Painel de localizar (é preciso reiniciar)"
+          "value": "Painel de busca"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -35890,13 +35645,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Pré visualização"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -36441,14 +36189,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Ações"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "Cores"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "Outras cores"
         }
       ],
       "TypesettingHeadings": [
@@ -36534,7 +36274,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Painel de localizar (é preciso reiniciar)"
+          "title": "Painel de busca"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -36664,7 +36404,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "Set Default Values",
@@ -36699,14 +36438,14 @@
           "428.title": "0 (normal)",
           "qMw-aC-Ilj.title": "Left",
           "cSu-im-H1E.title": "Insertion Cursor",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "Valorile mai mari accentuează textul la copierea imaginilor raster.",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "Asociază alb și negru cu alte culori.",
           "CBT-8e-Ayl.title": "Right",
           "407.title": "JPEG (Low)",
           "hmg-EV-KUC.title": "Păstrează fișierul anterior ca „nume~” la salvare",
           "423.title": "JPEG (Medium)",
-          "sto-5E-9Q5.title": "O funcție macOS care suprascrie automat fișierul în timpul editării. Intră în vigoare după repornirea TeXShop.",
+          "sto-5E-9Q5.title": "O funcție macOS care suprascrie automat fișierul în timpul editării.",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "One Character",
           "g92-sP-oZU.title": "Center",
@@ -36799,7 +36538,7 @@
           "vOt-2m-d2s.title": "Use One Window",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Stilul Standard al Paginii",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "Mărirea implicită pentru PDF-urile nou deschise.",
           "228.title": "Modifică Butoanele Paginii",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -36829,7 +36568,7 @@
           "Mo3-zf-BYT.title": "Never",
           "927.title": "Escape Key",
           "236.title": "La Deschidere",
-          "ts-aware-spelling.ibShadowedToolTip": "Folosește reguli de excludere pentru documentele LaTeX. Dezactivați pentru a folosi opțiunile anterioare de mai jos. Nu schimbă verificarea ortografiei în timpul tastării.",
+          "ts-aware-spelling.ibShadowedToolTip": "Folosește reguli de excludere pentru documentele LaTeX.",
           "876.title": "Configurează pentru Editor Extern",
           "928.title": "Tab Key",
           "583.title": "Apple Find Bar",
@@ -36841,7 +36580,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "Do not check LaTeX commands",
           "912.title": "Radio",
-          "585.title": "Find Panel (after restart)",
+          "585.title": "Panou de căutare",
           "aI9-3B-vVE.title": "Automatically",
           "872.title": "Alege...",
           "277.title": "OtherViews",
@@ -36861,7 +36600,6 @@
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "expl3",
           "rpP-GF-uJp.title": "Insertion",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Footnote",
@@ -36871,7 +36609,6 @@
           "BCt-qg-0VZ.title": "Syntax",
           "Z9i-kS-FGf.title": "Foreground",
           "lAb-Fn-Tpo.title": "Marker",
-          "F86-wI-vOl.label": "Regulat",
           "z0I-4l-zwC.title": "Comment",
           "tQ6-6v-qml.title": "Flash",
           "olb-4z-mYu.title": "Log",
@@ -36887,7 +36624,6 @@
           "J9P-9m-Ehr.title": "New Theme from Settings",
           "s3b-sE-3Ix.title": "Value",
           "oZx-IF-VfJ.title": "Preview",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "Console",
           "GMo-pb-qym.title": "Sync",
           "bHA-VU-6ZK.title": "argument",
@@ -37649,13 +37385,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -37907,7 +37636,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "Valorile mai mari accentuează textul la copierea imaginilor raster."
         },
         {
           "key": "377.title",
@@ -37921,7 +37650,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "Asociază alb și negru cu alte culori."
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -37960,7 +37689,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "O funcție macOS care suprascrie automat fișierul în timpul editării. Intră în vigoare după repornirea TeXShop."
+          "value": "O funcție macOS care suprascrie automat fișierul în timpul editării."
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -38629,7 +38358,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "Mărirea implicită pentru PDF-urile nou deschise."
         },
         {
           "key": "228.title",
@@ -38837,7 +38566,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "Folosește reguli de excludere pentru documentele LaTeX. Dezactivați pentru a folosi opțiunile anterioare de mai jos. Nu schimbă verificarea ortografiei în timpul tastării."
+          "value": "Folosește reguli de excludere pentru documentele LaTeX."
         },
         {
           "key": "876.title",
@@ -38929,7 +38658,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "Find Panel (after restart)"
+          "value": "Panou de căutare"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -39217,13 +38946,6 @@
           "kind": "cell",
           "property": "title",
           "value": "Preview"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -39768,14 +39490,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "Actions"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": "Regulat"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "expl3"
         }
       ],
       "TypesettingHeadings": [
@@ -39861,7 +39575,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "Find Panel (after restart)"
+          "title": "Panou de căutare"
         },
         {
           "id": "heading.settings.aig-4m-gAG",
@@ -39991,7 +39705,6 @@
           "1093.title": "Legacy pTeX (Shift JIS) ",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "LIV-SV-CEL.title": "Changes are saved automatically.",
           "1092.title": "Legacy pTeX (EUC)",
           "1097.title": "upTeX (shell script)",
           "1101.title": "恢复默认设置",
@@ -40026,14 +39739,14 @@
           "428.title": "0 (正常)",
           "qMw-aC-Ilj.title": "靠左",
           "cSu-im-H1E.title": "插入光标",
-          "434.ibShadowedToolTip": "Higher value emphasizes forecolor. No effect for PDF or EPS formats.",
+          "434.ibShadowedToolTip": "复制位图图像时，数值越大，文字越突出。",
           "377.title": "OtherViews",
-          "437.ibShadowedToolTip": "Check if you want to map black and white to different colors",
+          "437.ibShadowedToolTip": "将黑白映射为其他颜色。",
           "CBT-8e-Ayl.title": "靠右",
           "407.title": "JPEG (低)",
           "hmg-EV-KUC.title": "存储时将之前的文件保留为“名称~”",
           "423.title": "JPEG (中)",
-          "sto-5E-9Q5.title": "编辑时自动覆盖文件的 macOS 功能。重新启动 TeXShop 后生效。",
+          "sto-5E-9Q5.title": "编辑时自动覆盖文件的 macOS 功能。",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "单字符",
           "g92-sP-oZU.title": "居中",
@@ -40126,7 +39839,7 @@
           "vOt-2m-d2s.title": "单一窗口",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "默认页面格式",
-          "113.ibShadowedToolTip": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.",
+          "113.ibShadowedToolTip": "新打开的 PDF 的默认缩放比例。",
           "228.title": "换页按钮",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
@@ -40156,7 +39869,7 @@
           "Mo3-zf-BYT.title": "永不",
           "927.title": "Escape 键",
           "236.title": "启动时",
-          "ts-aware-spelling.ibShadowedToolTip": "对 LaTeX 文档使用排除规则。关闭后使用下方的原有选项。不改变键入时检查拼写的设置。",
+          "ts-aware-spelling.ibShadowedToolTip": "对 LaTeX 文档使用排除规则。",
           "876.title": "配置为外部编辑器",
           "928.title": "Tab 键",
           "583.title": "Apple 查找栏",
@@ -40168,7 +39881,7 @@
           "950.title": "{ }",
           "teg-0p-Q8J.title": "不检查 LaTeX 命令",
           "912.title": "Radio",
-          "585.title": "查找面板 (重新打开程序后生效)",
+          "585.title": "查找面板",
           "aI9-3B-vVE.title": "自动",
           "872.title": "设置...",
           "277.title": "OtherViews",
@@ -40188,7 +39901,6 @@
           "RC5-Ef-iJJ.title": "好"
         },
         "SettingsThemes": {
-          "L8F-o2-roK.label": "更多颜色",
           "rpP-GF-uJp.title": "插入点",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "脚注",
@@ -40198,7 +39910,6 @@
           "BCt-qg-0VZ.title": "语法",
           "Z9i-kS-FGf.title": "前景",
           "lAb-Fn-Tpo.title": "标记",
-          "F86-wI-vOl.label": " 常规颜色",
           "z0I-4l-zwC.title": "注释",
           "tQ6-6v-qml.title": "闪烁",
           "olb-4z-mYu.title": "日志",
@@ -40214,7 +39925,6 @@
           "J9P-9m-Ehr.title": "从设置新建主题",
           "s3b-sE-3Ix.title": "值",
           "oZx-IF-VfJ.title": "预览",
-          "LIV-TH-CEL.title": "Changes save immediately. Duplicate before editing.",
           "kuS-x2-ZGi.title": "控制台",
           "GMo-pb-qym.title": "同步",
           "bHA-VU-6ZK.title": "argument",
@@ -40976,13 +40686,6 @@
           "index": 6
         },
         {
-          "key": "LIV-SV-CEL.title",
-          "view": "settings.LIV-SV-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes are saved automatically."
-        },
-        {
           "key": "1092.title",
           "view": "settings.1089",
           "kind": "menuItem",
@@ -41234,7 +40937,7 @@
           "view": "settings.434",
           "kind": "view",
           "property": "toolTip",
-          "value": "Higher value emphasizes forecolor. No effect for PDF or EPS formats."
+          "value": "复制位图图像时，数值越大，文字越突出。"
         },
         {
           "key": "377.title",
@@ -41248,7 +40951,7 @@
           "view": "settings.437",
           "kind": "view",
           "property": "toolTip",
-          "value": "Check if you want to map black and white to different colors"
+          "value": "将黑白映射为其他颜色。"
         },
         {
           "key": "CBT-8e-Ayl.title",
@@ -41287,7 +40990,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "编辑时自动覆盖文件的 macOS 功能。重新启动 TeXShop 后生效。"
+          "value": "编辑时自动覆盖文件的 macOS 功能。"
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -41956,7 +41659,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom."
+          "value": "新打开的 PDF 的默认缩放比例。"
         },
         {
           "key": "228.title",
@@ -42164,7 +41867,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "对 LaTeX 文档使用排除规则。关闭后使用下方的原有选项。不改变键入时检查拼写的设置。"
+          "value": "对 LaTeX 文档使用排除规则。"
         },
         {
           "key": "876.title",
@@ -42256,7 +41959,7 @@
           "view": "settings.585",
           "kind": "view",
           "property": "title",
-          "value": "查找面板 (重新打开程序后生效)"
+          "value": "查找面板"
         },
         {
           "key": "aI9-3B-vVE.title",
@@ -42544,13 +42247,6 @@
           "kind": "cell",
           "property": "title",
           "value": "预览"
-        },
-        {
-          "key": "LIV-TH-CEL.title",
-          "view": "settings.LIV-TH-NOT",
-          "kind": "cell",
-          "property": "title",
-          "value": "Changes save immediately. Duplicate before editing."
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -43095,14 +42791,6 @@
         {
           "id": "heading.settings.ycd-ZH-bzw",
           "title": "操作"
-        },
-        {
-          "id": "heading.settings.3cH-6c-fhq",
-          "title": " 常规颜色"
-        },
-        {
-          "id": "heading.settings.PTb-79-UFr",
-          "title": "更多颜色"
         }
       ],
       "TypesettingHeadings": [
@@ -43188,7 +42876,7 @@
         },
         {
           "id": "heading.settings.585",
-          "title": "查找面板 (重新打开程序后生效)"
+          "title": "查找面板"
         },
         {
           "id": "heading.settings.aig-4m-gAG",

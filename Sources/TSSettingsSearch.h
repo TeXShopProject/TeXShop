@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger, TSSettingsSearchBonus) {
 @interface TSSettingsSearchResult : NSObject
 @property (copy, readonly) TSSettingsCategoryID category;
 @property (copy, readonly) NSArray<TSSettingsSearchEntry *> *entries;
+@property (copy, readonly) NSString *title;
+@property (copy, readonly) NSString *targetIdentifier;
 @property (readonly) NSInteger score;
 - (instancetype)initWithCategory:(TSSettingsCategoryID)category entries:(NSArray<TSSettingsSearchEntry *> *)entries score:(NSInteger)score NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;

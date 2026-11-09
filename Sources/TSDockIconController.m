@@ -29,8 +29,11 @@
     [self updatePreview];
 }
 - (void)updatePreview {
-    for (NSButton *button in self.buttons)
+    for (NSButton *button in self.buttons) {
         button.state = [TSDockIconNames()[button.tag] isEqualToString:self.selection] ? NSControlStateValueOn : NSControlStateValueOff;
+        button.layer.borderWidth = button.state == NSControlStateValueOn ? 3 : 0;
+        button.layer.borderColor = NSColor.controlAccentColor.CGColor;
+    }
     TSApplyDockIcon(NSApp.dockTile, self.bundle, self.selection);
 }
 - (void)chooseIcon:(NSButton *)sender {
@@ -43,38 +46,31 @@
     if (pane == nil || self.buttons.count != 0) return;
     NSStackView *body = [pane.subviews.firstObject isKindOfClass:NSStackView.class] ? (NSStackView *)pane.subviews.firstObject : nil;
     if (body == nil) return;
-    NSBox *group = [NSBox new];
-    [TSSettingsGroupStyle applyToBox:group];
-    group.identifier = @"DockIconChoices";
-    group.accessibilityLabel = [self text:@"Dock Icon While Running"];
+    TSSettingsGroupView *group = nil;
+    for (NSView *candidate in body.arrangedSubviews) if ([candidate.identifier isEqual:@"group.appearance.10"]) group=(TSSettingsGroupView *)candidate;
+    if (group == nil) return;
     group.toolTip = [self text:@"Applies while TeXShop is running. The standard icon returns after quitting."];
-    group.translatesAutoresizingMaskIntoConstraints = NO;
     NSMutableArray<NSView *> *options = [NSMutableArray array];
     NSArray *titles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];
     NSArray *details = @[@"Before 1.0", @"1.0–3.13", @"3.14–3.38", @"3.39–5.58", @"5.60–"];
     for (NSInteger index = 0; index < 5; index++) {
         NSString *label = [self text:titles[index]];
         NSString *tip = [NSString stringWithFormat:@"%@ — %@\n%@", label, [self text:details[index]], group.toolTip];
-        NSButton *button = [NSButton radioButtonWithTitle:@"" target:self action:@selector(chooseIcon:)];
-        button.tag = index;
-        button.accessibilityLabel = label;
-        button.toolTip = tip;
+        NSImage *artwork=[TSDockIconImage(self.bundle,TSDockIconNames()[index]) copy];artwork.size=NSMakeSize(52,52);
+        NSButton *button=[NSButton buttonWithImage:artwork target:self action:@selector(chooseIcon:)];
+        button.tag=index;button.bordered=NO;button.imageScaling=NSImageScaleNone;
+        button.accessibilityLabel=label;button.accessibilityRole=NSAccessibilityRadioButtonRole;button.toolTip=tip;
+        button.translatesAutoresizingMaskIntoConstraints=NO;button.wantsLayer=YES;button.layer.cornerRadius=12;
+        [button.widthAnchor constraintEqualToConstant:64].active=YES;[button.heightAnchor constraintEqualToConstant:64].active=YES;
         [self.buttons addObject:button];
-        NSButton *image = [NSButton buttonWithImage:TSDockIconImage(self.bundle, TSDockIconNames()[index]) target:self action:@selector(chooseIcon:)];
-        image.tag = index;
-        image.bordered = NO;
-        image.imageScaling = NSImageScaleProportionallyUpOrDown;
-        image.accessibilityLabel = label;
-        image.toolTip = tip;
-        image.translatesAutoresizingMaskIntoConstraints = NO;
-        [image.widthAnchor constraintEqualToConstant:40].active = YES;
-        [image.heightAnchor constraintEqualToConstant:40].active = YES;
         NSTextField *caption = [NSTextField wrappingLabelWithString:label];
         caption.alignment = NSTextAlignmentCenter;
-        NSStackView *option = [NSStackView stackViewWithViews:@[image,button,caption]];
+        caption.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+        NSTextField *period=[NSTextField labelWithString:[self text:details[index]]];period.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];period.textColor=NSColor.secondaryLabelColor;
+        NSStackView *option = [NSStackView stackViewWithViews:@[button,caption,period]];
         option.orientation = NSUserInterfaceLayoutOrientationVertical;
         option.alignment = NSLayoutAttributeCenterX;
-        option.spacing = 6;
+        option.spacing = 4;
         // Give wrapping captions a definite width in each equally sized column.
         caption.translatesAutoresizingMaskIntoConstraints = NO;
         [caption.widthAnchor constraintEqualToAnchor:option.widthAnchor].active = YES;
@@ -86,25 +82,18 @@
     NSStackView *choices = [NSStackView stackViewWithViews:options];
     choices.distribution = NSStackViewDistributionFillEqually;
     choices.alignment = NSLayoutAttributeTop;
-    choices.spacing = 12;
-    NSTextField *heading = [NSTextField wrappingLabelWithString:[self text:@"Dock Icon While Running"]];
-    heading.font = [NSFont boldSystemFontOfSize:NSFont.systemFontSize];
+    choices.spacing = 6;
     NSTextField *explanation = [NSTextField wrappingLabelWithString:group.toolTip ?: @""];
-    NSStackView *stack = [NSStackView stackViewWithViews:@[heading,choices,explanation]];
-    stack.orientation = NSUserInterfaceLayoutOrientationVertical;
-    stack.alignment = NSLayoutAttributeLeading;
-    stack.spacing = 12;
-    stack.translatesAutoresizingMaskIntoConstraints = NO;
-    [group addSubview:stack];
-    [NSLayoutConstraint activateConstraints:@[
-        [stack.leadingAnchor constraintEqualToAnchor:group.leadingAnchor constant:24],
-        [stack.trailingAnchor constraintEqualToAnchor:group.trailingAnchor constant:-24],
-        [stack.topAnchor constraintEqualToAnchor:group.topAnchor constant:24],
-        [stack.bottomAnchor constraintEqualToAnchor:group.bottomAnchor constant:-24],
-        [choices.widthAnchor constraintEqualToAnchor:stack.widthAnchor],
-        [heading.widthAnchor constraintEqualToAnchor:stack.widthAnchor],
-        [explanation.widthAnchor constraintEqualToAnchor:stack.widthAnchor]]];
-    [body addArrangedSubview:group];
-    [group.widthAnchor constraintEqualToAnchor:body.widthAnchor].active = YES;
+    explanation.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];explanation.textColor=NSColor.secondaryLabelColor;
+    NSStackView *stack=[TSPrefPaneLayout stackWithViews:@[explanation,choices] orientation:NSUserInterfaceLayoutOrientationVertical];stack.spacing=12;
+    [choices.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active=YES;
+    [explanation.widthAnchor constraintEqualToAnchor:stack.widthAnchor].active=YES;
+    NSView *row=[TSPrefPaneLayout catalogContent:stack trailing:NO indent:0];row.identifier=@"DockIconChoices";
+    [stack.trailingAnchor constraintEqualToAnchor:row.trailingAnchor constant:-12].active=YES;
+    NSStackView *rows=(NSStackView *)group.contentView.subviews.firstObject;
+    [rows addArrangedSubview:row];[row.widthAnchor constraintEqualToAnchor:rows.widthAnchor].active=YES;
+    // The backdrop was created while the dock group had only a heading.
+    for(NSView *background in group.subviews)if([background.identifier isEqual:@"card.background"])
+        for(NSLayoutConstraint *constraint in group.constraints.copy)if(constraint.firstItem==background && constraint.firstAttribute==NSLayoutAttributeTop){constraint.active=NO;[background.topAnchor constraintEqualToAnchor:row.topAnchor].active=YES;}
 }
 @end

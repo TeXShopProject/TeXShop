@@ -4,18 +4,21 @@
 @interface TextBundle:NSBundle @end
 @implementation TextBundle
 - (NSString *)localizedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)table {
- if([table isEqual:@"SettingsCategories"]){if([key isEqual:@"general"] || [key isEqual:@"documents"])return @"shared";if([key isEqual:@"editor"])return @"straße";}
- return value ?: key;
+ if([table isEqual:@"SettingsCategories"]){
+  NSDictionary *labels=@{@"general":@"General",@"documents":@"Documents",@"editor":@"Editor",@"keyboard":@"Keyboard",@"catalog.general.0.0.title":@"shared",@"catalog.general.0.0.note":@"extra",@"catalog.general.0.1.title":@"unrelated",@"catalog.documents.0.0.title":@"shared",@"catalog.editor.0.0.title":@"straße"};
+  return labels[key] ?: @"";
+ }
+ return @"";
 }
 @end
 int main(void){@autoreleasepool{
  TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:[TextBundle new] categoryOrder:@[@"general",@"documents",@"editor",@"keyboard"] commandNames:@[@"shared",@"ONLYCOMMAND",@"かたかな"]];
  NSArray *hits=[index resultsForQuery:@"shared"];
- Check([[hits objectAtIndex:0] score]==120);
- Check([[[index resultsForQuery:@"shar"] objectAtIndex:0] score]==110);
- Check([[[index resultsForQuery:@"hare"] objectAtIndex:0] score]==100);
+ Check([[hits objectAtIndex:0] score]==70);
+ Check([[[index resultsForQuery:@"shar"] objectAtIndex:0] score]==60);
+ Check([[[index resultsForQuery:@"hare"] objectAtIndex:0] score]==50);
  Check(hits.count==3);Check([[hits[0] category] isEqual:@"general"]);Check([[hits[1] category] isEqual:@"documents"]);Check([[hits[2] category] isEqual:@"keyboard"]);
- Check([index resultsForQuery:@"shared ONLYCOMMAND"].count==1);
+ Check([index resultsForQuery:@"Keyboard ONLYCOMMAND"].count==1);
  Check([index resultsForQuery:@"straße ONLYCOMMAND"].count==0);
  Check([index resultsForQuery:@"ＳＴＲＡＳＳＥ"].count==1);
  Check([index resultsForQuery:@"カタカナ"].count==1);
@@ -29,5 +32,11 @@ int main(void){@autoreleasepool{
  Check(!TSSettingsTextMatches(@"Café — Print PDF",TSSettingsQueryTokens(@"PDF missing")));
  Check(TSSettingsQueryTokens(@" ").count==0);
  Check([index resultsForQuery:@"ONLYCOMMAND missing"].count==0);
- puts("PASS: normalization, category AND, weighting, ties and function matching");
+ Check([index resultsForQuery:@"shared unrelated"].count==0);
+ Check([index resultsForQuery:@"General shared"].count==1);
+ Check([index resultsForQuery:@"General"].count==2);
+ for(TSSettingsSearchResult *result in [index resultsForQuery:@"General"])Check([result.targetIdentifier hasPrefix:@"row.catalog.general."]);
+ Check([[[index resultsForQuery:@"shared"] firstObject].targetIdentifier isEqual:@"row.catalog.general.0.0"]);
+ Check([[[index resultsForQuery:@"shared"] firstObject].title isEqual:@"shared"]);
+ puts("PASS: normalization, item AND, category qualification, weighting, ties and command matching");
 }return 0;}

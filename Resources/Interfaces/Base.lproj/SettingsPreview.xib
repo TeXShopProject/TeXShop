@@ -101,7 +101,7 @@
                   <action selector="magChanged:" target="-2" id="117" />
                 </connections>
               </button>
-              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="113" toolTip="Default zoom for newly opened PDFs. Existing PDFs keep their current zoom." identifier="settings.113">
+              <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="113" toolTip="Default zoom for newly opened PDFs." identifier="settings.113">
                 <rect key="frame" x="66" y="14" width="40" height="22" />
                 <autoresizingMask key="autoresizingMask" />
                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="100" drawsBackground="YES" id="865">

@@ -22,25 +22,28 @@ static void CheckButtons(NSView *view,NSView *root){
   else CheckButtons(child,root);
  }
 }
-// Independent input fixture: two groups with the production row identifiers.
+// Independent three-section fixture with the approved catalog structure.
 static NSView *InputHeader(void) {
  NSView *header=[NSView new];NSMutableArray *groups=[NSMutableArray array];
- for(NSString *key in @[@"bindings",@"completion"]){
-  NSBox *box=[NSBox new];[TSSettingsGroupStyle applyToBox:box];box.identifier=[@"group." stringByAppendingString:key];
-  box.accessibilityLabel=NSLocalizedString([key isEqual:@"bindings"]?@"Key Bindings":@"Command Completion",@"");
+ for(NSString *key in @[@"bindings",@"completion",@"shortcuts"]){
+  TSSettingsGroupView *box=[TSSettingsGroupView new];box.identifier=[@"group." stringByAppendingString:key];
+  box.accessibilityLabel=NSLocalizedString([key isEqual:@"bindings"]?@"Key Bindings":[key isEqual:@"completion"]?@"Command Completion":@"Menu Shortcuts",@"");
   NSMutableArray *rows=[NSMutableArray array];
-  NSTextField *heading=[NSTextField labelWithString:box.accessibilityLabel];heading.identifier=[@"heading." stringByAppendingString:key];[rows addObject:heading];
-  for(NSUInteger i=0;i<([key isEqual:@"completion"]?3:1);i++){
+  NSTextField *heading=[NSTextField labelWithString:box.accessibilityLabel];heading.identifier=[@"heading.group." stringByAppendingString:key];[rows addObject:heading];
+  if(![key isEqual:@"shortcuts"])for(NSUInteger i=0;i<([key isEqual:@"completion"]?3:1);i++){
    NSButton *button=[NSButton buttonWithTitle:i==0?NSLocalizedString(@"Completion trigger",@""):@"Input fixture" target:nil action:NULL];
    NSView *row=[TSPrefPaneLayout viewForRow:[[TSSettingsControlRow alloc]initWithControls:@[button] indentation:0]];
-   if([key isEqual:@"completion"] && i==0)row.identifier=@"row.settings.completion-trigger-label";
+   if([key isEqual:@"completion"] && i==0)row.identifier=@"row.catalog.keyboard.1.0";
    [rows addObject:row];
   }
   [TSPrefPaneLayout attachRows:rows toView:box.contentView];
-  [NSLayoutConstraint activateConstraints:@[[box.contentView.leadingAnchor constraintEqualToAnchor:box.leadingAnchor constant:8],[box.contentView.trailingAnchor constraintEqualToAnchor:box.trailingAnchor constant:-8],[box.contentView.topAnchor constraintEqualToAnchor:box.topAnchor constant:8],[box.contentView.bottomAnchor constraintEqualToAnchor:box.bottomAnchor constant:-8]]];
+  [NSLayoutConstraint activateConstraints:@[[box.contentView.leadingAnchor constraintEqualToAnchor:box.leadingAnchor],[box.contentView.trailingAnchor constraintEqualToAnchor:box.trailingAnchor],[box.contentView.topAnchor constraintEqualToAnchor:box.topAnchor],[box.contentView.bottomAnchor constraintEqualToAnchor:box.bottomAnchor]]];
   [groups addObject:box];
  }
- [TSPrefPaneLayout attachRows:groups toView:header];return header;
+ [TSPrefPaneLayout attachRows:groups toView:header];[TSPrefPaneLayout decorateGroupsInView:header];return header;
+}
+static BOOL AllInputGroupsVisible(TSShortcutPaneController *pane) {
+ for(NSString *key in @[@"group.bindings",@"group.completion",@"group.shortcuts"]){NSView *group=[pane viewWithIdentifier:key inView:pane.view];if(!group || group.hidden)return NO;}return YES;
 }
 static NSString *fixtureCharacters;
 static BOOL fixtureKeyWindow=YES;
@@ -129,6 +132,8 @@ int main(int argc,char **argv){@autoreleasepool{
  TSReplaceTestMethod(class_getInstanceMethod(NSWindow.class,@selector(keyDown:)),(IMP)RejectForwardedKey);
  class_addMethod(TSSettingsWindow.class,@selector(isKeyWindow),(IMP)IsKey,"B@:");
  CheckEventPriority();
+ { NSMenu *hiddenMenu=[NSMenu new];NSMenuItem *hidden=Item(@"Hidden",@"h",C);[hiddenMenu addItem:hidden];TSShortcutStore *hiddenStore=[[TSShortcutStore alloc]initWithMenu:hiddenMenu defaults:TSIsolatedAppKitDefaults];hidden.hidden=YES;hidden.allowsKeyEquivalentWhenHidden=NO;REQUIRE([TSShortcutSearch matchesKey:@"h" modifiers:C store:hiddenStore macros:@[]].count==0);hidden.allowsKeyEquivalentWhenHidden=YES;REQUIRE([TSShortcutSearch matchesKey:@"h" modifiers:C store:hiddenStore macros:@[]].count==1); }
+
  NSMenu *main=[NSMenu new],*menu=[NSMenu new];NSMenuItem *root=[[NSMenuItem alloc]initWithTitle:@"Actions" action:NULL keyEquivalent:@""];root.submenu=menu;[main addItem:root];NSApp.mainMenu=main;
  NSMenuItem *first=Item(@"First",@"f",C),*second=Item(@"Second",@"f",C),*equals=Item(@"Equals",@"=",C);
  for(NSMenuItem *item in @[first,second,equals])[menu addItem:item];
@@ -207,9 +212,10 @@ int main(int argc,char **argv){@autoreleasepool{
  shell.commandNamesProvider=^NSArray<NSString *> *{NSMutableArray *names=[NSMutableArray array];for(TSShortcutCommand *command in coordinator.store.commands)[names addObject:command.path];return names;};
  [shell selectCategoryIdentifier:@"general"];
  REQUIRE([shell setSettingsSearchQuery:@"First"]);
- REQUIRE([shell selectCategoryIdentifier:@"keyboard"]);
- REQUIRE([pane.search.stringValue isEqual:@"First"] && pane.visibleCommands.count==1);
- REQUIRE([shell setSettingsSearchQuery:@""] && [shell.history.currentIdentifier isEqual:@"general"]);
+ NSTableView *results=[shell valueForKey:@"categoryTable"];[results selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+ REQUIRE([shell.history.currentIdentifier isEqual:@"keyboard"]);
+ REQUIRE([pane.search.stringValue hasSuffix:@"First"] && pane.visibleCommands.count==1);
+ REQUIRE([shell setSettingsSearchQuery:@""] && [shell.history.currentIdentifier isEqual:@"keyboard"]);
  REQUIRE([pane.search.stringValue isEqual:@"pre-existing query"]);
  [shell selectCategoryIdentifier:@"keyboard"];
  pane.search.stringValue=@"First";[pane reloadCommands];REQUIRE(pane.visibleCommands.count==1);
@@ -224,10 +230,10 @@ int main(int argc,char **argv){@autoreleasepool{
  REQUIRE(pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
  NSTextField *inactive=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:3];
  REQUIRE([inactive.stringValue containsString:@"conflicts with"] && [inactive.stringValue containsString:first.title]);
- REQUIRE([pane.keySearchView.accessibilityValue containsString:@"priority"]);
+ REQUIRE([pane.keySearchView.accessibilityValue containsString:@"depends"]);
  REQUIRE([pane.keySearchView.accessibilityValue containsString:@"Matches: 3"]);
  NSScrollView *outer=pane.view.enclosingScrollView;
- REQUIRE(outer!=nil && !outer.hasVerticalScroller && pane.table.enclosingScrollView.hasVerticalScroller);
+ REQUIRE(outer!=nil && outer.hasVerticalScroller && pane.table.enclosingScrollView.hasVerticalScroller);
 
  [pane.table selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];[pane updateSelectionButtons];
  REQUIRE(!pane.selectionButtons[0].enabled && pane.macroButton.enabled);
@@ -238,6 +244,7 @@ int main(int argc,char **argv){@autoreleasepool{
  forwardedWindowEvents=0;[shell.window sendEvent:Event(@"x",0,7)];
  method_setImplementation(class_getInstanceMethod(NSWindow.class,@selector(sendEvent:)),appKitSendEvent);
  REQUIRE(pane.searchMatches.count==0 && [pane.searchMessage containsString:@"cannot be used"] && forwardedKeys==0 && forwardedWindowEvents==0);
+ fixtureCharacters=@"\r";forwardedKeys=0;REQUIRE([shell.window performKeyEquivalent:Event(@"\r",0,36)] && pane.searchingByKey && forwardedKeys==0 && [pane.searchMessage containsString:@"cannot be used"]);
  // Existing non-assignable shortcuts remain searchable, but new assignments stay restricted.
  NSMenuItem *rotate=Item(@"Rotate",@"c",O),*switchViews=Item(@"Switch views",@"2",O);
  [menu addItem:rotate];[menu addItem:switchViews];
@@ -327,29 +334,32 @@ int main(int argc,char **argv){@autoreleasepool{
   localizedStrings=translations[language];
   TSShortcutPaneController *translated=[[TSShortcutPaneController alloc]initWithShortcuts:coordinator];
   NSView *inputHeader=InputHeader();translated.settingsHeader=inputHeader;
-  NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,460) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];host.contentView=translated.view;
+  NSWindow *host=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,700,460) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];NSScrollView *outer=[[NSScrollView alloc]initWithFrame:host.contentView.bounds];outer.hasVerticalScroller=YES;outer.automaticallyAdjustsContentInsets=NO;outer.autoresizingMask=NSViewWidthSizable|NSViewHeightSizable;host.contentView=outer;translated.view.translatesAutoresizingMaskIntoConstraints=NO;outer.documentView=translated.view;[translated.view.widthAnchor constraintEqualToAnchor:outer.contentView.widthAnchor].active=YES;
   [translated viewDidLayout];[host.contentView layoutSubtreeIfNeeded];CheckButtons(translated.view,translated.view);
-  REQUIRE(translated.inputGroups.count==2 && translated.inputGroups[0].hidden && translated.inputGroups[1].hidden);
+  REQUIRE(AllInputGroupsVisible(translated));
   REQUIRE(NSHeight(translated.table.enclosingScrollView.frame)>40);
   REQUIRE(translated.table.enclosingScrollView.documentView==translated.table && translated.table.headerView.superview!=nil);
   REQUIRE(![inputHeader isDescendantOf:translated.table.enclosingScrollView]);
-  NSRect h=[inputHeader convertRect:inputHeader.bounds toView:translated.view];
-  REQUIRE(NSMinY(h)>NSMaxY(translated.search.frame));
+  REQUIRE([translated.table isDescendantOf:[translated viewWithIdentifier:@"group.shortcuts" inView:translated.view]]);
+  REQUIRE(translated.table.rowHeight==22 && translated.table.style==NSTableViewStyleInset && !translated.table.usesAlternatingRowBackgroundColors);
   [translated.table scrollRowToVisible:translated.table.numberOfRows-1];
   REQUIRE(NSIntersectsRect(translated.table.visibleRect,[translated.table rectOfRow:translated.table.numberOfRows-1]));
   TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:NSBundle.mainBundle categoryOrder:@[@"keyboard"] commandNames:@[]];
   searchExcludedView=translated.settingsHeader;
   SearchViews(translated.view,@"keyboard",index);searchExcludedView=nil;
-  [translated applySettingsQuery:@"completion" targets:@[@"row.settings.completion-trigger-label"] filterCommands:NO];
-  REQUIRE(translated.inputGroups[0].hidden && !translated.inputGroups[1].hidden);
+  [translated applySettingsQuery:@"completion" targets:@[@"row.catalog.keyboard.1.0"] filterCommands:NO];
+  REQUIRE(AllInputGroupsVisible(translated));
   [translated applySettingsQuery:@"bindings" targets:@[@"heading.group.bindings"] filterCommands:NO];
-  REQUIRE(!translated.inputGroups[0].hidden && translated.inputGroups[1].hidden);
+  REQUIRE(AllInputGroupsVisible(translated));
   [translated applySettingsQuery:@"ＦＩＲＳＴ" targets:@[] filterCommands:YES];
   REQUIRE(translated.visibleCommands.count==1);
   [translated applySettingsQuery:@"" targets:@[] filterCommands:NO];
   translated.search.stringValue=@"missing command fixture";[translated reloadCommands];
   REQUIRE(translated.table.numberOfRows==0);
   translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];
+  REQUIRE(translated.searchEvent==nil && translated.table.numberOfRows==(NSInteger)translated.store.settingsSearchCommandNames.count);
+  NSUInteger beforeFlags=translated.table.numberOfRows;NSEvent *flagsEvent=[NSEvent keyEventWithType:NSEventTypeFlagsChanged location:NSZeroPoint modifierFlags:S timestamp:0 windowNumber:0 context:nil characters:@"" charactersIgnoringModifiers:@"" isARepeat:NO keyCode:56];
+  @try { REQUIRE([translated handleKeySearchEvent:flagsEvent] && translated.searchEvent==nil && translated.table.numberOfRows==beforeFlags); } @catch(NSException *exception) { Check(NO,@"Modifier-only events must not reach character translation"); }
   for(id trigger in @[@"TAB",@"ESCAPE",NSNull.null,@"unexpected",@"ESC",@"TAB"]){
    [TSIsolatedAppKitDefaults setObject:trigger==NSNull.null?nil:trigger forKey:@"CommandCompletionChar"];
    NSDictionary *unchanged=[TSIsolatedAppKitDefaults.values copy];fixtureCharacters=@"\t";
@@ -357,9 +367,10 @@ int main(int argc,char **argv){@autoreleasepool{
    BOOL reserved=![trigger isEqual:@"ESCAPE"];
    REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]==reserved);
    REQUIRE((translated.highlightedCompletionRow!=nil)==reserved);
+   if(!reserved)REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")]);
    if(reserved){
-    REQUIRE(translated.inputGroups[0].hidden && !translated.inputGroups[1].hidden);
-    REQUIRE(translated.highlightedCompletionRow.layer.borderWidth==2);
+    REQUIRE(AllInputGroupsVisible(translated));
+    REQUIRE(translated.highlightedCompletionRow.layer.backgroundColor!=nil && translated.highlightedCompletionRow.layer.borderWidth==0);
     [translated.view layoutSubtreeIfNeeded];CheckButtons(translated.view,translated.view);
     NSRect row=[translated.highlightedCompletionRow convertRect:translated.highlightedCompletionRow.bounds toView:translated.view];
     REQUIRE(NSContainsRect(translated.view.bounds,row));
@@ -375,23 +386,24 @@ int main(int argc,char **argv){@autoreleasepool{
   REQUIRE(translated.highlightedCompletionRow==nil && ![translated.searchMessage isEqual:NSLocalizedString(@"This key is reserved for command completion.",@"")]);
   fixtureCharacters=@"\t";[translated handleKeySearchEvent:Event(@"\t",0,48)];
   NSView *highlighted=translated.highlightedCompletionRow;
-  REQUIRE(highlighted!=nil && highlighted.layer.borderWidth==2);
-  [translated stopKeySearch];REQUIRE(translated.highlightedCompletionRow==nil && highlighted.layer.borderWidth==0);
+  REQUIRE(highlighted!=nil && highlighted.layer.backgroundColor!=nil && highlighted.layer.borderWidth==0);
+  [translated stopKeySearch];REQUIRE(translated.highlightedCompletionRow==nil && highlighted.layer.backgroundColor==nil);
   translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];
   for(NSString *plain in @[@"a",@"x"]){
    fixtureCharacters=plain;[translated handleKeySearchEvent:Event(plain,0,0)];
    REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")]);
   }
+  fixtureCharacters=@"x";[translated handleKeySearchEvent:Event(@"x",S,7)];REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20.",@"")]);
   fixtureCharacters=@"x";[translated handleKeySearchEvent:Event(@"x",NSEventModifierFlagControl|NSEventModifierFlagOption|NSEventModifierFlagCommand,7)];
   REQUIRE(translated.searchMatches.count==0 && translated.highlightedCompletionRow==nil);
   REQUIRE([translated.searchMessage isEqual:NSLocalizedString(@"No command uses this key.",@"")]);
   [translated stopKeySearch];
   [host setContentSize:NSMakeSize(700,780)];[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
-  REQUIRE(!translated.inputGroups[0].hidden && !translated.inputGroups[1].hidden);
+  REQUIRE(AllInputGroupsVisible(translated));
   translated.searchMode.selectedSegment=1;[translated changeSearchMode:translated.searchMode];fixtureCharacters=@"\t";
   [translated handleKeySearchEvent:Event(@"\t",0,48)];
   [host setContentSize:NSMakeSize(700,460)];[translated viewDidLayout];[translated.view layoutSubtreeIfNeeded];
-  REQUIRE(translated.highlightedCompletionRow!=nil && !translated.inputGroups[1].hidden);
+  REQUIRE(AllInputGroupsVisible(translated));
   CheckButtons(translated.view,translated.view);
   REQUIRE(NSContainsRect(translated.view.bounds,translated.table.enclosingScrollView.frame));
   REQUIRE(NSWidth(translated.searchMode.frame)+1>=translated.searchMode.intrinsicContentSize.width);

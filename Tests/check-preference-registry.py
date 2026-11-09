@@ -14,6 +14,8 @@ for p in sorted((root/'Sources').glob('*.[mh]')):
  for sym,key in re.findall(r'(?:NSString\s*\*\s*(?:const\s*)?|TSPreferenceKey\s+(?:const\s*)?)(\w+)\s*=\s*@"([^"\n]+)"',s):
   constants[sym]=key
   if sym.endswith('Key'):add(key,str(p.relative_to(root))+':'+sym)
+# Resolve shared constants used by the profile registry after discovery.
+known.update(constants[sym] for sym in re.findall(r'\b[A-Za-z_]\w*\b',model.split('BOOL TSPreferenceProfilePreservesKey')[0]) if sym in constants)
 for p in sorted((root/'Sources').glob('*.[mh]')):
  s=p.read_text(errors='replace');s=re.sub(r'/\*.*?\*/','',s,flags=re.S);s=re.sub(r'//[^\n]*','',s)
  # Message receivers with a defaults contract; include multiline expressions.

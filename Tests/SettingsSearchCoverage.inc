@@ -16,7 +16,7 @@ static void CheckSearchText(TSSettingsSearch *index,NSString *text,NSString *cat
  for(NSString *query in variants){if(!TSSettingsQueryTokens(query).count)continue;Check(HasCategory(index,query,category),[NSString stringWithFormat:@"Search coverage %@ %@ / %@",category,text,query]);searchChecks++;}
 }
 static void SearchViews(NSView *view,NSString *category,TSSettingsSearch *index) {
- if(view==searchExcludedView)return;
+ if(view==searchExcludedView || [view isKindOfClass:TSSettingsChangeNote.class])return;
  if([view isKindOfClass:NSSearchField.class])CheckSearchText(index,[(NSSearchField *)view placeholderString] ?: @"",category);
  CheckSearchText(index,view.toolTip ?: @"",category);
  BOOL data=[view.accessibilityIdentifier isEqual:@"settings.user-data"];
@@ -41,6 +41,14 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
  TSSettingsSearch *index=[[TSSettingsSearch alloc]initWithBundle:resources categoryOrder:order commandNames:@[@"Unique Command 93762"]];
  Check([TSSettingsNormalizedText(@"ＰＤＦ　Éditeur … はんかく ｶﾅ") isEqual:TSSettingsNormalizedText(@"pdf editeur ... ハンカク カナ")],@"Compatibility, kana, accents, whitespace and case");
  Check(![TSSettingsNormalizedText(@"パス") isEqual:TSSettingsNormalizedText(@"ハス")],@"Dakuten distinctions retained");
+ // Independent roles: a boolean's title is a row name (50), while
+ // matrix/button choices (e.g. line-number size) remain choices (30).
+ for(NSArray *contract in @[@[@"row.catalog.general.0.0",@"catalog.general.0.0.title",@50],@[@"row.catalog.editor.0.2",@"catalog.editor.0.2.title",@50]]){
+  NSString *label=[resources localizedStringForKey:contract[1] value:nil table:@"SettingsCategories"];
+  BOOL found=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:contract[0]] && [entry.text isEqual:label]){Check(entry.weight==[contract[2]integerValue],@"Visible switch row names retain label weight");found=YES;}Check(found,@"Independent visible row is indexed");
+ }
+ BOOL hasChoices=NO;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:@"row.catalog.editor.0.3"] && entry.weight==30)hasChoices=YES;
+ Check(hasChoices,@"Radio matrix options have choice weight");
  Check([index resultsForQuery:@"unfindable-93762"].count==0,@"Unknown query has no results");
  Check([index resultsForQuery:@"\u3000 \n"].count==0,@"Empty normalized query has no results");
  for(NSString *category in order){
@@ -49,7 +57,7 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
   CheckSearchText(index,[index categoryDescription:category],category);
   SearchViews(panes[category].view,category,index);
   NSArray *entries=[index.entries filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(TSSettingsSearchEntry *e,NSDictionary *bindings){return [e.category isEqual:category];}]];
-  if(entries.count>=2)Check(HasCategory(index,[NSString stringWithFormat:@"%@ %@",[entries[0] text],[entries[1] text]],category),@"AND tokens may span category entries");
+  for(TSSettingsSearchEntry *entry in entries)Check(HasCategory(index,[NSString stringWithFormat:@"%@ %@",[index categoryDescription:category],entry.text],category),@"Item queries may include their category");
  }
  Check(HasCategory(index,@"Unique Command 93762",@"keyboard"),@"Command names indexed");
  Check(![index resultsForQuery:@"/private/user-only-path-93762"].count && ![index resultsForQuery:@"My Private Theme 93762"].count,@"No user values in index");

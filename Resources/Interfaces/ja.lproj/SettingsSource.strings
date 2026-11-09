@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Apple 標準検索パネル";
 "583.title" = "Apple 標準検索バー";
-"585.title" = "検索パネル（TeXShop再起動後）";
+"585.title" = "検索パネル";
 "872.title" = "設定...";
 "873.title" = "Helvetica 12";
 "874.title" = "現在の位置に設定";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "大";
 "teg-0p-Q8J.title" = "LaTeXコマンドを対象外にする";
 "ts-aware-spelling-cell.title" = "LaTeX対応のスペルチェック";
-"ts-aware-spelling.ibShadowedToolTip" = "LaTeX文書では除外規則を使います。OFFにすると下の従来の設定に戻ります。入力中のスペルチェックのON/OFFは変更しません。";
+"ts-aware-spelling.ibShadowedToolTip" = "LaTeX 文書では除外規則を使います。";
 "ts-edit-spelling-cell.title" = "LaTeXの除外規則を編集…";
 "ts-edit-spelling.ibShadowedToolTip" = "LaTeX対応のスペルチェックで使用する除外規則を編集します。";
 "uAi-0W-9KI.title" = "Switch";

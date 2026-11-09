@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 #import "TSPreferenceKey.h"
 NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, TSPreferenceInputKind) {
@@ -29,6 +29,15 @@ typedef NS_ENUM(NSInteger, TSPreferenceInputKind) {
                     minimum:(double)minimum maximum:(double)maximum allowsEmpty:(BOOL)allowsEmpty
                notification:(nullable NSNotificationName)notification NS_DESIGNATED_INITIALIZER;
 - (nullable TSPreferenceInputValue *)validatedValue:(NSString *)text;
+- (NSString *)displayStringFromDefaults:(NSUserDefaults *)defaults;
 - (NSString *)displayStringForValue:(nullable TSPreferenceInputValue *)value;
+@end
+// Tracks actual edits, independently of first-responder/focus changes.
+@interface TSPreferenceEditing : NSObject
+@property (weak, readonly, nullable) NSControl *editedField;
+- (void)markEdited:(NSControl *)field;
+- (void)clear;
+- (BOOL)commitField:(NSControl *)field rule:(TSPreferenceInput *)rule defaults:(NSUserDefaults *)defaults reflect:(BOOL)reflect sender:(NSObject *)sender;
+- (void)restoreField:(NSControl *)field rule:(TSPreferenceInput *)rule defaults:(NSUserDefaults *)defaults;
 @end
 NS_ASSUME_NONNULL_END

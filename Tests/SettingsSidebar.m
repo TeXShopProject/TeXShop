@@ -138,9 +138,9 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(keyboardPane!=nil && keyboardPane.settingsHeader!=nil,@"Actual keyboard provider carries the input header");
   NSView *keyboard=keyboardPane.view;
   Check(keyboard.window==integration->_prefsWindow,@"Actual keyboard view is attached to the settings window");
-  for(NSString *identifier in @[@"settings.edit-bindings",@"settings.edit-completion",@"settings.926",@"settings.cell.843",@"settings.completion-trigger-label"])Check(FindControl(keyboard,identifier)!=nil,[@"Production provider attaches input settings: " stringByAppendingString:identifier]);
+  for(NSString *identifier in @[@"settings.edit-bindings",@"settings.edit-completion",@"settings.926",@"settings.cell.843",@"row.catalog.keyboard.1.0"])Check(FindControl(keyboard,identifier)!=nil,[@"Production provider attaches input settings: " stringByAppendingString:identifier]);
   [integration->_prefsWindow.contentView layoutSubtreeIfNeeded];
-  Check(!keyboard.enclosingScrollView.hasVerticalScroller,@"Keyboard list owns vertical scrolling");
+  Check(keyboard.enclosingScrollView.hasVerticalScroller,@"All three expanded Keyboard sections remain reachable on short windows");
   [keyboardPane viewDidLayout];[keyboard layoutSubtreeIfNeeded];
   [fixtureDefaults setObject:@"TAB" forKey:@"CommandCompletionChar"];
   keyboardPane.searchMode.selectedSegment=1;[keyboardPane changeSearchMode:keyboardPane.searchMode];
@@ -149,6 +149,7 @@ int main(int argc,char **argv){@autoreleasepool{
   NSView *trigger=keyboardPane.highlightedCompletionRow;
   Check(trigger!=nil && NSContainsRect(keyboard.bounds,[trigger convertRect:trigger.bounds toView:keyboard]),@"Actual completion trigger is highlighted within the keyboard viewport");
   fprintf(stderr,"ACTUAL keyboard=%s header=%s table=%s\n",NSStringFromRect(keyboard.frame).UTF8String,NSStringFromRect(keyboardPane.settingsHeader.frame).UTF8String,NSStringFromRect(keyboardPane.table.enclosingScrollView.frame).UTF8String);
+  if(a==3) Check(NSWidth(integration->_prefsWindow.frame)<=800 && NSHeight(integration->_prefsWindow.frame)<=600,@"Keyboard also fits the small screen");
   Check(NSHeight(keyboardPane.table.enclosingScrollView.frame)>40,@"Actual input controls leave space for the scrolling list");
   if(strlen(argv[2]) && (a==3 || [paneBundle.bundlePath containsString:@"ja.bundle"] || [paneBundle.bundlePath containsString:@"de.bundle"])) {
    NSString *name=[paneBundle.bundlePath.lastPathComponent stringByDeletingPathExtension];
@@ -160,20 +161,17 @@ int main(int argc,char **argv){@autoreleasepool{
   for(NSString *key in keyboardTargets) {
    NSString *query=[paneBundle localizedStringForKey:key value:key table:@"Localizable"];
    Check([integration.settingsController setSettingsSearchQuery:query],@"Keyboard control search accepted");
-   Check([integration.settingsController selectCategoryIdentifier:@"keyboard"],@"Keyboard search result selected");
+   NSUInteger resultIndex=[integration.settingsController.searchResults indexOfObjectPassingTest:^BOOL(TSSettingsSearchResult *result,NSUInteger index,BOOL *stop){return [result.targetIdentifier isEqual:keyboardTargets[key]];}];
+   Check(resultIndex!=NSNotFound,@"Keyboard control has its own search result");
+   [integration.settingsController.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:resultIndex] byExtendingSelection:NO];
    NSView *target=FindControl(keyboard,keyboardTargets[key]); Check(target!=nil,@"Matching Keyboard control exists");
    BOOL highlighted=NO;
    for(NSView *overlay in [integration.settingsController valueForKey:@"searchHighlights"]) if(overlay.superview==target) highlighted=YES;
    Check(highlighted,[@"Keyboard result highlights the actual control: " stringByAppendingString:key]);
   }
   [integration.settingsController setSettingsSearchQuery:@""];
-  NSBox *completion=(NSBox *)FindControl(keyboard,@"group.completion");
-  completion.hidden=YES;
-  NSButton *editCompletion=(NSButton *)FindControl(keyboard,@"settings.edit-completion");
-  [integration.settingsController setSettingsSearchQuery:editCompletion.title];
-  [integration.settingsController selectCategoryIdentifier:@"keyboard"];
-  Check(!completion.hidden,@"Global result expands the real collapsed completion input group");
-  [integration.settingsController setSettingsSearchQuery:@""];
+  NSView *completion=FindControl(keyboard,@"group.completion");
+  Check(completion!=nil && !completion.hidden,@"Completion section always stays expanded");
   [integration.settingsController selectCategoryIdentifier:@"general"];
   smallScreen=NO;
   if(a==3){
@@ -205,7 +203,7 @@ int main(int argc,char **argv){@autoreleasepool{
   NSDictionary *panes=[owner classifySettingsPanes:loadedPanes];NSView *footer=Footer(loadedPanes);
   [c hostPaneControllers:panes footer:footer];
   Check([[memory stringForKey:@"TSSettingsSelectedCategory"] isEqual:@"console"],@"assembly never overwrites persisted category");
-  [c beginSession];Check([c.history.currentIdentifier isEqual:@"console"] && c.categoryTable.selectedRow==7,@"fresh controller restores saved category");
+  [c beginSession];Check([c.history.currentIdentifier isEqual:@"console"] && c.categoryTable.selectedRow==9,@"fresh controller restores saved category");
   [c.window.contentView layoutSubtreeIfNeeded];
   Check(NSEqualRects(c.window.frame,savedFrame) && !c.shouldCascadeWindows,@"restore frame after complete assembly without cascading");
   Check((c.window.styleMask & NSWindowStyleMaskFullSizeContentView)!=0,@"full height content enabled");
@@ -221,7 +219,7 @@ int main(int argc,char **argv){@autoreleasepool{
   for(NSUInteger i=0;i<expected.count;i++) Check([c viewForCategoryIdentifier:expected[i]]==[(NSViewController *)panes[expected[i]] view],@"category maps to original localized pane");
   [memory setObject:@"unknown" forKey:@"TSSettingsSelectedCategory"];
   Check([c viewForCategoryIdentifier:@"console"].window==c.window,@"selected controls use the host window");
-  Check(c.categoryTable.numberOfRows==10,@"sidebar includes all categories");
+  Check(c.categoryTable.numberOfRows==13,@"sidebar includes all categories");
   [c beginSession];Check([c.history.currentIdentifier isEqual:@"general"] && c.categoryTable.selectedRow==0,@"unknown category falls back to source");
 
 
@@ -230,7 +228,7 @@ int main(int argc,char **argv){@autoreleasepool{
   NSUInteger beforeArrows=owner.commits;
   for(NSInteger step=1;step<=3;step++) {
    [c.window sendEvent:arrow];
-   Check(c.categoryTable.selectedRow==step && c.window.firstResponder==c.categoryTable,@"consecutive window arrows preserve sidebar focus");
+   Check(c.categoryTable.selectedRow==(step==1?1:step+1) && c.window.firstResponder==c.categoryTable,@"consecutive window arrows preserve sidebar focus");
    Check(owner.commits==beforeArrows+(NSUInteger)step,@"one production validation per category change");
   }
   NSUInteger beforeSame=owner.commits;[c selectCategoryIdentifier:@"spelling"];
@@ -252,26 +250,26 @@ int main(int argc,char **argv){@autoreleasepool{
   for(NSString*identifier in expected){Check([c selectCategoryIdentifier:identifier],@"all categories reachable");Check([c.window.title isEqual:((NSViewController *)panes[identifier]).title],@"title follows selected category");}
   Check(NSEqualRects(frame,c.window.frame),@"navigation never resizes window");
   Check(memory.values.count==2 && [[memory stringForKey:@"TexCommand"]isEqual:@"sentinel"],@"navigation only saves UI category state");
-  [c goBack:nil];Check(c.categoryTable.selectedRow==7 && [c.navigationControl isEnabledForSegment:1],@"back syncs sidebar/buttons");
-  [c goForward:nil];Check(c.categoryTable.selectedRow==9 && ![c.navigationControl isEnabledForSegment:1],@"forward syncs sidebar/buttons");
-  owner.valid=NO;NSUInteger count=c.history.count;[c goBack:nil];Check(c.categoryTable.selectedRow==9 && c.history.count==count,@"invalid field blocks history changes");
-  Check(![c selectCategoryIdentifier:@"preview"] && c.categoryTable.selectedRow==9,@"invalid field blocks sidebar changes");
+  [c goBack:nil];Check(c.categoryTable.selectedRow==9 && [c.navigationControl isEnabledForSegment:1],@"back syncs sidebar/buttons");
+  [c goForward:nil];Check(c.categoryTable.selectedRow==12 && ![c.navigationControl isEnabledForSegment:1],@"forward syncs sidebar/buttons");
+  owner.valid=NO;NSUInteger count=c.history.count;[c goBack:nil];Check(c.categoryTable.selectedRow==12 && c.history.count==count,@"invalid field blocks history changes");
+  Check(![c selectCategoryIdentifier:@"preview"] && c.categoryTable.selectedRow==12,@"invalid field blocks sidebar changes");
   owner.valid=YES;
-  [c goBack:nil];owner.valid=NO;[c goForward:nil];Check(c.categoryTable.selectedRow==7,@"invalid field blocks forward");
-  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==7 && [c.history.currentIdentifier isEqual:@"console"],@"invalid sidebar selection restored");
-  owner.valid=YES;testSheet=[NSWindow new];[c goForward:nil];Check(c.categoryTable.selectedRow==7,@"sheet blocks forward");testSheet=nil;
-  Segment *segment=[Segment new];segment.testSegment=1;Check(c.navigationControl.target==c && c.navigationControl.action==@selector(navigate:),@"toolbar action wired");[c navigate:segment];Check(c.categoryTable.selectedRow==9,@"forward toolbar segment");
-  segment.testSegment=0;[c navigate:segment];Check(c.categoryTable.selectedRow==7,@"back toolbar segment");[c goForward:nil];
-  testSheet=[NSWindow new];[c goBack:nil];Check(c.categoryTable.selectedRow==9 && ![c selectCategoryIdentifier:@"general"],@"sheet blocks both routes");testSheet=nil;
+  [c goBack:nil];owner.valid=NO;[c goForward:nil];Check(c.categoryTable.selectedRow==9,@"invalid field blocks forward");
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==9 && [c.history.currentIdentifier isEqual:@"console"],@"invalid sidebar selection restored");
+  owner.valid=YES;testSheet=[NSWindow new];[c goForward:nil];Check(c.categoryTable.selectedRow==9,@"sheet blocks forward");testSheet=nil;
+  Segment *segment=[Segment new];segment.testSegment=1;Check(c.navigationControl.target==c && c.navigationControl.action==@selector(navigate:),@"toolbar action wired");[c navigate:segment];Check(c.categoryTable.selectedRow==12,@"forward toolbar segment");
+  segment.testSegment=0;[c navigate:segment];Check(c.categoryTable.selectedRow==9,@"back toolbar segment");[c goForward:nil];
+  testSheet=[NSWindow new];[c goBack:nil];Check(c.categoryTable.selectedRow==12 && ![c selectCategoryIdentifier:@"general"],@"sheet blocks both routes");testSheet=nil;
   testKeyWindow=YES;
   NSEvent *back=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:NSEventModifierFlagCommand timestamp:0 windowNumber:0 context:nil characters:@"[" charactersIgnoringModifiers:@"[" isARepeat:NO keyCode:33];
-  Check([c.window performKeyEquivalent:back] && c.categoryTable.selectedRow==7,@"Command bracket follows window history");
-  testKeyWindow=NO;[c.window performKeyEquivalent:back];Check(c.categoryTable.selectedRow==7,@"history shortcut only in key settings window");
-  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==2 && c.history.forwardIdentifier==nil,@"sidebar route synchronizes once and truncates forward history");
+  Check([c.window performKeyEquivalent:back] && c.categoryTable.selectedRow==9,@"Command bracket follows window history");
+  testKeyWindow=NO;[c.window performKeyEquivalent:back];Check(c.categoryTable.selectedRow==9,@"history shortcut only in key settings window");
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];Check(c.categoryTable.selectedRow==3 && c.history.forwardIdentifier==nil,@"sidebar route synchronizes once and truncates forward history");
   NSEvent *down=[NSEvent keyEventWithType:NSEventTypeKeyDown location:NSZeroPoint modifierFlags:0 timestamp:0 windowNumber:0 context:nil characters:@"\uF701" charactersIgnoringModifiers:@"\uF701" isARepeat:NO keyCode:125];
-  [c.categoryTable keyDown:down];Check(c.categoryTable.selectedRow==3,@"arrow key uses validated category route");
+  [c.categoryTable keyDown:down];Check(c.categoryTable.selectedRow==4,@"arrow key uses validated category route");
   [c selectCategoryIdentifier:@"editor"];
-  NSUInteger visits=c.history.count;[c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];Check(c.history.count==visits,@"reselect is not duplicate history");
+  NSUInteger visits=c.history.count;[c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];Check(c.history.count==visits,@"reselect is not duplicate history");
   [c endSession];[c beginSession];Check(c.history.count==1 && !c.history.backIdentifier && !c.history.forwardIdentifier,@"reopen resets history and preserves category");
   [c endSession];[memory setObject:@"console" forKey:@"TSSettingsSelectedCategory"];[c beginSession];
   Check([c.history.currentIdentifier isEqual:@"console"] && c.history.count==1,@"reopening reads saved category without retaining history");
@@ -286,11 +284,11 @@ int main(int argc,char **argv){@autoreleasepool{
   NSTextField *focusField=[[NSTextField alloc]initWithFrame:NSMakeRect(0,0,100,20)];
   [[c viewForCategoryIdentifier:c.history.currentIdentifier ?: @"general"] addSubview:focusField];[c.window makeFirstResponder:focusField];
   NSResponder *failedFocus=c.window.firstResponder;
-  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];
   Check(NSEqualPoints(c.contentScroll.contentView.bounds.origin,scrolled) && c.history.count==rejectedHistory,@"rejected selection preserves scroll and history");
   Check(c.window.firstResponder==failedFocus,@"failed validation does not steal field focus");
   [c.window makeFirstResponder:c.categoryTable];owner.errorField=focusField;
-  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];
+  [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:3] byExtendingSelection:NO];
   Check(c.window.firstResponder==focusField.currentEditor && c.window.firstResponder!=c.categoryTable,@"validation error transfers focus to the invalid field");
   owner.errorField=nil;owner.valid=YES;[focusField removeFromSuperview];
   [c selectCategoryIdentifier:@"preview"];
@@ -300,7 +298,7 @@ int main(int argc,char **argv){@autoreleasepool{
   // A new controller reads what actual navigation saved, without injecting defaults.
   TestController *fresh=[[TestController alloc]initWithDefaults:memory];fresh.settingsDelegate=owner;
   [fresh hostPaneControllers:panes footer:footer];owner->_prefsWindow=fresh.window;[fresh beginSession];
-  Check([fresh.history.currentIdentifier isEqual:@"preview"] && fresh.categoryTable.selectedRow==5,@"navigation persists for a fresh controller");
+  Check([fresh.history.currentIdentifier isEqual:@"preview"] && fresh.categoryTable.selectedRow==7,@"navigation persists for a fresh controller");
   [c hostPaneControllers:panes footer:footer];owner->_prefsWindow=c.window;[c beginSession];
 
   for(NSString *appearance in @[NSAppearanceNameAqua,NSAppearanceNameDarkAqua]){
@@ -321,36 +319,33 @@ int main(int argc,char **argv){@autoreleasepool{
   }
   c.searchBundle=paneBundle;
   [c selectCategoryIdentifier:@"console"];
-  NSString *beforeSearch=[memory stringForKey:@"TSSettingsSelectedCategory"];
+
   c.commandNamesProvider=^NSArray<NSString *> *{return @[@"Unique search command 93762"];};
   Check([c setSettingsSearchQuery:@"Unique search command 93762"] && c.searchResults.count==1,@"Command model contributes without constructing Keyboard view");
-  Check(c.categoryTable.numberOfRows==1,@"Sidebar shows result categories only");
-  Check([(id<NSTableViewDelegate>)c tableView:c.categoryTable heightOfRow:0]==50,@"Result rows have no group separator spacing");
+  Check(c.categoryTable.numberOfRows==1,@"Sidebar shows individual setting results");
+  Check([(id<NSTableViewDelegate>)c tableView:c.categoryTable heightOfRow:0]==44,@"Result rows have no group separator spacing");
   [c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
   Check([c.history.currentIdentifier isEqual:@"keyboard"],@"Filtered row resolves by category ID");
-  Check([[memory stringForKey:@"TSSettingsSelectedCategory"] isEqual:beforeSearch],@"Search navigation does not replace saved normal category");
-  Check([c setSettingsSearchQuery:@""] && [c.history.currentIdentifier isEqual:@"console"],@"Clearing returns to pre-search category");
+  Check([[memory stringForKey:@"TSSettingsSelectedCategory"] isEqual:@"keyboard"],@"Search navigation persists the current category");
+  Check([c setSettingsSearchQuery:@""] && [c.history.currentIdentifier isEqual:@"keyboard"],@"Clearing keeps the selected category");
   NSButton *dependent=(NSButton *)FindControl([c viewForCategoryIdentifier:@"spelling"],@"settings.cell.teg-0p-Q8J");
   dependent.enabled=NO;dependent.state=NSControlStateValueOn;
   Check([c setSettingsSearchQuery:dependent.title],@"Disabled control label remains searchable");
-  Check([c selectCategoryIdentifier:@"spelling"],@"Result can show a disabled control");
+  NSUInteger dependentIndex=[c.searchResults indexOfObjectPassingTest:^BOOL(TSSettingsSearchResult *result,NSUInteger i,BOOL *stop){return [result.category isEqual:@"spelling"];}];Check(dependentIndex!=NSNotFound,@"Disabled control has a result");[c.categoryTable selectRowIndexes:[NSIndexSet indexSetWithIndex:dependentIndex] byExtendingSelection:NO];
   Check(!dependent.enabled && dependent.state==NSControlStateValueOn,@"Result navigation preserves disabled state and non-default value");
   Check([[c valueForKey:@"searchHighlights"] count]>0,@"Result highlights matching row");
   for(NSView *overlay in [c valueForKey:@"searchHighlights"]) Check([overlay hitTest:NSMakePoint(NSMidX(overlay.frame),NSMidY(overlay.frame))]==nil,@"Search highlighting never intercepts clicks");
   Check([c setSettingsSearchQuery:@"notfound-93762"] && c.categoryTable.numberOfRows==0,@"Empty results do not show normal categories");
   Check([[c valueForKey:@"searchHighlights"] count]==0,@"Query change removes obsolete highlighting");
-  owner.valid=NO;Check(![c setSettingsSearchQuery:@""] && c.searchQuery.length>0,@"Invalid fields refuse search exit without losing query");owner.valid=YES;
-  Check([c setSettingsSearchQuery:@""] && [c.history.currentIdentifier isEqual:@"console"],@"Search origin survives several query changes");
-  Check(c.categoryTable.numberOfRows==10,@"Normal category list restored");
-  // A temporary result visit must preserve both sides of the normal history.
+  owner.valid=NO;Check([c setSettingsSearchQuery:@""] && !c.searchQuery.length,@"Clearing search does not navigate or commit untouched fields");owner.valid=YES;
+  Check([c setSettingsSearchQuery:@""] && [c.history.currentIdentifier isEqual:@"spelling"],@"Query changes preserve current category");
+  Check(c.categoryTable.numberOfRows==13,@"Normal category list restored");
   [c.history resetWithIdentifier:@"general"]; [c selectCategoryIdentifier:@"editor"]; [c selectCategoryIdentifier:@"console"]; [c goBack:nil];
-  NSUInteger normalCount=c.history.count;
-  for (NSUInteger exit=0;exit<3;exit++) {
-   [c setSettingsSearchQuery:@"Unique search command 93762"]; [c selectCategoryIdentifier:@"keyboard"];
-   if(exit==0)[c setSettingsSearchQuery:@""]; else if(exit==1)[c goBack:nil]; else [c goForward:nil];
-   Check(c.history.count==normalCount && [c.history.currentIdentifier isEqual:@"editor"] && [c.history.backIdentifier isEqual:@"general"] && [c.history.forwardIdentifier isEqual:@"console"],@"Search exit restores the entire history including forward entries");
-  }
-  [c goForward:nil];Check([c.history.currentIdentifier isEqual:@"console"],@"Forward resumes normal navigation after search exit");
+  [c setSettingsSearchQuery:@"Unique search command 93762"]; [c selectCategoryIdentifier:@"keyboard"];
+  Check([c.history.backIdentifier isEqual:@"editor"] && c.history.forwardIdentifier==nil,@"Search visit joins normal history");
+  [c goBack:nil];Check([c.history.currentIdentifier isEqual:@"editor"] && c.searchQuery.length,@"Back navigates during search");
+  [c goForward:nil];Check([c.history.currentIdentifier isEqual:@"keyboard"] && c.searchQuery.length,@"Forward navigates during search");
+  [c setSettingsSearchQuery:@""]; Check([c.history.currentIdentifier isEqual:@"keyboard"],@"Clear keeps the current pane");
   NSSearchField *globalField=[c valueForKey:@"settingsSearchField"];
   [c setSettingsSearchQuery:@"  "]; Check([globalField.stringValue isEqual:@"  "],@"Programmatic query preserves raw whitespace too");
   [c.window makeFirstResponder:globalField];
@@ -371,7 +366,7 @@ int main(int argc,char **argv){@autoreleasepool{
   NSButtonCell *cancel=((NSSearchFieldCell *)globalField.cell).cancelButtonCell;
   SEL cancelAction=cancel.action; if(cancelAction==NULL)abort();
   Check([NSApp sendAction:cancelAction to:cancel.target from:cancel],@"Actual nonediting cancel button action sent");
-  Check(!c.searchQuery.length && c.categoryTable.numberOfRows==10 && [c.history.currentIdentifier isEqual:@"console"],@"Nonediting cancel action clears results and restores the origin");
+  Check(!c.searchQuery.length && c.categoryTable.numberOfRows==13 && [c.history.currentIdentifier isEqual:@"keyboard"],@"Nonediting cancel action clears results and preserves current pane");
   [c.window makeFirstResponder:globalField]; globalEditor=(NSTextView *)globalField.currentEditor;
   [globalEditor insertText:@"Unique search command 93762" replacementRange:NSMakeRange(0,globalEditor.string.length)];
   Check([NSApp sendAction:cancelAction to:cancel.target from:cancel],@"Actual editing cancel button action sent");

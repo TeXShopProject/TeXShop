@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Apple Find Panel";
 "583.title" = "Apple Fine Bar";
-"585.title" = "Pannello di ricerca (richiede riavvio)";
+"585.title" = "Pannello di ricerca";
 "872.title" = "Imposta...";
 "873.title" = "Helvetica 12";
 "874.title" = "Imposta la posizione";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "Grande";
 "teg-0p-Q8J.title" = "Non controllare i comandi LaTeX";
 "ts-aware-spelling-cell.title" = "Controllo ortografico LaTeX";
-"ts-aware-spelling.ibShadowedToolTip" = "Usa le regole di esclusione per i documenti LaTeX. Disattiva per usare le opzioni precedenti qui sotto. Non modifica il controllo ortografico durante la digitazione.";
+"ts-aware-spelling.ibShadowedToolTip" = "Usa le regole di esclusione per i documenti LaTeX.";
 "ts-edit-spelling-cell.title" = "Modifica esclusioni LaTeX…";
 "ts-edit-spelling.ibShadowedToolTip" = "Modifica le regole di esclusione del controllo ortografico per LaTeX.";
 "uAi-0W-9KI.title" = "Switch";

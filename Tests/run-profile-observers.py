@@ -40,5 +40,5 @@ int main(void){@autoreleasepool{
 '''.replace('METHODS',a+'\n'+b)
 with tempfile.TemporaryDirectory(prefix='texshop-profile-observers-') as td:
  p=Path(td);(p/'test.m').write_text(program)
- subprocess.run(['xcrun','clang','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-fobjc-arc','-I',str(R/'Sources'),'-I',str(R/'Tests'),'-framework','Cocoa',str(p/'test.m'),str(R/'Sources/TSPreferenceProfile.m'),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-fobjc-arc','-I',str(R/'Sources'),'-I',str(R/'Tests'),'-framework','Cocoa',str(p/'test.m'),str(R/'Sources/TSPreferenceProfile.m'),str(R/'Sources/globals.m'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test')],check=True)

@@ -298,7 +298,7 @@
             <rect key="frame" x="0" y="0" width="257" height="136" />
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
             <subviews>
-              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Use exclusion rules for LaTeX documents. Turn off to use the legacy options below. Does not change Check Spelling While Typing." id="ts-aware-spelling" identifier="settings.ts-aware-spelling">
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Use exclusion rules for LaTeX documents." id="ts-aware-spelling" identifier="settings.ts-aware-spelling">
                 <rect key="frame" x="17" y="105" width="230" height="22" />
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
                 <buttonCell key="cell" type="check" title="LaTeX-aware spell checking" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="ts-aware-spelling-cell">
@@ -360,7 +360,7 @@
           </view>
           <font key="titleFont" metaFont="system" />
         </box>
-        <box fixedFrame="YES" title="Find Panel (after restart)" translatesAutoresizingMaskIntoConstraints="NO" id="585" identifier="settings.585">
+        <box fixedFrame="YES" title="Find Panel" translatesAutoresizingMaskIntoConstraints="NO" id="585" identifier="settings.585">
           <rect key="frame" x="340" y="451" width="259" height="90" />
           <autoresizingMask key="autoresizingMask" />
           <view key="contentView" id="M4W-gm-CJz" identifier="settings.M4W-gm-CJz">

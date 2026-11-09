@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
-"113.ibShadowedToolTip" = "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.";
+"113.ibShadowedToolTip" = "Zoom predeterminado para los PDF que se abran.";
 "1uj-kt-7Pj.title" = "Código TeX a la izquierda";
 "228.title" = "Botones cambio de página";
 "328.title" = "Desplazar";

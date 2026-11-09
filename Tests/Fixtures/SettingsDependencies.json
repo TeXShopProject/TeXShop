@@ -1,0 +1,126 @@
+{
+  "provenance": "Approved catalog buttonEnabledWhen / parent choices; existing tag 0 means fixed position. User decision 2026-11-09 removes per-document BlockCursor/SourceAndPreview dependencies.",
+  "rules": [
+    {
+      "category": "general",
+      "key": "DocumentWindowPositionMode",
+      "values": [
+        0,
+        1
+      ],
+      "enabled_values": [
+        0
+      ],
+      "outlets": [
+        "docWindowPosButton"
+      ],
+      "label_row": null
+    },
+    {
+      "category": "general",
+      "key": "PdfWindowPositionMode",
+      "values": [
+        0,
+        1
+      ],
+      "enabled_values": [
+        0
+      ],
+      "outlets": [
+        "pdfWindowPosButton"
+      ],
+      "label_row": null
+    },
+    {
+      "category": "general",
+      "key": "ConsoleWindowPosMode",
+      "values": [
+        0,
+        1
+      ],
+      "enabled_values": [
+        0
+      ],
+      "outlets": [
+        "consoleWindowPosButton"
+      ],
+      "label_row": null
+    },
+    {
+      "category": "general",
+      "key": "HtmlWindowPosMode",
+      "values": [
+        0,
+        1
+      ],
+      "enabled_values": [
+        0
+      ],
+      "outlets": [
+        "htmlWindowPosButton"
+      ],
+      "label_row": null
+    },
+    {
+      "category": "updates",
+      "key": "SparkleAutomaticUpdate",
+      "values": [
+        false,
+        true
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "sparkleIntervalMatrix"
+      ],
+      "label_row": "row.catalog.updates.0.1"
+    },
+    {
+      "category": "typesetting",
+      "key": "DefaultCommand",
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "enabled_values": [
+        2
+      ],
+      "outlets": [
+        "engineTextField"
+      ],
+      "label_row": "row.catalog.typesetting.0.1"
+    },
+    {
+      "category": "documents",
+      "key": "AutoSaveEnabled",
+      "values": [
+        false,
+        true
+      ],
+      "enabled_values": [
+        false
+      ],
+      "outlets": [
+        "keepBackupButton"
+      ],
+      "label_row": "row.catalog.documents.1.1"
+    },
+    {
+      "category": "preview",
+      "key": "PdfColorMap",
+      "values": [
+        false,
+        true
+      ],
+      "enabled_values": [
+        true
+      ],
+      "outlets": [
+        "colorParam1Popup"
+      ],
+      "label_row": "row.catalog.preview.3.1"
+    }
+  ]
+}

@@ -1,104 +1,151 @@
 {
-  "source": "Fixed expected category groups and original group membership; do not regenerate from production code.",
+  "source": "Approved SettingsPanelLab catalog.json, user follow-up 2026-11-09. Expected group order derives from the design, not production XIB. Instruction 2 item 30 overrides only two dependencies.",
   "groups": {
     "general": [
-      "settings.236",
-      "settings.aig-4m-gAG",
-      "settings.19",
-      "settings.585",
-      "settings.Kin-Cw-xVc",
-      "group.advanced"
+      "group.general.0",
+      "group.general.1",
+      "group.general.2",
+      "group.general.3",
+      "group.general.4",
+      "group.general.5"
     ],
     "documents": [
       "group.encoding",
       "group.saving"
     ],
     "editor": [
-      "group.editor-defaults",
-      "group.editor-behavior",
-      "settings.4a3-VM-Tgq",
-      "settings.Gj7-Yx-1Hv",
-      "settings.eIA-mh-q2u",
-      "group.parens",
-      "settings.934",
-      "settings.935",
-      "settings.933",
-      "settings.cSu-im-H1E",
-      "settings.DU3-gi-QzY"
+      "group.editor.0",
+      "group.editor.1",
+      "group.editor.2",
+      "group.editor.3",
+      "group.editor.4",
+      "group.editor.5",
+      "group.editor.6",
+      "group.editor.7",
+      "group.editor.8"
     ],
     "spelling": [
-      "group.spelling-common",
-      "settings.ENd-QB-0Uf",
-      "group.spelling-method"
+      "group.spelling.0",
+      "group.spelling.1"
     ],
     "appearance": [
-      "settings.14",
-      "settings.ZlV-mI-DdK"
+      "group.appearance.0",
+      "group.appearance.1",
+      "group.appearance.2",
+      "group.appearance.3",
+      "group.appearance.4",
+      "group.appearance.5",
+      "group.appearance.6",
+      "group.appearance.7",
+      "group.appearance.8",
+      "group.appearance.9",
+      "group.appearance.10"
     ],
     "preview": [
-      "group.windows",
-      "settings.47",
-      "group.page-display",
-      "group.pdf-interaction",
-      "settings.555",
-      "group.pdf-appearance",
-      "group.html-preview"
+      "group.preview.0",
+      "group.preview.1",
+      "group.preview.2",
+      "group.preview.3",
+      "group.preview.4",
+      "group.preview.5"
     ],
     "typesetting": [
-      "group.typesetting-defaults",
-      "group.synchronization",
-      "settings.215",
-      "settings.54",
-      "settings.200",
-      "settings.Eb6-59-PxD",
-      "settings.vEF-zd-SJl",
-      "group.tools"
+      "group.typesetting.0",
+      "group.typesetting.1",
+      "group.typesetting.2",
+      "group.typesetting.3",
+      "group.typesetting.4",
+      "group.typesetting.5",
+      "group.typesetting.6",
+      "group.typesetting.7",
+      "group.typesetting.8",
+      "group.typesetting.9"
     ],
     "console": [
-      "settings.752",
-      "settings.WQX-9X-AFi",
-      "settings.772",
-      "settings.828"
+      "group.console.0",
+      "group.console.1"
     ],
     "keyboard": [
       "group.bindings",
-      "group.completion"
+      "group.completion",
+      "group.shortcuts"
     ],
     "updates": [
-      "settings.e3h-Wk-X7D"
+      "group.updates.0"
     ]
   },
-  "originalGroups": {
+  "titles": {
+    "general": [
+      "起動時",
+      "ウインドウ",
+      "ウインドウの位置",
+      "プロジェクトのルートファイル",
+      "設定プロファイル",
+      "詳細"
+    ],
     "documents": [
-      "262",
-      "03p-fB-1K3",
-      "5ba-33-JZx",
-      "314"
+      "エンコーディング",
+      "保存"
+    ],
+    "editor": [
+      "表示",
+      "書式",
+      "入力",
+      "構文の色分け",
+      "括弧の対応",
+      "不可視文字",
+      "カーソル",
+      "検索",
+      "タグリストに表示する XML タグ"
+    ],
+    "spelling": [
+      "スペルチェック",
+      "方式"
+    ],
+    "appearance": [
+      "テーマ",
+      "テーマの編集",
+      "色：ウインドウ",
+      "色：ソース",
+      "色：シンタックスハイライト",
+      "色：括弧類",
+      "色：expl3",
+      "色：強調表示",
+      "色：SyncTeX と画像のコピー",
+      "色：XML 構文",
+      "起動中の Dock アイコン"
     ],
     "preview": [
-      "329",
-      "111",
-      "501",
-      "342",
-      "228",
-      "330",
-      "5HT-3x-Zr6",
-      "386",
-      "447",
-      "YrC-m9-abH",
-      "p2D-Mi-Gyc"
+      "表示",
+      "見開きの配置",
+      "更新",
+      "カラーマップ",
+      "画像のコピー",
+      "HTML"
     ],
     "typesetting": [
-      "183",
-      "188",
-      "675",
-      "823",
-      "W5U-9S-4OG",
-      "1020",
-      "1027",
-      "SXg-YM-OVa",
-      "163-F5-v8Z",
-      "SS5-tZ-cDa"
+      "既定",
+      "タイプセット後",
+      "ソースとプレビューの同期",
+      "パス",
+      "pdfTeX",
+      "TeX + dvipdfmx／TeX + dvips + distiller",
+      "パーソナルスクリプト",
+      "Distiller",
+      "検索用コマンドと BibTeX",
+      "pTeX サポート（日本用）"
+    ],
+    "console": [
+      "フォント",
+      "動作"
+    ],
+    "keyboard": [
+      "キーバインド",
+      "コマンド補完",
+      "メニューのショートカット"
+    ],
+    "updates": [
+      "自動確認"
     ]
   }
 }

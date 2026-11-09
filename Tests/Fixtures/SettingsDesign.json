@@ -1,0 +1,49 @@
+{
+  "reference": "SettingsPanelLab approved mockup, 2026-11-06; fixed design contract",
+  "sidebarRowHeight": 30,
+  "controlRowHeight": 38,
+  "sidebarIconSize": 22,
+  "overviewIconSize": 44,
+  "categories": {
+    "general": {
+      "symbol": "gearshape",
+      "color": "#888780"
+    },
+    "documents": {
+      "symbol": "doc.text",
+      "color": "#378ADD"
+    },
+    "editor": {
+      "symbol": "character.cursor.ibeam",
+      "color": "#BA7517"
+    },
+    "spelling": {
+      "symbol": "text.badge.checkmark",
+      "color": "#639922"
+    },
+    "appearance": {
+      "symbol": "paintpalette",
+      "color": "#7F77DD"
+    },
+    "preview": {
+      "symbol": "doc.text.magnifyingglass",
+      "color": "#E24B4A"
+    },
+    "typesetting": {
+      "symbol": "hammer",
+      "color": "#534AB7"
+    },
+    "console": {
+      "symbol": "terminal",
+      "color": "#2C2C2A"
+    },
+    "keyboard": {
+      "symbol": "keyboard",
+      "color": "#5F5E5A"
+    },
+    "updates": {
+      "symbol": "arrow.triangle.2.circlepath",
+      "color": "#1D9E75"
+    }
+  }
+}

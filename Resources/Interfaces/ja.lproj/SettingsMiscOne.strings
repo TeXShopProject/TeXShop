@@ -12,10 +12,10 @@
 "427.title" = "4";
 "428.title" = "0 (標準)";
 "431.title" = "5";
-"434.ibShadowedToolTip" = "大きな値にするほど文字色を強調します(PDF形式でのコピーでは無効)。";
+"434.ibShadowedToolTip" = "ビットマップ画像をコピーするときの文字の濃さです。大きな値ほど文字が強調されます。";
 "435.title" = "-1";
 "436.title" = "2";
-"437.ibShadowedToolTip" = "黒と白を別の色に置き換えてコピーします。";
+"437.ibShadowedToolTip" = "白黒を別の色に割り当てます。";
 "438.title" = "-2";
 "440.title" = "1";
 "441.title" = "3";
@@ -37,6 +37,6 @@
 "kCh-5t-39X.title" = "Radio";
 "qMw-aC-Ilj.title" = "左";
 "shH-XU-nyE.title" = " 2文字分";
-"sto-5E-9Q5.title" = "編集中に自動でファイルを上書きする macOS の機能です。TeXShop の再起動後に有効になります。";
+"sto-5E-9Q5.title" = "編集中に自動でファイルを上書きする macOS の機能です。";
 "tg5-uf-NZU.title" = "Radio";
 "xvd-dM-RGh.title" = "ブロックの位置:";

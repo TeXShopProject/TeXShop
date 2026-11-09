@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "新規PDFの倍率";
-"113.ibShadowedToolTip" = "新しく開くPDFの既定倍率です。開いているPDFの倍率は変わりません。";
+"113.ibShadowedToolTip" = "新しく開くPDFの既定倍率です。";
 "1uj-kt-7Pj.title" = "ソースウインドウが左";
 "228.title" = "ページボタン";
 "328.title" = "スクロール";

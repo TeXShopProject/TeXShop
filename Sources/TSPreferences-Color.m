@@ -126,7 +126,7 @@ NSInteger stringSort(id s1, id s2, void *context)
 
 - (void)FillInColorWells
 {
-    [self setThemeEditingEnabled:(EditingColors != nil) inView:_prefsWindow.contentView];
+    [self setAllThemeEditingEnabled:(EditingColors != nil)];
     if (EditingColors == nil) return;
     TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
     NSColor *flashColor, *aColor;
@@ -1069,7 +1069,7 @@ NSInteger stringSort(id s1, id s2, void *context)
     for (NSView *child in view.subviews) {
         if ([child isKindOfClass:NSColorWell.class] && ((NSColorWell *)child).action != @selector(BlockCursorColorChanged:))
             [(NSColorWell *)child setEnabled:enabled];
-        if ([child isKindOfClass:NSButton.class] && ((NSButton *)child).action == @selector(SaveNewStyle:))
+        if ([child isKindOfClass:NSButton.class] && (((NSButton *)child).action == @selector(SaveNewStyle:) || ((NSButton *)child).action == @selector(SaveEditedStyle:)))
             [(NSButton *)child setEnabled:enabled];
         [self setThemeEditingEnabled:enabled inView:child];
     }

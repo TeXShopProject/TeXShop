@@ -11,7 +11,7 @@
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
 "582.title" = "Apple Find Panel";
 "583.title" = "Apple Find Bar";
-"585.title" = "Find Panel (after restart)";
+"585.title" = "Panou de căutare";
 "872.title" = "Alege...";
 "873.title" = "Helvetica 12";
 "874.title" = "Set with current position";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "Large";
 "teg-0p-Q8J.title" = "Do not check LaTeX commands";
 "ts-aware-spelling-cell.title" = "Verificare ortografică LaTeX";
-"ts-aware-spelling.ibShadowedToolTip" = "Folosește reguli de excludere pentru documentele LaTeX. Dezactivați pentru a folosi opțiunile anterioare de mai jos. Nu schimbă verificarea ortografiei în timpul tastării.";
+"ts-aware-spelling.ibShadowedToolTip" = "Folosește reguli de excludere pentru documentele LaTeX.";
 "ts-edit-spelling-cell.title" = "Editează excluderile LaTeX…";
 "ts-edit-spelling.ibShadowedToolTip" = "Editează regulile de excludere pentru verificarea ortografică LaTeX.";
 "uAi-0W-9KI.title" = "Switch";

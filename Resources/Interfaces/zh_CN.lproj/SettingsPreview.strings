@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
-"113.ibShadowedToolTip" = "Default zoom for newly opened PDFs. Existing PDFs keep their current zoom.";
+"113.ibShadowedToolTip" = "新打开的 PDF 的默认缩放比例。";
 "1uj-kt-7Pj.title" = "源代码置于左边";
 "228.title" = "换页按钮";
 "328.title" = "滚动";

@@ -36,7 +36,7 @@ def run_case(name, changes=()):
                         '-Wno-deprecated-declarations', '-Wno-nullability-completeness', '-framework', 'Cocoa', '-framework', 'Carbon',
                         '-I', td, '-I', str(root / 'Sources'),
                         str(root / 'Tests/MacroShortcutConflicts.m'),
-                        str(root / 'Sources/TSMacroTreeNode.m'), '-o', str(binary)], check=True)
+                        str(root / 'Sources/TSMacroTreeNode.m'), str(root / 'Sources/TSPrefPaneLayout.m'), '-o', str(binary)], check=True)
         result = subprocess.run([str(binary), td], capture_output=True, text=True, timeout=20)
         if changes:
             assert result.returncode != 0 and 'FAIL ' in result.stderr, (name, result.stdout, result.stderr)
@@ -50,8 +50,8 @@ if '--mutations' in sys.argv:
     k='TSKeyboardShortcuts.m'; e='MacroEditorProduction.inc'; m='MacroMenuProduction.inc'
     cases = {
         'fold Shift-minus into equals': [(k, 'flags &= TSShortcutModifiers;', 'if ([key isEqual:@"-"] && (flags & NSEventModifierFlagShift)) { key=@"="; flags &= ~NSEventModifierFlagShift; } flags &= TSShortcutModifiers;')],
-        'macros block custom menu keys': [(k, 'if (!item.submenu && item.action != NSSelectorFromString(@"doMacro:")) [planned', 'if (!item.submenu) [planned')],
-        'do not clear installed macro keys before assignment': [(k, 'if (item.action == NSSelectorFromString(@"doMacro:")) item.keyEquivalent = @"";', 'if (NO) item.keyEquivalent = @"";')],
+        'macros block custom menu keys': [(k, 'if (!item.submenu && item.action != TSMacroAction()) [planned', 'if (!item.submenu) [planned')],
+        'do not clear installed macro keys before assignment': [(k, 'if (item.action == TSMacroAction()) item.keyEquivalent = @"";', 'if (NO) item.keyEquivalent = @"";')],
         'runtime menu comparison ignores uppercase Shift': [(m, 'NSDictionary *binding = [TSShortcutStore normalizedKey:entry[@"key"] modifiers:[entry[@"modifiers"] unsignedIntegerValue]];', 'NSDictionary *binding = @{@"key":[entry[@"key"] lowercaseString], @"modifiers":entry[@"modifiers"]};')],
         'allow later duplicate macro': [(m, 'if ([binding[@"key"] length]) [self.keyEquivalents addObject:binding];', 'if (NO) [self.keyEquivalents addObject:binding];')],
         'include services': [(k, 'if (item.submenu == NSApp.servicesMenu && item.submenu) continue;', 'if (NO) continue;'), (k, 'if (item.submenu && item.submenu != NSApp.servicesMenu) TSVisitMenu', 'if (item.submenu) TSVisitMenu')],
@@ -62,11 +62,11 @@ if '--mutations' in sys.argv:
         'do not remove changed conflicts': [(e, 'setKey:@""', 'setKey:@"F"')],
         'ignore write failure': [(e, 'if (![self saveNodes: [outlineController rootOfTree] toFile: pathStr]) return;', '[self saveNodes: [outlineController rootOfTree] toFile: pathStr];')],
         'do not select conflicting macro': [(e, '[outlineView selectItems:@[node] byExtendingSelection:NO];', '[outlineView selectItems:@[] byExtendingSelection:NO];')],
-        'no Escape handling': [(k, 'event.keyCode == 53', 'event.keyCode == 99')],
+        'no Escape handling': [(k, 'event.keyCode == kVK_Escape', 'event.keyCode == 99')],
         'restore ignores macro confirmation refusal': [(k, 'if (strongSelf == nil || !accepted) { return; }', 'if (strongSelf == nil) { return; }')],
         'save from sheet synchronously': [(e, 'dispatch_async(dispatch_get_main_queue(), ^{\n            if (response', '^{\n            if (response'), (e, 'else if (response == NSAlertSecondButtonReturn) [self cancelPressed:self];\n        });', 'else if (response == NSAlertSecondButtonReturn) [self cancelPressed:self];\n        }();')],
-        'conflictForKey counts macro items (macros block custom keys in the UI)': [(k, 'if (item == excluded || item.submenu != nil || item.action == NSSelectorFromString(@"doMacro:") || item.keyEquivalent.length == 0) { return; }', 'if (item == excluded || item.submenu != nil || item.keyEquivalent.length == 0) { return; }')],
-        'menuBindings includes installed macro items': [(k, 'if (!item.submenu && item.action != NSSelectorFromString(@"doMacro:") && item.keyEquivalent.length)\n            [result', 'if (!item.submenu && item.keyEquivalent.length)\n            [result')],
+        'conflictForKey counts macro items (macros block custom keys in the UI)': [(k, 'if (item == excluded || item.submenu != nil || item.action == TSMacroAction() || item.keyEquivalent.length == 0) { return; }', 'if (item == excluded || item.submenu != nil || item.keyEquivalent.length == 0) { return; }')],
+        'menuBindings includes installed macro items': [(k, 'if (!item.submenu && item.action != TSMacroAction() && item.keyEquivalent.length)\n            [result', 'if (!item.submenu && item.keyEquivalent.length)\n            [result')],
         'no clearing of command keys before applying (transient duplicates)': [(k, '    for (TSShortcutCommand *command in self.commands) command.item.keyEquivalent = @"";\n    for (TSShortcutCommand *command in self.commands) {\n        if ([active', '    for (TSShortcutCommand *command in self.commands) {\n        if ([active')],
         'refreshMenuAndMacros does not rebuild macros': [(k, '        [[NSNotificationCenter defaultCenter] postNotificationName:TSRebuildMacrosNotification object:self];\n', '')],
         'menuStructureChanged ignores reentrancy guards': [(k, 'if (menu != NSApp.mainMenu || self.menuRefreshPending || self.applyingMenus || self.rebuildingMacros) return;', 'if (menu != NSApp.mainMenu || self.menuRefreshPending) return;')],
@@ -88,9 +88,9 @@ if '--mutations' in sys.argv:
         'macro rebuild leaves guard set after exception': [(m, '    } @finally {\n        [[TSKeyboardShortcuts sharedController] endMenuRebuild];\n    }', '    } @catch (NSException *exception) { @throw; }\n    [[TSKeyboardShortcuts sharedController] endMenuRebuild];')],
         'validation changes rebuild all macros': [(k, '@[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification]', '@[NSMenuDidAddItemNotification, NSMenuDidRemoveItemNotification, NSMenuDidChangeItemNotification]'), (k, '    if ([[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) return;', ''), (k, 'if (![[self menuBindingSnapshot] isEqual:self.observedMenuBindings]) [self refreshMenuAndMacros];', '[self refreshMenuAndMacros];')],
         'strip Shift from non-ASCII letters': [(k, '![[NSCharacterSet letterCharacterSet] characterIsMember:[key characterAtIndex:0]])\n        flags &= ~NSEventModifierFlagShift;', 'YES)\n        flags &= ~NSEventModifierFlagShift;')],
-        'snapshot ignores modifiers': [(k, '@(item.keyEquivalentModifierMask), NSStringFromSelector', '@0, NSStringFromSelector')],
+        'snapshot ignores modifiers': [(k, '@(item.keyEquivalentModifierMask), (action ? NSStringFromSelector', '@0, (action ? NSStringFromSelector')],
         'snapshot ignores key equivalents': [(k, '[NSValue valueWithNonretainedObject:item], item.keyEquivalent,', '[NSValue valueWithNonretainedObject:item], @"",')],
-        'ignore items whose keys AppKit hides': [(k, 'if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:"))', 'if (!item.submenu && !item.separatorItem && item.action != NSSelectorFromString(@"doMacro:") && (item.keyEquivalent.length || [item.identifier hasPrefix:@"TSShortcut."]))')],
+        'ignore items whose keys AppKit hides': [(k, 'if (!item.submenu && !item.separatorItem && item.action != TSMacroAction())', 'if (!item.submenu && !item.separatorItem && item.action != TSMacroAction() && (item.keyEquivalent.length || [item.identifier hasPrefix:@"TSShortcut."]))')],
         'PDF drops legacy shifted punctuation': [(k, 'return [TSEventBindings(event, [event charactersByApplyingModifiers:0]) containsObject:', 'return [TSRecordedBinding(event, [event charactersByApplyingModifiers:0]) isEqual:')],
         'leave Shift for dead keys': [(k, 'key.length == 1 &&\n        ![key isEqual:unshifted]', 'key.length == 1 && unshifted.length == 1 &&\n        ![key isEqual:unshifted]')],
     }

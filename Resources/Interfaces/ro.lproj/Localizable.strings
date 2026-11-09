@@ -146,7 +146,7 @@
 /* Engine path discovery */
 "Set Up TeX Engine Paths" = "Configurarea căilor motoarelor TeX";
 "Detected Engine Paths" = "Căi ale motoarelor detectate";
-"The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged." = "Este selectată cea mai nouă instalare detectată. Puteți alege alta din lista de mai jos. Comenzile motoarelor personalizate și calea alternativă rămân neschimbate.";
+
 "Not found (current setting will be kept)" = "Nu a fost găsit (se păstrează configurarea actuală)";
 "Version unavailable" = "Necunoscută";
 "Use These Paths" = "Folosește aceste căi";
@@ -164,20 +164,19 @@
 "Apply" = "Aplică";
 "Shortcut Unavailable" = "Scurtătură indisponibilă";
 "Restore all keyboard shortcuts?" = "Restabiliți toate scurtăturile de tastatură?";
-"Press the new shortcut (Escape to cancel)." = "Apăsați noua scurtătură (Escape pentru anulare).";
+"New shortcut" = "Scurtătură nouă";
 "This command is no longer available." = "Această comandă nu mai este disponibilă.";
 "This shortcut is already used by “%@”." = "Această scurtătură este deja folosită de „%@”.";
-"Use Command or Control with a key, or a function key (F1–F20)." = "Folosiți o tastă cu Command sau Control, ori o tastă funcțională (F1–F20).";
-"Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors." = "Selectați o comandă pentru a-i modifica scurtătura. Modificările se aplică imediat. Macrocomenzile și scurtăturile de introducere a textului au editoare proprii.";
+
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
 "The selected profile is invalid." = "The selected profile is invalid.";
 "Apply Settings Profile?" = "Apply Settings Profile?";
-"This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@" = "This resets engine, editing, display, known hidden settings, and the Dock icon. Shortcuts, system language and key settings, window layouts, automatic updates, theme files, and unknown settings are kept. Theme selections may change. TeX engine path: %@";
+
 "Apply Profile" = "Apply Profile";
 "Settings could not be saved" = "Settings could not be saved";
 "Enter a valid setting" = "Enter a valid setting";
-"Correct this field, or restore its last saved value. Other settings are already saved." = "Correct this field, or restore its last saved value. Other settings are already saved.";
+
 "Continue Editing" = "Continue Editing";
 "Restore This Field" = "Restore This Field";
 "The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
@@ -204,14 +203,14 @@
 "Show in Macro Editor" = "Arată în editorul de macrocomenzi";
 "Assigned" = "Atribuit";
 "Inactive for this key" = "Inactiv pentru această tastă";
-"Assignment priority is shown; whether a command can run depends on the document." = "Este afișată prioritatea atribuirii. Executarea comenzii depinde de document.";
-"Keys used by the system cannot be detected. Press Escape to stop recording." = "Tastele folosite de sistem nu pot fi detectate. Escape oprește înregistrarea.";
+"Whether a command can run depends on the document." = "Posibilitatea de a executa o comandă depinde de document.";
+"Some keys are reserved by macOS." = "Unele taste sunt rezervate de macOS.";
 "No command uses this key." = "Nicio comandă nu folosește această tastă.";
 "Press a key" = "Apăsați o tastă";
 "This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "Această tastă nu poate fi folosită drept scurtătură. Folosiți Command sau Control cu o tastă, ori F1–F20.";
-"Custom menu shortcuts will be removed. Existing KeyEquivalents.plist settings will be preserved." = "Scurtăturile de meniu personalizate vor fi eliminate. Configurările din KeyEquivalents.plist vor fi păstrate.";
 
-"Existing assignments are shown. This key cannot be assigned to a new shortcut." = "Sunt afișate atribuirile existente. Această tastă nu poate fi atribuită unei scurtături noi.";
+
+"This key cannot be assigned to a new shortcut." = "Această tastă nu poate fi atribuită unei scurtături noi.";
 
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Rezultate: %lu";
@@ -267,9 +266,7 @@
 
 "Tools" = "Instrumente";
 
-"Expanded" = "Extins";
 
-"Collapsed" = "Restrâns";
 
 "Search Settings" = "Caută în configurări";
 
@@ -277,7 +274,6 @@
 
 "No Settings Found" = "Nicio configurare găsită";
 
-"Edits the shared file for all documents. The checkbox sets the default for new documents." = "Edits the shared file for all documents. The checkbox sets the default for new documents.";
 
 /* Independent Experiment console */
 "Experiment input" = "Intrare pentru experiment";
@@ -292,10 +288,29 @@
 "Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
 "Return to Editing" = "Return to Editing";
 "Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
-"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@" = "The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@";
+
 "These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
 "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
 "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
 "This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
 "This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
 "This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+
+"The newest detected installation is selected. You can choose another candidate below." = "Este selectată cea mai nouă instalare detectată. Puteți alege alta din lista de mai jos.";
+
+"The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive.\n\n%@" = "Următoarele macrocomenzi folosesc această scurtătură. Dacă o atribuiți comenzii din meniu, scurtăturile macrocomenzilor vor fi dezactivate.\n\n%@";
+
+"This does not turn spell checking while typing on or off." = "Această setare nu activează și nu dezactivează verificarea ortografiei în timpul tastării.";
+
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "PDF-urile deschise își păstrează mărirea. Noua valoare se aplică PDF-urilor deschise de acum înainte.";
+
+"Takes effect after you restart TeXShop." = "Intră în vigoare după repornirea TeXShop.";
+
+"Custom menu shortcuts will be removed." = "Scurtăturile de meniu personalizate vor fi eliminate.";
+
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+
+/* System spelling dictionary selection. */
+"Automatic Language" = "Detectare automată a limbii";
