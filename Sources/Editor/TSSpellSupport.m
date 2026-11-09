@@ -214,6 +214,37 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     return YES;
 }
 
+// The panel's Change button sends -checkSpelling: right after -changeSpelling:,
+// within the same action. Skip that search after a refusal; the flag is
+// cleared once the action is over, so a later Find Next works as usual.
+static BOOL sSkipSearchAfterRefusal;
+
++ (BOOL)refuseStaleChangeInTextView:(NSTextView *)textView
+{
+    if (sReviewWord.length == 0 || (textView == sReviewView && ReviewIsCurrent(textView))) return NO;
+    sReplacementStatus.stringValue = NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @"");
+    NSBeep();
+    sSkipSearchAfterRefusal = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{ sSkipSearchAfterRefusal = NO; });
+    return YES;
+}
+
++ (BOOL)skipsSearchAfterRefusedChange
+{
+    BOOL skip = sSkipSearchAfterRefusal;
+    sSkipSearchAfterRefusal = NO;
+    return skip;
+}
+
++ (void)endReview
+{
+    sReviewView = nil;
+    sReviewWord = nil;
+    sReviewText = nil;
+    sReplacementField.stringValue = @"";
+    sReplacementStatus.stringValue = @"";
+}
+
 // The panel's "Change All" button: replace the misspelling the panel is showing
 // everywhere in the document (outside the text the rules exclude) by the text in
 // the panel's correction field, as one undoable change, then go on to the next
