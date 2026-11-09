@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""Check how the text view's spelling actions use the review guard.
+The panel's Change asks TSSpellSupport first; the system's own search (Option,
+or a view without TeX-aware checking) ends the TeX-aware review. Runs the
+production methods against a recording stand-in; opens no panel or window.
+"""
+import argparse, subprocess, tempfile
+from pathlib import Path
+from production_fragments import method, verify_embedded
+root = Path(__file__).resolve().parents[1]
+p = argparse.ArgumentParser()
+p.add_argument('--mutation', choices=['no-refuse', 'no-end-check', 'no-end-guess', 'end-tex-aware'])
+args = p.parse_args()
+source = (root/'Sources/Editor/TSTextView.m').read_text(encoding='latin1')
+change = method(source, '- (void)changeSpelling:(id)sender')
+check = method(source, '- (void)checkSpelling:(id)sender')
+guess = method(source, '- (void)showGuessPanel:(id)sender')
+program = r'''
+#import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
+#define REQUIRE(x, what) do { if (!(x)) { NSLog(@"FAIL: %s (%@)", what, steps); exit(1); } } while(0)
+@class TSSpellMask;
+static NSMutableArray<NSString *> *steps;
+static BOOL refuse;
+static NSEventModifierFlags flags;
+static NSEventModifierFlags TestModifierFlags(id receiver, SEL selector) { return flags; }
+@interface TSSpellSupport : NSObject @end
+@implementation TSSpellSupport
++ (BOOL)refuseStaleChangeInTextView:(NSTextView *)view { [steps addObject:@"refuse?"]; return refuse; }
++ (void)endReview { [steps addObject:@"end"]; }
++ (NSString *)findNextMisspellingInTextView:(NSTextView *)view mask:(TSSpellMask *)mask { [steps addObject:@"find"]; return nil; }
++ (void)showSpellingPanelForTextView:(NSTextView *)view mask:(TSSpellMask *)mask openPanel:(void (^)(void))openPanel
+{ [steps addObject:@"panel"]; openPanel(); }
+@end
+@interface SystemTextView : NSTextView @end
+@implementation SystemTextView
+- (void)changeSpelling:(id)sender { [steps addObject:@"system change"]; }
+- (void)checkSpelling:(id)sender { [steps addObject:@"system search"]; }
+- (void)showGuessPanel:(id)sender { [steps addObject:@"system panel"]; }
+@end
+@interface ProbeTextView : SystemTextView
+@property BOOL texAware;
+@end
+@implementation ProbeTextView
+- (BOOL)usesTeXAwareSpellChecking { return self.texAware; }
+- (TSSpellMask *)freshSpellMask { return nil; }
+CHANGE
+CHECK
+GUESS
+@end
+static NSArray *Run(void (^action)(void)) { steps = [NSMutableArray array]; action(); return steps; }
+int main(void) { @autoreleasepool {
+    TSInstallAppKitIsolation();
+    method_setImplementation(class_getClassMethod(NSEvent.class, @selector(modifierFlags)), (IMP)TestModifierFlags);
+    ProbeTextView *v = [ProbeTextView new];
+    for (int aware = 0; aware < 2; aware++) {
+        v.texAware = aware;
+        refuse = YES;
+        REQUIRE([Run(^{ [v changeSpelling:nil]; }) isEqual:(@[@"refuse?"])], "a refused Change does nothing");
+        refuse = NO;
+        REQUIRE([Run(^{ [v changeSpelling:nil]; }) isEqual:(@[@"refuse?", @"system change"])], "an allowed Change replaces");
+    }
+    v.texAware = YES; flags = 0;
+    REQUIRE([Run(^{ [v checkSpelling:nil]; }) isEqual:(@[@"find"])], "TeX-aware Find Next keeps the review");
+    REQUIRE([Run(^{ [v showGuessPanel:nil]; }) isEqual:(@[@"panel", @"system panel"])], "TeX-aware panel keeps the review");
+    flags = NSEventModifierFlagOption;
+    REQUIRE([Run(^{ [v checkSpelling:nil]; }) isEqual:(@[@"end", @"system search"])], "Option search ends the review");
+    REQUIRE([Run(^{ [v showGuessPanel:nil]; }) isEqual:(@[@"end", @"system panel"])], "Option panel ends the review");
+    v.texAware = NO; flags = 0;
+    REQUIRE([Run(^{ [v checkSpelling:nil]; }) isEqual:(@[@"end", @"system search"])], "system search ends the review");
+    REQUIRE([Run(^{ [v showGuessPanel:nil]; }) isEqual:(@[@"end", @"system panel"])], "system panel ends the review");
+    puts("PASS: Change asks the review guard; the system's own search ends the review");
+} return 0; }
+'''.replace('CHANGE', change).replace('CHECK', check).replace('GUESS', guess)
+verify_embedded(program, [('complete method: changeSpelling', source, change),
+                          ('complete method: checkSpelling', source, check),
+                          ('complete method: showGuessPanel', source, guess)])
+mutations = {
+    'no-refuse': (change, change.replace('if ([TSSpellSupport refuseStaleChangeInTextView:self]) return;', '')),
+    'no-end-check': (check, check.replace('[TSSpellSupport endReview];', '')),
+    'no-end-guess': (guess, guess.replace('[TSSpellSupport endReview];', '')),
+    'end-tex-aware': (check, check.replace('[TSSpellSupport findNextMisspellingInTextView:',
+                                           '[TSSpellSupport endReview]; [TSSpellSupport findNextMisspellingInTextView:')),
+}
+if args.mutation:
+    old, new = mutations[args.mutation]
+    assert old != new and program.count(old) == 1
+    program = program.replace(old, new)
+with tempfile.TemporaryDirectory(prefix='texshop-spell-change-wiring-') as td:
+    t = Path(td); (t/'probe.m').write_text(program)
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-I', str(root/'Tests'), '-framework', 'Cocoa',
+                    str(t/'probe.m'), '-o', str(t/'probe')], check=True)
+    subprocess.run([str(t/'probe')], check=True, timeout=30)

@@ -27,9 +27,14 @@
     (as the panel was given it), or nil. "*/
 + (void)preferencesDidChange;
 + (void)changeAll:(id)sender;
-// YES when the panel is reviewing a misspelling in this view but the selection
-// or text has since changed, so the panel's Change would act on the wrong text.
-+ (BOOL)changeIsStaleForTextView:(NSTextView *)textView;
+/*" YES, after a beep, when the panel shows a word from a review that is no
+    longer current in `textView`: the selection or the text has changed since
+    the word was shown, or the panel's Change was sent to another pane or
+    document. The panel's Change would then replace the wrong text. NO when
+    no review is in progress. "*/
++ (BOOL)refuseStaleChangeInTextView:(NSTextView *)textView;
+/*" Forget the review, when the system's own search is used instead. "*/
++ (void)endReview;
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)textView mask:(TSSpellMask *)mask;
 
 /*" Opening the Spelling and Grammar panel (Show Spelling and Grammar, Command-:)

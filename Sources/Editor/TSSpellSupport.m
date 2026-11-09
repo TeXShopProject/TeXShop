@@ -214,9 +214,21 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     return YES;
 }
 
-+ (BOOL)changeIsStaleForTextView:(NSTextView *)textView
++ (BOOL)refuseStaleChangeInTextView:(NSTextView *)textView
 {
-    return textView && textView == sReviewView && sReviewWord.length && !ReviewIsCurrent(textView);
+    if (sReviewWord.length == 0 || (textView == sReviewView && ReviewIsCurrent(textView))) return NO;
+    sReplacementStatus.stringValue = NSLocalizedString(@"Return to the word and choose Find Next before replacing.", @"");
+    NSBeep();
+    return YES;
+}
+
++ (void)endReview
+{
+    sReviewView = nil;
+    sReviewWord = nil;
+    sReviewText = nil;
+    sReplacementField.stringValue = @"";
+    sReplacementStatus.stringValue = @"";
 }
 
 // The panel's "Change All" button: replace the misspelling the panel is showing
