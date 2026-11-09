@@ -1250,7 +1250,7 @@
 	<key>CFBundleHelpBookName</key>
 	<string>TeXShop Help</string>
 	<key>CFBundleIconFile</key>
-	<string>icon</string>
+	<string>TeXShop</string>
 	<key>CFBundleIdentifier</key>
 	<string>TeXShop</string>
 	<key>CFBundleInfoDictionaryVersion</key>
