@@ -1,5 +1,5 @@
 // added by Terada: Center the outlined TeX mark on the inherited icon background.
-// Generate Icon Composer artwork, a legacy fallback, and a full-bleed web avatar.
+// Generate Icon Composer artwork, a fallback preview, and a full-bleed web avatar.
 // swift Artwork/generate-icon.swift
 import AppKit
 import CoreText
@@ -83,8 +83,6 @@ let frameSVG="""
 </svg>
 """
 try frameSVG.write(to:asset.appendingPathComponent("Frame.svg"),atomically:true,encoding:.utf8)
-let iconset=root.appendingPathComponent("Artwork/TeXShop.iconset")
-try FileManager.default.createDirectory(at:iconset,withIntermediateDirectories:true)
 func png(_ pixels:Int, fullBleed:Bool = false)->Data {
     let b=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:pixels,pixelsHigh:pixels,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:0,bitsPerPixel:0)!
     let ctx=NSGraphicsContext(bitmapImageRep:b)!.cgContext
@@ -135,13 +133,12 @@ func png(_ pixels:Int, fullBleed:Bool = false)->Data {
     relief(word,top:color(255,255,255),bottom:color(220,225,226),side:color(139,153,156))
     return b.representation(using:.png,properties:[:])!
 }
-for size in [16,32,128,256,512] {
- try png(size).write(to:iconset.appendingPathComponent("icon_\(size)x\(size).png"))
- try png(size*2).write(to:iconset.appendingPathComponent("icon_\(size)x\(size)@2x.png"))
-}
-try png(1024).write(to:root.appendingPathComponent("Artwork/Icon-preview.png"))
+let preview=png(1024)
+try preview.write(to:root.appendingPathComponent("Artwork/Icon-preview.png"))
+try preview.write(to:root.appendingPathComponent("Resources/DockIcons/current.png"))
+try png(512).write(to:root.appendingPathComponent("website/assets/texshop.png"))
 try png(1024,fullBleed:true).write(to:root.appendingPathComponent("Artwork/GitHub-avatar.png"))
-print("Optically centered TeX outline; Icon Composer layers, legacy PNGs, and web avatar generated.")
+print("Optically centered TeX outline; Icon Composer layers, preview, Dock icon, website icon, and avatar generated.")
 
 let composerURL=root.appendingPathComponent("Artwork/TeXShop.icon/icon.json")
 var composer=try JSONSerialization.jsonObject(with:Data(contentsOf:composerURL)) as! [String:Any]
