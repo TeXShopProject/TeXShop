@@ -215,6 +215,17 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
     return [@[@"tex", @"ltx", @"latex", @"dtx", @"ins", @"sty", @"cls", @"clo", @"bbx", @"cbx", @"lbx"] containsObject:extension];
 }
 
+// The panel's Change button replaces the current selection. If the user has
+// selected other text since the misspelling was shown, do nothing, as Change All does.
+- (void)changeSpelling:(id)sender
+{
+    if ([self usesTeXAwareSpellChecking] && [TSSpellSupport changeIsStaleForTextView:self]) {
+        NSBeep();
+        return;
+    }
+    [super changeSpelling:sender];
+}
+
 - (void)checkSpelling:(id)sender
 {
     if (![self usesTeXAwareSpellChecking] || ([NSEvent modifierFlags] & NSEventModifierFlagOption)) {

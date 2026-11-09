@@ -214,6 +214,11 @@ static BOOL IsWholeWord(NSString *s, NSRange range)
     return YES;
 }
 
++ (BOOL)changeIsStaleForTextView:(NSTextView *)textView
+{
+    return textView && textView == sReviewView && sReviewWord.length && !ReviewIsCurrent(textView);
+}
+
 // The panel's "Change All" button: replace the misspelling the panel is showing
 // everywhere in the document (outside the text the rules exclude) by the text in
 // the panel's correction field, as one undoable change, then go on to the next

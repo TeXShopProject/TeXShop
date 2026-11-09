@@ -27,6 +27,9 @@
     (as the panel was given it), or nil. "*/
 + (void)preferencesDidChange;
 + (void)changeAll:(id)sender;
+// YES when the panel is reviewing a misspelling in this view but the selection
+// or text has since changed, so the panel's Change would act on the wrong text.
++ (BOOL)changeIsStaleForTextView:(NSTextView *)textView;
 + (NSString *)findNextMisspellingInTextView:(NSTextView *)textView mask:(TSSpellMask *)mask;
 
 /*" Opening the Spelling and Grammar panel (Show Spelling and Grammar, Command-:)
