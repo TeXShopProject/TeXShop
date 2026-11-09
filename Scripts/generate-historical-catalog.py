@@ -18,6 +18,25 @@ def order(r):
  chronological=dates.get(t[1:],{}).get('date','') if nums==(1,0,0) else ''
  return nums, (not bool(re.search(r'(?:beta|d\d)',t,re.I))),chronological,t
 meta.sort(key=order,reverse=True)
+def date_label(value, ja):
+ parts=value.split('-')
+ if not re.fullmatch(r'\d{4}(?:-\d{2}){0,2}',value):
+  raise ValueError(f'Invalid historical date: {value}')
+ year=int(parts[0]);month=int(parts[1]) if len(parts)>1 else 1;day=int(parts[2]) if len(parts)>2 else 1
+ d=date(year,month,day)
+ if len(parts)==1:return f'{year}年' if ja else str(year)
+ if len(parts)==2:return f'{year}年{month}月' if ja else d.strftime('%B')+f' {year}'
+ return f'{year}年{month}月{day}日' if ja else d.strftime('%B')+f' {day}, {year}'
+
+def date_stamp(info, ja):
+ value=info['date'];label=date_label(value,ja)
+ stamp=f'<time datetime="{value}">{label}</time>'
+ if info.get('end_date'):
+  end=info['end_date'];end_label=date_label(end,ja)
+  if len(end)!=len(value) or end<=value:raise ValueError('Historical date range must increase at equal precision')
+  stamp+=f'–<time datetime="{end}">{end_label}</time>'
+ return '<small>'+stamp+'</small>'
+
 def cell(a,role,tag,ja):
  if not a:return '<span class="not-available">—</span>'
  path=a.get('download_url') or 'https://github.com/TeXShopProject/TeXShop/releases/download/historical-archive/'+urllib.parse.quote(a['name']);name=f'TeXShop {tag[1:]} {role}';desc=f'{name}のSHA-256をコピー' if ja else f'Copy SHA-256 for {name}';sha=a['sha256']
@@ -101,8 +120,7 @@ for ja in (False,True):
   if app and match and int(match.group(1))<=48:
    os+=('<small>macOS 10.14 Mojaveでは起動不可</small>' if ja else '<small>Does not run on macOS 10.14 Mojave</small>')
   if dateinfo:
-   d=date.fromisoformat(dateinfo['date']);label=f'{d.year}年{d.month}月{d.day}日' if ja else d.strftime('%B')+f' {d.day}, {d.year}'
-   stamp=f'<small><time datetime="{d.isoformat()}">{label}</time></small>'
+   stamp=date_stamp(dateinfo,ja)
   status=statuses.get(r['tag'],{}); state=status.get('status'); label={'beta':('ベータ版','beta'),'unreleased':('未公開','unreleased'),'experimental':('実験版','experimental'),'development':('開発版','development'),'first_official':('初公式リリース','first official release')}.get(state); badge=''
   if label:
    label_text=(label[0] if ja else label[1]) if state=='first_official' else (f'（{label[0]}）' if ja else f'({label[1]})'); badge=f' <span class="release-status{" first-official" if state=="first_official" else ""}">{label_text}</span>'
