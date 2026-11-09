@@ -226,7 +226,7 @@
 "catalog.typesetting.0.1.title" = "Comando que se utilizará";
 "catalog.typesetting.0.2.title" = "Personal Script";
 "catalog.typesetting.0.3.title" = "Motor alternativo";
-"catalog.typesetting.0.3.note" = "(por defecto: pdflatexmk)";
+"catalog.typesetting.0.3.note" = "Predeterminado: pdflatexmk";
 "group.typesetting.1.title" = "Después de componer";
 "catalog.typesetting.1.0.title" = "Tras componer páginas";
 "group.typesetting.2.title" = "Sincronización de fuente y vista previa";
@@ -265,7 +265,7 @@
 "catalog.typesetting.8.0.title" = "kpsetool";
 "catalog.typesetting.8.0.note" = "Predeterminado: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
-"catalog.typesetting.8.1.note" = "Por defecto: bibtex";
+"catalog.typesetting.8.1.note" = "Predeterminado: bibtex";
 "group.typesetting.9.title" = "Soporte pTeX (japonés) ";
 "catalog.typesetting.9.0.title" = "Compatibilidad con el paquete otf";
 "group.console.0.title" = "Tipografía";

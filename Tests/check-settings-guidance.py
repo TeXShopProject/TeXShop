@@ -98,8 +98,11 @@ for language in LANGUAGES:
                 if self.stack[i][0]==tag:self.stack=self.stack[:i];break
         def handle_data(self,text):
             if not text.strip() or not any(t=='body' for t,i in self.stack):return
-            allowed={'content_border','header_background','header_logo','header_chapter','header_title','menu_border'}
-            if not any(i in allowed or t in ('script','style') for t,i in self.stack):self.outside.append(text.strip()[:80])
+            if any(i=='content_border' or t in ('script','style') for t,i in self.stack):return
+            chrome=any(i in {'header_background','header_logo','header_chapter','header_title','menu_border'} for t,i in self.stack)
+            # Chrome contains navigation links or headings, never body paragraphs.
+            heading_or_link=any(t in ('a','h1','h2','h3','h4') for t,i in self.stack) or self.stack[-1][1] in {'header_chapter','header_title'}
+            if not (chrome and heading_or_link and not any(t in ('p','dd','dt') for t,i in self.stack)):self.outside.append(text.strip()[:80])
     for name in ('basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden'):
         parser=ContentParser();parser.feed(pages[name]);assert not parser.outside,(language,name,'body text outside content_border',parser.outside)
     for name, key in (('basic_autocompletion', 'Edit Key Bindings…'), ('basic_commandcompletion', 'Edit Command Completion…')):
@@ -189,3 +192,15 @@ print('PASS: hidden PDF current text and distribution identity')
 phrase='Settings has a compact sidebar, overview cards and named groups with switches and right-aligned controls. Settings Profile is in General.'
 for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)
+
+# Obsolete unlinked pages still enter help indexes, so they must not ship.
+for language in ('en','ko'):
+    assert not (ROOT/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/basic_preferences1.htm').exists(),'Obsolete duplicate preferences help page'
+assert 'Transparency settings bring up a full Color Well' not in manual,'Opacity uses a slider in the manual'
+
+warning='A note with a yellow warning symbol explains changes to the spell-checking method, new-PDF zoom or default encoding when relevant. Auto Save requires a restart. The standard Find Panel and Find Bar switch immediately; switching to or from OgreKit requires a restart.'
+for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
+    text=(ROOT/filename).read_text()
+    assert warning in text,('Current release warning copies agree',filename)
+    for retired in ('All three groups remain open','Changing the method keeps the inactive options and their values','with all three groups open','without discarding unsaved edits'):
+        assert retired not in text,('Retired redundant release explanation',filename,retired)

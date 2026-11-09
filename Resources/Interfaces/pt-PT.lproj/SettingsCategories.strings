@@ -226,7 +226,7 @@
 "catalog.typesetting.0.1.title" = "Comando a usar";
 "catalog.typesetting.0.2.title" = "Script pessoal";
 "catalog.typesetting.0.3.title" = "Alternate Engine";
-"catalog.typesetting.0.3.note" = "(default: pdflatexmk)";
+"catalog.typesetting.0.3.note" = "Predefinição: pdflatexmk";
 "group.typesetting.1.title" = "Após a composição";
 "catalog.typesetting.1.0.title" = "After Typesetting";
 "group.typesetting.2.title" = "Sincronização do código-fonte e da pré-visualização";
@@ -265,7 +265,7 @@
 "catalog.typesetting.8.0.title" = "kpsetool";
 "catalog.typesetting.8.0.note" = "Predefinição: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "BibTeX Engine";
-"catalog.typesetting.8.1.note" = "default: bibtex";
+"catalog.typesetting.8.1.note" = "Predefinição: bibtex";
 "group.typesetting.9.title" = "pTeX support";
 "catalog.typesetting.9.0.title" = "Suporte para o pacote otf";
 "group.console.0.title" = "Tipo de letra";

@@ -226,7 +226,7 @@
 "catalog.typesetting.0.1.title" = "使用的命令";
 "catalog.typesetting.0.2.title" = "个性化脚本";
 "catalog.typesetting.0.3.title" = "替代引擎";
-"catalog.typesetting.0.3.note" = "(默认: pdflatexmk)";
+"catalog.typesetting.0.3.note" = "默认值：pdflatexmk";
 "group.typesetting.1.title" = "排版后";
 "catalog.typesetting.1.0.title" = "排版后";
 "group.typesetting.2.title" = "源文件和预览同步";
@@ -265,7 +265,7 @@
 "catalog.typesetting.8.0.title" = "kpsetool";
 "catalog.typesetting.8.0.note" = "默认值：kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "BibTeX 引擎";
-"catalog.typesetting.8.1.note" = "默认: bibtex";
+"catalog.typesetting.8.1.note" = "默认值：bibtex";
 "group.typesetting.9.title" = "pTeX 支持 (仅日语用户)";
 "catalog.typesetting.9.0.title" = "otf 宏包支持";
 "group.console.0.title" = "字体";

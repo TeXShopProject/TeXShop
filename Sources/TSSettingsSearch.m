@@ -23,7 +23,7 @@
 - (NSString *)title
 {
     for (TSSettingsSearchEntry *entry in self.entries)
-        if (entry.command || entry.weight == TSSettingsSearchWeightLabel) return entry.text;
+        if (entry.command || entry.weight == TSSettingsSearchWeightLabel || entry.weight == TSSettingsSearchWeightCategory) return entry.text;
     // Descriptions and choices qualify a named setting; they are never its title.
     return @"";
 }
@@ -86,6 +86,12 @@
     NSArray<NSString *> *tokens = TSSettingsQueryTokens(query);
     if (!tokens.count) return @[];
     NSMutableArray<TSSettingsSearchResult *> *results = [NSMutableArray array];
+    // Multiple color wells in these rows represent one named visual setting.
+    NSDictionary<NSString *, NSString *> *visualRows = @{
+        @"settings.0fE-JX-Dl8":@"settings.L8Q-Ov-EVr", @"settings.2U5-cN-QJw":@"settings.L8Q-Ov-EVr",
+        @"settings.ooP-O9-ggT":@"settings.Kx3-n3-dsv", @"settings.c9R-58-ggg":@"settings.Kx3-n3-dsv",
+        @"settings.GBU-aF-4Dc":@"settings.FoL-zy-obh", @"settings.cnt-Xt-iQF":@"settings.hCM-4U-XkM"
+    };
     for (TSSettingsCategoryID category in self.categoryOrder) {
         NSMutableDictionary<NSString *, NSMutableArray<TSSettingsSearchEntry *> *> *items = [NSMutableDictionary dictionary];
         NSMutableOrderedSet<NSString *> *order = [NSMutableOrderedSet orderedSet];
@@ -94,13 +100,24 @@
             if (![entry.category isEqualToString:category]) continue;
             if (!entry.targetIdentifier.length || [entry.targetIdentifier isEqualToString:@"category.description"]) { [categoryText addObject:entry]; continue; }
             // Commands share the table target but remain individually named results.
-            NSString *key = entry.command ? [@"command:" stringByAppendingString:entry.text] : entry.targetIdentifier;
+            NSString *key = entry.command ? [@"command:" stringByAppendingString:entry.text] : (visualRows[entry.targetIdentifier] ?: entry.targetIdentifier);
             if (items[key] == nil) { items[key] = [NSMutableArray array]; [order addObject:key]; }
             [items[key] addObject:entry];
         }
+        NSInteger categoryScore = 0;
+        for (NSString *token in tokens) {
+            NSInteger best = 0;
+            for (TSSettingsSearchEntry *entry in categoryText) {
+                NSRange range = [entry.normalizedText rangeOfString:token options:NSLiteralSearch];
+                if (range.location != NSNotFound) best = MAX(best, entry.weight + (entry.normalizedText.length == token.length ? TSSettingsSearchBonusExact : (range.location == 0 ? TSSettingsSearchBonusPrefix : TSSettingsSearchBonusSubstring)));
+            }
+            if (!best) { categoryScore = 0; break; }
+            categoryScore += best;
+        }
+        if (categoryScore) [results addObject:[[TSSettingsSearchResult alloc] initWithCategory:category entries:categoryText score:categoryScore]];
         for (NSString *key in order) {
             NSArray<TSSettingsSearchEntry *> *entries = items[key];
-            NSInteger score = 0;
+            NSInteger score = 0; BOOL ownMatch = NO;
             for (NSString *token in tokens) {
                 NSInteger best = 0;
                 for (TSSettingsSearchEntry *entry in entries) {
@@ -109,8 +126,9 @@
                     NSInteger bonus = entry.normalizedText.length == token.length ? TSSettingsSearchBonusExact : (range.location == 0 ? TSSettingsSearchBonusPrefix : TSSettingsSearchBonusSubstring);
                     best = MAX(best, entry.weight + bonus);
                 }
-                // Category text can find or qualify its settings. Tokens from
-                // unrelated settings still cannot complete an AND query.
+                ownMatch |= best > 0;
+                // Category words can qualify an item match, but cannot turn
+                // every unrelated setting into a result on their own.
                 for (TSSettingsSearchEntry *entry in categoryText) {
                     NSRange range = [entry.normalizedText rangeOfString:token options:NSLiteralSearch];
                     if (range.location == NSNotFound) continue;
@@ -120,7 +138,7 @@
                 if (!best) { score = 0; break; }
                 score += best;
             }
-            if (score) {
+            if (score && ownMatch) {
                 // A target may represent two labelled controls. Name the one
                 // whose label best matches this query, retaining stable ties.
                 TSSettingsSearchEntry *preferred = nil; NSInteger labelScore = 0;

@@ -348,16 +348,16 @@
     InvisibleColor = myColor;
     
     myArray = [colorDictionary objectForKey:@"PreviewAlpha"];
-    myNumber = myArray[3];
+    myNumber = myArray.count >= 4 ? myArray[3] : @1;
     self.pdfKitWindow.alphaValue = [myNumber floatValue];
     
     myArray = [colorDictionary objectForKey:@"SourceAlpha"];
-    myNumber = myArray[3];
+    myNumber = myArray.count >= 4 ? myArray[3] : @1;
     textWindow.alphaValue = [myNumber floatValue];
     fullSplitWindow.alphaValue = [myNumber floatValue];
     
     myArray = [colorDictionary objectForKey:@"ConsoleAlpha"];
-    myNumber = myArray[3];
+    myNumber = myArray.count >= 4 ? myArray[3] : @1;
     outputWindow.alphaValue = [myNumber floatValue];
     
     myColor = [[TSColorSupport sharedInstance] colorAndAlphaFromDictionary:colorDictionary andKey: @"ImageForeground"];

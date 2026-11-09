@@ -55,7 +55,7 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
   if(!entry.targetIdentifier.length || [entry.targetIdentifier isEqual:@"category.description"])continue;
   BOOL matched=NO;
   for(TSSettingsSearchResult *result in [index resultsForQuery:entry.text]){
-   if(![result.category isEqual:entry.category] || ![result.targetIdentifier isEqual:entry.targetIdentifier])continue;
+   if(![result.category isEqual:entry.category] || ![result.entries containsObject:entry])continue;
    matched=YES;
    Check(result.title.length>0,@"Every result has an explicit setting name");
    if([entry.targetIdentifier hasPrefix:@"row.catalog."]){
@@ -69,9 +69,31 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
  }
  // Labels sharing a target must use the name that matches the actual query.
  for(TSSettingsSearchEntry *entry in index.entries)if(entry.weight==TSSettingsSearchWeightLabel && ![entry.targetIdentifier hasPrefix:@"row.catalog."] && ![entry.targetIdentifier isEqual:@"DockIconChoices"]){
-  BOOL found=NO;for(TSSettingsSearchResult *result in [index resultsForQuery:entry.text])if([result.targetIdentifier isEqual:entry.targetIdentifier] && [result.category isEqual:entry.category]){
+  BOOL found=NO;for(TSSettingsSearchResult *result in [index resultsForQuery:entry.text])if([result.entries containsObject:entry] && [result.category isEqual:entry.category]){
    Check([TSSettingsNormalizedText(result.title) isEqual:TSSettingsNormalizedText(entry.text)],[NSString stringWithFormat:@"Matching labels win for %@: expected %@, got %@",entry.targetIdentifier,entry.text,result.title]);found=YES;
   }Check(found,@"Each visible label finds its own target");
+ }
+ // A category match is one doorway, not a match on every unrelated row.
+ TSSettingsSearch *isolated=[[TSSettingsSearch alloc]initWithBundle:resources categoryOrder:@[@"general"] commandNames:@[]];
+ NSMutableArray *synthetic=[NSMutableArray array];
+ for(NSArray *data in @[@[@"",@"Categoryneedle",@(TSSettingsSearchWeightCategory)],@[@"category.description",@"Summaryneedle",@20],@[@"row.alpha",@"Alpha option",@50],@[@"row.beta",@"Beta option",@50]])
+  [synthetic addObject:[[TSSettingsSearchEntry alloc]initWithCategory:@"general" target:data[0] text:data[1] weight:[data[2]integerValue] command:NO]];
+ [isolated setValue:synthetic forKey:@"entries"];
+ for(NSString *query in @[@"Categoryneedle",@"Summaryneedle"]){
+  NSArray<TSSettingsSearchResult *> *hits=[isolated resultsForQuery:query];
+  Check(hits.count==1 && !hits.firstObject.targetIdentifier.length && [hits.firstObject.title isEqual:@"Categoryneedle"],@"Category-only matches produce one named category doorway");
+ }
+ NSArray<TSSettingsSearchResult *> *qualified=[isolated resultsForQuery:@"Categoryneedle Alpha"];
+ Check(qualified.count==1 && [qualified.firstObject.targetIdentifier isEqual:@"row.alpha"],@"Category words qualify only the matching item");
+ Check([isolated resultsForQuery:@"Alpha Beta"].count==0,@"Unrelated items cannot complete an AND query");
+ for(NSArray *targets in @[@[@"settings.L8Q-Ov-EVr",@"settings.0fE-JX-Dl8",@"settings.2U5-cN-QJw"],@[@"settings.Kx3-n3-dsv",@"settings.ooP-O9-ggT",@"settings.c9R-58-ggg"],@[@"settings.FoL-zy-obh",@"settings.GBU-aF-4Dc"],@[@"settings.hCM-4U-XkM",@"settings.cnt-Xt-iQF"]]){
+  NSString *label=nil;for(TSSettingsSearchEntry *entry in index.entries)if([entry.targetIdentifier isEqual:targets[0]] && entry.weight==50){label=entry.text;break;}
+  NSUInteger matches=0;NSMutableSet *found=[NSMutableSet set];
+  for(TSSettingsSearchResult *hit in [index resultsForQuery:label]){
+   BOOL row=NO;for(TSSettingsSearchEntry *entry in hit.entries)if([targets containsObject:entry.targetIdentifier]){row=YES;[found addObject:entry.targetIdentifier];}
+   if(row)matches++;
+  }
+  Check(matches==1 && found.count==targets.count,@"A visual theme row has one result retaining all color targets");
  }
  Check([index resultsForQuery:@"unfindable-93762"].count==0,@"Unknown query has no results");
  Check([index resultsForQuery:@"\u3000 \n"].count==0,@"Empty normalized query has no results");

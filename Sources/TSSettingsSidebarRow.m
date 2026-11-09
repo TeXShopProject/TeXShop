@@ -36,7 +36,11 @@
     CGFloat height=10;
     NSArray *texts=@[title,categoryTitle];
     NSArray *fonts=@[[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold], [NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
-    for(NSUInteger i=0;i<texts.count;i++)height+=ceil([texts[i] boundingRectWithSize:NSMakeSize(available,CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:fonts[i]}].size.height);
+    for(NSUInteger i=0;i<texts.count;i++) {
+        NSTextField *label=[NSTextField wrappingLabelWithString:texts[i]];
+        label.font=fonts[i];
+        height+=ceil([label.cell cellSizeForBounds:NSMakeRect(0,0,available,CGFLOAT_MAX)].height);
+    }
     return MAX(44,height);
 }
 + (NSTableCellView *)cellForSearchTitle:(NSString *)title categoryTitle:(NSString *)categoryTitle

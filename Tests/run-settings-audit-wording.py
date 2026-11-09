@@ -27,6 +27,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
   cases.append(('outside-'+tag,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'</body>',body+b'</body>',guidance,'body text outside content_border'))
  for term in ['Theme color groups are shown together in Appearance.','Settings » Themes']:
   cases.append(('obsolete-'+term,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'<div id="content_border">',('<div id="content_border"><p>'+term+'</p>').encode('ascii',errors='xmlcharrefreplace'),guidance,term))
+ for chrome in ['menu_border','header_title']:
+  cases.append(('chrome-paragraph-'+chrome,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/configure_hidden.htm',('<div id="'+chrome+'">').encode(),('<div id="'+chrome+'"><p>fixture body</p>').encode(),guidance,'body text outside content_border'))
  for text in ['解除','すべて元に戻す…']:
   cases.append(('ja-label-'+text,'Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',text.encode('cp932'),b'REMOVED',guidance,'Japanese shortcut button missing'))
  for name,file,old,new,run,message in cases:
@@ -34,6 +36,24 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
   result=run();p.write_bytes(original)
   assert result.returncode and message in result.stderr,(name,result.stdout,result.stderr)
   print('DETECTED',name,message,flush=True)
+ for language in ['en','ko']:
+  p=T/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/basic_preferences1.htm';p.write_text('<html><body>obsolete</body></html>')
+  result=guidance();p.unlink();assert result.returncode and 'Obsolete duplicate preferences help page' in result.stderr,result.stderr
+  print('DETECTED obsolete duplicate help',language,flush=True)
+ p=T/'Manual Source/Manual.tex';original=p.read_bytes();p.write_bytes(original+b'\nTransparency settings bring up a full Color Well\n');result=guidance();p.write_bytes(original)
+ assert result.returncode and 'Opacity uses a slider in the manual' in result.stderr,result.stderr
+ print('DETECTED old opacity manual',flush=True)
+ search_wording=json.loads((R/'Tests/Fixtures/SettingsSearchWording.json').read_text())
+ for lang in search_wording['counts']:
+  p=T/f'Resources/Interfaces/{lang}.lproj/Localizable.strings';original=p.read_bytes();values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(p)]));values['Settings results: %lu']='Categories: %lu'
+  p.write_text('\n'.join(json.dumps(k,ensure_ascii=False)+' = '+json.dumps(v,ensure_ascii=False)+';' for k,v in values.items())+'\n')
+  result=wording();p.write_bytes(original);assert result.returncode and 'Search counts refer to settings' in result.stderr,result.stderr
+  print('DETECTED search count',lang,flush=True)
+ for lang in search_wording['prefixes']:
+  actual='Base' if lang=='en' else lang;p=T/f'Resources/Interfaces/{actual}.lproj/SettingsCategories.strings';original=p.read_bytes();values=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(p)]));values['catalog.typesetting.0.3.note']='(default: pdflatexmk)'
+  p.write_text('\n'.join(json.dumps(k,ensure_ascii=False)+' = '+json.dumps(v,ensure_ascii=False)+';' for k,v in values.items())+'\n')
+  result=wording();p.write_bytes(original);assert result.returncode and 'Engine defaults use consistent localized wording' in result.stderr,result.stderr
+  print('DETECTED engine default',lang,flush=True)
  # Revert all distributed PDF copies together: identity alone cannot catch stale content.
  hidden=['DocumentSources/CommentLinesRevised/CommentLines.pdf','Resources/Interfaces/Base.lproj/CommentLines.pdf','Resources/Interfaces/en.lproj/CommentLines.pdf']
  originals={name:(T/name).read_bytes() for name in hidden}

@@ -226,7 +226,7 @@
 "catalog.typesetting.0.1.title" = "Comanda utilizată";
 "catalog.typesetting.0.2.title" = "Personal Script";
 "catalog.typesetting.0.3.title" = "Alternate Engine";
-"catalog.typesetting.0.3.note" = "(default: pdflatexmk)";
+"catalog.typesetting.0.3.note" = "Implicit: pdflatexmk";
 "group.typesetting.1.title" = "După tehnoredactare";
 "catalog.typesetting.1.0.title" = "After Typesetting";
 "group.typesetting.2.title" = "Sincronizarea sursei și a previzualizării";
@@ -265,7 +265,7 @@
 "catalog.typesetting.8.0.title" = "kpsetool";
 "catalog.typesetting.8.0.note" = "Implicit: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "BibTeX Engine";
-"catalog.typesetting.8.1.note" = "default: bibtex";
+"catalog.typesetting.8.1.note" = "Implicit: bibtex";
 "group.typesetting.9.title" = "pTeX support";
 "catalog.typesetting.9.0.title" = "Suport pentru pachetul otf";
 "group.console.0.title" = "Font";

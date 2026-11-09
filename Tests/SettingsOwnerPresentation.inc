@@ -45,11 +45,14 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
                 CGFloat height=[shell tableView:shell.categoryTable heightOfRow:i];cell.frame=NSMakeRect(0,0,width.doubleValue,height);cell.textField.font=[NSFont systemFontOfSize:NSFont.systemFontSize weight:NSFontWeightSemibold];[cell layoutSubtreeIfNeeded];
                 NSTextField *category=(NSTextField *)Find(cell,@"search.result.category");
                 Check(category.stringValue.length>0,@"Search result retains its category label");
+                CGFloat requiredTextHeight=0;
                 for(NSTextField *label in @[cell.textField,category]){
                     NSRect frame=[label alignmentRectForFrame:label.frame];
-                    CGFloat needed=ceil([label.stringValue boundingRectWithSize:NSMakeSize(width.doubleValue-16,CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:label.font}].size.height);
-                    Check(NSMinY(frame)>=0 && NSMaxY(frame)<=height+1 && NSHeight(frame)>=needed-1,@"Wrapped search result names and categories fit the row");
+                    CGFloat needed=ceil([label.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(label.bounds),CGFLOAT_MAX)].height);
+                    requiredTextHeight+=needed;
+                    Check(NSMinY(frame)>=0 && NSMaxY(frame)<=height && NSHeight(label.bounds)>=needed,@"Wrapped search result names and categories fit the row");
                 }
+                Check(requiredTextHeight+4+2+4<=height,@"Wrapped search result names and categories fit the row");
             }
         }
     }

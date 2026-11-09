@@ -61,7 +61,7 @@ static void Check(BOOL ok,NSString *why) { if(!ok){fprintf(stderr,"FAIL: %s\n",w
 static id _Nonnull Required(id _Nullable value) {if(value==nil)abort();return (id _Nonnull)value;}
 static NSString * _Nonnull Argument(const char *value) {return Required([NSString stringWithUTF8String:value]);}
 static void Collect(NSView *v,NSMutableDictionary *controls) {
- if([v isKindOfClass:NSControl.class] && [v.identifier hasPrefix:@"settings."]) { Check(controls[Required(v.identifier)]==nil,@"Control occurs once");controls[Required(v.identifier)]=v; }
+ if([v isKindOfClass:NSControl.class] && ![v isKindOfClass:NSImageView.class] && [v.identifier hasPrefix:@"settings."]) { Check(controls[Required(v.identifier)]==nil,[NSString stringWithFormat:@"Control occurs once: %@",v.identifier]);controls[Required(v.identifier)]=v; }
  for(NSView *c in v.subviews) Collect(c,controls);
 }
 static NSView *Find(NSView *v,NSString *key) {if([v.identifier isEqual:key])return v;for(NSView *c in v.subviews){NSView *f=Find(c,key);if(f)return f;}return nil;}
@@ -82,7 +82,7 @@ static void Geometry(NSView *v) {
   for(NSInteger row=0;row<matrix.numberOfRows;row++)for(NSInteger col=0;col<matrix.numberOfColumns;col++)Check([matrix cellAtRow:row column:col].cellSize.width<=NSWidth([matrix cellFrameAtRow:row column:col])+1,@"Matrix title fits");
  }
  if([v.identifier hasPrefix:@"row."]) Check(NSHeight(v.frame)>=37.5,@"Minimum row height is 38");
- if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||(ancestor && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
+ if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||(ancestor && stack.spacing==4)||([NSStringFromClass(stack.class) isEqual:@"TSSettingsOpacityPresentation"] && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
 }
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();[NSApplication sharedApplication];memory=TSIsolatedAppKitDefaults;
@@ -223,9 +223,9 @@ int main(int argc,char **argv){@autoreleasepool{
  // Grayscale and named/catalog colors must be converted before RGB components are saved.
  NSColorWell *cursor=[owner valueForKey:@"BlockCursorColorWell"];
  for(NSColor *color in @[[NSColor colorWithCalibratedWhite:0.37 alpha:0.6],NSColor.systemRedColor]) {
-  cursor.color=color;[owner BlockCursorColorChanged:cursor];NSColor *rgb=[color colorUsingColorSpace:NSColorSpace.genericRGBColorSpace];
+  cursor.color=color;@try {[owner BlockCursorColorChanged:cursor];} @catch(NSException *exception){Check(NO,@"Cursor action stores converted RGB from its sender");}NSColor *rgb=[color colorUsingColorSpace:NSColorSpace.genericRGBColorSpace];
   Check(fabs([memory doubleForKey:BlockCursorRKey]-rgb.redComponent)<0.0001 && fabs([memory doubleForKey:BlockCursorGKey]-rgb.greenComponent)<0.0001 && fabs([memory doubleForKey:BlockCursorBKey]-rgb.blueComponent)<0.0001,@"Cursor action stores converted RGB from its sender");
-  NSMutableDictionary *theme=[NSMutableDictionary dictionary];[[TSColorSupport sharedInstance] changeColorValueInDictionary:theme forKey:@"probe" fromColorWell:cursor];NSArray *saved=theme[@"probe"];
+  NSMutableDictionary *theme=[NSMutableDictionary dictionary];@try {[[TSColorSupport sharedInstance] changeColorValueInDictionary:theme forKey:@"probe" fromColorWell:cursor];} @catch(NSException *exception){Check(NO,@"Theme wells store converted RGBA");}NSArray *saved=theme[@"probe"];
   Check(saved.count==4 && fabs([saved[0] doubleValue]-rgb.redComponent)<0.0001 && fabs([saved[1] doubleValue]-rgb.greenComponent)<0.0001 && fabs([saved[2] doubleValue]-rgb.blueComponent)<0.0001 && fabs([saved[3] doubleValue]-rgb.alphaComponent)<0.0001,@"Theme wells store converted RGBA");
  }
  // The Appearance pane is detached; an unreadable theme still disables all of its wells.

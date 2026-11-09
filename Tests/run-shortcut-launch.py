@@ -13,5 +13,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-shortcut-launch-') as directory
  if '--mutations' in sys.argv:
   text=source.read_text()
   for name,old,new in [('skip-install','        [self startObservingMenu];',';'),('synchronous-start','dispatch_async(dispatch_get_main_queue(), ^{\n        configuration(self);\n        [self startObservingMenu];\n    });','configuration(self);[self startObservingMenu];')]:
-   assert text.count(old)==1;path=d/'TSKeyboardShortcuts.m';path.write_text(text.replace(old,new));result=run(path);assert result.returncode and 'FAIL:' in result.stderr,(name,result.stderr);print('DETECTED',name,result.stderr.strip(),flush=True)
+   assert text.count(old)==1;path=d/'TSKeyboardShortcuts.m';path.write_text(text.replace(old,new));result=run(path);expected={'skip-install':'Launch installs saved shortcut on the final Find menu without opening settings','synchronous-start':'Installation waits until all launch observers finish'}[name];assert result.returncode and 'FAIL: '+expected in result.stderr,(name,result.stderr);print('DETECTED',name,result.stderr.strip(),flush=True)
   result=run(source);assert result.returncode==0,result.stderr;print('NORMAL CONTROL',result.stdout,flush=True)

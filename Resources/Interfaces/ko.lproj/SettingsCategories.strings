@@ -226,7 +226,7 @@
 "catalog.typesetting.0.1.title" = "사용할 명령";
 "catalog.typesetting.0.2.title" = "사용자 스크립트";
 "catalog.typesetting.0.3.title" = "대체 엔진";
-"catalog.typesetting.0.3.note" = "(default: pdflatexmk)";
+"catalog.typesetting.0.3.note" = "기본값: pdflatexmk";
 "group.typesetting.1.title" = "조판 후";
 "catalog.typesetting.1.0.title" = "조판 후 동작";
 "group.typesetting.2.title" = "소스와 미리보기 동기화";
@@ -265,7 +265,7 @@
 "catalog.typesetting.8.0.title" = "kpsetool";
 "catalog.typesetting.8.0.note" = "기본값: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "BibTeX 엔진";
-"catalog.typesetting.8.1.note" = "default: bibtex";
+"catalog.typesetting.8.1.note" = "기본값: bibtex";
 "group.typesetting.9.title" = "일본어 pTeX 지원";
 "catalog.typesetting.9.0.title" = "otf 패키지 지원";
 "group.console.0.title" = "서체";

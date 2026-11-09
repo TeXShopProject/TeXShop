@@ -226,7 +226,7 @@
 "catalog.typesetting.0.1.title" = "Te gebruiken commando";
 "catalog.typesetting.0.2.title" = "Eigen script";
 "catalog.typesetting.0.3.title" = "Alternate Engine";
-"catalog.typesetting.0.3.note" = "(default: pdflatexmk)";
+"catalog.typesetting.0.3.note" = "Standaard: pdflatexmk";
 "group.typesetting.1.title" = "Na het zetten";
 "catalog.typesetting.1.0.title" = "Na zetten";
 "group.typesetting.2.title" = "Synchronisatie van bron en voorvertoning";
@@ -265,7 +265,7 @@
 "catalog.typesetting.8.0.title" = "kpsetool";
 "catalog.typesetting.8.0.note" = "Standaard: kpsetool -w -n latex tex";
 "catalog.typesetting.8.1.title" = "BibTeX Engine";
-"catalog.typesetting.8.1.note" = "default: bibtex";
+"catalog.typesetting.8.1.note" = "Standaard: bibtex";
 "group.typesetting.9.title" = "pTeX support";
 "catalog.typesetting.9.0.title" = "Ondersteuning voor het otf-pakket";
 "group.console.0.title" = "Lettertype";

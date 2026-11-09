@@ -564,6 +564,11 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     NSView *root = keyboard ? self.keyboardPane.view : self.panes[category].view;
     if (root == nil) return;
     [root layoutSubtreeIfNeeded];
+    if (!hit.targetIdentifier.length) {
+        CGFloat top = root.isFlipped ? 0 : MAX(0, NSHeight(root.bounds) - 1);
+        [root scrollRectToVisible:NSMakeRect(0, top, 1, 1)];
+        return;
+    }
     NSMutableArray<NSView *> *matches = [NSMutableArray array];
     TSCollectSearchTargets(root, [NSSet setWithArray:targets], matches);
     for (NSView *match in matches) {

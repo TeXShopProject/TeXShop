@@ -1,0 +1,27 @@
+{
+  "counts": {
+    "de": "Gefundene Einstellungen: %lu",
+    "es": "Ajustes encontrados: %lu",
+    "fr": "Réglages trouvés : %lu",
+    "it": "Impostazioni trovate: %lu",
+    "nl": "Gevonden instellingen: %lu",
+    "pt-PT": "Definições encontradas: %lu",
+    "pt": "Ajustes encontrados: %lu",
+    "ro": "Configurări găsite: %lu",
+    "zh_CN": "找到的设置：%lu"
+  },
+  "prefixes": {
+    "en": "Default: ",
+    "de": "Vorgabe: ",
+    "es": "Predeterminado: ",
+    "fr": "Par défaut : ",
+    "it": "Predefinito: ",
+    "ja": "デフォルト: ",
+    "ko": "기본값: ",
+    "nl": "Standaard: ",
+    "pt-PT": "Predefinição: ",
+    "pt": "Padrão: ",
+    "ro": "Implicit: ",
+    "zh_CN": "默认值："
+  }
+}

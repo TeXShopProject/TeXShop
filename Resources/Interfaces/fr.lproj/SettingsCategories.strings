@@ -226,7 +226,7 @@
 "catalog.typesetting.0.1.title" = "Commande à utiliser";
 "catalog.typesetting.0.2.title" = "Script personnel";
 "catalog.typesetting.0.3.title" = "Moteur TeX alternatif";
-"catalog.typesetting.0.3.note" = "(par défaut :  pdflatexmk)";
+"catalog.typesetting.0.3.note" = "Par défaut : pdflatexmk";
 "group.typesetting.1.title" = "Après la composition";
 "catalog.typesetting.1.0.title" = "Après composition";
 "group.typesetting.2.title" = "Synchronisation de la source et de l’aperçu";

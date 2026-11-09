@@ -11,6 +11,12 @@ static void Check(BOOL value, NSString *message) {
 @end
 NSString *TSSettingsSelectedCategoryKey = @"TSSettingsSelectedCategory";
 static NSString *nibPath;
+@interface SearchPaneView:NSView
+@property NSRect lastSearchScroll;
+@end
+@implementation SearchPaneView
+- (BOOL)scrollRectToVisible:(NSRect)rect {self.lastSearchScroll=rect;return [super scrollRectToVisible:rect];}
+@end
 @interface SearchController : TSSettingsWindowController @end
 @implementation SearchController
 - (void)loadWindow {
@@ -49,7 +55,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSMutableDictionary *panes = [NSMutableDictionary dictionary];
     for (NSString *category in controller.categoryIdentifiers) {
         NSViewController *pane = [NSViewController new]; pane.title = category;
-        pane.view = [[NSView alloc] initWithFrame:NSMakeRect(0,0,700,600)];
+        pane.view = [[SearchPaneView alloc] initWithFrame:NSMakeRect(0,0,700,600)];
         NSArray *ids = [category isEqual:@"general"] ? @[@"row.catalog.general.0.0",@"row.catalog.general.0.1"] : ([category isEqual:@"editor"] ? @[@"row.catalog.editor.0.0"] : @[]);
         for (NSUInteger i=0;i<ids.count;i++) {
             NSView *row = [[NSView alloc] initWithFrame:NSMakeRect(12,100+60*i,600,38)]; row.identifier = ids[i]; [pane.view addSubview:row];
@@ -87,6 +93,10 @@ int main(int argc, char **argv) { @autoreleasepool {
     [controller setSettingsSearchQuery:@"setting"];
     NSTableCellView *cell=(id)[(id<NSTableViewDelegate>)controller tableView:controller.categoryTable viewForTableColumn:nil row:0];
     Check([cell.toolTip containsString:controller.searchResults[0].title] && [cell.toolTip containsString:controller.searchResults[0].category], @"Result exposes its item and category names");
+    [controller setSettingsSearchQuery:@"General"];
+    SearchPaneView *general=(SearchPaneView *)[panes[@"general"] view];general.lastSearchScroll=NSMakeRect(-1,-1,0,0);
+    Choose(controller,@"General");
+    Check(NSEqualRects(general.lastSearchScroll,NSMakeRect(0,MAX(0,NSHeight(general.bounds)-1),1,1)) && [[controller valueForKey:@"searchHighlights"] count]==0,@"Category doorway scrolls to pane top without item highlights");
     Check(!controller.window.visible, @"No settings window was ordered");
     puts("PASS: item results, selected-row highlighting, normal history, clear, persistence and validation");
 } return 0; }

@@ -20,8 +20,28 @@ if mutations:
    # Both radio options must retain their role, not merely one option.
    if name=='radio-choice-weight':text=text.replace('@"odm-Dy-TNW.title", TSSettingsSearchWeightChoice','@"odm-Dy-TNW.title", TSSettingsSearchWeightLabel')
    path=Path(temp)/'catalog.inc';path.write_text(text)
-   result=subprocess.run([*command,'--search-catalog',str(path)],capture_output=True,text=True)
+   # The old otf label is identical in Japanese; the old Dock label is
+   # identical in English. Exercise each non-equivalent localized case.
+   mutated_command=command.copy()
+   if name in ('legacy-label','dock-obsolete-label'):
+    if '--language' in mutated_command:
+     pos=mutated_command.index('--language');del mutated_command[pos:pos+2]
+    mutated_command+=['--language','Base' if name=='legacy-label' else 'ja']
+   result=subprocess.run([*mutated_command,'--search-catalog',str(path)],capture_output=True,text=True)
    assert result.returncode and 'FAIL: '+expected_failures[name] in result.stderr,(name,result.stdout,result.stderr)
    print('DETECTED',name,[line for line in result.stderr.splitlines() if 'FAIL:' in line],flush=True)
  subprocess.run(command,check=True)
  print('NORMAL CONTROL search roles',flush=True)
+
+if mutations:
+ engine=(r/'Sources/TSSettingsSearch.m').read_text()
+ cases=[('category-cascade','if (score && ownMatch)', 'if (score)', 'Category-only matches produce one named category doorway'),('category-doorway','if (categoryScore) [results addObject:', 'if (NO && categoryScore) [results addObject:', 'Category-only matches produce one named category doorway'),('theme-row-duplicates','(visualRows[entry.targetIdentifier] ?: entry.targetIdentifier)','entry.targetIdentifier','A visual theme row has one result retaining all color targets')]
+ with tempfile.TemporaryDirectory(prefix='texshop-search-categories-') as td:
+  for name,old,new,diagnostic in cases:
+   assert engine.count(old)==1
+   p=Path(td)/'search.m';p.write_text(engine.replace(old,new))
+   result=subprocess.run([*command,'--search-source',str(p)],capture_output=True,text=True)
+   assert result.returncode and 'FAIL: '+diagnostic in result.stderr,(name,result.stdout,result.stderr)
+   print('DETECTED',name,diagnostic,flush=True)
+ subprocess.run(command,check=True)
+ print('NORMAL CONTROL category search',flush=True)

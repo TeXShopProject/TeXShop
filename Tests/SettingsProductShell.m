@@ -216,8 +216,9 @@ int main(int argc,char **argv){@autoreleasepool{
 
  }
  if(argc>2){
+  [shell.splitController.splitView setPosition:190 ofDividerAtIndex:0];[shell.window.contentView layoutSubtreeIfNeeded];
   NSUInteger queryIndex=0;
-  for(NSString *query in @[@"utf",@"自動",@"Dock"]){
+  for(NSString *query in @[@"utf",@"自動",@"Dock",[fixture localizedStringForKey:@"appearance" value:nil table:@"SettingsCategories"]]){
    Check([shell setSettingsSearchQuery:query],@"Audit search query is accepted");
    shell.settingsSearchField.stringValue=query;
    NSMutableArray *items=[NSMutableArray array];for(TSSettingsSearchResult *result in shell.searchResults)[items addObject:@{@"category":result.category,@"target":result.targetIdentifier ?: @"",@"title":result.title}];

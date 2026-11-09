@@ -5,7 +5,7 @@ import argparse,json,subprocess,tempfile
 from pane_fixtures import bundles,sources
 from encoding_menu_fixture import encoding_menu_fixture
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--snapshots',type=Path);p.add_argument('--search-coverage',action='store_true');p.add_argument('--mutations',action='store_true');p.add_argument('--search-catalog',type=Path);args=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--snapshots',type=Path);p.add_argument('--search-coverage',action='store_true');p.add_argument('--mutations',action='store_true');p.add_argument('--search-catalog',type=Path);p.add_argument('--search-source',type=Path);args=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  program=(r/'Tests/SettingsClassification.m').read_text().replace('int main(int argc,char **argv)', encoding_menu_fixture(r)+'\nint main(int argc,char **argv)').replace('// SNAPSHOT_ENCODING', 'if(argc>3) { NSPopUpButton *encoding=[owner valueForKey:@"defaultEncodeMatrix"]; [[[EncodingMenuFixture alloc] init] addEncodingsToMenu:encoding.menu withTarget:nil action:NULL]; [encoding selectItemWithTag:NSUTF8StringEncoding]; }')
@@ -20,9 +20,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  (t/'test.m').write_text(program)
  extra=[r/'Sources/TSPreferences.m',r/'Sources/TSPreferences-Color.m',r/'Sources/TSColorSupport.m',r/'Sources/TSThemeFileStore.m',r/'Sources/globals.m',r/'Sources/TSPreferenceInput.m',r/'Tests/PreferencesTestServices.m',*sorted((r/'Sources').glob('TSSettings*.m'))]
  compile_command=['xcrun','clang','-fobjc-arc','-F',str(r),'-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*map(str,extra),str(r/'Sources/TSDockIconController.m'),'-o',str(t/'probe')]
- if args.search_catalog:
-  (t/'TSSettingsSearch.m').write_text((r/'Sources/TSSettingsSearch.m').read_text())
-  (t/'TSSettingsSearchCatalog.inc').write_text(args.search_catalog.read_text())
+ if args.search_catalog or args.search_source:
+  (t/'TSSettingsSearch.m').write_text((args.search_source or r/'Sources/TSSettingsSearch.m').read_text())
+  (t/'TSSettingsSearchCatalog.inc').write_text((args.search_catalog or r/'Sources/TSSettingsSearchCatalog.inc').read_text())
   compile_command=[str(t/'TSSettingsSearch.m') if x==str(r/'Sources/TSSettingsSearch.m') else x for x in compile_command]
  subprocess.run(compile_command,check=True)
  from settings_contract import expand
@@ -70,6 +70,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
     cmd=[str(t/'TSPreferences.m') if x==str(r/'Sources/TSPreferences.m') else str(t/filename) if x==str(r/'Sources'/filename) else x for x in compile_command]
     subprocess.run(cmd,check=True)
     result=subprocess.run(command,capture_output=True,text=True,timeout=90)
-    assert result.returncode and ('FAIL:' in result.stderr or 'NSException' in result.stderr or 'NSInvalidArgumentException' in result.stderr),(name,result.stdout,result.stderr)
+    failure={'cursor-RGB':'Cursor action stores converted RGB from its sender','theme-RGB':'Theme wells store converted RGBA','unread-theme':'Unreadable theme disables offscreen color wells','PDF-position':'Saving PDF position preserves source selection and value','expl3-notification':'Individual action sends exactly the approved runtime notification','invisible-notification':'Invisible-character default requests recoloring'}[name]
+    assert result.returncode and 'FAIL: '+failure in result.stderr,(name,result.stdout,result.stderr)
     print('DETECTED',name,result.stderr[-1200:],flush=True)
    subprocess.run(compile_command,check=True);subprocess.run(command,check=True,timeout=90);print('NORMAL CONTROL',lang,flush=True)

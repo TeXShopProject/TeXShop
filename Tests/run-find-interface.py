@@ -33,12 +33,16 @@ int main(int argc,char **argv){@autoreleasepool{
  NSInteger launch=argc>1?atoi(argv[1]):0;TSSettingsRememberLaunchValue(FindMethodKey,@(launch));
  NSArray *documents=@[[FindDocumentProbe new],[FindDocumentProbe new]];
  for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views)TSConfigureFindInterface(view,launch,NO);
+ NSMutableArray *scrollViews=[NSMutableArray array];
+ for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views){NSScrollView *scroll=[NSScrollView new];scroll.documentView=view;[scrollViews addObject:scroll];}
  NSInteger effective=launch;
  for(NSNumber *method in @[@1,@0,@2,@0,@1])for(NSNumber *incremental in @[@YES,@NO]){
+  for(NSScrollView *scroll in scrollViews)scroll.findBarVisible=YES;
   [SUD setInteger:method.integerValue forKey:FindMethodKey];[SUD setBool:incremental.boolValue forKey:IncrementalSearchKey];
   [NSNotificationCenter.defaultCenter postNotificationName:TSFindMethodChangedNotification object:nil];
   if(launch!=2 && method.integerValue!=2)effective=method.integerValue;
   for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views){
+   if(launch!=2 && method.integerValue==0)Check(!view.enclosingScrollView.findBarVisible,@"Switching to the panel closes every visible find bar");
    Check(view.usesFindBar==(effective==1) && view.usesFindPanel==(effective!=1),@"All source split views, console and log follow the effective find interface");
    if(launch!=2 && method.integerValue!=2)Check(view.incrementalSearchingEnabled==(effective==1&&incremental.boolValue),@"Incremental searching is enabled only in the requested find bar");
   }
@@ -62,7 +66,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-find-interface-')as tmp:
   cases.append(('bar-flag',program,original.replace('view.usesFindBar = method == 1;','view.usesFindBar = NO;'),'All source split views'))
   cases.append(('panel-flag',program,original.replace('view.usesFindPanel = method != 1;','view.usesFindPanel = YES;'),'All source split views'))
   cases.append(('incremental',program,original.replace('method == 1 && incremental','NO && incremental'),'Incremental searching'))
-  cases.append(('reverse-panel',program.replace('NSInteger current = [SUD integerForKey:FindMethodKey];','NSInteger current = [SUD integerForKey:FindMethodKey]; if (current == 0) return;'),original,'All source split views'))
+  cases.append(('reverse-panel',program.replace('NSInteger current = [SUD integerForKey:FindMethodKey];','NSInteger current = [SUD integerForKey:FindMethodKey]; if (current == 0) return;'),original,'Switching to the panel closes every visible find bar'))
+  cases.append(('visible-bar',program,original.replace('if (method != 1) view.enclosingScrollView.findBarVisible = NO;',';'),'Switching to the panel closes every visible find bar'))
   for name,body,interface,expected in cases:
    assert body!=program or interface!=original,(name,"No mutation applied")
    results=run(body,interface);assert any(x.returncode and 'FAIL: '+expected in x.stderr for x in results),(name,results);print('DETECTED',name,expected,flush=True)
