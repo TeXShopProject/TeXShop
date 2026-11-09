@@ -10,7 +10,7 @@ in `3rdparty/`.
 | OgreKit | 2.1.12 | `Frameworks/OgreKit.framework` | [2.1.12](https://github.com/sonoisa/OgreKit/tree/2.1.12) |
 | Onigmo | 6.2.0 | Embedded in OgreKit | [6.2.0](https://github.com/k-takata/Onigmo/releases/tag/Onigmo-6.2.0) |
 | zlib | 1.4 | `3rdparty/zlib/libz.a` | [1.4](https://github.com/madler/zlib/releases/tag/v1.4) |
-| SyncTeX parser | 1.21 | `Sources/synctex_parser*`, `Sources/synctex_version.h` | [TeX Live sources](https://github.com/TeX-Live/texlive-source/tree/a399fb5f3f02441b040ad34c7aed3a1af8ffdc39/texk/web2c/synctexdir) |
+| SyncTeX parser | 1.21 | `Sources/ThirdParty/SyncTeX/synctex_parser*`, `Sources/ThirdParty/SyncTeX/synctex_version.h` | [TeX Live sources](https://github.com/TeX-Live/texlive-source/tree/a399fb5f3f02441b040ad34c7aed3a1af8ffdc39/texk/web2c/synctexdir) |
 
 ## zlib
 
@@ -24,7 +24,7 @@ static archives. Upstream source is preserved without edits.
 The parser and utility source files are copied without edits from TeX Live commit
 `a399fb5f3f02441b040ad34c7aed3a1af8ffdc39`. Their individual checksums are recorded
 in `Documentation/SyncTeX-source.json`. The upstream readme and license notices
-are retained in `Sources/synctex_parser_readme.md` and the source headers.
+are retained in `Sources/ThirdParty/SyncTeX/synctex_parser_readme.md` and the source headers.
 TeXShop uses the standalone configuration, without `SYNCTEX_USE_LOCAL_HEADER`;
 TeX Live's engine-specific `synctex_parser_local.h` is not required.
 

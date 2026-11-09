@@ -120,13 +120,13 @@ for suffix,language in [('', 'en'),('-ja','ja')]:
     current=re.search(r'<article[^>]*id="v5.60"[^>]*>(.*?)</article>',web,re.S)
     assert current is not None
     check_obsolete(current[1],language,'current website release')
-manual = (ROOT / 'Manual Source/Manual.tex').read_text()
+manual = (ROOT / 'DocumentSources/Manual Source/Manual.tex').read_text()
 check_obsolete(manual, 'en', 'Manual.tex')
 assert '\\section{Settings for the Source Window}' in manual
 assert 'After making a selection, TeXShop must be restarted' not in manual, 'Find Panel restart guidance must distinguish OgreKit'
 font_route = manual.split("To change the font in the Source Window,", 1)[1].split("Choose a font and size", 1)[0]
 assert r"{\em Editor}" in font_route and r"{\em Appearance}" not in font_route, "Source font belongs to Editor"
-for file in ('Documentation/Releases/5.60.md', 'website/release-notes.html', 'Manual Source/Manual.tex'):
+for file in ('Documentation/Releases/5.60.md', 'website/release-notes.html', 'DocumentSources/Manual Source/Manual.tex'):
     text = (ROOT / file).read_text()
     assert 'NSUserKeyEquivalents' in text, file
     for obsolete in ('Settings → Spelling', 'with Edit Rules beneath', 'indented Edit Rules button',
@@ -207,7 +207,7 @@ for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','
 
 # Fifth audit: public release copies describe both category entrances and merged color rows.
 search_copy='Category names and descriptions also provide one entry that opens the top of the pane. Color controls on the same row share one result.'
-for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex'):
+for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex'):
     assert search_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
 ja_copy='カテゴリ名や説明に一致した場合は、ペインの先頭へ移る入口を1件表示します。同じ行の色設定は1件の結果にまとめます。'
 for filename in ('Documentation/Releases/5.60-ja.md','website/release-notes-ja.html'):
@@ -216,7 +216,7 @@ ko=html.unescape((ROOT/'Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_pref
 assert '카테고리' not in ko and '범주' in ko,'Korean category terminology is consistent'
 print('PASS: six release copies and Korean category terminology')
 
-for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex']:
+for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex']:
     text=(ROOT/filename).read_text()
     assert 'slider or a numeric field' in text,('Opacity numeric field in release notes',filename)
 assert 'slider and a numeric field' in manual,'Opacity numeric field in manual'
@@ -228,7 +228,7 @@ for filename in ["Documentation/Releases/5.60-ja.md","website/release-notes-ja.h
     assert "数値欄" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
 
 # Seventh audit: invalid typed text stays intact until commit, as pasted text does.
-for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex']:
+for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex']:
     assert 'Invalid opacity input, including decimals, is rejected when editing finishes; typed and pasted text follow the same rule.' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)
 for filename in ['Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
     assert '打鍵と貼り付け' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)

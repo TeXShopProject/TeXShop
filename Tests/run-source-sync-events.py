@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['live-menu-pointer'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/TSTextView.m').read_text(encoding='latin1')
+source = (root / 'Sources/Editor/TSTextView.m').read_text(encoding='latin1')
 a = source.index('- (void)doSyncForMenu:')
 b = source.index('- (void)mouseUp:', a)
 methods = source[a:b]

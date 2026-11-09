@@ -2,9 +2,10 @@
 """Production observers must ignore every intermediate write in a real profile apply."""
 from pathlib import Path
 import subprocess,tempfile
+from source_tree import include_args, source_file
 R=Path(__file__).resolve().parents[1]
 def method(file,sig):
- s=(R/'Sources'/file).read_text(encoding='latin1');a=s.rindex('\n'+sig)+1;return s[a:s.index('\n}',a)+2]
+ s=(source_file(R, file)).read_text(encoding='latin1');a=s.rindex('\n'+sig)+1;return s[a:s.index('\n}',a)+2]
 a=method('MyPDFKitView.m','- (void)previewAppearanceDefaultsChanged:');b=method('TSDocument.m','- (void)externalPDFSettingsChanged:')
 program=r'''
 #import <Cocoa/Cocoa.h>
@@ -40,5 +41,5 @@ int main(void){@autoreleasepool{
 '''.replace('METHODS',a+'\n'+b)
 with tempfile.TemporaryDirectory(prefix='texshop-profile-observers-') as td:
  p=Path(td);(p/'test.m').write_text(program)
- subprocess.run(['xcrun','clang','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-fobjc-arc','-I',str(R/'Sources'),'-I',str(R/'Tests'),'-framework','Cocoa',str(p/'test.m'),str(R/'Sources/TSPreferenceProfile.m'),str(R/'Sources/globals.m'),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-fobjc-arc',*include_args(R),'-I',str(R/'Tests'),'-framework','Cocoa',str(p/'test.m'),str(R/'Sources/Settings/TSPreferenceProfile.m'),str(R/'Sources/App/globals.m'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test')],check=True)

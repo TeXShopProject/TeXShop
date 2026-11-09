@@ -4,29 +4,31 @@ from pathlib import Path
 import argparse,subprocess,tempfile,shutil,re,json,os
 from pane_fixtures import bundles,sources
 from shortcut_sources import NAMES
+from source_tree import include_args, source_file
 r=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');p.add_argument('--visible-text-output',type=Path);p.add_argument('--visible-text-mutation',action='store_true');p.add_argument('--visible-text-whitespace-mutation',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
- compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*[str(r/'Sources'/n) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').glob('TSSettings*.m'))),'-o',str(t/'probe')]
+ compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/Settings/TSPreferences+Panes.m'),*[str(source_file(r, n)) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').rglob('TSSettings*.m'))),'-o',str(t/'probe')]
  def build(replacements=None):
   replacements=replacements or {}
   subprocess.run([str(replacements.get(x,x)) for x in compile],check=True)
  build()
  shell=t/'SettingsWindow.nib'
- if a.app:shutil.copy2(a.app/'Contents/Resources/SettingsWindow.nib',shell)
- else:subprocess.run(['xcrun','ibtool','--compile',str(shell),str(r/'Resources/SettingsWindow.xib')],check=True)
+ if a.app:shutil.copy2(a.app/'Contents/Resources/Base.lproj/SettingsWindow.nib',shell)
+ else:subprocess.run(['xcrun','ibtool','--compile',str(shell),str(r/'Resources/Interfaces/Base.lproj/SettingsWindow.xib')],check=True)
  for bundle in bundles(r,t/'fixtures',product=a.app,dock=True):
   if a.language and bundle.stem!=a.language:continue
-  shutil.copy2(r/'Resources/FactoryDefaults.plist',bundle/'Contents/Resources/FactoryDefaults.plist')
+  (bundle/'Contents/Resources/Defaults').mkdir(exist_ok=True);(bundle/'Contents/Resources/Themes').mkdir(exist_ok=True)
+  shutil.copy2(r/'Resources/Defaults/FactoryDefaults.plist',bundle/'Contents/Resources/Defaults/FactoryDefaults.plist')
   shutil.copy2(r/'Tests/Fixtures/SettingsDependencies.json',bundle/'Contents/Resources/SettingsDependencies.json')
   shutil.copy2(r/'Tests/Fixtures/SettingsCatalogReference.json',bundle/'Contents/Resources/SettingsCatalogReference.json')
   shutil.copy2(r/'Tests/Fixtures/SettingsInputRules.json',bundle/'Contents/Resources/SettingsInputRules.json')
   shutil.copy2(r/'Tests/Fixtures/SettingsHeightReference.json',bundle/'Contents/Resources/SettingsHeightReference.json')
   for themeName in ['LiteTheme','DarkTheme']:
-   shutil.copy2(r/('Resources/TeXShop/Themes/'+themeName+'.plist'),bundle/('Contents/Resources/'+themeName+'.plist'))
+   shutil.copy2(r/('Resources/TeXShop/Themes/'+themeName+'.plist'),bundle/('Contents/Resources/Themes/'+themeName+'.plist'))
   profiles=bundle/'Contents/Resources/Profiles';profiles.mkdir()
-  for profile in sorted((r/'Resources/Shellscripts').glob('*Defaults*.plist')):shutil.copy2(profile,profiles/profile.name)
+  for profile in sorted((r/'Resources/Defaults').glob('*Defaults*.plist')):shutil.copy2(profile,profiles/profile.name);shutil.copy2(profile,bundle/'Contents/Resources/Defaults'/profile.name)
   shutil.copy2(shell,bundle/'Contents/Resources/SettingsWindow.nib')
   if (a.visible_text_mutation or a.visible_text_whitespace_mutation) and bundle.stem=='fr':
    path=bundle/'Contents/Resources/fr.lproj/SettingsCategories.strings'
@@ -73,7 +75,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ('line-highlight-note','TSSettingsCatalogLayout.inc','@"id": @"catalog.editor.0.4", @"kind": @"switch", @"title": @"catalog.editor.0.4.title", @"note": @"catalog.editor.0.1.note"','@"id": @"catalog.editor.0.4", @"kind": @"switch", @"title": @"catalog.editor.0.4.title", @"note": @""'),
    ])
    for name in ['Chapter','Section','Subsection','Subsubsection','Introduction','Conclusion','Exercises','Project','Figure','Table','Mark']:
-    text=(r/'Sources/TSPreferences.m').read_text();start=text.index('- (IBAction)XML'+name+'ButtonChanged:');end=text.index('\n}',start)+2
+    text=(r/'Sources/Settings/TSPreferences.m').read_text();start=text.index('- (IBAction)XML'+name+'ButtonChanged:');end=text.index('\n}',start)+2
     original=text[start:end];changed=original.replace('[(TSAppDelegate *)NSApp.delegate updateXMLTabs];',';');assert changed!=original
     cases.append(('XML-'+name,'TSPreferences.m',original,changed))
    for key,enabled in [('showSpaceCharacterKey',1),('showFullwidthSpaceCharacterKey',1),('showNewLineCharacterKey',1),('showTabCharacterKey',1),('TSTeXAwareSpellCheckingKey',1)]:
@@ -102,7 +104,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ('opacity-no-action','TSPrefPaneLayout.m','self.source.color=[self.source.color colorWithAlphaComponent:MIN(100,MAX(0,percent))/100.0];\n    [self.source sendAction:self.source.action to:self.source.target];','self.source.color=[self.source.color colorWithAlphaComponent:MIN(100,MAX(0,percent))/100.0];','Opacity action preserves RGB'),
    ]
    prep='if (preparations & TSPreferencePrepareEncoding) [[TSEncodingSupport sharedInstance] setupForEncoding];'
-   source=(r/'Sources/TSPreferences.m').read_text()
+   source=(r/'Sources/Settings/TSPreferences.m').read_text()
    if prep in source:
     old=source[source.index(prep):source.index('TSPostPreferenceNotifications(changed, self);')+len('TSPostPreferenceNotifications(changed, self);')]
     audit_cases.append(('encoding-order','TSPreferences.m',old,old.replace(prep,'')+'\n    '+prep,'Encoding is prepared before profile notifications'))
@@ -172,18 +174,18 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
    if a.mutation_only:cases=[c for c in cases if c[0]==a.mutation_only];assert cases
    for name,filename,old,new in cases:
     assert old != new, (name, 'Mutation must change the source')
-    source=(r/'Sources'/filename).read_text()
+    source=(source_file(r, filename)).read_text()
     count=source.count(old)
     assert count>0,(name,count)
     # Color has two setter paths; both must implement the same disabled color.
     assert count==1 or name in ('disabled-label-color','theme-marker-refresh'),(name,count)
     stage=t/bundle.stem/name;stage.mkdir(parents=True)
     changed=stage/filename;changed.write_text(source.replace(old,new))
-    replacements={str(r/'Sources'/filename):changed}
-    if filename=='TSSettingsCatalogLayout.inc':shutil.copy2(r/'Sources/TSSettingsPaneClassification.inc',stage/'TSSettingsPaneClassification.inc')
+    replacements={str(source_file(r, filename)):changed}
+    if filename=='TSSettingsCatalogLayout.inc':shutil.copy2(r/'Sources/Settings/TSSettingsPaneClassification.inc',stage/'TSSettingsPaneClassification.inc')
     if filename.endswith('.inc'):
      for unit in ['TSPreferences.m','TSPreferences+Panes.m']:
-      copied=stage/unit;shutil.copy2(r/'Sources'/unit,copied);replacements[str(r/'Sources'/unit)]=copied
+      copied=stage/unit;shutil.copy2(source_file(r, unit),copied);replacements[str(source_file(r, unit))]=copied
     build(replacements)
     result=subprocess.run([str(t/'probe'),str(bundle)],capture_output=True,text=True,timeout=120)
     assert result.returncode and 'FAIL: '+expected[name] in result.stderr,(name,expected[name],result.stdout,result.stderr)

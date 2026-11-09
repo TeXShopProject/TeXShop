@@ -5,6 +5,7 @@ is also run against a mutated monitor to show that it detects the regression.
 """
 import subprocess, tempfile
 from pathlib import Path
+from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 program = r'''
 #import <Foundation/Foundation.h>
@@ -73,7 +74,7 @@ mutations = {
 }
 with tempfile.TemporaryDirectory(prefix='texshop-watch-exceptions-') as td:
     t = Path(td); (t/'test.m').write_text(program)
-    source = (root/'Sources/TSFileChangeMonitor.m').read_text()
+    source = (root/'Sources/Document/TSFileChangeMonitor.m').read_text()
     for mutated in [False, True]:
         for mode, (old, new) in mutations.items():
             s = source
@@ -82,7 +83,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-watch-exceptions-') as td:
                 s = s.replace(old, new)
             (t/'monitor.m').write_text(s)
             exe = t/'test'
-            subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Foundation', '-I'+str(root/'Sources'),
+            subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Foundation', *include_args(root),
                             str(t/'test.m'), str(t/'monitor.m'), '-o', str(exe)], check=True)
             result = subprocess.run([str(exe), str(t/'test.tex'), mode], text=True, capture_output=True, timeout=30)
             label = 'mutation' if mutated else 'production'

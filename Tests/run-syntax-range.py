@@ -5,7 +5,7 @@ import subprocess
 import shutil
 
 root = Path(__file__).resolve().parent.parent
-source = (root / 'Sources/TSDocument-Syntax.m').read_text()
+source = (root / 'Sources/Editor/TSDocument-Syntax.m').read_text()
 start = source.index('    // Clip the given range')
 end = source.index('    // NSLog(@"got here");', start)
 block = source[start:end]

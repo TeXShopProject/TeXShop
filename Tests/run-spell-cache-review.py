@@ -8,13 +8,14 @@ reach every pane, and a long text must not be masked again on every keystroke.
 """
 from pathlib import Path
 import argparse,subprocess,tempfile,os
+from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
 ap=argparse.ArgumentParser();ap.add_argument('--mutation',choices=['no-defer','unshared']);args=ap.parse_args()
-s=(root/'Sources/TSTextView.m').read_text()
+s=(root/'Sources/Editor/TSTextView.m').read_text()
 a=s.index('- (TSSpellMask *)spellMask');b=s.index('- (void)pasteAsComment:',a)
 methods=s[a:b]
 methods=methods.replace('TSTextView *weakView', 'ProbeView *weakView')
-support='#import "SessionChecker.h"\n#define NSSpellChecker SessionChecker\n'+(root/'Sources/TSSpellSupport.m').read_text()
+support='#import "SessionChecker.h"\n#define NSSpellChecker SessionChecker\n'+(root/'Sources/Editor/TSSpellSupport.m').read_text()
 mutations={'no-defer':('static NSUInteger sDeferredLength = 200000;','static NSUInteger sDeferredLength = NSUIntegerMax;'),
            'unshared':('TSSpellMaskCache *cache = objc_getAssociatedObject(storage, &sCacheKey);','TSSpellMaskCache *cache = nil;')}
 if args.mutation:
@@ -153,15 +154,15 @@ int main(int argc,char **argv) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='ts-spell-review-') as td:
  p=Path(td);(p/'test.m').write_text(program);(p/'support.m').write_text(support)
  rules=p/'rules.txt';rules.write_text('command-names yes\nskip-args 1 label\n')
- subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),'-I'+str(root/'Tests/SpellCheck'),
-     '-framework','Cocoa',str(p/'test.m'),str(p/'support.m'),str(root/'Sources/TSSpellExclusions.m'),'-o',str(p/'test')],check=True)
+ subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST',*include_args(root),'-I'+str(root/'Tests/SpellCheck'),
+     '-framework','Cocoa',str(p/'test.m'),str(p/'support.m'),str(root/'Sources/Editor/TSSpellExclusions.m'),'-o',str(p/'test')],check=True)
  result=subprocess.run([str(p/'test')],env=dict(os.environ,TSSPELL_RULES=str(rules)),timeout=120)
  if args.mutation:
   if result.returncode==0: raise SystemExit('FAIL: mutation %s was not detected'%args.mutation)
   print('PASS: mutation %s detected (exit %d).'%(args.mutation,result.returncode))
   raise SystemExit(0)
  if result.returncode!=0: raise SystemExit(result.returncode)
- subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),'-framework','Foundation',str(root/'Tests/SpellCheck/mask.m'),str(root/'Sources/TSSpellExclusions.m'),'-o',str(p/'mask')],check=True)
+ subprocess.run(['xcrun','clang', '-I', str(root/'Tests'),'-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST',*include_args(root),'-framework','Foundation',str(root/'Tests/SpellCheck/mask.m'),str(root/'Sources/Editor/TSSpellExclusions.m'),'-o',str(p/'mask')],check=True)
  result=subprocess.check_output([str(p/'mask'),str(root/'Resources/TeXShop/SpellCheck/SpellingExclusions.txt'),str(root/'Tests/SpellCheck/cases.tex')])
  if result!=(root/'Tests/SpellCheck/cases.expected.txt').read_bytes(): raise SystemExit('FAIL: masking fixture')
  print('PASS: submitted masking-engine fixture')

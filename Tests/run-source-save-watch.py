@@ -6,6 +6,7 @@ Use --revision to verify historical regressions, --mutation to test sensitivity.
 """
 import argparse, os, re, subprocess, tempfile
 from pathlib import Path
+from source_tree import git_show
 parser = argparse.ArgumentParser()
 parser.add_argument('--revision')
 parser.add_argument('--mutation', choices=['read-baseline', 'write-baseline', 'disk-baseline', 'generation', 'reload-catch', 'autosave-as-baseline'])
@@ -15,9 +16,9 @@ REPO = Path(__file__).resolve().parents[1]
 _temp = tempfile.TemporaryDirectory(prefix='texshop-save-watch-')
 OUT = Path(_temp.name)
 def show(rev, path):
-    text = (subprocess.check_output(['git', 'show', f'{rev}:{path}'], cwd=REPO, text=True)
+    text = (git_show(REPO, rev, path)
             if rev else (REPO / path).read_text())
-    if path == 'Sources/TSDocument.m':
+    if path == 'Sources/Document/TSDocument.m':
         if args.mutation == 'generation':
             text, count = re.subn(r'generation.unsignedIntegerValue != document->sourceIOGeneration \|\|', '', text)
             if count != 1: raise SystemExit('generation replacement count')
@@ -44,7 +45,7 @@ def cut(s, start, end):
     a = s.index(start); b = s.index(end, a); return s[a:b]
 
 def methods(rev, variant):
-    s = show(rev, 'Sources/TSDocument.m')
+    s = show(rev, 'Sources/Document/TSDocument.m')
     w = cut(s, '- (NSString *)fileSignatureAtPath:' if variant == 'pr' else '- (void)watchFile:', '//END PATCH')
     rd = cut(s, '- (BOOL)readFromURL: (NSURL *)absoluteURL', '- (BOOL)writeToURL:')
     wr = cut(s, '- (BOOL)writeToURL:', '// zenitani 2.10 (A) -- decode utf.sty')
@@ -506,7 +507,7 @@ for mode in modes:
 rev = args.revision
 m = OUT / 'probe.m'; m.write_text(PROGRAM.replace('METHODS', methods(rev, 'watch')))
 for suffix in ['m', 'h']:
-    content = show(rev, 'Sources/TSFileChangeMonitor.' + suffix)
+    content = show(rev, 'Sources/Document/TSFileChangeMonitor.' + suffix)
     if suffix == 'm':
         content = content.replace('#import <unistd.h>', '#import <unistd.h>\nextern int TSProbeStat(const char *, struct stat *);\nextern int TSProbeFstat(int, struct stat *);\nextern int TSProbeOpen(const char *, int);')
         for name in ['stat', 'fstat', 'open']:

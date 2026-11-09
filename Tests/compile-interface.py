@@ -9,7 +9,7 @@ if '--check-settings' in sys.argv[1:]:
             print(xib.name, 'compiled in temporary directory')
     if '--app' in sys.argv:
         app=Path(sys.argv[sys.argv.index('--app')+1]).resolve()
-        assert (app/'Contents/Resources/SettingsWindow.nib').exists(), app
+        assert (app/'Contents/Resources/Base.lproj/SettingsWindow.nib').exists(), app
         subprocess.run([sys.executable,str(Path(__file__).with_name('run-settings-panes.py')),'--app',str(app)],check=True)
     raise SystemExit(0)
 if 'Preferences' in sys.argv[1:]:

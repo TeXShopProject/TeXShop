@@ -2,9 +2,10 @@
 """Validate live-settings policies with memory defaults and temporary files only."""
 from pathlib import Path
 import subprocess,tempfile,sys,re,plistlib
+from source_tree import include_args, source_file
 ROOT=Path(__file__).resolve().parents[1]
 mutation=sys.argv[1] if len(sys.argv)>1 else ''
-sources={n:(ROOT/'Sources'/n).read_text() for n in ['TSPreferenceProfile.m','TSPreferenceInput.m','TSThemeFileStore.m']}
+sources={n:(source_file(ROOT, n)).read_text() for n in ['TSPreferenceProfile.m','TSPreferenceInput.m','TSThemeFileStore.m']}
 mutations={
  'profile-preserve':('TSPreferenceProfile.m','if (TSPreferenceProfilePreservesKey(key)) continue;','if (NO) continue;'),
  'profile-remove':('TSPreferenceProfile.m','else [removals addObject:key];','else {}'),
@@ -145,8 +146,8 @@ int main(int argc,const char **argv) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-live-core-',dir='/private/tmp') as tmp:
  t=Path(tmp);(t/'probe.m').write_text(program)
  for name,body in sources.items():(t/name).write_text(body)
- args=['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-I',str(ROOT/'Sources'),'-I',str(ROOT/'Tests'),'-framework','Cocoa',str(t/'probe.m'),*[str(t/n) for n in sources],str(ROOT/'Sources/globals.m'),'-o',str(t/'probe')]
+ args=['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new',*include_args(ROOT),'-I',str(ROOT/'Tests'),'-framework','Cocoa',str(t/'probe.m'),*[str(t/n) for n in sources],str(ROOT/'Sources/App/globals.m'),'-o',str(t/'probe')]
  subprocess.run(args,check=True)
  themes=t/'Colors';themes.mkdir()
- profiles=sorted((ROOT/'Resources/Shellscripts').glob('*Defaults*.plist'));assert len(profiles)==9
+ profiles=sorted((ROOT/'Resources/Defaults').glob('*Defaults*.plist'));assert len(profiles)==9
  subprocess.run([str(t/'probe'),str(themes),*map(str,profiles)],check=True)

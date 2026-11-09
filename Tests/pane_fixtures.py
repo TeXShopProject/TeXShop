@@ -1,11 +1,12 @@
 """Build isolated bundles from shared settings nibs and their real translations."""
 from pathlib import Path
 import plistlib, shutil, subprocess
+from source_tree import source_file
 
 NAMES = ('Source','Editor','Preview','Console','Typesetting','Engines','MiscOne','MiscTwo','Themes','Footer','ThemeName')
 
 def sources(root, names=NAMES):
-    return [root/'Sources'/('TSPref'+n+'Controller.m') for n in (*names,'Pane')] + [root/'Sources/TSPrefPaneLayout.m']
+    return [source_file(root, ('TSPref'+n+'Controller.m')) for n in (*names,'Pane')] + [root/'Sources/Settings/TSPrefPaneLayout.m']
 
 def bundles(root, temp, names=NAMES, product=None, dock=False):
     compiled=temp/'compiled';compiled.mkdir()

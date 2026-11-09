@@ -9,6 +9,7 @@ import argparse
 import re
 import subprocess
 import tempfile
+from source_tree import source_file
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("root", nargs="?", type=Path, default=Path(__file__).resolve().parents[1])
@@ -17,7 +18,7 @@ args = parser.parse_args()
 
 
 def method(filename, signature):
-    source = (args.root / "Sources" / filename).read_text(errors="replace")
+    source = (source_file(args.root, filename)).read_text(errors="replace")
     start = source.index(signature)
     # These methods all end with a closing brace at the start of a line.
     end = source.index("\n}\n", start) + 3

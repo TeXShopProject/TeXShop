@@ -6,7 +6,7 @@ and mixed line endings, and on a file the user asked not to be told about again.
 from pathlib import Path
 import subprocess, tempfile
 root = Path(__file__).resolve().parents[1]
-s = (root/'Sources/TSDocument.m').read_text(encoding='latin1')
+s = (root/'Sources/Document/TSDocument.m').read_text(encoding='latin1')
 a = s.index('static const char *TSLineEndingNoticeAttribute')
 b = s.index('- (void)tryLineEndingNotice:', a)
 code = s[a:b]

@@ -6,7 +6,7 @@ R=Path(__file__).resolve().parents[1]
 expected=json.loads((R/'Tests/Fixtures/SettingsSixthWording.json').read_text())
 with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
     T=Path(td)
-    for directory in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','Manual Source','DocumentSources/CommentLinesRevised','ChangesDocument']:
+    for directory in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','DocumentSources/Manual Source','DocumentSources/CommentLinesRevised','DocumentSources/ChangesDocument']:
         for source in (R/directory).rglob('*'):
             if source.is_file() and source.suffix in ['.strings','.htm','.html','.json','.md','.tex','.pdf']:
                 dest=T/source.relative_to(R);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,dest)
@@ -27,7 +27,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
             assert result.returncode and ('sixth audit reviewed wording' in result.stderr or 'translated row name' in result.stderr),(lang,table,result.stderr)
             print('DETECTED reviewed choice/group translation',lang,table,flush=True)
     cases=[
-        ('Manual Source/Manual.tex',b'slider and a numeric field',b'slider and a label'),
+        ('DocumentSources/Manual Source/Manual.tex',b'slider and a numeric field',b'slider and a label'),
         ('Documentation/Releases/5.60.md',b'or a numeric field',b'or a label'),
         ('website/release-notes.html',b'or a numeric field',b'or a label'),
         ('Documentation/Releases/5.60-ja.md','数値欄'.encode(),b'LABEL'),
@@ -37,8 +37,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
         path=f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
         cases.append((path,{'en':b'numeric field','ja':'数値欄'.encode('cp932'),'de':b'Zahlenfeld','es':b'campo num','ko':b'&#'}[lang],b'REMOVED'))
     # Reverting the new commit semantics must fail independently of field presence.
-    for path in ['Manual Source/Manual.tex','Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex']:
-        cases.append((path,b'typed and pasted' if path!='Manual Source/Manual.tex' else b'Typed and pasted',b'CHANGED'))
+    for path in ['DocumentSources/Manual Source/Manual.tex','Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex']:
+        cases.append((path,b'typed and pasted' if path!='DocumentSources/Manual Source/Manual.tex' else b'Typed and pasted',b'CHANGED'))
     for path in ['Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
         cases.append((path,'打鍵と貼り付け'.encode(),b'CHANGED'))
     for lang,old,encoding in [('en','typed and pasted','utf-8'),('ja','打鍵と貼り付け','cp932'),('de','getippten und eingefügten','latin-1'),('es','escrito y el pegado','latin-1')]:

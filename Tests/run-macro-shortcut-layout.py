@@ -2,14 +2,15 @@
 """Check status layout against all localized macro-editor nibs without showing windows."""
 from pathlib import Path
 import subprocess, tempfile, sys
+from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
-source=(root/'Sources/TSMacroEditor.m').read_text()
+source=(root/'Sources/Macros/TSMacroEditor.m').read_text()
 body=source[source.index('- (void)installShortcutStatus'):source.index('- (void)collectShortcutCandidates:')]
 with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
     mutation='--mutations' in sys.argv
     (Path(td)/'MacroStatusLayout.inc').write_text(body)
     binary=Path(td)/'layout'
-    subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-framework','Cocoa','-I',td,'-I',str(root/'Sources'),str(root/'Tests/MacroShortcutLayout.m'),'-o',str(binary)],check=True)
+    subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-framework','Cocoa','-I',td,*include_args(root),str(root/'Tests/MacroShortcutLayout.m'),'-o',str(binary)],check=True)
     for path in sorted((root/'Resources/Interfaces').glob('*.lproj/MacroEditor.nib/keyedobjects*.nib')):
         args=[str(binary),str(path)]
         if len(sys.argv)>1 and sys.argv[1]!='--mutations' and path.parts[-3] in ('Base.lproj','ja.lproj'):
@@ -27,14 +28,14 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-layout-') as td:
         for name,(before,after) in cases.items():
             assert body.count(before)==1
             (Path(td)/'MacroStatusLayout.inc').write_text(body.replace(before,after))
-            subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-framework','Cocoa','-I',td,'-I',str(root/'Sources'),str(root/'Tests/MacroShortcutLayout.m'),'-o',str(binary)],check=True)
+            subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-framework','Cocoa','-I',td,*include_args(root),str(root/'Tests/MacroShortcutLayout.m'),'-o',str(binary)],check=True)
             result=subprocess.run([str(binary),str(root/'Resources/Interfaces/Base.lproj/MacroEditor.nib/keyedobjects.nib')],capture_output=True,text=True)
             assert result.returncode and 'FAIL ' in result.stderr,(name,result.stderr)
             print('DETECTED:',name,result.stderr.strip())
 
         # Removing the Portuguese minimum size must fail the old-small-frame restoration case.
         (Path(td)/'MacroStatusLayout.inc').write_text(body)
-        subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-framework','Cocoa','-I',td,'-I',str(root/'Sources'),str(root/'Tests/MacroShortcutLayout.m'),'-o',str(binary)],check=True)
+        subprocess.run(['xcrun','clang','-fobjc-arc','-Wno-incomplete-implementation','-framework','Cocoa','-I',td,*include_args(root),str(root/'Tests/MacroShortcutLayout.m'),'-o',str(binary)],check=True)
         nibSource=(root/'Resources/Interfaces/pt.lproj/MacroEditor.nib/designable.nib').read_text()
         minimum='<string key="NSMinSize">{270, 272}</string>'
         assert nibSource.count(minimum)==1

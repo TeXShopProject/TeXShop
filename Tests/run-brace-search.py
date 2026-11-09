@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/TSDocument.m').read_text(encoding='latin-1')
+source = (root / 'Sources/Document/TSDocument.m').read_text(encoding='latin-1')
 start = source.index('static const NSInteger kTSBraceSearchLimit')
 end = source.index('\n}\n', source.index('static NSInteger TSFindMatchingBrace')) + 3
 helper = source[start:end]

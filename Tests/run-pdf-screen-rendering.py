@@ -11,8 +11,9 @@ args=parser.parse_args()
 if args.pdf and not args.screen: parser.error('a PDF path requires --screen; this displays a window')
 from pathlib import Path
 import subprocess, tempfile, sys, os
+from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
-s=(root/'Sources/MyPDFKitView.m').read_bytes().decode('utf-8',errors='replace')
+s=(root/'Sources/Preview/MyPDFKitView.m').read_bytes().decode('utf-8',errors='replace')
 start=s.index('- (void)drawPage:(PDFPage *)page toContext:')
 method=s[start:s.index('\n}',start)+2]
 program=r'''
@@ -69,5 +70,5 @@ int main(int argc,char**argv){@autoreleasepool{
 '''.replace('METHOD',method)
 with tempfile.TemporaryDirectory(prefix='texshop-screen-render-') as folder:
     p=Path(folder);(p/'test.m').write_text(program)
-    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit','-I',str(root/'Sources'),str(p/'test.m'),'-o',str(p/'test')],check=True)
+    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit',*include_args(root),str(p/'test.m'),'-o',str(p/'test')],check=True)
     subprocess.run([str(p/'test'),*sys.argv[1:]],env={**os.environ,'MTL_DEBUG_LAYER':'1'},check=True)

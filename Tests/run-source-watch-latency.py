@@ -2,6 +2,7 @@
 """Regression: a second vnode event while accept blocks must not wait for polling."""
 import subprocess, tempfile
 from pathlib import Path
+from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
 program=r'''
 #import <Foundation/Foundation.h>
@@ -31,7 +32,7 @@ int main(int argc,char **argv){@autoreleasepool{
 '''
 with tempfile.TemporaryDirectory(prefix='texshop-watch-latency-') as td:
     t=Path(td);(t/'test.m').write_text(program)
-    source=(root/'Sources/TSFileChangeMonitor.m').read_text()
+    source=(root/'Sources/Document/TSFileChangeMonitor.m').read_text()
     for mutation in [False,True]:
         s=source
         if mutation:
@@ -39,7 +40,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-watch-latency-') as td:
             b=s.index('\n            });',a)
             s=s[:a]+s[b:]
         (t/'monitor.m').write_text(s)
-        subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Foundation','-I'+str(root/'Sources'),str(t/'test.m'),str(t/'monitor.m'),'-o',str(t/'test')],check=True)
+        subprocess.run(['xcrun','clang','-w','-fobjc-arc','-framework','Foundation',*include_args(root),str(t/'test.m'),str(t/'monitor.m'),'-o',str(t/'test')],check=True)
         for repeat in range(3):
             result=subprocess.run([str(t/'test'),str(t/'test.tex')],text=True,capture_output=True)
             print(('mutation' if mutation else 'production'),result.stdout.strip(),flush=True)

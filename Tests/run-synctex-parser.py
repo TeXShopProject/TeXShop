@@ -8,6 +8,7 @@ from pathlib import Path
 import os
 import subprocess
 import tempfile
+from source_tree import include_args
 
 ROOT = Path(__file__).resolve().parents[1]
 TEX = Path(os.environ.get('TEXLIVE_BIN', '/Applications/TeXLive/2026/bin/universal-darwin'))
@@ -26,10 +27,10 @@ def main():
                 executable = directory / ('test-' + arch + ('-legacy' if legacy else ''))
                 defines = ['-DTEST_LEGACY_PARSER'] if legacy else []
                 run('xcrun', 'clang', '-arch', arch, '-mmacosx-version-min=14.6', *defines,
-                    '-I', ROOT / 'Sources', '-I', ROOT / '3rdparty/zlib/zlib-1.4',
-                    ROOT / 'Tests/SyncTeXParser.c', ROOT / 'Sources/synctex_parser.c',
-                    ROOT / 'Sources/synctex_parser_old.c',
-                    ROOT / 'Sources/synctex_parser_utils.c', ROOT / '3rdparty/zlib/libz.a',
+                    *include_args(ROOT), '-I', ROOT / '3rdparty/zlib/zlib-1.4',
+                    ROOT / 'Tests/SyncTeXParser.c', ROOT / 'Sources/ThirdParty/SyncTeX/synctex_parser.c',
+                    ROOT / 'Sources/ThirdParty/SyncTeX/synctex_parser_old.c',
+                    ROOT / 'Sources/ThirdParty/SyncTeX/synctex_parser_utils.c', ROOT / '3rdparty/zlib/libz.a',
                     '-o', executable)
                 executables.append(executable)
         for engine, text, queries in [

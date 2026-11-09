@@ -4,9 +4,10 @@ from pathlib import Path
 import os
 import subprocess
 import tempfile
+from source_tree import include_args
 
 root = Path(__file__).resolve().parents[1]
-s = (root / 'Sources/TSDocument.m').read_text()
+s = (root / 'Sources/Document/TSDocument.m').read_text()
 a = s.index('- (void)watchFile:')
 b = s.index('//END PATCH', a)
 watch_methods = s[a:b]
@@ -154,7 +155,7 @@ with tempfile.TemporaryDirectory(prefix='ts-continuous-watch-') as td:
     p = Path(td)
     (p/'test.m').write_text(program.replace('WATCH',watch_methods).replace('REVERT',revert_method))
     (p/'writer.py').write_text(writer)
-    subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa','-I'+str(root/'Sources'), str(p/'test.m'),str(root/'Sources/TSFileChangeMonitor.m'),'-o',str(p/'test')],check=True)
+    subprocess.run(['xcrun','clang','-fobjc-arc','-framework','Cocoa',*include_args(root), str(p/'test.m'),str(root/'Sources/Document/TSFileChangeMonitor.m'),'-o',str(p/'test')],check=True)
     import sys
     for mode in ['initial','preserved','atomic','dirty','missing','siblings','chunks','retry','retarget','parent','preview-only','large-idle','stop','lifetime']:
         directory=p/mode;directory.mkdir()

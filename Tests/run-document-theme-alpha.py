@@ -3,9 +3,10 @@
 from pathlib import Path
 import argparse, subprocess, tempfile
 from production_fragments import verify_embedded
+from source_tree import include_args
 r=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--mutations',action='store_true');args=p.parse_args()
-s=(r/'Sources/TSDocument-Color.m').read_text();start=s.index('    self.pdfKitWindow.alphaValue = TSThemeWindowAlpha(');end=s.index('    myColor = ',start);body=s[start:end]
+s=(r/'Sources/Editor/TSDocument-Color.m').read_text();start=s.index('    self.pdfKitWindow.alphaValue = TSThemeWindowAlpha(');end=s.index('    myColor = ',start);body=s[start:end]
 
 program=r'''
 #import "TestAppKitIsolation.h"
@@ -45,11 +46,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-document-theme-alpha-') as tmp:
  def run(code):
   generated=program.replace('BODY',code)
   if code==body:verify_embedded(generated,[('document alpha assignments',s,body)])
-  (d/'probe.m').write_text(generated);subprocess.run(['xcrun','clang','-fobjc-arc','-I',str(d),'-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(d/'probe.m'),'-o',str(d/'probe')],check=True)
+  (d/'probe.m').write_text(generated);subprocess.run(['xcrun','clang','-fobjc-arc','-I',str(d),*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(d/'probe.m'),'-o',str(d/'probe')],check=True)
   return subprocess.run([str(d/'probe')],capture_output=True,text=True,timeout=20)
  result=run(body);assert result.returncode==0,result.stderr;print(result.stdout,flush=True)
  if args.mutations:
-  original=(r/'Sources/TSThemeAlpha.h').read_text()
+  original=(r/'Sources/Settings/TSThemeAlpha.h').read_text()
   cases=[('array-type','![value isKindOfClass:NSArray.class] || ','', 'Invalid document theme alpha'),('number-type','if (![alpha isKindOfClass:NSNumber.class]) return 1;','', 'Invalid document theme alpha'),('finite','isfinite(result) && result >= 0 && result <= 1','YES', 'Invalid document theme alpha'),('lower-bound','result >= 0','YES', 'Invalid document theme alpha'),('upper-bound','result <= 1','YES', 'Invalid document theme alpha')]
   for name,old,new,message in cases:
    assert original.count(old)==1

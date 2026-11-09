@@ -5,7 +5,7 @@ import tempfile,subprocess,shutil,re,json
 R=Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  T=Path(td)
- for folder in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','Manual Source','DocumentSources/CommentLinesRevised','ChangesDocument']:
+ for folder in ['Resources/Interfaces','Tests/Fixtures','Documentation/Releases','website','DocumentSources/Manual Source','DocumentSources/CommentLinesRevised','DocumentSources/ChangesDocument']:
   for p in (R/folder).rglob('*'):
    if p.is_file() and p.suffix in ['.strings','.htm','.html','.json','.md','.tex','.pdf']:
     dest=T/p.relative_to(R);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,dest)
@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for run in [guidance,wording]:
   result=run();assert result.returncode==0,result.stderr
  cases=[]
- for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','ChangesDocument/Changes.tex','Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
+ for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex','Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
   phrase='同じ行の色設定は1件の結果にまとめます。' if '-ja.' in filename else 'Color controls on the same row share one result.'
   cases.append(('release-search-'+filename,filename,phrase.encode(),b'REMOVED',guidance,'Release category and color-row guidance'))
  cases.append(('ko-category','Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm',''.join('&#'+str(ord(c))+';' for c in '범주').encode(),''.join('&#'+str(ord(c))+';' for c in '카테고리').encode(),guidance,'Korean category terminology'))
@@ -23,7 +23,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for lang in ['en','ja','de','es','ko']:
   for name in ['basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden']:
    cases.append((f'outside-{lang}-{name}',f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm',b'</body>',b'<p>fixture paragraph</p></body>',guidance,'body text outside content_border'))
- cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>初期状態に戻す</p></div>'.encode('cp932'),guidance,'Japanese obsolete shortcut button'),('manual-find','Manual Source/Manual.tex',b'Switching between the Apple Find Panel and Apple Find Bar',b'After making a selection, TeXShop must be restarted. Switching between the Apple Find Panel and Apple Find Bar',guidance,'Find Panel restart guidance')]
+ cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>初期状態に戻す</p></div>'.encode('cp932'),guidance,'Japanese obsolete shortcut button'),('manual-find','DocumentSources/Manual Source/Manual.tex',b'Switching between the Apple Find Panel and Apple Find Bar',b'After making a selection, TeXShop must be restarted. Switching between the Apple Find Panel and Apple Find Bar',guidance,'Find Panel restart guidance')]
  for suffix in ['.md','-ja.md']:
   file='Documentation/Releases/5.60'+suffix
   # The checker examines these current release sources directly.
@@ -45,7 +45,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
   p=T/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/basic_preferences1.htm';p.write_text('<html><body>obsolete</body></html>')
   result=guidance();p.unlink();assert result.returncode and 'Obsolete duplicate preferences help page' in result.stderr,result.stderr
   print('DETECTED obsolete duplicate help',language,flush=True)
- p=T/'Manual Source/Manual.tex';original=p.read_bytes();p.write_bytes(original+b'\nTransparency settings bring up a full Color Well\n');result=guidance();p.write_bytes(original)
+ p=T/'DocumentSources/Manual Source/Manual.tex';original=p.read_bytes();p.write_bytes(original+b'\nTransparency settings bring up a full Color Well\n');result=guidance();p.write_bytes(original)
  assert result.returncode and 'Opacity uses a slider in the manual' in result.stderr,result.stderr
  print('DETECTED old opacity manual',flush=True)
  search_wording=json.loads((R/'Tests/Fixtures/SettingsSearchWording.json').read_text())

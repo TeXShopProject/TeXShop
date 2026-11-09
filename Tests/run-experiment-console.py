@@ -6,6 +6,7 @@ no TeXShop user settings are read and no windows are shown.
 """
 from pathlib import Path
 import subprocess, tempfile, os, argparse
+from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha"])
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
@@ -14,11 +15,11 @@ root = Path(__file__).resolve().parents[1]
 def cut(text, start, end):
     a = text.index(start)
     return text[a:text.index(end, a)]
-enc = (root / 'Sources/TSEncodingSupport.m').read_text(encoding='latin1')
+enc = (root / 'Sources/App/TSEncodingSupport.m').read_text(encoding='latin1')
 helpers = cut(enc, '// UTF-8 in which each byte that does not start or continue a valid character is replaced', '// The byte order mark that starts data')
 japanese = cut(enc, '// Japanese encodings read the byte 0x5C', '- (BOOL)ptexUtfOutputCheck:')
 filters = enc[enc.index('// replace backslashes by yens'):].rstrip() + '\n'
-controller = (root / 'Sources/TSExperimentConsoleController.m').read_text().replace('#import "TSEncodingSupport.h"', '').replace('#import "globals.h"', '')
+controller = (root / 'Sources/Typesetting/TSExperimentConsoleController.m').read_text().replace('#import "TSEncodingSupport.h"', '').replace('#import "globals.h"', '')
 if args.mutation == "no-window-load":
     assert "[self loadWindow];" in controller
     controller = controller.replace("[self loadWindow];", "", 1)
@@ -202,7 +203,7 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-console-') as tmp:
     src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
     src.write_text(prefix + controller + tests)
-    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Sources'), str(src), str(root / 'Sources/TSExperimentJob.m'), '-o', str(exe)], check=True)
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', *include_args(root), str(src), str(root / 'Sources/Typesetting/TSExperimentJob.m'), '-o', str(exe)], check=True)
     (Path(tmp)/'home'/'Library'/'Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(Path(tmp)/'home'), CFFIXED_USER_HOME=str(Path(tmp)/'home'))
     if args.artifacts:

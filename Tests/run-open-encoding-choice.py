@@ -14,7 +14,7 @@ from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
 mutation = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--mutation=')), None)
-s = (root/'Sources/TSDocumentController.m').read_text(encoding='latin1')
+s = (root/'Sources/Document/TSDocumentController.m').read_text(encoding='latin1')
 a = s.index('- (NSInteger)runModalOpenPanel:'); b = s.index('- (void)noteNewRecentDocument:', a)
 code = s[a:b]
 if mutation == 'kept':

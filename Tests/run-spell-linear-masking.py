@@ -6,6 +6,7 @@ then fail it.
 """
 import argparse, os, subprocess, tempfile
 from pathlib import Path
+from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--mutation',choices=['reference']);args=p.parse_args()
 rules=root/'Resources/TeXShop/SpellCheck/SpellingExclusions.txt'
@@ -16,8 +17,8 @@ with tempfile.TemporaryDirectory(prefix='ts-spell-linear-') as td:
     assert 'comments          yes' in text
     other=text.replace('comments          yes','comments          no')+'\nskip-body german\nlanguage-switch shorthandsoff\n'
     (t/'other.txt').write_text(other)
-    subprocess.run(['xcrun','clang','-O2','-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),
-        '-framework','Foundation',str(root/'Tests/SpellCheck/linear.m'),str(root/'Sources/TSSpellExclusions.m'),
+    subprocess.run(['xcrun','clang','-O2','-fobjc-arc','-w','-DTSSPELL_STANDALONE_TEST',*include_args(root),
+        '-framework','Foundation',str(root/'Tests/SpellCheck/linear.m'),str(root/'Sources/Editor/TSSpellExclusions.m'),
         '-o',str(t/'linear')],check=True)
     command=[str(t/'linear'),str(rules),str(t/'other.txt')]+[str(f) for f in fixtures]
     if args.mutation: command.append('--reference')

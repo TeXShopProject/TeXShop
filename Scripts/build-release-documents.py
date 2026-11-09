@@ -120,10 +120,10 @@ def main():
 \includepdf[pages=-]{Changes-5.57.pdf}
 \end{document}
 '''
-    changes_dir = ROOT / 'ChangesDocument'
+    changes_dir = ROOT / 'DocumentSources/ChangesDocument'
     changes_source = changes_dir / 'Changes.tex'
     changes_source.write_text(source, encoding='utf-8')
-    about_source = ROOT / 'First Steps Source/About-This-Release/About This Release.tex'
+    about_source = ROOT / 'DocumentSources/First Steps Source/About-This-Release/About This Release.tex'
     # Build away from the source tree so logs and auxiliary files stay untracked.
     with tempfile.TemporaryDirectory(prefix='texshop-release-docs-') as temp:
         output = Path(temp)

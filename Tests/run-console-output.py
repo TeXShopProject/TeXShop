@@ -21,18 +21,18 @@ mutation = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--mut
 def cut(text, start, end):
     a = text.index(start); return text[a:text.index(end, a)]
 
-enc = (root/'Sources/TSEncodingSupport.m').read_text(encoding='latin1')
+enc = (root/'Sources/App/TSEncodingSupport.m').read_text(encoding='latin1')
 helpers = cut(enc, '// UTF-8 in which each byte that does not start or continue a valid character is replaced',
               '// The byte order mark that starts data')
 japanese = cut(enc, '// Japanese encodings read the byte 0x5C', '- (BOOL)ptexUtfOutputCheck:')
-doc = (root/'Sources/TSDocument.m').read_text(encoding='latin1')
+doc = (root/'Sources/Document/TSDocument.m').read_text(encoding='latin1')
 output = cut(doc, '// Show a piece of TeX output in the console and look in it for errors.', '// Code by Nicolas Ojeda Bar')
-jobs = (root/'Sources/TSDocument-Jobs.m').read_text(encoding='latin1')
+jobs = (root/'Sources/Typesetting/TSDocument-Jobs.m').read_text(encoding='latin1')
 command = jobs[jobs.index('- (void) doTexCommand: sender'):]
 command = command[:command.index('\n}\n') + 3]
 filters = enc[enc.index('// replace backslashes by yens'):].rstrip() + '\n'
 filter_method = cut(doc, '- (NSString *)filterBackslashes:', '// The code below to handle line break algorithms')
-sync = (root/'Sources/MyPDFKitView.m').read_text(encoding='latin1')
+sync = (root/'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 
 def mutate(text, old, new):
     assert old in text, old; return text.replace(old, new)

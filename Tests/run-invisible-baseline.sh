@@ -14,13 +14,14 @@ trap cleanup EXIT
 python3 - "$root" "$output" <<'KEYS'
 from pathlib import Path
 import re, sys
-source = (Path(sys.argv[1]) / 'Sources/globals.m').read_text(encoding='latin1')
+source = (Path(sys.argv[1]) / 'Sources/App/globals.m').read_text(encoding='latin1')
 keys = re.findall(r'^NSString \*(?:show(?:Space|FullwidthSpace|Tab|NewLine)CharacterKey|(?:Space|FullwidthSpace|Tab|NewLine)CharacterKindKey)\s*=.*?;', source, re.M)
 assert len(keys) == 8
 (Path(sys.argv[2]) / 'MarkerKeys.h').write_text('\n'.join(keys))
 KEYS
 set -- "${1:?Specify an output PNG path}"
-xcrun clang -fobjc-arc -framework Cocoa -I "$root/Sources" -I "$output" "$root/Tests/InvisibleCharacterBaseline.m" "$root/Sources/TSLayoutManager.m" -o "$output/test"
+source_includes=(); while IFS= read -r d; do source_includes+=(-I "$d"); done < <(find "$root/Sources" -type d)
+xcrun clang -fobjc-arc -framework Cocoa "${source_includes[@]}" -I "$output" "$root/Tests/InvisibleCharacterBaseline.m" "$root/Sources/Editor/TSLayoutManager.m" -o "$output/test"
 # Verify independence from NSString drawing compatibility tied to the minimum OS declaration.
 mkdir -p "$output/Probe.app/Contents/MacOS"
 mv "$output/test" "$output/Probe.app/Contents/MacOS/Probe"

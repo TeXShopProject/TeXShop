@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/TSAppDelegate.m').read_text(encoding='latin-1')
+source = (root / 'Sources/App/TSAppDelegate.m').read_text(encoding='latin-1')
 start = source.index('- (void)makeDefaultEditor:(id)sender;')
 method = source[start:source.index('\n}\n', start) + 3]
 if 'LSSetDefaultRoleHandlerForContentType' in source:

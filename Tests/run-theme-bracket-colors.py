@@ -8,19 +8,19 @@ root = Path(__file__).resolve().parents[1]
 
 from production_fragments import method, verify_embedded
 
-support = (root / 'Sources/TSColorSupport.m').read_text(encoding='latin-1')
+support = (root / 'Sources/Editor/TSColorSupport.m').read_text(encoding='latin-1')
 signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:',
               '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
               '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
               '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:',
               '- (NSColor *)colorForKey: (NSString *)theKey isWindowDark:']
 methods = [method(support, s) for s in signatures if s in support]
-document_source = (root / 'Sources/TSDocument-Color.m').read_text(encoding='latin-1')
+document_source = (root / 'Sources/Editor/TSDocument-Color.m').read_text(encoding='latin-1')
 document=document_source
 start = document.index('mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerParen"];')
 end = document.index('\n', document.index('self.markerColorSquareAttribute =', start)) + 1
 document = document[start:end]
-prefs = (root / 'Sources/TSPreferences-Color.m').read_text(encoding='latin-1')
+prefs = (root / 'Sources/Settings/TSPreferences-Color.m').read_text(encoding='latin-1')
 helper = method(prefs, '- (NSColor *)editingColorForKey:') if '- (NSColor *)editingColorForKey:' in prefs else ''
 wells = re.search(r'^[ \t]*markerParenColorWell\.color = .*?^[ \t]*markerSquareColorWell\.color = [^\n]*\n', method(prefs, '- (void)FillInColorWells'), re.M | re.S).group(0)
 

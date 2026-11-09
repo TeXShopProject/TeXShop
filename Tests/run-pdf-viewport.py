@@ -7,13 +7,14 @@ import shutil
 from pathlib import Path
 import subprocess
 import tempfile
+from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['legacy-reload', 'legacy-second', 'skip-last-page', 'legacy-constraints', 'unconstrained'])
 parser.add_argument('--artifacts', type=Path, help='Keep the generated Objective-C and executable for cross-OS testing')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-source = (root / 'Sources/MyPDFKitView.m').read_text(encoding='latin1')
+source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 def method(signature):
     start = source.rindex(signature)
     return source[start:source.index('\n}', start) + 2]
@@ -299,15 +300,15 @@ with tempfile.TemporaryDirectory(prefix='texshop-viewport-') as directory:
     temp = Path(directory)
     (temp / 'test.m').write_text(program)
     if args.mutation in ('legacy-constraints', 'unconstrained'):
-        header = (root / 'Sources/TSExternalPDFReload.h').read_text()
+        header = (root / 'Sources/Preview/TSExternalPDFReload.h').read_text()
         start = header.index('    // On macOS 26, NSClipView')
         end = header.index('    [clip scrollToPoint:target.origin];', start)
         replacement = ('    target = [clip constrainBoundsRect:target];\n'
                        if args.mutation == 'legacy-constraints' else '')
         (temp/'TSExternalPDFReload.h').write_text(header[:start] + replacement + header[end:])
     subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
-                    '-I'+str(root/'Sources'), str(temp/'test.m'), str(root/'Sources/HideView.m'),
-                    str(root/'Sources/TSExternalPDFSnapshot.m'), '-o', str(temp/'test')], check=True)
+                    *include_args(root), str(temp/'test.m'), str(root/'Sources/Preview/HideView.m'),
+                    str(root/'Sources/Preview/TSExternalPDFSnapshot.m'), '-o', str(temp/'test')], check=True)
     home = temp / 'home'
     (home/'Library'/'Preferences').mkdir(parents=True)
     environment = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home))

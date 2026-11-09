@@ -11,7 +11,7 @@ from pathlib import Path
 import subprocess, sys, tempfile
 root = Path(__file__).resolve().parents[1]
 mutation = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--mutation=')), None)
-s = (root/'Sources/TSDocument.m').read_text(encoding='latin1')
+s = (root/'Sources/Document/TSDocument.m').read_text(encoding='latin1')
 a = s.index('- (void)tryLineEndingNotice:'); b = s.index('\n}\n', s.index('- (void)tryBadEncodingDialog:', a)) + 3
 notices = s[a:b]
 if mutation == 'hidden-window':
@@ -22,7 +22,7 @@ if mutation == 'no-wait':
     assert old in notices; notices = notices.replace(old, '')
 for real, stand_in in [('NSWindow', 'WindowStandIn'), ('NSAlert', 'AlertStandIn'), ('NSModalResponse', 'NSInteger'), ('NSControlStateValueOn', '1')]:
     notices = notices.replace(real, stand_in)
-w = (root/'Sources/TSTextEditorWindow.m').read_text(encoding='latin1')
+w = (root/'Sources/Windows/TSTextEditorWindow.m').read_text(encoding='latin1')
 a = w.index('- (void)makeKeyAndOrderFront:'); b = w.index('\n}\n', a) + 3
 window = w[a:b]
 program = r'''

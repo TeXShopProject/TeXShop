@@ -5,12 +5,13 @@ import json, subprocess, tempfile, os
 from pane_fixtures import bundles
 from settings_contract import load
 import argparse
+from source_tree import include_args
 parser=argparse.ArgumentParser();parser.add_argument("--app",type=Path);args=parser.parse_args()
 r = Path(__file__).resolve().parents[1]
 with tempfile.TemporaryDirectory(prefix='texshop-settings-panes-') as temp:
     p = Path(temp)
-    sources = sorted((r/'Sources').glob('TSPref*Controller.m')) + [r/'Sources/TSPrefPaneLayout.m',r/'Sources/TSDockIconController.m',r/'Sources/TSPreferences+Panes.m',r/'Sources/TSSettingsCategory.m']
-    subprocess.run(['xcrun','clang','-fobjc-arc','-Werror','-Wno-deprecated-declarations','-Wno-nullability-completeness','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsPanes.m'),*map(str,sources),'-o',str(p/'probe')],check=True)
+    sources = sorted((r/'Sources').rglob('TSPref*Controller.m')) + [r/'Sources/Settings/TSPrefPaneLayout.m',r/'Sources/App/TSDockIconController.m',r/'Sources/Settings/TSPreferences+Panes.m',r/'Sources/Settings/TSSettingsCategory.m']
+    subprocess.run(['xcrun','clang','-fobjc-arc','-Werror','-Wno-deprecated-declarations','-Wno-nullability-completeness','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsPanes.m'),*map(str,sources),'-o',str(p/'probe')],check=True)
     (p/'fixtures').mkdir()
     for bundle in bundles(r,p/'fixtures',product=args.app,dock=True):
         language=bundle.stem;localization=r/'Resources/Interfaces'/(language+'.lproj')

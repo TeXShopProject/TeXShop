@@ -2,9 +2,10 @@
 """Test independent review invalidation without opening the system spelling panel."""
 import argparse, os, subprocess, tempfile
 from pathlib import Path
+from source_tree import include_args
 root=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--mutation',choices=['responder','text','selection','panel-responder','no-sole','preload-multiple','all-editors','same-event','up-arrow','auto-hidden','auto-review','auto-accessory','auto-column','auto-guesses']);args=p.parse_args()
-s='#import "SessionChecker.h"\n#define NSSpellChecker SessionChecker\n'+(root/'Sources/TSSpellSupport.m').read_text()
+s='#import "SessionChecker.h"\n#define NSSpellChecker SessionChecker\n'+(root/'Sources/Editor/TSSpellSupport.m').read_text()
 removed={'responder':'view.window.firstResponder == view &&',
          'text':'[view.string isEqualToString:sReviewText] &&',
          'selection':'NSEqualRanges(view.selectedRange, sReviewSelection)'}
@@ -32,7 +33,7 @@ if args.mutation in mutations:
     s=s.replace(old,new)
 with tempfile.TemporaryDirectory(prefix='texshop-review-session-') as td:
     t=Path(td);(t/'support.m').write_text(s)
-    subprocess.run(['xcrun','clang','-fobjc-arc','-DTSSPELL_STANDALONE_TEST','-I'+str(root/'Sources'),
+    subprocess.run(['xcrun','clang','-fobjc-arc','-DTSSPELL_STANDALONE_TEST',*include_args(root),
         '-I'+str(root/'Tests/SpellCheck'),'-framework','Cocoa',str(root/'Tests/SpellCheck/session.m'),str(t/'support.m'),
-        str(root/'Sources/TSSpellExclusions.m'),'-o',str(t/'probe')],check=True)
+        str(root/'Sources/Editor/TSSpellExclusions.m'),'-o',str(t/'probe')],check=True)
     subprocess.run([str(t/'probe')],env=dict(os.environ,TSSPELL_RULES=str(root/'Resources/TeXShop/SpellCheck/SpellingExclusions.txt')),check=True,timeout=15)
