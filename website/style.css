@@ -106,3 +106,12 @@ nav .history-archive{font-size:11px;white-space:nowrap}
 @media(max-width:1100px){.downloads+footer{margin-inline:25px}}
 
 .icon-history-years{display:block;font-size:.85em;line-height:1.5;margin-top:2px}
+
+.release-years{justify-content:flex-start;gap:8px 18px;margin:22px 0 42px;font-size:14px;line-height:1.9}
+.release-years a{color:var(--link)}
+.release-year{margin:48px 0 64px}
+.release-year h2{font-size:28px;font-weight:400;scroll-margin-top:24px;margin:0 0 16px}
+.release-year .download-table{table-layout:fixed;margin-top:0}
+.release-year th:nth-child(1){width:32%}.release-year th:nth-child(2){width:23%}.release-year th:nth-child(3){width:19%}.release-year th:nth-child(4),.release-year th:nth-child(5){width:13%}
+.release-year .download-table th,.release-year .download-table td{padding-inline:12px}
+@media(max-width:850px){.release-years{gap:6px 16px;font-size:13px}.release-year{margin:38px 0 48px}.release-year h2{font-size:25px}.release-year .download-table td{padding-inline:0}}
