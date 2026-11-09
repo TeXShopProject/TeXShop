@@ -1,6 +1,6 @@
 # Bundled zlib
 
-The application links `Resources/Binaries/libz.a`, built from the unmodified
+The application links `libz.a` in this directory, built from the unmodified
 upstream source in `zlib-1.4/`. Both Debug and Release use these matching headers.
 The static library contains arm64 and x86_64 code targeting macOS 14.6.
 

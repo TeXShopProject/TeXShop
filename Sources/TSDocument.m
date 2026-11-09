@@ -876,7 +876,7 @@ withDarkColors = NO;
         }
         else if ([fileManager fileExistsAtPath:@"/usr/bin/sips"])
         {
-            NSString *sipsPath = [[NSBundle mainBundle] pathForResource:@"sipswrap" ofType:nil];
+            NSString *sipsPath = [[NSBundle mainBundle] pathForResource:@"sipswrap" ofType:nil inDirectory:@"Shellscripts"];
             [urls enumerateObjectsUsingBlock:^(NSURL *obj, NSUInteger idx, BOOL *stop) {
                 // NSLog([obj path]);
                 NSTask   *convertTask;
@@ -3177,7 +3177,7 @@ else {
 	self.detexTask = [[NSTask alloc] init];
 	[self.detexTask setCurrentDirectoryPath: [myFileName stringByDeletingLastPathComponent]];
 	[self.detexTask setEnvironment: [self environmentForSubTask]];
-	enginePath = [[NSBundle mainBundle] pathForResource:@"detexwrap" ofType:nil];
+	enginePath = [[NSBundle mainBundle] pathForResource:@"detexwrap" ofType:nil inDirectory:@"Shellscripts"];
 	tetexBinPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
 	args = [NSMutableArray array];
 	[args addObject:tetexBinPath];
@@ -10583,7 +10583,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
                 self.texloganalyserTask = [[NSTask alloc] init];
                 [self.texloganalyserTask setCurrentDirectoryPath: [logPath stringByDeletingLastPathComponent]];
                 [self.texloganalyserTask setEnvironment: [self environmentForSubTask]];
-                enginePath = [[NSBundle mainBundle] pathForResource:@"texloganalyserwrap" ofType:nil];
+                enginePath = [[NSBundle mainBundle] pathForResource:@"texloganalyserwrap" ofType:nil inDirectory:@"Shellscripts"];
                 tetexBinPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
                 args = [NSMutableArray array];
                 [args addObject:tetexBinPath];

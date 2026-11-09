@@ -6,10 +6,10 @@ in `3rdparty/`.
 
 | Component | Version | Used files | Upstream |
 | --- | --- | --- | --- |
-| Sparkle | 2.10.1 (2065) | `Sparkle.framework` | [2.10.1](https://github.com/sparkle-project/Sparkle/releases/tag/2.10.1) |
-| OgreKit | 2.1.12 | `OgreKit.framework` | [2.1.12](https://github.com/sonoisa/OgreKit/tree/2.1.12) |
+| Sparkle | 2.10.1 (2065) | `Frameworks/Sparkle.framework` | [2.10.1](https://github.com/sparkle-project/Sparkle/releases/tag/2.10.1) |
+| OgreKit | 2.1.12 | `Frameworks/OgreKit.framework` | [2.1.12](https://github.com/sonoisa/OgreKit/tree/2.1.12) |
 | Onigmo | 6.2.0 | Embedded in OgreKit | [6.2.0](https://github.com/k-takata/Onigmo/releases/tag/Onigmo-6.2.0) |
-| zlib | 1.4 | `Resources/Binaries/libz.a` | [1.4](https://github.com/madler/zlib/releases/tag/v1.4) |
+| zlib | 1.4 | `3rdparty/zlib/libz.a` | [1.4](https://github.com/madler/zlib/releases/tag/v1.4) |
 | SyncTeX parser | 1.21 | `Sources/synctex_parser*`, `Sources/synctex_version.h` | [TeX Live sources](https://github.com/TeX-Live/texlive-source/tree/a399fb5f3f02441b040ad34c7aed3a1af8ffdc39/texk/web2c/synctexdir) |
 
 ## zlib
@@ -50,8 +50,7 @@ The upstream README currently offers 2.1.12. The bundled framework reports
 2.1.12 and its Onigmo headers report 6.2.0; neither is replaced by the older
 `3rdparty/FlipUniversal/OgreKit-3.0.2` sources.
 
-The root Sparkle framework is the one linked and embedded by the target.
-`3rdparty/Sparkle-1.24.0` is a historical copy and is not the shipped updater.
+The Sparkle framework in `Frameworks/` is the one linked and embedded by the target.
 
 Apple frameworks such as PDFKit, AppKit and WebKit are provided by macOS. The
 Spotlight importer and adapted NoodleKit source are maintained as part of this

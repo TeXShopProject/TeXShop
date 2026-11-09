@@ -299,7 +299,7 @@
     self.myDocument.backwardSyncTaskExternal = [[NSTask alloc] init];
     [self.myDocument.backwardSyncTaskExternal setCurrentDirectoryPath: [myFileName stringByDeletingLastPathComponent]];
     [self.myDocument.backwardSyncTaskExternal setEnvironment: [self.myDocument environmentForSubTask]];
-    enginePath = [[NSBundle mainBundle] pathForResource:@"contextbackwardsyncwrap" ofType:nil];
+    enginePath = [[NSBundle mainBundle] pathForResource:@"contextbackwardsyncwrap" ofType:nil inDirectory:@"Shellscripts"];
     tetexBinPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
     alternateBinPath = [[SUD stringForKey:AltPathKey] stringByExpandingTildeInPath];
  

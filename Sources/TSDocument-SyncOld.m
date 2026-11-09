@@ -555,7 +555,7 @@
      synctexHandle = [synctexPipe fileHandleForReading];
      [synctexTask setStandardOutput: synctexPipe];
      enginePath = [[NSBundle mainBundle] pathForResource:@"synctex" ofType:nil];
-     // enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil];
+     // enginePath = [[NSBundle mainBundle] pathForResource:@"synctexviewwrap" ofType:nil inDirectory:@"Shellscripts"];
      [synctexTask setLaunchPath:enginePath];
      
      args = [NSMutableArray array];

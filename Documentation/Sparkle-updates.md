@@ -1,6 +1,6 @@
 # TeXShopProject updates
 
-TeXShop 5.59 uses Sparkle 2.10.1, with the framework embedded at the project root. The historical `3rdparty/Sparkle-1.24.0` directory is not used by the application.
+TeXShop 5.59 uses Sparkle 2.10.1, with the framework kept in `Frameworks/Sparkle.framework`.
 
 The feed is https://texshop.app/appcast.xml. It is part of the website deployed from `website/` by the manual **Publish website** GitHub Actions workflow. Edit website sources in this repository, commit and push after review, then run that workflow. GitHub Pages must be configured to use GitHub Actions. Site URL: https://texshop.app/.
 

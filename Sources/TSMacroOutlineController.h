@@ -33,7 +33,7 @@
 // Use "nodeFromDictionary" of "TSMacroTreeNode" to create such a node
 // from a dictionary.
 
-#define SEPARATOR_IMAGE @"Separator.tiff"
+#define SEPARATOR_IMAGE @"Separator"
 #define TSMacroOutlineViewAddedItemNotification		@"TSMacroOutlineViewAddedItem"
 #define TSMacroOutlineViewRemovedItemNotification	@"TSMacroOutlineViewDeletedItem"
 #define TSMacroOutlineViewAcceptedDropNotification	@"TSMacroOutlineViewAcceptedDrop"

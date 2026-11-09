@@ -54,6 +54,10 @@ static inline BOOL TSLinkPreviewHasHorizontalDestination(NSPoint raw, CGAffineTr
            (fabs(transform.c) < 0.0001 || raw.y != kPDFDestinationUnspecifiedValue);
 }
 
+// A text column narrower or wider than these (in PDF points) is not used to size the preview.
+static const CGFloat TSLinkPreviewMinimumColumn = 150;
+static const CGFloat TSLinkPreviewMaximumColumn = 600;
+
 static inline NSRect TSLinkPreviewTextBounds(PDFPage *page, NSSize size, NSPoint point,
                                              CGAffineTransform transform, BOOL enlarged)
 {
@@ -64,8 +68,8 @@ static inline NSRect TSLinkPreviewTextBounds(PDFPage *page, NSSize size, NSPoint
     PDFSelection *selection = [page selectionForRect:NSRectFromCGRect(pageBand)];
     if (!selection.string.length) return NSZeroRect;
     // Retain the column intersecting the destination, not unrelated columns.
-    // Exceptionally wide lines (posters, A3 prose) should not shrink a local preview.
-    CGFloat limit = (enlarged ? 445 : 400) / 0.75;
+    // Exceptionally wide lines (posters, A3 prose) do not describe a readable column.
+    CGFloat limit = TSLinkPreviewMaximumColumn;
     CGFloat nearest = CGFLOAT_MAX;
     NSMutableArray<NSValue *> *lines = [NSMutableArray array];
     for (PDFSelection *line in selection.selectionsByLine) {
@@ -88,6 +92,46 @@ static inline NSRect TSLinkPreviewTextBounds(PDFPage *page, NSSize size, NSPoint
     return result;
 }
 
+// Extend the lines around the destination to the right margin of their column on the
+// whole page, so a heading or a short line near the destination does not narrow the preview.
+// Lines sharing the left margin of the destination's lines belong to its column; most of them
+// are full lines, so the median right edge is the column's right margin.
+// A column narrower than the nominal preview is kept narrow only when prose lines stand beside
+// it, as in a two-column layout; otherwise it widens to the nominal 400 point crop (390 + padding).
+static inline NSRect TSLinkPreviewColumnBounds(PDFPage *page, NSSize size, CGAffineTransform transform,
+                                               NSRect local)
+{
+    if (NSIsEmptyRect(local)) return local;
+    NSRect column = local;
+    NSMutableArray<NSValue *> *lines = [NSMutableArray array];
+    CGRect pageRect = CGRectApplyAffineTransform(CGRectMake(0, 0, size.width, size.height),
+                                                 CGAffineTransformInvert(transform));
+    NSArray<PDFSelection *> *selections = [page selectionForRect:NSRectFromCGRect(pageRect)].selectionsByLine;
+    if (selections.count <= 600) for (PDFSelection *line in selections) {
+        CGRect bounds = CGRectApplyAffineTransform(NSRectToCGRect([line boundsForPage:page]), transform);
+        if (!isfinite(bounds.origin.x) || !isfinite(bounds.size.width) || bounds.size.width <= 0 ||
+            bounds.size.width > TSLinkPreviewMaximumColumn) continue;
+        [lines addObject:[NSValue valueWithRect:NSRectFromCGRect(bounds)]];
+    }
+    NSMutableArray<NSNumber *> *rights = [NSMutableArray array];
+    for (NSValue *value in lines)
+        if (fabs(NSMinX(value.rectValue) - NSMinX(local)) <= 30) [rights addObject:@(NSMaxX(value.rectValue))];
+    if (rights.count >= 5) {
+        [rights sortUsingSelector:@selector(compare:)];
+        CGFloat right = MIN(rights[rights.count / 2].doubleValue, size.width);
+        if (right > NSMaxX(column)) column.size.width = right - NSMinX(column);
+    }
+    NSUInteger beside = 0;
+    for (NSValue *value in lines) {
+        NSRect line = value.rectValue;
+        if (line.size.width >= TSLinkPreviewMinimumColumn &&
+            (NSMinX(line) >= NSMaxX(column) + 5 || NSMaxX(line) <= NSMinX(column) - 5)) beside++;
+    }
+    if (beside < 5 && column.size.width < 390)
+        column.size.width = MAX(column.size.width, MIN(390, size.width - NSMinX(column)));
+    return column;
+}
+
 static inline CGFloat TSLinkPreviewClamp(CGFloat value, CGFloat lower, CGFloat upper)
 {
     return MIN(MAX(value, lower), upper);
@@ -105,31 +149,49 @@ static inline BOOL TSLinkPreviewRects(NSSize pageSize, NSPoint destination, NSRe
         !isfinite(cursor.x) || !isfinite(cursor.y) ||
         visible.size.width <= 10 || visible.size.height <= 10) return NO;
 
-    CGFloat width = MIN(pageSize.width, enlarged ? 445 : 400);
+    CGFloat nominal = enlarged ? 445 : 400;
     CGFloat height = MIN(pageSize.height, enlarged ? 360 : 120);
     CGFloat padding = enlarged ? 10 : 5;
     CGFloat anchorX = TSLinkPreviewClamp(destination.x, 0, pageSize.width);
-    CGFloat preferredX = anchorX - padding;
+    CGFloat maximum = MIN(pageSize.width - 10, TSLinkPreviewMaximumColumn);
     NSRect text = NSIntersectionRect(NSMakeRect(0,0,pageSize.width,pageSize.height), textBounds);
-    if (!NSIsEmptyRect(text)) preferredX = MIN(preferredX, NSMinX(text) - padding);
-    CGFloat x = TSLinkPreviewClamp(preferredX, 0, pageSize.width - width);
-    // Keep both the text's line beginnings and the actual destination in view.
-    CGFloat right = anchorX + (enlarged ? padding : 200);
-    if (!NSIsEmptyRect(text)) right = MAX(right, NSMaxX(text) + padding);
-    width = MIN(pageSize.width - x, MAX(width, right - x));
-    if (width > (enlarged ? 445 : 400) / 0.75) {
-        // Prefer a readable destination over fitting a distant line beginning.
-        width = MIN(pageSize.width, enlarged ? 445 : 400);
+    BOOL hasText = !NSIsEmptyRect(text);
+    CGFloat x, width;
+    if (hasText && text.size.width >= TSLinkPreviewMinimumColumn && text.size.width <= maximum) {
+        // Show the whole text column at the nominal scale; the popup grows instead of shrinking.
+        x = TSLinkPreviewClamp(MIN(anchorX, NSMinX(text)) - padding, 0, pageSize.width);
+        width = TSLinkPreviewClamp(MAX(anchorX, NSMaxX(text)) + padding, x, pageSize.width) - x;
+    } else {
+        width = MIN(pageSize.width, nominal);
+        CGFloat preferredX = anchorX - padding;
+        if (hasText) preferredX = MIN(preferredX, NSMinX(text) - padding);
+        x = TSLinkPreviewClamp(preferredX, 0, pageSize.width - width);
+        // Keep both the text's line beginnings and the actual destination in view.
+        CGFloat right = anchorX + (enlarged ? padding : 200);
+        if (hasText) right = MAX(right, NSMaxX(text) + padding);
+        width = MIN(pageSize.width - x, MAX(width, right - x));
+    }
+    if (width > maximum + 2 * padding) {
+        // Context too far from the destination: prefer a readable destination.
+        width = MIN(pageSize.width, nominal);
         x = TSLinkPreviewClamp(anchorX - padding, 0, pageSize.width - width);
     }
     CGFloat y = TSLinkPreviewClamp(destination.y - height + 10, 0, pageSize.height - height);
-    *source = NSMakeRect(x, y, width, height);
 
+    // Shrink only for lack of room, continuously, down to a readable floor; beyond that,
+    // narrow the crop from the right, sliding it only to keep the destination visible.
     NSRect available = NSInsetRect(visible, 5, 5);
     CGFloat desiredScale = enlarged ? 1 : 2.0 / 3.0;
-    CGFloat scale = MIN(desiredScale,
-                        MIN(MIN(available.size.width, (enlarged ? 445 : 400) * desiredScale) / width,
-                            MIN(available.size.height, (enlarged ? 360 : 120) * desiredScale) / height));
+    CGFloat floorScale = enlarged ? 0.75 : 0.5;
+    CGFloat scale = MAX(floorScale, MIN(desiredScale, available.size.width / width));
+    scale = MIN(scale, available.size.height / height);
+    CGFloat shown = MIN(width, available.size.width / scale);
+    if (shown < width) {
+        x = TSLinkPreviewClamp(MAX(x, anchorX + padding - shown), 0, pageSize.width - shown);
+        width = shown;
+    }
+    *source = NSMakeRect(x, y, width, height);
+
     width *= scale;
     height *= scale;
     x = cursor.x + (enlarged ? -5 : 10);

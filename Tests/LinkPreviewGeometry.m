@@ -138,7 +138,9 @@ static void testTextContext(void) {
         require(TSLinkPreviewRects(size,destination,text,NSMakeRect(0,0,1000,1000),NSMakePoint(500,500),
                                   enlarged,NO,YES,&source,&output), "distant text and destination");
         require(source.origin.x < 89 && NSPointInRect(destination,source), "keep left context and far right anchor");
-        require(output.size.width <= (enlarged?445:400*2.0/3.0)+0.001, "expanded source does not enlarge popup");
+        require(near(output.size.width/source.size.width,enlarged?1:2.0/3.0), "wider context widens popup at nominal scale");
+        require(source.size.width <= MIN(size.width-10,TSLinkPreviewMaximumColumn)+2*(enlarged?10:5)+0.001,
+                "context width stays within the column limit");
         destination.x=196;
     }
     NSSize emptySize; CGAffineTransform emptyTransform;
@@ -277,7 +279,128 @@ static void testPlacementAndUnspecified(void) {
         require(near(point.x,0) && near(point.y,size.height), "omitted y defaults before rotation");
     }
 }
-int main(void) { @autoreleasepool {
+static NSString *lineOfWidth(CGFloat width) {
+    NSDictionary *attributes=@{NSFontAttributeName:[NSFont fontWithName:@"Helvetica" size:12]};
+    NSArray *words=@[@"lorem",@"ipsum",@"dolor",@"sit",@"amet"];
+    NSMutableString *line=[NSMutableString stringWithString:@"Body"];
+    for (NSUInteger i=0; [[line stringByAppendingFormat:@" %@",words[i%5]] sizeWithAttributes:attributes].width<=width; i++)
+        [line appendFormat:@" %@",words[i%5]];
+    return line;
+}
+static NSArray *bodyLines(CGFloat x, CGFloat width, CGFloat top, NSInteger count) {
+    NSMutableArray *lines=[NSMutableArray array];
+    for (NSInteger i=0;i<count;i++) [lines addObject:textLine(lineOfWidth(width),x,top-14*i)];
+    return lines;
+}
+static void sizedPreview(PDFDocument *document, NSPoint raw, NSRect visible, BOOL enlarged,
+                         NSRect *column, NSRect *source, NSRect *output) {
+    PDFPage *page=[document pageAtIndex:0]; NSSize size; CGAffineTransform transform;
+    require(TSLinkPreviewPageGeometry(page,&size,&transform),"sized page geometry");
+    NSPoint destination=TSLinkPreviewDestinationPoint(raw,size,transform);
+    *column=TSLinkPreviewColumnBounds(page,size,transform,
+                                     TSLinkPreviewTextBounds(page,size,destination,transform,enlarged));
+    require(TSLinkPreviewRects(size,destination,*column,visible,NSMakePoint(NSMidX(visible),NSMidY(visible)),
+                              enlarged,NO,YES,source,output),"sized preview");
+}
+// The popup widens to the destination's text column instead of shrinking it.
+static void testColumnWidth(void) {
+    NSRect wide=NSMakeRect(0,0,1500,1200), column, source, output;
+    // A heading and short display lines near the destination; full body lines further down.
+    NSMutableArray *lines=[NSMutableArray arrayWithObjects:textLine(@"1 Heading",92,700),
+        textLine(@"x = 1",250,680),textLine(@"y = 2",250,662),nil];
+    [lines addObjectsFromArray:bodyLines(92,428,560,12)];
+    PDFDocument *document=textFixture(NSMakeSize(612,792),NSMakeRect(0,0,612,792),lines);
+    for (NSInteger enlarged=0;enlarged<2;enlarged++) {
+        CGFloat nominal=enlarged?1:2.0/3.0;
+        sizedPreview(document,NSMakePoint(92,712),wide,enlarged,&column,&source,&output);
+        require(NSMaxX(column)>=500 && NSMinX(column)<=93,"page-level column reaches the right margin");
+        require(NSMinX(source)<=92 && NSMaxX(source)>=500,"whole body line is cropped");
+        require(near(output.size.width/source.size.width,nominal),"column shown at nominal scale");
+        require(output.size.width>(enlarged?445:400*2.0/3.0)+1 || enlarged,"standard popup widens for a 428 point column");
+    }
+    // Narrow-margin notes: a 550 point column on A4 is shown whole.
+    document=textFixture(NSMakeSize(595,842),NSMakeRect(0,0,595,842),bodyLines(22,550,700,12));
+    sizedPreview(document,NSMakePoint(22,712),wide,NO,&column,&source,&output);
+    require(NSMinX(source)<=22 && NSMaxX(source)>=550,"550 point column is cropped whole");
+    require(near(output.size.width/source.size.width,2.0/3.0),"550 point column at nominal scale");
+    // Two columns: each preview shows only its own column.
+    lines=[NSMutableArray arrayWithArray:bodyLines(72,205,700,10)];
+    [lines addObjectsFromArray:bodyLines(312,205,700,10)];
+    document=textFixture(NSMakeSize(595,842),NSMakeRect(0,0,595,842),lines);
+    sizedPreview(document,NSMakePoint(312,712),wide,NO,&column,&source,&output);
+    require(NSMinX(source)>=300 && NSMaxX(source)>=505,"right column preview excludes the left column");
+    sizedPreview(document,NSMakePoint(72,712),wide,NO,&column,&source,&output);
+    require(NSMaxX(source)<=300 && NSMinX(source)<=72,"left column preview excludes the right column");
+    require(near(output.size.width/source.size.width,2.0/3.0),"column preview at nominal scale");
+    // A column narrower than the minimum keeps the nominal 400 point crop.
+    document=textFixture(NSMakeSize(612,792),NSMakeRect(0,0,612,792),bodyLines(92,110,700,10));
+    sizedPreview(document,NSMakePoint(92,712),wide,NO,&column,&source,&output);
+    require(near(source.size.width,400),"narrow text keeps the nominal crop");
+    // Short lines without a neighbouring column (lists, tables) keep the nominal crop too.
+    document=textFixture(NSMakeSize(612,792),NSMakeRect(0,0,612,792),bodyLines(92,200,700,12));
+    sizedPreview(document,NSMakePoint(92,712),wide,NO,&column,&source,&output);
+    require(source.size.width>=399.999,"single-column short lines keep the nominal crop");
+}
+// Narrowing the window changes the popup continuously: first the scale, down to the floor,
+// then the crop from the right; the destination always stays visible.
+static void testContinuousShrinking(void) {
+    NSSize page=NSMakeSize(612,792);
+    NSRect text=NSMakeRect(92,600,428,120);
+    for (NSInteger enlarged=0;enlarged<2;enlarged++) for (NSInteger far=0;far<2;far++) {
+        NSPoint destination=NSMakePoint(far?500:92,700);
+        CGFloat nominal=enlarged?1:2.0/3.0, floor=enlarged?0.75:0.5;
+        NSRect previousSource=NSZeroRect, previousOutput=NSZeroRect, source, output; CGFloat previousScale=0;
+        for (CGFloat width=700; width>=40; width-=0.5) {
+            NSRect visible=NSMakeRect(0,0,width,1000);
+            require(TSLinkPreviewRects(page,destination,text,visible,NSMakePoint(width/2,500),enlarged,NO,YES,
+                                      &source,&output),"continuous geometry");
+            CGFloat scale=output.size.width/source.size.width;
+            require(contains(NSInsetRect(visible,5,5),output),"continuous output stays visible");
+            require(scale>=floor-0.0001 && scale<=nominal+0.0001,"scale between floor and nominal");
+            require(destination.x>=NSMinX(source)-0.001 && destination.x<=NSMaxX(source)+0.001,
+                    "destination stays in the crop");
+            CGFloat full=428+2*(enlarged?10:5);
+            if (width-10>=full*nominal) require(near(scale,nominal) && near(source.size.width,full),
+                                              "no shrinking while the column fits");
+            if (previousScale>0) {
+                require(fabs(scale-previousScale)<=0.01,"scale changes continuously");
+                require(fabs(output.size.width-previousOutput.size.width)<=0.51,"popup width changes continuously");
+                require(fabs(NSMinX(source)-NSMinX(previousSource))<=1.01 &&
+                        fabs(source.size.width-previousSource.size.width)<=1.01,"crop changes continuously");
+            }
+            previousScale=scale; previousSource=source; previousOutput=output;
+        }
+        require(near(previousScale,floor),"narrowest window uses the floor scale");
+    }
+}
+// Every internal link of a real document is shown with complete lines at the nominal scale.
+static void testDocument(const char *path) {
+    PDFDocument *document=[[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:@(path)]];
+    require(document.pageCount>100,"real document loaded");
+    NSUInteger links=0;
+    for (NSInteger index=0;index<document.pageCount;index++)
+    for (PDFAnnotation *annotation in [document pageAtIndex:index].annotations) {
+        PDFDestination *target=annotation.destination; PDFPage *page=target.page;
+        if (!page) continue;
+        NSSize size; CGAffineTransform transform;
+        if (!TSLinkPreviewPageGeometry(page,&size,&transform)) continue;
+        NSPoint destination=TSLinkPreviewDestinationPoint(target.point,size,transform);
+        NSRect local=TSLinkPreviewTextBounds(page,size,destination,transform,NO);
+        NSRect text=TSLinkPreviewColumnBounds(page,size,transform,local);
+        if (!TSLinkPreviewHasHorizontalDestination(target.point,transform) && !NSIsEmptyRect(text))
+            destination.x=NSMinX(text);
+        NSRect source,output;
+        require(TSLinkPreviewRects(size,destination,text,NSMakeRect(0,0,1000,1200),NSMakePoint(400,500),
+                                  NO,NO,YES,&source,&output),"real link preview");
+        require(NSIsEmptyRect(local) || (NSMinX(local)>=NSMinX(source)-0.5 && NSMaxX(local)<=NSMaxX(source)+0.5),
+                "real link lines are not cut");
+        require(near(output.size.width/source.size.width,2.0/3.0),"real link shown at nominal scale");
+        links++;
+    }
+    require(links>200,"real document links checked");
+    printf("checked %lu links in %s\n",(unsigned long)links,[[@(path) lastPathComponent] UTF8String]);
+}
+int main(int argc, const char **argv) { @autoreleasepool {
     NSRect source, output;
     require(TSLinkPreviewRects(NSMakeSize(418.431,637.609), NSMakePoint(91.009,598.328), NSZeroRect,
         NSMakeRect(0,0,418.431,637.609), NSMakePoint(396,500), YES, NO, YES, &source,&output), "reported example");
@@ -303,5 +426,9 @@ int main(void) { @autoreleasepool {
     testPlacementAndUnspecified();
     testColumnsAndWidePages();
     testRotatedTextContext();
+    testColumnWidth();
+    testContinuousShrinking();
+    require(argc>1,"real document path");
+    testDocument(argv[1]);
     puts("PASS: link preview bounds, aspect ratio, command sizing, CropBox and rotations");
 } }

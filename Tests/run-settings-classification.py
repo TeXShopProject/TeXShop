@@ -19,7 +19,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
  NSMutableDictionary *after=[NSMutableDictionary dictionary];''')
  (t/'test.m').write_text(program)
  extra=[r/'Sources/TSPreferences.m',r/'Sources/TSPreferences-Color.m',r/'Sources/TSColorSupport.m',r/'Sources/TSThemeFileStore.m',r/'Sources/globals.m',r/'Sources/TSPreferenceInput.m',r/'Tests/PreferencesTestServices.m',*sorted((r/'Sources').glob('TSSettings*.m'))]
- compile_command=['xcrun','clang','-fobjc-arc','-F',str(r),'-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*map(str,extra),str(r/'Sources/TSDockIconController.m'),'-o',str(t/'probe')]
+ compile_command=['xcrun','clang','-fobjc-arc','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-Wnullability-completeness','-Wnullable-to-nonnull-conversion','-Wunguarded-availability-new','-mmacosx-version-min=14.6','-I',str(r/'Sources'),'-I',str(r/'Tests'),'-framework','Cocoa',str(t/'test.m'),*map(str,sources(r)),str(r/'Sources/TSPreferences+Panes.m'),*map(str,extra),str(r/'Sources/TSDockIconController.m'),'-o',str(t/'probe')]
  if args.search_catalog or args.search_source:
   (t/'TSSettingsSearch.m').write_text((args.search_source or r/'Sources/TSSettingsSearch.m').read_text())
   (t/'TSSettingsSearchCatalog.inc').write_text((args.search_catalog or r/'Sources/TSSettingsSearchCatalog.inc').read_text())

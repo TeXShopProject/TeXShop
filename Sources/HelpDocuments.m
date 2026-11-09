@@ -197,7 +197,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"ShortCourse" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"ShortCourse" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -378,7 +378,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"HG" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"HG" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -386,7 +386,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"Binary" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"Binary" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -394,7 +394,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"MoreBinary" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"MoreBinary" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -402,7 +402,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"NegatedBinary" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"NegatedBinary" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -410,7 +410,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"BinaryOperations" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"BinaryOperations" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -418,7 +418,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"Arrows" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"Arrows" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -426,7 +426,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"MiscSymbols" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"MiscSymbols" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -434,7 +434,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"Delimiters" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"Delimiters" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -442,7 +442,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"Operators" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"Operators" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -450,7 +450,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"LargeOperators" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"LargeOperators" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -458,7 +458,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"MathAccents" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"MathAccents" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -466,7 +466,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"MathSpacing" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"MathSpacing" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -474,7 +474,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"European" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"European" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -482,7 +482,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"TextAccents" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"TextAccents" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -490,7 +490,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"TextSizes" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"TextSizes" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -498,7 +498,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"TextSymbols" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"TextSymbols" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -506,7 +506,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"TextSpacing" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"TextSpacing" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 
@@ -514,7 +514,7 @@
 {
 	NSString				*fileName;
  	
-	fileName = [[NSBundle mainBundle] pathForResource:@"Tables" ofType:@"pdf"];
+	fileName = [[NSBundle mainBundle] pathForResource:@"Tables" ofType:@"pdf" inDirectory:@"Gratzer"];
 	[self displayFile: fileName];
 }
 

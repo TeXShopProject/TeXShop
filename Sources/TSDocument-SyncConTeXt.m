@@ -104,7 +104,7 @@
     self.backwardSyncTask = [[NSTask alloc] init];
     [self.backwardSyncTask setCurrentDirectoryPath: [myFileName stringByDeletingLastPathComponent]];
     [self.backwardSyncTask setEnvironment: [self environmentForSubTask]];
-    enginePath = [[NSBundle mainBundle] pathForResource:@"contextbackwardsyncwrap" ofType:nil];
+    enginePath = [[NSBundle mainBundle] pathForResource:@"contextbackwardsyncwrap" ofType:nil inDirectory:@"Shellscripts"];
     tetexBinPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
     alternateBinPath = [[SUD stringForKey:AltPathKey] stringByExpandingTildeInPath];
     
@@ -334,7 +334,7 @@
         self.forwardSyncTask = [[NSTask alloc] init];
         [self.forwardSyncTask setCurrentDirectoryPath: [myFileName stringByDeletingLastPathComponent]];
         [self.forwardSyncTask setEnvironment: [self environmentForSubTask]];
-        enginePath = [[NSBundle mainBundle] pathForResource:@"contextforwardsyncwrap" ofType:nil];
+        enginePath = [[NSBundle mainBundle] pathForResource:@"contextforwardsyncwrap" ofType:nil inDirectory:@"Shellscripts"];
         tetexBinPath = [[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath];
         alternateBinPath = [[SUD stringForKey:AltPathKey] stringByExpandingTildeInPath];
         
