@@ -239,6 +239,12 @@
                                     <action selector="paste:" target="-1" id="8zn-1R-1aZ"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Swap with Clipboard" id="BCS-uR-R3s" identifier="TSShortcut.exchangePaste:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="exchangePaste:" target="-1" id="3e0-b0-vdy"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Paste As Comment" id="WtC-ts-E7O" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

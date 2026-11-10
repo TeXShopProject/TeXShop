@@ -2969,7 +2969,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
     return theMenu;
 }
 
-#pragma mark ========Character Conversion==========
+#pragma mark ========Edit Menu Text Commands==========
 
 // Validation of the commands below; returns NO for other menu items.
 - (BOOL)validateEditTextCommand:(NSMenuItem *)anItem enabled:(BOOL *)enabled
@@ -2979,7 +2979,32 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 		*enabled = [self isEditable];
 		return YES;
 	}
+	if (action == @selector(exchangePaste:)) {
+		*enabled = [self isEditable] && [[NSPasteboard generalPasteboard] canReadObjectForClasses:@[[NSString class]] options:nil];
+		return YES;
+	}
 	return NO;
+}
+
+// Replaces the selection with the text on the clipboard and puts the replaced
+// text on the clipboard, so that two pieces of text can be swapped. With
+// nothing selected this is an ordinary paste.
+- (IBAction)exchangePaste:(id)sender
+{
+	NSPasteboard *general = [NSPasteboard generalPasteboard];
+	NSString *replaced = nil;
+	if ([self selectedRange].length > 0 && [general canReadObjectForClasses:@[[NSString class]] options:nil]) {
+		// Copy the selection the way Copy does, including the yen/backslash setting.
+		NSPasteboard *selection = [NSPasteboard pasteboardWithUniqueName];
+		if ([self writeSelectionToPasteboard:selection types:[self writablePasteboardTypes]])
+			replaced = [selection stringForType:NSPasteboardTypeString];
+		[selection releaseGlobally];
+	}
+	[self paste:sender];
+	if (replaced) {
+		[general clearContents];
+		[general setString:replaced forType:NSPasteboardTypeString];
+	}
 }
 
 // Replaces the text in range with its converted form as one undoable edit.

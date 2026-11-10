@@ -240,6 +240,12 @@
                                     <action selector="paste:" target="-1" id="32"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="交換ペースト" id="JyF-2Y-TAv" identifier="TSShortcut.exchangePaste:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="exchangePaste:" target="-1" id="FMC-2Y-DkK"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="コメントとしてペースト" id="Cpd-Y7-D0H" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

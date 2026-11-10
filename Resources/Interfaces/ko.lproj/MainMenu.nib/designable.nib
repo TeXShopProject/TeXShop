@@ -241,6 +241,12 @@
                                     <action selector="paste:" target="-1" id="314"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="클립보드와 교환" id="nhm-uD-mRN" identifier="TSShortcut.exchangePaste:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="exchangePaste:" target="-1" id="uYZ-5a-m3O"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="주석문으로 붙여넣기" id="gHc-VY-m8D" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

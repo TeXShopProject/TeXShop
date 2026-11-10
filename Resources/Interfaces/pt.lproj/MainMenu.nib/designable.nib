@@ -240,6 +240,12 @@
                                     <action selector="paste:" target="-1" id="32"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Trocar com a área de transferência" id="rG1-7w-u8o" identifier="TSShortcut.exchangePaste:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="exchangePaste:" target="-1" id="Ext-IH-8L1"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Colar comentado" id="yMw-HS-cuT" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

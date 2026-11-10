@@ -1,4 +1,5 @@
-// Edit menu text commands: Character Type Conversion and Unicode Normalization.
+// Edit menu text commands: Character Type Conversion, Unicode Normalization and
+// Swap with Clipboard (exchangePaste:). A private pasteboard stands in for the clipboard.
 // Built by run-edit-text-commands.py together with the TSTextView source section.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
@@ -35,6 +36,10 @@ static void TestBeginSheet(NSAlert *alert, SEL cmd, NSWindow *window, void (^han
     if (handler) handler(alertAnswer);
 }
 
+static NSPasteboard *testPasteboard;
+static NSPasteboard *TestGeneralPasteboard(id receiver, SEL cmd) { return testPasteboard; }
+static void SetClipboard(NSString *text) { [testPasteboard clearContents]; if (text) [testPasteboard setString:text forType:NSPasteboardTypeString]; }
+
 @interface TestDocument : NSObject
 @property NSUInteger characterInfoShown;
 @end
@@ -52,6 +57,14 @@ static void TestBeginSheet(NSAlert *alert, SEL cmd, NSWindow *window, void (^han
 @end
 
 #include "TSTextViewEditCommands.inc"
+// Stands in for TeXShop's yen/backslash filtering on copy.
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard type:(NSPasteboardType)type
+{
+    BOOL written = [super writeSelectionToPasteboard:pboard type:type];
+    NSString *text = [pboard stringForType:NSPasteboardTypeString];
+    if (written && text) [pboard setString:[text stringByReplacingOccurrencesOfString:@"¥" withString:@"\\"] forType:NSPasteboardTypeString];
+    return written;
+}
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
     BOOL enabled;
@@ -195,6 +208,45 @@ static void CheckNormalizationCommand(void)
     Check(@"NFC undo name", delegate.undo.undoActionName, @"NFC");
 }
 
+static void CheckExchangePaste(void)
+{
+    TestDelegate *delegate = [TestDelegate new];
+    delegate.undo = [NSUndoManager new];
+    NSMenuItem *item = ActionItem(@selector(exchangePaste:), 0, @"Swap");
+
+    TSTextView *view = NewView(@"left right", delegate);
+    view.selectedRange = NSMakeRange(0, 4);
+    SetClipboard(@"NEW");
+    Require(@"swap enabled with text on the clipboard", [view validateMenuItem:item]);
+    [delegate.undo beginUndoGrouping];
+    [view exchangePaste:item];
+    [delegate.undo endUndoGrouping];
+    Check(@"swap pastes the clipboard", view.string, @"NEW right");
+    Check(@"swap puts the replaced text on the clipboard", [testPasteboard stringForType:NSPasteboardTypeString], @"left");
+    [delegate.undo undo];
+    Check(@"swap undoes the paste", view.string, @"left right");
+
+    view = NewView(@"x¥y", delegate);
+    [view selectAll:nil];
+    SetClipboard(@"Z");
+    [view exchangePaste:item];
+    Check(@"swap copies the way Copy does", [testPasteboard stringForType:NSPasteboardTypeString], @"x\\y");
+
+    view = NewView(@"ab", delegate);
+    view.selectedRange = NSMakeRange(1, 0);
+    SetClipboard(@"Q");
+    [view exchangePaste:item];
+    Check(@"without a selection it pastes", view.string, @"aQb");
+    Check(@"without a selection the clipboard stays", [testPasteboard stringForType:NSPasteboardTypeString], @"Q");
+
+    SetClipboard(nil);
+    view.selectedRange = NSMakeRange(0, 1);
+    Require(@"swap disabled with an empty clipboard", ![view validateMenuItem:item]);
+    SetClipboard(@"Q");
+    view.editable = NO;
+    Require(@"swap disabled in a read-only view", ![view validateMenuItem:item]);
+}
+
 static NSMenuItem *FindSubmenu(NSMenu *menu, SEL action)
 {
     for (NSMenuItem *item in menu.itemArray) {
@@ -229,6 +281,17 @@ static void CheckCompiledMenu(NSString *path)
     }
     Require([path stringByAppendingString:@": tags 1-11"], [tags isEqual:@[@1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11]]);
 
+    NSMenuItem *paste = nil, *exchange = nil;
+    for (NSMenuItem *item in convert.menu.itemArray) {
+        if (item.action == @selector(paste:)) paste = item;
+        if (item.action == @selector(exchangePaste:)) exchange = item;
+    }
+    Require([path stringByAppendingString:@": swap follows Paste"],
+            paste && exchange && [convert.menu indexOfItem:exchange] == [convert.menu indexOfItem:paste] + 1);
+    Require([path stringByAppendingString:@": swap wiring"],
+            exchange.target == nil && exchange.tag == 0 && [exchange.identifier isEqualToString:@"TSShortcut.exchangePaste:.0"] &&
+            exchange.keyEquivalent.length == 0 && exchange.title.length > 0);
+
     NSMenuItem *normalize = FindSubmenu(menu, @selector(normalizeSelectedString:));
     Require([path stringByAppendingString:@": normalization follows conversion"],
             normalize && normalize.menu == convert.menu && [normalize.menu indexOfItem:normalize] == [convert.menu indexOfItem:convert] + 1);
@@ -260,9 +323,13 @@ int main(int argc, char **argv)
         CheckStrings();
         CheckConversionCommand();
         CheckNormalizationCommand();
+        testPasteboard = [NSPasteboard pasteboardWithUniqueName];
+        method_setImplementation(class_getClassMethod(NSPasteboard.class, @selector(generalPasteboard)), (IMP)TestGeneralPasteboard);
+        CheckExchangePaste();
+        [testPasteboard releaseGlobally];
         for (int i = 1; i < argc; i++) CheckCompiledMenu(@(argv[i]));
         if (failures) return 1;
-        printf("PASS: conversions, normalization, command behaviour, %d compiled menus\n", argc - 1);
+        printf("PASS: conversions, normalization, swap with clipboard, command behaviour, %d compiled menus\n", argc - 1);
     }
     return 0;
 }

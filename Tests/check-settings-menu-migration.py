@@ -5,7 +5,7 @@ import hashlib,json,xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[1]
 removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
 # Commands added to the Edit menu later; they are outside the fixed contract.
-added={'convertCharacterType:','normalizeSelectedString:'}
+added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:'}
 def records(tree):
  result=[]
  for item in tree.iter('menuItem'):
