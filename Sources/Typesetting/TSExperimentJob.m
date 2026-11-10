@@ -129,24 +129,26 @@
     @catch (NSException *exception) { return NO; }
 }
 
-// A folder with more items than this is not mirrored, so that an Experiment starts quickly.
-static const NSUInteger TSExperimentMaximumLinks = 2000;
+// A folder with more subfolders than this is not mirrored, so that an Experiment starts quickly.
+static const NSUInteger TSExperimentMaximumFolders = 500;
 
-+ (NSUInteger)linkItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptName:(NSString *)name
++ (NSUInteger)createSubdirectoriesOf:(NSURL *)source inDirectory:(NSURL *)directory
 {
-    if (!source || !directory || !name.length) return 0;
+    if (!source || !directory) return 0;
     NSFileManager *manager = NSFileManager.defaultManager;
-    NSArray<NSString *> *items = [manager contentsOfDirectoryAtPath:source.path error:NULL];
-    if (items.count > TSExperimentMaximumLinks) return 0;
-    NSString *prefix = [name stringByAppendingString:@"."];
-    NSUInteger count = 0;
-    for (NSString *item in items) {
-        if ([item isEqualToString:name] || [item hasPrefix:prefix]) continue;
-        NSURL *link = [directory URLByAppendingPathComponent:item];
-        if ([manager fileExistsAtPath:link.path]) continue;
-        if ([manager createSymbolicLinkAtURL:link withDestinationURL:[source URLByAppendingPathComponent:item] error:NULL])
-            count++;
+    NSArray<NSURL *> *items = [manager contentsOfDirectoryAtURL:source includingPropertiesForKeys:@[NSURLIsDirectoryKey]
+                                                        options:0 error:NULL];
+    NSMutableArray<NSString *> *names = [NSMutableArray array];
+    for (NSURL *item in items) {
+        NSNumber *isDirectory = nil;
+        [item getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
+        if (isDirectory.boolValue) [names addObject:item.lastPathComponent];
     }
+    if (names.count > TSExperimentMaximumFolders) return 0;
+    NSUInteger count = 0;
+    for (NSString *name in names)
+        if ([manager createDirectoryAtURL:[directory URLByAppendingPathComponent:name isDirectory:YES]
+              withIntermediateDirectories:NO attributes:nil error:NULL]) count++;
     return count;
 }
 

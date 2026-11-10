@@ -191,7 +191,23 @@
     {
         theHeader = [theSource substringToIndex:beginDoc.location];
     }
-    newSource = [theHeader stringByAppendingString:@"\n\\begin{document}\n"];
+// The following code comes from http://nshipster.com/nstemporarydirectory/
+    
+    NSURL *directory = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]] isDirectory:YES];
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:directory withIntermediateDirectories:YES attributes:nil error:&error]) {
+        [self presentError:error];
+        return;
+    }
+    // The document's references, from a copy of its .aux that the Experiment reads at the start of
+    // every run, also when an engine typesets more than once (#8). The command shares the line of
+    // \begin{document}, so line numbers in messages stay those of the fragment.
+    NSURL *documentAux = [directory URLByAppendingPathComponent:@"TeXShop-document.aux"];
+    NSString *readAux = @"";
+    if ([TSExperimentJob copyAuxiliaryFile:[[[NSURL fileURLWithPath:filePath] URLByDeletingPathExtension] URLByAppendingPathExtension:@"aux"]
+                                     toURL:documentAux]
+        && [documentAux.path rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\\{}%# \t\n\r"]].location == NSNotFound)
+        readAux = [NSString stringWithFormat:@"\\AtBeginDocument{\\csname @input\\endcsname{%@}}", documentAux.path];
+    newSource = [theHeader stringByAppendingFormat:@"\n%@\\begin{document}\n", readAux];
     newSource = [newSource stringByAppendingString: [scrapTextView string]];
     newSource = [newSource stringByAppendingString:@"\n\\end{document}\n"];
  
@@ -204,14 +220,9 @@
     if (encoding == NSUnicodeStringEncoding) encoding = NSUTF8StringEncoding;
     self.scrapEffectiveEncoding = encoding;
     theData = [[TSEncodingSupport sharedInstance] dataForText:newSource encoding:encoding byteOrderMark:TSNoByteOrderMark];
-    if (!theData) { NSBeep(); return; }
-    
- 
-// The following code comes from http://nshipster.com/nstemporarydirectory/
-    
-    NSURL *directory = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]] isDirectory:YES];
-    if (![[NSFileManager defaultManager] createDirectoryAtURL:directory withIntermediateDirectories:YES attributes:nil error:&error]) {
-        [self presentError:error];
+    if (!theData) {
+        [[NSFileManager defaultManager] removeItemAtURL:directory error:NULL];
+        NSBeep();
         return;
     }
     NSURL *fileURL = [directory URLByAppendingPathComponent:@"file.tex"];
@@ -220,11 +231,8 @@
         [self presentError:error];
         return;
     }
-    // Files are found as when the document is typeset, and its references resolve (#8).
-    [TSExperimentJob linkItemsOfDirectory:[NSURL fileURLWithPath:fileLocation isDirectory:YES]
-                            intoDirectory:directory exceptName:@"file"];
-    [TSExperimentJob copyAuxiliaryFile:[[[NSURL fileURLWithPath:filePath] URLByDeletingPathExtension] URLByAppendingPathExtension:@"aux"]
-                                 toURL:[directory URLByAppendingPathComponent:@"file.aux"]];
+    // TeX run from the document's folder may write into its subfolders; they exist here (#8).
+    [TSExperimentJob createSubdirectoriesOf:[NSURL fileURLWithPath:fileLocation isDirectory:YES] inDirectory:directory];
 
     [self typesetFile: fileURL withAdditionalPath:fileLocation];
     
@@ -389,6 +397,30 @@
 
 
 
+// TeX programs that take -output-directory run from the document's folder and write everything to
+// the Experiment folder, so that files, also with paths beginning with ./, are found as when the
+// document is typeset, and nothing in the document's folder is written (#8). Other programs and
+// scripts, which may not take the option, run in the Experiment folder and find the document's
+// files through TEXINPUTS. Adds the source to `args`.
+- (BOOL)experimentRunsInDocumentFolder: (NSString *)enginePath arguments: (NSMutableArray *)args source: (NSString *)sourcePath
+{
+    static NSSet<NSString *> *programs;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        programs = [NSSet setWithArray:@[@"pdflatex", @"xelatex", @"lualatex", @"latex", @"platex", @"uplatex",
+                                         @"pdftex", @"xetex", @"luatex", @"luahbtex", @"etex", @"ptex", @"uptex",
+                                         @"eptex", @"euptex", @"pdflatex-dev", @"xelatex-dev", @"lualatex-dev",
+                                         @"latex-dev", @"platex-dev", @"uplatex-dev"]];
+    });
+    if ([programs containsObject:enginePath.lastPathComponent]) {
+        [args addObject:[@"-output-directory=" stringByAppendingString:[sourcePath stringByDeletingLastPathComponent]]];
+        [args addObject:sourcePath];
+        return YES;
+    }
+    [args addObject:[sourcePath lastPathComponent]];
+    return NO;
+}
+
 - (void)typesetFile: (NSURL *)fileURL withAdditionalPath: (NSString *)additionalPath
 {
     
@@ -399,6 +431,7 @@
     NSString        *userEngine;
     NSString        *tempPath;
     NSString        *theProgramWithFlags;
+    BOOL            runsInDocumentFolder = NO;
     
     
     env = [self environmentWithNewPath: additionalPath];
@@ -453,7 +486,7 @@
         // tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
         // enginePath = [tetexBinPath stringByAppendingString: enginePath];
         enginePath = [self absoluteEnginePath:enginePath];
-        [args addObject: [sourcePath lastPathComponent]];
+        runsInDocumentFolder = [self experimentRunsInDocumentFolder:enginePath arguments:args source:sourcePath];
         }
     
 // LatexCommandKey
@@ -465,7 +498,7 @@
           //   tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
           //   enginePath = [tetexBinPath stringByAppendingString: enginePath];
         enginePath = [self absoluteEnginePath:enginePath];
-        [args addObject: [sourcePath lastPathComponent]];
+        runsInDocumentFolder = [self experimentRunsInDocumentFolder:enginePath arguments:args source:sourcePath];
         }
 
 // LatexGSCommandKey
@@ -492,8 +525,10 @@
     TSExperimentConsoleController *console = [self ensureExperimentConsole];
     if (!console.isWindowLoaded || NSApp.keyWindow != console.window)
         console.returnWindow = NSApp.keyWindow;
+    NSURL *outputDirectory = [fileURL URLByDeletingLastPathComponent];
     [console startExecutable:enginePath ?: @"" arguments:args environment:env
-                  directory:[fileURL URLByDeletingLastPathComponent]
+                  directory:outputDirectory
+           workingDirectory:runsInDocumentFolder ? [NSURL fileURLWithPath:additionalPath isDirectory:YES] : outputDirectory
                    encoding:self.scrapEffectiveEncoding title:scrapWindow.title ?: @"TeXShop"
                  completion:^(NSURL *pdfURL) {
         TSDocument *document = weakSelf;

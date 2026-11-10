@@ -22,8 +22,13 @@ MUTATIONS = {
     'scrap-close-normal-console': ('windowWillClose', '        [self closeExperiment];',
                                   '        [outputWindow close];\n        [self closeExperiment];'),
     'doc-close-no-experiment': ('close', '    [self closeExperiment];\n', ''),
-    'scrap-no-links': ('typesetScrap', '    [TSExperimentJob linkItemsOfDirectory:', '    if (0) [TSExperimentJob linkItemsOfDirectory:'),
-    'scrap-no-aux': ('typesetScrap', '    [TSExperimentJob copyAuxiliaryFile:', '    if (0) [TSExperimentJob copyAuxiliaryFile:'),
+    'scrap-no-subfolders': ('typesetScrap', '    [TSExperimentJob createSubdirectoriesOf:', '    if (0) [TSExperimentJob createSubdirectoriesOf:'),
+    'scrap-aux-not-read': ('typesetScrap', '    newSource = [theHeader stringByAppendingFormat:@"\\n%@\\\\begin{document}\\n", readAux];',
+                           '    newSource = [theHeader stringByAppendingFormat:@"\\n%@\\\\begin{document}\\n", @""];'),
+    'scrap-relative-source': ('runsInFolder', '        [args addObject:sourcePath];\n        return YES;', '        [args addObject:[sourcePath lastPathComponent]];\n        return YES;'),
+    'scrap-no-output-directory': ('runsInFolder', '        [args addObject:[@"-output-directory=" stringByAppendingString:[sourcePath stringByDeletingLastPathComponent]]];\n', ''),
+    'scrap-cwd-temporary': ('typesetFile', '           workingDirectory:runsInDocumentFolder ? [NSURL fileURLWithPath:additionalPath isDirectory:YES] : outputDirectory',
+                            '           workingDirectory:outputDirectory'),
     'scrap-header-underflow': ('typesetScrap', 'theHeader = [theSource substringToIndex:beginDoc.location];',
                               'theHeader = [theSource substringToIndex:[theSource lineRangeForRange:NSMakeRange(0, beginDoc.location - 1)].length];'),
     'scrap-script-self': ('typesetScrap', 'self.scrapScript = theDocument->whichScript;',
@@ -47,7 +52,8 @@ def method(filename, signature):
 methods = {name: method('TSDocument-Scrap.m', sig) for name, sig in [
     ('typesetFile', '- (void)typesetFile:'), ('typesetScrap', '- (IBAction) typesetScrap:'),
     ('windowWillClose', '- (void)windowWillClose:'), ('closeExperiment', '- (void)closeExperiment'),
-    ('getFilePath', '- (NSString *)getFilePath'), ('searchFile', '- (void)searchFile:')]}
+    ('getFilePath', '- (NSString *)getFilePath'), ('searchFile', '- (void)searchFile:'),
+    ('runsInFolder', '- (BOOL)experimentRunsInDocumentFolder:')]}
 methods['close'] = method('TSDocument.m', '- (void)close\n')
 if args.mutation:
     name, old, new = MUTATIONS[args.mutation]
@@ -101,13 +107,15 @@ static NSUInteger shownWindows;
 + (instancetype)shared { static App *a; if (!a) a = [App new]; return a; }
 @end
 #define NSApp App.shared
+// A TeX program given in Settings, such as /Library/TeX/texbin/pdflatex, instead of the stand-ins.
+static NSString *programOverride;
 @interface Defaults : NSObject
 + (instancetype)shared;
 - (NSString *)stringForKey:(NSString *)key;
 @end
 @implementation Defaults
 + (instancetype)shared { static Defaults *d; if (!d) d = [Defaults new]; return d; }
-- (NSString *)stringForKey:(NSString *)key { return [@"/engine/" stringByAppendingString:key]; }
+- (NSString *)stringForKey:(NSString *)key { return programOverride ?: [@"/engine/" stringByAppendingString:key]; }
 @end
 #define SUD Defaults.shared
 static NSString *LatexScriptCommandKey = @"personal", *LatexCommandKey = @"pdf", *LatexGSCommandKey = @"dvi";
@@ -147,7 +155,7 @@ enum { TSNoByteOrderMark };
 @property (copy) NSString *executable, *source, *title;
 @property (copy) NSArray *arguments;
 @property (copy) NSDictionary *environment;
-@property (strong) NSURL *directory;
+@property (strong) NSURL *directory, *workingDirectory;
 @property (copy) void (^completion)(NSURL *);
 - (void)invalidate;
 - (void)startExecutable:(NSString *)exe arguments:(NSArray *)args environment:(NSDictionary *)env
@@ -157,8 +165,15 @@ enum { TSNoByteOrderMark };
 @implementation Console
 - (void)invalidate { self.invalidations++; self.completion = nil; }
 - (void)startExecutable:(NSString *)exe arguments:(NSArray *)args environment:(NSDictionary *)env
+              directory:(NSURL *)directory workingDirectory:(NSURL *)working encoding:(NSStringEncoding)encoding
+                  title:(NSString *)title completion:(void (^)(NSURL *))completion {
+    [self startExecutable:exe arguments:args environment:env directory:directory encoding:encoding title:title completion:completion];
+    self.workingDirectory = working;
+}
+- (void)startExecutable:(NSString *)exe arguments:(NSArray *)args environment:(NSDictionary *)env
               directory:(NSURL *)directory encoding:(NSStringEncoding)encoding title:(NSString *)title
              completion:(void (^)(NSURL *))completion {
+    self.workingDirectory = directory;
     self.starts++; self.executable = exe; self.arguments = args; self.environment = env;
     self.directory = directory; self.encoding = encoding; self.title = title; self.completion = completion;
     self.source = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:[directory URLByAppendingPathComponent:@"file.tex"]] encoding:encoding];
@@ -166,17 +181,17 @@ enum { TSNoByteOrderMark };
 @end
 #define TSExperimentConsoleController Console
 // Records how the Experiment folder is prepared (#8); the work itself is tested elsewhere.
-static NSURL *linkedSource, *linkedDirectory, *copiedAux, *copiedTo;
-static NSString *linkedException;
+static NSURL *subfolderSource, *subfolderDirectory, *copiedAux, *copiedTo;
+static BOOL auxCopied;
 @interface TSExperimentJob : NSObject
-+ (NSUInteger)linkItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptName:(NSString *)name;
++ (NSUInteger)createSubdirectoriesOf:(NSURL *)source inDirectory:(NSURL *)directory;
 + (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination;
 @end
 @implementation TSExperimentJob
-+ (NSUInteger)linkItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptName:(NSString *)name {
-    linkedSource = source; linkedDirectory = directory; linkedException = name; return 0;
++ (NSUInteger)createSubdirectoriesOf:(NSURL *)source inDirectory:(NSURL *)directory {
+    subfolderSource = source; subfolderDirectory = directory; return 0;
 }
-+ (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination { copiedAux = aux; copiedTo = destination; return NO; }
++ (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination { copiedAux = aux; copiedTo = destination; return auxCopied; }
 @end
 @interface BaseDocument : NSObject
 @property NSUInteger baseCloses;
@@ -214,6 +229,7 @@ static NSString *linkedException;
 - (NSDictionary *)environmentWithNewPath:(NSString *)path;
 - (NSString *)separate:(NSString *)command into:(NSMutableArray *)args;
 - (NSString *)absoluteEnginePath:(NSString *)path;
+- (BOOL)experimentRunsInDocumentFolder:(NSString *)enginePath arguments:(NSMutableArray *)args source:(NSString *)sourcePath;
 - (void)killRunningTasks;
 - (void)presentError:(NSError *)error;
 - (void)cancelWatchFile;
@@ -289,12 +305,15 @@ static void CheckSource(NSString *source, NSString *header, NSInteger rootScript
         Check(d.scrapEffectiveEncoding == expectedEncoding && c.encoding == expectedEncoding, @"root encoding is used, UTF-16 is normalized to UTF-8");
         Check([c.environment[@"TEXINPUTS"] isEqualToString:root.fileURL.URLByDeletingLastPathComponent.path], @"root source directory supplies search path");
         Check([c.title isEqualToString:@"Experiment sentinel"], @"Experiment title passed to its console");
-        Check([linkedSource.path isEqualToString:root.fileURL.URLByDeletingLastPathComponent.path] &&
-              [linkedDirectory.path isEqualToString:c.directory.path] && [linkedException isEqualToString:@"file"],
-              @"the Experiment folder links the root document's folder, except its own file names");
+        Check([subfolderSource.path isEqualToString:root.fileURL.URLByDeletingLastPathComponent.path] &&
+              [subfolderDirectory.path isEqualToString:c.directory.path],
+              @"the Experiment folder gets the root document's subfolders");
         Check([copiedAux.path isEqualToString:[root.fileURL.path.stringByDeletingPathExtension stringByAppendingPathExtension:@"aux"]] &&
-              [copiedTo.path isEqualToString:[c.directory URLByAppendingPathComponent:@"file.aux"].path],
-              @"the root document's .aux becomes the Experiment's file.aux");
+              [copiedTo.path isEqualToString:[c.directory URLByAppendingPathComponent:@"TeXShop-document.aux"].path],
+              @"the root document's .aux is copied under its own name, not as the Experiment's file.aux");
+        Check([c.workingDirectory isEqual:c.directory] && ([c.arguments.lastObject isEqualToString:@"file.tex"] ||
+              [c.arguments.lastObject hasSuffix:@"/file.tex"]),
+              @"an engine that is not a TeX program runs in the Experiment folder");
         CheckNormal(d, normal);
         // A hidden Experiment panel (e.g. application inactive) must still update.
         d->scrapWindow.isVisible = NO;
@@ -315,6 +334,38 @@ int main(void) { @autoreleasepool {
     CheckSource(@"preamble\\begin{document}body", @"preamble", 102, NSUTF8StringEncoding, @"/engine/personal");
     CheckSource(@"preamble\n\\begin{document}body", @"preamble\n", 100, NSUnicodeStringEncoding, @"/engine/pdf");
     CheckSource(@"entire preamble", @"entire preamble", 101, NSUTF8StringEncoding, @"/engine/dvi");
+    // A TeX program from Settings runs from the root's folder, writing to the Experiment folder,
+    // and the copied .aux is read at the start of every run (#8).
+    {
+        programOverride = @"/Library/TeX/texbin/pdflatex"; auxCopied = YES;
+        Document *d = D(), *root = D(); d.rootDocument = root;
+        root.fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"root/main.tex"]];
+        root.textView.string = @"pre\\begin{document}x"; root->whichScript = 100;
+        [d typesetScrap:nil];
+        Console *c = d.experimentConsole;
+        NSString *output = c.directory.path;
+        Check([c.workingDirectory.path isEqualToString:root.fileURL.URLByDeletingLastPathComponent.path],
+              @"a TeX program runs from the root document's folder");
+        Check([c.arguments containsObject:[@"-output-directory=" stringByAppendingString:output]] &&
+              [c.arguments.lastObject isEqualToString:[output stringByAppendingPathComponent:@"file.tex"]],
+              @"a TeX program writes to the Experiment folder and gets the full path of the fragment");
+        NSString *expected = [NSString stringWithFormat:@"pre\n\\AtBeginDocument{\\csname @input\\endcsname{%@/TeXShop-document.aux}}\\begin{document}\nfragment",
+                              output];
+        Check([c.source hasPrefix:expected], @"the copy of the document's .aux is read at the start of every run, on the line of \\begin{document}");
+        RemoveOutput(c);
+        programOverride = @"/opt/bin/ptex2pdf"; auxCopied = NO;
+        d = D(); root = D(); d.rootDocument = root;
+        root.fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"root/main.tex"]];
+        root.textView.string = @"pre\\begin{document}x"; root->whichScript = 100;
+        [d typesetScrap:nil];
+        c = d.experimentConsole;
+        Check([c.workingDirectory isEqual:c.directory] && [c.arguments.lastObject isEqualToString:@"file.tex"] &&
+              ![[c.arguments componentsJoinedByString:@" "] containsString:@"-output-directory"],
+              @"another program runs in the Experiment folder without -output-directory");
+        Check([c.source hasPrefix:@"pre\n\\begin{document}\n"], @"without a copied .aux the fragment is unchanged");
+        RemoveOutput(c);
+        programOverride = nil;
+    }
     // Without a root document, own settings remain the fallback.
     Document *d = D(); NSArray *normal = NormalState(d); [d typesetScrap:nil];
     Check([d.experimentConsole.source hasPrefix:@"child preamble\n"], @"unrooted document uses its own preamble");

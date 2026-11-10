@@ -192,6 +192,16 @@
              directory:(NSURL *)directory encoding:(NSStringEncoding)encoding title:(NSString *)title
             completion:(void (^)(NSURL *))completion
 {
+    [self startExecutable:path arguments:arguments environment:environment directory:directory
+         workingDirectory:directory encoding:encoding title:title completion:completion];
+}
+
+- (void)startExecutable:(NSString *)path arguments:(NSArray<NSString *> *)arguments
+           environment:(NSDictionary<NSString *,NSString *> *)environment
+             directory:(NSURL *)directory workingDirectory:(NSURL *)workingDirectory
+              encoding:(NSStringEncoding)encoding title:(NSString *)title
+            completion:(void (^)(NSURL *))completion
+{
     [self abort:nil];
     self.directory = directory;
     self.encoding = encoding;
@@ -227,7 +237,7 @@
         [controller removeDirectory];
     };
     NSError *error = nil;
-    if (![job startExecutable:path arguments:arguments environment:environment directory:directory error:&error]) {
+    if (![job startExecutable:path arguments:arguments environment:environment directory:workingDirectory ?: directory error:&error]) {
         [self appendText:[NSString stringWithFormat:@"%@\n", error.localizedDescription ?: NSLocalizedString(@"Typesetting engine cannot be found.", nil)]];
         self.commandField.enabled = NO;
         self.stopButton.enabled = NO;

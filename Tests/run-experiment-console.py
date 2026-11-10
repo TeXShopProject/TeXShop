@@ -8,7 +8,8 @@ from pathlib import Path
 import subprocess, tempfile, os, argparse
 from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha"])
+parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha",
+                                          "cwd-is-output", "removes-working"])
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -20,6 +21,14 @@ helpers = cut(enc, '// UTF-8 in which each byte that does not start or continue 
 japanese = cut(enc, '// Japanese encodings read the byte 0x5C', '- (BOOL)ptexUtfOutputCheck:')
 filters = enc[enc.index('// replace backslashes by yens'):].rstrip() + '\n'
 controller = (root / 'Sources/Typesetting/TSExperimentConsoleController.m').read_text().replace('#import "TSEncodingSupport.h"', '').replace('#import "globals.h"', '')
+if args.mutation == "cwd-is-output":
+    old = "environment:environment directory:workingDirectory ?: directory error:&error]"
+    assert old in controller
+    controller = controller.replace(old, "environment:environment directory:directory error:&error]", 1)
+elif args.mutation == "removes-working":
+    old = "        [controller removeDirectory];\n"
+    assert old in controller
+    controller = controller.replace(old, old + "        [[NSFileManager defaultManager] removeItemAtURL:workingDirectory error:NULL];\n", 1)
 if args.mutation == "no-window-load":
     assert "[self loadWindow];" in controller
     controller = controller.replace("[self loadWindow];", "", 1)
@@ -172,6 +181,21 @@ int main(void) { @autoreleasepool {
     check(waitFor(^BOOL{ return completed; }), @"yen job completes");
     check([console.outputText.string containsString:@"¥a\n"] && [console.outputText.string containsString:@"5c  61"], @"yen display and ASCII backslash bytes");
     g_shouldFilter = kNoFilterMode;
+    // A TeX program runs from the document's folder; only the Experiment folder is removed (#8).
+    dir = directory(); NSURL *work = directory(); completed = NO;
+    __block NSString *ranIn = nil;
+    [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"pwd -P > \"$OUT/pwd.txt\"; printf pdf > \"$OUT/file.pdf\""]
+                 environment:@{@"PATH":@"/usr/bin:/bin", @"OUT":dir.path} directory:dir workingDirectory:work
+                    encoding:NSUTF8StringEncoding title:@"Work" completion:^(NSURL *pdf) {
+        ranIn = [[NSString stringWithContentsOfURL:[dir URLByAppendingPathComponent:@"pwd.txt"] encoding:NSUTF8StringEncoding error:NULL]
+                 stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet];
+        completed = YES;
+    }];
+    check(waitFor(^BOOL{ return completed; }), @"job with a working folder completes");
+    check([ranIn isEqualToString:work.path.stringByResolvingSymlinksInPath] || [ranIn isEqualToString:[@"/private" stringByAppendingString:work.path]],
+          @"the job runs in its working folder");
+    check(!exists(dir) && exists(work), @"completion removes the Experiment folder and never the working folder");
+    [[NSFileManager defaultManager] removeItemAtURL:work error:NULL];
     // Closing/replacing an Experiment cancels its job and suppresses stale completion.
     dir = directory(); completed = NO;
     [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"sleep 10; printf pdf > file.pdf"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Sample" completion:^(NSURL *pdf) { completed = YES; }];
