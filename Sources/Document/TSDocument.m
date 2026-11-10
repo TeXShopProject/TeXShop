@@ -3735,6 +3735,19 @@ if ( ! skipTextWindow) {
 }
 
 
+// Offsets a new preview window from the frontmost open preview, if any.
+- (void)cascadePdfKitWindowFromFrontPreview
+{
+    // Window numbers come front to back.
+    for (NSNumber *number in [NSWindow windowNumbersWithOptions:0]) {
+        NSWindow *aWindow = [NSApp windowWithWindowNumber:number.integerValue];
+        if ([aWindow isKindOfClass:[TSPreviewWindow class]] && aWindow != self.pdfKitWindow) {
+            [self repositionWindow:self.pdfKitWindow activeWindow:aWindow];
+            break;
+        }
+    }
+}
+
 - (void)setupFromPreferencesUsingWindowController:(NSWindowController *)windowController
 /*" This method reads the NSUserDefaults and restores the settings before the document will actually be displayed.
 "*/
@@ -3941,28 +3954,7 @@ if ( ! skipTextWindow) {
         case PdfWindowPosSave:
             [pdfWindow setFrameAutosaveName:PdfWindowNameKey];
             [self.pdfKitWindow setFrameAutosaveName:PdfKitWindowNameKey];
-            // added by Terada (from this line)
-            NSInteger numberOfWindows = 0;
-            NSInteger i;
-            NSInteger *listOfWindows;
-            
-        //    NSCountWindowsForContext([NSApp contextID], &numberOfWindows);
-            NSCountWindows(&numberOfWindows);
-            
-            if (numberOfWindows>0){
-                listOfWindows = malloc(numberOfWindows * sizeof(NSInteger));
-                //NSWindowListForContext([NSApp contextID], numberOfWindows, listOfWindows);
-                NSWindowList(numberOfWindows, listOfWindows);
-                for(i=0; i<numberOfWindows; i++){
-                    NSWindow *aWindow = [NSApp windowWithWindowNumber:listOfWindows[i]];
-                    if ([aWindow isKindOfClass:[TSPreviewWindow class]]) {
-                        [self repositionWindow:self.pdfKitWindow activeWindow:aWindow];
-                        break;
-                    }
-                }
-                free(listOfWindows);
-            }
-            // added by Terada (until this line)
+            [self cascadePdfKitWindowFromFrontPreview];
             break;
 
 
@@ -3981,6 +3973,8 @@ if ( ! skipTextWindow) {
                 [pdfWindow setFrameFromString:[SUD stringForKey:PortablePdfWindowFixedPosKey]];
                 [self.pdfKitWindow setFrameFromString:[SUD stringForKey:PortablePdfWindowFixedPosKey]];
                 }
+            // Several previews at the fixed position would hide one another completely.
+            [self cascadePdfKitWindowFromFrontPreview];
 /*
         case PdfWindowPosFixed:
             [pdfWindow setFrameFromString:[SUD stringForKey:PdfWindowFixedPosKey]];
