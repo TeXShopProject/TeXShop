@@ -88,9 +88,15 @@ delimited  \(   \)
 skip-body  verbatim Verbatim BVerbatim LVerbatim lstlisting minted comment alltt filecontents
 skip-body  equation align alignat gather multline eqnarray displaymath math flalign split
 skip-body  array cases matrix pmatrix bmatrix vmatrix tikzpicture pgfpicture
+# amsmath
+skip-body  aligned alignedat gathered xalignat xxalignat subarray smallmatrix Bmatrix Vmatrix
+# mathtools
+skip-body  dcases drcases rcases multlined lgathered rgathered psmallmatrix bsmallmatrix
+skip-body  Bsmallmatrix vsmallmatrix Vsmallmatrix
 
 # Environments that take a specification argument, such as column formats.
-skip-env-args  1  tabular tabularx tabulary longtable minipage multicols wrapfigure wraptable tabu
+skip-env-args  1  tabular longtable minipage multicols wrapfigure wraptable tabu
+skip-env-args  2  tabularx tabulary
 
 # \verb|...|
 skip-verb  verb
@@ -148,6 +154,85 @@ skip-args  0  hyperref
 # check-args  prefix
 # parameters of every command except a list, these are the exceptions.
 check-args  emph verbatim
+
+# ---------------------------------------------------------------------------
+# Commands of common packages. Their arguments are file names, keys, lengths,
+# colours or settings, not prose. A command is only affected when it is used, so
+# these rules do no harm in a document that does not load the package.
+# (Options in [..] are always skipped by skip-args; N counts the {..} arguments.)
+
+# amsmath, mathtools. amssymb defines only symbols and needs no rules.
+skip-args  1  tag mathtoolsset usetagform refeq
+skip-args  2  newtagform renewtagform
+skip-args  3  DeclarePairedDelimiter
+
+# graphicx
+skip-args  1  DeclareGraphicsExtensions
+skip-args  4  DeclareGraphicsRule
+
+# xcolor, colortbl
+skip-args  1  pagecolor rowcolor columncolor cellcolor arrayrulecolor doublerulesepcolor selectcolormodel
+skip-args  2  fcolorbox colorlet
+skip-args  3  providecolor xdefinecolor rowcolors extractcolorspecs
+skip-args  4  definecolorset convertcolorspec
+
+# tikz, pgf
+skip-args  1  pgfmathparse pgfplotsset tikzsetnextfilename pgfkeys
+skip-args  2  pgfmathsetmacro
+
+# geometry
+skip-args  1  newgeometry savegeometry loadgeometry
+
+# fancyhdr: [..] chooses the header position (L, C, R, E, O); the text is checked.
+skip-args  0  fancyhead fancyfoot fancyhf lhead chead rhead lfoot cfoot rfoot
+skip-args  1  fancyheadoffset fancyfootoffset fancypagestyle
+
+# microtype: settings, not prose. \textls[amount]{text} checks its text.
+skip-args  0  textls
+skip-args  1  microtypesetup UseMicrotypeSet DeclareMicrotypeSetDefault DeclareMicrotypeVariants
+skip-args  1  LoadMicrotypeFile DisableLigatures microtypecontext
+skip-args  2  SetTracking SetExtraSpacing SetExtraKerning SetExpansion SetProtrusion
+skip-args  2  DeclareMicrotypeSet DeclareMicrotypeAlias DeclareMicrotypeBabelHook
+
+# tabularx, array. The column specification of the tabularx environment itself
+# is skipped by skip-env-args above.
+skip-args  2  newcolumntype
+
+# enumitem (the [..] of \begin{enumerate}[...] is skipped by env-options)
+skip-args  1  setlist setlistdepth restartlist
+skip-args  2  SetEnumitemKey SetLabelAlign
+skip-args  3  newlist renewlist SetEnumitemValue AddEnumerateCounter
+
+# hyperref (\hyperref[label]{text} is handled above)
+skip-args  1  nolinkurl hyperlink hypertarget hyperbaseurl hyperimage urlstyle urldef Acrobatmenu
+skip-args  1  pdfstringdefDisableCommands
+skip-args  2  hyperdef currentpdfbookmark subpdfbookmark belowpdfbookmark
+
+# cleveref. Labels are skipped by the ref rule above for \cref, \Cref and the page
+# variants; these are the commands whose names do not end in "ref".
+skip-args  1  labelcref labelcpageref namecref nameCref lcnamecref namecrefs nameCrefs lcnamecrefs
+skip-args  2  crefrange Crefrange cpagerefrange Cpagerefrange crefalias
+skip-args  3  crefname Crefname
+skip-args  1  crefdefaultlabelformat
+skip-args  2  crefformat Crefformat crefrangeformat Crefrangeformat creflabelformat
+skip-args  2  crefrangelabelformat
+
+# biblatex
+skip-args  0  printbibliography printbibheading printbiblist bibbysection bibbycategory
+skip-args  1  addglobalbib addsectionbib ExecuteBibliographyOptions DeclareBibliographyCategory
+skip-args  1  defbibheading
+skip-args  2  defbibfilter defbibcheck defbibentryset addtocategory
+skip-args  2  DeclareFieldFormat DeclareNameFormat DeclareListFormat
+
+# natbib: \citetext{...} holds ordinary text, not keys. \bibpunct has six settings.
+check-args  citetext
+skip-args  1  setcitestyle citestyle shortcites
+skip-args  6  bibpunct
+
+# siunitx: numbers and units, for versions 2 and 3.
+skip-args  1  num unit si ang numlist complexnum numproduct tablenum sisetup
+skip-args  2  SI qty numrange qtylist SIlist qtyproduct DeclareSIUnit DeclareSIQualifier
+skip-args  3  SIrange qtyrange DeclareSIPrefix
 
 # Languages other than the document's. A passage in a language the system has no
 # spell checker for is not checked at all. Names are those of babel and
