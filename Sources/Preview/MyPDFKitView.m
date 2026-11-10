@@ -329,6 +329,66 @@
     [myStepper1 setMaxValue:PDF_MAX_SCALE];
 }
 
+// An outline item is identified by the labels from the top of the outline down to the item. A label that appears
+// again among its siblings gets the number of siblings before it with the same label. The identifier stays the same
+// when the document is typeset again, but the PDFOutline objects do not. Each level is walked once, so the cost grows
+// only with the number of items.
+- (void) collectOpenOutlineKeysUnder: (PDFOutline *) parent prefix: (NSString *) prefix into: (NSMutableSet *) keys
+{
+	NSMutableDictionary	*seen = [NSMutableDictionary dictionary];
+	NSUInteger			i;
+
+	for (i = 0; i < [parent numberOfChildren]; i++)
+	{
+		PDFOutline	*child = [parent childAtIndex: i];
+		NSString	*label = [child label] ?: @"";
+		NSUInteger	earlier = [seen[label] unsignedIntegerValue];
+
+		seen[label] = @(earlier + 1);
+		if ([child numberOfChildren] > 0 && [_outlineView isItemExpanded: child])
+		{
+			NSString *key = [NSString stringWithFormat: @"%@\n%lu:%@", prefix, (unsigned long)earlier, label];
+			[keys addObject: key];
+			[self collectOpenOutlineKeysUnder: child prefix: key into: keys];
+		}
+	}
+}
+
+- (void) expandOutlineItemsUnder: (PDFOutline *) parent prefix: (NSString *) prefix withKeys: (NSSet *) keys
+{
+	NSMutableDictionary	*seen = [NSMutableDictionary dictionary];
+	NSUInteger			i;
+
+	for (i = 0; i < [parent numberOfChildren]; i++)
+	{
+		PDFOutline	*child = [parent childAtIndex: i];
+		NSString	*label = [child label] ?: @"";
+		NSUInteger	earlier = [seen[label] unsignedIntegerValue];
+
+		seen[label] = @(earlier + 1);
+		if ([child numberOfChildren] > 0)
+		{
+			NSString *key = [NSString stringWithFormat: @"%@\n%lu:%@", prefix, (unsigned long)earlier, label];
+			if ([keys containsObject: key])
+			{
+				[_outlineView expandItem: child];
+				[self expandOutlineItemsUnder: child prefix: key withKeys: keys];
+			}
+		}
+	}
+}
+
+- (void) scrollOutlineTo: (NSPoint) origin
+{
+	NSScrollView	*scrollView = [_outlineView enclosingScrollView];
+	NSClipView		*clipView = [scrollView contentView];
+	NSRect			bounds = [clipView bounds];
+
+	bounds.origin = origin;
+	[clipView scrollToPoint: [clipView constrainBoundsRect: bounds].origin];
+	[scrollView reflectScrolledClipView: clipView];
+}
+
 - (void) setupOutline
 {
     // NSLog(@"setup outline");
@@ -340,6 +400,11 @@
 //	if (_outline)
 //		[_outline release];
 //	_outline = NULL;
+	// Replacing the outline closes every item. Remember the open items and the scroll position, and restore them below.
+	NSMutableSet *openKeys = [NSMutableSet set];
+	if (self.outline)
+		[self collectOpenOutlineKeysUnder: self.outline prefix: @"" into: openKeys];
+	NSPoint scrollOrigin = [[[_outlineView enclosingScrollView] contentView] bounds].origin;
 	self.outline = [[self document] outlineRoot];
 	if (self.outline)
 	{
@@ -350,6 +415,8 @@
 
 		// Force it to load up.
 		[_outlineView reloadData];
+		[self expandOutlineItemsUnder: self.outline prefix: @"" withKeys: openKeys];
+		[self scrollOutlineTo: scrollOrigin];
 		[_outlineView display];
 	}
 	else
