@@ -39,6 +39,9 @@
 @property           NSRect      scrapFullRect;
 
 - (void) reShowWithPath: (NSString *) imagePath;
+// Call after the Experiment preview window is shown. After the first output since
+// the preview was emptied, shows the top of the first page.
+- (void)didShowOutputWindow;
 
 @end
 
