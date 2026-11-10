@@ -15,7 +15,7 @@ a = s.index('- (BOOL)revertToContentsOfURL:')
 b = s.index('//ULRICH BAUER PATCH\n- (void)revertDocumentToSaved:', a)
 revert_method = s[a:b]
 assert s.index('[self watchFile:([self fileURL] ?: absoluteURL).path]') < s.index('myData = sourceReloadData ?: [NSData dataWithContentsOfURL:absoluteURL options:')
-assert '[self cancelWatchFile]' not in s[s.index('- (BOOL)writeToURL:'):s.index('// zenitani 2.10 (A) -- decode utf.sty', s.index('- (BOOL)writeToURL:'))]
+assert '[self cancelWatchFile]' not in s[s.index('- (BOOL)writeToURL:'):s.index('- (BOOL)revertToContentsOfURL:', s.index('- (BOOL)writeToURL:'))]
 assert '[self cancelWatchFile]' in s[s.index('- (void)close\n'):s.index('[super close]', s.index('- (void)close\n'))]
 program = r'''
 #import <Cocoa/Cocoa.h>

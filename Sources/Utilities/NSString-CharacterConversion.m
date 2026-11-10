@@ -2689,6 +2689,20 @@ static NSString *TSUnicodeStringForCID(NSInteger cid)
     return str;
 }
 
+-(NSString*)stringByDecodingUTFCommandsForReading
+{
+    NSMutableString *str = [NSMutableString stringWithString:self];
+    [str replaceAllOccurrencesOfPattern:@"\\\\(?:UTF|UTFK|UTFT|UTFC)\\{([0-9a-fA-F]{4})\\}" usingBlock:^NSString*(NSString *match, NSArray<NSString*> *groups) {
+        unichar character = (unichar)strtoul(groups[0].UTF8String, NULL, 16);
+        if (character == 0xFF5E)
+            character = 0x301C; // FULLWIDTH TILDE → WAVE DASH
+        else if (character == 0xFF0D)
+            character = 0x2212; // FULLWIDTH HYPHEN-MINUS → MINUS SIGN
+        return [NSString stringWithCharacters:&character length:1];
+    }];
+    return str;
+}
+
 // あ → ア
 -(NSString*)stringByReplacingHiraganaWithKatakana
 {

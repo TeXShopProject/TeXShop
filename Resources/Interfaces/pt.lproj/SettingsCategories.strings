@@ -288,4 +288,4 @@
 
 "catalog.documents.1.3.note" = "Ao salvar, combina caracteres armazenados separadamente (como か + ゛) em um único caractere (が).";
 
-"catalog.typesetting.9.0.note" = "Ao salvar, substitui caracteres fora de JIS X 0208 por \\UTF{XXXX} (ou \\CID{número} para variantes de glifos). Ao abrir, converte \\UTF{…} novamente em caracteres. Para documentos pTeX que usam o pacote otf.";
+"catalog.typesetting.9.0.note" = "Ao salvar, substitui caracteres fora de JIS X 0208 por \\UTF{XXXX} (ou \\CID{número} para variantes de glifos). Para documentos pTeX que usam o pacote otf.";

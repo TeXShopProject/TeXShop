@@ -63,6 +63,7 @@
 #import "TSLayoutManager.h" // added by Terada 
 #import "TSToolbar.h"
 #import "NSString-Extras.h"  // Terada
+#import "NSString-CharacterConversion.h"
 #import "NSText-Extras.h"  // Terada
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
@@ -2835,12 +2836,9 @@ in other code when an external editor is being used. */
 															  withCharacter:OgreLfNewlineCharacter];
 		}
 		// zenitani 2.10 (A) -- decode utf.sty format
-		if( [SUD boolForKey:ptexUtfOutputEnabledKey] ) {
-			OGRegularExpression     *utfRegex;
-			utfRegex = [OGRegularExpression regularExpressionWithString:@"\\\\(UTF|UTFK|UTFT|UTFC){([0-9a-fA-F]{4})}"];
-			content = [utfRegex replaceAllMatchesInString: content delegate:self
-						replaceSelector:@selector(decodeUtfStyFormat:contextInfo:) contextInfo:nil];
-		}
+		// Decoded whether or not utf.sty output is on, so that a file saved with
+		// \UTF commands opens as text with any setting.
+		content = [content stringByDecodingUTFCommandsForReading];
 		content = [[TSEncodingSupport sharedInstance] textForEditing: content encoding: _encoding];
 		
 		theLength = [content length];
@@ -2879,14 +2877,6 @@ else {
 	return result;
 }
 
-// zenitani 2.10 (A) -- decode utf.sty format
-- (NSString *)decodeUtfStyFormat:(OGRegularExpressionMatch *)aMatch contextInfo:(id)contextInfo
-{
-	int u, d;
-	if( sscanf([[aMatch substringAtIndex:2] cStringUsingEncoding: NSJapaneseEUCStringEncoding],"%02X%02X",&u,&d) != 2 ) return nil;
-// 	NSLog([NSString stringWithFormat: @"%d %d %C", u, d, 256*u + d]);
-    return [NSString stringWithFormat: @"%C", (unichar)(256*u + d)];
-}
 
 
 - (BOOL)revertToContentsOfURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError

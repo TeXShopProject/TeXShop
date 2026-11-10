@@ -116,6 +116,10 @@
 -(NSString*)stringByReplacingLigWithAjLig;
 -(NSString*)stringByReplacingAjLigWithLig;
 
+// Reading a file: \UTF{xxxx}, \UTFK, \UTFT and \UTFC (utf.sty) → Unicode文字.
+// U+FF5E and U+FF0D become U+301C and U+2212, which Japanese encodings can save.
+-(NSString*)stringByDecodingUTFCommandsForReading;
+
 // 全角引用符 → 半角引用符
 -(NSString*)stringByReplacingFullwidthQuotesWithHalfwidthQuotes;
 

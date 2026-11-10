@@ -97,6 +97,8 @@ static void CheckStrings(void)
     Check(@"from UTF", [@"\\UTF{9AD9}\\UTF{9ad9}\\UTF{ZZZZ}" stringByReplacingUTFWithUnicodeCharacters], @"髙髙\\UTF{ZZZZ}");
     Check(@"from CID", [@"\\CID{1}|\\CID{13706}|\\CID{23057}|\\CID{99999}|\\CID{0}" stringByReplacingUTFWithUnicodeCharacters],
           @" |𠮷|\u9FA3|\\CID{99999}|\\CID{0}");
+    Check(@"UTF commands when reading", [@"\\UTF{9AD9}\\UTFK{FF5E}\\UTFC{ff0d}\\UTFT{3042}\\UTF{ZZZZ}～－" stringByDecodingUTFCommandsForReading],
+          @"髙〜−あ\\UTF{ZZZZ}～－");
     Check(@"modified NFC composes", [@"か\u3099は\u309A\uFA19" normalizedStringWithModifiedNFC], @"がぱ\uFA19");
     Check(@"modified NFC keeps text made only of excluded characters", [@"\uFA19\uFA19" normalizedStringWithModifiedNFC], @"\uFA19\uFA19");
     Check(@"modified NFD keeps compatibility ideographs", [@"が\uFA19" normalizedStringWithModifiedNFD], @"か\u3099\uFA19");

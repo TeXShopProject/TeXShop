@@ -288,4 +288,4 @@
 
 "catalog.documents.1.3.note" = "Al salvataggio, unisce i caratteri memorizzati separatamente (come か + ゛) in un solo carattere (が).";
 
-"catalog.typesetting.9.0.note" = "Al salvataggio, sostituisce i caratteri esterni a JIS X 0208 con \\UTF{XXXX} (o \\CID{numero} per le varianti dei glifi). All’apertura, riconverte \\UTF{…} in caratteri. Per documenti pTeX che usano il pacchetto otf.";
+"catalog.typesetting.9.0.note" = "Al salvataggio, sostituisce i caratteri esterni a JIS X 0208 con \\UTF{XXXX} (o \\CID{numero} per le varianti dei glifi). Per documenti pTeX che usano il pacchetto otf.";
