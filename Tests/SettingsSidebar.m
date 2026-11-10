@@ -41,7 +41,10 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     method_setImplementation(frameName,oldFrameName);
     [shell.window.contentView layoutSubtreeIfNeeded];
     NSView *sidebar=shell.settingsSearchField.superview,*content=shell.contentScroll.superview;
-    Check(NSMaxY(shell.settingsSearchField.frame)<=NSMaxY(sidebar.safeAreaRect)-5 && NSMaxY(shell.contentScroll.frame)<=NSMaxY(content.safeAreaRect)+1,@"Search and content remain below their titlebar safe areas");
+    // As in System Settings: the search field stays below the titlebar, while the content
+    // scrolls under the toolbar with a top inset equal to the titlebar height.
+    CGFloat titlebar=NSMaxY(content.bounds)-NSMaxY(content.safeAreaRect);
+    Check(NSMaxY(shell.settingsSearchField.frame)<=NSMaxY(sidebar.safeAreaRect)-5 && titlebar>0 && NSMaxY(shell.contentScroll.frame)>=NSMaxY(content.bounds)-1 && shell.contentScroll.automaticallyAdjustsContentInsets && fabs(shell.contentScroll.contentInsets.top-titlebar)<1,@"Search stays below the titlebar; content scrolls under the toolbar with a matching inset");
     NSDictionary *saved=[TSIsolatedAppKitDefaults.values copy];
     [TSIsolatedAppKitDefaults setObject:@"unknown" forKey:TSSettingsSelectedCategoryKey];[shell beginSession];
     Check([shell.history.currentIdentifier isEqual:TSSettingsCategoryGeneral] && shell.categoryTable.selectedRow==0,@"Unknown stored ID opens General");
@@ -113,7 +116,21 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     Check(ownerAlertCount==rejectedAlerts+1,@"A real category selection validates the invalid edit exactly once");
     Check(shell.window.firstResponder==focused,@"Rejected selection retains the invalid field's editor");
     FinishOwnerAlert(NSAlertSecondButtonReturn);Check([shell selectCategoryIdentifier:TSSettingsCategoryPreview],@"Restored field permits the next category");
-    Check(fabs(shell.contentScroll.contentView.bounds.origin.y)<1 && shell.window.firstResponder!=shell.categoryTable,@"Successful content navigation resets scroll without stealing sidebar focus");
+    Check(fabs(shell.contentScroll.contentView.bounds.origin.y+shell.contentScroll.contentInsets.top)<1 && shell.contentScroll.contentInsets.top>0 && shell.window.firstResponder!=shell.categoryTable,@"Successful content navigation shows the top of the pane below the toolbar without stealing sidebar focus");
+    // Rows revealed in the pane are below the toolbar, not under it.
+    {
+        NSClipView *clip=shell.contentScroll.contentView; CGFloat inset=shell.contentScroll.contentInsets.top;
+        NSMutableArray<NSView *> *rows=[NSMutableArray array]; NSMutableArray<NSView *> *queue=[NSMutableArray arrayWithObject:shell.contentScroll.documentView];
+        while(queue.count){NSView *v=queue.firstObject;[queue removeObjectAtIndex:0];if([v.identifier hasPrefix:@"row."])[rows addObject:v];[queue addObjectsFromArray:v.subviews];}
+        BOOL (^visible)(NSView *)=^BOOL(NSView *row){NSRect r=[row convertRect:row.bounds toView:clip];NSRect b=clip.bounds;
+            CGFloat top=clip.isFlipped?NSMinY(r):NSMaxY(b)-NSMaxY(r), limit=clip.isFlipped?NSMinY(b)+inset:inset;
+            return (clip.isFlipped?top>=limit-1:top>=limit-1) && (clip.isFlipped?NSMaxY(r)<=NSMaxY(b)+1:NSMinY(r)>=NSMinY(b)-1);};
+        Check(rows.count>3 && visible(rows.firstObject),@"The first row of a pane starts below the toolbar");
+        [rows.lastObject scrollRectToVisible:rows.lastObject.bounds];
+        Check(visible(rows.lastObject),@"A revealed lower row is below the toolbar");
+        [rows.firstObject scrollRectToVisible:rows.firstObject.bounds];
+        Check(visible(rows.firstObject),@"A revealed upper row is not hidden under the toolbar");
+    }
     method_setImplementation(alertMethod,oldAlert);
     Check((shell.window.styleMask&NSWindowStyleMaskFullSizeContentView)!=0 && shell.contentScroll.documentView.isFlipped,@"Full-height shell keeps a top-origin document");
     Check([shell.categoryIdentifiers isEqual:@[@"general",@"documents",@"editor",@"spelling",@"appearance",@"preview",@"typesetting",@"console",@"keyboard",@"updates"]] && shell.categoryTable.numberOfRows==13,@"Ten categories retain stable order and three grouping gaps");
