@@ -10,7 +10,7 @@ from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'other-window', 'cleanup-state', 'ordinary-escape', 'modified-escape', 'click-cleanup', 'initialize-cleanup',
                                            'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'scroll-moves-frame', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales',
-                                           'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection',
+                                           'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection', 'toggle-keeps-popup', 'link-popups-per-view', 'reads-settings-again',
                                            'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus',
                                            'no-page-label', 'label-unscaled', 'tooltip-kept', 'tooltip-always-hidden',
                                            'tooltip-trusts-data', 'label-from-index'])
@@ -36,6 +36,7 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void) mouseDown:', '- (void) mouseDownKeepingPinnedLinkPreview:', '- (void) initializeDisplay',
     '- (NSCursor *) cursorForToolWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:',
     '- (void) keepingPinnedLinkPreview:', '- (void) changeMouseMode:',
+    '- (void) linkPopupsChanged', '- (BOOL) skipLinks', '- (void) setSkipLinks:',
     '+ (void)initialize', '- (BOOL)showsLinkPreviewForAnnotation:'))
 if args.mutation == 'move-dismisses':
     methods = methods.replace('!self.skipLinks && !self.globalLongTerm', '!self.skipLinks')
@@ -95,6 +96,16 @@ if args.mutation in preview_mutations:
     old, new = preview_mutations[args.mutation]
     assert preview_source.count(old) == 1, args.mutation
     preview_source = preview_source.replace(old, new)
+document_source = (root / 'Sources/Document/TSDocument.m').read_text(encoding='latin1')
+start = document_source.index('- (void)toggleLinkPopups:(id)sender')
+document_methods = document_source[start:document_source.index('\n}', start) + 2]
+if args.mutation == 'toggle-keeps-popup':
+    document_methods = document_methods.replace('    [self.myPDFKitView linkPopupsChanged];\n', '')
+if args.mutation == 'link-popups-per-view':
+    methods = methods.replace('    return document ? !document.linkPopups : _skipLinks;', '    return _skipLinks;').replace(
+        '    if (document)\n        document.linkPopups = !skip;\n    else\n        _skipLinks = skip;', '    _skipLinks = skip;')
+if args.mutation == 'reads-settings-again':
+    methods = methods.replace('    if (!self.myDocument)\n        self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);', '    self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);')
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
@@ -144,8 +155,13 @@ static BOOL throwInClick;
 // Copy writes to a private pasteboard, never the user's clipboard.
 static NSPasteboard *testPasteboard;
 static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard; }
+@interface NSObject (TestLinkPopups)
+- (void)linkPopupsChanged;
+@end
 @interface TestDocument : NSObject
-@property BOOL previewDisplaysAsBook, previewDisplaysRTL, pdfSinglePage;
+@property BOOL previewDisplaysAsBook, previewDisplaysRTL, pdfSinglePage, linkPopups;
+@property id myPDFKitView, myPDFKitView2;
+- (void)toggleLinkPopups:(id)sender;
 @property NSInteger stringWindowAlignment;
 - (void)updatePreviewLayoutControls;
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
@@ -157,7 +173,9 @@ static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item { return YES; }
 - (NSMenu *)mousemodeMenu { return nil; }
 - (NSMatrix *)mousemodeMatrix { return nil; }
+DOCUMENTMETHODS
 @end
+#define TSDocument TestDocument
 @interface MyPDFKitView : PDFView {
     NSInteger mouseMode, currentMouseMode;
     BOOL _editMode,protectFind,downOverLink,showSync,fromTypesetOrQuit,firstTimeSave,drawMark;
@@ -168,8 +186,10 @@ static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard
     TSLinkPreviewView *linkPreview;
     BOOL showsLinkPreviewCursor;
     BOOL keepsPinnedLinkPreview;
+    BOOL _skipLinks;
 }
 @property BOOL skipLinks, globalLongTerm, inLink;
+- (void)linkPopupsChanged;
 @property TestDocument *myDocument;
 @property NSInteger handlingLink, timerNumber;
 @property OverView *overView;
@@ -622,6 +642,33 @@ static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDo
     view.autoScales = YES; [view layoutDocumentView];
     [view setTestMouseMode:0];
 }
+// A document reads Link Popups when it is opened; both panes follow it from then on (the
+// second pane may get its document only when the window is split, without initializing).
+static void testDocumentLinkPopups(MyPDFKitView *view, NSWindow *window, PDFDocument *pdf) {
+    for (NSNumber *setting in @[@NO, @YES]) {
+        TestDocument *document = [TestDocument new];
+        document.linkPopups = setting.boolValue;          // as TSDocument's init reads it
+        [SUD setBool:!setting.boolValue forKey:LinkPopupsKey]; // Settings changed after opening
+        MyPDFKitView *second = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
+        view.myDocument = document; document.myPDFKitView = view; document.myPDFKitView2 = second;
+        [view initializeDisplay];                          // the first PDF after the first typesetting
+        check(view.skipLinks == !setting.boolValue && document.linkPopups == setting.boolValue,
+              @"the first PDF uses the value from when the document was opened");
+        second.myDocument = document;                      // split later
+        check(second.skipLinks == view.skipLinks, @"a pane added by splitting matches the other pane");
+        for (int round = 0; round < 2; round++) {
+            BOOL before = document.linkPopups;
+            if (!view.skipLinks) show(view, NSEventModifierFlagOption);
+            [document toggleLinkPopups:nil];
+            check(document.linkPopups == !before && view.skipLinks == before && second.skipLinks == before,
+                  @"Link Popups in the menu switches both panes together");
+            if (!document.linkPopups) check(!view.preview && !handlers.count, @"switching link popups off closes a pinned popup");
+        }
+        [view doKillPopup];
+        view.myDocument = nil;
+    }
+    [SUD removeObjectForKey:LinkPopupsKey];
+}
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     installFakeToolTip();
@@ -647,6 +694,7 @@ int main(void) { @autoreleasepool {
     testInteraction(view, window);
     testTools(view, window, textDocument());
     testPageLabelAndToolTips(view, window, textDocument());
+    testDocumentLinkPopups(view, window, doc);
     view.document = doc; [view layoutDocumentView];
     show(view, 0);
     for (NSNumber *modifier in @[@0,@(NSEventModifierFlagOption)]) {
@@ -744,7 +792,7 @@ int main(void) { @autoreleasepool {
     printf("PASS: %lu popup event/lifecycle checks\n", (unsigned long)checks);
     return 0;
 }}
-'''.replace('METHODS', methods)
+'''.replace('DOCUMENTMETHODS', document_methods).replace('METHODS', methods)
 with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
     temporary = Path(directory)
     native = temporary / 'probe.m'
@@ -782,6 +830,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'cursor-not-restored':"leaving the popup shows the tool's cursor", 'hand-selects':'with the hand tool the whole popup moves',
                     'no-selection':'dragging over text selects it', 'move-confined':'moved popup keeps only a small part',
                     'copy-ignores-popup':'Copy copies the popup selection',
+                    'toggle-keeps-popup':'switching link popups off closes a pinned popup',
+                    'link-popups-per-view':('a pane added by splitting matches', 'the first PDF uses the value from when the document was opened'),
+                    'reads-settings-again':'the first PDF uses the value from when the document was opened',
                     'tool-change-kills-pin':'changing the tool keeps a pinned popup', 'flag-not-restored':'after a failed click',
                     'click-keeps-focus':'clicking the popup makes its preview the active view', 'click-keeps-selection':'a click away from text clears',
                     'no-page-label':'page label is drawn in the lower right corner', 'label-unscaled':'page label keeps its size on screen',
