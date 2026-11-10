@@ -11,7 +11,9 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'other-window', 'cleanup-state', 'ordinary-escape', 'modified-escape', 'click-cleanup', 'initialize-cleanup',
                                            'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'scroll-moves-frame', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales',
                                            'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection',
-                                           'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus'])
+                                           'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus',
+                                           'no-page-label', 'label-unscaled', 'tooltip-kept', 'tooltip-always-hidden',
+                                           'tooltip-trusts-data', 'label-from-index'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -33,7 +35,8 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void)setDocument:(PDFDocument *)document', '- (void)cleanupMarquee:',
     '- (void) mouseDown:', '- (void) mouseDownKeepingPinnedLinkPreview:', '- (void) initializeDisplay',
     '- (NSCursor *) cursorForToolWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:',
-    '- (void) keepingPinnedLinkPreview:', '- (void) changeMouseMode:'))
+    '- (void) keepingPinnedLinkPreview:', '- (void) changeMouseMode:',
+    '+ (void)initialize', '- (BOOL)showsLinkPreviewForAnnotation:'))
 if args.mutation == 'move-dismisses':
     methods = methods.replace('!self.skipLinks && !self.globalLongTerm', '!self.skipLinks')
 elif args.mutation == 'stale-timer':
@@ -58,6 +61,12 @@ elif args.mutation == 'flag-not-restored':
     methods = methods.replace('    @finally {\n        keepsPinnedLinkPreview = previous;\n    }', '    @finally {\n    }')
 elif args.mutation == 'cursor-not-restored':
     methods = methods.replace('        [[self cursorForToolWithEvent: theEvent] set];\n', '')
+elif args.mutation == 'label-from-index':
+    methods = methods.replace('if (linkedPage.label.length)', 'if ((linkedPage = [linkedPage.document pageAtIndex:[linkedPage.document indexForPage:linkedPage]]).label.length)').replace(
+        '@"Page label in the corner of a link popup; %@ is the page label given in the PDF"), linkedPage.label]',
+        '@"Page label in the corner of a link popup; %@ is the page label given in the PDF"), @([linkedPage.document indexForPage:linkedPage] + 1).stringValue]')
+elif args.mutation == 'tooltip-always-hidden':
+    methods = methods.replace('return !self.skipLinks && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&', 'return')
 elif args.mutation == 'copy-ignores-popup':
     methods = methods.replace('\tif (previewText.length) {', '\tif (NO) {')
 elif args.mutation == 'modified-escape':
@@ -74,6 +83,11 @@ preview_mutations = {
                       'frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], _startFrame.size, flipped);'),
     'click-keeps-selection': ('NSEqualRects(self.frame, _startFrame)) self.selection = nil;', 'NO) self.selection = nil;'),
     'click-keeps-focus': ('            if (self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
+    'no-page-label': ('    if (!self.pageLabel.length) return;\n', '    return;\n'),
+    'label-unscaled': ('[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit]', '[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]'),
+    'tooltip-kept': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])', 'if (NO)'),
+    'tooltip-trusts-data': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])',
+                            'if (annotation && [pdfView showsLinkPreviewForAnnotation:annotation])'),
     'resize-scales': ('                            [self availableRect], _pageSize, flipped, &frame, &source);',
                       '                            [self availableRect], _pageSize, flipped, &frame, &source);\n        source = _startSource;'),
 }
@@ -490,8 +504,127 @@ static void testTools(MyPDFKitView *view, NSWindow *window, PDFDocument *doc) {
     [view doKillPopup];
     [view setTestMouseMode:0];
 }
+// Fraction of the pixels in `rect` (view points, y up) that are the label's gray, not page white or text black.
+static double grayShare(NSBitmapImageRep *rep, NSView *view, NSRect rect) {
+    double scale = rep.pixelsWide / NSWidth(view.bounds); NSUInteger gray = 0, all = 0;
+    for (NSInteger y = (NSInteger)(NSMinY(rect) * scale); y < (NSInteger)(NSMaxY(rect) * scale); y++)
+        for (NSInteger x = (NSInteger)(NSMinX(rect) * scale); x < (NSInteger)(NSMaxX(rect) * scale); x++) {
+            NSColor *c = [[rep colorAtX:x y:rep.pixelsHigh - 1 - y] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+            CGFloat l = (c.redComponent + c.greenComponent + c.blueComponent) / 3;
+            all++; if (l > 0.55 && l < 0.75 && fabs(c.redComponent - c.blueComponent) < 0.05) gray++;
+        }
+    return all ? (double)gray / all : 0;
+}
+static NSBitmapImageRep *render(NSView *view) {
+    NSBitmapImageRep *rep = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
+    [view cacheDisplayInRect:view.bounds toBitmapImageRep:rep];
+    return rep;
+}
+// Stands in front of PDFKit's tool tip method before the filter is installed, so that user
+// data PDFKit would not pass reaches it intact instead of being read by the filter.
+static struct { int notAnObject; } opaqueToolTipData = {77};
+static NSString *(*pdfKitToolTip)(id, SEL, NSView *, NSToolTipTag, NSPoint, void *);
+static NSString *fakeToolTip(id self, SEL sel, NSView *view, NSToolTipTag tag, NSPoint point, void *data) {
+    if (data == &opaqueToolTipData) return opaqueToolTipData.notAnObject == 77 ? @"opaque" : @"changed";
+    return pdfKitToolTip(self, sel, view, tag, point, data);
+}
+static void installFakeToolTip(void) {
+    Method method = class_getInstanceMethod(NSClassFromString(@"PDFPageView"), @selector(view:stringForToolTip:point:userData:));
+    check(method != NULL, @"PDFKit's page view has a tool tip method");
+    pdfKitToolTip = (NSString *(*)(id, SEL, NSView *, NSToolTipTag, NSPoint, void *))method_setImplementation(method, (IMP)fakeToolTip);
+}
+static NSView *pageViewOf(PDFView *view) {
+    NSMutableArray *views = [NSMutableArray arrayWithObject:view];
+    while (views.count) {
+        NSView *candidate = views.lastObject; [views removeLastObject];
+        if ([NSStringFromClass(candidate.class) isEqualToString:@"PDFPageView"] && candidate.window) return candidate;
+        [views addObjectsFromArray:candidate.subviews];
+    }
+    return nil;
+}
+// The tool tip PDFKit's page view gives for `annotation`, asked at its center as the tool tip manager would.
+static NSString *toolTip(PDFView *view, PDFAnnotation *annotation, void *data) {
+    NSView *pageView = pageViewOf(view);
+    check(pageView != nil, @"PDFKit draws pages in page views");
+    NSPoint center = [view convertPoint:NSMakePoint(NSMidX(annotation.bounds), NSMidY(annotation.bounds)) fromPage:annotation.page];
+    return [(id<NSViewToolTipOwner>)pageView view:pageView stringForToolTip:0 point:[pageView convertPoint:center fromView:view] userData:data];
+}
+// Physical page 1 is labeled i and page 2 is 157, as in a book with front matter.
+static PDFDocument *labeledDocument(void) {
+    PDFDocument *doc = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:@(getenv("TS_LABELED_PDF"))]];
+    check(doc.pageCount == 2 && [[doc pageAtIndex:0].label isEqualToString:@"i"] && [[doc pageAtIndex:1].label isEqualToString:@"157"],
+          @"labeled test PDF");
+    PDFAnnotation *link = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(20,720,100,25) forType:PDFAnnotationSubtypeLink withProperties:nil];
+    link.destination = [[PDFDestination alloc] initWithPage:[doc pageAtIndex:1] atPoint:NSMakePoint(20,600)];
+    [[doc pageAtIndex:0] addAnnotation:link];
+    PDFAnnotation *web = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(20,650,100,25) forType:PDFAnnotationSubtypeLink withProperties:nil];
+    web.URL = [NSURL URLWithString:@"https://example.com/"];
+    [[doc pageAtIndex:0] addAnnotation:web];
+    return doc;
+}
+static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDocument *doc) {
+    view.document = doc; view.autoScales = NO; view.scaleFactor = 2; [view layoutDocumentView];
+    [view goToPage:[doc pageAtIndex:0]];
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_TEXT];
+    show(view, 0);
+    TSLinkPreviewView *preview = view.preview;
+    check([preview.pageLabel isEqualToString:[@"Page " stringByAppendingString:[doc pageAtIndex:0].label]],
+          @"popup names the target page by its label");
+    check([[doc pageAtIndex:0].label isEqualToString:@"1"], @"a PDF without page labels numbers its pages");
+    CGFloat unit = NSWidth([view.documentView convertRect:NSMakeRect(0,0,1,1) fromView:nil]);
+    NSRect bounds = preview.bounds;
+    NSBitmapImageRep *rep = render(preview);
+    NSRect corner = NSMakeRect(NSMaxX(bounds) - 30 * unit, NSMinY(bounds) + 3 * unit, 26 * unit, 10 * unit);
+    NSRect left = NSMakeRect(NSMinX(bounds) + 4 * unit, NSMinY(bounds) + 3 * unit, 26 * unit, 10 * unit);
+    check(grayShare(rep, preview, corner) > 0.3 && grayShare(rep, preview, left) < 0.01,
+          @"page label is drawn in the lower right corner");
+    NSRect beyond = NSMakeRect(NSMaxX(bounds) - 90 * unit, NSMinY(bounds) + 3 * unit, 20 * unit, 10 * unit);
+    check(grayShare(rep, preview, beyond) < 0.01, @"page label keeps its size on screen");
+    if (getenv("TS_LABEL_PNG")) [[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:@(getenv("TS_LABEL_PNG")) atomically:YES];
+    [view doKillPopup];
+    view.autoScales = YES; [view layoutDocumentView];
+
+    // The popup names the linked page by its label, not by its position or the page with the link.
+    PDFDocument *labeled = labeledDocument();
+    view.document = labeled; [view layoutDocumentView]; [view goToPage:[labeled pageAtIndex:0]];
+    show(view, 0);
+    check([view.preview.pageLabel isEqualToString:@"Page 157"], @"popup shows the label of the linked page");
+    [view doKillPopup];
+
+    // PDFKit's "Go to page" tool tip gives way to the popup.
+    [window.contentView display];
+    [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.3]];
+    PDFAnnotation *link = nil, *web = nil;
+    for (PDFAnnotation *annotation in [labeled pageAtIndex:0].annotations) {
+        if (annotation.destination) link = annotation;
+        if (annotation.URL) web = annotation;
+    }
+    check(toolTip(view, link, (__bridge void *)link) == nil, @"internal link gets no PDFKit tool tip while popups are on");
+    check([toolTip(view, web, (__bridge void *)web) length] > 0, @"a web link keeps its tool tip");
+    check([toolTip(view, link, &opaqueToolTipData) isEqualToString:@"opaque"],
+          @"user data that is not the link reaches PDFKit untouched");
+    view.skipLinks = YES;
+    check([toolTip(view, link, (__bridge void *)link) length] > 0, @"tool tip stays when link popups are off");
+    view.skipLinks = NO;
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
+    check([toolTip(view, link, (__bridge void *)link) length] > 0, @"tool tip stays with the selection tool, which shows no popups");
+    [view setTestMouseMode:0];
+    // Another PDFView showing the same document keeps PDFKit's tool tips.
+    PDFView *plain = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 650, 850)];
+    NSWindow *other = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,650,850) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+    other.releasedWhenClosed = NO;
+    [other.contentView addSubview:plain];
+    plain.document = labeled; plain.autoScales = YES; [plain layoutDocumentView];
+    [other.contentView display];
+    [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.3]];
+    check([toolTip(plain, link, (__bridge void *)link) length] > 0, @"a PDFView without popups keeps the tool tip");
+    [plain removeFromSuperview];
+    view.autoScales = YES; [view layoutDocumentView];
+    [view setTestMouseMode:0];
+}
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
+    installFakeToolTip();
     handlers = [NSMutableArray new];
     TSReplaceTestMethod(class_getClassMethod(NSEvent.class,@selector(modifierFlags)), (IMP)currentFlags);
     TSReplaceTestMethod(class_getClassMethod(NSEvent.class,@selector(mouseLocation)), (IMP)currentMouse);
@@ -513,6 +646,7 @@ int main(void) { @autoreleasepool {
     view.document = doc; view.autoScales = YES; [view layoutDocumentView];
     testInteraction(view, window);
     testTools(view, window, textDocument());
+    testPageLabelAndToolTips(view, window, textDocument());
     view.document = doc; [view layoutDocumentView];
     show(view, 0);
     for (NSNumber *modifier in @[@0,@(NSEventModifierFlagOption)]) {
@@ -618,7 +752,19 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     str(root/'Sources/Preview/OverView.m'),str(preview_file),'-o',str(exe)],check=True)
     home = temporary/'home'
     (home/'Library/Preferences').mkdir(parents=True)
-    env = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home))
+    # Two empty pages with a PageLabels tree: i, then 157.
+    objects = [b'<< /Type /Catalog /Pages 2 0 R /PageLabels << /Nums [0 << /S /r >> 1 << /S /D /St 157 >>] >> >>',
+               b'<< /Type /Pages /Kids [3 0 R 4 0 R] /Count 2 >>',
+               b'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << >> >>',
+               b'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 800] /Resources << >> >>']
+    pdf = bytearray(b'%PDF-1.4\n'); offsets = []
+    for number, body in enumerate(objects, 1):
+        offsets.append(len(pdf)); pdf += b'%d 0 obj\n' % number + body + b'\nendobj\n'
+    xref = len(pdf)
+    pdf += b'xref\n0 %d\n0000000000 65535 f \n' % (len(objects) + 1) + b''.join(b'%010d 00000 n \n' % o for o in offsets)
+    pdf += b'trailer\n<< /Size %d /Root 1 0 R >>\nstartxref\n%d\n%%%%EOF\n' % (len(objects) + 1, xref)
+    (temporary / 'labeled.pdf').write_bytes(bytes(pdf))
+    env = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home), TS_LABELED_PDF=str(temporary / 'labeled.pdf'))
     result = subprocess.run([str(exe)], env=env, capture_output=True, text=True, timeout=30)
     print(result.stdout, end='')
     if args.mutation:
@@ -633,6 +779,9 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'copy-ignores-popup':'Copy copies the popup selection',
                     'tool-change-kills-pin':'changing the tool keeps a pinned popup', 'flag-not-restored':'after a failed click',
                     'click-keeps-focus':'clicking the popup makes its preview the active view', 'click-keeps-selection':'a click away from text clears',
+                    'no-page-label':'page label is drawn in the lower right corner', 'label-unscaled':'page label keeps its size on screen',
+                    'tooltip-kept':'internal link gets no PDFKit tool tip', 'tooltip-trusts-data':'user data that is not the link',
+                    'label-from-index':'popup shows the label of the linked page', 'tooltip-always-hidden':'tool tip stays when link popups are off',
                     'unpinned-interactive':'hovering popup leaves the mouse', 'pinned-transparent':'pinned popup takes clicks',
                     'scroll-chains':'scrolling the popup leaves the preview', 'scroll-moves-frame':'scrolling leaves the popup in place', 'option-not-forwarded':'Option while shown makes',
                     'kill-leaves-view':'closing removes the popup view', 'cursor-overridden':'shows an open hand',
