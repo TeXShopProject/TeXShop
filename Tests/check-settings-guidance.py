@@ -189,7 +189,7 @@ for target in ('Base','en'):
 print('PASS: hidden PDF current text and distribution identity')
 
 # The current public English copies carry identical Settings layout wording.
-phrase='Settings has a compact sidebar, overview cards and named groups with switches and right-aligned controls. Settings Profile is in General.'
+phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile is in General.'
 for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)
 
@@ -205,11 +205,11 @@ for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','
     for retired in ('All three groups remain open','Changing the method keeps the inactive options and their values','with all three groups open','without discarding unsaved edits'):
         assert retired not in text,('Retired redundant release explanation',filename,retired)
 
-# Fifth audit: public release copies describe both category entrances and merged color rows.
-search_copy='Category names and descriptions also provide one entry that opens the top of the pane. Color controls on the same row share one result.'
+# Release copies describe Search Settings briefly; details belong to the help and manual.
+search_copy='Selecting a result shows and highlights the setting.'
 for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex'):
     assert search_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
-ja_copy='カテゴリ名や説明に一致した場合は、ペインの先頭へ移る入口を1件表示します。同じ行の色設定は1件の結果にまとめます。'
+ja_copy='選んだ項目へ移動して強調します。'
 for filename in ('Documentation/Releases/5.60-ja.md','website/release-notes-ja.html'):
     assert ja_copy in (ROOT/filename).read_text(),('Release category and color-row guidance',filename)
 ko=html.unescape((ROOT/'Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm').read_text())
@@ -228,10 +228,6 @@ for filename in ["Documentation/Releases/5.60-ja.md","website/release-notes-ja.h
     assert "数値欄" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
 
 # Seventh audit: invalid typed text stays intact until commit, as pasted text does.
-for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex']:
-    assert 'Invalid opacity input, including decimals, is rejected when editing finishes; typed and pasted text follow the same rule.' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)
-for filename in ['Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
-    assert '打鍵と貼り付け' in (ROOT/filename).read_text(), ('Opacity commit guidance',filename)
 assert 'Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule.' in manual, 'Opacity commit guidance in manual'
 for lang,terms in {
     'en':['Invalid text, including decimal values','typed and pasted input follow the same rule'],
@@ -246,7 +242,7 @@ print('PASS: typed/pasted opacity validation guidance in five helps, manual and 
 
 
 def check_internal_link_release(text):
-    for phrase in ("Size internal-link previews to the text column of the target page", "never below half size", "Uwe Schmock (#12)"):
+    for phrase in ("Size internal-link previews to the text column of the target page", "never below half size", ">Uwe Schmock</a>", 'issues/12">#12</a>'):
         assert phrase in text, ("Internal-link preview release guidance", phrase)
 
 check_internal_link_release((ROOT/"Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm").read_text())
