@@ -40,6 +40,7 @@
 #import "TSColorSupport.h"
 #import "TSSpellExclusions.h"
 #import "TSSpellSupport.h"
+#import "NSString-CharacterConversion.h"
 
 @protocol BDSKCompletionProtocol <NSObject>
 - (NSArray *)completionsForString:(NSString *)searchString;
@@ -2931,6 +2932,9 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 
 	if ([anItem action] == @selector(registerForCommandCompletion:))
 		return (g_canRegisterCommandCompletion && ([self selectedRange].length > 0));
+	BOOL enabled;
+	if ([self validateEditTextCommand:anItem enabled:&enabled])
+		return enabled;
     
 	return [super validateMenuItem: anItem];
 }
@@ -2962,6 +2966,96 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 		[theMenu insertItem:[NSMenuItem separatorItem] atIndex:2];
 		}
     return theMenu;
+}
+
+#pragma mark ========Character Conversion==========
+
+// Validation of the commands below; returns NO for other menu items.
+- (BOOL)validateEditTextCommand:(NSMenuItem *)anItem enabled:(BOOL *)enabled
+{
+	SEL action = [anItem action];
+	if (action == @selector(convertCharacterType:)) {
+		*enabled = [self isEditable];
+		return YES;
+	}
+	return NO;
+}
+
+// Replaces the text in range with its converted form as one undoable edit.
+- (void)replaceRange:(NSRange)range usingConversion:(NSString *(^)(NSString *))conversion actionName:(NSString *)actionName
+{
+	NSString *oldString = [[self string] substringWithRange:range];
+	NSString *newString = conversion(oldString);
+	if (![newString isEqualToString:oldString] && [self shouldChangeTextInRange:range replacementString:newString]) {
+		[self replaceCharactersInRange:range withString:newString];
+		[self didChangeText];
+		[[self undoManager] setActionName:actionName];
+		range.length = [newString length];
+	}
+	[self setSelectedRange:range];
+}
+
+// Converts the selection. With nothing selected the whole document is
+// converted, after the user agrees.
+- (void)convertSelectionUsing:(NSString *(^)(NSString *))conversion actionName:(NSString *)actionName completion:(void (^)(void))completion
+{
+	NSRange range = [self selectedRange];
+	if (range.length > 0) {
+		[self replaceRange:range usingConversion:conversion actionName:actionName];
+		if (completion) completion();
+		return;
+	}
+	if ([[self string] length] == 0) {
+		NSBeep();
+		return;
+	}
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Apply \"%@\" to the whole document?", @"Asked when a conversion is chosen with nothing selected"), actionName];
+	[alert addButtonWithTitle:NSLocalizedString(@"OK", @"OK")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel")];
+	__weak TSTextView *weakSelf = self;
+	void (^answer)(NSModalResponse) = ^(NSModalResponse response) {
+		TSTextView *view = weakSelf;
+		if (response != NSAlertFirstButtonReturn || !view || ![view isEditable]) return;
+		[view replaceRange:NSMakeRange(0, [[view string] length]) usingConversion:conversion actionName:actionName];
+	};
+	if ([self window])
+		[alert beginSheetModalForWindow:[self window] completionHandler:answer];
+	else
+		answer([alert runModal]);
+}
+
+- (IBAction)convertCharacterType:(id)sender
+{
+	NSString *(^conversion)(NSString *);
+	switch ([sender tag]) {
+		case TSHiraganaToKatakanaTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingHiraganaWithKatakana]; }; break;
+		case TSKatakanaToHiraganaTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingKatakanaWithHiragana]; }; break;
+		case TSFullwidthToHalfwidthDigitsTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingFullwidthDigitsWithHalfwidthDigits]; }; break;
+		case TSHalfwidthToFullwidthDigitsTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingHalfwidthDigitsWithFullwidthDigits]; }; break;
+		case TSFullwidthToHalfwidthAlphabetsTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingFullwidthAlphabetsWithHalfwidthAlphabets]; }; break;
+		case TSHalfwidthToFullwidthAlphabetsTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingHalfwidthAlphabetsWithFullwidthAlphabets]; }; break;
+		case TSUnicodeToAJMacrosTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingUnicodeCharactersWithAjMacros]; }; break;
+		case TSAJMacrosToUnicodeTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingAjMacrosWithUnicodeCharacters]; }; break;
+		case TSUnicodeToUTFTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingUnicodeCharactersWithUTF]; }; break;
+		case TSUTFToUnicodeTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingUTFWithUnicodeCharacters]; }; break;
+		case TSFullwidthToHalfwidthQuotesTag:
+			conversion = ^(NSString *s) { return [s stringByReplacingFullwidthQuotesWithHalfwidthQuotes]; }; break;
+		default:
+			NSBeep();
+			return;
+	}
+	[self convertSelectionUsing:conversion actionName:[sender title] completion:nil];
 }
 
 

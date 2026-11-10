@@ -226,6 +226,10 @@
 		520C2EF108AE984C0010B1F8 /* TSDocument-Syntax.m in Sources */ = {isa = PBXBuildFile; fileRef = 520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5217898608A7FAD600FC1D44 /* NSString-Extras.h in Headers */ = {isa = PBXBuildFile; fileRef = 5217898408A7FAD600FC1D44 /* NSString-Extras.h */; };
 		5217898708A7FAD600FC1D44 /* NSString-Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 5217898508A7FAD600FC1D44 /* NSString-Extras.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		F264AA2798678AB4A0B0DDB3 /* NSMutableString-Extras.h in Headers */ = {isa = PBXBuildFile; fileRef = B2B202308AF8EF1F1F0B57A6 /* NSMutableString-Extras.h */; };
+		F35EC8CDAEBA92E75B5351BD /* NSMutableString-Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = F837DEA890B30D0C475CE359 /* NSMutableString-Extras.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		F622D4390A4C96776A65CC4E /* NSString-CharacterConversion.h in Headers */ = {isa = PBXBuildFile; fileRef = 2939EE6809F1B3899F01B516 /* NSString-CharacterConversion.h */; };
+		57659D7CF0C626BFAB6DAC96 /* NSString-CharacterConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 24986CA2B58F4A705143F8B8 /* NSString-CharacterConversion.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		52A4037008AE1F6C0070F041 /* Encodings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52A4036E08AE1F6C0070F041 /* Encodings.strings */; };
 		52B13E4808A8182F00756E5E /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E4708A8182F00756E5E /* MainMenu.nib */; };
 		52B13E4A08A8183B00756E5E /* TSDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52B13E4908A8183B00756E5E /* TSDocument.nib */; };
@@ -812,6 +816,10 @@
 		520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Syntax.m"; sourceTree = "<group>"; };
 		5217898408A7FAD600FC1D44 /* NSString-Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-Extras.h"; sourceTree = "<group>"; };
 		5217898508A7FAD600FC1D44 /* NSString-Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-Extras.m"; sourceTree = "<group>"; };
+		B2B202308AF8EF1F1F0B57A6 /* NSMutableString-Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString-Extras.h"; sourceTree = "<group>"; };
+		F837DEA890B30D0C475CE359 /* NSMutableString-Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString-Extras.m"; sourceTree = "<group>"; };
+		2939EE6809F1B3899F01B516 /* NSString-CharacterConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-CharacterConversion.h"; sourceTree = "<group>"; };
+		24986CA2B58F4A705143F8B8 /* NSString-CharacterConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-CharacterConversion.m"; sourceTree = "<group>"; };
 		527DA9F40A24F30800A76865 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		52E4BF4408CA74C300726E11 /* TeXShop */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TeXShop; sourceTree = "<group>"; };
 		66A63DCE0114947700000001 /* epstopdf */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = epstopdf; sourceTree = "<group>"; };
@@ -1344,6 +1352,10 @@
 		F8ADDEB91E3D501662EC57A7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				B2B202308AF8EF1F1F0B57A6 /* NSMutableString-Extras.h */,
+				F837DEA890B30D0C475CE359 /* NSMutableString-Extras.m */,
+				2939EE6809F1B3899F01B516 /* NSString-CharacterConversion.h */,
+				24986CA2B58F4A705143F8B8 /* NSString-CharacterConversion.m */,
 				5217898408A7FAD600FC1D44 /* NSString-Extras.h */,
 				5217898508A7FAD600FC1D44 /* NSString-Extras.m */,
 				406B626C199934CF00C46D2A /* NSText-Extras.h */,
@@ -1628,6 +1640,8 @@
 				40839129060963C800266FAB /* TextFinder.h in Headers */,
 				40CD913807E4CE6C00DE6448 /* MyPDFKitView.h in Headers */,
 				5217898608A7FAD600FC1D44 /* NSString-Extras.h in Headers */,
+				F264AA2798678AB4A0B0DDB3 /* NSMutableString-Extras.h in Headers */,
+				F622D4390A4C96776A65CC4E /* NSString-CharacterConversion.h in Headers */,
 				400CD8BA0C66BD3900C450D6 /* HelpDocuments.h in Headers */,
 				400CD8C20C66BD4F00C450D6 /* TSMovie.h in Headers */,
 				400CD8C40C66BD4F00C450D6 /* TSMovieWindow.h in Headers */,
@@ -1900,6 +1914,8 @@
 				40CD913907E4CE6C00DE6448 /* MyPDFKitView.m in Sources */,
 				40D67168210A5F9C0021D69C /* TSDocument-Color.m in Sources */,
 				5217898708A7FAD600FC1D44 /* NSString-Extras.m in Sources */,
+				F35EC8CDAEBA92E75B5351BD /* NSMutableString-Extras.m in Sources */,
+				57659D7CF0C626BFAB6DAC96 /* NSString-CharacterConversion.m in Sources */,
 				520C2EEB08AE92850010B1F8 /* TSDocument-Jobs.m in Sources */,
 				40ACD3702C2787F900436D64 /* MyPDFKitView-Annotations.m in Sources */,
 				40D5BB3019632B9C0081BC77 /* ScrapTextView.m in Sources */,

@@ -408,6 +408,84 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Conversão de tipo de caractere" id="Fx3-OD-eQL">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Conversão de tipo de caractere" id="mvB-Bf-9wp">
+                                    <items>
+                                        <menuItem title="Hiragana → Katakana" tag="1" id="hGr-RR-nKI" identifier="TSShortcut.convertCharacterType:.1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Kr0-o5-3FI"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Katakana → Hiragana" tag="2" id="exa-uh-Fd0" identifier="TSShortcut.convertCharacterType:.2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="KeW-R2-Poi"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="i8S-J7-5S2"/>
+                                        <menuItem title="Dígitos de largura total → Dígitos de meia largura" tag="3" id="NFd-RG-puE" identifier="TSShortcut.convertCharacterType:.3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="kGk-q4-G12"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Dígitos de meia largura → Dígitos de largura total" tag="4" id="XSw-Pc-3ig" identifier="TSShortcut.convertCharacterType:.4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="xH2-Zz-XVC"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="sEv-xO-VCQ"/>
+                                        <menuItem title="Letras de largura total → Letras de meia largura" tag="5" id="JRX-e6-sXv" identifier="TSShortcut.convertCharacterType:.5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="hBn-L2-XMs"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Letras de meia largura → Letras de largura total" tag="6" id="KqB-Rw-GvA" identifier="TSShortcut.convertCharacterType:.6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="CPN-yK-fTq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="iIy-kO-E2j"/>
+                                        <menuItem title="Caracteres Unicode → ajmacros" tag="7" id="tIx-2y-uHb" identifier="TSShortcut.convertCharacterType:.7">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Ui3-hc-30O"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ajmacros → Caracteres Unicode" tag="8" id="uVH-vQ-tHW" identifier="TSShortcut.convertCharacterType:.8">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="8N1-GM-XRA"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="euv-If-VUn"/>
+                                        <menuItem title="Caracteres Unicode → \UTF / \CID" tag="9" id="VeK-pt-WY3" identifier="TSShortcut.convertCharacterType:.9">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="mCQ-FA-XWx"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="\UTF / \CID → Caracteres Unicode" tag="10" id="iBs-Fs-eTg" identifier="TSShortcut.convertCharacterType:.10">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="X9o-C7-34W"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="xWq-cF-hKY"/>
+                                        <menuItem title="Aspas tipográficas → Aspas do TeX" tag="11" id="NXh-wO-3OA" identifier="TSShortcut.convertCharacterType:.11">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Cq0-3n-zdz"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Ler texto" id="835">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Ler texto" id="836">

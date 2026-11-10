@@ -407,6 +407,84 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="字符类型转换" id="w5b-Ge-fkH">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="字符类型转换" id="uTk-KJ-oCi">
+                                    <items>
+                                        <menuItem title="平假名 → 片假名" tag="1" id="L62-se-yZC" identifier="TSShortcut.convertCharacterType:.1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="UZE-at-uhF"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="片假名 → 平假名" tag="2" id="LNq-99-ROn" identifier="TSShortcut.convertCharacterType:.2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="g8f-4h-cnR"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="WQC-lq-8As"/>
+                                        <menuItem title="全角数字 → 半角数字" tag="3" id="17F-DZ-rH4" identifier="TSShortcut.convertCharacterType:.3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="8XT-nl-uIj"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="半角数字 → 全角数字" tag="4" id="jNM-cA-RXT" identifier="TSShortcut.convertCharacterType:.4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="YAj-PF-BoY"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Pt0-1U-dju"/>
+                                        <menuItem title="全角字母 → 半角字母" tag="5" id="tTD-Px-y9H" identifier="TSShortcut.convertCharacterType:.5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="iH0-pR-AGp"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="半角字母 → 全角字母" tag="6" id="i2G-Ih-kN9" identifier="TSShortcut.convertCharacterType:.6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="kJA-gY-g7M"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Tgi-QF-ABd"/>
+                                        <menuItem title="Unicode 字符 → ajmacros" tag="7" id="1ZF-CJ-IVR" identifier="TSShortcut.convertCharacterType:.7">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="BwT-5M-Q4l"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ajmacros → Unicode 字符" tag="8" id="lJj-MD-rRo" identifier="TSShortcut.convertCharacterType:.8">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="QZI-ci-2Al"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="X15-lG-P0r"/>
+                                        <menuItem title="Unicode 字符 → \UTF / \CID" tag="9" id="2Fi-N5-Hoo" identifier="TSShortcut.convertCharacterType:.9">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="OXC-1o-3BC"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="\UTF / \CID → Unicode 字符" tag="10" id="scz-71-v8r" identifier="TSShortcut.convertCharacterType:.10">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="GJl-HA-E6Y"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="kR1-gt-8J1"/>
+                                        <menuItem title="全角引号 → 半角引号" tag="11" id="Hm2-Ov-DtL" identifier="TSShortcut.convertCharacterType:.11">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="K9C-qo-0Nb"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="语音" id="975">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="语音" id="976">

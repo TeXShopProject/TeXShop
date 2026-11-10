@@ -1070,6 +1070,40 @@ withDarkColors = NO;
 
 
 
+// Finds the main menu item whose submenu holds commands with the given action.
+static NSMenuItem *TSMainMenuItemWithSubmenuAction(NSMenu *menu, SEL action)
+{
+	for (NSMenuItem *item in [menu itemArray]) {
+		NSMenu *submenu = [item submenu];
+		if (!submenu)
+			continue;
+		for (NSMenuItem *subitem in [submenu itemArray])
+			if ([subitem action] == action)
+				return item;
+		NSMenuItem *found = TSMainMenuItemWithSubmenuAction(submenu, action);
+		if (found)
+			return found;
+	}
+	return nil;
+}
+
+// Adds a copy of an Edit menu submenu to the text view's context menu. Key
+// equivalents and shortcut identities stay with the main menu.
+static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
+{
+	NSMenuItem *original = TSMainMenuItemWithSubmenuAction([NSApp mainMenu], action);
+	if (!original || [contextMenu indexOfItemWithTitle:[original title]] != -1)
+		return;
+	NSMenuItem *copy = [original copy];
+	for (NSMenuItem *item in [[copy submenu] itemArray]) {
+		[item setKeyEquivalent:@""];
+		[item setKeyEquivalentModifierMask:0];
+		[item setIdentifier:nil];
+	}
+	[copy setIdentifier:nil];
+	[contextMenu addItem:copy];
+}
+
 - (void)setupTextView:(NSTextView *)aTextView
 {
 
@@ -1123,6 +1157,7 @@ withDarkColors = NO;
     NSMenu* aMenu = [aTextView menu];
     if([aMenu indexOfItemWithTitle:NSLocalizedString(@"Character Info", @"Character Info")] == -1)
         [aMenu addItemWithTitle:NSLocalizedString(@"Character Info", @"Character Info") action:@selector(showCharacterInfo:) keyEquivalent:@""];
+    TSAddContextCopyOfSubmenu(aMenu, @selector(convertCharacterType:));
 
  
 	[(TSTextView *)aTextView setDocument: self];
