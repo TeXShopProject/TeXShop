@@ -32,6 +32,7 @@
 #import "synctex_parser.h"
 
 @class TSOutlineExpansion;
+@class TSLinkPreviewView;
 
 @interface MyPDFKitView : PDFView <NSTableViewDelegate, NSWindowDelegate>
 {
@@ -272,6 +273,19 @@
 - (void)selectAll: (id)sender;
 - (void)updateMarquee: (NSTimer *)timer;
 - (void)cleanupMarquee: (BOOL)terminate;
+// The same cleanup, but a pinned link popup stays: for another window becoming main and for
+// splitting or unsplitting the window, which keep the page where it is (#14).
+- (void)cleanupMarqueeKeepingPinnedLinkPreview;
+// Whether `point`, in window coordinates, is in the visible part of a pinned link popup.
+- (BOOL)pinnedLinkPreviewContainsWindowPoint:(NSPoint)point;
+- (BOOL)hasPinnedLinkPreview;
+// Takes a pinned link popup out of this view, giving its frame in window coordinates, so that
+// the other pane can show it when the window is unsplit; nil without one.
+- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame;
+- (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
+// Brings a pinned link popup back into view, as far as dragging it would, after the view
+// changed size.
+- (void)keepPinnedLinkPreviewInView;
 - (void)recacheMarquee;
 - (BOOL)hasSelection;
 - (NSData *)imageDataFromSelectionType: (NSInteger)type;

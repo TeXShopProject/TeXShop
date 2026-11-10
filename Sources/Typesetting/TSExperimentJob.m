@@ -1,6 +1,7 @@
 #import "TSExperimentJob.h"
 #include <signal.h>
 #include <unistd.h>
+#include <sys/clonefile.h>
 
 @interface TSExperimentJob ()
 @property (nonatomic, strong) NSTask *task;
@@ -127,6 +128,86 @@
     if (!self.active || !self.task.running || !data) return NO;
     @try { return [self.input.fileHandleForWriting writeData:data error:error]; }
     @catch (NSException *exception) { return NO; }
+}
+
+// A folder with more items than this, counted through its subfolders, is not cloned, so that an
+// Experiment starts quickly.
+static const NSUInteger TSExperimentMaximumClonedItems = 5000;
+
+// Whether a symbolic link can only lead further down the clone: its target is relative and has
+// no .. component. Such a link stays; any other one could lead out of the Experiment folder.
+static BOOL TSExperimentLinkLeadsDown(NSFileManager *manager, NSString *path)
+{
+    NSString *target = [manager destinationOfSymbolicLinkAtPath:path error:NULL];
+    return target.length && !target.isAbsolutePath && ![target.pathComponents containsObject:@".."];
+}
+
+// Prepares one clone: gives its folders to their owner for reading, writing and searching, which
+// changes only the clone, and removes the symbolic links that could lead out of it. Returns NO
+// when a folder cannot be opened or a link cannot be removed: the clone is then not safe to use.
+static BOOL TSExperimentSecureClone(NSFileManager *manager, NSString *clone)
+{
+    NSMutableArray<NSString *> *pending = [NSMutableArray arrayWithObject:clone];
+    while (pending.count) {
+        NSString *path = pending.lastObject;
+        [pending removeLastObject];
+        NSDictionary *attributes = [manager attributesOfItemAtPath:path error:NULL];
+        if (!attributes) return NO;
+        NSString *type = attributes[NSFileType];
+        if ([type isEqual:NSFileTypeSymbolicLink]) {
+            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;
+            continue;
+        }
+        if (![type isEqual:NSFileTypeDirectory]) continue;
+        NSUInteger mode = [attributes[NSFilePosixPermissions] unsignedIntegerValue];
+        if ((mode & 0700) != 0700 &&
+            ![manager setAttributes:@{NSFilePosixPermissions: @(mode | 0700)} ofItemAtPath:path error:NULL]) return NO;
+        NSArray<NSString *> *items = [manager contentsOfDirectoryAtPath:path error:NULL];
+        if (!items) return NO;
+        for (NSString *item in items) [pending addObject:[path stringByAppendingPathComponent:item]];
+    }
+    return YES;
+}
+
++ (NSUInteger)cloneItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptNames:(NSArray<NSString *> *)names
+{
+    if (!source || !directory) return 0;
+    NSFileManager *manager = NSFileManager.defaultManager;
+    NSUInteger total = 0;
+    for (__unused NSString *item in [manager enumeratorAtPath:source.path])
+        if (++total > TSExperimentMaximumClonedItems) return 0;
+    NSMutableSet<NSString *> *excluded = [NSMutableSet set];
+    for (NSString *name in names) [excluded addObject:name.lowercaseString];
+    NSUInteger count = 0;
+    for (NSString *item in [manager contentsOfDirectoryAtPath:source.path error:NULL]) {
+        NSString *lower = item.lowercaseString;
+        // Names are compared ignoring case, as the file system may.
+        if ([excluded containsObject:lower] || [lower hasPrefix:@"file."]) continue;
+        NSString *from = [source.path stringByAppendingPathComponent:item];
+        NSString *to = [directory.path stringByAppendingPathComponent:item];
+        if ([manager fileExistsAtPath:to]) continue;
+        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) != 0)
+            continue;
+        if (TSExperimentSecureClone(manager, to)) {
+            count++;
+            continue;
+        }
+        // A clone that could not be checked is not used.
+        [manager removeItemAtPath:to error:NULL];
+        if ([manager attributesOfItemAtPath:to error:NULL]) return NSNotFound;
+    }
+    return count;
+}
+
++ (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination
+{
+    NSData *data = aux ? [NSData dataWithContentsOfURL:aux] : nil;
+    if (!data.length) return NO;
+    const char *bytes = data.bytes;
+    NSUInteger end = data.length;
+    while (end > 0 && bytes[end - 1] != '\n') end--;
+    if (end == 0) return NO;
+    return [[data subdataWithRange:NSMakeRange(0, end)] writeToURL:destination atomically:YES];
 }
 
 - (void)cancel

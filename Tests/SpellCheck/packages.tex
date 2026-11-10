@@ -1,0 +1,149 @@
+% Realistic uses of the commands of common packages. Words beginning skipqzx are
+% not prose and must be masked; words beginning keepqzx are prose and must stay.
+\documentclass[skipqzxa]{article}
+\usepackage[skipqzxb]{amsmath,mathtools,graphicx,xcolor,tikz,geometry,fancyhdr,microtype}
+\usepackage[skipqzxc]{booktabs,tabularx,enumitem,hyperref,cleveref,biblatex,natbib,siunitx}
+\begin{document}
+keepqzx0 prose before.
+
+% --- amsmath and mathtools -------------------------------------------------
+\begin{aligned} skipqzx1 \end{aligned}
+\begin{alignedat}{2} skipqzx2 \end{alignedat}
+\begin{gathered} skipqzx3 \end{gathered}
+\begin{xalignat}{2} skipqzx4 \end{xalignat}
+\begin{xxalignat}{2} skipqzx5 \end{xxalignat}
+\begin{subarray}{c} skipqzx6 \end{subarray}
+\begin{smallmatrix} skipqzx7 \end{smallmatrix}
+\begin{Bmatrix} skipqzx8 \end{Bmatrix}
+\begin{Vmatrix} skipqzx9 \end{Vmatrix}
+\begin{dcases} skipqzx10 \end{dcases}
+\begin{drcases} skipqzx11 \end{drcases}
+\begin{rcases} skipqzx12 \end{rcases}
+\begin{multlined} skipqzx13 \end{multlined}
+\begin{lgathered} skipqzx14 \end{lgathered}
+\begin{rgathered} skipqzx15 \end{rgathered}
+\begin{psmallmatrix} skipqzx16 \end{psmallmatrix}
+\begin{bsmallmatrix} skipqzx17 \end{bsmallmatrix}
+\begin{Bsmallmatrix} skipqzx18 \end{Bsmallmatrix}
+\begin{vsmallmatrix} skipqzx19 \end{vsmallmatrix}
+\begin{Vsmallmatrix} skipqzx20 \end{Vsmallmatrix}
+\begin{align*} skipqzx21 \end{align*}
+\tag{skipqzx22} \tag*{skipqzx23}
+\mathtoolsset{skipqzx24=true}
+\usetagform{skipqzx25}
+\newtagform{skipqzx26}[skipqzx27]{(}{skipqzx38)}
+\refeq{skipqzx28}
+\DeclarePairedDelimiter{\abs}{skipqzx29}{skipqzx30} keepqzx1
+
+% --- graphicx --------------------------------------------------------------
+\DeclareGraphicsExtensions{.skipqzx31,.skipqzx32}
+\DeclareGraphicsRule{.skipqzx33}{skipqzx34}{skipqzx35}{skipqzx36} keepqzx2
+\includegraphics*[width=3cm]{skipqzx37}
+
+% --- xcolor ----------------------------------------------------------------
+\pagecolor{skipqzx40} \rowcolor[rgb]{skipqzx41}[skipqzx39][skipqzx66] \columncolor{skipqzx42}
+\cellcolor{skipqzx43} \arrayrulecolor{skipqzx44} \selectcolormodel{skipqzx45}
+\fcolorbox{skipqzx46}{skipqzx47}{keepqzx3 framed}
+\colorlet{skipqzx48}{skipqzx49}
+\providecolor{skipqzx50}{rgb}{skipqzx51}
+\rowcolors{1}{skipqzx52}{skipqzx53}
+\definecolorset{rgb}{skipqzx54}{skipqzx55}{skipqzx56}
+\textcolor{skipqzx57}{keepqzx4 coloured}
+\colorbox{skipqzx58}{keepqzx5 boxed}
+
+% --- tikz and pgf ----------------------------------------------------------
+\pgfmathparse{skipqzx60} \pgfmathsetmacro{\x}{skipqzx61}
+\pgfplotsset{skipqzx62} \tikzsetnextfilename{skipqzx63} \pgfkeys{skipqzx64}
+\begin{tikzpicture} \node {skipqzx65}; \end{tikzpicture}
+
+% --- geometry --------------------------------------------------------------
+\newgeometry{skipqzx70} \savegeometry{skipqzx71} \loadgeometry{skipqzx72}
+\geometry{skipqzx73}
+
+% --- fancyhdr --------------------------------------------------------------
+\pagestyle{skipqzx80}
+\fancyhead[LEskipqzx81,ROskipqzx82]{keepqzx6 header}
+\fancyfoot[Cskipqzx83]{keepqzx7 footer}
+\fancyhf[HCskipqzx84]{keepqzx8 both}
+\lhead[keepqzx35 even]{keepqzx9 left} \chead[keepqzx36]{keepqzx10 centre} \rhead[keepqzx37]{keepqzx11 right}
+\lfoot[keepqzx38]{keepqzx12} \cfoot[keepqzx39]{keepqzx13} \rfoot[keepqzx40]{keepqzx14}
+\fancyheadoffset{skipqzx91} \fancyfootoffset{skipqzx92}
+\fancypagestyle{skipqzx93}[skipqzx95]{\fancyhead[Lskipqzx94]{keepqzx15 inside}}
+
+% --- microtype -------------------------------------------------------------
+\textls[skipqzx100]{keepqzx16 spaced}
+\microtypesetup{skipqzx101} \UseMicrotypeSet[skipqzx102]{skipqzx103}
+\DeclareMicrotypeSetDefault{skipqzx104} \DeclareMicrotypeVariants{skipqzx105}
+\LoadMicrotypeFile{skipqzx106} \DisableLigatures[skipqzx107]{skipqzx108} \microtypecontext{skipqzx109}
+\SetTracking[skipqzx110]{skipqzx111}{skipqzx112} \SetExtraSpacing[skipqzx113]{skipqzx114}{skipqzx115}
+\SetExtraKerning{skipqzx116}{skipqzx117} \SetExpansion{skipqzx118}{skipqzx119}
+\SetProtrusion[skipqzx120]{skipqzx121}{skipqzx122}
+\DeclareMicrotypeSet{skipqzx123}{skipqzx124} \DeclareMicrotypeAlias{skipqzx125}{skipqzx126}
+\DeclareMicrotypeBabelHook{skipqzx127}{skipqzx128} keepqzx17
+
+% --- booktabs, tabularx ----------------------------------------------------
+\begin{tabularx}{\textwidth}{skipqzx130 X}
+ \toprule keepqzx18 & keepqzx19 \\ \midrule keepqzx20 \\ \bottomrule
+\end{tabularx}
+\begin{tabulary}{skipqzx131}{skipqzx132} keepqzx21 \end{tabulary}
+\begin{tabular}{skipqzx133} keepqzx22 \\ \cmidrule[skipqzx134](lr){2-3} \end{tabular}
+\newcolumntype{skipqzx135}{>{\raggedright}p{skipqzx136}}
+
+% --- enumitem --------------------------------------------------------------
+\setlist[enumerate,1]{skipqzx140} \setlist{skipqzx141} \setlistdepth{skipqzx142}
+\restartlist{skipqzx143} \SetEnumitemKey{skipqzx144}{skipqzx145}
+\SetLabelAlign{skipqzx146}{skipqzx147}
+\newlist{skipqzx148}{skipqzx149}{skipqzx150} \renewlist{skipqzx151}{skipqzx152}{skipqzx153}
+\SetEnumitemValue{skipqzx154}{skipqzx155}{skipqzx156}
+\AddEnumerateCounter{skipqzx157}{skipqzx158}{skipqzx159}
+\begin{enumerate}[label=skipqzx160, leftmargin=*] \item keepqzx23 \end{enumerate}
+
+% --- hyperref --------------------------------------------------------------
+% The bookmark text of \currentpdfbookmark and the like is skipped with its name.
+\nolinkurl{skipqzx170} \hyperlink{skipqzx171}{keepqzx24 link} \hypertarget{skipqzx172}{keepqzx25 target}
+\hyperbaseurl{skipqzx173} \hyperimage{skipqzx174}{keepqzx41 image} \urlstyle{skipqzx175} \urldef{\u}\url{skipqzx176}
+\Acrobatmenu{skipqzx177}{keepqzx26 menu}
+\pdfstringdefDisableCommands{skipqzx178}
+\hyperdef{skipqzx179}{skipqzx180}{keepqzx27 def}
+\currentpdfbookmark{skipqzx181}{skipqzx182} \subpdfbookmark{skipqzx183}{skipqzx184}
+\belowpdfbookmark{skipqzx185}{skipqzx186}
+\hyperref[skipqzx187]{keepqzx28 text} \autoref{skipqzx188} \nameref{skipqzx189}
+
+% --- cleveref --------------------------------------------------------------
+\cref{skipqzx190} \Cref{skipqzx191} \cpageref{skipqzx192} \labelcref{skipqzx193}
+\labelcpageref{skipqzx194} \namecref{skipqzx195} \nameCref{skipqzx196} \lcnamecref{skipqzx197}
+\namecrefs{skipqzx198} \nameCrefs{skipqzx199} \lcnamecrefs{skipqzx200}
+\crefrange{skipqzx201}{skipqzx202} \Crefrange{skipqzx203}{skipqzx204}
+\cpagerefrange{skipqzx205}{skipqzx206} \Cpagerefrange{skipqzx207}{skipqzx208}
+\crefalias{skipqzx209}{skipqzx210}
+\crefname{skipqzx211}{skipqzx212}{skipqzx213} \Crefname{skipqzx214}{skipqzx215}{skipqzx216}
+\crefdefaultlabelformat{skipqzx217}
+\crefformat{skipqzx218}{skipqzx219} \Crefformat{skipqzx220}{skipqzx221}
+\crefrangeformat{skipqzx222}{skipqzx223} \Crefrangeformat{skipqzx224}{skipqzx225}
+\creflabelformat{skipqzx226}{skipqzx227} \crefrangelabelformat{skipqzx228}{skipqzx229} keepqzx29
+
+% --- biblatex --------------------------------------------------------------
+\printbibliography[heading=skipqzx240] \printbibheading[skipqzx241] \printbiblist[skipqzx242]{skipqzx239}
+\bibbysection[skipqzx243] \bibbycategory[skipqzx244]
+\addglobalbib{skipqzx245} \addsectionbib{skipqzx246} \ExecuteBibliographyOptions{skipqzx247}
+\DeclareBibliographyCategory{skipqzx248} \defbibheading{skipqzx249}[keepqzx30 title]{\section*{#1}}
+\defbibfilter{skipqzx250}{skipqzx251} \defbibcheck{skipqzx252}{skipqzx253}
+\defbibentryset{skipqzx254}{skipqzx255} \addtocategory{skipqzx256}{skipqzx257}
+\DeclareFieldFormat{skipqzx258}{skipqzx259} \DeclareNameFormat{skipqzx260}{skipqzx261}
+\DeclareListFormat{skipqzx262}{skipqzx263} \autocite{skipqzx264} \textcite[see][p.~1]{skipqzx265}
+
+% --- natbib ----------------------------------------------------------------
+\citet[see][p.~3]{skipqzx270} \citep{skipqzx271} \citetext{keepqzx32 free text}
+\setcitestyle{skipqzx272} \citestyle{skipqzx273} \shortcites{skipqzx274}
+\bibpunct{skipqzx275}{skipqzx276}{skipqzx277}{skipqzx278}{skipqzx279}{skipqzx280} keepqzx33
+
+% --- siunitx ---------------------------------------------------------------
+\SI{skipqzx290}{skipqzx291} \qty{skipqzx292}{skipqzx293} \num{skipqzx294} \unit{skipqzx295}
+\si{skipqzx296} \ang{skipqzx297} \numlist{skipqzx298} \complexnum{skipqzx299}
+\numproduct{skipqzx300} \tablenum{skipqzx301} \sisetup{skipqzx302}
+\numrange{skipqzx303}{skipqzx304} \qtylist{skipqzx305}{skipqzx306} \SIlist{skipqzx307}{skipqzx308}
+\qtyproduct{skipqzx309}{skipqzx310} \DeclareSIUnit{\x}{skipqzx311} \DeclareSIQualifier{\y}{skipqzx312}
+\SIrange{skipqzx313}{skipqzx314}{skipqzx315} \qtyrange{skipqzx316}{skipqzx317}{skipqzx318}
+\DeclareSIPrefix{skipqzx319}{skipqzx320}{skipqzx321}
+keepqzx34 prose after.
+\end{document}

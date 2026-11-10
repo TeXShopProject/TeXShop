@@ -23,6 +23,9 @@
 #   skip-env-args N ENV...        ignore the first N {..} arguments after \begin{env}
 #   skip-args N COMMAND...        ignore the arguments of these commands: any [..]
 #                                 options plus the first N {..} arguments
+#   package-args N COMMAND...     same as skip-args, except for a command that the
+#                                 document defines itself (needs auto-macros yes)
+#   package-pattern PATTERN COMMAND...  likewise, the same as skip-pattern
 #   skip-args-matching N REGEX    same, for every command whose whole name matches
 #   skip-pattern PATTERN COMMAND...  ignore the groups after these commands, in
 #                                 the order given by PATTERN, which is made of {} [] and ():
@@ -88,9 +91,15 @@ delimited  \(   \)
 skip-body  verbatim Verbatim BVerbatim LVerbatim lstlisting minted comment alltt filecontents
 skip-body  equation align alignat gather multline eqnarray displaymath math flalign split
 skip-body  array cases matrix pmatrix bmatrix vmatrix tikzpicture pgfpicture
+# amsmath
+skip-body  aligned alignedat gathered xalignat xxalignat subarray smallmatrix Bmatrix Vmatrix
+# mathtools
+skip-body  dcases drcases rcases multlined lgathered rgathered psmallmatrix bsmallmatrix
+skip-body  Bsmallmatrix vsmallmatrix Vsmallmatrix
 
 # Environments that take a specification argument, such as column formats.
-skip-env-args  1  tabular tabularx tabulary longtable minipage multicols wrapfigure wraptable tabu
+skip-env-args  1  tabular longtable minipage multicols wrapfigure wraptable tabu
+skip-env-args  2  tabularx tabulary
 
 # \verb|...|
 skip-verb  verb
@@ -148,6 +157,96 @@ skip-args  0  hyperref
 # check-args  prefix
 # parameters of every command except a list, these are the exceptions.
 check-args  emph verbatim
+
+# ---------------------------------------------------------------------------
+# Commands of common packages. Their arguments are file names, keys, lengths,
+# colours or settings, not prose. package-args and package-pattern work like
+# skip-args and skip-pattern, but leave alone a command that the document defines
+# itself (with \newcommand, \def and the like), so that a macro of your own named,
+# say, \unit or \rowcolor keeps its text checked, also when another macro uses it.
+# (Options in [..] are always skipped; N counts the {..} arguments.)
+
+# amsmath, mathtools. amssymb defines only symbols and needs no rules.
+package-args  1  tag mathtoolsset usetagform refeq
+package-args  3  newtagform renewtagform
+package-args  3  DeclarePairedDelimiter
+
+# graphicx
+package-args  1  DeclareGraphicsExtensions
+package-args  4  DeclareGraphicsRule
+
+# xcolor, colortbl
+package-args  1  pagecolor cellcolor arrayrulecolor doublerulesepcolor selectcolormodel
+# \rowcolor[model]{colour}[left overhang][right overhang]
+package-pattern  []{}[][]  rowcolor columncolor
+package-args  2  fcolorbox colorlet
+package-args  3  providecolor xdefinecolor rowcolors extractcolorspecs
+package-args  4  definecolorset convertcolorspec
+
+# tikz, pgf
+package-args  1  pgfmathparse pgfplotsset tikzsetnextfilename pgfkeys
+package-args  2  pgfmathsetmacro
+
+# geometry
+package-args  1  newgeometry savegeometry loadgeometry
+
+# fancyhdr: the [..] of \fancyhead, \fancyfoot and \fancyhf chooses the position (L, C,
+# R, E, O); the text is checked. \lhead[even]{odd} and the like have text in both
+# arguments, so they have no rule. \fancypagestyle{name}[base]{definitions}
+# checks its definitions.
+package-args  0  fancyhead fancyfoot fancyhf
+package-args  1  fancyheadoffset fancyfootoffset
+package-pattern  {}[]  fancypagestyle
+
+# microtype: settings, not prose. \textls[amount]{text} checks its text.
+package-args  0  textls
+package-args  1  microtypesetup UseMicrotypeSet DeclareMicrotypeSetDefault DeclareMicrotypeVariants
+package-args  1  LoadMicrotypeFile DisableLigatures microtypecontext
+package-args  2  SetTracking SetExtraSpacing SetExtraKerning SetExpansion SetProtrusion
+package-args  2  DeclareMicrotypeSet DeclareMicrotypeAlias DeclareMicrotypeBabelHook
+
+# tabularx, array. The column specification of the tabularx environment itself
+# is skipped by skip-env-args above.
+package-args  2  newcolumntype
+
+# enumitem (the [..] of \begin{enumerate}[...] is skipped by env-options)
+package-args  1  setlist setlistdepth restartlist
+package-args  2  SetEnumitemKey SetLabelAlign
+package-args  3  newlist renewlist SetEnumitemValue AddEnumerateCounter
+
+# hyperref (\hyperref[label]{text} is handled above)
+package-args  1  nolinkurl hyperlink hypertarget hyperbaseurl hyperimage urlstyle urldef Acrobatmenu
+package-args  1  pdfstringdefDisableCommands
+# \currentpdfbookmark{text}{name} and the like: the text is skipped with the name, as
+# for \pdfbookmark above, since a rule cannot skip only a later argument.
+package-args  2  hyperdef currentpdfbookmark subpdfbookmark belowpdfbookmark
+
+# cleveref. Labels of \cref, \Cref and the other commands ending in "ref" are skipped
+# by the ref rule above; the rest are listed here. The names given by \crefname and
+# the formats are skipped too, so that abbreviations such as "Fig." are not flagged.
+package-args  1  labelcref labelcpageref namecref nameCref lcnamecref namecrefs nameCrefs lcnamecrefs
+package-args  2  crefrange Crefrange cpagerefrange Cpagerefrange crefalias
+package-args  3  crefname Crefname
+package-args  1  crefdefaultlabelformat
+package-args  2  crefformat Crefformat crefrangeformat Crefrangeformat creflabelformat
+package-args  2  crefrangelabelformat
+
+# biblatex
+package-args  0  printbibliography printbibheading bibbysection bibbycategory
+package-args  1  printbiblist addglobalbib addsectionbib ExecuteBibliographyOptions DeclareBibliographyCategory
+package-args  1  defbibheading
+package-args  2  defbibfilter defbibcheck defbibentryset addtocategory
+package-args  2  DeclareFieldFormat DeclareNameFormat DeclareListFormat
+
+# natbib: \citetext{...} holds ordinary text, not keys. \bibpunct has six settings.
+check-args  citetext
+package-args  1  setcitestyle citestyle shortcites
+package-args  6  bibpunct
+
+# siunitx: numbers and units, for versions 2 and 3.
+package-args  1  num unit si ang numlist complexnum numproduct tablenum sisetup
+package-args  2  SI qty numrange qtylist SIlist qtyproduct DeclareSIUnit DeclareSIQualifier
+package-args  3  SIrange qtyrange DeclareSIPrefix
 
 # Languages other than the document's. A passage in a language the system has no
 # spell checker for is not checked at all. Names are those of babel and

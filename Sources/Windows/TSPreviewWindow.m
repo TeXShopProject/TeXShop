@@ -108,9 +108,25 @@ extern NSPanel *pageNumberWindow;
 
 - (void)resignMainWindow
 {
-    [(MyPDFKitView *)self.myPDFKitView cleanupMarquee: YES];
-    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarquee: YES];
+    // A pinned link popup stays while another window is used, for instance to paste text
+    // copied from it (#14).
+    [(MyPDFKitView *)self.myPDFKitView cleanupMarqueeKeepingPinnedLinkPreview];
+    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarqueeKeepingPinnedLinkPreview];
     [super resignMainWindow];
+}
+
+// Splitting or unsplitting changes the size of the panes; pinned link popups are brought back
+// into view, and again once PDFKit has laid out the panes (#14).
+- (void)keepPinnedLinkPreviewsInView
+{
+    [(MyPDFKitView *)self.myPDFKitView keepPinnedLinkPreviewInView];
+    [(MyPDFKitView *)self.myPDFKitView2 keepPinnedLinkPreviewInView];
+    __weak TSPreviewWindow *weakWindow = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        TSPreviewWindow *window = weakWindow;
+        [(MyPDFKitView *)window.myPDFKitView keepPinnedLinkPreviewInView];
+        [(MyPDFKitView *)window.myPDFKitView2 keepPinnedLinkPreviewInView];
+    });
 }
 
 
@@ -456,7 +472,8 @@ extern NSPanel *pageNumberWindow;
           NSRect Inside = aView.bounds;
           Inside = NSInsetRect(Inside, 15, 15);
           BOOL inPDF = [aView mouse: aPoint inRect: Inside];
-          if (inPDF)
+          // A click in a pinned link popup goes to the popup, which handles every tool (#14).
+          if (inPDF && ! [(MyPDFKitView *)aView pinnedLinkPreviewContainsWindowPoint: thePoint])
           {
               if ([self isMainWindow])
               {
@@ -1108,6 +1125,8 @@ extern NSPanel *pageNumberWindow;
     MyPDFKitView    *aView;
     BOOL        splitInMiddle;
     BOOL        topToBottom;
+    TSLinkPreviewView *movedPreview = nil;
+    NSRect      movedPreviewFrame = NSZeroRect;
     
     splitInMiddle = NO;
     topToBottom = NO;
@@ -1175,8 +1194,8 @@ extern NSPanel *pageNumberWindow;
 // REVISE self.windowIsSplit FOR SPLITING, BUT DO NOT YET SPLIT
     
     
-    [(MyPDFKitView *)self.myPDFKitView cleanupMarquee: YES];
-    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarquee: YES];
+    [(MyPDFKitView *)self.myPDFKitView cleanupMarqueeKeepingPinnedLinkPreview];
+    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarqueeKeepingPinnedLinkPreview];
     
     
     if (self.windowIsSplit) {
@@ -1270,6 +1289,10 @@ extern NSPanel *pageNumberWindow;
                 ((MyPDFKitView *)self.myPDFKitView2).verticalWidth1 = temp1;
                 ((MyPDFKitView *)self.myPDFKitView2).verticalWidth2 = temp2;
              }
+        // The pane that stays shows the pinned popup of the pane that goes away, at the same
+        // place on the screen, unless it has one of its own (#14).
+        if (! [(MyPDFKitView *)self.myPDFKitView hasPinnedLinkPreview])
+            movedPreview = [(MyPDFKitView *)self.myPDFKitView2 detachPinnedLinkPreviewWithWindowFrame: &movedPreviewFrame];
         [self.myPDFKitView2 removeFromSuperview];
         theFrame = [self.myPDFKitView frame];
         theSize.width = theFrame.size.width;
@@ -1364,6 +1387,10 @@ extern NSPanel *pageNumberWindow;
     // properties while PDFKit draws it in the first view.
     if (! self.windowIsSplit)
         [self.myPDFKitView2 setDocument:nil];
+    
+    if (movedPreview)
+        [(MyPDFKitView *)self.myPDFKitView attachPinnedLinkPreview: movedPreview windowFrame: movedPreviewFrame];
+    [self keepPinnedLinkPreviewsInView];
 }
 
 

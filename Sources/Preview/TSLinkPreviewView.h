@@ -26,6 +26,8 @@
 
 // The cursor for a point in the superview's coordinates, or nil outside a pinned popup.
 - (NSCursor *)cursorAtPoint:(NSPoint)point;
+// Moves the popup back into view as far as dragging it would allow, keeping its size.
+- (void)keepInView;
 
 @end
 
