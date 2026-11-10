@@ -1158,6 +1158,7 @@ static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
     if([aMenu indexOfItemWithTitle:NSLocalizedString(@"Character Info", @"Character Info")] == -1)
         [aMenu addItemWithTitle:NSLocalizedString(@"Character Info", @"Character Info") action:@selector(showCharacterInfo:) keyEquivalent:@""];
     TSAddContextCopyOfSubmenu(aMenu, @selector(convertCharacterType:));
+    TSAddContextCopyOfSubmenu(aMenu, @selector(normalizeSelectedString:));
 
  
 	[(TSTextView *)aTextView setDocument: self];

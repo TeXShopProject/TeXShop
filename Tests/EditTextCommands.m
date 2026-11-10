@@ -1,4 +1,4 @@
-// Edit menu text commands: Character Type Conversion.
+// Edit menu text commands: Character Type Conversion and Unicode Normalization.
 // Built by run-edit-text-commands.py together with the TSTextView source section.
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
@@ -35,7 +35,14 @@ static void TestBeginSheet(NSAlert *alert, SEL cmd, NSWindow *window, void (^han
     if (handler) handler(alertAnswer);
 }
 
+@interface TestDocument : NSObject
+@property NSUInteger characterInfoShown;
+@end
+@implementation TestDocument
+- (IBAction)showCharacterInfo:(id)sender { self.characterInfoShown++; }
+@end
 @interface TSTextView : NSTextView
+@property (weak) TestDocument *document;
 @end
 @interface TestDelegate : NSObject <NSTextViewDelegate>
 @property NSUndoManager *undo;
@@ -53,12 +60,13 @@ static void TestBeginSheet(NSAlert *alert, SEL cmd, NSWindow *window, void (^han
 }
 @end
 
-static NSMenuItem *Item(NSInteger tag, NSString *title)
+static NSMenuItem *ActionItem(SEL action, NSInteger tag, NSString *title)
 {
-    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:title action:@selector(convertCharacterType:) keyEquivalent:@""];
+    NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:title action:action keyEquivalent:@""];
     item.tag = tag;
     return item;
 }
+static NSMenuItem *Item(NSInteger tag, NSString *title) { return ActionItem(@selector(convertCharacterType:), tag, title); }
 
 static void CheckStrings(void)
 {
@@ -78,6 +86,7 @@ static void CheckStrings(void)
           @" |𠮷|\u9FA3|\\CID{99999}|\\CID{0}");
     Check(@"modified NFC composes", [@"か\u3099は\u309A\uFA19" normalizedStringWithModifiedNFC], @"がぱ\uFA19");
     Check(@"modified NFC keeps text made only of excluded characters", [@"\uFA19\uFA19" normalizedStringWithModifiedNFC], @"\uFA19\uFA19");
+    Check(@"modified NFD keeps compatibility ideographs", [@"が\uFA19" normalizedStringWithModifiedNFD], @"か\u3099\uFA19");
     Check(@"quotes", [@"‘“a”’ “b” ‘c’" stringByReplacingFullwidthQuotesWithHalfwidthQuotes], @"`\\,``a''\\,' ``b'' `c'");
 }
 
@@ -149,6 +158,43 @@ static void CheckConversionCommand(void)
     }
 }
 
+static void CheckNormalizationCommand(void)
+{
+    TestDelegate *delegate = [TestDelegate new];
+    delegate.undo = [NSUndoManager new];
+    TestDocument *document = [TestDocument new];
+    // Each tag against the same decomposed sample; ㍿ and the compatibility
+    // ideograph tell the variants apart.
+    NSString *sample = @"か\u3099\uFA19㍿";
+    NSDictionary *expected = @{@(TSNFCTag): @"が\u795E㍿", @(TSModifiedNFCTag): @"が\uFA19㍿", @(TSNFDTag): @"か\u3099\u795E㍿",
+                               @(TSModifiedNFDTag): @"か\u3099\uFA19㍿", @(TSNFKCTag): @"が\u795E株式会社", @(TSNFKDTag): @"か\u3099\u795E株式会社"};
+    for (NSNumber *tag in expected) {
+        TSTextView *view = NewView([@"x" stringByAppendingString:sample], delegate);
+        view.document = document;
+        view.selectedRange = NSMakeRange(1, sample.length);
+        NSUInteger shown = document.characterInfoShown;
+        [delegate.undo beginUndoGrouping];
+        [view normalizeSelectedString:ActionItem(@selector(normalizeSelectedString:), tag.integerValue, @"Form")];
+        [delegate.undo endUndoGrouping];
+        Check([NSString stringWithFormat:@"normalization tag %@", tag], [view.string substringFromIndex:1], expected[tag]);
+        Require([NSString stringWithFormat:@"normalization tag %@ selects the result", tag],
+                NSEqualRanges(view.selectedRange, NSMakeRange(1, view.string.length - 1)));
+        Require([NSString stringWithFormat:@"normalization tag %@ shows character info", tag], document.characterInfoShown == shown + 1);
+        Require(@"normalization validates", [view validateMenuItem:ActionItem(@selector(normalizeSelectedString:), tag.integerValue, @"Form")]);
+    }
+    // Whole document after agreement; no character info for the whole text.
+    TSTextView *view = NewView(@"か\u3099", delegate);
+    view.document = document;
+    NSUInteger shown = document.characterInfoShown;
+    alertAnswer = NSAlertFirstButtonReturn; alertsAsked = 0;
+    [delegate.undo beginUndoGrouping];
+    [view normalizeSelectedString:ActionItem(@selector(normalizeSelectedString:), TSNFCTag, @"NFC")];
+    [delegate.undo endUndoGrouping];
+    Check(@"whole document NFC", view.string, @"が");
+    Require(@"whole document NFC asked once", alertsAsked == 1 && document.characterInfoShown == shown);
+    Check(@"NFC undo name", delegate.undo.undoActionName, @"NFC");
+}
+
 static NSMenuItem *FindSubmenu(NSMenu *menu, SEL action)
 {
     for (NSMenuItem *item in menu.itemArray) {
@@ -182,6 +228,20 @@ static void CheckCompiledMenu(NSString *path)
                 item.keyEquivalent.length == 0 && item.title.length > 0);
     }
     Require([path stringByAppendingString:@": tags 1-11"], [tags isEqual:@[@1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11]]);
+
+    NSMenuItem *normalize = FindSubmenu(menu, @selector(normalizeSelectedString:));
+    Require([path stringByAppendingString:@": normalization follows conversion"],
+            normalize && normalize.menu == convert.menu && [normalize.menu indexOfItem:normalize] == [convert.menu indexOfItem:convert] + 1);
+    NSArray *forms = @[@"NFC", @"Modified NFC", @"NFD", @"Modified NFD", @"NFKC", @"NFKD"];
+    NSArray *items = normalize.submenu.itemArray;
+    Require([path stringByAppendingString:@": six normalization forms"], items.count == forms.count);
+    for (NSUInteger i = 0; i < MIN(items.count, forms.count); i++) {
+        NSMenuItem *item = items[i];
+        NSString *identifier = [NSString stringWithFormat:@"TSShortcut.normalizeSelectedString:.%lu", (unsigned long)(i + 1)];
+        Require([NSString stringWithFormat:@"%@: %@ wiring", path, forms[i]],
+                item.action == @selector(normalizeSelectedString:) && item.target == nil && item.tag == (NSInteger)(i + 1) &&
+                [item.identifier isEqualToString:identifier] && [item.title isEqualToString:forms[i]] && item.keyEquivalent.length == 0);
+    }
 }
 
 int main(int argc, char **argv)
@@ -199,9 +259,10 @@ int main(int argc, char **argv)
         }
         CheckStrings();
         CheckConversionCommand();
+        CheckNormalizationCommand();
         for (int i = 1; i < argc; i++) CheckCompiledMenu(@(argv[i]));
         if (failures) return 1;
-        printf("PASS: conversions, command behaviour, %d compiled menus\n", argc - 1);
+        printf("PASS: conversions, normalization, command behaviour, %d compiled menus\n", argc - 1);
     }
     return 0;
 }

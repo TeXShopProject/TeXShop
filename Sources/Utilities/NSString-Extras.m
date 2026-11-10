@@ -51,6 +51,19 @@
     return result;
 }
 
+// The decomposition used by HFS+ file names: like NFD, but CJK
+// compatibility ideographs and some other ranges stay as they are.
+- (NSString*)normalizedStringWithModifiedNFD
+{
+    CFStringRef sourceStr = (__bridge CFStringRef)self;
+    CFIndex length = CFStringGetMaximumSizeOfFileSystemRepresentation(sourceStr);
+    char *destStr = (char*)malloc(length);
+    Boolean success = destStr && CFStringGetFileSystemRepresentation(sourceStr, destStr, length);
+    NSString *result = success ? [NSString stringWithUTF8String:destStr] : nil;
+    free(destStr);
+    return result ?: [self copy];
+}
+
 // Terada (based on CotEditor)
 - (NSUInteger)numberOfComposedCharacters
 {

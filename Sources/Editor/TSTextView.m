@@ -41,6 +41,7 @@
 #import "TSSpellExclusions.h"
 #import "TSSpellSupport.h"
 #import "NSString-CharacterConversion.h"
+#import "NSString-Extras.h"
 
 @protocol BDSKCompletionProtocol <NSObject>
 - (NSArray *)completionsForString:(NSString *)searchString;
@@ -2974,7 +2975,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 - (BOOL)validateEditTextCommand:(NSMenuItem *)anItem enabled:(BOOL *)enabled
 {
 	SEL action = [anItem action];
-	if (action == @selector(convertCharacterType:)) {
+	if (action == @selector(convertCharacterType:) || action == @selector(normalizeSelectedString:)) {
 		*enabled = [self isEditable];
 		return YES;
 	}
@@ -3056,6 +3057,33 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 			return;
 	}
 	[self convertSelectionUsing:conversion actionName:[sender title] completion:nil];
+}
+
+- (IBAction)normalizeSelectedString:(id)sender
+{
+	NSString *(^conversion)(NSString *);
+	switch ([sender tag]) {
+		case TSNFCTag:
+			conversion = ^(NSString *s) { return [s precomposedStringWithCanonicalMapping]; }; break;
+		case TSModifiedNFCTag:
+			conversion = ^(NSString *s) { return [s normalizedStringWithModifiedNFC]; }; break;
+		case TSNFDTag:
+			conversion = ^(NSString *s) { return [s decomposedStringWithCanonicalMapping]; }; break;
+		case TSModifiedNFDTag:
+			conversion = ^(NSString *s) { return [s normalizedStringWithModifiedNFD]; }; break;
+		case TSNFKCTag:
+			conversion = ^(NSString *s) { return [s precomposedStringWithCompatibilityMapping]; }; break;
+		case TSNFKDTag:
+			conversion = ^(NSString *s) { return [s decomposedStringWithCompatibilityMapping]; }; break;
+		default:
+			NSBeep();
+			return;
+	}
+	// The result looks the same as before, so show what the selection now contains.
+	__weak TSTextView *weakSelf = self;
+	[self convertSelectionUsing:conversion actionName:[sender title] completion:^{
+		[weakSelf.document showCharacterInfo:nil];
+	}];
 }
 
 

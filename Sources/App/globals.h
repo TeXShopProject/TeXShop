@@ -275,6 +275,17 @@ typedef NS_ENUM(NSInteger, TSCharacterConversionTag)
 	TSFullwidthToHalfwidthQuotesTag = 11
 };
 
+// Menu item tags of Edit > Unicode Normalization (normalizeSelectedString:)
+typedef NS_ENUM(NSInteger, TSUnicodeNormalizationTag)
+{
+	TSNFCTag = 1,
+	TSModifiedNFCTag = 2,
+	TSNFDTag = 3,
+	TSModifiedNFDTag = 4,
+	TSNFKCTag = 5,
+	TSNFKDTag = 6
+};
+
 
 /*" global defines for TeXShop.app "*/
 extern NSString *DefaultCommandKey;

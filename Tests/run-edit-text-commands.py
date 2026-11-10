@@ -17,6 +17,10 @@ if mutation == 'no-undo-name':
     section = section.replace('[[self undoManager] setActionName:actionName];', '')
 elif mutation == 'convert-without-asking':
     section = section.replace('if ([[self string] length] == 0) {', 'if (YES) { [self replaceRange:NSMakeRange(0, [[self string] length]) usingConversion:conversion actionName:actionName];')
+elif mutation == 'no-character-info':
+    section = section.replace('[weakSelf.document showCharacterInfo:nil];', '')
+elif mutation == 'nfd-for-modified-nfd':
+    section = section.replace('[s normalizedStringWithModifiedNFD]', '[s decomposedStringWithCanonicalMapping]')
 elif mutation:
     raise SystemExit('unknown mutation ' + mutation)
 menus = sorted((root / 'Resources/Interfaces').glob('*.lproj/MainMenu.nib/keyedobjects*.nib'))
