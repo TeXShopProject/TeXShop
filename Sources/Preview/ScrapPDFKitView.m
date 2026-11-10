@@ -53,6 +53,7 @@
 @property (nonatomic) BOOL experimentViewReady;
 @property (nonatomic) BOOL updatingExperimentAppearance;
 @property (nonatomic, strong) NSToolbar *experimentToolbar;
+@property (nonatomic) BOOL showsTopOfFirstPage;
 @end
 
 @implementation ScrapPDFKitView
@@ -241,6 +242,9 @@
     [self setDocument: pdfDoc];
     
     if (needsInitialization) {
+        // A short Experiment's output is at the top of the first page.
+        self.showsTopOfFirstPage = YES;
+        [self showTopOfFirstPage];
         /*
         for (i = 1; i <= 10; i++)
             [self zoomIn:self];
@@ -284,5 +288,40 @@
     
 }
 
+
+
+// PDFKit may place a document loaded into a hidden window elsewhere, and may
+// lay the view out again when the window appears.
+- (void)showTopOfFirstPage
+{
+    if (!self.document.pageCount) return;
+    [self goToPage:[self.document pageAtIndex:0]];
+    [self layoutDocumentView];
+    [self layoutSubtreeIfNeeded];
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    if (!clip) return;
+    // The first page is in the top row, so ask the clip view for its top limit,
+    // which keeps the native content insets.
+    NSRect top = clip.bounds, documentRect = clip.documentRect;
+    CGFloat beyond = NSHeight(top) + fabs(scroll.contentInsets.top) + fabs(scroll.contentInsets.bottom) + 1;
+    top.origin.y = clip.isFlipped ? NSMinY(documentRect) - beyond : NSMaxY(documentRect) + beyond;
+    top = [clip constrainBoundsRect:top];
+    [clip scrollToPoint:top.origin];
+    [scroll reflectScrolledClipView:clip];
+}
+
+- (void)didShowOutputWindow
+{
+    if (!self.showsTopOfFirstPage) return;
+    [self showTopOfFirstPage];
+    __weak ScrapPDFKitView *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ScrapPDFKitView *view = weakSelf;
+        if (!view.showsTopOfFirstPage) return;
+        view.showsTopOfFirstPage = NO;
+        [view showTopOfFirstPage];
+    });
+}
 
 @end

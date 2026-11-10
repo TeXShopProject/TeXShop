@@ -26,6 +26,9 @@ MUTATIONS = {
                               'theHeader = [theSource substringToIndex:[theSource lineRangeForRange:NSMakeRange(0, beginDoc.location - 1)].length];'),
     'scrap-script-self': ('typesetScrap', 'self.scrapScript = theDocument->whichScript;',
                          'self.scrapScript = whichScript;'),
+    'pdf-top-before-show': ('typesetFile', '        [document->scrapPDFWindow makeKeyAndOrderFront:nil];\n        [document->scrapPDFKitView didShowOutputWindow];',
+                            '        [document->scrapPDFKitView didShowOutputWindow];\n        [document->scrapPDFWindow makeKeyAndOrderFront:nil];'),
+    'pdf-top-missing': ('typesetFile', '        [document->scrapPDFKitView didShowOutputWindow];\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('root', nargs='?', type=Path, default=Path(__file__).resolve().parents[1])
@@ -60,7 +63,7 @@ static void NSBeep(void) { beeps++; }
 @interface Node : NSObject
 @property (copy) NSString *string, *title, *titleOfSelectedItem;
 @property BOOL isVisible, hidesOnDeactivate;
-@property NSUInteger closes, shows, reloads, breaks;
+@property NSUInteger closes, shows, reloads, breaks, outputShows, shownBeforeOutput;
 @property (strong) id document;
 @property (copy) NSString *lastPath;
 - (void)close;
@@ -69,16 +72,19 @@ static void NSBeep(void) { beeps++; }
 - (void)breakConnections;
 - (void)makeKeyAndOrderFront:(id)sender;
 - (void)reShowWithPath:(NSString *)path;
+- (void)didShowOutputWindow;
 + (id)sharedColorPanel;
 + (id)sharedFontPanel;
 @end
+static NSUInteger shownWindows;
 @implementation Node
 - (void)close { self.closes++; self.isVisible = NO; }
 - (id)toolbar { return nil; }
 - (void)turnVisibleOff:(BOOL)b { }
 - (void)breakConnections { self.breaks++; }
-- (void)makeKeyAndOrderFront:(id)sender { self.shows++; self.isVisible = YES; }
+- (void)makeKeyAndOrderFront:(id)sender { self.shows++; self.isVisible = YES; shownWindows++; }
 - (void)reShowWithPath:(NSString *)path { self.reloads++; self.lastPath = path; }
+- (void)didShowOutputWindow { self.outputShows++; self.shownBeforeOutput = shownWindows; }
 + (id)sharedColorPanel { return nil; }
 + (id)sharedFontPanel { return nil; }
 @end
@@ -275,6 +281,8 @@ static void CheckSource(NSString *source, NSString *header, NSInteger rootScript
         [@"fixture" writeToURL:pdf atomically:YES encoding:NSUTF8StringEncoding error:NULL];
         c.completion(pdf);
         Check(d->scrapPDFKitView.reloads == 1, @"PDF completion loads while Experiment source is hidden");
+        Check(d->scrapPDFWindow.shows == 1 && d->scrapPDFKitView.outputShows == 1 && d->scrapPDFKitView.shownBeforeOutput == shownWindows,
+              @"PDF view is told after its window is shown, so a first output can show its top");
         RemoveOutput(c);
     } @catch (NSException *e) {
         Check(NO, [@"preamble extraction must not throw: " stringByAppendingString:e.name]);
