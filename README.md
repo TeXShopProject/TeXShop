@@ -2,11 +2,12 @@
 
 TeXShop is a free, open-source TeX and LaTeX editor and PDF previewer for macOS, created by Richard Koch and developed with contributions from many people.
 
-At Richard's invitation, Yusuke Terada is taking over its development and maintenance.
+At Richard's invitation, Yusuke Terada now develops and maintains TeXShop.
 
 ## Release status
 
-**TeXShop 5.59** is based on TeXShop 5.58 Golden Gate. Download the signed and notarized application from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.59). The application uses the TeXShopProject update feed.
+- **Current release: TeXShop 5.59**, based on TeXShop 5.58 Golden Gate. Download the signed and notarized application from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.59). The application uses the TeXShopProject update feed.
+- **Beta: TeXShop 5.60 beta-3**, for testing. The changes are listed in the 5.60 release notes ([English](Documentation/Releases/5.60.md), [Japanese](Documentation/Releases/5.60-ja.md)).
 
 The official website is [texshop.app](https://texshop.app/).
 
@@ -30,7 +31,7 @@ xcodebuild -project TeXShop.xcodeproj -scheme TeXShop \
 
 The current main application target declares macOS 14.6 as its deployment target. This build setting is not a tested release support matrix. Review the project settings against the Xcode SDK you use.
 
-Tests and investigation notes are in `Tests/` and `Documentation/`. Some scripts reflect the original development environment. Launching the full application can update `~/Library/TeXShop`; use a separate test account or protect your existing configuration before testing development builds.
+Tests are in `Tests/`. Release notes, the update procedure and notes on bundled libraries are in `Documentation/`; `Documentation/Legacy/` keeps documents from the original development. Launching the full application can update `~/Library/TeXShop`; use a separate test account or protect your existing configuration before testing development builds.
 
 ## Reporting bugs
 
