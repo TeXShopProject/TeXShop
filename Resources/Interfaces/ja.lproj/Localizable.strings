@@ -319,3 +319,6 @@
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "言語を自動判別";
+
+/* Asked when a conversion is chosen with nothing selected */
+"Apply \"%@\" to the whole document?" = "「%@」を書類全体に適用しますか？";

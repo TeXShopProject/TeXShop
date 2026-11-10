@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "不可见符号";
 "catalog.appearance.7.0.item.1" = "带圈符号";
 "catalog.appearance.7.0.item.2" = "括号";
+"catalog.appearance.7.0.item.3" = "全角字母数字符号";
+"catalog.appearance.7.0.item.4" = "全角字母数字符号背景";
 "group.appearance.8.title" = "颜色：SyncTeX 和图像复制";
 "catalog.appearance.8.0.item.0" = "预览中的 SyncTeX";
 "catalog.appearance.8.0.item.1" = "源文件中的 SyncTeX";
@@ -288,4 +290,4 @@
 
 "catalog.documents.1.3.note" = "保存时，将分开存储的字符（例如 か + ゛）合并为一个字符（が）。";
 
-"catalog.typesetting.9.0.note" = "保存时，将 JIS X 0208 以外的字符替换为 \\UTF{XXXX}（字形变体等替换为 \\CID{编号}）；打开时，将 \\UTF{…} 转回字符。适用于使用 otf 宏包的 pTeX 文稿。";
+"catalog.typesetting.9.0.note" = "保存时，将 JIS X 0208 以外的字符替换为 \\UTF{XXXX}（字形变体等替换为 \\CID{编号}）。适用于使用 otf 宏包的 pTeX 文稿。";

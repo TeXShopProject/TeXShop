@@ -4,11 +4,13 @@ from pathlib import Path
 import hashlib,json,xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[1]
 removed={'openAutoCompletionListEditor:','openCommandCompletionList:'}
+# Commands added to the Edit menu later; they are outside the fixed contract.
+added={'convertCharacterType:','normalizeSelectedString:','exchangePaste:'}
 def records(tree):
  result=[]
  for item in tree.iter('menuItem'):
   action=item.find('connections/action')
-  if action is None or action.get('selector') in removed:continue
+  if action is None or action.get('selector') in removed|added:continue
   result.append({'identifier':item.get('identifier'),'selector':action.get('selector'),'tag':item.get('tag','0'),'key':item.get('keyEquivalent',''),'mask':[child.attrib for child in item if child.tag=='modifierMask']})
  return sorted(result,key=lambda entry:json.dumps(entry,sort_keys=True))
 def digest(tree):return hashlib.sha256(json.dumps(records(tree),sort_keys=True,ensure_ascii=False).encode()).hexdigest()

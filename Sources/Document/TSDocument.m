@@ -45,6 +45,7 @@
 #import "MyPDFView.h"
 #import "MyPDFKitView.h"
 
+#import "TSConsoleOutput.h"
 #import "globals.h"
 #import "GlobalData.h"
 
@@ -63,6 +64,8 @@
 #import "TSLayoutManager.h" // added by Terada 
 #import "TSToolbar.h"
 #import "NSString-Extras.h"  // Terada
+#import "NSString-CharacterConversion.h"
+#import "NSMutableString-Extras.h"
 #import "NSText-Extras.h"  // Terada
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
@@ -1070,6 +1073,40 @@ withDarkColors = NO;
 
 
 
+// Finds the main menu item whose submenu holds commands with the given action.
+static NSMenuItem *TSMainMenuItemWithSubmenuAction(NSMenu *menu, SEL action)
+{
+	for (NSMenuItem *item in [menu itemArray]) {
+		NSMenu *submenu = [item submenu];
+		if (!submenu)
+			continue;
+		for (NSMenuItem *subitem in [submenu itemArray])
+			if ([subitem action] == action)
+				return item;
+		NSMenuItem *found = TSMainMenuItemWithSubmenuAction(submenu, action);
+		if (found)
+			return found;
+	}
+	return nil;
+}
+
+// Adds a copy of an Edit menu submenu to the text view's context menu. Key
+// equivalents and shortcut identities stay with the main menu.
+static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
+{
+	NSMenuItem *original = TSMainMenuItemWithSubmenuAction([NSApp mainMenu], action);
+	if (!original || [contextMenu indexOfItemWithTitle:[original title]] != -1)
+		return;
+	NSMenuItem *copy = [original copy];
+	for (NSMenuItem *item in [[copy submenu] itemArray]) {
+		[item setKeyEquivalent:@""];
+		[item setKeyEquivalentModifierMask:0];
+		[item setIdentifier:nil];
+	}
+	[copy setIdentifier:nil];
+	[contextMenu addItem:copy];
+}
+
 - (void)setupTextView:(NSTextView *)aTextView
 {
 
@@ -1123,6 +1160,8 @@ withDarkColors = NO;
     NSMenu* aMenu = [aTextView menu];
     if([aMenu indexOfItemWithTitle:NSLocalizedString(@"Character Info", @"Character Info")] == -1)
         [aMenu addItemWithTitle:NSLocalizedString(@"Character Info", @"Character Info") action:@selector(showCharacterInfo:) keyEquivalent:@""];
+    TSAddContextCopyOfSubmenu(aMenu, @selector(convertCharacterType:));
+    TSAddContextCopyOfSubmenu(aMenu, @selector(normalizeSelectedString:));
 
  
 	[(TSTextView *)aTextView setDocument: self];
@@ -1767,6 +1806,7 @@ if (! skipTextWindow) {
 	}
 	// added by mitsu --(A) g_texChar filtering
 	[texCommand setDelegate: [TSEncodingSupport sharedInstance]];
+	TSConfigureConsoleInput(texCommand);
 	// end addition
 
     if (!_externalEditor)
@@ -2799,12 +2839,9 @@ in other code when an external editor is being used. */
 															  withCharacter:OgreLfNewlineCharacter];
 		}
 		// zenitani 2.10 (A) -- decode utf.sty format
-		if( [SUD boolForKey:ptexUtfOutputEnabledKey] ) {
-			OGRegularExpression     *utfRegex;
-			utfRegex = [OGRegularExpression regularExpressionWithString:@"\\\\(UTF|UTFK|UTFT|UTFC){([0-9a-fA-F]{4})}"];
-			content = [utfRegex replaceAllMatchesInString: content delegate:self
-						replaceSelector:@selector(decodeUtfStyFormat:contextInfo:) contextInfo:nil];
-		}
+		// Decoded whether or not utf.sty output is on, so that a file saved with
+		// \UTF commands opens as text with any setting.
+		content = [content stringByDecodingUTFCommandsForReading];
 		content = [[TSEncodingSupport sharedInstance] textForEditing: content encoding: _encoding];
 		
 		theLength = [content length];
@@ -2843,14 +2880,6 @@ else {
 	return result;
 }
 
-// zenitani 2.10 (A) -- decode utf.sty format
-- (NSString *)decodeUtfStyFormat:(OGRegularExpressionMatch *)aMatch contextInfo:(id)contextInfo
-{
-	int u, d;
-	if( sscanf([[aMatch substringAtIndex:2] cStringUsingEncoding: NSJapaneseEUCStringEncoding],"%02X%02X",&u,&d) != 2 ) return nil;
-// 	NSLog([NSString stringWithFormat: @"%d %d %C", u, d, 256*u + d]);
-    return [NSString stringWithFormat: @"%C", (unichar)(256*u + d)];
-}
 
 
 - (BOOL)revertToContentsOfURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
@@ -3699,6 +3728,19 @@ if ( ! skipTextWindow) {
 }
 
 
+// Offsets a new preview window from the frontmost open preview, if any.
+- (void)cascadePdfKitWindowFromFrontPreview
+{
+    // Window numbers come front to back.
+    for (NSNumber *number in [NSWindow windowNumbersWithOptions:0]) {
+        NSWindow *aWindow = [NSApp windowWithWindowNumber:number.integerValue];
+        if ([aWindow isKindOfClass:[TSPreviewWindow class]] && aWindow != self.pdfKitWindow) {
+            [self repositionWindow:self.pdfKitWindow activeWindow:aWindow];
+            break;
+        }
+    }
+}
+
 - (void)setupFromPreferencesUsingWindowController:(NSWindowController *)windowController
 /*" This method reads the NSUserDefaults and restores the settings before the document will actually be displayed.
 "*/
@@ -3905,28 +3947,7 @@ if ( ! skipTextWindow) {
         case PdfWindowPosSave:
             [pdfWindow setFrameAutosaveName:PdfWindowNameKey];
             [self.pdfKitWindow setFrameAutosaveName:PdfKitWindowNameKey];
-            // added by Terada (from this line)
-            NSInteger numberOfWindows = 0;
-            NSInteger i;
-            NSInteger *listOfWindows;
-            
-        //    NSCountWindowsForContext([NSApp contextID], &numberOfWindows);
-            NSCountWindows(&numberOfWindows);
-            
-            if (numberOfWindows>0){
-                listOfWindows = malloc(numberOfWindows * sizeof(NSInteger));
-                //NSWindowListForContext([NSApp contextID], numberOfWindows, listOfWindows);
-                NSWindowList(numberOfWindows, listOfWindows);
-                for(i=0; i<numberOfWindows; i++){
-                    NSWindow *aWindow = [NSApp windowWithWindowNumber:listOfWindows[i]];
-                    if ([aWindow isKindOfClass:[TSPreviewWindow class]]) {
-                        [self repositionWindow:self.pdfKitWindow activeWindow:aWindow];
-                        break;
-                    }
-                }
-                free(listOfWindows);
-            }
-            // added by Terada (until this line)
+            [self cascadePdfKitWindowFromFrontPreview];
             break;
 
 
@@ -3945,6 +3966,8 @@ if ( ! skipTextWindow) {
                 [pdfWindow setFrameFromString:[SUD stringForKey:PortablePdfWindowFixedPosKey]];
                 [self.pdfKitWindow setFrameFromString:[SUD stringForKey:PortablePdfWindowFixedPosKey]];
                 }
+            // Several previews at the fixed position would hide one another completely.
+            [self cascadePdfKitWindowFromFrontPreview];
 /*
         case PdfWindowPosFixed:
             [pdfWindow setFrameFromString:[SUD stringForKey:PdfWindowFixedPosKey]];
@@ -7626,13 +7649,8 @@ if (! useFullSplitWindow) {
 
             dispatch_sync(dispatch_get_main_queue(), ^{ // GUI stuff should happen on main thread
                 self->typesetStart = YES;
-                NSRange theRange = [self->outputText selectedRange];
-                theRange.length = [newOutput length];
-                [self->outputText replaceCharactersInRange: [self->outputText selectedRange] withString: newOutput];
-                if (! self->consoleCleanStart) {
-                    [self->outputText setTextColor:[NSColor redColor] range: theRange];
-                }
-                [self->outputText scrollRangeToVisible: [self->outputText selectedRange]];
+                TSAppendConsoleOutput(self->outputText, newOutput,
+                    self->consoleCleanStart ? nil : [NSColor redColor]);
                 });
     //        [newOutput release];
             });
@@ -8428,6 +8446,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	// Substitute all occurances of #SEL# with the original text
 	[stringBuf replaceOccurrencesOfString: @"#SEL#" withString: oldString
 								  options: 0 range: NSMakeRange(0, [stringBuf length])];
+
+	// Substitute all occurances of #PASTE# with the text on the clipboard
+	[stringBuf replacePasteMarkersWithClipboardText];
 	
 	// Now search for #INS#, remember its position, and remove it. We will
 	// Later position the insertion mark there. Defaults to end of string.
@@ -8481,6 +8502,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	// Substitute all occurances of #SEL# with the original text
 	[stringBuf replaceOccurrencesOfString: @"#SEL#" withString: oldString
 					options: 0 range: NSMakeRange(0, [stringBuf length])];
+
+	// Substitute all occurances of #PASTE# with the text on the clipboard
+	[stringBuf replacePasteMarkersWithClipboardText];
 
 	// Now search for #INS#, remember its position, and remove it. We will
 	// Later position the insertion mark there. Defaults to end of string.
@@ -9326,7 +9350,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 				isOneOfOther = YES;
 		}
 		
-		if ([extension isEqualToString:@"gz"]) {
+		// SyncTeX writes name.synctex.gz(busy) while TeX runs; an interrupted run leaves it behind.
+		if ([extension isEqualToString:@"gz"] || [extension isEqualToString:@"gz(busy)"]) {
  			if ([[objectFileName pathExtension] isEqualToString:@"synctex"]) {
 				doMove = YES;
 				isOneOfOther = YES;

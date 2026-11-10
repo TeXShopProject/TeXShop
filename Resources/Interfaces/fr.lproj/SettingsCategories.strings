@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Invisibles";
 "catalog.appearance.7.0.item.1" = "Entourés";
 "catalog.appearance.7.0.item.2" = "Accolades";
+"catalog.appearance.7.0.item.3" = "Pleine chasse";
+"catalog.appearance.7.0.item.4" = "Pleine chasse (fond)";
 "group.appearance.8.title" = "Couleurs : SyncTeX et copie d’images";
 "catalog.appearance.8.0.item.0" = "SyncTeX dans l’aperçu";
 "catalog.appearance.8.0.item.1" = "SyncTeX dans la source";
@@ -288,4 +290,4 @@
 
 "catalog.documents.1.3.note" = "À l’enregistrement, réunit les caractères stockés séparément (comme か + ゛) en un seul caractère (が).";
 
-"catalog.typesetting.9.0.note" = "À l’enregistrement, remplace les caractères hors JIS X 0208 par \\UTF{XXXX} (ou \\CID{numéro} pour les variantes de glyphes). À l’ouverture, reconvertit \\UTF{…} en caractères. Pour les documents pTeX utilisant le paquet otf.";
+"catalog.typesetting.9.0.note" = "À l’enregistrement, remplace les caractères hors JIS X 0208 par \\UTF{XXXX} (ou \\CID{numéro} pour les variantes de glyphes). Pour les documents pTeX utilisant le paquet otf.";

@@ -1,6 +1,16 @@
 #pragma once
 #import <Cocoa/Cocoa.h>
 
+// Control characters other than tab, line feed and carriage return. The editor
+// always shows them as U+FFFD; otherwise they would take no space, and a form
+// feed would hide the rest of the document.
+static inline BOOL TSIsShownControlCharacter(unichar character)
+{
+    return character <= 0x08 || (character >= 0x0B && character <= 0x1F && character != 0x0D);
+}
+
+static NSString *const TSControlCharacterMarker = @"\uFFFD";
+
 // Keep the first two entries in their historical order for saved preferences.
 static inline NSArray<NSString *> *TSInvisibleMarkers(NSString *key)
 {

@@ -312,3 +312,6 @@
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Rilevamento automatico della lingua";
+
+/* Asked when a conversion is chosen with nothing selected */
+"Apply \"%@\" to the whole document?" = "Applicare «%@» all’intero documento?";

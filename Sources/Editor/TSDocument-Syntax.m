@@ -89,6 +89,14 @@ static BOOL isValidOrdinaryTeXCommandChar(NSInteger c)
  *
  * TODO: Consider moving the whole syntax coloring code to a separate class.
  */
+// U+FF01-U+FF0B, U+FF0D, U+FF0F-U+FF5D and U+2212: fullwidth forms of ASCII
+// letters, digits and symbols, and the minus sign. The fullwidth comma and
+// full stop are ordinary Japanese punctuation.
+static inline BOOL TSIsHighlightedFullwidthCharacter(unichar c)
+{
+    return (c >= 0xFF01 && c <= 0xFF0B) || c == 0xFF0D || (c >= 0xFF0F && c <= 0xFF5D) || c == 0x2212;
+}
+
 @implementation TSDocument (SyntaxHighlighting)
 
 
@@ -361,6 +369,14 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
         
         else if ((self.fileIsXML) && (theChar == '&'))
             [self syntaxColorLimitedXML: &location and: aLineEnd using: textString with: layoutManager];
+        
+        else if (self.fullwidthSymbolColorAttribute && TSIsHighlightedFullwidthCharacter(theChar)) {
+            // Fullwidth letters, digits and symbols are easily mistaken for ASCII.
+            colorRange.location = location;
+            colorRange.length = 1;
+            [layoutManager addTemporaryAttributes:self.fullwidthSymbolColorAttribute forCharacterRange:colorRange];
+            location++;
+        }
         
         else if ((theChar == '&') || (theChar == '$')) {
             // The teo special characters & $ get an extra color.

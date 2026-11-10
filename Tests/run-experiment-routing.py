@@ -48,6 +48,8 @@ elif args.mutation == "self-target":
 
 program = r'''
 #import <Foundation/Foundation.h>
+// The console helper of TSConsoleOutput.h, reduced to the probe's text calls.
+#define TSAppendConsoleOutput(view, text, color) [(view) replaceCharactersInRange:[(view) selectedRange] withString:(text)]
 @interface Sender : NSObject
 - (NSInteger)tag;
 @end
@@ -133,7 +135,7 @@ TOGGLE
     NSInteger whichEngine;
     Output *outputText;
 }
-@property BOOL annotationsExist;
+@property BOOL annotationsExist, directRootCommand;
 @property (strong) Console *experimentConsole;
 @property (strong) id inputPipe;
 @property (strong) NSFileHandle *readHandle;

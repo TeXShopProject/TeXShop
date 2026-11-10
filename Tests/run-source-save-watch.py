@@ -48,7 +48,7 @@ def methods(rev, variant):
     s = show(rev, 'Sources/Document/TSDocument.m')
     w = cut(s, '- (NSString *)fileSignatureAtPath:' if variant == 'pr' else '- (void)watchFile:', '//END PATCH')
     rd = cut(s, '- (BOOL)readFromURL: (NSURL *)absoluteURL', '- (BOOL)writeToURL:')
-    wr = cut(s, '- (BOOL)writeToURL:', '// zenitani 2.10 (A) -- decode utf.sty')
+    wr = cut(s, '- (BOOL)writeToURL:', '- (BOOL)revertToContentsOfURL:')
     wr = wr.replace('- (BOOL)writeToURL:', '- (BOOL)productionWriteToURL:')
     rv = cut(s, '- (BOOL)revertToContentsOfURL:', '//ULRICH BAUER PATCH\n- (void)revertDocumentToSaved:')
     if 'serializedSourceOfType' in s:
@@ -126,6 +126,13 @@ static void ExtWrite(NSString *path, NSString *text, int how){
 + (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
 + (NSInteger)byteOrderMarkOfData:(NSData *)data { return 0; }
 - (NSString *)textForEditing:(NSString *)text encoding:(NSStringEncoding)encoding { return text; }
+@end
+// The sources in these tests contain no \UTF commands.
+@interface NSString (TSCharacterConversion)
+- (NSString *)stringByDecodingUTFCommandsForReading;
+@end
+@implementation NSString (TSCharacterConversion)
+- (NSString *)stringByDecodingUTFCommandsForReading { return self; }
 @end
 // No encoding is chosen in an Open dialog in these tests.
 @interface TSDocumentController : NSDocumentController

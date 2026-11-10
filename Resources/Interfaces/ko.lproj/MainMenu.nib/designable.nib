@@ -241,6 +241,12 @@
                                     <action selector="paste:" target="-1" id="314"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="클립보드와 교환" id="nhm-uD-mRN" identifier="TSShortcut.exchangePaste:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="exchangePaste:" target="-1" id="uYZ-5a-m3O"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="주석문으로 붙여넣기" id="gHc-VY-m8D" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -405,6 +411,127 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="capitalizeWord:" target="-1" id="437"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="문자 종류 변환" id="bdz-Om-jaY">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="문자 종류 변환" id="pVS-GH-QSR">
+                                    <items>
+                                        <menuItem title="히라가나 → 가타카나" tag="1" id="wGL-6D-QwG" identifier="TSShortcut.convertCharacterType:.1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="xGl-MC-oEm"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="가타카나 → 히라가나" tag="2" id="ZT9-qE-fgW" identifier="TSShortcut.convertCharacterType:.2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="wkf-NY-b3H"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="fy1-0R-29L"/>
+                                        <menuItem title="전각 숫자 → 반각 숫자" tag="3" id="tE4-J8-WGb" identifier="TSShortcut.convertCharacterType:.3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="rUt-Ze-T0W"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="반각 숫자 → 전각 숫자" tag="4" id="cQP-2y-eBv" identifier="TSShortcut.convertCharacterType:.4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="W5W-Ah-4Xb"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="aVS-vL-fH6"/>
+                                        <menuItem title="전각 영문자 → 반각 영문자" tag="5" id="yDx-fU-oFA" identifier="TSShortcut.convertCharacterType:.5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="HVa-KX-dPz"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="반각 영문자 → 전각 영문자" tag="6" id="fYg-X2-Wsi" identifier="TSShortcut.convertCharacterType:.6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="RVM-4C-oh2"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="A3U-Xs-C3Q"/>
+                                        <menuItem title="유니코드 문자 → ajmacros" tag="7" id="K99-s9-tuF" identifier="TSShortcut.convertCharacterType:.7">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="EHH-VF-AkD"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ajmacros → 유니코드 문자" tag="8" id="D5x-yM-ODT" identifier="TSShortcut.convertCharacterType:.8">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="6dJ-0T-s6X"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="eaw-tA-tke"/>
+                                        <menuItem title="유니코드 문자 → \UTF / \CID" tag="9" id="cpu-Q6-ra2" identifier="TSShortcut.convertCharacterType:.9">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="2eL-wo-sjH"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="\UTF / \CID → 유니코드 문자" tag="10" id="hlr-K8-LdS" identifier="TSShortcut.convertCharacterType:.10">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Gfn-2b-p3R"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="vBv-8d-PdI"/>
+                                        <menuItem title="전각 따옴표 → 반각 따옴표" tag="11" id="NOg-OL-ZfE" identifier="TSShortcut.convertCharacterType:.11">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Z5w-7V-w5n"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="유니코드 정규화" id="F4l-6b-Bhd">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="유니코드 정규화" id="eT3-jN-FVY">
+                                    <items>
+                                        <menuItem title="NFC" tag="1" id="pIh-VI-onG" identifier="TSShortcut.normalizeSelectedString:.1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="UXG-WR-Zaw"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Modified NFC" tag="2" id="FAJ-H8-Kpy" identifier="TSShortcut.normalizeSelectedString:.2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="9Vd-Gi-QtH"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFD" tag="3" id="mUO-rv-MBK" identifier="TSShortcut.normalizeSelectedString:.3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="SAh-fz-RRD"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Modified NFD" tag="4" id="G5S-tH-aLC" identifier="TSShortcut.normalizeSelectedString:.4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="9ZS-sF-bSf"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFKC" tag="5" id="kFe-6I-RBw" identifier="TSShortcut.normalizeSelectedString:.5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="mi8-0Y-ntC"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFKD" tag="6" id="mZt-gF-2H2" identifier="TSShortcut.normalizeSelectedString:.6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="K3o-o9-suV"/>
                                             </connections>
                                         </menuItem>
                                     </items>

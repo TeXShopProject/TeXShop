@@ -133,6 +133,7 @@
 - (void)associatedWindow:(id)sender
 {
 	if ([self.myDocument documentType] == isTeX) {
+        self.myDocument.directRootCommand = YES;
         
         if ([self.myDocument experimentActive])
             [self.myDocument switchExperimentWindows];

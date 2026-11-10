@@ -66,6 +66,8 @@ elif mutation:
 
 program = r'''
 #import <Cocoa/Cocoa.h>
+// The console helper of TSConsoleOutput.h, reduced to the probe's text calls.
+#define TSAppendConsoleOutput(view, text, color) do { [(view) replaceCharactersInRange:[(view) selectedRange] withString:(text)]; if (color) [(view) setTextColor:(color) range:NSMakeRange(0, 0)]; } while (0)
 #define NUMBEROFERRORS 20
 typedef enum { kNoFilterMode = 0, kMacJapaneseFilterMode = 1, kOtherJapaneseFilterMode = 2 } TSFilterMode;
 static TSFilterMode g_shouldFilter = kNoFilterMode;

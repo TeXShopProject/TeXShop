@@ -15,6 +15,8 @@
         <outlet property="EditingStyle" destination="O5R-pm-csa" id="AIv-9y-jfD" />
         <outlet property="EditorFlashColorWell" destination="fIc-C1-M6K" id="iM7-9O-Pwb" />
         <outlet property="EditorHighlightBracesColorWell" destination="SG4-BQ-aGU" id="SWv-54-4ig" />
+        <outlet property="EditorHighlightZenkakuSymbolColorWell" destination="0Uo-lK-RFI" id="lfn-I4-DBf" />
+        <outlet property="EditorHighlightZenkakuSymbolBackgroundColorWell" destination="et7-Ed-flT" id="NXi-Zb-frw" />
         <outlet property="EditorHighlightContentColorWell" destination="GcO-ys-oEm" id="b04-Hk-IVP" />
         <outlet property="EditorInvisibleCharColorWell" destination="fwl-6S-zne" id="MzY-Dx-GZq" />
         <outlet property="EditorReverseSyncColorWell" destination="aI6-Dw-QYc" id="aec-o0-dkD" />
@@ -206,6 +208,22 @@
                           <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB" />
                           <connections>
                             <action selector="ConsoleAlphaChanged:" target="-2" id="sOa-a0-eD9" />
+                          </connections>
+                        </colorWell>
+                        <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Uo-lK-RFI" identifier="settings.0Uo-lK-RFI">
+                          <rect key="frame" x="290" y="181" width="59" height="24" />
+                          <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                          <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB" />
+                          <connections>
+                            <action selector="EditorHighlightZenkakuSymbolChanged:" target="-2" id="nj8-kn-qVe" />
+                          </connections>
+                        </colorWell>
+                        <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="et7-Ed-flT" identifier="settings.et7-Ed-flT">
+                          <rect key="frame" x="290" y="138" width="59" height="24" />
+                          <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" />
+                          <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB" />
+                          <connections>
+                            <action selector="EditorHighlightZenkakuSymbolBackgroundChanged:" target="-2" id="W88-yP-pE5" />
                           </connections>
                         </colorWell>
                         <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SG4-BQ-aGU" identifier="settings.SG4-BQ-aGU">
@@ -615,6 +633,24 @@
                           <rect key="frame" x="205" y="164.5" width="67" height="14" />
                           <autoresizingMask key="autoresizingMask" />
                           <textFieldCell key="cell" lineBreakMode="clipping" title="Background" id="usk-lT-OCT">
+                            <font key="font" metaFont="message" size="11" />
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                          </textFieldCell>
+                        </textField>
+                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tPl-K1-TUE" identifier="settings.tPl-K1-TUE">
+                          <rect key="frame" x="296" y="205.5" width="67" height="14" />
+                          <autoresizingMask key="autoresizingMask" />
+                          <textFieldCell key="cell" lineBreakMode="clipping" title="Fullwidth" id="UQx-ul-Ju9">
+                            <font key="font" metaFont="message" size="11" />
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
+                          </textFieldCell>
+                        </textField>
+                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oZu-II-zIi" identifier="settings.oZu-II-zIi">
+                          <rect key="frame" x="296" y="164.5" width="67" height="14" />
+                          <autoresizingMask key="autoresizingMask" />
+                          <textFieldCell key="cell" lineBreakMode="clipping" title="Fullwidth (Background)" id="88w-SL-CUz">
                             <font key="font" metaFont="message" size="11" />
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog" />
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />

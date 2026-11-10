@@ -238,6 +238,12 @@
                                     <action selector="paste:" target="-1" id="32"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Wisselen met klembord" id="8bL-Ew-lEk" identifier="TSShortcut.exchangePaste:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="exchangePaste:" target="-1" id="FnD-NW-sIO"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Plak As Comment" id="7xP-tv-05d" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -402,6 +408,127 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="capitalizeWord:" target="-1" id="916"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Tekensoort omzetten" id="YTB-4B-Bru">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Tekensoort omzetten" id="8WY-7j-7th">
+                                    <items>
+                                        <menuItem title="Hiragana → Katakana" tag="1" id="OAp-it-Gwp" identifier="TSShortcut.convertCharacterType:.1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="IjV-uF-CmX"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Katakana → Hiragana" tag="2" id="UAf-CX-BYV" identifier="TSShortcut.convertCharacterType:.2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="arS-XO-1M5"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Shb-4P-uqg"/>
+                                        <menuItem title="Cijfers met volle breedte → Cijfers met halve breedte" tag="3" id="fQd-7R-svw" identifier="TSShortcut.convertCharacterType:.3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="wvR-NY-hBd"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Cijfers met halve breedte → Cijfers met volle breedte" tag="4" id="M3M-wY-wbO" identifier="TSShortcut.convertCharacterType:.4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="mnw-og-kOZ"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="qsZ-a7-kCy"/>
+                                        <menuItem title="Letters met volle breedte → Letters met halve breedte" tag="5" id="nR1-uF-3W8" identifier="TSShortcut.convertCharacterType:.5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="a9t-sh-HPz"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Letters met halve breedte → Letters met volle breedte" tag="6" id="D9O-Gn-LBW" identifier="TSShortcut.convertCharacterType:.6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="sDk-gG-EV5"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="1sC-aQ-eUj"/>
+                                        <menuItem title="Unicode-tekens → ajmacros" tag="7" id="d6T-cr-P5J" identifier="TSShortcut.convertCharacterType:.7">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="e8G-xh-vAo"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ajmacros → Unicode-tekens" tag="8" id="pNI-Gt-0YV" identifier="TSShortcut.convertCharacterType:.8">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="hSA-87-VXe"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Tlr-Y0-FSR"/>
+                                        <menuItem title="Unicode-tekens → \UTF / \CID" tag="9" id="6Aa-AL-5CY" identifier="TSShortcut.convertCharacterType:.9">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Nda-5q-O9V"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="\UTF / \CID → Unicode-tekens" tag="10" id="aP8-4z-0cm" identifier="TSShortcut.convertCharacterType:.10">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="3Te-GK-Fhe"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="OJB-IS-BLS"/>
+                                        <menuItem title="Typografische aanhalingstekens → TeX-aanhalingstekens" tag="11" id="IR3-ED-Ega" identifier="TSShortcut.convertCharacterType:.11">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Zjy-si-6Eg"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Unicode-normalisatie" id="9rL-Gk-znc">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Unicode-normalisatie" id="x8W-gw-0Gq">
+                                    <items>
+                                        <menuItem title="NFC" tag="1" id="zIF-ya-SZE" identifier="TSShortcut.normalizeSelectedString:.1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="I2Y-67-mYl"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Modified NFC" tag="2" id="7U1-xi-JUT" identifier="TSShortcut.normalizeSelectedString:.2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="hC0-Qj-uGQ"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFD" tag="3" id="NvT-4x-XS9" identifier="TSShortcut.normalizeSelectedString:.3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="oJf-vh-Mu4"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Modified NFD" tag="4" id="7RH-F1-L76" identifier="TSShortcut.normalizeSelectedString:.4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="ndn-b0-8M7"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFKC" tag="5" id="Ddb-CZ-ESm" identifier="TSShortcut.normalizeSelectedString:.5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="YTC-is-Tfn"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFKD" tag="6" id="4pN-l2-slZ" identifier="TSShortcut.normalizeSelectedString:.6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="p4P-Ot-SD7"/>
                                             </connections>
                                         </menuItem>
                                     </items>

@@ -240,6 +240,12 @@
                                     <action selector="paste:" target="-1" id="32"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="交換ペースト" id="JyF-2Y-TAv" identifier="TSShortcut.exchangePaste:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="exchangePaste:" target="-1" id="FMC-2Y-DkK"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="コメントとしてペースト" id="Cpd-Y7-D0H" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -404,6 +410,127 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="capitalizeWord:" target="-1" id="876"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="文字種一括変換" id="EnD-hF-WAD">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="文字種一括変換" id="SE8-LJ-gj5">
+                                    <items>
+                                        <menuItem title="ひらがな → カタカナ" tag="1" id="KNN-Cb-UfX" identifier="TSShortcut.convertCharacterType:.1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="lyZ-Ob-6wL"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="カタカナ → ひらがな" tag="2" id="JxZ-EF-0VK" identifier="TSShortcut.convertCharacterType:.2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="k2p-6I-b4Z"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="uIc-ZV-QrI"/>
+                                        <menuItem title="全角数字 → 半角数字" tag="3" id="TwH-jz-EF5" identifier="TSShortcut.convertCharacterType:.3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="kJS-o6-J8B"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="半角数字 → 全角数字" tag="4" id="FMy-n5-UZZ" identifier="TSShortcut.convertCharacterType:.4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="my0-ks-ecJ"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="FFg-tx-Nxb"/>
+                                        <menuItem title="全角英字 → 半角英字" tag="5" id="xVp-h9-Ydf" identifier="TSShortcut.convertCharacterType:.5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="4qO-N8-PTr"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="半角英字 → 全角英字" tag="6" id="hZh-Xm-DR8" identifier="TSShortcut.convertCharacterType:.6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="h3Z-56-mQx"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="7f8-In-W8D"/>
+                                        <menuItem title="Unicode文字 → ajmacros" tag="7" id="hAn-KH-xPh" identifier="TSShortcut.convertCharacterType:.7">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="x3E-HY-Gq0"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ajmacros → Unicode文字" tag="8" id="J0y-3f-JHr" identifier="TSShortcut.convertCharacterType:.8">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="GCW-Up-Om0"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="30a-sI-P8y"/>
+                                        <menuItem title="Unicode文字 → \UTF / \CID" tag="9" id="KCV-dB-A3k" identifier="TSShortcut.convertCharacterType:.9">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Cjf-l5-uPC"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="\UTF / \CID → Unicode文字" tag="10" id="L0m-rA-eHs" identifier="TSShortcut.convertCharacterType:.10">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="Ou3-hQ-EXG"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="TCp-I6-1As"/>
+                                        <menuItem title="全角引用符 → 半角引用符" tag="11" id="BBe-tY-EcP" identifier="TSShortcut.convertCharacterType:.11">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="convertCharacterType:" target="-1" id="JiB-F0-YNz"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Unicode 正規化" id="2Jg-4j-19w">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Unicode 正規化" id="EHu-Cy-fel">
+                                    <items>
+                                        <menuItem title="NFC" tag="1" id="FWC-X5-KkB" identifier="TSShortcut.normalizeSelectedString:.1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="OSq-UW-xQn"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Modified NFC" tag="2" id="dSP-3T-qjs" identifier="TSShortcut.normalizeSelectedString:.2">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="4gR-V4-gp3"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFD" tag="3" id="XBS-kB-nr6" identifier="TSShortcut.normalizeSelectedString:.3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="M5f-WZ-Xrr"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Modified NFD" tag="4" id="Bz8-dv-IYi" identifier="TSShortcut.normalizeSelectedString:.4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="27u-oA-DGH"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFKC" tag="5" id="eks-sL-StH" identifier="TSShortcut.normalizeSelectedString:.5">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="nnM-9K-QIb"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="NFKD" tag="6" id="G34-zb-CBU" identifier="TSShortcut.normalizeSelectedString:.6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="normalizeSelectedString:" target="-1" id="I2M-ym-yXz"/>
                                             </connections>
                                         </menuItem>
                                     </items>

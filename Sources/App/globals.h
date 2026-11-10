@@ -259,6 +259,33 @@ typedef enum _CommentIndentType
 	Munindent = 4
 } _CommentIndentType;
 
+// Menu item tags of Edit > Character Type Conversion (convertCharacterType:)
+typedef NS_ENUM(NSInteger, TSCharacterConversionTag)
+{
+	TSHiraganaToKatakanaTag = 1,
+	TSKatakanaToHiraganaTag = 2,
+	TSFullwidthToHalfwidthDigitsTag = 3,
+	TSHalfwidthToFullwidthDigitsTag = 4,
+	TSFullwidthToHalfwidthAlphabetsTag = 5,
+	TSHalfwidthToFullwidthAlphabetsTag = 6,
+	TSUnicodeToAJMacrosTag = 7,
+	TSAJMacrosToUnicodeTag = 8,
+	TSUnicodeToUTFTag = 9,
+	TSUTFToUnicodeTag = 10,
+	TSFullwidthToHalfwidthQuotesTag = 11
+};
+
+// Menu item tags of Edit > Unicode Normalization (normalizeSelectedString:)
+typedef NS_ENUM(NSInteger, TSUnicodeNormalizationTag)
+{
+	TSNFCTag = 1,
+	TSModifiedNFCTag = 2,
+	TSNFDTag = 3,
+	TSModifiedNFDTag = 4,
+	TSNFKCTag = 5,
+	TSNFKDTag = 6
+};
+
 
 /*" global defines for TeXShop.app "*/
 extern NSString *DefaultCommandKey;
