@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Onzichtbare tekens";
 "catalog.appearance.7.0.item.1" = "Ingesloten tekst";
 "catalog.appearance.7.0.item.2" = "Accolades";
+"catalog.appearance.7.0.item.3" = "Volle breedte";
+"catalog.appearance.7.0.item.4" = "Volle breedte (achtergrond)";
 "group.appearance.8.title" = "Kleuren: SyncTeX en afbeeldingen kopiëren";
 "catalog.appearance.8.0.item.0" = "SyncTeX in voorvertoning";
 "catalog.appearance.8.0.item.1" = "SyncTeX in bron";

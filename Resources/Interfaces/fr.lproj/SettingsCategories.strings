@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Invisibles";
 "catalog.appearance.7.0.item.1" = "Entourés";
 "catalog.appearance.7.0.item.2" = "Accolades";
+"catalog.appearance.7.0.item.3" = "Pleine chasse";
+"catalog.appearance.7.0.item.4" = "Pleine chasse (fond)";
 "group.appearance.8.title" = "Couleurs : SyncTeX et copie d’images";
 "catalog.appearance.8.0.item.0" = "SyncTeX dans l’aperçu";
 "catalog.appearance.8.0.item.1" = "SyncTeX dans la source";

@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "不可见符号";
 "catalog.appearance.7.0.item.1" = "带圈符号";
 "catalog.appearance.7.0.item.2" = "括号";
+"catalog.appearance.7.0.item.3" = "全角字母数字符号";
+"catalog.appearance.7.0.item.4" = "全角字母数字符号背景";
 "group.appearance.8.title" = "颜色：SyncTeX 和图像复制";
 "catalog.appearance.8.0.item.0" = "预览中的 SyncTeX";
 "catalog.appearance.8.0.item.1" = "源文件中的 SyncTeX";

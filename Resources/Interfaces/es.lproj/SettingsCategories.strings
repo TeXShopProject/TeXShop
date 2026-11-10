@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Invisible";
 "catalog.appearance.7.0.item.1" = "Encerrado";
 "catalog.appearance.7.0.item.2" = "Delimitador";
+"catalog.appearance.7.0.item.3" = "Ancho completo";
+"catalog.appearance.7.0.item.4" = "Ancho completo (fondo)";
 "group.appearance.8.title" = "Colores: SyncTeX y copia de imágenes";
 "catalog.appearance.8.0.item.0" = "SyncTeX en la vista previa";
 "catalog.appearance.8.0.item.1" = "SyncTeX en la fuente";

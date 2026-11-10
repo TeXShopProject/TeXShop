@@ -14,6 +14,9 @@ mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 color = source_file(root, 'TSDocument-Color.m').read_text(encoding='latin-1')
 syntax = source_file(root, 'TSDocument-Syntax.m').read_text(encoding='latin-1')
 support = source_file(root, 'TSColorSupport.m').read_text(encoding='latin-1')
+preferences = source_file(root, 'TSPreferences-Color.m').read_text(encoding='latin-1')
+wells = preferences[preferences.index('- (NSColor *)fullwidthHighlightColorForKey:'):]
+wells = wells[:wells.index('\n}\n') + 3]
 
 block = color[color.index('    // A theme without these keys'):]
 block = block[:block.index('self.fullwidthSymbolColorAttribute = ') ]
@@ -32,6 +35,8 @@ elif mutation == 'clear-background':
     block = block.replace('myColor && myColor.alphaComponent > 0', 'myColor')
 elif mutation == 'comma':
     membership = membership.replace('c >= 0xFF01 && c <= 0xFF0B', 'c >= 0xFF01 && c <= 0xFF0C')
+elif mutation == 'well-fallback':
+    wells = wells.replace('@"EditorBackground" : @"EditorText"', '@"EditorText" : @"EditorBackground"')
 elif mutation:
     sys.exit('unknown mutation')
 
@@ -45,6 +50,11 @@ program = r'''
 READERS
 @end
 MEMBERSHIP
+@interface Wells : NSObject { @public NSMutableDictionary *EditingColors; }
+@end
+@implementation Wells
+WELLS
+@end
 static NSDictionary *Attributes(NSDictionary *colorDictionary)
 {
     NSColor *myColor; NSDictionary *result;
@@ -66,6 +76,12 @@ int main(int argc, char **argv) { @autoreleasepool {
     Require("transparent background adds no background", clear.count == 1 && clear[NSForegroundColorAttributeName]);
     NSDictionary *onlyBackground = Attributes(@{@"EditorHighlightZenkakuSymbolBackground": @[@0.1, @0, @0]});
     Require("background alone, three components", onlyBackground.count == 1 && Same(onlyBackground[NSBackgroundColorAttributeName], 0.1, 0, 0));
+    Wells *w = [Wells new];
+    w->EditingColors = [@{@"EditorText": @[@0.1, @0.2, @0.3, @1], @"EditorBackground": @[@0.9, @0.8, @0.7, @1]} mutableCopy];
+    Require("well shows the text color without a key", Same([w fullwidthHighlightColorForKey:@"EditorHighlightZenkakuSymbol"], 0.1, 0.2, 0.3));
+    Require("well shows the background without a key", Same([w fullwidthHighlightColorForKey:@"EditorHighlightZenkakuSymbolBackground"], 0.9, 0.8, 0.7));
+    w->EditingColors[@"EditorHighlightZenkakuSymbol"] = @[@0.5, @0.5, @0];
+    Require("well shows a three-component key", Same([w fullwidthHighlightColorForKey:@"EditorHighlightZenkakuSymbol"], 0.5, 0.5, 0));
     NSString *on = @"！＃＋－／０９：＠ＡＺ［｝ａｚ−", *off = @"，．～、。あ漢!0A-　";
     for (NSUInteger i = 0; i < on.length; i++) Require("highlighted character", TSIsHighlightedFullwidthCharacter([on characterAtIndex:i]));
     for (NSUInteger i = 0; i < off.length; i++) Require("ordinary character", !TSIsHighlightedFullwidthCharacter([off characterAtIndex:i]));
@@ -80,7 +96,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     if (failures) return 1;
     printf("PASS: fullwidth highlight from theme keys only, %d bundled themes\n", argc - 1);
 } return 0; }
-'''.replace('READERS', readers).replace('MEMBERSHIP', membership).replace('BLOCK', block)
+'''.replace('READERS', readers).replace('MEMBERSHIP', membership).replace('BLOCK', block).replace('WELLS', wells)
 themes = sorted((root / 'Resources/TeXShop/Themes').glob('*.plist')) + sorted((root / 'Resources/Themes').glob('*.plist'))
 assert len(themes) == 12
 with tempfile.TemporaryDirectory(prefix='texshop-fullwidth-') as tmp:

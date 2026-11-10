@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "不可視文字";
 "catalog.appearance.7.0.item.1" = "囲まれた中身";
 "catalog.appearance.7.0.item.2" = "波括弧";
+"catalog.appearance.7.0.item.3" = "全角英数記号";
+"catalog.appearance.7.0.item.4" = "全角英数記号の背景";
 "group.appearance.8.title" = "色：SyncTeX と画像のコピー";
 "catalog.appearance.8.0.item.0" = "SyncTeX（プレビュー上）";
 "catalog.appearance.8.0.item.1" = "SyncTeX（ソース上）";

@@ -19,6 +19,8 @@
 - (IBAction)EditorHighlightBracesChanged:(id)sender { [self.preferences EditorHighlightBracesChanged:sender]; }
 - (IBAction)EditorHighlightContentChanged:(id)sender { [self.preferences EditorHighlightContentChanged:sender]; }
 - (IBAction)EditorInvisibleCharChanged:(id)sender { [self.preferences EditorInvisibleCharChanged:sender]; }
+- (IBAction)EditorHighlightZenkakuSymbolChanged:(id)sender { [self.preferences EditorHighlightZenkakuSymbolChanged:sender]; }
+- (IBAction)EditorHighlightZenkakuSymbolBackgroundChanged:(id)sender { [self.preferences EditorHighlightZenkakuSymbolBackgroundChanged:sender]; }
 - (IBAction)EditorReverseSyncChanged:(id)sender { [self.preferences EditorReverseSyncChanged:sender]; }
 - (IBAction)EntryColorChanged:(id)sender { [self.preferences EntryColorChanged:sender]; }
 - (IBAction)FootnoteColorChanged:(id)sender { [self.preferences FootnoteColorChanged:sender]; }

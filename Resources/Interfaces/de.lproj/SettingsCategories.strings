@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Unsichtbar";
 "catalog.appearance.7.0.item.1" = "Umschlossen";
 "catalog.appearance.7.0.item.2" = "Klammer";
+"catalog.appearance.7.0.item.3" = "Vollbreit";
+"catalog.appearance.7.0.item.4" = "Vollbreit (Hintergrund)";
 "group.appearance.8.title" = "Farben: SyncTeX und Bildkopien";
 "catalog.appearance.8.0.item.0" = "SyncTeX in der Vorschau";
 "catalog.appearance.8.0.item.1" = "SyncTeX im Quelltext";

@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "보이지 않는 문자";
 "catalog.appearance.7.0.item.1" = "괄호 안의 내용";
 "catalog.appearance.7.0.item.2" = "중괄호";
+"catalog.appearance.7.0.item.3" = "전각 영숫자·기호";
+"catalog.appearance.7.0.item.4" = "전각 영숫자·기호 배경";
 "group.appearance.8.title" = "색상: SyncTeX와 이미지 복사";
 "catalog.appearance.8.0.item.0" = "미리보기의 SyncTeX";
 "catalog.appearance.8.0.item.1" = "소스의 SyncTeX";

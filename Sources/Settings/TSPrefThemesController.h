@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSColorWell *EditorHighlightBracesColorWell NS_SWIFT_NAME(editorHighlightBracesColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *EditorHighlightContentColorWell NS_SWIFT_NAME(editorHighlightContentColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *EditorInvisibleCharColorWell NS_SWIFT_NAME(editorInvisibleCharColorWell);
+@property (strong, nullable) IBOutlet NSColorWell *EditorHighlightZenkakuSymbolColorWell NS_SWIFT_NAME(editorHighlightZenkakuSymbolColorWell);
+@property (strong, nullable) IBOutlet NSColorWell *EditorHighlightZenkakuSymbolBackgroundColorWell NS_SWIFT_NAME(editorHighlightZenkakuSymbolBackgroundColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *EditorReverseSyncColorWell NS_SWIFT_NAME(editorReverseSyncColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *EntryColorWell NS_SWIFT_NAME(entryColorWell);
 @property (strong, nullable) IBOutlet NSColorWell *FootnoteColorWell NS_SWIFT_NAME(footnoteColorWell);

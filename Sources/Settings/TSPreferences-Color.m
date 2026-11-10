@@ -177,6 +177,8 @@ NSInteger stringSort(id s1, id s2, void *context)
     EditorHighlightBracesColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorHighlightBraces"];
     EditorHighlightContentColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorHighlightContent"];
     EditorInvisibleCharColorWell.color = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorInvisibleChar"];
+    EditorHighlightZenkakuSymbolColorWell.color = [self fullwidthHighlightColorForKey: @"EditorHighlightZenkakuSymbol"];
+    EditorHighlightZenkakuSymbolBackgroundColorWell.color = [self fullwidthHighlightColorForKey: @"EditorHighlightZenkakuSymbolBackground"];
     flashColor = [colorSupport colorAndAlphaFromDictionary:EditingColors andKey: @"EditorFlash"];
     if (flashColor != nil)
         EditorFlashColorWell.color = flashColor;
@@ -718,6 +720,44 @@ NSInteger stringSort(id s1, id s2, void *context)
     [colorSupport changeColorValueInDictionary: EditingColors forKey: @"EditorInvisibleChar" fromColorWell:sender];
     [self SaveEditedStyle:sender];
     
+}
+
+// A theme without the fullwidth keys shows these characters like other text,
+// so the wells then show the text and background colors.
+- (NSColor *)fullwidthHighlightColorForKey:(NSString *)key
+{
+    TSColorSupport *colorSupport = [TSColorSupport sharedInstance];
+    NSArray *components = EditingColors[key];
+    if (components.count >= 4)
+        return [colorSupport colorAndAlphaFromDictionary:EditingColors andKey:key];
+    if (components.count == 3)
+        return [colorSupport colorFromDictionary:EditingColors andKey:key];
+    NSString *fallback = [key hasSuffix:@"Background"] ? @"EditorBackground" : @"EditorText";
+    return [colorSupport colorAndAlphaFromDictionary:EditingColors andKey:fallback];
+}
+
+- (IBAction)EditorHighlightZenkakuSymbolChanged:sender
+{
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
+    {
+        [self deactivatePreferenceColorWells];
+        ((NSColorWell *)sender).color = [self fullwidthHighlightColorForKey: @"EditorHighlightZenkakuSymbol"];
+        return;
+    }
+    [[TSColorSupport sharedInstance] changeColorValueInDictionary: EditingColors forKey: @"EditorHighlightZenkakuSymbol" fromColorWell:sender];
+    [self SaveEditedStyle:sender];
+}
+
+- (IBAction)EditorHighlightZenkakuSymbolBackgroundChanged:sender
+{
+    if ((! _prefsWindow.keyWindow ) && (! (NSColorPanel.sharedColorPanelExists && [NSColorPanel sharedColorPanel].keyWindow)))
+    {
+        [self deactivatePreferenceColorWells];
+        ((NSColorWell *)sender).color = [self fullwidthHighlightColorForKey: @"EditorHighlightZenkakuSymbolBackground"];
+        return;
+    }
+    [[TSColorSupport sharedInstance] changeColorValueInDictionary: EditingColors forKey: @"EditorHighlightZenkakuSymbolBackground" fromColorWell:sender];
+    [self SaveEditedStyle:sender];
 }
 
 - (IBAction)EditorFlashChanged:sender

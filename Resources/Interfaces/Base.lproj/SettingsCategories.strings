@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Invisible";
 "catalog.appearance.7.0.item.1" = "Enclosed";
 "catalog.appearance.7.0.item.2" = "Braces";
+"catalog.appearance.7.0.item.3" = "Fullwidth";
+"catalog.appearance.7.0.item.4" = "Fullwidth (Background)";
 "group.appearance.8.title" = "Colors: SyncTeX and Image Copying";
 "catalog.appearance.8.0.item.0" = "SyncTeX in Preview";
 "catalog.appearance.8.0.item.1" = "SyncTeX in Source";

@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Caractere invizibile";
 "catalog.appearance.7.0.item.1" = "Textul dintre paranteze";
 "catalog.appearance.7.0.item.2" = "Acolade";
+"catalog.appearance.7.0.item.3" = "Lățime completă";
+"catalog.appearance.7.0.item.4" = "Lățime completă (fundal)";
 "group.appearance.8.title" = "Culori: SyncTeX și copierea imaginilor";
 "catalog.appearance.8.0.item.0" = "SyncTeX în previzualizare";
 "catalog.appearance.8.0.item.1" = "SyncTeX în sursă";

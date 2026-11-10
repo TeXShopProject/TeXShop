@@ -79,12 +79,14 @@ print(f'PASS: {len(nibs)} localized Preferences windows connect {len(base)} outl
 # also verifies the typed objects and forwarding through each pane controller.
 base=ET.parse(root/'Resources/Interfaces/Base.lproj/Preferences.nib/designable.nib')
 old={o.get('property'):o.get('destination') for o in base.findall(".//customObject[@id='-2']/connections/outlet")}
+# Outlets added after the migration have no legacy counterpart.
+added={'EditorHighlightZenkakuSymbolColorWell','EditorHighlightZenkakuSymbolBackgroundColorWell'}
 new={}
 for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xib') if x.name != 'SettingsWindow.xib']:
  tree=ET.parse(p)
  for outlet in tree.findall(".//customObject[@id='-2']/connections/outlet"):
   name=outlet.get('property')
-  if name=='view':continue
+  if name=='view' or name in added:continue
   original=name if name in old else '_'+name
   assert original in old and old[original]==outlet.get('destination'),(p,name)
   assert original not in new,(p,name)

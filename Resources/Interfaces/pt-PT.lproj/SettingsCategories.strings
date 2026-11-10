@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Carateres invisíveis";
 "catalog.appearance.7.0.item.1" = "Texto entre parênteses";
 "catalog.appearance.7.0.item.2" = "Chavetas";
+"catalog.appearance.7.0.item.3" = "Largura total";
+"catalog.appearance.7.0.item.4" = "Largura total (fundo)";
 "group.appearance.8.title" = "Cores: SyncTeX e cópia de imagens";
 "catalog.appearance.8.0.item.0" = "SyncTeX na pré-visualização";
 "catalog.appearance.8.0.item.1" = "SyncTeX no código-fonte";

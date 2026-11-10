@@ -650,6 +650,16 @@
         "class": "TSPrefThemesController"
       },
       {
+        "ivar": "EditorHighlightZenkakuSymbolColorWell",
+        "property": "EditorHighlightZenkakuSymbolColorWell",
+        "class": "TSPrefThemesController"
+      },
+      {
+        "ivar": "EditorHighlightZenkakuSymbolBackgroundColorWell",
+        "property": "EditorHighlightZenkakuSymbolBackgroundColorWell",
+        "class": "TSPrefThemesController"
+      },
+      {
         "ivar": "EditorHighlightContentColorWell",
         "property": "EditorHighlightContentColorWell",
         "class": "TSPrefThemesController"
@@ -2869,6 +2879,20 @@
         "value": "EditorHighlightBracesChanged:"
       },
       {
+        "key": "0Uo-lK-RFI.action",
+        "view": "settings.0Uo-lK-RFI",
+        "kind": "view",
+        "property": "action",
+        "value": "EditorHighlightZenkakuSymbolChanged:"
+      },
+      {
+        "key": "et7-Ed-flT.action",
+        "view": "settings.et7-Ed-flT",
+        "kind": "view",
+        "property": "action",
+        "value": "EditorHighlightZenkakuSymbolBackgroundChanged:"
+      },
+      {
         "key": "pp5-6n-eid.action",
         "view": "settings.pp5-6n-eid",
         "kind": "view",
@@ -3641,7 +3665,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Escape",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Actions"
+          "ycd-ZH-bzw.title": "Actions",
+          "UQx-ul-Ju9.title": "Fullwidth",
+          "88w-SL-CUz.title": "Fullwidth (Background)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
@@ -5987,6 +6013,20 @@
           "value": "Braces"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Fullwidth"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Fullwidth (Background)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -6942,7 +6982,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Escape",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Aktionen"
+          "ycd-ZH-bzw.title": "Aktionen",
+          "UQx-ul-Ju9.title": "Vollbreit",
+          "88w-SL-CUz.title": "Vollbreit (Hintergrund)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Sollte AUS sein für die meisten Systeme)",
@@ -9288,6 +9330,20 @@
           "value": "Klammer"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Vollbreit"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Vollbreit (Hintergrund)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -10243,7 +10299,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Escape",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Acciones"
+          "ycd-ZH-bzw.title": "Acciones",
+          "UQx-ul-Ju9.title": "Ancho completo",
+          "88w-SL-CUz.title": "Ancho completo (fondo)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(En general, desactivado.)",
@@ -12589,6 +12647,20 @@
           "value": "Delimitador"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Ancho completo"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Ancho completo (fondo)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -13544,7 +13616,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Échappement",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Actions"
+          "ycd-ZH-bzw.title": "Actions",
+          "UQx-ul-Ju9.title": "Pleine chasse",
+          "88w-SL-CUz.title": "Pleine chasse (fond)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "Obsoleto; dovrebbe essere spento",
@@ -15890,6 +15964,20 @@
           "value": "Accolades"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Pleine chasse"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Pleine chasse (fond)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -16845,7 +16933,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Escape",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Azioni"
+          "ycd-ZH-bzw.title": "Azioni",
+          "UQx-ul-Ju9.title": "Larghezza piena",
+          "88w-SL-CUz.title": "Larghezza piena (sfondo)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
@@ -19191,6 +19281,20 @@
           "value": "Parentesi"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Larghezza piena"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Larghezza piena (sfondo)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -20146,7 +20250,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "エスケープ",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "動作"
+          "ycd-ZH-bzw.title": "動作",
+          "UQx-ul-Ju9.title": "全角英数記号",
+          "88w-SL-CUz.title": "全角英数記号の背景"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "（通常はオフに）",
@@ -22492,6 +22598,20 @@
           "value": "波括弧"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "全角英数記号"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "全角英数記号の背景"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -23447,7 +23567,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "에스케이프",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "작업"
+          "ycd-ZH-bzw.title": "작업",
+          "UQx-ul-Ju9.title": "전각 영숫자·기호",
+          "88w-SL-CUz.title": "전각 영숫자·기호 배경"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(옛날 방식. 비활성화됨)",
@@ -25793,6 +25915,20 @@
           "value": "중괄호"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "전각 영숫자·기호"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "전각 영숫자·기호 배경"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -26748,7 +26884,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Escape-teken",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Acties"
+          "ycd-ZH-bzw.title": "Acties",
+          "UQx-ul-Ju9.title": "Volle breedte",
+          "88w-SL-CUz.title": "Volle breedte (achtergrond)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
@@ -29094,6 +29232,20 @@
           "value": "Accolades"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Volle breedte"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Volle breedte (achtergrond)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -30049,7 +30201,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Caráter de escape",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Ações"
+          "ycd-ZH-bzw.title": "Ações",
+          "UQx-ul-Ju9.title": "Largura total",
+          "88w-SL-CUz.title": "Largura total (fundo)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
@@ -32395,6 +32549,20 @@
           "value": "Chavetas"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Largura total"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Largura total (fundo)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -33350,7 +33518,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Escape",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Ações"
+          "ycd-ZH-bzw.title": "Ações",
+          "UQx-ul-Ju9.title": "Largura total",
+          "88w-SL-CUz.title": "Largura total (fundo)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "Deve permanecer DESATIVADO  para a maioria dos usuários",
@@ -35696,6 +35866,20 @@
           "value": "Parêntesis"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Largura total"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Largura total (fundo)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -36651,7 +36835,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "Caracter de escape",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "Acțiuni"
+          "ycd-ZH-bzw.title": "Acțiuni",
+          "UQx-ul-Ju9.title": "Lățime completă",
+          "88w-SL-CUz.title": "Lățime completă (fundal)"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
@@ -38997,6 +39183,20 @@
           "value": "Acolade"
         },
         {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "Lățime completă"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "Lățime completă (fundal)"
+        },
+        {
           "key": "yPD-Wd-E6K.title",
           "view": "settings.2pA-Xa-68E",
           "kind": "cell",
@@ -39952,7 +40152,9 @@
           "jw1-hy-rHZ.title": "key",
           "O6J-e1-meg.title": "转义符",
           "JAR-4h-Udf.title": "msg",
-          "ycd-ZH-bzw.title": "操作"
+          "ycd-ZH-bzw.title": "操作",
+          "UQx-ul-Ju9.title": "全角字母数字符号",
+          "88w-SL-CUz.title": "全角字母数字符号背景"
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(通常无需开启)",
@@ -42296,6 +42498,20 @@
           "kind": "cell",
           "property": "title",
           "value": "括号"
+        },
+        {
+          "key": "UQx-ul-Ju9.title",
+          "view": "settings.tPl-K1-TUE",
+          "kind": "cell",
+          "property": "title",
+          "value": "全角字母数字符号"
+        },
+        {
+          "key": "88w-SL-CUz.title",
+          "view": "settings.oZu-II-zIi",
+          "kind": "cell",
+          "property": "title",
+          "value": "全角字母数字符号背景"
         },
         {
           "key": "yPD-Wd-E6K.title",
