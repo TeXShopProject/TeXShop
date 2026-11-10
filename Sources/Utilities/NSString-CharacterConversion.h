@@ -28,6 +28,10 @@
 FOUNDATION_EXPORT NSUInteger TSAdobeJapan1CIDForSequence(NSString *sequence);
 /// The base character of a sequence made of one character and one variation selector, or nil.
 FOUNDATION_EXPORT NSString *TSBaseOfVariationSequence(NSString *sequence);
+/// The number of control characters (line breaks, tabs, ...) at the start of a composed
+/// character sequence. A control character takes the combining marks after it into its
+/// sequence; it is kept as it is, and the marks are converted on their own.
+FOUNDATION_EXPORT NSUInteger TSLeadingControlCharacters(NSString *string, NSRange sequence);
 
 @interface NSString (TSCharacterConversion)
 

@@ -121,6 +121,12 @@ static void CheckStrings(void)
     // Only sequences that Hiragino (Adobe-Japan1) draws as one glyph of its own become \CID.
     Check(@"CID only for Adobe-Japan1 glyphs", [@"\U0001F600|e\u0301|\U0001F468\u200D\U0001F469\u200D\U0001F467|\u8FBB\U000E0101|\U0002000B" stringByReplacingUnicodeCharactersWithUTF],
           @"\U0001F600|\\CID{201}|\U0001F468\u200D\U0001F469\u200D\U0001F467|\\CID{8267}|\\CID{13839}");
+    // A line break or tab takes a following combining mark into its composed sequence:
+    // it stays, and the mark is converted on its own (it became one \CID, losing the line break).
+    Check(@"line break before a combining mark", [@"あ\ńい|\r\ń|\t́|\ń\nx" stringByReplacingUnicodeCharactersWithUTF],
+          @"あ\n\\UTF{0301}い|\r\n\\UTF{0301}|\t\\UTF{0301}|\n\\UTF{0301}%\nx");
+    Check(@"line break before marks without a CID", [@"\ń̂|\né" stringByReplacingUnicodeCharactersWithUTF],
+          @"\ń̂|\n\\CID{201}");
     // ㊐..㊡ are \ajMaruYobi (they were written as \ajKakkoYobi, and ㊡ was read as ㊗).
     Check(@"to ajMaruYobi", [@"㊐㊊㊏㊗㊡|㈰㈪㈷㉁" stringByReplacingUnicodeCharactersWithAjMacros],
           @"\\ajMaruYobi{1}\\ajMaruYobi{2}\\ajMaruYobi{7}\\ajMaruYobi{8}\\ajMaruYobi{9}|\\ajKakkoYobi{1}\\ajKakkoYobi{2}\\ajKakkoYobi{8}\\ajKakkoYobi{9}");
