@@ -27,14 +27,14 @@ xcodebuild -project TeXShop.xcodeproj -scheme TeXShop \
 
 The current main application target declares macOS 14.6 as its deployment target. This build setting is not a tested release support matrix. Review the project settings against the Xcode SDK you use.
 
-Tests are in `Tests/`. Release notes, the update procedure and notes on bundled libraries are in `Documentation/`; `Documentation/Legacy/` keeps documents from the original development. Launching the full application can update `~/Library/TeXShop`; use a separate test account or protect your existing configuration before testing development builds.
+Tests are in [`Tests/`](Tests/). [Release notes](Documentation/Releases/), [the update procedure](Documentation/Sparkle-updates.md) and [notes on bundled libraries](Documentation/Bundled-libraries.md) are in [`Documentation/`](Documentation/); [`Documentation/Legacy/`](Documentation/Legacy/) keeps documents from the original development. Launching the full application can update `~/Library/TeXShop`; use a separate test account or protect your existing configuration before testing development builds.
 
 ## Reporting bugs
 
-Include the TeXShop version, macOS version, reproduction steps, and a minimal example. Remove private information from documents and crash reports before posting them in Issues.
+Include the TeXShop version, macOS version, reproduction steps, and a minimal example. Remove private information from documents and crash reports before posting them in [Issues](https://github.com/TeXShopProject/TeXShop/issues).
 
 ## License and acknowledgments
 
-TeXShop source headers specify the GNU General Public License, version 2 or (at your option) any later version. See [the GPL v2 text](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html). Bundled third-party components have their own license notices; those terms are unchanged.
+TeXShop source headers specify the GNU General Public License, version 2 or (at your option) any later version. See [`LICENSE`](LICENSE) or [the GPL v2 text](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html). Bundled third-party components have their own license notices; those terms are unchanged.
 
-Thank you to Richard Koch and all contributors, translators, documentation authors, and users who have supported TeXShop since 2000. See `Credits.rtf` and the original source notices for credits.
+Thank you to Richard Koch and all contributors, translators, documentation authors, and users who have supported TeXShop since 2000. See [`Credits.rtf`](Resources/Interfaces/en.lproj/Credits.rtf) and the original source notices for credits.
