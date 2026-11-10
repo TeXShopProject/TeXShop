@@ -5,6 +5,7 @@
 #import <Quartz/Quartz.h>
 #import <objc/runtime.h>
 #import "TSOutlineExpansion.h"
+#import "TestAppKitIsolation.h"
 
 static int failures = 0;
 #define CHECK(cond, ...) do { if (cond) { printf("ok   "); } else { printf("FAIL "); failures++; } printf(__VA_ARGS__); printf("\n"); } while (0)
@@ -89,6 +90,7 @@ static void Toggle(NSOutlineView *v, NSString *label, NSInteger nth, BOOL open)
 int main(int argc, char **argv)
 {
     @autoreleasepool {
+        TSInstallAppKitIsolation();
         [NSApplication sharedApplication];
         method_exchangeImplementations(class_getClassMethod([NSEvent class], @selector(modifierFlags)),
                                        class_getClassMethod([NSEvent class], @selector(test_modifierFlags)));

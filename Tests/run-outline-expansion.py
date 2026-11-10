@@ -2,6 +2,7 @@
 """Check that open entries of the Preview drawer's outline stay open after the PDF is read again."""
 from pathlib import Path
 import argparse
+import os
 import re
 import subprocess
 import tempfile
@@ -40,10 +41,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-outline-expansion-') as directo
         implementation.write_text(text.replace(old, new))
     executable = Path(directory) / 'probe'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'Quartz',
-                    *include_args(root), str(implementation), str(root / 'Tests/OutlineExpansion.m'),
+                    '-I', str(root / 'Tests'), *include_args(root), str(implementation), str(root / 'Tests/OutlineExpansion.m'),
                     '-o', str(executable)], check=True)
+    home = Path(directory) / 'home'
+    (home / 'Library/Preferences').mkdir(parents=True)
+    env = dict(os.environ, HOME=str(home), CFFIXED_USER_HOME=str(home))
     result = subprocess.run([str(executable), str(root / 'DocumentSources/Manual Source/Manual.pdf')],
-                            capture_output=True, text=True)
+                            capture_output=True, text=True, env=env, timeout=120)
     print(result.stdout, end='')
     if args.mutation:
         assert result.returncode != 0, 'mutation %s was not detected' % args.mutation
