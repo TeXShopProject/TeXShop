@@ -188,13 +188,15 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     self.contentScroll.hasVerticalScroller = YES;
     self.contentScroll.autohidesScrollers = YES;
     self.contentScroll.drawsBackground = NO;
-    self.contentScroll.automaticallyAdjustsContentInsets = NO;
+    // As in System Settings, the content scrolls under the toolbar; AppKit insets it
+    // by the titlebar height and draws the scroll edge effect (macOS 26 and later).
+    self.contentScroll.automaticallyAdjustsContentInsets = YES;
     [content.view addSubview:self.contentScroll];
     self.contentBottom = [self.contentScroll.bottomAnchor constraintEqualToAnchor:content.view.bottomAnchor];
     [NSLayoutConstraint activateConstraints:@[
         [self.contentScroll.leadingAnchor constraintEqualToAnchor:content.view.leadingAnchor],
         [self.contentScroll.trailingAnchor constraintEqualToAnchor:content.view.trailingAnchor],
-        [self.contentScroll.topAnchor constraintEqualToAnchor:content.view.safeAreaLayoutGuide.topAnchor],
+        [self.contentScroll.topAnchor constraintEqualToAnchor:content.view.topAnchor],
         self.contentBottom]];
     [self.splitController addSplitViewItem:[NSSplitViewItem splitViewItemWithViewController:content]];
     window.contentViewController = self.splitController;
@@ -343,7 +345,8 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
             [NSLayoutConstraint activateConstraints:@[
                 [scroll.leadingAnchor constraintEqualToAnchor:self.contentScroll.leadingAnchor],
                 [scroll.trailingAnchor constraintEqualToAnchor:self.contentScroll.trailingAnchor],
-                [scroll.topAnchor constraintEqualToAnchor:self.contentScroll.topAnchor],
+                // The Keyboard pane does not scroll vertically; keep it below the toolbar.
+                [scroll.topAnchor constraintEqualToAnchor:parent.safeAreaLayoutGuide.topAnchor],
                 [scroll.bottomAnchor constraintEqualToAnchor:self.contentScroll.bottomAnchor],
                 [document.widthAnchor constraintGreaterThanOrEqualToConstant:700],
                 width, height,
@@ -371,11 +374,18 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     [self synchronizeSidebarSelection];
     [self.contentScroll.documentView setAccessibilityLabel:self.window.title];
     [self.stateStore saveSelectedCategory:identifier];
-    [self.contentScroll.contentView scrollToPoint:NSZeroPoint];
-    [self.contentScroll reflectScrolledClipView:self.contentScroll.contentView];
+    [self scrollContentToTop];
     [self.window recalculateKeyViewLoop];
     [self updateNavigation];
     [self applySearchHighlight];
+}
+// The top of the content is below the toolbar: the clip view starts above the
+// document by the top content inset.
+- (void)scrollContentToTop
+{
+    [self.contentScroll layoutSubtreeIfNeeded];
+    [self.contentScroll.contentView scrollToPoint:NSMakePoint(0, -self.contentScroll.contentInsets.top)];
+    [self.contentScroll reflectScrolledClipView:self.contentScroll.contentView];
 }
 - (void)synchronizeSidebarSelection
 {

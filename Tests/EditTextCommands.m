@@ -98,8 +98,29 @@ static void CheckStrings(void)
     Check(@"from UTF", [@"\\UTF{9AD9}\\UTF{9ad9}\\UTF{ZZZZ}" stringByReplacingUTFWithUnicodeCharacters], @"髙髙\\UTF{ZZZZ}");
     Check(@"from CID", [@"\\CID{1}|\\CID{13706}|\\CID{23057}|\\CID{99999}|\\CID{0}" stringByReplacingUTFWithUnicodeCharacters],
           @" |𠮷|\u9FA3|\\CID{99999}|\\CID{0}");
+    // Reading decodes only what saving with utf.sty output writes: commands for characters
+    // outside JIS X 0208 (and ～/－). JIS characters, escaped backslashes and surrogates stay.
     Check(@"UTF commands when reading", [@"\\UTF{9AD9}\\UTFK{FF5E}\\UTFC{ff0d}\\UTFT{3042}\\UTF{ZZZZ}～－" stringByDecodingUTFCommandsForReading],
-          @"髙〜−あ\\UTF{ZZZZ}～－");
+          @"髙〜−\\UTFT{3042}\\UTF{ZZZZ}～－");
+    Check(@"literal UTF examples when reading", [@"\\verb|\\UTF{0041}| \\\\UTF{0041} \\\\UTF{9DD7} \\\\\\UTF{9DD7}" stringByDecodingUTFCommandsForReading],
+          @"\\verb|\\UTF{0041}| \\\\UTF{0041} \\\\UTF{9DD7} \\\\鷗");
+    Check(@"surrogate boundaries when reading", [@"\\UTF{D7FF}\\UTF{D800}\\UTF{DBFF}\\UTF{DC00}\\UTF{DFFF}\\UTF{E000}" stringByDecodingUTFCommandsForReading],
+          @"\uD7FF\\UTF{D800}\\UTF{DBFF}\\UTF{DC00}\\UTF{DFFF}\uE000");
+    Check(@"surrogate boundaries from UTF", [@"\\UTF{D7FF}\\UTF{D800}\\UTF{DBFF}\\UTF{DC00}\\UTF{DFFF}\\UTF{E000}\\UTF{0041}\\\\UTF{0041}" stringByReplacingUTFWithUnicodeCharacters],
+          @"\uD7FF\\UTF{D800}\\UTF{DBFF}\\UTF{DC00}\\UTF{DFFF}\uE000A\\\\UTF{0041}");
+    Require(@"decoded text is valid Unicode", [[@"\\UTF{D800}x" stringByDecodingUTFCommandsForReading] UTF8String] != NULL && [[@"\\UTF{D800}x" stringByReplacingUTFWithUnicodeCharacters] UTF8String] != NULL);
+    // Variation sequences become \CID only when Hiragino registers them (format 14 cmap).
+    Check(@"variation sequences", [@"\u845B\U000E01EF|\u845B\uFE0F|\u845B\U000E0100|\u8FBB\U000E0101" stringByReplacingUnicodeCharactersWithUTF],
+          @"\u845B\U000E01EF|\u845B\uFE0F|\\CID{1481}|\\CID{8267}");
+    // Manual decoding reads the original text once: escaped commands stay, and a command
+    // produced by a replacement is not decoded again.
+    Check(@"escaped CID", [@"\\CID{13706}|\\\\CID{13706}|\\\\\\CID{13706}|\\\\\\\\CID{13706}|\\CID{99999}" stringByReplacingUTFWithUnicodeCharacters],
+          @"\U00020BB7|\\\\CID{13706}|\\\\\U00020BB7|\\\\\\\\CID{13706}|\\CID{99999}");
+    Check(@"no second pass", [@"\\UTF{005C}CID{13706}|\\UTF{005C}UTF{9AD9}" stringByReplacingUTFWithUnicodeCharacters],
+          @"\\CID{13706}|\\UTF{9AD9}");
+    // Only sequences that Hiragino (Adobe-Japan1) draws as one glyph of its own become \CID.
+    Check(@"CID only for Adobe-Japan1 glyphs", [@"\U0001F600|e\u0301|\U0001F468\u200D\U0001F469\u200D\U0001F467|\u8FBB\U000E0101|\U0002000B" stringByReplacingUnicodeCharactersWithUTF],
+          @"\U0001F600|\\CID{201}|\U0001F468\u200D\U0001F469\u200D\U0001F467|\\CID{8267}|\\CID{13839}");
     Check(@"modified NFC composes", [@"か\u3099は\u309A\uFA19" normalizedStringWithModifiedNFC], @"がぱ\uFA19");
     Check(@"modified NFC keeps text made only of excluded characters", [@"\uFA19\uFA19" normalizedStringWithModifiedNFC], @"\uFA19\uFA19");
     Check(@"modified NFD keeps compatibility ideographs", [@"が\uFA19" normalizedStringWithModifiedNFD], @"か\u3099\uFA19");

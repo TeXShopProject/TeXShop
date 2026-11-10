@@ -2613,7 +2613,7 @@ The Backward/Forward arrows in the Preview window toolbar work  like similar arr
 \section{Popup Windows and Hovering Over Links}
 \label{Popup_Windows_Section}
 Hovering over a link will bring up a small view of the linked text. For instance, hovering over a section number in the table of contents will display the beginning of that section in the text. 
-The popup is as wide as the text column on the linked page, so complete lines are visible; in a two-column document it shows only the column containing the link target. The popup becomes smaller only when the Preview window is too narrow for it, and then never below half size.
+The popup is as wide as the text column on the linked page plus a margin of about 5\% of the column, so complete lines are visible and a pinned popup has room to scroll; in a two-column document it shows only the column containing the link target. The popup becomes smaller only when the Preview window is too narrow for it, and then never below half size. Its lower right corner shows the label of the linked page, such as ``Page 157''. This is the page number given in the PDF, which may differ from the page's position in the file, as in a book whose front matter is numbered i, ii, \ldots; a PDF without page labels shows that position. While link popups are on, the ``Go to page'' tool tip that would otherwise appear over such a link is left out, since it could cover the text.
 Normally the popup is on screen for four seconds and then disappears. This behavior can be changed with a
 modifier key, as explained below.
 
@@ -2625,7 +2625,13 @@ If you click in the contents of the Preview window while the Control key is down
 \label{Modifying_Popup_Windows_Section}
 The details of the small window created by hovering over a link can be changed by holding down any combination of three modifier keys  before moving a mouse to the link. These modifying keys have been selected so their names give a mnemonic for the effect they create. The SHIFT key shifts the small window to appear above the link, rather than  below it. The COMMAND key commands that a bigger window with larger text be displayed. The OPTION key pins the popup on screen, so you can move the pointer to explain the relationship between the linked text and the surrounding page. Release Option and the popup stays visible; press Escape to dismiss it. Option can also be pressed while an ordinary popup is already visible to pin it. Shift and Command can still be combined with Option.
 
-A pinned popup can be moved out of the way by dragging its inside, and resized by dragging its edges or corners; resizing shows more or less of the page at the same text size. Scrolling with the pointer over a pinned popup scrolls the page inside it, which helps when the popup does not start at the interesting part, as often happens with multi-line formulas. Clicking inside a pinned popup does not dismiss it. Clicking in the preview outside the popup, changing pages or zoom, switching windows, reloading the PDF, or closing the preview also dismisses the popup. Release the modifier keys before pressing Escape; modified Escape shortcuts retain their usual behavior.
+A pinned popup can be moved out of the way by dragging it, even until only a small part of it remains in view, and resized by dragging its edges or corners; resizing shows more or less of the page at the same text size. Scrolling with the pointer over a pinned popup scrolls the page inside it, which helps when the popup does not start at the interesting part, as often happens with multi-line formulas.
+
+The tool chosen in the Preview toolbar also applies inside a pinned popup. With the hand, dragging anywhere inside the popup moves it. With any other tool, the popup behaves like the text tool: dragging over text selects and highlights it, so it can be copied, double-clicking selects a word, and dragging where there is no text moves the popup. The pointer shows which of these will happen.
+
+A pinned popup stays until Escape is pressed; clicking inside it, or in the preview outside it, for instance to select text there, does not dismiss it. Changing pages or zoom, switching windows, reloading the PDF, or closing the preview dismisses it. Release the modifier keys before pressing Escape; modified Escape shortcuts retain their usual behavior.
+
+When the Preview window is split (see \cref{Splitting_Windows_Section}), each part can show its own pinned popup.
 
 
 
@@ -3589,7 +3595,7 @@ You can  remove Themes you no longer use by removing their plist files from the 
 
 Selecting a theme to edit fills the color wells. Choosing Lite Mode or Dark Mode themes saves those selections and updates the corresponding documents immediately.
 
-Finally we explain the actual color choices. At the top of the Theme Panel, the Foreground and Background colors can be set for the Source, Console, and Log Windows, and the Background color can be set for the Preview Window. For each of these except the Log window, transparency can also be set. In color theory, alpha value sets transparency.  Window opacity is set with a slider and a numeric field from 0\% (transparent) to 100\% (opaque).
+Finally we explain the actual color choices. At the top of the Theme Panel, the Foreground and Background colors can be set for the Source, Console, and Log Windows, and the Background color can be set for the Preview Window. For each of these except the Log window, transparency can also be set. In color theory, alpha value sets transparency.  Window opacity is set with a slider and a numeric field from 0\% (transparent) to 100\% (opaque). The colors themselves are always opaque, so their color wells offer no opacity.
 
 Why can we set the Background Color of the Preview Window, but not its Foreground Color? That is because pdf files created by TeX have an invisible background color. When such a file is printed, the result is black characters on the actual paper. If the pdf had a background color, then the printer might print a grayish wash over the entire page, which is clearly undesirable. So TeXShop can independently set the background of the Preview Window, and it will appear except when covered by actual letters. Note that when such a document is printed, the background color setting of Preview will be ignored because this information is not in the pdf file.
 
@@ -3704,6 +3710,7 @@ all consist of a string with no spaces. More precisely, this string can contain 
  
 \chapter{Splitting Windows}
 \section{Splitting Source and Preview Windows}
+\label{Splitting_Windows_Section}
 
 The toolbars for the source and preview window each contain an icon containing two stacked rectangles. This item ``splits the window'' into two independent parts. This makes it possible to examine one portion of the document while writing a separate portion. The icon is a toggle which both splits and unsplits the window.
 
@@ -4045,7 +4052,8 @@ If this popup window covers something important, press the shift key when hoveri
 By default, the popup window disappears after four seconds or when you move the mouse.
 This is probably long enough for you, but not for your audience.
 So exercise the option to pin the popup window by pressing the option key when hovering over the link, or while the popup is visible. You can then move the pointer freely while explaining; press Escape to close the popup.
-A pinned popup can be dragged to another place, resized at its edges, and scrolled to show more of the linked page.
+A pinned popup can be dragged to another place, even almost out of the window, resized at its edges, and scrolled to show more of the linked page.
+It stays until you press Escape, so you can select text to highlight it, in the preview or in the popup, while you explain.
 When the default popup window it too small -- no problem.
 You are in command, so press the command key when hovering over the link for a larger window!
 Of course, any combination of the three modifier keys also works as expected.
@@ -4280,7 +4288,7 @@ The submenu ``Character Type Conversion'' is mainly useful for Japanese document
 \item between hiragana and katakana,
 \item between fullwidth and halfwidth digits, and between fullwidth and halfwidth Latin letters,
 \item between circled and parenthesized numbers and letters, Roman numerals and similar characters, and the commands of the \texttt{ajmacros} package which print them, for example \verb|\ajMaru{1}| for a circled~1,
-\item between characters outside the JIS~X~0208 character set and the \verb|\UTF{...}| and \verb|\CID{...}| commands, which the \texttt{otf} package provides for pLaTeX and upLaTeX,
+\item between characters outside the JIS~X~0208 character set and the \verb|\UTF{...}| and \verb|\CID{...}| commands, which the \texttt{otf} package provides for pLaTeX and upLaTeX; a character sequence such as a variant ideograph becomes \verb|\CID{...}| only when it has an Adobe-Japan1 glyph, and emoji and other sequences without one are left unchanged,
 \item from curly quotation marks to the TeX forms \verb|`|, \verb|'|, \verb|``| and \verb|''|.
 \end{itemize}
 When a converted command ends a line, a \verb|%| is added after it so that the line break does not produce a space.

@@ -224,8 +224,11 @@ int main(int argc,char **argv){@autoreleasepool{
  NSColorWell *cursor=[owner valueForKey:@"BlockCursorColorWell"];
  for(NSColor *color in @[[NSColor colorWithCalibratedWhite:0.37 alpha:0.6],NSColor.systemRedColor]) {
   cursor.color=color;@try {[owner BlockCursorColorChanged:cursor];} @catch(NSException *exception){Check(NO,@"Cursor action stores converted RGB from its sender");}NSColor *rgb=[color colorUsingColorSpace:NSColorSpace.genericRGBColorSpace];
+  Check(!cursor.supportsAlpha,@"The block cursor color offers no opacity");
   Check(fabs([memory doubleForKey:BlockCursorRKey]-rgb.redComponent)<0.0001 && fabs([memory doubleForKey:BlockCursorGKey]-rgb.greenComponent)<0.0001 && fabs([memory doubleForKey:BlockCursorBKey]-rgb.blueComponent)<0.0001,@"Cursor action stores converted RGB from its sender");
-  NSMutableDictionary *theme=[NSMutableDictionary dictionary];@try {[[TSColorSupport sharedInstance] changeColorValueInDictionary:theme forKey:@"probe" fromColorWell:cursor];} @catch(NSException *exception){Check(NO,@"Theme wells store converted RGBA");}NSArray *saved=theme[@"probe"];
+  // The block cursor well is opaque; a theme well whose opacity is used keeps alpha.
+  NSColorWell *themeWell=[NSColorWell new];themeWell.supportsAlpha=YES;themeWell.color=color;
+  NSMutableDictionary *theme=[NSMutableDictionary dictionary];@try {[[TSColorSupport sharedInstance] changeColorValueInDictionary:theme forKey:@"probe" fromColorWell:themeWell];} @catch(NSException *exception){Check(NO,@"Theme wells store converted RGBA");}NSArray *saved=theme[@"probe"];
   Check(saved.count==4 && fabs([saved[0] doubleValue]-rgb.redComponent)<0.0001 && fabs([saved[1] doubleValue]-rgb.greenComponent)<0.0001 && fabs([saved[2] doubleValue]-rgb.blueComponent)<0.0001 && fabs([saved[3] doubleValue]-rgb.alphaComponent)<0.0001,@"Theme wells store converted RGBA");
  }
  // The Appearance pane is detached; an unreadable theme still disables all of its wells.

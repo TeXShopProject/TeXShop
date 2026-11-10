@@ -27,6 +27,7 @@
 #import "globals.h"
 #import "GlobalData.h"
 #import "NSString-Extras.h"  //Terada
+#import "NSString-CharacterConversion.h"
 #include <sys/xattr.h>
 
 static NSString *yenString = nil;
@@ -1342,9 +1343,39 @@ static NSString *TSTextForSaving(NSString *text, NSStringEncoding encoding)
 				utfString = [NSMutableString stringWithFormat:@"%CCID{%ld}",
                              (unichar)g_texChar,(unsigned long)[aGlyph characterIdentifier]];
 			} else if (charRange.length > 1) {
-				NSLayoutManager *aLayout = [dataView layoutManager];
-				utfString = [NSMutableString stringWithFormat:@"%CCID{%d}", (unichar)g_texChar,
-                             [aLayout glyphAtIndex:charRange.location]];
+				// Prefer the Adobe-Japan1 CID; the editor font's glyph number is one only
+				// when that font is an Adobe-Japan1 font such as Hiragino.
+				NSUInteger cid = TSAdobeJapan1CIDForSequence(subString);
+				NSString *base = (cid == NSNotFound) ? TSBaseOfVariationSequence(subString) : nil;
+				if (base != nil) {
+					// The font does not register this variation sequence, and the encoding
+					// cannot keep the selector: write the base character alone.
+					cid = (base.length > 1) ? TSAdobeJapan1CIDForSequence(base) : NSNotFound;
+					if ([base canBeConvertedToEncoding: CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISO_2022_JP)]) {
+						// An ordinary character: no command, so no "%" at the line end.
+						[newString appendString: base];
+						charRange.location += charRange.length;
+						charRange.length = 1;
+						continue;
+					} else if (base.length == 1)
+						utfString = [NSMutableString stringWithFormat:@"%CUTF{%04X}", (unichar)g_texChar, [base characterAtIndex:0]];
+					else if (cid != NSNotFound)
+						utfString = [NSMutableString stringWithFormat:@"%CCID{%lu}", (unichar)g_texChar, (unsigned long)cid];
+					else
+						utfString = nil;
+				} else if (cid != NSNotFound) {
+					utfString = [NSMutableString stringWithFormat:@"%CCID{%lu}", (unichar)g_texChar, (unsigned long)cid];
+				} else {
+					utfString = nil;
+				}
+				if (utfString == nil) {
+					// As before: the glyph number in the editor font, which is an Adobe-Japan1
+					// CID only in such a font. Emoji and other sequences Hiragino cannot draw
+					// as one glyph have no CID, and the encoding cannot keep them.
+					NSLayoutManager *aLayout = [dataView layoutManager];
+					utfString = [NSMutableString stringWithFormat:@"%CCID{%lu}", (unichar)g_texChar,
+						(unsigned long)[aLayout glyphAtIndex:[aLayout glyphIndexForCharacterAtIndex:charRange.location]]];
+				}
 				// 0x2014,0x2015 fix (reported by Kino-san)
 			} else if ( [subString characterAtIndex: 0] == 0x2015) {
 				utfString = [NSMutableString stringWithFormat:@"%C", (unichar)0x2014];

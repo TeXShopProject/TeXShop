@@ -48,9 +48,9 @@ You can handle such Unicode characters with pTeX by using otf.sty.
 
 <p> However, it is too difficult for normal users to input sources in this way.
 The TeXShop setting "otf Package Support" helps this.
-When this setting is on, "鷗" is converted to "\UTF{9DD7}" when the document is saved. When a document is opened, "\UTF{9DD7}" is converted back to "鷗" whether or not this setting is on.
+When this setting is on, "鷗" is converted to "\UTF{9DD7}" when the document is saved. When a document is opened, "\UTF{9DD7}" is converted back to "鷗" whether or not this setting is on. Only commands for characters outside JIS X 0208, which saving writes, are converted back; a command written after an escaped backslash, such as "\\UTF{9DD7}", is left as it is.
 Other characters outside JIS X 0208 are converted in the same way.
-A glyph variant chosen in the editor or a character outside the Basic Multilingual Plane is written as "\CID{number}" instead, using the glyph number in the editor font; use a font such as Hiragino, whose glyph numbers are Adobe-Japan1 CIDs.
+A glyph variant chosen in the editor or a character outside the Basic Multilingual Plane is written as "\CID{number}" instead, using its Adobe-Japan1 CID as drawn in Hiragino. A glyph variant counts only when Hiragino registers it; otherwise the variation selector cannot be kept and the base character is written alone. If Hiragino has no single glyph for a character, the glyph number in the editor font is used, which is a CID only in an Adobe-Japan1 font such as Hiragino.
 If a converted character ends a line, "%" is added after it so that no space appears in the output.
 U+2015 HORIZONTAL BAR is written as U+2014 EM DASH, which pTeX can read.
 Thanks to this feature, users can handle UTF-8 sources seamlessly as if pTeX interpreted UTF-8 source directly.

@@ -7,6 +7,7 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
 @property (copy) NSArray<NSMenuItem *> *proposals;
 - (instancetype)initWithPopup:(NSPopUpButton *)popup title:(NSString *)title;
 @end
+static NSMutableArray<NSView *> *TSCatalogGroupPopups;
 @implementation TSSettingsProfilePresentation
 - (instancetype)initWithPopup:(NSPopUpButton *)popup title:(NSString *)title
 {
@@ -96,6 +97,7 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
     if([kind isEqual:@"switch"] || [kind isEqual:@"switchpopup"]){
         NSButton *source=(NSButton *)controls.firstObject;source.title=title;
         NSView *toggle=[TSPrefPaneLayout switchForButton:source];
+        if([kind isEqual:@"switchpopup"])[TSCatalogGroupPopups addObject:controls[1]];
         accessory=[kind isEqual:@"switchpopup"]?[self horizontal:@[controls[1],toggle] spacing:12]:toggle;
     }else if([kind isEqual:@"popup"]){
         if([controls.firstObject.identifier isEqual:@"settings.1089"]){
@@ -201,9 +203,16 @@ static id TSCatalogRequired(id value) { if(value==nil) [NSException raise:NSInte
             TSSettingsGroupView *group=[TSSettingsGroupView new];group.identifier=model[@"id"];group.title=text(model[@"title"]);group.accessibilityLabel=group.title;
             NSTextField *heading=[self label:group.title small:NO];heading.font=[NSFont boldSystemFontOfSize:NSFont.systemFontSize];heading.identifier=[@"heading." stringByAppendingString:TSCatalogRequired(group.identifier)];
             NSMutableArray *rows=[NSMutableArray arrayWithObject:heading];
+            TSCatalogGroupPopups=[NSMutableArray array];
             for(NSDictionary *row in model[@"rows"]){NSView *built=[self buildRow:row views:views text:text];if(built)[rows addObject:built];}
             NSView *content=group.contentView;
             [TSPrefPaneLayout attachRows:rows toView:content];
+            // The pop-up menus beside switches in one group share one width: that of the
+            // widest menu, also when items are added after the pane is built.
+            if(TSCatalogGroupPopups.count>1){NSView *first=TSCatalogGroupPopups.firstObject;
+                for(NSView *popup in TSCatalogGroupPopups){[popup setContentCompressionResistancePriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationHorizontal];[popup setContentHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+                    if(popup!=first)[popup.widthAnchor constraintEqualToAnchor:first.widthAnchor].active=YES;}}
+            TSCatalogGroupPopups=nil;
             [NSLayoutConstraint activateConstraints:@[[content.leadingAnchor constraintEqualToAnchor:group.leadingAnchor],[content.trailingAnchor constraintEqualToAnchor:group.trailingAnchor],[content.topAnchor constraintEqualToAnchor:group.topAnchor],[content.bottomAnchor constraintEqualToAnchor:group.bottomAnchor]]];
             [groups addObject:group];
         }
