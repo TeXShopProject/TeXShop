@@ -181,6 +181,8 @@
 @property (strong) NSMutableSet<NSString *> *skipBody;
 @property (strong) NSMutableDictionary<NSString *, NSNumber *> *envArgs;
 @property (strong) NSMutableDictionary<NSString *, NSNumber *> *skipArgs;
+// Like skipArgs, but only for commands that the document does not define itself.
+@property (strong) NSMutableDictionary<NSString *, NSNumber *> *packageArgs;
 @property (strong) NSMutableDictionary<NSString *, NSString *> *patterns; // command -> e.g. "[](){}"
 @property (strong) NSMutableArray<TSSpellRegexRule *> *regexRules;
 @property (strong) NSMutableSet<NSString *> *checkArgs;
@@ -198,6 +200,7 @@
         _skipBody = [NSMutableSet set];
         _envArgs = [NSMutableDictionary dictionary];
         _skipArgs = [NSMutableDictionary dictionary];
+        _packageArgs = [NSMutableDictionary dictionary];
         _patterns = [NSMutableDictionary dictionary];
         _regexRules = [NSMutableArray array];
         _checkArgs = [NSMutableSet set];
@@ -266,7 +269,7 @@ static TSSpellRules *ParseRules(NSString *text)
             [rules.skipBody addObjectsFromArray:args];
         }
         else if ([directive isEqualToString:@"skip-env-args"] || [directive isEqualToString:@"skip-args"]
-                 || [directive isEqualToString:@"skip-args-matching"]) {
+                 || [directive isEqualToString:@"package-args"] || [directive isEqualToString:@"skip-args-matching"]) {
             NSInteger n = [args count] ? [args[0] integerValue] : -1;
             BOOL numeric = [args count] && [args[0] rangeOfCharacterFromSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]].location == NSNotFound;
             if (!numeric || [args count] < 2) { PROBLEM(@"%@ needs a number and at least one name", directive); continue; }
@@ -274,6 +277,8 @@ static TSSpellRules *ParseRules(NSString *text)
                 for (NSUInteger i = 1; i < [args count]; i++) rules.envArgs[args[i]] = @(n);
             } else if ([directive isEqualToString:@"skip-args"]) {
                 for (NSUInteger i = 1; i < [args count]; i++) rules.skipArgs[args[i]] = @(n);
+            } else if ([directive isEqualToString:@"package-args"]) {
+                for (NSUInteger i = 1; i < [args count]; i++) rules.packageArgs[args[i]] = @(n);
             } else {
                 NSError *err = nil;
                 NSString *pattern = [NSString stringWithFormat:@"^(?:%@)$", [[args subarrayWithRange:NSMakeRange(1, [args count] - 1)] componentsJoinedByString:@" "]];
@@ -543,6 +548,7 @@ typedef struct {
     __unsafe_unretained NSMutableDictionary<NSString *, id> *environmentEnds;   // see EnvironmentEnd
     struct LanguageSpan *spans;    // language changes not yet applied to `language`; see SetLanguage
     NSUInteger spanCount, spanCapacity, spanTotal;
+    __unsafe_unretained NSSet<NSString *> *definedCommands;  // every command the text defines; see package-args
 } MaskState;
 
 static void Blank(MaskState *m, NSUInteger i, NSUInteger j)
@@ -561,6 +567,25 @@ static void Delete(MaskState *m, NSUInteger i)
     m->excluded[i] = 1;
 }
 
+// The start of the next argument after pos: spaces and tabs, and one line end, perhaps after
+// a comment, may come between the arguments of a command, as in TeX. Only one line end is
+// crossed, so a blank line ends the arguments.
+static NSUInteger NextArgument(MaskState *m, NSUInteger pos)
+{
+    const unichar *src = m->src;
+    NSUInteger n = m->n, j = pos;
+    while (j < n && (src[j] == ' ' || src[j] == '\t')) j++;
+    NSUInteger k = j;
+    if (k < n && src[k] == '%') while (k < n && !IsNewline(src[k])) k++;
+    if (k < n && IsNewline(src[k])) {
+        if (src[k] == '\r' && k + 1 < n && src[k + 1] == '\n') k++;
+        k++;
+        while (k < n && (src[k] == ' ' || src[k] == '\t')) k++;
+        if (k < n && (src[k] == '{' || src[k] == '[')) return k;
+    }
+    return j;
+}
+
 // Blank the [..] groups and up to `mandatory` {..} groups starting at pos;
 // returns the position after them.
 static NSUInteger SkipArgs(MaskState *m, NSUInteger pos, NSInteger mandatory)
@@ -568,8 +593,7 @@ static NSUInteger SkipArgs(MaskState *m, NSUInteger pos, NSInteger mandatory)
     NSInteger remaining = mandatory;
     for (;;) {
         if (mandatory > 0 && remaining == 0) break;
-        NSUInteger j = pos;
-        while (j < m->n && (m->src[j] == ' ' || m->src[j] == '\t')) j++;
+        NSUInteger j = NextArgument(m, pos);
         NSUInteger end;
         if (j < m->n && m->src[j] == '[') {
             end = BalancedEnd(m->index, j, '[', ']');
@@ -1169,6 +1193,8 @@ static NSUInteger HandleBackslash(MaskState *m, TSSpellRules *rules, NSUInteger 
         if (!cached) {
             NSInteger found = -1;
             NSNumber *count = rules.skipArgs[name];
+            // A command defined in the document is its own, whatever a package rule says.
+            if (!count && ![m->definedCommands containsObject:name]) count = rules.packageArgs[name];
             if (count) {
                 found = [count integerValue];
             } else {
@@ -1384,7 +1410,8 @@ static void RegisterEnvironment(TSSpellRules *rules, NSMutableSet<NSString *> *e
 // Read the definitions of macros and environments in the text, so that the
 // arguments of the macros that only pass them on to non-prose can be skipped.
 static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
-                            NSMutableDictionary<NSString *, TSSpellMacro *> *macros, NSMutableSet<NSString *> *envs)
+                            NSMutableDictionary<NSString *, TSSpellMacro *> *macros, NSMutableSet<NSString *> *envs,
+                            NSMutableSet<NSString *> *defined)
 {
     static NSSet<NSString *> *commandDefiners, *documentDefiners, *defDefiners, *envDefiners, *documentEnvDefiners;
     static dispatch_once_t once;
@@ -1439,6 +1466,7 @@ static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
 
         NSString *name = ReadMacroName(src, n, &p);
         if (!name) continue;
+        [defined addObject:name];
         NSMutableString *kinds = [NSMutableString string];
         BOOL supported = YES;
         if (isCommand) {
@@ -1647,9 +1675,10 @@ static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
     NSMutableDictionary<NSString *, id> *environmentEnds = [NSMutableDictionary dictionary];
     ScanIndex index;
     InitScanIndex(&index, src, n);
-    if (rules.autoMacros) ScanDefinitions(rules, &index, macros, envs);
+    NSMutableSet<NSString *> *definedCommands = [NSMutableSet set];
+    if (rules.autoMacros) ScanDefinitions(rules, &index, macros, envs, definedCommands);
     MaskState m = { src, out, deleted, excluded, accent, language, n, argCountCache, languageNames, macros, envs,
-                    &index, environmentEnds, NULL, 0, 0, 0 };
+                    &index, environmentEnds, NULL, 0, 0, 0, definedCommands };
     RunMask(&m, rules);
     ApplyLanguageSpans(&m);
     free(m.spans);
