@@ -57,6 +57,10 @@ static inline BOOL TSLinkPreviewHasHorizontalDestination(NSPoint raw, CGAffineTr
 // A text column narrower or wider than these (in PDF points) is not used to size the preview.
 static const CGFloat TSLinkPreviewMinimumColumn = 150;
 static const CGFloat TSLinkPreviewMaximumColumn = 600;
+// Margin on each side of a text column, as a fraction of its width (about 105% in all).
+static const CGFloat TSLinkPreviewColumnMargin = 0.025;
+// Text narrower than this is shown in the nominal 400 point crop (390 + padding).
+static const CGFloat TSLinkPreviewNominalColumn = 390;
 
 static inline NSRect TSLinkPreviewTextBounds(PDFPage *page, NSSize size, NSPoint point,
                                              CGAffineTransform transform, BOOL enlarged)
@@ -127,8 +131,8 @@ static inline NSRect TSLinkPreviewColumnBounds(PDFPage *page, NSSize size, CGAff
         if (line.size.width >= TSLinkPreviewMinimumColumn &&
             (NSMinX(line) >= NSMaxX(column) + 5 || NSMaxX(line) <= NSMinX(column) - 5)) beside++;
     }
-    if (beside < 5 && column.size.width < 390)
-        column.size.width = MAX(column.size.width, MIN(390, size.width - NSMinX(column)));
+    if (beside < 5 && column.size.width < TSLinkPreviewNominalColumn)
+        column.size.width = MAX(column.size.width, MIN(TSLinkPreviewNominalColumn, size.width - NSMinX(column)));
     return column;
 }
 
@@ -159,6 +163,10 @@ static inline BOOL TSLinkPreviewRects(NSSize pageSize, NSPoint destination, NSRe
     CGFloat x, width;
     if (hasText && text.size.width >= TSLinkPreviewMinimumColumn && text.size.width <= maximum) {
         // Show the whole text column at the nominal scale; the popup grows instead of shrinking.
+        // A column wider than the nominal crop gets a preview of about 105% of its width,
+        // leaving room to scroll a pinned preview; narrower text already has room.
+        if (text.size.width > TSLinkPreviewNominalColumn)
+            padding = MAX(padding, round(text.size.width * TSLinkPreviewColumnMargin));
         x = TSLinkPreviewClamp(MIN(anchorX, NSMinX(text)) - padding, 0, pageSize.width);
         width = TSLinkPreviewClamp(MAX(anchorX, NSMaxX(text)) + padding, x, pageSize.width) - x;
     } else {

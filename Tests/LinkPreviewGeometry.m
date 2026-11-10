@@ -359,7 +359,9 @@ static void testContinuousShrinking(void) {
             require(scale>=floor-0.0001 && scale<=nominal+0.0001,"scale between floor and nominal");
             require(destination.x>=NSMinX(source)-0.001 && destination.x<=NSMaxX(source)+0.001,
                     "destination stays in the crop");
-            CGFloat full=428+2*(enlarged?10:5);
+            // A column wider than the nominal crop is shown at about 105% of its width.
+            CGFloat full=428+2*MAX(enlarged?10:5,round(428*TSLinkPreviewColumnMargin));
+            require(full/428>1.04 && full/428<1.06,"a wide column's preview is about 105% of its width");
             if (width-10>=full*nominal) require(near(scale,nominal) && near(source.size.width,full),
                                               "no shrinking while the column fits");
             if (previousScale>0) {
