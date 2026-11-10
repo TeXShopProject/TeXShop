@@ -141,14 +141,6 @@ tiLabelProgramKIT				= "Program";
 tiPaletteLabelProgramKIT		= "Program";
 tiToolTipProgramKIT				= "Choose typesetting program";
 
-tiLabelPreviousPageKIT			= "Previous";
-tiPaletteLabelPreviousPageKIT	= "Previous Page";
-tiToolTipPreviousPageKIT		= "Show previous page";
-
-tiLabelNextPageKIT				= "Next";
-tiPaletteLabelNextPageKIT		= "Next Page";
-tiToolTipNextPageKIT			= "Show next page";
-
 tiLabelPreviousPageButtonKIT		= "Previous";
 tiPaletteLabelPreviousPageButtonKIT	= "Previous Page";
 tiToolTipPreviousPageButtonKIT		= "Show previous page";

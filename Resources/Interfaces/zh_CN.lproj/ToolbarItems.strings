@@ -22,11 +22,9 @@
     tiLabelNextPage = "\U4e0b\U4e00\U4e2a";
     tiLabelNextPageButton = "\U4e0b\U4e00\U4e2a";
     tiLabelNextPageButtonKIT = "\U4e0b\U4e00\U4e2a";
-    tiLabelNextPageKIT = "\U4e0b\U4e00\U4e2a";
     tiLabelPreviousPage = "\U4e0a\U4e00\U4e2a";
     tiLabelPreviousPageButton = "\U4e0a\U4e00\U4e2a";
     tiLabelPreviousPageButtonKIT = "\U4e0a\U4e00\U4e2a";
-    tiLabelPreviousPageKIT = "\U4e0a\U4e00\U4e2a";
     tiLabelProgram = "\U7a0b\U5e8f";
     tiLabelProgramEE = "\U7a0b\U5e8f";
     tiLabelProgramKIT = "\U7a0b\U5e8f";
@@ -65,11 +63,9 @@
     tiPaletteLabelNextPage = "\U5207\U6362\U4e0b\U4e00\U9875";
     tiPaletteLabelNextPageButton = "\U4e0b\U4e00\U9875";
     tiPaletteLabelNextPageButtonKIT = "\U4e0b\U4e00\U9875";
-    tiPaletteLabelNextPageKIT = "\U4e0b\U4e00\U9875";
     tiPaletteLabelPreviousPage = "\U5207\U6362\U4e0a\U4e00\U9875";
     tiPaletteLabelPreviousPageButton = "\U4e0a\U4e00\U9875";
     tiPaletteLabelPreviousPageButtonKIT = "\U4e0a\U4e00\U9875";
-    tiPaletteLabelPreviousPageKIT = "\U4e0a\U4e00\U9875";
     tiPaletteLabelProgram = "\U7a0b\U5e8f";
     tiPaletteLabelProgramEE = "\U7a0b\U5e8f";
     tiPaletteLabelProgramKIT = "\U7a0b\U5e8f";
@@ -108,11 +104,9 @@
     tiToolTipNextPage = "\U663e\U793a\U4e0b\U4e00\U9875";
     tiToolTipNextPageButton = "\U663e\U793a\U4e0b\U4e00\U9875";
     tiToolTipNextPageButtonKIT = "\U663e\U793a\U4e0b\U4e00\U9875";
-    tiToolTipNextPageKIT = "\U663e\U793a\U4e0b\U4e00\U9875";
     tiToolTipPreviousPage = "\U663e\U793a\U4e0a\U4e00\U9875";
     tiToolTipPreviousPageButton = "\U663e\U793a\U4e0a\U4e00\U9875";
     tiToolTipPreviousPageButtonKIT = "\U663e\U793a\U4e0a\U4e00\U9875";
-    tiToolTipPreviousPageKIT = "\U663e\U793a\U4e0a\U4e00\U9875";
     tiToolTipPrint = "\U6253\U5370 PDF \U56fe\U50cf";
     tiToolTipPrintSource = "\U6253\U5370 TeX \U6e90\U4ee3\U7801";
     tiToolTipProgram = "\U9009\U62e9\U6392\U7248\U7a0b\U5e8f";

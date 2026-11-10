@@ -142,21 +142,13 @@ tiLabelProgramKIT				= "Programme";
 tiPaletteLabelProgramKIT		= "Programme";
 tiToolTipProgramKIT				= "Composer";
 
-tiLabelPreviousPageKIT			= "Previous";
-tiPaletteLabelPreviousPageKIT	= "Previous Page";
-tiToolTipPreviousPageKIT		= "Affiche la page précédente";
-
-tiLabelNextPageKIT				= "Next";
-tiPaletteLabelNextPageKIT		= "Next Page";
-tiToolTipNextPageKIT			= "Affiche la page suivante";
-
 tiLabelPreviousPageButtonKIT		= "Précédent";
 tiPaletteLabelPreviousPageButtonKIT	= "Page précédente";
-tiToolTipPreviousPageButtonKIT		= "Show previous page";
+tiToolTipPreviousPageButtonKIT		= "Affiche la page précédente";
 
 tiLabelNextPageButtonKIT			= "Prochain";
 tiPaletteLabelNextPageButtonKIT		= "Page suivante";
-tiToolTipNextPageButtonKIT			= "Show next page";
+tiToolTipNextPageButtonKIT			= "Affiche la page suivante";
 
 tiLabelGotoPageKIT				= "Aller à la page";
 tiPaletteLabelGotoPageKIT		= "Aller à la page";

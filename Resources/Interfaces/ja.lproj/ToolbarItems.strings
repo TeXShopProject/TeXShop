@@ -138,14 +138,6 @@ tiLabelProgramKIT				= "プログラム";
 tiPaletteLabelProgramKIT		= "プログラム";
 tiToolTipProgramKIT				= "タイプセットプログラムを選択します";
 
-tiLabelPreviousPageKIT			= "前のページ";
-tiPaletteLabelPreviousPageKIT	= "前のページ";
-tiToolTipPreviousPageKIT		= "前のページを表示します";
-
-tiLabelNextPageKIT				= "次のページ";
-tiPaletteLabelNextPageKIT		= "次のページ";
-tiToolTipNextPageKIT			= "次のページを表示します";
-
 tiLabelPreviousPageButtonKIT		= "前のページ";
 tiPaletteLabelPreviousPageButtonKIT	= "前のページ";
 tiToolTipPreviousPageButtonKIT		= "前のページを表示します";

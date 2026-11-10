@@ -138,14 +138,6 @@ tiLabelProgramKIT				= "Program";
 tiPaletteLabelProgramKIT		= "Program";
 tiToolTipProgramKIT				= "Kies zetprogramma";
 
-tiLabelPreviousPageKIT			= "Vorige";
-tiPaletteLabelPreviousPageKIT	= "Vorige pagina";
-tiToolTipPreviousPageKIT		= "Toon vorige pagina";
-
-tiLabelNextPageKIT				= "Volgende";
-tiPaletteLabelNextPageKIT		= "Volgende pagina";
-tiToolTipNextPageKIT			= "Toon volgende pagina";
-
 tiLabelPreviousPageButtonKIT		= "Vorige";
 tiPaletteLabelPreviousPageButtonKIT	= "Vorige pagina";
 tiToolTipPreviousPageButtonKIT		= "Toon vorige pagina";
