@@ -28,6 +28,9 @@ TeXShop 5.60 fixes typesetting cancellation and keeps the PDF preview position o
 \item Run Experiment jobs in a separate console with independent input, cancellation and cleanup, so they do not interfere with normal typesetting. Closing or replacing an Experiment cancels only its own job. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/8}{\#8}).
 \item Handle failures to launch typesetting tools and missing command-search paths more reliably, and avoid an indefinite wait when stopping helper processes.
 \item Show a sheet when a specified TeX root file cannot be found.
+\item Let console output be selected and copied while TeX runs or waits for input after an error. New output no longer replaces the selection, and the console does not scroll while text is selected. Moving the focus out of the input field no longer sends an empty line to TeX; Return still does. The Experiment console behaves the same.
+\item When a file with a \texttt{\% !TEX root} line is typeset, Command-1 in the root document’s preview returns to that file. A typeset or Command-1 in the root document’s own window makes that window the destination again.
+\item Trash leftover \texttt{.synctex.gz(busy)} files, which an interrupted run leaves behind, with the other auxiliary files.
 \item Fix errors involving empty documents, isolated quotation marks, and save-completion handling.
 \item Improve the handling of console output and log files that contain mixed encodings or broken characters, including UTF-8 characters split by TeX’s line wrapping.
 \end{itemize}
@@ -54,6 +57,7 @@ TeXShop 5.60 fixes typesetting cancellation and keeps the PDF preview position o
 \item Size internal-link previews to the text column of the target page, so whole lines appear at the usual scale; in two-column documents only the target column is shown. A preview shrinks only when the window is too narrow, and never below half size. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/12}{\#12}).
 \item Drag a pinned internal-link preview to move it, drag its edges or corners to resize it at the same text size, and scroll over it to see more of the linked page; clicking inside it no longer dismisses it. Suggested by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/14}{\#14}).
 \item Preserve the preview position when a window is closed and reopened during typesetting, including the combined source-and-preview window. Reported by \href{https://github.com/Uwe-Schmock}{Uwe Schmock} (\href{https://github.com/TeXShopProject/TeXShop/issues/5}{\#5}).
+\item When preview windows open at a fixed position, offset a new preview from the frontmost one instead of covering it exactly.
 \item Make source-file monitoring continue after automatic reloads and file replacement by external editors, including atomic saves. Preserve unsaved edits and the undo history for TeXShop’s own saves. This includes the contribution from \href{https://github.com/ddd3h}{Daisuke Nishihama} in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.
 \item When Automatic Preview Update is enabled, detect PDFs changed by other applications and reload the preview while preserving the page position and zoom. Avoid replacing unsaved PDF annotations, and retry when an external writer temporarily leaves an incomplete PDF.
 \item Fix a PDFKit crash during preview reloads, including changes in page count.
@@ -74,6 +78,9 @@ TeXShop 5.60 fixes typesetting cancellation and keeps the PDF preview position o
 \item Add Character Type Conversion to the Edit menu and to the source window’s contextual menu. It converts the selection between hiragana and katakana, between fullwidth and halfwidth digits and letters, between Unicode characters and ajmacros commands or \texttt{\textbackslash{}UTF}/\texttt{\textbackslash{}CID} commands, and from curly quotes to TeX quotes. With nothing selected, it asks before converting the whole document. Each conversion can be undone.
 \item Add Unicode Normalization to the Edit menu and to the contextual menu. It offers NFC, NFD, NFKC and NFKD, and Modified NFC and Modified NFD, which keep CJK compatibility ideographs unchanged. Character Info then shows the normalized selection.
 \item Add Swap with Clipboard to the Edit menu. It replaces the selection with the text on the clipboard and puts the replaced text on the clipboard. To exchange two pieces of text, copy one, select the other and choose Swap with Clipboard, then paste where the first one was. With nothing selected, it pastes as usual.
+\item Expand \texttt{\#PASTE\#} in macros and key bindings to the text on the clipboard, as \texttt{\#SEL\#} stands for the selection.
+\item Show control characters other than tab, line feed and carriage return as U+FFFD in the invisible character color, whether or not invisible characters are shown. Before, they took no space, and a form feed hid the rest of the document.
+\item Color fullwidth letters, digits and symbols, and the minus sign, which look much like ASCII in Japanese text, with the new Fullwidth and Fullwidth (Background) colors under Settings \(\rightarrow\) Appearance \(\rightarrow\) Colors: Highlights. The bundled themes define these colors; themes without them, including existing themes in \texttt{\textasciitilde{}/Library/TeXShop/Themes}, show these characters like other text.
 \end{itemize}
 
 \subsection{Opening and saving documents}
@@ -88,6 +95,7 @@ TeXShop 5.60 fixes typesetting cancellation and keeps the PDF preview position o
 \item Fix the encoding menu in the Save dialog, which did not change the encoding of the saved file. The menu can now be shown from Settings \(\rightarrow\) Documents and Saving. When the source has an encoding magic comment naming a known encoding, the menu shows that encoding and cannot be changed, unless the file could not be read in that encoding.
 \item Add settings under Settings \(\rightarrow\) Documents and Saving to turn autosave and Versions on or off and, while autosave is off, to keep the previous file as \texttt{name\textasciitilde{}} when saving.
 \item Fix saving with Automatic UTF-8-Mac to UTF-8 Conversion, which wrote an empty file when the text consisted only of CJK compatibility ideographs.
+\item \textbf{Changed behavior:} Decode \texttt{\textbackslash{}UTF}, \texttt{\textbackslash{}UTFK}, \texttt{\textbackslash{}UTFT} and \texttt{\textbackslash{}UTFC} commands when a file is opened, also when utf.sty export is off. A decoded U+FF5E or U+FF0D becomes U+301C or U+2212, which Japanese encodings can save; characters typed in the file are left as they are.
 \end{itemize}
 
 \subsection{App and Dock icons}

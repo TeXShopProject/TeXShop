@@ -1683,7 +1683,7 @@ Now examine the begin/end macro code:
      #INS#
      \end{#SEL#}
 \end{verbatim}
-Text in the macro will be inserted into the source file. Each occurrence of the string \#SEL\# will be replaced by the text selected when the macro was invoked. If no text was selected, \#SEL\# will be replaced with an empty string. The cursor will be placed at the end of the inserted text unless the text contains the string \#INS\#, in which case the cursor will be placed at that location.
+Text in the macro will be inserted into the source file. Each occurrence of the string \#SEL\# will be replaced by the text selected when the macro was invoked. If no text was selected, \#SEL\# will be replaced with an empty string. Each occurrence of \#PASTE\# will be replaced by the text on the clipboard, or with an empty string if the clipboard holds no text. The cursor will be placed at the end of the inserted text unless the text contains the string \#INS\#, in which case the cursor will be placed at that location.
 
 Using this knowledge, it is easy to understand and modify the default macros.
 		
@@ -2176,7 +2176,7 @@ Open Settings, select Keyboard, and press ``Edit Key Bindings...''. This opens a
 Extra items can be added, and existing items can be edited or removed.  
 
 Note the special symbols \#SEL\# and \#INS\#. If there is selected text when a remapped key is pressed, \#SEL\# will be that selection in the resulting output. The insertion cursor will be placed at the spot \#INS\#
-in the resulting output.
+in the resulting output. The symbol \#PASTE\# is replaced by the text on the clipboard.
 
 Although many items are remapped by the default Key Bindings, my guess is that only a few items are used, and users aren't even aware of the others. This seems to do no harm.
 
@@ -2697,8 +2697,7 @@ Many typesetting engines format output text to the console with lines of fixed l
 
 A final setting controls the placement of the console. One possibility is for it to appear in front of all other windows during and after typesetting. Another possibility is to bring it forward, typeset, and then push it behind the edit and source windows if there is no error.
 
-When console output temporarily stops, as it does when the console reports an error, it is not possible to
-copy console text. But after typesetting ends, it is possible to copy sections of console text and paste it elsewhere, like an email document asking for help. It is not possible, of course,
+Console text can be selected and copied at any time, also while TeX is running or waiting for input after an error, and pasted elsewhere, like an email document asking for help. New output is added at the end without disturbing the selection, and the console does not scroll while text is selected. Moving to the input field and away from it again does not send anything to TeX; only Return does. It is not possible, of course,
 to edit text in the console. 
 
 Starting with TeXShop 5.60, the menu item {\bf Show Console} has the keyboard shortcut \cmdkey-0. It brings forward the console of the active document. Pressing \cmdkey-0 again in the console returns to the source or preview window from which the console was called, or to the source window if there is no such window. This is similar to \cmdkey-1, which switches between the source and preview windows.
@@ -3613,6 +3612,8 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  An item in the Source menu asks the editor to ``Show Invisible Characters''. The Invisible color is the color used for these characters.
  
  The Enclosed and Braces characters are used for the items set in the top right of Preferences under the Editor category.
+
+ The Fullwidth colors are the text and background colors of fullwidth letters, digits and symbols, the characters U+FF01 to U+FF5D except the fullwidth comma and full stop, and of the minus sign U+2212. In Japanese text these characters are easily mistaken for their ASCII counterparts. The themes shipped with TeXShop define these colors. A theme without them, for instance a theme made with an earlier version of TeXShop, shows these characters like other text; the two color wells then show the text and background colors of the source window, and choosing a color adds it to the theme.
  
  Finally the XML Syntax colors are colors used when TeXShop syntax colors html, xml, and ptr files, as described in the chapter on Html, TeX4ht, and PreTeXt.
  
@@ -4263,6 +4264,8 @@ The Source menu has an item labeled ``Show Invisible Characters''. The specific 
 \end{figure}
 
 This particular example has three line feeds and two tab characters. 
+
+Control characters other than tab, line feed and carriage return are always shown, as the replacement character U+FFFD in the Invisible color, whether or not invisible characters are shown. They are usually left over from copying text out of other programs, and TeX reports them as errors.
 
 \section{Swap with Clipboard}
 
