@@ -137,9 +137,9 @@ tiLabelProgramKIT				= "Setzmethode";
 tiPaletteLabelProgramKIT		= "Setzmethode";
 tiToolTipProgramKIT				= "Schriftsatzprogramm auswählen";
 
-tiLabelPreviousPageButtonKIT		= "Zurück";
-tiPaletteLabelPreviousPageButtonKIT	= "Letzte Seite";
-tiToolTipPreviousPageButtonKIT		= "Letzte Seite anzeigen";
+tiLabelPreviousPageButtonKIT		= "Vorherige";
+tiPaletteLabelPreviousPageButtonKIT	= "Vorherige Seite";
+tiToolTipPreviousPageButtonKIT		= "Vorherige Seite anzeigen";
 
 tiLabelNextPageButtonKIT			= "Nächste";
 tiPaletteLabelNextPageButtonKIT		= "Nächste Seite";

@@ -112,6 +112,8 @@ static NSData *Pixels(NSImage *image) {
 static NSString *Localized(NSString *key) { return [NSBundle.mainBundle localizedStringForKey:key value:@"MISSING" table:@"ToolbarItems"]; }
 int main(int argc, char **argv) { @autoreleasepool {
  TSInstallAppKitIsolation(); [NSApplication sharedApplication];
+ NSString *language = @(argv[1]); NSUInteger checkedText = 0;
+ Check([NSBundle.mainBundle.preferredLocalizations.firstObject isEqual:language], @"Requested localization");
  Check([NSBundle.mainBundle.bundleIdentifier hasPrefix:@"org.texshop.ToolbarPageTest."], @"Isolated test bundle");
  defaults = [TSMemoryDefaults new];
  TSDocument *d = [TSDocument new]; d.view = [PageView new]; d.documentType = isPDF; d->fileIsTex = YES;
@@ -156,7 +158,11 @@ int main(int argc, char **argv) { @autoreleasepool {
   NSString *key = current[n];
   Check([now.label isEqual:Localized([@"tiLabel" stringByAppendingString:key])], @"Document arrow label");
   Check([old.label isEqual:now.label] && [old.paletteLabel isEqual:now.paletteLabel] && [old.toolTip isEqual:now.toolTip], @"Former item shows the document arrow text");
-  Check(![old.label isEqual:@"MISSING"] && ![old.label isEqual:legacy[n]] && old.label.length > 0, @"Former item has a real label");
+  for (NSString *text in @[old.label, old.paletteLabel, old.toolTip])
+   Check(![text isEqual:@"MISSING"] && ![text hasPrefix:@"ti"] && ![text isEqual:legacy[n]] && ![text isEqual:current[n]] && text.length > 0, @"Former item has real text");
+  NSArray *text = EXPECTED_TEXT[language][n];
+  if (text) Check([@[old.label, old.paletteLabel, old.toolTip] isEqual:text], [NSString stringWithFormat:@"Exact %@ text: %@ / %@ / %@", language, old.label, old.paletteLabel, old.toolTip]);
+  if (text) checkedText++;
   Check([Pixels(old.image) isEqual:Pixels(now.image)], @"Former item shows the document arrow icon");
   Check([Pixels(now.image) isEqual:Pixels([NSImage imageWithSystemSymbolName:n ? @"arrow.down.doc" : @"arrow.up.doc" accessibilityDescription:nil])], @"Document arrow symbol");
   Check(![Pixels(old.image) isEqual:n ? downArrow : upArrow], @"Former item no longer shows the arrow-only icon");
@@ -188,10 +194,23 @@ int main(int argc, char **argv) { @autoreleasepool {
   }
   d->fileIsTex = YES; d.documentType = isPDF;
  }
- NSLog(@"PASS: one previous/next pair offered and in default sets; former identifiers show working document-arrow items");
+ Check(checkedText == (EXPECTED_TEXT[language] ? 2 : 0), @"Exact text checked where listed");
+ NSLog(@"%@ PASS: one previous/next pair offered and in default sets; former identifiers show working document-arrow items", language);
 }}
 '''
-program = program.replace('CONSTANTS', constants).replace('METHODS', methods)
+# Exact text in the languages where the two pairs had been translated differently.
+expected = {
+    'en': [('Previous', 'Previous Page', 'Show previous page'), ('Next', 'Next Page', 'Show next page')],
+    'ja': [('前のページ', '前のページ', '前のページを表示します'), ('次のページ', '次のページ', '次のページを表示します')],
+    'de': [('Vorherige', 'Vorherige Seite', 'Vorherige Seite anzeigen'), ('Nächste', 'Nächste Seite', 'Nächste Seite anzeigen')],
+    'fr': [('Précédent', 'Page précédente', 'Affiche la page précédente'), ('Prochain', 'Page suivante', 'Affiche la page suivante')],
+}
+objc = lambda text: '@"' + text.replace('\\', '\\\\').replace('"', '\\"') + '"'
+table = '@{' + ', '.join('@"%s": @[%s]' % (language, ', '.join('@[%s]' % ', '.join(map(objc, item)) for item in items))
+                         for language, items in expected.items()) + '}'
+languages = sorted(p.parent.stem for p in (root/'Resources/Interfaces').glob('*.lproj/ToolbarItems.strings'))
+assert len(languages) == 12 and set(expected) <= set(languages)
+program = program.replace('CONSTANTS', constants).replace('METHODS', methods).replace('EXPECTED_TEXT', table)
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory(prefix='TeXShop-toolbar-pages-') as tmp:
@@ -199,7 +218,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-toolbar-pages-') as tmp:
     app = tmp/'ToolbarPageTest.app'; mac = app/'Contents/MacOS'; mac.mkdir(parents=True)
     (app/'Contents/Info.plist').write_bytes(plistlib.dumps({'CFBundleIdentifier': 'org.texshop.ToolbarPageTest.'+tmp.name,
         'CFBundleExecutable': 'ToolbarPageTest', 'CFBundlePackageType': 'APPL', 'LSUIElement': True, 'CFBundleDevelopmentRegion': 'en'}))
-    for language in ('en', 'ja'):
+    for language in languages:
         res = app/f'Contents/Resources/{language}.lproj'; res.mkdir(parents=True)
         shutil.copy(root/f'Resources/Interfaces/{language}.lproj/ToolbarItems.strings', res)
     source = tmp/'Test.m'; source.write_text(program)
@@ -207,8 +226,8 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-toolbar-pages-') as tmp:
                     '-framework', 'Cocoa', str(source), '-o', str(mac/'ToolbarPageTest')], check=True)
     home = tmp/'Home'; (home/'Library/Preferences').mkdir(parents=True)
     try:
-        for language in ('en', 'ja'):
-            result = subprocess.run([str(mac/'ToolbarPageTest'), '-AppleLanguages', f'({language})'],
+        for language in languages:
+            result = subprocess.run([str(mac/'ToolbarPageTest'), language, '-AppleLanguages', f'({language})'],
                                     env={**os.environ, 'CFFIXED_USER_HOME': str(home)}, capture_output=True, text=True)
             sys.stderr.write(result.stderr)
             if result.returncode:
