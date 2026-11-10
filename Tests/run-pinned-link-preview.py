@@ -9,7 +9,7 @@ from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'other-window', 'cleanup-state', 'ordinary-escape', 'modified-escape', 'click-cleanup', 'initialize-cleanup',
-                                           'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales'])
+                                           'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'scroll-moves-frame', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -50,6 +50,7 @@ preview_source = (root / 'Sources/Preview/TSLinkPreviewView.m').read_text()
 preview_mutations = {
     'unpinned-interactive': ('return self.pinned ? [super hitTest:point] : nil;', 'return [super hitTest:point];'),
     'pinned-transparent': ('return self.pinned ? [super hitTest:point] : nil;', 'return nil;'),
+    'scroll-moves-frame': ('    [self setNeedsDisplay:YES];\n}\n\n@end', '    self.frame = NSOffsetRect(self.frame, 0.1, 0);\n    [self setNeedsDisplay:YES];\n}\n\n@end'),
     'scroll-chains': ('    [self setNeedsDisplay:YES];\n}\n\n@end', '    [self setNeedsDisplay:YES];\n    [super scrollWheel:event];\n}\n\n@end'),
     'resize-scales': ('                            [self availableRect], _pageSize, flipped, &frame, &source);',
                       '                            [self availableRect], _pageSize, flipped, &frame, &source);\n        source = _startSource;'),
@@ -241,18 +242,20 @@ static void testInteraction(MyPDFKitView *view, NSWindow *window) {
           @"resizing keeps the text size and the left side of the page");
 
     NSRect clip = view.documentView.enclosingScrollView.contentView.bounds;
-    source = preview.source;
+    source = preview.source; frame = preview.frame;
     CGFloat unit = NSWidth([view.documentView convertRect:NSMakeRect(0,0,1,1) fromView:nil]);
     [preview scrollWheel:scroll(12, -9)];
     check(approx(NSMinY(preview.source), NSMinY(source) + 12 * unit / scale) &&
           approx(NSMinX(preview.source), NSMinX(source) + 9 * unit / scale) &&
-          approx(NSWidth(preview.source), NSWidth(source)) && NSEqualRects(preview.frame, frame = preview.frame),
+          approx(NSWidth(preview.source), NSWidth(source)),
           @"scrolling moves the page inside the popup");
+    check(NSEqualRects(preview.frame, frame), @"scrolling leaves the popup in place");
     check(NSEqualRects(view.documentView.enclosingScrollView.contentView.bounds, clip),
           @"scrolling the popup leaves the preview where it is");
     for (int i = 0; i < 400; i++) [preview scrollWheel:scroll(-40, 0)];
     check(approx(NSMinY(preview.source), 0) && NSEqualRects(view.documentView.enclosingScrollView.contentView.bounds, clip),
           @"scrolling stops at the bottom of the page");
+    check(NSEqualRects(preview.frame, frame), @"scrolling to the page edge leaves the popup in place");
 
     [NSCursor.arrowCursor set];
     [view mouseMoved:mouse(window, NSEventTypeMouseMoved, windowPoint(preview, 20, 15))];
@@ -385,7 +388,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'ordinary-escape':'ordinary popup leaves Escape', 'modified-escape':'modified Escape is not consumed',
                     'click-cleanup':'click clears popup', 'initialize-cleanup':'initializeDisplay clears popup',
                     'unpinned-interactive':'hovering popup leaves the mouse', 'pinned-transparent':'pinned popup takes clicks',
-                    'scroll-chains':'scrolling the popup leaves the preview', 'option-not-forwarded':'Option while shown makes',
+                    'scroll-chains':'scrolling the popup leaves the preview', 'scroll-moves-frame':'scrolling leaves the popup in place', 'option-not-forwarded':'Option while shown makes',
                     'kill-leaves-view':'closing removes the popup view', 'cursor-overridden':'shows an open hand',
                     'resize-scales':'resizing keeps the text size'}[args.mutation]
         assert result.returncode == 1 and expected in result.stderr, result.stderr
