@@ -2571,7 +2571,7 @@ An item in the Preview category of TeXShop Preferences determines the type of gr
 
 \section{Back, Forward, Rotation}
 
-The toolbar has two arrows pointing up and down for scrolling by a page, and two arrows pointing left and right for moving through the history of a document. These left and right arrows act like the corresponding arrows in a browser. If you use the ``Goto page'' tool to go from page 3 to page 5, and then page 10, and then page 25, the left arrow will take you back to page 10, and then to page 5, and at that point the right arrow will take you back to page 10.
+The toolbar has two buttons showing a page with an arrow pointing up or down, for moving to the previous or next page, and two arrows pointing left and right for moving through the history of a document. These left and right arrows act like the corresponding arrows in a browser. If you use the ``Goto page'' tool to go from page 3 to page 5, and then page 10, and then page 25, the left arrow will take you back to page 10, and then to page 5, and at that point the right arrow will take you back to page 10.
 
 The Preview menu also has menu items to rotate individual pages clockwise or counterclockwise.
 
@@ -2617,7 +2617,7 @@ The popup is as wide as the text column on the linked page plus a margin of abou
 Normally the popup is on screen for four seconds and then disappears. This behavior can be changed with a
 modifier key, as explained below.
 
-There is a menu item in the Preview menu called ``Link Popups'', suggested by Uwe Schmock. This menu is a toggle turning the hover behavior on or off. When it is on, the menu item is checked. The hover behavior is on when windows are first opened.
+There is a menu item in the Preview menu called ``Link Popups'', suggested by Uwe Schmock. This menu is a toggle turning the hover behavior on or off. When it is on, the menu item is checked. Whether the hover behavior is on when a document is opened is set by the ``Link Popups'' switch under Display in the {\em Preview} category of Settings; it is on by default.
 
 If you click in the contents of the Preview window while the Control key is down, a contextual menu opens. The ``Link Popups'' item is also in this contextual menu.
 
@@ -6516,10 +6516,7 @@ When TeXShop opens a .tex file for an external editor, it checks the dates of th
    defaults write TeXShop ExternalEditorTypesetAtStart NO
 \end{verbatim}
 
-When the TeXShop Preview Window displays a page containing links and the mouse hovers over a link, a small window pops up showing the contents of the linked area. This feature can be toggled on or off using the menu ``Link Popups'' in the Preview menu. By default, the item is active when a document is first opened. To change this,
-\begin{verbatim}
-   defaults write TeXShop LinkPopups NO
-\end{verbatim}
+When the TeXShop Preview Window displays a page containing links and the mouse hovers over a link, a small window pops up showing the contents of the linked area. This feature can be toggled on or off using the menu ``Link Popups'' in the Preview menu. Whether the item is active when a document is first opened is now set by the ``Link Popups'' switch under Display in the {\em Preview} category of Settings.
 
 \subsubsection{<Preferences for the Preview Window Drawer>}
 

@@ -15,6 +15,7 @@
         <outlet property="firstPageMatrix" destination="506" id="512" />
         <outlet property="htmlWindowPosButton" destination="EPC-FR-GKh" id="koQ-c5-bVK" />
         <outlet property="htmlWindowPosMatrix" destination="4qx-Bg-9Ii" id="oZo-Fd-y5r" />
+        <outlet property="linkPopupsButton" destination="preview-link-popups-button" id="preview-link-popups-outlet" />
         <outlet property="magTextField" destination="113" id="114" />
         <outlet property="mouseModePopup" destination="345" id="371" />
         <outlet property="pageStylePopup" destination="340" id="372" />
@@ -306,14 +307,14 @@
           <font key="titleFont" metaFont="system" />
         </box>
         <box fixedFrame="YES" title="Display" translatesAutoresizingMaskIntoConstraints="NO" id="5HT-3x-Zr6" identifier="settings.5HT-3x-Zr6">
-          <rect key="frame" x="48" y="169" width="253" height="50" />
+          <rect key="frame" x="48" y="169" width="253" height="72" />
           <autoresizingMask key="autoresizingMask" />
           <view key="contentView" id="024-V2-dVf" identifier="settings.024-V2-dVf">
-            <rect key="frame" x="0.0" y="0.0" width="253" height="38" />
+            <rect key="frame" x="0.0" y="0.0" width="253" height="60" />
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
             <subviews>
               <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fjQ-he-GFL" identifier="settings.fjQ-he-GFL">
-                <rect key="frame" x="19" y="9" width="215" height="18" />
+                <rect key="frame" x="19" y="31" width="215" height="18" />
                 <autoresizingMask key="autoresizingMask" />
                 <buttonCell key="cell" type="check" title="Smooth text and line art" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="jgT-n6-lh0">
                   <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
@@ -321,6 +322,17 @@
                 </buttonCell>
                 <connections>
                   <action selector="antialiasChanged:" target="-2" id="6WU-zq-Zod" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-link-popups-button" identifier="settings.preview-link-popups-button">
+                <rect key="frame" x="19" y="9" width="215" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Link Popups" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-link-popups-cell">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="linkPopupsChanged:" target="-2" id="preview-link-popups-action" />
                 </connections>
               </button>
             </subviews>

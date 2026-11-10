@@ -2280,6 +2280,13 @@
         "value": "displayAsBookChanged:"
       },
       {
+        "key": "preview-link-popups-button.action",
+        "view": "settings.preview-link-popups-button",
+        "kind": "view",
+        "property": "action",
+        "value": "linkPopupsChanged:"
+      },
+      {
         "key": "506.action",
         "view": "settings.506",
         "kind": "view",
@@ -3557,7 +3564,8 @@
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML Window Position",
-          "p2D-Mi-Gyc.title": "Home URL"
+          "p2D-Mi-Gyc.title": "Home URL",
+          "preview-link-popups-cell.title": "Link Popups"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -5391,6 +5399,13 @@
           "value": "Show first page alone as cover"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Link Popups"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -6874,7 +6889,8 @@
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML-Fenster-Postion",
-          "p2D-Mi-Gyc.title": "Standard URL-Adresse"
+          "p2D-Mi-Gyc.title": "Standard URL-Adresse",
+          "preview-link-popups-cell.title": "Link-Popups"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -8708,6 +8724,13 @@
           "value": "Show first page alone as cover"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Link-Popups"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -10191,7 +10214,8 @@
           "preview-cover-cell.title": "Mostrar la primera página sola como portada",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posición de ventana HTML",
-          "p2D-Mi-Gyc.title": "URL base"
+          "p2D-Mi-Gyc.title": "URL base",
+          "preview-link-popups-cell.title": "Desplegar enlaces"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -12025,6 +12049,13 @@
           "value": "Mostrar la primera página sola como portada"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Desplegar enlaces"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -13508,7 +13539,8 @@
           "preview-cover-cell.title": "Afficher la première page seule comme couverture",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Position de la fenêtre HTML",
-          "p2D-Mi-Gyc.title": "URL personnelle"
+          "p2D-Mi-Gyc.title": "URL personnelle",
+          "preview-link-popups-cell.title": "Pop-up pour les liens"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -15342,6 +15374,13 @@
           "value": "Afficher la première page seule comme couverture"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Pop-up pour les liens"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -16825,7 +16864,8 @@
           "preview-cover-cell.title": "Mostra la prima pagina da sola come copertina",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posizione finestra HTML",
-          "p2D-Mi-Gyc.title": "URL personale"
+          "p2D-Mi-Gyc.title": "URL personale",
+          "preview-link-popups-cell.title": "Collegamento popup"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -18659,6 +18699,13 @@
           "value": "Mostra la prima pagina da sola come copertina"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Collegamento popup"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -20142,7 +20189,8 @@
           "preview-cover-cell.title": "先頭ページを表紙として単独表示",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTMLウインドウの位置",
-          "p2D-Mi-Gyc.title": "ホームURL"
+          "p2D-Mi-Gyc.title": "ホームURL",
+          "preview-link-popups-cell.title": "リンク先をポップアップ"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -21976,6 +22024,13 @@
           "value": "先頭ページを表紙として単独表示"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "リンク先をポップアップ"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -23459,7 +23514,8 @@
           "preview-cover-cell.title": "첫 페이지를 표지로 따로 표시",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML 창 위치",
-          "p2D-Mi-Gyc.title": "홈 URL"
+          "p2D-Mi-Gyc.title": "홈 URL",
+          "preview-link-popups-cell.title": "링크 팝업"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -25293,6 +25349,13 @@
           "value": "첫 페이지를 표지로 따로 표시"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "링크 팝업"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -26776,7 +26839,8 @@
           "preview-cover-cell.title": "Eerste pagina apart als omslag tonen",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML Window Position",
-          "p2D-Mi-Gyc.title": "Start-URL"
+          "p2D-Mi-Gyc.title": "Start-URL",
+          "preview-link-popups-cell.title": "Beweeg pop-ups"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -28610,6 +28674,13 @@
           "value": "Eerste pagina apart als omslag tonen"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Beweeg pop-ups"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -30093,7 +30164,8 @@
           "preview-cover-cell.title": "Mostrar a primeira página como capa",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML Window Position",
-          "p2D-Mi-Gyc.title": "URL inicial"
+          "p2D-Mi-Gyc.title": "URL inicial",
+          "preview-link-popups-cell.title": "Pop-ups de links"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -31927,6 +31999,13 @@
           "value": "Mostrar a primeira página como capa"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Pop-ups de links"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -33410,7 +33489,8 @@
           "preview-cover-cell.title": "Mostrar a primeira página sozinha como capa",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posição da janela HTML",
-          "p2D-Mi-Gyc.title": "URL inicial"
+          "p2D-Mi-Gyc.title": "URL inicial",
+          "preview-link-popups-cell.title": "Pop-ups de links"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -35244,6 +35324,13 @@
           "value": "Mostrar a primeira página sozinha como capa"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Pop-ups de links"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -36727,7 +36814,8 @@
           "preview-cover-cell.title": "Arată prima pagină separat, ca o copertă",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML Window Position",
-          "p2D-Mi-Gyc.title": "URL inițial"
+          "p2D-Mi-Gyc.title": "URL inițial",
+          "preview-link-popups-cell.title": "Ferestre pop-up"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -38561,6 +38649,13 @@
           "value": "Arată prima pagină separat, ca o copertă"
         },
         {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Ferestre pop-up"
+        },
+        {
           "key": "Sb3-3h-ll4.title",
           "view": "settings.4qx-Bg-9Ii",
           "kind": "prototype",
@@ -40044,7 +40139,8 @@
           "preview-cover-cell.title": "将第一页单独显示为封面",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML 窗口位置",
-          "p2D-Mi-Gyc.title": "主页 URL"
+          "p2D-Mi-Gyc.title": "主页 URL",
+          "preview-link-popups-cell.title": "链接预览"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -41876,6 +41972,13 @@
           "kind": "cell",
           "property": "title",
           "value": "将第一页单独显示为封面"
+        },
+        {
+          "key": "preview-link-popups-cell.title",
+          "view": "settings.preview-link-popups-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "链接预览"
         },
         {
           "key": "Sb3-3h-ll4.title",

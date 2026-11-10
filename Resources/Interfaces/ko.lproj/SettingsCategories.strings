@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "마우스 모드";
 "catalog.preview.0.4.title" = "페이지 버튼으로 스크롤하지 않음";
 "catalog.preview.0.5.title" = "텍스트와 라인아트를 부드럽게";
+"catalog.preview.0.6.title" = "링크 팝업";
+"catalog.preview.0.6.note" = "앞으로 여는 문서의 초기값입니다. 열려 있는 문서에서는 ‘보기’ 메뉴에서 바꿉니다.";
 "group.preview.1.title" = "맞쪽보기";
 "catalog.preview.1.0.title" = "페이지 방향";
 "catalog.preview.1.1.title" = "첫 페이지를 표지로 따로 표시";

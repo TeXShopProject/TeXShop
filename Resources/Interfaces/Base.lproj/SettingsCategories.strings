@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Default Mouse Mode";
 "catalog.preview.0.4.title" = "Do not scroll with page buttons";
 "catalog.preview.0.5.title" = "Smooth text and line art";
+"catalog.preview.0.6.title" = "Link Popups";
+"catalog.preview.0.6.note" = "Default for documents opened from now on. For an open document, switch it in the Preview menu.";
 "group.preview.1.title" = "Two-Page Arrangement";
 "catalog.preview.1.0.title" = "Page direction";
 "catalog.preview.1.1.title" = "Show first page alone as cover";

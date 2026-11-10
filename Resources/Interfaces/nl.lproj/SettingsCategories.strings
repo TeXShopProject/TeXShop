@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Standaard muismodus";
 "catalog.preview.0.4.title" = "Niet scrollen met paginaknoppen";
 "catalog.preview.0.5.title" = "Text und Linien glätten";
+"catalog.preview.0.6.title" = "Beweeg pop-ups";
+"catalog.preview.0.6.note" = "Beginwaarde voor documenten die u hierna opent. In een geopend document wijzigt u dit in het menu ‘Pagina’.";
 "group.preview.1.title" = "Indeling van dubbele pagina’s";
 "catalog.preview.1.0.title" = "Paginarichting";
 "catalog.preview.1.1.title" = "Eerste pagina apart als omslag tonen";

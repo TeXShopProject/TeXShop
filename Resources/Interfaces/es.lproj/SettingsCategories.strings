@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Modo de ratón";
 "catalog.preview.0.4.title" = "No desplazar con los botones de página";
 "catalog.preview.0.5.title" = "Texto suave y arte lineal";
+"catalog.preview.0.6.title" = "Desplegar enlaces";
+"catalog.preview.0.6.note" = "Valor inicial para los documentos que se abran a partir de ahora. En un documento abierto, se cambia en el menú «PDF».";
 "group.preview.1.title" = "Con páginas dobles";
 "catalog.preview.1.0.title" = "Dirección de las páginas";
 "catalog.preview.1.1.title" = "Mostrar la primera página sola como portada";

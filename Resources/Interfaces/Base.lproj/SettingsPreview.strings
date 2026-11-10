@@ -47,6 +47,7 @@
 "p2D-Mi-Gyc.title" = "Home URL";
 "preview-cover-cell.title" = "Show first page alone as cover";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
+"preview-link-popups-cell.title" = "Link Popups";
 "sa2-VV-W1K.title" = "Remember last position on close";
 "tVs-uh-QcM.title" = "All windows start at fixed position";
 "vOt-2m-d2s.title" = "Use One Window";

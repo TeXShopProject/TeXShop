@@ -137,17 +137,9 @@ tiLabelProgramKIT				= "Setzmethode";
 tiPaletteLabelProgramKIT		= "Setzmethode";
 tiToolTipProgramKIT				= "Schriftsatzprogramm auswählen";
 
-tiLabelPreviousPageKIT			= "Vorherige";
-tiPaletteLabelPreviousPageKIT	= "Vorherige Seite";
-tiToolTipPreviousPageKIT		= "Vorherige Seite anzeigen";
-
-tiLabelNextPageKIT				= "Nächste";
-tiPaletteLabelNextPageKIT		= "Nächste Seite";
-tiToolTipNextPageKIT			= "Nächste Seite anzeigen";
-
-tiLabelPreviousPageButtonKIT		= "Zurück";
-tiPaletteLabelPreviousPageButtonKIT	= "Letzte Seite";
-tiToolTipPreviousPageButtonKIT		= "Letzte Seite anzeigen";
+tiLabelPreviousPageButtonKIT		= "Vorherige";
+tiPaletteLabelPreviousPageButtonKIT	= "Vorherige Seite";
+tiToolTipPreviousPageButtonKIT		= "Vorherige Seite anzeigen";
 
 tiLabelNextPageButtonKIT			= "Nächste";
 tiPaletteLabelNextPageButtonKIT		= "Nächste Seite";

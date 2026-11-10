@@ -585,6 +585,8 @@ extern NSPanel *pageNumberWindow;
 	}
     
     if ([anItem action] == @selector(toggleLinkPopups:)) {
+        if (self.myDocument)
+            return [self.myDocument validateMenuItem:anItem];
         MyPDFKitView *aView;
         aView = (MyPDFKitView *)self.myPDFKitView;
         
@@ -869,6 +871,10 @@ extern NSPanel *pageNumberWindow;
 {
     MyPDFKitView    *aView, *aView2;
     
+    if (self.myDocument) {
+        [self.myDocument toggleLinkPopups:sender];
+        return;
+    }
     aView = (MyPDFKitView *)self.myPDFKitView;
     aView2 = (MyPDFKitView *)self.myPDFKitView2;
     [aView changeLinkPopups];

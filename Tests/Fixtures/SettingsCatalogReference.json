@@ -1448,6 +1448,15 @@
        "src": [
         "fyB-vX-69R"
        ]
+      },
+      {
+       "kind": "switch",
+       "title": "リンク先をポップアップ",
+       "note": "これから開く書類の初期値です。開いている書類では、「プレビュー」メニューで切り替えます。",
+       "on": true,
+       "src": [
+        "preview-link-popups-button"
+       ]
       }
      ]
     },

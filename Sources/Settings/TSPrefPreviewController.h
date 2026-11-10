@@ -9,6 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSMatrix *firstPageMatrix;
 @property (strong, nullable) IBOutlet NSButton *htmlWindowPosButton;
 @property (strong, nullable) IBOutlet NSMatrix *htmlWindowPosMatrix;
+@property (strong, nullable) IBOutlet NSButton *linkPopupsButton;
 @property (strong, nullable) IBOutlet NSTextField *magTextField;
 @property (strong, nullable) IBOutlet NSPopUpButton *mouseModePopup;
 @property (strong, nullable) IBOutlet NSPopUpButton *pageStylePopup;

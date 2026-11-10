@@ -443,6 +443,8 @@ withDarkColors = NO;
 	self.lineNumberView2 = nil;
 	self.logLineNumberView = nil;
 	self.logExtension = nil;
+    // Read once, so that changing Settings later leaves this document as it is.
+    self.linkPopups = [SUD boolForKey:LinkPopupsKey];
     self.bookDisplay = [SUD boolForKey:DisplayAsBookKey];
     self.previewInitialBookDisplay = self.bookDisplay;
     NSInteger tempInt = [SUD integerForKey: PdfFirstPageStyleKey];
@@ -6506,8 +6508,21 @@ if (! useFullSplitWindow) {
 	return fileIsTex;
 }
 
+// Link Popups in the Preview menu and the preview's contextual menu, in separate and in
+// single-window mode: both panes follow the document.
+- (void)toggleLinkPopups:(id)sender
+{
+    self.linkPopups = !self.linkPopups;
+    [self.myPDFKitView linkPopupsChanged];
+    [self.myPDFKitView2 linkPopupsChanged];
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
+    if (anItem.action == @selector(toggleLinkPopups:)) {
+        anItem.state = self.linkPopups ? NSControlStateValueOn : NSControlStateValueOff;
+        return YES;
+    }
     if (anItem.action == @selector(changePreviewLayout:) ||
         anItem.action == @selector(changePreviewArrangement:))
         return [self validatePreviewLayoutItem:anItem];

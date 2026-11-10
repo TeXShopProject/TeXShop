@@ -256,6 +256,7 @@
 - (BOOL) toolIsMagnification;
 - (BOOL) validateMenuItem:(NSMenuItem *)anItem;
 - (void) changeLinkPopups;
+- (void) linkPopupsChanged;
 // - (void) changeAnnotationMenu;
 - (void)setCurrentSelection:(PDFSelection *)selection;
 - (void)displayTotalPage: (NSInteger) totalPageCount;

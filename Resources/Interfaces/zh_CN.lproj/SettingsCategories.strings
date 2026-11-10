@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "默认鼠标模式";
 "catalog.preview.0.4.title" = "不使用翻页按钮滚动";
 "catalog.preview.0.5.title" = "平滑文字和线稿";
+"catalog.preview.0.6.title" = "链接预览";
+"catalog.preview.0.6.note" = "今后打开的文稿的初始值。已打开的文稿请在“预览”菜单中切换。";
 "group.preview.1.title" = "双页模式";
 "catalog.preview.1.0.title" = "页面方向";
 "catalog.preview.1.1.title" = "将第一页单独显示为封面";

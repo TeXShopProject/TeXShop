@@ -255,7 +255,7 @@ else
              if (@available(macOS 11.0, *)) {
                 NSImage *symbolImage = [NSImage imageWithSystemSymbolName: symbolName
                                                 accessibilityDescription: accessibility];
-                return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
+                return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemKey
                                                      image:symbolImage target:self action:action];
                 }
             else
@@ -596,6 +596,30 @@ if (@available(macOS 11.0, *))
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+// The arrow-only page items (PreviousPageKIT, NextPageKIT) duplicated the document
+// arrow items. Toolbars saved with them show the document arrow items instead.
+static NSString *TSPreviewPageItemKey(NSString *itemIdent)
+{
+    if ([itemIdent isEqual: kPreviousPageKKTID])
+        return kPreviousPageButtonKKTID;
+    if ([itemIdent isEqual: kNextPageKKTID])
+        return kNextPageButtonKKTID;
+    return itemIdent;
+}
+
+- (NSToolbarItem *)makePreviewPageItemWithItemIdentifier:(NSString *)itemIdent
+{
+    NSString *itemKey = TSPreviewPageItemKey(itemIdent);
+
+    if ([itemKey isEqual: kPreviousPageButtonKKTID])
+        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemKey symbolName: @"arrow.up.doc" accessibility: @"Previous Page" imageName:@"PreviousPageAlternateAction" newImageName:@"PreviousPageAlternateAction" target:self action:@selector(doPreviousPageKK:)];
+
+    if ([itemKey isEqual: kNextPageButtonKKTID])
+        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemKey symbolName: @"arrow.down.doc" accessibility: @"Next Page" imageName:@"NextPageAlternateAction" newImageName:@"NextPageAlternateAction" target:self action:@selector(doNextPageKK:)];
+
+    return nil;
+}
 
 - (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	// Required delegate method   Given an item identifier, self method returns an item
@@ -1115,38 +1139,10 @@ if ([itemIdent isEqual: kSplitKKTID]) {
     }
 
 
-	if ([itemIdent isEqual: kPreviousPageButtonKKTID])
-    {
-        /*
-		return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-											 imageName:@"PreviousPageAlternateAction" target:self action:@selector(doPreviousPageKK:)];
-        */
-        
-        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.up.doc" accessibility: @"Previous Page" imageName:@"PreviousPageAlternateAction" newImageName:@"PreviousPageAlternateAction" target:self action:@selector(doPreviousPageKK:)];
-	}
- 
+    toolbarItem = [self makePreviewPageItemWithItemIdentifier:itemIdent];
+    if (toolbarItem)
+        return toolbarItem;
 
-	if ([itemIdent isEqual: kNextPageButtonKKTID]) {
-        /*
-		return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent
-											 imageName:@"NextPageAlternateAction" target:self action:@selector(doNextPageKK:)];
-        */
-        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.down.doc" accessibility: @"Next Page" imageName:@"NextPageAlternateAction" newImageName:@"NextPageAlternateAction" target:self action:@selector(doNextPageKK:)];
-        
-	}
-
-
-	if ([itemIdent isEqual: kPreviousPageKKTID])
-    {
-        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.up" accessibility: @"Previous Page" imageName:@"PreviousPageAction" newImageName:@"arrow.up" target:self action:@selector(doPreviousPageKK:)];
-     }
-        
-
-	if ([itemIdent isEqual: kNextPageKKTID])
-    {
-        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"arrow.down" accessibility: @"Next Page" imageName:@"NextPageAction" newImageName:@"arrow.down" target:self action:@selector(doNextPageKK:)];
-     }
-    
 	if ([itemIdent isEqual: kGotoPageTID]) {
 		toolbarItem =  [self makeToolbarItemFixedWithItemIdentifier:itemIdent key:itemIdent
 													customView:gotopageOutlet];
@@ -1571,8 +1567,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
         if ([self sharingExists]) {
 
 		return [NSArray arrayWithObjects:
-					kPreviousPageKKTID,
-					kNextPageKKTID,
+					kPreviousPageButtonKKTID,
+					kNextPageButtonKKTID,
 					kBackForthKKTID,
 					kDrawerKKTID,
 					NSToolbarPrintItemIdentifier,
@@ -1597,8 +1593,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
      
         
 		return [NSArray arrayWithObjects:
-                kPreviousPageKKTID,
-                kNextPageKKTID,
+                kPreviousPageButtonKKTID,
+                kNextPageButtonKKTID,
                 kBackForthKKTID,
                 kDrawerKKTID,
                 NSToolbarPrintItemIdentifier,
@@ -1634,8 +1630,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
                      kSplitID,
                      NSToolbarSpaceItemIdentifier,
                      NSToolbarSpaceItemIdentifier,
-                     kPreviousPageKKTID,
-                     kNextPageKKTID,
+                     kPreviousPageButtonKKTID,
+                     kNextPageButtonKKTID,
                      kDrawerKKTID,
                      NSToolbarPrintItemIdentifier,
                      skGotoPageKKTID,
@@ -1687,8 +1683,8 @@ if ([itemIdent isEqual: kSplitKKTID]) {
         if ([self sharingExists]) {
             
             return  [NSArray arrayWithObjects:
-                     kPreviousPageKKTID,
-                     kNextPageKKTID,
+                     kPreviousPageButtonKKTID,
+                     kNextPageButtonKKTID,
                      kDrawerKKTID,
                      NSToolbarPrintItemIdentifier,
                      skGotoPageKKTID,
@@ -1880,8 +1876,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 		return [NSArray arrayWithObjects:
 					kPreviousPageButtonKKTID,
 					kNextPageButtonKKTID,
-					kPreviousPageKKTID,
-					kNextPageKKTID,
 					kBackForthKKTID,
 					kDrawerKKTID,
 					kTypesetEETID,
@@ -1920,8 +1914,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
             return [NSArray arrayWithObjects:
  					kPreviousPageButtonKKTID,
 					kNextPageButtonKKTID,
-					kPreviousPageKKTID,
-					kNextPageKKTID,
 					kBackForthKKTID,
 					kDrawerKKTID,
 					kTypesetEETID,
@@ -1973,8 +1965,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kSplitID,
 					kPreviousPageButtonKKTID,
 					kNextPageButtonKKTID,
-					kPreviousPageKKTID,
-					kNextPageKKTID,
 					skBackForthKKTID,
 					kDrawerKKTID,
 	                skGotoPageKKTID,
@@ -2010,8 +2000,6 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kSplitID,
 					kPreviousPageButtonKKTID,
 					kNextPageButtonKKTID,
-					kPreviousPageKKTID,
-					kNextPageKKTID,
 					skBackForthKKTID,
 					kDrawerKKTID,
 	                skGotoPageKKTID,

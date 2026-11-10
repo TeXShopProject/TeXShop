@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Modo predefinido do rato";
 "catalog.preview.0.4.title" = "Não deslocar com os botões de página";
 "catalog.preview.0.5.title" = "Suavizar texto e ilustrações";
+"catalog.preview.0.6.title" = "Pop-ups de links";
+"catalog.preview.0.6.note" = "Valor inicial para os documentos abertos a partir de agora. Num documento aberto, altere no menu «Página».";
 "group.preview.1.title" = "Disposição de páginas duplas";
 "catalog.preview.1.0.title" = "Direção das páginas";
 "catalog.preview.1.1.title" = "Mostrar a primeira página separadamente como capa";
