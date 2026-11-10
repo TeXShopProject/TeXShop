@@ -62,6 +62,22 @@ static void CheckOwnerThemeWells(TSPreferences *owner,TSSettingsWindowController
             for(NSUInteger i=0;i<3;i++)Check(SameThemeColor([[owner valueForKey:outlets[i]]color],ThemeFixtureColor(theme[keys[i]] ?: changed[@"SyntaxMarker"])),@"Marker action refreshes only inheriting bracket wells");
         }
     }
+    // Colors drawn opaque offer no opacity; colors whose opacity is used keep it.
+    {
+        NSMutableDictionary *translucent=[(savedEditing ?: liteColors) mutableCopy];
+        for(NSString *key in @[@"EditorBackground",@"EditorText",@"LogBackground",@"SyntaxComment",@"ImageBackground"])translucent[key]=@[@0.2,@0.4,@0.6,@0.4];
+        [owner setValue:translucent forKey:@"EditingColors"];[owner FillInColorWells];
+        for(NSString *outlet in @[@"SourceBackgroundColorWell",@"SourceTextColorWell",@"LogBackgroundColorWell",@"SyntaxCommentColorWell",@"markerParenColorWell",@"XMLTagColorWell",@"explFunctionColorWell"]){
+            NSColorWell *well=[owner valueForKey:outlet];
+            Check(well!=nil && !well.supportsAlpha && fabs(well.color.alphaComponent-1)<0.001,[NSString stringWithFormat:@"%@ shows an opaque color without opacity",outlet]);
+        }
+        NSColorWell *image=[owner valueForKey:@"ImageBackgroundColorWell"];
+        Check(image.supportsAlpha && fabs(image.color.alphaComponent-0.4)<0.001,@"Image copy background keeps its opacity");
+        for(NSString *outlet in @[@"SourceAlphaColorWell",@"PreviewDirectSyncColorWell",@"EditorFlashColorWell",@"EditorHighlightZenkakuSymbolBackgroundColorWell"])
+            Check([[owner valueForKey:outlet] supportsAlpha],[NSString stringWithFormat:@"%@ keeps opacity",outlet]);
+        NSColorWell *cursor=[owner valueForKey:@"BlockCursorColorWell"];
+        Check(cursor==nil || !cursor.supportsAlpha,@"Block cursor color offers no opacity");
+    }
     method_setImplementation(keyMethod,oldKey);method_setImplementation(panelMethod,oldPanel);navigationTestWindow=nil;
     liteColors=savedLite;darkColors=savedDark;atLeastMojave=savedMojave;shell.window.appearance=savedAppearance;
     [owner setValue:savedEditing forKey:@"EditingColors"];[owner setValue:savedLast forKey:@"lastSavedEditingColors"];[owner FillInColorWells];

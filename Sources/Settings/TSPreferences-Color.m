@@ -114,6 +114,30 @@ NSInteger stringSort(id s1, id s2, void *context)
     return [[TSColorSupport sharedInstance] colorForKey: theKey fromDictionary: EditingColors isWindowDark: withDarkColors];
 }
 
+// These colors are drawn opaque, so their wells offer no opacity. Colors whose opacity
+// is used (flash, fullwidth background, image copy, preview sync) and the window
+// opacity wells behind the sliders keep it.
+- (void)useOpaqueColorWells
+{
+    NSColorWell * __strong wells[] = {SourceTextColorWell, SourceBackgroundColorWell, SourceInsertionPointColorWell,
+        PreviewBackgroundColorWell, ConsoleTextColorWell, ConsoleBackgroundColorWell, LogTextColorWell, LogBackgroundColorWell,
+        SyntaxCommentColorWell, SyntaxCommandColorWell, SyntaxMarkerColorWell, SyntaxIndexColorWell,
+        markerParenColorWell, markerCurlyColorWell, markerSquareColorWell,
+        EditorHighlightBracesColorWell, EditorHighlightContentColorWell, EditorInvisibleCharColorWell, EditorReverseSyncColorWell,
+        EditorHighlightZenkakuSymbolColorWell, FootnoteColorWell, EntryColorWell,
+        XMLCommentColorWell, XMLTagColorWell, XMLSpecialColorWell, XMLParameterColorWell, XMLValueColorWell,
+        explFunctionColorWell, explVariableColorWell, explIntenseFunctionColorWell, explIntenseVariableColorWell,
+        explmykeyColorWell, explmykeyArgumentColorWell, explmsgColorWell};
+    for (NSUInteger i = 0; i < sizeof(wells) / sizeof(wells[0]); i++) {
+        NSColorWell *well = wells[i];
+        if (well == nil) continue;
+        well.supportsAlpha = NO;
+        NSColor *color = well.color;
+        if (color != nil && color.alphaComponent < 1)
+            well.color = [color colorWithAlphaComponent:1];
+    }
+}
+
 // Bracket wells without their own color in the edited theme follow SyntaxMarker.
 - (void)refreshInheritedBracketColorWells
 {
@@ -123,6 +147,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         markerCurlyColorWell.color = [self editingColorForKey: @"SyntaxMarkerCurly"];
     if ([EditingColors objectForKey: @"SyntaxMarkerSquare"] == nil)
         markerSquareColorWell.color = [self editingColorForKey: @"SyntaxMarkerSquare"];
+    [self useOpaqueColorWells];
 }
 
 - (void)FillInColorWells
@@ -256,8 +281,7 @@ NSInteger stringSort(id s1, id s2, void *context)
         XMLValueColorWell.color = [colorSupport darkColorAndAlphaWithKey: @"XMLValue"];
     else
         XMLValueColorWell.color = [colorSupport liteColorAndAlphaWithKey: @"XMLValue"];
-       
-    
+    [self useOpaqueColorWells];
 }
 
 - (IBAction)EditingStyleChoice:(id)sender

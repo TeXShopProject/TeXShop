@@ -159,6 +159,7 @@
     _texCommandTextField = engines.texCommandTextField;
     _texGSCommandTextField = engines.texGSCommandTextField;
     BlockCursorColorWell = miscOne.BlockCursorColorWell;
+    BlockCursorColorWell.supportsAlpha = NO; // the block cursor color is stored without opacity
     _blockCursorButton = miscOne.blockCursorButton;
     _blockSideMatrix = miscOne.blockSideMatrix;
     _blockWidthMatrix = miscOne.blockWidthMatrix;
