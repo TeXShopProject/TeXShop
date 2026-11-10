@@ -22,6 +22,11 @@
 
 // Conversions behind Edit > Character Type Conversion. They are aimed at
 // Japanese LaTeX sources (pLaTeX/upLaTeX with the ajmacros package).
+/// The Adobe-Japan1 CID of a character sequence (a surrogate pair, or a character with
+/// a variation selector or combining marks), or NSNotFound when Hiragino does not draw
+/// it as one glyph of its own.
+FOUNDATION_EXPORT NSUInteger TSAdobeJapan1CIDForSequence(NSString *sequence);
+
 @interface NSString (TSCharacterConversion)
 
 // JIS X 0208 外の文字 ⇄ \UTF / \CID

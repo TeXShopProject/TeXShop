@@ -27,6 +27,7 @@
 #import "globals.h"
 #import "GlobalData.h"
 #import "NSString-Extras.h"  //Terada
+#import "NSString-CharacterConversion.h"
 #include <sys/xattr.h>
 
 static NSString *yenString = nil;
@@ -1342,9 +1343,14 @@ static NSString *TSTextForSaving(NSString *text, NSStringEncoding encoding)
 				utfString = [NSMutableString stringWithFormat:@"%CCID{%ld}",
                              (unichar)g_texChar,(unsigned long)[aGlyph characterIdentifier]];
 			} else if (charRange.length > 1) {
-				NSLayoutManager *aLayout = [dataView layoutManager];
-				utfString = [NSMutableString stringWithFormat:@"%CCID{%d}", (unichar)g_texChar,
-                             [aLayout glyphAtIndex:charRange.location]];
+				// Prefer the Adobe-Japan1 CID; the editor font's glyph number is one only
+				// when that font is an Adobe-Japan1 font such as Hiragino.
+				NSUInteger cid = TSAdobeJapan1CIDForSequence(subString);
+				if (cid == NSNotFound) {
+					NSLayoutManager *aLayout = [dataView layoutManager];
+					cid = [aLayout glyphAtIndex:[aLayout glyphIndexForCharacterAtIndex:charRange.location]];
+				}
+				utfString = [NSMutableString stringWithFormat:@"%CCID{%lu}", (unichar)g_texChar, (unsigned long)cid];
 				// 0x2014,0x2015 fix (reported by Kino-san)
 			} else if ( [subString characterAtIndex: 0] == 0x2015) {
 				utfString = [NSMutableString stringWithFormat:@"%C", (unichar)0x2014];
