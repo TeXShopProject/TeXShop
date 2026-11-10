@@ -1,0 +1,316 @@
+{
+  "policy": "Fallback for the ten rejected project-date candidates, at the maintainer’s direction on 2026-11-10. Application Info.plist timestamps in nine early app archives were overwritten in 2016; their source English.lproj/CustomInfo.plist preserves contemporary localized application metadata and is referenced by Project Builder. Use that original English file consistently, not later translation files. Retain only candidates within existing intervals and the actual version sequence; development suffixes are compared numerically. Dates are proxies, not verified release days. The two rejected versions retain their existing year-only dates.",
+  "versions": {
+    "1.0d2-later": {
+      "candidate": "2000-10-03",
+      "status": "accepted",
+      "reasons": [],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.0d2-later/texshopsource-1.0d2-later.zip",
+      "sha256": "9f1caf0259d13c858b321a0b086d51fd582d4e560f1b70ee592f53c02139247c",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2000-10-03T02:10:14",
+      "declared_version": "1.0",
+      "previous_date_record": {
+        "date": "2000",
+        "source": [
+          "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
+          "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf"
+        ],
+        "basis": "version-sequence",
+        "note": "Bounded by 1.0d2 and 1.0d3 within the same year. No exact day or month is assigned to the variant."
+      },
+      "bounds": {
+        "older": {
+          "version": "1.0d2",
+          "date": "2000-08-31"
+        },
+        "newer": {
+          "version": "1.0d3",
+          "date": "2000-10-07"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "1.0d5-Dirk": {
+      "candidate": "2000-12-31",
+      "status": "rejected",
+      "reasons": [
+        "later-than-newer-version"
+      ],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.0d5-Dirk/texshopsource-1.0d5-Dirk.zip",
+      "sha256": "67dc754cafd44c0ac529a1d0e8518288f1342c5c2f16247c6fbdf54e01166e17",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2000-12-31T20:26:06",
+      "declared_version": "1.0",
+      "previous_date_record": {
+        "date": "2000",
+        "source": [
+          "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
+          "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf"
+        ],
+        "basis": "version-sequence",
+        "note": "Bounded by 1.0d5 and 1.0d6 within the same year. No exact day or month is assigned to the variant."
+      },
+      "bounds": {
+        "older": {
+          "version": "1.0d5",
+          "date": "2000-11-24"
+        },
+        "newer": {
+          "version": "1.0d6",
+          "date": "2000-12-25"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "1.11": {
+      "candidate": "2001-06-28",
+      "status": "accepted",
+      "reasons": [],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.11/texshopsource-1.11.zip",
+      "sha256": "850671f46b387d9cb3fbad60c131437411e8df25ed801514dfee1faa52f8159c",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2001-06-28T19:20:32",
+      "declared_version": "1.11",
+      "previous_date_record": {
+        "date": "2001",
+        "source": [
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2001-June/000048.html",
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2001-August/003787.html"
+        ],
+        "basis": "version-sequence",
+        "note": "Bounded by 1.1 and 1.12 within the same year. No exact day or month is assigned to the variant."
+      },
+      "bounds": {
+        "older": {
+          "version": "1.1",
+          "date": "2001-06-24"
+        },
+        "newer": {
+          "version": "1.11a",
+          "date": "2001"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "1.11a": {
+      "candidate": "2001-06-28",
+      "status": "accepted",
+      "reasons": [],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.11a/texshopsource-1.11a.zip",
+      "sha256": "defcff7b15233397ab94e02f69c7d21cce68bd93de3761e1bef595dc6c7a007f",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2001-06-28T19:20:32",
+      "declared_version": "1.11",
+      "previous_date_record": {
+        "date": "2001",
+        "source": [
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2001-June/000048.html",
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2001-August/003787.html"
+        ],
+        "basis": "version-sequence",
+        "note": "Bounded by 1.1 and 1.12 within the same year. No exact day or month is assigned to the variant."
+      },
+      "bounds": {
+        "older": {
+          "version": "1.11",
+          "date": "2001"
+        },
+        "newer": {
+          "version": "1.12",
+          "date": "2001-08-07"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "1.21": {
+      "candidate": "2002-11-07",
+      "status": "accepted",
+      "reasons": [],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.21/texshopsource-1.21.zip",
+      "sha256": "82e2edbfe0ca5b5500f19ddd78cad337c48b5cdd01bb7358732349f78a536227",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2002-11-07T20:58:34",
+      "declared_version": "1.21",
+      "previous_date_record": {
+        "date": "2002",
+        "source": [
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2002-August/002519.html",
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002706.html"
+        ],
+        "basis": "version-sequence",
+        "note": "Bounded by 1.20 and 1.23 within the same year. No exact day or month is assigned to the variant."
+      },
+      "bounds": {
+        "older": {
+          "version": "1.20",
+          "date": "2002-08-26"
+        },
+        "newer": {
+          "version": "1.22",
+          "date": "2002"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "1.22": {
+      "candidate": "2002-11-10",
+      "status": "accepted",
+      "reasons": [],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.22/texshopsource-1.22.zip",
+      "sha256": "cf668b7e1e35bd28a4bbcf3b96571720275e08803ad37d3366801ee81099a9eb",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2002-11-10T05:28:12",
+      "declared_version": "1.22",
+      "previous_date_record": {
+        "date": "2002",
+        "source": [
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2002-August/002519.html",
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002706.html"
+        ],
+        "basis": "version-sequence",
+        "note": "Bounded by 1.20 and 1.23 within the same year. No exact day or month is assigned to the variant."
+      },
+      "bounds": {
+        "older": {
+          "version": "1.21",
+          "date": "2002"
+        },
+        "newer": {
+          "version": "1.23",
+          "date": "2002-11-10"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "1.25": {
+      "candidate": "2002-11-25",
+      "status": "accepted",
+      "reasons": [],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.25/texshopsource-1.25.zip",
+      "sha256": "ec33922d1d59001068697c80fabdf0fe345f0ba29a9a3af85566fd7631885c06",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2002-11-25T18:37:34",
+      "declared_version": "1.25",
+      "previous_date_record": {
+        "date": "2002",
+        "source": [
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002782.html",
+          "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf"
+        ],
+        "basis": "version-sequence",
+        "note": "Between 1.24 (November 12, 2002) and 1.28 (January 29, 2003); the evidence does not distinguish the year.",
+        "end_date": "2003"
+      },
+      "bounds": {
+        "older": {
+          "version": "1.24",
+          "date": "2002-11-12"
+        },
+        "newer": {
+          "version": "1.26",
+          "date": "2002",
+          "end_date": "2003"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "1.26": {
+      "candidate": "2002-12-30",
+      "status": "accepted",
+      "reasons": [],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.26/texshopsource-1.26.zip",
+      "sha256": "7549f46a9f870467d7af0a17126b9c5eebb0434f16d916f315231b299cd94abf",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2002-12-30T05:21:56",
+      "declared_version": "1.26",
+      "previous_date_record": {
+        "date": "2002",
+        "source": [
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002782.html",
+          "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf"
+        ],
+        "basis": "version-sequence",
+        "note": "Between 1.24 (November 12, 2002) and 1.28 (January 29, 2003); the evidence does not distinguish the year.",
+        "end_date": "2003"
+      },
+      "bounds": {
+        "older": {
+          "version": "1.25",
+          "date": "2002",
+          "end_date": "2003"
+        },
+        "newer": {
+          "version": "1.27",
+          "date": "2002",
+          "end_date": "2003"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "1.27": {
+      "candidate": "2003-01-03",
+      "status": "accepted",
+      "reasons": [],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.27/texshopsource-1.27.zip",
+      "sha256": "88a79400a2cdb5385aec543cb16d9c51c5d6e26da13d47e479390b68d1ff3209",
+      "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+      "plist_modified": "2003-01-03T21:18:10",
+      "declared_version": "1.27",
+      "previous_date_record": {
+        "date": "2002",
+        "source": [
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002782.html",
+          "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf"
+        ],
+        "basis": "version-sequence",
+        "note": "Between 1.24 (November 12, 2002) and 1.28 (January 29, 2003); the evidence does not distinguish the year.",
+        "end_date": "2003"
+      },
+      "bounds": {
+        "older": {
+          "version": "1.26",
+          "date": "2002",
+          "end_date": "2003"
+        },
+        "newer": {
+          "version": "1.28",
+          "date": "2003-01-29"
+        }
+      },
+      "note": "The nine early application ZIPs have 2016 Info.plist timestamps. Use the source’s English CustomInfo.plist (localized application metadata explicitly referenced by the Project Builder project) as a fallback; its date is a proxy, not a verified public release date. The English original is used consistently, not later translation timestamps."
+    },
+    "2.16": {
+      "candidate": "2007-12-08",
+      "status": "rejected",
+      "reasons": [
+        "outside-existing-date-range"
+      ],
+      "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.16/texshopsource-2.16.zip",
+      "sha256": "2ede8570e3a783f620f52526babf26d5e29157701ca798747b4da1f19bb96e18",
+      "plist_path": "texshop2.16/Resources/Info.plist",
+      "plist_modified": "2007-12-08T11:54:50",
+      "declared_version": "${MARKETING_VERSION}",
+      "previous_date_record": {
+        "date": "2008",
+        "source": [
+          "https://github.com/TeXShop/TeXShop/releases/download/v2.16/texshopsource-2.16.zip",
+          "https://email.esm.psu.edu/pipermail/macosx-tex/2008-September/036505.html"
+        ],
+        "basis": "archive-and-version-sequence",
+        "note": "Matching archived source or build timestamps provide the lower bound; successor 2.18 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+      },
+      "bounds": {
+        "older": {
+          "version": "2.14",
+          "date": "2007-08-16"
+        },
+        "newer": {
+          "version": "2.17",
+          "date": "2008-08-14"
+        }
+      },
+      "note": "Resources/Info.plist is the application target’s INFOPLIST_FILE, but its 2007 date predates the known 2008 version sequence."
+    }
+  }
+}

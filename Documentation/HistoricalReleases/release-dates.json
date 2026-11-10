@@ -1259,180 +1259,148 @@
     "note": "Public mailing-list date. Distributed in the MacTeX installer, not as a standalone release."
   },
   "5.11": {
-    "date": "2023-01",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v5.11/texshop-5.11.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v5.11/texshopsource-5.11.zip",
-      "https://github.com/macports/macports-ports/commit/bb549081a5372686a688b23ff91561d17ba31f34"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2023-01-31. Later archival GitHub publication dates are excluded."
+    "date": "2023-01-12",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v5.11/texshopsource-5.11.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "TeXShop-5.11/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "2dfaf80cba8d4912f12232509dd24f3a4ad0936ac8df1d96fa78638b862d9419",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.43": {
-    "date": "2019-10",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.43/texshop-4.43.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.43/texshopsource-4.43.zip",
-      "https://github.com/macports/macports-ports/commit/1120b214245a3bf89400f7d7525257fdcd15d817"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2019-10-18. Later archival GitHub publication dates are excluded."
+    "date": "2019-10-16",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.43/texshopsource-4.43.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource443/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "57ba432d61ca6500a4f68ccb85d9a6a08d0cc6a6ecf95b6ba100bdfad8ea4cce",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.41": {
-    "date": "2019-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.41/texshop-4.41.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.41/texshopsource-4.41.zip",
-      "https://github.com/macports/macports-ports/commit/f30b26e00c616754aafda56aeed391e632d9a4b3"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2019-09-22. Later archival GitHub publication dates are excluded."
+    "date": "2019-09-21",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.41/texshopsource-4.41.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource441/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "b426ab128dac666ba756ce3ec64ad12882ed290c2dcc63bed858616ab6d0c2e2",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.40": {
-    "date": "2019-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.40/texshop-4.40.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.40/texshopsource-4.40.zip",
-      "https://github.com/macports/macports-ports/commit/6845fbfb5b2d2897b5dc750242efda03b6a53741"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2019-09-21. Later archival GitHub publication dates are excluded."
+    "date": "2019-09-20",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.40/texshopsource-4.40.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource440/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "aa703b056750a1ac904c6000a7bcc10670bf7b6c90f98acdeea89570c59334c7",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.39": {
-    "date": "2019-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.39/texshop-4.39.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.39/texshopsource-4.39.zip",
-      "https://github.com/macports/macports-ports/commit/ea25fb943089341472134635245b995c07e61148"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2019-09-16. Later archival GitHub publication dates are excluded."
+    "date": "2019-09-15",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.39/texshopsource-4.39.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource439/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "8e1f6f8a9065f3ebf45bb6c16ec9d8d413f60def204db424d1a491a82ee9b753",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.38": {
-    "date": "2019-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.38/texshop-4.38.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.38/texshopsource-4.38.zip",
-      "https://github.com/macports/macports-ports/commit/bf381f24d64e184eae60cc79ee9307c32268dbb2"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2019-09-15. Later archival GitHub publication dates are excluded."
+    "date": "2019-09-14",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.38/texshopsource-4.38.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource438/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "e923893a5812635f3def8b301a2a7d1dd3bc30a28ad016d4ea05d106c41c39a7",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.37": {
-    "date": "2019-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.37/texshop-4.37.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.37/texshopsource-4.37.zip",
-      "https://github.com/macports/macports-ports/commit/c4b87a63e02d1ec6f4795ca990878a40704eb906"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2019-09-14. Later archival GitHub publication dates are excluded."
+    "date": "2019-09-13",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.37/texshopsource-4.37.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource437/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "fab3e10a747323d9f7eb3dc2c01f48658372287fab9d7b6661df6e6077a5fb55",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.35": {
-    "date": "2019-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.35/texshop-4.35.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.35/texshopsource-4.35.zip",
-      "https://github.com/macports/macports-ports/commit/8f95b714821f67fa22576c1fefb426496243b75f"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2019-09-06. Later archival GitHub publication dates are excluded."
+    "date": "2019-09-04",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.35/texshopsource-4.35.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource435/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "5561c279ded9da1da534126f5a450f72522d52c51693b40520687b92b74ed71b",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "3.87": {
-    "date": "2017-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v3.87/texshop-3.87.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v3.87/texshopsource-3.87.zip",
-      "https://github.com/macports/macports-ports/commit/492f2d44a043fd620625fd31661541b7e5f4660a"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2017-09-12. Later archival GitHub publication dates are excluded."
+    "date": "2017-09-11",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.87/texshopsource-3.87.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource387/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "1b367277a47971420b7eb1b1858876410603aaa3d43eb0007be7c4d93618d765",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "2.26": {
-    "date": "2009-03",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.26/texshop-2.26.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.26/texshopsource-2.26.zip",
-      "https://github.com/macports/macports-ports/commit/74cbf4bd020ae509a751cd2ef77c95745d35bef1"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2009-03-19. Later archival GitHub publication dates are excluded."
+    "date": "2009-03-19",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.26/texshopsource-2.26.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.26/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "d29492457cbb0af0210e6a64a7fb11727e977a8a38305545769a5d790c55a1ca",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "2.37": {
-    "date": "2010-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.37/texshop-2.37.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.37/texshopsource-2.37.zip",
-      "https://github.com/macports/macports-ports/commit/70af79c197b5382dab8aa69703ea35bf48822eaf"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "The matching archived product/source timestamps and the MacPorts update place this release within the displayed calendar month. MacPorts update: 2010-09-13. Later archival GitHub publication dates are excluded."
+    "date": "2010-09-13",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.37/texshopsource-2.37.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "0f4d792c94c37f28d1ece4809793db6b264014c6d8da51331d755f4f5e868c69",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.42": {
-    "date": "2019-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.42/texshop-4.42.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.42/texshopsource-4.42.zip",
-      "https://github.com/macports/macports-ports/commit/1630377ef501316cbb1418da9415038e1f807a8a"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "Archived product dated September 30; MacPorts availability October 1. This straddles a month boundary.",
-    "end_date": "2019-10"
+    "date": "2019-09-25",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.42/texshopsource-4.42.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource442/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "6a7a1cc6dc99523847fca812e8d73cd727f9075f7d55305e89321f7c7ecad203",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "4.31": {
-    "date": "2019-07",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.31/texshop-4.31.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v4.31/texshopsource-4.31.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2019-July/056708.html"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "Product dated July 30; public discussion of installed 4.31 on July 31."
+    "date": "2019-07-22",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v4.31/texshopsource-4.31.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource431/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "9a4c292b3104ff3a8e3ee83baeb625975ab22cebc395daaa76f42c1162384129",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "3.00": {
-    "date": "2011-07",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v3.00/texshopsource-3.00.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2011-July/047362.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 3.01 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2011-07-10",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.00/texshopsource-3.00.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop64-3.00/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "73c7a3c594a7912d590380fbb6fe6882a23c7e5e8f3bd0017e81e7d415a69454",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "2.44": {
-    "date": "2012-05",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.44/texshopsource-2.44.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2012-May/049138.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 2.45 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2012-05-14",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.44/texshopsource-2.44.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.44/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "e10dc8445adf32f9d7fa079091ff9c544bad284317c3298429b4bf7aee266135",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "3.37": {
-    "date": "2014",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v3.37/texshopsource-3.37.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2014-August/052733.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 3.38 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2014-07-08",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.37/texshopsource-3.37.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.37/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "8b3cd24c65ada4a1a5290b9b98f5171c0a49b4de5d4784566afb954df99c81cd",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "2.27": {
-    "date": "2009",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.27/texshopsource-2.27.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.28/texshopsource-2.28.zip"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 2.28 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2009-07-14",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.27/texshopsource-2.27.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.27/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "8e9c924100d6442ac8d3a14308309a161a7aa886569c1d34c312c2ebcb46f4dd",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "2.28": {
-    "date": "2009",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.28/texshopsource-2.28.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2009-December/042362.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 2.29 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2009-11-12",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.28/texshopsource-2.28.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.28/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "ef5f946c129c11ae11f159e3c79919f01453994d49a53ff87714b312873a9a9f",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "2.16": {
     "date": "2008",
@@ -1444,117 +1412,100 @@
     "note": "Matching archived source or build timestamps provide the lower bound; successor 2.18 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
   },
   "2.17": {
-    "date": "2008",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.17/texshopsource-2.17.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2008-September/036505.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 2.18 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2008-08-14",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.17/texshopsource-2.17.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.17/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "09351f1c752585ffaa78e4586c3385d1a740e7ced310bcf9808e00987602f7af",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.39": {
-    "date": "2005",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.39/texshop-1.39.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.39/texshopsource-1.39.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2005-October/018100.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 1.41 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2005-05-11",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.39/texshopsource-1.39.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "archive_sha256": "51261d8c588e4a552a1765d87733529a07a5cf393a7f0ffdc7d2f23b7f72ffd7",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.40": {
-    "date": "2005",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.40/texshop-1.40.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.40/texshopsource-1.40.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2005-October/018100.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 1.41 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2005-05-19",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.40/texshopsource-1.40.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "archive_sha256": "d2133d25e610ebcf8b12d654f20ce04879cae1a3ef83204ab39c1461286a5e3b",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "2.02": {
-    "date": "2005-05",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.02/texshop-2.02.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.02/texshopsource-2.02.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2005-May/015456.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 2.03 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2005-05-16",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.02/texshopsource-2.02.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "archive_sha256": "ccb4b83cd680d1b6042492c71d1f6ba6600fd09d2db472e245646a8a0d3cba3a",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.33": {
-    "date": "2003",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.33/texshop-1.33.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.33/texshopsource-1.33.zip",
-      "https://github.com/macports/macports-ports/commit/0e2cfc83b75c707bced430b990e56cdb5272b7f4"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 1.34 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2003-11-26",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.33/texshopsource-1.33.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource133/TeXShop.xcode/project.pbxproj",
+    "archive_sha256": "11a303aba96ce2769cb976cce436e4155e15bcfc54ae2af21969e4cd63cd1d28",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.11": {
-    "date": "2001",
-    "source": [
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2001-June/000048.html",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2001-August/003787.html"
-    ],
-    "basis": "version-sequence",
-    "note": "Bounded by 1.1 and 1.12 within the same year. No exact day or month is assigned to the variant."
+    "date": "2001-06-28",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.11/texshopsource-1.11.zip",
+    "basis": "localized-info-plist-modification-date-proxy",
+    "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+    "archive_sha256": "850671f46b387d9cb3fbad60c131437411e8df25ed801514dfee1faa52f8159c",
+    "note": "At the maintainer’s direction, the archived source’s English CustomInfo.plist modification date supplies the catalog date after the project-file date proved inconsistent. This is localized application metadata referenced by the project, not the built application’s Info.plist. It fits the existing date interval and surrounding version sequence but is not independent proof of a public release date."
   },
   "1.11a": {
-    "date": "2001",
-    "source": [
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2001-June/000048.html",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2001-August/003787.html"
-    ],
-    "basis": "version-sequence",
-    "note": "Bounded by 1.1 and 1.12 within the same year. No exact day or month is assigned to the variant."
+    "date": "2001-06-28",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.11a/texshopsource-1.11a.zip",
+    "basis": "localized-info-plist-modification-date-proxy",
+    "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+    "archive_sha256": "defcff7b15233397ab94e02f69c7d21cce68bd93de3761e1bef595dc6c7a007f",
+    "note": "At the maintainer’s direction, the archived source’s English CustomInfo.plist modification date supplies the catalog date after the project-file date proved inconsistent. This is localized application metadata referenced by the project, not the built application’s Info.plist. It fits the existing date interval and surrounding version sequence but is not independent proof of a public release date."
   },
   "1.21": {
-    "date": "2002",
-    "source": [
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2002-August/002519.html",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002706.html"
-    ],
-    "basis": "version-sequence",
-    "note": "Bounded by 1.20 and 1.23 within the same year. No exact day or month is assigned to the variant."
+    "date": "2002-11-07",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.21/texshopsource-1.21.zip",
+    "basis": "localized-info-plist-modification-date-proxy",
+    "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+    "archive_sha256": "82e2edbfe0ca5b5500f19ddd78cad337c48b5cdd01bb7358732349f78a536227",
+    "note": "At the maintainer’s direction, the archived source’s English CustomInfo.plist modification date supplies the catalog date after the project-file date proved inconsistent. This is localized application metadata referenced by the project, not the built application’s Info.plist. It fits the existing date interval and surrounding version sequence but is not independent proof of a public release date."
   },
   "1.22": {
-    "date": "2002",
-    "source": [
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2002-August/002519.html",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002706.html"
-    ],
-    "basis": "version-sequence",
-    "note": "Bounded by 1.20 and 1.23 within the same year. No exact day or month is assigned to the variant."
+    "date": "2002-11-10",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.22/texshopsource-1.22.zip",
+    "basis": "localized-info-plist-modification-date-proxy",
+    "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+    "archive_sha256": "cf668b7e1e35bd28a4bbcf3b96571720275e08803ad37d3366801ee81099a9eb",
+    "note": "At the maintainer’s direction, the archived source’s English CustomInfo.plist modification date supplies the catalog date after the project-file date proved inconsistent. This is localized application metadata referenced by the project, not the built application’s Info.plist. It fits the existing date interval and surrounding version sequence but is not independent proof of a public release date."
   },
   "1.29": {
-    "date": "2003",
-    "source": [
-      "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf",
-      "https://tug.org/TUGboat/tb24-1/koch.pdf"
-    ],
-    "basis": "version-sequence",
-    "note": "Bounded by 1.28 and 1.30 within the same year. No exact day or month is assigned to the variant. Koch’s 2003 conference paper describes 1.30 as just released, independently establishing the upper year."
+    "date": "2003-07-08",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.29/texshopsource-1.29.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource129/TeXShop.pbproj/project.pbxproj",
+    "archive_sha256": "39bce9b063eded781eb0707ee52d5ea17c6fb80ce6a827fcb56846f9e5c68996",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.30": {
-    "date": "2003",
-    "source": [
-      "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf",
-      "https://github.com/macports/macports-ports/commit/0e2cfc83b75c707bced430b990e56cdb5272b7f4",
-      "https://tug.org/TUGboat/tb24-1/koch.pdf"
-    ],
-    "basis": "version-sequence",
-    "note": "Bounded by 1.28 and 1.34 within the same year. No exact day or month is assigned to the variant. Koch’s 2003 conference paper describes 1.30 as just released, independently establishing the upper year."
+    "date": "2003-07-18",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.30/texshopsource-1.30.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource130/TeXShop.pbproj/project.pbxproj",
+    "archive_sha256": "fada9276fa86512f3d845f3189bfd1ba3028b14cc1ac5aab6902ca9a94c668c0",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.0d2-later": {
-    "date": "2000",
-    "source": [
-      "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf",
-      "https://texshop.app/archive/downloads/TeXShop-History-Koch.pdf"
-    ],
-    "basis": "version-sequence",
-    "note": "Bounded by 1.0d2 and 1.0d3 within the same year. No exact day or month is assigned to the variant."
+    "date": "2000-10-03",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.0d2-later/texshopsource-1.0d2-later.zip",
+    "basis": "localized-info-plist-modification-date-proxy",
+    "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+    "archive_sha256": "9f1caf0259d13c858b321a0b086d51fd582d4e560f1b70ee592f53c02139247c",
+    "note": "At the maintainer’s direction, the archived source’s English CustomInfo.plist modification date supplies the catalog date after the project-file date proved inconsistent. This is localized application metadata referenced by the project, not the built application’s Info.plist. It fits the existing date interval and surrounding version sequence but is not independent proof of a public release date."
   },
   "1.0d5-Dirk": {
     "date": "2000",
@@ -1566,80 +1517,203 @@
     "note": "Bounded by 1.0d5 and 1.0d6 within the same year. No exact day or month is assigned to the variant."
   },
   "1.25": {
-    "date": "2002",
-    "source": [
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002782.html",
-      "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf"
-    ],
-    "basis": "version-sequence",
-    "note": "Between 1.24 (November 12, 2002) and 1.28 (January 29, 2003); the evidence does not distinguish the year.",
-    "end_date": "2003"
+    "date": "2002-11-25",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.25/texshopsource-1.25.zip",
+    "basis": "localized-info-plist-modification-date-proxy",
+    "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+    "archive_sha256": "ec33922d1d59001068697c80fabdf0fe345f0ba29a9a3af85566fd7631885c06",
+    "note": "At the maintainer’s direction, the archived source’s English CustomInfo.plist modification date supplies the catalog date after the project-file date proved inconsistent. This is localized application metadata referenced by the project, not the built application’s Info.plist. It fits the existing date interval and surrounding version sequence but is not independent proof of a public release date."
   },
   "1.26": {
-    "date": "2002",
-    "source": [
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002782.html",
-      "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf"
-    ],
-    "basis": "version-sequence",
-    "note": "Between 1.24 (November 12, 2002) and 1.28 (January 29, 2003); the evidence does not distinguish the year.",
-    "end_date": "2003"
+    "date": "2002-12-30",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.26/texshopsource-1.26.zip",
+    "basis": "localized-info-plist-modification-date-proxy",
+    "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+    "archive_sha256": "7549f46a9f870467d7af0a17126b9c5eebb0434f16d916f315231b299cd94abf",
+    "note": "At the maintainer’s direction, the archived source’s English CustomInfo.plist modification date supplies the catalog date after the project-file date proved inconsistent. This is localized application metadata referenced by the project, not the built application’s Info.plist. It fits the existing date interval and surrounding version sequence but is not independent proof of a public release date."
   },
   "1.27": {
-    "date": "2002",
-    "source": [
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2002-November/002782.html",
-      "https://www.tug.org/TUGboat/tb24-1/tb76complete.pdf"
-    ],
-    "basis": "version-sequence",
-    "note": "Between 1.24 (November 12, 2002) and 1.28 (January 29, 2003); the evidence does not distinguish the year.",
-    "end_date": "2003"
+    "date": "2003-01-03",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.27/texshopsource-1.27.zip",
+    "basis": "localized-info-plist-modification-date-proxy",
+    "plist_path": "texshopsource/English.lproj/CustomInfo.plist",
+    "archive_sha256": "88a79400a2cdb5385aec543cb16d9c51c5d6e26da13d47e479390b68d1ff3209",
+    "note": "At the maintainer’s direction, the archived source’s English CustomInfo.plist modification date supplies the catalog date after the project-file date proved inconsistent. This is localized application metadata referenced by the project, not the built application’s Info.plist. It fits the existing date interval and surrounding version sequence but is not independent proof of a public release date."
   },
   "1.31": {
-    "date": "2003-10",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.31/texshop-1.31.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.31/texshopsource-1.31.zip",
-      "https://github.com/macports/macports-ports/commit/39f7f8289161ba44ad8f2543949d69ce40e549a2"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "Version-specific Info.plist and public MacPorts version change establish the month. Later rebuilds of the same version do not establish its initial release day."
+    "date": "2003-10-24",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.31/texshopsource-1.31.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource131/TeXShop.xcode/project.pbxproj",
+    "archive_sha256": "2da3fd09ef2c254536b19c3fd85e4b1decdc483e7b3070379e165f1f64f5ae40",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.32": {
-    "date": "2003-11",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.32/texshop-1.32.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.32/texshopsource-1.32.zip",
-      "https://github.com/macports/macports-ports/commit/ec062d50f62be3d0d4370af81c60280a7a380c1b"
-    ],
-    "basis": "archive-and-public-availability",
-    "note": "Version-specific Info.plist and public MacPorts version change establish the month. Later rebuilds of the same version do not establish its initial release day."
+    "date": "2003-11-17",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.32/texshopsource-1.32.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource132/TeXShop.xcode/project.pbxproj",
+    "archive_sha256": "f09e4e3506e81bb79ff1d0afb48aeb68d1b37c1c9c8cbd878f33afc531eeeb82",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.35c": {
-    "date": "2004-09",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.35c/texshop-1.35c.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.35c/texshopsource-1.35c.zip",
-      "https://github.com/macports/macports-ports/commit/d774ece75dd9acfe5dc7c978e2676a42549d037e"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Version 1.35c has a September 5 build; 1.35e was publicly packaged September 17, bounding c to September."
+    "date": "2004-09-05",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.35c/texshopsource-1.35c.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "archive_sha256": "50365916985d9091a177bbd092f5997b253fa48ead9fb2a48afba2f9b6759971",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "1.35f": {
-    "date": "2004",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.35f/texshop-1.35f.zip",
-      "https://github.com/TeXShop/TeXShop/releases/download/v1.35f/texshopsource-1.35f.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2005-April/014993.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Archived 1.35f executable is dated September 27, 2004; 1.37 was announced April 29, 2005. No narrower supported public-release interval is assigned.",
-    "end_date": "2005"
+    "date": "2004-09-27",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v1.35f/texshopsource-1.35f.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshopsource/TeXShop.xcode/project.pbxproj",
+    "archive_sha256": "dd9cd15a7068e2f9647464dc07b9338048b3c71926f7bca9d7cf9ea691fee8d5",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "5.58": {
-    "date": "2026",
-    "source": "https://texshop.app/archive/golden-gate.html",
-    "basis": "author-history",
-    "note": "Golden Gate variant: author’s account refers to April 2026 work and a June 25 update. This is distinct from the Tahoe 5.58 distribution in MacTeX 2026."
+    "date": "2026-06-17",
+    "source": "https://github.com/TeXShopProject/TeXShop/releases/download/historical-downloads/TeXShop-5.58-GG-Source.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "TexShop-5.58-GG-Source/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "1ba1c36b12244070e8cf0a365dfa61d98219b897f66f2a7680c130431ac5c32d",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
+  },
+  "2.19": {
+    "date": "2009-01-11",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.19/texshopsource-2.19.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.19/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "a18663236a73ed43c6bc12716811e062e1881052b58b01ec637d97886d2c11c2",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "2.21": {
+    "date": "2009-02-06",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.21/texshopsource-2.21.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.21/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "c19e598868fc82033d86a56791e7050287fcd5272347a73e04169318ecee3ef8",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "2.22": {
+    "date": "2009-02-10",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.22/texshopsource-2.22.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.22/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "c7b90e82df7ba6d9eeb31f9776794098b07b272bd9fd7214da65199a8fc652be",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "2.23": {
+    "date": "2009-02-23",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.23/texshopsource-2.23.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.23/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "631f89b95c4eb40cbad9646a3a9b4987e175e4b8649213bbe70943d567294039",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "2.24": {
+    "date": "2009-02-24",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.24/texshopsource-2.24.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.24/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "26b4fc334707a9fbbe875791a0f97d9f858a3cc1f56c00a53b553d53f05563d5",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "2.32": {
+    "date": "2010-03-02",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.32/texshopsource-2.32.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.32-64/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "24d9813eae5f8aee7e63109eac57df9dfb41574bb0681bcb0c2971f999f4ec48",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "2.35": {
+    "date": "2010-06-19",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.35/texshopsource-2.35.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop2.35/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "a89b0064d65a7ce9d72fcf94c71784a6a6f4ce656782530eee97f3414339730f",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.13": {
+    "date": "2013-04-26",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.13/texshopsource-3.13.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.13/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "6a0fe62be5a97d7007d6bf220976bf578a565b025205de997ccb55693b835629",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.19": {
+    "date": "2013-05-28",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.19/texshopsource-3.19.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.19/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "5c4db702fab01f16c9c5809e88264c6c1907fc3896007739cbb8d90d4c715843",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.20": {
+    "date": "2013-07-09",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.20/texshopsource-3.20.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.20/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "59d60271c92fdb3d012e9928c4634d4ff17fac02d968b58cab89900cfbd1fb7d",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.27": {
+    "date": "2013-11-07",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.27/texshopsource-3.27.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.27/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "5b3855d0f62f3ef6681f0f9e74b2dab6bd93ff7023a26b41f5ac2b6fc8ffc22e",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.28": {
+    "date": "2014-03-17",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.28/texshopsource-3.28.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.28/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "e1d2c44658b782f4532ebdbb78b48ee94c1f3550f6bd377fb1bc5ab89f9d976c",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.29": {
+    "date": "2014-03-23",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.29/texshopsource-3.29.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.29/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "20f3772b2f8796e0342ac67b7a02391ca2359bdb354e00d584a24b240f3358ae",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.30": {
+    "date": "2014-03-23",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.30/texshopsource-3.30.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.30/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "9cfc776f99080290836041e074b3d4bfa4818a20ec73ab386f797e5927f1dc4a",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.31": {
+    "date": "2014-03-25",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.31/texshopsource-3.31.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.31/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "05a0ff13c2a34525b4994497d888433cafc6107ad898ab6783c6be1b936ffc74",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.33": {
+    "date": "2014-04-11",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.33/texshopsource-3.33.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.33/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "b9cff52a8ea1c34ba444546d40c62030e3fe9b11b8ecf91119a50c266387c905",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
+  },
+  "3.40": {
+    "date": "2014-08-12",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v3.40/texshopsource-3.40.zip",
+    "basis": "project-file-modification-date-proxy",
+    "project_path": "texshop-3.40/TeXShop.xcodeproj/project.pbxproj",
+    "archive_sha256": "ea1c82307b181ef26c111e0a1abd0dcd1e8331814115b45b0a2fabc463260d50",
+    "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date. This version was unreleased; the date represents its archived development snapshot."
   }
 }
