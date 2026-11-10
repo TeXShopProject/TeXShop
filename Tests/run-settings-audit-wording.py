@@ -16,7 +16,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
   result=run();assert result.returncode==0,result.stderr
  cases=[]
  for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex','Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
-  phrase='同じ行の色設定は1件の結果にまとめます。' if '-ja.' in filename else 'Color controls on the same row share one result.'
+  phrase='選んだ項目へ移動して強調します。' if '-ja.' in filename else 'Selecting a result shows and highlights the setting.'
   cases.append(('release-search-'+filename,filename,phrase.encode(),b'REMOVED',guidance,'Release category and color-row guidance'))
  cases.append(('ko-category','Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm',''.join('&#'+str(ord(c))+';' for c in '범주').encode(),''.join('&#'+str(ord(c))+';' for c in '카테고리').encode(),guidance,'Korean category terminology'))
 

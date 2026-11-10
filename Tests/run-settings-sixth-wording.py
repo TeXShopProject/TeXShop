@@ -37,10 +37,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-sixth-wording-') as td:
         path=f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
         cases.append((path,{'en':b'numeric field','ja':'数値欄'.encode('cp932'),'de':b'Zahlenfeld','es':b'campo num','ko':b'&#'}[lang],b'REMOVED'))
     # Reverting the new commit semantics must fail independently of field presence.
-    for path in ['DocumentSources/Manual Source/Manual.tex','Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex']:
-        cases.append((path,b'typed and pasted' if path!='DocumentSources/Manual Source/Manual.tex' else b'Typed and pasted',b'CHANGED'))
-    for path in ['Documentation/Releases/5.60-ja.md','website/release-notes-ja.html']:
-        cases.append((path,'打鍵と貼り付け'.encode(),b'CHANGED'))
+    # Release notes keep only the slider and field; the commit rule is documented in the manual and help.
+    cases.append(('DocumentSources/Manual Source/Manual.tex',b'Typed and pasted',b'CHANGED'))
     for lang,old,encoding in [('en','typed and pasted','utf-8'),('ja','打鍵と貼り付け','cp932'),('de','getippten und eingefügten','latin-1'),('es','escrito y el pegado','latin-1')]:
         cases.append((f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm',old.encode(encoding),b'CHANGED'))
     cases.append(('Resources/Interfaces/ko.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'&#51649;&#51217;',b'CHANGED'))
