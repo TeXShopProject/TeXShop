@@ -496,6 +496,7 @@
         [document->scrapPDFKitView reShowWithPath:pdfURL.path];
         [document->scrapPDFWindow setHidesOnDeactivate:YES];
         [document->scrapPDFWindow makeKeyAndOrderFront:nil];
+        [document->scrapPDFKitView didShowOutputWindow];
     }];
 }
 
