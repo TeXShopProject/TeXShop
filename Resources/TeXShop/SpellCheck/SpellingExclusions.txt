@@ -163,7 +163,7 @@ check-args  emph verbatim
 
 # amsmath, mathtools. amssymb defines only symbols and needs no rules.
 skip-args  1  tag mathtoolsset usetagform refeq
-skip-args  2  newtagform renewtagform
+skip-args  3  newtagform renewtagform
 skip-args  3  DeclarePairedDelimiter
 
 # graphicx
@@ -171,7 +171,9 @@ skip-args  1  DeclareGraphicsExtensions
 skip-args  4  DeclareGraphicsRule
 
 # xcolor, colortbl
-skip-args  1  pagecolor rowcolor columncolor cellcolor arrayrulecolor doublerulesepcolor selectcolormodel
+skip-args  1  pagecolor cellcolor arrayrulecolor doublerulesepcolor selectcolormodel
+# \rowcolor[model]{colour}[left overhang][right overhang]
+skip-pattern  []{}[][]  rowcolor columncolor
 skip-args  2  fcolorbox colorlet
 skip-args  3  providecolor xdefinecolor rowcolors extractcolorspecs
 skip-args  4  definecolorset convertcolorspec
@@ -183,9 +185,13 @@ skip-args  2  pgfmathsetmacro
 # geometry
 skip-args  1  newgeometry savegeometry loadgeometry
 
-# fancyhdr: [..] chooses the header position (L, C, R, E, O); the text is checked.
-skip-args  0  fancyhead fancyfoot fancyhf lhead chead rhead lfoot cfoot rfoot
-skip-args  1  fancyheadoffset fancyfootoffset fancypagestyle
+# fancyhdr: the [..] of \fancyhead, \fancyfoot and \fancyhf chooses the position (L, C,
+# R, E, O); the text is checked. \lhead[even]{odd} and the like have text in both
+# arguments, so they have no rule. \fancypagestyle{name}[base]{definitions}
+# checks its definitions.
+skip-args  0  fancyhead fancyfoot fancyhf
+skip-args  1  fancyheadoffset fancyfootoffset
+skip-pattern  {}[]  fancypagestyle
 
 # microtype: settings, not prose. \textls[amount]{text} checks its text.
 skip-args  0  textls
@@ -206,10 +212,13 @@ skip-args  3  newlist renewlist SetEnumitemValue AddEnumerateCounter
 # hyperref (\hyperref[label]{text} is handled above)
 skip-args  1  nolinkurl hyperlink hypertarget hyperbaseurl hyperimage urlstyle urldef Acrobatmenu
 skip-args  1  pdfstringdefDisableCommands
+# \currentpdfbookmark{text}{name} and the like: the text is skipped with the name, as
+# for \pdfbookmark above, since a rule cannot skip only a later argument.
 skip-args  2  hyperdef currentpdfbookmark subpdfbookmark belowpdfbookmark
 
-# cleveref. Labels are skipped by the ref rule above for \cref, \Cref and the page
-# variants; these are the commands whose names do not end in "ref".
+# cleveref. Labels of \cref, \Cref and the other commands ending in "ref" are skipped
+# by the ref rule above; the rest are listed here. The names given by \crefname and
+# the formats are skipped too, so that abbreviations such as "Fig." are not flagged.
 skip-args  1  labelcref labelcpageref namecref nameCref lcnamecref namecrefs nameCrefs lcnamecrefs
 skip-args  2  crefrange Crefrange cpagerefrange Cpagerefrange crefalias
 skip-args  3  crefname Crefname
@@ -218,8 +227,8 @@ skip-args  2  crefformat Crefformat crefrangeformat Crefrangeformat creflabelfor
 skip-args  2  crefrangelabelformat
 
 # biblatex
-skip-args  0  printbibliography printbibheading printbiblist bibbysection bibbycategory
-skip-args  1  addglobalbib addsectionbib ExecuteBibliographyOptions DeclareBibliographyCategory
+skip-args  0  printbibliography printbibheading bibbysection bibbycategory
+skip-args  1  printbiblist addglobalbib addsectionbib ExecuteBibliographyOptions DeclareBibliographyCategory
 skip-args  1  defbibheading
 skip-args  2  defbibfilter defbibcheck defbibentryset addtocategory
 skip-args  2  DeclareFieldFormat DeclareNameFormat DeclareListFormat
