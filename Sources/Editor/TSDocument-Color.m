@@ -348,6 +348,21 @@
     myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorInvisibleChar"];
     InvisibleColor = myColor;
     
+    // A theme without these keys, such as one made before they existed, shows
+    // fullwidth characters like other text. A transparent background adds none.
+    NSMutableDictionary *fullwidthAttributes = [NSMutableDictionary dictionary];
+    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorHighlightZenkakuSymbol"];
+    if (myColor)
+        fullwidthAttributes[NSForegroundColorAttributeName] = myColor;
+    NSArray *fullwidthBackground = colorDictionary[@"EditorHighlightZenkakuSymbolBackground"];
+    if (fullwidthBackground.count >= 4)
+        myColor = [[TSColorSupport sharedInstance] colorAndAlphaFromDictionary:colorDictionary andKey: @"EditorHighlightZenkakuSymbolBackground"];
+    else
+        myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorHighlightZenkakuSymbolBackground"];
+    if (myColor && myColor.alphaComponent > 0)
+        fullwidthAttributes[NSBackgroundColorAttributeName] = myColor;
+    self.fullwidthSymbolColorAttribute = fullwidthAttributes.count ? fullwidthAttributes : nil;
+    
     self.pdfKitWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemePreviewAlphaKey);
     textWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemeSourceAlphaKey);
     fullSplitWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemeSourceAlphaKey);

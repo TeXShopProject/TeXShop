@@ -416,6 +416,8 @@ enum RootCommand
 @property (retain)  NSDictionary        *markerColorSquareAttribute;
 @property (retain)  NSDictionary		*indexColorAttribute;
 @property (retain)  NSDictionary        *footnoteColorAttribute;
+// Fullwidth letters, digits and symbols; nil when the theme does not color them.
+@property (retain)  NSDictionary        *fullwidthSymbolColorAttribute;
 
 @property (retain)  NSDictionary        *commentXMLColorAttribute;
 @property (retain)  NSDictionary        *tagXMLColorAttribute;

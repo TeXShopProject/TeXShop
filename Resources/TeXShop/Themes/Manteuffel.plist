@@ -51,6 +51,20 @@
 		<real>0</real>
 		<real>1</real>
 	</array>
+	<key>EditorHighlightZenkakuSymbol</key>
+	<array>
+		<real>0.692</real>
+		<real>0.101</real>
+		<real>0</real>
+		<real>1</real>
+	</array>
+	<key>EditorHighlightZenkakuSymbolBackground</key>
+	<array>
+		<real>0.9</real>
+		<real>1</real>
+		<real>1</real>
+		<real>1</real>
+	</array>
 	<key>EditorInsertionPoint</key>
 	<array>
 		<real>0.08235294371843338</real>
