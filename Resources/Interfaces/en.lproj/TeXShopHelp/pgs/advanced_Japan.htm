@@ -17,7 +17,7 @@ and many recent TeXShop additions are due to him. Recently a number of questions
 asked about the Settings for Japan. Below are
 these questions and Yusuke Terada's answers.
 
-<p> QUESTION: In the Typesetting category of Settings, there is a section "pTeX support" with checkbox "utf export". What does it do?
+<p> QUESTION: In the Typesetting category of Settings, the group "pTeX support (for Japan)" has the setting "otf Package Support" (called "utf export" in earlier versions). What does it do?
 
 <p> ANSWER: In Japan, many kinds of TeX engines are used, such as pTeX, upTeX, XeTeX and LuaTeX.
 pTeX is the most traditional engine.
@@ -47,11 +47,15 @@ You can handle such Unicode characters with pTeX by using otf.sty.
 </PRE>
 
 <p> However, it is too difficult for normal users to input sources in this way.
-The TeXShop feature "utf export" helps this.
-When this option is enabled, "鷗" is converted to "\UTF{9DD7}" when the document is saved, and it is restored when the document is opened again.
+The TeXShop setting "otf Package Support" helps this.
+When this setting is on, "鷗" is converted to "\UTF{9DD7}" when the document is saved, and it is restored when the document is opened again.
+Other characters outside JIS X 0208 are converted in the same way.
+A glyph variant chosen in the editor or a character outside the Basic Multilingual Plane is written as "\CID{number}" instead, using the glyph number in the editor font; use a font such as Hiragino, whose glyph numbers are Adobe-Japan1 CIDs.
+If a converted character ends a line, "%" is added after it so that no space appears in the output.
+U+2015 HORIZONTAL BAR is written as U+2014 EM DASH, which pTeX can read.
 Thanks to this feature, users can handle UTF-8 sources seamlessly as if pTeX interpreted UTF-8 source directly.
 
-<p> QUESTION: There is also a section "During File Save (for users in Japan)" with checkbox "Automatic UTF-8-Mac to UTF-8 Conversion". What does it do too?
+<p> QUESTION: In the Documents and Saving category, the group "Saving Documents" has the setting "Automatically convert UTF-8-MAC to UTF-8". What does it do?
 
 <p> ANSWER: In Japanese, some characters have two (or more) different Unicode representations.
 For example, the letter "が" can be represented in the following two ways.
@@ -77,7 +81,7 @@ For example, the following simple source causes the error "Undefined control seq
 <p> That's because the composed form is used in the first line and the decomposed form is used in the second line.
 However, they look exactly the same and it is impossible for normal users to distinguish them.
 
-<p>So I added the feature "Automatic UTF-8-Mac to UTF-8 Conversion" into TeXShop.
+<p>So I added the setting "Automatically convert UTF-8-MAC to UTF-8" into TeXShop.
 If this is enabled, the decomposed form is converted into the composed form when the document is saved. 
 This conversion is called Unicode normalization.
 This is useful to prevent troubles caused by the mixture of both representations. 
@@ -85,12 +89,13 @@ This is useful to prevent troubles caused by the mixture of both representations
 <p> The name "UTF-8-Mac" is a common name for the decomposed form. 
 This name is derived from the fact that HFS+ adopts the decomposed form.
 
-<p> Strictly speaking, the normalization form that HFS+ adopts is a little different from standardized Unicode normalization forms like NFC or NFD.
-TeXShop adopts the same normalization form as HFS+, which is sometimes called modified-NFD.
+<p> Strictly speaking, the normalization forms used here are a little different from standardized Unicode normalization forms like NFC or NFD.
+HFS+ stores a decomposed form that leaves some characters, such as CJK compatibility ideographs, unchanged; it is sometimes called modified NFD.
+When saving, TeXShop composes characters as in NFC but leaves unchanged every character that NFC would replace by a different character, such as the CJK compatibility ideographs. This form is sometimes called modified NFC.
 
 
 <p> I presented these features of TeXShop at the TUG 2013 annual conference.
-You can see the explanation of "utf-export" on pp. 26-28 in my slides
+You can see the explanation of "otf Package Support" (then called "utf export") on pp. 26-28 in my slides
 <A HREF=https://tug.org/tug2013/slides/Terada-TeXShop.pdf> https://tug.org/tug2013/slides/Terada-TeXShop.pdf></A>.
 Besides, you can get more detailed information about Unicode normalization on pp. 29-52.
 
