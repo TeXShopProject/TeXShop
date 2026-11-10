@@ -4280,7 +4280,7 @@ The submenu ``Character Type Conversion'' is mainly useful for Japanese document
 \item between hiragana and katakana,
 \item between fullwidth and halfwidth digits, and between fullwidth and halfwidth Latin letters,
 \item between circled and parenthesized numbers and letters, Roman numerals and similar characters, and the commands of the \texttt{ajmacros} package which print them, for example \verb|\ajMaru{1}| for a circled~1,
-\item between characters outside the JIS~X~0208 character set and the \verb|\UTF{...}| and \verb|\CID{...}| commands, which the \texttt{otf} package provides for pLaTeX and upLaTeX,
+\item between characters outside the JIS~X~0208 character set and the \verb|\UTF{...}| and \verb|\CID{...}| commands, which the \texttt{otf} package provides for pLaTeX and upLaTeX; a character sequence such as a variant ideograph becomes \verb|\CID{...}| only when it has an Adobe-Japan1 glyph, and emoji and other sequences without one are left unchanged,
 \item from curly quotation marks to the TeX forms \verb|`|, \verb|'|, \verb|``| and \verb|''|.
 \end{itemize}
 When a converted command ends a line, a \verb|%| is added after it so that the line break does not produce a space.
