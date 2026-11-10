@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Modified NFC composes everything except characters with Full_Composition_Exclusion.
+"""Modified NFC composes everything except characters with Full_Composition_Exclusion,
+and modified NFD keeps a leading U+FEFF.
 Also checks, over every code point, that the property equals the explicit list the
 earlier implementation used, so that current text normalizes exactly as before."""
 from pathlib import Path
@@ -34,6 +35,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check("a + U+0340", [@"à" normalizedStringWithModifiedNFC], @"à");
     Check("tab, CR and form feed", [@"\t\r\f" normalizedStringWithModifiedNFC], @"\t\r\f");
     Check("empty", [@"" normalizedStringWithModifiedNFC], @"");
+    Check("modified NFD keeps a leading U+FEFF", [@"\uFEFF\u304C" normalizedStringWithModifiedNFD], @"\uFEFF\u304B\u3099");
+    Check("modified NFD keeps U+FEFF alone", [@"\uFEFF" normalizedStringWithModifiedNFD], @"\uFEFF");
+    Check("modified NFD without U+FEFF", [@"\u304C" normalizedStringWithModifiedNFD], @"\u304B\u3099");
     Check("composes around excluded", [@"éÅö" normalizedStringWithModifiedNFC], @"éÅö");
     // Every code point, surrogates excluded.
     NSMutableString *all = [NSMutableString string];

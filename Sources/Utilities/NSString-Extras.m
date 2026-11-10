@@ -60,6 +60,9 @@
     char *destStr = (char*)malloc(length);
     Boolean success = destStr && CFStringGetFileSystemRepresentation(sourceStr, destStr, length);
     NSString *result = success ? [NSString stringWithUTF8String:destStr] : nil;
+    // UTF-8 decoding drops a leading U+FEFF as a byte order mark; keep it.
+    if (result && (unsigned char)destStr[0] == 0xEF && (unsigned char)destStr[1] == 0xBB && (unsigned char)destStr[2] == 0xBF && ![result hasPrefix:@"\uFEFF"])
+        result = [@"\uFEFF" stringByAppendingString:result];
     free(destStr);
     return result ?: [self copy];
 }
