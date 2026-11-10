@@ -9,7 +9,9 @@ from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'other-window', 'cleanup-state', 'ordinary-escape', 'modified-escape', 'click-cleanup', 'initialize-cleanup',
-                                           'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'scroll-moves-frame', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales'])
+                                           'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'scroll-moves-frame', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales',
+                                           'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection',
+                                           'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -17,7 +19,9 @@ def method(signature):
     start = source.rindex(signature)
     body = source[start:source.index('\n}', start) + 2]
     if args.mutation == 'click-cleanup' and signature == '- (void) mouseDown:':
-        body = body.replace('if (self.handlingLink) [self doKillPopup];', '')
+        body = body.replace('if (self.handlingLink && !self.globalLongTerm) [self doKillPopup];', '')
+    if args.mutation == 'click-kills-pin' and signature == '- (void) mouseDown:':
+        body = body.replace('if (self.handlingLink && !self.globalLongTerm) [self doKillPopup];', 'if (self.handlingLink) [self doKillPopup];')
     if args.mutation == 'initialize-cleanup' and signature == '- (void) initializeDisplay':
         body = body.replace('if (self.handlingLink) [self doKillPopup];', '')
     return body
@@ -27,7 +31,9 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void)observeLinkPreviewEvents', '- (void)linkPreviewWindowWillClose:',
     '- (void)viewWillMoveToWindow:', '- (void)doKillPopup', '- (void)killPopup:',
     '- (void)setDocument:(PDFDocument *)document', '- (void)cleanupMarquee:',
-    '- (void) mouseDown:', '- (void) initializeDisplay'))
+    '- (void) mouseDown:', '- (void) mouseDownKeepingPinnedLinkPreview:', '- (void) initializeDisplay',
+    '- (NSCursor *) cursorForToolWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:',
+    '- (void) keepingPinnedLinkPreview:', '- (void) changeMouseMode:'))
 if args.mutation == 'move-dismisses':
     methods = methods.replace('!self.skipLinks && !self.globalLongTerm', '!self.skipLinks')
 elif args.mutation == 'stale-timer':
@@ -35,7 +41,7 @@ elif args.mutation == 'stale-timer':
 elif args.mutation == 'other-window':
     methods = methods.replace('event.window != self.window || ', '')
 elif args.mutation == 'cleanup-state':
-    methods = methods.replace('if (self.handlingLink) { [self doKillPopup]; return; }', '')
+    methods = methods.replace('if (self.handlingLink && !(self.globalLongTerm && keepsPinnedLinkPreview)) { [self doKillPopup]; return; }', '')
 elif args.mutation == 'ordinary-escape':
     methods = methods.replace('self.globalLongTerm && event.type == NSEventTypeKeyDown', 'event.type == NSEventTypeKeyDown')
 elif args.mutation == 'option-not-forwarded':
@@ -43,7 +49,17 @@ elif args.mutation == 'option-not-forwarded':
 elif args.mutation == 'kill-leaves-view':
     methods = methods.replace('    [linkPreview removeFromSuperview];\n    linkPreview = nil;\n', '    linkPreview = nil;\n')
 elif args.mutation == 'cursor-overridden':
-    methods = methods.replace('        [previewCursor set];\n        return;', '        [previewCursor set];')
+    methods = methods.replace('        [previewCursor set];\n        showsLinkPreviewCursor = YES;\n        return;', '        [previewCursor set];\n        showsLinkPreviewCursor = YES;')
+elif args.mutation == 'cleanup-in-click-kills-pin':
+    methods = methods.replace('if (self.handlingLink && !(self.globalLongTerm && keepsPinnedLinkPreview))', 'if (self.handlingLink)')
+elif args.mutation == 'tool-change-kills-pin':
+    methods = methods.replace('[self keepingPinnedLinkPreview:^{ [self cleanupMarquee: YES]; }];', '[self cleanupMarquee: YES];')
+elif args.mutation == 'flag-not-restored':
+    methods = methods.replace('    @finally {\n        keepsPinnedLinkPreview = previous;\n    }', '    @finally {\n    }')
+elif args.mutation == 'cursor-not-restored':
+    methods = methods.replace('        [[self cursorForToolWithEvent: theEvent] set];\n', '')
+elif args.mutation == 'copy-ignores-popup':
+    methods = methods.replace('\tif (previewText.length) {', '\tif (NO) {')
 elif args.mutation == 'modified-escape':
     methods = methods.replace('&& !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl\n                                    | NSEventModifierFlagOption | NSEventModifierFlagShift))', '')
 preview_source = (root / 'Sources/Preview/TSLinkPreviewView.m').read_text()
@@ -52,6 +68,12 @@ preview_mutations = {
     'pinned-transparent': ('return self.pinned ? [super hitTest:point] : nil;', 'return nil;'),
     'scroll-moves-frame': ('    [self setNeedsDisplay:YES];\n}\n\n@end', '    self.frame = NSOffsetRect(self.frame, 0.1, 0);\n    [self setNeedsDisplay:YES];\n}\n\n@end'),
     'scroll-chains': ('    [self setNeedsDisplay:YES];\n}\n\n@end', '    [self setNeedsDisplay:YES];\n    [super scrollWheel:event];\n}\n\n@end'),
+    'hand-selects': ('return _page && !(self.usesHandTool && self.usesHandTool());', 'return _page != nil;'),
+    'no-selection': ('} else if ([self selectsText] && [self isTextAtPagePoint:pagePoint]) {', '} else if (NO) {'),
+    'move-confined': ('frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], kept, flipped);',
+                      'frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], _startFrame.size, flipped);'),
+    'click-keeps-selection': ('NSEqualRects(self.frame, _startFrame)) self.selection = nil;', 'NO) self.selection = nil;'),
+    'click-keeps-focus': ('            if (self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
     'resize-scales': ('                            [self availableRect], _pageSize, flipped, &frame, &source);',
                       '                            [self availableRect], _pageSize, flipped, &frame, &source);\n        source = _startSource;'),
 }
@@ -77,11 +99,15 @@ program = r'''
 #define NEW_PDF_FIT_TO_WIDTH 2
 #define NEW_PDF_FIT_TO_HEIGHT 3
 #define PDF_FIT_TO_WINDOW 4
-#define NEW_MOUSE_MODE_SELECT_TEXT 5
+// The values of Sources/App/globals.h, which mouseMoved: also uses as numbers.
 #define NEW_MOUSE_MODE_SCROLL 1
-#define NEW_MOUSE_MODE_SELECT_PDF 2
+#define NEW_MOUSE_MODE_SELECT_TEXT 2
+#define NEW_MOUSE_MODE_SELECT_PDF 5
 #define NEW_MOUSE_MODE_MAG_GLASS 3
 #define NEW_MOUSE_MODE_MAG_GLASS_L 4
+#define PdfCopyTypeKey @"copyType"
+#define IMAGE_TYPE_PDF 3
+#define IMAGE_TYPE_EPS 4
 static NSUInteger checks;
 static void check(BOOL ok, NSString *message) {
     checks++;
@@ -92,17 +118,31 @@ static NSEventModifierFlags currentFlags(id self, SEL sel) { return flags; }
 static NSPoint currentMouse(id self, SEL sel) { return NSZeroPoint; }
 static NSMutableArray *handlers;
 static id addMonitor(id self, SEL sel, NSEventMask mask, id handler) {
-    check(mask == (NSEventMaskKeyDown | NSEventMaskFlagsChanged), @"monitor mask");
+    // Text views add monitors of their own; only the popup's is recorded.
+    if (mask != (NSEventMaskKeyDown | NSEventMaskFlagsChanged)) return [NSObject new];
     id block = [handler copy]; [handlers addObject:block]; return block;
 }
 static void removeMonitor(id self, SEL sel, id monitor) { [handlers removeObjectIdenticalTo:monitor]; }
+// Whether a click also cleans up the marquee on its way, as selecting text or the magnifying glass do.
+static BOOL cleanupInClick;
+// Makes the click fail on its way, as an exception would.
+static BOOL throwInClick;
+// Copy writes to a private pasteboard, never the user's clipboard.
+static NSPasteboard *testPasteboard;
+static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard; }
 @interface TestDocument : NSObject
 @property BOOL previewDisplaysAsBook, previewDisplaysRTL, pdfSinglePage;
 @property NSInteger stringWindowAlignment;
 - (void)updatePreviewLayoutControls;
+- (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
+- (NSMenu *)mousemodeMenu;
+- (NSMatrix *)mousemodeMatrix;
 @end
 @implementation TestDocument
 - (void)updatePreviewLayoutControls {}
+- (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item { return YES; }
+- (NSMenu *)mousemodeMenu { return nil; }
+- (NSMatrix *)mousemodeMatrix { return nil; }
 @end
 @interface MyPDFKitView : PDFView {
     NSInteger mouseMode, currentMouseMode;
@@ -112,6 +152,8 @@ static void removeMonitor(id self, SEL sel, id monitor) { [handlers removeObject
     BOOL _pdfViewReady;
     id linkPreviewEventMonitor;
     TSLinkPreviewView *linkPreview;
+    BOOL showsLinkPreviewCursor;
+    BOOL keepsPinnedLinkPreview;
 }
 @property BOOL skipLinks, globalLongTerm, inLink;
 @property TestDocument *myDocument;
@@ -134,6 +176,7 @@ static void removeMonitor(id self, SEL sel, id monitor) { [handlers removeObject
 - (void)handleLink:(NSTimer *)timer;
 - (void)killPopup:(NSTimer *)timer;
 - (TSLinkPreviewView *)preview;
+- (void)setTestMouseMode:(NSInteger)mode;
 @end
 @implementation MyPDFKitView
 - (TSLinkPreviewView *)preview { return linkPreview; }
@@ -141,8 +184,15 @@ static void removeMonitor(id self, SEL sel, id monitor) { [handlers removeObject
 - (void)setupMagnificationStyle {}
 - (void)updateBackground:(NSRect)rect {}
 - (void)setDrawMark:(BOOL)value { drawMark=value; }
-// Stop the rest of mouseDown after its production popup-cleanup entry path.
-- (BOOL)annotationMouseDown:(NSEvent *)event { return YES; }
+- (void)setTestMouseMode:(NSInteger)mode { mouseMode = currentMouseMode = mode; }
+- (NSData *)imageDataFromSelectionType:(NSInteger)type { return nil; }
+// Stop the rest of mouseDown after its production popup-cleanup entry path. Clicks clean up
+// the marquee on their way (selecting text, the magnifying glass), so do that here too.
+- (BOOL)annotationMouseDown:(NSEvent *)event {
+    if (cleanupInClick) [self cleanupMarquee:YES];
+    if (throwInClick) [NSException raise:@"TestException" format:@"click fails"];
+    return YES;
+}
 - (void)doSync:(NSPoint)point {}
 - (void)doMagnifyingGlass:(NSEvent *)event level:(NSInteger)level {}
 - (void)scrollByDragging:(NSEvent *)event {}
@@ -150,7 +200,7 @@ static void removeMonitor(id self, SEL sel, id monitor) { [handlers removeObject
 - (void)selectARectForMavericks:(NSEvent *)event {}
 - (void)updateDarkModeInversion {}
 - (void)scaleChanged:(id)sender {}
-- (PDFAreaOfInterest)areaOfInterestForMouse:(NSEvent *)event { return self.inLink ? kPDFLinkArea : 0; }
+- (PDFAreaOfInterest)areaOfInterestForMouse:(NSEvent *)event { return self.inLink ? kPDFLinkArea : kPDFPageArea; }
 METHODS
 @end
 static NSEvent *event(NSWindow *window, NSEventType type, NSEventModifierFlags modifiers, NSString *text, NSPoint point) {
@@ -176,10 +226,11 @@ static void show(MyPDFKitView *view, NSEventModifierFlags modifiers) {
     check(view.preview.pinned == ((modifiers & NSEventModifierFlagOption) != 0), @"popup is pinned only with Option");
 }
 
-static NSEvent *mouse(NSWindow *window, NSEventType type, NSPoint point) {
+static NSEvent *clicks(NSWindow *window, NSEventType type, NSPoint point, NSInteger count) {
     return [NSEvent mouseEventWithType:type location:point modifierFlags:0 timestamp:0 windowNumber:window.windowNumber
-        context:nil eventNumber:0 clickCount:1 pressure:1];
+        context:nil eventNumber:0 clickCount:count pressure:1];
 }
+static NSEvent *mouse(NSWindow *window, NSEventType type, NSPoint point) { return clicks(window, type, point, 1); }
 static NSEvent *scroll(int32_t dy, int32_t dx) {
     CGEventRef cg = CGEventCreateScrollWheelEvent(NULL, kCGScrollEventUnitPixel, 2, dy, dx);
     NSEvent *result = [NSEvent eventWithCGEvent:cg]; CFRelease(cg); return result;
@@ -264,6 +315,181 @@ static void testInteraction(MyPDFKitView *view, NSWindow *window) {
     check(handler(event(window,NSEventTypeKeyDown,0,@"\033",NSZeroPoint)) == nil, @"Escape closes a moved popup");
     check(!view.preview && !preview.superview && !handlers.count, @"closing removes the popup view");
 }
+// A page whose text starts at the link destination (20, 600).
+static PDFDocument *textDocument(void) {
+    NSMutableData *data = [NSMutableData data];
+    CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
+    CGRect box = CGRectMake(0, 0, 600, 800);
+    CGContextRef context = CGPDFContextCreate(consumer, &box, NULL);
+    CGPDFContextBeginPage(context, NULL);
+    NSDictionary *attributes = @{(id)kCTFontAttributeName: (__bridge id)CTFontCreateWithName(CFSTR("Helvetica"), 12, NULL)};
+    NSArray *lines = @[@"Lemma 2. Every bounded sequence of real numbers has a convergent subsequence.",
+                       @"Proof. Choose a monotone subsequence and apply the monotone convergence theorem.",
+                       @"This completes the proof of the lemma, which is used again in the next section."];
+    for (NSUInteger i = 0; i < lines.count; i++) {
+        CTLineRef line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)
+            [[NSAttributedString alloc] initWithString:lines[i] attributes:attributes]);
+        CGContextSetTextPosition(context, 20, 588 - 16 * i);
+        CTLineDraw(line, context);
+        CFRelease(line);
+    }
+    CGPDFContextEndPage(context);
+    CGPDFContextClose(context);
+    CGContextRelease(context);
+    CGDataConsumerRelease(consumer);
+    PDFDocument *doc = [[PDFDocument alloc] initWithData:data];
+    PDFPage *page = [doc pageAtIndex:0];
+    PDFAnnotation *link = [[PDFAnnotation alloc] initWithBounds:NSMakeRect(20,720,100,25) forType:PDFAnnotationSubtypeLink withProperties:nil];
+    link.destination = [[PDFDestination alloc] initWithPage:page atPoint:NSMakePoint(20,600)]; [page addAnnotation:link];
+    return doc;
+}
+// Window points inside the popup where the cursor is `cursor`, away from the edges.
+static NSPoint findPoint(MyPDFKitView *view, NSCursor *cursor) {
+    TSLinkPreviewView *preview = view.preview;
+    NSRect frame = [preview.superview convertRect:preview.frame toView:nil];
+    for (CGFloat y = NSMaxY(frame) - 10; y > NSMinY(frame) + 10; y -= 2)
+        for (CGFloat x = NSMinX(frame) + 10; x < NSMaxX(frame) - 10; x += 3) {
+            NSPoint point = NSMakePoint(x, y);
+            if ([preview cursorAtPoint:[view.documentView convertPoint:point fromView:nil]] == cursor) return point;
+        }
+    return NSMakePoint(NAN, NAN);
+}
+// Some system cursors are new objects on each call.
+static BOOL sameCursor(NSCursor *a, NSCursor *b) {
+    return a == b || (a && b && NSEqualPoints(a.hotSpot, b.hotSpot) &&
+                      [a.image.TIFFRepresentation isEqualToData:b.image.TIFFRepresentation]);
+}
+static void drag(TSLinkPreviewView *preview, NSWindow *window, NSPoint from, NSPoint to) {
+    [preview mouseDown:mouse(window, NSEventTypeLeftMouseDown, from)];
+    [preview mouseDragged:mouse(window, NSEventTypeLeftMouseDragged, to)];
+    [preview mouseUp:mouse(window, NSEventTypeLeftMouseUp, to)];
+}
+static void testTools(MyPDFKitView *view, NSWindow *window, PDFDocument *doc) {
+    view.document = doc; [view layoutDocumentView];
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_TEXT];
+    show(view, NSEventModifierFlagOption);
+    flags = 0;
+    TSLinkPreviewView *preview = view.preview;
+    NSPoint text = findPoint(view, NSCursor.IBeamCursor), blank = findPoint(view, NSCursor.openHandCursor);
+    check(!isnan(text.x), @"pointer over text in a pinned popup shows an I-beam");
+    check(!isnan(blank.x), @"pointer away from text shows an open hand to move the popup");
+    NSRect frame = preview.frame;
+    drag(preview, window, text, NSMakePoint(text.x + 120, text.y));
+    check(preview.selection.string.length > 3 && preview.selectionIsRecent && NSEqualRects(preview.frame, frame),
+          @"dragging over text selects it and leaves the popup in place");
+    NSString *selected = preview.selection.string;
+    NSMenuItem *copyItem = [[NSMenuItem alloc] initWithTitle:@"Copy" action:@selector(copy:) keyEquivalent:@""];
+    check([view validateMenuItem:copyItem], @"Copy is enabled for text selected in the popup");
+    [testPasteboard clearContents];
+    [view copy:nil];
+    check([[testPasteboard stringForType:NSPasteboardTypeString] isEqualToString:selected], @"Copy copies the popup selection");
+    // With the keyboard elsewhere, a click in the popup brings Copy to its preview.
+    NSTextView *field = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 50, 20)];
+    [window.contentView addSubview:field];
+    field.string = @"sourceSentinel"; [field selectAll:nil];
+    [window makeFirstResponder:field];
+    [preview mouseDown:clicks(window, NSEventTypeLeftMouseDown, text, 2)];
+    [preview mouseUp:clicks(window, NSEventTypeLeftMouseUp, text, 2)];
+    check(window.firstResponder == view, @"clicking the popup makes its preview the active view");
+    [testPasteboard clearContents];
+    check([window.firstResponder tryToPerform:@selector(copy:) with:nil] &&
+          [[testPasteboard stringForType:NSPasteboardTypeString] isEqualToString:preview.selection.string],
+          @"Copy through the responder chain copies the popup selection");
+    [field removeFromSuperview];
+    [preview mouseDown:clicks(window, NSEventTypeLeftMouseDown, text, 1)];
+    [preview mouseUp:clicks(window, NSEventTypeLeftMouseUp, text, 1)];
+    drag(preview, window, text, NSMakePoint(text.x + 120, text.y));
+    cleanupInClick = YES;
+    [view mouseDown:event(window,NSEventTypeMouseMoved,0,@"",NSZeroPoint)];
+    cleanupInClick = NO;
+    check(view.preview == preview && !preview.selectionIsRecent && preview.selection,
+          @"clicking the preview keeps the popup and its highlight but not for Copy");
+    [preview mouseDown:clicks(window, NSEventTypeLeftMouseDown, text, 2)];
+    [preview mouseUp:clicks(window, NSEventTypeLeftMouseUp, text, 2)];
+    check(preview.selection.string.length > 0 && preview.selection.string.length < 20 && preview.selectionIsRecent,
+          @"double-clicking selects a word");
+    [preview mouseDown:mouse(window, NSEventTypeLeftMouseDown, blank)];
+    [preview mouseUp:mouse(window, NSEventTypeLeftMouseUp, blank)];
+    check(!preview.selection && NSEqualRects(preview.frame, frame), @"a click away from text clears the selection");
+    drag(preview, window, blank, NSMakePoint(blank.x + 7, blank.y - 5));
+    NSRect moved = [view.documentView convertRect:preview.frame toView:nil];
+    NSRect before = [view.documentView convertRect:frame toView:nil];
+    check(approx(NSMinX(moved), NSMinX(before) + 7) && approx(NSMinY(moved), NSMinY(before) - 5),
+          @"dragging away from text moves the popup");
+
+    [view setTestMouseMode:NEW_MOUSE_MODE_MAG_GLASS];
+    check(!isnan(findPoint(view, NSCursor.IBeamCursor).x), @"the magnifying glass acts as the pointer inside the popup");
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
+    check(!isnan(findPoint(view, NSCursor.IBeamCursor).x), @"the selection tool acts as the pointer inside the popup");
+
+    [view setTestMouseMode:NEW_MOUSE_MODE_SCROLL];
+    check(isnan(findPoint(view, NSCursor.IBeamCursor).x), @"with the hand tool the whole popup moves");
+    text = findPoint(view, NSCursor.openHandCursor);
+    frame = preview.frame;
+    drag(preview, window, text, NSMakePoint(text.x + 5, text.y + 4));
+    check(!preview.selection && !NSEqualRects(preview.frame, frame), @"hand tool moves over text instead of selecting");
+
+    // Leaving the popup shows the tool's cursor, however fast the pointer moves.
+    NSRect visible = [view.documentView convertRect:view.documentView.visibleRect toView:nil];
+    NSPoint away = NSMakePoint(NSMinX(visible) + 3, NSMinY(visible) + 3);
+    NSDictionary *expected = @{@(NEW_MOUSE_MODE_SCROLL): NSCursor.openHandCursor, @(NEW_MOUSE_MODE_MAG_GLASS): NSCursor.arrowCursor,
+                               @(NEW_MOUSE_MODE_SELECT_PDF): NSCursor.crosshairCursor, @(NEW_MOUSE_MODE_SELECT_TEXT): NSCursor.arrowCursor};
+    for (NSNumber *mode in expected) {
+        [view setTestMouseMode:mode.integerValue];
+        NSPoint edge = windowPoint(preview, 2, 20);
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, edge)];
+        check(!sameCursor(NSCursor.currentCursor, expected[mode]), @"edge of the popup shows a resize cursor");
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, away)];
+        check(sameCursor(NSCursor.currentCursor, expected[mode]), @"leaving the popup shows the tool's cursor");
+    }
+
+    // A pinned popup can be pushed almost out of the preview.
+    [view setTestMouseMode:NEW_MOUSE_MODE_SCROLL];
+    CGFloat unit = NSWidth([view.documentView convertRect:NSMakeRect(0,0,1,1) fromView:nil]);
+    NSRect available = NSInsetRect(view.documentView.visibleRect, 5, 5);
+    for (NSValue *direction in @[[NSValue valueWithSize:NSMakeSize(-5000,-5000)], [NSValue valueWithSize:NSMakeSize(5000,5000)]]) {
+        NSPoint start = findPoint(view, NSCursor.openHandCursor);
+        frame = preview.frame;
+        drag(preview, window, start, NSMakePoint(start.x + direction.sizeValue.width, start.y + direction.sizeValue.height));
+        NSRect shown = NSIntersectionRect(preview.frame, available);
+        check(approx(NSWidth(shown), MAX(NSWidth(frame) * 0.05, 20 * unit)) &&
+              approx(NSHeight(shown), MAX(NSHeight(frame) * 0.05, 20 * unit)) &&
+              approx(NSWidth(preview.frame), NSWidth(frame)),
+              @"moved popup keeps only a small part in view");
+        drag(preview, window, findPoint(view, NSCursor.openHandCursor), findPoint(view, NSCursor.openHandCursor));
+    }
+    // Changing the tool keeps a pinned popup; the selection tool's marquee goes away.
+    for (NSNumber *target in @[@(NEW_MOUSE_MODE_SELECT_TEXT), @(NEW_MOUSE_MODE_MAG_GLASS), @(NEW_MOUSE_MODE_SCROLL)]) {
+        [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
+        OverView *marquee = [[OverView alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
+        [view.documentView addSubview:marquee]; view.overView = marquee;
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""]; item.tag = target.integerValue;
+        [view changeMouseMode:item];
+        check(view.preview == preview && preview.superview && view.globalLongTerm && handlers.count == 1,
+              @"changing the tool keeps a pinned popup");
+        if (target.integerValue != NEW_MOUSE_MODE_SCROLL)
+            check(!view.overView && !marquee.superview, @"changing the tool still removes the marquee");
+        [marquee removeFromSuperview]; view.overView = nil;
+    }
+    // A click that fails on its way leaves later cleanups as they were.
+    throwInClick = YES;
+    @try { [view mouseDown:mouse(window, NSEventTypeLeftMouseDown, away)]; } @catch (NSException *exception) {}
+    throwInClick = NO;
+    check(view.preview == preview, @"a failed click keeps the pinned popup");
+    [view cleanupMarquee:YES];
+    check(!view.preview && !handlers.count, @"after a failed click, cleanup outside a click dismisses the popup");
+
+    // Hovering shows popups with every tool but the selection tool.
+    for (NSNumber *mode in @[@(NEW_MOUSE_MODE_SCROLL), @(NEW_MOUSE_MODE_SELECT_TEXT), @(NEW_MOUSE_MODE_MAG_GLASS), @(NEW_MOUSE_MODE_SELECT_PDF)]) {
+        [view setTestMouseMode:mode.integerValue];
+        view.inLink = YES; view.handlingLink = 0;
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, away)];
+        check((view.handlingLink == 1) == (mode.integerValue != NEW_MOUSE_MODE_SELECT_PDF), @"hovering a link starts a popup unless the selection tool is chosen");
+        view.inLink = NO; [view doKillPopup];
+    }
+    [view doKillPopup];
+    [view setTestMouseMode:0];
+}
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     handlers = [NSMutableArray new];
@@ -271,6 +497,8 @@ int main(void) { @autoreleasepool {
     TSReplaceTestMethod(class_getClassMethod(NSEvent.class,@selector(mouseLocation)), (IMP)currentMouse);
     TSReplaceTestMethod(class_getClassMethod(NSEvent.class,@selector(addLocalMonitorForEventsMatchingMask:handler:)), (IMP)addMonitor);
     TSReplaceTestMethod(class_getClassMethod(NSEvent.class,@selector(removeMonitor:)), (IMP)removeMonitor);
+    testPasteboard = [NSPasteboard pasteboardWithUniqueName];
+    TSReplaceTestMethod(class_getClassMethod(NSPasteboard.class,@selector(generalPasteboard)), (IMP)generalPasteboard);
     NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,650,850) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     NSWindow *otherWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,650,850) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     window.releasedWhenClosed = NO; otherWindow.releasedWhenClosed = NO;
@@ -284,6 +512,8 @@ int main(void) { @autoreleasepool {
     link.destination = [[PDFDestination alloc] initWithPage:page atPoint:NSMakePoint(20,600)]; [page addAnnotation:link];
     view.document = doc; view.autoScales = YES; [view layoutDocumentView];
     testInteraction(view, window);
+    testTools(view, window, textDocument());
+    view.document = doc; [view layoutDocumentView];
     show(view, 0);
     for (NSNumber *modifier in @[@0,@(NSEventModifierFlagOption)]) {
         NSEvent *escape = event(window,NSEventTypeKeyDown,modifier.unsignedIntegerValue,@"\033",NSZeroPoint);
@@ -348,9 +578,17 @@ int main(void) { @autoreleasepool {
     [view handleLink:showTimer(view)];
     check(view.preview != nil, @"next hover displays overlay after cleanupMarquee");
     [view doKillPopup];
-    show(view,NSEventModifierFlagOption);
+    show(view,0);
     [view mouseDown:event(window,NSEventTypeMouseMoved,0,@"",NSZeroPoint)];
-    check(!view.preview && !view.handlingLink && !handlers.count, @"click clears popup and monitor before annotation handling");
+    check(!view.preview && !view.handlingLink && !handlers.count, @"click clears an ordinary popup and monitor before annotation handling");
+    show(view,NSEventModifierFlagOption);
+    cleanupInClick = YES;
+    [view mouseDown:event(window,NSEventTypeMouseMoved,0,@"",NSZeroPoint)];
+    cleanupInClick = NO;
+    check(view.preview && view.preview.superview && view.globalLongTerm && handlers.count == 1,
+          @"click outside keeps a pinned popup, also through the marquee cleanup");
+    [view cleanupMarquee:YES];
+    check(!view.preview && !handlers.count, @"cleanup outside a click still clears a pinned popup");
     show(view,NSEventModifierFlagOption);
     [SUD registerDefaults:@{LinkPopupsKey:@YES}];
     [view initializeDisplay];
@@ -363,6 +601,7 @@ int main(void) { @autoreleasepool {
     show(view,NSEventModifierFlagOption);
     [view removeFromSuperview];
     check(!view.preview && !handlers.count, @"detaching view clears popup");
+    [testPasteboard releaseGlobally];
     printf("PASS: %lu popup event/lifecycle checks\n", (unsigned long)checks);
     return 0;
 }}
@@ -383,15 +622,23 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
     result = subprocess.run([str(exe)], env=env, capture_output=True, text=True, timeout=30)
     print(result.stdout, end='')
     if args.mutation:
-        expected = {'move-dismisses':'pinned popup survives', 'stale-timer':'old timer cannot dismiss',
-                    'other-window':'other windows retain Escape', 'cleanup-state':'cleanupMarquee clears',
+        expected = {'move-dismisses':('pinned popup survives', 'edge of the popup shows a resize cursor'), 'stale-timer':'old timer cannot dismiss',
+                    'other-window':'other windows retain Escape', 'cleanup-state':('cleanupMarquee clears', 'after a failed click, cleanup outside a click dismisses'),
                     'ordinary-escape':'ordinary popup leaves Escape', 'modified-escape':'modified Escape is not consumed',
-                    'click-cleanup':'click clears popup', 'initialize-cleanup':'initializeDisplay clears popup',
+                    'click-cleanup':'click clears an ordinary popup', 'initialize-cleanup':'initializeDisplay clears popup',
+                    'click-kills-pin':('click outside keeps a pinned popup', 'clicking the preview keeps the popup'),
+                    'cleanup-in-click-kills-pin':('click outside keeps a pinned popup', 'clicking the preview keeps the popup'),
+                    'cursor-not-restored':"leaving the popup shows the tool's cursor", 'hand-selects':'with the hand tool the whole popup moves',
+                    'no-selection':'dragging over text selects it', 'move-confined':'moved popup keeps only a small part',
+                    'copy-ignores-popup':'Copy copies the popup selection',
+                    'tool-change-kills-pin':'changing the tool keeps a pinned popup', 'flag-not-restored':'after a failed click',
+                    'click-keeps-focus':'clicking the popup makes its preview the active view', 'click-keeps-selection':'a click away from text clears',
                     'unpinned-interactive':'hovering popup leaves the mouse', 'pinned-transparent':'pinned popup takes clicks',
                     'scroll-chains':'scrolling the popup leaves the preview', 'scroll-moves-frame':'scrolling leaves the popup in place', 'option-not-forwarded':'Option while shown makes',
                     'kill-leaves-view':'closing removes the popup view', 'cursor-overridden':'shows an open hand',
                     'resize-scales':'resizing keeps the text size'}[args.mutation]
-        assert result.returncode == 1 and expected in result.stderr, result.stderr
+        if isinstance(expected, str): expected = (expected,)
+        assert result.returncode == 1 and any(message in result.stderr for message in expected), result.stderr
         print('PASS: detected mutation ' + args.mutation)
     else:
         if result.returncode: print(result.stderr)

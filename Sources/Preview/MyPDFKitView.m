@@ -70,6 +70,8 @@
     TSExternalPDFPosition secondViewport;
     id linkPreviewEventMonitor;
     TSLinkPreviewView *linkPreview;
+    BOOL showsLinkPreviewCursor;
+    BOOL keepsPinnedLinkPreview;
 }
 
 - (void)dealloc
@@ -2599,8 +2601,14 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 - (void) copy: (id)sender
 {
-	
-	if (mouseMode != NEW_MOUSE_MODE_SELECT_PDF)
+	// Text selected last in a pinned popup is what Copy copies.
+	NSString *previewText = linkPreview.selectionIsRecent ? linkPreview.selection.string : nil;
+	if (previewText.length) {
+		NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+		[pboard clearContents];
+		[pboard setString:previewText forType:NSPasteboardTypeString];
+	}
+	else if (mouseMode != NEW_MOUSE_MODE_SELECT_PDF)
 		[super copy:sender];
 	else {
 		NSString *dataType = 0;
@@ -3175,7 +3183,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 	if ((oldMouseMode == NEW_MOUSE_MODE_SELECT_PDF) && (mouseMode != NEW_MOUSE_MODE_SELECT_PDF) &&
 	(mouseMode != NEW_MOUSE_MODE_SCROLL))
 
-		[self cleanupMarquee: YES];
+		[self keepingPinnedLinkPreview:^{ [self cleanupMarquee: YES]; }];
 
 	[[self window] invalidateCursorRectsForView: self]; // this updates the cursor rects
 
@@ -3856,7 +3864,28 @@ if (self.myDocument.useConTeXtSyncParser)
 
  - (void) mouseDown: (NSEvent *) theEvent
 {
-    if (self.handlingLink) [self doKillPopup];
+    // A pinned popup stays until Escape; an ordinary one goes away.
+    if (self.handlingLink && !self.globalLongTerm) [self doKillPopup];
+    linkPreview.selectionIsRecent = NO;
+    [self keepingPinnedLinkPreview:^{ [self mouseDownKeepingPinnedLinkPreview: theEvent]; }];
+}
+
+// While `block` runs, -cleanupMarquee: leaves a pinned popup in place: clicks in the preview
+// and changes of tool keep it, whereas page changes, zoom or reloading still dismiss it.
+- (void) keepingPinnedLinkPreview: (void (^)(void))block
+{
+    BOOL previous = keepsPinnedLinkPreview;
+    keepsPinnedLinkPreview = YES;
+    @try {
+        block();
+    }
+    @finally {
+        keepsPinnedLinkPreview = previous;
+    }
+}
+
+- (void) mouseDownKeepingPinnedLinkPreview: (NSEvent *) theEvent
+{
     
     if ([self annotationMouseDown: theEvent])
         return;
@@ -4055,6 +4084,27 @@ The system then remembers the new number and sends is to the Timer which will di
 }
 
 
+// The cursor that the cursor rects show for the current tool at the event's location.
+- (NSCursor *) cursorForToolWithEvent: (NSEvent *) theEvent
+{
+	switch (currentMouseMode) {
+		case NEW_MOUSE_MODE_SCROLL:
+			return [NSCursor openHandCursor];
+		case NEW_MOUSE_MODE_SELECT_TEXT: {
+			PDFAreaOfInterest area = [self areaOfInterestForMouse: theEvent];
+			if (area & kPDFLinkArea) return [NSCursor pointingHandCursor];
+			if (area & kPDFTextArea) return [NSCursor IBeamCursor];
+			return [NSCursor arrowCursor];
+		}
+		case NEW_MOUSE_MODE_SELECT_PDF:
+			if (self.selRectTimer && NSPointInRect([[self documentView] convertPoint: [theEvent locationInWindow] fromView: nil], selectedRect))
+				return [NSCursor arrowCursor];
+			return [NSCursor crosshairCursor];
+		default:
+			return [NSCursor arrowCursor];
+	}
+}
+
 - (void) mouseMoved: (NSEvent *) theEvent
 {
     // A pinned popup shows how it can be moved or resized.
@@ -4062,7 +4112,14 @@ The system then remembers the new number and sends is to the Timer which will di
         [self.documentView convertPoint:theEvent.locationInWindow fromView:nil]];
     if (previewCursor) {
         [previewCursor set];
+        showsLinkPreviewCursor = YES;
         return;
+    }
+    // Leaving a pinned popup, however fast, shows the tool's cursor again.
+    if (showsLinkPreviewCursor) {
+        showsLinkPreviewCursor = NO;
+        [[self window] invalidateCursorRectsForView: self];
+        [[self cursorForToolWithEvent: theEvent] set];
     }
     
 if (!self.skipLinks && !self.globalLongTerm)
@@ -4381,7 +4438,13 @@ if (!self.skipLinks && !self.globalLongTerm)
             }
             [linkPreview removeFromSuperview];
             linkPreview = [[TSLinkPreviewView alloc] initWithFrame:bRect image:myImageNew source:aRect
-                                                          pageSize:imageSize];
+                                                          pageSize:imageSize page:linkedPage
+                                                         transform:pageTransform];
+            __weak MyPDFKitView *weakView = self;
+            linkPreview.usesHandTool = ^BOOL {
+                MyPDFKitView *view = weakView;
+                return view && view->mouseMode == NEW_MOUSE_MODE_SCROLL;
+            };
             [documentView addSubview:linkPreview];
             
             // theSelection = [linkedPage selectionForRect: aRect];
@@ -4625,6 +4688,8 @@ if (!self.skipLinks && !self.globalLongTerm)
 {
     if (anItem.action == @selector(changePageStyle:))
         return [self.myDocument validatePreviewLayoutItem:anItem];
+    if (anItem.action == @selector(copy:) && linkPreview.selectionIsRecent && linkPreview.selection.string.length)
+        return YES;
 	
 		
 		return [super validateMenuItem: anItem];	
@@ -4913,7 +4978,7 @@ if (!self.skipLinks && !self.globalLongTerm)
 // earses the frame of selected rectangle and cleans up the cached image
 - (void)cleanupMarquee: (BOOL)terminate
 {
-    if (self.handlingLink) { [self doKillPopup]; return; }
+    if (self.handlingLink && !(self.globalLongTerm && keepsPinnedLinkPreview)) { [self doKillPopup]; return; }
     // for Mavericks
    //  if (atLeastMavericks) {
     {

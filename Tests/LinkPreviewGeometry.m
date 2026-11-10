@@ -419,17 +419,27 @@ static void testPinnedInteraction(void) {
                 "a tiny preview can still be moved");
 
         NSRect area=NSMakeRect(0,0,1000,800);
-        NSRect moved=TSLinkPreviewMove(frame,NSMakeSize(30,-40),area,flipped);
+        NSSize kept=NSMakeSize(20,20);
+        NSRect moved=TSLinkPreviewMove(frame,NSMakeSize(30,-40),area,kept,flipped);
         require(near(NSMinX(moved),130) && near(NSMinY(moved),60) && near(NSWidth(moved),200) && near(NSHeight(moved),100),
                 "move follows the pointer in view coordinates");
-        moved=TSLinkPreviewMove(frame,NSMakeSize(5000,-5000),area,flipped);
-        require(contains(area,moved) && near(NSMaxX(moved),1000) && near(NSMinY(moved),0),"move stays in view");
-        moved=TSLinkPreviewMove(NSMakeRect(100,100,1200,900),NSMakeSize(50,50),area,flipped);
-        require(near(NSMinX(moved),0) && near(NSMaxY(TSLinkPreviewUpward(moved,flipped)),NSMaxY(TSLinkPreviewUpward(area,flipped))),
-                "oversized preview keeps its left and top edges visible");
-        NSRect previous=TSLinkPreviewMove(frame,NSMakeSize(-600,-600),area,flipped);
-        for (CGFloat d=-600; d<=600; d+=0.5) {
-            moved=TSLinkPreviewMove(frame,NSMakeSize(d,d),area,flipped);
+        for (NSInteger corner=0; corner<4; corner++) {
+            NSSize far=NSMakeSize(corner&1 ? 5000 : -5000, corner&2 ? 5000 : -5000);
+            moved=TSLinkPreviewMove(frame,far,area,kept,flipped);
+            NSRect visible=NSIntersectionRect(area,moved);
+            require(near(NSWidth(visible),20) && near(NSHeight(visible),20) && near(NSWidth(moved),200) && near(NSHeight(moved),100),
+                    "move may push all but the kept part out of view");
+        }
+        moved=TSLinkPreviewMove(frame,NSMakeSize(5000,-5000),area,frame.size,flipped);
+        require(contains(area,moved) && near(NSMaxX(moved),1000) && near(NSMinY(moved),0),"keeping the whole size keeps the popup in view");
+        moved=TSLinkPreviewMove(frame,NSMakeSize(-5000,0),area,NSMakeSize(500,500),flipped);
+        require(near(NSMinX(moved),0) && near(NSMinY(moved),100),"kept part is at most the popup itself");
+        moved=TSLinkPreviewMove(NSMakeRect(100,100,1200,900),NSMakeSize(-5000,5000),area,kept,flipped);
+        require(near(NSWidth(NSIntersectionRect(area,moved)),20) && near(NSHeight(NSIntersectionRect(area,moved)),20),
+                "oversized preview keeps the kept part in view");
+        NSRect previous=TSLinkPreviewMove(frame,NSMakeSize(-1200,-1200),area,kept,flipped);
+        for (CGFloat d=-1200; d<=1200; d+=0.5) {
+            moved=TSLinkPreviewMove(frame,NSMakeSize(d,d),area,kept,flipped);
             require(fabs(NSMinX(moved)-NSMinX(previous))<=0.5001 && fabs(NSMinY(moved)-NSMinY(previous))<=0.5001,
                     "move is continuous");
             previous=moved;
