@@ -247,6 +247,8 @@
 "Saving Documents" = "保存文稿";
 
 "Page Display" = "页面显示";
+/* Page label in the corner of a link popup; %@ is the label printed on the page */
+"Page %@" = "第 %@ 页";
 
 "PDF Interaction" = "PDF操作";
 

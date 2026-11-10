@@ -251,6 +251,8 @@
 "Saving Documents" = "Guardar documentos";
 
 "Page Display" = "Visualización de páginas";
+/* Page label in the corner of a link popup; %@ is the label printed on the page */
+"Page %@" = "Página %@";
 
 "PDF Interaction" = "Interacción con PDF";
 

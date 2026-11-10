@@ -251,6 +251,8 @@
 "Saving Documents" = "Salvarea documentelor";
 
 "Page Display" = "Afișarea paginilor";
+/* Page label in the corner of a link popup; %@ is the label printed on the page */
+"Page %@" = "Pagina %@";
 
 "PDF Interaction" = "Interacțiune PDF";
 

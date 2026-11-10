@@ -272,6 +272,8 @@
 "Saving Documents" = "保存";
 
 "Page Display" = "ページ表示";
+/* Page label in the corner of a link popup; %@ is the label printed on the page */
+"Page %@" = "%@ ページ";
 
 "PDF Interaction" = "PDFの操作";
 

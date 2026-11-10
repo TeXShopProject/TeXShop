@@ -1,5 +1,6 @@
 #import "TSLinkPreviewView.h"
 #import "TSLinkPreviewGeometry.h"
+#import <objc/runtime.h>
 
 // Sizes on screen, independent of the preview's magnification.
 static const CGFloat TSLinkPreviewGrip = 6;
@@ -12,6 +13,9 @@ static const CGFloat TSLinkPreviewKeptMinimum = 20;
 // Page points around a line that still count as its text, so the cursor does not flicker
 // between lines.
 static const CGFloat TSLinkPreviewLineSlack = 2;
+// The page label in the lower right corner: white bold text on a gray capsule.
+static const CGFloat TSLinkPreviewLabelFontSize = 11;
+static const CGFloat TSLinkPreviewLabelMargin = 3;
 
 typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     TSLinkPreviewDragNone,
@@ -78,8 +82,29 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
                                      NSCompositingOperationMultiply);
         }
     }
+    [self drawPageLabelInRect:bounds];
     [[NSColor blackColor] set];
     NSFrameRect(bounds);
+}
+
+- (void)drawPageLabelInRect:(NSRect)bounds
+{
+    if (!self.pageLabel.length) return;
+    CGFloat unit = [self unitsPerScreenPoint];
+    NSDictionary *attributes = @{NSFontAttributeName: [NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit],
+                                 NSForegroundColorAttributeName: NSColor.whiteColor};
+    NSSize size = [self.pageLabel sizeWithAttributes:attributes];
+    CGFloat height = ceil(size.height), radius = height / 2, margin = TSLinkPreviewLabelMargin * unit;
+    NSRect capsule = NSMakeRect(NSMaxX(bounds) - margin - ceil(size.width) - 2 * radius, NSMinY(bounds) + margin,
+                                ceil(size.width) + 2 * radius, height);
+    if (NSWidth(capsule) > NSWidth(bounds) - 2 * margin || NSHeight(capsule) > NSHeight(bounds) - 2 * margin) return;
+    [NSGraphicsContext saveGraphicsState];
+    [[NSGraphicsContext currentContext] setShouldAntialias:YES];
+    [[NSColor colorWithWhite:0.55 alpha:0.8] setFill];
+    [[NSBezierPath bezierPathWithRoundedRect:capsule xRadius:radius yRadius:radius] fill];
+    [self.pageLabel drawAtPoint:NSMakePoint(NSMinX(capsule) + radius, NSMinY(capsule) + (height - size.height) / 2)
+                 withAttributes:attributes];
+    [NSGraphicsContext restoreGraphicsState];
 }
 
 - (NSView *)hitTest:(NSPoint)point
@@ -254,3 +279,42 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 }
 
 @end
+
+static NSString *(*TSPageViewToolTip)(id, SEL, NSView *, NSToolTipTag, NSPoint, void *);
+
+static NSString *TSFilteredPageViewToolTip(NSView *self, SEL selector, NSView *view, NSToolTipTag tag,
+                                           NSPoint point, void *data)
+{
+    // PDFKit passes the annotation as the tool tip's user data.
+    id annotation = (__bridge id)data;
+    if ([annotation isKindOfClass:PDFAnnotation.class])
+        for (NSView *ancestor = self.superview; ancestor; ancestor = ancestor.superview)
+            if ([ancestor isKindOfClass:PDFView.class]) {
+                if ([ancestor respondsToSelector:@selector(showsLinkPreviewForAnnotation:)] &&
+                    [(PDFView *)ancestor showsLinkPreviewForAnnotation:annotation]) return nil;
+                break;
+            }
+    return TSPageViewToolTip(self, selector, view, tag, point, data);
+}
+
+BOOL TSLinkPreviewInstallToolTipFilter(void)
+{
+    static BOOL installed;
+    if (installed) return YES;
+    Class pageView = NSClassFromString(@"PDFPageView");
+    SEL selector = @selector(view:stringForToolTip:point:userData:);
+    struct objc_method_description owner =
+        protocol_getMethodDescription(@protocol(NSViewToolTipOwner), selector, YES, YES);
+    if (!pageView || ![pageView isSubclassOfClass:NSView.class] || !owner.types) return NO;
+    // Replace only the page view's own method, never one it inherits.
+    unsigned count = 0;
+    Method *methods = class_copyMethodList(pageView, &count), found = NULL;
+    for (unsigned i = 0; i < count; i++)
+        if (method_getName(methods[i]) == selector) found = methods[i];
+    free(methods);
+    if (!found || strcmp(method_getTypeEncoding(found), owner.types) != 0) return NO;
+    TSPageViewToolTip = (NSString *(*)(id, SEL, NSView *, NSToolTipTag, NSPoint, void *))
+        method_setImplementation(found, (IMP)TSFilteredPageViewToolTip);
+    installed = YES;
+    return YES;
+}

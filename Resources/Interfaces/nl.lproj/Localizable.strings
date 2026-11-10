@@ -248,6 +248,8 @@
 "Saving Documents" = "Documenten bewaren";
 
 "Page Display" = "Paginaweergave";
+/* Page label in the corner of a link popup; %@ is the label printed on the page */
+"Page %@" = "Pagina %@";
 
 "PDF Interaction" = "PDF-bediening";
 

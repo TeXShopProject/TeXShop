@@ -224,6 +224,8 @@
 "Saving Documents" = "Saving Documents";
 
 "Page Display" = "Page Display";
+/* Page label in the corner of a link popup; %@ is the label printed on the page */
+"Page %@" = "Page %@";
 
 "PDF Interaction" = "PDF Interaction";
 

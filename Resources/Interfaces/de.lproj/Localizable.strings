@@ -250,6 +250,8 @@
 "Saving Documents" = "Dokumente sichern";
 
 "Page Display" = "Seitendarstellung";
+/* Page label in the corner of a link popup; %@ is the label printed on the page */
+"Page %@" = "Seite %@";
 
 "PDF Interaction" = "PDF-Bedienung";
 

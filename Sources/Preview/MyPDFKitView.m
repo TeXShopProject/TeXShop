@@ -74,6 +74,12 @@
     BOOL keepsPinnedLinkPreview;
 }
 
++ (void)initialize
+{
+    // The link popup takes the place of PDFKit's "Go to page" tool tip (#17).
+    if (self == [MyPDFKitView class]) TSLinkPreviewInstallToolTipFilter();
+}
+
 - (void)dealloc
 {
     if (linkPreviewEventMonitor) [NSEvent removeMonitor:linkPreviewEventMonitor];
@@ -4440,6 +4446,9 @@ if (!self.skipLinks && !self.globalLongTerm)
             linkPreview = [[TSLinkPreviewView alloc] initWithFrame:bRect image:myImageNew source:aRect
                                                           pageSize:imageSize page:linkedPage
                                                          transform:pageTransform];
+            if (linkedPage.label.length)
+                linkPreview.pageLabel = [NSString stringWithFormat:NSLocalizedString(@"Page %@",
+                    @"Page label in the corner of a link popup; %@ is the label printed on the page"), linkedPage.label];
             __weak MyPDFKitView *weakView = self;
             linkPreview.usesHandTool = ^BOOL {
                 MyPDFKitView *view = weakView;
@@ -4474,6 +4483,13 @@ if (!self.skipLinks && !self.globalLongTerm)
 
 
 
+
+// Links whose target hovering shows in a popup, which replaces PDFKit's tool tip (#17).
+- (BOOL)showsLinkPreviewForAnnotation:(PDFAnnotation *)annotation
+{
+    return !self.skipLinks && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&
+           [annotation.type isEqualToString:@"Link"] && annotation.destination != nil;
+}
 
 // Observe only this window; hovering must not steal keyboard focus from its controls.
 - (NSEvent *)handleLinkPreviewEvent:(NSEvent *)event
