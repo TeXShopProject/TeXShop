@@ -3561,24 +3561,24 @@ static BOOL TSStartsCommand(NSString *string, NSUInteger location)
     
     // ㊐
     src = [NSString stringWithFormat:@"%C", (unichar)(0x3290)];
-    dest = @"\\ajKakkoYobi{1}";
+    dest = @"\\ajMaruYobi{1}";
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:YES];
     
     // ㊊ ～ ㊏
     for (int i=2; i<=7; i++) {
         src = [NSString stringWithFormat:@"%C", (unichar)(0x328A + i - 2)];
-        dest = [NSString stringWithFormat:@"\\ajKakkoYobi{%d}", i];
+        dest = [NSString stringWithFormat:@"\\ajMaruYobi{%d}", i];
         [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:YES];
     }
     
     // ㊗
     src = [NSString stringWithFormat:@"%C", (unichar)(0x3297)];
-    dest = @"\\ajKakkoYobi{8}";
+    dest = @"\\ajMaruYobi{8}";
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:YES];
     
     // ㊡
-    src = [NSString stringWithFormat:@"%C", (unichar)(0x3297)];
-    dest = @"\\ajKakkoYobi{9}";
+    src = [NSString stringWithFormat:@"%C", (unichar)(0x32A1)];
+    dest = @"\\ajMaruYobi{9}";
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:YES];
     
     return str;
@@ -3593,37 +3593,37 @@ static BOOL TSStartsCommand(NSString *string, NSUInteger location)
     NSMutableString *str = [NSMutableString stringWithString:self];
     
     // ㊐
-    src = @"\\ajKakkoYobi{1}";
+    src = @"\\ajMaruYobi{1}";
     dest = [NSString stringWithFormat:@"%C", (unichar)(0x3290)];
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:NO];
     
-    src = @"\\ajKakkoYobi1";
+    src = @"\\ajMaruYobi1";
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:NO];
     
     // ㊊ ～ ㊏
     for (int i=2; i<=7; i++) {
-        src = [NSString stringWithFormat:@"\\ajKakkoYobi{%d}", i];
+        src = [NSString stringWithFormat:@"\\ajMaruYobi{%d}", i];
         dest = [NSString stringWithFormat:@"%C", (unichar)(0x328A + i - 2)];
         [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:NO];
         
-        src = [NSString stringWithFormat:@"\\ajKakkoYobi%d", i];
+        src = [NSString stringWithFormat:@"\\ajMaruYobi%d", i];
         [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:NO];
     }
     
     // ㊗
-    src = @"\\ajKakkoYobi{8}";
+    src = @"\\ajMaruYobi{8}";
     dest = [NSString stringWithFormat:@"%C", (unichar)(0x3297)];
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:NO];
     
-    src = @"\\ajKakkoYobi8";
+    src = @"\\ajMaruYobi8";
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:NO];
     
     // ㊡
-    src = @"\\ajKakkoYobi{9}";
-    dest = [NSString stringWithFormat:@"%C", (unichar)(0x3297)];
+    src = @"\\ajMaruYobi{9}";
+    dest = [NSString stringWithFormat:@"%C", (unichar)(0x32A1)];
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:NO];
     
-    src = @"\\ajKakkoYobi9";
+    src = @"\\ajMaruYobi9";
     [str replaceAllOccurrencesOfString:src withString:dest addingPercentForEndOfLine:NO];
     
     return str;

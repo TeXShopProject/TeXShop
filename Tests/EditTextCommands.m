@@ -121,6 +121,11 @@ static void CheckStrings(void)
     // Only sequences that Hiragino (Adobe-Japan1) draws as one glyph of its own become \CID.
     Check(@"CID only for Adobe-Japan1 glyphs", [@"\U0001F600|e\u0301|\U0001F468\u200D\U0001F469\u200D\U0001F467|\u8FBB\U000E0101|\U0002000B" stringByReplacingUnicodeCharactersWithUTF],
           @"\U0001F600|\\CID{201}|\U0001F468\u200D\U0001F469\u200D\U0001F467|\\CID{8267}|\\CID{13839}");
+    // ㊐..㊡ are \ajMaruYobi (they were written as \ajKakkoYobi, and ㊡ was read as ㊗).
+    Check(@"to ajMaruYobi", [@"㊐㊊㊏㊗㊡|㈰㈪㈷㉁" stringByReplacingUnicodeCharactersWithAjMacros],
+          @"\\ajMaruYobi{1}\\ajMaruYobi{2}\\ajMaruYobi{7}\\ajMaruYobi{8}\\ajMaruYobi{9}|\\ajKakkoYobi{1}\\ajKakkoYobi{2}\\ajKakkoYobi{8}\\ajKakkoYobi{9}");
+    Check(@"from ajMaruYobi", [@"\\ajMaruYobi{1}\\ajMaruYobi{2}\\ajMaruYobi7\\ajMaruYobi{8}\\ajMaruYobi{9}\\ajMaruYobi9|\\ajKakkoYobi{1}\\ajKakkoYobi{9}" stringByReplacingAjMacrosWithUnicodeCharacters],
+          @"㊐㊊㊏㊗㊡㊡|㈰㉁");
     Check(@"modified NFC composes", [@"か\u3099は\u309A\uFA19" normalizedStringWithModifiedNFC], @"がぱ\uFA19");
     Check(@"modified NFC keeps text made only of excluded characters", [@"\uFA19\uFA19" normalizedStringWithModifiedNFC], @"\uFA19\uFA19");
     Check(@"modified NFD keeps compatibility ideographs", [@"が\uFA19" normalizedStringWithModifiedNFD], @"か\u3099\uFA19");
