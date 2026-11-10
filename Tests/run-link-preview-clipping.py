@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """A link popup draws only inside its frame (#21).
 
-The popup's image draws the whole linked page. Since macOS 14 a view may draw
-outside its bounds, and while the preview scrolled, parts of the linked page
-appeared around the popup. The popup now clips to its frame. This checks that
+The popup's image draws the whole linked page, and since macOS 14 a view may
+draw outside its bounds. Issue #21 showed parts of the linked page around the
+popup while the preview scrolled; the popup now clips to its frame so that
+nothing outside it can be drawn. This checks that
 it does, and that the page image is drawn with a clip no larger than the popup,
 by drawing a popup of an all-black page into a larger transparent bitmap with a
 dirty rectangle that extends past the popup, without showing any window.
@@ -41,12 +42,13 @@ static void check(BOOL ok, const char *message) {
 }
 // The clip in effect, in the popup's coordinates, when the page image is drawn.
 static NSRect imageClip;
-static BOOL (*originalDraw)(id, SEL, NSRect, NSRect, NSCompositingOperation, CGFloat, BOOL, NSDictionary *);
-static BOOL recordingDraw(NSImage *self, SEL sel, NSRect rect, NSRect from, NSCompositingOperation op, CGFloat fraction,
+// -drawInRect:fromRect:operation:fraction:respectFlipped:hints: returns void.
+static void (*originalDraw)(id, SEL, NSRect, NSRect, NSCompositingOperation, CGFloat, BOOL, NSDictionary *);
+static void recordingDraw(NSImage *self, SEL sel, NSRect rect, NSRect from, NSCompositingOperation op, CGFloat fraction,
                           BOOL flipped, NSDictionary *hints) {
     CGContextRef context = NSGraphicsContext.currentContext.CGContext;
     imageClip = NSRectFromCGRect(CGContextGetClipBoundingBox(context));
-    return originalDraw(self, sel, rect, from, op, fraction, flipped, hints);
+    originalDraw(self, sel, rect, from, op, fraction, flipped, hints);
 }
 static CGFloat alphaAt(NSBitmapImageRep *rep, NSInteger x, NSInteger y) {
     // Bitmap rows run from the top; y is measured from the bottom here.
@@ -75,6 +77,9 @@ int main(void) { @autoreleasepool {
     NSAffineTransform *offset = [NSAffineTransform transform];
     [offset translateXBy:100 yBy:100]; [offset concat];
     Method draw = class_getInstanceMethod(NSImage.class, @selector(drawInRect:fromRect:operation:fraction:respectFlipped:hints:));
+    char returnType[8] = {0};
+    method_getReturnType(draw, returnType, sizeof returnType);
+    check(strcmp(returnType, @encode(void)) == 0, "the replaced drawing method returns void");
     originalDraw = (void *)method_setImplementation(draw, (IMP)recordingDraw);
     // A redraw of more than the popup, as when the preview around it scrolls.
     [preview drawRect:NSMakeRect(-100, -100, 400, 400)];
