@@ -289,6 +289,19 @@ else
          */
 // removed by Terada: deprecated fixed NSToolbarItem size limits.
     }
+    // Liquid Glass (macOS 26 and later): the toolbar provides the glass backing,
+    // so custom buttons use the automatic bezel instead of a glass button of their own.
+    if (@available(macOS 26.0, *)) {
+        if ([customView isKindOfClass:[NSButton class]] &&
+            ![customView isKindOfClass:[NSPopUpButton class]]) {
+            [(NSButton *)customView setBezelStyle:NSBezelStyleAutomatic];
+            toolbarItem.bordered = YES;
+            if ([itemIdent isEqualToString:kTypesetTID] ||
+                [itemIdent isEqualToString:skTypesetTID]) {
+                toolbarItem.style = NSToolbarItemStyleProminent;
+            }
+        }
+    }
   
 	return toolbarItem;
 }
