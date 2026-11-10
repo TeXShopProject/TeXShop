@@ -1053,6 +1053,7 @@
 		AE9800010000000000000002 /* TSExperimentJob.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSExperimentJob.m; sourceTree = "<group>"; };
 		AE9800010000000000000003 /* TSExperimentJob.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSExperimentJob.h; sourceTree = "<group>"; };
 		AE9800020000000000000002 /* TSExperimentConsoleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSExperimentConsoleController.m; sourceTree = "<group>"; };
+		EA29041121938812CD434C34 /* TSConsoleOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSConsoleOutput.h; sourceTree = "<group>"; };
 		AE9800020000000000000003 /* TSExperimentConsoleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSExperimentConsoleController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1341,6 +1342,7 @@
 				520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */,
 				E16E00000000000000000003 /* TSEnginePathDiscovery.h */,
 				E16E00000000000000000002 /* TSEnginePathDiscovery.m */,
+				EA29041121938812CD434C34 /* TSConsoleOutput.h */,
 				AE9800020000000000000003 /* TSExperimentConsoleController.h */,
 				AE9800020000000000000002 /* TSExperimentConsoleController.m */,
 				AE9800010000000000000003 /* TSExperimentJob.h */,

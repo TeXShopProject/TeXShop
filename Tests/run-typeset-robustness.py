@@ -115,6 +115,8 @@ static NSString *UseOldHeadingCommandsKey = @"UseOldHeadingCommands";
 static BOOL atLeastElCapitan = YES, atLeastHighSierra = YES;
 static int alertCount;
 #define NSBeginAlertSheet(...) (alertCount++)
+// The console helper of TSConsoleOutput.h, reduced to the probe's text calls.
+#define TSAppendConsoleOutput(view, text, color) [(view) replaceCharactersInRange:[(view) selectedRange] withString:(text)]
 
 // Preferences backed by a dictionary, standing in for NSUserDefaults.
 @interface ProbePreferences : NSObject

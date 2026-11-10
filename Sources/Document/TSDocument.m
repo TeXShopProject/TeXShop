@@ -45,6 +45,7 @@
 #import "MyPDFView.h"
 #import "MyPDFKitView.h"
 
+#import "TSConsoleOutput.h"
 #import "globals.h"
 #import "GlobalData.h"
 
@@ -1805,6 +1806,7 @@ if (! skipTextWindow) {
 	}
 	// added by mitsu --(A) g_texChar filtering
 	[texCommand setDelegate: [TSEncodingSupport sharedInstance]];
+	TSConfigureConsoleInput(texCommand);
 	// end addition
 
     if (!_externalEditor)
@@ -7647,13 +7649,8 @@ if (! useFullSplitWindow) {
 
             dispatch_sync(dispatch_get_main_queue(), ^{ // GUI stuff should happen on main thread
                 self->typesetStart = YES;
-                NSRange theRange = [self->outputText selectedRange];
-                theRange.length = [newOutput length];
-                [self->outputText replaceCharactersInRange: [self->outputText selectedRange] withString: newOutput];
-                if (! self->consoleCleanStart) {
-                    [self->outputText setTextColor:[NSColor redColor] range: theRange];
-                }
-                [self->outputText scrollRangeToVisible: [self->outputText selectedRange]];
+                TSAppendConsoleOutput(self->outputText, newOutput,
+                    self->consoleCleanStart ? nil : [NSColor redColor]);
                 });
     //        [newOutput release];
             });

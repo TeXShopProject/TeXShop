@@ -1,3 +1,4 @@
+#import "TSConsoleOutput.h"
 #import "TSExperimentConsoleController.h"
 #import "TSExperimentJob.h"
 #import "TSEncodingSupport.h"
@@ -122,6 +123,7 @@
     field.placeholderString = NSLocalizedString(@"Experiment input", @"Experiment console input placeholder");
     field.accessibilityLabel = field.placeholderString;
     [content addSubview:field];
+    TSConfigureConsoleInput(field);
     self.commandField = field;
     field.enabled = NO;
     NSButton *stop = [NSButton buttonWithTitle:NSLocalizedString(@"Stop Experiment", @"Stop Experiment job")
@@ -147,8 +149,11 @@
     if (!text.length) return;
     NSAttributedString *addition = [[NSAttributedString alloc] initWithString:text attributes:@{
         NSFontAttributeName:self.outputText.font, NSForegroundColorAttributeName:self.outputText.textColor ?: NSColor.textColor}];
+    // Appending keeps any selection; follow the output only when nothing is selected.
+    BOOL selecting = TSConsoleHasSelection(self.outputText);
     [self.outputText.textStorage appendAttributedString:addition];
-    [self.outputText scrollRangeToVisible:NSMakeRange(self.outputText.string.length, 0)];
+    if (!selecting)
+        [self.outputText scrollRangeToVisible:NSMakeRange(self.outputText.string.length, 0)];
 }
 
 - (void)appendData:(NSData *)data atEnd:(BOOL)atEnd
