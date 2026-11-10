@@ -1,6 +1,7 @@
 #import "TSExperimentJob.h"
 #include <signal.h>
 #include <unistd.h>
+#include <sys/clonefile.h>
 
 @interface TSExperimentJob ()
 @property (nonatomic, strong) NSTask *task;
@@ -129,26 +130,50 @@
     @catch (NSException *exception) { return NO; }
 }
 
-// A folder with more subfolders than this is not mirrored, so that an Experiment starts quickly.
-static const NSUInteger TSExperimentMaximumFolders = 500;
+// A folder with more items than this, counted through its subfolders, is not cloned, so that an
+// Experiment starts quickly.
+static const NSUInteger TSExperimentMaximumClonedItems = 5000;
 
-+ (NSUInteger)createSubdirectoriesOf:(NSURL *)source inDirectory:(NSURL *)directory
+// Removes the symbolic links under `directory` that lead out of it: TeX writing through them would
+// change files elsewhere. Links within the clones stay.
+static void TSExperimentRemoveOutwardLinks(NSFileManager *manager, NSString *directory)
+{
+    NSString *base = [directory.stringByStandardizingPath stringByAppendingString:@"/"];
+    NSMutableArray<NSString *> *outward = [NSMutableArray array];
+    NSDirectoryEnumerator *walk = [manager enumeratorAtPath:directory];
+    for (NSString *relative in walk) {
+        if (![walk.fileAttributes[NSFileType] isEqual:NSFileTypeSymbolicLink]) continue;
+        NSString *path = [directory stringByAppendingPathComponent:relative];
+        NSString *target = [manager destinationOfSymbolicLinkAtPath:path error:NULL];
+        if (target && !target.isAbsolutePath)
+            target = [path.stringByDeletingLastPathComponent stringByAppendingPathComponent:target];
+        if (!target || ![[target.stringByStandardizingPath stringByAppendingString:@"/"] hasPrefix:base])
+            [outward addObject:path];
+    }
+    for (NSString *path in outward) [manager removeItemAtPath:path error:NULL];
+}
+
++ (NSUInteger)cloneItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptNames:(NSArray<NSString *> *)names
 {
     if (!source || !directory) return 0;
     NSFileManager *manager = NSFileManager.defaultManager;
-    NSArray<NSURL *> *items = [manager contentsOfDirectoryAtURL:source includingPropertiesForKeys:@[NSURLIsDirectoryKey]
-                                                        options:0 error:NULL];
-    NSMutableArray<NSString *> *names = [NSMutableArray array];
-    for (NSURL *item in items) {
-        NSNumber *isDirectory = nil;
-        [item getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
-        if (isDirectory.boolValue) [names addObject:item.lastPathComponent];
-    }
-    if (names.count > TSExperimentMaximumFolders) return 0;
+    NSUInteger total = 0;
+    for (__unused NSString *item in [manager enumeratorAtPath:source.path])
+        if (++total > TSExperimentMaximumClonedItems) return 0;
+    NSMutableSet<NSString *> *excluded = [NSMutableSet set];
+    for (NSString *name in names) [excluded addObject:name.lowercaseString];
     NSUInteger count = 0;
-    for (NSString *name in names)
-        if ([manager createDirectoryAtURL:[directory URLByAppendingPathComponent:name isDirectory:YES]
-              withIntermediateDirectories:NO attributes:nil error:NULL]) count++;
+    for (NSString *item in [manager contentsOfDirectoryAtPath:source.path error:NULL]) {
+        NSString *lower = item.lowercaseString;
+        // Names are compared ignoring case, as the file system may.
+        if ([excluded containsObject:lower] || [lower hasPrefix:@"file."]) continue;
+        NSString *from = [source.path stringByAppendingPathComponent:item];
+        NSString *to = [directory.path stringByAppendingPathComponent:item];
+        if ([manager fileExistsAtPath:to]) continue;
+        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) == 0)
+            count++;
+    }
+    TSExperimentRemoveOutwardLinks(manager, directory.path);
     return count;
 }
 
