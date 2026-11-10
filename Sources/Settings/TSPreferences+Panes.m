@@ -119,6 +119,7 @@
     _antialiasButton = preview.antialiasButton;
     _autoPDFButton = preview.autoPDFButton;
     _displayAsBookButton = preview.displayAsBookButton;
+    _linkPopupsButton = preview.linkPopupsButton;
     _firstPageMatrix = preview.firstPageMatrix;
     _htmlWindowPosButton = preview.htmlWindowPosButton;
     _htmlWindowPosMatrix = preview.htmlWindowPosMatrix;

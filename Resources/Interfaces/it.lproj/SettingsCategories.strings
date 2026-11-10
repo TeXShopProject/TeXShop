@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Funzione predefinita del mouse";
 "catalog.preview.0.4.title" = "Non scorrere con i pulsanti di pagina";
 "catalog.preview.0.5.title" = "Testo regolare e disegni al tratto";
+"catalog.preview.0.6.title" = "Collegamento popup";
+"catalog.preview.0.6.note" = "Valore iniziale per i documenti aperti d’ora in poi. In un documento aperto, si cambia dal menu «Pagina».";
 "group.preview.1.title" = "Modalità pagine affiancate";
 "catalog.preview.1.0.title" = "Direzione delle pagine";
 "catalog.preview.1.1.title" = "Mostra la prima pagina da sola come copertina";

@@ -47,6 +47,7 @@
 "p2D-Mi-Gyc.title" = "URL inicial";
 "preview-cover-cell.title" = "Mostrar a primeira página sozinha como capa";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
+"preview-link-popups-cell.title" = "Pop-ups de links";
 "sa2-VV-W1K.title" = "Lembrar-se da última posição";
 "tVs-uh-QcM.title" = "Abrir sempre em uma posição fixa";
 "vOt-2m-d2s.title" = "Usar uma única janela";

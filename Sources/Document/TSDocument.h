@@ -540,6 +540,9 @@ enum RootCommand
 @property (strong) NSNumber *previewBookOverride;
 @property (strong) NSNumber *previewDirectionOverride;
 @property           BOOL            bookDisplay;
+// Whether the previews of this document show link popups: Link Popups in Settings when
+// the document is opened, then Link Popups in the Preview menu. Both panes share it.
+@property           BOOL            linkPopups;
 @property           BOOL            RTLDisplay;
 @property           BOOL            useExplColor;
 @property           NSInteger       numberingCorrection;
@@ -1084,6 +1087,7 @@ enum RootCommand
 
 @interface TSDocument (PreviewLayoutControls)
 - (BOOL)previewDisplaysAsBook;
+- (void)toggleLinkPopups:(id)sender;
 - (BOOL)previewDisplaysRTL;
 - (void)changePreviewLayout:(id)sender;
 - (void)changePreviewArrangement:(id)sender;

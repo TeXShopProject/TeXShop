@@ -72,6 +72,7 @@
     TSLinkPreviewView *linkPreview;
     BOOL showsLinkPreviewCursor;
     BOOL keepsPinnedLinkPreview;
+    BOOL _skipLinks;
 }
 
 + (void)initialize
@@ -232,7 +233,9 @@
     
 //    self.skipLinks = NO;
     
-    self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);
+    // A document holds its own state from when it was opened; see skipLinks.
+    if (!self.myDocument)
+        self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);
     self.globalLongTerm = NO;
    // self.useAnnotationMenu = NO;
     self.stringAlignment = 1;
@@ -4068,9 +4071,30 @@ The system then remembers the new number and sends is to the Timer which will di
 - (void) changeLinkPopups
 {
     self.skipLinks = ! self.skipLinks;
+    [self linkPopupsChanged];
+}
+
+- (void) linkPopupsChanged
+{
     if (self.skipLinks)
         [self doKillPopup];
-    
+}
+
+// Both panes of a document, whenever they first show a PDF, follow the document's Link
+// Popups; a view without a document keeps its own.
+- (BOOL) skipLinks
+{
+    TSDocument *document = self.myDocument;
+    return document ? !document.linkPopups : _skipLinks;
+}
+
+- (void) setSkipLinks: (BOOL)skip
+{
+    TSDocument *document = self.myDocument;
+    if (document)
+        document.linkPopups = !skip;
+    else
+        _skipLinks = skip;
 }
 
 /*

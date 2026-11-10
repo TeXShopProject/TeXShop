@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Efectul Mausului";
 "catalog.preview.0.4.title" = "Nu derula cu butoanele de pagină";
 "catalog.preview.0.5.title" = "Netezește textul și liniile";
+"catalog.preview.0.6.title" = "Ferestre pop-up";
+"catalog.preview.0.6.note" = "Valoarea inițială pentru documentele deschise de acum înainte. Într-un document deschis, se schimbă din meniul „Previzualizare”.";
 "group.preview.1.title" = "Aranjarea paginilor duble";
 "catalog.preview.1.0.title" = "Direcția paginilor";
 "catalog.preview.1.1.title" = "Arată prima pagină separat, ca o copertă";

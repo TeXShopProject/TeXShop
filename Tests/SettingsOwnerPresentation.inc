@@ -129,7 +129,7 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
         }
         CountPresentedControls(pane, actual);
     }
-    Check(expected[0] == 50 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty switches and two exclusive spelling choices");
+    Check(expected[0] == 51 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty-one switches and two exclusive spelling choices");
     // The reference describes checkbox labels as items in its checks/grid rows.
     Check(actual[0] == expected[0] && actual[1] == expected[1] && actual[2] == expected[2] && actual[3] == 0,
           [NSString stringWithFormat:@"Displayed controls: switches=%lu checks=%lu radios=%lu matrices=%lu",(unsigned long)actual[0],(unsigned long)actual[1],(unsigned long)actual[2],(unsigned long)actual[3]]);

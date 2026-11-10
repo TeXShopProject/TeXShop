@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Comportamento padrão do mouse";
 "catalog.preview.0.4.title" = "Não rolar com os botões de página";
 "catalog.preview.0.5.title" = "Suavizar texto e ilustrações";
+"catalog.preview.0.6.title" = "Pop-ups de links";
+"catalog.preview.0.6.note" = "Valor inicial para os documentos abertos a partir de agora. Em um documento aberto, altere no menu “Página”.";
 "group.preview.1.title" = "Modo de página dupla";
 "catalog.preview.1.0.title" = "Direção das páginas";
 "catalog.preview.1.1.title" = "Mostrar a primeira página sozinha como capa";

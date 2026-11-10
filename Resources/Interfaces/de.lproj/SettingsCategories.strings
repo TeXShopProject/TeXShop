@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Standard Maus-Modus";
 "catalog.preview.0.4.title" = "Mit Seitentasten nicht scrollen";
 "catalog.preview.0.5.title" = "Schriftglättung für Text und Linien";
+"catalog.preview.0.6.title" = "Link-Popups";
+"catalog.preview.0.6.note" = "Anfangswert für Dokumente, die Sie danach öffnen. In einem geöffneten Dokument im Menü „Vorschau“ umschalten.";
 "group.preview.1.title" = "Doppelseiten-Modus";
 "catalog.preview.1.0.title" = "Seitenrichtung";
 "catalog.preview.1.1.title" = "Erste Seite einzeln als Deckblatt anzeigen";
