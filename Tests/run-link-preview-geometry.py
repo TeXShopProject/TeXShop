@@ -8,6 +8,8 @@ from source_tree import include_args
 
 MUTATIONS = {
     'move-unclamped': ('    up.origin = NSMakePoint(x, y);\n', '    up.origin = NSMakePoint(NSMinX(up) + delta.width, NSMinY(up) + (flipped ? -delta.height : delta.height));\n'),
+    'move-confined': ('    CGFloat keptWidth = MIN(MAX(kept.width, 0), NSWidth(up)), keptHeight = MIN(MAX(kept.height, 0), NSHeight(up));\n',
+                      '    CGFloat keptWidth = NSWidth(up), keptHeight = NSHeight(up);\n'),
     'resize-anchor': ('        source.origin.x += change / sx; source.size.width -= change / sx;\n', '        source.size.width -= change / sx;\n'),
     'resize-minimum': ('NSMaxX(up) - minimum.width);', 'NSMaxX(up));'),
     'pan-unclamped': ('    source.origin.x = TSLinkPreviewClamp(NSMinX(source) - contentDelta.width, 0,\n                                         MAX(0, pageSize.width - NSWidth(source)));\n',

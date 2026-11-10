@@ -247,15 +247,16 @@ static inline TSLinkPreviewEdge TSLinkPreviewEdgeAt(NSRect frame, NSPoint point,
     return edges;
 }
 
-// Keeps the whole frame inside the available area; a frame larger than the area keeps
-// its left and top edges visible.
-static inline NSRect TSLinkPreviewMove(NSRect frame, NSSize delta, NSRect available, BOOL flipped)
+// The frame may leave the available area, as far as `kept` of its width and of its height
+// (at most its whole size) stays inside, so a pinned preview can be pushed nearly out of view
+// and still be dragged back.
+static inline NSRect TSLinkPreviewMove(NSRect frame, NSSize delta, NSRect available, NSSize kept, BOOL flipped)
 {
     NSRect up = TSLinkPreviewUpward(frame, flipped), area = TSLinkPreviewUpward(available, flipped);
+    CGFloat keptWidth = MIN(MAX(kept.width, 0), NSWidth(up)), keptHeight = MIN(MAX(kept.height, 0), NSHeight(up));
     CGFloat x = NSMinX(up) + delta.width, y = NSMinY(up) + (flipped ? -delta.height : delta.height);
-    x = NSWidth(up) > NSWidth(area) ? NSMinX(area) : TSLinkPreviewClamp(x, NSMinX(area), NSMaxX(area) - NSWidth(up));
-    y = NSHeight(up) > NSHeight(area) ? NSMaxY(area) - NSHeight(up)
-                                      : TSLinkPreviewClamp(y, NSMinY(area), NSMaxY(area) - NSHeight(up));
+    x = MAX(MIN(x, NSMaxX(area) - keptWidth), NSMinX(area) - NSWidth(up) + keptWidth);
+    y = MIN(MAX(y, NSMinY(area) - NSHeight(up) + keptHeight), NSMaxY(area) - keptHeight);
     up.origin = NSMakePoint(x, y);
     return TSLinkPreviewUpward(up, flipped);
 }
