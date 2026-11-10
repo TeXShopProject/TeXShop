@@ -1020,6 +1020,15 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 		from = length - 1;
 	if (to > length)
 		to = length;
+	if (to < from)
+		to = from;
+
+	// A line break typed or pasted inside a line moves the rest of that line
+	// onto a new line, just after the edit. Include the character after the
+	// edit so that this line is colored again too; otherwise text split off
+	// a comment line keeps the comment color.
+	if (to < length)
+		to = to + 1;
 
 	colorRange.location = from;
 	colorRange.length = to - from;
