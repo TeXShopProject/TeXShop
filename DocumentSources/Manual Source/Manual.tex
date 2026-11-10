@@ -4459,7 +4459,7 @@ The final way to spell check is to use the menu item {\em Check Spelling While T
 
 \section{LaTeX-aware Spell Checking}
 
-TeXShop 5.60 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Use legacy spell checking}. The new method has an indented ``Edit LaTeX exclusion rules...'' button; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
+TeXShop 5.60 adds LaTeX-aware spell checking, based on an implementation proposed by Ralph Martin. In Settings, Spell Checking, choose {\bf Use LaTeX-aware spell checking (recommended)} or {\bf Legacy method}. The new method has an indented ``Edit LaTeX exclusion rules...'' button; the legacy method has three indented exclusions for commands, parameters and comments. Inactive options remain visible and retain their values. This choice does not turn on {\em Check Spelling While Typing}.
 
 LaTeX-aware spell checking skips comments, mathematics, TeX commands, and the arguments of commands such as \verb|\label|, \verb|\ref|, \verb|\cite|, and \verb|\usepackage|, and checks the rest of the text. It works with the standard {\em Spelling and Grammar} panel, and with {\em Check Spelling While Typing}, which then does not underline the skipped parts of the source. The new rules apply to TeX source files and to new documents not yet saved; other kinds of files, including Sweave files, keep the older behavior described in the next sections.
 
@@ -4519,7 +4519,7 @@ What is the mechanism Sims uses to turn off spell checking? I wish I had thought
 
 %Note that cocoAspell uses more sophisticated methods and operates at the optimal moment when the system is actually checking spelling, rather than at an earlier syntax coloring moment. So if you use cocoAspell, you will want to turn all the "Spell Checking" preferences off.
 
-In Settings under Spell Checking, the three indented options below ``Use legacy spell checking'' apply to the legacy method. These options are off by default. Leave them off if you use cocoAspell or another spelling service. Starting with TeXShop 5.60, these items are used only when LaTeX-aware spell checking is turned off.
+In Settings under Spell Checking, the three indented options below ``Legacy method'' apply to the legacy method. These options are off by default. Leave them off if you use cocoAspell or another spelling service. Starting with TeXShop 5.60, these items are used only when LaTeX-aware spell checking is turned off.
 
 The first spell checking item turns off spell checking for all TeX command words like: 
 \begin{verbatim}
