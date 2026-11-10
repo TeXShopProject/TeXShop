@@ -17,8 +17,6 @@ The universal application requires macOS 14.6 or later and runs on Apple Silicon
 
 The initial commit is an import of Richard Koch's original `TexShop-5.58-GG-Source` archive. It is followed by maintenance changes, including PDF zoom and reload handling, preview appearance controls, localized interface corrections, runtime WebKit view creation, syntax-coloring range checks, invisible-character alignment, and PDF rendering recovery and workarounds.
 
-This is not the complete historical TeXShop repository. Original copyright notices and contributor credits are preserved.
-
 ## Building
 
 Open `TeXShop.xcodeproj` in Xcode and select the `TeXShop` scheme. Choose your own signing configuration when building a distributable application. For an unsigned developer build:
