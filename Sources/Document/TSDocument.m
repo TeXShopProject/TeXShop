@@ -9362,7 +9362,8 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 				isOneOfOther = YES;
 		}
 		
-		if ([extension isEqualToString:@"gz"]) {
+		// SyncTeX writes name.synctex.gz(busy) while TeX runs; an interrupted run leaves it behind.
+		if ([extension isEqualToString:@"gz"] || [extension isEqualToString:@"gz(busy)"]) {
  			if ([[objectFileName pathExtension] isEqualToString:@"synctex"]) {
 				doMove = YES;
 				isOneOfOther = YES;
