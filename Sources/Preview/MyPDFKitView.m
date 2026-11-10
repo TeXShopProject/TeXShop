@@ -71,7 +71,7 @@
     id linkPreviewEventMonitor;
     TSLinkPreviewView *linkPreview;
     BOOL showsLinkPreviewCursor;
-    BOOL clickKeepsPinnedLinkPreview;
+    BOOL keepsPinnedLinkPreview;
 }
 
 - (void)dealloc
@@ -3183,7 +3183,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 	if ((oldMouseMode == NEW_MOUSE_MODE_SELECT_PDF) && (mouseMode != NEW_MOUSE_MODE_SELECT_PDF) &&
 	(mouseMode != NEW_MOUSE_MODE_SCROLL))
 
-		[self cleanupMarquee: YES];
+		[self keepingPinnedLinkPreview:^{ [self cleanupMarquee: YES]; }];
 
 	[[self window] invalidateCursorRectsForView: self]; // this updates the cursor rects
 
@@ -3867,9 +3867,21 @@ if (self.myDocument.useConTeXtSyncParser)
     // A pinned popup stays until Escape; an ordinary one goes away.
     if (self.handlingLink && !self.globalLongTerm) [self doKillPopup];
     linkPreview.selectionIsRecent = NO;
-    clickKeepsPinnedLinkPreview = YES;
-    [self mouseDownKeepingPinnedLinkPreview: theEvent];
-    clickKeepsPinnedLinkPreview = NO;
+    [self keepingPinnedLinkPreview:^{ [self mouseDownKeepingPinnedLinkPreview: theEvent]; }];
+}
+
+// While `block` runs, -cleanupMarquee: leaves a pinned popup in place: clicks in the preview
+// and changes of tool keep it, whereas page changes, zoom or reloading still dismiss it.
+- (void) keepingPinnedLinkPreview: (void (^)(void))block
+{
+    BOOL previous = keepsPinnedLinkPreview;
+    keepsPinnedLinkPreview = YES;
+    @try {
+        block();
+    }
+    @finally {
+        keepsPinnedLinkPreview = previous;
+    }
 }
 
 - (void) mouseDownKeepingPinnedLinkPreview: (NSEvent *) theEvent
@@ -4966,7 +4978,7 @@ if (!self.skipLinks && !self.globalLongTerm)
 // earses the frame of selected rectangle and cleans up the cached image
 - (void)cleanupMarquee: (BOOL)terminate
 {
-    if (self.handlingLink && !(self.globalLongTerm && clickKeepsPinnedLinkPreview)) { [self doKillPopup]; return; }
+    if (self.handlingLink && !(self.globalLongTerm && keepsPinnedLinkPreview)) { [self doKillPopup]; return; }
     // for Mavericks
    //  if (atLeastMavericks) {
     {

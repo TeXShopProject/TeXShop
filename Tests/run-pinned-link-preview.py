@@ -10,7 +10,8 @@ from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'other-window', 'cleanup-state', 'ordinary-escape', 'modified-escape', 'click-cleanup', 'initialize-cleanup',
                                            'unpinned-interactive', 'pinned-transparent', 'scroll-chains', 'scroll-moves-frame', 'option-not-forwarded', 'kill-leaves-view', 'cursor-overridden', 'resize-scales',
-                                           'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection'])
+                                           'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection',
+                                           'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -31,7 +32,8 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void)viewWillMoveToWindow:', '- (void)doKillPopup', '- (void)killPopup:',
     '- (void)setDocument:(PDFDocument *)document', '- (void)cleanupMarquee:',
     '- (void) mouseDown:', '- (void) mouseDownKeepingPinnedLinkPreview:', '- (void) initializeDisplay',
-    '- (NSCursor *) cursorForToolWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:'))
+    '- (NSCursor *) cursorForToolWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:',
+    '- (void) keepingPinnedLinkPreview:', '- (void) changeMouseMode:'))
 if args.mutation == 'move-dismisses':
     methods = methods.replace('!self.skipLinks && !self.globalLongTerm', '!self.skipLinks')
 elif args.mutation == 'stale-timer':
@@ -39,7 +41,7 @@ elif args.mutation == 'stale-timer':
 elif args.mutation == 'other-window':
     methods = methods.replace('event.window != self.window || ', '')
 elif args.mutation == 'cleanup-state':
-    methods = methods.replace('if (self.handlingLink && !(self.globalLongTerm && clickKeepsPinnedLinkPreview)) { [self doKillPopup]; return; }', '')
+    methods = methods.replace('if (self.handlingLink && !(self.globalLongTerm && keepsPinnedLinkPreview)) { [self doKillPopup]; return; }', '')
 elif args.mutation == 'ordinary-escape':
     methods = methods.replace('self.globalLongTerm && event.type == NSEventTypeKeyDown', 'event.type == NSEventTypeKeyDown')
 elif args.mutation == 'option-not-forwarded':
@@ -49,7 +51,11 @@ elif args.mutation == 'kill-leaves-view':
 elif args.mutation == 'cursor-overridden':
     methods = methods.replace('        [previewCursor set];\n        showsLinkPreviewCursor = YES;\n        return;', '        [previewCursor set];\n        showsLinkPreviewCursor = YES;')
 elif args.mutation == 'cleanup-in-click-kills-pin':
-    methods = methods.replace('if (self.handlingLink && !(self.globalLongTerm && clickKeepsPinnedLinkPreview))', 'if (self.handlingLink)')
+    methods = methods.replace('if (self.handlingLink && !(self.globalLongTerm && keepsPinnedLinkPreview))', 'if (self.handlingLink)')
+elif args.mutation == 'tool-change-kills-pin':
+    methods = methods.replace('[self keepingPinnedLinkPreview:^{ [self cleanupMarquee: YES]; }];', '[self cleanupMarquee: YES];')
+elif args.mutation == 'flag-not-restored':
+    methods = methods.replace('    @finally {\n        keepsPinnedLinkPreview = previous;\n    }', '    @finally {\n    }')
 elif args.mutation == 'cursor-not-restored':
     methods = methods.replace('        [[self cursorForToolWithEvent: theEvent] set];\n', '')
 elif args.mutation == 'copy-ignores-popup':
@@ -67,6 +73,7 @@ preview_mutations = {
     'move-confined': ('frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], kept, flipped);',
                       'frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], _startFrame.size, flipped);'),
     'click-keeps-selection': ('NSEqualRects(self.frame, _startFrame)) self.selection = nil;', 'NO) self.selection = nil;'),
+    'click-keeps-focus': ('            if (self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
     'resize-scales': ('                            [self availableRect], _pageSize, flipped, &frame, &source);',
                       '                            [self availableRect], _pageSize, flipped, &frame, &source);\n        source = _startSource;'),
 }
@@ -92,9 +99,10 @@ program = r'''
 #define NEW_PDF_FIT_TO_WIDTH 2
 #define NEW_PDF_FIT_TO_HEIGHT 3
 #define PDF_FIT_TO_WINDOW 4
-#define NEW_MOUSE_MODE_SELECT_TEXT 5
+// The values of Sources/App/globals.h, which mouseMoved: also uses as numbers.
 #define NEW_MOUSE_MODE_SCROLL 1
-#define NEW_MOUSE_MODE_SELECT_PDF 2
+#define NEW_MOUSE_MODE_SELECT_TEXT 2
+#define NEW_MOUSE_MODE_SELECT_PDF 5
 #define NEW_MOUSE_MODE_MAG_GLASS 3
 #define NEW_MOUSE_MODE_MAG_GLASS_L 4
 #define PdfCopyTypeKey @"copyType"
@@ -110,12 +118,15 @@ static NSEventModifierFlags currentFlags(id self, SEL sel) { return flags; }
 static NSPoint currentMouse(id self, SEL sel) { return NSZeroPoint; }
 static NSMutableArray *handlers;
 static id addMonitor(id self, SEL sel, NSEventMask mask, id handler) {
-    check(mask == (NSEventMaskKeyDown | NSEventMaskFlagsChanged), @"monitor mask");
+    // Text views add monitors of their own; only the popup's is recorded.
+    if (mask != (NSEventMaskKeyDown | NSEventMaskFlagsChanged)) return [NSObject new];
     id block = [handler copy]; [handlers addObject:block]; return block;
 }
 static void removeMonitor(id self, SEL sel, id monitor) { [handlers removeObjectIdenticalTo:monitor]; }
 // Whether a click also cleans up the marquee on its way, as selecting text or the magnifying glass do.
 static BOOL cleanupInClick;
+// Makes the click fail on its way, as an exception would.
+static BOOL throwInClick;
 // Copy writes to a private pasteboard, never the user's clipboard.
 static NSPasteboard *testPasteboard;
 static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard; }
@@ -124,10 +135,14 @@ static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard
 @property NSInteger stringWindowAlignment;
 - (void)updatePreviewLayoutControls;
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
+- (NSMenu *)mousemodeMenu;
+- (NSMatrix *)mousemodeMatrix;
 @end
 @implementation TestDocument
 - (void)updatePreviewLayoutControls {}
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item { return YES; }
+- (NSMenu *)mousemodeMenu { return nil; }
+- (NSMatrix *)mousemodeMatrix { return nil; }
 @end
 @interface MyPDFKitView : PDFView {
     NSInteger mouseMode, currentMouseMode;
@@ -138,7 +153,7 @@ static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard
     id linkPreviewEventMonitor;
     TSLinkPreviewView *linkPreview;
     BOOL showsLinkPreviewCursor;
-    BOOL clickKeepsPinnedLinkPreview;
+    BOOL keepsPinnedLinkPreview;
 }
 @property BOOL skipLinks, globalLongTerm, inLink;
 @property TestDocument *myDocument;
@@ -173,7 +188,11 @@ static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard
 - (NSData *)imageDataFromSelectionType:(NSInteger)type { return nil; }
 // Stop the rest of mouseDown after its production popup-cleanup entry path. Clicks clean up
 // the marquee on their way (selecting text, the magnifying glass), so do that here too.
-- (BOOL)annotationMouseDown:(NSEvent *)event { if (cleanupInClick) [self cleanupMarquee:YES]; return YES; }
+- (BOOL)annotationMouseDown:(NSEvent *)event {
+    if (cleanupInClick) [self cleanupMarquee:YES];
+    if (throwInClick) [NSException raise:@"TestException" format:@"click fails"];
+    return YES;
+}
 - (void)doSync:(NSPoint)point {}
 - (void)doMagnifyingGlass:(NSEvent *)event level:(NSInteger)level {}
 - (void)scrollByDragging:(NSEvent *)event {}
@@ -364,6 +383,22 @@ static void testTools(MyPDFKitView *view, NSWindow *window, PDFDocument *doc) {
     [testPasteboard clearContents];
     [view copy:nil];
     check([[testPasteboard stringForType:NSPasteboardTypeString] isEqualToString:selected], @"Copy copies the popup selection");
+    // With the keyboard elsewhere, a click in the popup brings Copy to its preview.
+    NSTextView *field = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 50, 20)];
+    [window.contentView addSubview:field];
+    field.string = @"sourceSentinel"; [field selectAll:nil];
+    [window makeFirstResponder:field];
+    [preview mouseDown:clicks(window, NSEventTypeLeftMouseDown, text, 2)];
+    [preview mouseUp:clicks(window, NSEventTypeLeftMouseUp, text, 2)];
+    check(window.firstResponder == view, @"clicking the popup makes its preview the active view");
+    [testPasteboard clearContents];
+    check([window.firstResponder tryToPerform:@selector(copy:) with:nil] &&
+          [[testPasteboard stringForType:NSPasteboardTypeString] isEqualToString:preview.selection.string],
+          @"Copy through the responder chain copies the popup selection");
+    [field removeFromSuperview];
+    [preview mouseDown:clicks(window, NSEventTypeLeftMouseDown, text, 1)];
+    [preview mouseUp:clicks(window, NSEventTypeLeftMouseUp, text, 1)];
+    drag(preview, window, text, NSMakePoint(text.x + 120, text.y));
     cleanupInClick = YES;
     [view mouseDown:event(window,NSEventTypeMouseMoved,0,@"",NSZeroPoint)];
     cleanupInClick = NO;
@@ -422,6 +457,35 @@ static void testTools(MyPDFKitView *view, NSWindow *window, PDFDocument *doc) {
               approx(NSWidth(preview.frame), NSWidth(frame)),
               @"moved popup keeps only a small part in view");
         drag(preview, window, findPoint(view, NSCursor.openHandCursor), findPoint(view, NSCursor.openHandCursor));
+    }
+    // Changing the tool keeps a pinned popup; the selection tool's marquee goes away.
+    for (NSNumber *target in @[@(NEW_MOUSE_MODE_SELECT_TEXT), @(NEW_MOUSE_MODE_MAG_GLASS), @(NEW_MOUSE_MODE_SCROLL)]) {
+        [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
+        OverView *marquee = [[OverView alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
+        [view.documentView addSubview:marquee]; view.overView = marquee;
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""]; item.tag = target.integerValue;
+        [view changeMouseMode:item];
+        check(view.preview == preview && preview.superview && view.globalLongTerm && handlers.count == 1,
+              @"changing the tool keeps a pinned popup");
+        if (target.integerValue != NEW_MOUSE_MODE_SCROLL)
+            check(!view.overView && !marquee.superview, @"changing the tool still removes the marquee");
+        [marquee removeFromSuperview]; view.overView = nil;
+    }
+    // A click that fails on its way leaves later cleanups as they were.
+    throwInClick = YES;
+    @try { [view mouseDown:mouse(window, NSEventTypeLeftMouseDown, away)]; } @catch (NSException *exception) {}
+    throwInClick = NO;
+    check(view.preview == preview, @"a failed click keeps the pinned popup");
+    [view cleanupMarquee:YES];
+    check(!view.preview && !handlers.count, @"after a failed click, cleanup outside a click dismisses the popup");
+
+    // Hovering shows popups with every tool but the selection tool.
+    for (NSNumber *mode in @[@(NEW_MOUSE_MODE_SCROLL), @(NEW_MOUSE_MODE_SELECT_TEXT), @(NEW_MOUSE_MODE_MAG_GLASS), @(NEW_MOUSE_MODE_SELECT_PDF)]) {
+        [view setTestMouseMode:mode.integerValue];
+        view.inLink = YES; view.handlingLink = 0;
+        [view mouseMoved:mouse(window, NSEventTypeMouseMoved, away)];
+        check((view.handlingLink == 1) == (mode.integerValue != NEW_MOUSE_MODE_SELECT_PDF), @"hovering a link starts a popup unless the selection tool is chosen");
+        view.inLink = NO; [view doKillPopup];
     }
     [view doKillPopup];
     [view setTestMouseMode:0];
@@ -559,14 +623,16 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
     print(result.stdout, end='')
     if args.mutation:
         expected = {'move-dismisses':('pinned popup survives', 'edge of the popup shows a resize cursor'), 'stale-timer':'old timer cannot dismiss',
-                    'other-window':'other windows retain Escape', 'cleanup-state':'cleanupMarquee clears',
+                    'other-window':'other windows retain Escape', 'cleanup-state':('cleanupMarquee clears', 'after a failed click, cleanup outside a click dismisses'),
                     'ordinary-escape':'ordinary popup leaves Escape', 'modified-escape':'modified Escape is not consumed',
                     'click-cleanup':'click clears an ordinary popup', 'initialize-cleanup':'initializeDisplay clears popup',
                     'click-kills-pin':('click outside keeps a pinned popup', 'clicking the preview keeps the popup'),
                     'cleanup-in-click-kills-pin':('click outside keeps a pinned popup', 'clicking the preview keeps the popup'),
                     'cursor-not-restored':"leaving the popup shows the tool's cursor", 'hand-selects':'with the hand tool the whole popup moves',
                     'no-selection':'dragging over text selects it', 'move-confined':'moved popup keeps only a small part',
-                    'copy-ignores-popup':'Copy copies the popup selection', 'click-keeps-selection':'a click away from text clears',
+                    'copy-ignores-popup':'Copy copies the popup selection',
+                    'tool-change-kills-pin':'changing the tool keeps a pinned popup', 'flag-not-restored':'after a failed click',
+                    'click-keeps-focus':'clicking the popup makes its preview the active view', 'click-keeps-selection':'a click away from text clears',
                     'unpinned-interactive':'hovering popup leaves the mouse', 'pinned-transparent':'pinned popup takes clicks',
                     'scroll-chains':'scrolling the popup leaves the preview', 'scroll-moves-frame':'scrolling leaves the popup in place', 'option-not-forwarded':'Option while shown makes',
                     'kill-leaves-view':'closing removes the popup view', 'cursor-overridden':'shows an open hand',

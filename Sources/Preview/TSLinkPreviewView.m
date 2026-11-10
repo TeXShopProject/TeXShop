@@ -173,6 +173,12 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 
 - (void)mouseDown:(NSEvent *)event
 {
+    // A click makes the popup's preview the active one, so that Copy and the keyboard reach it.
+    for (NSView *owner = self.superview; owner; owner = owner.superview)
+        if ([owner isKindOfClass:PDFView.class]) {
+            if (self.window.firstResponder != owner) [self.window makeFirstResponder:owner];
+            break;
+        }
     NSPoint point = [self locationOfEvent:event];
     _dragEdges = [self edgesAtPoint:point];
     _dragStart = point;
