@@ -48,6 +48,9 @@ int main(void) { @autoreleasepool {
     Check(@"unregistered selector keeps the base", @"\u845B\U000E01EF|\u845B\uFE0F", @"\u845B|\u845B", view, probe);
     Check(@"unregistered selector at line end", @"\u845B\U000E01EF\nx", @"\u845B\nx", view, probe);
     Check(@"combining sequence", @"e\u0301x", @"\\CID{201}x", view, probe);
+    // A line break before a combining mark is kept; the mark is written on its own.
+    Check(@"line break before a combining mark", @"a\ńb|\r\ń|\t́x", @"a\n\\UTF{0301}b|\r\n\\UTF{0301}|\t\\UTF{0301}x", view, probe);
+    Check(@"combining mark alone on a line", @"\ń\nx", @"\n\\UTF{0301}%\nx", view, probe);
     // Known limitation: a sequence Hiragino cannot draw as one glyph (emoji) still gets
     // the editor font's glyph number, as before; the encoding cannot keep it.
     view.string = @"\U0001F600";

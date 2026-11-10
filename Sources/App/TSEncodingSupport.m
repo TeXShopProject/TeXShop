@@ -1327,13 +1327,25 @@ static NSString *TSTextForSaving(NSString *text, NSStringEncoding encoding)
 	charRange = NSMakeRange(0,1);
 	endl = 0;
 	while (charRange.location < [dataString length]) {
-		if (charRange.location == endl) {
+		if (charRange.location >= endl) {
 			[dataString getLineStart:&startl end:&endl contentsEnd:&end forRange:charRange];
 			//            NSLog( @"%d %d %d", startl, end, endl);
 		}
 		//        NSLog( @"%d %d", charRange.length, charRange.location);
 		charRange = [dataString rangeOfComposedCharacterSequenceAtIndex: charRange.location];
 		//        NSLog( @"%d %d", charRange.length, charRange.location);
+		NSUInteger controls = TSLeadingControlCharacters(dataString, charRange);
+		if (controls > 0) {
+			// A line break before a combining mark is kept; the mark is written on its own.
+			[newString appendString: [dataString substringWithRange: NSMakeRange(charRange.location, controls)]];
+			charRange = NSMakeRange(charRange.location + controls, charRange.length - controls);
+			if (charRange.length == 0) {
+				charRange.length = 1;
+				continue;
+			}
+			if (charRange.location >= endl)
+				[dataString getLineStart:&startl end:&endl contentsEnd:&end forRange:charRange];
+		}
 		subString = [dataString substringWithRange: charRange];
         
 		if (![subString canBeConvertedToEncoding: CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingISO_2022_JP)]) {
