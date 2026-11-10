@@ -51,6 +51,9 @@
 <li>Use Command-0 to show the current document’s console. Press it again in the console to return to the source or PDF window that opened it; if there is no originating window, return to the source. This follows the existing Command-1 behavior. Suggested by <a href="https://github.com/martignoni">Nicolas Martignoni</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/2">#2</a>).</li>
 <li>Keep the Tags menu correctly localized when reopening a document in the combined source-and-preview window.</li>
 <li>Recolor text that a line break moves out of a comment line, so that it no longer keeps the comment color. Reported by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/16">#16</a>).</li>
+<li>Add Character Type Conversion to the Edit menu and to the source window’s contextual menu. It converts the selection between hiragana and katakana, between fullwidth and halfwidth digits and letters, between Unicode characters and ajmacros commands or <code>\UTF</code>/<code>\CID</code> commands, and from curly quotes to TeX quotes. With nothing selected, it asks before converting the whole document. Each conversion can be undone.</li>
+<li>Add Unicode Normalization to the Edit menu and to the contextual menu. It offers NFC, NFD, NFKC and NFKD, and Modified NFC and Modified NFD, which keep CJK compatibility ideographs unchanged. Character Info then shows the normalized selection.</li>
+<li>Add Swap with Clipboard to the Edit menu. It replaces the selection with the text on the clipboard and puts the replaced text on the clipboard. To exchange two pieces of text, copy one, select the other and choose Swap with Clipboard, then paste where the first one was. With nothing selected, it pastes as usual.</li>
 </ul>
 <h3>Opening and saving documents</h3>
 <ul>
@@ -62,6 +65,7 @@
 <li>When an opened file has Windows (CRLF), classic Mac (CR) or mixed line endings, tell the user that they have been changed to LF. The notice can be turned off for each file.</li>
 <li>Fix the encoding menu in the Save dialog, which did not change the encoding of the saved file. The menu can now be shown from Settings → Documents and Saving. When the source has an encoding magic comment naming a known encoding, the menu shows that encoding and cannot be changed, unless the file could not be read in that encoding.</li>
 <li>Add settings under Settings → Documents and Saving to turn autosave and Versions on or off and, while autosave is off, to keep the previous file as <code>name~</code> when saving.</li>
+<li>Fix saving with Automatic UTF-8-Mac to UTF-8 Conversion, which wrote an empty file when the text consisted only of CJK compatibility ideographs.</li>
 </ul>
 <h3>App and Dock icons</h3>
 <ul>

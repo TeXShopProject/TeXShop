@@ -4264,6 +4264,26 @@ The Source menu has an item labeled ``Show Invisible Characters''. The specific 
 
 This particular example has three line feeds and two tab characters. 
 
+\section{Swap with Clipboard}
+
+The Edit menu item ``Swap with Clipboard'' replaces the selected text with the text on the clipboard, and puts the text it replaced on the clipboard. To exchange two pieces of text, copy the first piece, select the second piece and choose ``Swap with Clipboard'', then select the place where the first piece was and paste. When nothing is selected, the command is an ordinary paste. In the Japanese menus the item is called ``Exchange Paste''.
+
+\section{Character Type Conversion and Unicode Normalization}
+
+The Edit menu has two submenus that rewrite the selected text. They are also in the contextual menu of the source window. If nothing is selected, TeXShop asks whether to apply the command to the whole document. Each command can be undone.
+
+The submenu ``Character Type Conversion'' is mainly useful for Japanese documents. It converts
+\begin{itemize}
+\item between hiragana and katakana,
+\item between fullwidth and halfwidth digits, and between fullwidth and halfwidth Latin letters,
+\item between circled and parenthesized numbers and letters, Roman numerals and similar characters, and the commands of the \texttt{ajmacros} package which print them, for example \verb|\ajMaru{1}| for a circled~1,
+\item between characters outside the JIS~X~0208 character set and the \verb|\UTF{...}| and \verb|\CID{...}| commands, which the \texttt{otf} package provides for pLaTeX and upLaTeX,
+\item from curly quotation marks to the TeX forms \verb|`|, \verb|'|, \verb|``| and \verb|''|.
+\end{itemize}
+When a converted command ends a line, a \verb|%| is added after it so that the line break does not produce a space.
+
+The submenu ``Unicode Normalization'' converts the selection to one of the Unicode normalization forms NFC, NFD, NFKC and NFKD. In NFC a letter followed by a combining accent becomes a single precomposed character; NFD decomposes such characters. NFKC and NFKD also replace compatibility characters, such as ligatures and fullwidth letters, by their ordinary equivalents. ``Modified NFC'' and ``Modified NFD'' work like NFC and NFD, but leave CJK compatibility ideographs and a few other characters unchanged, because NFC and NFD would replace them by different ideographs. Modified NFD is the decomposition used for file names on HFS+ disks, and Modified NFC is the form TeXShop writes when ``Automatic UTF-8-Mac to UTF-8 Conversion'' is selected in Settings. Since normalized text usually looks the same as before, TeXShop shows the Character Info panel for the selection afterward.
+
 \section{A Magic Line for Beamer and Other Slide Packages}
 
 Users often write mathematical slides using LaTeX. I highly recommend Beamer for that purpose. It is easy to use and produces beautiful slides.

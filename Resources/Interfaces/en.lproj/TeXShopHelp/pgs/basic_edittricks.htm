@@ -90,6 +90,21 @@ the following abbreviations may be used:
 If an extension is not mentioned in the Macro Editor, then it is
 handled in the default manner mentioned earlier. Thus for
 most people, no macro "Drag & Drop" submenu is needed.
+</P>
+
+<P>
+Swap with Clipboard in the Edit menu replaces the selected text with the text on the clipboard, and puts the text it replaced on the clipboard.
+To exchange two pieces of text, copy the first piece, select the second piece and choose Swap with Clipboard, then select the place where
+the first piece was and paste. When nothing is selected, the command is an ordinary paste.
+</P>
+
+<P>
+The submenus Character Type Conversion and Unicode Normalization in the Edit menu, also found in the contextual menu of the source window,
+rewrite the selected text; if nothing is selected, TeXShop asks whether to rewrite the whole document. Character Type Conversion is mainly
+for Japanese documents. It converts between hiragana and katakana, between fullwidth and halfwidth digits and letters, between characters
+such as circled numbers and the commands of the ajmacros package, and between characters outside JIS X 0208 and the &#92;UTF and &#92;CID
+commands of the otf package. It also changes curly quotes to TeX quotes. Unicode Normalization converts the selection to NFC, NFD, NFKC or NFKD,
+or to Modified NFC or Modified NFD, which leave CJK compatibility ideographs unchanged. Both commands can be undone.
 </P></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
