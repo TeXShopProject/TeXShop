@@ -4,8 +4,9 @@
 Loads each compiled interface without ordering a window and measures each
 non-editable label with its own cell: a single-line label must be as wide as
 its text, and a wrapping label must hold its text in its height. Trailing line
-breaks in titles are ignored. Buttons are not measured: their bezel padding is
-not part of the visible text. Placeholder titles replaced at run time
+breaks in titles are ignored. A button's title must fit the title area of its
+cell, both as built and with the automatic bezel that toolbar buttons use on
+macOS 26 and later. Placeholder titles replaced at run time
 ("Button") are skipped. The Settings window is composed from its own labels
 and is checked by run-settings-product-shell.py."""
 from pathlib import Path
@@ -21,8 +22,18 @@ program = r'''
 - (id)valueForUndefinedKey:(NSString *)k { return nil; }
 @end
 static int problems;
+static BOOL automaticBezel;
 static void Walk(NSView *v, NSString *nib) {
     if (v.isHidden) return;
+    if ([v isKindOfClass:NSButton.class] && ![v isKindOfClass:NSPopUpButton.class]) {
+        NSButton *b = (NSButton *)v;
+        if (b.title.length && ![b.title isEqual:@"Button"] && b.imagePosition != NSImageOnly) {
+            // Toolbar buttons use the automatic bezel on macOS 26 and later.
+            if (automaticBezel) b.bezelStyle = NSBezelStyleAutomatic;
+            CGFloat need = [b.cell attributedTitle].size.width, have = [b.cell titleRectForBounds:b.bounds].size.width;
+            if (need > have + 0.5) { printf("CLIPPED %s button \"%s\"%s: needs %.1f, has %.1f\n", nib.UTF8String, b.title.UTF8String, automaticBezel ? " (automatic bezel)" : "", need, have); problems++; }
+        }
+    }
     if ([v isKindOfClass:NSTextField.class] && !((NSTextField *)v).isEditable) {
         NSString *text = [[(NSTextField *)v stringValue] stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet];
         if (text.length && ![text isEqual:@"Button"]) {
@@ -42,6 +53,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     [NSApplication sharedApplication]; [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     int count = 0;
+    for (int pass = 0; pass < 2; pass++) { automaticBezel = pass == 1;
     for (int i = 1; i < argc; i++) {
         NSString *path = @(argv[i]);
         NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"keyedobjects.nib"]] ?: [NSData dataWithContentsOfFile:path];
@@ -52,9 +64,10 @@ int main(int argc, char **argv) { @autoreleasepool {
             else if ([o isKindOfClass:NSView.class]) Walk(o, path);
         }
         count++;
-    }
+    }}
+    count /= 2;
     if (problems) return 1;
-    printf("PASS: labels fit their text in %d localized interfaces\n", count);
+    printf("PASS: labels and buttons show their whole text in %d localized interfaces (also with the automatic toolbar bezel)\n", count);
 } return 0; }
 '''
 nibs = [str(p) for p in sorted(interfaces.glob('*.lproj/*.nib')) if p.name not in ('Preferences.nib', 'Movie.nib')]
