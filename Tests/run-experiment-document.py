@@ -22,6 +22,8 @@ MUTATIONS = {
     'scrap-close-normal-console': ('windowWillClose', '        [self closeExperiment];',
                                   '        [outputWindow close];\n        [self closeExperiment];'),
     'doc-close-no-experiment': ('close', '    [self closeExperiment];\n', ''),
+    'scrap-no-links': ('typesetScrap', '    [TSExperimentJob linkItemsOfDirectory:', '    if (0) [TSExperimentJob linkItemsOfDirectory:'),
+    'scrap-no-aux': ('typesetScrap', '    [TSExperimentJob copyAuxiliaryFile:', '    if (0) [TSExperimentJob copyAuxiliaryFile:'),
     'scrap-header-underflow': ('typesetScrap', 'theHeader = [theSource substringToIndex:beginDoc.location];',
                               'theHeader = [theSource substringToIndex:[theSource lineRangeForRange:NSMakeRange(0, beginDoc.location - 1)].length];'),
     'scrap-script-self': ('typesetScrap', 'self.scrapScript = theDocument->whichScript;',
@@ -163,6 +165,19 @@ enum { TSNoByteOrderMark };
 }
 @end
 #define TSExperimentConsoleController Console
+// Records how the Experiment folder is prepared (#8); the work itself is tested elsewhere.
+static NSURL *linkedSource, *linkedDirectory, *copiedAux, *copiedTo;
+static NSString *linkedException;
+@interface TSExperimentJob : NSObject
++ (NSUInteger)linkItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptName:(NSString *)name;
++ (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination;
+@end
+@implementation TSExperimentJob
++ (NSUInteger)linkItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptName:(NSString *)name {
+    linkedSource = source; linkedDirectory = directory; linkedException = name; return 0;
+}
++ (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination { copiedAux = aux; copiedTo = destination; return NO; }
+@end
 @interface BaseDocument : NSObject
 @property NSUInteger baseCloses;
 - (void)close;
@@ -274,6 +289,12 @@ static void CheckSource(NSString *source, NSString *header, NSInteger rootScript
         Check(d.scrapEffectiveEncoding == expectedEncoding && c.encoding == expectedEncoding, @"root encoding is used, UTF-16 is normalized to UTF-8");
         Check([c.environment[@"TEXINPUTS"] isEqualToString:root.fileURL.URLByDeletingLastPathComponent.path], @"root source directory supplies search path");
         Check([c.title isEqualToString:@"Experiment sentinel"], @"Experiment title passed to its console");
+        Check([linkedSource.path isEqualToString:root.fileURL.URLByDeletingLastPathComponent.path] &&
+              [linkedDirectory.path isEqualToString:c.directory.path] && [linkedException isEqualToString:@"file"],
+              @"the Experiment folder links the root document's folder, except its own file names");
+        Check([copiedAux.path isEqualToString:[root.fileURL.path.stringByDeletingPathExtension stringByAppendingPathExtension:@"aux"]] &&
+              [copiedTo.path isEqualToString:[c.directory URLByAppendingPathComponent:@"file.aux"].path],
+              @"the root document's .aux becomes the Experiment's file.aux");
         CheckNormal(d, normal);
         // A hidden Experiment panel (e.g. application inactive) must still update.
         d->scrapWindow.isVisible = NO;

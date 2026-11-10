@@ -24,6 +24,7 @@
 
 #import "TSDocument.h"
 #import "TSExperimentConsoleController.h"
+#import "TSExperimentJob.h"
 #import "TSTextView.h"
 
 #import "MyPDFView.h"
@@ -219,6 +220,11 @@
         [self presentError:error];
         return;
     }
+    // Files are found as when the document is typeset, and its references resolve (#8).
+    [TSExperimentJob linkItemsOfDirectory:[NSURL fileURLWithPath:fileLocation isDirectory:YES]
+                            intoDirectory:directory exceptName:@"file"];
+    [TSExperimentJob copyAuxiliaryFile:[[[NSURL fileURLWithPath:filePath] URLByDeletingPathExtension] URLByAppendingPathExtension:@"aux"]
+                                 toURL:[directory URLByAppendingPathComponent:@"file.aux"]];
 
     [self typesetFile: fileURL withAdditionalPath:fileLocation];
     

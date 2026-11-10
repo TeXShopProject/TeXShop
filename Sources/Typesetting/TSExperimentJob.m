@@ -129,6 +129,38 @@
     @catch (NSException *exception) { return NO; }
 }
 
+// A folder with more items than this is not mirrored, so that an Experiment starts quickly.
+static const NSUInteger TSExperimentMaximumLinks = 2000;
+
++ (NSUInteger)linkItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptName:(NSString *)name
+{
+    if (!source || !directory || !name.length) return 0;
+    NSFileManager *manager = NSFileManager.defaultManager;
+    NSArray<NSString *> *items = [manager contentsOfDirectoryAtPath:source.path error:NULL];
+    if (items.count > TSExperimentMaximumLinks) return 0;
+    NSString *prefix = [name stringByAppendingString:@"."];
+    NSUInteger count = 0;
+    for (NSString *item in items) {
+        if ([item isEqualToString:name] || [item hasPrefix:prefix]) continue;
+        NSURL *link = [directory URLByAppendingPathComponent:item];
+        if ([manager fileExistsAtPath:link.path]) continue;
+        if ([manager createSymbolicLinkAtURL:link withDestinationURL:[source URLByAppendingPathComponent:item] error:NULL])
+            count++;
+    }
+    return count;
+}
+
++ (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination
+{
+    NSData *data = aux ? [NSData dataWithContentsOfURL:aux] : nil;
+    if (!data.length) return NO;
+    const char *bytes = data.bytes;
+    NSUInteger end = data.length;
+    while (end > 0 && bytes[end - 1] != '\n') end--;
+    if (end == 0) return NO;
+    return [[data subdataWithRange:NSMakeRange(0, end)] writeToURL:destination atomically:YES];
+}
+
 - (void)cancel
 {
     self.finished = YES; // Invalidate queued output/completion before stopping this job.
