@@ -657,7 +657,8 @@
             NSRect Inside = aView.bounds;
             Inside = NSInsetRect(Inside, 15, 15);
             BOOL inPDF = [aView mouse: aPoint inRect: Inside];
-            if (inPDF)
+            // A click in a pinned link popup goes to the popup, which handles every tool (#14).
+            if (inPDF && ! [(MyPDFKitView *)aView pinnedLinkPreviewContainsWindowPoint: thePoint])
             {
                 if ([self isMainWindow])
                 {

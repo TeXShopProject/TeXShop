@@ -129,6 +129,24 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     return NSInsetRect(self.superview.visibleRect, 5, 5);
 }
 
+// The part of a moved popup that stays in view, so that it can be dragged back.
+- (NSSize)keptSizeForFrame:(NSRect)frame
+{
+    CGFloat unit = [self unitsPerScreenPoint];
+    return NSMakeSize(MAX(NSWidth(frame) * TSLinkPreviewKeptFraction, TSLinkPreviewKeptMinimum * unit),
+                      MAX(NSHeight(frame) * TSLinkPreviewKeptFraction, TSLinkPreviewKeptMinimum * unit));
+}
+
+- (void)keepInView
+{
+    if (!self.superview) return;
+    NSRect frame = TSLinkPreviewMove(self.frame, NSZeroSize, [self availableRect], [self keptSizeForFrame:self.frame],
+                                     self.superview.isFlipped);
+    if (NSEqualRects(frame, self.frame)) return;
+    self.frame = frame;
+    [self setNeedsDisplay:YES];
+}
+
 - (TSLinkPreviewEdge)edgesAtPoint:(NSPoint)point
 {
     return TSLinkPreviewEdgeAt(self.frame, point, TSLinkPreviewGrip * [self unitsPerScreenPoint],
@@ -239,9 +257,7 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     if (NSEqualSizes(delta, NSZeroSize)) {
         // Back at the starting point: restore it exactly.
     } else if (_drag == TSLinkPreviewDragMove) {
-        NSSize kept = NSMakeSize(MAX(NSWidth(frame) * TSLinkPreviewKeptFraction, TSLinkPreviewKeptMinimum * unit),
-                                 MAX(NSHeight(frame) * TSLinkPreviewKeptFraction, TSLinkPreviewKeptMinimum * unit));
-        frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], kept, flipped);
+        frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], [self keptSizeForFrame:frame], flipped);
     } else {
         TSLinkPreviewResize(_startFrame, _startSource, _dragEdges, delta,
                             NSMakeSize(TSLinkPreviewMinimumWidth * unit, TSLinkPreviewMinimumHeight * unit),
