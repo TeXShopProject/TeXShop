@@ -55,16 +55,20 @@
 // compatibility ideographs and some other ranges stay as they are.
 - (NSString*)normalizedStringWithModifiedNFD
 {
-    CFStringRef sourceStr = (__bridge CFStringRef)self;
+    // UTF-8 decoding would take a leading U+FEFF for a byte order mark and drop it.
+    // Decompose the text after the leading U+FEFFs and put all of them back.
+    NSUInteger marks = 0;
+    while (marks < self.length && [self characterAtIndex:marks] == 0xFEFF) marks++;
+    if (marks == self.length) return [self copy];
+    NSString *rest = [self substringFromIndex:marks];
+    CFStringRef sourceStr = (__bridge CFStringRef)rest;
     CFIndex length = CFStringGetMaximumSizeOfFileSystemRepresentation(sourceStr);
     char *destStr = (char*)malloc(length);
     Boolean success = destStr && CFStringGetFileSystemRepresentation(sourceStr, destStr, length);
-    NSString *result = success ? [NSString stringWithUTF8String:destStr] : nil;
-    // UTF-8 decoding drops a leading U+FEFF as a byte order mark; keep it.
-    if (result && (unsigned char)destStr[0] == 0xEF && (unsigned char)destStr[1] == 0xBB && (unsigned char)destStr[2] == 0xBF && ![result hasPrefix:@"\uFEFF"])
-        result = [@"\uFEFF" stringByAppendingString:result];
+    NSString *result = success ? [[NSString alloc] initWithBytes:destStr length:strlen(destStr) encoding:NSUTF8StringEncoding] : nil;
     free(destStr);
-    return result ?: [self copy];
+    if (result == nil) return [self copy];
+    return [[self substringToIndex:marks] stringByAppendingString:result];
 }
 
 // Terada (based on CotEditor)

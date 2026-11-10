@@ -38,6 +38,10 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check("modified NFD keeps a leading U+FEFF", [@"\uFEFF\u304C" normalizedStringWithModifiedNFD], @"\uFEFF\u304B\u3099");
     Check("modified NFD keeps U+FEFF alone", [@"\uFEFF" normalizedStringWithModifiedNFD], @"\uFEFF");
     Check("modified NFD without U+FEFF", [@"\u304C" normalizedStringWithModifiedNFD], @"\u304B\u3099");
+    Check("modified NFD keeps two leading U+FEFF", [@"\uFEFF\uFEFF\u304C" normalizedStringWithModifiedNFD], @"\uFEFF\uFEFF\u304B\u3099");
+    Check("modified NFD keeps three leading U+FEFF", [@"\uFEFF\uFEFF\uFEFF\u304C\uFA19" normalizedStringWithModifiedNFD], @"\uFEFF\uFEFF\uFEFF\u304B\u3099\uFA19");
+    Check("modified NFD keeps only U+FEFF", [@"\uFEFF\uFEFF" normalizedStringWithModifiedNFD], @"\uFEFF\uFEFF");
+    Check("modified NFD keeps a later U+FEFF", [@"\u304C\uFEFF\u304C" normalizedStringWithModifiedNFD], @"\u304B\u3099\uFEFF\u304B\u3099");
     Check("composes around excluded", [@"éÅö" normalizedStringWithModifiedNFC], @"éÅö");
     // Every code point, surrogates excluded.
     NSMutableString *all = [NSMutableString string];
