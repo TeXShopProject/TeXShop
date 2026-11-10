@@ -81,8 +81,10 @@ for language in LANGUAGES:
     for name in ('basic_spelling','configure_menushortcuts','configure_prefchanges'):
         assert 'id="settings-search"' not in pages[name],(language,name,'duplicate search section')
         assert 'basic_preferences.htm#settings-search' in pages[name],(language,name,'central overview link')
-    for key in ('Use LaTeX-aware spell checking (recommended)','Use legacy spell checking'):
-        assert labels[key] in overview,(language,'spelling overview',key)
+    # The two method rows use their visible Settings names.
+    for key in ('catalog.spelling.1.0.title','catalog.spelling.1.2.title'):
+        assert categories[key] in overview,(language,'spelling overview',key)
+    assert labels['Use legacy spell checking'] not in overview,(language,'spelling overview uses a label the window does not show')
     if language=='ja':
         for key in ('Search by Function','Search by Key','Remove Shortcut','Restore Default','Restore All…'):
             assert key in labels and '「'+labels[key]+'」' in pages['configure_menushortcuts'],('Japanese shortcut button missing',key)
@@ -135,7 +137,7 @@ for file in ('Documentation/Releases/5.60.md', 'website/release-notes.html', 'Do
         assert obsolete not in text, (file, obsolete)
 for file in ('Documentation/Releases/5.60-ja.md', 'website/release-notes-ja.html'):
     text = (ROOT / file).read_text()
-    assert 'NSUserKeyEquivalents' in text and 'LaTeXの構造を考慮する（推奨）' in text and '従来方式を使う' in text
+    assert 'NSUserKeyEquivalents' in text and 'LaTeXの構造を考慮する（推奨）' in text and '従来の方式' in text and '従来方式を使う' not in text
     assert '入力設定とショートカット一覧は同じ縦スクロール領域' not in text
 contract = json.loads((ROOT / 'Tests/Fixtures/SettingsCategoryGroups.json').read_text())
 assert 'catalog' in contract['source'].lower()

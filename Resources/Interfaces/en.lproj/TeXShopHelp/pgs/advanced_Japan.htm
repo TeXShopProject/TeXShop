@@ -48,7 +48,7 @@ You can handle such Unicode characters with pTeX by using otf.sty.
 
 <p> However, it is too difficult for normal users to input sources in this way.
 The TeXShop setting "otf Package Support" helps this.
-When this setting is on, "鷗" is converted to "\UTF{9DD7}" when the document is saved, and it is restored when the document is opened again.
+When this setting is on, "鷗" is converted to "\UTF{9DD7}" when the document is saved. When a document is opened, "\UTF{9DD7}" is converted back to "鷗" whether or not this setting is on.
 Other characters outside JIS X 0208 are converted in the same way.
 A glyph variant chosen in the editor or a character outside the Basic Multilingual Plane is written as "\CID{number}" instead, using the glyph number in the editor font; use a font such as Hiragino, whose glyph numbers are Adobe-Japan1 CIDs.
 If a converted character ends a line, "%" is added after it so that no space appears in the output.
