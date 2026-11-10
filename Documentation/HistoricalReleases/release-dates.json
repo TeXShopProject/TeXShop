@@ -1403,13 +1403,11 @@
     "note": "At the maintainer’s direction, the archived application project file’s modification date supplies the catalog date when day precision is otherwise unavailable and the date is consistent with the existing interval and surrounding versions. This is a proxy, not independent proof of a public release date."
   },
   "2.16": {
-    "date": "2008",
-    "source": [
-      "https://github.com/TeXShop/TeXShop/releases/download/v2.16/texshopsource-2.16.zip",
-      "https://email.esm.psu.edu/pipermail/macosx-tex/2008-September/036505.html"
-    ],
-    "basis": "archive-and-version-sequence",
-    "note": "Matching archived source or build timestamps provide the lower bound; successor 2.18 provides the upper bound. Only the shared calendar precision is displayed. For source-only versions this dates the archived development version, not a claimed public launch."
+    "date": "2008-07",
+    "source": "https://github.com/TeXShop/TeXShop/releases/download/v2.16/texshopsource-2.16.zip",
+    "basis": "source-file-modification-month-inference",
+    "evidence_file": "source-date-evidence.json",
+    "note": "At the maintainer’s direction on 2026-11-10, use July 2008 at month precision. Multiple principal source files were modified July 22–27. These dates support the archived development snapshot’s month, not an independently verified first public release date; do not assign July 27 as a release day."
   },
   "2.17": {
     "date": "2008-08-14",

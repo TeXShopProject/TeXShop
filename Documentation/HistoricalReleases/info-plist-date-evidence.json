@@ -1,5 +1,5 @@
 {
-  "policy": "Fallback for the ten rejected project-date candidates, at the maintainer’s direction on 2026-11-10. Application Info.plist timestamps in nine early app archives were overwritten in 2016; their source English.lproj/CustomInfo.plist preserves contemporary localized application metadata and is referenced by Project Builder. Use that original English file consistently, not later translation files. Retain only candidates within existing intervals and the actual version sequence; development suffixes are compared numerically. Dates are proxies, not verified release days. The two rejected versions retain their existing year-only dates.",
+  "policy": "Fallback for the ten rejected project-date candidates, at the maintainer’s direction on 2026-11-10. Application Info.plist timestamps in nine early app archives were overwritten in 2016; their source English.lproj/CustomInfo.plist preserves contemporary localized application metadata and is referenced by Project Builder. Use that original English file consistently, not later translation files. Retain only candidates within existing intervals and the actual version sequence; development suffixes are compared numerically. Dates are proxies, not verified release days. The rejected candidates do not supply day precision; subsequent source-date decisions are recorded separately.",
   "versions": {
     "1.0d2-later": {
       "candidate": "2000-10-03",
@@ -310,7 +310,11 @@
           "date": "2008-08-14"
         }
       },
-      "note": "Resources/Info.plist is the application target’s INFOPLIST_FILE, but its 2007 date predates the known 2008 version sequence."
+      "note": "The previous year-only 2008 record was itself an inference, not independent evidence excluding 2007. Prefer the cluster of application source modifications over a potentially unchanged Info.plist or a later-modified project file.",
+      "subsequent_decision": {
+        "date": "2008-07",
+        "evidence_file": "source-date-evidence.json"
+      }
     }
   }
 }
