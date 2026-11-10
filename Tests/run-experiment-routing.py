@@ -133,7 +133,7 @@ TOGGLE
     NSInteger whichEngine;
     Output *outputText;
 }
-@property BOOL annotationsExist;
+@property BOOL annotationsExist, directRootCommand;
 @property (strong) Console *experimentConsole;
 @property (strong) id inputPipe;
 @property (strong) NSFileHandle *readHandle;

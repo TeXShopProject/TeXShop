@@ -484,6 +484,9 @@ enum RootCommand
 
 @property (retain)  NSString			*statTempFile; // when get statistics for selection, name of temp file where selection is stored.
 @property (retain)  NSWindow            *ourCallingWindow;
+// Set by a typeset or Command-1 given in this document's source window; the next
+// root file check then makes that window the calling window again.
+@property BOOL                           directRootCommand;
 @property (retain)  NSDate              *pdfLastModDate;
 @property (retain) NSTimer             *pdfRefreshTimer;
 @property (retain) id                  pdfActivity;

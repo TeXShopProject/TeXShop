@@ -91,6 +91,8 @@
                         [obj bringPdfWindowFront];
                     }
 				} else if (task == RootForTexing) {
+					// Command-1 in the root preview returns to the file typeset from.
+					[obj setCallingWindow: textWindow];
 					// FIXME: The following code block exists twice in this function
   
 					theEngine = useTempEngine ? tempEngine : whichEngine;
@@ -154,6 +156,7 @@
                 [[obj textWindow] performSelector:@selector(miniaturize:) withObject:self afterDelay:0];
 			[obj doPreviewSyncWithFilename:[[self fileURL] path] andLine:pdfSyncLine andCharacterIndex:pdfCharacterIndex andTextView: textView];
 		} else if (task == RootForTexing) {
+			[obj setCallingWindow: textWindow];
             if([SUD boolForKey:MiniaturizeRootFileKey])
                 [[obj textWindow] performSelector:@selector(miniaturize:) withObject:self afterDelay:0];
 			// FIXME: The following code block exists twice in this function
@@ -304,6 +307,12 @@
 		}
 	}
 
+
+	// A typeset or Command-1 given in this window makes it the calling window
+	// again, replacing a window of another file that typeset this one as root.
+	if (self.directRootCommand && ((task == RootForSwitchWindow) || (task == RootForTexing)))
+		[self setCallingWindow: textWindow];
+	self.directRootCommand = NO;
 
 	if (!done && [SUD boolForKey:UseOldHeadingCommandsKey]) {
 

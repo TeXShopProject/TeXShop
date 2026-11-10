@@ -2051,6 +2051,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
         WindowAfterTypeset = [NSApplication.sharedApplication keyWindow];
     else
         WindowAfterTypeset = nil;
+    self.directRootCommand = YES;
      
 //    NSString	*titleString;
 	BOOL	useError;
