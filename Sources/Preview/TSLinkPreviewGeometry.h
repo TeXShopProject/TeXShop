@@ -207,3 +207,102 @@ static inline BOOL TSLinkPreviewRects(NSSize pageSize, NSPoint destination, NSRe
                         width, height);
     return YES;
 }
+
+// A pinned preview is a window onto the page at a fixed scale: it can be moved, resized
+// from any edge or corner, and its contents scrolled. Rectangles are handled with y up;
+// `flipped` converts a flipped view's rectangles (the source is always in page space).
+typedef NS_OPTIONS(NSUInteger, TSLinkPreviewEdge) {
+    TSLinkPreviewEdgeNone = 0,
+    TSLinkPreviewEdgeLeft = 1 << 0,
+    TSLinkPreviewEdgeRight = 1 << 1,
+    TSLinkPreviewEdgeTop = 1 << 2,
+    TSLinkPreviewEdgeBottom = 1 << 3,
+};
+
+static inline NSRect TSLinkPreviewUpward(NSRect rect, BOOL flipped)
+{
+    return flipped ? NSMakeRect(NSMinX(rect), -NSMaxY(rect), NSWidth(rect), NSHeight(rect)) : rect;
+}
+
+static inline TSLinkPreviewEdge TSLinkPreviewEdgeAt(NSRect frame, NSPoint point, CGFloat grip,
+                                                    BOOL flipped)
+{
+    if (!NSPointInRect(point, frame)) return TSLinkPreviewEdgeNone;
+    frame = TSLinkPreviewUpward(frame, flipped);
+    if (flipped) point.y = -point.y;
+    grip = MIN(grip, MIN(NSWidth(frame), NSHeight(frame)) / 3);
+    TSLinkPreviewEdge edges = TSLinkPreviewEdgeNone;
+    CGFloat left = point.x - NSMinX(frame), right = NSMaxX(frame) - point.x;
+    CGFloat bottom = point.y - NSMinY(frame), top = NSMaxY(frame) - point.y;
+    if (MIN(left, right) < grip) edges |= left <= right ? TSLinkPreviewEdgeLeft : TSLinkPreviewEdgeRight;
+    if (MIN(bottom, top) < grip) edges |= top <= bottom ? TSLinkPreviewEdgeTop : TSLinkPreviewEdgeBottom;
+    return edges;
+}
+
+// Keeps the whole frame inside the available area; a frame larger than the area keeps
+// its left and top edges visible.
+static inline NSRect TSLinkPreviewMove(NSRect frame, NSSize delta, NSRect available, BOOL flipped)
+{
+    NSRect up = TSLinkPreviewUpward(frame, flipped), area = TSLinkPreviewUpward(available, flipped);
+    CGFloat x = NSMinX(up) + delta.width, y = NSMinY(up) + (flipped ? -delta.height : delta.height);
+    x = NSWidth(up) > NSWidth(area) ? NSMinX(area) : TSLinkPreviewClamp(x, NSMinX(area), NSMaxX(area) - NSWidth(up));
+    y = NSHeight(up) > NSHeight(area) ? NSMaxY(area) - NSHeight(up)
+                                      : TSLinkPreviewClamp(y, NSMinY(area), NSMaxY(area) - NSHeight(up));
+    up.origin = NSMakePoint(x, y);
+    return TSLinkPreviewUpward(up, flipped);
+}
+
+// Moves one edge to `target`, keeping it between `lower` and `upper`; a limit the frame
+// already exceeds never pulls the edge past where it is now.
+static inline CGFloat TSLinkPreviewEdgeTarget(CGFloat current, CGFloat target, CGFloat lower, CGFloat upper)
+{
+    return TSLinkPreviewClamp(target, MIN(lower, current), MAX(upper, current));
+}
+
+// Moving edges reveal or hide page content; the content under the other edges stays put.
+static inline void TSLinkPreviewResize(NSRect frame, NSRect source, TSLinkPreviewEdge edges, NSSize delta,
+                                       NSSize minimum, NSRect available, NSSize pageSize, BOOL flipped,
+                                       NSRect *outputFrame, NSRect *outputSource)
+{
+    NSRect up = TSLinkPreviewUpward(frame, flipped), area = TSLinkPreviewUpward(available, flipped);
+    CGFloat dy = flipped ? -delta.height : delta.height;
+    CGFloat sx = NSWidth(source) > 0 ? NSWidth(up) / NSWidth(source) : 1;
+    CGFloat sy = NSHeight(source) > 0 ? NSHeight(up) / NSHeight(source) : 1;
+    if (edges & TSLinkPreviewEdgeLeft) {
+        CGFloat edge = TSLinkPreviewEdgeTarget(NSMinX(up), NSMinX(up) + delta.width,
+            MAX(MIN(NSMinX(area), NSMinX(up)), NSMinX(up) - NSMinX(source) * sx), NSMaxX(up) - minimum.width);
+        CGFloat change = edge - NSMinX(up);
+        up.origin.x += change; up.size.width -= change;
+        source.origin.x += change / sx; source.size.width -= change / sx;
+    } else if (edges & TSLinkPreviewEdgeRight) {
+        CGFloat edge = TSLinkPreviewEdgeTarget(NSMaxX(up), NSMaxX(up) + delta.width, NSMinX(up) + minimum.width,
+            MIN(MAX(NSMaxX(area), NSMaxX(up)), NSMaxX(up) + (pageSize.width - NSMaxX(source)) * sx));
+        CGFloat change = edge - NSMaxX(up);
+        up.size.width += change; source.size.width += change / sx;
+    }
+    if (edges & TSLinkPreviewEdgeBottom) {
+        CGFloat edge = TSLinkPreviewEdgeTarget(NSMinY(up), NSMinY(up) + dy,
+            MAX(MIN(NSMinY(area), NSMinY(up)), NSMinY(up) - NSMinY(source) * sy), NSMaxY(up) - minimum.height);
+        CGFloat change = edge - NSMinY(up);
+        up.origin.y += change; up.size.height -= change;
+        source.origin.y += change / sy; source.size.height -= change / sy;
+    } else if (edges & TSLinkPreviewEdgeTop) {
+        CGFloat edge = TSLinkPreviewEdgeTarget(NSMaxY(up), NSMaxY(up) + dy, NSMinY(up) + minimum.height,
+            MIN(MAX(NSMaxY(area), NSMaxY(up)), NSMaxY(up) + (pageSize.height - NSMaxY(source)) * sy));
+        CGFloat change = edge - NSMaxY(up);
+        up.size.height += change; source.size.height += change / sy;
+    }
+    *outputFrame = TSLinkPreviewUpward(up, flipped);
+    *outputSource = source;
+}
+
+// Scrolls the page under the preview; `contentDelta` is how far the content moves, in page
+// points with y up. The source stays on the page.
+static inline NSRect TSLinkPreviewPan(NSRect source, NSSize contentDelta, NSSize pageSize)
+{
+    source.origin.x = TSLinkPreviewClamp(NSMinX(source) - contentDelta.width, 0,
+                                         MAX(0, pageSize.width - NSWidth(source)));
+    source.origin.y = TSLinkPreviewClamp(NSMinY(source) - contentDelta.height, 0,
+                                         MAX(0, pageSize.height - NSHeight(source)));
+    return source;
+}
