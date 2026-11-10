@@ -400,6 +400,112 @@ static void testDocument(const char *path) {
     require(links>200,"real document links checked");
     printf("checked %lu links in %s\n",(unsigned long)links,[[@(path) lastPathComponent] UTF8String]);
 }
+
+static CGFloat upMinY(NSRect rect, BOOL flipped) { return NSMinY(TSLinkPreviewUpward(rect, flipped)); }
+static void testPinnedInteraction(void) {
+    for (NSInteger flipped=0; flipped<2; flipped++) {
+        NSRect frame=NSMakeRect(100,100,200,100);
+        CGFloat top=flipped ? 101 : 199, bottom=flipped ? 199 : 101;
+        require(TSLinkPreviewEdgeAt(frame,NSMakePoint(200,150),6,flipped)==TSLinkPreviewEdgeNone,"interior moves");
+        require(TSLinkPreviewEdgeAt(frame,NSMakePoint(101,150),6,flipped)==TSLinkPreviewEdgeLeft,"left edge");
+        require(TSLinkPreviewEdgeAt(frame,NSMakePoint(299,150),6,flipped)==TSLinkPreviewEdgeRight,"right edge");
+        require(TSLinkPreviewEdgeAt(frame,NSMakePoint(200,top),6,flipped)==TSLinkPreviewEdgeTop,"visual top edge");
+        require(TSLinkPreviewEdgeAt(frame,NSMakePoint(200,bottom),6,flipped)==TSLinkPreviewEdgeBottom,"visual bottom edge");
+        require(TSLinkPreviewEdgeAt(frame,NSMakePoint(299,top),6,flipped)==(TSLinkPreviewEdgeRight|TSLinkPreviewEdgeTop),"corner");
+        require(TSLinkPreviewEdgeAt(frame,NSMakePoint(99,150),6,flipped)==TSLinkPreviewEdgeNone,"outside is not an edge");
+        require(TSLinkPreviewEdgeAt(NSMakeRect(0,0,9,9),NSMakePoint(4.5,4.5),6,flipped)==TSLinkPreviewEdgeNone,
+                "a tiny preview can still be moved");
+
+        NSRect area=NSMakeRect(0,0,1000,800);
+        NSRect moved=TSLinkPreviewMove(frame,NSMakeSize(30,-40),area,flipped);
+        require(near(NSMinX(moved),130) && near(NSMinY(moved),60) && near(NSWidth(moved),200) && near(NSHeight(moved),100),
+                "move follows the pointer in view coordinates");
+        moved=TSLinkPreviewMove(frame,NSMakeSize(5000,-5000),area,flipped);
+        require(contains(area,moved) && near(NSMaxX(moved),1000) && near(NSMinY(moved),0),"move stays in view");
+        moved=TSLinkPreviewMove(NSMakeRect(100,100,1200,900),NSMakeSize(50,50),area,flipped);
+        require(near(NSMinX(moved),0) && near(NSMaxY(TSLinkPreviewUpward(moved,flipped)),NSMaxY(TSLinkPreviewUpward(area,flipped))),
+                "oversized preview keeps its left and top edges visible");
+        NSRect previous=TSLinkPreviewMove(frame,NSMakeSize(-600,-600),area,flipped);
+        for (CGFloat d=-600; d<=600; d+=0.5) {
+            moved=TSLinkPreviewMove(frame,NSMakeSize(d,d),area,flipped);
+            require(fabs(NSMinX(moved)-NSMinX(previous))<=0.5001 && fabs(NSMinY(moved)-NSMinY(previous))<=0.5001,
+                    "move is continuous");
+            previous=moved;
+        }
+
+        NSSize page=NSMakeSize(600,800), minimum=NSMakeSize(60,20);
+        NSRect source=NSMakeRect(150,300,300,150);   // scale 2/3
+        CGFloat scale=NSWidth(frame)/NSWidth(source);
+        NSRect wide=NSMakeRect(-500,-500,2000,2000);
+        NSRect out,outSource;
+        TSLinkPreviewResize(frame,source,TSLinkPreviewEdgeRight,NSMakeSize(20,0),minimum,wide,page,flipped,&out,&outSource);
+        require(near(NSWidth(out),220) && near(NSMinX(out),100) && near(NSWidth(outSource),330) && near(NSMinX(outSource),150),
+                "right edge reveals more of the line");
+        TSLinkPreviewResize(frame,source,TSLinkPreviewEdgeTop,NSMakeSize(0,flipped ? -30 : 30),minimum,wide,page,flipped,&out,&outSource);
+        require(near(NSHeight(out),130) && near(upMinY(out,flipped),upMinY(frame,flipped)) &&
+                near(NSMinY(outSource),300) && near(NSHeight(outSource),195),"top edge reveals content above");
+        TSLinkPreviewResize(frame,source,TSLinkPreviewEdgeBottom,NSMakeSize(0,flipped ? 30 : -30),minimum,wide,page,flipped,&out,&outSource);
+        require(near(NSHeight(out),130) && near(NSMaxY(outSource),450) && near(NSMinY(outSource),255),"bottom edge reveals content below");
+
+        for (NSUInteger edges=1; edges<16; edges++) {
+            if ((edges & 3)==3 || (edges & 12)==12) continue;
+            for (NSInteger limit=0; limit<2; limit++) {
+                NSRect available=limit ? NSMakeRect(40,30,400,260) : wide;
+                NSRect last, lastSource;
+                TSLinkPreviewResize(frame,source,edges,NSMakeSize(-700,-490),minimum,available,page,flipped,&last,&lastSource);
+                for (CGFloat d=-700; d<=700; d+=0.5) {
+                    TSLinkPreviewResize(frame,source,edges,NSMakeSize(d,d*0.7),minimum,available,page,flipped,&out,&outSource);
+                    require(near(NSWidth(out)/NSWidth(outSource),scale) && near(NSHeight(out)/NSHeight(outSource),scale),
+                            "resizing keeps the text size");
+                    require(near(NSMinX(out)-NSMinX(outSource)*scale,NSMinX(frame)-NSMinX(source)*scale) &&
+                            near(upMinY(out,flipped)-NSMinY(outSource)*scale,upMinY(frame,flipped)-NSMinY(source)*scale),
+                            "page content stays where it was on screen");
+                    require(contains(NSMakeRect(0,0,page.width,page.height),outSource),"resized source stays on the page");
+                    require(NSWidth(out)>=minimum.width-0.001 && NSHeight(out)>=minimum.height-0.001,"minimum size");
+                    require(contains(available,out),"resized preview stays in view");
+                    require(!(edges & TSLinkPreviewEdgeLeft) || !(edges & TSLinkPreviewEdgeRight),"one horizontal edge");
+                    if (!(edges & 3)) require(near(NSMinX(out),NSMinX(frame)) && near(NSWidth(out),NSWidth(frame)),"width unchanged");
+                    if (!(edges & 12)) require(near(NSMinY(out),NSMinY(frame)) && near(NSHeight(out),NSHeight(frame)),"height unchanged");
+                    require(fabs(NSMinX(out)-NSMinX(last))<=0.5001 && fabs(NSMaxX(out)-NSMaxX(last))<=0.5001 &&
+                            fabs(NSMinY(out)-NSMinY(last))<=0.3501 && fabs(NSMaxY(out)-NSMaxY(last))<=0.3501,
+                            "resizing is continuous");
+                    last=out; lastSource=outSource;
+                }
+            }
+        }
+        // A preview already smaller than the minimum can grow but is never forced to jump.
+        NSRect small=NSMakeRect(100,100,30,10), smallSource=NSMakeRect(10,10,45,15);
+        TSLinkPreviewResize(small,smallSource,TSLinkPreviewEdgeRight,NSMakeSize(-5,0),minimum,wide,page,flipped,&out,&outSource);
+        require(near(NSWidth(out),30),"undersized preview does not shrink further or jump");
+        TSLinkPreviewResize(small,smallSource,TSLinkPreviewEdgeRight,NSMakeSize(5,0),minimum,wide,page,flipped,&out,&outSource);
+        require(near(NSWidth(out),35),"undersized preview can grow");
+        // Part of the preview scrolled out of view: the edge on that side is not pulled in.
+        TSLinkPreviewResize(NSMakeRect(-20,100,200,100),source,TSLinkPreviewEdgeLeft,NSMakeSize(-5,0),minimum,
+                            NSMakeRect(0,0,1000,800),page,flipped,&out,&outSource);
+        require(near(NSMinX(out),-20),"edge already outside the view stays put");
+    }
+
+    NSSize page=NSMakeSize(600,800);
+    NSRect source=NSMakeRect(150,300,300,150);
+    NSRect panned=TSLinkPreviewPan(source,NSMakeSize(0,-40),page);
+    require(near(NSMinY(panned),340) && near(NSMinX(panned),150) && near(NSHeight(panned),150),
+            "moving content down shows what is above");
+    panned=TSLinkPreviewPan(source,NSMakeSize(25,0),page);
+    require(near(NSMinX(panned),125),"moving content right shows what is to the left");
+    panned=TSLinkPreviewPan(source,NSMakeSize(-5000,5000),page);
+    require(near(NSMaxX(panned),600) && near(NSMinY(panned),0),"scrolling stops at the page edge");
+    panned=TSLinkPreviewPan(NSMakeRect(0,0,700,900),NSMakeSize(10,10),page);
+    require(near(NSMinX(panned),0) && near(NSMinY(panned),0),"source larger than the page stays at its origin");
+    NSRect previous=TSLinkPreviewPan(source,NSMakeSize(-900,-900),page);
+    for (CGFloat d=-900; d<=900; d+=0.5) {
+        panned=TSLinkPreviewPan(source,NSMakeSize(d,d),page);
+        require(contains(NSMakeRect(0,0,600,800),panned) && near(NSWidth(panned),300) && near(NSHeight(panned),150),
+                "scrolling keeps the source on the page");
+        require(fabs(NSMinX(panned)-NSMinX(previous))<=0.5001 && fabs(NSMinY(panned)-NSMinY(previous))<=0.5001,
+                "scrolling is continuous");
+        previous=panned;
+    }
+}
 int main(int argc, const char **argv) { @autoreleasepool {
     NSRect source, output;
     require(TSLinkPreviewRects(NSMakeSize(418.431,637.609), NSMakePoint(91.009,598.328), NSZeroRect,
@@ -428,6 +534,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
     testRotatedTextContext();
     testColumnWidth();
     testContinuousShrinking();
+    testPinnedInteraction();
     require(argc>1,"real document path");
     testDocument(argv[1]);
     puts("PASS: link preview bounds, aspect ratio, command sizing, CropBox and rotations");
