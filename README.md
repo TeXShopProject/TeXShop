@@ -8,7 +8,7 @@ The history in this repository begins with an import of Richard Koch's TeXShop 5
 
 ## Release status
 
-- **Current release: TeXShop 5.59**, based on TeXShop 5.58 Golden Gate. Download the signed and notarized application from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.59). The application uses the TeXShopProject update feed.
+- **Current release: TeXShop 5.59**, based on TeXShop 5.58 Golden Gate. Download the signed and notarized application from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.59). Later versions can be installed with the app's built-in automatic updates (Sparkle).
 - **Beta: TeXShop 5.60 beta-3**, for testing. Download it from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.60-beta.3); it is not offered through automatic updates. The changes are listed in the 5.60 release notes ([English](Documentation/Releases/5.60.md), [Japanese](Documentation/Releases/5.60-ja.md)).
 
 The official website is [texshop.app](https://texshop.app/).
@@ -25,9 +25,9 @@ xcodebuild -project TeXShop.xcodeproj -scheme TeXShop \
   CODE_SIGNING_ALLOWED=NO build
 ```
 
-The current main application target declares macOS 14.6 as its deployment target. This build setting is not a tested release support matrix. Review the project settings against the Xcode SDK you use.
+The deployment target is macOS 14.6. Releases are built with Xcode 27.2.
 
-Tests are in [`Tests/`](Tests/). [Release notes](Documentation/Releases/), [the update procedure](Documentation/Sparkle-updates.md) and [notes on bundled libraries](Documentation/Bundled-libraries.md) are in [`Documentation/`](Documentation/); [`Documentation/Legacy/`](Documentation/Legacy/) keeps documents from the original development. Launching the full application can update `~/Library/TeXShop`; use a separate test account or protect your existing configuration before testing development builds.
+Tests are in [`Tests/`](Tests/). Each script there runs on its own, for example `python3 Tests/run-comment-line-break-color.py`; a few take arguments and say so when run without them. [Release notes](Documentation/Releases/), [the update procedure](Documentation/Sparkle-updates.md) and [notes on bundled libraries](Documentation/Bundled-libraries.md) are in [`Documentation/`](Documentation/); [`Documentation/Legacy/`](Documentation/Legacy/) keeps documents from the original development. Launching the full application can update `~/Library/TeXShop`; use a separate test account or protect your existing configuration before testing development builds.
 
 ## Reporting bugs
 
