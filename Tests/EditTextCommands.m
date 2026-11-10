@@ -109,6 +109,15 @@ static void CheckStrings(void)
     Check(@"surrogate boundaries from UTF", [@"\\UTF{D7FF}\\UTF{D800}\\UTF{DBFF}\\UTF{DC00}\\UTF{DFFF}\\UTF{E000}\\UTF{0041}\\\\UTF{0041}" stringByReplacingUTFWithUnicodeCharacters],
           @"\uD7FF\\UTF{D800}\\UTF{DBFF}\\UTF{DC00}\\UTF{DFFF}\uE000A\\\\UTF{0041}");
     Require(@"decoded text is valid Unicode", [[@"\\UTF{D800}x" stringByDecodingUTFCommandsForReading] UTF8String] != NULL && [[@"\\UTF{D800}x" stringByReplacingUTFWithUnicodeCharacters] UTF8String] != NULL);
+    // Variation sequences become \CID only when Hiragino registers them (format 14 cmap).
+    Check(@"variation sequences", [@"\u845B\U000E01EF|\u845B\uFE0F|\u845B\U000E0100|\u8FBB\U000E0101" stringByReplacingUnicodeCharactersWithUTF],
+          @"\u845B\U000E01EF|\u845B\uFE0F|\\CID{1481}|\\CID{8267}");
+    // Manual decoding reads the original text once: escaped commands stay, and a command
+    // produced by a replacement is not decoded again.
+    Check(@"escaped CID", [@"\\CID{13706}|\\\\CID{13706}|\\\\\\CID{13706}|\\\\\\\\CID{13706}|\\CID{99999}" stringByReplacingUTFWithUnicodeCharacters],
+          @"\U00020BB7|\\\\CID{13706}|\\\\\U00020BB7|\\\\\\\\CID{13706}|\\CID{99999}");
+    Check(@"no second pass", [@"\\UTF{005C}CID{13706}|\\UTF{005C}UTF{9AD9}" stringByReplacingUTFWithUnicodeCharacters],
+          @"\\CID{13706}|\\UTF{9AD9}");
     // Only sequences that Hiragino (Adobe-Japan1) draws as one glyph of its own become \CID.
     Check(@"CID only for Adobe-Japan1 glyphs", [@"\U0001F600|e\u0301|\U0001F468\u200D\U0001F469\u200D\U0001F467|\u8FBB\U000E0101|\U0002000B" stringByReplacingUnicodeCharactersWithUTF],
           @"\U0001F600|\\CID{201}|\U0001F468\u200D\U0001F469\u200D\U0001F467|\\CID{8267}|\\CID{13839}");

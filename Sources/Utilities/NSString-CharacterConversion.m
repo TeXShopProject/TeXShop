@@ -20,6 +20,7 @@
 
 #import <AppKit/AppKit.h>
 #import "NSString-CharacterConversion.h"
+#import <CoreText/CoreText.h>
 #import "NSMutableString-Extras.h"
 #import "globals.h"
 
@@ -2622,18 +2623,106 @@ static NSString *TSUnicodeStringForCID(NSInteger cid)
     return [[NSString alloc] initWithBytes:&codePoint length:sizeof(codePoint) encoding:NSUTF32LittleEndianStringEncoding];
 }
 
-// The Adobe-Japan1 CID of a character sequence, or NSNotFound. Hiragino is
-// CID-keyed Adobe-Japan1, so its glyph numbers are CIDs. A sequence that Hiragino
-// does not draw as one glyph of its own (emoji, joined sequences, combining marks
-// it cannot compose) has no CID; the glyph number of another font is not one.
-NSUInteger TSAdobeJapan1CIDForSequence(NSString *sequence)
+static BOOL TSIsVariationSelector(UTF32Char c)
+{
+    return (c >= 0xFE00 && c <= 0xFE0F) || (c >= 0xE0100 && c <= 0xE01EF);
+}
+
+static NSArray<NSNumber *> *TSScalars(NSString *string)
+{
+    NSMutableArray *scalars = [NSMutableArray array];
+    NSData *data = [string dataUsingEncoding:NSUTF32LittleEndianStringEncoding];
+    const UTF32Char *values = data.bytes;
+    for (NSUInteger i = 0; i < data.length / sizeof(UTF32Char); i++) [scalars addObject:@(NSSwapLittleIntToHost(values[i]))];
+    return scalars;
+}
+
+static NSFont *TSAdobeJapan1Font(void)
 {
     static NSFont *font;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         font = [NSFont fontWithName:@"HiraginoSans-W3" size:12] ?: [NSFont fontWithName:@"HiraKakuProN-W3" size:12];
     });
+    return font;
+}
+
+// The glyph that the font's format 14 cmap subtable registers for base + selector:
+// a non-default UVS glyph, `fallback` for a default UVS, or NSNotFound when the font
+// does not support the sequence (the text system would then ignore the selector).
+static NSUInteger TSVariationGlyph(NSFont *font, UTF32Char base, UTF32Char selector, NSUInteger fallback)
+{
+    static NSData *cmap;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        CFDataRef table = CTFontCopyTable((__bridge CTFontRef)font, kCTFontTableCmap, kCTFontTableOptionNoOptions);
+        cmap = CFBridgingRelease(table);
+    });
+    const uint8_t *b = cmap.bytes; NSUInteger n = cmap.length;
+    uint32_t (^u16)(NSUInteger) = ^uint32_t(NSUInteger o) { return o + 2 <= n ? (uint32_t)b[o] << 8 | b[o+1] : 0; };
+    uint32_t (^u24)(NSUInteger) = ^uint32_t(NSUInteger o) { return o + 3 <= n ? (uint32_t)b[o] << 16 | (uint32_t)b[o+1] << 8 | b[o+2] : 0; };
+    uint32_t (^u32)(NSUInteger) = ^uint32_t(NSUInteger o) { return o + 4 <= n ? (uint32_t)b[o] << 24 | (uint32_t)b[o+1] << 16 | (uint32_t)b[o+2] << 8 | b[o+3] : 0; };
+    if (n < 4) return NSNotFound;
+    NSUInteger subtable = 0;
+    for (uint32_t i = 0, count = u16(2); i < count; i++) {
+        NSUInteger record = 4 + 8 * i;
+        if (u16(record) == 0 && u16(record + 2) == 5) { subtable = u32(record + 4); break; }
+    }
+    if (subtable == 0 || u16(subtable) != 14) return NSNotFound;
+    for (uint32_t i = 0, count = u32(subtable + 6); i < count; i++) {
+        NSUInteger record = subtable + 10 + 11 * i;
+        if (u24(record) != selector) continue;
+        uint32_t defaults = u32(record + 3), nondefaults = u32(record + 7);
+        if (defaults) {
+            NSUInteger table = subtable + defaults;
+            for (uint32_t r = 0, ranges = u32(table); r < ranges; r++) {
+                uint32_t first = u24(table + 4 + 4 * r), extra = table + 4 + 4 * r + 3 < n ? b[table + 4 + 4 * r + 3] : 0;
+                if (base >= first && base <= first + extra) return fallback;
+            }
+        }
+        if (nondefaults) {
+            NSUInteger table = subtable + nondefaults;
+            for (uint32_t m = 0, mappings = u32(table); m < mappings; m++)
+                if (u24(table + 4 + 5 * m) == base) return u16(table + 4 + 5 * m + 3);
+        }
+        return NSNotFound;
+    }
+    return NSNotFound;
+}
+
+// The base of a sequence made of one character and one variation selector, or nil.
+NSString *TSBaseOfVariationSequence(NSString *sequence)
+{
+    NSArray<NSNumber *> *scalars = TSScalars(sequence);
+    if (scalars.count != 2 || TSIsVariationSelector(scalars[0].unsignedIntValue) || !TSIsVariationSelector(scalars[1].unsignedIntValue)) return nil;
+    UTF32Char base = NSSwapHostIntToLittle(scalars[0].unsignedIntValue);
+    return [[NSString alloc] initWithBytes:&base length:sizeof(base) encoding:NSUTF32LittleEndianStringEncoding];
+}
+
+// The Adobe-Japan1 CID of a character sequence, or NSNotFound. Hiragino is
+// CID-keyed Adobe-Japan1, so its glyph numbers are CIDs. A sequence has a CID when
+// Hiragino draws it as one glyph of its own: a variation sequence only when the
+// font registers it, other sequences only when they become one glyph without help
+// from another font and without ignoring characters other than combining marks.
+NSUInteger TSAdobeJapan1CIDForSequence(NSString *sequence)
+{
+    NSFont *font = TSAdobeJapan1Font();
     if (font == nil || sequence.length == 0) return NSNotFound;
+    NSArray<NSNumber *> *scalars = TSScalars(sequence);
+    BOOL selectors = NO;
+    for (NSNumber *scalar in scalars) selectors |= TSIsVariationSelector(scalar.unsignedIntValue);
+    if (selectors) {
+        NSString *base = TSBaseOfVariationSequence(sequence);
+        if (base == nil) return NSNotFound;
+        NSUInteger baseCID = TSAdobeJapan1CIDForSequence(base);
+        if (baseCID == NSNotFound && base.length == 1) {
+            // A BMP base drawn by Hiragino on its own: its glyph is its CID.
+            CGGlyph glyph = 0; unichar c = [base characterAtIndex:0];
+            if (CTFontGetGlyphsForCharacters((__bridge CTFontRef)font, &c, &glyph, 1) && glyph != 0) baseCID = glyph;
+        }
+        NSUInteger cid = TSVariationGlyph(font, scalars[0].unsignedIntValue, scalars[1].unsignedIntValue, baseCID);
+        return (cid == 0) ? NSNotFound : cid;
+    }
     NSTextStorage *storage = [[NSTextStorage alloc] initWithString:sequence attributes:@{NSFontAttributeName: font}];
     NSLayoutManager *layout = [NSLayoutManager new];
     NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(1000, 1000)];
@@ -2645,10 +2734,17 @@ NSUInteger TSAdobeJapan1CIDForSequence(NSString *sequence)
     NSFont *used = [storage attribute:NSFontAttributeName atIndex:0 effectiveRange:&run];
     if (![used.fontName isEqualToString:font.fontName] || run.length < sequence.length) return NSNotFound;
     NSRange glyphs = [layout glyphRangeForCharacterRange:NSMakeRange(0, sequence.length) actualCharacterRange:NULL];
+    NSCharacterSet *marks = NSCharacterSet.nonBaseCharacterSet;
     NSUInteger cid = NSNotFound;
     for (NSUInteger i = glyphs.location; i < NSMaxRange(glyphs); i++) {
         NSGlyph glyph = [layout glyphAtIndex:i];
-        if (glyph == NSNullGlyph || [layout propertyForGlyphAtIndex:i] & (NSGlyphPropertyNull | NSGlyphPropertyControlCharacter)) continue;
+        if (glyph == NSNullGlyph || [layout propertyForGlyphAtIndex:i] & (NSGlyphPropertyNull | NSGlyphPropertyControlCharacter)) {
+            // Only the second half of a surrogate pair, or a combining mark composed into
+            // the preceding glyph, may be left out.
+            unichar c = [sequence characterAtIndex:[layout characterIndexForGlyphAtIndex:i]];
+            if (!CFStringIsSurrogateLowCharacter(c) && ![marks characterIsMember:c]) return NSNotFound;
+            continue;
+        }
         if (cid != NSNotFound) return NSNotFound; // more than one glyph
         cid = glyph;
     }
@@ -2724,29 +2820,26 @@ static BOOL TSStartsCommand(NSString *string, NSUInteger location)
 // \UTF{xxxx} / \CID{xxxxx} → Unicode文字
 -(NSString*)stringByReplacingUTFWithUnicodeCharacters
 {
-    NSMutableString *str = [NSMutableString stringWithString:self];
-    
-    NSString *source = [str copy];
+    // One pass over the original text: commands produced by a replacement are not read
+    // again, and commands after an escaped backslash are left as they are.
+    NSMutableString *str = [NSMutableString string];
     __block NSUInteger offset = 0;
-    [str setString:@""];
-    NSRegularExpression *utf = [NSRegularExpression regularExpressionWithPattern:@"\\\\UTF\\{([0-9A-Fa-f]{4})\\}" options:0 error:NULL];
-    [utf enumerateMatchesInString:source options:0 range:NSMakeRange(0, source.length) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
-        [str appendString:[source substringWithRange:NSMakeRange(offset, match.range.location - offset)]];
-        unsigned long value = strtoul([source substringWithRange:[match rangeAtIndex:1]].UTF8String, NULL, 16);
-        if (TSStartsCommand(source, match.range.location) && TSIsUnicodeScalar(value)) {
-            unichar character = (unichar)value;
-            [str appendString:[NSString stringWithCharacters:&character length:1]];
-        } else {
-            [str appendString:[source substringWithRange:match.range]];
+    NSRegularExpression *command = [NSRegularExpression regularExpressionWithPattern:@"\\\\(?:UTF\\{([0-9A-Fa-f]{4})\\}|CID\\{([0-9]+)\\})" options:0 error:NULL];
+    [command enumerateMatchesInString:self options:0 range:NSMakeRange(0, self.length) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+        [str appendString:[self substringWithRange:NSMakeRange(offset, match.range.location - offset)]];
+        NSString *character = nil;
+        if (TSStartsCommand(self, match.range.location)) {
+            if ([match rangeAtIndex:1].location != NSNotFound) {
+                unsigned long value = strtoul([self substringWithRange:[match rangeAtIndex:1]].UTF8String, NULL, 16);
+                if (TSIsUnicodeScalar(value)) { unichar c = (unichar)value; character = [NSString stringWithCharacters:&c length:1]; }
+            } else {
+                character = TSUnicodeStringForCID([self substringWithRange:[match rangeAtIndex:2]].integerValue);
+            }
         }
+        [str appendString:character ?: [self substringWithRange:match.range]];
         offset = NSMaxRange(match.range);
     }];
-    [str appendString:[source substringFromIndex:offset]];
-    [str replaceAllOccurrencesOfPattern:@"\\\\CID\\{([0-9]+)\\}" usingBlock:^NSString*(NSString *match, NSArray<NSString*> *groups) {
-        NSString *character = TSUnicodeStringForCID(groups[0].integerValue);
-        return character ?: match;
-    }];
-    
+    [str appendString:[self substringFromIndex:offset]];
     return str;
 }
 

@@ -26,6 +26,8 @@
 /// a variation selector or combining marks), or NSNotFound when Hiragino does not draw
 /// it as one glyph of its own.
 FOUNDATION_EXPORT NSUInteger TSAdobeJapan1CIDForSequence(NSString *sequence);
+/// The base character of a sequence made of one character and one variation selector, or nil.
+FOUNDATION_EXPORT NSString *TSBaseOfVariationSequence(NSString *sequence);
 
 @interface NSString (TSCharacterConversion)
 
