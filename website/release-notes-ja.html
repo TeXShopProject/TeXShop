@@ -46,6 +46,7 @@
 <li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案をもとに、LaTeXの構造を考慮するスペルチェックを追加しました。TeXコマンド、コメント、数式、参照などに使う引数を除外して本文を検査します。初期設定では有効で、「設定」→「スペルチェック」から無効にできます。</li>
 <li>対応するマクロ定義や言語切り替えコマンドを考慮して検査対象を判定します。スペルチェックパネルでは、指定された言語で本文を検査できます。</li>
 <li>スペルチェックの除外規則の編集、検査対象の単語をまとめて置換する入力欄と「すべて変更」、現在の書類に含まれる学習済み単語を学習解除する機能を追加しました。「すべて変更」は1回の操作で取り消せます。</li>
+<li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提供により、既定の除外規則で、よく使うパッケージ（amsmath、mathtools、graphicx、xcolor、tikz、geometry、fancyhdr、microtype、booktabs、tabularx、enumitem、hyperref、cleveref、biblatex、natbib、siunitx）のコマンドの、文章でない引数（キー、ラベル、長さ、色、単位など）と、amsmath・mathtoolsの数式環境を検査しないようにしました。tabularx・tabularyの列指定も検査しなくなりました。</li>
 <li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案により、スペルチェックパネルで修正候補を選ぶと（クリックまたは矢印キー）、その候補が「すべて変更」の置換欄に入るようにしました。候補が1つだけのときは、単語を表示した時点で入ります。本文が変わるのは「すべて変更」を実行したときだけです。</li>
 <li><a href="https://github.com/ralphrmartin">Ralph Martin</a>氏の提案により、スペルチェックパネルの「変更」は、単語を表示した後に別の文字列を選択したり書類を編集したりした場合、その文字列を置き換えず、「すべて変更」と同じくビープ音を鳴らして何もしないようにしました。</li>
 <li>次のスペルミスへの移動と表示位置の調整を改善し、長い書類や分割したソース画面でのスペルチェックの負荷を抑えました。</li>
