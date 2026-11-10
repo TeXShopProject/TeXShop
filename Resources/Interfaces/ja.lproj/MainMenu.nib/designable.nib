@@ -388,7 +388,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="変換" id="859">
                                     <items>
-                                        <menuItem title="エンコーティングを変換" id="4B6-7E-C7l" identifier="TSShortcut.changeEncoding:.0">
+                                        <menuItem title="エンコーディングを変換" id="4B6-7E-C7l" identifier="TSShortcut.changeEncoding:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="changeEncoding:" target="-1" id="uFV-ku-mAw"/>
