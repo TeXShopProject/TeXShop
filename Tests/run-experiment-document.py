@@ -22,7 +22,9 @@ MUTATIONS = {
     'scrap-close-normal-console': ('windowWillClose', '        [self closeExperiment];',
                                   '        [outputWindow close];\n        [self closeExperiment];'),
     'doc-close-no-experiment': ('close', '    [self closeExperiment];\n', ''),
-    'scrap-no-clone': ('typesetScrap', '    [TSExperimentJob cloneItemsOfDirectory:', '    if (0) [TSExperimentJob cloneItemsOfDirectory:'),
+    'scrap-no-clone': ('typesetScrap', '    if ([TSExperimentJob cloneItemsOfDirectory:', '    if (0 && [TSExperimentJob cloneItemsOfDirectory:'),
+    'scrap-uses-unsafe-clone': ('typesetScrap', '                                   exceptNames:@[@"file", documentAuxName]] == NSNotFound) {',
+                                '                                   exceptNames:@[@"file", documentAuxName]] == NSNotFound && NO) {'),
     'scrap-aux-not-read': ('typesetScrap', '    newSource = [theHeader stringByAppendingFormat:@"\\n%@\\\\begin{document}\\n", readAux];',
                            '    newSource = [theHeader stringByAppendingFormat:@"\\n%@\\\\begin{document}\\n", @""];'),
     'scrap-aux-catcode': ('typesetScrap', '\\\\begingroup\\\\makeatletter\\\\csname @input\\\\endcsname{%@}\\\\endgroup',
@@ -172,13 +174,14 @@ enum { TSNoByteOrderMark };
 static NSURL *clonedSource, *clonedInto, *copiedAux, *copiedTo;
 static NSArray *clonedExceptions;
 static BOOL auxCopied;
+static NSUInteger cloneResult;
 @interface TSExperimentJob : NSObject
 + (NSUInteger)cloneItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptNames:(NSArray *)names;
 + (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination;
 @end
 @implementation TSExperimentJob
 + (NSUInteger)cloneItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptNames:(NSArray *)names {
-    clonedSource = source; clonedInto = directory; clonedExceptions = names; return 0;
+    clonedSource = source; clonedInto = directory; clonedExceptions = names; return cloneResult;
 }
 + (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination { copiedAux = aux; copiedTo = destination; return auxCopied; }
 @end
@@ -335,6 +338,17 @@ int main(void) { @autoreleasepool {
               @"the Experiment still runs in its own folder");
         RemoveOutput(c);
         auxCopied = NO;
+    }
+    // A clone that could not be checked and not be removed stops the Experiment (#8).
+    {
+        cloneResult = NSNotFound; beeps = 0;
+        Document *d = D(), *root = D(); d.rootDocument = root;
+        root.fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"root/main.tex"]];
+        root.textView.string = @"pre\\begin{document}x"; root->whichScript = 100;
+        [d typesetScrap:nil];
+        Check(d.experimentConsole.starts == 0 && beeps == 1 && ![[NSFileManager defaultManager] fileExistsAtPath:clonedInto.path],
+              @"an unsafe clone stops the Experiment and its folder is removed");
+        cloneResult = 0;
     }
     // Without a root document, own settings remain the fallback.
     Document *d = D(); NSArray *normal = NormalState(d); [d typesetScrap:nil];

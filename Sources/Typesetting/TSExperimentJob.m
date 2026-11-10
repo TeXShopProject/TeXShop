@@ -134,23 +134,39 @@
 // Experiment starts quickly.
 static const NSUInteger TSExperimentMaximumClonedItems = 5000;
 
-// Removes the symbolic links under `directory` that lead out of it: TeX writing through them would
-// change files elsewhere. Links within the clones stay.
-static void TSExperimentRemoveOutwardLinks(NSFileManager *manager, NSString *directory)
+// Whether a symbolic link can only lead further down the clone: its target is relative and has
+// no .. component. Such a link stays; any other one could lead out of the Experiment folder.
+static BOOL TSExperimentLinkLeadsDown(NSFileManager *manager, NSString *path)
 {
-    NSString *base = [directory.stringByStandardizingPath stringByAppendingString:@"/"];
-    NSMutableArray<NSString *> *outward = [NSMutableArray array];
-    NSDirectoryEnumerator *walk = [manager enumeratorAtPath:directory];
-    for (NSString *relative in walk) {
-        if (![walk.fileAttributes[NSFileType] isEqual:NSFileTypeSymbolicLink]) continue;
-        NSString *path = [directory stringByAppendingPathComponent:relative];
-        NSString *target = [manager destinationOfSymbolicLinkAtPath:path error:NULL];
-        if (target && !target.isAbsolutePath)
-            target = [path.stringByDeletingLastPathComponent stringByAppendingPathComponent:target];
-        if (!target || ![[target.stringByStandardizingPath stringByAppendingString:@"/"] hasPrefix:base])
-            [outward addObject:path];
+    NSString *target = [manager destinationOfSymbolicLinkAtPath:path error:NULL];
+    return target.length && !target.isAbsolutePath && ![target.pathComponents containsObject:@".."];
+}
+
+// Prepares one clone: gives its folders to their owner for reading, writing and searching, which
+// changes only the clone, and removes the symbolic links that could lead out of it. Returns NO
+// when a folder cannot be opened or a link cannot be removed: the clone is then not safe to use.
+static BOOL TSExperimentSecureClone(NSFileManager *manager, NSString *clone)
+{
+    NSMutableArray<NSString *> *pending = [NSMutableArray arrayWithObject:clone];
+    while (pending.count) {
+        NSString *path = pending.lastObject;
+        [pending removeLastObject];
+        NSDictionary *attributes = [manager attributesOfItemAtPath:path error:NULL];
+        if (!attributes) return NO;
+        NSString *type = attributes[NSFileType];
+        if ([type isEqual:NSFileTypeSymbolicLink]) {
+            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;
+            continue;
+        }
+        if (![type isEqual:NSFileTypeDirectory]) continue;
+        NSUInteger mode = [attributes[NSFilePosixPermissions] unsignedIntegerValue];
+        if ((mode & 0700) != 0700 &&
+            ![manager setAttributes:@{NSFilePosixPermissions: @(mode | 0700)} ofItemAtPath:path error:NULL]) return NO;
+        NSArray<NSString *> *items = [manager contentsOfDirectoryAtPath:path error:NULL];
+        if (!items) return NO;
+        for (NSString *item in items) [pending addObject:[path stringByAppendingPathComponent:item]];
     }
-    for (NSString *path in outward) [manager removeItemAtPath:path error:NULL];
+    return YES;
 }
 
 + (NSUInteger)cloneItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptNames:(NSArray<NSString *> *)names
@@ -170,10 +186,16 @@ static void TSExperimentRemoveOutwardLinks(NSFileManager *manager, NSString *dir
         NSString *from = [source.path stringByAppendingPathComponent:item];
         NSString *to = [directory.path stringByAppendingPathComponent:item];
         if ([manager fileExistsAtPath:to]) continue;
-        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) == 0)
+        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) != 0)
+            continue;
+        if (TSExperimentSecureClone(manager, to)) {
             count++;
+            continue;
+        }
+        // A clone that could not be checked is not used.
+        [manager removeItemAtPath:to error:NULL];
+        if ([manager attributesOfItemAtPath:to error:NULL]) return NSNotFound;
     }
-    TSExperimentRemoveOutwardLinks(manager, directory.path);
     return count;
 }
 

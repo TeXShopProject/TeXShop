@@ -17,13 +17,20 @@ the Experiment does, and every item of the document's folder is compared before
 and after.
 """
 from pathlib import Path
-import argparse, hashlib, os, re, shutil, subprocess, tempfile
+import argparse, contextlib, hashlib, os, re, shutil, subprocess, tempfile
 from source_tree import include_args
 
 MUTATIONS = {
-    'no-clone': ('        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) == 0)\n',
-                 '        if (NO)\n'),
-    'keeps-outward-links': ('    for (NSString *path in outward) [manager removeItemAtPath:path error:NULL];\n', ''),
+    'no-clone': ('        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) != 0)\n',
+                 '        if (YES)\n'),
+    'keeps-outward-links': ('            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;\n',
+                            '            continue;\n'),
+    'links-with-dotdot': ('''    return target.length && !target.isAbsolutePath && ![target.pathComponents containsObject:@".."];\n''',
+                          '''    return target.length && !target.isAbsolutePath;\n'''),
+    'no-chmod': ('''        if ((mode & 0700) != 0700 &&\n''', '''        if (NO &&\n'''),
+    'ignores-unsafe': ('''        if ((mode & 0700) != 0700 &&\n''', '''        if (NO &&\n''',
+                       '''            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;\n''',
+                       '''            if (!TSExperimentLinkLeadsDown(manager, path)) [manager removeItemAtPath:path error:NULL];\n'''),
     'clones-experiment-files': ('''        if ([excluded containsObject:lower] || [lower hasPrefix:@"file."]) continue;\n''', ''),
     'case-sensitive': ('''        NSString *lower = item.lowercaseString;\n''', '''        NSString *lower = item;\n'''),
     'no-limit': ('        if (++total > TSExperimentMaximumClonedItems) return 0;\n', '        ++total;\n'),
@@ -36,9 +43,10 @@ args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 job = (root / 'Sources/Typesetting/TSExperimentJob.m').read_text()
 if args.mutation and MUTATIONS[args.mutation]:
-    old, new = MUTATIONS[args.mutation]
-    assert job.count(old) == 1, args.mutation
-    job = job.replace(old, new)
+    pairs = MUTATIONS[args.mutation]
+    for old, new in zip(pairs[::2], pairs[1::2]):
+        assert job.count(old) == 1, args.mutation
+        job = job.replace(old, new)
 scrap = (root / 'Sources/Document/TSDocument-Scrap.m').read_text(encoding='latin1')
 match = re.search(r'readAux = \[NSString stringWithFormat:@"((?:[^"\\]|\\.)*)",', scrap)
 assert match, 'the line that reads the .aux is found in TSDocument-Scrap.m'
@@ -64,9 +72,19 @@ int main(int argc, char **argv) { @autoreleasepool {
           ![fm fileExistsAtPath:[e stringByAppendingPathComponent:@"TeXShop-document.aux"]], "the Experiment's own names are left out");
     check(![[fm contentsOfDirectoryAtPath:e error:NULL] containsObject:@"File.Log"], "names are compared ignoring case");
     check(![fm attributesOfItemAtPath:[e stringByAppendingPathComponent:@"outward"] error:NULL] &&
-          ![fm attributesOfItemAtPath:[e stringByAppendingPathComponent:@"figs/outward"] error:NULL], "links that lead out of the folder are removed");
-    check([[fm destinationOfSymbolicLinkAtPath:[e stringByAppendingPathComponent:@"figs/inward"] error:NULL] isEqualToString:@"../Norms.pdf"],
-          "a link within the clones stays");
+          ![fm attributesOfItemAtPath:[e stringByAppendingPathComponent:@"figs/outward"] error:NULL] &&
+          ![fm attributesOfItemAtPath:[e stringByAppendingPathComponent:@"figs/updir"] error:NULL] &&
+          ![fm attributesOfItemAtPath:[e stringByAppendingPathComponent:@"escape"] error:NULL], "links that could lead out of the folder are removed");
+    check([[fm destinationOfSymbolicLinkAtPath:[e stringByAppendingPathComponent:@"figs/inward"] error:NULL] isEqualToString:@"Plot.pdf"],
+          "a link further down the clones stays");
+    check([fm fileExistsAtPath:[e stringByAppendingPathComponent:@"readonly/note.txt"]] &&
+          ![fm attributesOfItemAtPath:[e stringByAppendingPathComponent:@"readonly/out"] error:NULL],
+          "a read-only folder is cloned without its outward link");
+    check([fm isWritableFileAtPath:[e stringByAppendingPathComponent:@"readonly"]], "the clone of a read-only folder can be written");
+    // A folder that cannot be opened cannot be cloned; if it is, its clone can be opened.
+    check(![fm attributesOfItemAtPath:[e stringByAppendingPathComponent:@"closed"] error:NULL] ||
+          [fm contentsOfDirectoryAtPath:[e stringByAppendingPathComponent:@"closed"] error:NULL] != nil,
+          "a folder that cannot be opened is skipped or opened in its clone");
     [@"written in the Experiment\n" writeToFile:[e stringByAppendingPathComponent:@"figs/cache.dat"] atomically:NO encoding:NSUTF8StringEncoding error:NULL];
     check([[NSString stringWithContentsOfURL:[doc URLByAppendingPathComponent:@"figs/cache.dat"] encoding:NSUTF8StringEncoding error:NULL]
               isEqualToString:@"the document's cache\n"], "writing a clone leaves the document's file alone");
@@ -87,15 +105,43 @@ int main(int argc, char **argv) { @autoreleasepool {
 '''
 
 def digest(folder):
-    """Content of every file and the kind of every other item under `folder`, following no link."""
+    """Mode and content of every file, and the mode or target of every other item under `folder`,
+    following no link; a folder that cannot be opened is listed with its mode only."""
     result = {}
-    for path in sorted(folder.rglob('*')):
+    def visit(path):
+        info = os.lstat(path)
         key = str(path.relative_to(folder))
-        result[key] = ('link:' + os.readlink(path)) if path.is_symlink() else 'dir' if path.is_dir() \
-            else hashlib.sha256(path.read_bytes()).hexdigest()
+        if path.is_symlink():
+            result[key] = 'link:' + os.readlink(path)
+        elif path.is_dir():
+            result[key] = f'dir:{info.st_mode & 0o7777:o}'
+            if info.st_mode & 0o500 == 0o500:
+                for child in sorted(path.iterdir()):
+                    visit(child)
+        else:
+            result[key] = f'{info.st_mode & 0o7777:o}:' + hashlib.sha256(path.read_bytes()).hexdigest()
+    for child in sorted(folder.iterdir()):
+        visit(child)
     return result
 
-with tempfile.TemporaryDirectory(prefix='texshop-experiment-files-') as directory:
+@contextlib.contextmanager
+def owner_access(directory):
+    """Gives every folder back to its owner before the temporary folder is removed."""
+    try:
+        yield
+    finally:
+        for folder, subfolders, _ in os.walk(directory):
+            for name in subfolders:
+                path = os.path.join(folder, name)
+                if not os.path.islink(path):
+                    os.chmod(path, 0o755)
+        for folder, subfolders, _ in os.walk(directory):
+            for name in subfolders:
+                path = os.path.join(folder, name)
+                if not os.path.islink(path):
+                    os.chmod(path, 0o755)
+
+with tempfile.TemporaryDirectory(prefix='texshop-experiment-files-') as directory, owner_access(directory):
     t = Path(directory)
     (t / 'TSExperimentJob.m').write_text(job)
     (t / 'probe.m').write_text(program)
@@ -118,7 +164,17 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-files-') as director
     (outside / 'target.txt').write_text('outside\n')
     os.symlink('../outside', doc / 'outward')
     os.symlink('../../outside/target.txt', doc / 'figs' / 'outward')
-    os.symlink('../Norms.pdf', doc / 'figs' / 'inward')
+    os.symlink('Plot.pdf', doc / 'figs' / 'inward')
+    os.symlink('../Norms.pdf', doc / 'figs' / 'updir')
+    os.symlink('.', doc / 'relay')
+    os.symlink('relay/../../outside/target.txt', doc / 'escape')
+    (doc / 'readonly').mkdir()
+    (doc / 'readonly' / 'note.txt').write_text('note\n')
+    os.symlink(str(outside / 'target.txt'), doc / 'readonly' / 'out')
+    os.chmod(doc / 'readonly', 0o555)
+    (doc / 'closed').mkdir()
+    (doc / 'closed' / 'secret.txt').write_text('secret\n')
+    os.chmod(doc / 'closed', 0o000)
     # Written while the document is typeset: the last line is not finished yet.
     (doc / 'half.aux').write_text('\\relax\n\\newlabel{shared}{{3}{7}}\n\\newlabel{half}{{')
     for k in range(5001):
@@ -148,7 +204,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-files-') as director
     shutil.rmtree(exp); exp.mkdir()
     subprocess.run([str(exe), str(doc), str(exp), str(crowded), str(other)], capture_output=True, text=True, check=True)
     shutil.copy(doc / 'main.aux', exp / 'TeXShop-document.aux')
-    before = digest(doc)
+    before, outside_before = digest(doc), digest(outside)
 
     def fragment(body, preamble='\\usepackage{graphicx}\\usepackage{hyperref}'):
         # As typesetScrap writes it: the .aux copy is read on the line of \begin{document}.
@@ -177,9 +233,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-files-') as director
             'what TeX and shell commands write goes to the Experiment folder'
         assert digest(doc) == before, 'pdflatex leaves every item of the document\'s folder unchanged'
         if shutil.which('lualatex', path=texdir):
-            fragment('\\directlua{local f=assert(io.open("cache.dat","w")); f:write("lua"); f:close()}See \\ref{shared}.', preamble='')
+            fragment('\\directlua{local f=assert(io.open("cache.dat","w")); f:write("lua"); f:close()'
+                     ' local g=assert(io.open("readonly/out","w")); g:write("lua"); g:close()}See \\ref{shared}.', preamble='')
             result = typeset('lualatex')
             assert result.returncode == 0 and (exp / 'cache.dat').read_text() == 'lua', 'lualatex writes into the Experiment folder'
+            assert digest(outside) == outside_before, 'Lua writing to a link of a read-only folder leaves the file elsewhere alone'
             assert digest(doc) == before, 'Lua leaves every item of the document\'s folder unchanged'
         # The Experiment's own file.aux, not the document's of the same name, is read.
         fragment('\\section{A}\\label{own}Own: \\ref{own}.', preamble='')
@@ -207,5 +265,6 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-files-') as director
     # A fragment with an error fails, so that a passing typesetting check means a clean run.
     fragment('\\errmessage{intentional error}', preamble='')
     assert typeset('pdflatex').returncode != 0, 'a TeX error makes the typesetting check fail'
+    assert digest(doc) == before and digest(outside) == outside_before, 'modes, links and contents are unchanged'
     print('PASS: Experiment clones the document\'s folder, finds ./ and \\graphicspath files, resolves references of a real .aux '
           'with pdflatex and latexmk, and TeX, Lua and shell writes leave the document\'s folder unchanged')
