@@ -31,6 +31,8 @@
 #import "HideView.h"
 #import "synctex_parser.h"
 
+@class TSOutlineExpansion;
+
 @interface MyPDFKitView : PDFView <NSTableViewDelegate, NSWindowDelegate>
 {
 // added by Terada (from this line)
@@ -154,6 +156,7 @@
 
 // @property BOOL      useAnnotationMenu;
 @property (retain) PDFOutline						*outline;
+@property (retain) TSOutlineExpansion				*outlineExpansion;
 @property (retain) NSMutableArray					*searchResults;
 @property (weak) TSPreviewWindow                    *myPDFWindow;
 @property (retain) NSTimer							*selRectTimer;

@@ -46,6 +46,7 @@
 #import "TSExternalPDFReload.h"
 #import "TSLinkPreviewGeometry.h"
 #import "TSLinkPreviewView.h"
+#import "TSOutlineExpansion.h"
 #import "MyPDFView.h"
 #import "globals.h"
 #import "TSDocument.h"
@@ -340,6 +341,8 @@
 //	if (_outline)
 //		[_outline release];
 //	_outline = NULL;
+	if (_outlineView != nil && self.outlineExpansion == nil)
+		self.outlineExpansion = [[TSOutlineExpansion alloc] initWithOutlineView: _outlineView];
 	self.outline = [[self document] outlineRoot];
 	if (self.outline)
 	{
@@ -348,14 +351,14 @@
 //		[_noOutlineText removeFromSuperview];
 //		_noOutlineText = NULL;
 
-		// Force it to load up.
-		[_outlineView reloadData];
+		// Force it to load up, opening again the entries that were open before.
+		[self.outlineExpansion reloadOutline];
 		[_outlineView display];
 	}
 	else
 	{
 //        NSLog(@"no outline");
-        [_outlineView reloadData];
+        [self.outlineExpansion reloadOutline];
         [_outlineView display];
         
 		// Remove outline view (leaving instead text that says, "No outline.").
