@@ -4,6 +4,8 @@ TeXShop is a free, open-source TeX and LaTeX editor and PDF previewer for macOS,
 
 At Richard's invitation, Yusuke Terada now develops and maintains TeXShop.
 
+The history in this repository begins with an import of Richard Koch's TeXShop 5.58 source (`TexShop-5.58-GG-Source`). Changes since then are described in the [release notes](https://texshop.app/release-notes.html), and earlier versions are listed under [All Previous Versions](https://texshop.app/all-releases.html).
+
 ## Release status
 
 - **Current release: TeXShop 5.59**, based on TeXShop 5.58 Golden Gate. Download the signed and notarized application from [GitHub Releases](https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.59). The application uses the TeXShopProject update feed.
@@ -12,10 +14,6 @@ At Richard's invitation, Yusuke Terada now develops and maintains TeXShop.
 The official website is [texshop.app](https://texshop.app/).
 
 The universal application requires macOS 14.6 or later and runs on Apple Silicon and Intel. TeXShop also requires a separate TeX distribution to typeset documents; see [MacTeX](https://www.tug.org/mactex/).
-
-## Source history
-
-The initial commit is an import of Richard Koch's original `TexShop-5.58-GG-Source` archive. It is followed by maintenance changes, including PDF zoom and reload handling, preview appearance controls, localized interface corrections, runtime WebKit view creation, syntax-coloring range checks, invisible-character alignment, and PDF rendering recovery and workarounds.
 
 ## Building
 
