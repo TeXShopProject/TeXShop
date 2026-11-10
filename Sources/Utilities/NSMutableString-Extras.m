@@ -18,6 +18,7 @@
  *
  */
 
+#import <AppKit/AppKit.h>
 #import "NSMutableString-Extras.h"
 
 @implementation NSMutableString (TeXShop)
@@ -79,5 +80,12 @@
     }
     
     [self replaceOccurrencesOfString:target withString:replacement options:0 range:NSMakeRange(0, self.length)];
+}
+- (void)replacePasteMarkersWithClipboardText
+{
+    if ([self rangeOfString:@"#PASTE#" options:NSLiteralSearch].location == NSNotFound)
+        return;
+    NSString *clipboard = [[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString] ?: @"";
+    [self replaceOccurrencesOfString:@"#PASTE#" withString:clipboard options:NSLiteralSearch range:NSMakeRange(0, self.length)];
 }
 @end

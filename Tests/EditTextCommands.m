@@ -7,6 +7,7 @@
 #import "globals.h"
 #import "NSString-Extras.h"
 #import "NSString-CharacterConversion.h"
+#import "NSMutableString-Extras.h"
 
 NSInteger g_texChar = 0x005C;
 
@@ -240,6 +241,16 @@ static void CheckExchangePaste(void)
     [view exchangePaste:item];
     Check(@"without a selection it pastes", view.string, @"aQb");
     Check(@"without a selection the clipboard stays", [testPasteboard stringForType:NSPasteboardTypeString], @"Q");
+
+    // Macro and key binding text: #PASTE# becomes the clipboard text.
+    NSMutableString *macro = [NSMutableString stringWithString:@"\\textbf{#PASTE#}#INS# #PASTE#"];
+    SetClipboard(@"word");
+    [macro replacePasteMarkersWithClipboardText];
+    Check(@"#PASTE# expands", macro, @"\\textbf{word}#INS# word");
+    macro = [NSMutableString stringWithString:@"(#PASTE#)"];
+    SetClipboard(nil);
+    [macro replacePasteMarkersWithClipboardText];
+    Check(@"#PASTE# with an empty clipboard", macro, @"()");
 
     SetClipboard(nil);
     view.selectedRange = NSMakeRange(0, 1);

@@ -24,4 +24,7 @@
 - (void)replaceAllOccurrencesOfPattern:(NSString*)pattern withString:(NSString*)replacement;
 - (void)replaceAllOccurrencesOfPattern:(NSString*)pattern usingBlock:(NSString* (^)(NSString*, NSArray<NSString*>*))replace;
 - (void)replaceAllOccurrencesOfString:(NSString*)target withString:(NSString*)replacement addingPercentForEndOfLine:(BOOL)addingPercent;
+// Replaces the macro marker #PASTE# with the text on the clipboard, or with
+// nothing when the clipboard holds no text.
+- (void)replacePasteMarkersWithClipboardText;
 @end

@@ -21,6 +21,7 @@
  */
 
 #import "ScrapTextView.h"
+#import "NSMutableString-Extras.h"
 #import "globals.h"
 #import "GlobalData.h"
 #import <OgreKit/OgreKit.h>
@@ -210,6 +211,9 @@
 	// Substitute all occurances of #SEL# with the original text
 	[stringBuf replaceOccurrencesOfString: @"#SEL#" withString: oldString
                                   options: 0 range: NSMakeRange(0, [stringBuf length])];
+
+	// Substitute all occurances of #PASTE# with the text on the clipboard
+	[stringBuf replacePasteMarkersWithClipboardText];
     
 	// Now search for #INS#, remember its position, and remove it. We will
 	// Later position the insertion mark there. Defaults to end of string.
@@ -689,6 +693,8 @@
 					//[newString replaceOccurrencesOfString: @"#RET#" withString: @"\n"
 					//			  options: 0 range: NSMakeRange(0, [newString length])];
 					// **** 2011/03/05 preserve proper indent (HS) **** Copied from Alvise Trevisan; preserve tabs code
+					// Substitute #PASTE# with the text on the clipboard
+					[newString replacePasteMarkersWithClipboardText];
 					// search for #INS#
 					insRange = [newString rangeOfString:@"#INS#" options:0];
 					// Start Changed by (HS) - find second #INS#, remove if it's there and

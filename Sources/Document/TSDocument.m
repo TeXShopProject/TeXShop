@@ -64,6 +64,7 @@
 #import "TSToolbar.h"
 #import "NSString-Extras.h"  // Terada
 #import "NSString-CharacterConversion.h"
+#import "NSMutableString-Extras.h"
 #import "NSText-Extras.h"  // Terada
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
@@ -8448,6 +8449,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	// Substitute all occurances of #SEL# with the original text
 	[stringBuf replaceOccurrencesOfString: @"#SEL#" withString: oldString
 								  options: 0 range: NSMakeRange(0, [stringBuf length])];
+
+	// Substitute all occurances of #PASTE# with the text on the clipboard
+	[stringBuf replacePasteMarkersWithClipboardText];
 	
 	// Now search for #INS#, remember its position, and remove it. We will
 	// Later position the insertion mark there. Defaults to end of string.
@@ -8501,6 +8505,9 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	// Substitute all occurances of #SEL# with the original text
 	[stringBuf replaceOccurrencesOfString: @"#SEL#" withString: oldString
 					options: 0 range: NSMakeRange(0, [stringBuf length])];
+
+	// Substitute all occurances of #PASTE# with the text on the clipboard
+	[stringBuf replacePasteMarkersWithClipboardText];
 
 	// Now search for #INS#, remember its position, and remove it. We will
 	// Later position the insertion mark there. Defaults to end of string.

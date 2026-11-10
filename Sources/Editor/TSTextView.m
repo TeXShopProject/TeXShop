@@ -25,6 +25,7 @@
 
 // added by mitsu --(A) g_texChar filtering
 #import "TSEncodingSupport.h"
+#import "NSMutableString-Extras.h"
 #import "globals.h"
 #import "TSDocument.h" // mitsu 1.29 (T2-4)
 #import "MyPDFKitView.h"
@@ -2539,6 +2540,8 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 					//[newString replaceOccurrencesOfString: @"#RET#" withString: @"\n"
 					//			  options: 0 range: NSMakeRange(0, [newString length])];
 					// **** 2011/03/05 preserve proper indent (HS) **** Copied from Alvise Trevisan; preserve tabs code
+					// Substitute #PASTE# with the text on the clipboard
+					[newString replacePasteMarkersWithClipboardText];
 					// search for #INS#
 					insRange = [newString rangeOfString:@"#INS#" options:0];
 					// Start Changed by (HS) - find second #INS#, remove if it's there and 
