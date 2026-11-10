@@ -32,6 +32,7 @@
 #import "MyPDFView.h"
 #import "MyPDFKitView.h"
 
+#import "TSConsoleOutput.h"
 #import "globals.h"
 
 #import "TSWindowManager.h"
@@ -1326,8 +1327,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     if (! result) {
         NSString *failureMessage = [NSString stringWithFormat: @"\nFailed executing: %@\n%@\n", filename, (failureReason ?: @"")];
         NSLog(@"%@", failureMessage);
-        [outputText replaceCharactersInRange: [outputText selectedRange] withString: failureMessage];
-        [outputText scrollRangeToVisible: [outputText selectedRange]];
+        TSAppendConsoleOutput(outputText, failureMessage, nil);
         if (task == self.texTask)
             self.texTask = nil;
         else if (task == self.bibTask)
@@ -1424,7 +1424,9 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 		[outputText selectAll:self];
 		[outputText replaceCharactersInRange: [outputText selectedRange] withString:@""];
 		[texCommand setStringValue:@""];
-		[outputText setSelectable: NO];
+		// Output can be selected and copied while TeX runs; it is never editable.
+		[outputText setEditable: NO];
+		[outputText setSelectable: YES];
 		typesetStart = NO;
 		// The following command produces an unwanted tex input event for reasons
 		//     I do not understand; the event will be discarded because typesetStart = NO
@@ -2051,6 +2053,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
         WindowAfterTypeset = [NSApplication.sharedApplication keyWindow];
     else
         WindowAfterTypeset = nil;
+    self.directRootCommand = YES;
      
 //    NSString	*titleString;
 	BOOL	useError;
@@ -2133,20 +2136,10 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 			encoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) byteOrderMark: TSNoByteOrderMark];
 		[self.writeHandle writeData: myData];
 		// added by mitsu --(L) reflect tex input and clear tex input field in console window
-		NSRange selectedRange = [outputText selectedRange];
-		
-		selectedRange.location += selectedRange.length;
-		selectedRange.length = 0;
-		// in the next two lines, replace "command" by "old command" after Japanese modification made -- koch
-		[outputText replaceCharactersInRange: selectedRange withString: command];
-		selectedRange.length = [command length];
-		
-		if ([SUD boolForKey: RedConsoleAfterErrorKey]) {
-			[outputText setTextColor: [NSColor redColor] range: selectedRange];
+		BOOL redOutput = [SUD boolForKey: RedConsoleAfterErrorKey];
+		TSAppendConsoleOutput(outputText, command, redOutput ? [NSColor redColor] : nil);
+		if (redOutput)
 			consoleCleanStart = NO;
-		}
-		
-		[outputText scrollRangeToVisible: selectedRange];
 		[texCommand setStringValue: @""];
 		// end addition
 
@@ -2170,8 +2163,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
     if (optionKeyPressed)
     {
         // NSLog(@"option pressed in abort");
-        [outputText replaceCharactersInRange: [outputText selectedRange] withString:@"\nConsole output killed.\n"];
-        [outputText scrollRangeToVisible:[outputText selectedRange]];
+        TSAppendConsoleOutput(outputText, @"\nConsole output killed.\n", nil);
         
         [self.readHandle closeFile];
         self.readHandle = nil;
@@ -2187,8 +2179,7 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 
    // [outputText setSelectable: YES];
    // [outputText selectAll:self];
-	[outputText replaceCharactersInRange: [outputText selectedRange] withString:@"\nProcess aborted\n"];
-	[outputText scrollRangeToVisible:[outputText selectedRange]];
+	TSAppendConsoleOutput(outputText, @"\nProcess aborted\n", nil);
 	
 	// NSString *theString = @"very strange\n"; 
 	// NSData *theData = [theString dataUsingEncoding: NSASCIIStringEncoding];

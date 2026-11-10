@@ -37,10 +37,42 @@
 #import "TSLayoutManager.h"
 #import "TSInvisibleCharacters.h"
 
+// Gives control characters the width of the marker drawn over them.
+@interface TSControlCharacterTypesetter : NSATSTypesetter
+@end
+
+@implementation TSControlCharacterTypesetter
+
+- (NSTypesetterControlCharacterAction)actionForControlCharacterAtIndex:(NSUInteger)charIndex
+{
+    if (TSIsShownControlCharacter([self.attributedString.string characterAtIndex:charIndex]))
+        return NSTypesetterWhitespaceAction;
+    return [super actionForControlCharacterAtIndex:charIndex];
+}
+
+- (NSRect)boundingBoxForControlGlyphAtIndex:(NSUInteger)glyphIndex
+                           forTextContainer:(NSTextContainer *)textContainer
+                       proposedLineFragment:(NSRect)proposedRect
+                              glyphPosition:(NSPoint)glyphPosition
+                             characterIndex:(NSUInteger)charIndex
+{
+    NSRect rect = [super boundingBoxForControlGlyphAtIndex:glyphIndex forTextContainer:textContainer
+                                      proposedLineFragment:proposedRect glyphPosition:glyphPosition characterIndex:charIndex];
+    if (TSIsShownControlCharacter([self.attributedString.string characterAtIndex:charIndex])) {
+        NSFont *font = [self.attributedString attribute:NSFontAttributeName atIndex:charIndex effectiveRange:NULL]
+            ?: [NSFont userFixedPitchFontOfSize:12];
+        rect.size.width = [TSControlCharacterMarker sizeWithAttributes:@{NSFontAttributeName: font}].width;
+    }
+    return rect;
+}
+
+@end
+
 @implementation TSLayoutManager
 - (id)init
 {
 	self = [super init];
+    self.typesetter = [TSControlCharacterTypesetter new];
     self.tabCharacters = TSInvisibleMarkers(TabCharacterKindKey);
     self.nextLineCharacters = TSInvisibleMarkers(NewLineCharacterKindKey);
     self.fullwidthSpaceCharacters = TSInvisibleMarkers(FullwidthSpaceCharacterKindKey);
@@ -118,6 +150,8 @@
             marker = fullwidthSpaceCharacter;
 		} else if (theCharacter == ' ' && showSpaceCharacter) {
             marker = spaceCharacter;
+        } else if (TSIsShownControlCharacter(theCharacter)) {
+            marker = TSControlCharacterMarker; // shown whether or not invisible characters are
         }
         // added by Terada: Use the drawing origin and text baseline instead of a fixed offset.
         if (marker != nil) {

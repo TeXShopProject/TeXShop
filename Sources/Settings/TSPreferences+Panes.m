@@ -198,6 +198,8 @@
     EditorHighlightBracesColorWell = themes.EditorHighlightBracesColorWell;
     EditorHighlightContentColorWell = themes.EditorHighlightContentColorWell;
     EditorInvisibleCharColorWell = themes.EditorInvisibleCharColorWell;
+    EditorHighlightZenkakuSymbolColorWell = themes.EditorHighlightZenkakuSymbolColorWell;
+    EditorHighlightZenkakuSymbolBackgroundColorWell = themes.EditorHighlightZenkakuSymbolBackgroundColorWell;
     EditorReverseSyncColorWell = themes.EditorReverseSyncColorWell;
     EntryColorWell = themes.EntryColorWell;
     FootnoteColorWell = themes.FootnoteColorWell;

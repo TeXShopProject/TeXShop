@@ -309,3 +309,6 @@
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "自动检测语言";
+
+/* Asked when a conversion is chosen with nothing selected */
+"Apply \"%@\" to the whole document?" = "要将“%@”应用到整个文稿吗？";

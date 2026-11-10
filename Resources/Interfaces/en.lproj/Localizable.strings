@@ -307,3 +307,6 @@
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Automatic Language";
+
+/* Asked when a conversion is chosen with nothing selected */
+"Apply \"%@\" to the whole document?" = "Apply “%@” to the whole document?";

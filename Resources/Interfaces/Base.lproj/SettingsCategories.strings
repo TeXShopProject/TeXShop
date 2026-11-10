@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Invisible";
 "catalog.appearance.7.0.item.1" = "Enclosed";
 "catalog.appearance.7.0.item.2" = "Braces";
+"catalog.appearance.7.0.item.3" = "Fullwidth";
+"catalog.appearance.7.0.item.4" = "Fullwidth (Background)";
 "group.appearance.8.title" = "Colors: SyncTeX and Image Copying";
 "catalog.appearance.8.0.item.0" = "SyncTeX in Preview";
 "catalog.appearance.8.0.item.1" = "SyncTeX in Source";
@@ -288,4 +290,4 @@
 
 "catalog.documents.1.3.note" = "When saving, combines characters stored in separate parts (such as か + ゛) into single characters (が).";
 
-"catalog.typesetting.9.0.note" = "When saving, replaces characters outside JIS X 0208 with \\UTF{XXXX} (or \\CID{number} for glyph variants), and turns \\UTF{…} back into characters when opening. For pTeX documents that use the otf package.";
+"catalog.typesetting.9.0.note" = "When saving, replaces characters outside JIS X 0208 with \\UTF{XXXX} (or \\CID{number} for glyph variants). For pTeX documents that use the otf package.";

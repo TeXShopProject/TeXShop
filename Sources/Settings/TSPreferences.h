@@ -194,6 +194,8 @@
     IBOutlet NSColorWell    *EditorHighlightBracesColorWell;
     IBOutlet NSColorWell    *EditorHighlightContentColorWell;
     IBOutlet NSColorWell    *EditorInvisibleCharColorWell;
+    IBOutlet NSColorWell    *EditorHighlightZenkakuSymbolColorWell;
+    IBOutlet NSColorWell    *EditorHighlightZenkakuSymbolBackgroundColorWell;
     IBOutlet NSColorWell    *EditorFlashColorWell;
     IBOutlet NSColorWell    *EditorReverseSyncColorWell;
     IBOutlet NSColorWell    *PreviewDirectSyncColorWell;
@@ -447,6 +449,8 @@
 - (IBAction)EditorHighlightBracesChanged:sender;
 - (IBAction)EditorHighlightContentChanged:sender;
 - (IBAction)EditorInvisibleCharChanged:sender;
+- (IBAction)EditorHighlightZenkakuSymbolChanged:sender;
+- (IBAction)EditorHighlightZenkakuSymbolBackgroundChanged:sender;
 - (IBAction)EditorFlashChanged:sender;
 - (IBAction)SourceAlphaChanged:sender;
 - (IBAction)PreviewAlphaChanged:sender;

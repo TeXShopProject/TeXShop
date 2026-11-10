@@ -312,3 +312,6 @@
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "언어 자동 감지";
+
+/* Asked when a conversion is chosen with nothing selected */
+"Apply \"%@\" to the whole document?" = "문서 전체에 ‘%@’을(를) 적용하시겠습니까?";

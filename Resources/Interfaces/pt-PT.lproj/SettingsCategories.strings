@@ -186,6 +186,8 @@
 "catalog.appearance.7.0.item.0" = "Carateres invisíveis";
 "catalog.appearance.7.0.item.1" = "Texto entre parênteses";
 "catalog.appearance.7.0.item.2" = "Chavetas";
+"catalog.appearance.7.0.item.3" = "Largura total";
+"catalog.appearance.7.0.item.4" = "Largura total (fundo)";
 "group.appearance.8.title" = "Cores: SyncTeX e cópia de imagens";
 "catalog.appearance.8.0.item.0" = "SyncTeX na pré-visualização";
 "catalog.appearance.8.0.item.1" = "SyncTeX no código-fonte";
@@ -288,4 +290,4 @@
 
 "catalog.documents.1.3.note" = "Ao guardar, combina caracteres armazenados separadamente (como か + ゛) num único carácter (が).";
 
-"catalog.typesetting.9.0.note" = "Ao guardar, substitui caracteres fora de JIS X 0208 por \\UTF{XXXX} (ou \\CID{número} para variantes de glifos). Ao abrir, converte \\UTF{…} novamente em caracteres. Para documentos pTeX que utilizam o pacote otf.";
+"catalog.typesetting.9.0.note" = "Ao guardar, substitui caracteres fora de JIS X 0208 por \\UTF{XXXX} (ou \\CID{número} para variantes de glifos). Para documentos pTeX que utilizam o pacote otf.";
