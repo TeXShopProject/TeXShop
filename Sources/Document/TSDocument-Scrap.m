@@ -24,6 +24,7 @@
 
 #import "TSDocument.h"
 #import "TSExperimentConsoleController.h"
+#import "TSExperimentJob.h"
 #import "TSTextView.h"
 
 #import "MyPDFView.h"
@@ -190,7 +191,35 @@
     {
         theHeader = [theSource substringToIndex:beginDoc.location];
     }
-    newSource = [theHeader stringByAppendingString:@"\n\\begin{document}\n"];
+// The following code comes from http://nshipster.com/nstemporarydirectory/
+    
+    NSURL *directory = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]] isDirectory:YES];
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:directory withIntermediateDirectories:YES attributes:nil error:&error]) {
+        [self presentError:error];
+        return;
+    }
+    // Files next to the document are found as when it is typeset, also with paths that begin
+    // with ./, which TeX does not look up in TEXINPUTS: the Experiment folder holds clones of
+    // them, so whatever TeX, Lua or shell commands write there leaves the document's folder alone
+    // (#8). Items that cannot be cloned are found through TEXINPUTS, as before.
+    NSString *documentAuxName = @"TeXShop-document.aux";
+    if ([TSExperimentJob cloneItemsOfDirectory:[NSURL fileURLWithPath:fileLocation isDirectory:YES] intoDirectory:directory
+                                   exceptNames:@[@"file", documentAuxName]] == NSNotFound) {
+        [[NSFileManager defaultManager] removeItemAtURL:directory error:NULL];
+        NSBeep();
+        return;
+    }
+    // The document's references, from a copy of its .aux that every run reads at its start with
+    // @ as a letter, also when an engine typesets more than once (#8). The command shares the line
+    // of \begin{document}, so line numbers in messages stay those of the fragment.
+    NSURL *documentAux = [directory URLByAppendingPathComponent:documentAuxName];
+    NSString *readAux = @"";
+    if ([TSExperimentJob copyAuxiliaryFile:[[[NSURL fileURLWithPath:filePath] URLByDeletingPathExtension] URLByAppendingPathExtension:@"aux"]
+                                     toURL:documentAux]
+        && [documentAux.path rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\\{}%# \t\n\r"]].location == NSNotFound)
+        readAux = [NSString stringWithFormat:@"\\AtBeginDocument{\\begingroup\\makeatletter\\csname @input\\endcsname{%@}\\endgroup}",
+                   documentAux.path];
+    newSource = [theHeader stringByAppendingFormat:@"\n%@\\begin{document}\n", readAux];
     newSource = [newSource stringByAppendingString: [scrapTextView string]];
     newSource = [newSource stringByAppendingString:@"\n\\end{document}\n"];
  
@@ -203,14 +232,9 @@
     if (encoding == NSUnicodeStringEncoding) encoding = NSUTF8StringEncoding;
     self.scrapEffectiveEncoding = encoding;
     theData = [[TSEncodingSupport sharedInstance] dataForText:newSource encoding:encoding byteOrderMark:TSNoByteOrderMark];
-    if (!theData) { NSBeep(); return; }
-    
- 
-// The following code comes from http://nshipster.com/nstemporarydirectory/
-    
-    NSURL *directory = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]] isDirectory:YES];
-    if (![[NSFileManager defaultManager] createDirectoryAtURL:directory withIntermediateDirectories:YES attributes:nil error:&error]) {
-        [self presentError:error];
+    if (!theData) {
+        [[NSFileManager defaultManager] removeItemAtURL:directory error:NULL];
+        NSBeep();
         return;
     }
     NSURL *fileURL = [directory URLByAppendingPathComponent:@"file.tex"];

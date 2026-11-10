@@ -22,6 +22,13 @@ MUTATIONS = {
     'scrap-close-normal-console': ('windowWillClose', '        [self closeExperiment];',
                                   '        [outputWindow close];\n        [self closeExperiment];'),
     'doc-close-no-experiment': ('close', '    [self closeExperiment];\n', ''),
+    'scrap-no-clone': ('typesetScrap', '    if ([TSExperimentJob cloneItemsOfDirectory:', '    if (0 && [TSExperimentJob cloneItemsOfDirectory:'),
+    'scrap-uses-unsafe-clone': ('typesetScrap', '                                   exceptNames:@[@"file", documentAuxName]] == NSNotFound) {',
+                                '                                   exceptNames:@[@"file", documentAuxName]] == NSNotFound && NO) {'),
+    'scrap-aux-not-read': ('typesetScrap', '    newSource = [theHeader stringByAppendingFormat:@"\\n%@\\\\begin{document}\\n", readAux];',
+                           '    newSource = [theHeader stringByAppendingFormat:@"\\n%@\\\\begin{document}\\n", @""];'),
+    'scrap-aux-catcode': ('typesetScrap', '\\\\begingroup\\\\makeatletter\\\\csname @input\\\\endcsname{%@}\\\\endgroup',
+                          '\\\\csname @input\\\\endcsname{%@}'),
     'scrap-header-underflow': ('typesetScrap', 'theHeader = [theSource substringToIndex:beginDoc.location];',
                               'theHeader = [theSource substringToIndex:[theSource lineRangeForRange:NSMakeRange(0, beginDoc.location - 1)].length];'),
     'scrap-script-self': ('typesetScrap', 'self.scrapScript = theDocument->whichScript;',
@@ -163,6 +170,21 @@ enum { TSNoByteOrderMark };
 }
 @end
 #define TSExperimentConsoleController Console
+// Records how the Experiment folder is prepared (#8); the work itself is tested elsewhere.
+static NSURL *clonedSource, *clonedInto, *copiedAux, *copiedTo;
+static NSArray *clonedExceptions;
+static BOOL auxCopied;
+static NSUInteger cloneResult;
+@interface TSExperimentJob : NSObject
++ (NSUInteger)cloneItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptNames:(NSArray *)names;
++ (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination;
+@end
+@implementation TSExperimentJob
++ (NSUInteger)cloneItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptNames:(NSArray *)names {
+    clonedSource = source; clonedInto = directory; clonedExceptions = names; return cloneResult;
+}
++ (BOOL)copyAuxiliaryFile:(NSURL *)aux toURL:(NSURL *)destination { copiedAux = aux; copiedTo = destination; return auxCopied; }
+@end
 @interface BaseDocument : NSObject
 @property NSUInteger baseCloses;
 - (void)close;
@@ -274,6 +296,13 @@ static void CheckSource(NSString *source, NSString *header, NSInteger rootScript
         Check(d.scrapEffectiveEncoding == expectedEncoding && c.encoding == expectedEncoding, @"root encoding is used, UTF-16 is normalized to UTF-8");
         Check([c.environment[@"TEXINPUTS"] isEqualToString:root.fileURL.URLByDeletingLastPathComponent.path], @"root source directory supplies search path");
         Check([c.title isEqualToString:@"Experiment sentinel"], @"Experiment title passed to its console");
+        Check([clonedSource.path isEqualToString:root.fileURL.URLByDeletingLastPathComponent.path] &&
+              [clonedInto.path isEqualToString:c.directory.path] &&
+              [clonedExceptions containsObject:@"file"] && [clonedExceptions containsObject:@"TeXShop-document.aux"],
+              @"the root document's folder is cloned into the Experiment folder, except the Experiment's own names");
+        Check([copiedAux.path isEqualToString:[root.fileURL.path.stringByDeletingPathExtension stringByAppendingPathExtension:@"aux"]] &&
+              [copiedTo.path isEqualToString:[c.directory URLByAppendingPathComponent:@"TeXShop-document.aux"].path],
+              @"the root document's .aux is copied under its own name, not as the Experiment's file.aux");
         CheckNormal(d, normal);
         // A hidden Experiment panel (e.g. application inactive) must still update.
         d->scrapWindow.isVisible = NO;
@@ -294,6 +323,33 @@ int main(void) { @autoreleasepool {
     CheckSource(@"preamble\\begin{document}body", @"preamble", 102, NSUTF8StringEncoding, @"/engine/personal");
     CheckSource(@"preamble\n\\begin{document}body", @"preamble\n", 100, NSUnicodeStringEncoding, @"/engine/pdf");
     CheckSource(@"entire preamble", @"entire preamble", 101, NSUTF8StringEncoding, @"/engine/dvi");
+    // With a copied .aux, every run reads it at its start with @ as a letter (#8).
+    {
+        auxCopied = YES;
+        Document *d = D(), *root = D(); d.rootDocument = root;
+        root.fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"root/main.tex"]];
+        root.textView.string = @"pre\\begin{document}x"; root->whichScript = 100;
+        [d typesetScrap:nil];
+        Console *c = d.experimentConsole;
+        NSString *expected = [NSString stringWithFormat:@"pre\n\\AtBeginDocument{\\begingroup\\makeatletter\\csname @input\\endcsname{%@/TeXShop-document.aux}\\endgroup}\\begin{document}\nfragment",
+                              c.directory.path];
+        Check([c.source hasPrefix:expected], @"the copy of the document's .aux is read with @ as a letter, on the line of \\begin{document}");
+        Check([c.directory isEqual:[NSURL fileURLWithPath:c.directory.path isDirectory:YES]] && [c.arguments.lastObject isEqualToString:@"file.tex"],
+              @"the Experiment still runs in its own folder");
+        RemoveOutput(c);
+        auxCopied = NO;
+    }
+    // A clone that could not be checked and not be removed stops the Experiment (#8).
+    {
+        cloneResult = NSNotFound; beeps = 0;
+        Document *d = D(), *root = D(); d.rootDocument = root;
+        root.fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"root/main.tex"]];
+        root.textView.string = @"pre\\begin{document}x"; root->whichScript = 100;
+        [d typesetScrap:nil];
+        Check(d.experimentConsole.starts == 0 && beeps == 1 && ![[NSFileManager defaultManager] fileExistsAtPath:clonedInto.path],
+              @"an unsafe clone stops the Experiment and its folder is removed");
+        cloneResult = 0;
+    }
     // Without a root document, own settings remain the fallback.
     Document *d = D(); NSArray *normal = NormalState(d); [d typesetScrap:nil];
     Check([d.experimentConsole.source hasPrefix:@"child preamble\n"], @"unrooted document uses its own preamble");
