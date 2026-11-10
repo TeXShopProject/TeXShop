@@ -1101,6 +1101,12 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 	[SUD setBool:[(NSCell *)sender state] forKey:AntiAliasKey];
 }
 
+// The state of Link Popups in the Preview menu when a Preview window opens.
+- (IBAction)linkPopupsChanged:(NSButton *)sender
+{
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:LinkPopupsKey];
+}
+
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender
 {
     NSInteger myTag = [sender tag];

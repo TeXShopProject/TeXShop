@@ -198,6 +198,6 @@ int main(int argc, const char **argv) { @autoreleasepool {
         }
     }
     // 173 migrated from the legacy Preferences window and 2 added since.
-    Check(outlets == 175, @"Every typed outlet loads");
-    puts("PASS: 11 panes and 175 typed outlets");
+    Check(outlets == 176, @"Every typed outlet loads");
+    puts("PASS: 11 panes and 176 typed outlets");
 } return 0; }

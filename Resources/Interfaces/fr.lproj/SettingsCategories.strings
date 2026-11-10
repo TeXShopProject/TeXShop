@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "Réglage de la souris par défaut";
 "catalog.preview.0.4.title" = "Ne pas faire défiler avec les boutons de page";
 "catalog.preview.0.5.title" = "Lisser le texte et les dessins au trait";
+"catalog.preview.0.6.title" = "Pop-up pour les liens";
+"catalog.preview.0.6.note" = "Valeur initiale des documents ouverts désormais. Pour un document ouvert, utilisez le menu « Page ».";
 "group.preview.1.title" = "Page double (variantes)";
 "catalog.preview.1.0.title" = "Sens des pages";
 "catalog.preview.1.1.title" = "Afficher la première page seule comme couverture";

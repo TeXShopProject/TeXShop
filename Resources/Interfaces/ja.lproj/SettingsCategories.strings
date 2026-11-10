@@ -209,6 +209,8 @@
 "catalog.preview.0.3.title" = "マウスモード";
 "catalog.preview.0.4.title" = "ページボタンでスクロールしない";
 "catalog.preview.0.5.title" = "テキストとラインアートを滑らかに表示";
+"catalog.preview.0.6.title" = "リンク先をポップアップ";
+"catalog.preview.0.6.note" = "これから開く書類の初期値です。開いている書類では、「プレビュー」メニューで切り替えます。";
 "group.preview.1.title" = "見開きの配置";
 "catalog.preview.1.0.title" = "ページの方向";
 "catalog.preview.1.1.title" = "先頭ページを表紙として単独表示";

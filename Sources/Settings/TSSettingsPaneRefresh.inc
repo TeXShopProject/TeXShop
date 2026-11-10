@@ -184,6 +184,7 @@
 #endif
     [_autoPDFButton setState:[defaults boolForKey:PdfRefreshKey]];
     [_antialiasButton setState:[defaults boolForKey:AntiAliasKey]];
+    [_linkPopupsButton setState:[defaults boolForKey:LinkPopupsKey] ? NSControlStateValueOn : NSControlStateValueOff];
     [_scrollButton setState:[defaults boolForKey:NoScrollEnabledKey]];
     magnification = [defaults floatForKey:PdfMagnificationKey];
     mag = round(magnification * 100.0);

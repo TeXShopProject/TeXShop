@@ -156,6 +156,7 @@
 
     IBOutlet NSPopUpButton  *dictionaryPopup;
 	IBOutlet NSButton *_displayAsBookButton;
+	IBOutlet NSButton *_linkPopupsButton;
 	IBOutlet NSPopUpButton	*_pageStylePopup;// mitsu 1.29 (O) /*" connected to page style popup button "*/
 	IBOutlet NSMatrix       *_firstPageMatrix;// /*" radio buttons for first page left or right in multipage display "*/
 	IBOutlet NSPopUpButton	*_resizeOptionPopup;// mitsu 1.29 (O) /*" connected to resize option popup button "*/
@@ -308,6 +309,7 @@
 - (IBAction)scrollPressed:sender;
 - (IBAction)firstDoublePageChanged:sender;
 - (IBAction)displayAsBookChanged:(NSButton *)sender;
+- (IBAction)linkPopupsChanged:(NSButton *)sender;
 - (IBAction)dictionaryPressed: sender;
 - (IBAction)texProgramChanged:sender;
 - (IBAction)latexProgramChanged:sender;

@@ -727,6 +727,11 @@ int main(void) { @autoreleasepool {
     [SUD registerDefaults:@{LinkPopupsKey:@YES}];
     [view initializeDisplay];
     check(!view.preview && !view.handlingLink && !handlers.count, @"initializeDisplay clears popup and monitor");
+    // The Settings switch is the default that a newly shown preview starts with.
+    check(!view.skipLinks, @"a preview starts with link popups on by default");
+    [SUD setBool:NO forKey:LinkPopupsKey]; [view initializeDisplay];
+    check(view.skipLinks, @"a preview starts with link popups off when the setting is off");
+    [SUD removeObjectForKey:LinkPopupsKey]; [view initializeDisplay];
     view.handlingLink=1; NSTimer *beforeInitialize=showTimer(view);
     [view initializeDisplay];
     view.handlingLink=1; [view handleLink:beforeInitialize];

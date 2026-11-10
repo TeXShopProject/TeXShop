@@ -47,6 +47,7 @@
 "p2D-Mi-Gyc.title" = "主页 URL";
 "preview-cover-cell.title" = "将第一页单独显示为封面";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
+"preview-link-popups-cell.title" = "链接预览";
 "sa2-VV-W1K.title" = "关闭时记住上一次位置";
 "tVs-uh-QcM.title" = "所有窗口从固定位置打开";
 "vOt-2m-d2s.title" = "单一窗口";

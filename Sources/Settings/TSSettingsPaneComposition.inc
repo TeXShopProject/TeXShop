@@ -204,6 +204,7 @@
         ]],
         @"settings.024-V2-dVf": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.fjQ-he-GFL"] kind:TSSettingsRowControls indentation:0], // antialiasButton
+            [TSSettingsLayoutRow controls:@[@"settings.preview-link-popups-button"] kind:TSSettingsRowControls indentation:0], // linkPopupsButton
         ]],
         @"settings.7Xo-ey-gfu": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.G6V-Sw-jFT"] kind:TSSettingsRowControls indentation:0], // useTwoWindowsButton

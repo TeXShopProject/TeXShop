@@ -11,6 +11,7 @@
 - (IBAction)displayAsBookChanged:(id)sender { [self.preferences displayAsBookChanged:sender]; }
 - (IBAction)firstDoublePageChanged:(id)sender { [self.preferences firstDoublePageChanged:sender]; }
 - (IBAction)htmlWindowPosChanged:(id)sender { [self.preferences htmlWindowPosChanged:sender]; }
+- (IBAction)linkPopupsChanged:(id)sender { [self.preferences linkPopupsChanged:sender]; }
 - (IBAction)magChanged:(id)sender { [self.preferences magChanged:sender]; }
 - (IBAction)mouseModeChanged:(id)sender { [self.preferences mouseModeChanged:sender]; }
 - (IBAction)pageStyleChanged:(id)sender { [self.preferences pageStyleChanged:sender]; }
