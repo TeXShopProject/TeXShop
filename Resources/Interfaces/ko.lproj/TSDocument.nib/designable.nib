@@ -700,7 +700,7 @@ DQ
                                 <rect key="frame" x="0.0" y="7" width="44" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="배율" id="103">
-                                    <font key="font" size="11" name="Monaco"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -720,7 +720,7 @@ DQ
                                 <rect key="frame" x="119" y="5" width="44" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="페이지" id="106">
-                                    <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -828,7 +828,7 @@ DQ
                     <autoresizingMask key="autoresizingMask"/>
                     <buttonCell key="cell" type="check" title="키 바인딩" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="126">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" size="13" name="HiraKakuProN-W3"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
                         <action selector="changeAutoComplete:" target="-2" id="581"/>
@@ -839,7 +839,7 @@ DQ
                     <autoresizingMask key="autoresizingMask"/>
                     <buttonCell key="cell" type="check" title="키 바인딩" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="128">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
                         <action selector="changeAutoComplete:" target="-2" id="625"/>
@@ -850,7 +850,7 @@ DQ
                     <autoresizingMask key="autoresizingMask"/>
                     <buttonCell key="cell" type="push" title="조판" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="130">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
                         <action selector="doTypeset:" target="-2" id="577"/>
@@ -874,7 +874,7 @@ DQ
                     <autoresizingMask key="autoresizingMask"/>
                     <buttonCell key="cell" type="push" title="조판" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="136">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
                         <action selector="doTypesetEE:" target="-2" id="579"/>
@@ -885,7 +885,7 @@ DQ
                     <autoresizingMask key="autoresizingMask"/>
                     <buttonCell key="cell" type="push" title="앞페이지" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="147">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
                         <action selector="previousPage:" target="-1" id="576"/>
@@ -896,7 +896,7 @@ DQ
                     <autoresizingMask key="autoresizingMask"/>
                     <buttonCell key="cell" type="push" title="다음페이지" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="149">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
                         <action selector="nextPage:" target="-1" id="575"/>
@@ -931,7 +931,7 @@ DQ
                                 <rect key="frame" x="5" y="4" width="36" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="배율" id="156">
-                                    <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -982,7 +982,7 @@ DQ
                                 <rect key="frame" x="120" y="4" width="42" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="페이지" id="165">
-                                    <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1028,7 +1028,7 @@ DQ
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="전체경로 표시" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="175">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" size="13" name="HiraKakuProN-W3"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
                         <action selector="changeShowFullPath:" target="-2" id="618"/>
@@ -1122,7 +1122,7 @@ DQ
                                 <rect key="frame" x="56" y="6" width="14" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="／" id="201">
-                                    <font key="font" size="11" name="AquaKana"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1140,7 +1140,7 @@ DQ
                                 <rect key="frame" x="122" y="6" width="42" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="페이지" id="205">
-                                    <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1181,7 +1181,7 @@ DQ
                                 <rect key="frame" x="5" y="4" width="36" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="배율" id="212">
-                                    <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1319,7 +1319,7 @@ DQ
                                     <rect key="frame" x="118" y="9" width="43" height="14"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="페이지" id="219">
-                                        <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                        <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -1408,7 +1408,7 @@ DQ
                                     <rect key="frame" x="5" y="11" width="36" height="14"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="배" id="234">
-                                        <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                        <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -1450,7 +1450,7 @@ DQ
                     <rect key="frame" x="-48" y="41" width="126" height="20"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="인코딩:  " id="241">
-                        <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                        <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -1533,7 +1533,7 @@ DQ
                     <rect key="frame" x="11" y="9" width="86" height="14"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="포맷 : " id="268">
-                        <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                        <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -1565,15 +1565,15 @@ DQ
                             <column>
                                 <formCell scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="justified" title="단어수 :" id="273">
                                     <font key="font" metaFont="system"/>
-                                    <font key="titleFont" size="13" name="HiraKakuProN-W3"/>
+                                    <font key="titleFont" metaFont="system"/>
                                 </formCell>
                                 <formCell scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="justified" tag="1" title="행수 :" id="274">
                                     <font key="font" metaFont="system"/>
-                                    <font key="titleFont" size="13" name="HiraKakuProN-W3"/>
+                                    <font key="titleFont" metaFont="system"/>
                                 </formCell>
                                 <formCell scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="justified" tag="2" title="글자수 :" id="275">
                                     <font key="font" metaFont="system"/>
-                                    <font key="titleFont" size="13" name="HiraKakuProN-W3"/>
+                                    <font key="titleFont" metaFont="system"/>
                                 </formCell>
                             </column>
                         </cells>
@@ -1583,7 +1583,7 @@ DQ
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="갱신" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="277">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="updateStatistics:" target="-2" id="595"/>
@@ -1887,7 +1887,7 @@ DQ
                                     <rect key="frame" x="5" y="11" width="36" height="14"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="배율" id="318">
-                                        <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                        <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -1938,7 +1938,7 @@ DQ
                                     <rect key="frame" x="122" y="12" width="46" height="14"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="페이지" id="327">
-                                        <font key="font" size="11" name="AppleSDGothicNeo-Regular"/>
+                                        <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -2213,7 +2213,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="다시표시" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="352">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="reFillLog:" target="-2" id="621"/>
@@ -2224,7 +2224,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="모든 경고" bezelStyle="regularSquare" imagePosition="left" inset="2" id="354">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="355">
@@ -2256,7 +2256,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="가로박스 경고" bezelStyle="regularSquare" imagePosition="left" inset="2" id="362">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="363">
@@ -2264,7 +2264,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="세로박스 경고" bezelStyle="regularSquare" imagePosition="left" inset="2" id="364">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="365">
@@ -2272,7 +2272,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="폰트 정보" bezelStyle="regularSquare" imagePosition="left" inset="2" id="366">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="367">
@@ -2280,7 +2280,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="로그파일 마지막" bezelStyle="regularSquare" imagePosition="left" inset="2" id="368">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="369">
@@ -2304,7 +2304,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="그림 사용" bezelStyle="regularSquare" imagePosition="left" inset="2" id="374">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="375">
@@ -2312,7 +2312,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="패키지 정보" bezelStyle="regularSquare" imagePosition="left" inset="2" id="376">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="13" name="AppleSDGothicNeo-Regular"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N96-5D-KgD">
@@ -2377,7 +2377,7 @@ DQ
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="취소" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="386">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="Monaco"/>
+                            <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>

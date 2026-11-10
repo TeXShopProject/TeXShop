@@ -1523,7 +1523,7 @@
                     <rect key="frame" x="26" y="10" width="61" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="编码:" id="867">
-                        <font key="font" size="11" name="STHeitiSC-Light"/>
+                        <font key="font" metaFont="message" size="11"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -1556,7 +1556,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="好" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="870">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                            <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 DQ
 </string>
@@ -1579,7 +1579,7 @@ DQ
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="取消" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="871">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                            <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
@@ -1592,7 +1592,7 @@ Gw
                         <rect key="frame" x="17" y="89" width="289" height="27"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="包的名称 (最好小写)" id="872">
-                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                            <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -1675,7 +1675,7 @@ Gw
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="好" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1036">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                            <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 DQ
 </string>
@@ -1689,7 +1689,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="取消" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1038">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                            <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
@@ -1761,7 +1761,7 @@ Gw
                         <rect key="frame" x="17" y="89" width="289" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="样式文件名 (最好用小写):" id="1071">
-                            <font key="font" size="13" name="STHeitiSC-Light"/>
+                            <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>

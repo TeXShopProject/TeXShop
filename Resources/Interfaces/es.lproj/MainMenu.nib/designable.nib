@@ -1590,7 +1590,7 @@ DQ
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Cancelar" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" inset="2" id="833">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="HiraKakuProN-W3"/>
+                            <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
@@ -1755,7 +1755,7 @@ DQ
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Cancelar" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="929">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name="HiraKakuProN-W3"/>
+                            <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
