@@ -117,6 +117,18 @@ static void CheckOwnerNavigation(TSPreferences *owner,TSSettingsWindowController
     Check(shell.window.firstResponder==focused,@"Rejected selection retains the invalid field's editor");
     FinishOwnerAlert(NSAlertSecondButtonReturn);Check([shell selectCategoryIdentifier:TSSettingsCategoryPreview],@"Restored field permits the next category");
     Check(fabs(shell.contentScroll.contentView.bounds.origin.y+shell.contentScroll.contentInsets.top)<1 && shell.contentScroll.contentInsets.top>0 && shell.window.firstResponder!=shell.categoryTable,@"Successful content navigation shows the top of the pane below the toolbar without stealing sidebar focus");
+    // The four invisible-character pop-up menus beside switches share one width.
+    {
+        Check([shell selectCategoryIdentifier:TSSettingsCategoryEditor],@"Editor opens for pop-up widths");[shell.window.contentView layoutSubtreeIfNeeded];
+        NSMutableArray<NSPopUpButton *> *popups=[NSMutableArray array];NSMutableArray<NSView *> *queue=[NSMutableArray arrayWithObject:shell.contentScroll.documentView];
+        while(queue.count){NSView *v=queue.firstObject;[queue removeObjectAtIndex:0];
+            if([v.identifier hasPrefix:@"row.catalog.editor.5."] && ![v.identifier isEqual:@"row.catalog.editor.5.0"]){NSMutableArray *q=[NSMutableArray arrayWithObject:v];while(q.count){NSView *w=q.firstObject;[q removeObjectAtIndex:0];if([w isKindOfClass:NSPopUpButton.class])[popups addObject:(NSPopUpButton *)w];[q addObjectsFromArray:w.subviews];}continue;}
+            [queue addObjectsFromArray:v.subviews];}
+        BOOL equal=popups.count==4;CGFloat width=NSWidth(popups.firstObject.frame);
+        for(NSPopUpButton *p in popups)equal&=fabs(NSWidth(p.frame)-width)<0.5 && NSWidth(p.frame)+0.5>=p.intrinsicContentSize.width;
+        NSMutableString *sizes=[NSMutableString string];for(NSPopUpButton *p in popups)[sizes appendFormat:@" %.1f/%.1f(%ld items)",NSWidth(p.frame),p.intrinsicContentSize.width,(long)p.numberOfItems];
+        Check(equal,[NSString stringWithFormat:@"The four invisible-character pop-up menus share one width (%lu found:%@)",(unsigned long)popups.count,sizes]);
+    }
     // Rows revealed in the pane are below the toolbar, not under it.
     {
         NSClipView *clip=shell.contentScroll.contentView; CGFloat inset=shell.contentScroll.contentInsets.top;
