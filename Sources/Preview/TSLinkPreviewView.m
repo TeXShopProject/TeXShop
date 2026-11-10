@@ -46,6 +46,8 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         _pageSize = pageSize;
         _page = page;
         _transform = transform;
+        // The image draws its whole page; only the part inside the popup may be seen (#21).
+        self.clipsToBounds = YES;
     }
     return self;
 }
@@ -64,6 +66,10 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 - (void)drawRect:(NSRect)dirtyRect
 {
     NSRect bounds = self.bounds;
+    // Since macOS 14 a view may draw outside its bounds. The image draws the whole linked
+    // page, so without this clip, parts of the page outside the popup showed up in the
+    // preview around it while scrolling (#21).
+    NSRectClip(bounds);
     [[NSGraphicsContext currentContext] setShouldAntialias:NO];
     [[NSColor whiteColor] set];
     NSRectFill(bounds);
