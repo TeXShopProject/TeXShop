@@ -25,6 +25,7 @@
 #                                 options plus the first N {..} arguments
 #   package-args N COMMAND...     same as skip-args, except for a command that the
 #                                 document defines itself (needs auto-macros yes)
+#   package-pattern PATTERN COMMAND...  likewise, the same as skip-pattern
 #   skip-args-matching N REGEX    same, for every command whose whole name matches
 #   skip-pattern PATTERN COMMAND...  ignore the groups after these commands, in
 #                                 the order given by PATTERN, which is made of {} [] and ():
@@ -159,10 +160,11 @@ check-args  emph verbatim
 
 # ---------------------------------------------------------------------------
 # Commands of common packages. Their arguments are file names, keys, lengths,
-# colours or settings, not prose. package-args works like skip-args, but leaves
-# alone a command that the document defines itself (with \newcommand, \def and the
-# like), so that a macro of your own named, say, \unit or \num keeps its text
-# checked. (Options in [..] are always skipped; N counts the {..} arguments.)
+# colours or settings, not prose. package-args and package-pattern work like
+# skip-args and skip-pattern, but leave alone a command that the document defines
+# itself (with \newcommand, \def and the like), so that a macro of your own named,
+# say, \unit or \rowcolor keeps its text checked, also when another macro uses it.
+# (Options in [..] are always skipped; N counts the {..} arguments.)
 
 # amsmath, mathtools. amssymb defines only symbols and needs no rules.
 package-args  1  tag mathtoolsset usetagform refeq
@@ -176,7 +178,7 @@ package-args  4  DeclareGraphicsRule
 # xcolor, colortbl
 package-args  1  pagecolor cellcolor arrayrulecolor doublerulesepcolor selectcolormodel
 # \rowcolor[model]{colour}[left overhang][right overhang]
-skip-pattern  []{}[][]  rowcolor columncolor
+package-pattern  []{}[][]  rowcolor columncolor
 package-args  2  fcolorbox colorlet
 package-args  3  providecolor xdefinecolor rowcolors extractcolorspecs
 package-args  4  definecolorset convertcolorspec
@@ -194,7 +196,7 @@ package-args  1  newgeometry savegeometry loadgeometry
 # checks its definitions.
 package-args  0  fancyhead fancyfoot fancyhf
 package-args  1  fancyheadoffset fancyfootoffset
-skip-pattern  {}[]  fancypagestyle
+package-pattern  {}[]  fancypagestyle
 
 # microtype: settings, not prose. \textls[amount]{text} checks its text.
 package-args  0  textls

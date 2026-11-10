@@ -184,6 +184,8 @@
 // Like skipArgs, but only for commands that the document does not define itself.
 @property (strong) NSMutableDictionary<NSString *, NSNumber *> *packageArgs;
 @property (strong) NSMutableDictionary<NSString *, NSString *> *patterns; // command -> e.g. "[](){}"
+// Like patterns, but only for commands that the document does not define itself.
+@property (strong) NSMutableDictionary<NSString *, NSString *> *packagePatterns;
 @property (strong) NSMutableArray<TSSpellRegexRule *> *regexRules;
 @property (strong) NSMutableSet<NSString *> *checkArgs;
 @property (strong) NSMutableSet<NSString *> *definitions;
@@ -202,6 +204,7 @@
         _skipArgs = [NSMutableDictionary dictionary];
         _packageArgs = [NSMutableDictionary dictionary];
         _patterns = [NSMutableDictionary dictionary];
+        _packagePatterns = [NSMutableDictionary dictionary];
         _regexRules = [NSMutableArray array];
         _checkArgs = [NSMutableSet set];
         _definitions = [NSMutableSet set];
@@ -290,7 +293,7 @@ static TSSpellRules *ParseRules(NSString *text)
                 [rules.regexRules addObject:r];
             }
         }
-        else if ([directive isEqualToString:@"skip-pattern"]) {
+        else if ([directive isEqualToString:@"skip-pattern"] || [directive isEqualToString:@"package-pattern"]) {
             // skip-pattern PATTERN COMMAND...   where PATTERN is made of {} [] and ()
             NSString *pattern = [args count] ? args[0] : @"";
             BOOL valid = [pattern length] > 0 && [pattern length] % 2 == 0;
@@ -298,8 +301,10 @@ static TSSpellRules *ParseRules(NSString *text)
                 NSString *pair = [pattern substringWithRange:NSMakeRange(k, 2)];
                 if (![@[@"{}", @"[]", @"()"] containsObject:pair]) valid = NO;
             }
-            if (!valid || [args count] < 2) { PROBLEM(@"skip-pattern needs a pattern made of {} [] and (), and at least one command"); continue; }
-            for (NSUInteger i = 1; i < [args count]; i++) rules.patterns[args[i]] = pattern;
+            if (!valid || [args count] < 2) { PROBLEM(@"%@ needs a pattern made of {} [] and (), and at least one command", directive); continue; }
+            NSMutableDictionary<NSString *, NSString *> *target =
+                [directive isEqualToString:@"skip-pattern"] ? rules.patterns : rules.packagePatterns;
+            for (NSUInteger i = 1; i < [args count]; i++) target[args[i]] = pattern;
         }
         else if ([directive isEqualToString:@"check-args"]) {
             [rules.checkArgs addObjectsFromArray:args];
@@ -1187,6 +1192,7 @@ static NSUInteger HandleBackslash(MaskState *m, TSSpellRules *rules, NSUInteger 
         }
         if ([rules.checkArgs containsObject:name]) return pos;
         NSString *pattern = rules.patterns[name];
+        if (!pattern && ![m->definedCommands containsObject:name]) pattern = rules.packagePatterns[name];
         if (pattern) return SkipPattern(m, pos, pattern);
         // How many arguments does this command skip? Looked up once per name.
         NSNumber *cached = m->argCountCache[name];
@@ -1284,7 +1290,7 @@ static void RunMask(MaskState *m, TSSpellRules *rules)
 // Which characters of `text` the rules exclude (1 = excluded), for analysing the
 // body of a macro definition.
 static NSData *ExcludedFlags(TSSpellRules *rules, NSDictionary<NSString *, TSSpellMacro *> *macros,
-                             NSSet<NSString *> *envs, NSString *text)
+                             NSSet<NSString *> *envs, NSSet<NSString *> *defined, NSString *text)
 {
     NSUInteger n = [text length];
     unichar *src = malloc((n + 1) * sizeof(unichar));
@@ -1298,7 +1304,7 @@ static NSData *ExcludedFlags(TSSpellRules *rules, NSDictionary<NSString *, TSSpe
     ScanIndex index;
     InitScanIndex(&index, src, n);
     MaskState m = { src, out, deleted, excluded, accent, language, n, cache, names, macros, envs, &index, environmentEnds,
-                    NULL, 0, 0, 0 };
+                    NULL, 0, 0, 0, defined };
     RunMask(&m, rules);
     NSData *flags = [NSData dataWithBytes:excluded length:n];
     FreeScanIndex(&index);
@@ -1314,7 +1320,8 @@ static NSString *const kProbe = @"qzjxq";
 // \ref, inside maths, in the argument of another such macro, ...). The body is
 // run through the masking itself with the argument replaced by a probe word.
 static void RegisterMacro(TSSpellRules *rules, NSMutableDictionary<NSString *, TSSpellMacro *> *macros,
-                          NSSet<NSString *> *envs, NSString *name, NSString *kinds, NSString *body)
+                          NSSet<NSString *> *envs, NSSet<NSString *> *defined, NSString *name, NSString *kinds,
+                          NSString *body)
 {
     if ([kinds length] == 0 || [kinds length] > 9) return;
     NSUInteger skip = 0;
@@ -1341,7 +1348,7 @@ static void RegisterMacro(TSSpellRules *rules, NSMutableDictionary<NSString *, T
         for (;;) {
             NSRange r = [probe rangeOfString:kProbe options:0 range:from];
             if (r.location == NSNotFound) break;
-            if (!flags) flags = ExcludedFlags(rules, macros, envs, probe);
+            if (!flags) flags = ExcludedFlags(rules, macros, envs, defined, probe);
             found = YES;
             if (((const uint8_t *)flags.bytes)[r.location] == 0) { allExcluded = NO; break; }
             from = NSMakeRange(NSMaxRange(r), [probe length] - NSMaxRange(r));
@@ -1409,9 +1416,12 @@ static void RegisterEnvironment(TSSpellRules *rules, NSMutableSet<NSString *> *e
 
 // Read the definitions of macros and environments in the text, so that the
 // arguments of the macros that only pass them on to non-prose can be skipped.
+// With namesOnly, only collects in `defined` the names of the commands that the text defines,
+// so that the full scan, which works out what each macro does with its arguments, knows of
+// every one, also of those defined further on.
 static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
                             NSMutableDictionary<NSString *, TSSpellMacro *> *macros, NSMutableSet<NSString *> *envs,
-                            NSMutableSet<NSString *> *defined)
+                            NSMutableSet<NSString *> *defined, BOOL namesOnly)
 {
     static NSSet<NSString *> *commandDefiners, *documentDefiners, *defDefiners, *envDefiners, *documentEnvDefiners;
     static dispatch_once_t once;
@@ -1442,6 +1452,7 @@ static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
         BOOL isEnv = [envDefiners containsObject:word], isDocumentEnv = [documentEnvDefiners containsObject:word];
         if (!(isCommand || isDocument || isDef || isEnv || isDocumentEnv)) continue;
 
+        if ((isEnv || isDocumentEnv) && namesOnly) continue;
         if (isEnv || isDocumentEnv) {
             // {name}[n][default]{begin}{end}   or   {name}{spec}{begin}{end}
             NSString *envName = ReadGroup(x, &p);
@@ -1466,7 +1477,11 @@ static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
 
         NSString *name = ReadMacroName(src, n, &p);
         if (!name) continue;
-        [defined addObject:name];
+        if (namesOnly) {
+            [defined addObject:name];
+            i = p;
+            continue;
+        }
         NSMutableString *kinds = [NSMutableString string];
         BOOL supported = YES;
         if (isCommand) {
@@ -1517,7 +1532,7 @@ static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
         if (!supported) continue;
         NSString *body = ReadGroup(x, &p);
         if (!body) continue;
-        RegisterMacro(rules, macros, envs, name, kinds, body);
+        RegisterMacro(rules, macros, envs, defined, name, kinds, body);
         i = p;
     }
 }
@@ -1676,7 +1691,10 @@ static void ScanDefinitions(TSSpellRules *rules, ScanIndex *x,
     ScanIndex index;
     InitScanIndex(&index, src, n);
     NSMutableSet<NSString *> *definedCommands = [NSMutableSet set];
-    if (rules.autoMacros) ScanDefinitions(rules, &index, macros, envs, definedCommands);
+    if (rules.autoMacros) {
+        ScanDefinitions(rules, &index, macros, envs, definedCommands, YES);
+        ScanDefinitions(rules, &index, macros, envs, definedCommands, NO);
+    }
     MaskState m = { src, out, deleted, excluded, accent, language, n, argCountCache, languageNames, macros, envs,
                     &index, environmentEnds, NULL, 0, 0, 0, definedCommands };
     RunMask(&m, rules);

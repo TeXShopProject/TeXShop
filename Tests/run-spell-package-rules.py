@@ -18,7 +18,9 @@ import argparse,re,subprocess,sys,tempfile
 from source_tree import include_args
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation',choices=['package-args-as-skip-args','defined-ignored','user-rules-yield',
-                                          'no-newline','two-line-ends','no-comment'])
+                                          'no-newline','two-line-ends','no-comment','probe-without-defined',
+                                          'no-names-pass','package-pattern-as-skip-pattern','defined-pattern-ignored',
+                                          'user-pattern-yields'])
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 rules=root/'Resources/TeXShop/SpellCheck/SpellingExclusions.txt'
@@ -33,12 +35,21 @@ engine_mutations={
     'no-newline':('    if (k < n && IsNewline(src[k])) {','    if (NO) {'),
     'two-line-ends':("        while (k < n && (src[k] == ' ' || src[k] == '\\t')) k++;\n        if (k < n && (src[k] == '{' || src[k] == '[')) return k;",
                      "        while (k < n && (src[k] == ' ' || src[k] == '\\t' || IsNewline(src[k]))) k++;\n        if (k < n && (src[k] == '{' || src[k] == '[')) return k;"),
+    'probe-without-defined':('                    NULL, 0, 0, 0, defined };','                    NULL, 0, 0, 0, nil };'),
+    'no-names-pass':('        ScanDefinitions(rules, &index, macros, envs, definedCommands, YES);\n',''),
+    'defined-pattern-ignored':('if (!pattern && ![m->definedCommands containsObject:name]) pattern = rules.packagePatterns[name];',
+                               'if (!pattern) pattern = rules.packagePatterns[name];'),
+    'user-pattern-yields':('        NSString *pattern = rules.patterns[name];\n',
+                           '        NSString *pattern = [m->definedCommands containsObject:name] ? nil : rules.patterns[name];\n'),
     'no-comment':("    if (k < n && src[k] == '%') while (k < n && !IsNewline(src[k])) k++;\n",''),
 }
 if args.mutation in engine_mutations:
     old,new=engine_mutations[args.mutation]
     assert engine.count(old)==1,args.mutation
     engine=engine.replace(old,new)
+if args.mutation=='package-pattern-as-skip-pattern':
+    assert rules_text.count('\npackage-pattern  ')==2
+    rules_text=rules_text.replace('\npackage-pattern  ','\nskip-pattern  ')
 if args.mutation=='package-args-as-skip-args':
     assert rules_text.count('\npackage-args  ')>10
     rules_text=rules_text.replace('\npackage-args  ','\nskip-args  ')
@@ -79,7 +90,20 @@ conflicts=('% Commands that packages define, defined by the document itself: the
            '\n'
            '{keepqzx14 after a blank line}\n'
            '\\end{tabularx}\n'
-           '\\num{keepqzx15 used again}\n')
+           '\\num{keepqzx15 used again}\n'
+           '% A macro that uses a command the document defines, defined before or after it.\n'
+           '\\newcommand{\\phrase}[1]{\\unit{#1}}\\phrase{keepqzx16 wrapped}\n'
+           '\\newcommand{\\outer}[1]{\\phrase{#1}}\\outer{keepqzx17 twice wrapped}\n'
+           '\\newcommand{\\cell}[1]{\\tablenum{#1}}\n'
+           '\\newcommand{\\tablenum}[1]{#1}\n'
+           '\\cell{keepqzx18 defined later}\n'
+           '% A macro that uses a package command the document does not define skips its argument.\n'
+           '\\newcommand{\\measure}[1]{\\SI{#1}{m}}\\measure{skipqzx19}\n'
+           '% Package patterns yield to the document too; the user\'s own patterns do not.\n'
+           '\\newcommand{\\rowcolor}[1]{#1}\\rowcolor{keepqzx19 row}\n'
+           '\\newcommand{\\columncolor}[1]{#1}\\columncolor{keepqzx20 column}\n'
+           '\\newcommand{\\fancypagestyle}[1]{#1}\\fancypagestyle{keepqzx21 style}\n'
+           '\\renewcommand{\\cmidrule}[1]{#1}\\cmidrule{skipqzx20}\n')
 failures=[]
 with tempfile.TemporaryDirectory() as t:
     t=Path(t)
