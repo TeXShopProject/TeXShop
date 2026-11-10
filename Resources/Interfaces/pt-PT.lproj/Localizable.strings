@@ -250,7 +250,7 @@
 "Saving Documents" = "Guardar documentos";
 
 "Page Display" = "Apresentação de páginas";
-/* Page label in the corner of a link popup; %@ is the label printed on the page */
+/* Page label in the corner of a link popup; %@ is the page label given in the PDF */
 "Page %@" = "Página %@";
 
 "PDF Interaction" = "Interação com PDF";

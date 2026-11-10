@@ -282,18 +282,22 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 
 static NSString *(*TSPageViewToolTip)(id, SEL, NSView *, NSToolTipTag, NSPoint, void *);
 
+// The tool tip is left out only for the link annotation under `point`, found through the
+// PDFView, and only when PDFKit's user data is that very annotation. The user data is never
+// dereferenced, so a change in what PDFKit passes there falls back to its own tool tip.
 static NSString *TSFilteredPageViewToolTip(NSView *self, SEL selector, NSView *view, NSToolTipTag tag,
                                            NSPoint point, void *data)
 {
-    // PDFKit passes the annotation as the tool tip's user data.
-    id annotation = (__bridge id)data;
-    if ([annotation isKindOfClass:PDFAnnotation.class])
-        for (NSView *ancestor = self.superview; ancestor; ancestor = ancestor.superview)
-            if ([ancestor isKindOfClass:PDFView.class]) {
-                if ([ancestor respondsToSelector:@selector(showsLinkPreviewForAnnotation:)] &&
-                    [(PDFView *)ancestor showsLinkPreviewForAnnotation:annotation]) return nil;
-                break;
-            }
+    PDFView *pdfView = nil;
+    for (NSView *ancestor = self.superview; ancestor && !pdfView; ancestor = ancestor.superview)
+        if ([ancestor isKindOfClass:PDFView.class]) pdfView = (PDFView *)ancestor;
+    if (data && view && [pdfView respondsToSelector:@selector(showsLinkPreviewForAnnotation:)]) {
+        NSPoint location = [pdfView convertPoint:point fromView:view];
+        PDFPage *page = [pdfView pageForPoint:location nearest:NO];
+        PDFAnnotation *annotation = page ? [page annotationAtPoint:[pdfView convertPoint:location toPage:page]] : nil;
+        if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])
+            return nil;
+    }
     return TSPageViewToolTip(self, selector, view, tag, point, data);
 }
 

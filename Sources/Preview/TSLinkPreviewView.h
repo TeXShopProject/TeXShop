@@ -31,8 +31,9 @@
 
 // PDFKit shows "Go to page n", with the page's index, as a tool tip over a link. Once this
 // is installed, a PDFView that implements -showsLinkPreviewForAnnotation: and returns YES
-// gets no such tool tip, since its popup shows the target and its page label (#17).
-// Without the private class or method it relies on, tool tips stay as they are.
+// for the link under the pointer gets no such tool tip, since its popup shows the target and
+// its page label (#17). Without the private class or method it relies on, or when PDFKit
+// passes something other than that link, tool tips stay as they are.
 @interface PDFView (TSLinkPreviewToolTips)
 - (BOOL)showsLinkPreviewForAnnotation:(PDFAnnotation *)annotation;
 @end

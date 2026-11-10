@@ -251,7 +251,7 @@
 "Saving Documents" = "문서 저장";
 
 "Page Display" = "페이지 표시";
-/* Page label in the corner of a link popup; %@ is the label printed on the page */
+/* Page label in the corner of a link popup; %@ is the page label given in the PDF */
 "Page %@" = "%@ 페이지";
 
 "PDF Interaction" = "PDF 조작";

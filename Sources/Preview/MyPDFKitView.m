@@ -4448,7 +4448,7 @@ if (!self.skipLinks && !self.globalLongTerm)
                                                          transform:pageTransform];
             if (linkedPage.label.length)
                 linkPreview.pageLabel = [NSString stringWithFormat:NSLocalizedString(@"Page %@",
-                    @"Page label in the corner of a link popup; %@ is the label printed on the page"), linkedPage.label];
+                    @"Page label in the corner of a link popup; %@ is the page label given in the PDF"), linkedPage.label];
             __weak MyPDFKitView *weakView = self;
             linkPreview.usesHandTool = ^BOOL {
                 MyPDFKitView *view = weakView;
