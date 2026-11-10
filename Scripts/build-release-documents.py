@@ -5,7 +5,8 @@ Requires TeX Live (including tgpagella and pdfpages). Run after updating the
 release Markdown and About This Release.tex. An alternate notes directory lets
 documentation be prepared without merging an unfinished website branch.
 Supported Markdown: paragraphs, level 1/2 headings, flat dash lists, bold,
-inline code, bare HTTP(S) URLs, and the release-status draft comment.
+inline code, bare HTTP(S) URLs, [text](URL) links outside bold text, and the
+release-status draft comment.
 Other Markdown constructs are rejected instead of silently printed literally.
 """
 import argparse
@@ -27,12 +28,21 @@ def escaped(text):
     return ''.join(replacements.get(c, c) for c in text)
 
 
-def inline(text):
-    tokens = re.split(r'(\*\*[^*]+\*\*|`[^`]+`|https?://\S+)', text)
+LINK = r'\[[^\[\]]+\]\(https?://[^()\s]+\)'
+
+
+def inline(text, links=True):
+    pattern = (LINK + '|' if links else '') + r'\*\*[^*]+\*\*|`[^`]+`|https?://\S+'
+    tokens = re.split('(' + pattern + ')', text)
     result = []
     for token in tokens:
-        if re.fullmatch(r'\*\*[^*]+\*\*', token):
-            result.append(r'\textbf{' + inline(token[2:-2]) + '}')
+        if links and re.fullmatch(LINK, token):
+            label, url = re.fullmatch(r'\[([^\]]+)\]\((.+)\)', token).groups()
+            if any(c in url for c in '\\{}%#'):
+                raise ValueError(f'Unsupported URL characters: {url!r}')
+            result.append(r'\href{' + url + '}{' + inline(label, links=False) + '}')
+        elif re.fullmatch(r'\*\*[^*]+\*\*', token):
+            result.append(r'\textbf{' + inline(token[2:-2], links=False) + '}')
         elif re.fullmatch(r'`[^`]+`', token):
             result.append(r'\texttt{' + escaped(token[1:-1]) + '}')
         elif token.startswith(('https://', 'http://')):

@@ -24,7 +24,7 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 \subsection{Typesetting and stability}
 
 \begin{itemize}
-\item Run Experiment jobs in a separate console with independent input, cancellation and cleanup, so they do not interfere with normal typesetting. Closing or replacing an Experiment cancels only its own job.
+\item Run Experiment jobs in a separate console with independent input, cancellation and cleanup, so they do not interfere with normal typesetting. Closing or replacing an Experiment cancels only its own job (\href{https://github.com/TeXShopProject/TeXShop/issues/8}{\#8}).
 \item \textbf{Critical fix:} Fix a problem where Stop reported that typesetting had been aborted but left TeX running. Starting another typesetting job now also stops the previous job and its child processes.
 \item Handle failures to launch typesetting tools and missing command-search paths more reliably, and avoid an indefinite wait when stopping helper processes.
 \item Show a sheet when a specified TeX root file cannot be found.
@@ -47,13 +47,13 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 
 \begin{itemize}
 \item Use the recorded source-click position and the clicked split editor for SyncTeX, including clicks at the start of a line and context-menu actions. Match valid filesystem aliases to SyncTeX inputs, prefer an exact recorded path, and reject paths that cannot be resolved.
-\item Preserve the page-relative position in both PDF panes after reloading, including content insets on macOS Tahoe. Preserve it across single-page and two-page navigation on macOS 27 when native PDFKit moves the viewport; skip the workaround when PDFKit already keeps the position. Up and Down arrows scroll within an enlarged page at a consistent on-screen step and stop at its edge.
-\item Keep PDF link previews within page and viewport bounds, with surrounding text and the appropriate column visible even for destinations near an edge.
-\item Pin an internal-link preview with Option, then move the pointer freely while explaining its contents; press Escape to dismiss it. Suggested by Uwe Schmock (\#10).
-\item Size internal-link previews to the text column of the target page, so whole lines appear at the usual scale; in two-column documents only the target column is shown. A preview shrinks only when the window is too narrow, and never below half size. Suggested by Uwe Schmock (\#12).
-\item Drag a pinned internal-link preview to move it, drag its edges or corners to resize it at the same text size, and scroll over it to see more of the linked page; clicking inside it no longer dismisses it. Suggested by Uwe Schmock (\#14).
-\item Preserve the preview position when a window is closed and reopened during typesetting, including the combined source-and-preview window.
-\item Make source-file monitoring continue after automatic reloads and file replacement by external editors, including atomic saves. Preserve unsaved edits and the undo history for TeXShop’s own saves. This includes the contribution from ddd3h in PR \#1.
+\item Preserve the page-relative position in both PDF panes after reloading, including content insets on macOS Tahoe. Preserve it across single-page and two-page navigation on macOS 27 when native PDFKit moves the viewport; skip the workaround when PDFKit already keeps the position. Up and Down arrows scroll within an enlarged page at a consistent on-screen step and stop at its edge (\href{https://github.com/TeXShopProject/TeXShop/issues/9}{\#9}).
+\item Keep PDF link previews within page and viewport bounds, with surrounding text and the appropriate column visible even for destinations near an edge (\href{https://github.com/TeXShopProject/TeXShop/issues/7}{\#7}).
+\item Pin an internal-link preview with Option, then move the pointer freely while explaining its contents; press Escape to dismiss it. Suggested by Uwe Schmock (\href{https://github.com/TeXShopProject/TeXShop/issues/10}{\#10}).
+\item Size internal-link previews to the text column of the target page, so whole lines appear at the usual scale; in two-column documents only the target column is shown. A preview shrinks only when the window is too narrow, and never below half size. Suggested by Uwe Schmock (\href{https://github.com/TeXShopProject/TeXShop/issues/12}{\#12}).
+\item Drag a pinned internal-link preview to move it, drag its edges or corners to resize it at the same text size, and scroll over it to see more of the linked page; clicking inside it no longer dismisses it. Suggested by Uwe Schmock (\href{https://github.com/TeXShopProject/TeXShop/issues/14}{\#14}).
+\item Preserve the preview position when a window is closed and reopened during typesetting, including the combined source-and-preview window (\href{https://github.com/TeXShopProject/TeXShop/issues/5}{\#5}).
+\item Make source-file monitoring continue after automatic reloads and file replacement by external editors, including atomic saves. Preserve unsaved edits and the undo history for TeXShop’s own saves. This includes the contribution from ddd3h in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.
 \item When Automatic Preview Update is enabled, detect PDFs changed by other applications and reload the preview while preserving the page position and zoom. Avoid replacing unsaved PDF annotations, and retry when an external writer temporarily leaves an incomplete PDF.
 \item Move file-change checks off the main thread to keep the interface responsive.
 \item Fix a PDFKit crash during preview reloads, including changes in page count, by correcting how PDF documents are shared with the second preview pane.
@@ -69,9 +69,9 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 \item Edit menu shortcuts in Settings \(\rightarrow\) Keyboard. Search by Function finds command names; Search by Key records a key to show matching menu commands and macros, including inactive assignments. Show in Macro Editor selects the matching macro. A new shortcut is recorded by pressing it, shortcuts already in use are reported, and one or all shortcuts can be restored. Shortcuts set in KeyEquivalents.plist remain the defaults. For the same key and modifiers, menu commands take precedence over macros; macros can use keys freed by customization. Confirm before assigning a macro’s key to a menu command. The Macro Editor marks inactive shortcuts, identifies the conflicting command and key, and asks about new or changed conflicts when saving. The bundled New array macro now uses Control-Shift-Command-A.
 \item Improve opening, scrolling, and editing long source documents by laying out text where needed and reducing repeated paragraph-layout work. Limit matching-brace searches on cursor movement.
 \item Preserve explicit left alignment in right-to-left paragraphs.
-\item Use Command-0 to show the current document’s console. Press it again in the console to return to the source or PDF window that opened it; if there is no originating window, return to the source. This follows the existing Command-1 behavior.
+\item Use Command-0 to show the current document’s console. Press it again in the console to return to the source or PDF window that opened it; if there is no originating window, return to the source. This follows the existing Command-1 behavior (\href{https://github.com/TeXShopProject/TeXShop/issues/2}{\#2}).
 \item Keep the Tags menu correctly localized when reopening a document in the combined source-and-preview window.
-\item Recolor text that a line break moves out of a comment line, so that it no longer keeps the comment color. Reported by Uwe Schmock (\#16).
+\item Recolor text that a line break moves out of a comment line, so that it no longer keeps the comment color. Reported by Uwe Schmock (\href{https://github.com/TeXShopProject/TeXShop/issues/16}{\#16}).
 \end{itemize}
 
 \subsection{Opening and saving documents}
@@ -90,8 +90,8 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 \subsection{App and Dock icons}
 
 \begin{itemize}
-\item Introduce a white-frame app icon inspired by the classic circular icon, with optically centered TeX lettering and a rounded-square shape for current macOS versions.
-\item Add five Dock icon choices under Settings \(\rightarrow\) Appearance, including historical designs. The selected icon retains its original shape while TeXShop is running. After quitting, the Dock returns to the standard app icon.
+\item Introduce a white-frame app icon inspired by the classic circular icon, with optically centered TeX lettering and a rounded-square shape for current macOS versions (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
+\item Add five Dock icon choices under Settings \(\rightarrow\) Appearance, including historical designs. The selected icon retains its original shape while TeXShop is running. After quitting, the Dock returns to the standard app icon (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
 \end{itemize}
 
 \subsection{Settings and themes}
@@ -127,10 +127,12 @@ TeXShop 5.60 fixes typesetting cancellation and improves LaTeX-aware spell check
 \subsection{Help and source distribution}
 
 \begin{itemize}
-\item Update the manual’s RaiseHook example for amsmath equations with hyperref 7.01q or later, following Uwe Schmock’s proposal, and explain which link targets consume the adjustment.
-\item Point the manual and the bundled help to the current TeXShop web site, texshop.app, and identify the remaining links to Richard Koch’s pages as his former web site. Suggested by Uwe Schmock (\#15).
+\item Update the manual’s RaiseHook example for amsmath equations with hyperref 7.01q or later, following Uwe Schmock’s proposal, and explain which link targets consume the adjustment (\href{https://github.com/TeXShopProject/TeXShop/issues/6}{\#6}).
+\item Point the manual and the bundled help to the current TeXShop web site, texshop.app, and identify the remaining links to Richard Koch’s pages as his former web site. Suggested by Uwe Schmock (\href{https://github.com/TeXShopProject/TeXShop/issues/15}{\#15}).
+\item Remove Skype from the presentation chapter of the manual. Suggested by Uwe Schmock (\href{https://github.com/TeXShopProject/TeXShop/issues/11}{\#11}).
+\item Point the contact information in the credits to the current maintainer. Reported by Ralph Martin (\href{https://github.com/TeXShopProject/TeXShop/issues/13}{\#13}).
 \item Add help for LaTeX-aware spell checking, repair broken help links, and update the hidden-settings reference.
-\item Fix a resource filename that could prevent building TeXShop from an extracted source archive.
+\item Fix a resource filename that could prevent building TeXShop from an extracted source archive (\href{https://github.com/TeXShopProject/TeXShop/issues/4}{\#4}).
 \end{itemize}
 
 \subsection{Bundled libraries}

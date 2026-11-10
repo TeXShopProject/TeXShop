@@ -24,13 +24,21 @@ class ReleaseDocuments(unittest.TestCase):
                          r'\textbf{Fix:} \texttt{a\_b * [x]}')
 
     def test_unsupported_markdown_is_rejected(self):
-        for text in ('[site](https://texshop.app/)', '*emphasis*', '_emphasis_',
+        for text in ('[site](texshop.app)', '[site](https://example.org/a%20b)', '*emphasis*', '_emphasis_',
                      '**[site](https://texshop.app/)**', '- item\n  - nested',
                      '### Subheading', '1. ordered', '> quote', '```code```',
                      '| a | b |', '<!-- hidden -->', '**unclosed', 'text  ',
                      'https://example.org/{unsafe}'):
             with self.subTest(text=text), self.assertRaises(ValueError):
                 documents.markdown(text)
+
+    def test_links_to_issues_and_pull_requests(self):
+        self.assertEqual(
+            documents.inline('Fixed ([#8](https://github.com/TeXShopProject/TeXShop/issues/8)).'),
+            r'Fixed (\href{https://github.com/TeXShopProject/TeXShop/issues/8}{\#8}).')
+        self.assertEqual(
+            documents.inline('From ddd3h in [PR #1](https://github.com/TeXShopProject/TeXShop/pull/1).'),
+            r'From ddd3h in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.')
 
     def test_lists_close_before_following_paragraph(self):
         result = documents.markdown('# TeXShop 5.60\n\n- One\n- Two\n\nNext paragraph.')
