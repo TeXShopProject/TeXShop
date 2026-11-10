@@ -3,6 +3,7 @@ import re,json,html,urllib.parse
 from datetime import date
 repo=Path(__file__).resolve().parents[1];root=repo/'website';meta=json.loads((repo/'Documentation/HistoricalReleases/manifest.json').read_text())
 dates=json.loads((repo/'Documentation/HistoricalReleases/release-dates.json').read_text())
+year_inferences=json.loads((repo/'Documentation/HistoricalReleases/year-inferences.json').read_text())
 overrides=json.loads((repo/'Documentation/HistoricalReleases/requirements-overrides.json').read_text())
 projects={x['tag']:x for x in json.loads((repo/'Documentation/HistoricalReleases/project-settings-audit.json').read_text())}
 statuses=json.loads((repo/'Documentation/HistoricalReleases/release-status.json').read_text())
@@ -80,7 +81,7 @@ for ja in (False,True):
  latest_version=re.search(r'<strong>TeXShop ([^<]+)</strong>',latest_cells[0]).group(1)
  notes_path=('release-notes-ja.html' if ja else 'release-notes.html')+'#v'+latest_version
  latest_cells[0]=latest_cells[0].replace('<strong>TeXShop '+latest_version+'</strong>',f'<a href="{html.escape(notes_path,quote=True)}">TeXShop {html.escape(latest_version)}</a>')
- rows=['<tr>'+''.join(latest_cells[:5])+'</tr>']
+ rows=[('latest','', '<tr>'+''.join(latest_cells[:5])+'</tr>')]
  for r in meta:
   if r['tag'] in ('v'+latest_version,'v.'+latest_version):continue
   if not r['assets']:continue
@@ -137,16 +138,36 @@ for ja in (False,True):
   if cpu_note:
    version_contents += f'<small class="release-milestone-note">{html.escape(cpu_note["ja" if ja else "en"])}</small>'; version_class='release-version first-release-version'
   tds=[f'<div class="{version_class}">{img}<div>{version_contents}</div></div>',os,cpu,cell(app,'App',r['tag'],ja),cell(source,'Source',r['tag'],ja)]
-  rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>')
+  year=dateinfo['date'][:4] if dateinfo else year_inferences[r['tag']]['year']
+  if dateinfo and dateinfo.get('end_date',dateinfo['date'])[:4]!=year:
+   year+='–'+dateinfo['end_date'][:4]
+  rows.append((year,dateinfo['date'] if dateinfo else '', '<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(tds))+'</tr>'))
  first=first_release; first_os,first_cpu=details(first['app'],ja)
  first_stamp='2000年7月23日' if ja else 'July 23, 2000'
  first_variant='2024年再コンパイル版' if ja else 'Recompiled in 2024'
  first_name=f'<a href="{html.escape(first["history"],quote=True)}">TeXShop 1.0d1</a> <span class="release-status">（開発版）</span>' if ja else f'<a href="{html.escape(first["history"],quote=True)}">TeXShop 1.0d1</a> <span class="release-status">(development)</span>'
  first_version=f'<div class="release-version first-release-version"><img src="{html.escape(first["icon"],quote=True)}" width="48" height="48" alt="" loading="lazy"><div>{first_name}<small><time datetime="{first["release_date"]}">{first_stamp}</time></small><small class="recompiled-note">{first_variant}</small></div></div>'
  first_cells=[first_version,first_os,first_cpu,cell(first['app'],'App',first['tag'],ja),cell(first['source'],'Source',first['tag'],ja)]
- rows.append('<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(first_cells))+'</tr>')
+ rows.append((first['release_date'][:4],first['release_date'], '<tr>'+''.join(f'<td data-label="{labels[i]}">{v}</td>' for i,v in enumerate(first_cells))+'</tr>'))
  heading=''.join('<th scope="col">'+esc(x)+'</th>' for x in labels)
  back='<a href="downloads-ja.html">‹ ダウンロード</a>' if ja else '<a href="downloads.html">‹ Downloads</a>'
- main=f'<main class="archive-content downloads"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>'+''.join(rows)+'</tbody></table></main>'
+ groups={}
+ for year,release_date,row in rows:
+  groups.setdefault(year,[]).append((release_date,row))
+ def group_order(year):
+  if year=='latest':return (9999,9999)
+  bounds=year.split('–')
+  return (int(bounds[-1]),int(bounds[0]))
+ sections=[];year_links=[]
+ for year in sorted(groups,key=group_order,reverse=True):
+  section_id='releases-'+year.replace('–','-')
+  if year=='latest':label='最新バージョン' if ja else 'Latest Version'
+  else:label=year+('年' if ja else '')
+  year_links.append(f'<a href="#{section_id}">{label}</a>')
+  # Preserve version order within each year, including dates known only to the year.
+  content=''.join(row for _,row in groups[year])
+  sections.append(f'<section class="release-year" aria-labelledby="{section_id}"><h2 id="{section_id}">{label}</h2><table class="download-table legacy-downloads"><thead><tr>{heading}</tr></thead><tbody>{content}</tbody></table></section>')
+ navigation=f'<nav class="release-years" aria-label="{"年別のリリース履歴" if ja else "Release history by year"}">'+''.join(year_links)+'</nav>'
+ main=f'<main class="archive-content downloads release-history"><nav class="release-back" aria-label="{title}">{back}</nav><h1>{title}</h1>'+navigation+''.join(sections)+'</main>'
  (root/('all-releases-ja.html' if ja else 'all-releases.html')).write_text(pre+main+post)
 print('Generated',len(rows),'rows per page')
