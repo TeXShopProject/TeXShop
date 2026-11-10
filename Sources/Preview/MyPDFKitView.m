@@ -3855,7 +3855,12 @@ if (self.myDocument.useConTeXtSyncParser)
 
 - (void) fancyMouseDown: (NSEvent *)theEvent
 {
-    
+    // A click with the magnifying glass leaves a pinned popup in place, as other clicks do (#14).
+    [self keepingPinnedLinkPreview:^{ [self fancyMouseDownKeepingPinnedLinkPreview: theEvent]; }];
+}
+
+- (void) fancyMouseDownKeepingPinnedLinkPreview: (NSEvent *)theEvent
+{
     switch (currentMouseMode)
     {
         case NEW_MOUSE_MODE_MAG_GLASS:
@@ -4559,6 +4564,60 @@ if (!self.skipLinks && !self.globalLongTerm)
 {
     if (newWindow != self.window && self.handlingLink) [self doKillPopup];
     [super viewWillMoveToWindow:newWindow];
+}
+
+- (void)cleanupMarqueeKeepingPinnedLinkPreview
+{
+    [self keepingPinnedLinkPreview:^{ [self cleanupMarquee: YES]; }];
+}
+
+- (BOOL)hasPinnedLinkPreview
+{
+    return self.handlingLink == 2 && self.globalLongTerm && linkPreview.pinned && linkPreview.superview;
+}
+
+- (BOOL)pinnedLinkPreviewContainsWindowPoint:(NSPoint)point
+{
+    if (![self hasPinnedLinkPreview] || linkPreview.window != self.window) return NO;
+    NSView *documentView = linkPreview.superview;
+    NSPoint local = [documentView convertPoint:point fromView:nil];
+    return NSPointInRect(local, documentView.visibleRect) && NSPointInRect(local, linkPreview.frame);
+}
+
+- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame
+{
+    if (![self hasPinnedLinkPreview]) return nil;
+    TSLinkPreviewView *preview = linkPreview;
+    if (frame) *frame = [preview.superview convertRect:preview.frame toView:nil];
+    [preview removeFromSuperview];
+    linkPreview = nil;
+    [self doKillPopup];
+    return preview;
+}
+
+- (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame
+{
+    NSView *documentView = self.documentView;
+    if (!preview || !documentView || [self hasPinnedLinkPreview]) return;
+    if (self.handlingLink) [self doKillPopup];
+    linkPreview = preview;
+    __weak MyPDFKitView *weakView = self;
+    linkPreview.usesHandTool = ^BOOL {
+        MyPDFKitView *view = weakView;
+        return view && view->mouseMode == NEW_MOUSE_MODE_SCROLL;
+    };
+    [documentView addSubview:linkPreview];
+    linkPreview.frame = [documentView convertRect:frame fromView:nil];
+    linkPreview.pinned = YES;
+    self.handlingLink = 2;
+    self.globalLongTerm = YES;
+    [self observeLinkPreviewEvents];
+    [self keepPinnedLinkPreviewInView];
+}
+
+- (void)keepPinnedLinkPreviewInView
+{
+    if ([self hasPinnedLinkPreview]) [linkPreview keepInView];
 }
 
 - (void)doKillPopup

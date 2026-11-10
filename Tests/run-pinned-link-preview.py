@@ -13,7 +13,11 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'click-kills-pin', 'cleanup-in-click-kills-pin', 'cursor-not-restored', 'hand-selects', 'no-selection', 'move-confined', 'copy-ignores-popup', 'click-keeps-selection', 'toggle-keeps-popup', 'link-popups-per-view', 'reads-settings-again',
                                            'tool-change-kills-pin', 'flag-not-restored', 'click-keeps-focus',
                                            'no-page-label', 'label-unscaled', 'tooltip-kept', 'tooltip-always-hidden',
-                                           'tooltip-trusts-data', 'label-from-index'])
+                                           'tooltip-trusts-data', 'label-from-index',
+                                           'magnifier-kills-pin', 'switch-kills-pin', 'keep-marquee', 'contains-unpinned', 'contains-hidden-part',
+                                           'detach-keeps-state', 'attach-keeps-old-tool', 'attach-replaces-pin', 'not-kept-in-view',
+                                           'window-magnifier-bypass', 'window-resign-kills-pin', 'window-split-kills-pin', 'window-unsplit-drops-pin',
+                                           'window-layout-not-kept'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -37,7 +41,33 @@ methods = '\n'.join(method(signature) for signature in (
     '- (NSCursor *) cursorForToolWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:',
     '- (void) keepingPinnedLinkPreview:', '- (void) changeMouseMode:',
     '- (void) linkPopupsChanged', '- (BOOL) skipLinks', '- (void) setSkipLinks:',
-    '+ (void)initialize', '- (BOOL)showsLinkPreviewForAnnotation:'))
+    '+ (void)initialize', '- (BOOL)showsLinkPreviewForAnnotation:',
+    '- (void) fancyMouseDown:', '- (void) fancyMouseDownKeepingPinnedLinkPreview:',
+    '- (void)cleanupMarqueeKeepingPinnedLinkPreview', '- (BOOL)hasPinnedLinkPreview',
+    '- (BOOL)pinnedLinkPreviewContainsWindowPoint:', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
+    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView'))
+view_mutations = {
+    'magnifier-kills-pin': ('[self keepingPinnedLinkPreview:^{ [self fancyMouseDownKeepingPinnedLinkPreview: theEvent]; }];',
+                            '[self fancyMouseDownKeepingPinnedLinkPreview: theEvent];'),
+    'switch-kills-pin': ('    [self keepingPinnedLinkPreview:^{ [self cleanupMarquee: YES]; }];\n}\n- (BOOL)hasPinnedLinkPreview',
+                         '    [self cleanupMarquee: YES];\n}\n- (BOOL)hasPinnedLinkPreview'),
+    'keep-marquee': ('    [self keepingPinnedLinkPreview:^{ [self cleanupMarquee: YES]; }];\n}\n- (BOOL)hasPinnedLinkPreview',
+                     '    [self keepingPinnedLinkPreview:^{ }];\n}\n- (BOOL)hasPinnedLinkPreview'),
+    'contains-unpinned': ('    return self.handlingLink == 2 && self.globalLongTerm && linkPreview.pinned && linkPreview.superview;',
+                          '    return linkPreview.superview != nil;'),
+    'contains-hidden-part': ('    return NSPointInRect(local, documentView.visibleRect) && NSPointInRect(local, linkPreview.frame);',
+                             '    return NSPointInRect(local, linkPreview.frame);'),
+    'detach-keeps-state': ('    [preview removeFromSuperview];\n    linkPreview = nil;\n    [self doKillPopup];\n    return preview;',
+                           '    [preview removeFromSuperview];\n    return preview;'),
+    'attach-keeps-old-tool': ('        return view && view->mouseMode == NEW_MOUSE_MODE_SCROLL;\n    };\n    [documentView addSubview:linkPreview];',
+                              '        return NO;\n    };\n    [documentView addSubview:linkPreview];'),
+    'attach-replaces-pin': ('    if (!preview || !documentView || [self hasPinnedLinkPreview]) return;', '    if (!preview || !documentView) return;'),
+    'not-kept-in-view': ('    if ([self hasPinnedLinkPreview]) [linkPreview keepInView];', ''),
+}
+if args.mutation in view_mutations:
+    old, new = view_mutations[args.mutation]
+    assert methods.count(old) == 1, args.mutation
+    methods = methods.replace(old, new)
 if args.mutation == 'move-dismisses':
     methods = methods.replace('!self.skipLinks && !self.globalLongTerm', '!self.skipLinks')
 elif args.mutation == 'stale-timer':
@@ -80,7 +110,7 @@ preview_mutations = {
     'scroll-chains': ('    [self setNeedsDisplay:YES];\n}\n\n@end', '    [self setNeedsDisplay:YES];\n    [super scrollWheel:event];\n}\n\n@end'),
     'hand-selects': ('return _page && !(self.usesHandTool && self.usesHandTool());', 'return _page != nil;'),
     'no-selection': ('} else if ([self selectsText] && [self isTextAtPagePoint:pagePoint]) {', '} else if (NO) {'),
-    'move-confined': ('frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], kept, flipped);',
+    'move-confined': ('frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], [self keptSizeForFrame:frame], flipped);',
                       'frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], _startFrame.size, flipped);'),
     'click-keeps-selection': ('NSEqualRects(self.frame, _startFrame)) self.selection = nil;', 'NO) self.selection = nil;'),
     'click-keeps-focus': ('            if (self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
@@ -106,6 +136,54 @@ if args.mutation == 'link-popups-per-view':
         '    if (document)\n        document.linkPopups = !skip;\n    else\n        _skipLinks = skip;', '    _skipLinks = skip;')
 if args.mutation == 'reads-settings-again':
     methods = methods.replace('    if (!self.myDocument)\n        self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);', '    self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);')
+# The preview windows hand clicks in a pinned popup to it, keep pinned popups when another
+# window becomes main, and keep or move them when the window is split or unsplit (#14).
+preview_window = (root / 'Sources/Windows/TSPreviewWindow.m').read_text(encoding='latin1')
+split_window = (root / 'Sources/Windows/TSFullSplitWindow.m').read_text(encoding='latin1')
+window_mutations = {
+    'window-magnifier-bypass': ('preview', '          if (inPDF && ! [(MyPDFKitView *)aView pinnedLinkPreviewContainsWindowPoint: thePoint])', '          if (inPDF)'),
+    'window-resign-kills-pin': ('preview', '    [(MyPDFKitView *)self.myPDFKitView cleanupMarqueeKeepingPinnedLinkPreview];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarqueeKeepingPinnedLinkPreview];\n    [super resignMainWindow];',
+                                '    [(MyPDFKitView *)self.myPDFKitView cleanupMarquee: YES];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarquee: YES];\n    [super resignMainWindow];'),
+    'window-split-kills-pin': ('preview', '    [(MyPDFKitView *)self.myPDFKitView cleanupMarqueeKeepingPinnedLinkPreview];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarqueeKeepingPinnedLinkPreview];\n    \n',
+                               '    [(MyPDFKitView *)self.myPDFKitView cleanupMarquee: YES];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarquee: YES];\n    \n'),
+    'window-unsplit-drops-pin': ('preview', '        [(MyPDFKitView *)self.myPDFKitView attachPinnedLinkPreview: movedPreview windowFrame: movedPreviewFrame];', '        ;'),
+    'window-layout-not-kept': ('preview', '    [self keepPinnedLinkPreviewsInView];\n}', '}'),
+}
+if args.mutation in window_mutations:
+    which, old, new = window_mutations[args.mutation]
+    assert preview_window.count(old) == 1, args.mutation
+    preview_window = preview_window.replace(old, new)
+def window_method(text, signature, after=0):
+    start = text.index(signature, after)
+    return text[start:text.index('\n}\n', start) + 3]
+window_problems = []
+for name, text in (('TSPreviewWindow', preview_window), ('TSFullSplitWindow', split_window)):
+    send = window_method(text, '- (void)sendEvent:')
+    guard = send[send.index('BOOL inPDF'):send.index('fancyMouseDown: theEvent')]
+    if 'pinnedLinkPreviewContainsWindowPoint: thePoint' not in guard.split('if (inPDF')[1].split('\n')[0]:
+        window_problems.append(f'{name} hands clicks in a pinned popup to the magnifying glass')
+resign = window_method(preview_window, '- (void)resignMainWindow')
+if 'cleanupMarquee: YES' in resign or resign.count('cleanupMarqueeKeepingPinnedLinkPreview') != 2:
+    window_problems.append('another window becoming main closes pinned popups')
+first = preview_window.index('- (void) mainSplitPdfKitWindow')
+split = window_method(preview_window, '- (void) mainSplitPdfKitWindow', preview_window.index('- (void) mainSplitPdfKitWindow', first + 1))
+if 'cleanupMarquee: YES' in split or split.count('cleanupMarqueeKeepingPinnedLinkPreview') != 2:
+    window_problems.append('splitting closes pinned popups')
+detach, remove, attach = (split.find(x) for x in ('detachPinnedLinkPreviewWithWindowFrame: &movedPreviewFrame',
+    '[self.myPDFKitView2 removeFromSuperview]', 'attachPinnedLinkPreview: movedPreview windowFrame: movedPreviewFrame'))
+if not (0 <= detach < remove < attach) or 'if (! [(MyPDFKitView *)self.myPDFKitView hasPinnedLinkPreview])' not in split:
+    window_problems.append('unsplitting drops the pinned popup of the pane that goes away')
+if not split.rstrip().endswith('[self keepPinnedLinkPreviewsInView];\n}'):
+    window_problems.append('splitting does not bring pinned popups back into view')
+keep = window_method(preview_window, '- (void)keepPinnedLinkPreviewsInView')
+if keep.count('keepPinnedLinkPreviewInView]') != 4 or 'dispatch_async(dispatch_get_main_queue()' not in keep:
+    window_problems.append('pinned popups are not brought back into view after layout')
+if args.mutation in window_mutations:
+    assert window_problems, args.mutation
+    print('PASS: detected mutation ' + args.mutation + ': ' + window_problems[0])
+    raise SystemExit(0)
+assert not window_problems, window_problems
+print('PASS: preview windows keep pinned popups through the magnifying glass, other windows and splitting')
 program = r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
@@ -211,6 +289,13 @@ DOCUMENTMETHODS
 - (void)killPopup:(NSTimer *)timer;
 - (TSLinkPreviewView *)preview;
 - (void)setTestMouseMode:(NSInteger)mode;
+- (void)fancyMouseDown:(NSEvent *)event;
+- (void)cleanupMarqueeKeepingPinnedLinkPreview;
+- (BOOL)hasPinnedLinkPreview;
+- (BOOL)pinnedLinkPreviewContainsWindowPoint:(NSPoint)point;
+- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame;
+- (void)attachPinnedLinkPreview:(TSLinkPreviewView *)preview windowFrame:(NSRect)frame;
+- (void)keepPinnedLinkPreviewInView;
 @end
 @implementation MyPDFKitView
 - (TSLinkPreviewView *)preview { return linkPreview; }
@@ -669,6 +754,89 @@ static void testDocumentLinkPopups(MyPDFKitView *view, NSWindow *window, PDFDocu
     }
     [SUD removeObjectForKey:LinkPopupsKey];
 }
+
+// A pinned popup stays through clicks with the magnifying glass, another window becoming
+// main, and splitting the window; unsplitting moves it to the pane that stays (#14).
+static void testKeepingPinned(MyPDFKitView *view, MyPDFKitView *second, NSWindow *window) {
+    show(view, NSEventModifierFlagOption);
+    TSLinkPreviewView *preview = view.preview;
+    NSPoint inside = windowPoint(preview, 20, 15);
+    NSRect visible = [view.documentView convertRect:view.documentView.visibleRect toView:nil];
+    NSPoint away = NSMakePoint(NSMinX(visible) + 2, NSMinY(visible) + 2);
+    check([view pinnedLinkPreviewContainsWindowPoint:inside], @"the window finds a click in a pinned popup");
+    check(![view pinnedLinkPreviewContainsWindowPoint:away], @"the window leaves a click outside the popup to the tool");
+    for (NSNumber *mode in @[@(NEW_MOUSE_MODE_MAG_GLASS), @(NEW_MOUSE_MODE_MAG_GLASS_L)]) {
+        [view setTestMouseMode:mode.integerValue];
+        [view fancyMouseDown:mouse(window, NSEventTypeLeftMouseDown, away)];
+        check(view.preview == preview && preview.superview && view.globalLongTerm && handlers.count == 1,
+              @"a click with the magnifying glass keeps a pinned popup");
+    }
+    OverView *marquee = [[OverView alloc] initWithFrame:NSMakeRect(0, 0, 10, 10)];
+    [view.documentView addSubview:marquee]; view.overView = marquee;
+    [view cleanupMarqueeKeepingPinnedLinkPreview];
+    check(view.preview == preview && preview.superview && view.globalLongTerm && handlers.count == 1,
+          @"another window becoming main keeps a pinned popup");
+    check(!view.overView && !marquee.superview, @"another window becoming main still removes the marquee");
+
+    // The part of a popup outside the pane is not clickable there.
+    NSRect saved = preview.frame;
+    NSRect available = NSInsetRect(view.documentView.visibleRect, 5, 5);
+    preview.frame = NSOffsetRect(saved, NSMaxX(available) - NSMinX(saved) - 10, 0);
+    NSRect onScreen = [view.documentView convertRect:preview.frame toView:nil];
+    check(![view pinnedLinkPreviewContainsWindowPoint:NSMakePoint(NSMaxX(onScreen) - 3, NSMidY(onScreen))],
+          @"the hidden part of a pinned popup is not taken for a click");
+    // After the pane changes size, the popup comes back into view as far as dragging allows.
+    preview.frame = NSOffsetRect(saved, 5000, 5000);
+    [view keepPinnedLinkPreviewInView];
+    CGFloat unit = NSWidth([view.documentView convertRect:NSMakeRect(0,0,1,1) fromView:nil]);
+    NSRect shown = NSIntersectionRect(preview.frame, available);
+    check(approx(NSWidth(shown), MAX(NSWidth(saved) * 0.05, 20 * unit)) &&
+          approx(NSHeight(shown), MAX(NSHeight(saved) * 0.05, 20 * unit)) && NSEqualSizes(preview.frame.size, saved.size),
+          @"a pinned popup outside the pane comes back into view");
+    preview.frame = saved;
+    [view keepPinnedLinkPreviewInView];
+    check(NSEqualRects(preview.frame, saved), @"a popup in view stays where it is");
+
+    // Unsplitting: the popup of the pane that goes away moves to the pane that stays.
+    [view doKillPopup];
+    show(second, NSEventModifierFlagOption);
+    preview = second.preview;
+    NSRect windowFrame = NSZeroRect;
+    NSRect expected = [second.documentView convertRect:preview.frame toView:nil];
+    check([second detachPinnedLinkPreviewWithWindowFrame:&windowFrame] == preview && NSEqualRects(windowFrame, expected),
+          @"detaching gives the popup and its place in the window");
+    check(!second.preview && !preview.superview && !second.handlingLink && !second.globalLongTerm && !handlers.count,
+          @"the pane that gives up its popup is left without one");
+    check([second detachPinnedLinkPreviewWithWindowFrame:&windowFrame] == nil, @"a pane without a pinned popup has none to give");
+    [second removeFromSuperview];
+    view.frame = window.contentView.bounds; [view layoutDocumentView];
+    [view setTestMouseMode:NEW_MOUSE_MODE_SCROLL];
+    [view attachPinnedLinkPreview:preview windowFrame:windowFrame];
+    check(view.preview == preview && preview.superview == view.documentView && view.handlingLink == 2 &&
+          view.globalLongTerm && preview.pinned && handlers.count == 1, @"the pane that stays shows the moved popup pinned");
+    NSRect moved = [view.documentView convertRect:preview.frame toView:nil];
+    check(approx(NSMinX(moved), NSMinX(windowFrame)) && approx(NSMinY(moved), NSMinY(windowFrame)) &&
+          approx(NSWidth(moved), NSWidth(windowFrame)) && approx(NSHeight(moved), NSHeight(windowFrame)),
+          @"the moved popup keeps its place and size on screen");
+    check(preview.usesHandTool(), @"the moved popup follows the tool of its new pane");
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_TEXT];
+    check(!preview.usesHandTool(), @"the moved popup follows a change of tool in its new pane");
+    [window.contentView addSubview:second]; [second layoutDocumentView];
+    show(second, NSEventModifierFlagOption);
+    TSLinkPreviewView *other = second.preview;
+    NSRect otherFrame = NSZeroRect;
+    [second detachPinnedLinkPreviewWithWindowFrame:&otherFrame];
+    [view attachPinnedLinkPreview:other windowFrame:otherFrame];
+    check(view.preview == preview && !other.superview && handlers.count == 1, @"a pane keeps its own pinned popup");
+    NSEvent *(^escape)(NSEvent *) = handlers.lastObject;
+    check(escape(event(window,NSEventTypeKeyDown,0,@"\033",NSZeroPoint)) == nil && !view.preview && !preview.superview &&
+          !handlers.count, @"Escape closes the moved popup");
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_TEXT];
+    show(view, 0);
+    check([view detachPinnedLinkPreviewWithWindowFrame:&windowFrame] == nil && view.preview, @"an ordinary popup is not moved");
+    [view cleanupMarqueeKeepingPinnedLinkPreview];
+    check(!view.preview && !handlers.count, @"another window becoming main closes an ordinary popup");
+}
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     installFakeToolTip();
@@ -696,6 +864,17 @@ int main(void) { @autoreleasepool {
     testPageLabelAndToolTips(view, window, textDocument());
     testDocumentLinkPopups(view, window, doc);
     view.document = doc; [view layoutDocumentView];
+    {
+        // A second pane beside the first, as when the window is split.
+        NSRect bounds = window.contentView.bounds;
+        view.frame = NSMakeRect(0, 0, NSWidth(bounds) / 2, NSHeight(bounds));
+        MyPDFKitView *second = [[MyPDFKitView alloc] initWithFrame:NSMakeRect(NSWidth(bounds) / 2, 0, NSWidth(bounds) / 2, NSHeight(bounds))];
+        [window.contentView addSubview:second];
+        second.document = doc; second.autoScales = YES; [view layoutDocumentView]; [second layoutDocumentView];
+        testKeepingPinned(view, second, window);
+        [second removeFromSuperview];
+        view.frame = bounds; [view layoutDocumentView];
+    }
     show(view, 0);
     for (NSNumber *modifier in @[@0,@(NSEventModifierFlagOption)]) {
         NSEvent *escape = event(window,NSEventTypeKeyDown,modifier.unsignedIntegerValue,@"\033",NSZeroPoint);
@@ -841,7 +1020,16 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'unpinned-interactive':'hovering popup leaves the mouse', 'pinned-transparent':'pinned popup takes clicks',
                     'scroll-chains':'scrolling the popup leaves the preview', 'scroll-moves-frame':'scrolling leaves the popup in place', 'option-not-forwarded':'Option while shown makes',
                     'kill-leaves-view':'closing removes the popup view', 'cursor-overridden':'shows an open hand',
-                    'resize-scales':'resizing keeps the text size'}[args.mutation]
+                    'resize-scales':'resizing keeps the text size',
+                    'magnifier-kills-pin':'a click with the magnifying glass keeps a pinned popup',
+                    'switch-kills-pin':'another window becoming main keeps a pinned popup',
+                    'keep-marquee':'another window becoming main still removes the marquee',
+                    'contains-unpinned':'an ordinary popup is not moved',
+                    'contains-hidden-part':'the hidden part of a pinned popup is not taken for a click',
+                    'detach-keeps-state':'the pane that gives up its popup is left without one',
+                    'attach-keeps-old-tool':'the moved popup follows the tool of its new pane',
+                    'attach-replaces-pin':'a pane keeps its own pinned popup',
+                    'not-kept-in-view':'a pinned popup outside the pane comes back into view'}[args.mutation]
         if isinstance(expected, str): expected = (expected,)
         assert result.returncode == 1 and any(message in result.stderr for message in expected), result.stderr
         print('PASS: detected mutation ' + args.mutation)
