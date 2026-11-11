@@ -8,8 +8,6 @@
 	<string>NO</string>
 	<key>AlwaysHighlightEnabled</key>
 	<string>NO</string>
-	<key>AntiAlias</key>
-	<string>YES</string>
 	<key>AutoCompleteEnabled</key>
 	<string>NO</string>
 	<key>AutomaticDashSubstitution</key>
@@ -100,8 +98,6 @@
 	<string>XeLaTeX</string>
 	<key>DefaultScript</key>
 	<string>101</string>
-	<key>DistillerCommand</key>
-	<string>0</string>
 	<key>DocumentWindowPositionMode</key>
 	<string>1</string>
 	<key>Encoding</key>

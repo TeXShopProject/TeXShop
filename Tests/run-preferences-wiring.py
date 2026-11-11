@@ -60,8 +60,9 @@ for path in nibs:
     lang = path.parent.parent.name
     outlets, actions, labels = wiring(path)
     problems += [f'{lang}: {x}' for x in labels]
-    # scrollPressed: ("Do not scroll" with page buttons) had no effect since PDFKit and was removed.
-    problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared - {'scrollPressed:'})]
+    # Removed because they had no effect: scrollPressed: ("Do not scroll" with page buttons, since PDFKit),
+    # distillerChanged: (Apple Distiller, whose pstopdf macOS 14 removed) and antialiasChanged: (always on).
+    problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared - {'scrollPressed:', 'distillerChanged:', 'antialiasChanged:'})]
     for prop, want in sorted(base.items()):
         have = outlets.get(prop)
         if have is None:
@@ -93,7 +94,7 @@ for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xi
   assert original not in new,(p,name)
   new[original]=p.name
 missing=set(old)-set(new)
-# _scrollButton ("Do not scroll" with page buttons) had no effect since PDFKit and was removed.
-assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton'},missing
-assert len(new)==172
-print('PASS: 172 used outlets each migrate exactly once into shared panes')
+# _scrollButton ("Do not scroll" with page buttons), _distillerMatrix and _antialiasButton were removed.
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton'},missing
+assert len(new)==170
+print('PASS: 170 used outlets each migrate exactly once into shared panes')

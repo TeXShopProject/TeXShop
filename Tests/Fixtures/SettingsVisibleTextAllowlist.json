@@ -2,11 +2,9 @@
   "policy": "Exact text and presented location only. No general English-word exemption. Dynamic encoding names and ISO dictionary codes are scoped separately in the checker.",
   "languages": {
     "de": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -60,11 +58,9 @@
       {"text": "Text", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"}
     ],
     "es": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -119,11 +115,9 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "fr": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -183,11 +177,9 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "it": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -241,11 +233,9 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "ja": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -292,11 +282,9 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "ko": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -342,11 +330,9 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "nl": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -400,11 +386,9 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "pt": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -458,11 +442,9 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "pt-PT": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -510,11 +492,9 @@
       {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "ro": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -567,11 +547,9 @@
       {"text": "Text", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"}
     ],
     "zh_CN": [
-      {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Distiller", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "-dALLOWPSTRANSPARENCY", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "Distiller (Ghostscript)", "id": "label.catalog-row", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
-      {"text": "Ghostscript", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
+      {"text": "Ghostscript", "id": "heading.group.typesetting.7", "category": "typesetting", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "label.catalog-row", "category": "general", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "HTML", "id": "heading.group.preview.5", "category": "preview", "role": "label", "reason": "Technical name, command or XML element"},
       {"text": "LaTeX", "id": "choice.settings.181", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},

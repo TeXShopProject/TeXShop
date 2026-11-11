@@ -4,7 +4,6 @@
 @implementation TSPrefPreviewController
 - (instancetype)init { return [super initWithNibName:@"SettingsPreview" bundle:nil]; }
 - (IBAction)HtmlHomeChanged:(id)sender { [self.preferences HtmlHomeChanged:sender]; }
-- (IBAction)antialiasChanged:(id)sender { [self.preferences antialiasChanged:sender]; }
 - (IBAction)autoPDFChanged:(id)sender { [self.preferences autoPDFChanged:sender]; }
 - (IBAction)currentHtmlWindowPosDefault:(id)sender { [self.preferences currentHtmlWindowPosDefault:sender]; }
 - (IBAction)currentPdfWindowPosDefault:(id)sender { [self.preferences currentPdfWindowPosDefault:sender]; }

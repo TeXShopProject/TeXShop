@@ -98,8 +98,6 @@
 	<string>XeLaTeX</string>
 	<key>DefaultScript</key>
 	<string>101</string>
-	<key>DistillerCommand</key>
-	<string>0</string>
 	<key>DocumentWindowPositionMode</key>
 	<string>1</string>
 	<key>Encoding</key>

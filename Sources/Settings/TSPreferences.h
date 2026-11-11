@@ -70,7 +70,6 @@
 	IBOutlet NSButton	*_pdfWindowPosButton;		/* connected to current position button */
     IBOutlet NSMatrix    *_htmlWindowPosMatrix;        /*" connected to "HTML Window Position" "*/
     IBOutlet NSButton    *_htmlWindowPosButton;        /* connected to current position button */
-    IBOutlet NSButton       *_antialiasButton;      /* connect to antialias checkbox */
 	IBOutlet NSTextField	*_magTextField;			/*" connected to magnification text field "*/
 	IBOutlet NSTextField	*_texCommandTextField;		/*" connected to "TeX program" "*/
 	IBOutlet NSTextField	*_latexCommandTextField;	/*" connected to "Latex program" "*/
@@ -90,7 +89,6 @@
 	IBOutlet NSMatrix	*_syncMatrix;			/*" connected to "Sync Method" "*/
 	IBOutlet NSMatrix	*_defaultCommandMatrix;		/*" connected to "Default Program" "*/
 	IBOutlet NSTextField    *_engineTextField;
-	IBOutlet NSMatrix       *_distillerMatrix;              /*" connected to "Distiller" "*/
 	IBOutlet NSMatrix	*_consoleMatrix;		/*" connected to "Show Console" "*/
     IBOutlet NSTextField *tabIndentField;
     IBOutlet NSTextField *firstParagraphIndentField;
@@ -327,14 +325,12 @@
 - (IBAction)syncChanged:sender;
 // - (IBAction)defaultMetaPostChanged:sender;
 //- (IBAction)defaultBibtexChanged:sender; // comment out by Terada
-- (IBAction)distillerChanged:sender;
 - (IBAction)defaultProgramChanged:sender;
 - (IBAction)setEngine:sender;
 - (IBAction)consoleBehaviorChanged:sender;
 - (IBAction)saveRelatedButtonPressed:sender;
 - (IBAction)syncTabButtonPressed:sender;
 - (IBAction)autoPDFChanged:sender;
-- (IBAction)antialiasChanged:sender;
 - (IBAction)ptexUtfOutputPressed:sender; // zenitani 1.35 (C)
 - (IBAction)convertUTFPressed:sender;
 - (IBAction)openRootFilePressed:sender;

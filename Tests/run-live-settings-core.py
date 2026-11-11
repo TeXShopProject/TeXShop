@@ -96,11 +96,11 @@ int main(int argc,const char **argv) { @autoreleasepool {
         }
     }
     ObservedDefaults *firstLaunch=[ObservedDefaults new];
-    NSDictionary *factory=@{@"AntiAlias":@YES,@"DocumentWindowFixedPos":@"factory-position"};
-    [firstLaunch setBool:NO forKey:@"AntiAlias"];
+    NSDictionary *factory=@{@"LinkPopups":@YES,@"DocumentWindowFixedPos":@"factory-position"};
+    [firstLaunch setBool:NO forKey:@"LinkPopups"];
     TSPreferenceProfile *first=[[TSPreferenceProfile alloc]initWithProfile:@{@"TetexBinPath":@"/test/bin"} documentFont:font registeredDefaults:factory];
     [first applyToDefaults:firstLaunch];
-    check([firstLaunch boolForKey:@"AntiAlias"] && [[firstLaunch stringForKey:@"DocumentWindowFixedPos"] isEqual:@"factory-position"],"first launch registers absent factory defaults during apply");
+    check([firstLaunch boolForKey:@"LinkPopups"] && [[firstLaunch stringForKey:@"DocumentWindowFixedPos"] isEqual:@"factory-position"],"first launch registers absent factory defaults during apply");
     check([[TSPreferenceProfile alloc] initWithProfile:@{} documentFont:font]==nil,"reject missing engine path");
     check([[TSPreferenceProfile alloc] initWithProfile:@{@"TetexBinPath":@"  "} documentFont:font]==nil,"reject empty engine path");
     TSPreferenceInput *text=[[TSPreferenceInput alloc] initWithKey:@"path" kind:TSPreferenceInputText minimum:0 maximum:0 allowsEmpty:NO notification:nil];

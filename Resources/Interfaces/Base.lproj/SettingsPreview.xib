@@ -9,7 +9,6 @@
     <customObject id="-2" userLabel="File's Owner" customClass="TSPrefPreviewController">
       <connections>
         <outlet property="HtmlHomeField" destination="gxJ-rd-D1v" id="Rpi-lO-rAY" />
-        <outlet property="antialiasButton" destination="fjQ-he-GFL" id="6Ic-qg-dkP" />
         <outlet property="autoPDFButton" destination="557" id="559" />
         <outlet property="displayAsBookButton" destination="preview-cover-button" id="preview-cover-outlet" />
         <outlet property="firstPageMatrix" destination="506" id="512" />
@@ -291,17 +290,6 @@
             <rect key="frame" x="0.0" y="0.0" width="253" height="82" />
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
             <subviews>
-              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fjQ-he-GFL" identifier="settings.fjQ-he-GFL">
-                <rect key="frame" x="19" y="53" width="215" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <buttonCell key="cell" type="check" title="Smooth text and line art" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="jgT-n6-lh0">
-                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                  <font key="font" metaFont="system" />
-                </buttonCell>
-                <connections>
-                  <action selector="antialiasChanged:" target="-2" id="6WU-zq-Zod" />
-                </connections>
-              </button>
               <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-link-popups-button" identifier="settings.preview-link-popups-button">
                 <rect key="frame" x="19" y="31" width="215" height="18" />
                 <autoresizingMask key="autoresizingMask" />

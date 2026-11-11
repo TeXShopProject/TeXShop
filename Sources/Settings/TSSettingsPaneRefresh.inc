@@ -183,7 +183,6 @@
     NSInteger myTag, itemIndex;
 #endif
     [_autoPDFButton setState:[defaults boolForKey:PdfRefreshKey]];
-    [_antialiasButton setState:[defaults boolForKey:AntiAliasKey]];
     [_linkPopupsButton setState:[defaults boolForKey:LinkPopupsKey] ? NSControlStateValueOn : NSControlStateValueOff];
     [_scrollPageTurnButton setState:[defaults boolForKey:NoScrollPageTurnKey] ? NSControlStateValueOn : NSControlStateValueOff];
     magnification = [defaults floatForKey:PdfMagnificationKey];
@@ -255,8 +254,6 @@
     [_bibTeXengineField setStringValue:bibTeXengine];
     [_savePSButton setState:[defaults boolForKey:SavePSEnabledKey]];
 #ifdef MITSU_PDF
-    myTag = [defaults integerForKey:DistillerCommandKey];
-    [_distillerMatrix selectCellWithTag:myTag];
     myInteger = [defaults integerForKey:BringFrontOnTypesetKey];
     myTag = myInteger;
     [_afterTypesettingMatrix selectCellWithTag:myTag];

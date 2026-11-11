@@ -3723,7 +3723,6 @@ if ( ! self.myDocument.useConTeXtSyncParser)
 }
     
     [NSGraphicsContext saveGraphicsState];
-    BOOL shouldAntiAlias = [SUD boolForKey: AntiAliasKey];
     NSInteger interpolationValue = [SUD integerForKey: InterpolationValueKey];
     
     if (interpolationValue < 0)
@@ -3738,24 +3737,22 @@ if ( ! self.myDocument.useConTeXtSyncParser)
     //      NSImageInterpolationMedium = 4 (correct, not reversed)
     //      NSImageInterpolationHigh = 3 (correct, not reversed)
     
-    if (shouldAntiAlias) {
-        switch (interpolationValue) {
-                
-            case 0: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
-                break;
-        
-            case 1: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
-                break;
-        
-            case 2: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
-                break;
-        
-            case 4: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationMedium];
-                break;
-        
-            case 3: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-                break;
-         }
+    switch (interpolationValue) {
+            
+        case 0: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
+            break;
+    
+        case 1: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
+            break;
+    
+        case 2: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
+            break;
+    
+        case 4: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationMedium];
+            break;
+    
+        case 3: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+            break;
     }
     
 	[page drawWithBox:[self displayBox]];
