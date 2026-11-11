@@ -279,3 +279,12 @@ tiToolTipHtmlSearch           = "検索";
 "Two Pages" = "見開きページ";
 "Continuous" = "複数ページ";
 "Continuous Two Pages" = "複数見開きページ";
+
+/* Experiment preview tools */
+"ExperimentToolScroll" = "スクロール";
+"ExperimentToolSelectText" = "文字選択";
+"ExperimentToolMagnify" = "拡大鏡";
+"ExperimentToolSelectPDF" = "範囲指定";
+"ExperimentZoomOut" = "ズームアウト";
+"ExperimentZoomIn" = "ズームイン";
+"ExperimentZoomToContent" = "内容に合わせる";

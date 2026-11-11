@@ -351,6 +351,7 @@ extern NSString *PdfCopyTypeKey; // mitsu 1.29 (O)
 extern NSString *PdfExportTypeKey; // mitsu 1.29 (O)
 extern NSString *PdfMouseModeKey; // mitsu 1.29 (O)
 extern NSString *PdfKitMouseModeKey; // mitsu 1.29 (O)
+extern NSString *ExperimentMouseModeKey;
 extern NSString *PdfQuickDragKey; // mitsu 1.29 drag & drop
 extern NSString *SaveDocumentFontKey;
 extern NSString *SyntaxColoringEnabledKey;

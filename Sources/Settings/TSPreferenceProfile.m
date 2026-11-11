@@ -107,6 +107,7 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             EncodingAutoDetectionKey,
             EncodingMenuInSaveDialogKey,
             ExceptionListExcludesParametersKey,
+            ExperimentMouseModeKey,
             ExternalEditorTypesetAtStartKey,
             ExtraCommandsNotToCheckParametersKey,
             ExtraCommandsToCheckParametersKey,

@@ -28,6 +28,12 @@
 #import "OverView.h"
 
 
+// The non-blank part of a page, in page coordinates; empty for a blank or rotated page.
+NSRect TSExperimentInkBounds(PDFPage *page, PDFDisplayBox box);
+// Part of a page as image data in a Copy Format type; sets the matching pasteboard type.
+NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CGFloat pixelsPerPoint,
+                                  NSPasteboardType *pasteboardType);
+
 @interface ScrapPDFKitView : PDFView <NSToolbarDelegate, NSMenuItemValidation>
 {
 

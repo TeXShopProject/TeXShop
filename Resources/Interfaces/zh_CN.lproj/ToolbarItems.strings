@@ -206,5 +206,10 @@
     tiLabelHtmlSearch             = "搜索";
     tiPaletteLabelHtmlSearch      = "搜索";
     tiToolTipHtmlSearch           = "搜索";
-
-
+    ExperimentToolScroll = "滚动";
+    ExperimentToolSelectText = "选择文本";
+    ExperimentToolMagnify = "放大镜";
+    ExperimentToolSelectPDF = "选择 PDF";
+    ExperimentZoomOut = "缩小";
+    ExperimentZoomIn = "放大";
+    ExperimentZoomToContent = "缩放到内容";
