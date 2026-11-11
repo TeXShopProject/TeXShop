@@ -991,6 +991,8 @@ enum RootCommand
 - (void)fixColor:(NSUInteger)from :(NSUInteger)to;
 - (void)colorizeAll;
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)aTextView;
+- (void)colorizeExperimentSource;
+- (void)observeExperimentSource;
 - (void)cursorMoved: (NSTextView *)aTextView;
 - (void)removeCurrentLineColor: (NSTextView *)aTextView;
 

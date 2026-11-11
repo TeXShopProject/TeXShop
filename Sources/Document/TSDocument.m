@@ -8068,11 +8068,16 @@ if (! useFullSplitWindow) {
        self.blockCursor = NO;
    
     if (self.syntaxcolorEntry)
+    {
         [self cursorMoved: textView];
+        if (scrapTextView.window.isVisible)
+            [self cursorMoved: scrapTextView];
+    }
     else
     {
         [self removeCurrentLineColor: textView1];
         [self removeCurrentLineColor: textView2];
+        [self removeCurrentLineColor: scrapTextView];
     }
 }
 

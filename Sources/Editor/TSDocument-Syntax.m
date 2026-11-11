@@ -933,6 +933,8 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 		theRange.length = [self.textStorage length];
 		[[textView1 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
 		[[textView2 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
+		[[scrapTextView layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName
+			forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
 	}
 }
 
@@ -983,6 +985,61 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 	// Recolor the visible area only.
 	[self colorizeVisibleAreaInTextView:textView1];
 	[self colorizeVisibleAreaInTextView:textView2];
+	[self colorizeExperimentSource];
+}
+
+// The source in the Experiment window is colored like the document's source. It is
+// short, so its visible area is colored again after each change.
+- (void)colorizeExperimentSource
+{
+    if (scrapTextView.window.isVisible)
+        [self colorizeVisibleAreaInTextView:scrapTextView];
+}
+
+- (void)experimentSourceDidChange:(NSNotification *)notification
+{
+    [self colorizeExperimentSource];
+}
+
+// The active line follows the insertion point, as in the document's source.
+- (void)experimentSelectionDidChange:(NSNotification *)notification
+{
+    if (scrapTextView.window.isVisible)
+        [self cursorMoved:scrapTextView];
+}
+
+- (void)observeExperimentSource
+{
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    NSClipView *clipView = scrapTextView.enclosingScrollView.contentView;
+    [center removeObserver:self name:NSTextDidChangeNotification object:scrapTextView];
+    [center removeObserver:self name:NSTextViewDidChangeSelectionNotification object:scrapTextView];
+    [center removeObserver:self name:NSViewFrameDidChangeNotification object:scrapTextView];
+    if (clipView)
+        [center removeObserver:self name:NSViewBoundsDidChangeNotification object:clipView];
+    if (!scrapTextView)
+        return;
+    [center addObserver:self selector:@selector(experimentSourceDidChange:)
+                   name:NSTextDidChangeNotification object:scrapTextView];
+    [center addObserver:self selector:@selector(experimentSelectionDidChange:)
+                   name:NSTextViewDidChangeSelectionNotification object:scrapTextView];
+    [center addObserver:self selector:@selector(viewFrameDidChange:)
+                   name:NSViewFrameDidChangeNotification object:scrapTextView];
+    if (clipView) {
+        clipView.postsBoundsChangedNotifications = YES;
+        [center addObserver:self selector:@selector(viewBoundsDidChange:)
+                       name:NSViewBoundsDidChangeNotification object:clipView];
+    }
+}
+
+// The characters visible in any text view, as -[TSTextView visibleCharacterRange]; the
+// Experiment source is a plain text view.
+static NSRange TSVisibleCharacterRange(NSTextView *textView)
+{
+    NSLayoutManager *layoutManager = textView.layoutManager;
+    NSRect visibleRect = textView.enclosingScrollView.contentView.documentVisibleRect;
+    NSRange glyphs = [layoutManager glyphRangeForBoundingRect:visibleRect inTextContainer:textView.textContainer];
+    return [layoutManager characterRangeForGlyphRange:glyphs actualGlyphRange:NULL];
 }
 
 - (void) colorizeVisibleAreaInTextView:(NSTextView *)aTextView
@@ -1004,12 +1061,13 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // are required to prevent a crash if the splitbar
     // is moved to the extreme left.
     
-    editWidth = [aTextView theViewWidth];
+    // The width of the clip view, as -[TSTextView theViewWidth].
+    editWidth = aTextView.enclosingScrollView.contentView.bounds.size.width;
     // NSLog(@"the width is %f", editWidth);
     
     if (editWidth > 60.0)
 
-        [self colorizeText:aTextView range:[aTextView visibleCharacterRange]];
+        [self colorizeText:aTextView range:TSVisibleCharacterRange(aTextView)];
 }
 
 
@@ -1093,7 +1151,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
         {
             layoutManager = [aTextView layoutManager];
             textString = [aTextView string];
-            [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:[aTextView visibleCharacterRange]];
+            [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:TSVisibleCharacterRange(aTextView)];
 
             mySelectedLineRange = [aTextView selectedRange];
             [textString getLineStart:&startl end:&endl contentsEnd:&theEnd forRange:mySelectedLineRange];

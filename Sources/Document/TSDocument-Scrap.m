@@ -153,6 +153,8 @@
     [scrapPDFWindow setTitle: newTitle];
     [scrapWindow setHidesOnDeactivate:YES];
     [scrapWindow makeKeyAndOrderFront:sender];
+    [self observeExperimentSource];
+    [self colorizeExperimentSource];
 }
 
 
