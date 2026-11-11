@@ -8,6 +8,7 @@
 
 #import "MyPDFKitView.h"
 #import "Globals.h"
+#import "TSMagnifyingGlass.h"
 
 #define NSAppKitVersionNumber10_10_Max 1349
 
@@ -186,21 +187,13 @@
 // Routine for El Capitan
 - (void)doMagnifyingGlassElCapitanNew:(NSEvent *)theEvent level: (NSInteger)level
 {
-     NSPoint mouseLocWindow, mouseLocView, mouseLocDocumentView;
-    NSRect magRectWindow, tempRect, theOriginalRect, thePageOriginalRect;
-    NSRect pageBox;
-    float  pageHeight, pageWidth;
+     NSPoint mouseLocWindow, mouseLocView;
+    NSRect magRectWindow, thePageOriginalRect;
     BOOL cursorVisible;
-    NSInteger rotation;
-    CGFloat magWidth = 0.0, magHeight = 0.0, magOffsetX = 0.0, magOffsetY = 0.0;
+    CGFloat magWidth = 0.0, magHeight = 0.0;
     NSInteger originalLevel, currentLevel = 0.0;
-    CGFloat magScale = 2.5; // 4.0
-    magScale = 1.5;
-    NSPoint pageLowerLeft, viewLowerLeft;
-    float oldWidth, oldHeight;
-    float oldx, oldy;
+    CGFloat magScale = 1.5;
     
-    tempRect = [[self documentView] visibleRect];
     cursorVisible = YES;
     originalLevel = level+[theEvent clickCount];
     
@@ -219,60 +212,26 @@
     
     
     
-    NSPoint myLocation = [[self window] mouseLocationOutsideOfEventStream];
-    myLocation = [self convertPoint: myLocation fromView:nil];
+    // The page under the click, where the glass starts.
+    NSPoint myLocation = [self convertPoint: [theEvent locationInWindow] fromView:nil];
   
+    // The lens draws the page as the preview shows it (TSMagnifyingGlass.h), so a page
+    // whose boxes do not start at the origin, or a rotated page, shows the right place.
     PDFPage *myPage = [self pageForPoint: myLocation nearest:YES];
-    rotation = myPage.rotation;
-    pageBox = [myPage boundsForBox: kPDFDisplayBoxMediaBox];
-    pageWidth = pageBox.size.width;
-    pageHeight = pageBox.size.height;
-    
-    NSData	*myData = [myPage dataRepresentation];
-    NSImage *myImageNew = [[NSImage alloc] initWithData: myData];
-    pageLowerLeft.x = 0; pageLowerLeft.y = 0;
-    viewLowerLeft = [self convertPoint:pageLowerLeft fromPage: myPage];
-    // NSLog(@"Page LowerLeft %f and %f", viewLowerLeft.x, viewLowerLeft.y);
+    NSImage *myImageNew = TSMagnifyingGlassPageImage(myPage, self.displayBox);
     
     
     do {
         
         if ([theEvent type]==NSLeftMouseDragged || [theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
             
-            // set up the size and magScale
+            // set up the size, in points on screen, and the magnification of the screen
             if ([theEvent type]==NSEventTypeLeftMouseDown || [theEvent type]==NSEventTypeFlagsChanged) {
                 currentLevel = originalLevel; // +(([theEvent modifierFlags] & NSAlternateKeyMask)?1:0);
-                if (currentLevel <= 1) {
-                    magWidth = 150; magHeight = 100;
-                    magOffsetX = magWidth/2; magOffsetY = magHeight/2;
-                } else if (currentLevel == 2) {
-                    magWidth = 380; magHeight = 250;
-                    magOffsetX = magWidth/2; magOffsetY = magHeight/2;
-                } else {
-                    magWidth = 1800; magHeight = 1500;
-                    magOffsetX = magWidth / 2; magOffsetY = magHeight / 2;
-                }
+                NSSize lensSize = TSMagnifyingGlassSize(currentLevel);
+                magWidth = lensSize.width; magHeight = lensSize.height;
             }
-            
-            if (!([theEvent modifierFlags] & NSShiftKeyMask)) {
-                if ([theEvent modifierFlags] & NSCommandKeyMask)
-                    magScale = 2.0; 	// x4
-                else if ([theEvent modifierFlags] & NSAlternateKeyMask)
-                    magScale = 2.5; // x1.5
-                else if ([theEvent modifierFlags] & NSControlKeyMask)
-                    magScale = 3.0; // x1.5
-                else
-                    magScale = 1.5; 	// x2.5
-            } else { // shrink the image with shift key -- can be very slow
-                if ([theEvent modifierFlags] & NSCommandKeyMask)
-                    magScale = 1.0; 	// x4
-                else if ([theEvent modifierFlags] & NSAlternateKeyMask)
-                    magScale = .66666; // x1.5
-                else if ([theEvent modifierFlags] & NSControlKeyMask)
-                    magScale = .50000; // x1.5
-                else
-                    magScale = 1.5; 	// x2.5
-            }
+            magScale = TSMagnifyingGlassScale([theEvent modifierFlags]);
 
             
             // get Mouse location and check if it is with the view's rect
@@ -280,7 +239,6 @@
             if (!([theEvent type]==NSEventTypeFlagsChanged)) {
                 mouseLocWindow = [theEvent locationInWindow];
                 mouseLocView = [self convertPoint: mouseLocWindow fromView:nil];
-                mouseLocDocumentView = [[self documentView] convertPoint: mouseLocWindow fromView:nil];
             }
             // check if the mouse is in the rect
             
@@ -290,52 +248,16 @@
                     cursorVisible = NO;
                 }
                 
-                magRectWindow = NSMakeRect(mouseLocDocumentView.x-magOffsetX, mouseLocDocumentView.y-magOffsetY,
-                                           magWidth, magHeight);
-                /*
-                 theOriginalRect = NSMakeRect(mouseLocDocumentView.x - tempRect.origin.x  - magOffsetX / magScale,
-                 mouseLocDocumentView.y - tempRect.origin.y  - magOffsetY / magScale,
-                 magWidth / magScale, magHeight / magScale);
-                 */
-                theOriginalRect.origin.x = mouseLocView.x  - magOffsetX / magScale; theOriginalRect.origin.y = mouseLocView.y - magOffsetY / magScale;
-                theOriginalRect.size.width = magWidth / magScale; theOriginalRect.size.height = magHeight / magScale;
-                
-                thePageOriginalRect = [self convertRect: theOriginalRect toPage: myPage];
-                if (rotation == 90)
-                {
-                    oldWidth = thePageOriginalRect.size.width;
-                    oldHeight = thePageOriginalRect.size.height;
-                    oldx = thePageOriginalRect.origin.x;
-                    oldy = thePageOriginalRect.origin.y;
-                    
-                    thePageOriginalRect.origin.x = oldy;
-                    thePageOriginalRect.origin.y = pageWidth - oldx - thePageOriginalRect.size.width;
-    
-                    thePageOriginalRect.size.width = oldHeight;
-                    thePageOriginalRect.size.height = oldWidth;
+                // The glass follows the page under the pointer.
+                PDFPage *pageUnder = [self pageForPoint: mouseLocView nearest:YES];
+                if (pageUnder && pageUnder != myPage) {
+                    myPage = pageUnder;
+                    myImageNew = TSMagnifyingGlassPageImage(myPage, self.displayBox);
                 }
-                if (rotation == 180)
-                {
-                    thePageOriginalRect.origin.x = pageWidth - thePageOriginalRect.origin.x - thePageOriginalRect.size.width;
-                    thePageOriginalRect.origin.y = pageHeight - thePageOriginalRect.origin.y - thePageOriginalRect.size.height;
-                }
-                if (rotation == 270)
-                {
-                    oldWidth = thePageOriginalRect.size.width;
-                    oldHeight = thePageOriginalRect.size.height;
-                    oldx = thePageOriginalRect.origin.x;
-                    oldy = thePageOriginalRect.origin.y;
-                    
-                    thePageOriginalRect.origin.x = pageHeight - oldy - thePageOriginalRect.size.height;;
-                    thePageOriginalRect.origin.y = oldx;
-    
-                    thePageOriginalRect.size.width = oldHeight;
-                    thePageOriginalRect.size.height = oldWidth;
-                }
-                
-                
-                
-                
+                NSRect lensInView;
+                TSMagnifyingGlassLayout(self, myPage, self.displayBox, mouseLocView, NSMakeSize(magWidth, magHeight),
+                                        magScale, &lensInView, &thePageOriginalRect);
+                magRectWindow = [[self documentView] convertRect: lensInView fromView: self];
                 
                 [[self overView] setDrawRubberBand: NO];
                 [[self overView] setDrawMagnifiedRect: NO];

@@ -22,7 +22,8 @@ MUTATIONS = {
                      'labels:labels target:self action:@selector(changeExperimentTool:)];\n'),
     'glass-in-page-units': ('    [overlay setSelectionRect:[self.documentView convertRect:onScreen fromView:self]];',
                             '    [overlay setSelectionRect:onScreen];'),
-    'lens-page-coordinates': ('    [overlay setMagnifiedRect:drawn];', '    [overlay setMagnifiedRect:pageSource];'),
+    'lens-page-coordinates': ('    [overlay setMagnifiedRect:drawn];',
+                              '    [overlay setMagnifiedRect:[self convertRect:NSInsetRect(onScreen, NSWidth(onScreen) / 6, NSHeight(onScreen) / 6) toPage:page]];'),
     'no-tool-sync': ('    [self updateExperimentAppearance:notification];\n    [self syncExperimentToolSelection];',
                      '    [self updateExperimentAppearance:notification];'),
 }
@@ -296,13 +297,15 @@ int main(int argc, char **argv) { @autoreleasepool {
           [NSString stringWithFormat:@"Small lens on screen %@", NSStringFromRect(lensRect)]);
     Check(fabs(NSMidX(source) - NSMidX(Formula)) < 2 && fabs(NSMidY(source) - NSMidY(Formula)) < 2, @"Lens shows the page under the pointer");
     CGFloat shown = NSWidth(source) * view.scaleFactor;   // width of the source as the screen shows it
-    Check(fabs(NSWidth(lensRect) / shown - 2.5) < .05, [NSString stringWithFormat:@"Glass magnifies 250%% (%.2f)", NSWidth(lensRect) / shown]);
-    [view showExperimentMagnifierAt:over level:1 modifiers:NSEventModifierFlagCommand];
-    source = [[lens valueForKey:@"magnifiedRect"] rectValue];
-    Check(fabs(150 / (NSWidth(source) * view.scaleFactor) - 4) < .05, @"Command magnifies 400%");
-    [view showExperimentMagnifierAt:over level:1 modifiers:NSEventModifierFlagControl];
-    source = [[lens valueForKey:@"magnifiedRect"] rectValue];
-    Check(fabs(150 / (NSWidth(source) * view.scaleFactor) - 1.5) < .05, @"Control magnifies 150%");
+    // The same glass as the Preview window: 150%, Command 200%, Option 250%, Control 300% of the screen.
+    Check(fabs(NSWidth(lensRect) / shown - 1.5) < .05, [NSString stringWithFormat:@"Glass magnifies 150%% (%.2f)", NSWidth(lensRect) / shown]);
+    NSEventModifierFlags keys[] = {NSEventModifierFlagCommand, NSEventModifierFlagOption, NSEventModifierFlagControl};
+    CGFloat factors[] = {2.0, 2.5, 3.0};
+    for (int k = 0; k < 3; k++) {
+        [view showExperimentMagnifierAt:over level:1 modifiers:keys[k]];
+        source = [[lens valueForKey:@"magnifiedRect"] rectValue];
+        Check(fabs(150 / (NSWidth(source) * view.scaleFactor) - factors[k]) < .05, @"Modifier keys magnify as in the Preview window");
+    }
     [view showExperimentMagnifierAt:over level:2 modifiers:0];
     lensRect = [view convertRect:[[lens valueForKey:@"theSelectionRect"] rectValue] fromView:view.documentView];
     Check(fabs(NSWidth(lensRect) - 380) < .5, @"Double click gives the large lens");

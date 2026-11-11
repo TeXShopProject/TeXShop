@@ -45,6 +45,7 @@
 #import "TSColorSupport.h"
 #import "TSPreviewAppearance.h"
 #import "TSExperimentTheme.h"
+#import "TSMagnifyingGlass.h"
 
 
 
@@ -379,23 +380,6 @@ static NSInteger TSExperimentGroupIndex(id sender)
     return NSNotFound;
 }
 
-// Lens sizes of the document preview's magnifying glass, here in points on screen,
-// since the Experiment preview usually shows the page reduced.
-static NSSize TSExperimentLensSize(NSInteger level)
-{
-    if (level <= 1) return NSMakeSize(150, 100);
-    if (level == 2) return NSMakeSize(380, 250);
-    return NSMakeSize(1800, 1500);
-}
-
-// Magnification of what the screen shows: 250%, Command 400%, Control 150%.
-static CGFloat TSExperimentLensScale(NSEventModifierFlags flags)
-{
-    if (flags & NSEventModifierFlagCommand) return 4.0;
-    if (flags & NSEventModifierFlagControl) return 1.5;
-    return 2.5;
-}
-
 // The area of a page that is not blank, in page coordinates; empty if the page is blank.
 NSRect TSExperimentInkBounds(PDFPage *page, PDFDisplayBox box)
 {
@@ -665,25 +649,14 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 {
     PDFPage *page = [self pageForPoint:point nearest:YES];
     if (!page) return;
+    // Same glass as the Preview window (TSMagnifyingGlass.h).
     PDFDisplayBox box = self.displayBox;
     if (self.lensPage != page) {
-        // The page as the preview draws it: the box origin at zero and the rotation applied.
         self.lensPage = page;
-        NSRect bounds = [page boundsForBox:box];
-        NSSize size = page.rotation % 180 ? NSMakeSize(NSHeight(bounds), NSWidth(bounds)) : bounds.size;
-        self.lensImage = [NSImage imageWithSize:size flipped:NO drawingHandler:^BOOL(NSRect rect) {
-            [page drawWithBox:box toContext:NSGraphicsContext.currentContext.CGContext];
-            return YES;
-        }];
+        self.lensImage = TSMagnifyingGlassPageImage(page, box);
     }
-    NSSize lens = TSExperimentLensSize(level);
-    CGFloat scale = TSExperimentLensScale(flags);
-    // The view is in points on screen; the document view may be scaled.
-    NSRect source = NSMakeRect(point.x - lens.width / 2 / scale, point.y - lens.height / 2 / scale,
-                               lens.width / scale, lens.height / scale);
-    NSRect pageSource = [self convertRect:source toPage:page];
-    NSRect drawn = NSRectFromCGRect(CGRectApplyAffineTransform(NSRectToCGRect(pageSource), [page transformForBox:box]));
-    NSRect onScreen = NSMakeRect(point.x - lens.width / 2, point.y - lens.height / 2, lens.width, lens.height);
+    NSRect onScreen, drawn;
+    TSMagnifyingGlassLayout(self, page, box, point, TSMagnifyingGlassSize(level), TSMagnifyingGlassScale(flags), &onScreen, &drawn);
     OverView *overlay = [self experimentOverlayView];
     [overlay setDrawRubberBand:NO];
     [overlay setDrawMagnifiedRect:NO];
