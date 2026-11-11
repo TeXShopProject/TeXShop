@@ -227,7 +227,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "使用考虑 LaTeX 结构的拼写检查（推荐）";
 "Use legacy spell checking" = "使用传统拼写检查";
 "LaTeX Spell Checking" = "LaTeX 拼写检查";
-"Edit Key Bindings…" = "编辑按键绑定文件…";
+"Edit Key Bindings…" = "按键绑定编辑器…";
 "Key Bindings" = "按键绑定";
 "Edit Command Completion…" = "编辑命令补全文件…";
 "Command Completion" = "命令补全";
@@ -314,3 +314,20 @@
 
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "要将“%@”应用到整个文稿吗？";
+
+/* Macro editor placeholder guide */
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 所选文本，#INS# = 插入宏后的光标位置，#PASTE# = 剪贴板中的文本。AppleScript 宏还可以使用 #FILEPATH# 等占位符（参见帮助）。";
+/* Key binding editor placeholder guide */
+"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 已选字符，#INS# = 插入点，#PASTE# = 剪贴板中的文本";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "插入带注释的标记";
+"How to Use Marks…" = "如何使用标记…";
+"Inserts a mark (•) to come back to later." = "插入一个标记（•），以便稍后回到此处。";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "插入带注释的标记（•‹注释›）。所选文本将成为注释。";
+"Selects the next mark, with its note; typing replaces it." = "连同注释选中下一个标记；输入即可替换。";
+"Selects the previous mark, with its note; typing replaces it." = "连同注释选中上一个标记；输入即可替换。";
+"Deletes the next • and selects its note, if it has one." = "删除下一个 • 并选中其注释（如果有）。";
+"Deletes the previous • and selects its note, if it has one." = "删除上一个 • 并选中其注释（如果有）。";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = 标记，•‹注释› = 带注释的标记；使用“%@ › %@”在它们之间移动。";
+"Marks" = "标记";

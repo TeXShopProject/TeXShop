@@ -296,6 +296,51 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Marcatori" id="815">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Marcatori" id="816">
+                                    <items>
+                                        <menuItem title="Inserisci Marcatore" keyEquivalent="8" id="821" identifier="TSShortcut.placeBullet:.0">
+                                            <connections>
+                                                <action selector="placeBullet:" target="-1" id="828"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Inserisci marcatore con nota" keyEquivalent="8" id="822" identifier="TSShortcut.placeComment:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="placeComment:" target="-1" id="829"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="Marcatore Successivo" keyEquivalent="f" id="817" identifier="TSShortcut.doNextBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBullet:" target="-1" id="824"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Marcatore Successivo (Del)" alternate="YES" keyEquivalent="f" id="819" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBulletAndDelete:" target="-1" id="825"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Marcatore Precedente" keyEquivalent="g" id="818" identifier="TSShortcut.doPreviousBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBullet:" target="-1" id="826"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Marcatore Precedente (Del)" alternate="YES" keyEquivalent="g" id="820" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBulletAndDelete:" target="-1" id="827"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Grammatica e ortografia" id="q1b-8w-YAz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Grammatica e ortografia" id="FdC-tV-IBb">
@@ -649,48 +694,6 @@
                                             <connections>
                                                 <action selector="registerForCommandCompletion:" target="-1" id="545"/>
                                             </connections>
-                                        </menuItem>
-                                        <menuItem title="Marcatori" id="815">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Marcatori" id="816">
-                                                <items>
-                                                    <menuItem title="Marcatore Successivo" keyEquivalent="f" id="817" identifier="TSShortcut.doNextBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBullet:" target="-1" id="824"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Marcatore Successivo (Del)" alternate="YES" keyEquivalent="f" id="819" identifier="TSShortcut.doNextBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBulletAndDelete:" target="-1" id="825"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Marcatore Precedente" keyEquivalent="g" id="818" identifier="TSShortcut.doPreviousBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBullet:" target="-1" id="826"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Marcatore Precedente (Del)" alternate="YES" keyEquivalent="g" id="820" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBulletAndDelete:" target="-1" id="827"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Inserisci Marcatore" keyEquivalent="8" id="821" identifier="TSShortcut.placeBullet:.0">
-                                                        <connections>
-                                                            <action selector="placeBullet:" target="-1" id="828"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Inserisci Comment" alternate="YES" keyEquivalent="8" id="822" identifier="TSShortcut.placeComment:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="placeComment:" target="-1" id="829"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
                                         </menuItem>
                                     </items>
                                 </menu>

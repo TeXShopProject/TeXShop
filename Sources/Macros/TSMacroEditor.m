@@ -32,6 +32,11 @@
 #import "TSEncodingSupport.h"
 #import "NSText-Extras.h"
 #import "globals.h"
+#import "TSDialogButtonLayout.h"
+#import "TSColorSupport.h"
+#import "TSMarkMenu.h"
+
+static void *TSMacroContentAppearanceContext = &TSMacroContentAppearanceContext;
 
 
 @implementation TSMacroEditor
@@ -142,7 +147,56 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[item setTarget: self];
 	}
 	[self refreshShortcutConflicts];
+	// Settings may have changed the font or the themes since the editor was last open.
+	[contentTextView setFontSafely:[self contentFont]];
+	[self applyContentAppearance:nil];
 	[window makeKeyAndOrderFront: nil];
+}
+
+// BEGIN content appearance
+// The contents show in the source font, or the console font when Settings asks
+// for it, and in the text, background and insertion point colors of the theme
+// for the window's light or dark appearance.
+- (NSFont *)contentFont
+{
+    NSFont *font = nil;
+    if ([SUD boolForKey:SameFontForMacroKey])
+        font = [NSFont fontWithName:[SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
+    else {
+        id data = [SUD objectForKey:DocumentFontKey];
+        if ([data isKindOfClass:NSData.class]) {
+            @try { font = [NSUnarchiver unarchiveObjectWithData:data]; } @catch (NSException *exception) { font = nil; }
+        }
+    }
+    return [font isKindOfClass:NSFont.class] ? font : [NSFont userFontOfSize:12.0];
+}
+- (void)applyContentAppearance:(NSNotification *)notification
+{
+    if (contentTextView == nil) return;
+    NSAppearance *appearance = [window effectiveAppearance] ?: NSApp.effectiveAppearance;
+    BOOL dark = [[appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
+    NSDictionary *theme = dark ? darkColors : liteColors;
+    TSColorSupport *colors = [TSColorSupport sharedInstance];
+    // As the document's source: opaque theme colors, whatever alpha a theme stores
+    // (the Solarized themes store a transparent background), and the built-in
+    // color for a key the theme does not have.
+    NSColor *(^opaque)(NSString *) = ^NSColor *(NSString *key) {
+        return [colors colorFromDictionary:theme andKey:key] ?: [[colors colorForKey:key fromDictionary:theme isWindowDark:dark] colorWithAlphaComponent:1];
+    };
+    NSColor *text = opaque(@"EditorText");
+    contentTextView.drawsBackground = YES;
+    contentTextView.backgroundColor = opaque(@"EditorBackground");
+    contentTextView.textColor = text;
+    contentTextView.insertionPointColor = opaque(@"EditorInsertionPoint");
+    NSMutableDictionary *typing = [contentTextView.typingAttributes mutableCopy] ?: [NSMutableDictionary dictionary];
+    typing[NSForegroundColorAttributeName] = text;
+    contentTextView.typingAttributes = typing;
+}
+// END content appearance
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context == TSMacroContentAppearanceContext) [self applyContentAppearance:nil];
+    else [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (void)loadUI
@@ -156,6 +210,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
 			return;
 		}
         [self installShortcutStatus];
+        [self installListControls];
+        [self installPlaceholderNote];
+        [self layoutDialogButtons];
 
 		// set up window and UI elements
 		// [window setDelegate: self];	// not necessary if it is connected in IB
@@ -174,16 +231,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[contentTextView setAllowsUndo:YES];
 		[contentTextView setRichText:YES];
 		[contentTextView setUsesFontPanel:YES];
-       // [contentTextView setTextColor: NSColor.systemBlueColor];
-        if ([SUD boolForKey:SameFontForMacroKey])
-            {
-                NSFont   *theFont;
-
-                theFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
-                [contentTextView setFontSafely: theFont];
-           }
-        else
-            [contentTextView setFontSafely:[NSFont userFontOfSize:12.0]];
+        [contentTextView setFontSafely:[self contentFont]];
         [contentTextView setContinuousSpellCheckingEnabled: NO];
         [contentTextView setAutomaticSpellingCorrectionEnabled: NO];
         [contentTextView setSmartInsertDeleteEnabled: NO];
@@ -195,6 +243,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
         [contentTextView setAutomaticTextReplacementEnabled: NO];
 
         [scrollView setDocumentView:contentTextView];
+        [self applyContentAppearance:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applyContentAppearance:) name:SourceColorChangedNotification object:nil];
+        [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:TSMacroContentAppearanceContext];
 		// [contentTextView release];
 		// text fields
         [nameField setDelegate: [TSEncodingSupport sharedInstance]];
@@ -213,6 +264,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[testButton setEnabled: NO];
 		[deleteButton setEnabled: NO];
 		[duplicateButton setEnabled: NO];
+		[self syncListControls];
 	}
 }
 
@@ -262,6 +314,122 @@ static TSFilterMode savedFilter = kNoFilterMode;
     self.shortcutStatus.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
     self.shortcutStatus.textColor = NSColor.secondaryLabelColor;
     [host addSubview:self.shortcutStatus];
+}
+
+// The list is edited with the standard + and - buttons attached below it and an
+// action menu for the less frequent commands. The nib's five text buttons stay
+// hidden and keep their actions, titles and enabled state.
+- (void)installListControls
+{
+    if (self.listButtons) return;
+    NSView *host = [window contentView];
+    NSScrollView *list = [outlineView enclosingScrollView];
+    NSArray<NSButton *> *old = @[newItemButton, submenuButton, separatorButton, deleteButton, duplicateButton];
+    CGFloat oldBottom = CGFLOAT_MAX;
+    for (NSButton *button in old) { oldBottom = MIN(oldBottom, NSMinY([host convertRect:button.bounds fromView:button])); button.hidden = YES; }
+    const CGFloat barHeight = 24, segmentWidth = 32;
+    NSImage *more = [NSImage imageWithSystemSymbolName:@"ellipsis" accessibilityDescription:nil];
+    NSSegmentedControl *buttons = [NSSegmentedControl segmentedControlWithImages:@[[[NSImage imageNamed:NSImageNameAddTemplate] copy], [[NSImage imageNamed:NSImageNameRemoveTemplate] copy], more]
+        trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(listButtonPressed:)];
+    buttons.segmentStyle = NSSegmentStyleSmallSquare;
+    buttons.identifier = @"macro.list.buttons";
+    NSMenu *actions = [[NSMenu alloc] initWithTitle:@""];
+    actions.autoenablesItems = NO;
+    for (NSButton *source in @[submenuButton, separatorButton, duplicateButton]) {
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:source.title action:@selector(listActionChosen:) keyEquivalent:@""];
+        item.target = self; item.representedObject = source;
+        [actions addItem:item];
+    }
+    NSArray<NSString *> *labels = @[newItemButton.title, deleteButton.title, [NSString stringWithFormat:@"%@, %@, %@", submenuButton.title, separatorButton.title, duplicateButton.title]];
+    for (NSInteger segment = 0; segment < 3; segment++) {
+        [buttons setWidth:segmentWidth forSegment:segment];
+        [buttons setToolTip:labels[segment] forSegment:segment];
+        [buttons imageForSegment:segment].accessibilityDescription = labels[segment];
+    }
+    // The third segment opens the menu of the less frequent commands on a click.
+    [buttons setMenu:actions forSegment:2];
+    [buttons setShowsMenuIndicator:YES forSegment:2];
+    // The bar takes the place of the old buttons, directly below the list,
+    // which grows into the space they left.
+    NSRect listFrame = list.frame;
+    CGFloat barY = oldBottom;
+    [buttons sizeToFit];
+    buttons.frame = NSMakeRect(NSMinX(listFrame), barY, NSWidth(buttons.frame), barHeight);
+    CGFloat top = NSMaxY(listFrame);
+    listFrame.origin.y = barY + barHeight - 1; listFrame.size.height = top - listFrame.origin.y;
+    list.frame = listFrame;
+    buttons.autoresizingMask = NSViewMaxXMargin | NSViewMaxYMargin;
+    [host addSubview:buttons];
+    self.listButtons = buttons; self.listActions = actions;
+    [self syncListControls];
+}
+- (void)syncListControls
+{
+    [self.listButtons setEnabled:newItemButton.enabled forSegment:0];
+    [self.listButtons setEnabled:deleteButton.enabled forSegment:1];
+    for (NSMenuItem *item in self.listActions.itemArray) item.enabled = [item.representedObject isEnabled];
+}
+- (void)listButtonPressed:(NSSegmentedControl *)sender
+{
+    if (sender.selectedSegment > 1) return;
+    NSButton *source = sender.selectedSegment == 0 ? newItemButton : deleteButton;
+    if (source.enabled) [NSApp sendAction:source.action to:source.target from:source];
+}
+- (void)listActionChosen:(NSMenuItem *)sender
+{
+    NSButton *source = sender.representedObject;
+    if (source.enabled) [NSApp sendAction:source.action to:source.target from:source];
+}
+// What the placeholders in a macro stand for, below its contents.
+- (void)installPlaceholderNote
+{
+    if (self.placeholderNote) return;
+    NSView *host = [window contentView];
+    NSScrollView *contents = [contentTextView enclosingScrollView];
+    NSTextField *note = [NSTextField wrappingLabelWithString:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help).", @"Macro editor placeholder guide"), [TSMarkMenu markGuide]]];
+    note.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    note.textColor = NSColor.secondaryLabelColor;
+    note.identifier = @"macro.placeholders";
+    note.selectable = YES;
+    NSRect frame = contents.frame;
+    // Size the note for its narrowest width, which the window's minimum width keeps.
+    CGFloat narrowest = MIN(NSWidth(frame), 300);
+    CGFloat height = ceil([note.cell cellSizeForBounds:NSMakeRect(0, 0, narrowest, CGFLOAT_MAX)].height);
+    const CGFloat gap = 6;
+    // When the contents cannot give up the room and keep 64pt, grow the window
+    // downwards first, keeping its top edge, so the contents grow with it.
+    CGFloat deficit = height + gap + 64 - NSHeight(frame);
+    if (deficit > 0) {
+        NSRect grown = [window frame];
+        grown.origin.y -= deficit; grown.size.height += deficit;
+        [window setFrame:grown display:NO];
+        frame = contents.frame;
+    }
+    note.frame = NSMakeRect(NSMinX(frame), NSMinY(frame), NSWidth(frame), height);
+    frame.origin.y += height + gap; frame.size.height -= height + gap;
+    contents.frame = frame;
+    note.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
+    [host addSubview:note];
+    self.placeholderNote = note;
+    // The contents keep the room they had at the smallest window size.
+    NSSize smallest = [window minSize];
+    // The contents keep at least 64pt at the smallest window size.
+    smallest.height = MAX(smallest.height + height + gap, NSHeight([window frame]) - NSHeight(frame) + 64);
+    smallest.width = MAX(smallest.width, narrowest + NSWidth([window frame]) - NSWidth(frame));
+    [window setMinSize:smallest];
+    NSRect current = [window frame];
+    if (NSHeight(current) < smallest.height || NSWidth(current) < smallest.width) {
+        current.origin.y -= MAX(0, smallest.height - NSHeight(current));
+        current.size.height = MAX(NSHeight(current), smallest.height);
+        current.size.width = MAX(NSWidth(current), smallest.width);
+        [window setFrame:current display:NO];
+    }
+}
+// Save is the default button at the trailing edge with Cancel before it; Test,
+// which does not close the window, starts the row at the leading edge.
+- (void)layoutDialogButtons
+{
+    TSLayoutDialogButtons([window contentView], @[saveButton, cancelButton], @[testButton]);
 }
 
 - (void)collectShortcutCandidates:(TSMacroTreeNode *)parent path:(NSString *)path
@@ -507,6 +675,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 	NSArray *selectedNodes = [outlineController selectedNodes];
 	[deleteButton setEnabled: ([selectedNodes count] > 0)];
 	[duplicateButton setEnabled: ([selectedNodes count] > 0)];
+	[self syncListControls];
 	
 	TSMacroTreeNode *newItem = ([selectedNodes count] == 1)?[selectedNodes objectAtIndex: 0]:nil;
 	if (newItem == self.previousItem && !forceUpdate)

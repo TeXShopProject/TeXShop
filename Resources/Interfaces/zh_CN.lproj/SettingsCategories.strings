@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "控制台窗口调整";
 "group.bindings.title" = "按键绑定";
 "catalog.keyboard.0.0.title" = "使用按键绑定（新文档的默认值）";
-"catalog.keyboard.0.1.title" = "编辑按键绑定文件…";
+"catalog.keyboard.0.1.title" = "按键绑定编辑器…";
 "group.completion.title" = "命令补全";
 "catalog.keyboard.1.0.title" = "触发按键";
 "catalog.keyboard.1.1.title" = "BibDesk 补全";

@@ -3,11 +3,48 @@
 
 #import "globals.h"
 #import "TSAutoCompletionListEditor.h"
+#import "TSDialogButtonLayout.h"
+#import "TSMarkMenu.h"
 #import "GlobalData.h"
 
 #define AutoCompletionRowsType @"TSAutoCompletionRowsType"
 
 @implementation TSAutoCompletionListEditor
+
+// BEGIN editor layout
+// The guide names every placeholder a key binding can use, and the buttons
+// follow the guidelines: Remove at the leading edge, Cancel and Save trailing.
+- (void)layoutEditorWindow
+{
+    NSView *host = [window contentView];
+    NSButton *save = nil, *cancel = nil, *remove = nil;
+    NSTextField *guide = nil;
+    for (NSView *view in host.subviews) {
+        if ([view isKindOfClass:NSButton.class]) {
+            SEL action = ((NSButton *)view).action;
+            if (action == @selector(savePressed:)) save = (NSButton *)view;
+            else if (action == @selector(cancelPressed:)) cancel = (NSButton *)view;
+            else if (action == @selector(removePressed:)) remove = (NSButton *)view;
+        } else if ([view isKindOfClass:NSTextField.class] && [((NSTextField *)view).stringValue containsString:@"#SEL#"]) guide = (NSTextField *)view;
+    }
+    if (guide) {
+        guide.stringValue = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard", @"Key binding editor placeholder guide"), [TSMarkMenu markGuide]];
+        guide.cell.wraps = YES; guide.cell.lineBreakMode = NSLineBreakByWordWrapping;
+        NSRect frame = guide.frame;
+        CGFloat needed = ceil([guide.cell cellSizeForBounds:NSMakeRect(0, 0, NSWidth(frame), CGFLOAT_MAX)].height);
+        if (needed > NSHeight(frame)) {
+            // Take the extra lines from the bottom of the list above the guide.
+            CGFloat extra = needed - NSHeight(frame);
+            frame.size.height = needed; guide.frame = frame;
+            NSScrollView *list = [tableView enclosingScrollView];
+            NSRect listFrame = list.frame;
+            listFrame.origin.y += extra; listFrame.size.height -= extra;
+            list.frame = listFrame;
+        }
+    }
+    if (save && cancel) TSLayoutDialogButtons(host, @[save, cancel], remove ? @[remove] : @[]);
+}
+// END editor layout
 - (IBAction)openAutoCompletionListEditor: (id)sender
 {
 	if(!window){
@@ -18,6 +55,7 @@
 		}
 		[tableView setDraggingSourceOperationMask:NSDragOperationMove forLocal:YES];
 		[tableView registerForDraggedTypes:[NSArray arrayWithObject:AutoCompletionRowsType]];
+		[self layoutEditorWindow];
 		
 		NSString *key;
 

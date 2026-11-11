@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "Redimensionarea consolei";
 "group.bindings.title" = "Completare Automată";
 "catalog.keyboard.0.0.title" = "Folosește asocieri de taste (implicit pentru documentele noi)";
-"catalog.keyboard.0.1.title" = "Editează asocierile de taste…";
+"catalog.keyboard.0.1.title" = "Editor de asocieri de taste…";
 "group.completion.title" = "Completarea comenzilor";
 "catalog.keyboard.1.0.title" = "Tastă de activare";
 "catalog.keyboard.1.1.title" = "Completări BibDesk";

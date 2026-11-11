@@ -231,7 +231,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "Usa il controllo adatto a LaTeX (consigliato)";
 "Use legacy spell checking" = "Usa il controllo tradizionale";
 "LaTeX Spell Checking" = "Ortografia LaTeX";
-"Edit Key Bindings…" = "Modifica le associazioni dei tasti…";
+"Edit Key Bindings…" = "Editor delle associazioni dei tasti…";
 "Key Bindings" = "Associazioni dei tasti";
 "Edit Command Completion…" = "Modifica il completamento dei comandi…";
 "Command Completion" = "Completamento dei comandi";
@@ -317,3 +317,20 @@
 
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "Applicare «%@» all’intero documento?";
+
+/* Macro editor placeholder guide */
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = testo selezionato, #INS# = punto di inserimento dopo la macro, #PASTE# = testo negli appunti. Le macro AppleScript possono usare anche #FILEPATH# e altri segnaposto (vedi Aiuto).";
+/* Key binding editor placeholder guide */
+"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caratteri selezionati, #INS# = punto di inserimento, #PASTE# = testo negli appunti";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "Inserisci marcatore con nota";
+"How to Use Marks…" = "Come usare i marcatori…";
+"Inserts a mark (•) to come back to later." = "Inserisce un marcatore (•) a cui tornare più tardi.";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Inserisce un marcatore con nota (•‹nota›). Il testo selezionato diventa la nota.";
+"Selects the next mark, with its note; typing replaces it." = "Seleziona il marcatore successivo con la sua nota; digitando lo si sostituisce.";
+"Selects the previous mark, with its note; typing replaces it." = "Seleziona il marcatore precedente con la sua nota; digitando lo si sostituisce.";
+"Deletes the next • and selects its note, if it has one." = "Elimina il • successivo e ne seleziona la nota, se presente.";
+"Deletes the previous • and selects its note, if it has one." = "Elimina il • precedente e ne seleziona la nota, se presente.";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = marcatore, •‹nota› = marcatore con nota; %@ › %@ sposta tra di essi.";
+"Marks" = "Marcatori";

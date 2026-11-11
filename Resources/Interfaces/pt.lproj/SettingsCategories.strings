@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "Redimensionar console";
 "group.bindings.title" = "Auto Completar";
 "catalog.keyboard.0.0.title" = "Usar associações de teclas (padrão para novos documentos)";
-"catalog.keyboard.0.1.title" = "Editar associações de teclas…";
+"catalog.keyboard.0.1.title" = "Editor de associações de teclas…";
 "group.completion.title" = "Conclusão de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de ativação";
 "catalog.keyboard.1.1.title" = "Complemento BibDesk";

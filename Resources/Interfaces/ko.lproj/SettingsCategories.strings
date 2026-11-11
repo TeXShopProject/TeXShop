@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "콘솔창 리사이즈";
 "group.bindings.title" = "키 바인딩";
 "catalog.keyboard.0.0.title" = "키 바인딩 사용(새 문서의 기본값)";
-"catalog.keyboard.0.1.title" = "키 바인딩 파일 편집…";
+"catalog.keyboard.0.1.title" = "키 바인딩 에디터…";
 "group.completion.title" = "명령어 완성";
 "catalog.keyboard.1.0.title" = "호출 키";
 "catalog.keyboard.1.1.title" = "BibDesk 자동 완성";

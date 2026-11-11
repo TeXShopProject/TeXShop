@@ -299,6 +299,51 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="마크" id="107">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="마크" id="108">
+                                    <items>
+                                        <menuItem title="마크 삽입" keyEquivalent="8" id="113" identifier="TSShortcut.placeBullet:.0">
+                                            <connections>
+                                                <action selector="placeBullet:" target="-1" id="429"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="메모 있는 마크 삽입" keyEquivalent="8" id="114" identifier="TSShortcut.placeComment:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="placeComment:" target="-1" id="430"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="다음 마크로 이동" keyEquivalent="f" id="109" identifier="TSShortcut.doNextBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBullet:" target="-1" id="425"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="다음 마크로 이동하고 삭제" alternate="YES" keyEquivalent="f" id="110" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBulletAndDelete:" target="-1" id="427"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="이전 마크로 이동" keyEquivalent="g" id="111" identifier="TSShortcut.doPreviousBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBullet:" target="-1" id="426"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="이전 마크로 이동하고 삭제" alternate="YES" keyEquivalent="g" id="112" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBulletAndDelete:" target="-1" id="428"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="맞춤법 및 문법" id="FNH-T4-QnA">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="맞춤법 및 문법" id="vSg-de-ZZ1">
@@ -652,48 +697,6 @@
                                             <connections>
                                                 <action selector="registerForCommandCompletion:" target="-1" id="367"/>
                                             </connections>
-                                        </menuItem>
-                                        <menuItem title="마크" id="107">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="마크" id="108">
-                                                <items>
-                                                    <menuItem title="다음 마크로 이동" keyEquivalent="f" id="109" identifier="TSShortcut.doNextBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBullet:" target="-1" id="425"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="다음 마크로 이동하고 삭제" alternate="YES" keyEquivalent="f" id="110" identifier="TSShortcut.doNextBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBulletAndDelete:" target="-1" id="427"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="이전 마크로 이동" keyEquivalent="g" id="111" identifier="TSShortcut.doPreviousBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBullet:" target="-1" id="426"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="이전 마크로 이동하고 삭제" alternate="YES" keyEquivalent="g" id="112" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBulletAndDelete:" target="-1" id="428"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="마크 삽입" keyEquivalent="8" id="113" identifier="TSShortcut.placeBullet:.0">
-                                                        <connections>
-                                                            <action selector="placeBullet:" target="-1" id="429"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="코멘트 삽입" alternate="YES" keyEquivalent="8" id="114" identifier="TSShortcut.placeComment:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="placeComment:" target="-1" id="430"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
                                         </menuItem>
                                     </items>
                                 </menu>

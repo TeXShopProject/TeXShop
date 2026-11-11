@@ -7,6 +7,7 @@
 //
 
 #import "HelpDocuments.h"
+#import "TSDialogButtonLayout.h"
 #import "TSDocumentController.h"
 #import "globals.h"
 #import "TSDocument.h"
@@ -20,6 +21,14 @@
 @end
 
 @implementation HelpDocuments
+
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	// Older nibs put OK and Cancel edge to edge; space them as the guidelines describe.
+	if (packageHelpPanel) TSLayoutDialogButtonRow(packageHelpPanel);
+	if (openStyleFilePanel) TSLayoutDialogButtonRow(openStyleFilePanel);
+}
 
 - (id)init
 {

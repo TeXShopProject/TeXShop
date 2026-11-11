@@ -7,11 +7,19 @@
 //
 
 #import "TSStationery.h"
+#import "TSDialogButtonLayout.h"
 #import "globals.h"
 #import "TSDocument.h"
 
 
 @implementation TSStationery
+
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	// Older nibs put OK and Cancel edge to edge; space them as the guidelines describe.
+	if (stationeryWindow) TSLayoutDialogButtonRow(stationeryWindow);
+}
 
 - (id)init
 {
