@@ -221,7 +221,7 @@
 "catalog.preview.2.0.note" = "使用外部编辑器编辑源文件时，重新载入已更改的 PDF。";
 "group.preview.3.title" = "颜色映射";
 "catalog.preview.3.0.title" = "使用颜色映射";
-"catalog.preview.3.0.note" = "将预览中的选区作为图像复制、拖移或存储时，黑色替换为文字颜色，白色替换为背景颜色。这两种颜色在当前主题的“复制图像时的颜色映射”中设置。PDF 和 EPS 图像只应用背景颜色。";
+"catalog.preview.3.0.note" = "将预览中的选区作为图像复制、拖移或存储时，黑色替换为文字颜色，白色替换为背景颜色。这两种颜色在当前主题的“复制图像时的颜色映射”中设置。PDF 和 EPS 不受影响。";
 "catalog.preview.3.1.title" = "前景色突出:";
 "group.preview.4.title" = "复制图像";
 "catalog.preview.4.0.title" = "图像副本类型";

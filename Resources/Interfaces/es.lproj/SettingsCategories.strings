@@ -221,7 +221,7 @@
 "catalog.preview.2.0.note" = "Recargar los PDF modificados al editar la fuente en un editor externo.";
 "group.preview.3.title" = "Correspondencia de color";
 "catalog.preview.3.0.title" = "Usar correspondencia de color";
-"catalog.preview.3.0.note" = "Al copiar, arrastrar o guardar como imagen una selección de la vista previa, el negro se sustituye por el color del texto y el blanco por el color de fondo. Ambos colores se definen en «Correspondencia de color de imágenes copiadas» del tema actual. Las imágenes PDF y EPS solo reciben el color de fondo.";
+"catalog.preview.3.0.note" = "Al copiar, arrastrar o guardar como imagen una selección de la vista previa, el negro se sustituye por el color del texto y el blanco por el color de fondo. Ambos colores se definen en «Correspondencia de color de imágenes copiadas» del tema actual. Las copias PDF y EPS no se modifican.";
 "catalog.preview.3.1.title" = "Prominencia primer plano:";
 "group.preview.4.title" = "Copia de imágenes";
 "catalog.preview.4.0.title" = "Formato de imagen al copiar";

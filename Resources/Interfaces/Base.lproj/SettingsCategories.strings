@@ -221,7 +221,7 @@
 "catalog.preview.2.0.note" = "Reload changed PDFs when editing source in an external editor.";
 "group.preview.3.title" = "Color Mapping";
 "catalog.preview.3.0.title" = "Use Color Mapping";
-"catalog.preview.3.0.note" = "When you copy, drag or save a selection from the preview as an image, black becomes the text color and white the background color. Both colors are set in Color Mapping for Copied Images in the current theme. PDF and EPS images get only the background color.";
+"catalog.preview.3.0.note" = "When you copy, drag or save a selection from the preview as an image, black becomes the text color and white the background color. Both colors are set in Color Mapping for Copied Images in the current theme. PDF and EPS copies are not changed.";
 "catalog.preview.3.1.title" = "Foreground Prominence:";
 "group.preview.4.title" = "Copy Images";
 "catalog.preview.4.0.title" = "Image Copy Type";

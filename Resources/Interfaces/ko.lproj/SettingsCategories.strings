@@ -221,7 +221,7 @@
 "catalog.preview.2.0.note" = "외부 편집기로 소스를 편집할 때 변경된 PDF를 다시 불러옵니다.";
 "group.preview.3.title" = "칼러 맵";
 "catalog.preview.3.0.title" = "칼러 매핑 사용";
-"catalog.preview.3.0.note" = "미리보기에서 선택한 영역을 이미지로 복사, 드래그 또는 저장할 때 검은색을 텍스트 색으로, 흰색을 배경색으로 바꿉니다. 두 색은 사용 중인 테마의 ‘이미지 복사 시 칼러 맵’에서 설정합니다. PDF와 EPS에는 배경색만 적용됩니다.";
+"catalog.preview.3.0.note" = "미리보기에서 선택한 영역을 이미지로 복사, 드래그 또는 저장할 때 검은색을 텍스트 색으로, 흰색을 배경색으로 바꿉니다. 두 색은 사용 중인 테마의 ‘이미지 복사 시 칼러 맵’에서 설정합니다. PDF와 EPS에는 적용되지 않습니다.";
 "catalog.preview.3.1.title" = "전경색 농도";
 "group.preview.4.title" = "이미지 복사";
 "catalog.preview.4.0.title" = "복사할 이미지 형식";

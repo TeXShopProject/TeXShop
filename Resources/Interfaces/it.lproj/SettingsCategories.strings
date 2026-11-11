@@ -221,7 +221,7 @@
 "catalog.preview.2.0.note" = "Ricaricare i PDF modificati quando si usa un editor esterno per il sorgente.";
 "group.preview.3.title" = "Mappatura dei colori";
 "catalog.preview.3.0.title" = "Usa la mappatura dei colori";
-"catalog.preview.3.0.note" = "Quando copi, trascini o salvi come immagine una selezione dell’anteprima, il nero diventa il colore del testo e il bianco quello dello sfondo. I due colori si impostano in «Mappatura dei colori delle immagini copiate» del tema in uso. Le immagini PDF ed EPS ricevono solo il colore di sfondo.";
+"catalog.preview.3.0.note" = "Quando copi, trascini o salvi come immagine una selezione dell’anteprima, il nero diventa il colore del testo e il bianco quello dello sfondo. I due colori si impostano in «Mappatura dei colori delle immagini copiate» del tema in uso. Le copie PDF ed EPS non vengono modificate.";
 "catalog.preview.3.1.title" = "Risalto del primo piano:";
 "group.preview.4.title" = "Copia delle immagini";
 "catalog.preview.4.0.title" = "Copia immagine usando il formato";

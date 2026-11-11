@@ -221,7 +221,7 @@
 "catalog.preview.2.0.note" = "Reîncarcă PDF-urile modificate când sursa este editată într-un editor extern.";
 "group.preview.3.title" = "Culori";
 "catalog.preview.3.0.title" = "Folosește Culori";
-"catalog.preview.3.0.note" = "Când copiați, trageți sau salvați ca imagine o selecție din previzualizare, negrul devine culoarea textului, iar albul culoarea fundalului. Ambele culori se setează în „Culori pentru imaginile copiate” din tema curentă. Imaginile PDF și EPS primesc doar culoarea fundalului.";
+"catalog.preview.3.0.note" = "Când copiați, trageți sau salvați ca imagine o selecție din previzualizare, negrul devine culoarea textului, iar albul culoarea fundalului. Ambele culori se setează în „Culori pentru imaginile copiate” din tema curentă. Copiile PDF și EPS nu sunt modificate.";
 "catalog.preview.3.1.title" = "Proeminența Planului din Față";
 "group.preview.4.title" = "Copiază imagini";
 "catalog.preview.4.0.title" = "Tipul de Copiere a Imaginii";

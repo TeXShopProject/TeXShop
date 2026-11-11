@@ -221,7 +221,7 @@
 "catalog.preview.2.0.note" = "Recarregar os PDFs alterados ao editar o código-fonte em um editor externo.";
 "group.preview.3.title" = "Mapeamento de cores";
 "catalog.preview.3.0.title" = "Usar mapeamento de cores";
-"catalog.preview.3.0.note" = "Ao copiar, arrastar ou salvar como imagem uma seleção da pré-visualização, o preto é substituído pela cor do texto e o branco pela cor de fundo. As duas cores são definidas em “Mapeamento de cores das imagens copiadas” no tema atual. Imagens PDF e EPS recebem apenas a cor de fundo.";
+"catalog.preview.3.0.note" = "Ao copiar, arrastar ou salvar como imagem uma seleção da pré-visualização, o preto é substituído pela cor do texto e o branco pela cor de fundo. As duas cores são definidas em “Mapeamento de cores das imagens copiadas” no tema atual. Cópias em PDF e EPS não são alteradas.";
 "catalog.preview.3.1.title" = "Proeminência do texto";
 "group.preview.4.title" = "Copiar imagens";
 "catalog.preview.4.0.title" = "Tipo de cópia de imagem";

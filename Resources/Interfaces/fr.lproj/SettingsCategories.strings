@@ -221,7 +221,7 @@
 "catalog.preview.2.0.note" = "Recharger les PDF modifiés lors de l’édition de la source dans un éditeur externe.";
 "group.preview.3.title" = "Coloriage";
 "catalog.preview.3.0.title" = "Utiliser le coloriage";
-"catalog.preview.3.0.note" = "Lorsque vous copiez, faites glisser ou enregistrez une sélection de l’aperçu sous forme d’image, le noir devient la couleur du texte et le blanc celle du fond. Ces deux couleurs se règlent dans « Coloriage des images copiées » du thème actuel. Les images PDF et EPS ne reçoivent que la couleur de fond.";
+"catalog.preview.3.0.note" = "Lorsque vous copiez, faites glisser ou enregistrez une sélection de l’aperçu sous forme d’image, le noir devient la couleur du texte et le blanc celle du fond. Ces deux couleurs se règlent dans « Coloriage des images copiées » du thème actuel. Les copies PDF et EPS ne sont pas modifiées.";
 "catalog.preview.3.1.title" = "Proéminence du premier plan";
 "group.preview.4.title" = "Copie d’images";
 "catalog.preview.4.0.title" = "Type de copie de l'image";
