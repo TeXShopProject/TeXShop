@@ -1484,68 +1484,13 @@ if ((atLeastHighSierra) && (self.PDFFlashFix))
 
 - (void)saveLocation
 {
-    splitTheIndex = [self index];
-    splitVisibleRect = [[self documentView] visibleRect];
-    splitFullRect = [[self documentView] bounds];
+    splitPlace = TSPreviewPaneCapture(self);
 }
-
-
-- (double)returnHeight
-{
-    return splitFullRect.size.height;
-}
-
-- (void)writeLocation: (NSInteger)anIndex andFullRect: (NSRect) fullRect andVisibleRect: (NSRect) visibleRect
-{
-    splitTheIndex = anIndex;
-    splitVisibleRect = visibleRect;
-    splitFullRect = fullRect;
-}
-
-- (void)readLocation: (NSInteger *) anIndex andFullRect: (NSRect *) fullRect andVisibleRect: (NSRect *) visibleRect
-{
-    anIndex = &splitTheIndex;
-    fullRect = &splitFullRect;
-    visibleRect = &splitVisibleRect;
-}
-
 
 - (void)restoreLocation
 {
-    NSRect      newFullRect;
-    NSInteger   difference;
-
-    [self moveSplitToCorrectSpot: splitTheIndex];
-    
-    newFullRect = [[self documentView] bounds];
-    difference = newFullRect.size.height - splitFullRect.size.height;
-   
-    splitVisibleRect.origin.y = splitVisibleRect.origin.y + difference - 1;
-    [[self documentView] scrollRectToVisible: splitVisibleRect];
-        
+    TSPreviewPaneRestore(self, splitPlace);
 }
-
-- (void)saveLocationLimited
-{
-    splitVisibleRectLimited = [[self documentView] visibleRect];
-}
-
-
-
-- (void)restoreLocationLimited
-{
-    NSRect      topRect;
-    
-  //  topRect = splitVisibleRectLimited;
-  //  [[self documentView] scrollRectToVisible: topRect];
-  //  NSLog(@"the origin is %f and then %f", topRect.origin.x, topRect.origin.y);
-  
-  [[self documentView] scrollRectToVisible: splitVisibleRectLimited];
-        
-}
-
-
-
 
 
 - (void)removeHideView1: (NSTimer *) theTimer
