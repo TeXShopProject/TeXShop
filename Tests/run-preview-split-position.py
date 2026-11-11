@@ -11,7 +11,8 @@ from production_fragments import closing_brace, verify_embedded
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['first-not-restored', 'switch-not-swapped', 'shift-not-same',
-                                           'second-not-saved', 'edge-ignores-flip'])
+                                           'second-not-saved', 'edge-ignores-flip',
+                                           'deferred-restore', 'restore-before-layout'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 window_source = (root / 'Sources/Windows/TSPreviewWindow.m').read_text(encoding='latin1')
@@ -35,11 +36,21 @@ fragments = [('complete method: ' + text.split('\n')[0], source, text)
 for problem, old, new in (
         ('first-not-restored', 'TSPreviewPaneRestore(firstView, firstTop);', ''),
         ('switch-not-swapped', 'TSPreviewPaneRestore(self.myPDFKitView, lower);', 'TSPreviewPaneRestore(self.myPDFKitView, upper);'),
-        ('shift-not-same', 'TSPreviewPaneRestore(secondView, firstTop);', ''),
-        ('second-not-saved', '[secondView saveLocation];', '')):
+        ('shift-not-same', 'TSPreviewPaneRestore(secondView, firstTop);', ';'),
+        ('second-not-saved', '[secondView saveLocation];', ''),
+        ('restore-before-layout', '    [self.pdfKitSplitView adjustSubviews];\n    [self.pdfKitSplitView layoutSubtreeIfNeeded];\n    TSPreviewPaneRestore', '    TSPreviewPaneRestore')):
     if args.mutation == problem:
         assert split.count(old) + switch.count(old) >= 1, problem
         split, switch = split.replace(old, new), switch.replace(old, new)
+if args.mutation == 'deferred-restore':
+    # Putting the place back once more later undoes what the user did in between.
+    old = '    TSPreviewPaneRestore(firstView, firstTop);\n    if (self.windowIsSplit)'
+    assert split.count(old) == 1
+    split = split.replace(old, '    TSPreviewPaneRestore(firstView, firstTop);\n'
+                          '    dispatch_async(dispatch_get_main_queue(), ^{ TSPreviewPaneRestore(firstView, firstTop); });\n    if (self.windowIsSplit)')
+    old = '        TSPreviewPaneRestore(self.myPDFKitView2, upper);\n'
+    assert switch.count(old) == 1
+    switch = switch.replace(old, old + '        dispatch_async(dispatch_get_main_queue(), ^{ TSPreviewPaneRestore(self.myPDFKitView, lower); });\n')
 if args.mutation == 'edge-ignores-flip':
     old = 'CGFloat top = clip.isFlipped ? NSMinY(bounds) + insets.top : NSMaxY(bounds) - insets.top;'
     assert header_source.count(old) == 1
@@ -243,6 +254,29 @@ int main(int argc, char **argv) { @autoreleasepool {
         split(p, 0);
         NSRect b = clip.bounds, d = clip.documentRect;
         check(fabs(NSMaxY(b) - NSMaxY(d)) < 1, @"unsplitting at the end of the document shows the end without a gap");
+        [p.window close];
+    }
+    {   // Scrolling or switching right after splitting, before the run loop turns again, is kept.
+        Preview p = makePreview(doc, 1, 3);
+        scrollTo(p.first, 1, 500); settle(p.window);
+        flags = 0; [p.window splitPdfKitWindow:nil];
+        scrollTo(p.first, 4, 300);
+        TSPreviewPanePlace moved = topOf(p.first);
+        settle(p.window);
+        check(near(distanceFromTop(p.first, moved)), [NSString stringWithFormat:@"scrolling right after splitting is kept (%.2f)", distanceFromTop(p.first, moved)]);
+        [p.window splitPdfKitWindow:nil];
+        scrollTo(p.first, 2, 400);
+        moved = topOf(p.first);
+        settle(p.window);
+        check(near(distanceFromTop(p.first, moved)), @"scrolling right after unsplitting is kept");
+        [p.window splitPdfKitWindow:nil]; settle(p.window);
+        scrollTo(p.second, 5, 300); settle(p.window);
+        TSPreviewPanePlace upper = topOf(p.first), lower = topOf(p.second);
+        [p.window switchViews];
+        [p.window switchViews];
+        settle(p.window);
+        check(near(distanceFromTop(p.first, upper)) && near(distanceFromTop(p.second, lower)),
+              [NSString stringWithFormat:@"switching twice in a row returns both panes (%.2f, %.2f)", distanceFromTop(p.first, upper), distanceFromTop(p.second, lower)]);
         [p.window close];
     }
     printf("PASS: %lu checks\n", (unsigned long)checks);

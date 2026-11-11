@@ -1228,8 +1228,11 @@ extern NSPanel *pageNumberWindow;
   
  // ADJUST SCROLLING OF SPLIT OR UNSPLIT WINDOW
     
+    // Let the split view give the panes their final sizes first, so that no later
+    // layout moves the places put back below.
+    [self.pdfKitSplitView adjustSubviews];
+    [self.pdfKitSplitView layoutSubtreeIfNeeded];
     TSPreviewPaneRestore(firstView, firstTop);
-    TSPreviewPanePlace secondTop = {0};
     if (self.windowIsSplit)
         {
             if (secondView.locationSaved)
@@ -1237,15 +1240,7 @@ extern NSPanel *pageNumberWindow;
             // Shift-split: the second pane shows the same place as the first.
             if (topToBottom)
                 TSPreviewPaneRestore(secondView, firstTop);
-            secondTop = TSPreviewPaneCapture(secondView);
         }
-    // PDFKit may lay the panes out again once more before they are drawn.
-    BOOL wasSplit = self.windowIsSplit;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.windowIsSplit != wasSplit) return;
-        TSPreviewPaneRestore(firstView, firstTop);
-        if (wasSplit) TSPreviewPaneRestore(secondView, secondTop);
-    });
     
     // Otherwise each reload would replace the shared document's rendering
     // properties while PDFKit draws it in the first view.
