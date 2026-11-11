@@ -5436,6 +5436,11 @@ if ( ! skipTextWindow) {
 // added by Terada (- (void)resetHighlight:)
 - (void)resetHighlight:(id)sender
 {
+    // While text is composed, the brace highlight stays and nothing is colored. The
+    // change of the selection that commits or removes the composed text schedules
+    // this method again.
+    if ([self coloringWaitsForMarkedTextIn:textView])
+        return;
     
   // item added by Koch in August, 2018
     
@@ -5455,10 +5460,6 @@ if ( ! skipTextWindow) {
         braceHighlighting = NO;
     }
     
-	 if([textView1 hasMarkedText] || [textView2 hasMarkedText])
-		return;
-    
-  	
 	if(windowIsSplit){
 		[self colorizeVisibleAreaInTextView:textView1];
 		[self colorizeVisibleAreaInTextView:textView2];
@@ -5615,6 +5616,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 // added by Terada (- (void)textViewDidChangeSelection:(NSNotification *)inNotification)
 - (void)textViewDidChangeSelection:(NSNotification *)inNotification
 {
+	[self colorAfterMarkedTextEnds];
 	[self matchBracesForSelectionInTextView:nil];
 }
 
