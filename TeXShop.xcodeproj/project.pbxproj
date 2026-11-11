@@ -138,6 +138,7 @@
 		407881810519249A006979EA /* TSPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC768C40010B1D17F000001 /* TSPreferences.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881820519249A006979EA /* globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AC768C80010B25E7F000001 /* globals.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881830519249A006979EA /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E7EAC2001D35FA7F000001 /* TSAppDelegate.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
+		D1FD5E9C1699033F4DD1FA82 /* TSDialogButtonLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EFF8B56412A39CCA9BB4FE4 /* TSDialogButtonLayout.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881840519249A006979EA /* TSWindowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E5E43A003E251B7F000001 /* TSWindowManager.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881860519249A006979EA /* TSLaTeXPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8EA8F01FF59A101DF2474 /* TSLaTeXPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881880519249A006979EA /* TSToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5ECC3210214678B01DF2474 /* TSToolbarController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -412,6 +413,8 @@
 		00CFF0F2000AD1547F000001 /* TSPreviewWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSPreviewWindow.m; sourceTree = "<group>"; };
 		00CFF0F5000AD1F27F000001 /* TSPrintView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSPrintView.h; sourceTree = "<group>"; };
 		00CFF0F6000AD1F27F000001 /* TSPrintView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSPrintView.m; sourceTree = "<group>"; };
+		3B5450D753C8B6DC243DDB55 /* TSDialogButtonLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDialogButtonLayout.h; sourceTree = "<group>"; };
+		5EFF8B56412A39CCA9BB4FE4 /* TSDialogButtonLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSDialogButtonLayout.m; sourceTree = "<group>"; };
 		00E5E439003E251B7F000001 /* TSWindowManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSWindowManager.h; sourceTree = "<group>"; };
 		00E5E43A003E251B7F000001 /* TSWindowManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSWindowManager.m; sourceTree = "<group>"; };
 		00E7EAC1001D35FA7F000001 /* TSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
@@ -1409,6 +1412,8 @@
 				F5ECC3210214678B01DF2474 /* TSToolbarController.m */,
 				40BCDA501FF9589100AAC575 /* TSWindowController.h */,
 				40BCDA511FF9589100AAC575 /* TSWindowController.m */,
+				3B5450D753C8B6DC243DDB55 /* TSDialogButtonLayout.h */,
+				5EFF8B56412A39CCA9BB4FE4 /* TSDialogButtonLayout.m */,
 				00E5E439003E251B7F000001 /* TSWindowManager.h */,
 				00E5E43A003E251B7F000001 /* TSWindowManager.m */,
 			);
@@ -1903,6 +1908,7 @@
 				407881810519249A006979EA /* TSPreferences.m in Sources */,
 				407881820519249A006979EA /* globals.m in Sources */,
 				407881830519249A006979EA /* TSAppDelegate.m in Sources */,
+				D1FD5E9C1699033F4DD1FA82 /* TSDialogButtonLayout.m in Sources */,
 				407881840519249A006979EA /* TSWindowManager.m in Sources */,
 				407881860519249A006979EA /* TSLaTeXPanelController.m in Sources */,
 				407881880519249A006979EA /* TSToolbarController.m in Sources */,

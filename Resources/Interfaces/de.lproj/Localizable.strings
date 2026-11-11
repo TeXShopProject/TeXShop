@@ -317,3 +317,8 @@
 
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "„%@“ auf das ganze Dokument anwenden?";
+
+/* Macro editor placeholder guide */
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = ausgewählter Text, #INS# = Einfügemarke nach dem Makro, #PASTE# = Text in der Zwischenablage. AppleScript-Makros können auch #FILEPATH# und weitere Platzhalter verwenden (siehe Hilfe).";
+/* Key binding editor placeholder guide */
+"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = ausgewählte Zeichen, #INS# = Einfügemarke, #PASTE# = Text in der Zwischenablage";

@@ -33,6 +33,7 @@
 #import <Foundation/Foundation.h>
 
 #import "TSDocument.h"
+#import "TSDialogButtonLayout.h"
 #import "TSExperimentConsoleController.h"
 #include <sys/xattr.h>
 #import <OgreKit/OgreKit.h> // zenitani 1.35 (A)
@@ -1236,6 +1237,9 @@ static void TSAddContextCopyOfSubmenu(NSMenu *contextMenu, SEL action)
     
 
 	[super windowControllerDidLoadNib:aController];
+	// Older nibs put OK and Cancel edge to edge; space them as the guidelines describe.
+	for (NSWindow *panel in @[linePanel ?: (id)NSNull.null, projectPanel ?: (id)NSNull.null, extensionPanel ?: (id)NSNull.null])
+		if ([panel isKindOfClass:NSWindow.class]) TSLayoutDialogButtonRow(panel);
 
     // Terada: Create WebKit views on the running OS instead of archiving OS-specific internals in nibs.
     if (self.htmlViewContainer && !self.htmlView) {

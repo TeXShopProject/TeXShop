@@ -22,6 +22,7 @@
  *
  */
 
+#import "TSDialogButtonLayout.h"
 #import "TextFinder.h"
 // added by mitsu --(A) g_texChar filtering and (G) TSEncodingSupport
 #import "TSEncodingSupport.h"
@@ -95,6 +96,7 @@ static id sharedFindObject = nil;
 			return;
 		}
 	if (self == sharedFindObject) [[findTextField window] setFrameAutosaveName:@"Find"];
+		TSLayoutBottomActionRow([findTextField window]);
 // added by mitsu --(A) g_texChar filtering
 		[findTextField setDelegate: [TSEncodingSupport sharedInstance]];
 		[replaceTextField setDelegate: [TSEncodingSupport sharedInstance]];

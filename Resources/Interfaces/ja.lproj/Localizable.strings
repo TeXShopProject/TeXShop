@@ -324,3 +324,8 @@
 
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "「%@」を書類全体に適用しますか？";
+
+/* Macro editor placeholder guide */
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 選択中の文字列、#INS# = 挿入後のカーソル位置、#PASTE# = クリップボードの文字列。AppleScript のマクロでは #FILEPATH# なども使えます（ヘルプ参照）。";
+/* Key binding editor placeholder guide */
+"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 選択中の文字列、#INS# = 出力後のカーソル位置、#PASTE# = クリップボードの文字列";

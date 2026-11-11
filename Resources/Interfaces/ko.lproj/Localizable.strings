@@ -317,3 +317,8 @@
 
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "문서 전체에 ‘%@’을(를) 적용하시겠습니까?";
+
+/* Macro editor placeholder guide */
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 선택한 텍스트, #INS# = 매크로 삽입 후 커서 위치, #PASTE# = 클립보드의 텍스트. AppleScript 매크로에서는 #FILEPATH# 등도 사용할 수 있습니다(도움말 참조).";
+/* Key binding editor placeholder guide */
+"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 선택한 문자열, #INS# = 출력 후 커서 위치, #PASTE# = 클립보드의 텍스트";

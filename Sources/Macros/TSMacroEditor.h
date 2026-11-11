@@ -58,6 +58,13 @@
 @property (retain) NSMapTable *originalShortcutKeys;
 @property (retain) NSMapTable *shortcutConflicts;
 @property (retain) NSTextField *shortcutStatus;
+@property (retain) NSSegmentedControl *listButtons;
+@property (retain) NSMenu *listActions;
+@property (retain) NSTextField *placeholderNote;
+- (void)installListControls;
+- (void)installPlaceholderNote;
+- (void)layoutDialogButtons;
+- (void)syncListControls;
 - (NSString *)shortcutConflictForNode:(TSMacroTreeNode *)node;
 - (void)refreshShortcutConflicts;
 @property (retain) TSMacroTreeNode *previousItem;	// record previously selected item
