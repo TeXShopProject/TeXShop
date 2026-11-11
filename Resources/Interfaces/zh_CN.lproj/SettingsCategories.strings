@@ -274,7 +274,7 @@
 "catalog.typesetting.7.1.note" = "Ghostscript 将 PostScript 转换为 PDF 时加上此选项，以保留 PSTricks 等的透明效果。需要 Ghostscript 9.51 或更高版本。";
 "group.typesetting.8.title" = "查找命令和 BibTeX";
 "catalog.typesetting.8.0.title" = "kpsewhich";
-"catalog.typesetting.8.0.note" = "“帮助”菜单中“打开样式文件”用来查找文件的命令。默认值：kpsewhich -progname=latex -format=tex";
+"catalog.typesetting.8.0.note" = "“文件”菜单中“打开样式文件”用来查找文件的命令。默认值：kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeX 引擎";
 "catalog.typesetting.8.1.note" = "默认值：bibtex";
 "group.typesetting.9.title" = "pTeX 支持 (仅日语用户)";

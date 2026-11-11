@@ -111,6 +111,12 @@
                                     <action selector="openDocument:" target="-1" id="105"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Abrir arquivo de estilo" id="888" identifier="TSShortcut.displayStyleFile:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayStyleFile:" target="671" id="909"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Recentes" id="146">
                                 <menu key="submenu" title="Recentes" systemMenu="recentDocuments" id="147">
                                     <items>
@@ -1377,12 +1383,6 @@
                                     <action selector="displayHelpForPackage:" target="671" id="800"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Abrir arquivo de estilo" id="888" identifier="TSShortcut.displayStyleFile:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayStyleFile:" target="671" id="909"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="829"/>
                             <menuItem title="Primeiros passos com o TexShop" id="663" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
@@ -1709,7 +1709,7 @@ Gw
                 </subviews>
             </view>
         </window>
-        <window title="Kpsetool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="899" userLabel="StyleHelp" customClass="NSPanel">
+        <window title="Abrir arquivo de estilo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="899" userLabel="StyleHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="633" y="424" width="323" height="136"/>
@@ -1759,7 +1759,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="904">
                         <rect key="frame" x="17" y="89" width="289" height="27"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Style File Name (lower case is usually best)" id="905">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Style File Name" id="905">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

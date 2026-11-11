@@ -147,6 +147,25 @@
      ]
     },
     {
+     "title": "プロジェクトのルートファイル",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "ファイルを開いたときにルートファイルも開く",
+       "src": [
+        "8pX-l6-YF6"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "開いたルートファイルを最小化する",
+       "src": [
+        "irw-yn-ghY"
+       ]
+      }
+     ]
+    },
+    {
      "title": "起動中の Dock アイコン",
      "rows": [
       {
@@ -194,25 +213,6 @@
        "selected": 4,
        "src": [
         "code:TSDockIconController"
-       ]
-      }
-     ]
-    },
-    {
-     "title": "プロジェクトのルートファイル",
-     "rows": [
-      {
-       "kind": "switch",
-       "title": "ファイルを開いたときにルートファイルも開く",
-       "src": [
-        "8pX-l6-YF6"
-       ]
-      },
-      {
-       "kind": "switch",
-       "title": "開いたルートファイルを最小化する",
-       "src": [
-        "irw-yn-ghY"
        ]
       }
      ]
@@ -1831,7 +1831,7 @@
        "kind": "path",
        "title": "kpsewhich",
        "value": "kpsewhich -progname=latex -format=tex",
-       "note": "「ヘルプ」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex",
+       "note": "「ファイル」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex",
        "src": [
         "1195"
        ]

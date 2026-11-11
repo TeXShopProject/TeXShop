@@ -274,7 +274,7 @@
 "catalog.typesetting.7.1.note" = "Adaugă această opțiune când Ghostscript convertește PostScript în PDF, pentru a păstra transparența, de exemplu cea din PSTricks. Necesită Ghostscript 9.51 sau mai nou.";
 "group.typesetting.8.title" = "Comenzi de căutare și BibTeX";
 "catalog.typesetting.8.0.title" = "kpsewhich";
-"catalog.typesetting.8.0.note" = "Comanda cu care „Deschide fișierul de stil” din meniul Ajutor caută fișierul. Implicit: kpsewhich -progname=latex -format=tex";
+"catalog.typesetting.8.0.note" = "Comanda cu care „Deschide fișierul de stil” din meniul Fișier caută fișierul. Implicit: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Implicit: bibtex";
 "group.typesetting.9.title" = "Suport pTeX (pentru Japonia)";
