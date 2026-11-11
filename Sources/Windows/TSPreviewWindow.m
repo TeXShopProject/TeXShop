@@ -41,6 +41,7 @@
 #import "MyPDFView.h"
 #import "MyPDFKitView.h"
 #import "globals.h"
+#import "TSPreviewSplitDivider.h"
 
 #define ADJUST 7
 #define ADJUST1 47
@@ -1127,6 +1128,9 @@ extern NSPanel *pageNumberWindow;
     BOOL        topToBottom;
     TSLinkPreviewView *movedPreview = nil;
     NSRect      movedPreviewFrame = NSZeroRect;
+    
+    if (self.previewSplitDivider == nil && self.pdfKitSplitView != nil)
+        self.previewSplitDivider = [[TSPreviewSplitDivider alloc] initWithSplitView:self.pdfKitSplitView];
     
     splitInMiddle = NO;
     topToBottom = NO;

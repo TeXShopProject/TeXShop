@@ -79,6 +79,7 @@
 		403B423B178CB65400E38A72 /* OverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 403B4239178CB65400E38A72 /* OverView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		F29CAC13458CF5539134DBD6 /* TSLinkPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA13866BF3622A550CEA0B84 /* TSLinkPreviewView.m */; };
 		85F95A45B305235593F1F001 /* TSOutlineExpansion.m in Sources */ = {isa = PBXBuildFile; fileRef = 61C426C1306DC86F5A07099E /* TSOutlineExpansion.m */; };
+		0BF38A67E94FE8E7E9361D96 /* TSPreviewSplitDivider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 403E76BD218E7008006975A8 /* TeXShop.scriptSuite */; };
 		403F25EA0F20770F001031A0 /* TSDocument-Console.m in Sources */ = {isa = PBXBuildFile; fileRef = 403F25E90F20770F001031A0 /* TSDocument-Console.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4040A2C9135BE98200AC4C27 /* TSAutoCompletionListEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */; };
@@ -486,6 +487,8 @@
 		FA13866BF3622A550CEA0B84 /* TSLinkPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSLinkPreviewView.m; sourceTree = "<group>"; };
 		D410E1A3A9A8C208EF679455 /* TSOutlineExpansion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSOutlineExpansion.h; sourceTree = "<group>"; };
 		61C426C1306DC86F5A07099E /* TSOutlineExpansion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSOutlineExpansion.m; sourceTree = "<group>"; };
+		45C811148691F6D3DDB84B92 /* TSPreviewSplitDivider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPreviewSplitDivider.h; sourceTree = "<group>"; };
+		1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPreviewSplitDivider.m; sourceTree = "<group>"; };
 		403E76BD218E7008006975A8 /* TeXShop.scriptSuite */ = {isa = PBXFileReference; lastKnownFileType = text.plist.scriptSuite; path = TeXShop.scriptSuite; sourceTree = "<group>"; };
 		403F25E90F20770F001031A0 /* TSDocument-Console.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Console.m"; sourceTree = "<group>"; };
 		4040A2C7135BE98200AC4C27 /* TSAutoCompletionListEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAutoCompletionListEditor.h; sourceTree = "<group>"; };
@@ -1222,6 +1225,8 @@
 				FA13866BF3622A550CEA0B84 /* TSLinkPreviewView.m */,
 				D410E1A3A9A8C208EF679455 /* TSOutlineExpansion.h */,
 				61C426C1306DC86F5A07099E /* TSOutlineExpansion.m */,
+				45C811148691F6D3DDB84B92 /* TSPreviewSplitDivider.h */,
+				1AF3DDBE9DD040A7E58F0C3F /* TSPreviewSplitDivider.m */,
 				400CD8BE0C66BD4F00C450D6 /* TSMovie.h */,
 				400CD8BF0C66BD4F00C450D6 /* TSMovie.m */,
 				00CFF0F5000AD1F27F000001 /* TSPrintView.h */,
@@ -1973,6 +1978,7 @@
 				403B423B178CB65400E38A72 /* OverView.m in Sources */,
 				F29CAC13458CF5539134DBD6 /* TSLinkPreviewView.m in Sources */,
 				85F95A45B305235593F1F001 /* TSOutlineExpansion.m in Sources */,
+				0BF38A67E94FE8E7E9361D96 /* TSPreviewSplitDivider.m in Sources */,
 				40BCDA531FF9589200AAC575 /* TSWindowController.m in Sources */,
 				406B626F199934D000C46D2A /* NSText-Extras.m in Sources */,
 			);
