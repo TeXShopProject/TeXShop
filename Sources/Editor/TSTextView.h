@@ -71,6 +71,7 @@
 - (IBAction)convertCharacterType:(id)sender;
 - (IBAction)normalizeSelectedString:(id)sender;
 - (IBAction)exchangePaste:(id)sender;
+- (void)fixupTabs;
 // - (void)drawInsertionPointInRect:(NSRect)rect color:(NSColor *)color turnedOn:(BOOL)flag;
 // -(void)_drawInsertionPointInRect:(NSRect)arg1 color:(NSColor *)color turnedOn:(BOOL)flag;
 

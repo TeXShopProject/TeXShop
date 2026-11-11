@@ -8,6 +8,7 @@
 
 #import "TSDocument.h"
 #import "ScrapTextView.h"
+#import "TSTextView.h"
 #import "TSLayoutManager.h"
 #import "NoodleLineNumberView.h"
 #import "NSText-Extras.h"
@@ -98,32 +99,46 @@
         [storage addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, storage.length)];
 
     // Wrapping, as -setLineBreakMode: does for the document's source.
-    NSScrollView *scrollView = scrapTextView.enclosingScrollView;
+    NSScrollView *experimentScrollView = scrapTextView.enclosingScrollView;
     NSTextContainer *container = scrapTextView.textContainer;
     if (lineBreakMode == NSLineBreakByClipping) {
         NSSize maximumSize = NSMakeSize(FLT_MAX, FLT_MAX);
-        scrollView.hasHorizontalScroller = YES;
+        experimentScrollView.hasHorizontalScroller = YES;
         container.widthTracksTextView = NO;
         container.containerSize = maximumSize;
         scrapTextView.maxSize = maximumSize;
         scrapTextView.horizontallyResizable = YES;
     } else {
-        scrollView.hasHorizontalScroller = NO;
+        experimentScrollView.hasHorizontalScroller = NO;
         scrapTextView.horizontallyResizable = NO;
         scrapTextView.autoresizingMask = NSViewWidthSizable;
-        NSSize contentSize = scrollView ? scrollView.contentSize : scrapTextView.frame.size;
+        NSSize contentSize = experimentScrollView ? experimentScrollView.contentSize : scrapTextView.frame.size;
         [scrapTextView setFrameSize:NSMakeSize(contentSize.width, NSHeight(scrapTextView.frame))];
         // Set the width as well: the frame may already have it, and then would not
         // bring a container left wide by clipping back to the view.
         container.containerSize = NSMakeSize(MAX(contentSize.width - 2 * scrapTextView.textContainerInset.width, 0), FLT_MAX);
         container.widthTracksTextView = YES;
-        NSClipView *clipView = scrollView.contentView;
+        NSClipView *clipView = experimentScrollView.contentView;
         if (clipView && NSMinX(clipView.bounds) != 0) {
             [clipView scrollToPoint:NSMakePoint(0, NSMinY(clipView.bounds))];
-            [scrollView reflectScrolledClipView:clipView];
+            [experimentScrollView reflectScrolledClipView:clipView];
         }
     }
     [self colorizeExperimentSource];
+}
+
+// A font chosen in the Experiment source goes to the document's source as
+// -[TSTextView changeFont:] does it there, and comes back with the tabs.
+- (void)applyExperimentFontToSource:(NSFont *)font
+{
+    if (!font)
+        return;
+    NSTextView *source = [self textView] ?: textView1;
+    textView1.font = font;
+    textView2.font = font;
+    if ([source respondsToSelector:@selector(fixupTabs)])
+        [(TSTextView *)source fixupTabs];
+    [self applyExperimentTextLayout];
 }
 
 // TSLayoutManager draws the invisible characters (and control characters) in the
@@ -147,18 +162,18 @@
 
 - (void)applyExperimentLineNumbers
 {
-    NSScrollView *scrollView = scrapTextView.enclosingScrollView;
-    if (!scrollView)
+    NSScrollView *experimentScrollView = scrapTextView.enclosingScrollView;
+    if (!experimentScrollView)
         return;
-    if (lineNumbersShowing && ![scrollView.verticalRulerView isKindOfClass:[NoodleLineNumberView class]]) {
-        NoodleLineNumberView *lineNumberView = [[NoodleLineNumberView alloc] initWithScrollView:scrollView];
-        scrollView.verticalRulerView = lineNumberView;
-        scrollView.hasVerticalRuler = YES;
-        scrollView.hasHorizontalRuler = NO;
+    if (lineNumbersShowing && ![experimentScrollView.verticalRulerView isKindOfClass:[NoodleLineNumberView class]]) {
+        NoodleLineNumberView *lineNumberView = [[NoodleLineNumberView alloc] initWithScrollView:experimentScrollView];
+        experimentScrollView.verticalRulerView = lineNumberView;
+        experimentScrollView.hasVerticalRuler = YES;
+        experimentScrollView.hasHorizontalRuler = NO;
     }
-    if ([scrollView.verticalRulerView isKindOfClass:[NoodleLineNumberView class]])
-        scrollView.rulersVisible = lineNumbersShowing;
-    [scrollView tile];
+    if ([experimentScrollView.verticalRulerView isKindOfClass:[NoodleLineNumberView class]])
+        experimentScrollView.rulersVisible = lineNumbersShowing;
+    [experimentScrollView tile];
 }
 
 #pragma mark Colors

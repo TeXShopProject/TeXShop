@@ -19,6 +19,8 @@ EXPERIMENT = 'Sources/Editor/TSDocument-ExperimentSource.m'
 DOCUMENT = 'Sources/Document/TSDocument.m'
 SCRAP_VIEW = 'Sources/Editor/ScrapTextView.m'
 SCRAP = 'Sources/Document/TSDocument-Scrap.m'
+XML = 'Sources/Document/TSDocument-XML.m'
+TEXT_VIEW = 'Sources/Editor/TSTextView.m'
 
 MUTATIONS = {
     'colorize-all-skips-experiment': (SYNTAX,
@@ -55,6 +57,10 @@ MUTATIONS = {
         '\tBOOL experiment = (aTextView != nil && aTextView == scrapTextView);\n', '\tBOOL experiment = NO;\n'),
     'flash-in-document-view': (DOCUMENT,
         '\tNSTextView *flashView = experiment ? scrapTextView : textView;\n', '\tNSTextView *flashView = textView;\n'),
+    'no-xml-hook': (XML,
+        '    [self colorizeVisibleAreaInTextView:textView2];\n    [self colorizeExperimentSource];\n', '    [self colorizeVisibleAreaInTextView:textView2];\n'),
+    'experiment-font-stays-local': (SCRAP_VIEW,
+        '    [self.document applyExperimentFontToSource:self.font];\n', ''),
     'no-typed-match-override': (SCRAP_VIEW,
         '        [self.document flashMatchForCharacter:replacementString range:affectedCharRange inTextView:self];\n', ''),
 }
@@ -62,7 +68,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-text = {path: (root / path).read_text(encoding='latin1') for path in (SYNTAX, EXPERIMENT, DOCUMENT, SCRAP_VIEW, SCRAP)}
+text = {path: (root / path).read_text(encoding='latin1') for path in (SYNTAX, EXPERIMENT, DOCUMENT, SCRAP_VIEW, SCRAP, XML, TEXT_VIEW)}
 if args.mutation:
     path, old, new = MUTATIONS[args.mutation]
     assert text[path].count(old) == 1, args.mutation
@@ -100,7 +106,10 @@ brace_search = document[start:document.index('\n}\n', document.index('static NSI
 tab_stops = method(document, 'static NSArray *tabStopArrayForFontAndTabWidth(')
 scrap_overrides = '\n'.join(method(text[SCRAP_VIEW], s) for s in [
     '- (void)updateInsertionPointStateAndRestartTimer:(BOOL)restartFlag',
-    '- (BOOL)shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString'])
+    '- (BOOL)shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString',
+    '- (void)changeFont:(id)sender'])
+toggle_xml = method(text[XML], ' - (IBAction) toggleXML: sender')
+text_view_tabs = method(text[TEXT_VIEW], '- (void)fixupTabs')
 try_scrap = method(text[SCRAP], '- (void) tryScrap:(id)sender')
 
 globals_m = source_file(root, 'globals.m').read_text(encoding='latin1')
@@ -126,6 +135,28 @@ NSInteger g_texChar = '\\';
 static int failures;
 static void Check(BOOL ok, const char *name) { if (!ok) { printf("FAIL: %s\n", name); failures++; } }
 static void Spin(NSTimeInterval seconds) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:seconds]]; }
+
+@interface TSTextView : NSTextView
+- (void)fixupTabs;
+@end
+#define CommandCompletionPathXML @"XML"
+#define CommandCompletionPathRegular @"Regular"
+@interface GlobalData : NSObject
+@property (strong) NSString *CommandCompletionPath;
++ (instancetype)sharedGlobalData;
+@end
+@implementation GlobalData
++ (instancetype)sharedGlobalData { static GlobalData *shared; if (!shared) shared = [GlobalData new]; return shared; }
+@end
+@interface TSAppDelegate : NSObject
+- (void)reReadCommandCompletionData;
+@end
+@implementation TSAppDelegate
+- (void)reReadCommandCompletionData {}
+@end
+// The font that the Font panel gives; the panel itself is never shown.
+static NSFont *PanelFont;
+static NSFont *PanelConvertFont(id manager, SEL selector, NSFont *font) { return PanelFont; }
 
 @interface NSText (Extras)
 - (void)setFontSafely:(NSFont *)aFont;
@@ -163,6 +194,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 @interface TestSourceView : NSTextView
 @end
 @implementation TestSourceView
+@@TEXT_VIEW_TABS@@
 - (void)showFindIndicatorForRange:(NSRange)range { [indicators addObject:[@"source " stringByAppendingString:NSStringFromRange(range)]]; }
 @end
 
@@ -223,6 +255,8 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 - (void)showIndexColor:(id)sender;
 - (IBAction)toggleSyntaxColorEntry:(id)sender;
 - (IBAction)toggleBlockCursor:(id)sender;
+- (IBAction)toggleXML:(id)sender;
+- (void)applyExperimentFontToSource:(NSFont *)font;
 @end
 
 // The Experiment source, with the production overrides of ScrapTextView.
@@ -247,10 +281,16 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 @synthesize textView = textView;
 - (IBAction)doUpdate:(id)sender {}
 - (void)setupTags {}
-- (void)syntaxColorXML:(NSUInteger *)location from:(NSUInteger)lineStart to:(NSUInteger)lineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager { (*location)++; }
+static NSColor *XMLColor;
+- (void)syntaxColorXML:(NSUInteger *)location from:(NSUInteger)lineStart to:(NSUInteger)lineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager
+{
+    [layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName: XMLColor} forCharacterRange:NSMakeRange(*location, 1)];
+    (*location)++;
+}
 - (void)syntaxColorLimitedXML:(NSUInteger *)location and:(NSUInteger)lineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager { (*location)++; }
 - (void)syntaxColorXMLCommentsfrom:(NSUInteger)aLineStart to:(NSUInteger)aLineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager {}
 @@DOCUMENT_METHODS@@
+@@TOGGLE_XML@@
 @end
 
 @@SYNTAX@@
@@ -318,7 +358,7 @@ int main(void) { @autoreleasepool {
     Method draw = class_getInstanceMethod(TSLayoutManager.class, @selector(drawInvisibleCharacter:atGlyphIndex:containerOrigin:attributes:cache:));
     originalDrawMarker = (void *)method_getImplementation(draw);
     method_setImplementation(draw, (IMP)RecordMarker);
-    FlashColor = NSColor.orangeColor; ThemeBackground = NSColor.whiteColor;
+    FlashColor = NSColor.orangeColor; ThemeBackground = NSColor.whiteColor; XMLColor = NSColor.brownColor;
     NSColor *commandColor = NSColor.blueColor, *commentColor = NSColor.redColor, *entryColor = NSColor.yellowColor;
     NSColor *indexColor = NSColor.greenColor, *braceColor = NSColor.magentaColor, *contentColor = NSColor.cyanColor;
     highlightBracesColorDict = @{NSForegroundColorAttributeName: braceColor};
@@ -351,6 +391,7 @@ int main(void) { @autoreleasepool {
     ScrapTextView *scrap = [[ScrapTextView alloc] initWithFrame:NSMakeRect(0, 0, 420, 160)];
     InstallTextView(scrap, MakeScrollView(experiment));
     scrap.document = doc;
+    scrap.richText = NO;  // as tryScrap: sets it
     [experiment makeFirstResponder:scrap];
     doc->scrapTextView = scrap;
 
@@ -486,6 +527,28 @@ int main(void) { @autoreleasepool {
     [doc setLineBreakMode:Item(1)];
     Check(scrap.defaultParagraphStyle.lineBreakMode == NSLineBreakByWordWrapping, "Wrap by Word applies to the Experiment source");
 
+    // A font chosen in the Experiment source (Font panel, Bigger, Smaller) is the document's font too.
+    PanelFont = [NSFont fontWithName:@"Menlo" size:24];
+    method_setImplementation(class_getInstanceMethod(NSFontManager.class, @selector(convertFont:)), (IMP)PanelConvertFont);
+    [scrap changeFont:[NSFontManager sharedFontManager]];
+    Check(scrap.font.pointSize == 24 && doc->textView1.font.pointSize == 24,
+          "a font chosen in the Experiment source becomes the document's font");
+    [doc setLineBreakMode:Item(1)];
+    Check(scrap.font.pointSize == 24 && [scrap.typingAttributes[NSFontAttributeName] pointSize] == 24 &&
+          scrap.defaultParagraphStyle.defaultTabInterval == doc->textView1.defaultParagraphStyle.defaultTabInterval &&
+          scrap.defaultParagraphStyle.defaultTabInterval > 0,
+          "the Experiment source keeps that font and the document's tabs after another setting changes");
+    [doc setDocumentFontFromPreferences:nil];
+    Check(scrap.font.pointSize == 15, "the Settings font applies again to both");
+
+    // XML coloring, from the Source menu.
+    scrap.string = @"<tag>text</tag>\n";
+    NSMenuItem *xmlItem = Item(0); xmlItem.state = NSControlStateValueOff;
+    [doc toggleXML:xmlItem];
+    Check(doc.fileIsXML && [Foreground(scrap, 0) isEqual:XMLColor], "XML coloring applies to the Experiment source at once");
+    [doc toggleXML:xmlItem];
+    Check(!doc.fileIsXML && ![Foreground(scrap, 0) isEqual:XMLColor], "turning XML coloring off applies to the Experiment source at once");
+
     // Invisible characters, from the Source menu; the kinds come from Settings.
     for (NSString *key in @[showSpaceCharacterKey, showTabCharacterKey, showNewLineCharacterKey, showFullwidthSpaceCharacterKey])
         [SUD setBool:YES forKey:key];
@@ -596,7 +659,7 @@ int main(void) { @autoreleasepool {
 '''
 replacements = {
     'DEFINES': defines, 'SCRAP_OVERRIDES': scrap_overrides, 'TAB_STOPS': tab_stops, 'BRACE_SEARCH': brace_search,
-    'DOCUMENT_METHODS': document_methods, 'SYNTAX': strip_imports(text[SYNTAX]), 'EXPERIMENT': strip_imports(text[EXPERIMENT]),
+    'DOCUMENT_METHODS': document_methods, 'TOGGLE_XML': toggle_xml, 'TEXT_VIEW_TABS': text_view_tabs, 'SYNTAX': strip_imports(text[SYNTAX]), 'EXPERIMENT': strip_imports(text[EXPERIMENT]),
     'TRY_SCRAP_SYNCS': 'YES' if '[self syncExperimentSourceDisplay];' in try_scrap else 'NO',
 }
 for name, value in replacements.items():

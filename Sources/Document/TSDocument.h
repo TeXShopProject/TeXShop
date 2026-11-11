@@ -1107,6 +1107,7 @@ enum RootCommand
 - (void)observeExperimentSource;
 - (void)syncExperimentSourceDisplay;
 - (void)applyExperimentTextLayout;
+- (void)applyExperimentFontToSource:(NSFont *)font;
 - (void)applyExperimentInvisibleCharacters;
 - (void)applyExperimentLineNumbers;
 - (void)colorizeExperimentSource;

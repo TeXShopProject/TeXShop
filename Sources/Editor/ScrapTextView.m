@@ -136,6 +136,14 @@
     return change;
 }
 
+// The Experiment source always shows the document's font, so a font chosen here
+// (Font panel, Bigger, Smaller) becomes the font of the document's source too.
+- (void)changeFont:(id)sender
+{
+    [super changeFont:sender];
+    [self.document applyExperimentFontToSource:self.font];
+}
+
 
 - (void)undoSpecial:(id)theDictionary
 {
