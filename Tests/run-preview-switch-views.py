@@ -19,8 +19,10 @@ MUTATIONS = {
     'selection-stays': ('window', '    [upperView setCurrentSelection:lowerSelection];\n    [lowerView setCurrentSelection:upperSelection];\n', ''),
     'popup-stays-on-screen': ('window', 'NSMinX(newUpperFrame) - NSMinX(lowerFrame), NSMaxY(newUpperFrame) - NSMaxY(lowerFrame)', '0, 0'),
     'popup-dropped': ('window', '    if (upperPopup)\n        [lowerView attachPinnedLinkPreview:', '    if (NO)\n        [lowerView attachPinnedLinkPreview:'),
-    'focus-stays': ('window', '        [window makeFirstResponder:upperActive ? lowerView : upperView];\n', '        ;\n'),
-    'active-view-stays': ('window', '        self.activeView = self.activeView == upperView ? lowerView : upperView;\n', '        ;\n'),
+    'focus-stays': ('window', '![window makeFirstResponder:active]', 'YES'),
+    'active-view-only': ('window', '        [active becomeActiveView];\n', '        self.activeView = active;\n'),
+    # view code
+    'search-not-followed': ('view', '\t[self resetSearchDelegate];\n    [self.myDocument', '    [self.myDocument'),
     'places-not-swapped': ('window', '    TSPreviewPaneRestore(upperView, lower);\n    TSPreviewPaneRestore(lowerView, upper);\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
@@ -41,14 +43,23 @@ window_methods = [last_method(window_source, s) for s in (
 view_methods = [last_method(view_source, s) for s in (
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
     '- (BOOL)hasPinnedLinkPreview\n', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
-    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n')]
+    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n',
+    # What the toolbar, the menus and the search results follow (#25 audit).
+    '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
+    '- (void)fixMagnificationControls\n', '- (void)fixStuff\n', '- (void)resetSearchDelegate\n',
+    '- (BOOL)becomeFirstResponder\n', '- (void)becomeActiveView\n')]
 fragments = [('complete method: ' + text.split('\n')[0], source, text)
              for source, texts in ((window_source, window_methods), (view_source, view_methods)) for text in texts]
 window_text = '\n'.join(window_methods)
+view_text = '\n'.join(view_methods)
 if args.mutation:
     which, old, new = MUTATIONS[args.mutation]
-    assert window_text.count(old) == 1, args.mutation
-    window_text = window_text.replace(old, new)
+    if which == 'window':
+        assert window_text.count(old) == 1, args.mutation
+        window_text = window_text.replace(old, new)
+    else:
+        assert view_text.count(old) == 1, args.mutation
+        view_text = view_text.replace(old, new)
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -61,6 +72,7 @@ program = r'''
 enum { PDF_SINGLE_PAGE_STYLE = 1, PDF_TWO_PAGE_STYLE = 2, PDF_MULTI_PAGE_STYLE = 3, PDF_DOUBLE_MULTI_PAGE_STYLE = 4 };
 enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4 };
 enum { NEW_MOUSE_MODE_SCROLL = 1, NEW_MOUSE_MODE_SELECT_TEXT = 2 };
+#define PDF_MAX_SCALE 2000
 static NSUInteger checks;
 static void check(BOOL ok, NSString *message) {
     checks++;
@@ -76,11 +88,34 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 @implementation TSLinkPreviewView
 - (void)keepInView {}
 @end
+@interface TestWindow : NSWindow
+@property BOOL firstTime, windowIsSplit, horizontal;
+@property PDFView *activeView, *myPDFKitView, *myPDFKitView2;
+@property NSSplitView *pdfKitSplitView;
+@property (strong) TSPreviewSplitDivider *previewSplitDivider;
+- (void)mainSplitPdfKitWindow;
+- (void)splitPdfKitWindow:(id)sender;
+- (void)switchViews;
+@end
+#define TSPreviewWindow TestWindow
+@interface TestDocument : NSObject
+@property (weak) TestWindow *window;
+@end
+@implementation TestDocument
+- (id)topView { return self.window.myPDFKitView; }
+- (void)updatePreviewLayoutControls {}
+@end
 @interface MyPDFKitView : PDFView {
     TSPreviewPanePlace splitPlace;
-    NSInteger pageStyle, firstPageStyle, resizeOption, mouseMode;
+    NSInteger pageStyle, firstPageStyle, resizeOption, mouseMode, scaleMag;
     TSLinkPreviewView *linkPreview;
+    // The toolbar's magnification field and stepper and the search results, shared by both parts.
+    NSTextField *myScale, *smyScale, *myScale1;
+    NSStepper *myStepper, *smyStepper, *myStepper1;
+    NSTableView *_searchTable;
 }
+@property (weak) TestWindow *myPDFWindow;
+@property (weak) TestDocument *myDocument;
 @property BOOL locationSaved, verticalSplitSaved, horizontalSplitSaved;
 @property double horizontalHeight1, horizontalHeight2, verticalWidth1, verticalWidth2;
 @property NSInteger handlingLink;
@@ -100,7 +135,12 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)setFirstPageStyle:(NSInteger)s { firstPageStyle = s; }
 - (void)setResizeOption:(NSInteger)s { resizeOption = s; }
 - (double)magnification { return self.scaleFactor; }
-- (void)setMagnification:(double)m { [self setScaleFactor:m]; }
+- (void)useScaleField:(NSTextField *)field stepper:(NSStepper *)stepper searchTable:(NSTableView *)table {
+    myScale = field; myStepper = stepper; _searchTable = table;
+}
+// As in MyPDFKitView, cleaning up the marquee closes a popup that is not kept.
+- (void)cleanupMarquee:(BOOL)terminate { [self doKillPopup]; }
+- (void)pageChanged:(NSNotification *)notification {}
 - (void)setupPageStyle {
     PDFDisplayMode modes[] = {kPDFDisplaySinglePageContinuous, kPDFDisplaySinglePage, kPDFDisplayTwoUp,
                               kPDFDisplaySinglePageContinuous, kPDFDisplayTwoUpContinuous};
@@ -109,7 +149,6 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 }
 - (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_NONE) [self setScaleFactor:1]; else [self setAutoScales:YES]; }
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
-- (void)resetSearchDelegate {}
 - (void)observeLinkPreviewEvents {}
 - (void)doKillPopup { [linkPreview removeFromSuperview]; linkPreview = nil; self.globalLongTerm = NO; self.handlingLink = 0; }
 - (void)pin:(NSRect)windowFrame {
@@ -118,19 +157,6 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 }
 - (BOOL)acceptsFirstResponder { return YES; }
 VIEWMETHODS
-@end
-@interface TestWindow : NSWindow
-@property BOOL firstTime, windowIsSplit, horizontal;
-@property PDFView *activeView, *myPDFKitView, *myPDFKitView2;
-@property NSSplitView *pdfKitSplitView;
-@property (strong) TSPreviewSplitDivider *previewSplitDivider;
-- (void)mainSplitPdfKitWindow;
-- (void)splitPdfKitWindow:(id)sender;
-- (void)switchViews;
-@end
-@implementation MyPDFKitView (Focus)
-// As MyPDFKitView: the view that gets the focus becomes the active view.
-- (BOOL)becomeFirstResponder { ((TestWindow *)self.window).activeView = self; return [super becomeFirstResponder]; }
 @end
 @implementation TestWindow
 - (BOOL)canBecomeKeyWindow { return YES; }
@@ -174,7 +200,10 @@ static NSPoint popupOffset(MyPDFKitView *v) {
 }
 static NSString *selectionText(PDFView *v) { return v.currentSelection.string ?: @""; }
 
-typedef struct { TestWindow *window; MyPDFKitView *upper, *lower; } Preview;
+typedef struct {
+    TestWindow *window; MyPDFKitView *upper, *lower;
+    TestDocument *document; NSTextField *scaleField; NSTableView *searchTable; NSSearchField *searchField;
+} Preview;
 static Preview makePreview(PDFDocument *doc, BOOL sideBySide) {
     TestWindow *w = [[TestWindow alloc] initWithContentRect:NSMakeRect(0, 0, 900, 900)
         styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
@@ -192,11 +221,23 @@ static Preview makePreview(PDFDocument *doc, BOOL sideBySide) {
     [sv addSubview:a];
     w.pdfKitSplitView = sv; w.myPDFKitView = a; w.myPDFKitView2 = b; w.activeView = a;
     w.firstTime = YES;
+    TestDocument *document = [TestDocument new]; document.window = w;
+    NSTextField *field = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 50, 20)];
+    NSStepper *stepper = [NSStepper new]; stepper.maxValue = 1000;
+    NSTableView *table = [NSTableView new];
+    // The search field of the drawer, which can have the focus instead of either part.
+    NSSearchField *search = [[NSSearchField alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
+    [w.contentView addSubview:search];
+    for (MyPDFKitView *v in @[a, b]) {
+        v.myPDFWindow = w; v.myDocument = document;
+        [v useScaleField:field stepper:stepper searchTable:table];
+        [NSNotificationCenter.defaultCenter addObserver:v selector:@selector(scaleChanged:) name:PDFViewScaleChangedNotification object:v];
+    }
     a.document = doc; [a setupPageStyle]; [a setupMagnificationStyle];
     settle(w);
     flags = sideBySide ? NSEventModifierFlagOption : 0; [w splitPdfKitWindow:nil]; flags = 0;
     settle(w);
-    return (Preview){w, a, b};
+    return (Preview){w, a, b, document, field, table, search};
 }
 
 typedef struct {
@@ -218,6 +259,14 @@ static State stateOf(Preview p) {
         p.window.firstResponder, p.window.activeView};
 }
 static NSString *describe(NSString *name, NSString *what) { return [NSString stringWithFormat:@"%@: %@", name, what]; }
+// The toolbar's magnification and the search results work with the active part.
+static void checkControls(Preview p, NSString *name) {
+    PDFView *active = p.window.activeView;
+    check(p.scaleField.integerValue == lround(active.scaleFactor * 100),
+          describe(name, [NSString stringWithFormat:@"the magnification field shows the active part (%ld for %.0f)",
+                          (long)p.scaleField.integerValue, active.scaleFactor * 100]));
+    check(p.searchTable.delegate == (id)active, describe(name, @"the search results work with the active part"));
+}
 
 // After a switch each view holds what the other part had; `s` is the state before it.
 static void checkSwitched(Preview p, State s, NSString *name, BOOL fixedScales) {
@@ -310,18 +359,30 @@ int main(int argc, char **argv) { @autoreleasepool {
         [p.window switchViews]; settle(p.window);
         checkSwitched(p, before, [name stringByAppendingString:@", first switch"], YES);
         check(p.window.firstResponder == p.upper && p.window.activeView == p.upper, describe(name, @"the active part stays active at its new place"));
+        checkControls(p, [name stringByAppendingString:@", first switch"]);
         [p.window switchViews]; settle(p.window);
         checkSame(p, before, [name stringByAppendingString:@", second switch"]);
+        checkControls(p, [name stringByAppendingString:@", second switch"]);
         for (int i = 0; i < 4; i++) { [p.window switchViews]; settle(p.window); }
         checkSame(p, before, [name stringByAppendingString:@", six switches"]);
 
-        // Without the focus in either part, the active view still follows its part.
-        [p.window makeFirstResponder:nil]; p.window.activeView = p.lower;
-        [p.window switchViews]; settle(p.window);
-        check(p.window.firstResponder != p.upper && p.window.firstResponder != p.lower && p.window.activeView == p.upper,
-              describe(name, @"the active view follows its part"));
-        [p.window switchViews]; settle(p.window);
-        check(p.window.activeView == p.lower, describe(name, @"the active view follows its part back"));
+        // With the focus in the search field, the focus stays there, and the active view, the
+        // magnification field and the search results follow the part, whichever part is active.
+        for (MyPDFKitView *start in @[p.lower, p.upper]) {
+            MyPDFKitView *other = start == p.lower ? p.upper : p.lower;
+            NSString *which = [name stringByAppendingString:start == p.lower ? @", second part active" : @", first part active"];
+            [start becomeActiveView];
+            check([p.window makeFirstResponder:p.searchField], describe(which, @"the search field has the focus"));
+            NSResponder *focus = p.window.firstResponder;
+            CGFloat startScale = start.scaleFactor;
+            [p.window switchViews]; settle(p.window);
+            check(p.window.firstResponder == focus && p.window.activeView == other && near(other.scaleFactor - startScale),
+                  describe(which, @"the focus stays in the search field and the active view follows its part"));
+            checkControls(p, which);
+            [p.window switchViews]; settle(p.window);
+            check(p.window.firstResponder == focus && p.window.activeView == start, describe(which, @"the active view follows its part back"));
+            checkControls(p, [which stringByAppendingString:@", back"]);
+        }
 
         // Unsplitting after a switch keeps the first view, which now shows what the second part showed.
         [p.window makeFirstResponder:p.lower]; settle(p.window);
@@ -359,7 +420,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     return 0;
 }}
 '''
-program = program.replace('VIEWMETHODS', '\n'.join(view_methods)).replace('WINDOWMETHODS', window_text)
+program = program.replace('VIEWMETHODS', view_text).replace('WINDOWMETHODS', window_text)
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:

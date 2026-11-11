@@ -907,11 +907,16 @@ extern NSPanel *pageNumberWindow;
         [lowerView attachPinnedLinkPreview:upperPopup windowFrame:NSOffsetRect(upperPopupFrame,
             NSMinX(newLowerFrame) - NSMinX(upperFrame), NSMaxY(newLowerFrame) - NSMaxY(upperFrame))];
 
-    // The active part stays active where it now is.
-    if (upperActive || lowerActive)
-        [window makeFirstResponder:upperActive ? lowerView : upperView];
-    else if (self.activeView == upperView || self.activeView == lowerView)
-        self.activeView = self.activeView == upperView ? lowerView : upperView;
+    // The active part stays active where it now is. Without the keyboard focus in either part,
+    // as when it is in the search field, the focus stays where it is, and the toolbar, the menus
+    // and the search results still follow the part.
+    MyPDFKitView *active = nil;
+    if (upperActive || self.activeView == upperView)
+        active = lowerView;
+    else if (lowerActive || self.activeView == lowerView)
+        active = upperView;
+    if (!(upperActive || lowerActive) || ![window makeFirstResponder:active])
+        [active becomeActiveView];
     [self keepPinnedLinkPreviewsInView];
 }
 

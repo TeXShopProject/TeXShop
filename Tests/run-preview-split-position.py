@@ -106,6 +106,7 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_WINDOW) [self setAutoScales:YES]; else [self setScaleFactor:self.fixedScale]; }
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
 - (void)resetSearchDelegate {}
+- (void)becomeActiveView {}
 - (BOOL)hasPinnedLinkPreview { return YES; }
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
