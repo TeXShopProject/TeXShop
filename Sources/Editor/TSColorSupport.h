@@ -28,6 +28,9 @@
 
 - (NSColor *)colorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode;
 - (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode;
+// A theme color drawn opaque, as the document's source, console and preview draw it;
+// the opacity stored with the color is not used. Without the key, the built-in color.
+- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode;
 
 // - (NSColor *)colorForKey: (NSString *)theKey  whiledark: (BOOL)mode;
 

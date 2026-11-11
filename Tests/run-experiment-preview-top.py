@@ -51,7 +51,7 @@ static NSUserDefaults *testDefaults;
 #define SourceColorChangedNotification @"SourceColorChanged"
 @implementation TSColorSupport
 + (id)sharedInstance { static id instance; if (!instance) instance = [self new]; return instance; }
-- (NSColor *)colorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark { return NSColor.grayColor; }
+- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark { return NSColor.grayColor; }
 @end
 PDFSOURCE
 static NSString *context = @"";

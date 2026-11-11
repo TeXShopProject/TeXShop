@@ -480,6 +480,7 @@ enum RootCommand
 @property (retain)  NSString            *spellLanguage;
 @property           BOOL                automaticSpelling;
 @property           BOOL                syntaxcolorEntry;
+@property           BOOL                coloringWaitsForMarkedText;
 @property           BOOL                blockCursor;
 @property           BOOL                docUseAnnotationMenu;
 @property           BOOL                annotationsExist;
@@ -1001,6 +1002,8 @@ enum RootCommand
 - (void)fixColor:(NSUInteger)from :(NSUInteger)to;
 - (void)colorizeAll;
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)aTextView;
+- (BOOL)coloringWaitsForMarkedTextIn:(NSTextView *)aTextView;
+- (void)colorAfterMarkedTextEnds;
 - (void)cursorMoved: (NSTextView *)aTextView;
 - (void)removeCurrentLineColor: (NSTextView *)aTextView;
 

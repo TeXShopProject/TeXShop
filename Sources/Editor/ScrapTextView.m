@@ -38,9 +38,9 @@
         @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
     TSColorSupport *colors = [TSColorSupport sharedInstance];
-    self.backgroundColor = [colors colorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark];
-    self.textColor = [colors colorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark];
-    self.insertionPointColor = [colors colorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark];
+    self.backgroundColor = [colors opaqueColorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark];
+    self.textColor = [colors opaqueColorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark];
+    self.insertionPointColor = [colors opaqueColorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark];
     self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeSourceAlphaKey);
 }
 

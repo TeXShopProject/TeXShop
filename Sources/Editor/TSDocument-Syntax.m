@@ -87,6 +87,12 @@ static BOOL isValidOrdinaryTeXCommandChar(NSInteger c)
  * We also track changes to the text view (resizing, scrolling) and re-color
  * the visible text when any of those events occurs via colorizeVisibleAreaInTextView:.
  *
+ * Text being composed with an input method (marked text) is not colored. While it
+ * is there, every keystroke can resize the text view, and coloring then would
+ * recolor the visible text each time and color the composed text itself. Coloring
+ * waits, and the visible text is colored once the composed text is committed or
+ * removed; see coloringWaitsForMarkedTextIn: and colorAfterMarkedTextEnds.
+ *
  * TODO: Consider moving the whole syntax coloring code to a separate class.
  */
 // U+FF01-U+FF0B, U+FF0D, U+FF0F-U+FF5D and U+2212: fullwidth forms of ASCII
@@ -98,6 +104,53 @@ static inline BOOL TSIsHighlightedFullwidthCharacter(unichar c)
 }
 
 @implementation TSDocument (SyntaxHighlighting)
+
+// Whether a view of this text, the source in either half of a split window or the
+// Experiment source, holds text being composed with an input method.
+static BOOL TSTextStorageHasMarkedText(NSTextStorage *storage)
+{
+    for (NSLayoutManager *layoutManager in storage.layoutManagers)
+        for (NSTextContainer *container in layoutManager.textContainers)
+            if (container.textView.hasMarkedText)
+                return YES;
+    return NO;
+}
+
+// YES while the text of aTextView holds text being composed; the coloring asked for
+// is then done by colorAfterMarkedTextEnds.
+- (BOOL)coloringWaitsForMarkedTextIn:(NSTextView *)aTextView
+{
+    if (!aTextView || !TSTextStorageHasMarkedText(aTextView.textStorage))
+        return NO;
+    self.coloringWaitsForMarkedText = YES;
+    return YES;
+}
+
+// Called when the selection changes, as it does whenever composed text changes, is
+// committed or is removed. It looks again once AppKit has finished with the keystroke.
+- (void)colorAfterMarkedTextEnds
+{
+    if (!self.coloringWaitsForMarkedText)
+        return;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(colorWaitingForMarkedText) object:nil];
+    [self performSelector:@selector(colorWaitingForMarkedText) withObject:nil afterDelay:0];
+}
+
+// Nothing is colored while text is still being composed in the source or in the
+// shown Experiment source, not even the other one. Text left composed in a closed
+// Experiment window does not hold back the source; it waits again when that window
+// is shown. A brace highlight kept while text was composed is removed by
+// -resetHighlight:, which the same change of the selection schedules.
+- (void)colorWaitingForMarkedText
+{
+    if (!self.coloringWaitsForMarkedText || TSTextStorageHasMarkedText(self.textStorage) ||
+        (scrapTextView.window.isVisible && TSTextStorageHasMarkedText(scrapTextView.textStorage)))
+        return;
+    self.coloringWaitsForMarkedText = NO;
+    [self colorizeAll];
+    [self cursorMoved:textView];
+    [self refreshExperimentCurrentLine];
+}
 
 
 
@@ -195,6 +248,9 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     BOOL            hasUnderLineAndColon;
     BOOL            isKeyCommand;
     
+    if ([self coloringWaitsForMarkedTextIn:aTextView])
+        return;
+
     colorExpl3 = self.useExplColor; // [SUD boolForKey:expl3SyntaxColoringKey];
     
     // New rules and legacy exclusions are alternative spelling modes.
@@ -1011,6 +1067,8 @@ static NSRange TSVisibleCharacterRange(NSTextView *textView)
 	// if (!fileIsTex || ![SUD boolForKey:SyntaxColoringEnabledKey])
      if (!fileIsTex || !self.syntaxColor)
 		return;
+    if ([self coloringWaitsForMarkedTextIn:aTextView])
+        return;
     
     // Nov 5, 2024. Koch.
     // Warning: the next three lines and the value 60.0
@@ -1103,7 +1161,7 @@ static NSRange TSVisibleCharacterRange(NSTextView *textView)
         NSString        *textString;
         BOOL            writeCursor;
         
-        if (self.syntaxcolorEntry)
+        if (self.syntaxcolorEntry && ![self coloringWaitsForMarkedTextIn:aTextView])
         {
             layoutManager = [aTextView layoutManager];
             textString = [aTextView string];

@@ -22,6 +22,7 @@
 <li>After the first Experiment typesetting, show the top of the first page, where the output is, instead of the middle of the page. Later typesetting keeps the position being viewed. Suggested by <a href="https://github.com/Uwe-Schmock">Uwe Schmock</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>).</li>
 <li>Show the source in the Experiment window like the document’s source: the same font, tabs, line spacing, wrapping, syntax colors, current line highlight, block cursor, invisible characters, line numbers and brace matching. Changing any of these from a menu or in Settings changes the Experiment window at once.</li>
 <li>Add tools to the Experiment preview’s toolbar: Scroll, Select Text, Magnify and Select PDF, as in the Preview window, and Zoom Out, Zoom In and Zoom to Content, which enlarges the typeset part of the page to fill the window. A rectangle drawn with Select PDF is copied in the format chosen in Copy Format. The Experiment preview remembers its tool separately from the Preview window.</li>
+<li>Make the bar below the Experiment source narrow, with a small Typeset button, to match the thin frames of the Experiment windows.</li>
 <li>Handle failures to launch typesetting tools and missing command-search paths more reliably, and avoid an indefinite wait when stopping helper processes.</li>
 <li>Show a sheet when a specified TeX root file cannot be found.</li>
 <li>Let console output be selected and copied while TeX runs or waits for input after an error. New output no longer replaces the selection, and the console does not scroll while text is selected. Moving the focus out of the input field no longer sends an empty line to TeX; Return still does. The Experiment console behaves the same.</li>
@@ -83,6 +84,7 @@
 <li>Expand <code>#PASTE#</code> in macros and key bindings to the text on the clipboard, as <code>#SEL#</code> stands for the selection.</li>
 <li>Show control characters other than tab, line feed and carriage return as U+FFFD in the invisible character color, whether or not invisible characters are shown. Before, they took no space, and a form feed hid the rest of the document.</li>
 <li>Color fullwidth letters, digits and symbols, and the minus sign, which look much like ASCII in Japanese text, with the new Fullwidth and Fullwidth (Background) colors under Settings → Themes → Highlights. The bundled themes define these colors; themes without them, including existing themes in <code>~/Library/TeXShop/Themes</code>, show these characters like other text.</li>
+<li>Leave text being composed with an input method, such as Japanese before it is committed, uncolored, and color the source once it is committed or canceled. Typing Japanese no longer slows down by recoloring the visible text at every keystroke, and a fullwidth digit being typed is no longer highlighted. The Experiment source behaves the same.</li>
 <li>Give each bundled theme expl3 colors that suit it. Themes without these colors, including existing themes in <code>~/Library/TeXShop/Themes</code>, keep the built-in expl3 colors.</li>
 </ul>
 <h4>Opening and saving documents</h4>
@@ -107,7 +109,7 @@
 <h4>Settings and themes</h4>
 <ul>
 <li><strong>Changed behavior:</strong> When the default encoding changes while source windows are open, the existing encoding warning appears below the setting instead of in a sheet.</li>
-<li>Apply the selected theme’s background, text, insertion-point colors and window opacity to Experiment source, preview and console windows where those controls are present. Experiment previews share the normal preview’s System, Light and Dark page appearance choices.</li>
+<li>Apply the selected theme’s background, text, insertion-point colors and window opacity to Experiment source, preview and console windows where those controls are present. Experiment previews share the normal preview’s System, Light and Dark page appearance choices. The background and text colors are drawn opaque, as in the document’s windows, also with themes such as SolarizedDark that store an opacity of 0 with the background.</li>
 <li>Add Search Settings with an item-level result list showing each setting and its category. Selecting a result shows and highlights the setting.</li>
 <li>Window opacity can be adjusted with a 0–100% slider or a numeric field.</li>
 <li>Existing <code>KeyEquivalents.plist</code> entries for the former Key Bindings submenu’s first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (<code>NSUserKeyEquivalents</code>) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings → Keyboard and cannot be assigned by their former menu titles.</li>
