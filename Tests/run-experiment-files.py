@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Experiment typesetting finds the document's files and references (#8).
 
-The Experiment folder holds copy-on-write clones of the items next to the
-document, so \\includegraphics{./Norms.pdf} and \\graphicspath{{./figs/}}, which
+The Experiment folder holds copy-on-write clones of the files next to the
+document, in folders made anew there (cloning whole folders is slow in a Dropbox
+folder), so \\includegraphics{./Norms.pdf} and \\graphicspath{{./figs/}}, which
 TeX does not look up in TEXINPUTS, work as in the document, while whatever TeX,
 Lua or shell commands write there leaves the document's folder alone. Symbolic
-links that lead out of the Experiment folder are removed. A copy of the
+links that could lead out of the Experiment folder are left out. A copy of the
 document's .aux, up to its last complete line, is read with @ as a letter at the
 start of every run, also when latexmk typesets more than once.
 
@@ -21,19 +22,18 @@ import argparse, contextlib, hashlib, os, re, shutil, subprocess, tempfile
 from source_tree import include_args
 
 MUTATIONS = {
-    'no-clone': ('        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) != 0)\n',
-                 '        if (YES)\n'),
-    'keeps-outward-links': ('            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;\n',
-                            '            continue;\n'),
+    'no-clone': ('            if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) == 0)\n',
+                 '            if (NO)\n'),
+    'clones-folders': ('            if (mkdir(to.fileSystemRepresentation, 0700) != 0) continue;\n',
+                       '            if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW) != 0) continue;\n'),
+    'keeps-outward-links': ('            if (TSExperimentLinkLeadsDown(target) && symlink(', '            if (symlink('),
     'links-with-dotdot': ('''    return target.length && !target.isAbsolutePath && ![target.pathComponents containsObject:@".."];\n''',
                           '''    return target.length && !target.isAbsolutePath;\n'''),
-    'no-chmod': ('''        if ((mode & 0700) != 0700 &&\n''', '''        if (NO &&\n'''),
-    'ignores-unsafe': ('''        if ((mode & 0700) != 0700 &&\n''', '''        if (NO &&\n''',
-                       '''            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;\n''',
-                       '''            if (!TSExperimentLinkLeadsDown(manager, path)) [manager removeItemAtPath:path error:NULL];\n'''),
-    'clones-experiment-files': ('''        if ([excluded containsObject:lower] || [lower hasPrefix:@"file."]) continue;\n''', ''),
+    'no-owner-access': ('            chmod(to.fileSystemRepresentation, (info.st_mode & 0777) | 0700);\n',
+                        '            chmod(to.fileSystemRepresentation, info.st_mode & 0777);\n'),
+    'clones-experiment-files': ('''        if (!parent.length && ([excluded containsObject:lower] || [lower hasPrefix:@"file."])) continue;\n''', ''),
     'case-sensitive': ('''        NSString *lower = item.lowercaseString;\n''', '''        NSString *lower = item;\n'''),
-    'no-limit': ('        if (++total > TSExperimentMaximumClonedItems) return 0;\n', '        ++total;\n'),
+    'no-limit': ('        if (items.count == TSExperimentMaximumClonedItems) return 0;\n', ''),
     'whole-aux': ("    while (end > 0 && bytes[end - 1] != '\\n') end--;\n", ''),
     'aux-catcode': None,
 }
