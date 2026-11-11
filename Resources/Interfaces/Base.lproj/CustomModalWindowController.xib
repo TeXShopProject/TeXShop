@@ -45,7 +45,7 @@ Gw
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
-Gw
+DQ
 </string>
                         </buttonCell>
                         <connections>
@@ -92,7 +92,9 @@ Gw
                 </subviews>
                 <constraints>
                     <constraint firstItem="Rer-xE-vmi" firstAttribute="bottom" secondItem="XX0-l9-AZe" secondAttribute="bottom" id="EwT-vX-fyZ"/>
-                    <constraint firstItem="Rer-xE-vmi" firstAttribute="trailing" secondItem="XX0-l9-AZe" secondAttribute="leading" constant="-10" id="L0K-2I-Rhl"/>
+                    <constraint firstItem="Rer-xE-vmi" firstAttribute="trailing" secondItem="XX0-l9-AZe" secondAttribute="leading" constant="-12" id="L0K-2I-Rhl"/>
+                    <constraint firstItem="Rer-xE-vmi" firstAttribute="width" secondItem="XX0-l9-AZe" secondAttribute="width" id="tsW-eq-Btn"/>
+                    <constraint firstItem="XX0-l9-AZe" firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="tsW-mn-Btn"/>
                     <constraint firstAttribute="bottom" secondItem="XX0-l9-AZe" secondAttribute="bottom" constant="20" id="trI-N5-gEi"/>
                     <constraint firstAttribute="trailing" secondItem="XX0-l9-AZe" secondAttribute="trailing" constant="20" id="wWY-hW-d1g"/>
                 </constraints>

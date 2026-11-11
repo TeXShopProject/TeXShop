@@ -24,7 +24,8 @@ def escaped(text):
                     '&': r'\&', '%': r'\%', '$': r'\$', '#': r'\#',
                     '_': r'\_', '~': r'\textasciitilde{}', '^': r'\textasciicircum{}',
                     '→': r'\(\rightarrow\)', '＋': '+', '〜': r'\textasciitilde{}',
-                    '＼': r'\textbackslash{}'}
+                    '＼': r'\textbackslash{}', '•': r'\textbullet{}', '‹': r'\guilsinglleft{}',
+                    '›': r'\guilsinglright{}', '−': r'\textminus{}'}
     return ''.join(replacements.get(c, c) for c in text)
 
 

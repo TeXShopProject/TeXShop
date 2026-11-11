@@ -987,18 +987,19 @@
     //NSLog(@"Place • hit");
 }
 
-- (void) placeComment: (id)sender // by (HS) to be a simple insertion (replacing the selection)
+// As -[TSDocument placeComment:]: •‹› or •‹selection›, undoable.
+- (void) placeComment: (id)sender
 {
-    NSRange		myRange;
-    
-    //   text = [textView string];
-    myRange = [self selectedRange];
-    [self replaceCharactersInRange:myRange withString:startcommentString];//" •\n" puts • on previous line
-    myRange.location += [startcommentString length];//= end+2;//start puts • on previous line
-    myRange.length = 0;
-    [self replaceCharactersInRange:myRange withString:endcommentString];
-    [self setSelectedRange: myRange];
-    //NSLog(@"Place • hit");
+    NSRange selection = [self selectedRange];
+    NSString *note = [[self string] substringWithRange:selection];
+    NSString *mark = [NSString stringWithFormat:@"%@%@%@", startcommentString, note, endcommentString];
+    if (![self shouldChangeTextInRange:selection replacementString:mark])
+        return;
+    [self replaceCharactersInRange:selection withString:mark];
+    [self didChangeText];
+    [[self undoManager] setActionName:NSLocalizedString(@"Insert Mark with Note", @"Edit › Mark")];
+    NSUInteger caret = note.length ? selection.location + mark.length : selection.location + startcommentString.length;
+    [self setSelectedRange:NSMakeRange(caret, 0)];
 }
 
 // end BULLET (H. Neary) (modified by (HS))

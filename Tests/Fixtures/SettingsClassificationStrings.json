@@ -257,19 +257,19 @@
       }
     },
     "Edit Key Bindings…": {
-      "default": "Edit Key Bindings…",
+      "default": "Key Bindings Editor…",
       "overrides": {
-        "ja": "キーバインドファイルを編集…",
-        "de": "Tastenbelegungen bearbeiten…",
-        "fr": "Modifier les raccourcis de saisie…",
-        "es": "Editar combinaciones de teclas…",
-        "it": "Modifica le associazioni dei tasti…",
-        "nl": "Toetsbindingen bewerken…",
-        "pt": "Editar associações de teclas…",
-        "pt-PT": "Editar associações de teclas…",
-        "ro": "Editează asocierile de taste…",
-        "ko": "키 바인딩 파일 편집…",
-        "zh_CN": "编辑按键绑定文件…"
+        "ja": "キーバインドエディタ…",
+        "de": "Tastenbelegungs-Editor…",
+        "fr": "Éditeur de raccourcis de saisie…",
+        "es": "Editor de combinaciones de teclas…",
+        "it": "Editor delle associazioni dei tasti…",
+        "nl": "Toetsbindingen-editor…",
+        "pt": "Editor de associações de teclas…",
+        "pt-PT": "Editor de associações de teclas…",
+        "ro": "Editor de asocieri de taste…",
+        "ko": "키 바인딩 에디터…",
+        "zh_CN": "按键绑定编辑器…"
       }
     },
     "Key Bindings": {

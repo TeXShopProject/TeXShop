@@ -204,7 +204,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "Use LaTeX-aware spell checking (recommended)";
 "Use legacy spell checking" = "Use legacy spell checking";
 "LaTeX Spell Checking" = "LaTeX Spell Checking";
-"Edit Key Bindings…" = "Edit Key Bindings…";
+"Edit Key Bindings…" = "Key Bindings Editor…";
 "Key Bindings" = "Key Bindings";
 "Edit Command Completion…" = "Edit Command Completion…";
 "Command Completion" = "Command Completion";
@@ -312,3 +312,20 @@
 
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "Apply “%@” to the whole document?";
+
+/* Macro editor placeholder guide */
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help).";
+/* Key binding editor placeholder guide */
+"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "Insert Mark with Note";
+"How to Use Marks…" = "How to Use Marks…";
+"Inserts a mark (•) to come back to later." = "Inserts a mark (•) to come back to later.";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Inserts a mark with a note (•‹note›). Selected text becomes the note.";
+"Selects the next mark, with its note; typing replaces it." = "Selects the next mark, with its note; typing replaces it.";
+"Selects the previous mark, with its note; typing replaces it." = "Selects the previous mark, with its note; typing replaces it.";
+"Deletes the next • and selects its note, if it has one." = "Deletes the next • and selects its note, if it has one.";
+"Deletes the previous • and selects its note, if it has one." = "Deletes the previous • and selects its note, if it has one.";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = mark, •‹note› = mark with a note; %@ › %@ moves between them.";
+"Marks" = "Marks";

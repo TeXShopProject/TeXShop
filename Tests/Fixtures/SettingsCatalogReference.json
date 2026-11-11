@@ -1955,7 +1955,7 @@
       },
       {
        "kind": "button",
-       "title": "キーバインドファイルを編集…",
+       "title": "キーバインドエディタ…",
        "src": [
         "menu:openAutoCompletionListEditor"
        ]

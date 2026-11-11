@@ -231,7 +231,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "LaTeX 구조를 고려한 맞춤법 검사 사용(권장)";
 "Use legacy spell checking" = "기존 맞춤법 검사 사용";
 "LaTeX Spell Checking" = "LaTeX 맞춤법 검사";
-"Edit Key Bindings…" = "키 바인딩 파일 편집…";
+"Edit Key Bindings…" = "키 바인딩 에디터…";
 "Key Bindings" = "키 바인딩";
 "Edit Command Completion…" = "명령어 완성 파일 편집…";
 "Command Completion" = "명령어 완성";
@@ -317,3 +317,20 @@
 
 /* Asked when a conversion is chosen with nothing selected */
 "Apply \"%@\" to the whole document?" = "문서 전체에 ‘%@’을(를) 적용하시겠습니까?";
+
+/* Macro editor placeholder guide */
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 선택한 텍스트, #INS# = 매크로 삽입 후 커서 위치, #PASTE# = 클립보드의 텍스트. AppleScript 매크로에서는 #FILEPATH# 등도 사용할 수 있습니다(도움말 참조).";
+/* Key binding editor placeholder guide */
+"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 선택한 문자열, #INS# = 출력 후 커서 위치, #PASTE# = 클립보드의 텍스트";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "메모 있는 마크 삽입";
+"How to Use Marks…" = "마크 사용법…";
+"Inserts a mark (•) to come back to later." = "나중에 돌아올 위치에 마크(•)를 삽입합니다.";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "메모 있는 마크(•‹메모›)를 삽입합니다. 선택한 텍스트가 메모가 됩니다.";
+"Selects the next mark, with its note; typing replaces it." = "다음 마크를 메모와 함께 선택합니다. 입력하면 바뀝니다.";
+"Selects the previous mark, with its note; typing replaces it." = "이전 마크를 메모와 함께 선택합니다. 입력하면 바뀝니다.";
+"Deletes the next • and selects its note, if it has one." = "다음 •를 지우고, 메모가 있으면 메모를 선택합니다.";
+"Deletes the previous • and selects its note, if it has one." = "이전 •를 지우고, 메모가 있으면 메모를 선택합니다.";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = 마크, •‹메모› = 메모 있는 마크. %@ › %@에서 이동할 수 있습니다.";
+"Marks" = "마크";

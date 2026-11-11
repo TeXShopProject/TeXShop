@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "Cambio de tamaño";
 "group.bindings.title" = "Autocompleción";
 "catalog.keyboard.0.0.title" = "Usar combinaciones de teclas (valor inicial para documentos nuevos)";
-"catalog.keyboard.0.1.title" = "Editar combinaciones de teclas…";
+"catalog.keyboard.0.1.title" = "Editor de combinaciones de teclas…";
 "group.completion.title" = "Autocompletado de comandos";
 "catalog.keyboard.1.0.title" = "Tecla de activación";
 "catalog.keyboard.1.1.title" = "Compleciones BibDesk";

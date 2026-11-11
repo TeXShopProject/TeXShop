@@ -296,6 +296,51 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Marks" id="813">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Marks" id="814">
+                                    <items>
+                                        <menuItem title="Insert Mark" keyEquivalent="8" id="819" identifier="TSShortcut.placeBullet:.0">
+                                            <connections>
+                                                <action selector="placeBullet:" target="-1" id="826"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Inserir marca com nota" keyEquivalent="8" id="820" identifier="TSShortcut.placeComment:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="placeComment:" target="-1" id="827"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="Next Mark" keyEquivalent="f" id="815" identifier="TSShortcut.doNextBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBullet:" target="-1" id="822"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Next Mark (Del)" alternate="YES" keyEquivalent="f" id="817" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBulletAndDelete:" target="-1" id="823"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Previous Mark" keyEquivalent="g" id="816" identifier="TSShortcut.doPreviousBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBullet:" target="-1" id="824"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Previous Mark (Del)" alternate="YES" keyEquivalent="g" id="818" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBulletAndDelete:" target="-1" id="825"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Ortografia e gramática" id="DrE-7b-WG4">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Ortografia e gramática" id="BOm-Mq-qc1">
@@ -649,48 +694,6 @@
                                             <connections>
                                                 <action selector="registerForCommandCompletion:" target="-1" id="545"/>
                                             </connections>
-                                        </menuItem>
-                                        <menuItem title="Marks" id="813">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Marks" id="814">
-                                                <items>
-                                                    <menuItem title="Next Mark" keyEquivalent="f" id="815" identifier="TSShortcut.doNextBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBullet:" target="-1" id="822"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Next Mark (Del)" alternate="YES" keyEquivalent="f" id="817" identifier="TSShortcut.doNextBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBulletAndDelete:" target="-1" id="823"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Previous Mark" keyEquivalent="g" id="816" identifier="TSShortcut.doPreviousBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBullet:" target="-1" id="824"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Previous Mark (Del)" alternate="YES" keyEquivalent="g" id="818" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBulletAndDelete:" target="-1" id="825"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Insert Mark" keyEquivalent="8" id="819" identifier="TSShortcut.placeBullet:.0">
-                                                        <connections>
-                                                            <action selector="placeBullet:" target="-1" id="826"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Insert Comment" alternate="YES" keyEquivalent="8" id="820" identifier="TSShortcut.placeComment:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="placeComment:" target="-1" id="827"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
                                         </menuItem>
                                     </items>
                                 </menu>

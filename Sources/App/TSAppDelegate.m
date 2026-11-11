@@ -29,6 +29,7 @@
 #import "TSAppDelegate.h"
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import "TSDockIconController.h"
+#import "TSMarkMenu.h"
 
 #import "globals.h"
 
@@ -212,6 +213,8 @@
     }
     // Rule editing and spelling help remain accessible in either spelling mode.
     [TSSpellSupport installMenuItems];
+    // Marks work without command completion; their commands belong in Edit.
+    [TSMarkMenu installInMenu:NSApp.mainMenu];
     // OgreKit replaces the Find submenu during the launch notification.
     [[TSKeyboardShortcuts sharedController] startAfterLaunchWithConfiguration:^(TSKeyboardShortcuts *shortcuts) {
         shortcuts.showSettings = ^{ [[TSPreferences sharedInstance] showKeyboardSettings:nil]; };

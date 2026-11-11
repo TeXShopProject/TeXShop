@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "Größenänderung der Konsole";
 "group.bindings.title" = "Automat. Vervollständigung";
 "catalog.keyboard.0.0.title" = "Tastenbelegungen verwenden (Vorgabe für neue Dokumente)";
-"catalog.keyboard.0.1.title" = "Tastenbelegungen bearbeiten…";
+"catalog.keyboard.0.1.title" = "Tastenbelegungs-Editor…";
 "group.completion.title" = "Befehlsvervollständigung";
 "catalog.keyboard.1.0.title" = "Auslösetaste";
 "catalog.keyboard.1.1.title" = "BibDesk-Vervollständigung";
