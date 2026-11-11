@@ -3724,6 +3724,8 @@ Thus the source and preview windows can be split horizontally, with one portion 
 or vertically, with one portion to the left of the other.
 Pushing the option key while clicking the split window toolbar item has the same effect.
 
+When the Preview window is split or unsplit, the place shown at the top edge of the top (or left) view stays where it is on the screen, at any magnification and in every display format. If that view is scrolled while the window is split, unsplitting keeps the new position. When the window is split again, the bottom (or right) view shows the place it showed when the window was last unsplit.
+
 \section{The Active View in a Split Window}
 \label{Active_View_Split_Window}
 
@@ -3777,10 +3779,6 @@ unsplit.
 \newpage
 This feature is not available for the Source Window because it is not needed there. When the source window has been split into two views, the  view with the cursor will become the active window when the window is unsplit.
 
-If ``Switch Views'' is used several times in a row, the images will slowly creep up or down, rather than returning to their exact starting positions. This creep is difficult to eliminate and irrelevant, 
-because the command is designed to be used just once in the rare case that the bottom view in the
-Preview window should become the main view after unsplitting.
-
 
 \section{Revising the Document and Typesetting}
 
@@ -3802,27 +3800,23 @@ However, when the Preview window is split so both views are shown simultaneously
 \section{Avoiding Creep When Unsplitting}
 
 When splitting the Preview window was introduced, we imagined that users faced with writing related sections of a document would split the window and  work in split mode constantly without unsplitting. To our surprise, a few users
-worked in a different way; they alternated between working with the split window and working with the unsplit top portion. These users noticed that when a document was split and then unsplit, the display  did not return to the exact starting spot, but instead crept up or down by several lines. If the two commands were cycled again and again, each cycle produced an additional creep. This became annoying. 
+worked in a different way; they alternated between working with the split window and working with the unsplit top portion. These users noticed that when a document was split and then unsplit, the display  did not return to the exact starting spot, but instead crept up or down. If the two commands were cycled again and again, each cycle produced an additional creep. TeXShop 5.25 reduced the creep by returning a horizontally split window to the position it had before splitting, which ignored any scrolling of the top portion while the window was split.
 
-The problem did not occur in Single Page or Double Page display modes, but only in Multipage and Double Multipage modes. It did not occur when the window was split vertically, but only when it was split horizontally. In TeXShop 5.25, this problem was fixed by a slight design change. Just before splitting a window horizontally, the program records the position of its scroll bar. When the window is unsplit, the view returns to that recorded scroll bar position.
-This virtually eliminates the creep, but at a slight cost. When the user splits the window and then scrolls the top portion, unsplitting does not return to the new scroll position of the view, but instead to the original position before splitting. (This only happens when splitting horizontally in Multipage and Double Multipage modes.)
-
-It is easy to get around this problem. Suppose you want to scroll the top portion of a split window to a new ``permanent position.'' Unsplit the window, scroll to the new position, and split it again. The lower half will not change, but the upper half will now remember its new position.
+Since TeXShop 5.60, splitting and unsplitting no longer creep. TeXShop records the place shown at the top edge of the top view as a position on its page, and puts that place back at the top edge after the window is split or unsplit. So the top portion stays where it is on the screen, and scrolling it while the window is split is kept when the window is unsplit. Near the end of the document, where the larger unsplit window cannot scroll that far, the window shows the end of the document instead.
 
 \section{Two Options When Splitting Horizontally}
 \label{Options_Splitting_Horizontally_Section}
 
  Two special variations have been added to the split window command in horizontal mode. Most users should ignore these variations, but one or two users may find them helpful. If the shift and control keys are held down when the Split Window menu is selected or the corresponding tool is checked, the window is forced to split so the lower and upper views are the same size. If just the shift key is held down in the same situation, the two views are forced to have the same size and to contain the same material. 
  
- The first of these variations may be useful for users who rarely move the split bar and never change the magnification of either view. These users probably already have a stable situation without creep.
-In those rare cases when they do move the split bar (and pay with additional creep), the option takes them back to the stable situation. 
+ The first of these variations may be useful for users who usually work with two views of the same size: when they have moved the split bar, the variation brings the two views back to the same size.
 
 The second variation was created for a user who lectures directly from a screen showing typeset course notes. He typically shows a full page view of the notes, scrolling through each day's material. But when he comes to a theorem, he splits the screen using the second variation. The theorem remains in the upper view, so students can refer back to it and recall the assumptions required for the conclusion. Meanwhile the lower view can be scrolled to show example applications of the theorem and then key steps of the proof. 
 
 
 \section{Splitting Vertically}
 
-If the Option key is held down when a window is split, the split is vertical. This mode works as expected provided you know what to expect. When a window is split, the original single full window's contents are placed in the left vertical side. Since vertical sections are narrower than before,  more pages are shown. The original unsplit page is at the bottom of this display rather than the top. This is by design. Similarly when the window is unsplit, the bottom portion of the left side will become the new single window. This is also by design. If the left side is scrolled during the split phase, the new material at the bottom of the left side will become the full window after unsplitting. 
+If the Option key is held down when a window is split, the split is vertical. The original window's contents are placed in the left side, and the place shown at the top edge of the window stays at the top of the left side. Since each side is narrower than the window, a magnification that fits the page to the window makes the pages smaller, and more of the document is shown below. When the window is unsplit, the place shown at the top of the left side stays at the top of the window.
 
 \section{Final Note}
 
@@ -3893,7 +3887,7 @@ The two views are not fixed; they can be scrolled if desired. So while one view 
 \label{Independence_Split_Window_Section}
 
 When this feature was  introduced in TeXShop 5.23, the two views for the full window were also the two views displayed by splitting the window. This is no longer the case. Instead if either of the views for the full window is split, it will become the top view of the split window. The bottom view of this window is a completely separate view, which
-can be scrolled to any position desired. Unsplitting the window returns to the original view before it was split.
+can be scrolled to any position desired. Unsplitting the window keeps the place shown at the top of the top view, so unless that view was scrolled, the original view returns.
 If we then type Option-2 to get the second full view and then split that view, the second full view will appear as the top view of the split window, and the bottom view will be the same view obtained when we first split. This means that
 users who use the new Switch Preview Views feature can also use the older Split Window feature. Then they will deal with three independent views, the two views for the full window (which become the top view when splitting),
 and the bottom view when either view is split.
@@ -4077,7 +4071,7 @@ Hold down the shift key and toggle ``Split Window'' in the Window menu (or the c
 This splits the Preview window into equal parts and duplicates the upper part of the full view into the lower part.
 Follow the internal link in the lower part.
 If desired, scroll each part a litte bit and move the dividing bar.
-When you switch back, i.e.\ unsplit the Preview window (no modifier key necessary), then the lower part vanishes and you see more of the upper one (and possibly experience an upward creep of a line or two).
+When you switch back, i.e.\ unsplit the Preview window (no modifier key necessary), then the lower part vanishes and you see more of the upper one, which stays where it is on the screen.
 
 TeXShop remembers the position of the dividing bar and the view of the lower part is saved.
 If you split again (without any modifier key), you get back the setting which you just left.

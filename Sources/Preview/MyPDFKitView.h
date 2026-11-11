@@ -30,6 +30,7 @@
 #import "TSDocument.h"
 #import "HideView.h"
 #import "synctex_parser.h"
+#import "TSPreviewPanePlace.h"
 
 @class TSOutlineExpansion;
 @class TSLinkPreviewView;
@@ -126,8 +127,7 @@
     
 // Variables used when splitting window
     
-    NSInteger   splitTheIndex;
-    NSRect      splitVisibleRect, splitVisibleRectLimited, splitFullRect;
+    TSPreviewPanePlace   splitPlace;
     
 // Variables for Annotations
     
@@ -335,12 +335,7 @@
 
 // splittingWindow
 - (void)saveLocation;
-- (void)saveLocationLimited;
-- (void)writeLocation: (NSInteger)anIndex andFullRect: (NSRect) fullRect andVisibleRect: (NSRect) visibleRect;
-- (void)readLocation: (NSInteger *) anIndex andFullRect: (NSRect *) fullRect andVisibleRect: (NSRect *) visibleRect;
 - (void)restoreLocation;
-- (void)restoreLocationLimited;
-- (double)returnHeight;
 
 
 @end

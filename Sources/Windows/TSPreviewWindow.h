@@ -56,7 +56,6 @@
 @property               double          mytimestamp;
 @property               BOOL            horizontal;
 @property               double          scrolladjust;
-@property               BOOL            oldUnsplitAfterSwitch;
 // @property               NSRect          oldVisibleRect;
 // @property               NSInteger       oldIndex;
 // @property               BOOL            oldUsed;
