@@ -157,7 +157,7 @@
 	<key>KeepBackup</key>
 	<string>NO</string>
 	<key>Kpsetool</key>
-	<string>kpsetool -w -n latex tex</string>
+	<string>kpsewhich -progname=latex -format=tex</string>
 	<key>LastStyName</key>
 	<string>latex.ltx</string>
 	<key>LatexCommand</key>
@@ -461,7 +461,7 @@
 	<key>HtmlWindowFixedPos</key>
 	<string>18 678 507 479 0 0 1920 1178</string>
 	<key>HtmlHome</key>
-	<string></string>
+	<string>https://texshop.app</string>
 	<key>EncodingMenuInSaveDialog</key>
 	<false/>
 	<key>BlockCursor</key>

@@ -216,9 +216,6 @@
 		AE9500010000000000000001 /* TSExternalPDFSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9500010000000000000002 /* TSExternalPDFSnapshot.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40DE48221FDC4C04003E1D9A /* HideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DE48201FDC4C04003E1D9A /* HideView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		40DE48231FDC4C04003E1D9A /* HideView.h in Headers */ = {isa = PBXBuildFile; fileRef = 40DE48211FDC4C04003E1D9A /* HideView.h */; };
-		40E21179289760EE0033BA29 /* more.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 40E21177289760EE0033BA29 /* more.jpg */; };
-		40E2117C289761050033BA29 /* READ ME FIRST.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40E2117A289761050033BA29 /* READ ME FIRST.pdf */; };
-		40E2117F2897611A0033BA29 /* SamplePage.html in Resources */ = {isa = PBXBuildFile; fileRef = 40E2117D289761190033BA29 /* SamplePage.html */; };
 		40E76BF1292FDD1E00CBE5F9 /* CustomModalWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40E76BF0292FDD0C00CBE5F9 /* CustomModalWindowController.m */; };
 		40E76BF4292FDD9200CBE5F9 /* CustomModalWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40E76BF2292FDD9200CBE5F9 /* CustomModalWindowController.xib */; };
 		40E81A6929A0788D0014D82A /* Manual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 40E81A6729A0788D0014D82A /* Manual.pdf */; };
@@ -808,9 +805,6 @@
 		AE9500010000000000000002 /* TSExternalPDFSnapshot.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSExternalPDFSnapshot.m; sourceTree = "<group>"; };
 		40DE48201FDC4C04003E1D9A /* HideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HideView.m; sourceTree = "<group>"; };
 		40DE48211FDC4C04003E1D9A /* HideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HideView.h; sourceTree = "<group>"; };
-		40E21178289760EE0033BA29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Base; path = Base.lproj/more.jpg; sourceTree = "<group>"; };
-		40E2117B289761050033BA29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Base; path = "Base.lproj/READ ME FIRST.pdf"; sourceTree = "<group>"; };
-		40E2117E289761190033BA29 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/SamplePage.html; sourceTree = "<group>"; };
 		40E76BEF292FDD0C00CBE5F9 /* CustomModalWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomModalWindowController.h; sourceTree = "<group>"; };
 		40E76BF0292FDD0C00CBE5F9 /* CustomModalWindowController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = CustomModalWindowController.m; sourceTree = "<group>"; };
 		40E76BF3292FDD9200CBE5F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CustomModalWindowController.xib; sourceTree = "<group>"; };
@@ -1445,9 +1439,6 @@
 				40A03E850F3A47760014104E /* First Steps with Mathematical Typesetting.pdf */,
 				40A03E8A0F3A47860014104E /* First Steps with TeXShop.pdf */,
 				403244B329A037A9000431A1 /* Manual.pdf */,
-				40E2117D289761190033BA29 /* SamplePage.html */,
-				40E2117A289761050033BA29 /* READ ME FIRST.pdf */,
-				40E21177289760EE0033BA29 /* more.jpg */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				03E61892009B32C77F000001 /* Localizable.strings */,
 				52B13E5108A8183B00756E5E /* MacroEditor.nib */,
@@ -1807,11 +1798,8 @@
 				4078813C0519249A006979EA /* ToolbarItems.strings in Resources */,
 				52A4037008AE1F6C0070F041 /* Encodings.strings in Resources */,
 				4078813B0519249A006979EA /* TeXShop.scriptTerminology in Resources */,
-				40E21179289760EE0033BA29 /* more.jpg in Resources */,
 				40AC8583181E0CCF00E69820 /* Notes on Applescript in TeXShop.pdf in Resources */,
 				403E76BE218E7008006975A8 /* TeXShop.scriptSuite in Resources */,
-				40E2117C289761050033BA29 /* READ ME FIRST.pdf in Resources */,
-				40E2117F2897611A0033BA29 /* SamplePage.html in Resources */,
 				4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */,
 				4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */,
 				4015F925218F458C00F6F883 /* ScriptRunner.app in Resources */,
@@ -2237,30 +2225,6 @@
 				40496C2426067EDA005E885D /* Base */,
 			);
 			name = "File Encoding.pdf";
-			sourceTree = "<group>";
-		};
-		40E21177289760EE0033BA29 /* more.jpg */ = {
-			isa = PBXVariantGroup;
-			children = (
-				40E21178289760EE0033BA29 /* Base */,
-			);
-			name = more.jpg;
-			sourceTree = "<group>";
-		};
-		40E2117A289761050033BA29 /* READ ME FIRST.pdf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				40E2117B289761050033BA29 /* Base */,
-			);
-			name = "READ ME FIRST.pdf";
-			sourceTree = "<group>";
-		};
-		40E2117D289761190033BA29 /* SamplePage.html */ = {
-			isa = PBXVariantGroup;
-			children = (
-				40E2117E289761190033BA29 /* Base */,
-			);
-			name = SamplePage.html;
 			sourceTree = "<group>";
 		};
 		40E76BF2292FDD9200CBE5F9 /* CustomModalWindowController.xib */ = {

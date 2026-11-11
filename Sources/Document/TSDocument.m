@@ -7965,7 +7965,7 @@ if (! useFullSplitWindow) {
 		
 		NSString* kpsetool = [SUD objectForKey:KpsetoolKey];
 		if(!kpsetool || [kpsetool isEqualToString:@""]){
-			kpsetool = @"kpsetool -w -n latex tex";
+			kpsetool = @"kpsewhich -progname=latex -format=tex";
 		}
 		NSString* target = [input stringValue];
 		[SUD setObject:target forKey:LastStyNameKey];

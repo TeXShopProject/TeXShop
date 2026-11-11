@@ -25,7 +25,7 @@ for lang,expected in fixture['languages'].items():
     if lang in search_wording['counts']:assert actual['Settings results: %lu']==search_wording['counts'][lang],(lang,'Search counts refer to settings')
     engine=strings(panes/'SettingsCategories.strings')
     # A note may first say what the setting does; the default is always its last part.
-    for key,value in [('catalog.typesetting.0.3.note','pdflatexmk'),('catalog.typesetting.8.0.note','kpsetool -w -n latex tex'),('catalog.typesetting.8.1.note','bibtex')]:assert engine[key].endswith(search_wording['prefixes'][lang]+value),(lang,'Engine defaults use consistent localized wording',key)
+    for key,value in [('catalog.typesetting.0.3.note','pdflatexmk'),('catalog.typesetting.8.0.note','kpsewhich -progname=latex -format=tex'),('catalog.typesetting.8.1.note','bibtex')]:assert engine[key].endswith(search_wording['prefixes'][lang]+value),(lang,'Engine defaults use consistent localized wording',key)
     assert "Changes the Dock icon only. Click OK to keep your choice." not in strings(panes/"SettingsDock.strings"),(lang,"obsolete Dock confirmation guidance")
     for (table,key),value in zip(reviewed['keys'],reviewed['languages'][lang]):assert strings(panes/(table+'.strings'))[key]==value,(lang,key)
     assert actual['New shortcut']==reviewed['languages'][lang][3],(lang,'recording label')

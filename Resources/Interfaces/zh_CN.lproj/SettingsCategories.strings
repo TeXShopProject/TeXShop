@@ -229,7 +229,7 @@
 "catalog.preview.4.2.note" = "复制位图图像时，数值越大，文字越突出。";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "主页 URL";
-"catalog.preview.5.0.note" = "打开 HTML 窗口时首先显示的页面。输入网址或文件路径。留空时打开示例页面。";
+"catalog.preview.5.0.note" = "打开 HTML 窗口时首先显示的页面。输入网址或文件路径。默认值：https://texshop.app";
 "group.typesetting.0.title" = "默认值";
 "catalog.typesetting.0.0.title" = "默认指令";
 "catalog.typesetting.0.1.title" = "使用的命令";
@@ -273,8 +273,8 @@
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Ghostscript 将 PostScript 转换为 PDF 时加上此选项，以保留 PSTricks 等的透明效果。需要 Ghostscript 9.51 或更高版本。";
 "group.typesetting.8.title" = "查找命令和 BibTeX";
-"catalog.typesetting.8.0.title" = "kpsetool";
-"catalog.typesetting.8.0.note" = "“帮助”菜单中“打开样式文件”用来查找文件的命令。默认值：kpsetool -w -n latex tex";
+"catalog.typesetting.8.0.title" = "kpsewhich";
+"catalog.typesetting.8.0.note" = "“帮助”菜单中“打开样式文件”用来查找文件的命令。默认值：kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeX 引擎";
 "catalog.typesetting.8.1.note" = "默认值：bibtex";
 "group.typesetting.9.title" = "pTeX 支持 (仅日语用户)";

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1020.title" = "検索用コマンド";
-"1024.title" = "kpsetool (デフォルト: kpsetool -w -n latex tex)";
+"1024.title" = "kpsewhich (デフォルト: kpsewhich -progname=latex -format=tex)";
 "1027.title" = "BibTeX エンジン";
 "1030.title" = "デフォルト: bibtex";
 "1063.title" = "デフォルト";

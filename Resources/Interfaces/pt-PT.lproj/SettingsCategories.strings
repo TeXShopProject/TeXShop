@@ -229,7 +229,7 @@
 "catalog.preview.4.2.note" = "Valores mais elevados realçam o texto ao copiar imagens rasterizadas.";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL inicial";
-"catalog.preview.5.0.note" = "A página que a janela HTML abre primeiro. Introduza um endereço web ou o caminho de um ficheiro. Se estiver vazio, abre uma página de exemplo.";
+"catalog.preview.5.0.note" = "A página que a janela HTML abre primeiro. Introduza um endereço web ou o caminho de um ficheiro. Predefinição: https://texshop.app";
 "group.typesetting.0.title" = "Predefinições";
 "catalog.typesetting.0.0.title" = "Formato por omissão";
 "catalog.typesetting.0.1.title" = "Comando a usar";
@@ -273,8 +273,8 @@
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Acrescenta esta opção quando o Ghostscript converte PostScript em PDF, para manter a transparência, como a do PSTricks. Requer o Ghostscript 9.51 ou posterior.";
 "group.typesetting.8.title" = "Comandos de pesquisa e BibTeX";
-"catalog.typesetting.8.0.title" = "kpsetool";
-"catalog.typesetting.8.0.note" = "O comando com que “Abrir ficheiro de estilo” do menu Ajuda procura o ficheiro. Predefinição: kpsetool -w -n latex tex";
+"catalog.typesetting.8.0.title" = "kpsewhich";
+"catalog.typesetting.8.0.note" = "O comando com que “Abrir ficheiro de estilo” do menu Ajuda procura o ficheiro. Predefinição: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Predefinição: bibtex";
 "group.typesetting.9.title" = "Suporte a pTeX (para o Japão)";

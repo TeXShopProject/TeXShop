@@ -229,7 +229,7 @@
 "catalog.preview.4.2.note" = "ビットマップ画像をコピーするときの文字の濃さです。大きな値ほど文字が強調されます。";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "ホーム URL";
-"catalog.preview.5.0.note" = "HTML ウインドウを表示したときに最初に開くページです。Web のアドレスか、ファイルのパスを入れます。空のときは付属のサンプルページを開きます。";
+"catalog.preview.5.0.note" = "HTML ウインドウを表示したときに最初に開くページです。Web のアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app";
 "group.typesetting.0.title" = "既定";
 "catalog.typesetting.0.0.title" = "デフォルトのコマンド";
 "catalog.typesetting.0.1.title" = "利用するコマンド";
@@ -273,8 +273,8 @@
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Ghostscript で PostScript を PDF に変換するときにこのオプションを付け、PSTricks などの透明効果を残します。Ghostscript 9.51 以降が必要です。";
 "group.typesetting.8.title" = "検索用コマンドと BibTeX";
-"catalog.typesetting.8.0.title" = "kpsetool";
-"catalog.typesetting.8.0.note" = "「ヘルプ」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsetool -w -n latex tex";
+"catalog.typesetting.8.0.title" = "kpsewhich";
+"catalog.typesetting.8.0.note" = "「ヘルプ」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeX エンジン";
 "catalog.typesetting.8.1.note" = "デフォルト: bibtex";
 "group.typesetting.9.title" = "pTeX サポート（日本用）";

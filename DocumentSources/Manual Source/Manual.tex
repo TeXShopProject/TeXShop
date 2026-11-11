@@ -2722,13 +2722,11 @@ Console output and log files sometimes mix encodings, for instance when a docume
 Starting with TeXShop 5.00, a new preview window is available in TeXShop, able to display html source as a live web view. The window is provided because several TeX and LaTeX engines  produce html output. For the moment, we ignore these engines and  examine the window.
 
 Select the item ``Show HTML Window'' in the Preview menu.
-A default web document will open with links to to several active web sites.
-Click the last link to see an illustration, and click the TUG link to confirm that the window can  access live
- content.
+The window opens the TeXShop web site, which confirms that the window can access live content.
 When the page first appears, it may be small and in an awkward location. Resize it and move it to a  reasonable spot, perhaps where the Preview Window usually appears. Select it and choose the item
 ``Save HTML Window Position'' in the Preview menu. The window will then always open with this size and position. 
 
-In the HTML group of the Preview category of Settings, the item ``Home URL'' sets the page that opens when the window is shown. Enter a web address, such as https://tug.org, or the full path of an html file. When the item is empty, the default web document described above opens.
+In the HTML group of the Preview category of Settings, the item ``Home URL'' sets the page that opens when the window is shown. Enter a web address, such as https://tug.org, or the full path of an html file. By default it is https://texshop.app, and an empty item also opens that page.
 
 Although the window contains a full featured web view, the toolbar items are  minimal. Our  window only provides Back and Forward buttons, a field to enter a new URL, and a search field. The search field currently does nothing. You already have Safari and perhaps other browsers;  TeXShop has no obligation to provide a duplicate.
 
@@ -4353,15 +4351,14 @@ The TeX Live distribution comes with a massive amount of documentation. This men
 Most binaries and packages in TeX Live have associated documentation. Selecting this item opens a small dialog in which you can type the name of a binary or package. Usually this item is in small letters. TeXShop then calls a program in TeX Live to open the documentation in appropriate programs, often in Preview or Safari. 
 Try this by searching for documentation for pdftex, xetex, beamer, hyperref, and other interesting software.
 \newpage
-The search tool which this item calls can be set in TeXShop Preferences. By default it is
-\begin{verbatim}
-    kpsetool -w -n latex tex
-\end{verbatim}
-
 
 {\bf Open Style File ...}
 
 This menu command opens a small dialog in which you can type the name of a style file or class file. TeXShop will then open the file itself.
+TeXShop finds the file with the search command set by the ``kpsewhich'' item in the Typesetting category of Settings. By default it is
+\begin{verbatim}
+    kpsewhich -progname=latex -format=tex
+\end{verbatim}
 
 
 

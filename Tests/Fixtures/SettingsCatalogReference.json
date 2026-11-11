@@ -1568,11 +1568,11 @@
       {
        "kind": "path",
        "title": "ホーム URL",
-       "value": "https://www.google.com",
+       "value": "https://texshop.app",
        "src": [
         "Q1c-5s-qjb"
        ],
-       "note": "HTML ウインドウを表示したときに最初に開くページです。Web のアドレスか、ファイルのパスを入れます。空のときは付属のサンプルページを開きます。"
+       "note": "HTML ウインドウを表示したときに最初に開くページです。Web のアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app"
       }
      ]
     }
@@ -1829,9 +1829,9 @@
      "rows": [
       {
        "kind": "path",
-       "title": "kpsetool",
-       "value": "kpsetool -w -n latex tex",
-       "note": "「ヘルプ」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsetool -w -n latex tex",
+       "title": "kpsewhich",
+       "value": "kpsewhich -progname=latex -format=tex",
+       "note": "「ヘルプ」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex",
        "src": [
         "1195"
        ]

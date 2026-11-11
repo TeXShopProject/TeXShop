@@ -229,7 +229,7 @@
 "catalog.preview.4.2.note" = "Valorile mai mari accentuează textul la copierea imaginilor raster.";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL inițial";
-"catalog.preview.5.0.note" = "Pagina pe care fereastra HTML o deschide prima. Introduceți o adresă web sau calea unui fișier. Dacă este gol, se deschide o pagină de exemplu.";
+"catalog.preview.5.0.note" = "Pagina pe care fereastra HTML o deschide prima. Introduceți o adresă web sau calea unui fișier. Implicit: https://texshop.app";
 "group.typesetting.0.title" = "Valori implicite";
 "catalog.typesetting.0.0.title" = "Comanda Standard";
 "catalog.typesetting.0.1.title" = "Comanda utilizată";
@@ -273,8 +273,8 @@
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Adaugă această opțiune când Ghostscript convertește PostScript în PDF, pentru a păstra transparența, de exemplu cea din PSTricks. Necesită Ghostscript 9.51 sau mai nou.";
 "group.typesetting.8.title" = "Comenzi de căutare și BibTeX";
-"catalog.typesetting.8.0.title" = "kpsetool";
-"catalog.typesetting.8.0.note" = "Comanda cu care „Deschide fișierul de stil” din meniul Ajutor caută fișierul. Implicit: kpsetool -w -n latex tex";
+"catalog.typesetting.8.0.title" = "kpsewhich";
+"catalog.typesetting.8.0.note" = "Comanda cu care „Deschide fișierul de stil” din meniul Ajutor caută fișierul. Implicit: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "Motor BibTeX";
 "catalog.typesetting.8.1.note" = "Implicit: bibtex";
 "group.typesetting.9.title" = "Suport pTeX (pentru Japonia)";

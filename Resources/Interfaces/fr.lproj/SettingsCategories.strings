@@ -229,7 +229,7 @@
 "catalog.preview.4.2.note" = "Les valeurs élevées accentuent le texte lors de la copie d’images matricielles.";
 "group.preview.5.title" = "HTML";
 "catalog.preview.5.0.title" = "URL personnelle";
-"catalog.preview.5.0.note" = "La page que la fenêtre HTML ouvre en premier. Saisissez une adresse web ou le chemin d’un fichier. Si le champ est vide, une page d’exemple s’ouvre.";
+"catalog.preview.5.0.note" = "La page que la fenêtre HTML ouvre en premier. Saisissez une adresse web ou le chemin d’un fichier. Par défaut : https://texshop.app";
 "group.typesetting.0.title" = "Valeurs par défaut";
 "catalog.typesetting.0.0.title" = "Format par défaut";
 "catalog.typesetting.0.1.title" = "Commande à utiliser";
@@ -273,8 +273,8 @@
 "catalog.typesetting.7.1.title" = "-dALLOWPSTRANSPARENCY";
 "catalog.typesetting.7.1.note" = "Ajoute cette option quand Ghostscript convertit le PostScript en PDF, afin de conserver la transparence, par exemple celle de PSTricks. Nécessite Ghostscript 9.51 ou ultérieur.";
 "group.typesetting.8.title" = "Commandes de recherche et BibTeX";
-"catalog.typesetting.8.0.title" = "kpsetool";
-"catalog.typesetting.8.0.note" = "La commande avec laquelle « Ouvrir le fichier style » du menu Aide cherche le fichier. Par défaut : kpsetool -w -n latex tex";
+"catalog.typesetting.8.0.title" = "kpsewhich";
+"catalog.typesetting.8.0.note" = "La commande avec laquelle « Ouvrir le fichier style » du menu Aide cherche le fichier. Par défaut : kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "Moteur BibTeX";
 "catalog.typesetting.8.1.note" = "Par défaut : bibtex";
 "group.typesetting.9.title" = "Support pTeX (Japon)";

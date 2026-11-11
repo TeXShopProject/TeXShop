@@ -3350,7 +3350,7 @@
           "1069.title": "TeX",
           "1027.title": "BibTeX Engine",
           "1030.title": "default: bibtex",
-          "1024.title": "kpsetool (default: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
           "1063.title": "Default",
           "878.title": "LaTeX ",
           "882.title": "Shell Escape Warning",
@@ -4239,7 +4239,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (default: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -6615,7 +6615,7 @@
           "1069.title": "TeX",
           "1027.title": "BibTeX Engine",
           "1030.title": "default: bibtex",
-          "1024.title": "kpsetool (default: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
           "1063.title": "Standard",
           "878.title": "LaTeX ",
           "882.title": "Shell-Escape-Warnung",
@@ -7504,7 +7504,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (default: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -9880,7 +9880,7 @@
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
           "1030.title": "Por defecto: bibtex",
-          "1024.title": "kpsetool (por defecto: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (por defecto: kpsewhich -progname=latex -format=tex)",
           "1063.title": "por defecto",
           "878.title": "LaTeX ",
           "882.title": "Avisos shell-escape",
@@ -10769,7 +10769,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (por defecto: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (por defecto: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -13145,7 +13145,7 @@
           "1069.title": "TeX",
           "1027.title": "Moteur BibTeX",
           "1030.title": "Par défaut : bibtex",
-          "1024.title": "kpsetool (Par défaut : kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (Par défaut : kpsewhich -progname=latex -format=tex)",
           "1063.title": "défaut",
           "878.title": "LaTeX ",
           "882.title": "Avertissement de Shell Escape",
@@ -14034,7 +14034,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (Par défaut : kpsetool -w -n latex tex)"
+          "value": "kpsewhich (Par défaut : kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -16410,7 +16410,7 @@
           "1069.title": "TeX",
           "1027.title": "Motore BibTeX",
           "1030.title": "default: bibtex",
-          "1024.title": "kpsetool (default: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
           "1063.title": "default",
           "878.title": "LaTeX ",
           "882.title": "Avvisa se si usa Shell Escape",
@@ -17299,7 +17299,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (default: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -19675,7 +19675,7 @@
           "1069.title": "TeX",
           "1027.title": "BibTeX エンジン",
           "1030.title": "デフォルト: bibtex",
-          "1024.title": "kpsetool (デフォルト: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (デフォルト: kpsewhich -progname=latex -format=tex)",
           "1063.title": "デフォルト",
           "878.title": "LaTeX",
           "882.title": "Shell Escape を警告",
@@ -20564,7 +20564,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (デフォルト: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (デフォルト: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -22940,7 +22940,7 @@
           "1069.title": "TeX",
           "1027.title": "BibTeX 엔진",
           "1030.title": "default: bibtex",
-          "1024.title": "kpsetool (default: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
           "1063.title": "기본값",
           "878.title": "LaTeX ",
           "882.title": "Shell Escape시 경고",
@@ -23829,7 +23829,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (default: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -26205,7 +26205,7 @@
           "1069.title": "TeX",
           "1027.title": "BibTeX-engine",
           "1030.title": "default: bibtex",
-          "1024.title": "kpsetool (default: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
           "1063.title": "standaard",
           "878.title": "LaTeX ",
           "882.title": "Waarschuwing voor shell escape",
@@ -27094,7 +27094,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (default: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -29470,7 +29470,7 @@
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
           "1030.title": "default: bibtex",
-          "1024.title": "kpsetool (default: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
           "1063.title": "omissão",
           "878.title": "LaTeX ",
           "882.title": "Aviso de shell escape",
@@ -30359,7 +30359,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (default: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -32735,7 +32735,7 @@
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
           "1030.title": "por padrão: bibtex",
-          "1024.title": "kpsetool (por padrão: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (por padrão: kpsewhich -progname=latex -format=tex)",
           "1063.title": "padrão",
           "878.title": "LaTeX ",
           "882.title": "Alerta para Shell Escape",
@@ -33624,7 +33624,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (por padrão: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (por padrão: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -36000,7 +36000,7 @@
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
           "1030.title": "default: bibtex",
-          "1024.title": "kpsetool (default: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
           "1063.title": "default",
           "878.title": "LaTeX ",
           "882.title": "Avertisment shell escape",
@@ -36889,7 +36889,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (default: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (default: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",
@@ -39265,7 +39265,7 @@
           "1069.title": "TeX",
           "1027.title": "BibTeX 引擎",
           "1030.title": "默认: bibtex",
-          "1024.title": "kpsetool (默认: kpsetool -w -n latex tex)",
+          "1024.title": "kpsewhich (默认: kpsewhich -progname=latex -format=tex)",
           "1063.title": "默认",
           "878.title": "LaTeX ",
           "882.title": "Shell Escape 警告",
@@ -40154,7 +40154,7 @@
           "view": "settings.1021",
           "kind": "cell",
           "property": "title",
-          "value": "kpsetool (默认: kpsetool -w -n latex tex)"
+          "value": "kpsewhich (默认: kpsewhich -progname=latex -format=tex)"
         },
         {
           "key": "1063.title",

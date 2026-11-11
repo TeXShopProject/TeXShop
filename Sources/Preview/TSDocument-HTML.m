@@ -26,7 +26,7 @@
 #import "TSWindowManager.h"
 
 
-// The Home URL setting is a web address or the path of a file; empty means the bundled sample page.
+// The Home URL setting is a web address or the path of a file; empty means the TeXShop web site.
 static NSURL *TSHTMLHomeURL(NSString *home)
 {
     home = [home stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
@@ -39,7 +39,7 @@ static NSURL *TSHTMLHomeURL(NSString *home)
         if (url != nil)
             return url;
     }
-    return [[NSBundle mainBundle] URLForResource:@"SamplePage" withExtension:@"html"];
+    return [NSURL URLWithString:@"https://texshop.app"];
 }
 
 @implementation TSDocument (HTML)

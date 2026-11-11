@@ -243,7 +243,7 @@
     NSString *kpsetool = [defaults objectForKey:KpsetoolKey];
     if (!kpsetool || [kpsetool isEqualToString:@""])
     {
-        kpsetool = @"kpsetool -w -n latex tex";
+        kpsetool = @"kpsewhich -progname=latex -format=tex";
     }
     [_kpsetoolField setStringValue:kpsetool];
     NSString *bibTeXengine = [defaults objectForKey:BibTeXengineKey];
