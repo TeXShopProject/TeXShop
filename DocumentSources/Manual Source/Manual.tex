@@ -3772,6 +3772,8 @@ of a split window. This is useful because when the Preview Window is unsplit, th
 active view. Using ``Switch View'' first allows either view to become the active window when the window is
 unsplit.
 
+Switch Views exchanges the two parts completely. Each part keeps its size, so if the divider has been moved, it moves to the other side: a small bottom part becomes a small top part, and a narrow right part becomes a narrow left part. Each part also takes along the place it shows, its display format and magnification, its selection, and a pinned link popup, which stays at the same place within its part. If one of the views was active, the view that now shows its material becomes active. Switching again gives back the original arrangement. Since the top (or left) view is the one that remains when the window is unsplit, after switching it is the material of the other part that remains.
+
 \newpage
 This feature is not available for the Source Window because it is not needed there. When the source window has been split into two views, the  view with the cursor will become the active window when the window is unsplit.
 
@@ -3792,6 +3794,8 @@ When the Preview window is not split, the menu items ``Display Format'' and ``Ma
 When the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes made to the top view affect the entire document as above. Thus if the window is later unsplit, the changes will hold in the entire document.
 
 However, when the Preview window is split so both views are shown simultaneously, ``Display Format'' and ``Magnification'' changes made to the bottom view will only apply to that portion of the split window, and only as long as the window remains split. This slight design inconsistency makes it possible for a user working with two sections of the document to temporarily magnify the bottom section and inspect fine details without propagating that magnification change to the rest of the interface.
+
+Switch Views exchanges these settings together with the two parts. After switching, the display format and magnification that were chosen for the bottom view belong to the top view, and they remain when the window is unsplit.
 
 \section{Avoiding Creep When Unsplitting}
 
