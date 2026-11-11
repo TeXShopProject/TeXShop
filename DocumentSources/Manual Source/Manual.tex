@@ -2495,6 +2495,8 @@ In the early days of macOS, strange bugs would sometimes surface in Apple's pdf 
 
 The Preview window can display a pdf as one long scrollable document; this is called MultiPage Mode, and is the recommended mode. It can also display two pages side by side in a long scrollable document. This is called Double MultiPage Mode.  It can display one page at a time, called Single Page Mode, or two pages at a time, called Double Page Mode. Menu items in the Preview menu move to the Previous Page, or to the Next Page. Items in the Preview Toolbar also perform these tasks.
 
+In Single Page Mode and Double Page Mode, scrolling past the top or bottom of a page with the mouse wheel or the trackpad moves to the previous or next page, as in Apple's Preview. To make scrolling stop at the edge of the page instead, turn on ``Do not turn pages by scrolling'' under Display in the Preview category of TeXShop Settings. The keyboard, the Preview menu and the page buttons in the toolbar still move to other pages.
+
 As usual, items in TeXShop Preferences under the Preview category select the behavior to use when documents first start, but the mode for a particular document can later be changed using an item in the Preview menu.
 
 The  modes showing two pages side by side are controlled by a TeXShop Preference item under the Preview category, which allows users to select ``Pages Flow from Left to Right'' or
@@ -2531,11 +2533,11 @@ A very small number of people use TeX to create intricate pdf diagrams which the
 
 TeXShop Preference items for the Preview Window are mainly found under the Preview category. This page also contains items for Single Page mode, and for the HTML Preview window. Single Page mode has already been discussed in this document, and the HTML Preview window will be covered later.
 
-At the top of the second column of the Preview category, there is an item labeled ``Change Page Buttons'' with a checkbox titled ``Do not scroll''. What does this item do? I haven't got the slightest idea.
+Until TeXShop 5.60, the Preview category had an item labeled ``Change Page Buttons'' with a checkbox titled ``Do not scroll''. What did this item do? For a long time I hadn't got the slightest idea.
 
 At the start of this chapter, I explained that the original TeXShop used a preliminary version of Apple's PDF code to display pdf documents, together with extensions by Mitsuhiro Shishikura. Some of that old code is still in TeXShop, used to display graphic files and dvi files, as explained later in this document. But most of the code has been replaced by code which calls Apple's PDFKit. The old code is in a source file called MyPDFView, and the new code is in a source file called MyPDFKitView, and for years and years I have only edited the MyPDFKitView file. 
 
-I looked at the code in Preferences which controls the mysterious ``Change Page Buttons'' item. It controls a global preference which is only consulted by the code in MyPDFView. Whatever this code did was not ported over to MyPDFKitView during the transition to PDFKit in Tiger. So you can ignore that preference setting.
+I looked at the code in Preferences which controls the mysterious ``Change Page Buttons'' item. It controls a global preference which is only consulted by the code in MyPDFView. There, in Single Page mode, it made the page buttons move straight to the next page instead of first scrolling through an enlarged page. Whatever this code did was not ported over to MyPDFKitView during the transition to PDFKit in Tiger, so the item had no effect, and TeXShop 5.60 removes it. Its place in the Preview category is taken by ``Do not turn pages by scrolling'', described in the section on Display Modes.
 
 \newpage
 \section{Preview Mouse Tools}
