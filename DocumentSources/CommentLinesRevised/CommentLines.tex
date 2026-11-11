@@ -294,9 +294,9 @@ Start with the Sync Marks tool on. Marks are shown only for documents typeset wi
 {\em External Editors and PDF Updates}
 \begin{description}
 \item[\texttt{defaults write TeXShop PdfFileRefresh NO}] \hfill \\
-With Reload PDFs Changed by Other Apps on, do not reload a PDF file opened by itself in TeXShop when another application changes it. The PDF of a TeX document is still reloaded.
+Do not reload a PDF file opened by itself in TeXShop when another application changes it. The PDF of a TeX document is still reloaded.
 \item[\texttt{defaults write TeXShop RefreshTime 2}] \hfill \\
-How often, in seconds, TeXShop checks whether a PDF has changed; the default is 1 and the minimum 0.5.
+How often, in seconds, TeXShop checks whether a PDF has changed while Always Watch for PDF Changes by Other Apps is on; the default is 1 and the minimum 0.5.
 \item[\texttt{defaults write TeXShop BringPdfFrontOnAutomaticUpdate NO}] \hfill \\
 When an external editor is used, do not bring the Preview window to the front when the PDF is updated.
 \item[\texttt{defaults write TeXShop ExternalEditorTypesetAtStart NO}] \hfill \\

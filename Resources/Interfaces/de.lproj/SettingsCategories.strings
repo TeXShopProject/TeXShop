@@ -219,8 +219,8 @@
 "catalog.preview.1.1.title" = "Erste Seite einzeln als Deckblatt anzeigen";
 "catalog.preview.1.2.title" = "Gilt für künftig geöffnete Dokumente. Magische Kommentare und die Leserichtung im PDF haben Vorrang.";
 "group.preview.2.title" = "Aktualisierung";
-"catalog.preview.2.0.title" = "Von anderen Apps geänderte PDFs neu laden";
-"catalog.preview.2.0.note" = "Die Vorschau neu laden, wenn ein externer Editor, latexmk oder eine andere App das PDF neu schreibt.";
+"catalog.preview.2.0.title" = "PDF-Änderungen durch andere Apps ständig überwachen";
+"catalog.preview.2.0.note" = "Die Vorschau sofort neu laden, wenn ein externer Editor, latexmk oder eine andere App das PDF neu schreibt, auch wenn TeXShop im Hintergrund ist.";
 "group.preview.4.title" = "Bilder kopieren";
 "catalog.preview.4.0.title" = "Bild-Kopierformat";
 "catalog.preview.4.1.title" = "Farbmapping";

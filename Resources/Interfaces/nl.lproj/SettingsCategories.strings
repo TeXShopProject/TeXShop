@@ -219,8 +219,8 @@
 "catalog.preview.1.1.title" = "Eerste pagina apart als omslag tonen";
 "catalog.preview.1.2.title" = "Geldt voor later geopende documenten. Magische commentaarregels en de weergaverichting van de pdf hebben voorrang.";
 "group.preview.2.title" = "Vernieuwen";
-"catalog.preview.2.0.title" = "Door andere apps gewijzigde pdf’s herladen";
-"catalog.preview.2.0.note" = "De voorvertoning opnieuw laden wanneer een externe editor, latexmk of een andere app de pdf herschrijft.";
+"catalog.preview.2.0.title" = "Pdf-wijzigingen door andere apps altijd volgen";
+"catalog.preview.2.0.note" = "De voorvertoning direct opnieuw laden wanneer een externe editor, latexmk of een andere app de pdf herschrijft, ook als TeXShop op de achtergrond staat.";
 "group.preview.4.title" = "Afbeeldingen kopiëren";
 "catalog.preview.4.0.title" = "Kopieer selectie als";
 "catalog.preview.4.1.title" = "Vervang kleuren";

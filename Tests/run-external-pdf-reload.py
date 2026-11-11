@@ -21,15 +21,25 @@ methods='\n'.join(method(s,x) for x in ['- (void)reShowWithPath:', '- (void)reSh
 fixture=fixture.replace('METHODS',methods.replace('MyPDFKitView *weakSelf', 'RecoveryView *weakSelf'))
 fixture=fixture.replace('@implementation TestWindow', '@implementation TestWindow\n- (void)setRepresentedFilename:(NSString *)s {}\n- (void)setTitle:(NSString *)s {}\n- (void)makeKeyAndOrderFront:(id)sender {[self orderWindow:NSWindowAbove relativeTo:0];}')
 s=(root/'Sources/Document/TSDocument.m').read_text()
-controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFObservationEnabled', '- (void)externalPDFSettingsChanged:', '- (void)configureExternalPDFObservation','- (void)stopExternalPDFObservation','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)acceptExternalPDFAtPath:', '- (void)prepareExternalPDFContent', '- (BOOL)externalPDFReloadBlocked'])
+controller='\n'.join(method(s,x) for x in ['- (NSString *)externalPDFPath','- (BOOL)externalPDFChecksAllowed','- (BOOL)externalPDFObservationEnabled','- (void)externalPDFPreviewActivated:','- (void)followExternalPDFChange','- (void)stopFollowingExternalPDF', '- (void)externalPDFSettingsChanged:', '- (void)configureExternalPDFObservation','- (void)stopExternalPDFObservation','- (void)startExternalPDFObservation','- (void)notePDFLoadedAtPath:', '- (void)acceptExternalPDFAtPath:', '- (void)prepareExternalPDFContent', '- (BOOL)externalPDFReloadBlocked'])
 # Count and optionally stall the file checks made by the polling path only.
-controller+='\n'+method(s,'- (void)refreshPDFWindow:').replace('TSExternalPDFState(', 'CheckedState(')
+controller+='\n'+'\n'.join(method(s,x) for x in ['- (void)refreshPDFWindow:','- (void)checkExternalPDF:']).replace('TSExternalPDFState(', 'CheckedState(')
 controller+='\n'+'\n'.join(method(s,x) for x in ['- (void)finishExternalPDFCheck:', '- (void)applyExternalPDFPath:'])
 controller=controller.replace('TSExternalPDFSnapshot(', 'CountedSnapshot(')
 mutations={
  'inline': ('dispatch_async(self.externalPDFQueue, ^{', 'RunInline(^{'),
  'generation': ('generation == self.externalPDFGeneration && ', ''),
- 'taskdone': ('return ![self externalPDFObservationEnabled] || ', 'return ![self externalPDFObservationEnabled] || !taskDone || '),
+ 'taskdone': ('return ![self externalPDFChecksAllowed] || ', 'return ![self externalPDFChecksAllowed] || !taskDone || '),
+ # Returning to the preview does not check the PDF.
+ 'noactivation': ('[self checkExternalPDF:YES];\n}', '}'),
+ # A change found on returning is not followed until the file settles.
+ 'nofollow': ('    self.externalPDFQuietChecks = 0;\n    if (self.pdfRefreshTimer || self.externalPDFFollowTimer) return;', '    return;'),
+ # Following never stops once the file is quiet.
+ 'nostop': ('else if (self.externalPDFFollowTimer && ++self.externalPDFQuietChecks >= 3) [self stopFollowingExternalPDF];', ''),
+ # A PDF that stays unopenable counts as quiet, so a writer pausing between pages ends following.
+ 'pausestop': ('else if (![signature isEqualToString:self.externalPDFLoadedSignature]) self.externalPDFQuietChecks = 0;\n', ''),
+ # Checks on returning wait for a second observation, as the timer does.
+ 'twoobservations': ('BOOL attempted = key && (immediate || [key isEqualToString:pending]);', 'BOOL attempted = [key isEqualToString:pending];'),
  # Ignore a new ctime when the cheap signature is unchanged, as before content comparison.
  'nohash': ('if (changeTime && loadedChangeTime && ![changeTime isEqualToString:loadedChangeTime]) {', 'if (0) {'),
  # Digest a file read in place on the main thread.
@@ -80,7 +90,11 @@ static void RunInline(dispatch_block_t block) { block(); }
 @property (strong) dispatch_queue_t externalPDFQueue;
 @property NSUInteger externalPDFGeneration;
 @property BOOL externalPDFCheckRunning;
+@property NSTimer *externalPDFFollowTimer;
+@property NSTimeInterval externalPDFFollowDeadline;
+@property NSUInteger externalPDFQuietChecks;
 - (void)refreshPDFWindow:(NSTimer*)timer;
+- (void)checkExternalPDF:(BOOL)immediate;
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime;
 @end
 @implementation TSDocument
@@ -88,6 +102,12 @@ static void RunInline(dispatch_block_t block) { block(); }
 - (void)allocateSyncScannerOld {}
 - (void)fillLogWindowIfVisible {}
 CONTROLLER
+@end
+// Views must be in a visible window for checks on returning; nothing is shown.
+@interface VisibleWindow:NSWindow
+@end
+@implementation VisibleWindow
+- (BOOL)isVisible {return YES;}
 @end
 static void Check(BOOL ok,NSString *message){if(!ok){NSLog(@"FAIL: %@",message);exit(1);}}
 // Independent checks report every failure before exiting.
@@ -318,6 +338,82 @@ int main(int argc,char **argv){@autoreleasepool{
  Expect(TSTestDigests>0 && TSTestMainDigests==0,[NSString stringWithFormat:@"Content digests run off the main thread (%lu of %lu on main)",(unsigned long)TSTestMainDigests,(unsigned long)TSTestDigests]);
  if(failures) exit(1);
  printf("PASS: metadata-only changes, same-size overwrites with restored mtime, background checks and digests, stalled access, stale results\n");
+
+ // Automatic reloading off: returning to TeXShop or to the preview checks the PDF.
+ {
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@NO,@"PdfFileRefresh":@YES,@"RefreshTime":@0.5} mutableCopy];
+ NSString *tex=[@(argv[1]) stringByAppendingPathComponent:@"return.tex"],*pdf=[@(argv[1]) stringByAppendingPathComponent:@"return.pdf"];
+ [@"" writeToFile:tex atomically:YES encoding:NSUTF8StringEncoding error:NULL];[first writeToFile:pdf atomically:YES];
+ VisibleWindow *shown=[[VisibleWindow alloc] initWithContentRect:NSMakeRect(0,0,900,600) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+ shown.releasedWhenClosed=NO;
+ NSWindow *other=[[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,100,100) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];other.releasedWhenClosed=NO;
+ TSDocument *r=[TSDocument new];r.fileURL=[NSURL fileURLWithPath:tex];r->taskDone=YES;r.pdfKitWindow=[TestWindow new];r.documentType=isTeX;
+ r.myPDFKitView=[[RecoveryView alloc] initWithFrame:NSMakeRect(0,0,900,600)];r.myPDFKitView2=nil;
+ RecoveryView *v=r.myPDFKitView;v.myPDFWindow=r.pdfKitWindow;v.myDocument=[TestDocument new];v.myDocument.pdfKitWindow=r.pdfKitWindow;
+ [shown.contentView addSubview:v];v.document=[[PDFDocument alloc]initWithData:first];v.displayMode=kPDFDisplaySinglePageContinuous;v.autoScales=NO;v.scaleFactor=1.4;
+ [v goToDestination:[[PDFDestination alloc]initWithPage:[v.document pageAtIndex:6] atPoint:NSMakePoint(170,520)]];Pump(.1);
+ NoteLoaded(r,pdf);
+ [r configureExternalPDFObservation];
+ Check(!r.pdfRefreshTimer && !r.pdfActivity,@"Off: no watching timer or activity");
+ NSNotificationCenter *center=NSNotificationCenter.defaultCenter;
+ void (^Return)(id)=^(id object){[center postNotificationName:(object==NSApp?NSApplicationDidBecomeActiveNotification:NSWindowDidBecomeKeyNotification) object:object];WaitIdle(r);Pump(.05);};
+ TSExternalPDFPosition kept=TSExternalPDFCapture(v);
+ PDFDocument *old=v.document;[changed writeToFile:pdf atomically:YES];
+ Pump(1.2);Check(v.document==old,@"Off: a rewritten PDF is not reloaded while TeXShop is not returned to");
+ Return(other);Check(v.document==old,@"Off: another window becoming key does not check");
+ Return(NSApp);Check(v.document!=old,@"Off: returning to TeXShop reloads at once");SamePosition(v,kept,@"return to TeXShop");
+ Check(r.externalPDFFollowTimer!=nil,@"Off: a change found on returning is followed");
+ Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops after the PDF is quiet for three seconds");
+ // A PDF still being written does not open; it is shown once complete.
+ old=v.document;kept=TSExternalPDFCapture(v);NSData *third=PDF(12,3);
+ [[third subdataWithRange:NSMakeRange(0,third.length/2)] writeToFile:pdf atomically:NO];
+ Return(shown);Check(v.document==old,@"Off: a partly written PDF is not loaded");
+ Check(r.externalPDFFollowTimer!=nil,@"Off: a partly written PDF is followed");
+ Pump(1.2);[third writeToFile:pdf atomically:NO];
+ Pump(2.4);Check(v.document!=old,@"Off: the completed PDF is loaded while following");SamePosition(v,kept,@"completed while following");
+ // Later typesetting passes within the follow period are shown too.
+ old=v.document;Pump(1.1);[first writeToFile:pdf atomically:YES];Pump(2.4);
+ Check(v.document!=old,@"Off: a second pass soon after is loaded while following");
+ Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops again");
+ // A writer pausing between pages: the partly written PDF stays the same for
+ // longer than three seconds, and following continues until it is complete.
+ old=v.document;kept=TSExternalPDFCapture(v);NSData *fourth=PDF(12,4);
+ [[fourth subdataWithRange:NSMakeRange(0,fourth.length/2)] writeToFile:pdf atomically:NO];
+ Return(shown);Check(v.document==old && r.externalPDFFollowTimer!=nil,@"Off: a paused writer's partial PDF is followed");
+ Pump(4.6);Check(v.document==old && r.externalPDFFollowTimer!=nil,@"Off: following continues while the PDF does not open");
+ [fourth writeToFile:pdf atomically:NO];Pump(2.4);
+ Check(v.document!=old,@"Off: the PDF completed after a pause is loaded");SamePosition(v,kept,@"completed after a pause");
+ Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops once the completed PDF is quiet");
+ // Following ends after two minutes even while the file keeps changing.
+ [changed writeToFile:pdf atomically:YES];Return(NSApp);Check(r.externalPDFFollowTimer!=nil,@"Off: following restarts");
+ r.externalPDFFollowDeadline=0;Pump(1.3);Check(r.externalPDFFollowTimer==nil,@"Off: following ends at its deadline");
+ // What blocks timer reloads blocks reloads on returning.
+ old=v.document;[first writeToFile:pdf atomically:YES];
+ r.annotationsExist=YES;Return(NSApp);Check(v.document==old,@"Off: unsaved annotations are protected");r.annotationsExist=NO;
+ NSTask *job=[NSTask new];job.executableURL=[NSURL fileURLWithPath:@"/bin/sleep"];job.arguments=@[@"3"];
+ [job launchAndReturnError:NULL];r.texTask=job;Return(NSApp);Check(v.document==old,@"Off: typesetting in TeXShop blocks the reload");
+ [job terminate];[job waitUntilExit];r.texTask=nil;
+ [r.pdfKitWindow close];Return(NSApp);Check(v.document==old,@"Off: a closed preview is not reloaded");
+ [r.pdfKitWindow orderWindow:NSWindowAbove relativeTo:0];
+ // A load made by TeXShop itself is not repeated.
+ NoteLoaded(r,pdf);old=v.document;Return(NSApp);Check(v.document==old,@"Off: an acknowledged load is not repeated");
+ Pump(.5);[r stopFollowingExternalPDF];
+ // Automatic reloading on: returning also reloads at once; the timer needs no following.
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@YES,@"PdfFileRefresh":@YES,@"RefreshTime":@30} mutableCopy];
+ [r startExternalPDFObservation];Check(r.pdfRefreshTimer!=nil,@"On: watching timer");
+ old=v.document;[changed writeToFile:pdf atomically:YES];Return(NSApp);
+ Check(v.document!=old && r.externalPDFFollowTimer==nil,@"On: returning reloads at once without following");
+ [r stopExternalPDFObservation];
+ old=v.document;[first writeToFile:pdf atomically:YES];Return(NSApp);Check(v.document==old,@"Closed document ignores returning");
+ // PdfFileRefresh NO keeps PDFs opened by themselves as they are.
+ TSIsolatedAppKitDefaults.values=[@{@"PdfRefresh":@NO,@"PdfFileRefresh":@NO} mutableCopy];
+ TSDocument *q=[TSDocument new];q.fileURL=[NSURL fileURLWithPath:pdf];q->taskDone=YES;q.pdfKitWindow=[TestWindow new];q.documentType=isPDF;q.myPDFKitView=v;
+ v.document=[[PDFDocument alloc]initWithData:first];NoteLoaded(q,pdf);[q configureExternalPDFObservation];
+ old=v.document;[changed writeToFile:pdf atomically:YES];Return(NSApp);Check(v.document==old,@"PdfFileRefresh NO: a PDF opened by itself is not reloaded");
+ [q stopExternalPDFObservation];
+ [shown close];[other close];
+ printf("PASS: automatic reloading off: returning to TeXShop or the preview, partly written PDFs, following later passes, blocking, PdfFileRefresh\n");
+ }
 }}
 '''.replace('CONTROLLER',controller)
 with tempfile.TemporaryDirectory(prefix='texshop-external-pdf-') as td:

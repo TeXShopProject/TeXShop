@@ -219,8 +219,8 @@
 "catalog.preview.1.1.title" = "Arată prima pagină separat, ca o copertă";
 "catalog.preview.1.2.title" = "Se aplică documentelor deschise ulterior. Comentariile speciale și direcția de vizualizare a PDF-ului au prioritate.";
 "group.preview.2.title" = "Actualizare";
-"catalog.preview.2.0.title" = "Reîncarcă PDF-urile modificate de alte aplicații";
-"catalog.preview.2.0.note" = "Reîncarcă previzualizarea când un editor extern, latexmk sau altă aplicație rescrie PDF-ul.";
+"catalog.preview.2.0.title" = "Urmărește permanent modificările PDF-ului făcute de alte aplicații";
+"catalog.preview.2.0.note" = "Reîncarcă imediat previzualizarea când un editor extern, latexmk sau altă aplicație rescrie PDF-ul, chiar dacă TeXShop este în fundal.";
 "group.preview.4.title" = "Copiază imagini";
 "catalog.preview.4.0.title" = "Tipul de Copiere a Imaginii";
 "catalog.preview.4.1.title" = "Folosește Culori";

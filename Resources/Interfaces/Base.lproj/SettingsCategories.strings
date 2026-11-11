@@ -219,8 +219,8 @@
 "catalog.preview.1.1.title" = "Show first page alone as cover";
 "catalog.preview.1.2.title" = "Applies to documents opened later. Magic comments and the PDF’s viewing direction take precedence.";
 "group.preview.2.title" = "Refresh";
-"catalog.preview.2.0.title" = "Reload PDFs Changed by Other Apps";
-"catalog.preview.2.0.note" = "Reload the preview when an external editor, latexmk or another app rewrites the PDF.";
+"catalog.preview.2.0.title" = "Always Watch for PDF Changes by Other Apps";
+"catalog.preview.2.0.note" = "Reload the preview as soon as an external editor, latexmk or another app rewrites the PDF, even while TeXShop is in the background.";
 "group.preview.4.title" = "Copy Images";
 "catalog.preview.4.0.title" = "Image Copy Type";
 "catalog.preview.4.1.title" = "Use Color Mapping";

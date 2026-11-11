@@ -219,8 +219,8 @@
 "catalog.preview.1.1.title" = "Mostrar a primeira página separadamente como capa";
 "catalog.preview.1.2.title" = "Aplica-se aos documentos abertos posteriormente. Os comentários especiais e a direção de visualização do PDF têm prioridade.";
 "group.preview.2.title" = "Atualização";
-"catalog.preview.2.0.title" = "Recarregar PDF alterados por outras apps";
-"catalog.preview.2.0.note" = "Recarregar a pré-visualização quando um editor externo, o latexmk ou outra app reescreve o PDF.";
+"catalog.preview.2.0.title" = "Vigiar sempre as alterações ao PDF feitas por outras apps";
+"catalog.preview.2.0.note" = "Recarregar a pré-visualização logo que um editor externo, o latexmk ou outra app reescreve o PDF, mesmo com o TeXShop em segundo plano.";
 "group.preview.4.title" = "Copiar imagens";
 "catalog.preview.4.0.title" = "Formato de cópia da imagem";
 "catalog.preview.4.1.title" = "Usar mapeamento de cores";
