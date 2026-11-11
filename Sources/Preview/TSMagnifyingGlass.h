@@ -25,19 +25,35 @@ static inline CGFloat TSMagnifyingGlassScale(NSEventModifierFlags flags)
     return 1.5;
 }
 
-// The page as a preview draws it: the box origin at zero and the rotation applied.
-static inline NSImage *TSMagnifyingGlassPageImage(PDFPage *page, PDFDisplayBox box)
+// Draws the part of the page given by source, in the coordinates of the page as a
+// preview draws it (the box origin at zero and the rotation applied), into lens in
+// the current graphics context. Only the lens is drawn: an image of the whole page
+// at the magnification of the glass took memory that grew with the square of the
+// Preview magnification, gigabytes above 400%.
+static inline void TSMagnifyingGlassDrawPage(PDFPage *page, PDFDisplayBox box, NSRect source, NSRect lens)
 {
-    NSRect bounds = [page boundsForBox:box];
-    NSSize size = page.rotation % 180 ? NSMakeSize(NSHeight(bounds), NSWidth(bounds)) : bounds.size;
-    return [NSImage imageWithSize:size flipped:NO drawingHandler:^BOOL(NSRect rect) {
-        [page drawWithBox:box toContext:NSGraphicsContext.currentContext.CGContext];
-        return YES;
-    }];
+    NSGraphicsContext *context = NSGraphicsContext.currentContext;
+    if (!page || !context || NSIsEmptyRect(source) || NSIsEmptyRect(lens)) return;
+    CGContextRef cg = context.CGContext;
+    CGContextSaveGState(cg);
+    CGContextClipToRect(cg, NSRectToCGRect(lens));
+    // The lens frame is drawn without antialiasing; the page is drawn as the preview draws it.
+    CGContextSetShouldAntialias(cg, true);
+    CGContextSetInterpolationQuality(cg, kCGInterpolationHigh);
+    if (context.isFlipped) {
+        // Draw the page upright in a flipped view, as respectFlipped: did for the page image.
+        CGContextTranslateCTM(cg, 0, NSMinY(lens) + NSMaxY(lens));
+        CGContextScaleCTM(cg, 1, -1);
+    }
+    CGContextTranslateCTM(cg, NSMinX(lens), NSMinY(lens));
+    CGContextScaleCTM(cg, NSWidth(lens) / NSWidth(source), NSHeight(lens) / NSHeight(source));
+    CGContextTranslateCTM(cg, -NSMinX(source), -NSMinY(source));
+    [page drawWithBox:box toContext:cg];
+    CGContextRestoreGState(cg);
 }
 
 // For a pointer at point (view coordinates): the lens in view coordinates, and the
-// part of the page image (TSMagnifyingGlassPageImage) that the lens shows.
+// part of the page, as TSMagnifyingGlassDrawPage takes it, that the lens shows.
 static inline void TSMagnifyingGlassLayout(PDFView *view, PDFPage *page, PDFDisplayBox box, NSPoint point,
                                            NSSize lens, CGFloat scale, NSRect *lensInView, NSRect *imageSource)
 {

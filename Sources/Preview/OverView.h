@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#import <Quartz/Quartz.h>
 
 
 
@@ -23,6 +24,10 @@
 }
 
 @property (retain) NSImage *magnifiedImage;
+// The magnifying glass: when set, the lens shows magnifiedRect of this page, drawn
+// as TSMagnifyingGlassDrawPage takes it, instead of magnifiedImage.
+@property (retain) PDFPage *magnifiedPage;
+@property PDFDisplayBox magnifiedBox;
 
 // - (void) dealloc;
 - (void) setDrawRubberBand: (BOOL)value;

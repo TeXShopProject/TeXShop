@@ -7,7 +7,7 @@ sources, so the harnesses follow any change to them.
 import re
 from pathlib import Path
 
-KEYS = ('ExperimentMouseModeKey', 'PdfCopyTypeKey', 'GlassMaxMagnificationKey', 'PdfKitMouseModeKey')
+KEYS = ('ExperimentMouseModeKey', 'PdfCopyTypeKey', 'PdfKitMouseModeKey')
 
 
 def prelude(root):

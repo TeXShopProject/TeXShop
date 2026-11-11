@@ -335,7 +335,6 @@ NSString *HtmlWindowNameKey = @"HtmlWindowName";
 NSString *HtmlWindowPosModeKey = @"HtmlWindowPosMode";
 NSString *HtmlWindowFixedPosKey = @"HtmlWindowFixedPos";
 NSString *HtmlHomeKey = @"HtmlHome";
-NSString *GlassMaxMagnificationKey = @"GlassMaxMagnification";
 NSString *EncodingMenuInSaveDialogKey = @"EncodingMenuInSaveDialog";
 NSString *BlockCursorKey = @"BlockCursor";
 NSString *BlockCursorRKey = @"BlockCursorR";
@@ -415,9 +414,9 @@ NSColor *PreviewDirectSyncColor = nil;
 NSInteger	g_macroType;	// FIXME: get rid of this
 
 /*
-NSString *placeholderString = @"¥";
-NSString *startcommentString = @"¥Ü";
-NSString *endcommentString = @"Ý";
+NSString *placeholderString = @"â€¢";
+NSString *startcommentString = @"â€¢â€¹";
+NSString *endcommentString = @"â€º";
 */
 NSString *placeholderString;
 NSString *startcommentString;

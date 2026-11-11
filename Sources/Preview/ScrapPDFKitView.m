@@ -67,7 +67,6 @@ static const NSInteger TSExperimentToolCount = 4;
 @property (nonatomic, strong) PDFPage *selectionPage;
 @property (nonatomic) NSRect selectionPageRect;
 @property (nonatomic, strong) PDFPage *lensPage;
-@property (nonatomic, strong) NSImage *lensImage;
 @end
 
 @implementation ScrapPDFKitView
@@ -651,10 +650,7 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
     if (!page) return;
     // Same glass as the Preview window (TSMagnifyingGlass.h).
     PDFDisplayBox box = self.displayBox;
-    if (self.lensPage != page) {
-        self.lensPage = page;
-        self.lensImage = TSMagnifyingGlassPageImage(page, box);
-    }
+    self.lensPage = page;
     NSRect onScreen, drawn;
     TSMagnifyingGlassLayout(self, page, box, point, TSMagnifyingGlassSize(level), TSMagnifyingGlassScale(flags), &onScreen, &drawn);
     OverView *overlay = [self experimentOverlayView];
@@ -663,7 +659,8 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
     [overlay setDrawMagnifiedImage:YES];
     [overlay setSelectionRect:[self.documentView convertRect:onScreen fromView:self]];
     [overlay setMagnifiedRect:drawn];
-    overlay.magnifiedImage = self.lensImage;
+    overlay.magnifiedPage = page;
+    overlay.magnifiedBox = box;
     [overlay setNeedsDisplay:YES];
 }
 
@@ -671,7 +668,6 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 {
     [self removeExperimentOverlay];
     self.lensPage = nil;
-    self.lensImage = nil;
 }
 
 // Drags the view under the pointer; window deltas are in points.
@@ -706,10 +702,6 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 
 - (void)magnifyExperiment:(NSEvent *)event
 {
-    NSInteger largest = [SUD integerForKey:GlassMaxMagnificationKey];
-    if (largest == 0) largest = 250;
-    // As in the document preview: no glass on an already enlarged page.
-    if (self.scaleFactor > largest / 100.0) return;
     [self clearExperimentSelection];
     NSInteger level = event.clickCount;
     NSPoint point = [self convertPoint:event.locationInWindow fromView:nil];

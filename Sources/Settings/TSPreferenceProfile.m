@@ -118,7 +118,6 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             FullwidthSpaceCharacterKindKey,
             TSProfileKeyFullwidthSpaceCharacterKindExtended,
             GSBinPath,
-            GlassMaxMagnificationKey,
             HighlightContentEnabledKey,
             HtmlHomeKey,
             HtmlWindowFixedPosKey,
