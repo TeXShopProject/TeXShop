@@ -4,12 +4,6 @@
 # By Richard Koch, Oct 4, 2001, following similar code by
 # Gerben Wierda
 
-if ("$argv[1]" == "Panther") then
-    set filename = "$argv[4]"
-    /usr/bin/pstopdf "${filename}"
-    
-else
-
 set mygspath = "$argv[2]"
 if (-x ${mygspath}/gs) then
 	setenv PATH "${mygspath}:${PATH}"
@@ -20,5 +14,3 @@ set filename = "$argv[4]"
 set epstopdfname = "$argv[3]"
 set outputname = "${filename:r}.pdf"
 "${epstopdfname}" -o="${outputname}" "${filename}"
-
-endif

@@ -183,9 +183,8 @@
     NSInteger myTag, itemIndex;
 #endif
     [_autoPDFButton setState:[defaults boolForKey:PdfRefreshKey]];
-    [_antialiasButton setState:[defaults boolForKey:AntiAliasKey]];
     [_linkPopupsButton setState:[defaults boolForKey:LinkPopupsKey] ? NSControlStateValueOn : NSControlStateValueOff];
-    [_scrollButton setState:[defaults boolForKey:NoScrollEnabledKey]];
+    [_scrollPageTurnButton setState:[defaults boolForKey:NoScrollPageTurnKey] ? NSControlStateValueOn : NSControlStateValueOff];
     magnification = [defaults floatForKey:PdfMagnificationKey];
     mag = round(magnification * 100.0);
     myNumber = [NSNumber numberWithInteger:mag];
@@ -244,7 +243,7 @@
     NSString *kpsetool = [defaults objectForKey:KpsetoolKey];
     if (!kpsetool || [kpsetool isEqualToString:@""])
     {
-        kpsetool = @"kpsetool -w -n latex tex";
+        kpsetool = @"kpsewhich -progname=latex -format=tex";
     }
     [_kpsetoolField setStringValue:kpsetool];
     NSString *bibTeXengine = [defaults objectForKey:BibTeXengineKey];
@@ -255,8 +254,6 @@
     [_bibTeXengineField setStringValue:bibTeXengine];
     [_savePSButton setState:[defaults boolForKey:SavePSEnabledKey]];
 #ifdef MITSU_PDF
-    myTag = [defaults integerForKey:DistillerCommandKey];
-    [_distillerMatrix selectCellWithTag:myTag];
     myInteger = [defaults integerForKey:BringFrontOnTypesetKey];
     myTag = myInteger;
     [_afterTypesettingMatrix selectCellWithTag:myTag];

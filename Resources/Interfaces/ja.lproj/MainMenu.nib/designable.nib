@@ -111,6 +111,12 @@
                                     <action selector="openDocument:" target="-1" id="105"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="スタイルファイルを開く..." id="911" identifier="TSShortcut.displayStyleFile:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayStyleFile:" target="690" id="935"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="最近使った書類" id="146">
                                 <menu key="submenu" title="最近使った書類" systemMenu="recentDocuments" id="147">
                                     <items>
@@ -1380,12 +1386,6 @@
                                     <action selector="displayHelpForPackage:" target="690" id="819"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="スタイルファイルを開く..." id="911" identifier="TSShortcut.displayStyleFile:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayStyleFile:" target="690" id="935"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="849"/>
                             <menuItem title="TeXShop 入門（英語）" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
@@ -1711,7 +1711,7 @@ Gw
                 </subviews>
             </view>
         </window>
-        <window title="Kpsetool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="925" userLabel="StyleHelp" customClass="NSPanel">
+        <window title="スタイルファイルを開く" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="925" userLabel="StyleHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="633" y="424" width="323" height="136"/>
@@ -1761,7 +1761,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="930">
                         <rect key="frame" x="17" y="89" width="289" height="27"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="スタイルファイル名（小文字推奨）" id="931">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="スタイルファイル名" id="931">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

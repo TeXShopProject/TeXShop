@@ -109,6 +109,12 @@
                                     <action selector="openDocument:" target="-1" id="105"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Ouvrir le fichier style..." id="913" identifier="TSShortcut.displayStyleFile:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayStyleFile:" target="675" id="934"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Ouvrir récent" id="146">
                                 <menu key="submenu" title="Ouvrir récent" systemMenu="recentDocuments" id="147">
                                     <items>
@@ -1380,12 +1386,6 @@
                                     <action selector="displayHelpForPackage:" target="675" id="825"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Ouvrir le fichier style..." id="913" identifier="TSShortcut.displayStyleFile:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayStyleFile:" target="675" id="934"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="854"/>
                             <menuItem title="Premiers pas avec TeXShop" id="664" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
@@ -1712,7 +1712,7 @@ Gw
                 </subviews>
             </view>
         </window>
-        <window title="Kpsetool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="924" userLabel="StyleHelp" customClass="NSPanel">
+        <window title="Ouvrir le fichier style" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="924" userLabel="StyleHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="633" y="423" width="332" height="137"/>
@@ -1762,7 +1762,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="929">
                         <rect key="frame" x="17" y="83" width="298" height="34"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Nom du fichier style (minuscules préférables)" id="930">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Nom du fichier style" id="930">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

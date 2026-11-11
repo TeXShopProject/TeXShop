@@ -595,8 +595,6 @@ for(NSString *key in enu)
 			[self testGSCommandKey];
 			enginePath = [[SUD stringForKey:LatexGSCommandKey] stringByExpandingTildeInPath];
 
-			if (([SUD integerForKey:DistillerCommandKey] == 1) && (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2))
-				enginePath = [enginePath stringByAppendingString: @" --distiller /usr/bin/pstopdf"];
 			if (! writeable) {
 				argumentString = [@" --outdir " stringByAppendingString: TempOutputKey];
 				enginePath = [enginePath stringByAppendingString: argumentString];
@@ -609,18 +607,12 @@ for(NSString *key in enu)
                 enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
             else
                 enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdfwrap" ofType:nil inDirectory:@"Shellscripts"];
-			if (([SUD integerForKey:DistillerCommandKey] == 1) && (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2))
-				[args addObject: @"Panther"];
-			else
-				[args addObject: @"Ghostscript"];
+			[args addObject: @"Ghostscript"];
 			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
 			[args addObject: gsPath];
 		} else if  ([[myFileName pathExtension] isEqualToString:@"eps"]) {
 			enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap" ofType:nil inDirectory:@"Shellscripts"];
-			if (([SUD integerForKey:DistillerCommandKey] == 1) && (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2))
-				[args addObject: @"Panther"];
-			else
-				[args addObject: @"Ghostscript"];
+			[args addObject: @"Ghostscript"];
 			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
 			[args addObject: gsPath];
 			tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
@@ -1559,11 +1551,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 								myEngine = [[SUD stringForKey:TexGSCommandKey] stringByExpandingTildeInPath]; // 1.35 (D)
 						
 						
-						if (([SUD integerForKey:DistillerCommandKey] == 1) && (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2))
-							myEngine = [myEngine stringByAppendingString: @" --distiller /usr/bin/pstopdf"];
-                        
                         //KOCH2023
-                        else {
+                        {
                             
                             BOOL versionOK = true;
                             

@@ -2,7 +2,6 @@
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "Default zoom for newly opened PDFs.";
 "1uj-kt-7Pj.title" = "Left";
-"228.title" = "Change Page Buttons";
 "328.title" = "Scroll";
 "329.title" = "Default Page Style";
 "330.title" = "Default Mouse Mode";
@@ -32,7 +31,6 @@
 "864.title" = "Set with current position";
 "865.title" = "100";
 "866.title" = "Set";
-"867.title" = "Do not scroll";
 "871.title" = "Automatic Preview Update";
 "910.title" = "Radio";
 "911.title" = "Radio";
@@ -43,11 +41,11 @@
 "V7d-ht-Pe3.title" = "Right";
 "YrC-m9-abH.title" = "HTML Window Position";
 "Zdh-Ch-Ndh.title" = "Set with current position";
-"jgT-n6-lh0.title" = "Smooth text and line art";
 "p2D-Mi-Gyc.title" = "Home URL";
 "preview-cover-cell.title" = "Show first page alone as cover";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Link Popups";
+"preview-scroll-page-turn-cell.title" = "Do not turn pages by scrolling";
 "sa2-VV-W1K.title" = "Remember last position on close";
 "tVs-uh-QcM.title" = "All windows start at fixed position";
 "vOt-2m-d2s.title" = "Use One Window";

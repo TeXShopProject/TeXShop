@@ -56,11 +56,11 @@ So the engine file must contain the commands which convert the dvi file to a pdf
 Here is a typical engine file for uo.fmt in that case:</p>
 <dl>
 <dd>#!/bin/tcsh
-<dd>set path= ($path /Library/TeX/texbin /usr/texbin /usr/local/bin)
+<dd>set path= ($path /Library/TeX/texbin /usr/local/bin /opt/homebrew/bin)
 <dd>latex -fmt uolatex  "$1"
 <dd>set filename = "$1"
 <dd>dvips "${filename:r}.dvi"
-<dd>pstopdf "${filename:r}.ps" 
+<dd>ps2pdf "${filename:r}.ps" 
 </dl>  
 <h4> Making formats </h4>
 <p> Format files contain the internal binary representation of typeset lines of source.

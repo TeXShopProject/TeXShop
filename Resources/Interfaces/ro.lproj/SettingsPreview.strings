@@ -2,7 +2,6 @@
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "Mărirea implicită pentru PDF-urile nou deschise.";
 "1uj-kt-7Pj.title" = "Stânga";
-"228.title" = "Modifică Butoanele Paginii";
 "328.title" = "Derulare";
 "329.title" = "Stilul Standard al Paginii";
 "330.title" = "Efectul Mausului";
@@ -32,7 +31,6 @@
 "864.title" = "Folosește poziția actuală";
 "865.title" = "100";
 "866.title" = "Stabilește";
-"867.title" = "Nu defila";
 "871.title" = "Actualizează automat previzualizarea";
 "910.title" = "Radio";
 "911.title" = "Radio";
@@ -43,11 +41,11 @@
 "V7d-ht-Pe3.title" = "Dreapta";
 "YrC-m9-abH.title" = "HTML Window Position";
 "Zdh-Ch-Ndh.title" = "Folosește poziția actuală";
-"jgT-n6-lh0.title" = "Netezește textul și liniile";
 "p2D-Mi-Gyc.title" = "URL inițial";
 "preview-cover-cell.title" = "Arată prima pagină separat, ca o copertă";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Ferestre pop-up";
+"preview-scroll-page-turn-cell.title" = "Nu schimba pagina la derulare";
 "sa2-VV-W1K.title" = "Păstrează poziția la închidere";
 "tVs-uh-QcM.title" = "Deschide toate ferestrele în poziția fixată";
 "vOt-2m-d2s.title" = "Unește într-o singură fereastră";

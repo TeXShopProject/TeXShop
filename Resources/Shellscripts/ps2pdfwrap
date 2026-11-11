@@ -4,12 +4,6 @@
 # By Richard Koch, July 29, 2001, following similar code by
 # Gerben Wierda
 
-if ("$argv[1]" == "Panther") then
-    set filename = "$argv[3]"
-    /usr/bin/pstopdf "${filename}"
-    
-else
-
 
 set mygspath = "$argv[2]"
 if (-x ${mygspath}/ps2pdf) then
@@ -19,5 +13,3 @@ endif
 
 set filename = "$argv[3]"
 ps2pdf "${filename}"
-
-endif

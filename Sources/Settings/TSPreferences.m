@@ -1083,28 +1083,21 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 
 
 
-/*" This method is connected to the 'scroll' checkbox.
-"*/
-- (IBAction)scrollPressed:sender
-{
-
-	[SUD setBool:[(NSCell *)sender state] forKey:NoScrollEnabledKey];
-}
-
 - (IBAction)autoPDFChanged:sender
 {
 	[SUD setBool:[(NSCell *)sender state] forKey:PdfRefreshKey];
-}
-
-- (IBAction)antialiasChanged:sender
-{
-	[SUD setBool:[(NSCell *)sender state] forKey:AntiAliasKey];
 }
 
 // The state of Link Popups in the Preview menu when a Preview window opens.
 - (IBAction)linkPopupsChanged:(NSButton *)sender
 {
     [SUD setBool:sender.state == NSControlStateValueOn forKey:LinkPopupsKey];
+}
+
+// Whether scrolling stops at the edge of the page in single and double page display.
+- (IBAction)scrollPageTurnChanged:(NSButton *)sender
+{
+    [SUD setBool:sender.state == NSControlStateValueOn forKey:NoScrollPageTurnKey];
 }
 
 - (IBAction)sourceAndPreviewInSameWindowChanged:sender
@@ -1560,12 +1553,6 @@ person script. See also: DefaultTypesetMode.
 }
 
 
-
-- (IBAction)distillerChanged:sender
-{
-
-	[SUD setInteger:[[sender selectedCell] tag] forKey:DistillerCommandKey];
-}
 
 // zenitani 1.35 (C)
 - (IBAction)ptexUtfOutputPressed:sender

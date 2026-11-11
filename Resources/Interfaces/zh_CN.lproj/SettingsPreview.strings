@@ -2,7 +2,6 @@
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "新打开的 PDF 的默认缩放比例。";
 "1uj-kt-7Pj.title" = "左";
-"228.title" = "换页按钮";
 "328.title" = "滚动";
 "329.title" = "默认页面格式";
 "330.title" = "默认鼠标模式";
@@ -32,7 +31,6 @@
 "864.title" = "设成当前位置";
 "865.title" = "100";
 "866.title" = "设定";
-"867.title" = "不要滚动";
 "871.title" = "自动更新预览";
 "910.title" = "Radio";
 "911.title" = "Radio";
@@ -43,11 +41,11 @@
 "V7d-ht-Pe3.title" = "右";
 "YrC-m9-abH.title" = "HTML 窗口位置";
 "Zdh-Ch-Ndh.title" = "设成当前位置";
-"jgT-n6-lh0.title" = "平滑文字和线稿";
 "p2D-Mi-Gyc.title" = "主页 URL";
 "preview-cover-cell.title" = "将第一页单独显示为封面";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "链接预览";
+"preview-scroll-page-turn-cell.title" = "滚动时不翻页";
 "sa2-VV-W1K.title" = "关闭时记住上一次位置";
 "tVs-uh-QcM.title" = "所有窗口从固定位置打开";
 "vOt-2m-d2s.title" = "单一窗口";

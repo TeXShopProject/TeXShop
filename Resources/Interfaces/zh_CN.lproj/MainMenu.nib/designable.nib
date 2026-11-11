@@ -109,6 +109,12 @@
                                     <action selector="openDocument:" target="-1" id="105"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="打开样式文件..." id="1054" identifier="TSShortcut.displayStyleFile:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayStyleFile:" target="705" id="1075"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="打开最近文件" id="146">
                                 <menu key="submenu" title="打开最近文件" systemMenu="recentDocuments" id="147">
                                     <items>
@@ -1379,12 +1385,6 @@
                                     <action selector="displayHelpForPackage:" target="705" id="853"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="打开样式文件..." id="1054" identifier="TSShortcut.displayStyleFile:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayStyleFile:" target="705" id="1075"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="892">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1713,7 +1713,7 @@ Gw
                 <outlet property="tableView" destination="1011" id="1050"/>
             </connections>
         </customObject>
-        <window title="Kpsetool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="1065" userLabel="StyleHelp" customClass="NSPanel">
+        <window title="打开样式文件" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="1065" userLabel="StyleHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="633" y="424" width="323" height="136"/>
@@ -1763,7 +1763,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1070">
                         <rect key="frame" x="17" y="89" width="289" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="样式文件名 (最好用小写):" id="1071">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="样式文件名:" id="1071">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

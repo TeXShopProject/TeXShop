@@ -9,20 +9,19 @@
     <customObject id="-2" userLabel="File's Owner" customClass="TSPrefPreviewController">
       <connections>
         <outlet property="HtmlHomeField" destination="gxJ-rd-D1v" id="Rpi-lO-rAY" />
-        <outlet property="antialiasButton" destination="fjQ-he-GFL" id="6Ic-qg-dkP" />
         <outlet property="autoPDFButton" destination="557" id="559" />
         <outlet property="displayAsBookButton" destination="preview-cover-button" id="preview-cover-outlet" />
         <outlet property="firstPageMatrix" destination="506" id="512" />
         <outlet property="htmlWindowPosButton" destination="EPC-FR-GKh" id="koQ-c5-bVK" />
         <outlet property="htmlWindowPosMatrix" destination="4qx-Bg-9Ii" id="oZo-Fd-y5r" />
         <outlet property="linkPopupsButton" destination="preview-link-popups-button" id="preview-link-popups-outlet" />
+        <outlet property="scrollPageTurnButton" destination="preview-scroll-page-turn-button" id="preview-scroll-page-turn-outlet" />
         <outlet property="magTextField" destination="113" id="114" />
         <outlet property="mouseModePopup" destination="345" id="371" />
         <outlet property="pageStylePopup" destination="340" id="372" />
         <outlet property="pdfWindowPosButton" destination="46" id="110" />
         <outlet property="pdfWindowPosMatrix" destination="44" id="91" />
         <outlet property="resizeOptionPopup" destination="334" id="373" />
-        <outlet property="scrollButton" destination="230" id="232" />
         <outlet property="useLeftSourceButton" destination="iRm-g2-CpD" id="5AK-oG-15J" />
         <outlet property="useOneWindowButton" destination="MBq-SG-G54" id="WeS-06-WPr" />
         <outlet property="useRightSourceButton" destination="zvK-4Q-HJ5" id="OOi-pn-wSo" />
@@ -111,28 +110,6 @@
                   <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog" />
                 </textFieldCell>
               </textField>
-            </subviews>
-          </view>
-          <font key="titleFont" metaFont="system" />
-        </box>
-        <box fixedFrame="YES" title="Change Page Buttons" translatesAutoresizingMaskIntoConstraints="NO" id="228" identifier="settings.228">
-          <rect key="frame" x="322" y="561" width="253" height="50" />
-          <autoresizingMask key="autoresizingMask" />
-          <view key="contentView" id="p9l-bi-ywt" identifier="settings.p9l-bi-ywt">
-            <rect key="frame" x="0.0" y="0.0" width="253" height="38" />
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
-            <subviews>
-              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="230" identifier="settings.230">
-                <rect key="frame" x="33" y="9" width="103" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <buttonCell key="cell" type="check" title="Do not scroll" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="867">
-                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                  <font key="font" metaFont="system" />
-                </buttonCell>
-                <connections>
-                  <action selector="scrollPressed:" target="-2" id="231" />
-                </connections>
-              </button>
             </subviews>
           </view>
           <font key="titleFont" metaFont="system" />
@@ -307,25 +284,14 @@
           <font key="titleFont" metaFont="system" />
         </box>
         <box fixedFrame="YES" title="Display" translatesAutoresizingMaskIntoConstraints="NO" id="5HT-3x-Zr6" identifier="settings.5HT-3x-Zr6">
-          <rect key="frame" x="48" y="169" width="253" height="72" />
+          <rect key="frame" x="48" y="169" width="253" height="94" />
           <autoresizingMask key="autoresizingMask" />
           <view key="contentView" id="024-V2-dVf" identifier="settings.024-V2-dVf">
-            <rect key="frame" x="0.0" y="0.0" width="253" height="60" />
+            <rect key="frame" x="0.0" y="0.0" width="253" height="82" />
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
             <subviews>
-              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fjQ-he-GFL" identifier="settings.fjQ-he-GFL">
-                <rect key="frame" x="19" y="31" width="215" height="18" />
-                <autoresizingMask key="autoresizingMask" />
-                <buttonCell key="cell" type="check" title="Smooth text and line art" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="jgT-n6-lh0">
-                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                  <font key="font" metaFont="system" />
-                </buttonCell>
-                <connections>
-                  <action selector="antialiasChanged:" target="-2" id="6WU-zq-Zod" />
-                </connections>
-              </button>
               <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-link-popups-button" identifier="settings.preview-link-popups-button">
-                <rect key="frame" x="19" y="9" width="215" height="18" />
+                <rect key="frame" x="19" y="31" width="215" height="18" />
                 <autoresizingMask key="autoresizingMask" />
                 <buttonCell key="cell" type="check" title="Link Popups" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-link-popups-cell">
                   <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
@@ -333,6 +299,17 @@
                 </buttonCell>
                 <connections>
                   <action selector="linkPopupsChanged:" target="-2" id="preview-link-popups-action" />
+                </connections>
+              </button>
+              <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="preview-scroll-page-turn-button" identifier="settings.preview-scroll-page-turn-button">
+                <rect key="frame" x="19" y="9" width="215" height="18" />
+                <autoresizingMask key="autoresizingMask" />
+                <buttonCell key="cell" type="check" title="Do not turn pages by scrolling" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="preview-scroll-page-turn-cell">
+                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
+                  <font key="font" metaFont="system" />
+                </buttonCell>
+                <connections>
+                  <action selector="scrollPageTurnChanged:" target="-2" id="preview-scroll-page-turn-action" />
                 </connections>
               </button>
             </subviews>

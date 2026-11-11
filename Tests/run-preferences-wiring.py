@@ -60,7 +60,9 @@ for path in nibs:
     lang = path.parent.parent.name
     outlets, actions, labels = wiring(path)
     problems += [f'{lang}: {x}' for x in labels]
-    problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared)]
+    # Removed because they had no effect: scrollPressed: ("Do not scroll" with page buttons, since PDFKit),
+    # distillerChanged: (Apple Distiller, whose pstopdf macOS 14 removed) and antialiasChanged: (always on).
+    problems += [f'{lang}: action {s} is not a TSPreferences method' for s in sorted(actions - declared - {'scrollPressed:', 'distillerChanged:', 'antialiasChanged:'})]
     for prop, want in sorted(base.items()):
         have = outlets.get(prop)
         if have is None:
@@ -80,7 +82,7 @@ print(f'PASS: {len(nibs)} localized Preferences windows connect {len(base)} outl
 base=ET.parse(root/'Resources/Interfaces/Base.lproj/Preferences.nib/designable.nib')
 old={o.get('property'):o.get('destination') for o in base.findall(".//customObject[@id='-2']/connections/outlet")}
 # Outlets added after the migration have no legacy counterpart.
-added={'EditorHighlightZenkakuSymbolColorWell','EditorHighlightZenkakuSymbolBackgroundColorWell','linkPopupsButton'}
+added={'EditorHighlightZenkakuSymbolColorWell','EditorHighlightZenkakuSymbolBackgroundColorWell','linkPopupsButton','scrollPageTurnButton'}
 new={}
 for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xib') if x.name != 'SettingsWindow.xib']:
  tree=ET.parse(p)
@@ -92,6 +94,7 @@ for p in [x for x in (root/'Resources/Interfaces/Base.lproj').glob('Settings*.xi
   assert original not in new,(p,name)
   new[original]=p.name
 missing=set(old)-set(new)
-assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView'},missing
-assert len(new)==173
-print('PASS: 173 used outlets each migrate exactly once into shared panes')
+# _scrollButton ("Do not scroll" with page buttons), _distillerMatrix and _antialiasButton were removed.
+assert missing <= {'_prefsWindow','_tabView','_samplePanel','_fontTextView','_scrollButton','_distillerMatrix','_antialiasButton'},missing
+assert len(new)==170
+print('PASS: 170 used outlets each migrate exactly once into shared panes')
