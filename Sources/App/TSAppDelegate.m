@@ -927,9 +927,9 @@
     unichar smallgreater = 0x203A;
     
     /*
-    NSString *placeholderString = @"¥";
-    NSString *startcommentString = @"¥Ü";
-    NSString *endcommentString = @"Ý";
+    NSString *placeholderString = @"â€¢";
+    NSString *startcommentString = @"â€¢â€¹";
+    NSString *endcommentString = @"â€º";
     */
 
     

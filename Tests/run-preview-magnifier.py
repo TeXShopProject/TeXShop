@@ -17,6 +17,14 @@ MUTATIONS = {
                            '                magRectWindow = lensInView;'),
     'first-page-only': ('                if (pageUnder && pageUnder != myPage) {', '                if (NO) {'),
     'fixed-scale': ('            magScale = TSMagnifyingGlassScale([theEvent modifierFlags]);', ''),
+    # The former limit and the former image of the whole page.
+    'magnification-limit': ('- (void)doMagnifyingGlass:(NSEvent *)theEvent level: (NSInteger)level\n{\n',
+                            '- (void)doMagnifyingGlass:(NSEvent *)theEvent level: (NSInteger)level\n{\n    if (self.scaleFactor > 2.5) return;\n'),
+    'whole-page-image': ('                [[self overView] setMagnifiedPage: myPage];\n',
+                         '                { PDFPage *p = myPage; PDFDisplayBox b = self.displayBox; NSRect r = [p boundsForBox:b];\n'
+                         '                  NSSize z = p.rotation % 180 ? NSMakeSize(NSHeight(r), NSWidth(r)) : r.size;\n'
+                         '                  [[self overView] setMagnifiedImage: [NSImage imageWithSize:z flipped:NO drawingHandler:^BOOL(NSRect d) {\n'
+                         '                      [p drawWithBox:b toContext:NSGraphicsContext.currentContext.CGContext]; return YES; }]]; }\n'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -38,13 +46,13 @@ program = r'''
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import <objc/runtime.h>
+#import <mach/mach.h>
 #import "TestAppKitIsolation.h"
 #import "OverView.h"
 #import "TSMagnifyingGlass.h"
 #define NSAppKitVersionNumber10_10_Max 1349
 static TSMemoryDefaults *defaults;
 #define SUD defaults
-static NSString *GlassMaxMagnificationKey = @"GlassMaxMagnification";
 @interface MyPDFKitView : PDFView
 @property (retain) OverView *overView;
 @end
@@ -111,6 +119,11 @@ static BOOL Glass(MyPDFKitView *view, NSPoint from, NSPoint to, NSInteger level,
     Drain();
     return shown;
 }
+static double FootprintMB(void) {
+    task_vm_info_data_t info; mach_msg_type_number_t count = TASK_VM_INFO_COUNT;
+    task_info(mach_task_self(), TASK_VM_INFO, (task_info_t)&info, &count);
+    return info.phys_footprint / 1048576.0;
+}
 static NSRect LensOnScreen(MyPDFKitView *view) { return [view convertRect:lens fromView:view.documentView]; }
 static CGFloat Magnification(MyPDFKitView *view, PDFPage *page) {
     // Width on screen of what the lens shows, compared with the lens itself.
@@ -136,7 +149,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSUInteger cases = 0;
     // offset 1: both boxes moved; offset 2: only the CropBox, as \\pdfpageattr{/CropBox [...]} makes.
     for (int offset = 0; offset < 3; offset++) for (NSInteger rotation = 0; rotation < 360; rotation += 90)
-    for (NSNumber *zoom in @[@0, @0.5, @1.0, @2.0]) {
+    for (NSNumber *zoom in @[@0, @0.5, @1.0, @2.0, @4.0]) {
         PDFDocument *document = Document(1); PDFPage *page = [document pageAtIndex:0];
         if (offset == 1) [page setBounds:NSMakeRect(100, 600, 400, 200) forBox:kPDFDisplayBoxMediaBox];
         if (offset) [page setBounds:offset == 1 ? NSMakeRect(100, 600, 400, 200) : NSMakeRect(150, 600, 300, 200) forBox:kPDFDisplayBoxCropBox];
@@ -147,10 +160,6 @@ int main(int argc, char **argv) { @autoreleasepool {
         context = [NSString stringWithFormat:@"offset %d rotation %ld zoom %.2f", offset, (long)rotation, view.scaleFactor];
         NSPoint formula = [view convertPoint:NSMakePoint(NSMidX(Formula), NSMidY(Formula)) fromPage:page];
         NSPoint paper = [view convertPoint:offset ? NSMakePoint(170, 630) : NSMakePoint(NSMidX(Formula), NSMinY(Formula) - 60) fromPage:page];
-        if (view.scaleFactor > 2.5) {
-            Check(!Glass(view, formula, formula, 0, 1, 0), @"No glass above the largest magnification");
-            continue;
-        }
         Check(Glass(view, formula, formula, 0, 1, 0), @"Glass shown");
         Check(DarkAt(drawn, .5, .5), @"Lens centre shows the formula under the pointer");
         NSRect onScreen = LensOnScreen(view);
@@ -162,7 +171,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
         cases++;
     }
-    Check(cases >= 42, [NSString stringWithFormat:@"Enough position cases (%lu)", (unsigned long)cases]);
+    Check(cases >= 54, [NSString stringWithFormat:@"Enough position cases (%lu)", (unsigned long)cases]);
 
     // Modifier keys, larger lenses, and the largest magnification.
     context = @"keys and lenses";
@@ -180,10 +189,22 @@ int main(int argc, char **argv) { @autoreleasepool {
     }
     Check(Glass(view, formula, formula, 0, 2, 0) && fabs(NSWidth(LensOnScreen(view)) - 380) < .5, @"Double click: large lens");
     Check(Glass(view, formula, formula, 1, 1, 0) && fabs(NSWidth(LensOnScreen(view)) - 380) < .5, @"Magnify (Large) tool: large lens");
-    [defaults setInteger:400 forKey:GlassMaxMagnificationKey];
-    view.scaleFactor = 3; Pump();
-    Check(Glass(view, formula, formula, 0, 1, 0), @"GlassMaxMagnification raises the limit");
-    [defaults setObject:nil forKey:GlassMaxMagnificationKey];
+
+    // An enlarged Preview: the glass works, and draws only the lens. An image of the
+    // whole page at the glass's magnification took about 1 GB at 800% and 4 GB at 1600%.
+    for (NSNumber *zoom in @[@8.0, @16.0]) {
+        context = [NSString stringWithFormat:@"enlarged %@", zoom];
+        view.scaleFactor = zoom.doubleValue; Pump();
+        [view goToRect:NSMakeRect(NSMidX(Formula) - 5, NSMidY(Formula) - 5, 10, 10) onPage:page]; Pump();
+        formula = [view convertPoint:NSMakePoint(NSMidX(Formula), NSMidY(Formula)) fromPage:page];
+        double before = FootprintMB();
+        Check(Glass(view, formula, formula, 0, 1, 0), @"Glass shown at any magnification");
+        double grown = FootprintMB() - before;
+        Check(DarkAt(drawn, .5, .5), @"Lens shows the formula under the pointer");
+        Check(fabs(Magnification(view, page) - 1.5) < .05, @"Glass magnifies the screen 150%");
+        Check(grown < 200, [NSString stringWithFormat:@"The glass draws only the lens (%.0f MB more)", grown]);
+    }
+    view.scaleFactor = 0.7; Pump();
 
     // Dragging from one page onto the next shows the next page.
     context = @"two pages";

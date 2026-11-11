@@ -2637,19 +2637,18 @@ When the Preview window is split (see \cref{Splitting_Windows_Section}), each pa
 
 
 
-\subsection{Too Much Magnification is Bad}
+\subsection{The Magnifying Glass at High Magnification}
 \label{Too_Much_Magnification}
  
- One user liked to increase the default magnification significantly in the Preview Window, and in addition use the magnifying glass for extremely close inspection of fine details. This caused TeXShop to run out of memory and crash. TeXShop now protects itself by refusing to activate the magnifying glass if the default magnification is too large.
- The default limit is a preview magnification of 250.
-On your own risk you can change it with a hidden preference,
-see the chapter on Hidden Preferences below.
+ One user liked to increase the default magnification significantly in the Preview Window, and in addition use the magnifying glass for extremely close inspection of fine details. This caused TeXShop to run out of memory and crash. For a while TeXShop protected itself by refusing to activate the magnifying glass when the Preview magnification was above 250.
  
-To understand the problem, it is useful to know how the magnifying glass works. When a user asks for the glass, TeXShop glues an extra view on top of the Preview window's content, but this view is transparent so the user does not notice that it is there. Then TeXShop creates an offscreen image of the entire active page being displayed on the screen. Next TeXShop reads the data from this offscreen image which is contained in a small rectangle centered on the mouse location, and draws this data to a larger rectangle in the transparent view. The result is a magnified view of the portion of the screen under the mouse; this magnified image is in the mostly transparent view rather than in the original Preview page.
+To understand the problem, it is useful to know how the magnifying glass worked. When a user asks for the glass, TeXShop glues an extra view on top of the Preview window's content, but this view is transparent so the user does not notice that it is there. Then TeXShop created an offscreen image of the entire active page being displayed on the screen. Next TeXShop reads the data from this offscreen image which is contained in a small rectangle centered on the mouse location, and draws this data to a larger rectangle in the transparent view. The result is a magnified view of the portion of the screen under the mouse; this magnified image is in the mostly transparent view rather than in the original Preview page.
 
 If the user moves the mouse, TeXShop erases the transparent view and  repeats the procedure with the new mouse location. The magnified image appears to move to a new location, but the uncovered data need not be redrawn.
 
-If the Preview window has a large default magnification, then only a small portion of the window is visible on the screen. But the offscreen image of the active page will contain the full page in intricate detail, taking a gigantic amount of memory. Hence the out of memory bug.
+If the Preview window has a large default magnification, then only a small portion of the window is visible on the screen. But the offscreen image of the active page contained the full page in intricate detail, taking a gigantic amount of memory. Hence the out of memory bug.
+
+Starting with TeXShop 5.60, the glass no longer makes an image of the page. It draws only the small rectangle it shows, directly from the PDF, so it uses little memory and works at any magnification of the Preview window. The limit and the hidden preference that raised it are gone.
 
 \chapter{Printing}
 
@@ -4038,8 +4037,6 @@ For removing most the white border but keeping the headline, I would use slightl
 \end{verbatim}
 to get a version of this manual for presentation.
 This ad hoc intervention does the job, and you don't have to fiddle around with the magnification during the presentation.
-
-Note that in this process the magnification in the Preview window might get so large that the magnifying class stops working, see \cref{Too_Much_Magnification} for details.
 \item
 When you present a proof, you will probably refer to previous results, equations, definitions, etc.
 \emph{Here TeXShop's exceptional hover preview comes into play, see \cref{Popup_Windows_Section,Modifying_Popup_Windows_Section}.}
@@ -6678,11 +6675,6 @@ The optional menu to select the encoding was removed from the Save Dialog. Start
 \subsubsection{<Preferences for the Preview Window>}
 
 In double page mode, the initial page is shown by itself and then pages are shown side by side. This is called Book Mode. Starting with TeXShop 5.60, it is turned off with the item {\bf Show first page alone as cover} under the Preview category of TeXShop Settings, which replaces the former hidden preference DisplayAsBook.
-
-Some users select very high magnification in the Preview Window, and then use a magnifying glass. This can dangerously deplete memory, so TeXShop does not allow the magnifying glass to work when the Preview magnification is above 250. While not recommended, this limit can be raised
-\begin{verbatim}
-   defaults write TeXShop GlassMaxMagnification 300
-\end{verbatim}
 
 When syncTeX syncs from the source window to the preview window, it highlights the selected text in yellow. This can be a little difficult to see. Years ago, TeXShop circled the selected text with a red oval rather than highlighting it. To make this the default
 \begin{verbatim}

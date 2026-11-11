@@ -550,7 +550,6 @@ extern NSString *HtmlWindowNameKey;
 extern NSString *HtmlWindowPosModeKey;
 extern NSString *HtmlWindowFixedPosKey;
 extern NSString *HtmlHomeKey;
-extern NSString *GlassMaxMagnificationKey;
 extern NSString *EncodingMenuInSaveDialogKey;
 extern NSString *BlockCursorKey;
 extern NSString *BlockCursorRKey;

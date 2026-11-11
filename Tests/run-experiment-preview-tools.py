@@ -288,7 +288,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSPoint over = ViewPointOfPage(view, NSMakePoint(NSMidX(Formula), NSMidY(Formula)));
     [view showExperimentMagnifierAt:over level:1 modifiers:0];
     OverView *lens = view.experimentOverlay;
-    Check(lens.superview == view.documentView && lens.magnifiedImage, @"Glass shown");
+    Check(lens.superview == view.documentView && lens.magnifiedPage == first, @"Glass shown");
     Check(view.scaleFactor < 0.6, @"Fixture: the Experiment panel shows the page reduced");
     // Lens size in points on screen, and magnification of what the screen shows.
     NSRect lensRect = [view convertRect:[[lens valueForKey:@"theSelectionRect"] rectValue] fromView:view.documentView];
@@ -359,12 +359,23 @@ int main(int argc, char **argv) { @autoreleasepool {
     Post(Mouse(NSEventTypeLeftMouseUp, panel, end, 1, 0));
     [view mouseDown:Mouse(NSEventTypeLeftMouseDown, panel, start, 1, 0)];
     Check(view.experimentOverlay == nil, @"Glass gone after the button is released");
-    view.autoScales = NO; view.scaleFactor = 3; Pump();
-    [view showExperimentMagnifierAt:over level:1 modifiers:0]; [view hideExperimentMagnifier];
+    // The glass works at any magnification, and draws only the lens.
+    view.autoScales = NO; view.scaleFactor = 16; Pump();
+    [view goToRect:NSMakeRect(NSMidX(Formula) - 5, NSMidY(Formula) - 5, 10, 10) onPage:[view.document pageAtIndex:0]]; Pump();
+    NSPoint enlarged = ViewPointOfPage(view, NSMakePoint(NSMidX(Formula), NSMidY(Formula)));
+    [view showExperimentMagnifierAt:enlarged level:1 modifiers:0];
+    {
+        OverView *glass = view.experimentOverlay;
+        NSRect shownLens = [[glass valueForKey:@"theSelectionRect"] rectValue];
+        NSBitmapImageRep *drawn = [glass bitmapImageRepForCachingDisplayInRect:shownLens];
+        [glass cacheDisplayInRect:shownLens toBitmapImageRep:drawn];
+        Check(DarkAt(drawn, .5, .5), @"An enlarged page shows the formula in the glass");
+    }
+    [view hideExperimentMagnifier];
     Post(Mouse(NSEventTypeLeftMouseUp, panel, start, 1, 0));
     [view mouseDown:Mouse(NSEventTypeLeftMouseDown, panel, start, 1, 0)];
     NSEvent *left = [NSApp nextEventMatchingMask:NSEventMaskLeftMouseUp untilDate:NSDate.distantPast inMode:NSDefaultRunLoopMode dequeue:YES];
-    Check(view.lensImage == nil && left.type == NSEventTypeLeftMouseUp, @"No glass beyond the largest magnification");
+    Check(left == nil && view.experimentOverlay == nil, @"The glass tool works on an enlarged page");
     view.scaleFactor = 2; Pump();
     [testDefaults setInteger:NEW_MOUSE_MODE_SCROLL forKey:ExperimentMouseModeKey];
     NSPoint beforeDrag = Clip(view).bounds.origin;

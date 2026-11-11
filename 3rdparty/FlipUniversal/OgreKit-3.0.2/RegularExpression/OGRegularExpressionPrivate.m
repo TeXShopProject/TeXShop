@@ -35,25 +35,25 @@ OnigSyntaxType  OgrePrivateRubySyntax;
 
 @implementation OGRegularExpression (Private)
 
-/* ”ñŒöŠJƒƒ\ƒbƒh */
+/* éå…¬é–‹ãƒ¡ã‚½ãƒƒãƒ‰ */
 
 - (void)dealloc
 {
 #ifdef DEBUG_OGRE
 	NSLog(@"-dealloc of %@", [self className]);
 #endif
-	// named group(‹tˆø‚«)«‘
+	// named group(é€†å¼•ã)è¾æ›¸
 	[_groupIndexForNameDictionary release];
 	[_nameForGroupIndexArray release];
 	
-	// ‹SÔ³‹K•\Œ»ƒIƒuƒWƒFƒNƒg
+	// é¬¼è»Šæ­£è¦è¡¨ç¾ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	if (_regexBuffer != NULL) onig_free(_regexBuffer);
 	
-	// ³‹K•\Œ»‚ğ•\‚·•¶š—ñ
+	// æ­£è¦è¡¨ç¾ã‚’è¡¨ã™æ–‡å­—åˆ—
     NSZoneFree([self zone], _UTF16ExpressionString);
 	[_expressionString release];
 	
-	// \‚Ì‘ã‘Ö•¶š
+	// \ã®ä»£æ›¿æ–‡å­—
 	[_escapeCharacter release];
 	
 	[super dealloc];
@@ -65,7 +65,7 @@ OnigSyntaxType  OgrePrivateRubySyntax;
 	return _regexBuffer;
 }
 
-// OgreSyntax‚É‘Î‰‚·‚éOnigSyntaxType*‚ğ•Ô‚·B
+// OgreSyntaxã«å¯¾å¿œã™ã‚‹OnigSyntaxType*ã‚’è¿”ã™ã€‚
 + (OnigSyntaxType*)onigSyntaxTypeForSyntax:(OgreSyntax)syntax
 {
 	if(syntax == OgreSimpleMatchingSyntax)	return &OgrePrivateRubySyntax;
@@ -82,11 +82,11 @@ OnigSyntaxType  OgrePrivateRubySyntax;
 	return NULL;	// dummy
 }
 
-// string’†‚Ì\‚ğcharacter‚É’u‚«Š·‚¦‚½•¶š—ñ‚ğ•Ô‚·Bcharacter‚ªnil‚Ìê‡Astring‚ğ•Ô‚·B
+// stringä¸­ã®\ã‚’characterã«ç½®ãæ›ãˆãŸæ–‡å­—åˆ—ã‚’è¿”ã™ã€‚characterãŒnilã®å ´åˆã€stringã‚’è¿”ã™ã€‚
 + (NSObject<OGStringProtocol>*)changeEscapeCharacterInOGString:(NSObject<OGStringProtocol>*)string toCharacter:(NSString*)character
 {
 	if ( (character == nil) || (string == nil) || ([character length] == 0) ) {
-		// ƒGƒ‰[B—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ã‚¨ãƒ©ãƒ¼ã€‚ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[NSException raise:NSInvalidArgumentException format:@"nil string (or other) argument"];
 	}
 	
@@ -96,8 +96,8 @@ OnigSyntaxType  OgrePrivateRubySyntax;
 	
 	NSString	*plainString = [string string];
 	NSUInteger	strLength = [plainString length];
-	NSRange		scanRange = NSMakeRange(0, strLength);	// ƒXƒLƒƒƒ“‚·‚é”ÍˆÍ
-	NSRange		matchRange;					// escape‚Ì”­Œ©‚³‚ê‚½”ÍˆÍ(length‚Íí‚É1)
+	NSRange		scanRange = NSMakeRange(0, strLength);	// ã‚¹ã‚­ãƒ£ãƒ³ã™ã‚‹ç¯„å›²
+	NSRange		matchRange;					// escapeã®ç™ºè¦‹ã•ã‚ŒãŸç¯„å›²(lengthã¯å¸¸ã«1)
 	
 	/* escape character set */
 	NSCharacterSet	*swapCharSet = [NSCharacterSet characterSetWithCharactersInString:
@@ -146,41 +146,41 @@ OnigSyntaxType  OgrePrivateRubySyntax;
 	return resultString;
 }
 
-// character‚Ì•¶ší‚ğ•Ô‚·B
+// characterã®æ–‡å­—ç¨®ã‚’è¿”ã™ã€‚
 /*
- –ß‚è’l:
+ æˆ»ã‚Šå€¤:
   OgreKindOfNil			character == nil
-  OgreKindOfEmpty		‹ó•¶š @""
+  OgreKindOfEmpty		ç©ºæ–‡å­— @""
   OgreKindOfBackslash	\ @"\\"
-  OgreKindOfNormal		‚»‚Ì‘¼
+  OgreKindOfNormal		ãã®ä»–
  */
 + (OgreKindOfCharacter)kindOfCharacter:(NSString*)character
 {
 	if (character == nil) {
-		// Character‚ªnil‚Ìê‡
+		// CharacterãŒnilã®å ´åˆ
 		return OgreKindOfNil;
 	}
 	if ([character length] == 0) {
-		// Character‚ª‹ó•¶š—ñ‚Ìê‡
+		// CharacterãŒç©ºæ–‡å­—åˆ—ã®å ´åˆ
 		return OgreKindOfEmpty;
 	}
-	// character‚Ì1•¶š–Ú
+	// characterã®1æ–‡å­—ç›®
 	NSString	*substr = [character substringWithRange:NSMakeRange(0,1)];
 		
 	if ([substr isEqualToString:@"\\"]) {
-		// \‚Ìê‡
+		// \ã®å ´åˆ
 		return OgreKindOfBackslash;
 	}
 		
-	// “Áê•¶š‚Å‚È‚¢ê‡
+	// ç‰¹æ®Šæ–‡å­—ã§ãªã„å ´åˆ
 	return OgreKindOfNormal;
 }
 
-// ‹ó”’‚Å’PŒê‚ğƒOƒ‹[ƒv•ª‚¯‚·‚éB—á: @"alpha beta gamma" -> @"(alpha)|(beta)|(gamma)"
+// ç©ºç™½ã§å˜èªã‚’ã‚°ãƒ«ãƒ¼ãƒ—åˆ†ã‘ã™ã‚‹ã€‚ä¾‹: @"alpha beta gamma" -> @"(alpha)|(beta)|(gamma)"
 + (NSString*)delimitByWhitespaceInString:(NSString*)string
 {	
 	if (string == nil) {
-		// ƒGƒ‰[B—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ã‚¨ãƒ©ãƒ¼ã€‚ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[NSException raise:OgreException format:@"nil string (or other) argument"];
 	}
 
@@ -218,9 +218,9 @@ OnigSyntaxType  OgrePrivateRubySyntax;
 	return expressionString;
 }
 
-// –¼‘O‚ªname‚Ìgroup number
-// ‘¶İ‚µ‚È‚¢–¼‘O‚Ìê‡‚Í-1‚ğ•Ô‚·B
-// “¯ˆê‚Ì–¼‘O‚ğ‚Â•”•ª•¶š—ñ‚ª•¡”‚ ‚éê‡‚Í-2‚ğ•Ô‚·B
+// åå‰ãŒnameã®group number
+// å­˜åœ¨ã—ãªã„åå‰ã®å ´åˆã¯-1ã‚’è¿”ã™ã€‚
+// åŒä¸€ã®åå‰ã‚’æŒã¤éƒ¨åˆ†æ–‡å­—åˆ—ãŒè¤‡æ•°ã‚ã‚‹å ´åˆã¯-2ã‚’è¿”ã™ã€‚
 - (int)groupIndexForName:(NSString*)name
 {
 	if (name == nil) {
@@ -236,8 +236,8 @@ OnigSyntaxType  OgrePrivateRubySyntax;
 	return [[array objectAtIndex:0] unsignedIntValue];
 }
 
-// index”Ô–Ú‚Ì•”•ª•¶š—ñ‚Ì–¼‘O
-// ‘¶İ‚µ‚È‚¢–¼‘O‚Ìê‡‚Í nil ‚ğ•Ô‚·B
+// indexç•ªç›®ã®éƒ¨åˆ†æ–‡å­—åˆ—ã®åå‰
+// å­˜åœ¨ã—ãªã„åå‰ã®å ´åˆã¯ nil ã‚’è¿”ã™ã€‚
 - (NSString*)nameForGroupIndex:(NSUInteger)index
 {
 	if ( (_nameForGroupIndexArray == nil) || (index < 1) || (index > [_nameForGroupIndexArray count])) {
@@ -245,7 +245,7 @@ OnigSyntaxType  OgrePrivateRubySyntax;
 	}
 	
 	NSString	*name = [_nameForGroupIndexArray objectAtIndex:(index - 1)];
-	if ([name length] == 0) return nil;	// @"" ‚Í nil ‚É“Ç‚İ‘Ö‚¦‚éB
+	if ([name length] == 0) return nil;	// @"" ã¯ nil ã«èª­ã¿æ›¿ãˆã‚‹ã€‚
 	
 	return name;
 }

@@ -17,29 +17,9 @@
 
 - (void)doMagnifyingGlass:(NSEvent *)theEvent level: (NSInteger)level
 {
-    
-    NSInteger   theScale;
-    float       theRealScale;
- 
-    theScale = [SUD integerForKey: GlassMaxMagnificationKey];
-    if (theScale == 0)
-        theScale = 250;
-    theRealScale = theScale / 100.0;
-  // NSLog(@"The scale %d", theScale);
-  // NSLog(@"The real scale %f", theRealScale);
-  // NSLog(@"The actual scale %f", self.scaleFactor);
-
-    if (self.scaleFactor > theRealScale)
-        return;
-
-    // Use new Magnifying Glass Routine on Lion, Mountain Lion, and Mavericks. It works in all these places
-    // and the old routine has problems in all of these places.
-    
-    // If the user has magnified the image and then uses the magnifying glass, TeXShop creates an
-    // enormous image of the current page. This requires several gigabytes of memory, slows the program
-    // and leads to crashes. So we refuse to use the magnifying glass if rhe current magnification is
-    // more than 256 (fix on August 18, 2022)
-    
+    // The glass draws only the lens (TSMagnifyingGlassDrawPage), so it works at any
+    // magnification. It used to make an image of the whole page, which took
+    // gigabytes when the Preview was enlarged, and was refused above 250%.
     
     if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_7)
         //        [self doMagnifyingGlassML: theEvent level:level] ;
@@ -218,7 +198,6 @@
     // The lens draws the page as the preview shows it (TSMagnifyingGlass.h), so a page
     // whose boxes do not start at the origin, or a rotated page, shows the right place.
     PDFPage *myPage = [self pageForPoint: myLocation nearest:YES];
-    NSImage *myImageNew = TSMagnifyingGlassPageImage(myPage, self.displayBox);
     
     
     do {
@@ -252,7 +231,6 @@
                 PDFPage *pageUnder = [self pageForPoint: mouseLocView nearest:YES];
                 if (pageUnder && pageUnder != myPage) {
                     myPage = pageUnder;
-                    myImageNew = TSMagnifyingGlassPageImage(myPage, self.displayBox);
                 }
                 NSRect lensInView;
                 TSMagnifyingGlassLayout(self, myPage, self.displayBox, mouseLocView, NSMakeSize(magWidth, magHeight),
@@ -264,7 +242,8 @@
                 [[self overView] setDrawMagnifiedImage: YES];
                 [[self overView] setSelectionRect: magRectWindow];
                 [[self overView] setMagnifiedRect: thePageOriginalRect];
-                [[self overView] setMagnifiedImage: myImageNew];
+                [[self overView] setMagnifiedPage: myPage];
+                [[self overView] setMagnifiedBox: self.displayBox];
                 [[self overView] setNeedsDisplayInRect: [[self documentView] visibleRect]];
                 
                 
