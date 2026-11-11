@@ -988,50 +988,6 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 	[self colorizeExperimentSource];
 }
 
-// The source in the Experiment window is colored like the document's source. It is
-// short, so its visible area is colored again after each change.
-- (void)colorizeExperimentSource
-{
-    if (scrapTextView.window.isVisible)
-        [self colorizeVisibleAreaInTextView:scrapTextView];
-}
-
-- (void)experimentSourceDidChange:(NSNotification *)notification
-{
-    [self colorizeExperimentSource];
-}
-
-// The active line follows the insertion point, as in the document's source.
-- (void)experimentSelectionDidChange:(NSNotification *)notification
-{
-    if (scrapTextView.window.isVisible)
-        [self cursorMoved:scrapTextView];
-}
-
-- (void)observeExperimentSource
-{
-    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    NSClipView *clipView = scrapTextView.enclosingScrollView.contentView;
-    [center removeObserver:self name:NSTextDidChangeNotification object:scrapTextView];
-    [center removeObserver:self name:NSTextViewDidChangeSelectionNotification object:scrapTextView];
-    [center removeObserver:self name:NSViewFrameDidChangeNotification object:scrapTextView];
-    if (clipView)
-        [center removeObserver:self name:NSViewBoundsDidChangeNotification object:clipView];
-    if (!scrapTextView)
-        return;
-    [center addObserver:self selector:@selector(experimentSourceDidChange:)
-                   name:NSTextDidChangeNotification object:scrapTextView];
-    [center addObserver:self selector:@selector(experimentSelectionDidChange:)
-                   name:NSTextViewDidChangeSelectionNotification object:scrapTextView];
-    [center addObserver:self selector:@selector(viewFrameDidChange:)
-                   name:NSViewFrameDidChangeNotification object:scrapTextView];
-    if (clipView) {
-        clipView.postsBoundsChangedNotifications = YES;
-        [center addObserver:self selector:@selector(viewBoundsDidChange:)
-                       name:NSViewBoundsDidChangeNotification object:clipView];
-    }
-}
-
 // The characters visible in any text view, as -[TSTextView visibleCharacterRange]; the
 // Experiment source is a plain text view.
 static NSRange TSVisibleCharacterRange(NSTextView *textView)

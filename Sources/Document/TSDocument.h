@@ -377,6 +377,9 @@ enum RootCommand
 	NSInteger lastCursorLocation; // added by Terada
 	NSInteger lastStringLength; // added by Terada
 	BOOL lastInputIsDelete; // added by Terada
+	// The same state for the source of the Experiment window
+	NSInteger scrapLastCursorLocation, scrapLastStringLength;
+	BOOL scrapLastInputIsDelete, scrapBraceHighlighting, scrapContentHighlighting;
 	
 	//Michael Witten: mfwitten@mit.edu
 	NSLineBreakMode		lineBreakMode;
@@ -906,6 +909,10 @@ enum RootCommand
 - (void)annotationPanelWillClose:(NSNotification *)notification;
 
 
+// Brace matching for the document's source, or for the source of the Experiment window
+- (void)matchBracesForSelectionInTextView:(NSTextView *)aTextView;
+- (void)flashMatchForCharacter:(NSString *)replacementString range:(NSRange)affectedCharRange inTextView:(NSTextView *)aTextView;
+
 @end
 
 
@@ -991,8 +998,6 @@ enum RootCommand
 - (void)fixColor:(NSUInteger)from :(NSUInteger)to;
 - (void)colorizeAll;
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)aTextView;
-- (void)colorizeExperimentSource;
-- (void)observeExperimentSource;
 - (void)cursorMoved: (NSTextView *)aTextView;
 - (void)removeCurrentLineColor: (NSTextView *)aTextView;
 
@@ -1095,6 +1100,23 @@ enum RootCommand
 - (void)changePreviewArrangement:(id)sender;
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
 - (void)updatePreviewLayoutControls;
+@end
+
+// The source of the Experiment window shows its text as the document's source does.
+@interface TSDocument (ExperimentSource)
+- (void)observeExperimentSource;
+- (void)syncExperimentSourceDisplay;
+- (void)applyExperimentTextLayout;
+- (void)applyExperimentInvisibleCharacters;
+- (void)applyExperimentLineNumbers;
+- (void)colorizeExperimentSource;
+- (void)refreshExperimentCurrentLine;
+- (void)resetExperimentHighlight:(id)sender;
+- (void)highlightExperimentBracesAt:(NSArray *)locations;
+- (void)highlightExperimentContent:(NSString *)rangeString;
+- (void)showExperimentIndicator:(NSString *)rangeString;
+- (void)resetExperimentBackgroundColor:(id)sender;
+- (void)resetExperimentBackgroundColorOfTextView:(id)sender;
 @end
 
 @interface TSDocument (Experiment)

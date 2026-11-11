@@ -225,6 +225,7 @@
 		520C2EEB08AE92850010B1F8 /* TSDocument-Jobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		520C2EF008AE984C0010B1F8 /* TSDocument-RootFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		520C2EF108AE984C0010B1F8 /* TSDocument-Syntax.m in Sources */ = {isa = PBXBuildFile; fileRef = 520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		41D66DDAA7C313F1591AEC67 /* TSDocument-ExperimentSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 056081BD34CC0A97EF97164E /* TSDocument-ExperimentSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5217898608A7FAD600FC1D44 /* NSString-Extras.h in Headers */ = {isa = PBXBuildFile; fileRef = 5217898408A7FAD600FC1D44 /* NSString-Extras.h */; };
 		5217898708A7FAD600FC1D44 /* NSString-Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 5217898508A7FAD600FC1D44 /* NSString-Extras.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		F264AA2798678AB4A0B0DDB3 /* NSMutableString-Extras.h in Headers */ = {isa = PBXBuildFile; fileRef = B2B202308AF8EF1F1F0B57A6 /* NSMutableString-Extras.h */; };
@@ -817,6 +818,7 @@
 		520C2EEA08AE92850010B1F8 /* TSDocument-Jobs.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Jobs.m"; sourceTree = "<group>"; };
 		520C2EEE08AE984C0010B1F8 /* TSDocument-RootFile.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-RootFile.m"; sourceTree = "<group>"; };
 		520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-Syntax.m"; sourceTree = "<group>"; };
+		056081BD34CC0A97EF97164E /* TSDocument-ExperimentSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TSDocument-ExperimentSource.m"; sourceTree = "<group>"; };
 		5217898408A7FAD600FC1D44 /* NSString-Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-Extras.h"; sourceTree = "<group>"; };
 		5217898508A7FAD600FC1D44 /* NSString-Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-Extras.m"; sourceTree = "<group>"; };
 		B2B202308AF8EF1F1F0B57A6 /* NSMutableString-Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString-Extras.h"; sourceTree = "<group>"; };
@@ -1142,6 +1144,7 @@
 				4016DD862109FC6200745019 /* TSColorSupport.h */,
 				4016DD852109FC6200745019 /* TSColorSupport.m */,
 				40D67167210A5F9C0021D69C /* TSDocument-Color.m */,
+				056081BD34CC0A97EF97164E /* TSDocument-ExperimentSource.m */,
 				520C2EEF08AE984C0010B1F8 /* TSDocument-Syntax.m */,
 				346FA9FB1309961900DAA25D /* TSLayoutManager.h */,
 				346FA9FC1309961900DAA25D /* TSLayoutManager.m */,
@@ -1929,6 +1932,7 @@
 				520C2EF008AE984C0010B1F8 /* TSDocument-RootFile.m in Sources */,
 				407622742207340F00FB6C80 /* MyPDFKitView-TextMate.m in Sources */,
 				520C2EF108AE984C0010B1F8 /* TSDocument-Syntax.m in Sources */,
+				41D66DDAA7C313F1591AEC67 /* TSDocument-ExperimentSource.m in Sources */,
 				409F89D21960A6A200D6F7AD /* ScrapPDFKitView.m in Sources */,
 				4093BBEA22CECA7D00D37BD7 /* TSDocument-XML.m in Sources */,
 				408F8D7618DB671100277EDB /* GlobalData.m in Sources */,

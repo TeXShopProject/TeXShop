@@ -940,6 +940,7 @@ withDarkColors = NO;
         [self.logScrollView tile];
  		lineNumbersShowing = NO;
 	}
+	[self applyExperimentLineNumbers];
 }
 
 - (void) applyInvisibleCharactersShowing
@@ -947,6 +948,7 @@ withDarkColors = NO;
 	[(TSLayoutManager*)[textView layoutManager] setInvisibleCharactersEnabled:invisibleCharactersShowing];
 	[(TSLayoutManager*)[textView1 layoutManager] setInvisibleCharactersEnabled:invisibleCharactersShowing];
 	[(TSLayoutManager*)[textView2 layoutManager] setInvisibleCharactersEnabled:invisibleCharactersShowing];
+	[self applyExperimentInvisibleCharacters];
 }
 
 // added by Terada (- (void) showHideInvisibleCharacters:)
@@ -5605,6 +5607,27 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 // added by Terada (- (void)textViewDidChangeSelection:(NSNotification *)inNotification)
 - (void)textViewDidChangeSelection:(NSNotification *)inNotification
 {
+	[self matchBracesForSelectionInTextView:nil];
+}
+
+// aTextView is the source of the Experiment window, which keeps its own state,
+// or nil for the document's source.
+- (void)matchBracesForSelectionInTextView:(NSTextView *)aTextView
+{
+	BOOL experiment = (aTextView != nil && aTextView == scrapTextView);
+	NSInteger *lastLocation = experiment ? &scrapLastCursorLocation : &lastCursorLocation;
+	NSInteger *lastLength = experiment ? &scrapLastStringLength : &lastStringLength;
+	BOOL *lastDelete = experiment ? &scrapLastInputIsDelete : &lastInputIsDelete;
+	BOOL highlightingBraces = experiment ? scrapBraceHighlighting : braceHighlighting;
+	BOOL highlightingContent = experiment ? scrapContentHighlighting : contentHighlighting;
+	SEL resetBackgroundSelector = experiment ? @selector(resetExperimentBackgroundColor:) : @selector(resetBackgroundColor:);
+	SEL resetHighlightSelector = experiment ? @selector(resetExperimentHighlight:) : @selector(resetHighlight:);
+	SEL highlightBracesSelector = experiment ? @selector(highlightExperimentBracesAt:) : @selector(highlightBracesAt:);
+	SEL highlightContentSelector = experiment ? @selector(highlightExperimentContent:) : @selector(highlightContent:);
+	SEL showIndicatorSelector = experiment ? @selector(showExperimentIndicator:) : @selector(showIndicator:);
+	SEL resetFlashSelector = experiment ? @selector(resetExperimentBackgroundColorOfTextView:) : @selector(resetBackgroundColorOfTextView:);
+	NSTextView *flashView = experiment ? scrapTextView : textView;
+
 	BOOL alwaysHighlight  = [SUD boolForKey:AlwaysHighlightEnabledKey];
 	BOOL highlightContent = [SUD boolForKey:HighlightContentEnabledKey];
 	BOOL showIndicatorForMove = [SUD boolForKey:ShowIndicatorForMoveEnabledKey];
@@ -5622,14 +5645,14 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 		return;
 	}
 	
-	if(contentHighlighting){
-		[self performSelector:@selector(resetBackgroundColor:) 
+	if(highlightingContent){
+		[self performSelector:resetBackgroundSelector
 				   withObject:nil afterDelay:0];
 	}
 	
 	@try {
-		if(alwaysHighlight || braceHighlighting){
-			[self performSelector:@selector(resetHighlight:) 
+		if(alwaysHighlight || highlightingBraces){
+			[self performSelector:resetHighlightSelector
 					   withObject:nil afterDelay:0];
 		}
 	}
@@ -5640,22 +5663,22 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	
 	unichar k_braceCharList[] = {0x0028, 0x0029, 0x005B, 0x005D, 0x007B, 0x007D, 0x003C, 0x003E}; // ()[]{}<>
     
-	NSString *theString = [_textStorage string];
+	NSString *theString = experiment ? [scrapTextView string] : [_textStorage string];
     NSInteger theStringLength = [theString length];
     if (theStringLength == 0) { return; }
-    NSRange theSelectedRange = [[self textView] selectedRange];
+    NSRange theSelectedRange = experiment ? [scrapTextView selectedRange] : [[self textView] selectedRange];
     NSInteger theLocation = theSelectedRange.location;
-    NSInteger theDifference = theLocation - lastCursorLocation;
-    lastCursorLocation = theLocation;
+    NSInteger theDifference = theLocation - *lastLocation;
+    *lastLocation = theLocation;
 	
-	if (theStringLength - lastStringLength == -1) {
-		lastStringLength = theStringLength;
-		lastInputIsDelete = YES;
+	if (theStringLength - *lastLength == -1) {
+		*lastLength = theStringLength;
+		*lastDelete = YES;
 		return;
 	}
-	lastStringLength = theStringLength;
-	if (lastInputIsDelete){
-		lastInputIsDelete = NO;
+	*lastLength = theStringLength;
+	if (*lastDelete){
+		*lastDelete = NO;
 		return;
 	}
     
@@ -5713,7 +5736,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 		return;
 	if (theMatch >= 0) {
 		theLocation = theMatch;
-				[self performSelector:@selector(highlightBracesAt:)
+				[self performSelector:highlightBracesSelector
 						   withObject:[NSArray arrayWithObjects:
 									   [NSNumber numberWithInteger:theLocation],
 									   [NSNumber numberWithInteger:originalLocation],
@@ -5722,19 +5745,19 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 				 
 				
                 if(highlightContent){
-					[self performSelector:@selector(highlightContent:) 
+					[self performSelector:highlightContentSelector
 							   withObject:NSStringFromRange(NSMakeRange(MIN(originalLocation, theLocation), ABS(originalLocation - theLocation)+1)) afterDelay:0];
 				}
 				
 				if (NSFoundationVersionNumber > LEOPARD && !autoCompleting && showIndicatorForMove) {
-					[self performSelector:@selector(showIndicator:) 
+					[self performSelector:showIndicatorSelector
 							   withObject:NSStringFromRange(NSMakeRange(theLocation, 1)) 
 							   afterDelay:0];
 				}
 				
 				
 				if(!alwaysHighlight){
-					[self performSelector:@selector(resetHighlight:) 
+					[self performSelector:resetHighlightSelector
 							   withObject:nil afterDelay:0.30];
 				}
 				
@@ -5749,7 +5772,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
         
         
 #ifdef MOJAVEORHIGHER
-        if ((atLeastMojave) && (textView1.effectiveAppearance.name == NSAppearanceNameDarkAqua))
+        if ((atLeastMojave) && ((experiment ? scrapTextView : textView1).effectiveAppearance.name == NSAppearanceNameDarkAqua))
             withDarkColors = YES;
         else
 #endif
@@ -5768,20 +5791,20 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
         
         if (flashColor != nil)
             
-            [textView setBackgroundColor: flashColor];
+            [flashView setBackgroundColor: flashColor];
         
         else {
         
         if (withDarkColors)
             // [textView setBackgroundColor:[NSColor colorWithDeviceRed:0.00 green:0.20 blue:0.20 alpha:1.00]];
-            [textView setBackgroundColor: [[TSColorSupport sharedInstance] darkColorWithKey: @"EditorFlash"]];
+            [flashView setBackgroundColor: [[TSColorSupport sharedInstance] darkColorWithKey: @"EditorFlash"]];
         else
             // [textView setBackgroundColor:[NSColor colorWithDeviceRed:1 green:0.95 blue:1 alpha:1]];
-            [textView setBackgroundColor: [[TSColorSupport sharedInstance] liteColorWithKey: @"EditorFlash"]];
+            [flashView setBackgroundColor: [[TSColorSupport sharedInstance] liteColorWithKey: @"EditorFlash"]];
         }
         
        
-		[self performSelector:@selector(resetBackgroundColorOfTextView:) 
+		[self performSelector:resetFlashSelector
 				   withObject:nil afterDelay:0.20];
 	}
 }
@@ -5797,11 +5820,6 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	// Still, at least block selections would be useful for our users. But until the rest
 	// of the code is not aware of this possibility, we better keep this disabled.
 	
-	NSRange			matchRange;
-	NSString		*textString;
-	NSInteger				i, j, count, uchar, leftpar, rightpar;
-	NSDate			*myDate;
-	
 	// Record the modified range (for the syntax coloring code).
 	colorStart = affectedCharRange.location;
 	colorEnd = colorStart + [replacementString length];
@@ -5815,7 +5833,9 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	// FIXME HACK: Always rebuild the tags menu when things change...
 	tagLine = YES;
 #else
-	NSRange			tagRange;
+	NSRange			tagRange, matchRange;
+	NSString		*textString;
+	NSInteger		i;
 	NSUInteger 		start, end, end1;
 	
 	//
@@ -5886,12 +5906,26 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 	}
 #endif
 	
+	[self flashMatchForCharacter:replacementString range:affectedCharRange inTextView:textView];
+	return YES;
+}
+
+// Typing a closing brace briefly shows its partner, in the document's source or in
+// the source of the Experiment window (aTextView).
+- (void)flashMatchForCharacter:(NSString *)replacementString range:(NSRange)affectedCharRange inTextView:(NSTextView *)aTextView
+{
+	NSRange			matchRange;
+	NSString		*textString;
+	NSInteger				i, j, count, uchar, leftpar, rightpar;
+	NSDate			*myDate;
+	SEL showIndicatorSelector = (aTextView != nil && aTextView == scrapTextView) ? @selector(showExperimentIndicator:) : @selector(showIndicator:);
+
 	if (replacementString == nil)
-		return YES;
+		return;
 	
 	
 	if ([replacementString length] != 1)
-		return YES;
+		return;
 	rightpar = [replacementString characterAtIndex:0];
 
 	if ([SUD boolForKey:ParensMatchingEnabledKey]) {
@@ -5899,7 +5933,7 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 			  || ((rightpar == ')') && [SUD boolForKey:CheckParenEnabledKey])
 			  || ((rightpar == '>') && [SUD boolForKey:CheckBracketEnabledKey])
 			  || ((rightpar == ']') && [SUD boolForKey:CheckSquareBracketEnabledKey]))) // modified by Terada
-			return YES;
+			return;
 		
 		if (rightpar == '}')
 			leftpar = '{';
@@ -5910,12 +5944,12 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 		else
 			leftpar = '[';
 		
-		textString = [textView string];
+		textString = [aTextView string];
 		i = affectedCharRange.location;
 		j = 1;
 		count = 1;
 		
-		if (((i > 0) ? [textString characterAtIndex:i-1] : 0) == g_texChar) return YES; // added by Terada
+		if (((i > 0) ? [textString characterAtIndex:i-1] : 0) == g_texChar) return; // added by Terada
 		
 		// modified Jan 26, 2001, so we don't search entire text
 		while ((i > 0) && (j < 5000)) {
@@ -5931,24 +5965,24 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 				matchRange.length = 1;
 				// modified by Terada (from this line)
 				if ((NSFoundationVersionNumber > LEOPARD) && ([SUD boolForKey: brieflyFlashYellowForMatchKey])) {
-					[self performSelector:@selector(showIndicator:) 
+					[self performSelector:showIndicatorSelector
 							   withObject:NSStringFromRange(matchRange)
 							   afterDelay:0.0];
 				}
 				else {
 					// koch: here 'affinity' and 'stillSelecting' are necessary, else the wrong range is selected.
-					[textView setSelectedRange: matchRange
+					[aTextView setSelectedRange: matchRange
 									  affinity: NSSelectByCharacter stillSelecting: YES];
 					
 					// TODO / FIXME: Replace the brace highlighting below with something better. See Smultron:
 					//   [layoutManager addTemporaryAttributes:[self highlightColour] forCharacterRange:NSMakeRange(cursorLocation, 1)];
 					//   [self performSelector:@selector(resetBackgroundColour:) withObject:NSStringFromRange(NSMakeRange(cursorLocation, 1)) afterDelay:0.12];
 					
-					[textView display];
+					[aTextView display];
 					myDate = [NSDate date];
 					// Koch: Jan 26, 2001: changed -0.15 to -0.075 to speed things up
 					while ([myDate timeIntervalSinceNow] > - 0.075);
-					[textView setSelectedRange: affectedCharRange];
+					[aTextView setSelectedRange: affectedCharRange];
 					
 				}
 				// modified by Terada (until this line)
@@ -5957,11 +5991,6 @@ static NSInteger TSFindMatchingBrace(NSString *text, NSInteger origin, unichar b
 			}
 		}
 	}
-
-    
-
-	
-	return YES;
 }
 
 
@@ -8068,17 +8097,13 @@ if (! useFullSplitWindow) {
        self.blockCursor = NO;
    
     if (self.syntaxcolorEntry)
-    {
         [self cursorMoved: textView];
-        if (scrapTextView.window.isVisible)
-            [self cursorMoved: scrapTextView];
-    }
     else
     {
         [self removeCurrentLineColor: textView1];
         [self removeCurrentLineColor: textView2];
-        [self removeCurrentLineColor: scrapTextView];
     }
+    [self refreshExperimentCurrentLine];
 }
 
 - (IBAction)toggleBlockCursor:sender {
@@ -8088,6 +8113,7 @@ if (! useFullSplitWindow) {
     if ((self.blockCursor) && (! self.syntaxcolorEntry))
        self.syntaxcolorEntry = YES;
     [self cursorMoved: textView];
+    [self refreshExperimentCurrentLine];
  }
 
 - (void) flipIndexColor: (NSInteger)state
@@ -8103,6 +8129,7 @@ if (! useFullSplitWindow) {
     }
     [self colorizeVisibleAreaInTextView:textView1];
     [self colorizeVisibleAreaInTextView:textView2];
+    [self colorizeExperimentSource];
 }
 
 
@@ -8333,7 +8360,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	[textView1 setDefaultParagraphStyle: newStyle];
 	[textView2 setFontSafely:font];
 	[textView2 setDefaultParagraphStyle: newStyle];
-
+	[self applyExperimentTextLayout];
 }
 
 
@@ -9493,9 +9520,12 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
         theRange.length = [self.textStorage length];
         [[textView1 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
         [[textView2 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
+        [[scrapTextView layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName
+            forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
     }
 	[self colorizeVisibleAreaInTextView:textView1];
 	[self colorizeVisibleAreaInTextView:textView2];
+	[self colorizeExperimentSource];
 }
 
 - (BOOL)indexColorState // warning: can be called after indexColorBox is disposed
@@ -9682,6 +9712,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
     
 	[textView  setDefaultParagraphStyle: styleNew];
 	[textView2 setDefaultParagraphStyle: styleNew];
+	[self applyExperimentTextLayout];
 }
 
 

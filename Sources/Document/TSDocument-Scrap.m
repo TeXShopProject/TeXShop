@@ -132,19 +132,6 @@
         [scrapTextView setAutomaticSpellingCorrectionEnabled:[SUD boolForKey:AutomaticSpellingCorrectionEnabledKey]];
         }
     
-    if ([SUD boolForKey:SaveDocumentFontKey] == YES)
-        {
-        NSData	*fontData;
-        NSFont 	*font;
-        
-        fontData = [SUD objectForKey:DocumentFontKey];
-        if (fontData != nil)
-            {
-            font = [NSUnarchiver unarchiveObjectWithData:fontData];
-            [scrapTextView setFontSafely:font];
-            }
-        }
-
     if ([textWindow title])
         newTitle = [[textWindow title] stringByDeletingPathExtension];
     else
@@ -154,7 +141,9 @@
     [scrapWindow setHidesOnDeactivate:YES];
     [scrapWindow makeKeyAndOrderFront:sender];
     [self observeExperimentSource];
-    [self colorizeExperimentSource];
+    // The font, wrapping, invisible characters, line numbers and colors of the
+    // document's source
+    [self syncExperimentSourceDisplay];
 }
 
 
