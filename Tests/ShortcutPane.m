@@ -237,8 +237,39 @@ int main(int argc,char **argv){@autoreleasepool{
  for(NSString *key in @[@"q",@"w",@",",@"h",@"[",@"]"]){fixtureCharacters=key;REQUIRE([shell.window performKeyEquivalent:Event(key,C,0)] && pane.searchingByKey && [shell.history.currentIdentifier isEqual:TSSettingsCategoryKeyboard]);}
  fixtureCharacters=@"f";[shell.window keyDown:Event(@"f",C,3)];REQUIRE(pane.searchMatches.count==3 && pane.table.selectedRow==0 && [pane macroHeaderRow]==2);
  REQUIRE(pane.selectionButtons[0].enabled && !pane.macroButton.enabled);
- NSTextField *inactive=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:3];
- REQUIRE([inactive.stringValue containsString:@"conflicts with"] && [inactive.stringValue containsString:first.title]);
+ // Inactive matches: the path line plus the settings warning style (yellow triangle, small label-colored text) that fits its row.
+ REQUIRE([pane.table.tableColumns[0].identifier isEqual:@"command"]);
+ NSTextField *assigned=(NSTextField *)[pane tableView:pane.table viewForTableColumn:pane.table.tableColumns[0] row:0];
+ REQUIRE([assigned isKindOfClass:NSTextField.class] && [assigned.stringValue hasSuffix:@"Assigned"] && [pane tableView:pane.table heightOfRow:0]==pane.table.rowHeight);
+ NSTextField *header=(NSTextField *)[pane tableView:pane.table viewForTableColumn:nil row:2];
+ REQUIRE([pane tableView:pane.table isGroupRow:2] && [header.stringValue isEqual:@"Macros"]);
+ for(NSNumber *width in @[@300,@200,@520]) {
+  pane.table.tableColumns[0].width=width.doubleValue;[pane.table layoutSubtreeIfNeeded];
+  for(NSNumber *rowNumber in @[@1,@3]) {
+   NSInteger row=rowNumber.integerValue;
+   REQUIRE(!pane.searchMatches[row==1?1:2].winner);
+   NSView *cell=[pane.table viewAtColumn:0 row:row makeIfNecessary:YES];[cell.superview layoutSubtreeIfNeeded];[cell layoutSubtreeIfNeeded];
+   REQUIRE([cell.identifier isEqual:@"shortcut.inactive-command"] && NSHeight([pane.table rectOfRow:row])==[pane tableView:pane.table heightOfRow:row] && [pane tableView:pane.table heightOfRow:row]>pane.table.rowHeight);
+   NSTextField *path=nil,*reason=nil;NSImageView *icon=nil;
+   for(NSView *v in cell.subviews) if([v isKindOfClass:NSTextField.class]) path=(NSTextField *)v; else for(NSView *w in ((NSStackView *)v).arrangedSubviews){ if([w isKindOfClass:NSImageView.class]) icon=(NSImageView *)w; else reason=(NSTextField *)w; }
+   REQUIRE([path.stringValue isEqual:pane.searchMatches[row==1?1:2].path]);
+   REQUIRE([reason.identifier isEqual:@"shortcut.inactive-reason"] && [reason.stringValue containsString:@"conflicts with"] && [reason.stringValue containsString:first.title]);
+   REQUIRE([icon.identifier isEqual:@"settings.warning-symbol.multicolor"] && icon.contentTintColor==nil && !icon.accessibilityElement);
+   REQUIRE([reason.textColor isEqual:NSColor.labelColor] && reason.font.pointSize==NSFont.smallSystemFontSize);
+   NSRect r=[reason convertRect:reason.bounds toView:cell];
+   NSRect pr=[path convertRect:path.bounds toView:cell];
+   if(!(cell.isFlipped ? NSMinY(r)>=NSMaxY(pr) : NSMaxY(r)<=NSMinY(pr)) || !NSContainsRect(NSInsetRect(cell.bounds,-2.5,-.5),r)) fprintf(stderr,"cell %s path %s reason %s\n",NSStringFromRect(cell.bounds).UTF8String,NSStringFromRect(pr).UTF8String,NSStringFromRect(r).UTF8String);
+   REQUIRE((cell.isFlipped ? NSMinY(r)>=NSMaxY(pr) : NSMaxY(r)<=NSMinY(pr)) && NSContainsRect(NSInsetRect(cell.bounds,-2.5,-.5),r));
+   CGFloat needed=[reason.cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(reason.bounds),CGFLOAT_MAX)].height;
+   REQUIRE(needed<=NSHeight(reason.bounds)+.5);
+   // No blank line under the warning, and the path text starts where ordinary rows start.
+   REQUIRE(NSHeight([pane.table rectOfRow:row])-(NSHeight(pr)+2+needed+4+pane.table.intercellSpacing.height)<1);
+   NSTextField *plain=(NSTextField *)[pane.table viewAtColumn:0 row:0 makeIfNecessary:YES];
+   REQUIRE(fabs(NSMinX([cell convertRect:[path alignmentRectForFrame:path.frame] toView:pane.table])-NSMinX([plain convertRect:[plain alignmentRectForFrame:plain.bounds] toView:pane.table]))<.5);
+   REQUIRE(fabs(NSMinX([cell convertRect:[icon.superview convertRect:[icon alignmentRectForFrame:icon.frame] toView:cell] toView:pane.table])-NSMinX([cell convertRect:[path alignmentRectForFrame:path.frame] toView:pane.table]))<.5);
+  }
+ }
+ pane.table.tableColumns[0].width=300;
  REQUIRE(![pane.keySearchView.accessibilityValue containsString:@"depends"]);
  REQUIRE([pane.keySearchView.accessibilityValue containsString:@"Matches: 3"]);
  NSScrollView *outer=pane.view.enclosingScrollView;
