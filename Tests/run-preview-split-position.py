@@ -18,6 +18,10 @@ root = Path(__file__).resolve().parents[1]
 window_source = (root / 'Sources/Windows/TSPreviewWindow.m').read_text(encoding='latin1')
 view_source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
 header_source = (root / 'Sources/Preview/TSPreviewPanePlace.h').read_text(encoding='latin1')
+# The preview also keeps the top of each part while its divider is dragged (#24);
+# run the split code together with it when it is there.
+divider = root / 'Sources/Preview/TSPreviewSplitDivider.m'
+uses_divider = divider.exists()
 
 def last_method(source, signature):
     # TSPreviewWindow.m keeps an older copy of mainSplitPdfKitWindow in a comment.
@@ -62,6 +66,7 @@ program = r'''
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
 #import "TSPreviewPanePlace.h"
+DIVIDERIMPORT
 #define NEW_PDF_FIT_TO_NONE 1
 #define NEW_PDF_FIT_TO_WINDOW 4
 static NSUInteger checks;
@@ -108,6 +113,7 @@ VIEWMETHODS
 @property BOOL firstTime, windowIsSplit, horizontal;
 @property PDFView *activeView, *myPDFKitView, *myPDFKitView2;
 @property NSSplitView *pdfKitSplitView;
+DIVIDERPROPERTY
 - (void)mainSplitPdfKitWindow;
 - (void)splitPdfKitWindow:(id)sender;
 - (void)switchViews;
@@ -283,7 +289,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     return 0;
 }}
 '''
-program = (program.replace('VIEWMETHODS', '\n'.join(view_methods))
+program = (program.replace('DIVIDERIMPORT', '#import "TSPreviewSplitDivider.h"' if uses_divider else '')
+           .replace('DIVIDERPROPERTY', '@property (strong) TSPreviewSplitDivider *previewSplitDivider;' if uses_divider else '')
+           .replace('VIEWMETHODS', '\n'.join(view_methods))
            .replace('SPLITTERMETHOD', splitter).replace('SPLITMETHOD', split).replace('SWITCHMETHOD', switch))
 if not args.mutation:
     verify_embedded(program, fragments)
@@ -301,7 +309,7 @@ with tempfile.TemporaryDirectory() as temp:
     (temp / 'test.m').write_text(program, encoding='latin1')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
                     '-I', str(temp), '-I', str(root / 'Tests'), *include_args(root),
-                    str(temp / 'test.m'), '-o', str(temp / 'test')], check=True)
+                    str(temp / 'test.m'), *([str(divider)] if uses_divider else []), '-o', str(temp / 'test')], check=True)
     result = subprocess.run([str(temp / 'test'), str(temp / 'doc.pdf')], capture_output=True, text=True)
     output = result.stdout + result.stderr
     if args.mutation:
