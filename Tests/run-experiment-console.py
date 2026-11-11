@@ -203,7 +203,7 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-console-') as tmp:
     src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
     src.write_text(prefix + controller + tests)
-    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', *include_args(root), str(src), str(root / 'Sources/Typesetting/TSExperimentJob.m'), '-o', str(exe)], check=True)
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', *include_args(root), str(src), str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'), '-o', str(exe)], check=True)
     (Path(tmp)/'home'/'Library'/'Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(Path(tmp)/'home'), CFFIXED_USER_HOME=str(Path(tmp)/'home'))
     if args.artifacts:

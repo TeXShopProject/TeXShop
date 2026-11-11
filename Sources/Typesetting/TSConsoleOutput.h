@@ -13,6 +13,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#include <fcntl.h>
 
 // Console output stays selectable while TeX runs, so that it can be copied.
 
@@ -46,6 +47,20 @@ static inline void TSAppendConsoleOutput(NSTextView *view, NSString *text, NSCol
     }
 }
 
+// Writes console input to a process. A process that has quit, or closed its
+// input, makes the write fail instead of stopping TeXShop with SIGPIPE.
+static inline BOOL TSWriteConsoleInput(NSFileHandle *handle, NSData *data, NSError **error)
+{
+    if (handle == nil || data == nil)
+        return NO;
+    fcntl(handle.fileDescriptor, F_SETNOSIGPIPE, 1);
+    @try {
+        return [handle writeData:data error:error];
+    } @catch (NSException *exception) {
+        return NO;
+    }
+}
+
 // Moving the focus away from the input field, for example to select output,
 // must not send TeX an empty line. Return and Enter still send the field,
 // including an empty response.
@@ -53,3 +68,17 @@ static inline void TSConfigureConsoleInput(NSTextField *field)
 {
     [(NSTextFieldCell *)field.cell setSendsActionOnEndEditing:NO];
 }
+
+// Return in the console output answers TeX as Return in an empty input field
+// does, so that output can be clicked and read while TeX waits. An unmodified
+// Return or Enter in the output text view sends an empty line when the console
+// can send input, then moves the focus to the input field and keeps what has
+// been typed there, unsent. Return with Shift, Control, Option or Command, and
+// Return while the console cannot send, are left to AppKit. Make an instance the
+// delegate of the output text view and keep a strong reference to it. The
+// sendEmptyLine block reports its own failure, as the input field does.
+@interface TSConsoleOutputReturn : NSObject <NSTextViewDelegate>
+- (instancetype)initWithInputField:(NSTextField *)field
+                           canSend:(BOOL (^)(void))canSend
+                     sendEmptyLine:(BOOL (^)(void))sendEmptyLine;
+@end

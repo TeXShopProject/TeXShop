@@ -292,6 +292,7 @@
 		952A90BE333C4EBFF9D4C07C /* SettingsTypesetting.strings in Copy Base Search Tables */ = {isa = PBXBuildFile; fileRef = AEEE6196401A6C5434151BC3; };
 		AE9800010000000000000001 /* TSExperimentJob.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9800010000000000000002 /* TSExperimentJob.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		AE9800020000000000000001 /* TSExperimentConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9800020000000000000002 /* TSExperimentConsoleController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		AE9800030000000000000001 /* TSConsoleOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9800030000000000000002 /* TSConsoleOutput.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -1056,6 +1057,7 @@
 		AE9800010000000000000002 /* TSExperimentJob.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSExperimentJob.m; sourceTree = "<group>"; };
 		AE9800010000000000000003 /* TSExperimentJob.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSExperimentJob.h; sourceTree = "<group>"; };
 		AE9800020000000000000002 /* TSExperimentConsoleController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSExperimentConsoleController.m; sourceTree = "<group>"; };
+		AE9800030000000000000002 /* TSConsoleOutput.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSConsoleOutput.m; sourceTree = "<group>"; };
 		EA29041121938812CD434C34 /* TSConsoleOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSConsoleOutput.h; sourceTree = "<group>"; };
 		AE9800020000000000000003 /* TSExperimentConsoleController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSExperimentConsoleController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1348,6 +1350,7 @@
 				E16E00000000000000000003 /* TSEnginePathDiscovery.h */,
 				E16E00000000000000000002 /* TSEnginePathDiscovery.m */,
 				EA29041121938812CD434C34 /* TSConsoleOutput.h */,
+				AE9800030000000000000002 /* TSConsoleOutput.m */,
 				AE9800020000000000000003 /* TSExperimentConsoleController.h */,
 				AE9800020000000000000002 /* TSExperimentConsoleController.m */,
 				AE9800010000000000000003 /* TSExperimentJob.h */,
@@ -1908,6 +1911,7 @@
 				407881900519249A006979EA /* MyPDFView.m in Sources */,
 				AE9800010000000000000001 /* TSExperimentJob.m in Sources */,
 				AE9800020000000000000001 /* TSExperimentConsoleController.m in Sources */,
+				AE9800030000000000000001 /* TSConsoleOutput.m in Sources */,
 				40770A9F195F1AB700A67050 /* TSDocument-Scrap.m in Sources */,
 				40B7DEAC057139E2002872F2 /* TSDocumentScripting.m in Sources */,
 				40067E60288F16CA00756801 /* TSDocument-HTML.m in Sources */,
