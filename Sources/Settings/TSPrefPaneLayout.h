@@ -41,5 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)attachRows:(NSArray<NSView *> *)rows toView:(NSView *)view;
 + (void)prepareControl:(NSView *)view;
 + (NSStackView *)stackWithViews:(NSArray<NSView *> *)views orientation:(NSUserInterfaceLayoutOrientation)orientation;
+// The yellow warning triangle used beside settings warnings, sized for font.
++ (NSImageView *)warningSymbolForFont:(NSFont *)font;
 @end
 NS_ASSUME_NONNULL_END
