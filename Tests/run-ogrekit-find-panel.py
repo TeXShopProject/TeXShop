@@ -11,7 +11,9 @@ into the bundled framework.
 The compiled nib of every localization in Frameworks/OgreKit.framework is loaded with
 the real OgreKit, as the application loads it, and so is each source compiled again,
 so that the two agree. The panel is measured at its size in the nib and widened.
-Windows are never ordered on screen; --png DIR writes images of the panels."""
+Windows are never ordered on screen. Each panel is also drawn in Dark Mode into a folder
+with a Japanese name, and the test checks that all the images were written; --png DIR
+keeps them in DIR."""
 from pathlib import Path
 import argparse, os, re, subprocess, sys, tempfile
 
@@ -28,8 +30,11 @@ MUTATIONS = {
     # A source edited without compiling it into the framework.
     'stale-framework': ('it', 'x="17" y="8" width="111" height="20"', 'x="17" y="9" width="111" height="20"'),
 }
+# The image path as the first version of this test built it, which loses non-ASCII folder names.
+IMAGE_PATH = '[png stringByAppendingPathComponent:[language stringByAppendingPathExtension:@"png"]]'
+ASCII_IMAGE_PATH = '[NSString stringWithFormat:@"%s/%@.png", png.UTF8String, language]'
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=sorted(MUTATIONS))
+parser.add_argument('--mutation', choices=sorted([*MUTATIONS, 'ascii-image-path']))
 parser.add_argument('--png', help='directory for images of the panels')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -122,7 +127,7 @@ static NSString *Measure(NSString *label, NSWindow *window) {
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
-    const char *png = getenv("TS_OGRE_PNG");
+    NSString *png = getenv("TS_OGRE_PNG") ? [NSString stringWithUTF8String:getenv("TS_OGRE_PNG")] : nil;
     NSMutableDictionary *layouts = [NSMutableDictionary dictionary];
     for (int i = 1; i + 2 < argc; i += 3) {
         NSString *language = @(argv[i]), *kind = @(argv[i + 1]), *label = [NSString stringWithFormat:@"%@ %@", language, kind];
@@ -146,8 +151,9 @@ int main(int argc, char **argv) { @autoreleasepool {
             NSView *view = window.contentView.superview;
             NSBitmapImageRep *rep = [view bitmapImageRepForCachingDisplayInRect:view.bounds];
             [view cacheDisplayInRect:view.bounds toBitmapImageRep:rep];
-            [[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}]
-                writeToFile:[NSString stringWithFormat:@"%s/%@.png", png, language] atomically:YES];
+            NSData *data = [rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
+            NSString *path = [png stringByAppendingPathComponent:[language stringByAppendingPathExtension:@"png"]];
+            Check(data.length > 0 && [data writeToFile:path atomically:YES], [label stringByAppendingString:@": the image is written"]);
         }
         [window setContentSize:NSMakeSize(window.contentView.frame.size.width + 240, window.contentView.frame.size.height)];
         Measure([label stringByAppendingString:@" widened"], window);
@@ -168,24 +174,29 @@ with tempfile.TemporaryDirectory(prefix='texshop-ogrekit-find-panel-') as tmp:
         compiled = sorted(p.name for p in nib_dir.glob('keyedobjects*.nib'))
         assert compiled == ['keyedobjects.nib'], (language, compiled)  # no older variant that macOS would prefer
         source = (sources / f'{language}.lproj/OgreAdvancedFindPanel.xib').read_text(encoding='utf-8')
-        if args.mutation and MUTATIONS[args.mutation][0] == language:
+        if args.mutation in MUTATIONS and MUTATIONS[args.mutation][0] == language:
             _, old, new = MUTATIONS[args.mutation]
             assert source.count(old) == 1, args.mutation
             source = source.replace(old, new)
         xib, out = tmp / f'{language}.xib', tmp / f'{language}.nib'
         xib.write_text(source, encoding='utf-8')
         subprocess.run(['xcrun', 'ibtool', '--compile', str(out), str(xib)], check=True, stdout=subprocess.DEVNULL)
-        if not args.mutation or args.mutation == 'stale-framework':
+        if args.mutation in (None, 'stale-framework', 'ascii-image-path'):
             triples += [language, 'framework', str(nib_dir / 'keyedobjects.nib')]
         triples += [language, 'source', str(out / 'keyedobjects.nib' if out.is_dir() else out)]
+    if args.mutation == 'ascii-image-path':
+        assert program.count(IMAGE_PATH) == 1
+        program = program.replace(IMAGE_PATH, ASCII_IMAGE_PATH)
     (tmp / 'probe.m').write_text(program, encoding='utf-8')
     subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Tests'),
                     '-F', str(frameworks), '-framework', 'OgreKit', str(tmp / 'probe.m'), '-o', str(tmp / 'probe')], check=True)
     (tmp / 'home/Library/Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(tmp / 'home'), CFFIXED_USER_HOME=str(tmp / 'home'), DYLD_FRAMEWORK_PATH=str(frameworks))
-    if args.png:
-        Path(args.png).mkdir(parents=True, exist_ok=True)
-        env['TS_OGRE_PNG'] = str(Path(args.png).resolve())
+    images = Path(args.png).resolve() if args.png else tmp / '検索パネルの画像'
+    images.mkdir(parents=True, exist_ok=True)
+    for old in images.glob('*.png'):
+        old.unlink()
+    env['TS_OGRE_PNG'] = str(images)
     result = subprocess.run([str(tmp / 'probe'), *triples], capture_output=True, text=True, timeout=300, env=env)
     print(result.stdout, end='')
     if args.mutation:
@@ -195,3 +206,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-ogrekit-find-panel-') as tmp:
     elif result.returncode:
         print(result.stderr[-3000:])
         sys.exit('FAIL')
+    else:
+        written = sorted(p.stem for p in images.glob('*.png') if p.stat().st_size > 0)
+        if written != sorted(LANGUAGES):
+            sys.exit(f'FAIL: images of the panels were not all written to {images}: {written}')
+        print(f'PASS: images of the panels in all {len(written)} localizations written to {images.name}')
