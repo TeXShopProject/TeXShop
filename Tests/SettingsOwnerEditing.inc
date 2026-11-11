@@ -35,7 +35,10 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
         NSTextField *field=[owner valueForKey:entry[@"outlet"]];TSPreferenceInput *rule=[rules objectForKey:field];
         Check(rule && [rule.key isEqual:entry[@"key"]] && rule.kind==[entry[@"kind"]integerValue] && rule.minimum==[entry[@"minimum"]doubleValue] && rule.maximum==[entry[@"maximum"]doubleValue] && rule.allowsEmpty==[entry[@"allowsEmpty"]boolValue],[NSString stringWithFormat:@"Independent rule contract for %@",entry[@"outlet"]]);
         Check((entry[@"notification"]==NSNull.null && rule.notification==nil) || [rule.notification isEqual:entry[@"notification"]], [NSString stringWithFormat:@"Input notification contract for %@",entry[@"outlet"]]);
-        Check(field.delegate==owner && field.formatter==nil,@"Original formatters cannot bypass the unified input validator");
+        if(rule.kind==TSPreferenceInputInteger){
+            NSNumberFormatter *formatter=(NSNumberFormatter *)field.formatter;
+            Check(field.delegate==owner && [formatter isKindOfClass:TSIntegerInputFormatter.class] && formatter.minimum.doubleValue==rule.minimum && formatter.maximum.doubleValue==rule.maximum,[NSString stringWithFormat:@"%@ keeps typing to digits and carries its range",entry[@"outlet"]]);
+        }else Check(field.delegate==owner && field.formatter==nil,@"Original formatters cannot bypass the unified input validator");
     }
     NSDictionary *saved = [TSIsolatedAppKitDefaults.values copy];
     [shell beginSession];
@@ -99,6 +102,69 @@ static void CheckOwnerEditing(TSPreferences *owner, TSSettingsWindowController *
     Check(profileTabs!=31 && tabs.currentEditor==nil,@"Profile application releases the pre-application editor");
     [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];
     Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==profileTabs,@"Later navigation cannot restore the pre-profile text");
+    // Whole-number fields: digits only while typing, and a stepper beside each.
+    [shell selectCategoryIdentifier:TSSettingsCategoryEditor];
+    [shell.window.contentView layoutSubtreeIfNeeded];
+    NSView *editorPane=[shell viewForCategoryIdentifier:TSSettingsCategoryEditor];
+    for(NSString *outlet in @[@"tabIndentField",@"firstParagraphIndentField",@"remainingParagraphIndentField",@"interlineSpacingField"]){
+        NSTextField *field=[owner valueForKey:outlet];
+        NSStepper *stepper=(NSStepper *)Find(editorPane,[field.identifier stringByAppendingString:@".stepper"]);
+        Check([stepper isKindOfClass:NSStepper.class] && stepper.superview==field.superview && !stepper.hiddenOrHasHiddenAncestor && NSWidth(stepper.frame)>0 && NSMinX(stepper.frame)>=NSMaxX(field.frame) && [stepper.accessibilityLabel isEqual:field.accessibilityLabel],[NSString stringWithFormat:@"%@ has a stepper right beside it",outlet]);
+    }
+    for(NSString *outlet in @[@"magTextField",@"gsBinPathField"]){
+        NSTextField *field=[owner valueForKey:outlet];
+        Check(Find(field.superview,[field.identifier stringByAppendingString:@".stepper"])==nil,[NSString stringWithFormat:@"%@ has no stepper",outlet]);
+    }
+    NSFormatter *digits=tabs.formatter;NSString *partial=@"12";NSRange selection=NSMakeRange(2,0);
+    Check([digits isPartialStringValid:&partial proposedSelectedRange:&selection originalString:@"1" originalSelectedRange:NSMakeRange(1,0) errorDescription:NULL] && [partial isEqual:@"12"],@"Digits can be typed");
+    partial=@"";Check([digits isPartialStringValid:&partial proposedSelectedRange:&selection originalString:@"1" originalSelectedRange:NSMakeRange(1,0) errorDescription:NULL],@"The field can be emptied while typing");
+    for(NSString *bad in @[@"1.5",@"1,5",@"-1",@"+1",@"a",@"1 ",@"\u0661"]){
+        partial=bad;
+        Check(![digits isPartialStringValid:&partial proposedSelectedRange:&selection originalString:@"1" originalSelectedRange:NSMakeRange(1,0) errorDescription:NULL] && [partial isEqual:bad],[NSString stringWithFormat:@"Typing %@ is refused without changing the entry",bad]);
+    }
+    partial=@"\uFF11\uFF12";
+    Check(![digits isPartialStringValid:&partial proposedSelectedRange:&selection originalString:@"" originalSelectedRange:NSMakeRange(0,0) errorDescription:NULL] && [partial isEqual:@"12"] && selection.location==2,@"Full-width digits become ASCII digits");
+    id object=nil;
+    Check([digits getObjectValue:&object forString:@"bad" errorDescription:NULL] && [object isEqual:@"bad"],@"Text at the end of editing is left to the common validator");
+    NSStepper *tabStepper=(NSStepper *)Find(editorPane,[tabs.identifier stringByAppendingString:@".stepper"]);
+    __block NSUInteger stepNotes=0;
+    id stepObserver=[NSNotificationCenter.defaultCenter addObserverForName:DocumentFontChangedNotification object:owner queue:nil usingBlock:^(NSNotification *n){stepNotes++;}];
+    void (^step)(NSInteger)=^(NSInteger direction){tabStepper.integerValue=1+direction;[tabStepper sendAction:tabStepper.action to:tabStepper.target];};
+    [TSIsolatedAppKitDefaults setInteger:10 forKey:tabsKey];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+    step(1);
+    Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==11 && [tabs.stringValue isEqual:@"11"] && stepNotes==1 && tabStepper.integerValue==1,@"Stepper up stores one more, shows it and notifies documents once");
+    step(-1);
+    Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==10 && [tabs.stringValue isEqual:@"10"] && stepNotes==2,@"Stepper down stores one less");
+    [TSIsolatedAppKitDefaults setInteger:50 forKey:tabsKey];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];stepNotes=0;
+    step(1);
+    Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==50 && stepNotes==0,@"Stepper stops at the maximum");
+    [TSIsolatedAppKitDefaults setInteger:2 forKey:tabsKey];[owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+    step(-1);
+    Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==2 && stepNotes==0,@"Stepper stops at the minimum");
+    EditOwnerField(owner,tabs,@"7");step(1);
+    Check([TSIsolatedAppKitDefaults integerForKey:tabsKey]==8 && [tabs.stringValue isEqual:@"8"] && tabs.currentEditor==nil,@"Stepper continues from the number being typed");
+    EditOwnerField(owner,tabs,@"bad");alerts=ownerAlertCount;step(1);
+    Check(ownerAlertCount==alerts+1 && [TSIsolatedAppKitDefaults integerForKey:tabsKey]==8,@"Stepper keeps the warning for an invalid entry");
+    FinishOwnerAlert(NSAlertSecondButtonReturn);
+    [shell.window makeFirstResponder:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:stepObserver];
+    // Stored values outside the ranges are shown as the source windows apply them.
+    NSTextField *spacing=[owner valueForKey:@"interlineSpacingField"];
+    [TSIsolatedAppKitDefaults setDouble:45 forKey:SourceInterlineSpaceKey];
+    [TSIsolatedAppKitDefaults setDouble:150 forKey:SourceHeadIndentKey];
+    [TSIsolatedAppKitDefaults setDouble:2.7 forKey:SourceFirstLineHeadIndentKey];
+    [TSIsolatedAppKitDefaults setInteger:0 forKey:tabsKey];
+    [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
+    Check([spacing.stringValue isEqual:@"20"] && [[[owner valueForKey:@"remainingParagraphIndentField"] stringValue] isEqual:@"100"] && [[[owner valueForKey:@"firstParagraphIndentField"] stringValue] isEqual:@"2"] && [tabs.stringValue isEqual:@"2"],@"Out-of-range stored values are shown inside the ranges");
+    Check([TSIsolatedAppKitDefaults doubleForKey:SourceInterlineSpaceKey]==45 && [TSIsolatedAppKitDefaults doubleForKey:SourceFirstLineHeadIndentKey]==2.7,@"Showing a stored value does not rewrite it");
+    EditOwnerField(owner,spacing,@"");alerts=ownerAlertCount;
+    Check(![owner windowShouldClose:shell.window] && ownerAlertCount==alerts+1,@"An empty interline spacing warns");
+    FinishOwnerAlert(NSAlertSecondButtonReturn);
+    Check([spacing.stringValue isEqual:@"20"] && [TSIsolatedAppKitDefaults doubleForKey:SourceInterlineSpaceKey]==45,@"Restoring an entry shows the stored value inside the range");
+    [shell.window makeFirstResponder:nil];
+    Check(TSStoredIntegerInRange(TSIsolatedAppKitDefaults,SourceInterlineSpaceKey,TSInterlineSpaceRange)==20 && TSStoredIntegerInRange(TSIsolatedAppKitDefaults,SourceFirstLineHeadIndentKey,TSParagraphIndentRange)==2 && TSIntegerInRange(45,TSInterlineSpaceRange)==20 && TSIntegerInRange(0,TSInterlineSpaceRange)==1 && TSIntegerInRange(-3,TSParagraphIndentRange)==0 && TSIntegerInRange(1,TSTabWidthRange)==2 && TSIntegerInRange(NAN,TSTabWidthRange)==2,@"Source windows use the same ranges as the fields");
+    TSPreferenceInput *spacingRule=[rules objectForKey:[owner valueForKey:@"interlineSpacingField"]];
+    Check(spacingRule.minimum==TSInterlineSpaceRange.minimum && spacingRule.maximum==TSInterlineSpaceRange.maximum,@"The interline field takes its range from the shared ranges");
     TSIsolatedAppKitDefaults.values = [saved mutableCopy];
     [owner updateControlsFromUserDefaults:TSIsolatedAppKitDefaults];
     [shell beginSession];

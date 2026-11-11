@@ -34,8 +34,6 @@
 - (void)refreshEditorSettingsFromDefaults:(NSUserDefaults *)defaults
 {
     NSData *fontData, *attributesData;
-    NSInteger tabSize;
-    NSNumber *myNumber;
     fontData = [defaults objectForKey:DocumentFontKey];
     if (fontData != nil)
     {
@@ -119,15 +117,10 @@
         [_lineSizeMatrix selectCellWithTag:1];
     else
         [_lineSizeMatrix selectCellWithTag:2];
-    tabSize = [defaults integerForKey:tabsKey];
-    myNumber = [NSNumber numberWithInteger:tabSize];
-    [tabIndentField setStringValue:[myNumber stringValue]];
-    [firstParagraphIndentField setIntegerValue:[defaults integerForKey:SourceFirstLineHeadIndentKey]];
-    [remainingParagraphIndentField setIntegerValue:[defaults integerForKey:SourceHeadIndentKey]];
-    if ([defaults integerForKey:SourceInterlineSpaceKey] == 0)
-        [interlineSpacingField setIntegerValue:1];
-    else
-        [interlineSpacingField setIntegerValue:[defaults integerForKey:SourceInterlineSpaceKey]];
+    [tabIndentField setIntegerValue:TSStoredIntegerInRange(defaults, tabsKey, TSTabWidthRange)];
+    [firstParagraphIndentField setIntegerValue:TSStoredIntegerInRange(defaults, SourceFirstLineHeadIndentKey, TSParagraphIndentRange)];
+    [remainingParagraphIndentField setIntegerValue:TSStoredIntegerInRange(defaults, SourceHeadIndentKey, TSParagraphIndentRange)];
+    [interlineSpacingField setIntegerValue:TSStoredIntegerInRange(defaults, SourceInterlineSpaceKey, TSInterlineSpaceRange)];
     [self setSettingsControl:BlockCursorColorWell enabled:YES];
     [self setSettingsControl:_blockSideMatrix enabled:YES];
     [self setSettingsControl:_blockWidthMatrix enabled:YES];

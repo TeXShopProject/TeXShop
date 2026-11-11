@@ -478,11 +478,60 @@ static NSColor *TSSettingsCardColor(void)
 // Retain the existing well/action as the theme persistence boundary. The slider
 // and the numeric field forward one action each, preserving RGB and every
 // existing save/error behavior.
+// The stepper beside a whole-number field. A click changes the field by one
+// within the range its formatter carries (the field's formatter limits the
+// value otherwise, as for opacity), then sends the field's own action,
+// so the value is checked, stored and announced as if it had been typed. The
+// stepper's own value only gives the direction and returns to 1 each time.
+@interface TSSettingsIntegerStepper : NSStepper
+@property (weak) NSTextField *field;
+@end
+@implementation TSSettingsIntegerStepper
+- (instancetype)initWithField:(NSTextField *)field
+{
+    self=[super initWithFrame:NSZeroRect];
+    if(self==nil)return nil;
+    _field=field;
+    self.translatesAutoresizingMaskIntoConstraints=NO;
+    self.minValue=0;self.maxValue=2;self.increment=1;self.integerValue=1;
+    self.valueWraps=NO;self.autorepeat=YES;
+    self.target=self;self.action=@selector(stepped:);
+    self.identifier=[(field.identifier ?: @"settings.integer") stringByAppendingString:@".stepper"];
+    self.accessibilityLabel=field.accessibilityLabel;
+    return self;
+}
+- (id)accessibilityValue {return self.field.stringValue;}
+- (void)stepped:(id)sender
+{
+    NSInteger direction=self.integerValue-1;
+    self.integerValue=1;
+    NSTextField *field=self.field;
+    if(direction==0 || field==nil || !field.enabled)return;
+    // Typing in progress is checked and stored first; an invalid entry keeps
+    // its warning and the stepper changes nothing.
+    id<NSTextFieldDelegate> delegate=field.delegate;
+    NSText *editor=field.currentEditor;
+    if(editor!=nil){
+        if([delegate respondsToSelector:@selector(control:textShouldEndEditing:)] && ![delegate control:field textShouldEndEditing:editor])return;
+        [field.window makeFirstResponder:nil];
+    }
+    NSNumberFormatter *formatter=[field.formatter isKindOfClass:NSNumberFormatter.class]?(NSNumberFormatter *)field.formatter:nil;
+    NSInteger current=field.integerValue,value=current+direction;
+    if(formatter.minimum!=nil)value=MAX(value,formatter.minimum.integerValue);
+    if(formatter.maximum!=nil)value=MIN(value,formatter.maximum.integerValue);
+    if(value==current)return;
+    field.stringValue=[NSString stringWithFormat:@"%ld",(long)value];
+    if([delegate respondsToSelector:@selector(controlTextDidChange:)])
+        [delegate controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:field]];
+    [field sendAction:field.action to:field.target];
+}
+@end
 @interface TSSettingsOpacityPresentation : NSStackView <NSTextFieldDelegate>
 @property (strong) NSColorWell *source;
 @property (strong) NSSlider *slider;
 @property (strong) NSTextField *field;
 @property (strong) NSTextField *unit;
+@property (strong) NSStepper *stepper;
 @property BOOL fieldWasEdited;
 - (instancetype)initWithWell:(NSColorWell *)well;
 @end
@@ -511,8 +560,9 @@ static NSColor *TSSettingsCardColor(void)
     _unit.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];_unit.accessibilityElement=NO;
     // The unit belongs to the value, like the former percentage label: it is not a searchable setting name.
     _unit.accessibilityIdentifier=@"settings.user-data";
-    [self addArrangedSubview:_slider];[self addArrangedSubview:_field];[self addArrangedSubview:_unit];
-    [self setCustomSpacing:6 afterView:_slider];[self setCustomSpacing:2 afterView:_field];
+    _stepper=[[TSSettingsIntegerStepper alloc]initWithField:_field];_stepper.controlSize=NSControlSizeSmall;
+    [self addArrangedSubview:_slider];[self addArrangedSubview:_field];[self addArrangedSubview:_stepper];[self addArrangedSubview:_unit];
+    [self setCustomSpacing:6 afterView:_slider];[self setCustomSpacing:2 afterView:_field];[self setCustomSpacing:2 afterView:_stepper];
     [_slider.widthAnchor constraintEqualToConstant:60].active=YES;[_field.widthAnchor constraintEqualToConstant:36].active=YES;
     for(NSString *key in @[@"color",@"enabled"])[well addObserver:self forKeyPath:key options:0 context:NULL];
     [self synchronize];return self;
@@ -523,7 +573,7 @@ static NSColor *TSSettingsCardColor(void)
     double percent=self.source.color.alphaComponent*100;
     BOOL enabled=self.source.enabled;
     self.slider.doubleValue=percent;
-    self.slider.enabled=enabled;self.field.enabled=enabled;
+    self.slider.enabled=enabled;self.field.enabled=enabled;self.stepper.enabled=enabled;
     self.field.objectValue=@(percent);
     NSText *editor=self.field.currentEditor;
     if(editor!=nil)editor.string=self.field.stringValue;
@@ -562,6 +612,7 @@ static NSColor *TSSettingsCardColor(void)
 }
 @end
 @implementation TSPrefPaneLayout
++ (NSView *)stepperForIntegerField:(NSTextField *)field {return [[TSSettingsIntegerStepper alloc]initWithField:field];}
 + (NSView *)opacityForColorWell:(NSColorWell *)well {return [[TSSettingsOpacityPresentation alloc]initWithWell:well];}
 #include "TSSettingsPaneComposition.inc"
 + (NSView *)switchForButton:(NSButton *)button

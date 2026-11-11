@@ -6,7 +6,7 @@ from pane_fixtures import bundles,sources
 from shortcut_sources import NAMES
 from source_tree import include_args, source_file
 r=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');p.add_argument('--visible-text-output',type=Path);p.add_argument('--visible-text-mutation',action='store_true');p.add_argument('--visible-text-whitespace-mutation',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('output',nargs='?',type=Path);p.add_argument('--app',type=Path);p.add_argument('--language');p.add_argument('--mutations',action='store_true');p.add_argument('--integer-field-mutations',action='store_true');p.add_argument('--additional-mutations',action='store_true');p.add_argument('--mutation-start');p.add_argument('--audit-mutations',action='store_true');p.add_argument('--third-audit-mutations',action='store_true');p.add_argument('--capture-languages',nargs='+');p.add_argument('--mutation-only');p.add_argument('--fourth-audit-mutations',action='store_true');p.add_argument('--fifth-audit-mutations',action='store_true');p.add_argument('--opacity-field-mutations',action='store_true');p.add_argument('--sixth-audit-mutations',action='store_true');p.add_argument('--seventh-audit-mutations',action='store_true');p.add_argument('--visible-text-output',type=Path);p.add_argument('--visible-text-mutation',action='store_true');p.add_argument('--visible-text-whitespace-mutation',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
  t=Path(temp);(t/'fixtures').mkdir()
  compile=['xcrun','clang','-fobjc-arc','-DTS_TEST_REAL_SHORTCUTS','-DTS_TEST_REAL_PROFILE','-DNSBeginCriticalAlertSheet=TSTestUnexpectedCriticalSheet','-F',str(r/'Frameworks'),'-Wno-deprecated-declarations','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa','-framework','Carbon',str(r/'Tests/SettingsProductShell.m'),str(r/'Tests/PreferencesTestServices.m'),*map(str,sources(r)),str(r/'Sources/Settings/TSPreferences+Panes.m'),*[str(source_file(r, n)) for n in ['TSPreferences.m','TSPreferenceProfile.m','TSPreferences-Color.m','TSColorSupport.m','TSThemeFileStore.m','TSPreferenceInput.m','globals.m','TSDockIconController.m',*NAMES]],*map(str,sorted((r/'Sources').rglob('TSSettings*.m'))),'-o',str(t/'probe')]
@@ -44,7 +44,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
   if a.output and (not a.capture_languages or bundle.stem in a.capture_languages):folder=a.output/bundle.stem;folder.mkdir(parents=True,exist_ok=True);command.append(str(folder))
   print('LANGUAGE',bundle.stem,flush=True);subprocess.run(command,check=True,timeout=120,env=env)
 
-  if a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations or a.sixth_audit_mutations or a.seventh_audit_mutations:
+  if a.integer_field_mutations or a.mutations or a.additional_mutations or a.audit_mutations or a.third_audit_mutations or a.fourth_audit_mutations or a.fifth_audit_mutations or a.opacity_field_mutations or a.sixth_audit_mutations or a.seventh_audit_mutations:
    cases=[
     ('profile-transient-clear','TSPreferences.m','[self.settingsChangeNotes valuesReplaced];',';'),
     ('encoding-sheet','TSPreferences.m','[self.settingsChangeNotes recordUserChangeForKey:EncodingKey previousValue:oldValue ?: @""];','NSBeginCriticalAlertSheet(@"Encoding",nil,nil,nil,nil,nil,NULL,NULL,NULL,@"Warning");'),
@@ -156,6 +156,24 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
     ]
     cases=[]
     for name,file,old,new,message in field:cases.append((name,file,old,new));expected[name]=message
+   if a.integer_field_mutations:
+    integer=[
+     ('integer-stepper-missing','TSSettingsPaneClassification.inc','        if([kind isEqual:@"integer"])[parts addObject:[TSPrefPaneLayout stepperForIntegerField:field]];\n','','tabIndentField has a stepper right beside it'),
+     ('integer-formatter-missing','TSPreferences.m','field.formatter = rule.kind == TSPreferenceInputInteger ? [[TSIntegerInputFormatter alloc] initWithInput:rule] : nil;','field.formatter = nil;','tabIndentField keeps typing to digits and carries its range'),
+     ('integer-letters','TSPreferenceInput.m','    if ([digits rangeOfCharacterFromSet:other].location != NSNotFound) return NO;\n','','Typing 1.5 is refused without changing the entry'),
+     ('integer-fullwidth','TSPreferenceInput.m','    NSString *digits = [*partial precomposedStringWithCompatibilityMapping];\n    NSCharacterSet','    NSString *digits = *partial;\n    NSCharacterSet','Full-width digits become ASCII digits'),
+     ('integer-end-editing','TSPreferenceInput.m','errorDescription:(out NSString * _Nullable *)error\n{\n    if (value != NULL) *value = [string copy];','errorDescription:(out NSString * _Nullable *)error\n{\n    if (value != NULL) *value = @([string integerValue]);','Text at the end of editing is left to the common validator'),
+     ('stepper-skips-validation','TSPrefPaneLayout.m','        if([delegate respondsToSelector:@selector(control:textShouldEndEditing:)] && ![delegate control:field textShouldEndEditing:editor])return;\n','','Stepper keeps the warning for an invalid entry'),
+     ('stepper-keeps-direction','TSPrefPaneLayout.m','    NSInteger direction=self.integerValue-1;\n    self.integerValue=1;\n','    NSInteger direction=self.integerValue-1;\n','Stepper up stores one more, shows it and notifies documents once'),
+     ('stepper-no-action','TSPrefPaneLayout.m','    [field sendAction:field.action to:field.target];\n','','Stepper up stores one more, shows it and notifies documents once'),
+     ('refresh-unranged','TSSettingsPaneRefresh.inc','[remainingParagraphIndentField setIntegerValue:TSStoredIntegerInRange(defaults, SourceHeadIndentKey, TSParagraphIndentRange)];','[remainingParagraphIndentField setIntegerValue:[defaults integerForKey:SourceHeadIndentKey]];','Out-of-range stored values are shown inside the ranges'),
+     ('restore-unranged','TSPreferenceInput.m','    if (number != nil && self.kind == TSPreferenceInputInteger)\n','    if (NO)\n','Restoring an entry shows the stored value inside the range'),
+     ('opacity-stepper-missing','TSPrefPaneLayout.m','_stepper=[[TSSettingsIntegerStepper alloc]initWithField:_field];','_stepper=[NSStepper new];','Opacity has a stepper beside its field'),
+     ('opacity-stepper-enabled','TSPrefPaneLayout.m','self.field.enabled=enabled;self.stepper.enabled=enabled;','self.field.enabled=enabled;','Disabled opacity disables its numeric field'),
+     ('rule-range-literal','TSPreferences.m','minimum:TSInterlineSpaceRange.minimum maximum:TSInterlineSpaceRange.maximum','minimum:0 maximum:20','Independent rule contract for interlineSpacingField'),
+    ]
+    cases=[]
+    for name,file,old,new,message in integer:cases.append((name,file,old,new));expected[name]=message
    if a.sixth_audit_mutations:
     sixth=[
      ('sidebar-width-plus-six','TSSettingsSidebarRow.m','width - 40','width - 34','Long localized sidebar names fit at every supported width'),

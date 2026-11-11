@@ -11,6 +11,7 @@
 #import "globals.h"
 #import "TSPreferenceProfile.h"
 #import "TSPreferenceInput.h"
+#import "TSSourceFormatRanges.h"
 #import "TSColorSupport.h"
 #import "TSSettingsChangeNote.h"
 #import "TSPrefPaneLayout.h"

@@ -43,6 +43,7 @@
 #import "TSSpellSupport.h"
 #import "NSString-CharacterConversion.h"
 #import "NSString-Extras.h"
+#import "TSSourceFormatRanges.h"
 
 @protocol BDSKCompletionProtocol <NSObject>
 - (NSArray *)completionsForString:(NSString *)searchString;
@@ -1665,7 +1666,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
     }
     
     CGFloat charWidth = [[self font] advancementForGlyph:(NSGlyph)' '].width;
-    paragraphStyle.defaultTabInterval = charWidth * [SUD integerForKey: tabsKey];
+    paragraphStyle.defaultTabInterval = charWidth * TSStoredIntegerInRange(SUD, tabsKey, TSTabWidthRange);
     paragraphStyle.tabStops = @[];
     
     self.defaultParagraphStyle = paragraphStyle;
