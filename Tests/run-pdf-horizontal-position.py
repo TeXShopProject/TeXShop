@@ -48,6 +48,7 @@ program = r'''
 #import <PDFKit/PDFKit.h>
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
+#import "TSScrollPageTurn.h"
 #define SUD NSUserDefaults.standardUserDefaults
 #define LeftRightArrowsAlwaysPageKey @"LeftRightArrowsAlwaysPage"
 #define NoScrollPageTurnKey @"NoScrollPageTurn"

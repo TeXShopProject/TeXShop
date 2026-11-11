@@ -191,6 +191,7 @@ program = r'''
 #import "TSLinkPreviewGeometry.h"
 #import "OverView.h"
 #import "TSLinkPreviewView.h"
+#import "TSScrollPageTurn.h"
 #define SUD NSUserDefaults.standardUserDefaults
 #define FlashFixKey @"flash"
 #define FlashDelayKey @"delay"

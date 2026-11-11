@@ -45,6 +45,7 @@
 #import "MyPDFKitView.h"
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
+#import "TSScrollPageTurn.h"
 #import "TSLinkPreviewGeometry.h"
 #import "TSLinkPreviewView.h"
 #import "TSOutlineExpansion.h"
@@ -81,6 +82,8 @@
 {
     // The link popup takes the place of PDFKit's "Go to page" tool tip (#17).
     if (self == [MyPDFKitView class]) TSLinkPreviewInstallToolTipFilter();
+    // Notes the scroll being handled, for "Do not turn pages by scrolling".
+    if (self == [MyPDFKitView class]) TSScrollPageTurnInstallMonitor();
 }
 
 - (void)dealloc
@@ -2231,9 +2234,10 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 // "Do not turn pages by scrolling" (NoScrollPageTurnKey): in single and double page
 // display, scrolling with the mouse wheel or the trackpad stops at the edge of the page.
-// PDFKit turns the page from a scroll by asking the view to perform goToNextPage: or
-// goToPreviousPage: after a delay, after the scroll event. Keys, menus and the page
-// buttons call these methods directly and still turn the page.
+// While it handles a scroll, PDFKit turns the page by asking the view to perform
+// goToNextPage: or goToPreviousPage: after a delay. Only a page turn asked for while
+// a scroll is being handled (TSScrollPageTurn.h) is dropped: keys, menus, the page
+// buttons and other delayed requests still turn the page.
 - (BOOL)scrollingKeepsPage
 {
     return [SUD boolForKey:NoScrollPageTurnKey] &&
@@ -2243,7 +2247,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (BOOL)isPageTurnFromScrolling:(SEL)selector
 {
     return (selector == @selector(goToNextPage:) || selector == @selector(goToPreviousPage:)) &&
-        [self scrollingKeepsPage];
+        TSScrollEventBeingHandled(self.window) != nil && [self scrollingKeepsPage];
 }
 
 - (void)performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay
@@ -2264,14 +2268,14 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (void)goToNextPage:(id)sender
 {
     // A page turn made while a scroll is being handled comes from the scroll.
-    if (NSApp.currentEvent.type == NSEventTypeScrollWheel && [self isPageTurnFromScrolling:_cmd])
+    if ([self isPageTurnFromScrolling:_cmd])
         return;
     [self keepHorizontalPositionDuring:^{ [super goToNextPage:sender]; }];
 }
 
 - (void)goToPreviousPage:(id)sender
 {
-    if (NSApp.currentEvent.type == NSEventTypeScrollWheel && [self isPageTurnFromScrolling:_cmd])
+    if ([self isPageTurnFromScrolling:_cmd])
         return;
     [self keepHorizontalPositionDuring:^{ [super goToPreviousPage:sender]; }];
 }

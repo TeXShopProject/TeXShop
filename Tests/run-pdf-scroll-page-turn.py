@@ -11,7 +11,7 @@ import tempfile
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['ignore-setting', 'no-delayed-guard', 'no-event-guard', 'all-modes'])
+parser.add_argument('--mutation', choices=['ignore-setting', 'no-delayed-guard', 'no-event-guard', 'all-modes', 'stale-current-event', 'never-cleared'])
 parser.add_argument('--artifacts', type=Path, help='Keep the generated Objective-C and executable for other macOS versions')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -33,9 +33,18 @@ if args.mutation == 'ignore-setting':
 elif args.mutation == 'no-delayed-guard':
     mutate('    if ([self isPageTurnFromScrolling:selector])\n        return;\n', '', 2)
 elif args.mutation == 'no-event-guard':
-    mutate('if (NSApp.currentEvent.type == NSEventTypeScrollWheel && [self isPageTurnFromScrolling:_cmd])', 'if (NO)', 2)
+    mutate('    if ([self isPageTurnFromScrolling:_cmd])\n        return;\n', '', 2)
+elif args.mutation == 'stale-current-event':
+    # The first version: any page turn while the last event was a scroll.
+    mutate('TSScrollEventBeingHandled(self.window) != nil', 'NSApp.currentEvent.type == NSEventTypeScrollWheel')
 elif args.mutation == 'all-modes':
     mutate('(self.displayMode == kPDFDisplaySinglePage || self.displayMode == kPDFDisplayTwoUp)', 'YES', 2)
+
+header = (root / 'Sources/Preview/TSScrollPageTurn.h').read_text()
+if args.mutation == 'never-cleared':
+    old = '                if (TSScrollEventInDispatch == event)\n                    TSScrollEventInDispatch = nil;\n'
+    assert old in header
+    header = header.replace(old, '')
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -44,6 +53,7 @@ program = r'''
 #import <PDFKit/PDFKit.h>
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
+#import "TSScrollPageTurn.h"
 #define SUD NSUserDefaults.standardUserDefaults
 #define NoScrollPageTurnKey @"NoScrollPageTurn"
 static NSString *context;
@@ -53,9 +63,6 @@ static void check(BOOL ok, NSString *message) {
  if(!ok) { fprintf(stderr,"FAIL: %s [%s]\n",message.UTF8String,context.UTF8String); exit(1); }
 }
 static void pump(double seconds) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:seconds]]; }
-// The event AppKit is handling; set by the test to model a scroll in progress.
-static NSEvent *current;
-static NSEvent *CurrentEvent(id self, SEL _cmd) { return current; }
 @interface PreviewView:PDFView
 -(BOOL)scrollingKeepsPage;
 @end
@@ -74,6 +81,20 @@ static NSEvent *wheel(int dy) {
  CGEventRef e=CGEventCreateScrollWheelEvent(NULL,kCGScrollEventUnitPixel,1,dy);
  NSEvent *event=[NSEvent eventWithCGEvent:e];CFRelease(e);return event;
 }
+// Hands a scroll to AppKit as a person's wheel does: dequeued (so it becomes
+// NSApp.currentEvent), sent through NSApplication (its local monitors run), and
+// handled by the scroll view under the pointer, all in one pass of the run loop.
+// The hidden window is under no pointer, so the test hands the event to the view.
+static void handleScroll(PDFView *v, NSEvent *e) {
+ [NSApp postEvent:e atStart:YES];
+ NSEvent *dequeued=[NSApp nextEventMatchingMask:NSEventMaskScrollWheel untilDate:[NSDate dateWithTimeIntervalSinceNow:.2] inMode:NSDefaultRunLoopMode dequeue:YES];
+ [NSApp sendEvent:dequeued];
+ [v.documentView.enclosingScrollView scrollWheel:dequeued];
+}
+static void dequeueKey(NSEvent *e) {
+ [NSApp postEvent:e atStart:YES];
+ [NSApp nextEventMatchingMask:NSEventMaskKeyDown untilDate:[NSDate dateWithTimeIntervalSinceNow:.2] inMode:NSDefaultRunLoopMode dequeue:YES];
+}
 static NSEvent *key(unichar k, NSEventModifierFlags flags) {
  NSString *s=[NSString stringWithCharacters:&k length:1];
  if(k!=' ') flags|=NSEventModifierFlagFunction;
@@ -83,7 +104,7 @@ static NSUInteger pageOf(PDFView *v) { return [v.document indexForPage:v.current
 // Scrolls with the wheel past the bottom (or top) of page 4, as a person turning the wheel.
 static NSUInteger wheelPastEdge(PDFView *v, BOOL down) {
  TSExternalPDFPosition start={YES,NO,4,NSMakePoint(300,down?150:650),2};TSExternalPDFRestore(v,start);pump(.05);
- for(int i=0;i<8;i++){ NSEvent *e=wheel(down?-60:60); current=e; [v.documentView.enclosingScrollView scrollWheel:e]; current=nil; pump(.12); }
+ for(int i=0;i<8;i++){ handleScroll(v,wheel(down?-60:60)); pump(.12); }
  return pageOf(v);
 }
 static PDFView *makeView(Class cls, PDFDocument *doc, PDFDisplayMode mode, NSWindow **window) {
@@ -94,8 +115,8 @@ static PDFView *makeView(Class cls, PDFDocument *doc, PDFDisplayMode mode, NSWin
 }
 int main(void) { @autoreleasepool {
  TSInstallAppKitIsolation(); [NSApplication sharedApplication];
- Method m=class_getInstanceMethod(NSApplication.class,@selector(currentEvent));
- method_setImplementation(m,(IMP)CurrentEvent);
+ [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
+ TSScrollPageTurnInstallMonitor();
  PDFDocument *doc=makePDF();
  NSUInteger nativeTurns=0;
  for(NSNumber *mode in @[@(kPDFDisplaySinglePage),@(kPDFDisplayTwoUp),@(kPDFDisplaySinglePageContinuous),@(kPDFDisplayTwoUpContinuous)])
@@ -121,22 +142,34 @@ int main(void) { @autoreleasepool {
   // A page turn made while a scroll is being handled is a scroll's, as on a trackpad.
   if(paginated) {
    TSExternalPDFRestore(v,(TSExternalPDFPosition){YES,NO,4,NSMakePoint(300,400),2});pump(.05);
-   current=wheel(-60);[v goToNextPage:v];current=nil;
+   [NSApp sendEvent:wheel(-60)];[v goToNextPage:v];pump(.05);
    check(pageOf(v)==4,@"no next page while a scroll is handled");
-   current=wheel(60);[v goToPreviousPage:v];current=nil;
+   [NSApp sendEvent:wheel(60)];[v goToPreviousPage:v];pump(.05);
    check(pageOf(v)==4,@"no previous page while a scroll is handled");
+   // After the scroll, NSApp.currentEvent still names it, but other page turns are not the scroll's.
+   handleScroll(v,wheel(-10));pump(.05);
+   check(NSApp.currentEvent.type==NSEventTypeScrollWheel,@"Fixture: the last scroll stays the current event");
+   NSMenu *menu=[NSMenu new];NSMenuItem *item=[menu addItemWithTitle:@"Next Page" action:@selector(goToNextPage:) keyEquivalent:@""];item.target=v;
+   NSUInteger before=pageOf(v);[menu performActionForItemAtIndex:0];pump(.05);
+   check(pageOf(v)!=before,@"a menu command after a scroll turns the page");
+   before=pageOf(v);[v performSelector:@selector(goToPreviousPage:) withObject:v afterDelay:0];pump(.05);
+   check(pageOf(v)!=before,@"a delayed page turn after a scroll is not dropped");
+   dequeueKey(key(NSRightArrowFunctionKey,0));
+   check(NSApp.currentEvent.type==NSEventTypeKeyDown,@"Fixture: a key is the current event");
+   before=pageOf(v);[v performSelector:@selector(goToNextPage:) withObject:v afterDelay:0];pump(.05);
+   check(pageOf(v)!=before,@"a delayed page turn asked for by a key is not dropped");
   }
   // Keys, menus and the page buttons still turn pages.
   TSExternalPDFRestore(v,(TSExternalPDFPosition){YES,NO,4,NSMakePoint(300,400),2});pump(.05);
-  current=key(NSRightArrowFunctionKey,NSEventModifierFlagCommand);[v goToNextPage:nil];current=nil;pump(.05);
+  dequeueKey(key(NSRightArrowFunctionKey,NSEventModifierFlagCommand));[v goToNextPage:nil];pump(.05);
   check(pageOf(v)==4+(mode.integerValue==kPDFDisplayTwoUp||mode.integerValue==kPDFDisplayTwoUpContinuous?2:1),@"the next page command turns the page");
-  current=key(NSLeftArrowFunctionKey,NSEventModifierFlagCommand);[v goToPreviousPage:nil];current=nil;pump(.05);
+  dequeueKey(key(NSLeftArrowFunctionKey,NSEventModifierFlagCommand));[v goToPreviousPage:nil];pump(.05);
   check(pageOf(v)==4,@"the previous page command turns the page");
   if(paginated) {
    TSExternalPDFRestore(v,(TSExternalPDFPosition){YES,NO,4,NSMakePoint(300,150),2});pump(.05);
-   for(int i=0;i<6&&pageOf(v)==4;i++){ NSEvent *e=key(NSDownArrowFunctionKey,NSEventModifierFlagOption); current=e; [v keyDown:e]; current=nil; pump(.05); }
+   for(int i=0;i<6&&pageOf(v)==4;i++){ NSEvent *e=key(NSDownArrowFunctionKey,NSEventModifierFlagOption); [v keyDown:e]; pump(.05); }
    check(pageOf(v)!=4,@"Option-Down still moves on to the next page");
-   current=key(NSEndFunctionKey,0);[v keyDown:current];current=nil;pump(.05);
+   [v keyDown:key(NSEndFunctionKey,0)];pump(.05);
    check(pageOf(v)>=6,@"End still goes to the last page");
   }
   [SUD removeObjectForKey:NoScrollPageTurnKey];
@@ -150,7 +183,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-scroll-page-turn-') as director
     temp = Path(directory)
     (temp / 'home' / 'Library' / 'Preferences').mkdir(parents=True)
     (temp / 'test.m').write_text(program)
-    subprocess.run(['xcrun', 'clang', '-I', str(root / 'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc',
+    (temp / 'TSScrollPageTurn.h').write_text(header)
+    subprocess.run(['xcrun', 'clang', '-I', str(temp), '-I', str(root / 'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc',
                     '-framework', 'Cocoa', '-framework', 'PDFKit', *include_args(root), str(temp / 'test.m'),
                     '-o', str(temp / 'test')], check=True)
     if args.artifacts:
