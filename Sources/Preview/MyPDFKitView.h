@@ -312,6 +312,9 @@
 - (void)fixMagnificationControls;
 - (NSMutableArray *)getSearchResults;
 - (void)resetSearchDelegate;
+// Makes this the view that the toolbar, the Preview menu and the search results work with,
+// without taking the keyboard focus.
+- (void)becomeActiveView;
 - (void)cancelSearch;
 - (void)setProtectFind: (BOOL)value;
 - (void) setShowSync: (BOOL)value;

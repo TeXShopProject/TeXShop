@@ -792,11 +792,7 @@ extern NSPanel *pageNumberWindow;
     MyPDFKitView    *aView;
     
     if (self.windowIsSplit) {
-        // Each pane shows exactly what the other one showed at its top edge (#23).
-        TSPreviewPanePlace upper = TSPreviewPaneCapture(self.myPDFKitView);
-        TSPreviewPanePlace lower = TSPreviewPaneCapture(self.myPDFKitView2);
-        TSPreviewPaneRestore(self.myPDFKitView, lower);
-        TSPreviewPaneRestore(self.myPDFKitView2, upper);
+        [self switchSplitParts];
       }
    
     else {
@@ -832,6 +828,97 @@ extern NSPanel *pageNumberWindow;
      }
         
  }
+
+// The two parts of a split window change places with everything they show (#25): the place
+// at the top edge (#23), the display format, the magnification, the selection, a pinned link
+// popup (#14) and the size of the part, so the divider moves, and switching again gives back
+// the first arrangement. The top (or left) view stays the one that remains when the window is
+// unsplit, so it now holds what the other part showed.
+- (void)switchSplitParts
+{
+    MyPDFKitView *upperView = (MyPDFKitView *)self.myPDFKitView;
+    MyPDFKitView *lowerView = (MyPDFKitView *)self.myPDFKitView2;
+    NSSplitView *splitView = self.pdfKitSplitView;
+    if (upperView.superview != splitView || lowerView.superview != splitView || splitView.subviews.count != 2)
+        return;
+    NSWindow *window = upperView.window;
+
+    [upperView cleanupMarqueeKeepingPinnedLinkPreview];
+    [lowerView cleanupMarqueeKeepingPinnedLinkPreview];
+
+    TSPreviewPanePlace upper = TSPreviewPaneCapture(upperView);
+    TSPreviewPanePlace lower = TSPreviewPaneCapture(lowerView);
+    NSInteger upperStyle = upperView.pageStyle, lowerStyle = lowerView.pageStyle;
+    NSInteger upperFirstStyle = upperView.firstPageStyle, lowerFirstStyle = lowerView.firstPageStyle;
+    NSInteger upperResize = upperView.resizeOption, lowerResize = lowerView.resizeOption;
+    BOOL upperAutoScales = upperView.autoScales, lowerAutoScales = lowerView.autoScales;
+    CGFloat upperScale = upperView.scaleFactor, lowerScale = lowerView.scaleFactor;
+    PDFSelection *upperSelection = upperView.currentSelection, *lowerSelection = lowerView.currentSelection;
+    NSRect upperFrame = [upperView convertRect:upperView.bounds toView:nil];
+    NSRect lowerFrame = [lowerView convertRect:lowerView.bounds toView:nil];
+    NSRect upperPopupFrame = NSZeroRect, lowerPopupFrame = NSZeroRect;
+    TSLinkPreviewView *upperPopup = [upperView detachPinnedLinkPreviewWithWindowFrame: &upperPopupFrame];
+    TSLinkPreviewView *lowerPopup = [lowerView detachPinnedLinkPreviewWithWindowFrame: &lowerPopupFrame];
+    NSResponder *responder = window.firstResponder;
+    BOOL upperActive = [responder isKindOfClass:[NSView class]] && [(NSView *)responder isDescendantOf:upperView];
+    BOOL lowerActive = [responder isKindOfClass:[NSView class]] && [(NSView *)responder isDescendantOf:lowerView];
+
+    // Each part gets the size of the other one, so the divider moves to the other side.
+    CGFloat lowerExtent = splitView.isVertical ? NSWidth(lowerView.frame) : NSHeight(lowerView.frame);
+    CGFloat start = splitView.isVertical ? NSMinX(splitView.bounds) : NSMinY(splitView.bounds);
+    [splitView setPosition:start + lowerExtent ofDividerAtIndex:0];
+    [splitView layoutSubtreeIfNeeded];
+
+    // Each view takes the display format and magnification of the other part. A magnification
+    // that fits the page to the window gives the same value, since the size comes along.
+    MyPDFKitView *views[2] = {upperView, lowerView};
+    NSInteger styles[2] = {lowerStyle, upperStyle}, firstStyles[2] = {lowerFirstStyle, upperFirstStyle};
+    NSInteger resizes[2] = {lowerResize, upperResize};
+    BOOL autoScales[2] = {lowerAutoScales, upperAutoScales};
+    CGFloat scales[2] = {lowerScale, upperScale};
+    for (int i = 0; i < 2; i++) {
+        MyPDFKitView *view = views[i];
+        [view setFirstPageStyle:firstStyles[i]];
+        if (view.pageStyle != styles[i]) {
+            [view setPageStyle:styles[i]];
+            [view setupPageStyle];
+        }
+        [view setResizeOption:resizes[i]];
+        if (autoScales[i])
+            [view setAutoScales:YES];
+        else {
+            [view setAutoScales:NO];
+            [view setMagnification:scales[i]];
+        }
+    }
+    [upperView setCurrentSelection:lowerSelection];
+    [lowerView setCurrentSelection:upperSelection];
+
+    TSPreviewPaneRestore(upperView, lower);
+    TSPreviewPaneRestore(lowerView, upper);
+
+    // A pinned popup keeps its place in its part, which is now at the other side.
+    NSRect newUpperFrame = [upperView convertRect:upperView.bounds toView:nil];
+    NSRect newLowerFrame = [lowerView convertRect:lowerView.bounds toView:nil];
+    if (lowerPopup)
+        [upperView attachPinnedLinkPreview:lowerPopup windowFrame:NSOffsetRect(lowerPopupFrame,
+            NSMinX(newUpperFrame) - NSMinX(lowerFrame), NSMaxY(newUpperFrame) - NSMaxY(lowerFrame))];
+    if (upperPopup)
+        [lowerView attachPinnedLinkPreview:upperPopup windowFrame:NSOffsetRect(upperPopupFrame,
+            NSMinX(newLowerFrame) - NSMinX(upperFrame), NSMaxY(newLowerFrame) - NSMaxY(upperFrame))];
+
+    // The active part stays active where it now is. Without the keyboard focus in either part,
+    // as when it is in the search field, the focus stays where it is, and the toolbar, the menus
+    // and the search results still follow the part.
+    MyPDFKitView *active = nil;
+    if (upperActive || self.activeView == upperView)
+        active = lowerView;
+    else if (lowerActive || self.activeView == lowerView)
+        active = upperView;
+    if (!(upperActive || lowerActive) || ![window makeFirstResponder:active])
+        [active becomeActiveView];
+    [self keepPinnedLinkPreviewsInView];
+}
 
 - (void)switchSplitViews: (id)sender
 {
