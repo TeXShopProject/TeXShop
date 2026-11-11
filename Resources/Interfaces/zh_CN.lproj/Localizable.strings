@@ -330,5 +330,4 @@
 "Deletes the next • and selects its note, if it has one." = "删除下一个 • 并选中其注释（如果有）。";
 "Deletes the previous • and selects its note, if it has one." = "删除上一个 • 并选中其注释（如果有）。";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = 标记，•‹注释› = 带注释的标记；使用“%@ › %@”在它们之间移动。";
-"Edit" = "编辑";
 "Marks" = "标记";
