@@ -20,7 +20,8 @@ import argparse, os, subprocess, tempfile
 from source_tree import include_args
 
 MUTATIONS = ['no-experiment-delegate', 'no-normal-delegate', 'send-field', 'modifiers', 'no-focus',
-             'select-draft', 'send-when-stopped', 'normal-always-send', 'sigpipe']
+             'select-draft', 'send-when-stopped', 'normal-always-send', 'sigpipe',
+             'unguarded-descriptor', 'ignore-fcntl-failure']
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=MUTATIONS)
 args = parser.parse_args()
@@ -73,7 +74,12 @@ elif m == 'send-when-stopped':
     controller = mutate(controller, 'canSend:^BOOL{ return weakSelf.job.active; }', 'canSend:^BOOL{ return YES; }')
     delegate = mutate(delegate, '!field.enabled || ', '')
 elif m == 'sigpipe':
-    header = mutate(header, 'fcntl(handle.fileDescriptor, F_SETNOSIGPIPE, 1);', '')
+    header = mutate(header, 'if (fcntl(handle.fileDescriptor, F_SETNOSIGPIPE, 1) == -1) {', 'if (NO) {')
+elif m == 'unguarded-descriptor':
+    header = mutate(header, '    @try {\n        if (fcntl(handle.fileDescriptor, F_SETNOSIGPIPE, 1) == -1) {',
+                    '    int descriptor = handle.fileDescriptor;\n    @try {\n        if (fcntl(descriptor, F_SETNOSIGPIPE, 1) == -1) {')
+elif m == 'ignore-fcntl-failure':
+    header = mutate(header, 'if (fcntl(handle.fileDescriptor, F_SETNOSIGPIPE, 1) == -1) {', 'if (fcntl(handle.fileDescriptor, F_SETNOSIGPIPE, 1) == -1 && NO) {')
 elif m == 'normal-always-send':
     wiring = mutate(wiring, 'return document && document->typesetStart && document.inputPipe;', 'return YES;')
 
@@ -440,6 +446,35 @@ int main(void) { @autoreleasepool {
     [q finish];
     [a invalidate];
     [b invalidate];
+
+    // The input writer itself: a handle closed here, and a descriptor SIGPIPE cannot be turned off for.
+    NSData *line = [@"\n" dataUsingEncoding:NSUTF8StringEncoding];
+    NSPipe *closedPipe = [NSPipe pipe];
+    [closedPipe.fileHandleForWriting closeFile];
+    BOOL wrote = YES;
+    @try { wrote = TSWriteConsoleInput(closedPipe.fileHandleForWriting, line, NULL); }
+    @catch (NSException *exception) { check(NO, @"closed handle: no exception escapes"); }
+    check(!wrote, @"closed handle: the write fails");
+    NSFileHandle *invalid = [[NSFileHandle alloc] initWithFileDescriptor:-1 closeOnDealloc:NO];
+    NSError *error = nil;
+    wrote = YES;
+    @try { wrote = TSWriteConsoleInput(invalid, line, &error); }
+    @catch (NSException *exception) { check(NO, @"invalid descriptor: no exception escapes"); }
+    check(!wrote && [error.domain isEqual:NSPOSIXErrorDomain] && error.code == EBADF,
+          @"invalid descriptor: SIGPIPE cannot be turned off, so nothing is written and the error is POSIX");
+
+    // The normal console after its write handle was closed here, with TeX still listed as running.
+    Probe *shut = [Probe new];
+    [shut launch:@"/bin/sh" arguments:@[@"-c", Echo] directory:directory() environment:environment()];
+    check(waitFor(^BOOL{ return [shut.received containsString:@"ready"]; }), @"closed-handle normal job started");
+    [shut.writeHandle closeFile];
+    [shut->outputWindow makeFirstResponder:shut->outputText];
+    NSString *shownBefore = shut->outputText.string.copy;
+    @try { returnKey(shut->outputWindow); }
+    @catch (NSException *exception) { check(NO, @"closed normal handle: no exception escapes the key event"); }
+    check(shut->outputWindow.firstResponder == shut->outputText && [shut->outputText.string isEqualToString:shownBefore],
+          @"closed normal handle: nothing echoed, focus stays in the output");
+    [shut finish];
 
     realTeX();
     puts("PASS: Return in the console output answers TeX through AppKit key events in both consoles");

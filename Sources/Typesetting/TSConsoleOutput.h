@@ -48,13 +48,18 @@ static inline void TSAppendConsoleOutput(NSTextView *view, NSString *text, NSCol
 }
 
 // Writes console input to a process. A process that has quit, or closed its
-// input, makes the write fail instead of stopping TeXShop with SIGPIPE.
+// input, makes the write fail instead of stopping TeXShop with SIGPIPE; so does
+// a handle that has been closed here. Nothing is written unless SIGPIPE is off.
 static inline BOOL TSWriteConsoleInput(NSFileHandle *handle, NSData *data, NSError **error)
 {
     if (handle == nil || data == nil)
         return NO;
-    fcntl(handle.fileDescriptor, F_SETNOSIGPIPE, 1);
     @try {
+        if (fcntl(handle.fileDescriptor, F_SETNOSIGPIPE, 1) == -1) {
+            if (error)
+                *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
+            return NO;
+        }
         return [handle writeData:data error:error];
     } @catch (NSException *exception) {
         return NO;
