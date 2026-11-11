@@ -22,6 +22,7 @@ MUTATIONS = {
                      'labels:labels target:self action:@selector(changeExperimentTool:)];\n'),
     'glass-in-page-units': ('    [overlay setSelectionRect:[self.documentView convertRect:onScreen fromView:self]];',
                             '    [overlay setSelectionRect:onScreen];'),
+    'lens-page-coordinates': ('    [overlay setMagnifiedRect:drawn];', '    [overlay setMagnifiedRect:pageSource];'),
     'no-tool-sync': ('    [self updateExperimentAppearance:notification];\n    [self syncExperimentToolSelection];',
                      '    [self updateExperimentAppearance:notification];'),
 }
@@ -307,6 +308,36 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(fabs(NSWidth(lensRect) - 380) < .5, @"Double click gives the large lens");
     [view hideExperimentMagnifier];
     Check(view.experimentOverlay == nil, @"Glass removed");
+    // What the lens actually draws: the formula under the pointer, for rotated pages and
+    // for a page whose boxes do not start at the origin.
+    NSUInteger lensCases = 0;
+    for (NSInteger rotation = 0; rotation < 360; rotation += 90) for (int offset = 0; offset < 2; offset++) {
+        context = [NSString stringWithFormat:@"lens rotation %ld offset %d", (long)rotation, offset];
+        PDFDocument *turned = Document(1);
+        PDFPage *page = [turned pageAtIndex:0];
+        if (offset) {
+            [page setBounds:NSMakeRect(100, 600, 400, 200) forBox:kPDFDisplayBoxMediaBox];
+            [page setBounds:NSMakeRect(100, 600, 400, 200) forBox:kPDFDisplayBoxCropBox];
+        }
+        page.rotation = rotation;
+        view.document = turned; view.autoScales = YES; Pump();
+        // The lens centre shows what lies under the pointer: the formula, then plain paper.
+        NSPoint spots[] = {NSMakePoint(NSMidX(Formula), NSMidY(Formula)), offset ? NSMakePoint(140, 630) : NSMakePoint(120, 300)};
+        for (int k = 0; k < 2; k++) {
+            NSPoint target = [view convertPoint:spots[k] fromPage:page];
+            [view showExperimentMagnifierAt:target level:1 modifiers:0];
+            OverView *glass = view.experimentOverlay;
+            NSRect shownLens = [[glass valueForKey:@"theSelectionRect"] rectValue];
+            NSBitmapImageRep *drawn = [glass bitmapImageRepForCachingDisplayInRect:shownLens];
+            [glass cacheDisplayInRect:shownLens toBitmapImageRep:drawn];
+            Check(DarkAt(drawn, .5, .5) == (k == 0), k == 0 ? @"Lens centre shows the formula" : @"Lens centre shows paper away from it");
+            [view hideExperimentMagnifier];
+        }
+        lensCases++;
+    }
+    Check(lensCases == 8, @"All rotations with and without a box offset");
+    context = @"magnifier";
+    view.document = Document(1); Pump();
 
     // Mouse tracking loops with posted events.
     context = @"tracking";

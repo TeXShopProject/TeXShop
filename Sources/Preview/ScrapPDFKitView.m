@@ -665,9 +665,16 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
 {
     PDFPage *page = [self pageForPoint:point nearest:YES];
     if (!page) return;
+    PDFDisplayBox box = self.displayBox;
     if (self.lensPage != page) {
+        // The page as the preview draws it: the box origin at zero and the rotation applied.
         self.lensPage = page;
-        self.lensImage = [[NSImage alloc] initWithData:page.dataRepresentation];
+        NSRect bounds = [page boundsForBox:box];
+        NSSize size = page.rotation % 180 ? NSMakeSize(NSHeight(bounds), NSWidth(bounds)) : bounds.size;
+        self.lensImage = [NSImage imageWithSize:size flipped:NO drawingHandler:^BOOL(NSRect rect) {
+            [page drawWithBox:box toContext:NSGraphicsContext.currentContext.CGContext];
+            return YES;
+        }];
     }
     NSSize lens = TSExperimentLensSize(level);
     CGFloat scale = TSExperimentLensScale(flags);
@@ -675,30 +682,14 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
     NSRect source = NSMakeRect(point.x - lens.width / 2 / scale, point.y - lens.height / 2 / scale,
                                lens.width / scale, lens.height / scale);
     NSRect pageSource = [self convertRect:source toPage:page];
-    NSRect box = [page boundsForBox:kPDFDisplayBoxMediaBox];
-    // The page image is unrotated; turn the source rectangle back with the page.
-    NSRect turned = pageSource;
-    switch (page.rotation % 360) {
-        case 90:
-            turned.origin = NSMakePoint(NSMinY(pageSource), NSWidth(box) - NSMinX(pageSource) - NSWidth(pageSource));
-            turned.size = NSMakeSize(NSHeight(pageSource), NSWidth(pageSource));
-            break;
-        case 180:
-            turned.origin = NSMakePoint(NSWidth(box) - NSMaxX(pageSource), NSHeight(box) - NSMaxY(pageSource));
-            break;
-        case 270:
-            turned.origin = NSMakePoint(NSHeight(box) - NSMinY(pageSource) - NSHeight(pageSource), NSMinX(pageSource));
-            turned.size = NSMakeSize(NSHeight(pageSource), NSWidth(pageSource));
-            break;
-        default: break;
-    }
+    NSRect drawn = NSRectFromCGRect(CGRectApplyAffineTransform(NSRectToCGRect(pageSource), [page transformForBox:box]));
     NSRect onScreen = NSMakeRect(point.x - lens.width / 2, point.y - lens.height / 2, lens.width, lens.height);
     OverView *overlay = [self experimentOverlayView];
     [overlay setDrawRubberBand:NO];
     [overlay setDrawMagnifiedRect:NO];
     [overlay setDrawMagnifiedImage:YES];
     [overlay setSelectionRect:[self.documentView convertRect:onScreen fromView:self]];
-    [overlay setMagnifiedRect:turned];
+    [overlay setMagnifiedRect:drawn];
     overlay.magnifiedImage = self.lensImage;
     [overlay setNeedsDisplay:YES];
 }
