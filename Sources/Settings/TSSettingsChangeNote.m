@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSSettingsChangeNote.h"
 #import "TSPreferenceKey.h"
+#import "TSPrefPaneLayout.h"
 #import "globals.h"
 
 static NSMutableDictionary<NSString *, id> *launchValues;
@@ -22,12 +23,7 @@ NSDictionary<NSString *, id> *TSSettingsLaunchValues(void) { return [launchValue
     self.orientation = NSUserInterfaceLayoutOrientationHorizontal;
     self.alignment = NSLayoutAttributeFirstBaseline; self.spacing = 4;
     NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-    NSImage *symbol = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle.fill" accessibilityDescription:nil];
-    NSImageView *icon = [NSImageView new];
-    NSImageSymbolConfiguration *configuration = [[NSImageSymbolConfiguration configurationWithPointSize:font.pointSize weight:NSFontWeightRegular]
-        configurationByApplyingConfiguration:[NSImageSymbolConfiguration configurationPreferringMulticolor]];
-    icon.image = [symbol imageWithSymbolConfiguration:configuration];
-    icon.identifier = @"settings.warning-symbol.multicolor"; icon.accessibilityElement = NO;
+    NSImageView *icon = [TSPrefPaneLayout warningSymbolForFont:font];
     NSTextField *label = [NSTextField wrappingLabelWithString:text];
     label.font = font; label.textColor = NSColor.labelColor;
     [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];

@@ -12,7 +12,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-change-notes-') as directory:
     shutil.copytree(r/'Resources/Interfaces/Base.lproj',resources/'Base.lproj',ignore=shutil.ignore_patterns('*.xib'))
     shutil.copytree(r/'Resources/Interfaces/en.lproj',resources/'en.lproj',ignore=shutil.ignore_patterns('*.nib','TeXShopHelp','*.pdf'))
     original=r/'Sources/Settings/TSSettingsChangeNote.m'
-    command=['xcrun','clang','-fobjc-arc','-DNSAccessibilityPostNotificationWithUserInfo=TSProbeAnnouncement','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsChangeNotes.m'),str(original),str(r/'Sources/App/globals.m'),str(r/'Sources/Settings/TSSettingsSearch.m'),str(r/'Sources/Settings/TSSettingsCategory.m'),'-o',str(d/'probe')]
+    command=['xcrun','clang','-fobjc-arc','-DNSAccessibilityPostNotificationWithUserInfo=TSProbeAnnouncement','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-mmacosx-version-min=14.6',*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(r/'Tests/SettingsChangeNotes.m'),str(original),str(r/'Sources/Settings/TSPrefPaneLayout.m'),str(r/'Sources/App/globals.m'),str(r/'Sources/Settings/TSSettingsSearch.m'),str(r/'Sources/Settings/TSSettingsCategory.m'),'-o',str(d/'probe')]
     def run(source=None, strings=bundle):
         subprocess.run([str(source) if x==str(original) and source else x for x in command],check=True)
         return subprocess.run([str(d/'probe'),str(strings)],capture_output=True,text=True,timeout=60)

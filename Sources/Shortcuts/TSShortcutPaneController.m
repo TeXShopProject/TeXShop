@@ -366,27 +366,79 @@ typedef NS_ENUM(NSInteger, TSShortcutSearchMode) {
 }
 - (BOOL)tableView:(NSTableView *)tableView isGroupRow:(NSInteger)row { return self.searchingByKey && row == [self macroHeaderRow]; }
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row { return ![self tableView:tableView isGroupRow:row]; }
+// Why a key-search match does not run for the searched key; nil for the match that runs.
+- (NSString *)inactiveReasonForMatch:(TSShortcutMatch *)match {
+    if (match == nil || match.winner) { return nil; }
+    for (TSShortcutMatch *owner in self.searchMatches) {
+        if (!owner.winner) continue;
+        NSString *ownerKey = owner.macro ? owner.macro.key : owner.menuItem.keyEquivalent;
+        NSEventModifierFlags ownerFlags = owner.macro ? owner.macro.modifiers : owner.menuItem.keyEquivalentModifierMask;
+        return [NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).", @""),
+            owner.path, [TSShortcutStore displayKey:ownerKey modifiers:ownerFlags]];
+    }
+    return NSLocalizedString(@"Inactive for this key", @"");
+}
+// Ordinary rows draw their text 2pt inside the cell; the warning row lines up with them.
+static const CGFloat TSShortcutWarningIndent = 2, TSShortcutWarningGap = 2, TSShortcutWarningBottom = 4, TSShortcutWarningSpacing = 4;
+// The same warning line the settings window shows elsewhere: yellow triangle, small label-colored text.
+- (NSStackView *)warningWithText:(NSString *)text {
+    NSFont *font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    NSTextField *label = [NSTextField wrappingLabelWithString:text];
+    label.font = font; label.textColor = NSColor.labelColor; label.identifier = @"shortcut.inactive-reason";
+    [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
+    NSStackView *warning = [NSStackView stackViewWithViews:@[[TSPrefPaneLayout warningSymbolForFont:font], label]];
+    warning.orientation = NSUserInterfaceLayoutOrientationHorizontal; warning.alignment = NSLayoutAttributeFirstBaseline;
+    warning.spacing = TSShortcutWarningSpacing; warning.translatesAutoresizingMaskIntoConstraints = NO;
+    warning.identifier = @"shortcut.inactive-warning";
+    return warning;
+}
+- (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row {
+    NSString *reason = self.searchingByKey && self.searchEvent != nil ? [self inactiveReasonForMatch:[self matchAtRow:row]] : nil;
+    if (reason == nil) { return tableView.rowHeight; }
+    NSStackView *warning = [self warningWithText:reason];
+    NSTextField *note = (NSTextField *)warning.arrangedSubviews[1];
+    NSTextField *path = [NSTextField labelWithString:@" "];
+    // The command cell is as wide as its column; the note's frame adds its own alignment insets.
+    NSEdgeInsets insets = note.alignmentRectInsets;
+    CGFloat width = tableView.tableColumns.firstObject.width - TSShortcutWarningIndent
+        - warning.arrangedSubviews[0].intrinsicContentSize.width - TSShortcutWarningSpacing + insets.left + insets.right;
+    CGFloat height = [note.cell cellSizeForBounds:NSMakeRect(0, 0, MAX(width, 1), CGFLOAT_MAX)].height;
+    return ceil(path.intrinsicContentSize.height + TSShortcutWarningGap + height + TSShortcutWarningBottom + tableView.intercellSpacing.height);
+}
+- (void)tableViewColumnDidResize:(NSNotification *)notification {
+    if (!self.searchingByKey || self.searchEvent == nil || self.table.numberOfRows == 0) { return; }
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        context.duration = 0;
+        [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, (NSUInteger)self.table.numberOfRows)]];
+    }];
+}
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)column row:(NSInteger)row {
     if (self.searchingByKey && self.searchEvent != nil) {
-        if (row == [self macroHeaderRow]) { return [NSTextField labelWithString:[column.identifier isEqualToString:@"command"] ? NSLocalizedString(@"Macros", @"") : @""]; }
+        // Group rows span the table and arrive without a column.
+        if (row == [self macroHeaderRow]) { return [NSTextField labelWithString:column == nil || [column.identifier isEqualToString:@"command"] ? NSLocalizedString(@"Macros", @"") : @""]; }
         TSShortcutMatch *match = [self matchAtRow:row];
         if (match == nil) { return nil; }
         NSString *key = match.macro != nil ? match.macro.key : match.menuItem.keyEquivalent;
         NSEventModifierFlags flags = match.macro != nil ? match.macro.modifiers : match.menuItem.keyEquivalentModifierMask;
-        NSString *status = match.winner ? NSLocalizedString(@"Assigned", @"") : NSLocalizedString(@"Inactive for this key", @"");
-        if (!match.winner) {
-            for (TSShortcutMatch *owner in self.searchMatches) {
-                if (!owner.winner) continue;
-                NSString *ownerKey = owner.macro ? owner.macro.key : owner.menuItem.keyEquivalent;
-                NSEventModifierFlags ownerFlags = owner.macro ? owner.macro.modifiers : owner.menuItem.keyEquivalentModifierMask;
-                status = [NSString stringWithFormat:NSLocalizedString(@"This shortcut is inactive because it conflicts with “%@” (%@).", @""),
-                    owner.path, [TSShortcutStore displayKey:ownerKey modifiers:ownerFlags]];
-                break;
-            }
-        }
-        NSString *text = [column.identifier isEqualToString:@"command"] ? [match.path stringByAppendingFormat:@" — %@", status] : [TSShortcutStore displayKey:key modifiers:flags];
+        NSString *reason = [self inactiveReasonForMatch:match];
+        BOOL isCommand = [column.identifier isEqualToString:@"command"];
+        NSString *text = !isCommand ? [TSShortcutStore displayKey:key modifiers:flags]
+            : reason == nil ? [match.path stringByAppendingFormat:@" — %@", NSLocalizedString(@"Assigned", @"")] : match.path;
         NSTextField *label = [NSTextField labelWithString:text]; label.lineBreakMode = NSLineBreakByTruncatingMiddle; label.toolTip = text;
-        return label;
+        if (!isCommand || reason == nil) { return label; }
+        NSView *cell = [NSView new]; cell.identifier = @"shortcut.inactive-command";
+        NSStackView *warning = [self warningWithText:reason];
+        label.translatesAutoresizingMaskIntoConstraints = NO;
+        [label setContentCompressionResistancePriority:249 forOrientation:NSLayoutConstraintOrientationHorizontal];
+        [cell addSubview:label]; [cell addSubview:warning];
+        [NSLayoutConstraint activateConstraints:@[
+            [label.topAnchor constraintEqualToAnchor:cell.topAnchor],
+            [label.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor constant:TSShortcutWarningIndent],
+            [label.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor],
+            [warning.topAnchor constraintEqualToAnchor:label.bottomAnchor constant:TSShortcutWarningGap],
+            [warning.leadingAnchor constraintEqualToAnchor:cell.leadingAnchor constant:TSShortcutWarningIndent],
+            [warning.trailingAnchor constraintEqualToAnchor:cell.trailingAnchor]]];
+        return cell;
     }
     if (row < 0 || row >= (NSInteger)self.visibleCommands.count) { return nil; }
     TSShortcutCommand *command = self.visibleCommands[(NSUInteger)row];

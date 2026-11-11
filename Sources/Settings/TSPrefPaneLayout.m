@@ -657,6 +657,16 @@ static NSColor *TSSettingsCardColor(void)
     stack.detachesHiddenViews = YES;
     return stack;
 }
++ (NSImageView *)warningSymbolForFont:(NSFont *)font
+{
+    NSImage *symbol = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle.fill" accessibilityDescription:nil];
+    NSImageSymbolConfiguration *configuration = [[NSImageSymbolConfiguration configurationWithPointSize:font.pointSize weight:NSFontWeightRegular]
+        configurationByApplyingConfiguration:[NSImageSymbolConfiguration configurationPreferringMulticolor]];
+    NSImageView *icon = [NSImageView new];
+    icon.image = [symbol imageWithSymbolConfiguration:configuration];
+    icon.identifier = @"settings.warning-symbol.multicolor"; icon.accessibilityElement = NO;
+    return icon;
+}
 + (void)prepareControl:(NSView *)view
 {
     view.translatesAutoresizingMaskIntoConstraints = NO;
