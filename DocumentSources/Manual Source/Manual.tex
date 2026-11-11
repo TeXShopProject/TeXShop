@@ -495,7 +495,7 @@ TeXShop Settings opens from the main TeXShop menu. Its sidebar groups related se
 
 Use Back and Forward to revisit categories. Command-left bracket and Command-right bracket navigate while Settings is active; brackets produced with Option also work. The window remembers its last category. Navigation history lasts until the settings window closes.
 
-General contains Settings Profile and the link to Comment Lines and Hidden Settings. The profile confirmation describes its reset scope and selected engine path. Editor contains the source font; Console contains its own font. Appearance contains theme selections, the theme editor and Dock icon choices. Theme colors are grouped by their purpose. Creating a theme asks for its name; replacing an existing theme asks for confirmation with that name.
+General contains Settings Profile, the Dock icon choices and the link to Comment Lines and Hidden Settings. The profile confirmation describes its reset scope and selected engine path. Editor contains the source font; Console contains its own font. Themes contains theme selections and the theme editor. Theme colors are grouped by their purpose. Creating a theme asks for its name; replacing an existing theme asks for confirmation with that name.
 
 A small note with a yellow warning symbol under a changed setting explains consequences that may otherwise be surprising: the spell-checking method, the zoom for new PDFs when a preview is open, and the default encoding when a source window is open. The note clears when the value returns to the value at opening, another category is selected, or Settings closes. Auto Save shows a restart note while its saved value differs from the startup value. Switching between the standard Find Panel and Find Bar updates open source, console and log views immediately. Switching to or from OgreKit requires restarting TeXShop.
 
@@ -545,7 +545,7 @@ The solution was simple: choose a source file which contains Hebrew. The Apple F
 Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings, Keyboard and cannot be assigned by their former menu titles.
 
 
-Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose the \LaTeX{}-aware or legacy method. The former has a rule editor; the latter has three indented options. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings.
+Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Themes, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose the \LaTeX{}-aware or legacy method. The former has a rule editor; the latter has three indented options. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings.
 
 Use Search Settings above the sidebar to find categories, labels, options and menu commands. Results list individual settings with their category names. A match on a category name or description provides one entry to the top of that category. Color fields on the same row share one result. Words separated by spaces must describe the same setting, optionally qualified by its category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to scroll to and highlight that setting and add the visit to normal navigation history. Clearing the query keeps the current pane. Back and Forward remain available according to the history and navigate accordingly. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording.
 
@@ -2891,7 +2891,7 @@ PreTeXt source files have extension .xml or .ptx.  They are text files containin
 
 \subsection{Syntax Coloring}
 
-The old syntax coloring methods are used for LaTeX embedded in these files, but in addition five extra colors are used for the tags. These colors, and all other TeXShop colors, can be adjusted  in the theme settings in TeXShop's Appearance category, to be described in a later chapter.
+The old syntax coloring methods are used for LaTeX embedded in these files, but in addition five extra colors are used for the tags. These colors, and all other TeXShop colors, can be adjusted  in TeXShop's Themes category, to be described in a later chapter.
 
 The ``Comment'' color is for xml comments and the ``Tag'' color is for xml tags. Some tags contain extra information; for instance, the minimal.xml file contains
 \begin{verbatim}
@@ -3555,9 +3555,9 @@ which reads
 
 \chapter{Themes}
 
-TeXShop uses customizable colors for syntax coloring, for various window backgrounds, and for other purposes. In the original version of TeXShop, users could modify these colors with a fairly baroque set of preference items. Then in macOS Mojave, Apple introduced ``Lite Mode'' and ``Dark Mode'' and an entirely new set of colors was required. At that point the old color preferences were ripped out of TeXShop and replaced by the theme settings in the Appearance category in Preferences, see \cref{fig:Theme}. While previously many colors could only be changed using  obscure hidden Preference settings, now all color choices are available in the theme settings in the Appearance category.
+TeXShop uses customizable colors for syntax coloring, for various window backgrounds, and for other purposes. In the original version of TeXShop, users could modify these colors with a fairly baroque set of preference items. Then in macOS Mojave, Apple introduced ``Lite Mode'' and ``Dark Mode'' and an entirely new set of colors was required. At that point the old color preferences were ripped out of TeXShop and replaced by the Themes category in Preferences, see \cref{fig:Theme}. While previously many colors could only be changed using  obscure hidden Preference settings, now all color choices are available in the Themes category.
 
-The illustration on the next page shows the earlier tabbed Themes interface for reference. The current Appearance category groups theme colors by their purpose. In the Window Colors group, each window opacity slider runs from 0\% (transparent) to 100\% (opaque), with an editable numeric field beside it. Enter a whole percentage and press Return or leave the field to apply it. Out-of-range integers are clamped to 0 or 100. Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. These themes are listed in three pulldown menus: Lite Mode Theme, Dark Mode Them, Theme to Edit. The first menu sets the theme used on all systems below Mojave, and the theme used in Lite Mode on Mojave and above. The second menu sets the theme used in Dark Mode on Mojave and above. The final menu sets the theme which Preferences is currently editing.
+The illustration on the next page shows the earlier tabbed Themes interface for reference. The current Themes category groups theme colors by their purpose. In the Windows group, each window opacity slider runs from 0\% (transparent) to 100\% (opaque), with an editable numeric field beside it. Enter a whole percentage and press Return or leave the field to apply it. Out-of-range integers are clamped to 0 or 100. Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. These themes are listed in three pulldown menus: Lite Mode Theme, Dark Mode Them, Theme to Edit. The first menu sets the theme used on all systems below Mojave, and the theme used in Lite Mode on Mojave and above. The second menu sets the theme used in Dark Mode on Mojave and above. The final menu sets the theme which Preferences is currently editing.
 
 TeXShop is shipped with several themes, including ``LiteTheme'' and ``DarkTheme''. These are the default themes for Lite Mode and Dark Mode. As explained later, there is a way for users to rename or remove Themes known to TeXShop. But TeXShop will always replace ``LiteTheme'' and ``DarkTheme''
 and use them if other required themes are missing.
@@ -3624,7 +3624,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  
  Finally the XML Syntax colors are colors used when TeXShop syntax colors html, xml, and ptr files, as described in the chapter on Html, TeX4ht, and PreTeXt.
  
- To be completely honest, one color is not set in the theme settings in the Appearance category. It is the color of the optional block cursor, set in the Editor category of Preferences. This will be discussed in a later chapter of this Manual.
+ To be completely honest, one color is not set in the Themes category. It is the color of the optional block cursor, set in the Editor category of Preferences. This will be discussed in a later chapter of this Manual.
  
  In September, 2025, a user requested that marker symbols be colored in a more precise manner.
  Before then, round parentheses were not colored, and the pairs \{ \}, [ ], and symbols \& and \$  were all given the same coloring. Starting in September, 2025, only \& and \$ are given the standard ``marker''
@@ -3649,7 +3649,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  
  \section{expl3 Coloring Rules}
  
- The colors used for expl3 syntax coloring can be changed in TeXShop Preferences using the theme settings in the Appearance category. This method works as usual, and seven additional colors are provided for expl3 coloring.
+ The colors used for expl3 syntax coloring can be changed in TeXShop Preferences in the Themes category. This method works as usual, and seven additional colors are provided for expl3 coloring. Each bundled theme sets these colors to suit its palette; a theme without them uses built-in expl3 colors.
  
  I am not a macro programmer, so my description of expl3 syntax may be a little rough. Syntax coloring is in TeXShop because it was requested by Alan Munn, and the description of the syntax comes directly from Munn. If you are a macro programmer, thank Munn for the new feature.
  
@@ -3724,6 +3724,8 @@ Thus the source and preview windows can be split horizontally, with one portion 
 or vertically, with one portion to the left of the other.
 Pushing the option key while clicking the split window toolbar item has the same effect.
 
+When the Preview window is split or unsplit, the place shown at the top edge of the top (or left) view stays where it is on the screen, at any magnification and in every display format. If that view is scrolled while the window is split, unsplitting keeps the new position. When the window is split again, the bottom (or right) view shows the place it showed when the window was last unsplit.
+
 \section{The Active View in a Split Window}
 \label{Active_View_Split_Window}
 
@@ -3777,10 +3779,6 @@ unsplit.
 \newpage
 This feature is not available for the Source Window because it is not needed there. When the source window has been split into two views, the  view with the cursor will become the active window when the window is unsplit.
 
-If ``Switch Views'' is used several times in a row, the images will slowly creep up or down, rather than returning to their exact starting positions. This creep is difficult to eliminate and irrelevant, 
-because the command is designed to be used just once in the rare case that the bottom view in the
-Preview window should become the main view after unsplitting.
-
 
 \section{Revising the Document and Typesetting}
 
@@ -3802,27 +3800,23 @@ However, when the Preview window is split so both views are shown simultaneously
 \section{Avoiding Creep When Unsplitting}
 
 When splitting the Preview window was introduced, we imagined that users faced with writing related sections of a document would split the window and  work in split mode constantly without unsplitting. To our surprise, a few users
-worked in a different way; they alternated between working with the split window and working with the unsplit top portion. These users noticed that when a document was split and then unsplit, the display  did not return to the exact starting spot, but instead crept up or down by several lines. If the two commands were cycled again and again, each cycle produced an additional creep. This became annoying. 
+worked in a different way; they alternated between working with the split window and working with the unsplit top portion. These users noticed that when a document was split and then unsplit, the display  did not return to the exact starting spot, but instead crept up or down. If the two commands were cycled again and again, each cycle produced an additional creep. TeXShop 5.25 reduced the creep by returning a horizontally split window to the position it had before splitting, which ignored any scrolling of the top portion while the window was split.
 
-The problem did not occur in Single Page or Double Page display modes, but only in Multipage and Double Multipage modes. It did not occur when the window was split vertically, but only when it was split horizontally. In TeXShop 5.25, this problem was fixed by a slight design change. Just before splitting a window horizontally, the program records the position of its scroll bar. When the window is unsplit, the view returns to that recorded scroll bar position.
-This virtually eliminates the creep, but at a slight cost. When the user splits the window and then scrolls the top portion, unsplitting does not return to the new scroll position of the view, but instead to the original position before splitting. (This only happens when splitting horizontally in Multipage and Double Multipage modes.)
-
-It is easy to get around this problem. Suppose you want to scroll the top portion of a split window to a new ``permanent position.'' Unsplit the window, scroll to the new position, and split it again. The lower half will not change, but the upper half will now remember its new position.
+Since TeXShop 5.60, splitting and unsplitting no longer creep. TeXShop records the place shown at the top edge of the top view as a position on its page, and puts that place back at the top edge after the window is split or unsplit. So the top portion stays where it is on the screen, and scrolling it while the window is split is kept when the window is unsplit. Near the end of the document, where the larger unsplit window cannot scroll that far, the window shows the end of the document instead.
 
 \section{Two Options When Splitting Horizontally}
 \label{Options_Splitting_Horizontally_Section}
 
  Two special variations have been added to the split window command in horizontal mode. Most users should ignore these variations, but one or two users may find them helpful. If the shift and control keys are held down when the Split Window menu is selected or the corresponding tool is checked, the window is forced to split so the lower and upper views are the same size. If just the shift key is held down in the same situation, the two views are forced to have the same size and to contain the same material. 
  
- The first of these variations may be useful for users who rarely move the split bar and never change the magnification of either view. These users probably already have a stable situation without creep.
-In those rare cases when they do move the split bar (and pay with additional creep), the option takes them back to the stable situation. 
+ The first of these variations may be useful for users who usually work with two views of the same size: when they have moved the split bar, the variation brings the two views back to the same size.
 
 The second variation was created for a user who lectures directly from a screen showing typeset course notes. He typically shows a full page view of the notes, scrolling through each day's material. But when he comes to a theorem, he splits the screen using the second variation. The theorem remains in the upper view, so students can refer back to it and recall the assumptions required for the conclusion. Meanwhile the lower view can be scrolled to show example applications of the theorem and then key steps of the proof. 
 
 
 \section{Splitting Vertically}
 
-If the Option key is held down when a window is split, the split is vertical. This mode works as expected provided you know what to expect. When a window is split, the original single full window's contents are placed in the left vertical side. Since vertical sections are narrower than before,  more pages are shown. The original unsplit page is at the bottom of this display rather than the top. This is by design. Similarly when the window is unsplit, the bottom portion of the left side will become the new single window. This is also by design. If the left side is scrolled during the split phase, the new material at the bottom of the left side will become the full window after unsplitting. 
+If the Option key is held down when a window is split, the split is vertical. The original window's contents are placed in the left side, and the place shown at the top edge of the window stays at the top of the left side. Since each side is narrower than the window, a magnification that fits the page to the window makes the pages smaller, and more of the document is shown below. When the window is unsplit, the place shown at the top of the left side stays at the top of the window.
 
 \section{Final Note}
 
@@ -3893,7 +3887,7 @@ The two views are not fixed; they can be scrolled if desired. So while one view 
 \label{Independence_Split_Window_Section}
 
 When this feature was  introduced in TeXShop 5.23, the two views for the full window were also the two views displayed by splitting the window. This is no longer the case. Instead if either of the views for the full window is split, it will become the top view of the split window. The bottom view of this window is a completely separate view, which
-can be scrolled to any position desired. Unsplitting the window returns to the original view before it was split.
+can be scrolled to any position desired. Unsplitting the window keeps the place shown at the top of the top view, so unless that view was scrolled, the original view returns.
 If we then type Option-2 to get the second full view and then split that view, the second full view will appear as the top view of the split window, and the bottom view will be the same view obtained when we first split. This means that
 users who use the new Switch Preview Views feature can also use the older Split Window feature. Then they will deal with three independent views, the two views for the full window (which become the top view when splitting),
 and the bottom view when either view is split.
@@ -4077,7 +4071,7 @@ Hold down the shift key and toggle ``Split Window'' in the Window menu (or the c
 This splits the Preview window into equal parts and duplicates the upper part of the full view into the lower part.
 Follow the internal link in the lower part.
 If desired, scroll each part a litte bit and move the dividing bar.
-When you switch back, i.e.\ unsplit the Preview window (no modifier key necessary), then the lower part vanishes and you see more of the upper one (and possibly experience an upward creep of a line or two).
+When you switch back, i.e.\ unsplit the Preview window (no modifier key necessary), then the lower part vanishes and you see more of the upper one, which stays where it is on the screen.
 
 TeXShop remembers the position of the dividing bar and the view of the lower part is saved.
 If you split again (without any modifier key), you get back the setting which you just left.
@@ -7021,7 +7015,7 @@ Localization must be done by native speakers. Nine languages including English a
 
 The TeXShop program icon is by Thiemo Gamma. Designing icons is the most difficult task a programmer can face; I've never been able to come close. Thiemo's icon showed up in my mailbox one day and I immediately switched to it.  I know that Apple's current style is square with rounded corners, but Thiemo's icon will remain.
 
-Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the Appearance category of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
+Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the General category of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
 
 
 \end{document}

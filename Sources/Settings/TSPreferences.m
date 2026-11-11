@@ -155,7 +155,7 @@ Loads the .nib file if necessary, fills all the controls with the values from th
     self.inputErrorPresented = NO;
     _prefsWindow.delegate = self;
     [self configurePreferenceInputs];
-    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController viewForCategoryIdentifier:TSSettingsCategoryAppearance]];
+    [[TSDockIconController sharedController] installInPreferencesPane:[self.settingsController viewForCategoryIdentifier:TSSettingsCategoryGeneral]];
     [[TSDockIconController sharedController] restoreSavedIcon];
     [self updateControlsFromUserDefaults:SUD];
     [self PrepareColorPane:SUD];

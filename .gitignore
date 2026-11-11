@@ -12,3 +12,5 @@ TeXShop-private-keys/
 /website/archive/downloads/texshop557-tahoe.zip
 /website/archive/downloads/texshopsource557-tahoe.zip
 /website/archive/downloads/*.partial
+__pycache__/
+*.pyc

@@ -148,7 +148,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
         CheckStrings(pane, expected[name]);
         CheckStrings(pane, expected[[name stringByAppendingString:@"Tags"]]);
         CheckActions(pane, expected[[name stringByAppendingString:@"Actions"]]);
-        // Dock behavior is exercised on the final Appearance category in SettingsProductShell.m.
+        // Dock behavior is exercised in the General category in SettingsProductShell.m.
         unsigned int count = 0;
         objc_property_t *properties = class_copyPropertyList(cls, &count);
         for (unsigned int index = 0; index < count; index++) {
