@@ -80,8 +80,8 @@
         @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     TSColorSupport *colors = [TSColorSupport sharedInstance];
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
-    self.outputText.backgroundColor = [colors colorForKey:@"ConsoleBackground" fromDictionary:theme isWindowDark:dark];
-    self.outputText.textColor = [colors colorForKey:@"ConsoleText" fromDictionary:theme isWindowDark:dark];
+    self.outputText.backgroundColor = [colors opaqueColorForKey:@"ConsoleBackground" fromDictionary:theme isWindowDark:dark];
+    self.outputText.textColor = [colors opaqueColorForKey:@"ConsoleText" fromDictionary:theme isWindowDark:dark];
     self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeConsoleAlphaKey);
 }
 

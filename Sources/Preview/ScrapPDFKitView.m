@@ -92,7 +92,7 @@ static const NSInteger TSExperimentToolCount = 4;
     BOOL dark = [[self.effectiveAppearance bestMatchFromAppearancesWithNames:
         @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
-    self.backgroundColor = [[TSColorSupport sharedInstance] colorForKey:@"PreviewBackground"
+    self.backgroundColor = [[TSColorSupport sharedInstance] opaqueColorForKey:@"PreviewBackground"
         fromDictionary:theme isWindowDark:dark];
     self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemePreviewAlphaKey);
 }
