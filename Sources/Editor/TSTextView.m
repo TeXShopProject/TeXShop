@@ -1652,6 +1652,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
         [self.document textView1].font = thisFont;
     
     [self fixupTabs];
+    [self.document applyExperimentTextLayout];
 }
  
 

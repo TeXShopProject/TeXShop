@@ -118,6 +118,32 @@
     return self;
 }
 
+// As in TSTextView: the active line and the block cursor follow the insertion point.
+- (void)updateInsertionPointStateAndRestartTimer:(BOOL)restartFlag
+{
+    [super updateInsertionPointStateAndRestartTimer:restartFlag];
+    if (self.document)
+        [self.document performSelector:@selector(cursorMoved:) withObject:self afterDelay:0];
+}
+
+// As the document does for its source, which has the document as its delegate:
+// typing a closing brace briefly shows its partner.
+- (BOOL)shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
+{
+    BOOL change = [super shouldChangeTextInRange:affectedCharRange replacementString:replacementString];
+    if (change)
+        [self.document flashMatchForCharacter:replacementString range:affectedCharRange inTextView:self];
+    return change;
+}
+
+// The Experiment source always shows the document's font, so a font chosen here
+// (Font panel, Bigger, Smaller) becomes the font of the document's source too.
+- (void)changeFont:(id)sender
+{
+    [super changeFont:sender];
+    [self.document applyExperimentFontToSource:self.font];
+}
+
 
 - (void)undoSpecial:(id)theDictionary
 {
