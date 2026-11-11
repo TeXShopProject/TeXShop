@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """The bar below the Experiment source is narrow, as the thin frames of the Experiment
-windows are: a small Typeset button, 4 points from the bottom and from the source above
-it and 8 points from the right edge, wide enough for its title in every language.
+windows are: a small Typeset button, 5 points from the bottom and from the source above
+it and 20 points from the right edge, clear of the corner where the window is resized,
+and wide enough for its title in every language.
 
 The compiled TSDocument nib of every localization is loaded, as the application loads
 it, and the Experiment source window is measured at its size in the nib and after it is
@@ -12,9 +13,10 @@ from pathlib import Path
 import argparse, os, re, shutil, subprocess, sys, tempfile
 
 MUTATIONS = {
-    'tall-bar': ('ja', '<rect key="frame" x="-1" y="28" width="278" height="351"/>', '<rect key="frame" x="-1" y="54" width="278" height="325"/>'),
+    'tall-bar': ('ja', '<rect key="frame" x="-1" y="30" width="278" height="349"/>', '<rect key="frame" x="-1" y="54" width="278" height="325"/>'),
     'regular-button': ('Base', ' controlSize="small" borderStyle="border"', ' borderStyle="border"'),
-    'clipped-title': ('ja', 'x="187" y="4" width="81" height="20"', 'x="208" y="4" width="60" height="20"'),
+    'clipped-title': ('ja', 'x="175" y="5" width="81" height="20"', 'x="196" y="5" width="60" height="20"'),
+    'near-corner': ('fr', 'x="182" y="5" width="74" height="20"', 'x="194" y="5" width="74" height="20"'),
     'fixed-button': ('de', 'flexibleMinX="YES" flexibleMaxY="YES"/>\n                        <buttonCell key="cell" type="push" title="Compila"',
                      'flexibleMaxY="YES"/>\n                        <buttonCell key="cell" type="push" title="Compila"'),
 }
@@ -55,9 +57,9 @@ static void Measure(NSString *label, NSView *content, Owner *owner) {
     NSRect b = button.frame, s = source.frame, c = content.bounds;
     Check(button.controlSize == NSControlSizeSmall && button.bezelStyle == NSBezelStyleRounded,
           [label stringByAppendingString:@": a small push button"]);
-    Check(fabs(NSHeight(b) - 20) < 0.5 && fabs(NSMinY(b) - 4) < 0.5, [label stringByAppendingString:@": 20 points high, 4 from the bottom"]);
-    Check(fabs(NSMinY(s) - NSMaxY(b) - 4) < 0.5, [label stringByAppendingString:@": 4 points between the button and the source"]);
-    Check(fabs(NSMaxX(c) - NSMaxX(b) - 8) < 0.5, [label stringByAppendingString:@": 8 points from the right edge"]);
+    Check(fabs(NSHeight(b) - 20) < 0.5 && fabs(NSMinY(b) - 5) < 0.5, [label stringByAppendingString:@": 20 points high, 5 from the bottom"]);
+    Check(fabs(NSMinY(s) - NSMaxY(b) - 5) < 0.5, [label stringByAppendingString:@": 5 points between the button and the source"]);
+    Check(fabs(NSMaxX(c) - NSMaxX(b) - 20) < 0.5, [label stringByAppendingString:@": 20 points from the right edge"]);
     Check(NSMaxY(s) >= NSMaxY(c) && NSMinX(s) <= NSMinX(c) && NSMaxX(s) >= NSMaxX(c),
           [label stringByAppendingString:@": the source fills the rest of the window"]);
     Check(button.intrinsicContentSize.width <= NSWidth(b) + 0.5, [label stringByAppendingString:@": the title fits"]);
