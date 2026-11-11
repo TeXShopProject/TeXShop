@@ -1810,6 +1810,14 @@ if (! skipTextWindow) {
 	[texCommand setDelegate: [TSEncodingSupport sharedInstance]];
 	TSConfigureConsoleInput(texCommand);
 	// end addition
+	__weak TSDocument *weakSelf = self;
+	self.consoleOutputReturn = [[TSConsoleOutputReturn alloc] initWithInputField: texCommand
+		canSend: ^BOOL{
+			TSDocument *document = weakSelf;
+			return document && document->typesetStart && document.inputPipe;
+		}
+		sendEmptyLine: ^BOOL{ return [weakSelf sendConsoleLine: @""]; }];
+	[outputText setDelegate: self.consoleOutputReturn];
 
     if (!_externalEditor)
     {

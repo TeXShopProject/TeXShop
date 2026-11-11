@@ -38,6 +38,7 @@
 
 @class TSFileChangeMonitor;
 @class TSExperimentConsoleController;
+@class TSConsoleOutputReturn;
 
 #define NUMBEROFERRORS	20
 
@@ -442,6 +443,7 @@ enum RootCommand
 @property (retain) NSFileHandle        *writeHandle;
 @property (retain) NSFileHandle        *readHandle;
 @property (retain) NSPipe              *inputPipe;
+@property (strong) TSConsoleOutputReturn *consoleOutputReturn;
 @property (retain) NSPipe              *outputPipe;
 @property (retain) NSTask              *texTask;
 @property (strong) TSExperimentConsoleController *experimentConsole;
@@ -954,6 +956,7 @@ enum RootCommand
 - (void) autosaveFinished: (NSDocument *)doc didSave:(BOOL)didSave contextInfo:(void *)contextInfo;
 
 - (void) doTexCommand: sender;
+- (BOOL) sendConsoleLine: (NSString *)line;
 - (void) convertDocument;
 - (void) abort:sender;
 - (void) sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
