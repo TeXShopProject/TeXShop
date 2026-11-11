@@ -240,6 +240,8 @@
 	<string>3</string>
 	<key>PdfKitMouseMode</key>
 	<string>2</string>
+	<key>ExperimentMouseMode</key>
+	<string>2</string>
 	<key>PdfMagnification</key>
 	<string>1</string>
 	<key>PdfMouseMode</key>

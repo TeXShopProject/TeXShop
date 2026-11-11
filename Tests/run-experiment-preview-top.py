@@ -11,6 +11,7 @@ keeps the position the user was viewing. Defaults stay in memory.
 from pathlib import Path
 import argparse, os, plistlib, subprocess, sys, tempfile
 from source_tree import include_args
+from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 
 MUTATIONS = {
     'no-first-flag': ('        self.showsTopOfFirstPage = YES;\n', ''),
@@ -36,6 +37,7 @@ if args.mutation:
 for header in ['globals.h', 'TSDocument.h', 'TSEncodingSupport.h']:
     pdf = pdf.replace(f'#import "{header}"', '')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', (root/'Sources/Preview/TSPreviewAppearance.h').read_text())
+pdf = experiment_preview_prelude(root) + pdf
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -196,7 +198,7 @@ with tempfile.TemporaryDirectory(prefix='TeXShop-experiment-top-') as tmp:
         'CFBundleExecutable': 'ExperimentTopTest', 'CFBundlePackageType': 'APPL', 'LSUIElement': True}))
     (tmp/'Test.m').write_text(program)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-w', *include_args(root), '-I'+str(root/'Tests'),
-                    '-framework', 'Cocoa', '-framework', 'Quartz', str(tmp/'Test.m'), '-o', str(mac/'ExperimentTopTest')], check=True)
+                    '-framework', 'Cocoa', '-framework', 'Quartz', str(tmp/'Test.m'), *experiment_preview_sources(root), '-o', str(mac/'ExperimentTopTest')], check=True)
     home = tmp/'Home'; (home/'Library/Preferences').mkdir(parents=True)
     try:
         result = subprocess.run([str(mac/'ExperimentTopTest'), str(tmp)], env={**os.environ, 'CFFIXED_USER_HOME': str(home)},
