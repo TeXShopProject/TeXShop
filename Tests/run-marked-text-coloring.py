@@ -43,7 +43,9 @@ MUTATIONS = {
     'color-while-source-composes': (SYNTAX,
         '    if (!self.coloringWaitsForMarkedText || TSTextStorageHasMarkedText(self.textStorage) ||', '    if (!self.coloringWaitsForMarkedText ||'),
     'color-while-experiment-composes': (SYNTAX,
-        ' ||\n        (scrapTextView && TSTextStorageHasMarkedText(scrapTextView.textStorage)))\n        return;', ')\n        return;'),
+        ' ||\n        (scrapTextView.window.isVisible && TSTextStorageHasMarkedText(scrapTextView.textStorage)))\n        return;', ')\n        return;'),
+    'closed-experiment-holds-source': (SYNTAX,
+        '(scrapTextView.window.isVisible && TSTextStorageHasMarkedText(scrapTextView.textStorage))', '(scrapTextView && TSTextStorageHasMarkedText(scrapTextView.textStorage))'),
     'brace-reset-before-wait': (DOCUMENT,
         '    if ([self coloringWaitsForMarkedTextIn:textView])\n        return;\n    \n  // item added by Koch in August, 2018',
         '  // item added by Koch in August, 2018'),
@@ -587,6 +589,30 @@ int main(void) { @autoreleasepool {
     [scrap setMarkedText:@"" selectedRange:NSMakeRange(0, 0) replacementRange:NSMakeRange(NSNotFound, 0)];
     Spin(0.05);
     Check([Foreground(scrap, 0) isEqual:commandColor], "removing text composed in the Experiment source colors what waited");
+
+    // Text left composed in a closed Experiment window does not hold back the source,
+    // and waits again when the window is shown.
+    [scrap setSelectedRange:NSMakeRange(scrapAt, 0)];
+    Compose(scrap, @[@"\uff4b", @"\u304b"]);
+    [doc colorizeExperimentSource];
+    Check(doc.coloringWaitsForMarkedText, "text composed in the Experiment source waits");
+    experiment.shown = NO;
+    [mainWindow makeFirstResponder:source];
+    [source setSelectedRange:NSMakeRange(at, 0)];
+    Uncolor(source);
+    Compose(source, @[@"\uff53", @"\u3055"]);
+    [doc colorizeAll];
+    [source insertText:@"\u3055" replacementRange:NSMakeRange(NSNotFound, 0)];
+    Spin(0.05);
+    Check(scrap.hasMarkedText && !doc.coloringWaitsForMarkedText && [Foreground(source, 0) isEqual:commandColor],
+          "text left composed in a closed Experiment window does not hold back the source");
+    experiment.shown = YES;
+    Uncolor(scrap);
+    [doc syncExperimentSourceDisplay];
+    Check(Foreground(scrap, 0) == nil && doc.coloringWaitsForMarkedText, "shown again, the Experiment source waits for its composed text");
+    [scrap insertText:@"\u304b" replacementRange:NSMakeRange(NSNotFound, 0)];
+    Spin(0.05);
+    Check(!doc.coloringWaitsForMarkedText && [Foreground(scrap, 0) isEqual:commandColor], "the Experiment source is colored after that text is committed");
 
     if (failures) return 1;
     printf("PASS: text composed with an input method is not colored, in either half of the source or in the Experiment "

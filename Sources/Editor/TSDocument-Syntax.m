@@ -137,13 +137,14 @@ static BOOL TSTextStorageHasMarkedText(NSTextStorage *storage)
 }
 
 // Nothing is colored while text is still being composed in the source or in the
-// Experiment source, not even the other one. A brace highlight kept while text was
-// composed is removed by -resetHighlight:, which the same change of the selection
-// schedules.
+// shown Experiment source, not even the other one. Text left composed in a closed
+// Experiment window does not hold back the source; it waits again when that window
+// is shown. A brace highlight kept while text was composed is removed by
+// -resetHighlight:, which the same change of the selection schedules.
 - (void)colorWaitingForMarkedText
 {
     if (!self.coloringWaitsForMarkedText || TSTextStorageHasMarkedText(self.textStorage) ||
-        (scrapTextView && TSTextStorageHasMarkedText(scrapTextView.textStorage)))
+        (scrapTextView.window.isVisible && TSTextStorageHasMarkedText(scrapTextView.textStorage)))
         return;
     self.coloringWaitsForMarkedText = NO;
     [self colorizeAll];
