@@ -204,7 +204,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "Use LaTeX-aware spell checking (recommended)";
 "Use legacy spell checking" = "Use legacy spell checking";
 "LaTeX Spell Checking" = "LaTeX Spell Checking";
-"Edit Key Bindings…" = "Edit Key Bindings…";
+"Edit Key Bindings…" = "Key Bindings Editor…";
 "Key Bindings" = "Key Bindings";
 "Edit Command Completion…" = "Edit Command Completion…";
 "Command Completion" = "Command Completion";

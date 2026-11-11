@@ -227,7 +227,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "使用考虑 LaTeX 结构的拼写检查（推荐）";
 "Use legacy spell checking" = "使用传统拼写检查";
 "LaTeX Spell Checking" = "LaTeX 拼写检查";
-"Edit Key Bindings…" = "编辑按键绑定文件…";
+"Edit Key Bindings…" = "按键绑定编辑器…";
 "Key Bindings" = "按键绑定";
 "Edit Command Completion…" = "编辑命令补全文件…";
 "Command Completion" = "命令补全";

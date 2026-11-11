@@ -231,7 +231,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "Usa il controllo adatto a LaTeX (consigliato)";
 "Use legacy spell checking" = "Usa il controllo tradizionale";
 "LaTeX Spell Checking" = "Ortografia LaTeX";
-"Edit Key Bindings…" = "Modifica le associazioni dei tasti…";
+"Edit Key Bindings…" = "Editor delle associazioni dei tasti…";
 "Key Bindings" = "Associazioni dei tasti";
 "Edit Command Completion…" = "Modifica il completamento dei comandi…";
 "Command Completion" = "Completamento dei comandi";

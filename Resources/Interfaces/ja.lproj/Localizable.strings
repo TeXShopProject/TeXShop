@@ -252,7 +252,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "LaTeXの構造を考慮する（推奨）";
 "Use legacy spell checking" = "従来方式を使う";
 "LaTeX Spell Checking" = "LaTeXのスペルチェック";
-"Edit Key Bindings…" = "キーバインドファイルを編集…";
+"Edit Key Bindings…" = "キーバインドエディタ…";
 "Key Bindings" = "キーバインド";
 "Edit Command Completion…" = "コマンド補完ファイルを編集…";
 "Command Completion" = "コマンド補完";

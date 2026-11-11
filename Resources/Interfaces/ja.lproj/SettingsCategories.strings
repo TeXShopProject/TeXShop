@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "コンソールのリサイズ";
 "group.bindings.title" = "キーバインド";
 "catalog.keyboard.0.0.title" = "キーバインドを使う（新しい書類の初期値）";
-"catalog.keyboard.0.1.title" = "キーバインドファイルを編集…";
+"catalog.keyboard.0.1.title" = "キーバインドエディタ…";
 "group.completion.title" = "コマンド補完";
 "catalog.keyboard.1.0.title" = "呼び出すキー";
 "catalog.keyboard.1.1.title" = "BibDesk 自動補完";

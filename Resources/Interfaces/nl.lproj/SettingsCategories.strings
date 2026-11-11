@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "Vergroten/verkleinen console";
 "group.bindings.title" = "Automatisch aanvullen";
 "catalog.keyboard.0.0.title" = "Toetsbindingen gebruiken (standaard voor nieuwe documenten)";
-"catalog.keyboard.0.1.title" = "Toetsbindingen bewerken…";
+"catalog.keyboard.0.1.title" = "Toetsbindingen-editor…";
 "group.completion.title" = "Commandoaanvulling";
 "catalog.keyboard.1.0.title" = "Activeringstoets";
 "catalog.keyboard.1.1.title" = "BibDesk-aanvullen";

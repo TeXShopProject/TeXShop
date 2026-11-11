@@ -33,6 +33,9 @@
 #import "NSText-Extras.h"
 #import "globals.h"
 #import "TSDialogButtonLayout.h"
+#import "TSColorSupport.h"
+
+static void *TSMacroContentAppearanceContext = &TSMacroContentAppearanceContext;
 
 
 @implementation TSMacroEditor
@@ -143,7 +146,50 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[item setTarget: self];
 	}
 	[self refreshShortcutConflicts];
+	// Settings may have changed the font or the themes since the editor was last open.
+	[contentTextView setFontSafely:[self contentFont]];
+	[self applyContentAppearance:nil];
 	[window makeKeyAndOrderFront: nil];
+}
+
+// BEGIN content appearance
+// The contents show in the source font, or the console font when Settings asks
+// for it, and in the text, background and insertion point colors of the theme
+// for the window's light or dark appearance.
+- (NSFont *)contentFont
+{
+    NSFont *font = nil;
+    if ([SUD boolForKey:SameFontForMacroKey])
+        font = [NSFont fontWithName:[SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
+    else {
+        id data = [SUD objectForKey:DocumentFontKey];
+        if ([data isKindOfClass:NSData.class]) {
+            @try { font = [NSUnarchiver unarchiveObjectWithData:data]; } @catch (NSException *exception) { font = nil; }
+        }
+    }
+    return [font isKindOfClass:NSFont.class] ? font : [NSFont userFontOfSize:12.0];
+}
+- (void)applyContentAppearance:(NSNotification *)notification
+{
+    if (contentTextView == nil) return;
+    NSAppearance *appearance = [window effectiveAppearance] ?: NSApp.effectiveAppearance;
+    BOOL dark = [[appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
+    NSDictionary *theme = dark ? darkColors : liteColors;
+    TSColorSupport *colors = [TSColorSupport sharedInstance];
+    NSColor *text = [colors colorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark];
+    contentTextView.drawsBackground = YES;
+    contentTextView.backgroundColor = [colors colorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark];
+    contentTextView.textColor = text;
+    contentTextView.insertionPointColor = [colors colorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark];
+    NSMutableDictionary *typing = [contentTextView.typingAttributes mutableCopy] ?: [NSMutableDictionary dictionary];
+    typing[NSForegroundColorAttributeName] = text;
+    contentTextView.typingAttributes = typing;
+}
+// END content appearance
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context == TSMacroContentAppearanceContext) [self applyContentAppearance:nil];
+    else [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (void)loadUI
@@ -178,16 +224,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[contentTextView setAllowsUndo:YES];
 		[contentTextView setRichText:YES];
 		[contentTextView setUsesFontPanel:YES];
-       // [contentTextView setTextColor: NSColor.systemBlueColor];
-        if ([SUD boolForKey:SameFontForMacroKey])
-            {
-                NSFont   *theFont;
-
-                theFont = [NSFont fontWithName: [SUD stringForKey:ConsoleFontNameKey] size:[SUD floatForKey:ConsoleFontSizeKey]];
-                [contentTextView setFontSafely: theFont];
-           }
-        else
-            [contentTextView setFontSafely:[NSFont userFontOfSize:12.0]];
+        [contentTextView setFontSafely:[self contentFont]];
         [contentTextView setContinuousSpellCheckingEnabled: NO];
         [contentTextView setAutomaticSpellingCorrectionEnabled: NO];
         [contentTextView setSmartInsertDeleteEnabled: NO];
@@ -199,6 +236,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
         [contentTextView setAutomaticTextReplacementEnabled: NO];
 
         [scrollView setDocumentView:contentTextView];
+        [self applyContentAppearance:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applyContentAppearance:) name:SourceColorChangedNotification object:nil];
+        [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:TSMacroContentAppearanceContext];
 		// [contentTextView release];
 		// text fields
         [nameField setDelegate: [TSEncodingSupport sharedInstance]];

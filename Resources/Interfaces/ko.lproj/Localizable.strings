@@ -231,7 +231,7 @@
 "Use LaTeX-aware spell checking (recommended)" = "LaTeX 구조를 고려한 맞춤법 검사 사용(권장)";
 "Use legacy spell checking" = "기존 맞춤법 검사 사용";
 "LaTeX Spell Checking" = "LaTeX 맞춤법 검사";
-"Edit Key Bindings…" = "키 바인딩 파일 편집…";
+"Edit Key Bindings…" = "키 바인딩 에디터…";
 "Key Bindings" = "키 바인딩";
 "Edit Command Completion…" = "명령어 완성 파일 편집…";
 "Command Completion" = "명령어 완성";

@@ -282,7 +282,7 @@
 "catalog.console.1.1.title" = "Console Resize";
 "group.bindings.title" = "Key Bindings";
 "catalog.keyboard.0.0.title" = "Use key bindings (default for new documents)";
-"catalog.keyboard.0.1.title" = "Edit Key Bindings…";
+"catalog.keyboard.0.1.title" = "Key Bindings Editor…";
 "group.completion.title" = "Command Completion";
 "catalog.keyboard.1.0.title" = "Completion trigger";
 "catalog.keyboard.1.1.title" = "BibDesk Completions";
