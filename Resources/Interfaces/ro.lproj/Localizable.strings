@@ -322,3 +322,15 @@
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = textul selectat, #INS# = punctul de inserare după macro, #PASTE# = textul din clipboard. Macrourile AppleScript pot folosi și #FILEPATH# și alți marcatori (vezi Ajutor).";
 /* Key binding editor placeholder guide */
 "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caracterele selectate, #INS# = punctul de inserare, #PASTE# = textul din clipboard";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "Inserează marcaj cu notă";
+"How to Use Marks…" = "Cum se folosesc marcajele…";
+"Inserts a mark (•) to come back to later." = "Inserează un marcaj (•) la care să reveniți mai târziu.";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Inserează un marcaj cu notă (•‹notă›). Textul selectat devine nota.";
+"Selects the next mark, with its note; typing replaces it." = "Selectează marcajul următor cu nota lui; tastarea îl înlocuiește.";
+"Selects the previous mark, with its note; typing replaces it." = "Selectează marcajul anterior cu nota lui; tastarea îl înlocuiește.";
+"Deletes the next • and selects its note, if it has one." = "Șterge următorul • și îi selectează nota, dacă are.";
+"Deletes the previous • and selects its note, if it has one." = "Șterge • anterior și îi selectează nota, dacă are.";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = marcaj, •‹notă› = marcaj cu notă; %@ › %@ trece de la unul la altul.";
+"Marks" = "Marks";

@@ -322,3 +322,15 @@
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = texto selecionado, #INS# = ponto de inserção após a macro, #PASTE# = texto da área de transferência. Macros AppleScript também podem usar #FILEPATH# e outros marcadores (veja a Ajuda).";
 /* Key binding editor placeholder guide */
 "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caracteres selecionados, #INS# = ponto de inserção, #PASTE# = texto da área de transferência";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "Inserir marca com nota";
+"How to Use Marks…" = "Como usar as marcas…";
+"Inserts a mark (•) to come back to later." = "Insere uma marca (•) para voltar a ela depois.";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Insere uma marca com nota (•‹nota›). O texto selecionado vira a nota.";
+"Selects the next mark, with its note; typing replaces it." = "Seleciona a próxima marca com sua nota; digitar a substitui.";
+"Selects the previous mark, with its note; typing replaces it." = "Seleciona a marca anterior com sua nota; digitar a substitui.";
+"Deletes the next • and selects its note, if it has one." = "Apaga o próximo • e seleciona sua nota, se houver.";
+"Deletes the previous • and selects its note, if it has one." = "Apaga o • anterior e seleciona sua nota, se houver.";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = marca, •‹nota› = marca com nota; use %@ › %@ para ir de uma a outra.";
+"Marks" = "Marcas";

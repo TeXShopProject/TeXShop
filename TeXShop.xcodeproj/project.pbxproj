@@ -142,6 +142,7 @@
 		407881840519249A006979EA /* TSWindowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E5E43A003E251B7F000001 /* TSWindowManager.m */; settings = {ATTRIBUTES = (); COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881860519249A006979EA /* TSLaTeXPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8EA8F01FF59A101DF2474 /* TSLaTeXPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881880519249A006979EA /* TSToolbarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5ECC3210214678B01DF2474 /* TSToolbarController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		BFF34630FF2F234805A3056C /* TSMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 068A0284B4D8986B4C59306F /* TSMarkMenu.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		407881890519249A006979EA /* TSTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = F510E36E03916F340100009E /* TSTextView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818A0519249A006979EA /* TSEncodingSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AA2B8203C79AF800000009 /* TSEncodingSupport.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818B0519249A006979EA /* TSMacroEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62303C7FAE800000009 /* TSMacroEditor.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -839,6 +840,8 @@
 		66A63DD00114947700000001 /* ps2pdfwrap */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.csh; path = ps2pdfwrap; sourceTree = "<group>"; };
 		F506285400F4F04801000001 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		F50B193D0152A11D01000001 /* contextwrap */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.csh; path = contextwrap; sourceTree = "<group>"; };
+		3DBCF2332BEF8B0487C42BD9 /* TSMarkMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMarkMenu.h; sourceTree = "<group>"; };
+		068A0284B4D8986B4C59306F /* TSMarkMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMarkMenu.m; sourceTree = "<group>"; };
 		F510E36D03916F340100009E /* TSTextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TSTextView.h; sourceTree = "<group>"; };
 		F510E36E03916F340100009E /* TSTextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TSTextView.m; sourceTree = "<group>"; };
 		F5332B17016CD72701DF2474 /* metapostwrap */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.csh; path = metapostwrap; sourceTree = "<group>"; };
@@ -1160,6 +1163,8 @@
 				DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */,
 				3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */,
 				02810215E6051B57C001C799 /* TSSpellSupport.m */,
+				3DBCF2332BEF8B0487C42BD9 /* TSMarkMenu.h */,
+				068A0284B4D8986B4C59306F /* TSMarkMenu.m */,
 				F510E36D03916F340100009E /* TSTextView.h */,
 				F510E36E03916F340100009E /* TSTextView.m */,
 			);
@@ -1912,6 +1917,7 @@
 				407881840519249A006979EA /* TSWindowManager.m in Sources */,
 				407881860519249A006979EA /* TSLaTeXPanelController.m in Sources */,
 				407881880519249A006979EA /* TSToolbarController.m in Sources */,
+				BFF34630FF2F234805A3056C /* TSMarkMenu.m in Sources */,
 				407881890519249A006979EA /* TSTextView.m in Sources */,
 				4078818A0519249A006979EA /* TSEncodingSupport.m in Sources */,
 				40356AD11F8D157F0093399B /* synctex_parser_old.c in Sources */,

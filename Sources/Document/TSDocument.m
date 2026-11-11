@@ -10949,18 +10949,20 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
     //NSLog(@"Place • hit");
 }
 
-- (void) placeComment: (id)sender // by (HS) to be a simple insertion (replacing the selection)
+// Edit › Mark › Insert Mark with Note: •‹› with the insertion point inside, or the
+// selected text as the note, •‹selection›, with the insertion point after it. Undoable.
+- (void) placeComment: (id)sender
 {
-    NSRange		myRange;
-
-  //   text = [textView string];
-    myRange = [textView selectedRange];
-    [textView replaceCharactersInRange:myRange withString:startcommentString];//" •\n" puts • on previous line
-    myRange.location += [startcommentString length];//= end+2;//start puts • on previous line
-    myRange.length = 0;
-    [textView replaceCharactersInRange:myRange withString:endcommentString];
-    [textView setSelectedRange: myRange];
-    //NSLog(@"Place • hit");
+    NSRange selection = [textView selectedRange];
+    NSString *note = [[textView string] substringWithRange:selection];
+    NSString *mark = [NSString stringWithFormat:@"%@%@%@", startcommentString, note, endcommentString];
+    if (![textView shouldChangeTextInRange:selection replacementString:mark])
+        return;
+    [textView replaceCharactersInRange:selection withString:mark];
+    [textView didChangeText];
+    [[textView undoManager] setActionName:NSLocalizedString(@"Insert Mark with Note", @"Edit › Mark")];
+    NSUInteger caret = note.length ? selection.location + mark.length : selection.location + startcommentString.length;
+    [textView setSelectedRange:NSMakeRange(caret, 0)];
 }
 
 // end BULLET (H. Neary) (modified by (HS))

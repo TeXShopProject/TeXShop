@@ -296,6 +296,51 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Señales" id="835">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Señales" id="836">
+                                    <items>
+                                        <menuItem title="Insertar señal" keyEquivalent="8" id="841" identifier="TSShortcut.placeBullet:.0">
+                                            <connections>
+                                                <action selector="placeBullet:" target="-1" id="848"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Insertar señal con nota" keyEquivalent="8" id="842" identifier="TSShortcut.placeComment:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="placeComment:" target="-1" id="849"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="Señal siguiente" keyEquivalent="f" id="837" identifier="TSShortcut.doNextBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBullet:" target="-1" id="844"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Señal siguiente (Del)" alternate="YES" keyEquivalent="f" id="839" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBulletAndDelete:" target="-1" id="845"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Señal anterior" keyEquivalent="g" id="838" identifier="TSShortcut.doPreviousBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBullet:" target="-1" id="846"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Señal anterior (Del)" alternate="YES" keyEquivalent="g" id="840" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBulletAndDelete:" target="-1" id="847"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Ortografía y gramática" id="FUN-xw-kAj">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Ortografía y gramática" id="3HX-W4-u4G">
@@ -649,48 +694,6 @@
                                             <connections>
                                                 <action selector="registerForCommandCompletion:" target="-1" id="545"/>
                                             </connections>
-                                        </menuItem>
-                                        <menuItem title="Señales" id="835">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Señales" id="836">
-                                                <items>
-                                                    <menuItem title="Señal siguiente" keyEquivalent="f" id="837" identifier="TSShortcut.doNextBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBullet:" target="-1" id="844"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Señal siguiente (Del)" alternate="YES" keyEquivalent="f" id="839" identifier="TSShortcut.doNextBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBulletAndDelete:" target="-1" id="845"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Señal anterior" keyEquivalent="g" id="838" identifier="TSShortcut.doPreviousBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBullet:" target="-1" id="846"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Señal anterior (Del)" alternate="YES" keyEquivalent="g" id="840" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBulletAndDelete:" target="-1" id="847"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Insertar señal" keyEquivalent="8" id="841" identifier="TSShortcut.placeBullet:.0">
-                                                        <connections>
-                                                            <action selector="placeBullet:" target="-1" id="848"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Insertar comentario" alternate="YES" keyEquivalent="8" id="842" identifier="TSShortcut.placeComment:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="placeComment:" target="-1" id="849"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
                                         </menuItem>
                                     </items>
                                 </menu>

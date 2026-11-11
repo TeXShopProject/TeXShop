@@ -322,3 +322,15 @@
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = texte sélectionné, #INS# = point d’insertion après la macro, #PASTE# = texte du presse-papiers. Les macros AppleScript peuvent aussi utiliser #FILEPATH# et d’autres marqueurs (voir l’Aide).";
 /* Key binding editor placeholder guide */
 "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caractères sélectionnés, #INS# = point d’insertion, #PASTE# = texte du presse-papiers";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "Insérer un repère avec note";
+"How to Use Marks…" = "Utiliser les repères…";
+"Inserts a mark (•) to come back to later." = "Insère un repère (•) pour y revenir plus tard.";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Insère un repère avec note (•‹note›). Le texte sélectionné devient la note.";
+"Selects the next mark, with its note; typing replaces it." = "Sélectionne le repère suivant avec sa note ; la saisie le remplace.";
+"Selects the previous mark, with its note; typing replaces it." = "Sélectionne le repère précédent avec sa note ; la saisie le remplace.";
+"Deletes the next • and selects its note, if it has one." = "Supprime le • suivant et sélectionne sa note, s’il en a une.";
+"Deletes the previous • and selects its note, if it has one." = "Supprime le • précédent et sélectionne sa note, s’il en a une.";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = repère, •‹note› = repère avec note ; %@ › %@ permet de passer de l’un à l’autre.";
+"Marks" = "Repères";

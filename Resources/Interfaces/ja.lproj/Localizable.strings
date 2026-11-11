@@ -329,3 +329,15 @@
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 選択中の文字列、#INS# = 挿入後のカーソル位置、#PASTE# = クリップボードの文字列。AppleScript のマクロでは #FILEPATH# なども使えます（ヘルプ参照）。";
 /* Key binding editor placeholder guide */
 "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 選択中の文字列、#INS# = 出力後のカーソル位置、#PASTE# = クリップボードの文字列";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "メモ付きマークを挿入";
+"How to Use Marks…" = "マークの使い方…";
+"Inserts a mark (•) to come back to later." = "あとで戻ってくる場所に、マーク（•）を入れます。";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "メモ付きのマーク（•‹メモ›）を入れます。選んだ文字がメモになります。";
+"Selects the next mark, with its note; typing replaces it." = "次のマークをメモごと選びます。そのまま入力すると置き換わります。";
+"Selects the previous mark, with its note; typing replaces it." = "前のマークをメモごと選びます。そのまま入力すると置き換わります。";
+"Deletes the next • and selects its note, if it has one." = "次の • を消し、メモがあればそれを選びます。";
+"Deletes the previous • and selects its note, if it has one." = "前の • を消し、メモがあればそれを選びます。";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = マーク、•‹メモ› = メモ付きマーク。「%@」→「%@」で移動できます。";
+"Marks" = "マーク";

@@ -10,6 +10,7 @@
 #import <objc/message.h>
 @interface NSButtonCell (Private) - (NSInteger)_buttonType; @end
 #import "TSDialogButtonLayout.h"
+#import "TSMarkMenu.h"
 #import "TSAutoCompletionListEditor.h"
 // Older nibs set outlets directly on instance variables of these names.
 @interface SpacingOwner : NSObject { @public id linePanel, projectPanel, extensionPanel; }

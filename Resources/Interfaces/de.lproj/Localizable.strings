@@ -322,3 +322,15 @@
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = ausgewählter Text, #INS# = Einfügemarke nach dem Makro, #PASTE# = Text in der Zwischenablage. AppleScript-Makros können auch #FILEPATH# und weitere Platzhalter verwenden (siehe Hilfe).";
 /* Key binding editor placeholder guide */
 "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = ausgewählte Zeichen, #INS# = Einfügemarke, #PASTE# = Text in der Zwischenablage";
+
+/* Edit › Mark */
+"Insert Mark with Note" = "Marke mit Notiz einfügen";
+"How to Use Marks…" = "Marken verwenden…";
+"Inserts a mark (•) to come back to later." = "Fügt eine Marke (•) ein, zu der Sie später zurückkehren.";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Fügt eine Marke mit Notiz (•‹Notiz›) ein. Ausgewählter Text wird zur Notiz.";
+"Selects the next mark, with its note; typing replaces it." = "Wählt die nächste Marke samt Notiz aus; Tippen ersetzt sie.";
+"Selects the previous mark, with its note; typing replaces it." = "Wählt die vorhergehende Marke samt Notiz aus; Tippen ersetzt sie.";
+"Deletes the next • and selects its note, if it has one." = "Löscht das nächste • und wählt seine Notiz aus, falls vorhanden.";
+"Deletes the previous • and selects its note, if it has one." = "Löscht das vorhergehende • und wählt seine Notiz aus, falls vorhanden.";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = Marke, •‹Notiz› = Marke mit Notiz; mit %@ › %@ springen Sie zwischen ihnen.";
+"Marks" = "Marken";

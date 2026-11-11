@@ -4,6 +4,7 @@
 #import "globals.h"
 #import "TSAutoCompletionListEditor.h"
 #import "TSDialogButtonLayout.h"
+#import "TSMarkMenu.h"
 #import "GlobalData.h"
 
 #define AutoCompletionRowsType @"TSAutoCompletionRowsType"
@@ -27,7 +28,7 @@
         } else if ([view isKindOfClass:NSTextField.class] && [((NSTextField *)view).stringValue containsString:@"#SEL#"]) guide = (NSTextField *)view;
     }
     if (guide) {
-        guide.stringValue = NSLocalizedString(@"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard", @"Key binding editor placeholder guide");
+        guide.stringValue = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard", @"Key binding editor placeholder guide"), [TSMarkMenu markGuide]];
         guide.cell.wraps = YES; guide.cell.lineBreakMode = NSLineBreakByWordWrapping;
         NSRect frame = guide.frame;
         CGFloat needed = ceil([guide.cell cellSizeForBounds:NSMakeRect(0, 0, NSWidth(frame), CGFLOAT_MAX)].height);

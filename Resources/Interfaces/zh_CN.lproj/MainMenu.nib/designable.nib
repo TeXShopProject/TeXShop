@@ -296,6 +296,51 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="标记" id="874">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="标记" id="875">
+                                    <items>
+                                        <menuItem title="插入标记" keyEquivalent="8" id="877" identifier="TSShortcut.placeBullet:.0">
+                                            <connections>
+                                                <action selector="placeBullet:" target="-1" id="886"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="插入带注释的标记" keyEquivalent="8" id="876" identifier="TSShortcut.placeComment:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="placeComment:" target="-1" id="887"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                        </menuItem>
+                                        <menuItem title="下一个标记" keyEquivalent="f" id="881" identifier="TSShortcut.doNextBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBullet:" target="-1" id="882"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="删除下一个标记" alternate="YES" keyEquivalent="f" id="879" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doNextBulletAndDelete:" target="-1" id="883"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="上一个标记" keyEquivalent="g" id="880" identifier="TSShortcut.doPreviousBullet:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBullet:" target="-1" id="884"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="删除上一个标记" alternate="YES" keyEquivalent="g" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="doPreviousBulletAndDelete:" target="-1" id="885"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="拼写和语法" id="REi-Nl-cx8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="拼写和语法" id="595-fB-WGc">
@@ -649,48 +694,6 @@
                                             <connections>
                                                 <action selector="registerForCommandCompletion:" target="-1" id="545"/>
                                             </connections>
-                                        </menuItem>
-                                        <menuItem title="标记" id="874">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="标记" id="875">
-                                                <items>
-                                                    <menuItem title="下一个标记" keyEquivalent="f" id="881" identifier="TSShortcut.doNextBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBullet:" target="-1" id="882"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="删除下一个标记" alternate="YES" keyEquivalent="f" id="879" identifier="TSShortcut.doNextBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doNextBulletAndDelete:" target="-1" id="883"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="上一个标记" keyEquivalent="g" id="880" identifier="TSShortcut.doPreviousBullet:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBullet:" target="-1" id="884"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="删除上一个标记" alternate="YES" keyEquivalent="g" id="878" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="doPreviousBulletAndDelete:" target="-1" id="885"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="插入标记" keyEquivalent="8" id="877" identifier="TSShortcut.placeBullet:.0">
-                                                        <connections>
-                                                            <action selector="placeBullet:" target="-1" id="886"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="插入注释" alternate="YES" keyEquivalent="8" id="876" identifier="TSShortcut.placeComment:.0">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="placeComment:" target="-1" id="887"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
                                         </menuItem>
                                     </items>
                                 </menu>

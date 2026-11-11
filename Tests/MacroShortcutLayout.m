@@ -1,6 +1,7 @@
 // Instantiate existing localized nibs offscreen and run the production status-band layout.
 #import "TSMacroEditor.h"
 #import "TSDialogButtonLayout.h"
+#import "TSMarkMenu.h"
 #import <objc/runtime.h>
 #import "MemoryDefaults.h"
 static TSMemoryDefaults *memoryDefaults;

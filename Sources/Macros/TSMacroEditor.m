@@ -34,6 +34,7 @@
 #import "globals.h"
 #import "TSDialogButtonLayout.h"
 #import "TSColorSupport.h"
+#import "TSMarkMenu.h"
 
 static void *TSMacroContentAppearanceContext = &TSMacroContentAppearanceContext;
 
@@ -379,7 +380,7 @@ static TSFilterMode savedFilter = kNoFilterMode;
     if (self.placeholderNote) return;
     NSView *host = [window contentView];
     NSScrollView *contents = [contentTextView enclosingScrollView];
-    NSTextField *note = [NSTextField wrappingLabelWithString:NSLocalizedString(@"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help).", @"Macro editor placeholder guide")];
+    NSTextField *note = [NSTextField wrappingLabelWithString:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help).", @"Macro editor placeholder guide"), [TSMarkMenu markGuide]]];
     note.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
     note.textColor = NSColor.secondaryLabelColor;
     note.identifier = @"macro.placeholders";
@@ -389,6 +390,15 @@ static TSFilterMode savedFilter = kNoFilterMode;
     CGFloat narrowest = MIN(NSWidth(frame), 300);
     CGFloat height = ceil([note.cell cellSizeForBounds:NSMakeRect(0, 0, narrowest, CGFLOAT_MAX)].height);
     const CGFloat gap = 6;
+    // When the contents cannot give up the room and keep 64pt, grow the window
+    // downwards first, keeping its top edge, so the contents grow with it.
+    CGFloat deficit = height + gap + 64 - NSHeight(frame);
+    if (deficit > 0) {
+        NSRect grown = [window frame];
+        grown.origin.y -= deficit; grown.size.height += deficit;
+        [window setFrame:grown display:NO];
+        frame = contents.frame;
+    }
     note.frame = NSMakeRect(NSMinX(frame), NSMinY(frame), NSWidth(frame), height);
     frame.origin.y += height + gap; frame.size.height -= height + gap;
     contents.frame = frame;
@@ -397,7 +407,8 @@ static TSFilterMode savedFilter = kNoFilterMode;
     self.placeholderNote = note;
     // The contents keep the room they had at the smallest window size.
     NSSize smallest = [window minSize];
-    smallest.height += height + gap;
+    // The contents keep at least 64pt at the smallest window size.
+    smallest.height = MAX(smallest.height + height + gap, NSHeight([window frame]) - NSHeight(frame) + 64);
     smallest.width = MAX(smallest.width, narrowest + NSWidth([window frame]) - NSWidth(frame));
     [window setMinSize:smallest];
     NSRect current = [window frame];
