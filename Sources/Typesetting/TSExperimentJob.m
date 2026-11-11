@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <sys/clonefile.h>
 #include <sys/stat.h>
+#include <sys/resource.h>
+#include <fcntl.h>
 
 @interface TSExperimentJob ()
 @property (nonatomic, strong) NSTask *task;
@@ -159,6 +161,11 @@ static BOOL TSExperimentLinkLeadsDown(NSString *target)
     // not. The folders made here, listed relative to the Experiment folder, belong to their owner.
     NSMutableSet<NSString *> *folders = [NSMutableSet setWithObject:@""];
     NSUInteger count = 0;
+    // Nothing is downloaded for the clones, also when a file becomes online-only meanwhile: opening
+    // such a file then fails at once.
+    int materialize = getiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD);
+    BOOL restore = materialize >= 0 && materialize != IOPOL_MATERIALIZE_DATALESS_FILES_OFF &&
+        setiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD, IOPOL_MATERIALIZE_DATALESS_FILES_OFF) == 0;
     for (NSString *item in items) {
         NSString *parent = item.stringByDeletingLastPathComponent;
         if (![folders containsObject:parent]) continue; // inside a folder that is left out
@@ -182,10 +189,19 @@ static BOOL TSExperimentLinkLeadsDown(NSString *target)
             // A file whose contents are not on this Mac, such as an online-only Dropbox file, is
             // not downloaded for the clone; TeX finds it through TEXINPUTS when it reads it.
             if (info.st_flags & SF_DATALESS) continue;
-            if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) == 0)
+            // The clone is made from the file as opened, without following a link and without
+            // waiting on a pipe, so that an item changed into a link or a folder since it was looked
+            // at is not cloned: such a clone could lead out of the Experiment folder.
+            int file = open(from.fileSystemRepresentation, O_RDONLY | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC);
+            if (file < 0) continue;
+            struct stat opened;
+            if (fstat(file, &opened) == 0 && S_ISREG(opened.st_mode) && !(opened.st_flags & SF_DATALESS) &&
+                fclonefileat(file, AT_FDCWD, to.fileSystemRepresentation, CLONE_NOOWNERCOPY) == 0)
                 count++;
+            close(file);
         }
     }
+    if (restore) setiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD, materialize);
     return count;
 }
 
