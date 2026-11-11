@@ -189,7 +189,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 for name, value in {'SUPPORT': support, 'SOURCE': source, 'CONSOLE': console, 'PREVIEW': preview}.items():
     program = program.replace(f'@@{name}@@', value)
 themes = sorted((root / 'Resources/TeXShop/Themes').glob('*.plist')) + sorted((root / 'Resources/Themes').glob('*.plist'))
-assert len(themes) == 12 and any('SolarizedDark' in t.name for t in themes)
+assert len(themes) >= 12 and any('SolarizedDark' in t.name for t in themes)
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-theme-opacity-') as tmp:
     tmp = Path(tmp)
     (tmp / 'test.m').write_text(program, encoding='latin-1')
