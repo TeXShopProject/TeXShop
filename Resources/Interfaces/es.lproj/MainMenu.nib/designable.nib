@@ -109,6 +109,12 @@
                                     <action selector="openDocument:" target="-1" id="105"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Abrir archivo de estilo..." id="911" identifier="TSShortcut.displayStyleFile:.0">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="displayStyleFile:" target="675" id="932"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Documentos recientes" id="146">
                                 <menu key="submenu" title="Documentos recientes" systemMenu="recentDocuments" id="147">
                                     <items>
@@ -1379,12 +1385,6 @@
                                     <action selector="displayHelpForPackage:" target="675" id="822"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Abrir archivo de estilo..." id="911" identifier="TSShortcut.displayStyleFile:.0">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="displayStyleFile:" target="675" id="932"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="851"/>
                             <menuItem title="Primeros pasos con TeXShop" id="667" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
@@ -1717,7 +1717,7 @@ Gw
                 </subviews>
             </view>
         </window>
-        <window title="Kpsetool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="922" userLabel="StyleHelp" customClass="NSPanel">
+        <window title="Abrir archivo de estilo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="922" userLabel="StyleHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="633" y="421" width="323" height="139"/>

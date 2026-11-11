@@ -274,7 +274,7 @@
 "catalog.typesetting.7.1.note" = "Ghostscript で PostScript を PDF に変換するときにこのオプションを付け、PSTricks などの透明効果を残します。Ghostscript 9.51 以降が必要です。";
 "group.typesetting.8.title" = "検索用コマンドと BibTeX";
 "catalog.typesetting.8.0.title" = "kpsewhich";
-"catalog.typesetting.8.0.note" = "「ヘルプ」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex";
+"catalog.typesetting.8.0.note" = "「ファイル」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "BibTeX エンジン";
 "catalog.typesetting.8.1.note" = "デフォルト: bibtex";
 "group.typesetting.9.title" = "pTeX サポート（日本用）";

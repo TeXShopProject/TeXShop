@@ -17,6 +17,9 @@ add(TSSettingsCategoryGeneral, @"row.catalog.general.2.2", @"SettingsCategories"
 add(TSSettingsCategoryGeneral, @"row.catalog.general.2.2", @"SettingsCategories", @"catalog.general.2.2.button", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.2.3", @"SettingsCategories", @"catalog.general.2.3.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.2.3", @"SettingsCategories", @"catalog.general.2.3.button", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryGeneral, @"heading.group.general.3", @"SettingsCategories", @"group.general.3.title", TSSettingsSearchWeightHeading);
+add(TSSettingsCategoryGeneral, @"row.catalog.general.3.0", @"SettingsCategories", @"catalog.general.3.0.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryGeneral, @"row.catalog.general.3.1", @"SettingsCategories", @"catalog.general.3.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"heading.group.general.6", @"SettingsCategories", @"group.general.6.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsCategories", @"group.general.6.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Classic Circle", TSSettingsSearchWeightChoice);
@@ -24,9 +27,6 @@ add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Classic Tr
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Current (Default)", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Original", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"DockIconChoices", @"SettingsDock", @"Retina Triangle", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryGeneral, @"heading.group.general.3", @"SettingsCategories", @"group.general.3.title", TSSettingsSearchWeightHeading);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.3.0", @"SettingsCategories", @"catalog.general.3.0.title", TSSettingsSearchWeightLabel);
-add(TSSettingsCategoryGeneral, @"row.catalog.general.3.1", @"SettingsCategories", @"catalog.general.3.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"heading.group.general.4", @"SettingsCategories", @"group.general.4.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsCategories", @"catalog.general.4.0.title", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.4.1", @"SettingsCategories", @"catalog.general.4.1.title", TSSettingsSearchWeightLabel);

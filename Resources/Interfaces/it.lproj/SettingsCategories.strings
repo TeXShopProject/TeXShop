@@ -274,7 +274,7 @@
 "catalog.typesetting.7.1.note" = "Aggiunge questa opzione quando Ghostscript converte PostScript in PDF, per mantenere la trasparenza, ad esempio quella di PSTricks. Richiede Ghostscript 9.51 o successivo.";
 "group.typesetting.8.title" = "Comandi di ricerca e BibTeX";
 "catalog.typesetting.8.0.title" = "kpsewhich";
-"catalog.typesetting.8.0.note" = "Il comando con cui «Apri file di stile» nel menu Aiuto cerca il file. Predefinito: kpsewhich -progname=latex -format=tex";
+"catalog.typesetting.8.0.note" = "Il comando con cui «Apri file di stile» nel menu Archivio cerca il file. Predefinito: kpsewhich -progname=latex -format=tex";
 "catalog.typesetting.8.1.title" = "Motore BibTeX";
 "catalog.typesetting.8.1.note" = "Predefinito: bibtex";
 "group.typesetting.9.title" = "Supporto pTeX (solo giapponese)";
