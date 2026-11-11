@@ -1,4 +1,5 @@
 #import "TSExperimentJob.h"
+#import "TSConsoleOutput.h"
 #include <signal.h>
 #include <unistd.h>
 #include <sys/clonefile.h>
@@ -126,8 +127,7 @@
 - (BOOL)sendData:(NSData *)data error:(NSError **)error
 {
     if (!self.active || !self.task.running || !data) return NO;
-    @try { return [self.input.fileHandleForWriting writeData:data error:error]; }
-    @catch (NSException *exception) { return NO; }
+    return TSWriteConsoleInput(self.input.fileHandleForWriting, data, error);
 }
 
 // A folder with more items than this, counted through its subfolders, is not cloned, so that an

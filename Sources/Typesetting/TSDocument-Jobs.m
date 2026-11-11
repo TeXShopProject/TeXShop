@@ -2121,29 +2121,42 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 
 - (void) doTexCommand: sender
 {
+	if ([self sendConsoleLine: [texCommand stringValue]])
+		[texCommand setStringValue: @""];
+}
+
+// Sends a line to the running TeX and shows it in the console. Returns NO when
+// nothing is running that reads input, or when the line cannot be written.
+- (BOOL) sendConsoleLine: (NSString *)line
+{
 	NSData *myData;
 	NSString *command;
-    
- 
-	if ((typesetStart) && (self.inputPipe)) {
-		command = [[texCommand stringValue] stringByAppendingString:@"\n"];
-		command = [self filterBackslashes:command];
+	NSError *error = nil;
+	BOOL sent;
 
-		// TeX reads what is typed in the encoding of the document (UTF-8 for a UTF-16 document),
-		// with backslashes and tildes written as 0x5C and 0x7E, as when the source is saved.
-		// In yen mode a yen sign stands for the backslash in every encoding, UTF-8 included.
-		myData = [[TSEncodingSupport sharedInstance] dataForText: (g_shouldFilter == kMacJapaneseFilterMode ? filterYenToBackslash(command) : command)
-			encoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) byteOrderMark: TSNoByteOrderMark];
-		[self.writeHandle writeData: myData];
-		// added by mitsu --(L) reflect tex input and clear tex input field in console window
-		BOOL redOutput = [SUD boolForKey: RedConsoleAfterErrorKey];
-		TSAppendConsoleOutput(outputText, command, redOutput ? [NSColor redColor] : nil);
-		if (redOutput)
-			consoleCleanStart = NO;
-		[texCommand setStringValue: @""];
-		// end addition
+	if (! typesetStart || ! self.inputPipe)
+		return NO;
+	command = [line stringByAppendingString:@"\n"];
+	command = [self filterBackslashes:command];
 
+	// TeX reads what is typed in the encoding of the document (UTF-8 for a UTF-16 document),
+	// with backslashes and tildes written as 0x5C and 0x7E, as when the source is saved.
+	// In yen mode a yen sign stands for the backslash in every encoding, UTF-8 included.
+	myData = [[TSEncodingSupport sharedInstance] dataForText: (g_shouldFilter == kMacJapaneseFilterMode ? filterYenToBackslash(command) : command)
+		encoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) byteOrderMark: TSNoByteOrderMark];
+	// TeX may have just quit, closing its input.
+	sent = TSWriteConsoleInput(self.writeHandle, myData, &error);
+	if (! sent) {
+		NSBeep();
+		return NO;
 	}
+	// added by mitsu --(L) reflect tex input and clear tex input field in console window
+	BOOL redOutput = [SUD boolForKey: RedConsoleAfterErrorKey];
+	TSAppendConsoleOutput(outputText, command, redOutput ? [NSColor redColor] : nil);
+	if (redOutput)
+		consoleCleanStart = NO;
+	// end addition
+	return YES;
 }
 
 - (void)abort:(id)sender

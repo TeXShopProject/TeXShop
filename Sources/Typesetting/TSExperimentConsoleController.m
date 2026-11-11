@@ -43,6 +43,7 @@
 @property (nonatomic, strong) NSTextView *outputText;
 @property (nonatomic, strong) NSTextField *commandField;
 @property (nonatomic, strong) NSButton *stopButton;
+@property (nonatomic, strong) TSConsoleOutputReturn *outputReturn;
 @property (nonatomic, strong) NSURL *directory;
 @property (nonatomic, strong) NSData *carry;
 @property (nonatomic) NSStringEncoding encoding;
@@ -126,6 +127,11 @@
     TSConfigureConsoleInput(field);
     self.commandField = field;
     field.enabled = NO;
+    __weak TSExperimentConsoleController *weakSelf = self;
+    self.outputReturn = [[TSConsoleOutputReturn alloc] initWithInputField:field
+        canSend:^BOOL{ return weakSelf.job.active; }
+        sendEmptyLine:^BOOL{ return [weakSelf sendLine:@""]; }];
+    text.delegate = self.outputReturn;
     NSButton *stop = [NSButton buttonWithTitle:NSLocalizedString(@"Stop Experiment", @"Stop Experiment job")
                                       target:self action:@selector(abort:)];
     stop.bezelStyle = NSBezelStyleShadowlessSquare;
@@ -238,18 +244,25 @@
 
 - (void)sendCommand:(id)sender
 {
-    NSString *command = [self.commandField.stringValue stringByAppendingString:@"\n"];
+    if ([self sendLine:self.commandField.stringValue])
+        self.commandField.stringValue = @"";
+}
+
+// Sends a line to the running job and shows it in the output.
+- (BOOL)sendLine:(NSString *)line
+{
+    NSString *command = [line stringByAppendingString:@"\n"];
     NSString *displayCommand = g_shouldFilter == kMacJapaneseFilterMode ? filterBackslashToYen(command) : command;
     if (g_shouldFilter == kMacJapaneseFilterMode) command = filterYenToBackslash(command);
     NSData *data = [[TSEncodingSupport sharedInstance] dataForText:command encoding:self.encoding byteOrderMark:TSNoByteOrderMark];
     NSError *error = nil;
     if ([self.job sendData:data error:&error]) {
         [self appendText:displayCommand];
-        self.commandField.stringValue = @"";
-    } else {
-        NSBeep();
-        if (error) [self appendText:[error.localizedDescription stringByAppendingString:@"\n"]];
+        return YES;
     }
+    NSBeep();
+    if (error) [self appendText:[error.localizedDescription stringByAppendingString:@"\n"]];
+    return NO;
 }
 
 - (void)toggleFromWindow:(NSWindow *)origin

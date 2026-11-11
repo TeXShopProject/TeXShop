@@ -29,7 +29,7 @@ doc = (root/'Sources/Document/TSDocument.m').read_text(encoding='latin1')
 output = cut(doc, '// Show a piece of TeX output in the console and look in it for errors.', '// Code by Nicolas Ojeda Bar')
 jobs = (root/'Sources/Typesetting/TSDocument-Jobs.m').read_text(encoding='latin1')
 command = jobs[jobs.index('- (void) doTexCommand: sender'):]
-command = command[:command.index('\n}\n') + 3]
+command = command[:command.index('\n}\n', command.index('- (BOOL) sendConsoleLine:')) + 3]
 filters = enc[enc.index('// replace backslashes by yens'):].rstrip() + '\n'
 filter_method = cut(doc, '- (NSString *)filterBackslashes:', '// The code below to handle line break algorithms')
 sync = (root/'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -56,7 +56,7 @@ elif mutation == 'source':
 elif mutation == 'cr':
     helpers = mutate(helpers, "if (b[i] == '\\r') {", "if (NO) {")
 elif mutation == 'input':
-    command = mutate(command, '[[TSEncodingSupport sharedInstance] dataForText: (g_shouldFilter == kMacJapaneseFilterMode ? filterYenToBackslash(command) : command)\n\t\t\tencoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) byteOrderMark: TSNoByteOrderMark]',
+    command = mutate(command, '[[TSEncodingSupport sharedInstance] dataForText: (g_shouldFilter == kMacJapaneseFilterMode ? filterYenToBackslash(command) : command)\n\t\tencoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) byteOrderMark: TSNoByteOrderMark]',
                      '[filterYenToBackslash(command) dataUsingEncoding: (_encoding == NSUnicodeStringEncoding ? NSUTF8StringEncoding : _encoding) allowLossyConversion:YES]')
 elif mutation == 'order':
     helpers = mutate(helpers, '\tif ((text = [[NSString alloc] initWithBytes:bytes length:length encoding:NSUTF8StringEncoding]))\n\t\treturn text;\n',
@@ -105,6 +105,11 @@ FILTERS
 @implementation FakeHandle
 - (void)waitForDataInBackgroundAndNotify { self.arms++; }
 - (void)writeData:(NSData *)data { if (! self.written) self.written = [NSMutableData data]; [self.written appendData:data]; }
+- (BOOL)writeData:(NSData *)data error:(NSError **)error { [self writeData:data]; return YES; }
+@end
+// The input writer of TSConsoleOutput.h, reduced to the fake handle.
+static BOOL TSWriteConsoleInput(FakeHandle *handle, NSData *data, NSError **error) { return [handle writeData:data error:error]; }
+@interface FakeHandle (Unused)
 @end
 @interface FakeText : NSObject
 @property NSMutableString *text;
