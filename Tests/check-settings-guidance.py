@@ -223,14 +223,18 @@ print('PASS: six release copies and Korean category terminology')
 
 for filename in ['Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm','DocumentSources/ChangesDocument/Changes.tex']:
     text=(ROOT/filename).read_text()
-    assert 'slider or a numeric field' in text,('Opacity numeric field in release notes',filename)
+    assert 'slider, a numeric field or the arrow buttons beside the field' in text,('Opacity numeric field and arrow buttons in release notes',filename)
 assert 'slider and a numeric field' in manual,'Opacity numeric field in manual'
 for lang,term in {'en':'numeric field','ja':'数値欄','de':'Zahlenfeld','es':'campo numérico','ko':'숫자 입력 필드'}.items():
     page=ROOT/f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
     assert term in read_help(page,lang),('Opacity numeric field in help',lang)
+assert 'arrow buttons beside the field to raise or lower it by one percent' in manual,'Opacity arrow buttons in manual'
+for lang,term in {'en':'arrow buttons','ja':'矢印ボタン','de':'Pfeiltasten','es':'botones de flecha','ko':'화살표 버튼'}.items():
+    page=ROOT/f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/basic_preferences.htm'
+    assert term in read_help(page,lang),('Opacity arrow buttons in help',lang)
 
 for filename in ["Documentation/Releases/5.60-ja.md","website/release-notes-ja.html"]:
-    assert "数値欄" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
+    assert "数値欄、その横の矢印ボタン" in (ROOT/filename).read_text(),("Opacity numeric field in release notes",filename)
 
 # Seventh audit: invalid typed text stays intact until commit, as pasted text does.
 assert 'Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule.' in manual, 'Opacity commit guidance in manual'

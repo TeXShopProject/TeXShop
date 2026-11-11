@@ -112,6 +112,7 @@ program = r'''
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
+#import "TSSourceFormatRanges.h"
 #import "TSLayoutManager.h"
 #define SUD TSIsolatedAppKitDefaults
 @@DEFINES@@

@@ -72,6 +72,7 @@
 #import "TSWindowController.h"
 #import "TSFileChangeMonitor.h"
 #import "TSExternalPDFReload.h"
+#import "TSSourceFormatRanges.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 
 
@@ -8334,22 +8335,15 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	}
     
 	
-    CGFloat                     interlinespace      = [SUD floatForKey: SourceInterlineSpaceKey];
-    CGFloat                     myFirstLineHeadIndent = [SUD floatForKey: SourceFirstLineHeadIndentKey];
-    CGFloat                     myHeadIndent          = [SUD floatForKey: SourceHeadIndentKey];
+    CGFloat                     interlinespace      = TSStoredIntegerInRange(SUD, SourceInterlineSpaceKey, TSInterlineSpaceRange);
+    CGFloat                     myFirstLineHeadIndent = TSStoredIntegerInRange(SUD, SourceFirstLineHeadIndentKey, TSParagraphIndentRange);
+    CGFloat                     myHeadIndent          = TSStoredIntegerInRange(SUD, SourceHeadIndentKey, TSParagraphIndentRange);
     
-	NSUInteger					tabWidth			= [SUD integerForKey: tabsKey];
+	NSUInteger					tabWidth			= TSStoredIntegerInRange(SUD, tabsKey, TSTabWidthRange);
 	NSUInteger					textStorageLength	= [_textStorage length];
     NSArray					*	desiredTabStops		= tabStopArrayForFontAndTabWidth(font, tabWidth);
 	NSParagraphStyle 		*	paraStyle			= [NSParagraphStyle defaultParagraphStyle];
     NSMutableParagraphStyle	*	newStyle			= [paraStyle mutableCopy] ;
-    
-    if (interlinespace < 0.5)
-        interlinespace = 1.0;
-    if (interlinespace < 0.0)
-        interlinespace = 0.0;
-    if (interlinespace > 40.0)
-        interlinespace = 1.0;
 	
 	[newStyle setTabStops:desiredTabStops];
     [newStyle setLineSpacing: interlinespace];
@@ -9044,7 +9038,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
  
     //Expand the selectedRange to include whole lines
     [text getLineStart:&blockStart end:&blockEnd contentsEnd:NULL forRange:[textView selectedRange]];
-    tabWidth = [SUD integerForKey: tabsKey];
+    tabWidth = TSStoredIntegerInRange(SUD, tabsKey, TSTabWidthRange);
     
  
  

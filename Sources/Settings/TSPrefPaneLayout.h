@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 @interface TSPrefPaneLayout : NSObject
 + (NSView *)opacityForColorWell:(NSColorWell *)well;
++ (NSView *)stepperForIntegerField:(NSTextField *)field;
 + (NSView *)switchForButton:(NSButton *)button;
 + (NSView *)choiceForControls:(NSArray<NSView *> *)controls;
 + (NSView *)catalogRowWithTitle:(NSString *)title note:(NSString *)note accessory:(NSView *)accessory expands:(BOOL)expands indent:(NSUInteger)indent;
