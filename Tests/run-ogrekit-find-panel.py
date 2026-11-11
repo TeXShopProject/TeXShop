@@ -12,10 +12,11 @@ The compiled nib of every localization in Frameworks/OgreKit.framework is loaded
 the real OgreKit, as the application loads it, and so is each source compiled again,
 so that the two agree. The panel is measured at its size in the nib and widened.
 Windows are never ordered on screen. Each panel is also drawn in Dark Mode into a folder
-with a Japanese name, and the test checks that all the images were written; --png DIR
-keeps them in DIR."""
+of the test with a Japanese name, and the test checks that all the images were written;
+--png DIR copies the nine images, named after the localizations, into DIR and leaves
+everything else there alone."""
 from pathlib import Path
-import argparse, os, re, subprocess, sys, tempfile
+import argparse, os, re, shutil, subprocess, sys, tempfile
 
 LANGUAGES = ['Base', 'de', 'es', 'fr', 'it', 'ja', 'nl', 'pt', 'ro']
 MUTATIONS = {
@@ -34,7 +35,7 @@ MUTATIONS = {
 IMAGE_PATH = '[png stringByAppendingPathComponent:[language stringByAppendingPathExtension:@"png"]]'
 ASCII_IMAGE_PATH = '[NSString stringWithFormat:@"%s/%@.png", png.UTF8String, language]'
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=sorted([*MUTATIONS, 'ascii-image-path']))
+parser.add_argument('--mutation', choices=sorted([*MUTATIONS, 'ascii-image-path', 'clear-target']))
 parser.add_argument('--png', help='directory for images of the panels')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -181,7 +182,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-ogrekit-find-panel-') as tmp:
         xib, out = tmp / f'{language}.xib', tmp / f'{language}.nib'
         xib.write_text(source, encoding='utf-8')
         subprocess.run(['xcrun', 'ibtool', '--compile', str(out), str(xib)], check=True, stdout=subprocess.DEVNULL)
-        if args.mutation in (None, 'stale-framework', 'ascii-image-path'):
+        if args.mutation in (None, 'stale-framework', 'ascii-image-path', 'clear-target'):
             triples += [language, 'framework', str(nib_dir / 'keyedobjects.nib')]
         triples += [language, 'source', str(out / 'keyedobjects.nib' if out.is_dir() else out)]
     if args.mutation == 'ascii-image-path':
@@ -192,14 +193,14 @@ with tempfile.TemporaryDirectory(prefix='texshop-ogrekit-find-panel-') as tmp:
                     '-F', str(frameworks), '-framework', 'OgreKit', str(tmp / 'probe.m'), '-o', str(tmp / 'probe')], check=True)
     (tmp / 'home/Library/Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(tmp / 'home'), CFFIXED_USER_HOME=str(tmp / 'home'), DYLD_FRAMEWORK_PATH=str(frameworks))
-    images = Path(args.png).resolve() if args.png else tmp / '検索パネルの画像'
-    images.mkdir(parents=True, exist_ok=True)
-    for old in images.glob('*.png'):
-        old.unlink()
+    # The panels are drawn into a folder of this test with a Japanese name, and only the
+    # nine images are then copied to --png DIR; nothing else in DIR is touched.
+    images = tmp / '検索パネルの画像'
+    images.mkdir()
     env['TS_OGRE_PNG'] = str(images)
     result = subprocess.run([str(tmp / 'probe'), *triples], capture_output=True, text=True, timeout=300, env=env)
     print(result.stdout, end='')
-    if args.mutation:
+    if args.mutation and args.mutation != 'clear-target':
         if result.returncode == 0:
             sys.exit(f'FAIL: mutation {args.mutation} was not detected')
         print(f'PASS: detected mutation {args.mutation}')
@@ -207,7 +208,31 @@ with tempfile.TemporaryDirectory(prefix='texshop-ogrekit-find-panel-') as tmp:
         print(result.stderr[-3000:])
         sys.exit('FAIL')
     else:
-        written = sorted(p.stem for p in images.glob('*.png') if p.stat().st_size > 0)
-        if written != sorted(LANGUAGES):
-            sys.exit(f'FAIL: images of the panels were not all written to {images}: {written}')
-        print(f'PASS: images of the panels in all {len(written)} localizations written to {images.name}')
+        missing = [language for language in LANGUAGES
+                   if not (images / f'{language}.png').is_file() or (images / f'{language}.png').stat().st_size == 0]
+        if missing:
+            sys.exit(f'FAIL: images of the panels were not written to {images.name}: {missing}')
+        print(f'PASS: images of the panels in all {len(LANGUAGES)} localizations written to {images.name}')
+        # Without --png, the copy goes to a folder of the test that already holds another
+        # image, which must stay as it is.
+        target = Path(args.png) if args.png else tmp / '保存先'
+        target.mkdir(parents=True, exist_ok=True)
+        other = None if args.png else target / 'unrelated.png'
+        if other:
+            shutil.copyfile(images / 'ja.png', other)
+            kept = other.read_bytes()
+        if args.mutation == 'clear-target':
+            for old in target.glob('*.png'):
+                old.unlink()
+        for language in LANGUAGES:
+            shutil.copyfile(images / f'{language}.png', target / f'{language}.png')
+        left_alone = not other or (other.is_file() and other.read_bytes() == kept)
+        if args.mutation == 'clear-target':
+            if left_alone:
+                sys.exit('FAIL: mutation clear-target was not detected')
+            print('FAIL: copying the images changed another image')
+            print('PASS: detected mutation clear-target')
+        elif not left_alone:
+            sys.exit(f'FAIL: copying the images changed another image in {target.name}')
+        else:
+            print(f'PASS: the nine images copied to {target.name}, other files there left alone')
