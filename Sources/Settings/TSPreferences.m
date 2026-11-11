@@ -35,6 +35,7 @@
 #import "TSEnginePathDiscovery.h"
 #import "TSPreferenceProfile.h"
 #import "TSPreferenceInput.h"
+#import "TSSourceFormatRanges.h"
 #import "TSColorSupport.h"
 #import "TSInvisibleCharacters.h"
 #import "TSDockIconController.h"
@@ -1898,7 +1899,9 @@ A tag of 0 means "no", a tag of 1 means "yes".
     if (field == nil) return;
     [self.inputRules setObject:rule forKey:field];
     // The common validator owns both regular editing and no-UI termination.
-    field.formatter = nil;
+    // A whole-number field only keeps its typing to digits and carries its
+    // range for the stepper beside it.
+    field.formatter = rule.kind == TSPreferenceInputInteger ? [[TSIntegerInputFormatter alloc] initWithInput:rule] : nil;
     if ([field isKindOfClass:NSTextField.class]) ((NSTextField *)field).delegate = self;
 }
 - (void)configurePreferenceInputs
@@ -1906,13 +1909,13 @@ A tag of 0 means "no", a tag of 1 means "yes".
     self.inputRules = [NSMapTable strongToStrongObjectsMapTable];
     self.inputEditing = [TSPreferenceEditing new];
     [self addPreferenceField:tabIndentField rule:[[TSPreferenceInput alloc] initWithKey:tabsKey
-        kind:TSPreferenceInputInteger minimum:2 maximum:50 allowsEmpty:NO notification:TSPreferenceNotificationForKey(tabsKey)]];
+        kind:TSPreferenceInputInteger minimum:TSTabWidthRange.minimum maximum:TSTabWidthRange.maximum allowsEmpty:NO notification:TSPreferenceNotificationForKey(tabsKey)]];
     [self addPreferenceField:firstParagraphIndentField rule:[[TSPreferenceInput alloc] initWithKey:SourceFirstLineHeadIndentKey
-        kind:TSPreferenceInputInteger minimum:0 maximum:100 allowsEmpty:NO notification:TSPreferenceNotificationForKey(SourceFirstLineHeadIndentKey)]];
+        kind:TSPreferenceInputInteger minimum:TSParagraphIndentRange.minimum maximum:TSParagraphIndentRange.maximum allowsEmpty:NO notification:TSPreferenceNotificationForKey(SourceFirstLineHeadIndentKey)]];
     [self addPreferenceField:remainingParagraphIndentField rule:[[TSPreferenceInput alloc] initWithKey:SourceHeadIndentKey
-        kind:TSPreferenceInputInteger minimum:0 maximum:100 allowsEmpty:NO notification:TSPreferenceNotificationForKey(SourceHeadIndentKey)]];
+        kind:TSPreferenceInputInteger minimum:TSParagraphIndentRange.minimum maximum:TSParagraphIndentRange.maximum allowsEmpty:NO notification:TSPreferenceNotificationForKey(SourceHeadIndentKey)]];
     [self addPreferenceField:interlineSpacingField rule:[[TSPreferenceInput alloc] initWithKey:SourceInterlineSpaceKey
-        kind:TSPreferenceInputInteger minimum:1 maximum:20 allowsEmpty:NO notification:TSPreferenceNotificationForKey(SourceInterlineSpaceKey)]];
+        kind:TSPreferenceInputInteger minimum:TSInterlineSpaceRange.minimum maximum:TSInterlineSpaceRange.maximum allowsEmpty:NO notification:TSPreferenceNotificationForKey(SourceInterlineSpaceKey)]];
     [self addPreferenceField:_magTextField rule:[[TSPreferenceInput alloc] initWithKey:PdfMagnificationKey
         kind:TSPreferenceInputPercentage minimum:20 maximum:400 allowsEmpty:NO notification:nil]];
     [self addPreferenceField:_HtmlHomeField rule:[[TSPreferenceInput alloc] initWithKey:HtmlHomeKey

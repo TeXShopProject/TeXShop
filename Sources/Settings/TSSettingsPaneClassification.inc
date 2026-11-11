@@ -108,14 +108,16 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
             choice.accessibilityLabel=title;
             if(!pair && controls.count>1){((NSButton *)controls[1]).title=text(model[@"button"]);accessory=[self horizontal:@[choice,controls[1]] spacing:8];}else accessory=choice;
         }
-    }else if([kind isEqual:@"text"] || [kind isEqual:@"path"]){
+    }else if([kind isEqual:@"text"] || [kind isEqual:@"integer"] || [kind isEqual:@"path"]){
         NSTextField *field=(NSTextField *)controls.firstObject;field.accessibilityLabel=title;
-        if([kind isEqual:@"text"]){field.alignment=NSTextAlignmentRight;[field.widthAnchor constraintEqualToConstant:64].active=YES;}
+        if(![kind isEqual:@"path"]){field.alignment=NSTextAlignmentRight;[field.widthAnchor constraintEqualToConstant:64].active=YES;}
         else{field.lineBreakMode=NSLineBreakByTruncatingMiddle;[field.widthAnchor constraintGreaterThanOrEqualToConstant:150].active=YES;}
         NSMutableArray *parts=[NSMutableArray arrayWithObject:field];
+        if([kind isEqual:@"integer"])[parts addObject:[TSPrefPaneLayout stepperForIntegerField:field]];
         if([model[@"unit"] length])[parts addObject:[self label:text(model[@"unit"]) small:YES]];
         if(controls.count>1){((NSButton *)controls[1]).title=text(model[@"button"]);[parts addObject:controls[1]];}
         accessory=parts.count==1?field:[self horizontal:parts spacing:8];
+        if([kind isEqual:@"integer"])[(NSStackView *)accessory setCustomSpacing:2 afterView:field];
     }else if([kind isEqual:@"font"]){
         controls.firstObject.accessibilityIdentifier=@"settings.user-data";
         ((NSTextField *)controls.firstObject).textColor=NSColor.secondaryLabelColor;

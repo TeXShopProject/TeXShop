@@ -561,7 +561,55 @@ static NSColor *TSSettingsCardColor(void)
     return YES;
 }
 @end
+// The stepper beside a whole-number field. A click changes the field by one
+// within the range its formatter carries, then sends the field's own action,
+// so the value is checked, stored and announced as if it had been typed. The
+// stepper's own value only gives the direction and returns to 1 each time.
+@interface TSSettingsIntegerStepper : NSStepper
+@property (weak) NSTextField *field;
+@end
+@implementation TSSettingsIntegerStepper
+- (instancetype)initWithField:(NSTextField *)field
+{
+    self=[super initWithFrame:NSZeroRect];
+    if(self==nil)return nil;
+    _field=field;
+    self.translatesAutoresizingMaskIntoConstraints=NO;
+    self.minValue=0;self.maxValue=2;self.increment=1;self.integerValue=1;
+    self.valueWraps=NO;self.autorepeat=YES;
+    self.target=self;self.action=@selector(stepped:);
+    self.identifier=[(field.identifier ?: @"settings.integer") stringByAppendingString:@".stepper"];
+    self.accessibilityLabel=field.accessibilityLabel;
+    return self;
+}
+- (id)accessibilityValue {return self.field.stringValue;}
+- (void)stepped:(id)sender
+{
+    NSInteger direction=self.integerValue-1;
+    self.integerValue=1;
+    NSTextField *field=self.field;
+    if(direction==0 || field==nil || !field.enabled)return;
+    // Typing in progress is checked and stored first; an invalid entry keeps
+    // its warning and the stepper changes nothing.
+    id<NSTextFieldDelegate> delegate=field.delegate;
+    NSText *editor=field.currentEditor;
+    if(editor!=nil){
+        if([delegate respondsToSelector:@selector(control:textShouldEndEditing:)] && ![delegate control:field textShouldEndEditing:editor])return;
+        [field.window makeFirstResponder:nil];
+    }
+    NSNumberFormatter *formatter=[field.formatter isKindOfClass:NSNumberFormatter.class]?(NSNumberFormatter *)field.formatter:nil;
+    NSInteger current=field.integerValue,value=current+direction;
+    if(formatter.minimum!=nil)value=MAX(value,formatter.minimum.integerValue);
+    if(formatter.maximum!=nil)value=MIN(value,formatter.maximum.integerValue);
+    if(value==current)return;
+    field.stringValue=[NSString stringWithFormat:@"%ld",(long)value];
+    if([delegate respondsToSelector:@selector(controlTextDidChange:)])
+        [delegate controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:field]];
+    [field sendAction:field.action to:field.target];
+}
+@end
 @implementation TSPrefPaneLayout
++ (NSView *)stepperForIntegerField:(NSTextField *)field {return [[TSSettingsIntegerStepper alloc]initWithField:field];}
 + (NSView *)opacityForColorWell:(NSColorWell *)well {return [[TSSettingsOpacityPresentation alloc]initWithWell:well];}
 #include "TSSettingsPaneComposition.inc"
 + (NSView *)switchForButton:(NSButton *)button

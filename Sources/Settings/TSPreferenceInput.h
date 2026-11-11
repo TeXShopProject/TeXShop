@@ -32,6 +32,13 @@ typedef NS_ENUM(NSInteger, TSPreferenceInputKind) {
 - (NSString *)displayStringFromDefaults:(NSUserDefaults *)defaults;
 - (NSString *)displayStringForValue:(nullable TSPreferenceInputValue *)value;
 @end
+// Keeps typing in a whole-number field to digits (full-width digits become
+// ASCII). Any text that reaches the end of editing is passed on unchanged, so
+// TSPreferenceInput still decides whether it is valid. The minimum and maximum
+// of the rule are kept for the stepper beside the field.
+@interface TSIntegerInputFormatter : NSNumberFormatter
+- (instancetype)initWithInput:(TSPreferenceInput *)input;
+@end
 // Tracks actual edits, independently of first-responder/focus changes.
 @interface TSPreferenceEditing : NSObject
 @property (weak, readonly, nullable) NSControl *editedField;

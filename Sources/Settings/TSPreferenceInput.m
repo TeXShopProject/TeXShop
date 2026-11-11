@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPreferenceInput.h"
+#import "TSSourceFormatRanges.h"
 #import <math.h>
 @interface TSPreferenceInputValue ()
 - (instancetype)initWithText:(nullable NSString *)text number:(nullable NSNumber *)number;
@@ -52,9 +53,13 @@
 {
     // Restoration is based on this field's key, including empty/missing values.
     // Do not validate or clamp a previously stored value while restoring it.
+    // A whole number is shown as the source windows apply it: inside the range
+    // and without a fraction. The stored value itself is left as it is.
     if (self.kind == TSPreferenceInputText) return [defaults stringForKey:self.key] ?: @"";
     NSObject *stored = [defaults objectForKey:self.key];
     NSNumber *number = [stored isKindOfClass:NSNumber.class] ? (NSNumber *)stored : nil;
+    if (number != nil && self.kind == TSPreferenceInputInteger)
+        number = @(TSIntegerInRange(number.doubleValue, (TSIntegerRange){(NSInteger)self.minimum, (NSInteger)self.maximum}));
     return [self displayStringForValue:[[TSPreferenceInputValue alloc] initWithText:nil number:number]];
 }
 - (NSString *)displayStringForValue:(nullable TSPreferenceInputValue *)value
@@ -67,6 +72,51 @@
     formatter.maximumFractionDigits = 6;
     NSNumber *number = self.kind == TSPreferenceInputPercentage ? @(value.numberValue.doubleValue * 100) : value.numberValue;
     return [formatter stringFromNumber:number] ?: @"";
+}
+@end
+
+@implementation TSIntegerInputFormatter
+- (instancetype)initWithInput:(TSPreferenceInput *)input
+{
+    self = [super init];
+    if (self == nil) return nil;
+    self.numberStyle = NSNumberFormatterNoStyle;
+    self.allowsFloats = NO;
+    self.minimum = @(input.minimum);
+    self.maximum = @(input.maximum);
+    return self;
+}
+- (nullable NSString *)stringForObjectValue:(nullable id)value
+{
+    if ([value isKindOfClass:NSString.class]) return value;
+    if ([value isKindOfClass:NSNumber.class]) return [NSString stringWithFormat:@"%ld", (long)[value integerValue]];
+    return nil;
+}
+- (BOOL)getObjectValue:(out id _Nullable *)value forString:(NSString *)string range:(inout nullable NSRange *)range error:(out NSError **)error
+{
+    if (value != NULL) *value = [string copy];
+    return YES;
+}
+- (BOOL)getObjectValue:(out id _Nullable *)value forString:(NSString *)string errorDescription:(out NSString * _Nullable *)error
+{
+    if (value != NULL) *value = [string copy];
+    return YES;
+}
+- (BOOL)isPartialStringValid:(NSString * _Nonnull *)partial proposedSelectedRange:(NSRangePointer)selection
+              originalString:(NSString *)original originalSelectedRange:(NSRange)originalSelection
+            errorDescription:(NSString * _Nullable *)error
+{
+    // Refuse the whole edit rather than dropping characters from it: removing
+    // the separator from a pasted 1.5 would silently turn it into 15.
+    NSString *digits = [*partial precomposedStringWithCompatibilityMapping];
+    NSCharacterSet *other = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"].invertedSet;
+    if ([digits rangeOfCharacterFromSet:other].location != NSNotFound) return NO;
+    if (![digits isEqualToString:*partial]) {
+        *partial = digits;
+        if (selection != NULL) *selection = NSMakeRange(digits.length, 0);
+        return NO;
+    }
+    return YES;
 }
 @end
 

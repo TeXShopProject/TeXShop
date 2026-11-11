@@ -640,7 +640,7 @@ The remaining items in the first column and the first block of items in the seco
 The last item sets the spacing between lines, so the source
 can be single spaced or double spaced or somewhere between these extremes.
 
-Preference values for various style fields are integers. These values are constrained in various ways. Tab indent can be between 2 and 50, paragraph indent can be between 0 and 100, and interline spacing can be between 1 and 20. When larger or smaller values are entered, they are replaced with the closest allowed value.
+Preference values for various style fields are integers. These values are constrained in various ways. Tab indent can be between 2 and 50, paragraph indent can be between 0 and 100, and interline spacing can be between 1 and 20. When larger or smaller values are entered, they are replaced with the closest allowed value. Only digits can be typed in these fields, and the arrow buttons beside each field raise or lower its value by one. The source window uses the same ranges, so a value saved outside a range by an older version or by the {\tt defaults} command is used as the closest allowed whole number.
 
 
 If a source window is open when the style items are set, the changes will appear immediately in the source, so users can experiment with  values until they find a pleasing set. However, there is a mild complication. When number entry boxes are used in preferences, changes in these boxes are not sent to the Mac until the box is deactivated. The easy way to deactivate a box is to activate another box by clicking in it. At that moment, the source window will be updated to reveal changes. Press Return or leave the field to validate and save the value. Return keeps Settings open.
@@ -6444,7 +6444,7 @@ TeXShop 5.60 moved several hidden preferences into TeXShop Settings: AutoSaveEna
 These preferences have existed for a long time. Most of them are still active, if seldom used.
 
 \subsubsection {<Preferences for Line Spacing in the Source Window>}
-The command below sets the line spacing in the source window. The default value 1.0 corresponds to standard single spacing, the value 10.0 corresponds to double spacing, and values outside the range 0.5 < value < 40.0 will be ignored.
+The command below sets the line spacing in the source window; it is the Interline Spacing item under Settings, Editor, Format. The default value 1.0 corresponds to standard single spacing and the value 10.0 corresponds to double spacing. The source window uses a whole number from 1 to 20; other values are replaced with the closest of these.
 \begin{verbatim}
    defaults write TeXShop SourceInterlineSpace 1.0
 \end{verbatim}

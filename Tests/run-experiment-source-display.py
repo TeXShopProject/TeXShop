@@ -37,6 +37,15 @@ MUTATIONS = {
         '        [self.document performSelector:@selector(cursorMoved:) withObject:self afterDelay:0];\n', '        ;\n'),
     'no-font-hook': (DOCUMENT,
         '\t[textView2 setDefaultParagraphStyle: newStyle];\n\t[self applyExperimentTextLayout];\n', '\t[textView2 setDefaultParagraphStyle: newStyle];\n'),
+    'interline-unranged': (DOCUMENT,
+        '    CGFloat                     interlinespace      = TSStoredIntegerInRange(SUD, SourceInterlineSpaceKey, TSInterlineSpaceRange);\n',
+        '    CGFloat                     interlinespace      = [SUD floatForKey: SourceInterlineSpaceKey];\n'),
+    'indent-unranged': (DOCUMENT,
+        '    CGFloat                     myHeadIndent          = TSStoredIntegerInRange(SUD, SourceHeadIndentKey, TSParagraphIndentRange);\n',
+        '    CGFloat                     myHeadIndent          = [SUD floatForKey: SourceHeadIndentKey];\n'),
+    'tabs-unranged': (DOCUMENT,
+        '\tNSUInteger\t\t\t\t\ttabWidth\t\t\t= TSStoredIntegerInRange(SUD, tabsKey, TSTabWidthRange);\n',
+        '\tNSUInteger\t\t\t\t\ttabWidth\t\t\t= [SUD integerForKey: tabsKey];\n'),
     'no-line-break-hook': (DOCUMENT,
         '\t[textView2 setDefaultParagraphStyle: styleNew];\n\t[self applyExperimentTextLayout];\n', '\t[textView2 setDefaultParagraphStyle: styleNew];\n'),
     'wrap-keeps-wide-container': (EXPERIMENT,
@@ -123,6 +132,7 @@ program = r'''
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
+#import "TSSourceFormatRanges.h"
 #import "TSLayoutManager.h"
 #define SUD TSIsolatedAppKitDefaults
 @@DEFINES@@
@@ -508,6 +518,27 @@ int main(void) { @autoreleasepool {
     NSParagraphStyle *scrapStyle = [scrap.textStorage attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
     Check([scrap.font.fontName isEqual:@"Menlo-Regular"] && scrap.font.pointSize == 15, "the document font applies to the Experiment source");
     Check(scrapStyle.lineSpacing == 3.0 && scrap.defaultParagraphStyle.lineSpacing == 3.0, "line spacing applies to the Experiment source");
+    // Stored values outside the Settings ranges apply as the Settings fields show them.
+    [SUD setInteger:2 forKey:tabsKey];
+    [doc setDocumentFontFromPreferences:nil];
+    NSArray *twoCharacterStops = doc->textView1.defaultParagraphStyle.tabStops;
+    [SUD setInteger:0 forKey:tabsKey];
+    [SUD setDouble:45 forKey:SourceInterlineSpaceKey];
+    [SUD setDouble:150 forKey:SourceHeadIndentKey];
+    [SUD setDouble:2.7 forKey:SourceFirstLineHeadIndentKey];
+    [doc setDocumentFontFromPreferences:nil];
+    NSParagraphStyle *ranged = doc->textView1.defaultParagraphStyle;
+    Check(ranged.lineSpacing == 20 && ranged.headIndent == 100 && ranged.firstLineHeadIndent == 2 && [ranged.tabStops isEqual:twoCharacterStops],
+          "out-of-range stored values apply at the nearest whole number of the Settings ranges");
+    [SUD setDouble:0 forKey:SourceInterlineSpaceKey];
+    [doc setDocumentFontFromPreferences:nil];
+    Check(doc->textView1.defaultParagraphStyle.lineSpacing == 1, "line spacing 0 from an older version applies as 1");
+    [SUD setInteger:3 forKey:tabsKey];
+    [SUD setFloat:3.0 forKey:SourceInterlineSpaceKey];
+    [SUD setDouble:0 forKey:SourceHeadIndentKey];
+    [SUD setDouble:0 forKey:SourceFirstLineHeadIndentKey];
+    [doc setDocumentFontFromPreferences:nil];
+    scrapStyle = [scrap.textStorage attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
     Check([scrapStyle.tabStops isEqual:doc->textView1.defaultParagraphStyle.tabStops] && scrapStyle.tabStops.count > 0,
           "tab stops of the Experiment source are the document's");
     Check([scrap.typingAttributes[NSFontAttributeName] isEqual:scrap.font], "typed text gets the document font");
