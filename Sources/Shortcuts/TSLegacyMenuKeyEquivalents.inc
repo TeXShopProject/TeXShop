@@ -1,11 +1,43 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // Legacy KeyEquivalents uses one-based positions or localized menu titles.
+// Those describe the menus as they were before 5.60: Open Style File then sat in
+// the Help menu right after Show Help for Package, and the File menu had no such
+// item. Positions are counted in that order, so the move does not shift them.
+static NSString *const TSLegacyMovedItem = @"TSShortcut.displayStyleFile:.0";
+static NSString *const TSLegacyMovedItemFormerAnchor = @"TSShortcut.displayHelpForPackage:.0";
+static NSMenuItem *TSLegacyItemWithIdentifier(NSMenu *menu, NSString *identifier)
+{
+    for (NSMenuItem *item in menu.itemArray) {
+        if ([item.identifier isEqualToString:identifier]) return item;
+        NSMenuItem *found = item.hasSubmenu ? TSLegacyItemWithIdentifier(item.submenu, identifier) : nil;
+        if (found != nil) return found;
+    }
+    return nil;
+}
+static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
+{
+    NSMutableArray<NSMenuItem *> *items = [menu.itemArray mutableCopy];
+    NSMenu *root = menu;
+    while (root.supermenu != nil) root = root.supermenu;
+    NSMenuItem *moved = TSLegacyItemWithIdentifier(root, TSLegacyMovedItem);
+    if (moved == nil) return items;
+    [items removeObjectIdenticalTo:moved];
+    NSUInteger anchor = [items indexOfObjectPassingTest:^BOOL(NSMenuItem *item, NSUInteger index, BOOL *stop) {
+        return [item.identifier isEqualToString:TSLegacyMovedItemFormerAnchor];
+    }];
+    if (anchor != NSNotFound) [items insertObject:moved atIndex:anchor + 1];
+    return items;
+}
 static NSMenuItem *TSLegacyMenuItem(NSMenu *menu, id key)
 {
-    if (![key isKindOfClass:NSString.class]) return nil;
+    if (![key isKindOfClass:NSString.class] || menu == nil) return nil;
+    NSArray<NSMenuItem *> *items = TSLegacyItems(menu);
     NSInteger index = [key integerValue];
-    if (index == 0) return [menu itemWithTitle:key];
-    return index > 0 && index <= menu.numberOfItems ? [menu itemAtIndex:index - 1] : nil;
+    if (index == 0) {
+        for (NSMenuItem *item in items) if ([item.title isEqualToString:key]) return item;
+        return [menu itemWithTitle:key];
+    }
+    return index > 0 && index <= (NSInteger)items.count ? items[index - 1] : nil;
 }
 static void TSApplyLegacyKeyEquivalent(NSMenuItem *item, id value)
 {
