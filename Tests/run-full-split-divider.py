@@ -35,6 +35,9 @@ MUTATIONS = {
     'edges-kept': ('TSFullSplitDivider.m',
         '    CGFloat fraction = MIN(MAX(NSWidth(source.frame) / width, TSFullSplitMinimumFraction), 1 - TSFullSplitMinimumFraction);\n',
         '    CGFloat fraction = NSWidth(source.frame) / width;\n'),
+    'width-of-the-nib': ('TSFullSplitDivider.m',
+        '    [splitView setPosition:round(left * width) ofDividerAtIndex:0];\n',
+        '    [splitView setPosition:round(left * 782) ofDividerAtIndex:0];\n'),
     'garbage-used': ('TSFullSplitDivider.m',
         '    if (!isfinite(fraction) || fraction <= 0 || fraction >= 1)\n        return 0;\n', ''),
 }
@@ -124,8 +127,8 @@ static TSDocument *Open(CGFloat width, BOOL sourceOnRight) {
     NSNib *nib = [[NSNib alloc] initWithNibData:nibData bundle:nil];
     if (![nib instantiateWithOwner:doc topLevelObjects:&objects]) return nil;
     // The side views and the source's split view arrive in the instance variables.
-    window = outlets[@"fullSplitWindow"];
     sides = (NSSplitView *)doc->leftView.superview;
+    window = sides.window;
     // As doMove does: the source goes into one side, the Preview into the other.
     NSView *source = sourceOnRight ? doc->rightView : doc->leftView;
     NSView *preview = sourceOnRight ? doc->leftView : doc->rightView;
@@ -137,12 +140,16 @@ static TSDocument *Open(CGFloat width, BOOL sourceOnRight) {
     [preview addSubview:pdf];
     [window setFrame:NSMakeRect(40, 40, width, 700) display:NO];
     [window layoutIfNeeded];
+    Check(window != nil && fabs(NSWidth(sides.bounds) - width) < 1,
+          [NSString stringWithFormat:@"the combined window takes the width %.0f it is given", width]);
     return doc;
 }
-static CGFloat Shared(void) { return NSWidth(sides.bounds) - sides.dividerThickness; }
+// Each document's own sides, and the width they share.
+static NSSplitView *Sides(TSDocument *doc) { return (NSSplitView *)doc->leftView.superview; }
+static CGFloat Shared(TSDocument *doc) { return NSWidth(Sides(doc).bounds) - Sides(doc).dividerThickness; }
 static CGFloat SourceShare(TSDocument *doc) {
     NSView *side = [doc->splitView isDescendantOf:doc->leftView] ? doc->leftView : doc->rightView;
-    return NSWidth(side.frame) / Shared();
+    return NSWidth(side.frame) / Shared(doc);
 }
 static double Remembered(void) { return [NSUserDefaults.standardUserDefaults doubleForKey:FullSplitSourceFractionKey]; }
 static BOOL Near(double a, double b) { return fabs(a - b) < 0.006; }
@@ -166,7 +173,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 
         // Nothing remembered yet: the divider stays where the nib has it.
         TSDocument *doc = Open(1400, NO);
-        Check(doc != nil && [sides isKindOfClass:NSSplitView.class] && sides.isVertical && sides.subviews.count == 2,
+        Check(doc != nil && [Sides(doc) isKindOfClass:NSSplitView.class] && Sides(doc).isVertical && Sides(doc).subviews.count == 2,
               [@"the combined window has two sides" stringByAppendingString:nibName]);
         // The other languages have the same window: one remembered share is used there.
         if (i > 1) {
@@ -184,17 +191,19 @@ int main(int argc, char **argv) { @autoreleasepool {
               [@"before any drag the divider stays where it was" stringByAppendingString:nibName]);
 
         // Dragging the divider remembers the source's share.
-        DragDivider(sides, 350);
-        Check(Near(SourceShare(doc), 350 / Shared()), [@"the divider was dragged" stringByAppendingString:nibName]);
+        DragDivider(Sides(doc), 350);
+        Check(Near(SourceShare(doc), 350 / Shared(doc)), [@"the divider was dragged" stringByAppendingString:nibName]);
         double dragged = Remembered();
-        Check(Near(dragged, 350 / Shared()), [@"dragging the divider remembers the source's share" stringByAppendingString:nibName]);
+        Check(Near(dragged, 350 / Shared(doc)), [@"dragging the divider remembers the source's share" stringByAppendingString:nibName]);
 
         // Window resizes and the program's own moves are not remembered.
-        [window setFrame:NSMakeRect(40, 40, 1100, 700) display:NO];
-        [window layoutIfNeeded];
+        CGFloat wider = NSWidth(Sides(doc).bounds);
+        [Sides(doc).window setFrame:NSMakeRect(40, 40, 1100, 700) display:NO];
+        [Sides(doc).window layoutIfNeeded];
+        Check(wider - NSWidth(Sides(doc).bounds) > 250, [@"the window became narrower" stringByAppendingString:nibName]);
         Check(Remembered() == dragged, [@"resizing the window is not remembered" stringByAppendingString:nibName]);
         Check(fabs(SourceShare(doc) - dragged) < 0.02, [@"resizing the window keeps the share" stringByAppendingString:nibName]);
-        [sides setPosition:700 ofDividerAtIndex:0];
+        [Sides(doc) setPosition:700 ofDividerAtIndex:0];
         Check(Remembered() == dragged, [@"moving the divider from the program is not remembered" stringByAppendingString:nibName]);
 
         // A new window of another width, for another document, opens with that share.
@@ -209,17 +218,17 @@ int main(int argc, char **argv) { @autoreleasepool {
         [swapped restoreFullSplitDivider];
         Check([swapped->splitView isDescendantOf:swapped->rightView] && Near(SourceShare(swapped), dragged),
               [@"with the source on the right, the source opens with its share" stringByAppendingString:nibName]);
-        DragDivider(sides, 0.6 * Shared());
+        DragDivider(Sides(swapped), 0.6 * Shared(swapped));
         Check(Near(Remembered(), 0.4), [@"dragging with the source on the right remembers the source's share" stringByAppendingString:nibName]);
         TSDocument *back = Open(1300, NO);
         [back restoreFullSplitDivider];
         Check(Near(SourceShare(back), 0.4), [@"that share is used with the source on the left again" stringByAppendingString:nibName]);
 
         // A side dragged to nothing, or nearly so, opens at a usable width.
-        DragDivider(sides, 0);
+        DragDivider(Sides(back), 0);
         Check(Near(Remembered(), 0.1), [@"a source dragged away is remembered at a tenth" stringByAppendingString:nibName]);
-        Check(![sides isSubviewCollapsed:sides.subviews[0]], [@"no side is folded away" stringByAppendingString:nibName]);
-        DragDivider(sides, Shared());
+        Check(![Sides(back) isSubviewCollapsed:Sides(back).subviews[0]], [@"no side is folded away" stringByAppendingString:nibName]);
+        DragDivider(Sides(back), Shared(back));
         Check(Near(Remembered(), 0.9), [@"a Preview dragged away leaves the source nine tenths" stringByAppendingString:nibName]);
         TSDocument *wide = Open(1000, NO);
         [wide restoreFullSplitDivider];
