@@ -153,7 +153,7 @@
       "outlets": [
         "colorParam1Popup"
       ],
-      "label_row": "row.catalog.preview.3.1",
+      "label_row": "row.catalog.preview.4.2",
       "key_symbol": "PdfColorMapKey",
       "whole_row": true,
       "value_kind": "boolean"

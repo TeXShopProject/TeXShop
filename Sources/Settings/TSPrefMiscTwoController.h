@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) IBOutlet NSButton *XMLtable NS_SWIFT_NAME(xMLtable);
 @property (strong, nullable) IBOutlet NSTextField *alternateEngineTextField;
 @property (strong, nullable) IBOutlet NSButton *convertUTFButton;
-@property (strong, nullable) IBOutlet NSMatrix *distillerMatrix;
 @property (strong, nullable) IBOutlet NSTextField *latexScriptCommandTextField;
 @property (strong, nullable) IBOutlet NSButton *miniaturizeRootFileButton;
 @property (strong, nullable) IBOutlet NSButton *openRootFileButton;

@@ -21,7 +21,6 @@
         <outlet property="XMLtable" destination="F6b-YV-mvL" id="gji-6Q-ytU" />
         <outlet property="alternateEngineTextField" destination="gZB-h1-n7P" id="JqO-fq-T0B" />
         <outlet property="convertUTFButton" destination="sPQ-5E-qId" id="qJj-IM-dId" />
-        <outlet property="distillerMatrix" destination="eiU-B8-j8t" id="o2B-Mg-2X0" />
         <outlet property="latexScriptCommandTextField" destination="KBV-98-EKO" id="2pL-Wh-2wM" />
         <outlet property="miniaturizeRootFileButton" destination="4J7-3F-0ja" id="H19-zo-8gu" />
         <outlet property="openRootFileButton" destination="UtV-tr-Xnu" id="fug-bq-F4l" />
@@ -38,46 +37,6 @@
       <rect key="frame" x="10" y="33" width="652" height="623" />
       <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
       <subviews>
-        <box fixedFrame="YES" title="Distiller" translatesAutoresizingMaskIntoConstraints="NO" id="SXg-YM-OVa" identifier="settings.SXg-YM-OVa">
-          <rect key="frame" x="22" y="329.5" width="141" height="70" />
-          <autoresizingMask key="autoresizingMask" />
-          <view key="contentView" id="aFF-a7-Car" identifier="settings.aFF-a7-Car">
-            <rect key="frame" x="0.0" y="0.0" width="141" height="58" />
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
-            <subviews>
-              <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" autosizesCells="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eiU-B8-j8t" identifier="settings.eiU-B8-j8t">
-                <rect key="frame" x="17" y="9" width="117" height="38" />
-                <autoresizingMask key="autoresizingMask" />
-                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog" />
-                <size key="cellSize" width="117" height="18" />
-                <size key="intercellSpacing" width="4" height="2" />
-                <buttonCell key="prototype" type="radio" title="Radio" imagePosition="left" alignment="left" inset="2" id="SCh-Ca-qiI">
-                  <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                  <font key="font" metaFont="system" />
-                </buttonCell>
-                <cells>
-                  <column>
-                    <buttonCell type="radio" title="Ghostscript" imagePosition="left" alignment="left" state="on" inset="2" id="i9l-Ll-3us">
-                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                      <font key="font" metaFont="system" />
-                      <connections>
-                        <action selector="distillerChanged:" target="-2" id="76m-Wl-WTu" />
-                      </connections>
-                    </buttonCell>
-                    <buttonCell type="radio" title="Apple Distiller" imagePosition="left" alignment="left" tag="1" inset="2" id="kY2-vG-FLS">
-                      <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
-                      <font key="font" metaFont="system" />
-                      <connections>
-                        <action selector="distillerChanged:" target="-2" id="yXt-xS-HQf" />
-                      </connections>
-                    </buttonCell>
-                  </column>
-                </cells>
-              </matrix>
-            </subviews>
-          </view>
-          <font key="titleFont" metaFont="system" />
-        </box>
         <box fixedFrame="YES" title="During File Save" translatesAutoresizingMaskIntoConstraints="NO" id="03p-fB-1K3" identifier="settings.03p-fB-1K3">
           <rect key="frame" x="22" y="267.5" width="346" height="50" />
           <autoresizingMask key="autoresizingMask" />

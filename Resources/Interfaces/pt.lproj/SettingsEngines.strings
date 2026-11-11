@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1020.title" = "Comando de busca";
-"1024.title" = "kpsetool (por padrão: kpsetool -w -n latex tex)";
+"1024.title" = "kpsewhich (por padrão: kpsewhich -progname=latex -format=tex)";
 "1027.title" = "Motor BibTeX";
 "1030.title" = "por padrão: bibtex";
 "1063.title" = "padrão";

@@ -2,7 +2,6 @@
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "Zoom padrão para PDFs recém-abertos.";
 "1uj-kt-7Pj.title" = "Esquerda";
-"228.title" = "Botões de mudança de página";
 "328.title" = "Rolar";
 "329.title" = "Estilo de visualização padrão";
 "330.title" = "Comportamento padrão do mouse";
@@ -32,7 +31,6 @@
 "864.title" = "Escolher a posição atual";
 "865.title" = "100";
 "866.title" = "Definir";
-"867.title" = "Não deslizar";
 "871.title" = "Atualizar automaticamente o pdf";
 "910.title" = "Radio";
 "911.title" = "Radio";
@@ -43,11 +41,11 @@
 "V7d-ht-Pe3.title" = "Direita";
 "YrC-m9-abH.title" = "Posição da janela HTML";
 "Zdh-Ch-Ndh.title" = "Escolher a posição atual";
-"jgT-n6-lh0.title" = "Suavizar texto e ilustrações";
 "p2D-Mi-Gyc.title" = "URL inicial";
 "preview-cover-cell.title" = "Mostrar a primeira página sozinha como capa";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Pop-ups de links";
+"preview-scroll-page-turn-cell.title" = "Não mudar de página ao rolar";
 "sa2-VV-W1K.title" = "Lembrar-se da última posição";
 "tVs-uh-QcM.title" = "Abrir sempre em uma posição fixa";
 "vOt-2m-d2s.title" = "Usar uma única janela";

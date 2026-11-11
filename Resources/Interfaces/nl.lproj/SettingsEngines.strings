@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1020.title" = "Search command";
-"1024.title" = "kpsetool (default: kpsetool -w -n latex tex)";
+"1024.title" = "kpsewhich (default: kpsewhich -progname=latex -format=tex)";
 "1027.title" = "BibTeX-engine";
 "1030.title" = "default: bibtex";
 "1063.title" = "standaard";

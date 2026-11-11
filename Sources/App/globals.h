@@ -333,7 +333,7 @@ extern NSString *CheckSquareBracketEnabledKey; // added by Terada
 extern NSString *CheckParenEnabledKey; // added by Terada
 extern NSString *MakeatletterEnabledKey; // added by Terada
 extern NSString *PdfMagnificationKey;
-extern NSString *NoScrollEnabledKey;
+extern NSString *NoScrollPageTurnKey;
 extern NSString *PdfWindowFixedPosKey;
 extern NSString *PortablePdfWindowFixedPosKey;
 extern NSString *PdfWindowNameKey;
@@ -341,7 +341,6 @@ extern NSString *PdfKitWindowNameKey;
 extern NSString *PdfWindowPosModeKey;
 extern NSString *PdfPageStyleKey; // mitsu 1.29 (O)
 extern NSString *PdfRefreshKey;
-extern NSString *AntiAliasKey;
 extern NSString *RefreshTimeKey;
 extern NSString *PdfFileRefreshKey;
 extern NSString *PdfFirstPageStyleKey;
@@ -361,7 +360,6 @@ extern NSString *GSBinPath;
 extern NSString *TexCommandKey;
 extern NSString *TexGSCommandKey;
 extern NSString *TexScriptCommandKey;
-extern NSString *DistillerCommandKey;
 extern NSString *MatrixSizeKey; // Jonas' Matrix addition
 extern NSString *TSHasBeenUsedKey;
 extern NSString *UserInfoPath;

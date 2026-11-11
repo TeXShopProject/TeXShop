@@ -26,22 +26,32 @@
 #import "TSWindowManager.h"
 
 
+// The Home URL setting is a web address or the path of a file; empty means the TeXShop web site.
+static NSURL *TSHTMLHomeURL(NSString *home)
+{
+    home = [home stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    if ([home hasPrefix:@"/"] || [home hasPrefix:@"~"])
+        return [NSURL fileURLWithPath:home.stringByExpandingTildeInPath];
+    if (home.length > 0) {
+        NSURL *url = [NSURL URLWithString:home];
+        if (url.scheme.length == 0)
+            url = [NSURL URLWithString:[@"https://" stringByAppendingString:home]];
+        if (url != nil)
+            return url;
+    }
+    return [NSURL URLWithString:@"https://texshop.app"];
+}
+
 @implementation TSDocument (HTML)
 
 - (void)showHTMLWindow:sender
 {
-    NSString *myString, *aString;
-    NSURL *theURL;
-    NSURLRequest *theRequest;
+    NSURL *theURL = TSHTMLHomeURL([SUD stringForKey:HtmlHomeKey]);
     
-   myString = [SUD stringForKey:HtmlHomeKey];
-   if ((myString == NULL) || (myString.length == 0))
-        aString = [[NSBundle mainBundle] pathForResource:@"SamplePage" ofType:@"html"];
-    myString = @"file://";
-    myString = [myString stringByAppendingString:aString];
-    theURL = [NSURL URLWithString: myString];
-    theRequest = [NSURLRequest requestWithURL: theURL];
-    [self.htmlView loadRequest: theRequest];
+    if (theURL.isFileURL)
+        [self.htmlView loadFileURL:theURL allowingReadAccessToURL:theURL.URLByDeletingLastPathComponent];
+    else
+        [self.htmlView loadRequest:[NSURLRequest requestWithURL:theURL]];
     self.htmlView.allowsMagnification = YES;
     [self.htmlWindow makeKeyAndOrderFront:self];
    

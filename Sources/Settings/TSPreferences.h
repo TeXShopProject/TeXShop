@@ -70,9 +70,7 @@
 	IBOutlet NSButton	*_pdfWindowPosButton;		/* connected to current position button */
     IBOutlet NSMatrix    *_htmlWindowPosMatrix;        /*" connected to "HTML Window Position" "*/
     IBOutlet NSButton    *_htmlWindowPosButton;        /* connected to current position button */
-    IBOutlet NSButton       *_antialiasButton;      /* connect to antialias checkbox */
 	IBOutlet NSTextField	*_magTextField;			/*" connected to magnification text field "*/
-	IBOutlet NSButton	*_scrollButton;			/*" connected to scroll button "*/
 	IBOutlet NSTextField	*_texCommandTextField;		/*" connected to "TeX program" "*/
 	IBOutlet NSTextField	*_latexCommandTextField;	/*" connected to "Latex program" "*/
 	IBOutlet NSButton	*_escapeWarningButton;		/*" connected to "Shell Escape Warning" "*/
@@ -91,7 +89,6 @@
 	IBOutlet NSMatrix	*_syncMatrix;			/*" connected to "Sync Method" "*/
 	IBOutlet NSMatrix	*_defaultCommandMatrix;		/*" connected to "Default Program" "*/
 	IBOutlet NSTextField    *_engineTextField;
-	IBOutlet NSMatrix       *_distillerMatrix;              /*" connected to "Distiller" "*/
 	IBOutlet NSMatrix	*_consoleMatrix;		/*" connected to "Show Console" "*/
     IBOutlet NSTextField *tabIndentField;
     IBOutlet NSTextField *firstParagraphIndentField;
@@ -157,6 +154,7 @@
     IBOutlet NSPopUpButton  *dictionaryPopup;
 	IBOutlet NSButton *_displayAsBookButton;
 	IBOutlet NSButton *_linkPopupsButton;
+	IBOutlet NSButton *_scrollPageTurnButton;
 	IBOutlet NSPopUpButton	*_pageStylePopup;// mitsu 1.29 (O) /*" connected to page style popup button "*/
 	IBOutlet NSMatrix       *_firstPageMatrix;// /*" radio buttons for first page left or right in multipage display "*/
 	IBOutlet NSPopUpButton	*_resizeOptionPopup;// mitsu 1.29 (O) /*" connected to resize option popup button "*/
@@ -306,10 +304,10 @@
 - (IBAction)htmlWindowPosChanged:sender;
 - (IBAction)currentHtmlWindowPosDefault:sender;
 - (IBAction)magChanged:sender;
-- (IBAction)scrollPressed:sender;
 - (IBAction)firstDoublePageChanged:sender;
 - (IBAction)displayAsBookChanged:(NSButton *)sender;
 - (IBAction)linkPopupsChanged:(NSButton *)sender;
+- (IBAction)scrollPageTurnChanged:(NSButton *)sender;
 - (IBAction)dictionaryPressed: sender;
 - (IBAction)texProgramChanged:sender;
 - (IBAction)latexProgramChanged:sender;
@@ -327,14 +325,12 @@
 - (IBAction)syncChanged:sender;
 // - (IBAction)defaultMetaPostChanged:sender;
 //- (IBAction)defaultBibtexChanged:sender; // comment out by Terada
-- (IBAction)distillerChanged:sender;
 - (IBAction)defaultProgramChanged:sender;
 - (IBAction)setEngine:sender;
 - (IBAction)consoleBehaviorChanged:sender;
 - (IBAction)saveRelatedButtonPressed:sender;
 - (IBAction)syncTabButtonPressed:sender;
 - (IBAction)autoPDFChanged:sender;
-- (IBAction)antialiasChanged:sender;
 - (IBAction)ptexUtfOutputPressed:sender; // zenitani 1.35 (C)
 - (IBAction)convertUTFPressed:sender;
 - (IBAction)openRootFilePressed:sender;

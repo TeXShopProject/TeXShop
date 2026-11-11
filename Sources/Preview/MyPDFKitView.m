@@ -45,6 +45,7 @@
 #import "MyPDFKitView.h"
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
+#import "TSScrollPageTurn.h"
 #import "TSLinkPreviewGeometry.h"
 #import "TSLinkPreviewView.h"
 #import "TSOutlineExpansion.h"
@@ -81,6 +82,8 @@
 {
     // The link popup takes the place of PDFKit's "Go to page" tool tip (#17).
     if (self == [MyPDFKitView class]) TSLinkPreviewInstallToolTipFilter();
+    // Notes the scroll being handled, for "Do not turn pages by scrolling".
+    if (self == [MyPDFKitView class]) TSScrollPageTurnInstallMonitor();
 }
 
 - (void)dealloc
@@ -2229,13 +2232,51 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     [self keepHorizontalPositionDuring:^{ [super goToPage:page]; }];
 }
 
+// "Do not turn pages by scrolling" (NoScrollPageTurnKey): in single and double page
+// display, scrolling with the mouse wheel or the trackpad stops at the edge of the page.
+// While it handles a scroll, PDFKit turns the page by asking the view to perform
+// goToNextPage: or goToPreviousPage: after a delay. Only a page turn asked for while
+// a scroll is being handled (TSScrollPageTurn.h) is dropped: keys, menus, the page
+// buttons and other delayed requests still turn the page.
+- (BOOL)scrollingKeepsPage
+{
+    return [SUD boolForKey:NoScrollPageTurnKey] &&
+        (self.displayMode == kPDFDisplaySinglePage || self.displayMode == kPDFDisplayTwoUp);
+}
+
+- (BOOL)isPageTurnFromScrolling:(SEL)selector
+{
+    return (selector == @selector(goToNextPage:) || selector == @selector(goToPreviousPage:)) &&
+        TSScrollEventBeingHandled(self.window) != nil && [self scrollingKeepsPage];
+}
+
+- (void)performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay
+{
+    if ([self isPageTurnFromScrolling:selector])
+        return;
+    [super performSelector:selector withObject:argument afterDelay:delay];
+}
+
+- (void)performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay
+                inModes:(NSArray<NSRunLoopMode> *)modes
+{
+    if ([self isPageTurnFromScrolling:selector])
+        return;
+    [super performSelector:selector withObject:argument afterDelay:delay inModes:modes];
+}
+
 - (void)goToNextPage:(id)sender
 {
+    // A page turn made while a scroll is being handled comes from the scroll.
+    if ([self isPageTurnFromScrolling:_cmd])
+        return;
     [self keepHorizontalPositionDuring:^{ [super goToNextPage:sender]; }];
 }
 
 - (void)goToPreviousPage:(id)sender
 {
+    if ([self isPageTurnFromScrolling:_cmd])
+        return;
     [self keepHorizontalPositionDuring:^{ [super goToPreviousPage:sender]; }];
 }
 
@@ -3686,7 +3727,6 @@ if ( ! self.myDocument.useConTeXtSyncParser)
 }
     
     [NSGraphicsContext saveGraphicsState];
-    BOOL shouldAntiAlias = [SUD boolForKey: AntiAliasKey];
     NSInteger interpolationValue = [SUD integerForKey: InterpolationValueKey];
     
     if (interpolationValue < 0)
@@ -3701,24 +3741,22 @@ if ( ! self.myDocument.useConTeXtSyncParser)
     //      NSImageInterpolationMedium = 4 (correct, not reversed)
     //      NSImageInterpolationHigh = 3 (correct, not reversed)
     
-    if (shouldAntiAlias) {
-        switch (interpolationValue) {
-                
-            case 0: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
-                break;
-        
-            case 1: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
-                break;
-        
-            case 2: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
-                break;
-        
-            case 4: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationMedium];
-                break;
-        
-            case 3: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-                break;
-         }
+    switch (interpolationValue) {
+            
+        case 0: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationDefault];
+            break;
+    
+        case 1: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
+            break;
+    
+        case 2: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
+            break;
+    
+        case 4: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationMedium];
+            break;
+    
+        case 3: [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+            break;
     }
     
 	[page drawWithBox:[self displayBox]];

@@ -125,13 +125,9 @@
             [TSSettingsLayoutRow controls:@[@"settings.DU3-gi-QzY"] kind:TSSettingsRowSection indentation:0], // XML Tag Choices
             [TSSettingsLayoutRow controls:@[@"settings.vEF-zd-SJl"] kind:TSSettingsRowSection indentation:0], // Alternate Engine
             [TSSettingsLayoutRow controls:@[@"settings.SS5-tZ-cDa"] kind:TSSettingsRowSection indentation:0], // pTeX support (for Japan)
-            [TSSettingsLayoutRow controls:@[@"settings.SXg-YM-OVa"] kind:TSSettingsRowSection indentation:0], // Distiller
             [TSSettingsLayoutRow controls:@[@"settings.03p-fB-1K3"] kind:TSSettingsRowSection indentation:0], // During File Save
             [TSSettingsLayoutRow controls:@[@"settings.Kin-Cw-xVc"] kind:TSSettingsRowSection indentation:0], // Project Root File
             [TSSettingsLayoutRow controls:@[@"settings.e3h-Wk-X7D"] kind:TSSettingsRowSection indentation:0], // Sparkle Updater
-        ]],
-        @"settings.aFF-a7-Car": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.eiU-B8-j8t"] kind:TSSettingsRowControls indentation:0], // distillerMatrix
         ]],
         @"settings.CTJ-d3-TKI": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.sPQ-5E-qId"] kind:TSSettingsRowControls indentation:0], // convertUTFButton
@@ -161,7 +157,6 @@
             [TSSettingsLayoutRow controls:@[@"settings.F6b-YV-mvL", @"settings.9KW-ea-Zni"] kind:TSSettingsRowControls indentation:0],
         ]],
         @"settings.10": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.228"] kind:TSSettingsRowSection indentation:0], // Change Page Buttons
             [TSSettingsLayoutRow controls:@[@"settings.47"] kind:TSSettingsRowSection indentation:0], // Preview Window Position
             [TSSettingsLayoutRow controls:@[@"settings.329"] kind:TSSettingsRowSection indentation:0], // Default Page Style
             [TSSettingsLayoutRow controls:@[@"settings.342"] kind:TSSettingsRowSection indentation:0], // Magnification Method
@@ -182,9 +177,6 @@
         @"settings.HSm-QY-Bs6": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.113", @"settings.116"] kind:TSSettingsRowControls indentation:0], // magTextField
         ]],
-        @"settings.p9l-bi-ywt": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.230"] kind:TSSettingsRowControls indentation:0], // scrollButton
-        ]],
         @"settings.slE-Lh-2Zi": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.345"] kind:TSSettingsRowControls indentation:0], // mouseModePopup
         ]],
@@ -203,8 +195,8 @@
             [TSSettingsLayoutRow controls:@[@"settings.557"] kind:TSSettingsRowControls indentation:0], // autoPDFButton
         ]],
         @"settings.024-V2-dVf": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.fjQ-he-GFL"] kind:TSSettingsRowControls indentation:0], // antialiasButton
             [TSSettingsLayoutRow controls:@[@"settings.preview-link-popups-button"] kind:TSSettingsRowControls indentation:0], // linkPopupsButton
+            [TSSettingsLayoutRow controls:@[@"settings.preview-scroll-page-turn-button"] kind:TSSettingsRowControls indentation:0], // scrollPageTurnButton
         ]],
         @"settings.7Xo-ey-gfu": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.G6V-Sw-jFT"] kind:TSSettingsRowControls indentation:0], // useTwoWindowsButton

@@ -46,5 +46,31 @@ int main(int argc,char **argv){@autoreleasepool{
   Check([other.keyEquivalent isEqual:@"z"],@"Malformed entries do not rewrite unrelated keys");
   Check([[completion.submenu itemAtIndex:0].keyEquivalent isEqual:@"a"] && [[completion.submenu itemAtIndex:1].keyEquivalent isEqual:@"b"],@"Every child dictionary entry is processed");
  }
- puts("PASS: 12 legacy title fixtures; numeric/named migration, removed entries, bounds and sibling assignments");
+ // Open Style File moved from Help (after Show Help for Package) to File (after Open).
+ // Legacy entries name or number the items as they were before the move.
+ for(NSNumber *numericMenus in @[@NO,@YES]){
+  NSMenu *main=[NSMenu new];
+  NSMenuItem *fileTop=Item(main,@"File");fileTop.submenu=[NSMenu new];NSMenu *file=fileTop.submenu;
+  Item(file,@"New");Item(file,@"New from Stationery...");NSMenuItem *open=Item(file,@"Open...");open.identifier=@"TSShortcut.openDocument:.0";
+  NSMenuItem *style=Item(file,@"Open Style File...");style.identifier=@"TSShortcut.displayStyleFile:.0";
+  Item(file,@"Open Recent");Item(file,@"Open for Preview...");[file addItem:NSMenuItem.separatorItem];
+  NSMenuItem *close=Item(file,@"Close");NSMenuItem *save=Item(file,@"Save");
+  NSMenuItem *helpTop=Item(main,@"Help");helpTop.submenu=[NSMenu new];NSMenu *help=helpTop.submenu;
+  Item(help,@"TeXShop Help");[help addItem:NSMenuItem.separatorItem];Item(help,@"TeX Live Documentation");
+  NSMenuItem *package=Item(help,@"Show Help for Package...");package.identifier=@"TSShortcut.displayHelpForPackage:.0";
+  NSMenuItem *helpSeparator=NSMenuItem.separatorItem;[help addItem:helpSeparator];NSMenuItem *first=Item(help,@"First Steps with TeXShop");
+  NSString *fileKey=numericMenus.boolValue?@"1":@"File",*helpKey=numericMenus.boolValue?@"2":@"Help";
+  void (^reset)(void)=^{for(NSMenuItem *item in @[style,close,save,package,first,helpSeparator]){item.keyEquivalent=@"";}};
+  reset();Apply(main,@{helpKey:@{@"Open Style File...":@[@"j",@NO,@NO]}});
+  Check([style.keyEquivalent isEqual:@"j"],@"Former Help path by name reaches the moved Open Style File");
+  reset();Apply(main,@{helpKey:@{@"5":@[@"j",@NO,@NO]}});
+  Check([style.keyEquivalent isEqual:@"j"] && [first.keyEquivalent isEqual:@""] && [helpSeparator.keyEquivalent isEqual:@""],@"Former Help position of Open Style File reaches it, not the separator");
+  reset();Apply(main,@{helpKey:@{@"7":@[@"k",@NO,@NO]}});
+  Check([first.keyEquivalent isEqual:@"k"],@"Help items after the former position keep their former numbers");
+  reset();Apply(main,@{fileKey:@{@"8":@[@"j",@NO,@NO],@"4":@[@"r",@NO,@NO]}});
+  Check([save.keyEquivalent isEqual:@"j"] && [close.keyEquivalent isEqual:@""] && [style.keyEquivalent isEqual:@""],@"File positions after Open keep their former numbers instead of shifting to Close");
+  reset();Apply(main,@{fileKey:@{@"Open Style File...":@[@"j",@NO,@NO],@"Save":@[@"s",@NO,@NO]}});
+  Check([style.keyEquivalent isEqual:@"j"] && [save.keyEquivalent isEqual:@"s"],@"Names in the current File menu still apply");
+ }
+ puts("PASS: 12 legacy title fixtures; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File");
 }return 0;}

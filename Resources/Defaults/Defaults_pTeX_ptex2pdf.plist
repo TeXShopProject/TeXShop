@@ -98,8 +98,6 @@
 	<string>XeLaTeX</string>
 	<key>DefaultScript</key>
 	<string>101</string>
-	<key>DistillerCommand</key>
-	<string>0</string>
 	<key>DocumentWindowPositionMode</key>
 	<string>1</string>
 	<key>Encoding</key>
@@ -153,7 +151,7 @@
 	<key>KeepBackup</key>
 	<string>NO</string>
 	<key>Kpsetool</key>
-	<string>kpsetool -w -n latex tex</string>
+	<string>kpsewhich -progname=latex -format=tex</string>
 	<key>LastStyName</key>
 	<string>latex.ltx</string>
 	<key>LatexCommand</key>
@@ -184,8 +182,8 @@
 	<integer>12</integer>
 	<key>NewLineCharacterKind</key>
 	<string>0</string>
-	<key>NoScrollEnabled</key>
-	<string>YES</string>
+	<key>NoScrollPageTurn</key>
+	<false/>
 	<key>OtherTeXExtensions</key>
 	<array/>
 	<key>OtherTrashExtensions</key>
@@ -455,7 +453,7 @@
 	<key>HtmlWindowFixedPos</key>
 	<string>18 678 507 479 0 0 1920 1178</string>
 	<key>HtmlHome</key>
-	<string></string>
+	<string>https://texshop.app</string>
 	<key>EncodingMenuInSaveDialog</key>
 	<false/>
 	<key>BlockCursor</key>

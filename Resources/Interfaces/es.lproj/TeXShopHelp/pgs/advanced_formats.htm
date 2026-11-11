@@ -43,11 +43,11 @@ XeLaTeX.engine. Los archivos .engine necesitan tener activado el bit que los con
 <p>Tambi&eacute;n es posible usar formatos si est&aacute;s componiendo mendiante tex + ghostscript. Pero ten en cuenta que TeXShop asume que un archivo .engine contiene una o m&aacute;s l&iacute;neas con comandos que al final producen un archivo .pdf. As&iacute; que el archivo .engine debe contener comandos que conviertan el archivo .dvi en un .pdf. He aqu&iacute; un archivo uo.fmt t&iacute;pico que lograr&iacute;a esto:</p>
 <dl>
 <dd>#!/bin/tcsh
-<dd>set path= ($path /usr/local/teTeX/bin/powerpc-apple-darwin-current /usr/local/bin)
+<dd>set path= ($path /Library/TeX/texbin /usr/local/bin /opt/homebrew/bin)
 <dd>latex -fmt uolatex  "$1"
 <dd>set filename = "$1"
 <dd>dvips "${filename:r}.dvi"
-<dd>pstopdf "${filename:r}.ps" 
+<dd>ps2pdf "${filename:r}.ps" 
 </dl>  
 <h4> Creaci&oacute;n de formatos </h4>
 <p>Los archivos de formato contienen la representaci&oacute;n binaria interna que ha surgido al compilar l&iacute;neas de c&oacute;digo fuente. Esta representaci&oacute;n depende tanto del microprocesador como de la implementaci&oacute;n particular de TeX que se ha usado. 

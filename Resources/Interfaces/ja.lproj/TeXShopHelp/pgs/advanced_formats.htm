@@ -152,11 +152,11 @@ Here is a typical engine file for uo.fmt in that case:</p>
 	<tt>
 		<dl>
 			<dd>#!/bin/tcsh
-			<dd>set path= ($path /usr/local/teTeX/bin/powerpc-apple-darwin-current /usr/local/bin)
+			<dd>set path= ($path /Library/TeX/texbin /usr/local/bin /opt/homebrew/bin)
 			<dd>latex -fmt uolatex  "$1"
 			<dd>set filename = "$1"
 			<dd>dvips "${filename:r}.dvi"
-			<dd>pstopdf "${filename:r}.ps" 
+			<dd>ps2pdf "${filename:r}.ps" 
 		</dl>
 	</tt>
 

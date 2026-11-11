@@ -116,10 +116,10 @@
     remainingParagraphIndentField = editor.remainingParagraphIndentField;
     tabIndentField = editor.tabIndentField;
     _HtmlHomeField = preview.HtmlHomeField;
-    _antialiasButton = preview.antialiasButton;
     _autoPDFButton = preview.autoPDFButton;
     _displayAsBookButton = preview.displayAsBookButton;
     _linkPopupsButton = preview.linkPopupsButton;
+    _scrollPageTurnButton = preview.scrollPageTurnButton;
     _firstPageMatrix = preview.firstPageMatrix;
     _htmlWindowPosButton = preview.htmlWindowPosButton;
     _htmlWindowPosMatrix = preview.htmlWindowPosMatrix;
@@ -129,7 +129,6 @@
     _pdfWindowPosButton = preview.pdfWindowPosButton;
     _pdfWindowPosMatrix = preview.pdfWindowPosMatrix;
     _resizeOptionPopup = preview.resizeOptionPopup;
-    _scrollButton = preview.scrollButton;
     useLeftSourceButton = preview.useLeftSourceButton;
     useOneWindowButton = preview.useOneWindowButton;
     useRightSourceButton = preview.useRightSourceButton;
@@ -183,7 +182,6 @@
     XMLtable = miscTwo.XMLtable;
     _alternateEngineTextField = miscTwo.alternateEngineTextField;
     _convertUTFButton = miscTwo.convertUTFButton;
-    _distillerMatrix = miscTwo.distillerMatrix;
     _latexScriptCommandTextField = miscTwo.latexScriptCommandTextField;
     _miniaturizeRootFileButton = miscTwo.miniaturizeRootFileButton;
     _openRootFileButton = miscTwo.openRootFileButton;

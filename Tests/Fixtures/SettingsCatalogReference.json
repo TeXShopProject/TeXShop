@@ -147,6 +147,25 @@
      ]
     },
     {
+     "title": "プロジェクトのルートファイル",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "ファイルを開いたときにルートファイルも開く",
+       "src": [
+        "8pX-l6-YF6"
+       ]
+      },
+      {
+       "kind": "switch",
+       "title": "開いたルートファイルを最小化する",
+       "src": [
+        "irw-yn-ghY"
+       ]
+      }
+     ]
+    },
+    {
      "title": "起動中の Dock アイコン",
      "rows": [
       {
@@ -194,25 +213,6 @@
        "selected": 4,
        "src": [
         "code:TSDockIconController"
-       ]
-      }
-     ]
-    },
-    {
-     "title": "プロジェクトのルートファイル",
-     "rows": [
-      {
-       "kind": "switch",
-       "title": "ファイルを開いたときにルートファイルも開く",
-       "src": [
-        "8pX-l6-YF6"
-       ]
-      },
-      {
-       "kind": "switch",
-       "title": "開いたルートファイルを最小化する",
-       "src": [
-        "irw-yn-ghY"
        ]
       }
      ]
@@ -478,7 +478,8 @@
        "title": "選択時にカーソルを移動",
        "src": [
         "621#8"
-       ]
+       ],
+       "note": "前面にないソースのウインドウをクリックしたとき、そのクリックでカーソルも移動します。"
       },
       {
        "kind": "switch",
@@ -563,7 +564,8 @@
        "title": "移動中も黄色くポップアップ",
        "src": [
         "1151"
-       ]
+       ],
+       "note": "カーソルを動かして括弧の隣に来たときも、対応する括弧を黄色く示します。"
       },
       {
        "kind": "switch",
@@ -1447,17 +1449,10 @@
       },
       {
        "kind": "switch",
-       "title": "ページボタンでスクロールしない",
+       "title": "スクロールでページを送らない",
+       "note": "「単一ページ」「見開きページ」で、マウスのホイールやトラックパッドでのスクロールが、ページの上端・下端で止まります。",
        "src": [
-        "230"
-       ]
-      },
-      {
-       "kind": "switch",
-       "title": "テキストとラインアートを滑らかに表示",
-       "on": true,
-       "src": [
-        "fyB-vX-69R"
+        "preview-scroll-page-turn-button"
        ]
       },
       {
@@ -1512,8 +1507,25 @@
      ]
     },
     {
-     "title": "カラーマップ",
+     "title": "画像のコピー",
      "rows": [
+      {
+       "kind": "popup",
+       "title": "フォーマット",
+       "choices": [
+        "PDF",
+        "TIFF (圧縮なし)",
+        "TIFF (LZW)",
+        "TIFF (PackBits)",
+        "JPEG (高画質)",
+        "JPEG (中画質)",
+        "JPEG (低画質)",
+        "PNG"
+       ],
+       "src": [
+        "405"
+       ]
+      },
       {
        "kind": "switch",
        "title": "カラーマップを使う",
@@ -1545,29 +1557,8 @@
         "values": [
          1
         ]
-       }
-      }
-     ]
-    },
-    {
-     "title": "画像のコピー",
-     "rows": [
-      {
-       "kind": "popup",
-       "title": "フォーマット",
-       "choices": [
-        "PDF",
-        "TIFF (圧縮なし)",
-        "TIFF (LZW)",
-        "TIFF (PackBits)",
-        "JPEG (高画質)",
-        "JPEG (中画質)",
-        "JPEG (低画質)",
-        "PNG"
-       ],
-       "src": [
-        "405"
-       ]
+       },
+       "note": "ビットマップ画像をコピーするときの文字の濃さです。大きな値ほど文字が強調されます。"
       }
      ]
     },
@@ -1577,10 +1568,11 @@
       {
        "kind": "path",
        "title": "ホーム URL",
-       "value": "https://www.google.com",
+       "value": "https://texshop.app",
        "src": [
         "Q1c-5s-qjb"
-       ]
+       ],
+       "note": "HTML ウインドウを表示したときに最初に開くページです。Web のアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app"
       }
      ]
     }
@@ -1641,7 +1633,7 @@
        "kind": "path",
        "title": "代替エンジン",
        "value": "pdflatexmk",
-       "note": "デフォルト: pdflatexmk",
+       "note": "「代替エンジンでタイプセット」で使うエンジンです。デフォルト: pdflatexmk",
        "src": [
         "5ec-XS-ht9"
        ]
@@ -1758,7 +1750,8 @@
        "on": true,
        "src": [
         "325"
-       ]
+       ],
+       "note": "上の TeX・LaTeX のコマンドに --shell-escape が含まれているとき、タイプセットの前に確認します。"
       }
      ]
     },
@@ -1790,7 +1783,8 @@
        "title": "PostScript ファイルを保存",
        "src": [
         "225"
-       ]
+       ],
+       "note": "「TeX + dvips + distiller」でタイプセットするとき、途中で作る PostScript ファイルを残します。"
       }
      ]
     },
@@ -1818,25 +1812,15 @@
      ]
     },
     {
-     "title": "Distiller",
+     "title": "Ghostscript",
      "rows": [
       {
-       "kind": "popup",
-       "title": "Distiller",
-       "choices": [
-        "Ghostscript",
-        "Apple Distiller"
-       ],
-       "src": [
-        "546"
-       ]
-      },
-      {
        "kind": "switch",
-       "title": "Ghostscript オプション -dALLOWPSTRANSPARENCY",
+       "title": "-dALLOWPSTRANSPARENCY",
        "src": [
         "217-aa-RyX"
-       ]
+       ],
+       "note": "Ghostscript で PostScript を PDF に変換するときにこのオプションを付け、PSTricks などの透明効果を残します。Ghostscript 9.51 以降が必要です。"
       }
      ]
     },
@@ -1845,9 +1829,9 @@
      "rows": [
       {
        "kind": "path",
-       "title": "kpsetool",
-       "value": "kpsetool -w -n latex tex",
-       "note": "デフォルト: kpsetool -w -n latex tex",
+       "title": "kpsewhich",
+       "value": "kpsewhich -progname=latex -format=tex",
+       "note": "「ファイル」メニューの「スタイルファイルを開く」で、ファイルを探すコマンドです。デフォルト: kpsewhich -progname=latex -format=tex",
        "src": [
         "1195"
        ]
@@ -1982,7 +1966,8 @@
        "title": "BibDesk 自動補完",
        "src": [
         "621#7"
-       ]
+       ],
+       "note": "\\cite などの中で、BibDesk の文献の引用キーを補完の候補に出します。"
       },
       {
        "kind": "button",
