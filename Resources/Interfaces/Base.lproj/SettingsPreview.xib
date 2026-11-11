@@ -271,7 +271,7 @@
               <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="557" identifier="settings.557">
                 <rect key="frame" x="19" y="9" width="187" height="18" />
                 <autoresizingMask key="autoresizingMask" />
-                <buttonCell key="cell" type="check" title="Automatic Preview Update" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="871">
+                <buttonCell key="cell" type="check" title="Reload PDFs Changed by Other Apps" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="871">
                   <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                   <font key="font" metaFont="system" />
                 </buttonCell>

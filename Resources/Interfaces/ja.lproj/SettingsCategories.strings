@@ -219,8 +219,8 @@
 "catalog.preview.1.1.title" = "先頭ページを表紙として単独表示";
 "catalog.preview.1.2.title" = "これから開く文書に適用します。マジックコメントと、PDF 内の表示方向が優先されます。";
 "group.preview.2.title" = "更新";
-"catalog.preview.2.0.title" = "プレビューの自動更新";
-"catalog.preview.2.0.note" = "外部エディタでソースを編集しているときに、PDF が変わったら読み直します。";
+"catalog.preview.2.0.title" = "ほかのアプリによる PDF の変更を感知して自動更新";
+"catalog.preview.2.0.note" = "外部エディタや latexmk などで PDF が書き換えられたら、プレビューを読み直します。";
 "group.preview.4.title" = "画像のコピー";
 "catalog.preview.4.0.title" = "フォーマット";
 "catalog.preview.4.1.title" = "カラーマップを使う";

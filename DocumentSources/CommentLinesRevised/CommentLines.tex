@@ -293,10 +293,8 @@ Start with the Sync Marks tool on. Marks are shown only for documents typeset wi
 
 {\em External Editors and PDF Updates}
 \begin{description}
-\item[\texttt{defaults write TeXShop AutoReloadExternalPDF NO}] \hfill \\
-With Automatic Preview Update on, do not reload a PDF changed by another program.
 \item[\texttt{defaults write TeXShop PdfFileRefresh NO}] \hfill \\
-Do not update a PDF file opened by itself in TeXShop when it changes. The PDF of a TeX document is still updated.
+With Reload PDFs Changed by Other Apps on, do not reload a PDF file opened by itself in TeXShop when another application changes it. The PDF of a TeX document is still reloaded.
 \item[\texttt{defaults write TeXShop RefreshTime 2}] \hfill \\
 How often, in seconds, TeXShop checks whether a PDF has changed; the default is 1 and the minimum 0.5.
 \item[\texttt{defaults write TeXShop BringPdfFrontOnAutomaticUpdate NO}] \hfill \\

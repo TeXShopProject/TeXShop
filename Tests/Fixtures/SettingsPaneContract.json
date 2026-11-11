@@ -3482,7 +3482,7 @@
           "332.title": "Magnify",
           "866.title": "Set",
           "501.title": "Two-Page Arrangement",
-          "871.title": "Automatic Preview Update",
+          "871.title": "Reload PDFs Changed by Other Apps",
           "636.title": "Select Text",
           "339.title": "Fit to Window",
           "328.title": "Scroll",
@@ -5171,7 +5171,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Automatic Preview Update"
+          "value": "Reload PDFs Changed by Other Apps"
         },
         {
           "key": "636.title",
@@ -6747,7 +6747,7 @@
           "332.title": "Lupe",
           "866.title": "Anwenden",
           "501.title": "Doppelseiten-Modus",
-          "871.title": "Vorschau autom. aktualisieren",
+          "871.title": "Von anderen Apps geänderte PDFs neu laden",
           "636.title": "Textauswahl",
           "339.title": "An Fenster anpassen",
           "328.title": "Verschieben",
@@ -8436,7 +8436,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Vorschau autom. aktualisieren"
+          "value": "Von anderen Apps geänderte PDFs neu laden"
         },
         {
           "key": "636.title",
@@ -10012,7 +10012,7 @@
           "332.title": "Aumentar",
           "866.title": "Establecer",
           "501.title": "Con páginas dobles",
-          "871.title": "Actualizar PDF automáticamente",
+          "871.title": "Recargar los PDF modificados por otras apps",
           "636.title": "Seleccionar texto",
           "339.title": "Ajustar a la ventana",
           "328.title": "Desplazar",
@@ -11701,7 +11701,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Actualizar PDF automáticamente"
+          "value": "Recargar los PDF modificados por otras apps"
         },
         {
           "key": "636.title",
@@ -13277,7 +13277,7 @@
           "332.title": "Agrandir",
           "866.title": "Confirmer",
           "501.title": "Page double (variantes)",
-          "871.title": "Mise à jour automatique de l'aperçu",
+          "871.title": "Recharger les PDF modifiés par d’autres apps",
           "636.title": "Sélectionner le  texte",
           "339.title": "Adapter à la fenêtre",
           "328.title": "Dérouler",
@@ -14966,7 +14966,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Mise à jour automatique de l'aperçu"
+          "value": "Recharger les PDF modifiés par d’autres apps"
         },
         {
           "key": "636.title",
@@ -16542,7 +16542,7 @@
           "332.title": "Ingrandimento",
           "866.title": "Ripristina",
           "501.title": "Modalità pagine affiancate",
-          "871.title": "Aggiornam. anteprima automatico",
+          "871.title": "Ricarica i PDF modificati da altre app",
           "636.title": "Selezione testo",
           "339.title": "Adatta alla finestra",
           "328.title": "Scorrimento",
@@ -18231,7 +18231,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Aggiornam. anteprima automatico"
+          "value": "Ricarica i PDF modificati da altre app"
         },
         {
           "key": "636.title",
@@ -19807,7 +19807,7 @@
           "332.title": "拡大鏡",
           "866.title": "設定",
           "501.title": "見開きの配置",
-          "871.title": "プレビューの自動更新",
+          "871.title": "ほかのアプリによる PDF の変更を感知して自動更新",
           "636.title": "文字選択",
           "339.title": "ウインドウに合わせる",
           "328.title": "スクロール",
@@ -21496,7 +21496,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "プレビューの自動更新"
+          "value": "ほかのアプリによる PDF の変更を感知して自動更新"
         },
         {
           "key": "636.title",
@@ -23072,7 +23072,7 @@
           "332.title": "확대경",
           "866.title": "설정",
           "501.title": "맞쪽보기",
-          "871.title": "보기 창 자동 갱신",
+          "871.title": "다른 앱이 변경한 PDF 반영",
           "636.title": "글자 선택",
           "339.title": "창에 맞추기",
           "328.title": "스크롤",
@@ -24761,7 +24761,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "보기 창 자동 갱신"
+          "value": "다른 앱이 변경한 PDF 반영"
         },
         {
           "key": "636.title",
@@ -26337,7 +26337,7 @@
           "332.title": "Vergroten",
           "866.title": "Reset",
           "501.title": "Indeling van dubbele pagina’s",
-          "871.title": "Werk automatisch bij",
+          "871.title": "Door andere apps gewijzigde pdf’s herladen",
           "636.title": "Tekst selecteren",
           "339.title": "Aan venster aanpassen",
           "328.title": "Scrollen",
@@ -28026,7 +28026,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Werk automatisch bij"
+          "value": "Door andere apps gewijzigde pdf’s herladen"
         },
         {
           "key": "636.title",
@@ -29602,7 +29602,7 @@
           "332.title": "Ampliar",
           "866.title": "Definir",
           "501.title": "Disposição de páginas duplas",
-          "871.title": "Atualizar a pré-visualização automaticamente",
+          "871.title": "Recarregar PDF alterados por outras apps",
           "636.title": "Selecionar texto",
           "339.title": "Ajustar à janela",
           "328.title": "Deslocar",
@@ -31291,7 +31291,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Atualizar a pré-visualização automaticamente"
+          "value": "Recarregar PDF alterados por outras apps"
         },
         {
           "key": "636.title",
@@ -32867,7 +32867,7 @@
           "332.title": "Ampliar",
           "866.title": "Definir",
           "501.title": "Modo de página dupla",
-          "871.title": "Atualizar automaticamente o pdf",
+          "871.title": "Recarregar PDFs alterados por outros apps",
           "636.title": "Selecionar texto",
           "339.title": "Ajustar à janela",
           "328.title": "Rolar",
@@ -34556,7 +34556,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Atualizar automaticamente o pdf"
+          "value": "Recarregar PDFs alterados por outros apps"
         },
         {
           "key": "636.title",
@@ -36132,7 +36132,7 @@
           "332.title": "Mărire",
           "866.title": "Stabilește",
           "501.title": "Aranjarea paginilor duble",
-          "871.title": "Actualizează automat previzualizarea",
+          "871.title": "Reîncarcă PDF-urile modificate de alte aplicații",
           "636.title": "Selectează textul",
           "339.title": "Adaptează la Fereastră",
           "328.title": "Derulare",
@@ -37821,7 +37821,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "Actualizează automat previzualizarea"
+          "value": "Reîncarcă PDF-urile modificate de alte aplicații"
         },
         {
           "key": "636.title",
@@ -39397,7 +39397,7 @@
           "332.title": "放大镜",
           "866.title": "设定",
           "501.title": "双页模式",
-          "871.title": "自动更新预览",
+          "871.title": "重新载入其他应用更改的 PDF",
           "636.title": "选择文本",
           "339.title": "适合窗口",
           "328.title": "滚动",
@@ -41086,7 +41086,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "自动更新预览"
+          "value": "重新载入其他应用更改的 PDF"
         },
         {
           "key": "636.title",

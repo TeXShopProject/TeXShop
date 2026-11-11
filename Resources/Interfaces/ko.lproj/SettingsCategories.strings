@@ -219,8 +219,8 @@
 "catalog.preview.1.1.title" = "첫 페이지를 표지로 따로 표시";
 "catalog.preview.1.2.title" = "이후 여는 문서에 적용됩니다. 매직 주석과 PDF의 보기 방향이 우선합니다.";
 "group.preview.2.title" = "새로 고침";
-"catalog.preview.2.0.title" = "보기 창 자동 갱신";
-"catalog.preview.2.0.note" = "외부 편집기로 소스를 편집할 때 변경된 PDF를 다시 불러옵니다.";
+"catalog.preview.2.0.title" = "다른 앱이 변경한 PDF 반영";
+"catalog.preview.2.0.note" = "외부 편집기나 latexmk 등이 PDF를 다시 쓰면 보기 창을 다시 불러옵니다.";
 "group.preview.4.title" = "이미지 복사";
 "catalog.preview.4.0.title" = "복사할 이미지 형식";
 "catalog.preview.4.1.title" = "칼러 매핑 사용";

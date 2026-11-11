@@ -7219,8 +7219,7 @@ if (! useFullSplitWindow) {
 {
     if (self.externalPDFObservationClosed ||
         (self.documentType != isTeX && self.documentType != isPDF)) return NO;
-    id override = [SUD objectForKey:@"AutoReloadExternalPDF"];
-    return [SUD boolForKey:PdfRefreshKey] && (!override || [override boolValue]) &&
+    return [SUD boolForKey:PdfRefreshKey] &&
         (self.documentType != isPDF || [SUD boolForKey:PdfFileRefreshKey]);
 }
 
