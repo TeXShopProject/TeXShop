@@ -44,6 +44,7 @@
 
 #import "MyPDFKitView.h"
 #import "TSExternalPDFReload.h"
+#import "TSPreviewHorizontalPosition.h"
 #import "TSLinkPreviewGeometry.h"
 #import "TSLinkPreviewView.h"
 #import "TSOutlineExpansion.h"
@@ -2204,6 +2205,80 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 }
 */
 
+
+// On macOS 27, single and double page display moves to a page corner whenever
+// the page changes: Option or Command with the Up and Down arrows, Space, Home,
+// End, the page number field, SyncTeX and Find. Keep the horizontal position, as
+// continuous display and earlier systems do. PDFKit's own keys call these methods.
+- (void)keepHorizontalPositionDuring:(void (NS_NOESCAPE ^)(void))navigation
+{
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    BOOL keep = NO;
+    if (@available(macOS 27.0, *))
+        keep = (self.displayMode == kPDFDisplaySinglePage || self.displayMode == kPDFDisplayTwoUp) &&
+            self.document.pageCount && clip && !NSIsEmptyRect(clip.bounds);
+    CGFloat x = NSMinX(clip.bounds);
+    navigation();
+    if (keep)
+        TSPreviewScrollHorizontally(self.documentView.enclosingScrollView, x);
+}
+
+- (void)goToPage:(PDFPage *)page
+{
+    [self keepHorizontalPositionDuring:^{ [super goToPage:page]; }];
+}
+
+- (void)goToNextPage:(id)sender
+{
+    [self keepHorizontalPositionDuring:^{ [super goToNextPage:sender]; }];
+}
+
+- (void)goToPreviousPage:(id)sender
+{
+    [self keepHorizontalPositionDuring:^{ [super goToPreviousPage:sender]; }];
+}
+
+- (void)goToFirstPage:(id)sender
+{
+    [self keepHorizontalPositionDuring:^{ [super goToFirstPage:sender]; }];
+}
+
+- (void)goToLastPage:(id)sender
+{
+    [self keepHorizontalPositionDuring:^{ [super goToLastPage:sender]; }];
+}
+
+// SyncTeX and Find show their result with scrollSelectionToVisible:. On macOS 27
+// PDFKit then also scrolls sideways, to a place that depends on where the line
+// is on the page, so the margins moved from one page to the next. Scroll sideways
+// only as far as needed to bring the result into view.
+- (void)scrollSelectionToVisible:(id)sender
+{
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    PDFSelection *selection = self.currentSelection;
+    BOOL keep = NO;
+    if (@available(macOS 27.0, *))
+        keep = selection && clip && !NSIsEmptyRect(clip.bounds) && NSWidth(clip.frame) > 0;
+    CGFloat x = NSMinX(clip.bounds), width = NSWidth(clip.bounds);
+    [super scrollSelectionToVisible:sender];
+    if (!keep) return;
+    clip = self.documentView.enclosingScrollView.contentView;
+    NSRect extent = NSZeroRect;
+    for (PDFPage *page in selection.pages) {
+        NSRect bounds = [selection boundsForPage:page];
+        if (NSIsEmptyRect(bounds) || [self.document indexForPage:page] == NSNotFound) continue;
+        bounds = [clip convertRect:[self convertRect:bounds fromPage:page] fromView:self];
+        extent = NSIsEmptyRect(extent) ? bounds : NSUnionRect(extent, bounds);
+    }
+    if (NSIsEmptyRect(extent)) return;
+    // Ten points on screen to spare, in clip view units.
+    CGFloat margin = 10 * NSWidth(clip.bounds) / NSWidth(clip.frame);
+    CGFloat target = TSPreviewHorizontalOriginShowing(NSMinX(extent), NSMaxX(extent), x, width, margin);
+    if (!isnan(target))
+        TSPreviewScrollHorizontally(self.documentView.enclosingScrollView, target);
+}
 
 - (void)stepPageForward:(BOOL)forward sender:(id)sender
 {
