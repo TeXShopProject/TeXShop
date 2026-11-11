@@ -9,7 +9,7 @@ import tempfile
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['no-keep', 'no-go-to-page', 'selection-native', 'selection-always-keep'])
+parser.add_argument('--mutation', choices=['no-keep', 'no-go-to-page', 'selection-native', 'selection-always-keep', 'union-extent'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -33,6 +33,13 @@ elif args.mutation == 'selection-native':
     mutate('    if (!keep) return;\n    clip = self', '    return;\n    clip = self')
 elif args.mutation == 'selection-always-keep':
     mutate('    if (!isnan(target))\n', '    target = x;\n')
+header = (root / 'Sources/Preview/TSPreviewHorizontalPosition.h').read_text()
+if args.mutation == 'union-extent':
+    # The first version: the result as one rectangle around all its lines.
+    old = '    if (!count) return x;\n'
+    assert old in header
+    header = header.replace(old, old + '    { NSRect all = lines[0]; for (NSUInteger i = 1; i < count; i++) all = NSUnionRect(all, lines[i]);\n'
+                            '      return TSPreviewHorizontalOriginShowing(NSMinX(all), NSMaxX(all), x, width, margin); }\n')
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -63,7 +70,7 @@ METHODS
 
 // Pages of text whose column alternates between the left and the right, as in a
 // two-sided document; the page width varies when asked.
-static PDFDocument *makePDF(BOOL varied) {
+static PDFDocument *makePDF(BOOL varied, BOOL far) {
  NSMutableData *data=[NSMutableData data];
  CGDataConsumerRef consumer=CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
  CGContextRef pdf=CGPDFContextCreate(consumer,NULL,NULL);
@@ -77,7 +84,7 @@ static PDFDocument *makePDF(BOOL varied) {
   for(NSInteger line=0;line<40;line++)
    [[NSString stringWithFormat:@"Line %02ld of page %ld runs across the text column here",line,n+1]
      drawAtPoint:NSMakePoint(left,740-18*line) withAttributes:attributes];
-  [@"far" drawAtPoint:NSMakePoint(box.size.width-40,400) withAttributes:attributes];
+  if(far) [@"far" drawAtPoint:NSMakePoint(box.size.width-40,400) withAttributes:attributes];
   [NSGraphicsContext restoreGraphicsState];
   CGContextEndPage(pdf);
  }
@@ -126,7 +133,7 @@ int main(void) { @autoreleasepool {
  TSInstallAppKitIsolation(); [NSApplication sharedApplication];
  [SUD setBool:NO forKey:LeftRightArrowsAlwaysPageKey];
  BOOL macOS27=NO; if (@available(macOS 27.0,*)) macOS27=YES;
- PDFDocument *plain=makePDF(NO), *varied=makePDF(YES);
+ PDFDocument *plain=makePDF(NO,YES), *varied=makePDF(YES,YES), *columns=makePDF(NO,NO);
  check(plain.pageCount==9 && [[plain pageAtIndex:4].string containsString:@"Line 00 of page 5"],@"test document has text");
 
  // The pure rule for search and SyncTeX results.
@@ -137,6 +144,18 @@ int main(void) { @autoreleasepool {
  check(TSPreviewHorizontalOriginShowing(0,190,100,200,10)==-5,@"the spare room shrinks for a wide result");
  check(TSPreviewHorizontalOriginShowing(50,600,100,200,10)==100,@"a result wider than the view keeps the position while in view");
  check(isnan(TSPreviewHorizontalOriginShowing(400,900,100,200,10)),@"a wide result out of view is left to PDFKit");
+ {
+  NSRect view=NSMakeRect(100,500,200,200);
+  NSRect split[]={NSMakeRect(20,600,150,12),NSMakeRect(400,100,150,12)};   // runs on to the next column
+  check(TSPreviewHorizontalOriginShowingLines(split,2,view,100,10)==10,@"the line in view vertically decides, not the room between the lines");
+  NSRect apart[]={NSMakeRect(-200,600,250,12),NSMakeRect(350,620,250,12)};   // two wide parts, only the room in view
+  check(isnan(TSPreviewHorizontalOriginShowingLines(apart,2,view,100,10)),@"room between the lines does not count as in view");
+  NSRect shown[]={NSMakeRect(20,560,250,12),NSMakeRect(120,600,150,12)};
+  check(TSPreviewHorizontalOriginShowingLines(shown,2,view,100,10)==100,@"any line fully in view keeps the position");
+  NSRect below[]={NSMakeRect(20,900,100,12)};
+  check(TSPreviewHorizontalOriginShowingLines(below,1,view,100,10)==10,@"with no line in view vertically, the first line decides");
+  check(TSPreviewHorizontalOriginShowingLines(NULL,0,view,100,10)==100,@"no lines keep the position");
+ }
 
  NSUInteger paginatedRuns=0,keptLines=0,nativeMoves=0;
  for(NSNumber *mode in @[@(kPDFDisplaySinglePage),@(kPDFDisplayTwoUp),@(kPDFDisplaySinglePageContinuous),@(kPDFDisplayTwoUpContinuous)])
@@ -226,6 +245,30 @@ int main(void) { @autoreleasepool {
    v.document=nil;[w close];
   }
  }
+ // A result that runs from the last line of one page onto the next page of a spread,
+ // starting with the view between the two pages' lines: some of the result must show.
+ if(macOS27) for(NSNumber *mode in @[@(kPDFDisplayTwoUp),@(kPDFDisplayTwoUpContinuous)]) for(NSInteger style=0;style<2;style++) {
+  context=[NSString stringWithFormat:@"result across pages, mode=%@ style=%ld",mode,style];
+  NSWindow *w=window(),*cw=window();
+  PDFView *v=setUp([[PreviewView alloc]initWithFrame:NSMakeRect(0,0,500,500)],w,columns,mode.integerValue,NO,style);
+  PDFView *control=setUp([[PDFView alloc]initWithFrame:NSMakeRect(0,0,500,500)],cw,columns,mode.integerValue,NO,style);
+  PDFPage *a=[columns pageAtIndex:4],*b=[columns pageAtIndex:5];
+  PDFSelection *selection=[columns selectionFromPage:a atCharacterIndex:[a.string rangeOfString:@"Line 39"].location toPage:b atCharacterIndex:48];
+  check(selection.pages.count==2&&selection.selectionsByLine.count>=2,@"Fixture: the result runs on to the next page");
+  for(PDFView *view in @[v,control]) {
+   [view goToPage:a];TSPreviewScrollHorizontally(view.documentView.enclosingScrollView,480);pump();
+   [view setCurrentSelection:selection];[view scrollSelectionToVisible:nil];[view setCurrentSelection:nil];pump();
+  }
+  for(PDFView *view in @[control,v]) {
+   BOOL seen=NO;NSRect visible=clipOf(view).bounds;
+   for(PDFSelection *line in selection.selectionsByLine) for(PDFPage *page in line.pages) {
+    NSRect r=[clipOf(view) convertRect:[view convertRect:[line boundsForPage:page] fromPage:page] fromView:view];
+    seen|=NSIntersectsRect(r,visible);
+   }
+   check(seen,view==v?@"part of a result across pages is in view":@"Fixture: PDFKit alone shows part of the result");
+  }
+  v.document=nil;control.document=nil;[w close];[cw close];
+ }
  if(macOS27) {
   check(paginatedRuns==12*9,@"all paginated cases ran");
   // Lines keep the margins in every view; PDFKit alone moves them in most.
@@ -240,7 +283,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-horizontal-') as directory:
     temp = Path(directory)
     (temp / 'home' / 'Library' / 'Preferences').mkdir(parents=True)
     (temp / 'test.m').write_text(program)
-    subprocess.run(['xcrun', 'clang', '-I', str(root / 'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc',
+    (temp / 'TSPreviewHorizontalPosition.h').write_text(header)
+    subprocess.run(['xcrun', 'clang', '-I', str(temp), '-I', str(root / 'Tests'), '-mmacosx-version-min=14.6', '-w', '-fobjc-arc',
                     '-framework', 'Cocoa', '-framework', 'PDFKit', *include_args(root), str(temp / 'test.m'),
                     '-o', str(temp / 'test')], check=True)
     subprocess.run([str(temp / 'test')], check=True, timeout=300,

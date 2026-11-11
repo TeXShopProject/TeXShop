@@ -53,3 +53,26 @@ static inline CGFloat TSPreviewHorizontalOriginShowing(CGFloat left, CGFloat rig
     if (right <= x || left >= x + width) return NAN;
     return x;
 }
+
+// The same for a result made of lines, in clip view coordinates, once PDFKit has
+// scrolled it into view vertically: visible has the vertical range then and the
+// width of the view, and x is the left edge before. Each line counts by itself: the
+// room between the lines of a result that runs on to another page or column is not
+// part of it.
+// - a line in view vertically and fully in view sideways at x keeps x;
+// - otherwise the first line in view vertically (or the first line) decides, as above.
+static inline CGFloat TSPreviewHorizontalOriginShowingLines(const NSRect *lines, NSUInteger count, NSRect visible,
+                                                           CGFloat x, CGFloat margin)
+{
+    CGFloat width = NSWidth(visible);
+    NSUInteger first = NSNotFound;
+    for (NSUInteger i = 0; i < count; i++) {
+        NSRect line = lines[i];
+        if (!(NSMaxY(line) > NSMinY(visible) && NSMinY(line) < NSMaxY(visible))) continue;
+        if (first == NSNotFound) first = i;
+        if (NSMinX(line) >= x && NSMaxX(line) <= x + width) return x;
+    }
+    if (!count) return x;
+    if (first == NSNotFound) first = 0;
+    return TSPreviewHorizontalOriginShowing(NSMinX(lines[first]), NSMaxX(lines[first]), x, width, margin);
+}

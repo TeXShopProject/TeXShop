@@ -2252,7 +2252,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 // SyncTeX and Find show their result with scrollSelectionToVisible:. On macOS 27
 // PDFKit then also scrolls sideways, to a place that depends on where the line
 // is on the page, so the margins moved from one page to the next. Scroll sideways
-// only as far as needed to bring the result into view.
+// only as far as needed to bring the result into view (TSPreviewHorizontalPosition.h).
 - (void)scrollSelectionToVisible:(id)sender
 {
     NSScrollView *scroll = self.documentView.enclosingScrollView;
@@ -2265,17 +2265,25 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     [super scrollSelectionToVisible:sender];
     if (!keep) return;
     clip = self.documentView.enclosingScrollView.contentView;
-    NSRect extent = NSZeroRect;
-    for (PDFPage *page in selection.pages) {
-        NSRect bounds = [selection boundsForPage:page];
-        if (NSIsEmptyRect(bounds) || [self.document indexForPage:page] == NSNotFound) continue;
-        bounds = [clip convertRect:[self convertRect:bounds fromPage:page] fromView:self];
-        extent = NSIsEmptyRect(extent) ? bounds : NSUnionRect(extent, bounds);
+    // The result line by line: a result that runs on to another page or column
+    // leaves room between its lines that shows none of it.
+    NSMutableData *lines = [NSMutableData data];
+    NSArray<PDFSelection *> *parts = selection.selectionsByLine;
+    for (PDFSelection *part in parts.count ? parts : @[selection]) {
+        for (PDFPage *page in part.pages) {
+            NSRect bounds = [part boundsForPage:page];
+            if (NSIsEmptyRect(bounds) || [self.document indexForPage:page] == NSNotFound) continue;
+            bounds = [clip convertRect:[self convertRect:bounds fromPage:page] fromView:self];
+            [lines appendBytes:&bounds length:sizeof bounds];
+        }
     }
-    if (NSIsEmptyRect(extent)) return;
+    if (!lines.length) return;
     // Ten points on screen to spare, in clip view units.
     CGFloat margin = 10 * NSWidth(clip.bounds) / NSWidth(clip.frame);
-    CGFloat target = TSPreviewHorizontalOriginShowing(NSMinX(extent), NSMaxX(extent), x, width, margin);
+    NSRect visible = clip.bounds;
+    visible.origin.x = x;
+    visible.size.width = width;
+    CGFloat target = TSPreviewHorizontalOriginShowingLines(lines.bytes, lines.length / sizeof(NSRect), visible, x, margin);
     if (!isnan(target))
         TSPreviewScrollHorizontally(self.documentView.enclosingScrollView, target);
 }
