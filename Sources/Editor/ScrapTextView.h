@@ -49,6 +49,9 @@
 @property (retain) NSString     *originalString;
 @property (retain) NSString     *currentString;
 
+// The theme's colors for the background, the text and the insertion point.
+- (void)updateExperimentColors:(NSNotification *)notification;
+
 
 @end
 

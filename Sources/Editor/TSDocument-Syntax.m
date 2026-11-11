@@ -933,6 +933,8 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 		theRange.length = [self.textStorage length];
 		[[textView1 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
 		[[textView2 layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:theRange];
+		[[scrapTextView layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName
+			forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
 	}
 }
 
@@ -983,6 +985,17 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
 	// Recolor the visible area only.
 	[self colorizeVisibleAreaInTextView:textView1];
 	[self colorizeVisibleAreaInTextView:textView2];
+	[self colorizeExperimentSource];
+}
+
+// The characters visible in any text view, as -[TSTextView visibleCharacterRange]; the
+// Experiment source is a plain text view.
+static NSRange TSVisibleCharacterRange(NSTextView *textView)
+{
+    NSLayoutManager *layoutManager = textView.layoutManager;
+    NSRect visibleRect = textView.enclosingScrollView.contentView.documentVisibleRect;
+    NSRange glyphs = [layoutManager glyphRangeForBoundingRect:visibleRect inTextContainer:textView.textContainer];
+    return [layoutManager characterRangeForGlyphRange:glyphs actualGlyphRange:NULL];
 }
 
 - (void) colorizeVisibleAreaInTextView:(NSTextView *)aTextView
@@ -1004,12 +1017,13 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
     // are required to prevent a crash if the splitbar
     // is moved to the extreme left.
     
-    editWidth = [aTextView theViewWidth];
+    // The width of the clip view, as -[TSTextView theViewWidth].
+    editWidth = aTextView.enclosingScrollView.contentView.bounds.size.width;
     // NSLog(@"the width is %f", editWidth);
     
     if (editWidth > 60.0)
 
-        [self colorizeText:aTextView range:[aTextView visibleCharacterRange]];
+        [self colorizeText:aTextView range:TSVisibleCharacterRange(aTextView)];
 }
 
 
@@ -1093,7 +1107,7 @@ static BOOL TSParagraphHasAlignment(NSTextStorage *storage, NSUInteger location,
         {
             layoutManager = [aTextView layoutManager];
             textString = [aTextView string];
-            [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:[aTextView visibleCharacterRange]];
+            [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:TSVisibleCharacterRange(aTextView)];
 
             mySelectedLineRange = [aTextView selectedRange];
             [textString getLineStart:&startl end:&endl contentsEnd:&theEnd forRange:mySelectedLineRange];

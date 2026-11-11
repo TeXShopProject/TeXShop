@@ -485,6 +485,7 @@
     
     [self colorizeVisibleAreaInTextView:textView1];
     [self colorizeVisibleAreaInTextView:textView2];
+    [self colorizeExperimentSource];
     
 }
 
