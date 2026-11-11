@@ -495,7 +495,7 @@ TeXShop Settings opens from the main TeXShop menu. Its sidebar groups related se
 
 Use Back and Forward to revisit categories. Command-left bracket and Command-right bracket navigate while Settings is active; brackets produced with Option also work. The window remembers its last category. Navigation history lasts until the settings window closes.
 
-General contains Settings Profile and the link to Comment Lines and Hidden Settings. The profile confirmation describes its reset scope and selected engine path. Editor contains the source font; Console contains its own font. Appearance contains theme selections, the theme editor and Dock icon choices. Theme colors are grouped by their purpose. Creating a theme asks for its name; replacing an existing theme asks for confirmation with that name.
+General contains Settings Profile, the Dock icon choices and the link to Comment Lines and Hidden Settings. The profile confirmation describes its reset scope and selected engine path. Editor contains the source font; Console contains its own font. Themes contains theme selections and the theme editor. Theme colors are grouped by their purpose. Creating a theme asks for its name; replacing an existing theme asks for confirmation with that name.
 
 A small note with a yellow warning symbol under a changed setting explains consequences that may otherwise be surprising: the spell-checking method, the zoom for new PDFs when a preview is open, and the default encoding when a source window is open. The note clears when the value returns to the value at opening, another category is selected, or Settings closes. Auto Save shows a restart note while its saved value differs from the startup value. Switching between the standard Find Panel and Find Bar updates open source, console and log views immediately. Switching to or from OgreKit requires restarting TeXShop.
 
@@ -545,7 +545,7 @@ The solution was simple: choose a source file which contains Hebrew. The Apple F
 Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings, Keyboard and cannot be assigned by their former menu titles.
 
 
-Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose the \LaTeX{}-aware or legacy method. The former has a rule editor; the latter has three indented options. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings.
+Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Themes, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose the \LaTeX{}-aware or legacy method. The former has a rule editor; the latter has three indented options. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings.
 
 Use Search Settings above the sidebar to find categories, labels, options and menu commands. Results list individual settings with their category names. A match on a category name or description provides one entry to the top of that category. Color fields on the same row share one result. Words separated by spaces must describe the same setting, optionally qualified by its category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to scroll to and highlight that setting and add the visit to normal navigation history. Clearing the query keeps the current pane. Back and Forward remain available according to the history and navigate accordingly. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording.
 
@@ -2890,7 +2890,7 @@ PreTeXt source files have extension .xml or .ptx.  They are text files containin
 
 \subsection{Syntax Coloring}
 
-The old syntax coloring methods are used for LaTeX embedded in these files, but in addition five extra colors are used for the tags. These colors, and all other TeXShop colors, can be adjusted  in the theme settings in TeXShop's Appearance category, to be described in a later chapter.
+The old syntax coloring methods are used for LaTeX embedded in these files, but in addition five extra colors are used for the tags. These colors, and all other TeXShop colors, can be adjusted  in TeXShop's Themes category, to be described in a later chapter.
 
 The ``Comment'' color is for xml comments and the ``Tag'' color is for xml tags. Some tags contain extra information; for instance, the minimal.xml file contains
 \begin{verbatim}
@@ -3554,9 +3554,9 @@ which reads
 
 \chapter{Themes}
 
-TeXShop uses customizable colors for syntax coloring, for various window backgrounds, and for other purposes. In the original version of TeXShop, users could modify these colors with a fairly baroque set of preference items. Then in macOS Mojave, Apple introduced ``Lite Mode'' and ``Dark Mode'' and an entirely new set of colors was required. At that point the old color preferences were ripped out of TeXShop and replaced by the theme settings in the Appearance category in Preferences, see \cref{fig:Theme}. While previously many colors could only be changed using  obscure hidden Preference settings, now all color choices are available in the theme settings in the Appearance category.
+TeXShop uses customizable colors for syntax coloring, for various window backgrounds, and for other purposes. In the original version of TeXShop, users could modify these colors with a fairly baroque set of preference items. Then in macOS Mojave, Apple introduced ``Lite Mode'' and ``Dark Mode'' and an entirely new set of colors was required. At that point the old color preferences were ripped out of TeXShop and replaced by the Themes category in Preferences, see \cref{fig:Theme}. While previously many colors could only be changed using  obscure hidden Preference settings, now all color choices are available in the Themes category.
 
-The illustration on the next page shows the earlier tabbed Themes interface for reference. The current Appearance category groups theme colors by their purpose. In the Window Colors group, each window opacity slider runs from 0\% (transparent) to 100\% (opaque), with an editable numeric field beside it. Enter a whole percentage and press Return or leave the field to apply it. Out-of-range integers are clamped to 0 or 100. Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. These themes are listed in three pulldown menus: Lite Mode Theme, Dark Mode Them, Theme to Edit. The first menu sets the theme used on all systems below Mojave, and the theme used in Lite Mode on Mojave and above. The second menu sets the theme used in Dark Mode on Mojave and above. The final menu sets the theme which Preferences is currently editing.
+The illustration on the next page shows the earlier tabbed Themes interface for reference. The current Themes category groups theme colors by their purpose. In the Windows group, each window opacity slider runs from 0\% (transparent) to 100\% (opaque), with an editable numeric field beside it. Enter a whole percentage and press Return or leave the field to apply it. Out-of-range integers are clamped to 0 or 100. Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. These themes are listed in three pulldown menus: Lite Mode Theme, Dark Mode Them, Theme to Edit. The first menu sets the theme used on all systems below Mojave, and the theme used in Lite Mode on Mojave and above. The second menu sets the theme used in Dark Mode on Mojave and above. The final menu sets the theme which Preferences is currently editing.
 
 TeXShop is shipped with several themes, including ``LiteTheme'' and ``DarkTheme''. These are the default themes for Lite Mode and Dark Mode. As explained later, there is a way for users to rename or remove Themes known to TeXShop. But TeXShop will always replace ``LiteTheme'' and ``DarkTheme''
 and use them if other required themes are missing.
@@ -3623,7 +3623,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  
  Finally the XML Syntax colors are colors used when TeXShop syntax colors html, xml, and ptr files, as described in the chapter on Html, TeX4ht, and PreTeXt.
  
- To be completely honest, one color is not set in the theme settings in the Appearance category. It is the color of the optional block cursor, set in the Editor category of Preferences. This will be discussed in a later chapter of this Manual.
+ To be completely honest, one color is not set in the Themes category. It is the color of the optional block cursor, set in the Editor category of Preferences. This will be discussed in a later chapter of this Manual.
  
  In September, 2025, a user requested that marker symbols be colored in a more precise manner.
  Before then, round parentheses were not colored, and the pairs \{ \}, [ ], and symbols \& and \$  were all given the same coloring. Starting in September, 2025, only \& and \$ are given the standard ``marker''
@@ -3648,7 +3648,7 @@ The colors ``Invisible Chars, Enclosed Chars, Braces'' are used for some feature
  
  \section{expl3 Coloring Rules}
  
- The colors used for expl3 syntax coloring can be changed in TeXShop Preferences using the theme settings in the Appearance category. This method works as usual, and seven additional colors are provided for expl3 coloring.
+ The colors used for expl3 syntax coloring can be changed in TeXShop Preferences in the Themes category. This method works as usual, and seven additional colors are provided for expl3 coloring. Each bundled theme sets these colors to suit its palette; a theme without them uses built-in expl3 colors.
  
  I am not a macro programmer, so my description of expl3 syntax may be a little rough. Syntax coloring is in TeXShop because it was requested by Alan Munn, and the description of the syntax comes directly from Munn. If you are a macro programmer, thank Munn for the new feature.
  
@@ -7016,7 +7016,7 @@ Localization must be done by native speakers. Nine languages including English a
 
 The TeXShop program icon is by Thiemo Gamma. Designing icons is the most difficult task a programmer can face; I've never been able to come close. Thiemo's icon showed up in my mailbox one day and I immediately switched to it.  I know that Apple's current style is square with rounded corners, but Thiemo's icon will remain.
 
-Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the Appearance category of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
+Starting with TeXShop 5.60, the application icon places Thiemo's round design inside a white rounded square, the shape used by current versions of macOS, with the letters TeX adjusted to look centered. The item {\bf Dock Icon While Running} under the General category of TeXShop Settings selects one of five Dock icons: Original, Classic Triangle, Retina Triangle, Classic Circle, and the current icon. The selected icon is shown only while TeXShop is running; after TeXShop quits, the Dock shows the standard icon again, and the icon in the Finder never changes.
 
 
 \end{document}

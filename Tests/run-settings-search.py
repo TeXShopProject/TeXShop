@@ -12,7 +12,7 @@ if mutations:
  expected_failures.update({'legacy-label':'Result name is the visible row name','dock-obsolete-label':'Dock result uses the visible group name'})
  source=(r/'Sources/Settings/TSSettingsSearchCatalog.inc').read_text()
  cases=[('boolean-label-weight','@"catalog.general.0.0.title", TSSettingsSearchWeightLabel','@"catalog.general.0.0.title", TSSettingsSearchWeightChoice'),('radio-choice-weight','@"Xrb-Fe-9cg.title", TSSettingsSearchWeightChoice','@"Xrb-Fe-9cg.title", TSSettingsSearchWeightLabel')]
- cases.extend([('legacy-label','@"ahm-aK-Qi9.title", TSSettingsSearchWeightDescription','@"ahm-aK-Qi9.title", TSSettingsSearchWeightLabel'),('dock-obsolete-label','@"group.appearance.10.title", TSSettingsSearchWeightLabel','@"Dock Icon While Running", TSSettingsSearchWeightLabel')])
+ cases.extend([('legacy-label','@"ahm-aK-Qi9.title", TSSettingsSearchWeightDescription','@"ahm-aK-Qi9.title", TSSettingsSearchWeightLabel'),('dock-obsolete-label','@"group.general.6.title", TSSettingsSearchWeightLabel','@"Dock Icon While Running", TSSettingsSearchWeightLabel')])
  with tempfile.TemporaryDirectory(prefix='texshop-search-roles-') as temp:
   for name,old,new in cases:
    assert source.count(old)==1

@@ -12,16 +12,19 @@ CATEGORIES = ('general', 'documents', 'editor', 'spelling', 'appearance',
               'preview', 'typesetting', 'console', 'keyboard', 'updates')
 # Quoted names and HTML-wrapped names must be checked too. Source *menu* and
 # theme *settings* remain valid; the removed sidebar categories do not.
+# Themes is the current category; Appearance, its earlier 5.60 name, and the
+# old Themes tab are obsolete.
 QUOTE = r'["“”„«»\x27`]*'
-ENGLISH = (rf'\b(?:Source|Engines?|Misc\.? ?[12]?|Themes){QUOTE}\s+'
+ENGLISH = (rf'\b(?:Source|Engines?|Misc\.? ?[12]?|Appearance){QUOTE}\s+'
            rf'(?:configuration\s+)?(?:tab|category|pane|flag)\b|'
-           rf'\b(?:tab|category|pane)\s+{QUOTE}(?:Source|Engines?|Misc\d?|Themes)\b')
+           rf'\b(?:tab|category|pane)\s+{QUOTE}(?:Source|Engines?|Misc\d?|Appearance)\b|'
+           rf'\bThemes{QUOTE}\s+tab\b|\btab\s+{QUOTE}Themes\b')
 CATEGORY_RULES = {
     'en': ENGLISH + r'|(?i:\b(?:Source|Engines?|Misc\.? ?[12]?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)',
-    'ko': ENGLISH + r'|(?i:\b(?:Source|Engines?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)' + r'|(문서|엔진설정|기타1|기타2)\s*(?:\(Engine\)\s*)?(탭|범주|카테고리|tab)',
-    'ja': r'「詳細」タブ|「(?:内部設定|詳細1|詳細2|書類|ソース|テーマ)」(?:タブ|カテゴリ|パネル|項目)|「(?:内部設定|詳細1|詳細2)」|内部設定\s*>',
-    'de': rf'\bunter\s+{QUOTE}Programme\b|\bTitel\s+Programme\b|(?:Registerkarte)\s+{QUOTE}(?:Programme|Themes|Quelltext)\b|\b(?:Quelltext|Programme|Div\. ?[12]){QUOTE}[- ]?(?:Reiter|Kategorie|Tab|Bereich)\b|(?:Reiter|Kategorie)\s+{QUOTE}(?:Quelltext|Programme|Div\.)',
-    'es': rf'\b(?:solapa|pestaña|categoría|sección|apartado)\s+{QUOTE}(?:Código|Motor|Misc\d?|Documento|Modos|Copiar)\b',
+    'ko': ENGLISH + r'|(?i:\b(?:Source|Engines?|Themes)\s+(?:Preferences|Tab of Preferences)\b|\bThemes\s+panel\b)' + r'|(문서|엔진설정|기타1|기타2)\s*(?:\(Engine\)\s*)?(탭|범주|카테고리|tab)|모양\s*(?:category|범주|카테고리)|맞춤법 검사, 모양,|모양에서',
+    'ja': r'「詳細」タブ|「テーマ」タブ|「(?:内部設定|詳細1|詳細2|書類|ソース|外観)」(?:タブ|カテゴリ|パネル|項目)|「(?:内部設定|詳細1|詳細2)」|内部設定\s*>',
+    'de': rf'\bunter\s+{QUOTE}Programme\b|\bTitel\s+Programme\b|(?:Registerkarte)\s+{QUOTE}(?:Programme|Themes|Quelltext)\b|\b(?:Quelltext|Programme|Div\. ?[12]){QUOTE}[- ]?(?:Reiter|Kategorie|Tab|Bereich)\b|(?:Reiter|Kategorie)\s+{QUOTE}(?:Quelltext|Programme|Div\.|Erscheinungsbild)',
+    'es': rf'\b(?:solapa|pestaña|categoría|sección|apartado)\s+{QUOTE}(?:Código|Motor|Misc\d?|Documento|Modos|Copiar|Apariencia)\b',
 }
 REMOVED_MENU = (r'Edit Key Bindings File|Open Completion File|Edit Command Completion File|'
                 r'Key Bindings menu|Vervollständigungsdatei öffnen|Autovervollständigung-Datei|'
@@ -51,7 +54,7 @@ def plain(text):
 
 def check_obsolete(text, language, path):
     text = plain(text)
-    arrows = r'(?:Settings|Preferences|設定|설정|환경설정|Einstellungen|Ajustes|Preferencias)\s*[>→›▸»]\s*[「“"«]*(?:Source|Misc\.?\s*[12]|Engines?|Themes|内部設定|詳細[12]|ソース|テーマ|기타[12]|엔진설정|Quelltext|Programme|Div\.\s*[12]|Código|Motor|Modos)\b'
+    arrows = r'(?<!System )(?:Settings|Preferences|設定|설정|환경설정|Einstellungen|Ajustes|Preferencias)\s*[>→›▸»]\s*[「“"«]*(?:Source|Misc\.?\s*[12]|Engines?|Appearance|内部設定|詳細[12]|ソース|外観|모양|기타[12]|엔진설정|Quelltext|Programme|Div\.\s*[12]|Código|Motor|Modos)\b'
     for pattern in (CATEGORY_RULES[language], REMOVED_MENU, OLD_UI, arrows):
         match = re.search(pattern, text)
         assert match is None, (str(path), text[max(0, match.start()-60):match.end()+60])
@@ -191,7 +194,7 @@ for target in ('Base','en'):
 print('PASS: hidden PDF current text and distribution identity')
 
 # The current public English copies carry identical Settings layout wording.
-phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile is in General.'
+phrase='Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Spell Checking, Themes, Preview, Typesetting, Console, Keyboard, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile and the Dock icon are in General; Themes contains only what themes store.'
 for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     assert phrase in (ROOT/filename).read_text(),('Current release layout copies agree',filename)
 

@@ -43,7 +43,7 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
  Check([TSSettingsNormalizedText(@"ＰＤＦ　Éditeur … はんかく ｶﾅ") isEqual:TSSettingsNormalizedText(@"pdf editeur ... ハンカク カナ")],@"Compatibility, kana, accents, whitespace and case");
  Check(![TSSettingsNormalizedText(@"パス") isEqual:TSSettingsNormalizedText(@"ハス")],@"Dakuten distinctions retained");
  for(NSString *year in @[@"2000–2001",@"2001–2013",@"2013–2014",@"2014–2026",@"2026–"]){
-  BOOL found=NO;for(TSSettingsSearchResult *hit in [index resultsForQuery:year])if([hit.category isEqual:@"appearance"] && [hit.targetIdentifier isEqual:@"DockIconChoices"])found=YES;
+  BOOL found=NO;for(TSSettingsSearchResult *hit in [index resultsForQuery:year])if([hit.category isEqual:@"general"] && [hit.targetIdentifier isEqual:@"DockIconChoices"])found=YES;
   Check(found,@"Every visible Dock year finds its choice row");
  }
  // Independent roles: a boolean's title is a row name (50), while
@@ -67,7 +67,7 @@ static void SearchCoverage(NSDictionary<NSString *,NSViewController *> *panes,NS
     NSTextField *name=(NSTextField *)SearchFind(row,@"label.catalog-row");
     if(name.stringValue.length)Check([result.title isEqual:name.stringValue],@"Result name is the visible row name, never its note");
    }
-   if([entry.targetIdentifier isEqual:@"DockIconChoices"])Check([result.title isEqual:[resources localizedStringForKey:@"group.appearance.10.title" value:nil table:@"SettingsCategories"]],@"Dock result uses the visible group name, never removed guidance");
+   if([entry.targetIdentifier isEqual:@"DockIconChoices"])Check([result.title isEqual:[resources localizedStringForKey:@"group.general.6.title" value:nil table:@"SettingsCategories"]],@"Dock result uses the visible group name, never removed guidance");
   }
   Check(matched,@"Every indexed target is found by each of its entries");
  }

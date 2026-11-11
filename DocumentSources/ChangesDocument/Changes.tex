@@ -88,7 +88,8 @@ TeXShop 5.60 fixes typesetting cancellation and keeps the PDF preview position o
 \item Add Swap with Clipboard to the Edit menu. It replaces the selection with the text on the clipboard and puts the replaced text on the clipboard. To exchange two pieces of text, copy one, select the other and choose Swap with Clipboard, then paste where the first one was. With nothing selected, it pastes as usual.
 \item Expand \texttt{\#PASTE\#} in macros and key bindings to the text on the clipboard, as \texttt{\#SEL\#} stands for the selection.
 \item Show control characters other than tab, line feed and carriage return as U+FFFD in the invisible character color, whether or not invisible characters are shown. Before, they took no space, and a form feed hid the rest of the document.
-\item Color fullwidth letters, digits and symbols, and the minus sign, which look much like ASCII in Japanese text, with the new Fullwidth and Fullwidth (Background) colors under Settings \(\rightarrow\) Appearance \(\rightarrow\) Colors: Highlights. The bundled themes define these colors; themes without them, including existing themes in \texttt{\textasciitilde{}/Library/TeXShop/Themes}, show these characters like other text.
+\item Color fullwidth letters, digits and symbols, and the minus sign, which look much like ASCII in Japanese text, with the new Fullwidth and Fullwidth (Background) colors under Settings \(\rightarrow\) Themes \(\rightarrow\) Highlights. The bundled themes define these colors; themes without them, including existing themes in \texttt{\textasciitilde{}/Library/TeXShop/Themes}, show these characters like other text.
+\item Give each bundled theme expl3 colors that suit it. Themes without these colors, including existing themes in \texttt{\textasciitilde{}/Library/TeXShop/Themes}, keep the built-in expl3 colors.
 \end{itemize}
 
 \subsection{Opening and saving documents}
@@ -111,7 +112,7 @@ TeXShop 5.60 fixes typesetting cancellation and keeps the PDF preview position o
 
 \begin{itemize}
 \item Introduce a white-frame app icon inspired by the classic circular icon, with optically centered TeX lettering and a rounded-square shape for current macOS versions. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} and \href{https://github.com/martignoni}{Nicolas Martignoni} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
-\item Add five Dock icon choices under Settings \(\rightarrow\) Appearance, including historical designs. The selected icon retains its original shape while TeXShop is running. After quitting, the Dock returns to the standard app icon. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
+\item Add five Dock icon choices under Settings \(\rightarrow\) General, including historical designs. The selected icon retains its original shape while TeXShop is running. After quitting, the Dock returns to the standard app icon. Suggested by \href{https://github.com/LaTeX-fetishist}{LaTeX fetishist} (\href{https://github.com/TeXShopProject/TeXShop/issues/3}{\#3}).
 \end{itemize}
 
 \subsection{Settings and themes}
@@ -122,7 +123,7 @@ TeXShop 5.60 fixes typesetting cancellation and keeps the PDF preview position o
 \item Add Search Settings with an item-level result list showing each setting and its category. Selecting a result shows and highlights the setting.
 \item Window opacity can be adjusted with a 0–100\% slider or a numeric field.
 \item Existing \texttt{KeyEquivalents.plist} entries for the former Key Bindings submenu’s first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (\texttt{NSUserKeyEquivalents}) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings \(\rightarrow\) Keyboard and cannot be assigned by their former menu titles.
-\item Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile is in General.
+\item Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Spell Checking, Themes, Preview, Typesetting, Console, Keyboard, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile and the Dock icon are in General; Themes contains only what themes store.
 \item Spell Checking offers “Use LaTeX-aware spell checking (recommended)” with “Edit LaTeX exclusion rules…” beneath it, or “Legacy method” with three indented options. “Check Spelling” is independent.
 \item Keyboard contains text input key bindings, Esc/Tab command completion, BibDesk completion and both file editors; these editors have moved from the Source menu. When Tab triggers completion it is reserved for completion. Key bindings and command completion appear above shortcut search. Searching for Tab when it triggers completion reveals and highlights that setting.
 \item General provides a link to Comment Lines and Hidden Settings.

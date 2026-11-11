@@ -68,7 +68,8 @@
 <li>Add Swap with Clipboard to the Edit menu. It replaces the selection with the text on the clipboard and puts the replaced text on the clipboard. To exchange two pieces of text, copy one, select the other and choose Swap with Clipboard, then paste where the first one was. With nothing selected, it pastes as usual.</li>
 <li>Expand <code>#PASTE#</code> in macros and key bindings to the text on the clipboard, as <code>#SEL#</code> stands for the selection.</li>
 <li>Show control characters other than tab, line feed and carriage return as U+FFFD in the invisible character color, whether or not invisible characters are shown. Before, they took no space, and a form feed hid the rest of the document.</li>
-<li>Color fullwidth letters, digits and symbols, and the minus sign, which look much like ASCII in Japanese text, with the new Fullwidth and Fullwidth (Background) colors under Settings → Appearance → Colors: Highlights. The bundled themes define these colors; themes without them, including existing themes in <code>~/Library/TeXShop/Themes</code>, show these characters like other text.</li>
+<li>Color fullwidth letters, digits and symbols, and the minus sign, which look much like ASCII in Japanese text, with the new Fullwidth and Fullwidth (Background) colors under Settings → Themes → Highlights. The bundled themes define these colors; themes without them, including existing themes in <code>~/Library/TeXShop/Themes</code>, show these characters like other text.</li>
+<li>Give each bundled theme expl3 colors that suit it. Themes without these colors, including existing themes in <code>~/Library/TeXShop/Themes</code>, keep the built-in expl3 colors.</li>
 </ul>
 <h3>Opening and saving documents</h3>
 <ul>
@@ -87,7 +88,7 @@
 <h3>App and Dock icons</h3>
 <ul>
 <li>Introduce a white-frame app icon inspired by the classic circular icon, with optically centered TeX lettering and a rounded-square shape for current macOS versions. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> and <a href="https://github.com/martignoni">Nicolas Martignoni</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).</li>
-<li>Add five Dock icon choices under Settings → Appearance, including historical designs. The selected icon retains its original shape while TeXShop is running. After quitting, the Dock returns to the standard app icon. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).</li>
+<li>Add five Dock icon choices under Settings → General, including historical designs. The selected icon retains its original shape while TeXShop is running. After quitting, the Dock returns to the standard app icon. Suggested by <a href="https://github.com/LaTeX-fetishist">LaTeX fetishist</a> (<a href="https://github.com/TeXShopProject/TeXShop/issues/3">#3</a>).</li>
 </ul>
 <h3>Settings and themes</h3>
 <ul>
@@ -96,7 +97,7 @@
 <li>Add Search Settings with an item-level result list showing each setting and its category. Selecting a result shows and highlights the setting.</li>
 <li>Window opacity can be adjusted with a 0–100% slider or a numeric field.</li>
 <li>Existing <code>KeyEquivalents.plist</code> entries for the former Key Bindings submenu’s first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (<code>NSUserKeyEquivalents</code>) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings → Keyboard and cannot be assigned by their former menu titles.</li>
-<li>Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Spell Checking, Appearance, Preview, Typesetting, Console, Keyboard, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile is in General.</li>
+<li>Settings has a compact sidebar with ten categories: General, Documents and Saving, Editor, Spell Checking, Themes, Preview, Typesetting, Console, Keyboard, and Updates. Each category shows overview cards and named groups with switches, right-aligned controls, wrapping labels and indented dependent options. Settings Profile and the Dock icon are in General; Themes contains only what themes store.</li>
 <li>Spell Checking offers “Use LaTeX-aware spell checking (recommended)” with “Edit LaTeX exclusion rules…” beneath it, or “Legacy method” with three indented options. “Check Spelling” is independent.</li>
 <li>Keyboard contains text input key bindings, Esc/Tab command completion, BibDesk completion and both file editors; these editors have moved from the Source menu. When Tab triggers completion it is reserved for completion. Key bindings and command completion appear above shortcut search. Searching for Tab when it triggers completion reveals and highlights that setting.</li>
 <li>General provides a link to Comment Lines and Hidden Settings.</li>

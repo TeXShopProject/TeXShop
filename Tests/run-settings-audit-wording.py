@@ -30,7 +30,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
   cases.append(('release-'+suffix,file,b'\n',b'\napproved compact layout\n',guidance,'approved compact layout'))
  for tag,body in [('ul',b'<ul><li>fixture item</li></ul>'),('div',b'<div>fixture division</div>'),('raw',b'fixture bare text'),('dl',b'<dl><dt>fixture term</dt><dd>fixture definition</dd></dl>')]:
   cases.append(('outside-'+tag,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'</body>',body+b'</body>',guidance,'body text outside content_border'))
- for term in ['Theme color groups are shown together in Appearance.','Settings » Themes']:
+ for term in ['Theme color groups are shown together in Appearance.','Settings » Appearance','Appearance category']:
   cases.append(('obsolete-'+term,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/basic_preferences.htm',b'<div id="content_border">',('<div id="content_border"><p>'+term+'</p>').encode('ascii',errors='xmlcharrefreplace'),guidance,term))
  for chrome in ['menu_border','header_title']:
   cases.append(('chrome-paragraph-'+chrome,'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/configure_hidden.htm',('<div id="'+chrome+'">').encode(),('<div id="'+chrome+'"><p>fixture body</p>').encode(),guidance,'body text outside content_border'))

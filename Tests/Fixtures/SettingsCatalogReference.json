@@ -7,7 +7,7 @@
    "symbol": "gearshape",
    "color": "#888780",
    "section": 0,
-   "summary": "起動時の動作、ウインドウの開き方と位置、設定プロファイルを設定します。",
+   "summary": "起動時の動作、ウインドウの開き方と位置、設定プロファイル、Dock のアイコンを設定します。",
    "groups": [
     {
      "title": "起動時",
@@ -142,6 +142,58 @@
        ],
        "buttonEnabledWhen": [
         1
+       ]
+      }
+     ]
+    },
+    {
+     "title": "起動中の Dock アイコン",
+     "rows": [
+      {
+       "kind": "dock",
+       "title": "TeXShop の起動中に適用します。終了後は標準のアイコンに戻ります。",
+       "choices": [
+        "初期版",
+        "旧三角アイコン",
+        "Retina版三角アイコン",
+        "丸形アイコン",
+        "現在のアイコン（標準）"
+       ],
+       "items": [
+        {
+         "title": "1.0 以前",
+         "cells": [
+          "original"
+         ]
+        },
+        {
+         "title": "1.0–3.13",
+         "cells": [
+          "triangle"
+         ]
+        },
+        {
+         "title": "3.14–3.38",
+         "cells": [
+          "retina"
+         ]
+        },
+        {
+         "title": "3.39–5.58",
+         "cells": [
+          "round"
+         ]
+        },
+        {
+         "title": "5.60–",
+         "cells": [
+          "current"
+         ]
+        }
+       ],
+       "selected": 4,
+       "src": [
+        "code:TSDockIconController"
        ]
       }
      ]
@@ -838,11 +890,11 @@
   },
   {
    "id": "appearance",
-   "title": "外観",
+   "title": "テーマ",
    "symbol": "paintpalette",
    "color": "#7F77DD",
    "section": 1,
-   "summary": "配色のテーマと、Dock のアイコンを設定します。",
+   "summary": "配色のテーマを選び、編集します。",
    "groups": [
     {
      "title": "テーマ",
@@ -906,7 +958,7 @@
      ]
     },
     {
-     "title": "色：ウインドウ",
+     "title": "ウインドウ",
      "rows": [
       {
        "kind": "colortable",
@@ -972,7 +1024,7 @@
      ]
     },
     {
-     "title": "色：ソース",
+     "title": "ソース",
      "rows": [
       {
        "kind": "colors",
@@ -1010,7 +1062,7 @@
      ]
     },
     {
-     "title": "色：シンタックスハイライト",
+     "title": "シンタックスハイライト",
      "rows": [
       {
        "kind": "colors",
@@ -1066,7 +1118,7 @@
      ]
     },
     {
-     "title": "色：括弧類",
+     "title": "括弧類",
      "rows": [
       {
        "kind": "colors",
@@ -1104,7 +1156,7 @@
      ]
     },
     {
-     "title": "色：expl3",
+     "title": "expl3",
      "rows": [
       {
        "kind": "colors",
@@ -1178,7 +1230,7 @@
      ]
     },
     {
-     "title": "色：強調表示",
+     "title": "強調表示",
      "rows": [
       {
        "kind": "colors",
@@ -1216,7 +1268,7 @@
      ]
     },
     {
-     "title": "色：SyncTeX と画像のコピー",
+     "title": "SyncTeX",
      "rows": [
       {
        "kind": "colors",
@@ -1239,9 +1291,20 @@
          "src": [
           "dOa-qE-k50"
          ]
-        },
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "画像コピー時のカラーマップ",
+     "rows": [
+      {
+       "kind": "colors",
+       "title": "",
+       "items": [
         {
-         "title": "画像コピーの文字",
+         "title": "文字",
          "cells": [
           "#000000"
          ],
@@ -1250,7 +1313,7 @@
          ]
         },
         {
-         "title": "画像コピーの背景",
+         "title": "背景",
          "cells": [
           "#FFFFFF"
          ],
@@ -1263,7 +1326,7 @@
      ]
     },
     {
-     "title": "色：XML 構文",
+     "title": "XML 構文",
      "rows": [
       {
        "kind": "colors",
@@ -1314,58 +1377,6 @@
           "aWb-fc-sKb"
          ]
         }
-       ]
-      }
-     ]
-    },
-    {
-     "title": "起動中の Dock アイコン",
-     "rows": [
-      {
-       "kind": "dock",
-       "title": "TeXShop の起動中に適用します。終了後は標準のアイコンに戻ります。",
-       "choices": [
-        "初期版",
-        "旧三角アイコン",
-        "Retina版三角アイコン",
-        "丸形アイコン",
-        "現在のアイコン（標準）"
-       ],
-       "items": [
-        {
-         "title": "1.0 以前",
-         "cells": [
-          "original"
-         ]
-        },
-        {
-         "title": "1.0–3.13",
-         "cells": [
-          "triangle"
-         ]
-        },
-        {
-         "title": "3.14–3.38",
-         "cells": [
-          "retina"
-         ]
-        },
-        {
-         "title": "3.39–5.58",
-         "cells": [
-          "round"
-         ]
-        },
-        {
-         "title": "5.60–",
-         "cells": [
-          "current"
-         ]
-        }
-       ],
-       "selected": 4,
-       "src": [
-        "code:TSDockIconController"
        ]
       }
      ]
@@ -1509,7 +1520,8 @@
        "src": [
         "437"
        ],
-       "id": "colorMap"
+       "id": "colorMap",
+       "note": "プレビューで選んだ範囲を画像としてコピー・ドラッグ・保存するとき、黒を文字の色に、白を背景の色に置き換えます。2 つの色は、使用中のテーマの「画像コピー時のカラーマップ」で設定します。PDF と EPS では背景の色だけが付きます。"
       },
       {
        "kind": "popup",
