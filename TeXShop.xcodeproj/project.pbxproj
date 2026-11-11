@@ -93,6 +93,7 @@
 		404D1B642891B23400402802 /* TSHTMLWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D1B622891B23400402802 /* TSHTMLWindow.m */; };
 		404D7901199FF471008B8D64 /* TSFullSplitWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 404D78FF199FF471008B8D64 /* TSFullSplitWindow.h */; };
 		404D7902199FF471008B8D64 /* TSFullSplitWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 404D7900199FF471008B8D64 /* TSFullSplitWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		26F5B11D7C0A4E9D2B3A6C01 /* TSFullSplitDivider.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F5B11D7C0A4E9D2B3A6C03 /* TSFullSplitDivider.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4054643E19AE9630006EE9D5 /* GlyphPopoverMulti.xib in Resources */ = {isa = PBXBuildFile; fileRef = D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */; };
 		4054643F19AE9630006EE9D5 /* GlyphPopoverSingle.xib in Resources */ = {isa = PBXBuildFile; fileRef = D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */; };
 		4061BA9E1991979600C890DB /* RecentTexFonts.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4061BA9C1991979600C890DB /* RecentTexFonts.pdf */; };
@@ -520,6 +521,8 @@
 		404D1B622891B23400402802 /* TSHTMLWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSHTMLWindow.m; sourceTree = "<group>"; };
 		404D78FF199FF471008B8D64 /* TSFullSplitWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSFullSplitWindow.h; sourceTree = "<group>"; };
 		404D7900199FF471008B8D64 /* TSFullSplitWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSFullSplitWindow.m; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6C02 /* TSFullSplitDivider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSFullSplitDivider.h; sourceTree = "<group>"; };
+		26F5B11D7C0A4E9D2B3A6C03 /* TSFullSplitDivider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSFullSplitDivider.m; sourceTree = "<group>"; };
 		4054643C19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverMulti.xib; sourceTree = "<group>"; };
 		4054643D19AE9630006EE9D5 /* Base */ = {isa = PBXFileReference; name = Base; fileEncoding = 4; lastKnownFileType = file.xib; path = Base.lproj/GlyphPopoverSingle.xib; sourceTree = "<group>"; };
 		405F8B43199AF6F50005C0AE /* pt */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt; path = Resources/Interfaces/pt.lproj/Movie.nib; sourceTree = "<group>"; };
@@ -1395,6 +1398,8 @@
 				4098635B0C66CC4D00221E87 /* TSFullscreenWindow.m */,
 				404D78FF199FF471008B8D64 /* TSFullSplitWindow.h */,
 				404D7900199FF471008B8D64 /* TSFullSplitWindow.m */,
+				26F5B11D7C0A4E9D2B3A6C02 /* TSFullSplitDivider.h */,
+				26F5B11D7C0A4E9D2B3A6C03 /* TSFullSplitDivider.m */,
 				404D1B612891B23400402802 /* TSHTMLWindow.h */,
 				404D1B622891B23400402802 /* TSHTMLWindow.m */,
 				408B6DCE0F3D516C0098CCED /* TSLogWindow.h */,
@@ -1927,6 +1932,7 @@
 				401B9EC11F8C568300B48034 /* TSDocument-SyncOld.m in Sources */,
 				40D1F2C206040B1700087115 /* TSMatrixTableView.m in Sources */,
 				404D7902199FF471008B8D64 /* TSFullSplitWindow.m in Sources */,
+				26F5B11D7C0A4E9D2B3A6C01 /* TSFullSplitDivider.m in Sources */,
 				4017CF9B266454D700981011 /* TSDocument-SyncConTeXt.m in Sources */,
 				4083912A060963C800266FAB /* TextFinder.m in Sources */,
 				40E76BF1292FDD1E00CBE5F9 /* CustomModalWindowController.m in Sources */,

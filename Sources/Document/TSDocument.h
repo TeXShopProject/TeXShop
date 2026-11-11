@@ -39,6 +39,7 @@
 @class TSFileChangeMonitor;
 @class TSExperimentConsoleController;
 @class TSConsoleOutputReturn;
+@class TSFullSplitDivider;
 
 #define NUMBEROFERRORS	20
 
@@ -596,6 +597,9 @@ enum RootCommand
 //                          3 = html Preview
 //                          4 = both pdf and html Preview
 @property NSInteger PreviewType;
+
+// Remembers where the user leaves the divider of the window that shows the source and the Preview.
+@property (strong) TSFullSplitDivider *fullSplitDivider;
 
 
 

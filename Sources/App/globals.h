@@ -485,6 +485,7 @@ extern NSString *TagMenuInMenuBarKey;
 extern NSString *ResetSourceTextColorEachTimeKey;
 extern NSString *SourceAndPreviewInSameWindowKey;
 extern NSString *DocumentSplitWindowPositionKey;
+extern NSString *FullSplitSourceFractionKey;
 extern NSString *TabIndentKey;
 extern NSString *SwitchSidesKey;
 extern NSString *InterpolationValueKey;

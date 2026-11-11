@@ -73,6 +73,7 @@
 #import "TSFileChangeMonitor.h"
 #import "TSExternalPDFReload.h"
 #import "TSPreviewAppearance.h"  // added by Terada
+#import "TSFullSplitDivider.h"
 
 
 #define COLORTIME  0.02
@@ -749,24 +750,7 @@ withDarkColors = NO;
                 [self.textView setSelectedRange: theRange];
                 [self.textView scrollRangeToVisible: theRange];
             }
-             if ([coder containsValueForKey:@"LeftViewWidth"] &&
-                 [coder containsValueForKey:@"RightViewWidth"]) {
-                float leftWidth = [coder decodeFloatForKey:@"LeftViewWidth"];
-                float rightWidth = [coder decodeFloatForKey:@"RightViewWidth"];
-                NSSize leftSize, rightSize;
-                leftSize.height = leftView.frame.size.height;
-                leftSize.width = leftWidth;
-                rightSize.height = rightView.frame.size.height;
-                rightSize.width = rightWidth;
-                 if (leftWidth < rightWidth) {
-                     [leftView setFrameSize: leftSize];
-                     [rightView setFrameSize: rightSize];
-                 }
-                 else {
-                     [rightView setFrameSize: rightSize];
-                     [leftView setFrameSize: leftSize];
-                 }
-             }
+            [self restoreFullSplitDivider];
             
             if (fullSplitWindow.tabbingMode == NSWindowTabbingModePreferred)
                 [fullSplitWindow mergeAllWindows: fullSplitWindow];
@@ -811,8 +795,6 @@ withDarkColors = NO;
         // NSRect theVisibleSplitRect = [[self.myPDFKitView documentView] visibleRect];
         NSRange theSelectedRange = [self.textView selectedRange];
         NSString *stringForRange = NSStringFromRange(theSelectedRange);
-        float leftWidth = leftView.frame.size.width;
-        float rightWidth = rightView.frame.size.width;
        
         theSplitCode = [fullSplitWindow stringWithSavedFrame];
         [coder encodeObject: theSplitCode forKey:@"SplitWindow"];
@@ -823,8 +805,6 @@ withDarkColors = NO;
         // [coder encodePoint: theSplitOrigin forKey: @"SplitWindowOrigin"];
         // [coder encodeRect: theVisibleSplitRect forKey:@"VisibleSplitPDFRect"];
         [coder encodeObject:stringForRange forKey:@"TextSelection"];
-        [coder encodeFloat: leftWidth forKey:@"LeftViewWidth"];
-        [coder encodeFloat: rightWidth forKey:@"RightViewWidth"];
  
     }
     
@@ -11502,6 +11482,7 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             NSString *splitPosition = [SUD stringForKey:DocumentSplitWindowPositionKey];
             if ([splitPosition length] > 5)
                [fullSplitWindow setFrameFromString:splitPosition];
+            [self restoreFullSplitDivider];
             
          //   [fullSplitWindow mergeAllWindows:self]; // WOW this line makes all split windows load as tabs
             
@@ -11518,6 +11499,17 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
             
             
         }
+}
+
+// The divider between the source and the Preview goes back to where the user last left it.
+- (void) restoreFullSplitDivider
+{
+    NSSplitView *sides = (NSSplitView *)leftView.superview;
+    if (! [sides isKindOfClass: [NSSplitView class]])
+        return;
+    if (self.fullSplitDivider == nil)
+        self.fullSplitDivider = [[TSFullSplitDivider alloc] initWithSplitView: sides sourceView: splitView];
+    [self.fullSplitDivider restore];
 }
 
 - (void) doSeparateWindows: (id)sender;
