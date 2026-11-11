@@ -177,11 +177,17 @@ static TSFilterMode savedFilter = kNoFilterMode;
     BOOL dark = [[appearance bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     NSDictionary *theme = dark ? darkColors : liteColors;
     TSColorSupport *colors = [TSColorSupport sharedInstance];
-    NSColor *text = [colors colorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark];
+    // As the document's source: opaque theme colors, whatever alpha a theme stores
+    // (the Solarized themes store a transparent background), and the built-in
+    // color for a key the theme does not have.
+    NSColor *(^opaque)(NSString *) = ^NSColor *(NSString *key) {
+        return [colors colorFromDictionary:theme andKey:key] ?: [[colors colorForKey:key fromDictionary:theme isWindowDark:dark] colorWithAlphaComponent:1];
+    };
+    NSColor *text = opaque(@"EditorText");
     contentTextView.drawsBackground = YES;
-    contentTextView.backgroundColor = [colors colorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark];
+    contentTextView.backgroundColor = opaque(@"EditorBackground");
     contentTextView.textColor = text;
-    contentTextView.insertionPointColor = [colors colorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark];
+    contentTextView.insertionPointColor = opaque(@"EditorInsertionPoint");
     NSMutableDictionary *typing = [contentTextView.typingAttributes mutableCopy] ?: [NSMutableDictionary dictionary];
     typing[NSForegroundColorAttributeName] = text;
     contentTextView.typingAttributes = typing;

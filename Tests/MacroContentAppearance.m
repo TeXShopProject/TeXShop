@@ -38,21 +38,35 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([[[editor contentFont] familyName] isEqual:@"Courier"] && [editor contentFont].pointSize == 11);
     [defaults setBool:NO forKey:SameFontForMacroKey]; [defaults removeObjectForKey:DocumentFontKey];
     REQUIRE([[editor contentFont] isEqual:[NSFont userFontOfSize:12]]);
-    // Colors follow the window's appearance.
+    // Colors follow the window's appearance and are the opaque colors the
+    // document's source uses (colorFromDictionary:andKey:), whatever alpha the
+    // theme stores: the bundled Solarized Light has a transparent background.
     TSColorSupport *colors = [TSColorSupport sharedInstance];
-    for (NSAppearanceName mode in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
-        BOOL dark = [mode isEqual:NSAppearanceNameDarkAqua];
-        NSDictionary *theme = dark ? darkColors : liteColors;
-        host.appearance = [NSAppearance appearanceNamed:mode];
-        [editor applyContentAppearance:nil];
-        REQUIRE(contents.drawsBackground);
-        REQUIRE(Same(contents.backgroundColor, [colors colorForKey:@"EditorBackground" fromDictionary:theme isWindowDark:dark]));
-        REQUIRE(Same(contents.textColor, [colors colorForKey:@"EditorText" fromDictionary:theme isWindowDark:dark]));
-        REQUIRE(Same(contents.insertionPointColor, [colors colorForKey:@"EditorInsertionPoint" fromDictionary:theme isWindowDark:dark]));
-        REQUIRE(Same(contents.typingAttributes[NSForegroundColorAttributeName], contents.textColor));
-        contents.string = @"\\begin{#SEL#}#INS#";
-        REQUIRE(Same([contents.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] ?: contents.textColor, contents.textColor));
+    NSArray *lightBackground = liteColors[@"EditorBackground"];
+    REQUIRE(lightBackground.count == 4 && [lightBackground[3] doubleValue] < 0.01);
+    NSMutableDictionary *translucent = [darkColors mutableCopy];
+    NSMutableArray *faint = [darkColors[@"EditorBackground"] mutableCopy]; faint[3] = @0.3; translucent[@"EditorBackground"] = faint;
+    for (NSDictionary *dark in @[darkColors, translucent]) {
+        darkColors = dark;
+        for (NSAppearanceName mode in @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]) {
+            BOOL isDark = [mode isEqual:NSAppearanceNameDarkAqua];
+            NSDictionary *theme = isDark ? darkColors : liteColors;
+            host.appearance = [NSAppearance appearanceNamed:mode];
+            [editor applyContentAppearance:nil];
+            REQUIRE(contents.drawsBackground);
+            for (NSArray *pair in @[@[@"EditorBackground", contents.backgroundColor], @[@"EditorText", contents.textColor], @[@"EditorInsertionPoint", contents.insertionPointColor]]) {
+                NSColor *document = [colors colorFromDictionary:theme andKey:pair[0]];
+                REQUIRE(document != nil && Same(pair[1], document) && [pair[1] alphaComponent] > 0.999);
+            }
+            REQUIRE(Same(contents.typingAttributes[NSForegroundColorAttributeName], contents.textColor));
+            contents.string = @"\\begin{#SEL#}#INS#";
+            REQUIRE(Same([contents.textStorage attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:NULL] ?: contents.textColor, contents.textColor));
+        }
     }
-    REQUIRE(!Same([colors colorForKey:@"EditorText" fromDictionary:liteColors isWindowDark:NO], [colors colorForKey:@"EditorText" fromDictionary:darkColors isWindowDark:YES]));
+    // A theme without the key uses the built-in color, made opaque.
+    NSMutableDictionary *partial = [liteColors mutableCopy]; [partial removeObjectForKey:@"EditorInsertionPoint"]; liteColors = partial;
+    host.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua]; [editor applyContentAppearance:nil];
+    REQUIRE(Same(contents.insertionPointColor, [[colors colorForKey:@"EditorInsertionPoint" fromDictionary:partial isWindowDark:NO] colorWithAlphaComponent:1]));
+    REQUIRE(!Same([colors colorFromDictionary:liteColors andKey:@"EditorText"], [colors colorFromDictionary:darkColors andKey:@"EditorText"]));
     puts("PASS: macro contents use the source or console font and the light or dark theme colors");
 } return 0; }

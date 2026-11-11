@@ -9,6 +9,7 @@ body = source[source.index('// BEGIN content appearance'):source.index('// END c
 mutations = {
     'always-light': ('NSDictionary *theme = dark ? darkColors : liteColors;', 'NSDictionary *theme = liteColors; dark = NO;'),
     'no-background': ('contentTextView.backgroundColor = ', '(void)'),
+    'theme-alpha': ('return [colors colorFromDictionary:theme andKey:key] ?:', 'return [colors colorForKey:key fromDictionary:theme isWindowDark:dark] ?:'),
     'ignore-console-font': ('if ([SUD boolForKey:SameFontForMacroKey])', 'if (NO)'),
 }
 def run(text):
