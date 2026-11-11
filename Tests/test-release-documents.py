@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Check release-document Markdown boundaries without invoking TeX."""
+import html
 import importlib.util
+import re
 from pathlib import Path
 import sys
 import unittest
@@ -12,7 +14,35 @@ documents = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(documents)
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def plain_markdown(text):
+    text = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', text).replace('`', '').replace('**', '')
+    return re.sub(r'\s+', ' ', text).strip()
+
+
+def plain_html(text):
+    return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', text)))
+
+
 class ReleaseDocuments(unittest.TestCase):
+    def test_hand_written_copies_contain_every_item(self):
+        # The web pages and the help page are written by hand; each item of the
+        # Markdown notes must appear in each copy of the same language.
+        copies = {
+            'Documentation/Releases/5.60.md': ['website/release-notes.html',
+                                               'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'],
+            'Documentation/Releases/5.60-ja.md': ['website/release-notes-ja.html'],
+        }
+        for notes, pages in copies.items():
+            items = [plain_markdown(line[2:]) for line in (ROOT / notes).read_text().splitlines() if line.startswith('- ')]
+            self.assertTrue(items, notes)
+            for page in pages:
+                text = plain_html((ROOT / page).read_text())
+                missing = [item[:80] for item in items if item not in text]
+                self.assertEqual(missing, [], page)
+
     def test_sentence_punctuation_is_outside_url(self):
         self.assertEqual(documents.inline('See https://texshop.app/.'),
                          r'See \url{https://texshop.app/}.')

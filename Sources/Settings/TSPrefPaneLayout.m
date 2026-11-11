@@ -478,91 +478,9 @@ static NSColor *TSSettingsCardColor(void)
 // Retain the existing well/action as the theme persistence boundary. The slider
 // and the numeric field forward one action each, preserving RGB and every
 // existing save/error behavior.
-@interface TSSettingsOpacityPresentation : NSStackView <NSTextFieldDelegate>
-@property (strong) NSColorWell *source;
-@property (strong) NSSlider *slider;
-@property (strong) NSTextField *field;
-@property (strong) NSTextField *unit;
-@property BOOL fieldWasEdited;
-- (instancetype)initWithWell:(NSColorWell *)well;
-@end
-@implementation TSSettingsOpacityPresentation
-- (instancetype)initWithWell:(NSColorWell *)well {
-    self=[super initWithFrame:NSZeroRect];if(!self)return nil;
-    self.translatesAutoresizingMaskIntoConstraints=NO;
-    self.orientation=NSUserInterfaceLayoutOrientationHorizontal;self.alignment=NSLayoutAttributeCenterY;self.spacing=4;
-    _source=well;well.hidden=YES;well.accessibilityElement=NO;
-    [well removeConstraints:well.constraints];well.translatesAutoresizingMaskIntoConstraints=NO;[self addSubview:well];
-    [NSLayoutConstraint activateConstraints:@[[well.widthAnchor constraintEqualToConstant:0],[well.heightAnchor constraintEqualToConstant:0],[well.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],[well.topAnchor constraintEqualToAnchor:self.topAnchor]]];
-    _slider=[NSSlider sliderWithValue:100 minValue:0 maxValue:100 target:self action:@selector(changed:)];
-    _slider.controlSize=NSControlSizeSmall;_slider.continuous=NO;
-    _slider.identifier=[@"opacity." stringByAppendingString:well.identifier ?: @""];
-    _slider.accessibilityLabel=well.accessibilityLabel;
-    _field=[NSTextField textFieldWithString:@"100"];
-    _field.controlSize=NSControlSizeSmall;
-    _field.font=[NSFont monospacedDigitSystemFontOfSize:NSFont.smallSystemFontSize weight:NSFontWeightRegular];_field.alignment=NSTextAlignmentRight;
-    _field.formatter=[TSOpacityFormatter new];
-    _field.delegate=self;_field.target=self;_field.action=@selector(fieldChanged:);
-    _field.cell.sendsActionOnEndEditing=YES;
-    _field.identifier=[@"opacity-value." stringByAppendingString:well.identifier ?: @""];
-    _field.accessibilityIdentifier=@"settings.user-data";
-    _field.accessibilityLabel=well.accessibilityLabel;
-    _unit=[NSTextField labelWithString:@"%"];
-    _unit.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];_unit.accessibilityElement=NO;
-    // The unit belongs to the value, like the former percentage label: it is not a searchable setting name.
-    _unit.accessibilityIdentifier=@"settings.user-data";
-    [self addArrangedSubview:_slider];[self addArrangedSubview:_field];[self addArrangedSubview:_unit];
-    [self setCustomSpacing:6 afterView:_slider];[self setCustomSpacing:2 afterView:_field];
-    [_slider.widthAnchor constraintEqualToConstant:60].active=YES;[_field.widthAnchor constraintEqualToConstant:36].active=YES;
-    for(NSString *key in @[@"color",@"enabled"])[well addObserver:self forKeyPath:key options:0 context:NULL];
-    [self synchronize];return self;
-}
-- (void)dealloc {for(NSString *key in @[@"color",@"enabled"])[self.source removeObserver:self forKeyPath:key];}
-- (void)synchronize {
-    self.fieldWasEdited=NO;
-    double percent=self.source.color.alphaComponent*100;
-    BOOL enabled=self.source.enabled;
-    self.slider.doubleValue=percent;
-    self.slider.enabled=enabled;self.field.enabled=enabled;
-    self.field.objectValue=@(percent);
-    NSText *editor=self.field.currentEditor;
-    if(editor!=nil)editor.string=self.field.stringValue;
-    NSNumberFormatter *formatter=[NSNumberFormatter new];
-    formatter.numberStyle=NSNumberFormatterPercentStyle;
-    formatter.maximumFractionDigits=0;
-    formatter.locale=NSLocale.currentLocale;
-    NSString *spoken=[formatter stringFromNumber:@(percent/100.0)] ?: @"";
-    self.slider.accessibilityValue=spoken;
-    self.unit.textColor=enabled?NSColor.secondaryLabelColor:NSColor.disabledControlTextColor;
-}
-- (void)observeValueForKeyPath:(NSString *)path ofObject:(id)object change:(NSDictionary *)change context:(void *)context {[self synchronize];}
-- (void)applyPercent:(double)percent {
-    if(!self.source.enabled){[self synchronize];return;}
-    self.source.color=[self.source.color colorWithAlphaComponent:MIN(100,MAX(0,percent))/100.0];
-    [self.source sendAction:self.source.action to:self.source.target];
-    [self synchronize];
-}
-- (void)changed:(NSSlider *)sender {[self applyPercent:sender.doubleValue];}
-- (void)controlTextDidBeginEditing:(NSNotification *)note { self.fieldWasEdited=NO; }
-- (void)controlTextDidChange:(NSNotification *)note { self.fieldWasEdited=YES; }
-// A field that was only passed through keeps the stored fractional value.
-- (void)fieldChanged:(NSTextField *)sender {
-    id value=sender.objectValue;
-    if(![value isKindOfClass:NSNumber.class] || !self.source.enabled){[self synchronize];return;}
-    double entered=[value doubleValue];
-    if(!self.fieldWasEdited || entered==self.slider.doubleValue){[self synchronize];return;}
-    [self applyPercent:entered];
-}
-// Empty input cannot be formatted: refuse it and show the stored value again.
-- (BOOL)control:(NSControl *)control didFailToFormatString:(NSString *)string errorDescription:(nullable NSString *)error {
-    TSOpacityFormatter *formatter=(TSOpacityFormatter *)self.field.formatter;
-    if(formatter.rejectionHandler!=nil)formatter.rejectionHandler();
-    [self synchronize];
-    return YES;
-}
-@end
 // The stepper beside a whole-number field. A click changes the field by one
-// within the range its formatter carries, then sends the field's own action,
+// within the range its formatter carries (the field's formatter limits the
+// value otherwise, as for opacity), then sends the field's own action,
 // so the value is checked, stored and announced as if it had been typed. The
 // stepper's own value only gives the direction and returns to 1 each time.
 @interface TSSettingsIntegerStepper : NSStepper
@@ -606,6 +524,91 @@ static NSColor *TSSettingsCardColor(void)
     if([delegate respondsToSelector:@selector(controlTextDidChange:)])
         [delegate controlTextDidChange:[NSNotification notificationWithName:NSControlTextDidChangeNotification object:field]];
     [field sendAction:field.action to:field.target];
+}
+@end
+@interface TSSettingsOpacityPresentation : NSStackView <NSTextFieldDelegate>
+@property (strong) NSColorWell *source;
+@property (strong) NSSlider *slider;
+@property (strong) NSTextField *field;
+@property (strong) NSTextField *unit;
+@property (strong) NSStepper *stepper;
+@property BOOL fieldWasEdited;
+- (instancetype)initWithWell:(NSColorWell *)well;
+@end
+@implementation TSSettingsOpacityPresentation
+- (instancetype)initWithWell:(NSColorWell *)well {
+    self=[super initWithFrame:NSZeroRect];if(!self)return nil;
+    self.translatesAutoresizingMaskIntoConstraints=NO;
+    self.orientation=NSUserInterfaceLayoutOrientationHorizontal;self.alignment=NSLayoutAttributeCenterY;self.spacing=4;
+    _source=well;well.hidden=YES;well.accessibilityElement=NO;
+    [well removeConstraints:well.constraints];well.translatesAutoresizingMaskIntoConstraints=NO;[self addSubview:well];
+    [NSLayoutConstraint activateConstraints:@[[well.widthAnchor constraintEqualToConstant:0],[well.heightAnchor constraintEqualToConstant:0],[well.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],[well.topAnchor constraintEqualToAnchor:self.topAnchor]]];
+    _slider=[NSSlider sliderWithValue:100 minValue:0 maxValue:100 target:self action:@selector(changed:)];
+    _slider.controlSize=NSControlSizeSmall;_slider.continuous=NO;
+    _slider.identifier=[@"opacity." stringByAppendingString:well.identifier ?: @""];
+    _slider.accessibilityLabel=well.accessibilityLabel;
+    _field=[NSTextField textFieldWithString:@"100"];
+    _field.controlSize=NSControlSizeSmall;
+    _field.font=[NSFont monospacedDigitSystemFontOfSize:NSFont.smallSystemFontSize weight:NSFontWeightRegular];_field.alignment=NSTextAlignmentRight;
+    _field.formatter=[TSOpacityFormatter new];
+    _field.delegate=self;_field.target=self;_field.action=@selector(fieldChanged:);
+    _field.cell.sendsActionOnEndEditing=YES;
+    _field.identifier=[@"opacity-value." stringByAppendingString:well.identifier ?: @""];
+    _field.accessibilityIdentifier=@"settings.user-data";
+    _field.accessibilityLabel=well.accessibilityLabel;
+    _unit=[NSTextField labelWithString:@"%"];
+    _unit.font=[NSFont systemFontOfSize:NSFont.smallSystemFontSize];_unit.accessibilityElement=NO;
+    // The unit belongs to the value, like the former percentage label: it is not a searchable setting name.
+    _unit.accessibilityIdentifier=@"settings.user-data";
+    _stepper=[[TSSettingsIntegerStepper alloc]initWithField:_field];_stepper.controlSize=NSControlSizeSmall;
+    [self addArrangedSubview:_slider];[self addArrangedSubview:_field];[self addArrangedSubview:_stepper];[self addArrangedSubview:_unit];
+    [self setCustomSpacing:6 afterView:_slider];[self setCustomSpacing:2 afterView:_field];[self setCustomSpacing:2 afterView:_stepper];
+    [_slider.widthAnchor constraintEqualToConstant:60].active=YES;[_field.widthAnchor constraintEqualToConstant:36].active=YES;
+    for(NSString *key in @[@"color",@"enabled"])[well addObserver:self forKeyPath:key options:0 context:NULL];
+    [self synchronize];return self;
+}
+- (void)dealloc {for(NSString *key in @[@"color",@"enabled"])[self.source removeObserver:self forKeyPath:key];}
+- (void)synchronize {
+    self.fieldWasEdited=NO;
+    double percent=self.source.color.alphaComponent*100;
+    BOOL enabled=self.source.enabled;
+    self.slider.doubleValue=percent;
+    self.slider.enabled=enabled;self.field.enabled=enabled;self.stepper.enabled=enabled;
+    self.field.objectValue=@(percent);
+    NSText *editor=self.field.currentEditor;
+    if(editor!=nil)editor.string=self.field.stringValue;
+    NSNumberFormatter *formatter=[NSNumberFormatter new];
+    formatter.numberStyle=NSNumberFormatterPercentStyle;
+    formatter.maximumFractionDigits=0;
+    formatter.locale=NSLocale.currentLocale;
+    NSString *spoken=[formatter stringFromNumber:@(percent/100.0)] ?: @"";
+    self.slider.accessibilityValue=spoken;
+    self.unit.textColor=enabled?NSColor.secondaryLabelColor:NSColor.disabledControlTextColor;
+}
+- (void)observeValueForKeyPath:(NSString *)path ofObject:(id)object change:(NSDictionary *)change context:(void *)context {[self synchronize];}
+- (void)applyPercent:(double)percent {
+    if(!self.source.enabled){[self synchronize];return;}
+    self.source.color=[self.source.color colorWithAlphaComponent:MIN(100,MAX(0,percent))/100.0];
+    [self.source sendAction:self.source.action to:self.source.target];
+    [self synchronize];
+}
+- (void)changed:(NSSlider *)sender {[self applyPercent:sender.doubleValue];}
+- (void)controlTextDidBeginEditing:(NSNotification *)note { self.fieldWasEdited=NO; }
+- (void)controlTextDidChange:(NSNotification *)note { self.fieldWasEdited=YES; }
+// A field that was only passed through keeps the stored fractional value.
+- (void)fieldChanged:(NSTextField *)sender {
+    id value=sender.objectValue;
+    if(![value isKindOfClass:NSNumber.class] || !self.source.enabled){[self synchronize];return;}
+    double entered=[value doubleValue];
+    if(!self.fieldWasEdited || entered==self.slider.doubleValue){[self synchronize];return;}
+    [self applyPercent:entered];
+}
+// Empty input cannot be formatted: refuse it and show the stored value again.
+- (BOOL)control:(NSControl *)control didFailToFormatString:(NSString *)string errorDescription:(nullable NSString *)error {
+    TSOpacityFormatter *formatter=(TSOpacityFormatter *)self.field.formatter;
+    if(formatter.rejectionHandler!=nil)formatter.rejectionHandler();
+    [self synchronize];
+    return YES;
 }
 @end
 @implementation TSPrefPaneLayout

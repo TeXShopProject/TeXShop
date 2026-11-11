@@ -165,9 +165,11 @@ with tempfile.TemporaryDirectory(prefix='texshop-product-shell-') as temp:
      ('integer-end-editing','TSPreferenceInput.m','errorDescription:(out NSString * _Nullable *)error\n{\n    if (value != NULL) *value = [string copy];','errorDescription:(out NSString * _Nullable *)error\n{\n    if (value != NULL) *value = @([string integerValue]);','Text at the end of editing is left to the common validator'),
      ('stepper-skips-validation','TSPrefPaneLayout.m','        if([delegate respondsToSelector:@selector(control:textShouldEndEditing:)] && ![delegate control:field textShouldEndEditing:editor])return;\n','','Stepper keeps the warning for an invalid entry'),
      ('stepper-keeps-direction','TSPrefPaneLayout.m','    NSInteger direction=self.integerValue-1;\n    self.integerValue=1;\n','    NSInteger direction=self.integerValue-1;\n','Stepper up stores one more, shows it and notifies documents once'),
-     ('stepper-no-action','TSPrefPaneLayout.m','    [field sendAction:field.action to:field.target];\n}\n@end\n@implementation TSPrefPaneLayout','}\n@end\n@implementation TSPrefPaneLayout','Stepper up stores one more, shows it and notifies documents once'),
+     ('stepper-no-action','TSPrefPaneLayout.m','    [field sendAction:field.action to:field.target];\n','','Stepper up stores one more, shows it and notifies documents once'),
      ('refresh-unranged','TSSettingsPaneRefresh.inc','[remainingParagraphIndentField setIntegerValue:TSStoredIntegerInRange(defaults, SourceHeadIndentKey, TSParagraphIndentRange)];','[remainingParagraphIndentField setIntegerValue:[defaults integerForKey:SourceHeadIndentKey]];','Out-of-range stored values are shown inside the ranges'),
      ('restore-unranged','TSPreferenceInput.m','    if (number != nil && self.kind == TSPreferenceInputInteger)\n','    if (NO)\n','Restoring an entry shows the stored value inside the range'),
+     ('opacity-stepper-missing','TSPrefPaneLayout.m','_stepper=[[TSSettingsIntegerStepper alloc]initWithField:_field];','_stepper=[NSStepper new];','Opacity has a stepper beside its field'),
+     ('opacity-stepper-enabled','TSPrefPaneLayout.m','self.field.enabled=enabled;self.stepper.enabled=enabled;','self.field.enabled=enabled;','Disabled opacity disables its numeric field'),
      ('rule-range-literal','TSPreferences.m','minimum:TSInterlineSpaceRange.minimum maximum:TSInterlineSpaceRange.maximum','minimum:0 maximum:20','Independent rule contract for interlineSpacingField'),
     ]
     cases=[]
