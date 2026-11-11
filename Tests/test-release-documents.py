@@ -39,6 +39,10 @@ class ReleaseDocuments(unittest.TestCase):
             items = [plain_markdown(line[2:]) for line in (ROOT / notes).read_text().splitlines() if line.startswith('- ')]
             self.assertTrue(items, notes)
             for page in pages:
+                # A source tree without the web site, such as the in-house
+                # TetsuTeXShop, checks only the help page.
+                if page.startswith('website/') and not (ROOT / 'website').is_dir():
+                    continue
                 text = plain_html((ROOT / page).read_text())
                 missing = [item[:80] for item in items if item not in text]
                 self.assertEqual(missing, [], page)
