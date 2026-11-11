@@ -216,7 +216,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
     *explColorAttribute6, *explColorAttribute7, *footnoteColorAttribute, *fullwidthSymbolColorAttribute,
     *indexColorAttribute, *markerColorAttribute, *markerColorCurlyAttribute, *markerColorParenAttribute,
     *markerColorSquareAttribute, *regularColorAttribute;
-@property BOOL blockCursor, fileIsXML, syntaxColor, syntaxcolorEntry, useExplColor;
+@property BOOL blockCursor, fileIsXML, syntaxColor, syntaxcolorEntry, useExplColor, coloringWaitsForMarkedText;
 @property (strong) NSTextStorage *textStorage;
 @property (strong) NSTextView *textView;
 @property (strong) NSScrollView *logScrollView;
@@ -227,6 +227,8 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 - (void)setupTags;
 - (void)colorizeAll;
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)aTextView;
+- (BOOL)coloringWaitsForMarkedTextIn:(NSTextView *)aTextView;
+- (void)colorAfterMarkedTextEnds;
 - (void)reColor:(NSNotification *)notification;
 - (void)cursorMoved:(NSTextView *)aTextView;
 - (void)removeCurrentLineColor:(NSTextView *)aTextView;

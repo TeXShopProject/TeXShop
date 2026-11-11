@@ -57,6 +57,7 @@
 // the insertion point through -[ScrapTextView updateInsertionPointStateAndRestartTimer:].
 - (void)experimentSelectionDidChange:(NSNotification *)notification
 {
+    [self colorAfterMarkedTextEnds];
     if ([self experimentSourceShown])
         [self matchBracesForSelectionInTextView:scrapTextView];
 }
@@ -212,13 +213,14 @@ static NSRange TSExperimentRange(NSTextView *view, NSRange range)
 
 - (void)resetExperimentHighlight:(id)sender
 {
+    // As -resetHighlight:, the brace highlight stays while text is composed.
+    if ([self coloringWaitsForMarkedTextIn:scrapTextView])
+        return;
     if (scrapBraceHighlighting) {
         [scrapTextView.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName
                                             forCharacterRange:NSMakeRange(0, scrapTextView.string.length)];
         scrapBraceHighlighting = NO;
     }
-    if (scrapTextView.hasMarkedText)
-        return;
     [self colorizeExperimentSource];
 }
 

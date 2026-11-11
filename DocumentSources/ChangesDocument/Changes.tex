@@ -97,6 +97,7 @@ TeXShop 5.60 fixes typesetting cancellation and keeps the PDF preview position o
 \item Expand \texttt{\#PASTE\#} in macros and key bindings to the text on the clipboard, as \texttt{\#SEL\#} stands for the selection.
 \item Show control characters other than tab, line feed and carriage return as U+FFFD in the invisible character color, whether or not invisible characters are shown. Before, they took no space, and a form feed hid the rest of the document.
 \item Color fullwidth letters, digits and symbols, and the minus sign, which look much like ASCII in Japanese text, with the new Fullwidth and Fullwidth (Background) colors under Settings \(\rightarrow\) Themes \(\rightarrow\) Highlights. The bundled themes define these colors; themes without them, including existing themes in \texttt{\textasciitilde{}/Library/TeXShop/Themes}, show these characters like other text.
+\item Leave text being composed with an input method, such as Japanese before it is committed, uncolored, and color the source once it is committed or canceled. Typing Japanese no longer slows down by recoloring the visible text at every keystroke, and a fullwidth digit being typed is no longer highlighted. The Experiment source behaves the same.
 \item Give each bundled theme expl3 colors that suit it. Themes without these colors, including existing themes in \texttt{\textasciitilde{}/Library/TeXShop/Themes}, keep the built-in expl3 colors.
 \end{itemize}
 
