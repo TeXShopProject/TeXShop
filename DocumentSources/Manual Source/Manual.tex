@@ -3758,6 +3758,8 @@ The Preview window does not work this way. Instead, the top view of a split wind
 
 There are rare situations when we want the bottom portion of the Preview window to become the primary view after we unsplit. And for that, there is a special command.
 
+The top view is also the one that stays in place when the divider of a Preview window split into a top and a bottom part is moved. Think of the page lying on a table, and of the bottom view as a sheet of paper laid over its lower part, showing another place in the document. Moving the divider moves this sheet up or down. The top view keeps its text where it is and only shows more or less of it below, while the text of the bottom view moves with the divider. Unsplitting the window takes the sheet away.
+
 %There is a final interesting interaction. Select a chapter in the drawer and then type Option-2. This command does not switch the two views, because the first responder is the drawer rather than the Preview Window. Instead it selects chapter 2. But if we click in either view, then that view becomes first responder. After that when we type Option-2, this keystroke goes to the view rather than the drawer. Neither view understands Option-2, so the keystroke passes on down to the Preview Window. The Preview Window does understand Option-2 as a shortcut for ``Switch Views'' and switches the views.
 %
 %To summarize, if Option-2 fails to switch the views in split view mode when a drawer is visible, click in one of the
