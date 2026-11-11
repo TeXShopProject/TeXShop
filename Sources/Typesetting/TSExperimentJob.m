@@ -3,6 +3,9 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/clonefile.h>
+#include <sys/stat.h>
+#include <sys/resource.h>
+#include <fcntl.h>
 
 @interface TSExperimentJob ()
 @property (nonatomic, strong) NSTask *task;
@@ -135,67 +138,70 @@
 static const NSUInteger TSExperimentMaximumClonedItems = 5000;
 
 // Whether a symbolic link can only lead further down the clone: its target is relative and has
-// no .. component. Such a link stays; any other one could lead out of the Experiment folder.
-static BOOL TSExperimentLinkLeadsDown(NSFileManager *manager, NSString *path)
+// no .. component. Such a link is made again in the Experiment folder; any other one could lead
+// out of it and is left out.
+static BOOL TSExperimentLinkLeadsDown(NSString *target)
 {
-    NSString *target = [manager destinationOfSymbolicLinkAtPath:path error:NULL];
     return target.length && !target.isAbsolutePath && ![target.pathComponents containsObject:@".."];
-}
-
-// Prepares one clone: gives its folders to their owner for reading, writing and searching, which
-// changes only the clone, and removes the symbolic links that could lead out of it. Returns NO
-// when a folder cannot be opened or a link cannot be removed: the clone is then not safe to use.
-static BOOL TSExperimentSecureClone(NSFileManager *manager, NSString *clone)
-{
-    NSMutableArray<NSString *> *pending = [NSMutableArray arrayWithObject:clone];
-    while (pending.count) {
-        NSString *path = pending.lastObject;
-        [pending removeLastObject];
-        NSDictionary *attributes = [manager attributesOfItemAtPath:path error:NULL];
-        if (!attributes) return NO;
-        NSString *type = attributes[NSFileType];
-        if ([type isEqual:NSFileTypeSymbolicLink]) {
-            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;
-            continue;
-        }
-        if (![type isEqual:NSFileTypeDirectory]) continue;
-        NSUInteger mode = [attributes[NSFilePosixPermissions] unsignedIntegerValue];
-        if ((mode & 0700) != 0700 &&
-            ![manager setAttributes:@{NSFilePosixPermissions: @(mode | 0700)} ofItemAtPath:path error:NULL]) return NO;
-        NSArray<NSString *> *items = [manager contentsOfDirectoryAtPath:path error:NULL];
-        if (!items) return NO;
-        for (NSString *item in items) [pending addObject:[path stringByAppendingPathComponent:item]];
-    }
-    return YES;
 }
 
 + (NSUInteger)cloneItemsOfDirectory:(NSURL *)source intoDirectory:(NSURL *)directory exceptNames:(NSArray<NSString *> *)names
 {
     if (!source || !directory) return 0;
     NSFileManager *manager = NSFileManager.defaultManager;
-    NSUInteger total = 0;
-    for (__unused NSString *item in [manager enumeratorAtPath:source.path])
-        if (++total > TSExperimentMaximumClonedItems) return 0;
+    NSMutableArray<NSString *> *items = [NSMutableArray array];
+    for (NSString *item in [manager enumeratorAtPath:source.path]) {
+        if (items.count == TSExperimentMaximumClonedItems) return 0;
+        [items addObject:item];
+    }
     NSMutableSet<NSString *> *excluded = [NSMutableSet set];
     for (NSString *name in names) [excluded addObject:name.lowercaseString];
+    // Folders are made anew and only files are cloned: cloning a whole folder can take seconds in
+    // a folder that a file provider such as Dropbox keeps, while cloning its files one by one does
+    // not. The folders made here, listed relative to the Experiment folder, belong to their owner.
+    NSMutableSet<NSString *> *folders = [NSMutableSet setWithObject:@""];
     NSUInteger count = 0;
-    for (NSString *item in [manager contentsOfDirectoryAtPath:source.path error:NULL]) {
+    // Nothing is downloaded for the clones, also when a file becomes online-only meanwhile: opening
+    // such a file then fails at once.
+    int materialize = getiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD);
+    BOOL restore = materialize >= 0 && materialize != IOPOL_MATERIALIZE_DATALESS_FILES_OFF &&
+        setiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD, IOPOL_MATERIALIZE_DATALESS_FILES_OFF) == 0;
+    for (NSString *item in items) {
+        NSString *parent = item.stringByDeletingLastPathComponent;
+        if (![folders containsObject:parent]) continue; // inside a folder that is left out
         NSString *lower = item.lowercaseString;
         // Names are compared ignoring case, as the file system may.
-        if ([excluded containsObject:lower] || [lower hasPrefix:@"file."]) continue;
+        if (!parent.length && ([excluded containsObject:lower] || [lower hasPrefix:@"file."])) continue;
         NSString *from = [source.path stringByAppendingPathComponent:item];
         NSString *to = [directory.path stringByAppendingPathComponent:item];
-        if ([manager fileExistsAtPath:to]) continue;
-        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) != 0)
-            continue;
-        if (TSExperimentSecureClone(manager, to)) {
+        struct stat info;
+        if (lstat(from.fileSystemRepresentation, &info) != 0) continue;
+        if (S_ISDIR(info.st_mode)) {
+            if (mkdir(to.fileSystemRepresentation, 0700) != 0) continue;
+            chmod(to.fileSystemRepresentation, (info.st_mode & 0777) | 0700);
+            [folders addObject:item];
             count++;
-            continue;
+        } else if (S_ISLNK(info.st_mode)) {
+            NSString *target = [manager destinationOfSymbolicLinkAtPath:from error:NULL];
+            if (TSExperimentLinkLeadsDown(target) && symlink(target.fileSystemRepresentation, to.fileSystemRepresentation) == 0)
+                count++;
+        } else if (S_ISREG(info.st_mode)) {
+            // A file whose contents are not on this Mac, such as an online-only Dropbox file, is
+            // not downloaded for the clone; TeX finds it through TEXINPUTS when it reads it.
+            if (info.st_flags & SF_DATALESS) continue;
+            // The clone is made from the file as opened, without following a link and without
+            // waiting on a pipe, so that an item changed into a link or a folder since it was looked
+            // at is not cloned: such a clone could lead out of the Experiment folder.
+            int file = open(from.fileSystemRepresentation, O_RDONLY | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC);
+            if (file < 0) continue;
+            struct stat opened;
+            if (fstat(file, &opened) == 0 && S_ISREG(opened.st_mode) && !(opened.st_flags & SF_DATALESS) &&
+                fclonefileat(file, AT_FDCWD, to.fileSystemRepresentation, CLONE_NOOWNERCOPY) == 0)
+                count++;
+            close(file);
         }
-        // A clone that could not be checked is not used.
-        [manager removeItemAtPath:to error:NULL];
-        if ([manager attributesOfItemAtPath:to error:NULL]) return NSNotFound;
     }
+    if (restore) setiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD, materialize);
     return count;
 }
 

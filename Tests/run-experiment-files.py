@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Experiment typesetting finds the document's files and references (#8).
 
-The Experiment folder holds copy-on-write clones of the items next to the
-document, so \\includegraphics{./Norms.pdf} and \\graphicspath{{./figs/}}, which
+The Experiment folder holds copy-on-write clones of the files next to the
+document, in folders made anew there (cloning whole folders is slow in a Dropbox
+folder), so \\includegraphics{./Norms.pdf} and \\graphicspath{{./figs/}}, which
 TeX does not look up in TEXINPUTS, work as in the document, while whatever TeX,
 Lua or shell commands write there leaves the document's folder alone. Symbolic
-links that lead out of the Experiment folder are removed. A copy of the
+links that could lead out of the Experiment folder are left out, also when a
+file turns into such a link, or into a folder holding one, after it is looked
+at; nothing is downloaded for the clones. A copy of the
 document's .aux, up to its last complete line, is read with @ as a letter at the
 start of every run, also when latexmk typesets more than once.
 
@@ -21,19 +24,27 @@ import argparse, contextlib, hashlib, os, re, shutil, subprocess, tempfile
 from source_tree import include_args
 
 MUTATIONS = {
-    'no-clone': ('        if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY) != 0)\n',
-                 '        if (YES)\n'),
-    'keeps-outward-links': ('            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;\n',
-                            '            continue;\n'),
+    'no-clone': ('                fclonefileat(file, AT_FDCWD, to.fileSystemRepresentation, CLONE_NOOWNERCOPY) == 0)\n',
+                 '                NO)\n'),
+    'clones-by-path': ('O_RDONLY | O_NOFOLLOW | O_NONBLOCK | O_CLOEXEC', 'O_RDONLY | O_NONBLOCK | O_CLOEXEC',
+                       'S_ISREG(opened.st_mode) && ', '',
+                       'fclonefileat(file, AT_FDCWD, to.fileSystemRepresentation, CLONE_NOOWNERCOPY)',
+                       'clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW | CLONE_NOOWNERCOPY)'),
+    'any-opened-type': ('S_ISREG(opened.st_mode) && ', ''),
+    'clones-dataless': ('            if (info.st_flags & SF_DATALESS) continue;\n', '',
+                        ' && !(opened.st_flags & SF_DATALESS)', ''),
+    'downloads': ('    BOOL restore = materialize >= 0', '    BOOL restore = NO && materialize >= 0'),
+    'keeps-policy': ('    if (restore) setiopolicy_np(', '    if (NO) setiopolicy_np('),
+    'clones-folders': ('            if (mkdir(to.fileSystemRepresentation, 0700) != 0) continue;\n',
+                       '            if (clonefile(from.fileSystemRepresentation, to.fileSystemRepresentation, CLONE_NOFOLLOW) != 0) continue;\n'),
+    'keeps-outward-links': ('            if (TSExperimentLinkLeadsDown(target) && symlink(', '            if (symlink('),
     'links-with-dotdot': ('''    return target.length && !target.isAbsolutePath && ![target.pathComponents containsObject:@".."];\n''',
                           '''    return target.length && !target.isAbsolutePath;\n'''),
-    'no-chmod': ('''        if ((mode & 0700) != 0700 &&\n''', '''        if (NO &&\n'''),
-    'ignores-unsafe': ('''        if ((mode & 0700) != 0700 &&\n''', '''        if (NO &&\n''',
-                       '''            if (!TSExperimentLinkLeadsDown(manager, path) && ![manager removeItemAtPath:path error:NULL]) return NO;\n''',
-                       '''            if (!TSExperimentLinkLeadsDown(manager, path)) [manager removeItemAtPath:path error:NULL];\n'''),
-    'clones-experiment-files': ('''        if ([excluded containsObject:lower] || [lower hasPrefix:@"file."]) continue;\n''', ''),
+    'no-owner-access': ('            chmod(to.fileSystemRepresentation, (info.st_mode & 0777) | 0700);\n',
+                        '            chmod(to.fileSystemRepresentation, info.st_mode & 0777);\n'),
+    'clones-experiment-files': ('''        if (!parent.length && ([excluded containsObject:lower] || [lower hasPrefix:@"file."])) continue;\n''', ''),
     'case-sensitive': ('''        NSString *lower = item.lowercaseString;\n''', '''        NSString *lower = item;\n'''),
-    'no-limit': ('        if (++total > TSExperimentMaximumClonedItems) return 0;\n', '        ++total;\n'),
+    'no-limit': ('        if (items.count == TSExperimentMaximumClonedItems) return 0;\n', ''),
     'whole-aux': ("    while (end > 0 && bytes[end - 1] != '\\n') end--;\n", ''),
     'aux-catcode': None,
 }
@@ -104,6 +115,65 @@ int main(int argc, char **argv) { @autoreleasepool {
 }}
 '''
 
+# Items that change after they are looked at (#8): a file that becomes a link to a file outside,
+# or a folder holding such a link, right after lstat. A file reported online-only is not opened,
+# and nothing is downloaded while the clones are made; the thread's policy is restored after.
+race_program = r"""
+#import <Foundation/Foundation.h>
+#import "TSExperimentJob.h"
+#include <sys/stat.h>
+#include <sys/resource.h>
+#include <unistd.h>
+static void check(BOOL ok, const char *message) { if (!ok) { fprintf(stderr, "FAIL: %s\n", message); exit(1); } }
+static NSString *victim, *outside;
+static int mode, policyDuringClone = -2;
+int TSRaceLstat(const char *path, struct stat *info) {
+    int result = lstat(path, info);
+    if (result || ![@(path) isEqual:victim]) return result;
+    policyDuringClone = getiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD);
+    if (mode == 3) { info->st_flags |= SF_DATALESS; return result; }
+    unlink(path);
+    if (mode == 1) symlink(outside.fileSystemRepresentation, path);
+    else { mkdir(path, 0700); symlink(outside.fileSystemRepresentation, [[victim stringByAppendingPathComponent:@"outward"] fileSystemRepresentation]); }
+    return result;
+}
+int main(int argc, char **argv) { @autoreleasepool {
+    NSFileManager *fm = NSFileManager.defaultManager;
+    NSString *root = @(argv[1]);
+    for (mode = 1; mode <= 3; mode++) {
+        NSString *base = [root stringByAppendingPathComponent:[NSString stringWithFormat:@"race%d", mode]];
+        NSString *doc = [base stringByAppendingPathComponent:@"doc"], *exp = [base stringByAppendingPathComponent:@"exp"];
+        for (NSString *d in @[doc, exp]) [fm createDirectoryAtPath:d withIntermediateDirectories:YES attributes:nil error:NULL];
+        outside = [base stringByAppendingPathComponent:@"outside.txt"];
+        victim = [doc stringByAppendingPathComponent:@"victim"];
+        [@"outside" writeToFile:outside atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+        [@"ordinary file" writeToFile:victim atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+        [@"other file" writeToFile:[doc stringByAppendingPathComponent:@"other.tex"] atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+        int before = getiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD);
+        policyDuringClone = -2;
+        [TSExperimentJob cloneItemsOfDirectory:[NSURL fileURLWithPath:doc isDirectory:YES]
+                                 intoDirectory:[NSURL fileURLWithPath:exp isDirectory:YES] exceptNames:@[@"file"]];
+        check(policyDuringClone == IOPOL_MATERIALIZE_DATALESS_FILES_OFF, "nothing is downloaded while the clones are made");
+        check(getiopolicy_np(IOPOL_TYPE_VFS_MATERIALIZE_DATALESS_FILES, IOPOL_SCOPE_THREAD) == before,
+              "the thread downloads as before once the clones are made");
+        check([fm fileExistsAtPath:[exp stringByAppendingPathComponent:@"other.tex"]], "the other files are cloned");
+        for (NSString *name in @[@"victim", @"victim/outward"]) {
+            NSString *path = [exp stringByAppendingPathComponent:name];
+            struct stat info;
+            if (lstat(path.fileSystemRepresentation, &info) == 0) {
+                check(!S_ISLNK(info.st_mode) && !S_ISDIR(info.st_mode), "an item changed since it was looked at is not cloned as a link or folder");
+                [@"written in the Experiment" writeToFile:path atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+            }
+        }
+        check([[NSString stringWithContentsOfFile:outside encoding:NSUTF8StringEncoding error:NULL] isEqualToString:@"outside"],
+              "an item changed since it was looked at leaves the file outside alone");
+        if (mode == 3)
+            check(![fm fileExistsAtPath:[exp stringByAppendingPathComponent:@"victim"]], "a file whose contents are not on this Mac is not cloned");
+    }
+    return 0;
+}}
+"""
+
 def digest(folder):
     """Mode and content of every file, and the mode or target of every other item under `folder`,
     following no link; a folder that cannot be opened is listed with its mode only."""
@@ -148,6 +218,18 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-files-') as director
     exe = t / 'probe'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Foundation', *include_args(root),
                     str(t / 'probe.m'), str(t / 'TSExperimentJob.m'), '-o', str(exe)], check=True)
+    (t / 'race.m').write_text(race_program)
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-c', *include_args(root), '-Dlstat=TSRaceLstat',
+                    str(t / 'TSExperimentJob.m'), '-o', str(t / 'race-job.o')], check=True)
+    subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Foundation', *include_args(root),
+                    str(t / 'race.m'), str(t / 'race-job.o'), '-o', str(t / 'race')], check=True)
+    (t / 'races').mkdir()
+    race = subprocess.run([str(t / 'race'), str(t / 'races')], capture_output=True, text=True)
+    if args.mutation and race.returncode:
+        print(f'PASS: detected mutation {args.mutation}: {race.stderr.strip()}')
+        raise SystemExit(0)
+    if race.returncode:
+        raise SystemExit(race.stderr)
     doc, exp, crowded, other, outside = t / 'doc', t / 'exp', t / 'crowded', t / 'other', t / 'outside'
     for d in (doc / 'figs', doc / 'chapters', exp, crowded, other, outside):
         d.mkdir(parents=True)

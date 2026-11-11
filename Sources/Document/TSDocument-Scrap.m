@@ -194,12 +194,8 @@
     // them, so whatever TeX, Lua or shell commands write there leaves the document's folder alone
     // (#8). Items that cannot be cloned are found through TEXINPUTS, as before.
     NSString *documentAuxName = @"TeXShop-document.aux";
-    if ([TSExperimentJob cloneItemsOfDirectory:[NSURL fileURLWithPath:fileLocation isDirectory:YES] intoDirectory:directory
-                                   exceptNames:@[@"file", documentAuxName]] == NSNotFound) {
-        [[NSFileManager defaultManager] removeItemAtURL:directory error:NULL];
-        NSBeep();
-        return;
-    }
+    [TSExperimentJob cloneItemsOfDirectory:[NSURL fileURLWithPath:fileLocation isDirectory:YES] intoDirectory:directory
+                               exceptNames:@[@"file", documentAuxName]];
     // The document's references, from a copy of its .aux that every run reads at its start with
     // @ as a letter, also when an engine typesets more than once (#8). The command shares the line
     // of \begin{document}, so line numbers in messages stay those of the fragment.
