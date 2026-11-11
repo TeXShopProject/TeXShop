@@ -280,3 +280,12 @@ tiToolTipHtmlSearch           = "Search";
 "Two Pages" = "Two Pages";
 "Continuous" = "Continuous";
 "Continuous Two Pages" = "Continuous Two Pages";
+
+/* Experiment preview tools */
+"ExperimentToolScroll" = "Scroll";
+"ExperimentToolSelectText" = "Select Text";
+"ExperimentToolMagnify" = "Magnify";
+"ExperimentToolSelectPDF" = "Select PDF";
+"ExperimentZoomOut" = "Zoom Out";
+"ExperimentZoomIn" = "Zoom In";
+"ExperimentZoomToContent" = "Zoom to Content";

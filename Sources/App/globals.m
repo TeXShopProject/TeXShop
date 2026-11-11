@@ -87,6 +87,7 @@ NSString *PdfCopyTypeKey = @"PdfCopyType"; // mitsu 1.29 (O)
 NSString *PdfExportTypeKey = @"PdfExportType"; // mitsu 1.29 (O)
 NSString *PdfMouseModeKey = @"PdfMouseMode"; // mitsu 1.29 (O)
 NSString *PdfKitMouseModeKey = @"PdfKitMouseMode"; // mitsu 1.29 (O)
+NSString *ExperimentMouseModeKey = @"ExperimentMouseMode";
 NSString *PdfQuickDragKey = @"PdfQuickDrag"; // mitsu 1.29 drag & drop
 NSString *SaveDocumentFontKey = @"SaveDocumentFont";
 NSString *SyntaxColoringEnabledKey = @"SyntaxColoringEnabled";

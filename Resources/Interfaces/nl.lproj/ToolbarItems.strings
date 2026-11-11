@@ -261,3 +261,12 @@ tiToolTipHtmlURLField            = "To go this URL";
 tiLabelHtmlSearch             = "Search";
 tiPaletteLabelHtmlSearch      = "Search";
 tiToolTipHtmlSearch           = "Search";
+
+/* Experiment preview tools */
+"ExperimentToolScroll" = "Scrollen";
+"ExperimentToolSelectText" = "Tekst selecteren";
+"ExperimentToolMagnify" = "Vergroten";
+"ExperimentToolSelectPDF" = "PDF selecteren";
+"ExperimentZoomOut" = "Zoom uit";
+"ExperimentZoomIn" = "Zoom in";
+"ExperimentZoomToContent" = "Zoom naar inhoud";

@@ -8,6 +8,7 @@ Defaults stay in memory, and no window uses frame autosaving, including failing 
 from pathlib import Path
 import argparse, os, subprocess, tempfile
 from source_tree import include_args
+from experiment_preview_source import prelude as experiment_preview_prelude, sources as experiment_preview_sources
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=['source-hook', 'pdf-hook', 'defaults-hook', 'reload-hook', 'menu-validation', 'filter-gamma', 'source-alpha', 'preview-alpha'])
 args = parser.parse_args()
@@ -36,6 +37,7 @@ appearance = (root/'Sources/Preview/TSPreviewAppearance.h').read_text()
 if args.mutation == 'filter-gamma':
     appearance = appearance.replace('numberWithDouble:1.6', 'numberWithDouble:1.0')
 pdf = pdf.replace('#import "TSPreviewAppearance.h"', appearance)
+pdf = experiment_preview_prelude(root) + pdf
 prefix = r'''
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
@@ -212,7 +214,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-themes-') as tmp:
     src, exe = Path(tmp)/'test.m', Path(tmp)/'test'
     src.write_text(prefix + pdf + tests)
     subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-w','-fobjc-arc','-framework','Cocoa','-framework','Quartz',
-        *include_args(root),str(src),'-o',str(exe)], check=True)
+        *include_args(root),str(src),*experiment_preview_sources(root),'-o',str(exe)], check=True)
     (Path(tmp)/'home/Library/Preferences').mkdir(parents=True)
     result = subprocess.run([str(exe)],env=dict(os.environ,HOME=str(Path(tmp)/'home'),CFFIXED_USER_HOME=str(Path(tmp)/'home')),capture_output=True,text=True,timeout=30)
     if args.mutation:

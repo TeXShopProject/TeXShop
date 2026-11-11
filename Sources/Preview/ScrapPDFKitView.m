@@ -45,15 +45,29 @@
 #import "TSColorSupport.h"
 #import "TSPreviewAppearance.h"
 #import "TSExperimentTheme.h"
+#import "TSMagnifyingGlass.h"
 
 
 
+
+// The Experiment preview offers four of the preview's mouse modes and remembers
+// its own choice; the document preview's mode is not changed.
+static NSString * const TSExperimentToolsToolbarID = @"TSExperimentTools";
+static NSString * const TSExperimentZoomToolbarID = @"TSExperimentZoom";
+static const NSInteger TSExperimentToolModes[] = {
+    NEW_MOUSE_MODE_SCROLL, NEW_MOUSE_MODE_SELECT_TEXT, NEW_MOUSE_MODE_MAG_GLASS, NEW_MOUSE_MODE_SELECT_PDF };
+static const NSInteger TSExperimentToolCount = 4;
 
 @interface ScrapPDFKitView ()
 @property (nonatomic) BOOL experimentViewReady;
 @property (nonatomic) BOOL updatingExperimentAppearance;
 @property (nonatomic, strong) NSToolbar *experimentToolbar;
 @property (nonatomic) BOOL showsTopOfFirstPage;
+@property (nonatomic, strong) OverView *experimentOverlay;
+@property (nonatomic, strong) PDFPage *selectionPage;
+@property (nonatomic) NSRect selectionPageRect;
+@property (nonatomic, strong) PDFPage *lensPage;
+@property (nonatomic, strong) NSImage *lensImage;
 @end
 
 @implementation ScrapPDFKitView
@@ -98,11 +112,14 @@
     NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
     [center removeObserver:self name:SourceColorChangedNotification object:nil];
     [center removeObserver:self name:NSUserDefaultsDidChangeNotification object:SUD];
+    [center removeObserver:self name:PDFViewScaleChangedNotification object:self];
     if (!self.window) return;
     [center addObserver:self selector:@selector(updateExperimentColors:)
         name:SourceColorChangedNotification object:nil];
-    [center addObserver:self selector:@selector(updateExperimentAppearance:)
+    [center addObserver:self selector:@selector(experimentDefaultsChanged:)
         name:NSUserDefaultsDidChangeNotification object:SUD];
+    [center addObserver:self selector:@selector(experimentScaleChanged:)
+        name:PDFViewScaleChangedNotification object:self];
     if (!self.window.toolbar) {
         NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"TSExperimentPreviewToolbar"];
         toolbar.delegate = self;
@@ -115,6 +132,12 @@
     [self updateExperimentAppearance:nil];
 }
 
+- (void)experimentDefaultsChanged:(NSNotification *)notification
+{
+    [self updateExperimentAppearance:notification];
+    [self syncExperimentToolSelection];
+}
+
 - (void)viewDidChangeEffectiveAppearance
 {
     [super viewDidChangeEffectiveAppearance];
@@ -124,6 +147,8 @@
 
 - (void)setDocument:(PDFDocument *)document
 {
+    [self clearExperimentSelection];
+    [self hideExperimentMagnifier];
     [super setDocument:document];
     [self updateExperimentAppearance:nil];
     // PDFKit may create its document scroll view on the following run-loop turn.
@@ -133,7 +158,8 @@
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
 {
-    return @[NSToolbarFlexibleSpaceItemIdentifier, TSPreviewAppearanceToolbarID];
+    return @[TSExperimentToolsToolbarID, TSExperimentZoomToolbarID,
+             NSToolbarFlexibleSpaceItemIdentifier, TSPreviewAppearanceToolbarID];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
@@ -144,6 +170,8 @@
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSToolbarItemIdentifier)identifier
     willBeInsertedIntoToolbar:(BOOL)inserted
 {
+    if ([identifier isEqualToString:TSExperimentToolsToolbarID]) return self.experimentToolsItem;
+    if ([identifier isEqualToString:TSExperimentZoomToolbarID]) return self.experimentZoomItem;
     return [identifier isEqualToString:TSPreviewAppearanceToolbarID] ? TSPreviewAppearanceItem(self) : nil;
 }
 
@@ -158,6 +186,8 @@
 {
     if (item.action == @selector(changePreviewAppearance:))
         return TSValidatePreviewAppearanceChoice(item, SUD);
+    if (item.action == @selector(copy:) && self.experimentMouseMode == NEW_MOUSE_MODE_SELECT_PDF)
+        return self.hasExperimentSelection;
     return [super validateMenuItem:item];
 }
 
@@ -322,6 +352,463 @@
         view.showsTopOfFirstPage = NO;
         [view showTopOfFirstPage];
     });
+}
+
+#pragma mark - Experiment tools
+
+static NSString *TSExperimentText(NSString *key, NSString *english)
+{
+    NSString *text = NSLocalizedStringFromTable(key, @"ToolbarItems", @"");
+    return text.length && ![text isEqualToString:key] ? text : english;
+}
+
+static NSInteger TSExperimentToolIndex(NSInteger mode)
+{
+    for (NSInteger i = 0; i < TSExperimentToolCount; i++)
+        if (TSExperimentToolModes[i] == mode) return i;
+    return NSNotFound;
+}
+
+// The index of a group's control that sent an action, whether the group or one of its items sent it.
+static NSInteger TSExperimentGroupIndex(id sender)
+{
+    if ([sender isKindOfClass:NSToolbarItemGroup.class]) return [(NSToolbarItemGroup *)sender selectedIndex];
+    if ([sender isKindOfClass:NSToolbarItem.class])
+        for (NSToolbarItem *item in [(NSToolbarItem *)sender toolbar].items)
+            if ([item isKindOfClass:NSToolbarItemGroup.class] && [[(NSToolbarItemGroup *)item subitems] containsObject:sender])
+                return [[(NSToolbarItemGroup *)item subitems] indexOfObject:sender];
+    return NSNotFound;
+}
+
+// The area of a page that is not blank, in page coordinates; empty if the page is blank.
+NSRect TSExperimentInkBounds(PDFPage *page, PDFDisplayBox box)
+{
+    NSRect bounds = [page boundsForBox:box];
+    if (!page || page.rotation % 360 != 0 || NSIsEmptyRect(bounds)) return NSZeroRect;
+    CGFloat resolution = MIN(2.0, 4000.0 / MAX(NSWidth(bounds), NSHeight(bounds)));
+    size_t width = MAX(1, (size_t)ceil(NSWidth(bounds) * resolution));
+    size_t height = MAX(1, (size_t)ceil(NSHeight(bounds) * resolution));
+    CGColorSpaceRef gray = CGColorSpaceCreateDeviceGray();
+    CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 0, gray, (CGBitmapInfo)kCGImageAlphaNone);
+    CGColorSpaceRelease(gray);
+    if (!context) return NSZeroRect;
+    CGContextSetGrayFillColor(context, 1, 1);
+    CGContextFillRect(context, CGRectMake(0, 0, width, height));
+    CGContextScaleCTM(context, resolution, resolution);
+    [page drawWithBox:box toContext:context];
+    const uint8_t *pixels = CGBitmapContextGetData(context);
+    size_t bytesPerRow = CGBitmapContextGetBytesPerRow(context);
+    NSInteger minX = width, minY = height, maxX = -1, maxY = -1;
+    for (size_t row = 0; row < height; row++)
+        for (size_t column = 0; column < width; column++)
+            if (pixels[row * bytesPerRow + column] < 240) {
+                minX = MIN(minX, (NSInteger)column); maxX = MAX(maxX, (NSInteger)column);
+                minY = MIN(minY, (NSInteger)row); maxY = MAX(maxY, (NSInteger)row);
+            }
+    CGContextRelease(context);
+    if (maxX < 0) return NSZeroRect;
+    // Row 0 of the bitmap is the top of the page.
+    return NSMakeRect(NSMinX(bounds) + minX / resolution, NSMinY(bounds) + (height - 1 - maxY) / resolution,
+                      (maxX - minX + 1) / resolution, (maxY - minY + 1) / resolution);
+}
+
+// Image data of part of a page in a Copy Format type (TIFF, JPEG, PNG or PDF).
+NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CGFloat pixelsPerPoint,
+                                  NSPasteboardType *pasteboardType)
+{
+    if (!page || NSIsEmptyRect(rect)) return nil;
+    PDFPage *part = [page copy];
+    [part setBounds:rect forBox:kPDFDisplayBoxMediaBox];
+    [part setBounds:rect forBox:kPDFDisplayBoxCropBox];
+    if (type == IMAGE_TYPE_PDF) {
+        PDFDocument *document = [PDFDocument new];
+        [document insertPage:part atIndex:0];
+        if (pasteboardType) *pasteboardType = NSPasteboardTypePDF;
+        return document.dataRepresentation;
+    }
+    BOOL turned = part.rotation % 180 != 0;
+    NSSize size = turned ? NSMakeSize(NSHeight(rect), NSWidth(rect)) : rect.size;
+    NSInteger width = MAX(1, lround(size.width * pixelsPerPoint)), height = MAX(1, lround(size.height * pixelsPerPoint));
+    NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+        pixelsWide:width pixelsHigh:height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO
+        colorSpaceName:NSDeviceRGBColorSpace bytesPerRow:0 bitsPerPixel:0];
+    if (!bitmap) return nil;
+    bitmap.size = size;
+    NSGraphicsContext *context = [NSGraphicsContext graphicsContextWithBitmapImageRep:bitmap];
+    [NSGraphicsContext saveGraphicsState];
+    NSGraphicsContext.currentContext = context;
+    [NSColor.whiteColor setFill];
+    NSRectFill(NSMakeRect(0, 0, size.width, size.height));
+    [part drawWithBox:kPDFDisplayBoxCropBox toContext:context.CGContext];
+    [NSGraphicsContext restoreGraphicsState];
+    NSBitmapImageFileType fileType = NSBitmapImageFileTypePNG;
+    NSDictionary *properties = @{};
+    NSPasteboardType kind = NSPasteboardTypePNG;
+    switch (type) {
+        case IMAGE_TYPE_TIFF_NC: case IMAGE_TYPE_TIFF_LZW: case IMAGE_TYPE_TIFF_PB:
+            fileType = NSBitmapImageFileTypeTIFF;
+            kind = NSPasteboardTypeTIFF;
+            properties = @{NSImageCompressionMethod: @(type == IMAGE_TYPE_TIFF_NC ? NSTIFFCompressionNone :
+                type == IMAGE_TYPE_TIFF_LZW ? NSTIFFCompressionLZW : NSTIFFCompressionPackBits)};
+            break;
+        case IMAGE_TYPE_JPEG_HIGH: case IMAGE_TYPE_JPEG_MEDIUM: case IMAGE_TYPE_JPEG_LOW:
+            fileType = NSBitmapImageFileTypeJPEG;
+            kind = @"public.jpeg";
+            properties = @{NSImageCompressionFactor: @(type == IMAGE_TYPE_JPEG_HIGH ? JPEG_COMPRESSION_HIGH :
+                type == IMAGE_TYPE_JPEG_MEDIUM ? JPEG_COMPRESSION_MEDIUM : JPEG_COMPRESSION_LOW)};
+            break;
+        default: // PNG, and formats the Copy Format menu no longer offers
+            break;
+    }
+    if (pasteboardType) *pasteboardType = kind;
+    return [bitmap representationUsingType:fileType properties:properties];
+}
+
+- (NSInteger)experimentMouseMode
+{
+    NSInteger mode = [SUD integerForKey:ExperimentMouseModeKey];
+    return TSExperimentToolIndex(mode) == NSNotFound ? NEW_MOUSE_MODE_SELECT_TEXT : mode;
+}
+
+- (NSToolbarItem *)experimentToolsItem
+{
+    NSArray *symbols = @[@"hand.point.up.left", @"a", @"text.magnifyingglass", @"rectangle.dashed"];
+    NSArray *labels = @[TSExperimentText(@"ExperimentToolScroll", @"Scroll"),
+                        TSExperimentText(@"ExperimentToolSelectText", @"Select Text"),
+                        TSExperimentText(@"ExperimentToolMagnify", @"Magnify"),
+                        TSExperimentText(@"ExperimentToolSelectPDF", @"Select PDF")];
+    NSMutableArray *images = [NSMutableArray array];
+    for (NSUInteger i = 0; i < symbols.count; i++)
+        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:labels[i]]];
+    NSToolbarItemGroup *group = [NSToolbarItemGroup groupWithItemIdentifier:TSExperimentToolsToolbarID images:images
+        selectionMode:NSToolbarItemGroupSelectionModeSelectOne labels:labels target:self action:@selector(changeExperimentTool:)];
+    // Kept as separate buttons: AppKit would size them by their labels and fold them into a menu.
+    group.controlRepresentation = NSToolbarItemGroupControlRepresentationExpanded;
+    group.label = group.paletteLabel = TSExperimentText(@"tiLabelMouseModeKIT", @"Mouse Mode");
+    for (NSUInteger i = 0; i < group.subitems.count; i++) group.subitems[i].toolTip = labels[i];
+    group.selectedIndex = TSExperimentToolIndex(self.experimentMouseMode);
+    return group;
+}
+
+- (NSToolbarItem *)experimentZoomItem
+{
+    NSArray *symbols = @[@"minus.magnifyingglass", @"plus.magnifyingglass", @"viewfinder"];
+    NSArray *labels = @[TSExperimentText(@"ExperimentZoomOut", @"Zoom Out"),
+                        TSExperimentText(@"ExperimentZoomIn", @"Zoom In"),
+                        TSExperimentText(@"ExperimentZoomToContent", @"Zoom to Content")];
+    NSMutableArray *images = [NSMutableArray array];
+    for (NSUInteger i = 0; i < symbols.count; i++)
+        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:labels[i]]];
+    NSToolbarItemGroup *group = [NSToolbarItemGroup groupWithItemIdentifier:TSExperimentZoomToolbarID images:images
+        selectionMode:NSToolbarItemGroupSelectionModeMomentary labels:labels target:self action:@selector(experimentZoom:)];
+    // Kept as separate buttons: AppKit would size them by their labels and fold them into a menu.
+    group.controlRepresentation = NSToolbarItemGroupControlRepresentationExpanded;
+    group.label = group.paletteLabel = TSExperimentText(@"tiLabelMagnificationKIT", @"Magnification");
+    for (NSUInteger i = 0; i < group.subitems.count; i++) group.subitems[i].toolTip = labels[i];
+    return group;
+}
+
+// Another Experiment window may have changed the shared choice.
+- (void)syncExperimentToolSelection
+{
+    NSInteger index = TSExperimentToolIndex(self.experimentMouseMode);
+    for (NSToolbarItem *item in self.window.toolbar.items)
+        if ([item.itemIdentifier isEqualToString:TSExperimentToolsToolbarID] &&
+            [(NSToolbarItemGroup *)item selectedIndex] != index) {
+            [(NSToolbarItemGroup *)item setSelectedIndex:index];
+            [self clearExperimentSelection];
+            [self.window invalidateCursorRectsForView:self];
+        }
+}
+
+- (void)changeExperimentTool:(id)sender
+{
+    NSInteger index = TSExperimentGroupIndex(sender);
+    if (index == NSNotFound || index < 0 || index >= TSExperimentToolCount) return;
+    [self clearExperimentSelection];
+    [SUD setInteger:TSExperimentToolModes[index] forKey:ExperimentMouseModeKey];
+    [self.window invalidateCursorRectsForView:self];
+}
+
+- (void)experimentZoom:(id)sender
+{
+    switch (TSExperimentGroupIndex(sender)) {
+        case 0: [self zoomOut:sender]; break;
+        case 1: [self zoomIn:sender]; break;
+        case 2: [self zoomToContent]; break;
+        default: break;
+    }
+}
+
+// The unobscured part of the view, in clip view (document) units.
+- (NSRect)experimentVisibleArea
+{
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    NSRect area = clip.bounds;
+    if (!clip || NSHeight(clip.frame) <= 0) return area;
+    CGFloat unit = NSHeight(area) / NSHeight(clip.frame);
+    NSEdgeInsets insets = scroll.contentInsets;
+    area.origin.x += insets.left * unit;
+    area.size.width -= (insets.left + insets.right) * unit;
+    area.origin.y += (clip.isFlipped ? insets.top : insets.bottom) * unit;
+    area.size.height -= (insets.top + insets.bottom) * unit;
+    return area;
+}
+
+- (void)scrollExperimentToShowPoint:(NSPoint)point
+{
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    if (!clip) return;
+    NSRect area = [self experimentVisibleArea], target = clip.bounds;
+    target.origin.x += point.x - NSMidX(area);
+    target.origin.y += point.y - NSMidY(area);
+    target = [clip constrainBoundsRect:target];
+    [clip scrollToPoint:target.origin];
+    [scroll reflectScrolledClipView:clip];
+}
+
+// Enlarges the non-blank part of the page in view to fill the preview.
+- (void)zoomToContent
+{
+    NSClipView *clip = self.documentView.enclosingScrollView.contentView;
+    if (!self.document.pageCount || !clip) return;
+    NSRect area = [self experimentVisibleArea];
+    NSPoint middle = [self convertPoint:NSMakePoint(NSMidX(area), NSMidY(area)) fromView:clip];
+    PDFPage *page = [self pageForPoint:middle nearest:YES];
+    NSRect ink = TSExperimentInkBounds(page, self.displayBox);
+    if (NSIsEmptyRect(ink)) return;
+    ink = NSIntersectionRect(NSInsetRect(ink, -8, -8), [page boundsForBox:self.displayBox]);
+    NSEdgeInsets insets = self.documentView.enclosingScrollView.contentInsets;
+    CGFloat width = NSWidth(clip.frame) - insets.left - insets.right;
+    CGFloat height = NSHeight(clip.frame) - insets.top - insets.bottom;
+    if (width <= 0 || height <= 0) return;
+    CGFloat scale = MIN(width / NSWidth(ink), height / NSHeight(ink));
+    scale = MAX(self.minScaleFactor, MIN(scale, MIN(self.maxScaleFactor, 8.0)));
+    [self clearExperimentSelection];
+    self.autoScales = NO;
+    self.scaleFactor = scale;
+    [self layoutDocumentView];
+    [self layoutSubtreeIfNeeded];
+    NSPoint center = [self convertPoint:NSMakePoint(NSMidX(ink), NSMidY(ink)) fromPage:page];
+    [self scrollExperimentToShowPoint:[self.documentView convertPoint:center fromView:self]];
+}
+
+- (OverView *)experimentOverlayView
+{
+    if (!self.experimentOverlay || self.experimentOverlay.superview != self.documentView) {
+        [self.experimentOverlay removeFromSuperview];
+        self.experimentOverlay = [[OverView alloc] initWithFrame:self.documentView.frame];
+        [self.documentView addSubview:self.experimentOverlay];
+    }
+    return self.experimentOverlay;
+}
+
+- (void)removeExperimentOverlay
+{
+    [self.experimentOverlay removeFromSuperview];
+    self.experimentOverlay = nil;
+}
+
+- (BOOL)hasExperimentSelection
+{
+    return self.selectionPage != nil && NSWidth(self.selectionPageRect) >= 1 && NSHeight(self.selectionPageRect) >= 1;
+}
+
+- (void)clearExperimentSelection
+{
+    self.selectionPage = nil;
+    self.selectionPageRect = NSZeroRect;
+    [self removeExperimentOverlay];
+}
+
+// Points are in document view coordinates, as the rubber band is drawn there.
+- (void)setExperimentSelectionFrom:(NSPoint)start to:(NSPoint)end square:(BOOL)square
+{
+    NSRect band = NSMakeRect(MIN(start.x, end.x), MIN(start.y, end.y), fabs(end.x - start.x), fabs(end.y - start.y));
+    if (square) {
+        CGFloat side = MAX(NSWidth(band), NSHeight(band));
+        band.origin.x = end.x < start.x ? start.x - side : start.x;
+        band.origin.y = end.y < start.y ? start.y - side : start.y;
+        band.size = NSMakeSize(side, side);
+    }
+    OverView *overlay = [self experimentOverlayView];
+    [overlay setDrawMagnifiedImage:NO];
+    [overlay setDrawMagnifiedRect:NO];
+    [overlay setDrawRubberBand:YES];
+    [overlay setSelectionRect:band];
+    [overlay setNeedsDisplay:YES];
+    NSRect inView = [self convertRect:band fromView:self.documentView];
+    PDFPage *page = [self pageForPoint:NSMakePoint(NSMidX(inView), NSMidY(inView)) nearest:YES];
+    self.selectionPage = page;
+    self.selectionPageRect = page ? NSIntersectionRect([self convertRect:inView toPage:page], [page boundsForBox:self.displayBox]) : NSZeroRect;
+}
+
+- (void)showExperimentMagnifierAt:(NSPoint)point level:(NSInteger)level modifiers:(NSEventModifierFlags)flags
+{
+    PDFPage *page = [self pageForPoint:point nearest:YES];
+    if (!page) return;
+    // Same glass as the Preview window (TSMagnifyingGlass.h).
+    PDFDisplayBox box = self.displayBox;
+    if (self.lensPage != page) {
+        self.lensPage = page;
+        self.lensImage = TSMagnifyingGlassPageImage(page, box);
+    }
+    NSRect onScreen, drawn;
+    TSMagnifyingGlassLayout(self, page, box, point, TSMagnifyingGlassSize(level), TSMagnifyingGlassScale(flags), &onScreen, &drawn);
+    OverView *overlay = [self experimentOverlayView];
+    [overlay setDrawRubberBand:NO];
+    [overlay setDrawMagnifiedRect:NO];
+    [overlay setDrawMagnifiedImage:YES];
+    [overlay setSelectionRect:[self.documentView convertRect:onScreen fromView:self]];
+    [overlay setMagnifiedRect:drawn];
+    overlay.magnifiedImage = self.lensImage;
+    [overlay setNeedsDisplay:YES];
+}
+
+- (void)hideExperimentMagnifier
+{
+    [self removeExperimentOverlay];
+    self.lensPage = nil;
+    self.lensImage = nil;
+}
+
+// Drags the view under the pointer; window deltas are in points.
+- (void)scrollExperimentFromOrigin:(NSPoint)origin byDelta:(NSSize)delta
+{
+    NSScrollView *scroll = self.documentView.enclosingScrollView;
+    NSClipView *clip = scroll.contentView;
+    if (!clip || NSWidth(clip.frame) <= 0) return;
+    CGFloat unit = NSWidth(clip.bounds) / NSWidth(clip.frame);
+    NSRect target = clip.bounds;
+    target.origin.x = origin.x - delta.width * unit;
+    target.origin.y = clip.isFlipped ? origin.y + delta.height * unit : origin.y - delta.height * unit;
+    target = [clip constrainBoundsRect:target];
+    [clip scrollToPoint:target.origin];
+    [scroll reflectScrolledClipView:clip];
+}
+
+- (void)scrollExperimentByDragging:(NSEvent *)event
+{
+    NSClipView *clip = self.documentView.enclosingScrollView.contentView;
+    if (!clip) return;
+    NSPoint start = event.locationInWindow, origin = clip.bounds.origin;
+    [NSCursor.closedHandCursor push];
+    do {
+        event = [self.window nextEventMatchingMask:NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
+        if (event.type == NSEventTypeLeftMouseDragged)
+            [self scrollExperimentFromOrigin:origin byDelta:NSMakeSize(event.locationInWindow.x - start.x,
+                                                                       event.locationInWindow.y - start.y)];
+    } while (event && event.type != NSEventTypeLeftMouseUp);
+    [NSCursor pop];
+}
+
+- (void)magnifyExperiment:(NSEvent *)event
+{
+    NSInteger largest = [SUD integerForKey:GlassMaxMagnificationKey];
+    if (largest == 0) largest = 250;
+    // As in the document preview: no glass on an already enlarged page.
+    if (self.scaleFactor > largest / 100.0) return;
+    [self clearExperimentSelection];
+    NSInteger level = event.clickCount;
+    NSPoint point = [self convertPoint:event.locationInWindow fromView:nil];
+    BOOL hidden = NO;
+    while (event && event.type != NSEventTypeLeftMouseUp) {
+        if (event.type != NSEventTypeFlagsChanged)
+            point = [self convertPoint:event.locationInWindow fromView:nil];
+        if ([self mouse:point inRect:self.visibleRect]) {
+            if (!hidden) { [NSCursor hide]; hidden = YES; }
+            [self showExperimentMagnifierAt:point level:level modifiers:event.modifierFlags];
+        } else {
+            if (hidden) { [NSCursor unhide]; hidden = NO; }
+            [self removeExperimentOverlay];
+        }
+        event = [self.window nextEventMatchingMask:NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
+    }
+    [self hideExperimentMagnifier];
+    if (hidden) [NSCursor unhide];
+}
+
+- (void)selectExperimentRect:(NSEvent *)event
+{
+    [self clearExperimentSelection];
+    NSPoint start = [self.documentView convertPoint:event.locationInWindow fromView:nil], end = start;
+    while (event && event.type != NSEventTypeLeftMouseUp) {
+        if (event.type != NSEventTypeFlagsChanged) {
+            end = [self.documentView convertPoint:event.locationInWindow fromView:nil];
+            if (event.type == NSEventTypeLeftMouseDragged) [self.documentView autoscroll:event];
+        }
+        [self setExperimentSelectionFrom:start to:end square:(event.modifierFlags & NSEventModifierFlagShift) != 0];
+        event = [self.window nextEventMatchingMask:NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged | NSEventMaskFlagsChanged];
+    }
+    if (!self.hasExperimentSelection) [self clearExperimentSelection];
+}
+
+- (void)mouseDown:(NSEvent *)event
+{
+    switch (self.experimentMouseMode) {
+        case NEW_MOUSE_MODE_SCROLL:
+            [self clearExperimentSelection];
+            [self scrollExperimentByDragging:event];
+            break;
+        case NEW_MOUSE_MODE_MAG_GLASS:
+            [self magnifyExperiment:event];
+            break;
+        case NEW_MOUSE_MODE_SELECT_PDF:
+            [self selectExperimentRect:event];
+            break;
+        default:
+            [self clearExperimentSelection];
+            [super mouseDown:event];
+    }
+}
+
+- (NSCursor *)experimentToolCursor
+{
+    switch (self.experimentMouseMode) {
+        case NEW_MOUSE_MODE_SCROLL: return NSCursor.openHandCursor;
+        case NEW_MOUSE_MODE_SELECT_PDF: return NSCursor.crosshairCursor;
+        case NEW_MOUSE_MODE_MAG_GLASS: return NSCursor.arrowCursor;
+        default: return nil;
+    }
+}
+
+- (void)resetCursorRects
+{
+    NSCursor *cursor = self.experimentToolCursor;
+    if (cursor) [self addCursorRect:self.visibleRect cursor:cursor];
+    else [super resetCursorRects];
+}
+
+// PDFKit sets its own cursor over text and links while the pointer moves.
+- (void)mouseMoved:(NSEvent *)event
+{
+    NSCursor *cursor = self.experimentToolCursor;
+    if (cursor) [cursor set];
+    else [super mouseMoved:event];
+}
+
+- (void)copy:(id)sender
+{
+    if (self.experimentMouseMode != NEW_MOUSE_MODE_SELECT_PDF || !self.hasExperimentSelection) {
+        [super copy:sender];
+        return;
+    }
+    NSPasteboardType kind = nil;
+    CGFloat backing = self.window.backingScaleFactor > 0 ? self.window.backingScaleFactor : 2;
+    NSData *data = TSExperimentSelectionData(self.selectionPage, self.selectionPageRect,
+        [SUD integerForKey:PdfCopyTypeKey], MAX(1.0, self.scaleFactor * backing), &kind);
+    if (!data) { NSBeep(); return; }
+    NSPasteboard *pasteboard = NSPasteboard.generalPasteboard;
+    [pasteboard clearContents];
+    [pasteboard setData:data forType:kind];
+}
+
+- (void)experimentScaleChanged:(NSNotification *)notification
+{
+    // The rubber band is drawn at the old scale; select again after zooming.
+    [self clearExperimentSelection];
 }
 
 @end

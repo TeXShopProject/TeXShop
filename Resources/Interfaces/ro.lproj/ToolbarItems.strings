@@ -261,3 +261,12 @@ tiToolTipHtmlURLField            = "To go this URL";
 tiLabelHtmlSearch             = "Search";
 tiPaletteLabelHtmlSearch      = "Search";
 tiToolTipHtmlSearch           = "Search";
+
+/* Experiment preview tools */
+"ExperimentToolScroll" = "Derulare";
+"ExperimentToolSelectText" = "Selectează textul";
+"ExperimentToolMagnify" = "Mărire";
+"ExperimentToolSelectPDF" = "Selectează PDF";
+"ExperimentZoomOut" = "Zoom Out";
+"ExperimentZoomIn" = "Zoom In";
+"ExperimentZoomToContent" = "Potrivește la conținut";

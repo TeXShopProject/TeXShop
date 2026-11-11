@@ -256,3 +256,12 @@ tiToolTipHtmlURLField            = "URL";
 tiLabelHtmlSearch             = "찾기";
 tiPaletteLabelHtmlSearch      = "찾기";
 tiToolTipHtmlSearch           = "찾기";
+
+/* Experiment preview tools */
+"ExperimentToolScroll" = "스크롤";
+"ExperimentToolSelectText" = "글자 선택";
+"ExperimentToolMagnify" = "확대경";
+"ExperimentToolSelectPDF" = "영역 선택";
+"ExperimentZoomOut" = "축소하기";
+"ExperimentZoomIn" = "확대하기";
+"ExperimentZoomToContent" = "내용에 맞추기";
