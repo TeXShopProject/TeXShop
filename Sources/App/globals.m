@@ -335,7 +335,6 @@ NSString *HtmlWindowNameKey = @"HtmlWindowName";
 NSString *HtmlWindowPosModeKey = @"HtmlWindowPosMode";
 NSString *HtmlWindowFixedPosKey = @"HtmlWindowFixedPos";
 NSString *HtmlHomeKey = @"HtmlHome";
-NSString *GlassMaxMagnificationKey = @"GlassMaxMagnification";
 NSString *EncodingMenuInSaveDialogKey = @"EncodingMenuInSaveDialog";
 NSString *BlockCursorKey = @"BlockCursor";
 NSString *BlockCursorRKey = @"BlockCursorR";
