@@ -54,7 +54,10 @@
       {"text": "Themes", "id": "heading.group.appearance.0", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Updates", "id": "category.title", "category": "updates", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "Text", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"}
     ],
     "es": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -111,7 +114,9 @@
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
       {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
       {"category": "general", "id": "label.catalog-row", "role": "label", "text": "PDF", "reason": "File format or typesetting engine name"},
-      {"category": "appearance", "id": "", "role": "label", "text": "PDF", "reason": "File format or typesetting engine name"}
+      {"category": "appearance", "id": "", "role": "label", "text": "PDF", "reason": "File format or typesetting engine name"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "fr": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -172,7 +177,10 @@
       {"text": "Source", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Style", "id": "heading.group.editor.1", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "Source", "id": "heading.group.appearance.3", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "it": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -228,7 +236,9 @@
       {"text": "Log", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Tag", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "ja": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -277,7 +287,9 @@
       {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
       {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
-      {"category": "typesetting", "id": "label.catalog-row", "role": "label", "text": "LaTeX", "reason": "File format or typesetting engine name"}
+      {"category": "typesetting", "id": "label.catalog-row", "role": "label", "text": "LaTeX", "reason": "File format or typesetting engine name"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "ko": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -325,7 +337,9 @@
       {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
       {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "nl": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -381,7 +395,9 @@
       {"text": "Tag", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Updates", "id": "category.title", "category": "updates", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "pt": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -437,7 +453,9 @@
       {"text": "Log", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Tab", "id": "label.catalog-row", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "pt-PT": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -487,7 +505,9 @@
       {"text": "0 (normal)", "id": "settings.434", "category": "preview", "role": "choice", "reason": "Word also used in this locale"},
       {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ],
     "ro": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -541,7 +561,10 @@
       {"text": "Index", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Tab", "id": "label.catalog-row", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "Text", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"}
     ],
     "zh_CN": [
       {"text": "Apple Distiller", "id": "choice.settings.eiU-B8-j8t", "category": "typesetting", "role": "choice", "reason": "Technical name, command or XML element"},
@@ -589,7 +612,9 @@
       {"text": "subsubsection ", "id": "settings.ct9-Gf-9nT", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
       {"text": "table", "id": "settings.F6b-YV-mvL", "category": "editor", "role": "button", "reason": "Technical name, command or XML element"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
-      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"}
+      {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},
+      {"text": "expl3", "id": "heading.group.appearance.6", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"},
+      {"text": "SyncTeX", "id": "heading.group.appearance.8", "category": "appearance", "role": "label", "reason": "Technical name, command or XML element"}
     ]
   }
 }

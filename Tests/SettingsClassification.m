@@ -120,8 +120,8 @@ int main(int argc,char **argv){@autoreleasepool{
  Check(HeadingCount(Find([panes[@"documents"] view],@"group.encoding"))==1 && HeadingCount(Find([panes[@"documents"] view],@"group.saving"))==1,@"Documents has one heading for Encoding and one for Saving");
  Check([Find([panes[@"documents"] view],@"settings.5xa-en-KkV") isDescendantOf:Find([panes[@"documents"] view],@"group.encoding")],@"Encoding dialog option belongs to Encoding");
  TSDockIconController *dock=[[TSDockIconController alloc]initWithBundle:bundle defaults:memory];
- [dock installInPreferencesPane:[panes[@"appearance"] view]];
- Check(Find([panes[@"appearance"] view],@"DockIconChoices")!=nil,@"Dock choices installed in Appearance");
+ [dock installInPreferencesPane:[panes[@"general"] view]];
+ Check(Find([panes[@"general"] view],@"DockIconChoices")!=nil && Find([panes[@"appearance"] view],@"DockIconChoices")==nil,@"Dock choices installed in General, not Themes");
  NSMutableDictionary *after=[NSMutableDictionary dictionary];for(NSViewController *p in panes.allValues)Collect(p.view,after);
  for(NSString *key in before){NSControl *c=before[key];BOOL retained=[c isKindOfClass:NSMatrix.class] || [c isKindOfClass:NSColorWell.class] || c.action!=NULL || ([c isKindOfClass:NSTextField.class] && ((NSTextField *)c).editable) || [@[@"settings.18",@"settings.754"] containsObject:key];if(retained)Check(c==after[key],[NSString stringWithFormat:@"Original functional control retained exactly once: %@",key]);}
  for(NSString *category in panes){
@@ -231,7 +231,7 @@ int main(int argc,char **argv){@autoreleasepool{
   NSMutableDictionary *theme=[NSMutableDictionary dictionary];@try {[[TSColorSupport sharedInstance] changeColorValueInDictionary:theme forKey:@"probe" fromColorWell:themeWell];} @catch(NSException *exception){Check(NO,@"Theme wells store converted RGBA");}NSArray *saved=theme[@"probe"];
   Check(saved.count==4 && fabs([saved[0] doubleValue]-rgb.redComponent)<0.0001 && fabs([saved[1] doubleValue]-rgb.greenComponent)<0.0001 && fabs([saved[2] doubleValue]-rgb.blueComponent)<0.0001 && fabs([saved[3] doubleValue]-rgb.alphaComponent)<0.0001,@"Theme wells store converted RGBA");
  }
- // The Appearance pane is detached; an unreadable theme still disables all of its wells.
+ // The Themes pane is detached; an unreadable theme still disables all of its wells.
  DetachedPaneHost *detached=[[DetachedPaneHost alloc]initWithDefaults:memory];detached.testPanes=panes;owner.settingsController=detached;
  [owner setValue:nil forKey:@"EditingColors"];[owner FillInColorWells];
  NSUInteger disabledWells=0;for(NSControl *control in after.allValues)if([control isKindOfClass:NSColorWell.class] && control.action!=@selector(BlockCursorColorChanged:)){Check(!control.enabled,@"Unreadable theme disables offscreen color wells");disabledWells++;}

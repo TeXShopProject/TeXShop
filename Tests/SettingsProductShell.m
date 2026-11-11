@@ -260,7 +260,10 @@ int main(int argc,char **argv){@autoreleasepool{
  [windowManager setValue:nil forKey:@"activeTextWindow"];
  TSDockIconController *dock=[TSDockIconController sharedController];
  [dock installInPreferencesPane:[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance]];
- NSArray<NSButton *> *dockButtons=[dock valueForKey:@"buttons"];Check(dockButtons.count==5,@"Appearance installs exactly five Dock choices once");
+ Check([[dock valueForKey:@"buttons"] count]==0,@"Themes has no Dock group");
+ [dock installInPreferencesPane:[shell viewForCategoryIdentifier:TSSettingsCategoryGeneral]];
+ NSArray<NSButton *> *dockButtons=[dock valueForKey:@"buttons"];Check(dockButtons.count==5,@"General installs exactly five Dock choices once");
+ if(argc>2){[shell selectCategoryIdentifier:TSSettingsCategoryGeneral];Save([shell viewForCategoryIdentifier:TSSettingsCategoryGeneral],[@(argv[2]) stringByAppendingPathComponent:@"general-with-dock.png"]);}
  NSArray *expectedDockYears=@[@"2000–2001",@"2001–2013",@"2013–2014",@"2014–2026",@"2026–"];
  for(NSUInteger index=0;index<dockButtons.count;index++){
   NSTextField *caption=(NSTextField *)Find(dockButtons[index].superview,@"dock.years");

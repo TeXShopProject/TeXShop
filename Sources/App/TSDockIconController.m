@@ -1,4 +1,4 @@
-// Dock choices appear with fonts and color themes in Appearance.
+// Dock choices appear in General.
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSDockIconController.h"
 #import "TSPrefPaneLayout.h"
@@ -47,7 +47,7 @@
     NSStackView *body = [pane.subviews.firstObject isKindOfClass:NSStackView.class] ? (NSStackView *)pane.subviews.firstObject : nil;
     if (body == nil) return;
     TSSettingsGroupView *group = nil;
-    for (NSView *candidate in body.arrangedSubviews) if ([candidate.identifier isEqual:@"group.appearance.10"]) group=(TSSettingsGroupView *)candidate;
+    for (NSView *candidate in body.arrangedSubviews) if ([candidate.identifier isEqual:@"group.general.6"]) group=(TSSettingsGroupView *)candidate;
     if (group == nil) return;
     NSMutableArray<NSView *> *options = [NSMutableArray array];
     NSArray *titles = @[@"Original", @"Classic Triangle", @"Retina Triangle", @"Classic Circle", @"Current (Default)"];

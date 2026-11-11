@@ -65,8 +65,8 @@
     NSString *(^dockText)(NSString *) = ^(NSString *key) { return [bundle localizedStringForKey:key value:key table:@"SettingsDock"]; };
     for (NSUInteger i = 0; i < dockTitles.count; i++) {
         NSString *tip = [NSString stringWithFormat:@"%@ — %@", dockText(dockTitles[i]), dockText(dockPeriods[i])];
-        [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryAppearance target:@"DockIconChoices" text:tip weight:TSSettingsSearchWeightDescription command:NO]];
-        [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryAppearance target:@"DockIconChoices" text:TSDockIconYears()[i] weight:TSSettingsSearchWeightChoice command:NO]];
+        [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryGeneral target:@"DockIconChoices" text:tip weight:TSSettingsSearchWeightDescription command:NO]];
+        [entries addObject:[[TSSettingsSearchEntry alloc] initWithCategory:TSSettingsCategoryGeneral target:@"DockIconChoices" text:TSDockIconYears()[i] weight:TSSettingsSearchWeightChoice command:NO]];
     }
     for (NSString *category in order) add(category, @"", @"SettingsCategories", category, TSSettingsSearchWeightCategory);
     for (NSString *category in order) {
