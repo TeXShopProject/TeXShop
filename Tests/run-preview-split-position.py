@@ -30,31 +30,33 @@ def last_method(source, signature):
 
 split = last_method(window_source, '- (void) mainSplitPdfKitWindow')
 switch = last_method(window_source, '- (void)switchViews;')
+# Switching the parts of a split window (#25).
+parts = last_method(window_source, '- (void)switchSplitParts\n')
 splitter = last_method(window_source, '- (void) splitPdfKitWindow:')
 view_methods = [last_method(view_source, s) for s in (
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:')]
 fragments = [('complete method: ' + text.split('\n')[0], source, text)
-             for source, text in [(window_source, split), (window_source, switch), (window_source, splitter)]
+             for source, text in [(window_source, split), (window_source, switch), (window_source, parts), (window_source, splitter)]
              + [(view_source, m) for m in view_methods]]
 
 for problem, old, new in (
         ('first-not-restored', 'TSPreviewPaneRestore(firstView, firstTop);', ''),
-        ('switch-not-swapped', 'TSPreviewPaneRestore(self.myPDFKitView, lower);', 'TSPreviewPaneRestore(self.myPDFKitView, upper);'),
+        ('switch-not-swapped', 'TSPreviewPaneRestore(upperView, lower);', 'TSPreviewPaneRestore(upperView, upper);'),
         ('shift-not-same', 'TSPreviewPaneRestore(secondView, firstTop);', ';'),
         ('second-not-saved', '[secondView saveLocation];', ''),
         ('restore-before-layout', '    [self.pdfKitSplitView adjustSubviews];\n    [self.pdfKitSplitView layoutSubtreeIfNeeded];\n    TSPreviewPaneRestore', '    TSPreviewPaneRestore')):
     if args.mutation == problem:
-        assert split.count(old) + switch.count(old) >= 1, problem
-        split, switch = split.replace(old, new), switch.replace(old, new)
+        assert split.count(old) + parts.count(old) >= 1, problem
+        split, parts = split.replace(old, new), parts.replace(old, new)
 if args.mutation == 'deferred-restore':
     # Putting the place back once more later undoes what the user did in between.
     old = '    TSPreviewPaneRestore(firstView, firstTop);\n    if (self.windowIsSplit)'
     assert split.count(old) == 1
     split = split.replace(old, '    TSPreviewPaneRestore(firstView, firstTop);\n'
                           '    dispatch_async(dispatch_get_main_queue(), ^{ TSPreviewPaneRestore(firstView, firstTop); });\n    if (self.windowIsSplit)')
-    old = '        TSPreviewPaneRestore(self.myPDFKitView2, upper);\n'
-    assert switch.count(old) == 1
-    switch = switch.replace(old, old + '        dispatch_async(dispatch_get_main_queue(), ^{ TSPreviewPaneRestore(self.myPDFKitView, lower); });\n')
+    old = '    TSPreviewPaneRestore(lowerView, upper);\n'
+    assert parts.count(old) == 1
+    parts = parts.replace(old, old + '    dispatch_async(dispatch_get_main_queue(), ^{ TSPreviewPaneRestore(upperView, lower); });\n')
 if args.mutation == 'edge-ignores-flip':
     old = 'CGFloat top = clip.isFlipped ? NSMinY(bounds) + insets.top : NSMaxY(bounds) - insets.top;'
     assert header_source.count(old) == 1
@@ -104,6 +106,7 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_WINDOW) [self setAutoScales:YES]; else [self setScaleFactor:self.fixedScale]; }
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
 - (void)resetSearchDelegate {}
+- (void)becomeActiveView {}
 - (BOOL)hasPinnedLinkPreview { return YES; }
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)f { return nil; }
 - (void)attachPinnedLinkPreview:(TSLinkPreviewView *)p windowFrame:(NSRect)f {}
@@ -122,6 +125,7 @@ DIVIDERPROPERTY
 - (void)keepPinnedLinkPreviewsInView {}
 SPLITMETHOD
 SWITCHMETHOD
+PARTSMETHOD
 SPLITTERMETHOD
 @end
 
@@ -292,7 +296,7 @@ int main(int argc, char **argv) { @autoreleasepool {
 program = (program.replace('DIVIDERIMPORT', '#import "TSPreviewSplitDivider.h"' if uses_divider else '')
            .replace('DIVIDERPROPERTY', '@property (strong) TSPreviewSplitDivider *previewSplitDivider;' if uses_divider else '')
            .replace('VIEWMETHODS', '\n'.join(view_methods))
-           .replace('SPLITTERMETHOD', splitter).replace('SPLITMETHOD', split).replace('SWITCHMETHOD', switch))
+           .replace('SPLITTERMETHOD', splitter).replace('SPLITMETHOD', split).replace('SWITCHMETHOD', switch).replace('PARTSMETHOD', parts))
 if not args.mutation:
     verify_embedded(program, fragments)
 with tempfile.TemporaryDirectory() as temp:

@@ -8098,10 +8098,18 @@ else
     
 	((TSPreviewWindow *)self.myPDFWindow).activeView = self;
 	result =  [super becomeFirstResponder];
+	[self becomeActiveView];
+	return result;
+}
+
+// The toolbar, the Preview menu and the search results work with this view from now on,
+// whether or not it has the keyboard focus (#25).
+- (void)becomeActiveView
+{
+	((TSPreviewWindow *)self.myPDFWindow).activeView = self;
 	[self fixStuff];
 	[self resetSearchDelegate];
     [self.myDocument updatePreviewLayoutControls];
-	return result;
 }
 
 
