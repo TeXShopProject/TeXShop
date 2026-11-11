@@ -39,11 +39,12 @@
 
 + (BOOL)isDividerDrag:(NSNotification *)notification
 {
-    // NSSplitView marks a resize by the user in its notifications. Otherwise the
-    // resize is a divider drag when it happens during a mouse drag in the window
-    // that is not a resize of the window itself.
-    if ([notification.userInfo[@"NSSplitViewUserResizeKey"] boolValue])
-        return YES;
+    // NSSplitView says in its notifications whether the user or the program moved
+    // a divider. Without that, the resize is a divider drag when it happens during
+    // a mouse drag in the window that is not a resize of the window itself.
+    NSNumber *byUser = notification.userInfo[@"NSSplitViewUserResizeKey"];
+    if (byUser != nil)
+        return byUser.boolValue;
     NSView *splitView = notification.object;
     NSEvent *event = NSApp.currentEvent;
     return [splitView isKindOfClass:[NSView class]] && splitView.window != nil && !splitView.window.inLiveResize &&
