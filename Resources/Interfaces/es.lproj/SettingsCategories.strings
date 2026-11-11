@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "Establecer";
 "catalog.preview.0.3.title" = "Modo de ratón";
-"catalog.preview.0.4.title" = "No desplazar con los botones de página";
+"catalog.preview.0.4.title" = "No pasar de página al desplazar";
+"catalog.preview.0.4.note" = "Con «Página simple» y «Página doble», el desplazamiento con la rueda del ratón o el trackpad se detiene en los bordes superior e inferior de la página.";
 "catalog.preview.0.5.title" = "Texto suave y arte lineal";
 "catalog.preview.0.6.title" = "Desplegar enlaces";
 "catalog.preview.0.6.note" = "Valor inicial para los documentos que se abran a partir de ahora. En un documento abierto, se cambia en el menú «PDF».";

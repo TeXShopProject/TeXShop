@@ -161,7 +161,6 @@
             [TSSettingsLayoutRow controls:@[@"settings.F6b-YV-mvL", @"settings.9KW-ea-Zni"] kind:TSSettingsRowControls indentation:0],
         ]],
         @"settings.10": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.228"] kind:TSSettingsRowSection indentation:0], // Change Page Buttons
             [TSSettingsLayoutRow controls:@[@"settings.47"] kind:TSSettingsRowSection indentation:0], // Preview Window Position
             [TSSettingsLayoutRow controls:@[@"settings.329"] kind:TSSettingsRowSection indentation:0], // Default Page Style
             [TSSettingsLayoutRow controls:@[@"settings.342"] kind:TSSettingsRowSection indentation:0], // Magnification Method
@@ -181,9 +180,6 @@
         ]],
         @"settings.HSm-QY-Bs6": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.113", @"settings.116"] kind:TSSettingsRowControls indentation:0], // magTextField
-        ]],
-        @"settings.p9l-bi-ywt": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.230"] kind:TSSettingsRowControls indentation:0], // scrollButton
         ]],
         @"settings.slE-Lh-2Zi": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.345"] kind:TSSettingsRowControls indentation:0], // mouseModePopup
@@ -205,6 +201,7 @@
         @"settings.024-V2-dVf": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.fjQ-he-GFL"] kind:TSSettingsRowControls indentation:0], // antialiasButton
             [TSSettingsLayoutRow controls:@[@"settings.preview-link-popups-button"] kind:TSSettingsRowControls indentation:0], // linkPopupsButton
+            [TSSettingsLayoutRow controls:@[@"settings.preview-scroll-page-turn-button"] kind:TSSettingsRowControls indentation:0], // scrollPageTurnButton
         ]],
         @"settings.7Xo-ey-gfu": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.G6V-Sw-jFT"] kind:TSSettingsRowControls indentation:0], // useTwoWindowsButton

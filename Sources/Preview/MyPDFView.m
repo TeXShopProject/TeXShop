@@ -1086,20 +1086,7 @@ failed. If you change the code below, be sure to test carefully!
 
 	if (pageStyle == PDF_SINGLE_PAGE_STYLE)
 	{
-		if ([SUD boolForKey:NoScrollEnabledKey]) {
-			pagenumber = [self.myRep currentPage];
-			if (pagenumber > 0) {
-				[self cleanupMarquee: YES];
-				pagenumber--;
-				[currentPage0 setIntegerValue:(pagenumber + 1)];
-								[currentPage1 setIntegerValue:(pagenumber + 1)];
-				[self.myRep setCurrentPage: pagenumber];
-				[currentPage0 display];
-				[self display];
-				}
-			}
-
-		else {
+		{
 			myBounds = [self bounds];
 			myVisible = [self visibleRect];
 			newVisible = myVisible;
@@ -1232,20 +1219,7 @@ failed. If you change the code below, be sure to test carefully!
 
 	if (pageStyle == PDF_SINGLE_PAGE_STYLE)
 	{
-		if ([SUD boolForKey:NoScrollEnabledKey]) {
-			pagenumber = [self.myRep currentPage];
-			if (pagenumber < ([self.myRep pageCount]) - 1) {
-				[self cleanupMarquee: YES];
-				pagenumber++;
-				[currentPage0 setIntegerValue:(pagenumber + 1)];
-								[currentPage1 setIntegerValue:(pagenumber + 1)];
-				[self.myRep setCurrentPage: pagenumber];
-				[currentPage0 display];
-				[self display];
-				}
-			}
-
-		else {
+		{
 			myBounds = [self bounds];
 			myVisible = [self visibleRect];
 			newVisible = myVisible;
@@ -1503,7 +1477,7 @@ failed. If you change the code below, be sure to test carefully!
 		if (pagenumber != [self.myRep currentPage])
 			[self cleanupMarquee: YES];
 		[self.myRep setCurrentPage: (pagenumber - 1)];
-		if (![SUD boolForKey:NoScrollEnabledKey]) {
+		{
 			myBounds = [self bounds];
 			myVisible = [self visibleRect];
 			newVisible = myVisible;

@@ -2,7 +2,6 @@
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "Standaardzoom voor nieuw geopende pdf’s.";
 "1uj-kt-7Pj.title" = "Links";
-"228.title" = "Change Page Buttons";
 "328.title" = "Scrollen";
 "329.title" = "Standaard weergavetype";
 "330.title" = "Default Mouse Mode";
@@ -32,7 +31,6 @@
 "864.title" = "Kies huidige positie";
 "865.title" = "100";
 "866.title" = "Reset";
-"867.title" = "Niet scrollen";
 "871.title" = "Werk automatisch bij";
 "910.title" = "Radio";
 "911.title" = "Radio";
@@ -48,6 +46,7 @@
 "preview-cover-cell.title" = "Eerste pagina apart als omslag tonen";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Beweeg pop-ups";
+"preview-scroll-page-turn-cell.title" = "Niet bladeren door te scrollen";
 "sa2-VV-W1K.title" = "Positie bij sluiten bewaren";
 "tVs-uh-QcM.title" = "Alle vensters op vaste positie openen";
 "vOt-2m-d2s.title" = "Samenvoegen in één venster";

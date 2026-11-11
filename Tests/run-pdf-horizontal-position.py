@@ -17,7 +17,8 @@ def method(signature):
     start = source.rindex(signature)
     return source[start:source.index('\n}', start) + 2]
 methods = '\n'.join(method(signature) for signature in (
-    '- (void)keepHorizontalPositionDuring:', '- (void)goToPage:(PDFPage *)page', '- (void)goToNextPage:',
+    '- (void)keepHorizontalPositionDuring:', '- (BOOL)scrollingKeepsPage', '- (BOOL)isPageTurnFromScrolling:',
+    '- (void)goToPage:(PDFPage *)page', '- (void)goToNextPage:',
     '- (void)goToPreviousPage:', '- (void)goToFirstPage:', '- (void)goToLastPage:',
     '- (void)scrollSelectionToVisible:', '- (void)stepPageForward:', '- (void) previousPage:', '- (void) nextPage:',
     '- (BOOL)scrollVerticalArrowWithinPage:', '- (void)keyDown:'))
@@ -49,6 +50,7 @@ program = r'''
 #import "TSPreviewHorizontalPosition.h"
 #define SUD NSUserDefaults.standardUserDefaults
 #define LeftRightArrowsAlwaysPageKey @"LeftRightArrowsAlwaysPage"
+#define NoScrollPageTurnKey @"NoScrollPageTurn"
 #define PDF_SINGLE_PAGE_STYLE 1
 #define PDF_TWO_PAGE_STYLE 2
 static NSString *context;

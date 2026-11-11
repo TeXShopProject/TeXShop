@@ -108,7 +108,7 @@ int main(int argc,char **argv){@autoreleasepool{
   @[@"documents",@"AutomaticUTF8MACtoUTF8Conversion",@"convertUTFButton"],
   @[@"editor",@"LineNumberEnabled",@"lineNumberButton"],
   @[@"spelling",@"AutomaticSpellingCorrectionEnabled",@"autoSpellCorrectButton"],
-  @[@"preview",@"NoScrollEnabled",@"scrollButton"],
+  @[@"preview",@"NoScrollPageTurn",@"scrollPageTurnButton"],
   @[@"typesetting",@"SavePSEnabled",@"savePSButton"],
   @[@"console",@"SameFontForMacro",@"macroButton"],
   @[@"keyboard",@"AutoCompleteEnabled",@"autoCompleteButton"],

@@ -2,7 +2,6 @@
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "Zoom predefinito per i PDF appena aperti.";
 "1uj-kt-7Pj.title" = "Sinistra";
-"228.title" = "Pulsanti Cambio Pagina";
 "328.title" = "Scorrimento";
 "329.title" = "Vista documento";
 "330.title" = "Funzione predefinita del mouse";
@@ -32,7 +31,6 @@
 "864.title" = "Imposta la posizione";
 "865.title" = "100";
 "866.title" = "Ripristina";
-"867.title" = "Non Scorrere";
 "871.title" = "Aggiornam. anteprima automatico";
 "910.title" = "Radio";
 "911.title" = "Radio";
@@ -48,6 +46,7 @@
 "preview-cover-cell.title" = "Mostra la prima pagina da sola come copertina";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Collegamento popup";
+"preview-scroll-page-turn-cell.title" = "Non cambiare pagina scorrendo";
 "sa2-VV-W1K.title" = "Conserva l'ultima posizione";
 "tVs-uh-QcM.title" = "Scegli una posizione prefissata";
 "vOt-2m-d2s.title" = "Usa un’unica finestra";

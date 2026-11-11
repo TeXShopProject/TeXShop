@@ -2229,13 +2229,50 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     [self keepHorizontalPositionDuring:^{ [super goToPage:page]; }];
 }
 
+// "Do not turn pages by scrolling" (NoScrollPageTurnKey): in single and double page
+// display, scrolling with the mouse wheel or the trackpad stops at the edge of the page.
+// PDFKit turns the page from a scroll by asking the view to perform goToNextPage: or
+// goToPreviousPage: after a delay, after the scroll event. Keys, menus and the page
+// buttons call these methods directly and still turn the page.
+- (BOOL)scrollingKeepsPage
+{
+    return [SUD boolForKey:NoScrollPageTurnKey] &&
+        (self.displayMode == kPDFDisplaySinglePage || self.displayMode == kPDFDisplayTwoUp);
+}
+
+- (BOOL)isPageTurnFromScrolling:(SEL)selector
+{
+    return (selector == @selector(goToNextPage:) || selector == @selector(goToPreviousPage:)) &&
+        [self scrollingKeepsPage];
+}
+
+- (void)performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay
+{
+    if ([self isPageTurnFromScrolling:selector])
+        return;
+    [super performSelector:selector withObject:argument afterDelay:delay];
+}
+
+- (void)performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay
+                inModes:(NSArray<NSRunLoopMode> *)modes
+{
+    if ([self isPageTurnFromScrolling:selector])
+        return;
+    [super performSelector:selector withObject:argument afterDelay:delay inModes:modes];
+}
+
 - (void)goToNextPage:(id)sender
 {
+    // A page turn made while a scroll is being handled comes from the scroll.
+    if (NSApp.currentEvent.type == NSEventTypeScrollWheel && [self isPageTurnFromScrolling:_cmd])
+        return;
     [self keepHorizontalPositionDuring:^{ [super goToNextPage:sender]; }];
 }
 
 - (void)goToPreviousPage:(id)sender
 {
+    if (NSApp.currentEvent.type == NSEventTypeScrollWheel && [self isPageTurnFromScrolling:_cmd])
+        return;
     [self keepHorizontalPositionDuring:^{ [super goToPreviousPage:sender]; }];
 }
 

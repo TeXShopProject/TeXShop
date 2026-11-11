@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "Set";
 "catalog.preview.0.3.title" = "Default Mouse Mode";
-"catalog.preview.0.4.title" = "Do not scroll with page buttons";
+"catalog.preview.0.4.title" = "Do not turn pages by scrolling";
+"catalog.preview.0.4.note" = "With Single Page and Two Page, scrolling with the mouse wheel or the trackpad stops at the top and bottom of the page.";
 "catalog.preview.0.5.title" = "Smooth text and line art";
 "catalog.preview.0.6.title" = "Link Popups";
 "catalog.preview.0.6.note" = "Default for documents opened from now on. For an open document, switch it in the Preview menu.";

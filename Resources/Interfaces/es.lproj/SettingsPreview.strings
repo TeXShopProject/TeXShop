@@ -2,7 +2,6 @@
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "Zoom predeterminado para los PDF que se abran.";
 "1uj-kt-7Pj.title" = "Izquierda";
-"228.title" = "Botones cambio de página";
 "328.title" = "Desplazar";
 "329.title" = "Mostrar páginas";
 "330.title" = "Modo de ratón";
@@ -32,7 +31,6 @@
 "864.title" = "Establecer con posición actual";
 "865.title" = "100";
 "866.title" = "Establecer";
-"867.title" = "Cambiar sin desplazar";
 "871.title" = "Actualizar PDF automáticamente";
 "910.title" = "Radio";
 "911.title" = "Radio";
@@ -48,6 +46,7 @@
 "preview-cover-cell.title" = "Mostrar la primera página sola como portada";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "Desplegar enlaces";
+"preview-scroll-page-turn-cell.title" = "No pasar de página al desplazar";
 "sa2-VV-W1K.title" = "Conservar la última position";
 "tVs-uh-QcM.title" = "Comenzar con posición fija";
 "vOt-2m-d2s.title" = "Usar una ventana";

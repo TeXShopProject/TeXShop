@@ -149,7 +149,7 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             TSProfileKeyNSUserKeyEquivalents,
             NewLineCharacterKindKey,
             TSProfileKeyNewLineCharacterKindExtended,
-            NoScrollEnabledKey,
+            NoScrollPageTurnKey,
             OpenAsTabsKey,
             OpenWithSourceInFrontKey,
             originalSpellingKey,

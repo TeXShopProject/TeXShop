@@ -480,11 +480,6 @@
         "class": "TSPrefPreviewController"
       },
       {
-        "ivar": "_scrollButton",
-        "property": "scrollButton",
-        "class": "TSPrefPreviewController"
-      },
-      {
         "ivar": "useLeftSourceButton",
         "property": "useLeftSourceButton",
         "class": "TSPrefPreviewController"
@@ -2245,13 +2240,6 @@
         "value": "magChanged:"
       },
       {
-        "key": "230.action",
-        "view": "settings.230",
-        "kind": "view",
-        "property": "action",
-        "value": "scrollPressed:"
-      },
-      {
         "key": "345.action",
         "view": "settings.345",
         "kind": "view",
@@ -2285,6 +2273,13 @@
         "kind": "view",
         "property": "action",
         "value": "linkPopupsChanged:"
+      },
+      {
+        "key": "preview-scroll-page-turn-button.action",
+        "view": "settings.preview-scroll-page-turn-button",
+        "kind": "view",
+        "property": "action",
+        "value": "scrollPageTurnChanged:"
       },
       {
         "key": "506.action",
@@ -3554,18 +3549,17 @@
           "48.title": "All windows start at fixed position",
           "333.title": "Single Page",
           "45.title": "Remember last position on close",
-          "867.title": "Do not scroll",
           "637.title": "Actual Size",
           "vOt-2m-d2s.title": "Use One Window",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Default Page Style",
           "113.ibShadowedToolTip": "Default zoom for newly opened PDFs.",
-          "228.title": "Change Page Buttons",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML Window Position",
           "p2D-Mi-Gyc.title": "Home URL",
-          "preview-link-popups-cell.title": "Link Popups"
+          "preview-link-popups-cell.title": "Link Popups",
+          "preview-scroll-page-turn-cell.title": "Do not turn pages by scrolling"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -5342,13 +5336,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Do not scroll"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -5385,13 +5372,6 @@
           "value": "Default zoom for newly opened PDFs."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Change Page Buttons"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -5404,6 +5384,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Link Popups"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Do not turn pages by scrolling"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -6427,10 +6414,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Change Page Buttons"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Default Mouse Mode"
         },
@@ -6879,18 +6862,17 @@
           "48.title": "Fenster immer an fester Position",
           "333.title": "Einzelseiten",
           "45.title": "Merke zuletzt benutzte Position",
-          "867.title": "Nicht scrollen",
           "637.title": "Tatsächliche Größe",
           "vOt-2m-d2s.title": "Ein gemeinsames Fenster",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "PDF-Darstellung",
           "113.ibShadowedToolTip": "Standardzoom für neu geöffnete PDFs.",
-          "228.title": "Seitenwechsel",
           "preview-cover-cell.title": "Show first page alone as cover",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML-Fenster-Postion",
           "p2D-Mi-Gyc.title": "Standard URL-Adresse",
-          "preview-link-popups-cell.title": "Link-Popups"
+          "preview-link-popups-cell.title": "Link-Popups",
+          "preview-scroll-page-turn-cell.title": "Beim Scrollen nicht umblättern"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -8667,13 +8649,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Nicht scrollen"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -8710,13 +8685,6 @@
           "value": "Standardzoom für neu geöffnete PDFs."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Seitenwechsel"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -8729,6 +8697,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Link-Popups"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Beim Scrollen nicht umblättern"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -9752,10 +9727,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Seitenwechsel"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Standard Maus-Modus"
         },
@@ -10204,18 +10175,17 @@
           "48.title": "Comenzar con posición fija",
           "333.title": "Página simple",
           "45.title": "Conservar la última position",
-          "867.title": "Cambiar sin desplazar",
           "637.title": "Tamaño real",
           "vOt-2m-d2s.title": "Usar una ventana",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Mostrar páginas",
           "113.ibShadowedToolTip": "Zoom predeterminado para los PDF que se abran.",
-          "228.title": "Botones cambio de página",
           "preview-cover-cell.title": "Mostrar la primera página sola como portada",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posición de ventana HTML",
           "p2D-Mi-Gyc.title": "URL base",
-          "preview-link-popups-cell.title": "Desplegar enlaces"
+          "preview-link-popups-cell.title": "Desplegar enlaces",
+          "preview-scroll-page-turn-cell.title": "No pasar de página al desplazar"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -11992,13 +11962,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Cambiar sin desplazar"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -12035,13 +11998,6 @@
           "value": "Zoom predeterminado para los PDF que se abran."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Botones cambio de página"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -12054,6 +12010,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Desplegar enlaces"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "No pasar de página al desplazar"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -13077,10 +13040,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Botones cambio de página"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Modo de ratón"
         },
@@ -13529,18 +13488,17 @@
           "48.title": "Choisir une position fixe",
           "333.title": "Page simple",
           "45.title": "Conserver la dernière position",
-          "867.title": "Ne pas faire défiler",
           "637.title": "Taille réelle",
           "vOt-2m-d2s.title": "Utiliser une seule fenêtre",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Style de la page par défaut",
           "113.ibShadowedToolTip": "Zoom par défaut des PDF nouvellement ouverts.",
-          "228.title": "Changer les boutons page",
           "preview-cover-cell.title": "Afficher la première page seule comme couverture",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Position de la fenêtre HTML",
           "p2D-Mi-Gyc.title": "URL personnelle",
-          "preview-link-popups-cell.title": "Pop-up pour les liens"
+          "preview-link-popups-cell.title": "Pop-up pour les liens",
+          "preview-scroll-page-turn-cell.title": "Ne pas changer de page en faisant défiler"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -15317,13 +15275,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Ne pas faire défiler"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -15360,13 +15311,6 @@
           "value": "Zoom par défaut des PDF nouvellement ouverts."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Changer les boutons page"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -15379,6 +15323,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Pop-up pour les liens"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Ne pas changer de page en faisant défiler"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -16402,10 +16353,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Changer les boutons page"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Réglage de la souris par défaut"
         },
@@ -16854,18 +16801,17 @@
           "48.title": "Scegli una posizione prefissata",
           "333.title": "Pagina singola",
           "45.title": "Conserva l'ultima posizione",
-          "867.title": "Non Scorrere",
           "637.title": "Dimensioni reali",
           "vOt-2m-d2s.title": "Usa un’unica finestra",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Vista documento",
           "113.ibShadowedToolTip": "Zoom predefinito per i PDF appena aperti.",
-          "228.title": "Pulsanti Cambio Pagina",
           "preview-cover-cell.title": "Mostra la prima pagina da sola come copertina",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posizione finestra HTML",
           "p2D-Mi-Gyc.title": "URL personale",
-          "preview-link-popups-cell.title": "Collegamento popup"
+          "preview-link-popups-cell.title": "Collegamento popup",
+          "preview-scroll-page-turn-cell.title": "Non cambiare pagina scorrendo"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -18642,13 +18588,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Non Scorrere"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -18685,13 +18624,6 @@
           "value": "Zoom predefinito per i PDF appena aperti."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Pulsanti Cambio Pagina"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -18704,6 +18636,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Collegamento popup"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Non cambiare pagina scorrendo"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -19727,10 +19666,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Pulsanti Cambio Pagina"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Funzione predefinita del mouse"
         },
@@ -20179,18 +20114,17 @@
           "48.title": "いつも同じ位置で開く",
           "333.title": "単一ページ",
           "45.title": "閉じたときの位置を保存",
-          "867.title": "スクロールしない",
           "637.title": "実際の大きさ",
           "vOt-2m-d2s.title": "1つのウインドウに統合",
           "preview-cover-note-cell.title": "これから開く文書に適用。マジックコメントと\nPDF内の表示方向を優先します。",
           "329.title": "ページレイアウト",
           "113.ibShadowedToolTip": "新しく開くPDFの既定倍率です。",
-          "228.title": "ページボタン",
           "preview-cover-cell.title": "先頭ページを表紙として単独表示",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTMLウインドウの位置",
           "p2D-Mi-Gyc.title": "ホームURL",
-          "preview-link-popups-cell.title": "リンク先をポップアップ"
+          "preview-link-popups-cell.title": "リンク先をポップアップ",
+          "preview-scroll-page-turn-cell.title": "スクロールでページを送らない"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -21967,13 +21901,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "スクロールしない"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -22010,13 +21937,6 @@
           "value": "新しく開くPDFの既定倍率です。"
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "ページボタン"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -22029,6 +21949,13 @@
           "kind": "cell",
           "property": "title",
           "value": "リンク先をポップアップ"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "スクロールでページを送らない"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -23052,10 +22979,6 @@
           "title": "新規PDFの倍率"
         },
         {
-          "id": "heading.settings.228",
-          "title": "ページボタン"
-        },
-        {
           "id": "heading.settings.330",
           "title": "マウスモード"
         },
@@ -23504,18 +23427,17 @@
           "48.title": "항상 같은 위치에서 열기",
           "333.title": "단일 페이지",
           "45.title": "닫을 때 위치 저장",
-          "867.title": "스크롤하지 않음",
           "637.title": "실제 크기",
           "vOt-2m-d2s.title": "단일 창으로",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "페이지 형식",
           "113.ibShadowedToolTip": "새로 여는 PDF의 기본 확대율입니다.",
-          "228.title": "페이지 버튼",
           "preview-cover-cell.title": "첫 페이지를 표지로 따로 표시",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML 창 위치",
           "p2D-Mi-Gyc.title": "홈 URL",
-          "preview-link-popups-cell.title": "링크 팝업"
+          "preview-link-popups-cell.title": "링크 팝업",
+          "preview-scroll-page-turn-cell.title": "스크롤로 페이지를 넘기지 않음"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -25292,13 +25214,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "스크롤하지 않음"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -25335,13 +25250,6 @@
           "value": "새로 여는 PDF의 기본 확대율입니다."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "페이지 버튼"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -25354,6 +25262,13 @@
           "kind": "cell",
           "property": "title",
           "value": "링크 팝업"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "스크롤로 페이지를 넘기지 않음"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -26377,10 +26292,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "페이지 버튼"
-        },
-        {
           "id": "heading.settings.330",
           "title": "마우스 모드"
         },
@@ -26829,18 +26740,17 @@
           "48.title": "Alle vensters op vaste positie openen",
           "333.title": "Enkele pagina",
           "45.title": "Positie bij sluiten bewaren",
-          "867.title": "Niet scrollen",
           "637.title": "Werkelijke grootte",
           "vOt-2m-d2s.title": "Samenvoegen in één venster",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Standaard weergavetype",
           "113.ibShadowedToolTip": "Standaardzoom voor nieuw geopende pdf’s.",
-          "228.title": "Change Page Buttons",
           "preview-cover-cell.title": "Eerste pagina apart als omslag tonen",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML Window Position",
           "p2D-Mi-Gyc.title": "Start-URL",
-          "preview-link-popups-cell.title": "Beweeg pop-ups"
+          "preview-link-popups-cell.title": "Beweeg pop-ups",
+          "preview-scroll-page-turn-cell.title": "Niet bladeren door te scrollen"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -28617,13 +28527,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Niet scrollen"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -28660,13 +28563,6 @@
           "value": "Standaardzoom voor nieuw geopende pdf’s."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Change Page Buttons"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -28679,6 +28575,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Beweeg pop-ups"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Niet bladeren door te scrollen"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -29702,10 +29605,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Change Page Buttons"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Default Mouse Mode"
         },
@@ -30154,18 +30053,17 @@
           "48.title": "Abrir sempre numa posição fixa",
           "333.title": "Página única",
           "45.title": "Lembrar-se da última posição",
-          "867.title": "Não deslizar",
           "637.title": "Tamanho real",
           "vOt-2m-d2s.title": "Unir numa única janela",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Default Page Style",
           "113.ibShadowedToolTip": "Ampliação predefinida dos PDF acabados de abrir.",
-          "228.title": "Botões de mudança de página",
           "preview-cover-cell.title": "Mostrar a primeira página como capa",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML Window Position",
           "p2D-Mi-Gyc.title": "URL inicial",
-          "preview-link-popups-cell.title": "Pop-ups de links"
+          "preview-link-popups-cell.title": "Pop-ups de links",
+          "preview-scroll-page-turn-cell.title": "Não mudar de página ao deslocar"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -31942,13 +31840,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Não deslizar"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -31985,13 +31876,6 @@
           "value": "Ampliação predefinida dos PDF acabados de abrir."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Botões de mudança de página"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -32004,6 +31888,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Pop-ups de links"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Não mudar de página ao deslocar"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -33027,10 +32918,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Botões de mudança de página"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Default Mouse Mode"
         },
@@ -33479,18 +33366,17 @@
           "48.title": "Abrir sempre em uma posição fixa",
           "333.title": "Página simples",
           "45.title": "Lembrar-se da última posição",
-          "867.title": "Não deslizar",
           "637.title": "Tamanho atual",
           "vOt-2m-d2s.title": "Usar uma única janela",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Estilo de visualização padrão",
           "113.ibShadowedToolTip": "Zoom padrão para PDFs recém-abertos.",
-          "228.title": "Botões de mudança de página",
           "preview-cover-cell.title": "Mostrar a primeira página sozinha como capa",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "Posição da janela HTML",
           "p2D-Mi-Gyc.title": "URL inicial",
-          "preview-link-popups-cell.title": "Pop-ups de links"
+          "preview-link-popups-cell.title": "Pop-ups de links",
+          "preview-scroll-page-turn-cell.title": "Não mudar de página ao rolar"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -35267,13 +35153,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Não deslizar"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -35310,13 +35189,6 @@
           "value": "Zoom padrão para PDFs recém-abertos."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Botões de mudança de página"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -35329,6 +35201,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Pop-ups de links"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Não mudar de página ao rolar"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -36352,10 +36231,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Botões de mudança de página"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Comportamento padrão do mouse"
         },
@@ -36804,18 +36679,17 @@
           "48.title": "Toate ferestrele apar la poziția fixată",
           "333.title": "Pagină Simplă",
           "45.title": "Înregistrează  ultima poziție la închidere",
-          "867.title": "Nu defila",
           "637.title": "Dimensiune reală",
           "vOt-2m-d2s.title": "Unește într-o singură fereastră",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Stilul Standard al Paginii",
           "113.ibShadowedToolTip": "Mărirea implicită pentru PDF-urile nou deschise.",
-          "228.title": "Modifică Butoanele Paginii",
           "preview-cover-cell.title": "Arată prima pagină separat, ca o copertă",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML Window Position",
           "p2D-Mi-Gyc.title": "URL inițial",
-          "preview-link-popups-cell.title": "Ferestre pop-up"
+          "preview-link-popups-cell.title": "Ferestre pop-up",
+          "preview-scroll-page-turn-cell.title": "Nu schimba pagina la derulare"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -38592,13 +38466,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "Nu defila"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -38635,13 +38502,6 @@
           "value": "Mărirea implicită pentru PDF-urile nou deschise."
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "Modifică Butoanele Paginii"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -38654,6 +38514,13 @@
           "kind": "cell",
           "property": "title",
           "value": "Ferestre pop-up"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "Nu schimba pagina la derulare"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -39677,10 +39544,6 @@
           "title": "Zoom for new PDFs"
         },
         {
-          "id": "heading.settings.228",
-          "title": "Modifică Butoanele Paginii"
-        },
-        {
           "id": "heading.settings.330",
           "title": "Efectul Mausului"
         },
@@ -40129,18 +39992,17 @@
           "48.title": "所有窗口从固定位置打开",
           "333.title": "单页",
           "45.title": "关闭时记住上一次位置",
-          "867.title": "不要滚动",
           "637.title": "实际大小",
           "vOt-2m-d2s.title": "单一窗口",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "默认页面格式",
           "113.ibShadowedToolTip": "新打开的 PDF 的默认缩放比例。",
-          "228.title": "换页按钮",
           "preview-cover-cell.title": "将第一页单独显示为封面",
           "Sb3-3h-ll4.title": "Radio",
           "YrC-m9-abH.title": "HTML 窗口位置",
           "p2D-Mi-Gyc.title": "主页 URL",
-          "preview-link-popups-cell.title": "链接预览"
+          "preview-link-popups-cell.title": "链接预览",
+          "preview-scroll-page-turn-cell.title": "滚动时不翻页"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
@@ -41917,13 +41779,6 @@
           "column": 0
         },
         {
-          "key": "867.title",
-          "view": "settings.230",
-          "kind": "cell",
-          "property": "title",
-          "value": "不要滚动"
-        },
-        {
           "key": "637.title",
           "view": "settings.334",
           "kind": "menuItem",
@@ -41960,13 +41815,6 @@
           "value": "新打开的 PDF 的默认缩放比例。"
         },
         {
-          "key": "228.title",
-          "view": "settings.228",
-          "kind": "view",
-          "property": "title",
-          "value": "换页按钮"
-        },
-        {
           "key": "preview-cover-cell.title",
           "view": "settings.preview-cover-button",
           "kind": "cell",
@@ -41979,6 +41827,13 @@
           "kind": "cell",
           "property": "title",
           "value": "链接预览"
+        },
+        {
+          "key": "preview-scroll-page-turn-cell.title",
+          "view": "settings.preview-scroll-page-turn-button",
+          "kind": "cell",
+          "property": "title",
+          "value": "滚动时不翻页"
         },
         {
           "key": "Sb3-3h-ll4.title",
@@ -43000,10 +42855,6 @@
         {
           "id": "heading.settings.111",
           "title": "Zoom for new PDFs"
-        },
-        {
-          "id": "heading.settings.228",
-          "title": "换页按钮"
         },
         {
           "id": "heading.settings.330",

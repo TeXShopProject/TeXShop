@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "Stabilește";
 "catalog.preview.0.3.title" = "Efectul Mausului";
-"catalog.preview.0.4.title" = "Nu derula cu butoanele de pagină";
+"catalog.preview.0.4.title" = "Nu schimba pagina la derulare";
+"catalog.preview.0.4.note" = "La „Pagină Simplă” și „Pagină Dublă”, derularea cu rotița mouse-ului sau cu trackpadul se oprește la marginea de sus și de jos a paginii.";
 "catalog.preview.0.5.title" = "Netezește textul și liniile";
 "catalog.preview.0.6.title" = "Ferestre pop-up";
 "catalog.preview.0.6.note" = "Valoarea inițială pentru documentele deschise de acum înainte. Într-un document deschis, se schimbă din meniul „Previzualizare”.";

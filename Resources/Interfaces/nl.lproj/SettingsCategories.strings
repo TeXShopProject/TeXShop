@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "Reset";
 "catalog.preview.0.3.title" = "Standaard muismodus";
-"catalog.preview.0.4.title" = "Niet scrollen met paginaknoppen";
+"catalog.preview.0.4.title" = "Niet bladeren door te scrollen";
+"catalog.preview.0.4.note" = "Bij ‘Enkele pagina’ en ‘Twee pagina’s’ stopt scrollen met het muiswiel of het trackpad aan de boven- en onderkant van de pagina.";
 "catalog.preview.0.5.title" = "Text und Linien glätten";
 "catalog.preview.0.6.title" = "Beweeg pop-ups";
 "catalog.preview.0.6.note" = "Beginwaarde voor documenten die u hierna opent. In een geopend document wijzigt u dit in het menu ‘Pagina’.";

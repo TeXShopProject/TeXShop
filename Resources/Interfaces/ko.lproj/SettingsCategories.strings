@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "설정";
 "catalog.preview.0.3.title" = "마우스 모드";
-"catalog.preview.0.4.title" = "페이지 버튼으로 스크롤하지 않음";
+"catalog.preview.0.4.title" = "스크롤로 페이지를 넘기지 않음";
+"catalog.preview.0.4.note" = "‘단일 페이지’와 ‘단일 페이지 맞쪽보기’에서 마우스 휠이나 트랙패드로 스크롤하면 페이지의 위아래 끝에서 멈춥니다.";
 "catalog.preview.0.5.title" = "텍스트와 라인아트를 부드럽게";
 "catalog.preview.0.6.title" = "링크 팝업";
 "catalog.preview.0.6.note" = "앞으로 여는 문서의 초기값입니다. 열려 있는 문서에서는 ‘보기’ 메뉴에서 바꿉니다.";

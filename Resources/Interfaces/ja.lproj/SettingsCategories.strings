@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "設定";
 "catalog.preview.0.3.title" = "マウスモード";
-"catalog.preview.0.4.title" = "ページボタンでスクロールしない";
+"catalog.preview.0.4.title" = "スクロールでページを送らない";
+"catalog.preview.0.4.note" = "「単一ページ」「見開きページ」で、マウスのホイールやトラックパッドでのスクロールが、ページの上端・下端で止まります。";
 "catalog.preview.0.5.title" = "テキストとラインアートを滑らかに表示";
 "catalog.preview.0.6.title" = "リンク先をポップアップ";
 "catalog.preview.0.6.note" = "これから開く書類の初期値です。開いている書類では、「プレビュー」メニューで切り替えます。";

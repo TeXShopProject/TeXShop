@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "设定";
 "catalog.preview.0.3.title" = "默认鼠标模式";
-"catalog.preview.0.4.title" = "不使用翻页按钮滚动";
+"catalog.preview.0.4.title" = "滚动时不翻页";
+"catalog.preview.0.4.note" = "在“单页”和“双页”中，用鼠标滚轮或触控板滚动时，会停在页面的顶端和底端。";
 "catalog.preview.0.5.title" = "平滑文字和线稿";
 "catalog.preview.0.6.title" = "链接预览";
 "catalog.preview.0.6.note" = "今后打开的文稿的初始值。已打开的文稿请在“预览”菜单中切换。";

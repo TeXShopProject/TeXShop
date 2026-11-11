@@ -333,7 +333,7 @@ extern NSString *CheckSquareBracketEnabledKey; // added by Terada
 extern NSString *CheckParenEnabledKey; // added by Terada
 extern NSString *MakeatletterEnabledKey; // added by Terada
 extern NSString *PdfMagnificationKey;
-extern NSString *NoScrollEnabledKey;
+extern NSString *NoScrollPageTurnKey;
 extern NSString *PdfWindowFixedPosKey;
 extern NSString *PortablePdfWindowFixedPosKey;
 extern NSString *PdfWindowNameKey;

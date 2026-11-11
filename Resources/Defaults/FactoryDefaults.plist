@@ -192,8 +192,8 @@
 	<integer>12</integer>
 	<key>NewLineCharacterKind</key>
 	<string>0</string>
-	<key>NoScrollEnabled</key>
-	<string>YES</string>
+	<key>NoScrollPageTurn</key>
+	<false/>
 	<key>OtherTeXExtensions</key>
 	<array/>
 	<key>OtherTrashExtensions</key>

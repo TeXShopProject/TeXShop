@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "Anwenden";
 "catalog.preview.0.3.title" = "Standard Maus-Modus";
-"catalog.preview.0.4.title" = "Mit Seitentasten nicht scrollen";
+"catalog.preview.0.4.title" = "Beim Scrollen nicht umblättern";
+"catalog.preview.0.4.note" = "Bei „Einzelseiten“ und „Doppelseiten“ hält das Scrollen mit dem Mausrad oder dem Trackpad am oberen und unteren Rand der Seite an.";
 "catalog.preview.0.5.title" = "Schriftglättung für Text und Linien";
 "catalog.preview.0.6.title" = "Link-Popups";
 "catalog.preview.0.6.note" = "Anfangswert für Dokumente, die Sie danach öffnen. In einem geöffneten Dokument im Menü „Vorschau“ umschalten.";

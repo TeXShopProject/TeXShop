@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "Definir";
 "catalog.preview.0.3.title" = "Modo predefinido do rato";
-"catalog.preview.0.4.title" = "Não deslocar com os botões de página";
+"catalog.preview.0.4.title" = "Não mudar de página ao deslocar";
+"catalog.preview.0.4.note" = "Em «Página única» e «Duas páginas», o deslocamento com a roda do rato ou o trackpad para no topo e no fundo da página.";
 "catalog.preview.0.5.title" = "Suavizar texto e ilustrações";
 "catalog.preview.0.6.title" = "Pop-ups de links";
 "catalog.preview.0.6.note" = "Valor inicial para os documentos abertos a partir de agora. Num documento aberto, altere no menu «Página».";

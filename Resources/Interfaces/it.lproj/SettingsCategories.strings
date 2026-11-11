@@ -208,7 +208,8 @@
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "Ripristina";
 "catalog.preview.0.3.title" = "Funzione predefinita del mouse";
-"catalog.preview.0.4.title" = "Non scorrere con i pulsanti di pagina";
+"catalog.preview.0.4.title" = "Non cambiare pagina scorrendo";
+"catalog.preview.0.4.note" = "Con «Pagina singola» e «Pagine affiancate», lo scorrimento con la rotella del mouse o il trackpad si ferma all’inizio e alla fine della pagina.";
 "catalog.preview.0.5.title" = "Testo regolare e disegni al tratto";
 "catalog.preview.0.6.title" = "Collegamento popup";
 "catalog.preview.0.6.note" = "Valore iniziale per i documenti aperti d’ora in poi. In un documento aperto, si cambia dal menu «Pagina».";

@@ -72,7 +72,6 @@
     IBOutlet NSButton    *_htmlWindowPosButton;        /* connected to current position button */
     IBOutlet NSButton       *_antialiasButton;      /* connect to antialias checkbox */
 	IBOutlet NSTextField	*_magTextField;			/*" connected to magnification text field "*/
-	IBOutlet NSButton	*_scrollButton;			/*" connected to scroll button "*/
 	IBOutlet NSTextField	*_texCommandTextField;		/*" connected to "TeX program" "*/
 	IBOutlet NSTextField	*_latexCommandTextField;	/*" connected to "Latex program" "*/
 	IBOutlet NSButton	*_escapeWarningButton;		/*" connected to "Shell Escape Warning" "*/
@@ -157,6 +156,7 @@
     IBOutlet NSPopUpButton  *dictionaryPopup;
 	IBOutlet NSButton *_displayAsBookButton;
 	IBOutlet NSButton *_linkPopupsButton;
+	IBOutlet NSButton *_scrollPageTurnButton;
 	IBOutlet NSPopUpButton	*_pageStylePopup;// mitsu 1.29 (O) /*" connected to page style popup button "*/
 	IBOutlet NSMatrix       *_firstPageMatrix;// /*" radio buttons for first page left or right in multipage display "*/
 	IBOutlet NSPopUpButton	*_resizeOptionPopup;// mitsu 1.29 (O) /*" connected to resize option popup button "*/
@@ -306,10 +306,10 @@
 - (IBAction)htmlWindowPosChanged:sender;
 - (IBAction)currentHtmlWindowPosDefault:sender;
 - (IBAction)magChanged:sender;
-- (IBAction)scrollPressed:sender;
 - (IBAction)firstDoublePageChanged:sender;
 - (IBAction)displayAsBookChanged:(NSButton *)sender;
 - (IBAction)linkPopupsChanged:(NSButton *)sender;
+- (IBAction)scrollPageTurnChanged:(NSButton *)sender;
 - (IBAction)dictionaryPressed: sender;
 - (IBAction)texProgramChanged:sender;
 - (IBAction)latexProgramChanged:sender;

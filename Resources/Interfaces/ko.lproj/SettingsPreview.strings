@@ -2,7 +2,6 @@
 "111.title" = "Zoom for new PDFs";
 "113.ibShadowedToolTip" = "새로 여는 PDF의 기본 확대율입니다.";
 "1uj-kt-7Pj.title" = "왼쪽";
-"228.title" = "페이지 버튼";
 "328.title" = "스크롤";
 "329.title" = "페이지 형식";
 "330.title" = "마우스 모드";
@@ -32,7 +31,6 @@
 "864.title" = "현재 위치 저장";
 "865.title" = "100";
 "866.title" = "설정";
-"867.title" = "스크롤하지 않음";
 "871.title" = "보기 창 자동 갱신";
 "910.title" = "Radio";
 "911.title" = "Radio";
@@ -48,6 +46,7 @@
 "preview-cover-cell.title" = "첫 페이지를 표지로 따로 표시";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "링크 팝업";
+"preview-scroll-page-turn-cell.title" = "스크롤로 페이지를 넘기지 않음";
 "sa2-VV-W1K.title" = "닫을 때 위치 저장";
 "tVs-uh-QcM.title" = "항상 같은 위치에서 열기";
 "vOt-2m-d2s.title" = "단일 창으로";
