@@ -2400,18 +2400,18 @@ Gw
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zR6-h5-H5c">
-                        <rect key="frame" x="-1" y="54" width="278" height="325"/>
+                        <rect key="frame" x="-1" y="28" width="278" height="351"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" drawsBackground="NO" id="aeW-V0-9W2">
-                            <rect key="frame" x="1" y="1" width="276" height="323"/>
+                            <rect key="frame" x="1" y="1" width="276" height="349"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="Mqy-WO-pUA" customClass="ScrapTextView">
-                                    <rect key="frame" x="0.0" y="0.0" width="276" height="323"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="276" height="349"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <size key="minSize" width="276" height="323"/>
+                                    <size key="minSize" width="276" height="349"/>
                                     <size key="maxSize" width="463" height="10000000"/>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
@@ -2422,16 +2422,16 @@ Gw
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="IJW-Cj-jvn">
-                            <rect key="frame" x="261" y="1" width="16" height="323"/>
+                            <rect key="frame" x="261" y="1" width="16" height="349"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nHT-PN-LW5">
-                        <rect key="frame" x="160" y="19" width="105" height="19"/>
+                        <rect key="frame" x="187" y="4" width="81" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="roundRect" title="タイプセット" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mcx-f5-PRl">
+                        <buttonCell key="cell" type="push" title="タイプセット" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mcx-f5-PRl">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="cellTitle"/>
+                            <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
                         <connections>
                             <action selector="typesetScrap:" target="-2" id="f8l-ua-smF"/>
