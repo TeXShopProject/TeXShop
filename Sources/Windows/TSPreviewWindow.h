@@ -29,6 +29,7 @@
 
 
 @class TSDocument;
+@class TSPreviewSplitDivider;
 
 @interface TSPreviewWindow : NSWindow
 {
@@ -50,6 +51,7 @@
 @property (retain)      PDFView         *myPDFKitView;
 @property (retain)      PDFView        *myPDFKitView2;
 @property (weak)      NSSplitView    *pdfKitSplitView;
+@property (strong)    TSPreviewSplitDivider *previewSplitDivider; // keeps the top of each part when the divider is dragged
 @property (weak)      TSDocument      *myDocument;
 @property               double          mytimestamp;
 @property               BOOL            horizontal;
