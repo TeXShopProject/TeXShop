@@ -61,7 +61,7 @@ static ExperimentMemoryDefaults *testDefaults;
 #define SourceColorChangedNotification @"SourceColorChanged"
 @implementation TSColorSupport
 + (id)sharedInstance { static id instance; if (!instance) instance = [self new]; return instance; }
-- (NSColor *)colorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
+- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
 { return theme[key] ?: (dark ? NSColor.blackColor : NSColor.whiteColor); }
 @end
 @interface ExperimentSourceFixture : NSTextView

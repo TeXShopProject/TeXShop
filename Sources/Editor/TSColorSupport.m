@@ -266,6 +266,19 @@ static id sharedColorSupport = nil;
         return [self liteColorWithKey: theKey];
 }
 
+// Themes store an opacity of 0 with some of these colors, for example the editor
+// background of SolarizedDark, which -colorFromDictionary:andKey: ignores.
+- (NSColor *)opaqueColorForKey: (NSString *)theKey fromDictionary: (NSDictionary *)theDictionary isWindowDark: (BOOL)mode
+{
+    NSColor *theColor = [self colorFromDictionary: theDictionary andKey: theKey];
+    if (theColor != nil)
+        return theColor;
+    if (mode)
+        return [self darkColorWithKey: theKey];
+    else
+        return [self liteColorWithKey: theKey];
+}
+
 - (NSColor *)colorForKey: (NSString *)theKey isWindowDark: (BOOL)mode
 {
     NSDictionary *theDictionary;

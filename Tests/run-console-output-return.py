@@ -103,7 +103,7 @@ static NSDictionary *liteColors;
 static NSDictionary *darkColors;
 @implementation TSColorSupport
 + (id)sharedInstance { static id s; if (!s) s = [self new]; return s; }
-- (NSColor *)colorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
+- (NSColor *)opaqueColorForKey:(NSString *)key fromDictionary:(NSDictionary *)theme isWindowDark:(BOOL)dark
 { return theme[key] ?: (dark ? NSColor.blackColor : NSColor.whiteColor); }
 @end
 @interface TestDefaults : NSObject
