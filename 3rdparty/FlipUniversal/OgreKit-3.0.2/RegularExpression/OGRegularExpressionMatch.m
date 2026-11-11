@@ -32,7 +32,7 @@
 
 NSString	* const OgreMatchException = @"OGRegularExpressionMatchException";
 
-// ©g‚ğencoding/decoding‚·‚é‚½‚ß‚Ìkey
+// è‡ªèº«ã‚’encoding/decodingã™ã‚‹ãŸã‚ã®key
 static NSString	* const OgreRegionKey              = @"OgreMatchRegion";
 static NSString	* const OgreEnumeratorKey          = @"OgreMatchEnumerator";
 static NSString	* const OgreTerminalOfLastMatchKey = @"OgreMatchTerminalOfLastMatch";
@@ -68,7 +68,7 @@ static OnigRegion *Ogre_onigRegionWithArray(NSArray *regionArray)
 	
 	OnigRegion		*region = onig_region_new();
 	if (region == NULL) {
-		// ƒƒ‚ƒŠ‚ğŠm•Û‚Å‚«‚È‚©‚Á‚½ê‡A—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã§ããªã‹ã£ãŸå ´åˆã€ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[NSException raise:NSMallocException format:@"fail to memory allocation"];
 	}
 	int     i = 0, n = (int)[regionArray count];
@@ -77,7 +77,7 @@ static OnigRegion *Ogre_onigRegionWithArray(NSArray *regionArray)
 	
 	r = onig_region_resize(region, n);
 	if (r != ONIG_NORMAL) {
-		// ƒƒ‚ƒŠ‚ğŠm•Û‚Å‚«‚È‚©‚Á‚½ê‡A—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã§ããªã‹ã£ãŸå ´åˆã€ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		onig_region_free(region, 1);
 		[NSException raise:NSMallocException format:@"fail to memory allocation"];
 	}
@@ -121,7 +121,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
     
     capture = (OnigCaptureTreeNode*)malloc(sizeof(OnigCaptureTreeNode));
 	if (capture == NULL) {
-		// ƒƒ‚ƒŠ‚ğŠm•Û‚Å‚«‚È‚©‚Á‚½ê‡A—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã§ããªã‹ã£ãŸå ´åˆã€ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[NSException raise:NSMallocException format:@"fail to memory allocation"];
 	}
     
@@ -135,7 +135,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
         int  i, n = (int)[children count];
         capture->childs = (OnigCaptureTreeNode**)malloc(n * sizeof(OnigCaptureTreeNode*));
         if (capture->childs == NULL) {
-            // ƒƒ‚ƒŠ‚ğŠm•Û‚Å‚«‚È‚©‚Á‚½ê‡A—áŠO‚ğ”­¶‚³‚¹‚éB
+            // ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã§ããªã‹ã£ãŸå ´åˆã€ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
             free(capture);
             [NSException raise:NSMallocException format:@"fail to memory allocation"];
         }
@@ -155,25 +155,25 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 
 @implementation OGRegularExpressionMatch
 
-// ƒ}ƒbƒ`‚µ‚½‡”Ô
+// ãƒãƒƒãƒã—ãŸé †ç•ª
 - (NSUInteger)index
 {
 	return _index;
 }
 
-// •”•ª•¶š—ñ‚Ì” + 1
+// éƒ¨åˆ†æ–‡å­—åˆ—ã®æ•° + 1
 - (NSUInteger)count
 {
 	return _region->num_regs;
 }
 
-// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚Ì”ÍˆÍ
+// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ã®ç¯„å›²
 - (NSRange)rangeOfMatchedString
 {
 	return [self rangeOfSubstringAtIndex:0];
 }
 
-// ƒ}ƒbƒ`‚µ‚½•¶š—ñ \&, \0
+// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ— \&, \0
 - (NSObject<OGStringProtocol>*)matchedOGString
 {
 	return [self ogSubstringAtIndex:0];
@@ -189,11 +189,11 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [self attributedSubstringAtIndex:0];
 }
 
-// index”Ô–Ú‚Ìsubstring‚Ì”ÍˆÍ
+// indexç•ªç›®ã®substringã®ç¯„å›²
 - (NSRange)rangeOfSubstringAtIndex:(NSUInteger)index
 {
 	if ( (index >= _region->num_regs) || (_region->beg[index] == -1) ) {
-		// index”Ô–Ú‚Ìsubstring‚ª‘¶İ‚µ‚È‚¢ê‡
+		// indexç•ªç›®ã®substringãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return NSMakeRange(NSNotFound, 0);
 	}
 	//NSLog(@"%d %d-%d", index, _region->beg[index], _region->end[index]);
@@ -201,10 +201,10 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return NSMakeRange(_searchRange.location + (_region->beg[index] / sizeof(unichar)), (_region->end[index] - _region->beg[index]) / sizeof(unichar));
 }
 
-// index”Ô–Ú‚Ìsubstring \n
+// indexç•ªç›®ã®substring \n
 - (NSObject<OGStringProtocol>*)ogSubstringAtIndex:(NSUInteger)index
 {
-	// index”Ô–Ú‚Ìsubstring‚ª‘¶İ‚µ‚È‚¢‚É‚Í nil ‚ğ•Ô‚·
+	// indexç•ªç›®ã®substringãŒå­˜åœ¨ã—ãªã„æ™‚ã«ã¯ nil ã‚’è¿”ã™
 	if ( (index >= _region->num_regs) || (_region->beg[index] == -1) ){
 		return nil;
 	}
@@ -214,7 +214,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 
 - (NSString*)substringAtIndex:(NSUInteger)index
 {
-	// index”Ô–Ú‚Ìsubstring‚ª‘¶İ‚µ‚È‚¢‚É‚Í nil ‚ğ•Ô‚·
+	// indexç•ªç›®ã®substringãŒå­˜åœ¨ã—ãªã„æ™‚ã«ã¯ nil ã‚’è¿”ã™
 	if ( (index >= _region->num_regs) || (_region->beg[index] == -1) ){
 		return nil;
 	}
@@ -224,7 +224,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 
 - (NSAttributedString*)attributedSubstringAtIndex:(NSUInteger)index
 {
-	// index”Ô–Ú‚Ìsubstring‚ª‘¶İ‚µ‚È‚¢‚É‚Í nil ‚ğ•Ô‚·
+	// indexç•ªç›®ã®substringãŒå­˜åœ¨ã—ãªã„æ™‚ã«ã¯ nil ã‚’è¿”ã™
 	if ( (index >= _region->num_regs) || (_region->beg[index] == -1) ){
 		return nil;
 	}
@@ -232,7 +232,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [[_targetString attributedString] attributedSubstringFromRange:NSMakeRange(_region->beg[index] / sizeof(unichar), (_region->end[index] - _region->beg[index]) / sizeof(unichar))];
 }
 
-// ƒ}ƒbƒ`‚Ì‘ÎÛ‚É‚È‚Á‚½•¶š—ñ
+// ãƒãƒƒãƒã®å¯¾è±¡ã«ãªã£ãŸæ–‡å­—åˆ—
 - (NSObject<OGStringProtocol>*)targetOGString
 {
 	return _targetString;
@@ -248,11 +248,11 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [_targetString attributedString];
 }
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª‚æ‚è‘O‚Ì•¶š—ñ \`
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†ã‚ˆã‚Šå‰ã®æ–‡å­—åˆ— \`
 - (NSObject<OGStringProtocol>*)prematchOGString
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
@@ -262,7 +262,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 - (NSString*)prematchString
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
@@ -272,29 +272,29 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 - (NSAttributedString*)prematchAttributedString
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
 	return [[_targetString attributedString] attributedSubstringFromRange:NSMakeRange(0, _region->beg[0] / sizeof(unichar))];
 }
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª‚æ‚è‘O‚Ì•¶š—ñ \` ‚Ì”ÍˆÍ
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†ã‚ˆã‚Šå‰ã®æ–‡å­—åˆ— \` ã®ç¯„å›²
 - (NSRange)rangeOfPrematchString
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return NSMakeRange(NSNotFound, 0);
 	}
 
 	return NSMakeRange(_searchRange.location, _region->beg[0] / sizeof(unichar));
 }
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª‚æ‚èŒã‚ë‚Ì•¶š—ñ \'
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†ã‚ˆã‚Šå¾Œã‚ã®æ–‡å­—åˆ— \'
 - (NSObject<OGStringProtocol>*)postmatchOGString
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•”•ª‚æ‚èŒã‚ë‚Ì•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†ã‚ˆã‚Šå¾Œã‚ã®æ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
@@ -304,7 +304,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 - (NSString*)postmatchString
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•”•ª‚æ‚èŒã‚ë‚Ì•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†ã‚ˆã‚Šå¾Œã‚ã®æ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
@@ -314,29 +314,29 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 - (NSAttributedString*)postmatchAttributedString
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•”•ª‚æ‚èŒã‚ë‚Ì•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†ã‚ˆã‚Šå¾Œã‚ã®æ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
 	return [[_targetString attributedString] attributedSubstringFromRange:NSMakeRange(_region->end[0] / sizeof(unichar), [_targetString length] - _region->end[0] / sizeof(unichar))];
 }
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª‚æ‚èŒã‚ë‚Ì•¶š—ñ \' ‚Ì”ÍˆÍ
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†ã‚ˆã‚Šå¾Œã‚ã®æ–‡å­—åˆ— \' ã®ç¯„å›²
 - (NSRange)rangeOfPostmatchString
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•”•ª‚æ‚èŒã‚ë‚Ì•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†ã‚ˆã‚Šå¾Œã‚ã®æ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return NSMakeRange(NSNotFound, 0);
 	}
 	
 	return NSMakeRange(_searchRange.location + _region->end[0] / sizeof(unichar), [_targetString length] - _region->end[0] / sizeof(unichar));
 }
 
-// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚Æˆê‚Â‘O‚Éƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ÌŠÔ‚Ì•¶š—ñ \-
+// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ã¨ä¸€ã¤å‰ã«ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ã®é–“ã®æ–‡å­—åˆ— \-
 - (NSObject<OGStringProtocol>*)ogStringBetweenMatchAndLastMatch
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
@@ -346,7 +346,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 - (NSString*)stringBetweenMatchAndLastMatch
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
@@ -356,25 +356,25 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 - (NSAttributedString*)attributedStringBetweenMatchAndLastMatch
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return nil;
 	}
 	
 	return [[_targetString attributedString] attributedSubstringFromRange:NSMakeRange(_terminalOfLastMatch, _region->beg[0] / sizeof(unichar) - _terminalOfLastMatch)];
 }
 
-// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚Æˆê‚Â‘O‚Éƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ÌŠÔ‚Ì•¶š—ñ \- ‚Ì”ÍˆÍ
+// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ã¨ä¸€ã¤å‰ã«ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ã®é–“ã®æ–‡å­—åˆ— \- ã®ç¯„å›²
 - (NSRange)rangeOfStringBetweenMatchAndLastMatch
 {
 	if (_region->beg[0] == -1) {
-		// ƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ª‘¶İ‚µ‚È‚¢ê‡
+		// ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 		return NSMakeRange(NSNotFound, 0);
 	}
 
 	return NSMakeRange(_searchRange.location + _terminalOfLastMatch, _region->beg[0] / sizeof(unichar) - _terminalOfLastMatch);
 }
 
-// ÅŒã‚Éƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ \+
+// æœ€å¾Œã«ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ— \+
 - (NSObject<OGStringProtocol>*)lastMatchOGSubstring
 {
 	NSInteger i = [self count] - 1;
@@ -414,7 +414,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	}
 }
 
-// ÅŒã‚Éƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì”ÍˆÍ \+
+// æœ€å¾Œã«ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ç¯„å›² \+
 - (NSRange)rangeOfLastMatchSubstring
 {
 	NSInteger i = [self count] - 1;
@@ -471,48 +471,48 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 		regionArray = [decoder decodeObject];
 	}
 	if (regionArray == nil) {
-		// ƒGƒ‰[B—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ã‚¨ãƒ©ãƒ¼ã€‚ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[self release];
 		[NSException raise:NSInvalidUnarchiveOperationException format:@"fail to decode"];
 	}
 	_region = Ogre_onigRegionWithArray(regionArray);	
 	
     
-	// OGRegularExpressionEnumerator*	_enumerator;	// ¶¬å
+	// OGRegularExpressionEnumerator*	_enumerator;	// ç”Ÿæˆä¸»
     if (allowsKeyedCoding) {
 		_enumerator = [[decoder decodeObjectForKey: OgreEnumeratorKey] retain];
 	} else {
 		_enumerator = [[decoder decodeObject] retain];
 	}
 	if (_enumerator == nil) {
-		// ƒGƒ‰[B—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ã‚¨ãƒ©ãƒ¼ã€‚ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[self release];
 		[NSException raise:NSInvalidUnarchiveOperationException format:@"fail to decode"];
 	}
 	
 	
-	// unsigned	_terminalOfLastMatch;	// ‘O‰ñ‚Éƒ}ƒbƒ`‚µ‚½•¶š—ñ‚ÌI’[ˆÊ’u (_region->end[0] / sizeof(unichar))
+	// unsigned	_terminalOfLastMatch;	// å‰å›ã«ãƒãƒƒãƒã—ãŸæ–‡å­—åˆ—ã®çµ‚ç«¯ä½ç½® (_region->end[0] / sizeof(unichar))
     if (allowsKeyedCoding) {
 		anObject = [decoder decodeObjectForKey: OgreTerminalOfLastMatchKey];
 	} else {
 		anObject = [decoder decodeObject];
 	}
 	if (anObject == nil) {
-		// ƒGƒ‰[B—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ã‚¨ãƒ©ãƒ¼ã€‚ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[self release];
 		[NSException raise:NSInvalidUnarchiveOperationException format:@"fail to decode"];
 	}
 	_terminalOfLastMatch = [anObject unsignedIntegerValue];
 
 	
-	// 	unsigned		_index;		// ƒ}ƒbƒ`‚µ‚½‡”Ô
+	// 	unsigned		_index;		// ãƒãƒƒãƒã—ãŸé †ç•ª
     if (allowsKeyedCoding) {
 		anObject = [decoder decodeObjectForKey: OgreIndexOfMatchKey];
 	} else {
 		anObject = [decoder decodeObject];
 	}
 	if (anObject == nil) {
-		// ƒGƒ‰[B—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ã‚¨ãƒ©ãƒ¼ã€‚ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[self release];
 		[NSException raise:NSInvalidUnarchiveOperationException format:@"fail to decode"];
 	}
@@ -527,17 +527,17 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 		captureArray = [decoder decodeObject];
 	}
 	if (captureArray == nil) {
-		// ƒGƒ‰[B—áŠO‚ğ”­¶‚³‚¹‚éB
+		// ã‚¨ãƒ©ãƒ¼ã€‚ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[self release];
 		[NSException raise:NSInvalidUnarchiveOperationException format:@"fail to decode"];
 	}
 	_region->history_root = Ogre_onigCaptureTreeNodeWithArray(captureArray);
 	
     
-	// •p”É‚É—˜—p‚·‚é‚à‚Ì‚ÍƒLƒƒƒbƒVƒ…‚·‚éB•Û‚Í‚µ‚È‚¢B
-	// ŒŸõ‘ÎÛ•¶š—ñ
+	// é »ç¹ã«åˆ©ç”¨ã™ã‚‹ã‚‚ã®ã¯ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã™ã‚‹ã€‚ä¿æŒã¯ã—ãªã„ã€‚
+	// æ¤œç´¢å¯¾è±¡æ–‡å­—åˆ—
 	_targetString        = [_enumerator targetString];
-	// ŒŸõ”ÍˆÍ
+	// æ¤œç´¢ç¯„å›²
 	NSRange	searchRange = [_enumerator searchRange];
 	_searchRange.location = searchRange.location;
 	_searchRange.length   = searchRange.length;
@@ -586,9 +586,9 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 }
 
 
-// –¼‘O(ƒ‰ƒxƒ‹)‚ªname‚Ì•”•ª•¶š—ñ (OgreCaptureGroupOption‚ğw’è‚µ‚½‚Æ‚«‚Ég—p‚Å‚«‚é)
-// ‘¶İ‚µ‚È‚¢–¼‘O‚Ìê‡‚Í nil ‚ğ•Ô‚·B
-// “¯ˆê‚Ì–¼‘O‚ğ‚Â•”•ª•¶š—ñ‚ª•¡”‚ ‚éê‡‚Í—áŠO‚ğ”­¶‚³‚¹‚éB
+// åå‰(ãƒ©ãƒ™ãƒ«)ãŒnameã®éƒ¨åˆ†æ–‡å­—åˆ— (OgreCaptureGroupOptionã‚’æŒ‡å®šã—ãŸã¨ãã«ä½¿ç”¨ã§ãã‚‹)
+// å­˜åœ¨ã—ãªã„åå‰ã®å ´åˆã¯ nil ã‚’è¿”ã™ã€‚
+// åŒä¸€ã®åå‰ã‚’æŒã¤éƒ¨åˆ†æ–‡å­—åˆ—ãŒè¤‡æ•°ã‚ã‚‹å ´åˆã¯ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 - (NSObject<OGStringProtocol>*)ogSubstringNamed:(NSString*)name
 {
 	NSInteger	index = [self indexOfSubstringNamed:name];
@@ -613,9 +613,9 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [self attributedSubstringAtIndex:index];
 }
 
-// –¼‘O‚ªname‚Ì•”•ª•¶š—ñ‚Ì”ÍˆÍ
-// ‘¶İ‚µ‚È‚¢–¼‘O‚Ìê‡‚Í {NSNotFound, 0} ‚ğ•Ô‚·B
-// “¯ˆê‚Ì–¼‘O‚ğ‚Â•”•ª•¶š—ñ‚ª•¡”‚ ‚éê‡‚Í—áŠO‚ğ”­¶‚³‚¹‚éB
+// åå‰ãŒnameã®éƒ¨åˆ†æ–‡å­—åˆ—ã®ç¯„å›²
+// å­˜åœ¨ã—ãªã„åå‰ã®å ´åˆã¯ {NSNotFound, 0} ã‚’è¿”ã™ã€‚
+// åŒä¸€ã®åå‰ã‚’æŒã¤éƒ¨åˆ†æ–‡å­—åˆ—ãŒè¤‡æ•°ã‚ã‚‹å ´åˆã¯ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 - (NSRange)rangeOfSubstringNamed:(NSString*)name
 {
 	NSInteger	index = [self indexOfSubstringNamed:name];
@@ -624,22 +624,22 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [self rangeOfSubstringAtIndex:index];
 }
 
-// –¼‘O‚ªname‚Ì•”•ª•¶š—ñ‚Ìindex
-// ‘¶İ‚µ‚È‚¢ê‡‚Í-1‚ğ•Ô‚·
-// “¯ˆê‚Ì–¼‘O‚ğ‚Â•”•ª•¶š—ñ‚ª•¡”‚ ‚éê‡‚Í—áŠO‚ğ”­¶‚³‚¹‚éB
+// åå‰ãŒnameã®éƒ¨åˆ†æ–‡å­—åˆ—ã®index
+// å­˜åœ¨ã—ãªã„å ´åˆã¯-1ã‚’è¿”ã™
+// åŒä¸€ã®åå‰ã‚’æŒã¤éƒ¨åˆ†æ–‡å­—åˆ—ãŒè¤‡æ•°ã‚ã‚‹å ´åˆã¯ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 - (NSUInteger)indexOfSubstringNamed:(NSString*)name
 {
 	int	index = [[_enumerator regularExpression] groupIndexForName:name];
 	if (index == -2) {
-		// “¯ˆê‚Ì–¼‘O‚ğ‚Â•”•ª•¶š—ñ‚ª•¡”‚ ‚éê‡‚Í—áŠO‚ğ”­¶‚³‚¹‚éB
+		// åŒä¸€ã®åå‰ã‚’æŒã¤éƒ¨åˆ†æ–‡å­—åˆ—ãŒè¤‡æ•°ã‚ã‚‹å ´åˆã¯ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 		[NSException raise:OgreMatchException format:@"multiplex definition name <%@> call", name];
 	}
 	
 	return index;
 }
 
-// index”Ô–Ú‚Ì•”•ª•¶š—ñ‚Ì–¼‘O
-// ‘¶İ‚µ‚È‚¢–¼‘O‚Ìê‡‚Í nil ‚ğ•Ô‚·B
+// indexç•ªç›®ã®éƒ¨åˆ†æ–‡å­—åˆ—ã®åå‰
+// å­˜åœ¨ã—ãªã„åå‰ã®å ´åˆã¯ nil ã‚’è¿”ã™ã€‚
 - (NSString*)nameOfSubstringAtIndex:(NSUInteger)index
 {
 	return [[_enumerator regularExpression] nameForGroupIndex:index];
@@ -647,7 +647,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 
 
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì‚¤‚¿ƒOƒ‹[ƒv”Ô†‚ªÅ¬‚Ì‚à‚Ì
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ã†ã¡ã‚°ãƒ«ãƒ¼ãƒ—ç•ªå·ãŒæœ€å°ã®ã‚‚ã®
 - (NSUInteger)indexOfFirstMatchedSubstringInRange:(NSRange)aRange
 {
 	NSUInteger	index, count = [self count];
@@ -657,7 +657,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 		if (_region->beg[index] != -1) return index;
 	}
 	
-	return 0;   // ‚Ç‚Ì•”•ª®‚É‚àƒ}ƒbƒ`‚µ‚È‚©‚Á‚½ê‡
+	return 0;   // ã©ã®éƒ¨åˆ†å¼ã«ã‚‚ãƒãƒƒãƒã—ãªã‹ã£ãŸå ´åˆ
 }
 
 - (NSString*)nameOfFirstMatchedSubstringInRange:(NSRange)aRange
@@ -666,7 +666,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 }
 
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì‚¤‚¿ƒOƒ‹[ƒv”Ô†‚ªÅ‘å‚Ì‚à‚Ì
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ã†ã¡ã‚°ãƒ«ãƒ¼ãƒ—ç•ªå·ãŒæœ€å¤§ã®ã‚‚ã®
 - (NSUInteger)indexOfLastMatchedSubstringInRange:(NSRange)aRange
 {
 	NSUInteger	index, count = [self count];
@@ -676,7 +676,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 		if (_region->beg[index] != -1) return index;
 	}
 	
-	return 0;   // ‚Ç‚Ì•”•ª®‚É‚àƒ}ƒbƒ`‚µ‚È‚©‚Á‚½ê‡
+	return 0;   // ã©ã®éƒ¨åˆ†å¼ã«ã‚‚ãƒãƒƒãƒã—ãªã‹ã£ãŸå ´åˆ
 }
 
 - (NSString*)nameOfLastMatchedSubstringInRange:(NSRange)aRange
@@ -685,7 +685,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 }
 
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì‚¤‚¿Å’·‚Ì‚à‚Ì
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ã†ã¡æœ€é•·ã®ã‚‚ã®
 - (NSUInteger)indexOfLongestSubstringInRange:(NSRange)aRange
 {
 	BOOL		matched = NO;
@@ -712,7 +712,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 }
 
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì‚¤‚¿Å’Z‚Ì‚à‚Ì
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ã†ã¡æœ€çŸ­ã®ã‚‚ã®
 - (NSUInteger)indexOfShortestSubstringInRange:(NSRange)aRange
 {
 	BOOL		matched = NO;
@@ -738,7 +738,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [self nameOfSubstringAtIndex:[self indexOfShortestSubstringInRange:aRange]];
 }
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì‚¤‚¿ƒOƒ‹[ƒv”Ô†‚ªÅ¬‚Ì‚à‚Ì (‚È‚¢ê‡‚Í0‚ğ•Ô‚·)
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ã†ã¡ã‚°ãƒ«ãƒ¼ãƒ—ç•ªå·ãŒæœ€å°ã®ã‚‚ã® (ãªã„å ´åˆã¯0ã‚’è¿”ã™)
 - (NSUInteger)indexOfFirstMatchedSubstring
 {
 	return [self indexOfFirstMatchedSubstringInRange:NSMakeRange(1, [self count] - 1)];
@@ -754,7 +754,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [self indexOfFirstMatchedSubstringInRange:NSMakeRange(anIndex, [self count] - anIndex)];
 }
 
-// ‚»‚Ì–¼‘O
+// ãã®åå‰
 - (NSString*)nameOfFirstMatchedSubstring
 {
 	return [self nameOfFirstMatchedSubstringInRange:NSMakeRange(1, [self count] - 1)];
@@ -771,7 +771,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 }
 
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì‚¤‚¿ƒOƒ‹[ƒv”Ô†‚ªÅ‘å‚Ì‚à‚Ì (‚È‚¢ê‡‚Í0‚ğ•Ô‚·)
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ã†ã¡ã‚°ãƒ«ãƒ¼ãƒ—ç•ªå·ãŒæœ€å¤§ã®ã‚‚ã® (ãªã„å ´åˆã¯0ã‚’è¿”ã™)
 - (NSUInteger)indexOfLastMatchedSubstring
 {
 	return [self indexOfLastMatchedSubstringInRange:NSMakeRange(1, [self count] - 1)];
@@ -787,7 +787,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [self indexOfLastMatchedSubstringInRange:NSMakeRange(anIndex, [self count] - anIndex)];
 }
 
-// ‚»‚Ì–¼‘O
+// ãã®åå‰
 - (NSString*)nameOfLastMatchedSubstring
 {
 	return [self nameOfLastMatchedSubstringInRange:NSMakeRange(1, [self count] - 1)];
@@ -804,7 +804,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 }
 
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì‚¤‚¿Å’·‚Ì‚à‚Ì (‚È‚¢ê‡‚Í0‚ğ•Ô‚·B“¯‚¶’·‚³‚Ì•¨‚ª•¡”‚ ‚ê‚ÎA”Ô†‚Ì¬‚³‚¢•¨‚ª—Dæ‚³‚ê‚é)
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ã†ã¡æœ€é•·ã®ã‚‚ã® (ãªã„å ´åˆã¯0ã‚’è¿”ã™ã€‚åŒã˜é•·ã•ã®ç‰©ãŒè¤‡æ•°ã‚ã‚Œã°ã€ç•ªå·ã®å°ã•ã„ç‰©ãŒå„ªå…ˆã•ã‚Œã‚‹)
 - (NSUInteger)indexOfLongestSubstring
 {
 	return [self indexOfLongestSubstringInRange:NSMakeRange(1, [self count] - 1)];
@@ -820,7 +820,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [self indexOfLongestSubstringInRange:NSMakeRange(anIndex, [self count] - anIndex)];
 }
 
-// ‚»‚Ì–¼‘O
+// ãã®åå‰
 - (NSString*)nameOfLongestSubstring
 {
 	return [self nameOfLongestSubstringInRange:NSMakeRange(1, [self count] - 1)];
@@ -837,7 +837,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 }
 
 
-// ƒ}ƒbƒ`‚µ‚½•”•ª•¶š—ñ‚Ì‚¤‚¿Å’Z‚Ì‚à‚Ì (‚È‚¢ê‡‚Í0‚ğ•Ô‚·B“¯‚¶’·‚³‚Ì•¨‚ª•¡”‚ ‚ê‚ÎA”Ô†‚Ì¬‚³‚¢•¨‚ª—Dæ‚³‚ê‚é)
+// ãƒãƒƒãƒã—ãŸéƒ¨åˆ†æ–‡å­—åˆ—ã®ã†ã¡æœ€çŸ­ã®ã‚‚ã® (ãªã„å ´åˆã¯0ã‚’è¿”ã™ã€‚åŒã˜é•·ã•ã®ç‰©ãŒè¤‡æ•°ã‚ã‚Œã°ã€ç•ªå·ã®å°ã•ã„ç‰©ãŒå„ªå…ˆã•ã‚Œã‚‹)
 - (NSUInteger)indexOfShortestSubstring
 {
 	return [self indexOfShortestSubstringInRange:NSMakeRange(1, [self count] - 1)];
@@ -853,7 +853,7 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 	return [self indexOfShortestSubstringInRange:NSMakeRange(anIndex, [self count] - anIndex)];
 }
 
-// ‚»‚Ì–¼‘O
+// ãã®åå‰
 - (NSString*)nameOfShortestSubstring
 {
 	return [self nameOfShortestSubstringInRange:NSMakeRange(1, [self count] - 1)];
@@ -872,8 +872,8 @@ static OnigCaptureTreeNode *Ogre_onigCaptureTreeNodeWithArray(NSArray *captureAr
 /******************
 * Capture History *
 *******************/
-// •ßŠl—š—ğ
-// —š—ğ‚ª‚È‚¢ê‡‚Ínil‚ğ•Ô‚·B
+// æ•ç²å±¥æ­´
+// å±¥æ­´ãŒãªã„å ´åˆã¯nilã‚’è¿”ã™ã€‚
 - (OGRegularExpressionCapture*)captureHistory
 {
 	if (_region->history_root == NULL) return nil;

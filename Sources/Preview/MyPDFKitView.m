@@ -3031,7 +3031,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
         ;
     else {
         
-     //   The notification object is the PDFDocument object itself. To determine the string selection found, use the @”PDFDocumentFoundSelection” key to obtain userinfo of type PDFSelection *
+     //   The notification object is the PDFDocument object itself. To determine the string selection found, use the @‚ÄùPDFDocumentFoundSelection‚Äù key to obtain userinfo of type PDFSelection *
         
         
         
