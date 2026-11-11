@@ -95,12 +95,12 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
         }
     }
     [shell setSettingsSearchQuery:@""];
-    NSArray *notes=@[@[@"general",@"row.catalog.general.1.0"],@[@"editor",@"row.catalog.editor.0.1"],@[@"editor",@"row.catalog.editor.0.2"],@[@"editor",@"row.catalog.editor.0.4"],@[@"editor",@"row.catalog.editor.0.5"],@[@"editor",@"row.catalog.editor.3.1"],@[@"editor",@"row.catalog.editor.6.0"],@[@"preview",@"row.catalog.preview.3.0"]];
+    NSArray *notes=@[@[@"general",@"row.catalog.general.1.0"],@[@"editor",@"row.catalog.editor.0.1"],@[@"editor",@"row.catalog.editor.0.2"],@[@"editor",@"row.catalog.editor.0.4"],@[@"editor",@"row.catalog.editor.0.5"],@[@"editor",@"row.catalog.editor.3.1"],@[@"editor",@"row.catalog.editor.6.0"],@[@"preview",@"row.catalog.preview.4.1"]];
     for(NSArray *entry in notes){NSView *row=Find([shell viewForCategoryIdentifier:entry[0]],entry[1]);Check(Find(row,@"note.catalog-row")!=nil,[NSString stringWithFormat:@"Per-document default explanation retained for %@",entry[1]]);}
     for(NSArray *entry in @[@[@"documents",@"row.catalog.documents.1.3"],@[@"typesetting",@"row.catalog.typesetting.9.0"]]){
         NSTextField *note=(NSTextField *)Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"note.catalog-row");Check(note.stringValue.length>20,@"Conversion settings include the approved explanation in each language");
     }
-    NSTextField *colorMapNote=(NSTextField *)Find(Find([shell viewForCategoryIdentifier:@"preview"],@"row.catalog.preview.3.0"),@"note.catalog-row");
+    NSTextField *colorMapNote=(NSTextField *)Find(Find([shell viewForCategoryIdentifier:@"preview"],@"row.catalog.preview.4.1"),@"note.catalog-row");
     Check([colorMapNote.stringValue containsString:[fixture localizedStringForKey:@"group.appearance.11.title" value:nil table:@"SettingsCategories"]],@"Color mapping note names the theme group that holds its colors");
     NSDictionary *catalog = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:[fixture URLForResource:@"SettingsCatalogReference" withExtension:@"json"]] options:0 error:NULL];
     Check([catalog[@"categories"] count] == 10, @"Independent approved catalog fixture is read");
@@ -131,7 +131,7 @@ static void CheckOwnerPresentation(TSSettingsWindowController *shell) {
         }
         CountPresentedControls(pane, actual);
     }
-    Check(expected[0] == 51 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty-one switches and two exclusive spelling choices");
+    Check(expected[0] == 50 && expected[1] == 15 && expected[2] == 2, @"Reference contains fifty switches and two exclusive spelling choices");
     // The reference describes checkbox labels as items in its checks/grid rows.
     Check(actual[0] == expected[0] && actual[1] == expected[1] && actual[2] == expected[2] && actual[3] == 0,
           [NSString stringWithFormat:@"Displayed controls: switches=%lu checks=%lu radios=%lu matrices=%lu",(unsigned long)actual[0],(unsigned long)actual[1],(unsigned long)actual[2],(unsigned long)actual[3]]);

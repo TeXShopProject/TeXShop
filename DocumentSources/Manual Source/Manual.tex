@@ -870,8 +870,8 @@ To switch between ``Pdftex'' and ``TeX + DVI'' for an occasional document, go to
 
 After making these choices, typesetting with TeXShop is easy. When you want to typeset, just push the ``Typeset'' button in the Source toolbar or select the ``Typeset'' menu at the top of the Typeset menu. This menu has a keyboard shortcut, command-T. After a few days, you'll ignore the toolbar item and the menu item and type command-T when you want to typeset.
 
-At the very bottom of the first column in this Settings category, there is an item labeled
-``Use -dALLOWPSTRANSPARENCY''. This is only active when using TeX + DVI mode.
+Near the bottom of this Settings category, the ``Ghostscript'' group has a switch labeled
+``-dALLOWPSTRANSPARENCY''. This is only active when using TeX + DVI mode.
 In this mode, when a graphic is created, it is processed by Ghostscript.
 In modern versions of Ghostscript, the postscript code has been converted to C and made
 safer, but this modernization can break transparency. This preference sets a flag
@@ -2527,15 +2527,15 @@ If you use ``Fit to Window'' mode, but want to temporarily magnify  the image so
 
 A very small number of people use TeX to create intricate pdf diagrams which they then view in TeXShop for long periods of time at very high magnification.  TeXShop is not really designed for that sort of work flow and if bugs occur, I recommend searching for other appropriate tools.
 
-\section{A Mysterious Preference Item}
+\section{A Formerly Mysterious Preference Item}
 
 TeXShop Preference items for the Preview Window are mainly found under the Preview category. This page also contains items for Single Page mode, and for the HTML Preview window. Single Page mode has already been discussed in this document, and the HTML Preview window will be covered later.
 
-At the top of the second column of the Preview category, there is an item labeled ``Change Page Buttons'' with a checkbox titled ``Do not scroll''. What does this item do? I haven't got the slightest idea.
+Until TeXShop 5.59, the Preview category had an item labeled ``Change Page Buttons'' with a checkbox titled ``Do not scroll''. What did this item do? For a long time, I hadn't the slightest idea.
 
 At the start of this chapter, I explained that the original TeXShop used a preliminary version of Apple's PDF code to display pdf documents, together with extensions by Mitsuhiro Shishikura. Some of that old code is still in TeXShop, used to display graphic files and dvi files, as explained later in this document. But most of the code has been replaced by code which calls Apple's PDFKit. The old code is in a source file called MyPDFView, and the new code is in a source file called MyPDFKitView, and for years and years I have only edited the MyPDFKitView file. 
 
-I looked at the code in Preferences which controls the mysterious ``Change Page Buttons'' item. It controls a global preference which is only consulted by the code in MyPDFView. Whatever this code did was not ported over to MyPDFKitView during the transition to PDFKit in Tiger. So you can ignore that preference setting.
+I looked at the code in Preferences which controls the mysterious ``Change Page Buttons'' item. It controlled a global preference which was only consulted by the code in MyPDFView. Whatever this code did was not ported over to MyPDFKitView during the transition to PDFKit in Tiger, so the item had no effect, and it was removed in TeXShop 5.60. Its place in the Preview category is taken by the switch ``Do not turn pages by scrolling''. When it is on, in Single Page and Two Page display, scrolling with the mouse wheel or the trackpad stops at the top and bottom of the page instead of moving to the next page.
 
 \newpage
 \section{Preview Mouse Tools}
@@ -2569,6 +2569,8 @@ The ``select pdf'' tool offers more options than first imagined. Select any port
 Drag and drop also works with graphic selections. For instance, click and hold down the mouse inside the selection and then drag everything into Apple's Keynote to copy the information to a slide. Dragging the selection to the desktop creates a file containing the pdf information, with a default name. Rather than dragging and dropping the selection, select the item ``Save Selection to File..'' in the Preview menu to name the corresponding file and the location on disk where it is saved.
 
 An item in the Preview category of TeXShop Preferences determines the type of graphic data created for selections. By default, pdf data is created, but various types of tiff, jpeg, and png data are also possible. This choice can also made in the Preview menu for an individual selection using the ``Copy Format'' menu.
+
+The same group, ``Copy Images'', has the switch ``Use Color Mapping''. When it is on, tiff, jpeg, and png selections replace black by a text color and white by a background color; these colors are set by ``Color Mapping for Copied Images'' in the theme being used. The item ``Foreground Prominence'' below it sets how strongly the text is emphasized. Pdf and eps selections keep the colors of the page.
 
 \section{Back, Forward, Rotation}
 
@@ -2724,7 +2726,7 @@ Click the last link to see an illustration, and click the TUG link to confirm th
 When the page first appears, it may be small and in an awkward location. Resize it and move it to a  reasonable spot, perhaps where the Preview Window usually appears. Select it and choose the item
 ``Save HTML Window Position'' in the Preview menu. The window will then always open with this size and position. 
 
-In TeXShop Preferences under the Preview category, the item ``Home URL'' allows you to set the web page that opens by default when the window is selected.
+In the HTML group of the Preview category of Settings, the item ``Home URL'' sets the page that opens when the window is shown. Enter a web address, such as https://tug.org, or the full path of an html file. When the item is empty, the default web document described above opens.
 
 Although the window contains a full featured web view, the toolbar items are  minimal. Our  window only provides Back and Forward buttons, a field to enter a new URL, and a search field. The search field currently does nothing. You already have Safari and perhaps other browsers;  TeXShop has no obligation to provide a duplicate.
 
@@ -6185,11 +6187,7 @@ This command reverses the cycle direction.
 
 \section{Items in the Preference Pane}
 
-{\bf Distiller}
-
-TeXShop sometimes needs to convert a postscript file into pdf. This is usually done with Ghostscript, but users who did not install Ghostscript can use a distiller provided by Apple in macOS. In case one method is unsatisfactory, it can be useful to switch to the other temporarily.
-
-{\bf Use -dALLOWPSTRANSPARENCY}
+{\bf -dALLOWPSTRANSPARENCY}
 
 TeXShop uses Ghostscript in two crucial places. First, TeXShop can open and display postscript files. To do this,
 it converts the postscript file to a pdf file using ps2pdf, a program in the Ghostscript family,
@@ -6201,9 +6199,9 @@ The Ghostscript program  was originally written in postscript. Recently, the aut
 To fix this, the Ghostscript authors added a special flag, ``-dALLOWPSTRANSPARENCY''.
 When Ghostscript is called with this flag set, the transparency operators are recognized (while the other more serious security bugs are still quashed).  This flag is available in Ghostscript 9.51 and higher. 
 
-A special preference titled ``Ghostscript Options'' under the Typesetting category allows users to turn on this flag. The flag is off by default because some users have earlier versions of Ghostscript or never use transparency, and because the flag might conceivably be removed at some future date.
+The switch ``-dALLOWPSTRANSPARENCY'' in the Ghostscript group of the Typesetting category of Settings turns on this flag. The flag is off by default because some users have earlier versions of Ghostscript or never use transparency, and because the flag might conceivably be removed at some future date.
 
-The flag only affects the two TeXShop operations described in the initial paragraph of this section. It has no effect if the user has selected the Apple distiller rather than Ghostscript for conversion operations. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
+The flag only affects the two TeXShop operations described in the initial paragraph of this section. Earlier versions of TeXShop could also use a distiller provided by Apple in macOS instead of Ghostscript, but macOS 14 removed that distiller, so TeXShop 5.60 always uses Ghostscript. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
 
 The DVI typesetting chain is controlled by the Preference items ``TeX + dvips + distiller'' under the Typesetting category.
 These items call a script named {\em simpdftex} in TeXLive to control the typesetting process. This script recognizes many optional flags. A few are set by default. One of the optional flags not set by default is named

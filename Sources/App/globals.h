@@ -341,7 +341,6 @@ extern NSString *PdfKitWindowNameKey;
 extern NSString *PdfWindowPosModeKey;
 extern NSString *PdfPageStyleKey; // mitsu 1.29 (O)
 extern NSString *PdfRefreshKey;
-extern NSString *AntiAliasKey;
 extern NSString *RefreshTimeKey;
 extern NSString *PdfFileRefreshKey;
 extern NSString *PdfFirstPageStyleKey;
@@ -361,7 +360,6 @@ extern NSString *GSBinPath;
 extern NSString *TexCommandKey;
 extern NSString *TexGSCommandKey;
 extern NSString *TexScriptCommandKey;
-extern NSString *DistillerCommandKey;
 extern NSString *MatrixSizeKey; // Jonas' Matrix addition
 extern NSString *TSHasBeenUsedKey;
 extern NSString *UserInfoPath;

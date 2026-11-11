@@ -116,7 +116,6 @@
     remainingParagraphIndentField = editor.remainingParagraphIndentField;
     tabIndentField = editor.tabIndentField;
     _HtmlHomeField = preview.HtmlHomeField;
-    _antialiasButton = preview.antialiasButton;
     _autoPDFButton = preview.autoPDFButton;
     _displayAsBookButton = preview.displayAsBookButton;
     _linkPopupsButton = preview.linkPopupsButton;
@@ -183,7 +182,6 @@
     XMLtable = miscTwo.XMLtable;
     _alternateEngineTextField = miscTwo.alternateEngineTextField;
     _convertUTFButton = miscTwo.convertUTFButton;
-    _distillerMatrix = miscTwo.distillerMatrix;
     _latexScriptCommandTextField = miscTwo.latexScriptCommandTextField;
     _miniaturizeRootFileButton = miscTwo.miniaturizeRootFileButton;
     _openRootFileButton = miscTwo.openRootFileButton;

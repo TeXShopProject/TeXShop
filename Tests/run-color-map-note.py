@@ -74,7 +74,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-color-map-note-') as tmp:
 notes = {}
 for strings in sorted((root / 'Resources/Interfaces').glob('*.lproj/SettingsCategories.strings')):
     values = json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(strings)]))
-    notes[strings.parent.name] = values['catalog.preview.3.0.note']
+    notes[strings.parent.name] = values['catalog.preview.4.1.note']
 if mutation == 'note-background':
     notes['ja.lproj'] = notes['ja.lproj'].replace('PDF と EPS には適用されません。', 'PDF と EPS では背景の色だけが付きます。')
 assert len(notes) == 12, notes.keys()

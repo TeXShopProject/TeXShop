@@ -1088,11 +1088,6 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
 	[SUD setBool:[(NSCell *)sender state] forKey:PdfRefreshKey];
 }
 
-- (IBAction)antialiasChanged:sender
-{
-	[SUD setBool:[(NSCell *)sender state] forKey:AntiAliasKey];
-}
-
 // The state of Link Popups in the Preview menu when a Preview window opens.
 - (IBAction)linkPopupsChanged:(NSButton *)sender
 {
@@ -1558,12 +1553,6 @@ person script. See also: DefaultTypesetMode.
 }
 
 
-
-- (IBAction)distillerChanged:sender
-{
-
-	[SUD setInteger:[[sender selectedCell] tag] forKey:DistillerCommandKey];
-}
 
 // zenitani 1.35 (C)
 - (IBAction)ptexUtfOutputPressed:sender

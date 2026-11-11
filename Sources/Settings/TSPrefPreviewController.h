@@ -3,7 +3,6 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface TSPrefPreviewController : TSPrefPaneController
 @property (strong, nullable) IBOutlet NSTextField *HtmlHomeField NS_SWIFT_NAME(htmlHomeField);
-@property (strong, nullable) IBOutlet NSButton *antialiasButton;
 @property (strong, nullable) IBOutlet NSButton *autoPDFButton;
 @property (strong, nullable) IBOutlet NSButton *displayAsBookButton;
 @property (strong, nullable) IBOutlet NSMatrix *firstPageMatrix;

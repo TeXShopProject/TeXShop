@@ -375,11 +375,6 @@
         "class": "TSPrefMiscTwoController"
       },
       {
-        "ivar": "_distillerMatrix",
-        "property": "distillerMatrix",
-        "class": "TSPrefMiscTwoController"
-      },
-      {
         "ivar": "_latexScriptCommandTextField",
         "property": "latexScriptCommandTextField",
         "class": "TSPrefMiscTwoController"
@@ -417,11 +412,6 @@
       {
         "ivar": "_HtmlHomeField",
         "property": "HtmlHomeField",
-        "class": "TSPrefPreviewController"
-      },
-      {
-        "ivar": "_antialiasButton",
-        "property": "antialiasButton",
         "class": "TSPrefPreviewController"
       },
       {
@@ -2012,24 +2002,6 @@
     ],
     "MiscTwoActions": [
       {
-        "key": "i9l-Ll-3us.action",
-        "view": "settings.eiU-B8-j8t",
-        "kind": "matrix",
-        "property": "action",
-        "value": "distillerChanged:",
-        "row": 0,
-        "column": 0
-      },
-      {
-        "key": "kY2-vG-FLS.action",
-        "view": "settings.eiU-B8-j8t",
-        "kind": "matrix",
-        "property": "action",
-        "value": "distillerChanged:",
-        "row": 1,
-        "column": 0
-      },
-      {
         "key": "sPQ-5E-qId.action",
         "view": "settings.sPQ-5E-qId",
         "kind": "view",
@@ -2172,24 +2144,6 @@
     ],
     "MiscTwoTags": [
       {
-        "key": "i9l-Ll-3us.tag",
-        "view": "settings.eiU-B8-j8t",
-        "kind": "matrix",
-        "property": "tag",
-        "value": 0,
-        "row": 0,
-        "column": 0
-      },
-      {
-        "key": "kY2-vG-FLS.tag",
-        "view": "settings.eiU-B8-j8t",
-        "kind": "matrix",
-        "property": "tag",
-        "value": 1,
-        "row": 1,
-        "column": 0
-      },
-      {
         "key": "GUV-qt-mM2.tag",
         "view": "settings.ssL-3D-6IR",
         "kind": "matrix",
@@ -2294,13 +2248,6 @@
         "kind": "view",
         "property": "action",
         "value": "autoPDFChanged:"
-      },
-      {
-        "key": "fjQ-he-GFL.action",
-        "view": "settings.fjQ-he-GFL",
-        "kind": "view",
-        "property": "action",
-        "value": "antialiasChanged:"
       },
       {
         "key": "G6V-Sw-jFT.action",
@@ -3476,7 +3423,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Open root file automatically on opening a child",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "Project Root File",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "During File Save",
@@ -3486,12 +3432,10 @@
           "vEF-zd-SJl.title": "Alternate Engine",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "mPz-qG-Toi.title": "TeX Program (no default)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Personal Script",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Automatic UTF-8-Mac to UTF-8 Conversion",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Daily",
@@ -3504,7 +3448,6 @@
           "oSw-pG-JGB.title": "Weekly",
           "8Bw-D6-HlO.title": "LaTeX Program (no default)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Monthly"
         },
@@ -3532,7 +3475,6 @@
           "342.title": "Magnification Method",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Smooth text and line art",
           "tVs-uh-QcM.title": "All windows start at fixed position",
           "507.title": "Right to Left",
           "343.title": "Two Page",
@@ -4804,15 +4746,6 @@
           "value": "Open root file automatically on opening a child"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -4876,13 +4809,6 @@
           "value": "TeX Program (no default)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -4909,13 +4835,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -5004,15 +4923,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(default: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -5200,13 +5110,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Smooth text and line art"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -6478,10 +6381,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "During File Save"
         },
@@ -6789,7 +6688,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Stammdatei öffnen, wenn eine Unterdatei geöffnet wird",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "Stammdatei des Projekts",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "Abspeichern von Dateien",
@@ -6799,12 +6697,10 @@
           "vEF-zd-SJl.title": "Alternativer Engine",
           "DU3-gi-QzY.title": "XML-Tag-Auswahlmöglichkeiten",
           "mPz-qG-Toi.title": "TeX-Programm (keine Voreinstellung)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Persönliches Skript",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Automatische Konvertierung UTF-8-Mac zu UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Täglich",
@@ -6817,7 +6713,6 @@
           "oSw-pG-JGB.title": "Wöchentlich",
           "8Bw-D6-HlO.title": "LaTeX-Programm (keine Voreinstellung)",
           "a5N-7n-3da.title": "(Standard: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Monatlich"
         },
@@ -6845,7 +6740,6 @@
           "342.title": "Änderung der Fenstergröße",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Schriftglättung für Text und Linien",
           "tVs-uh-QcM.title": "Fenster immer an fester Position",
           "507.title": "Seiten fließen von rechts nach links",
           "343.title": "Doppelseiten",
@@ -8117,15 +8011,6 @@
           "value": "Stammdatei öffnen, wenn eine Unterdatei geöffnet wird"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -8189,13 +8074,6 @@
           "value": "TeX-Programm (keine Voreinstellung)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -8222,13 +8100,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -8317,15 +8188,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(Standard: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -8513,13 +8375,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Schriftglättung für Text und Linien"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -9791,10 +9646,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "Abspeichern von Dateien"
         },
@@ -10102,7 +9953,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Abrir automáticamente el archivo raíz",
-          "kY2-vG-FLS.title": "Distiller de Apple",
           "Kin-Cw-xVc.title": "Archivo raíz del proyecto",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "Al guardar",
@@ -10112,12 +9962,10 @@
           "vEF-zd-SJl.title": "Motor alternativo",
           "DU3-gi-QzY.title": "Elección de marcas XML",
           "mPz-qG-Toi.title": "Programa TeX (nada por defecto)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script personal",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Conversión automática de UTF-8-Mac a UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Diaria",
@@ -10130,7 +9978,6 @@
           "oSw-pG-JGB.title": "Semanal",
           "8Bw-D6-HlO.title": "Programa LaTeX (nada por defecto)",
           "a5N-7n-3da.title": "(por defecto: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensual"
         },
@@ -10158,7 +10005,6 @@
           "342.title": "Tras cambiar tamaño",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Texto suave y arte lineal",
           "tVs-uh-QcM.title": "Comenzar con posición fija",
           "507.title": "Paginación de derecha a izquierda",
           "343.title": "Página doble",
@@ -11430,15 +11276,6 @@
           "value": "Abrir automáticamente el archivo raíz"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Distiller de Apple",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -11502,13 +11339,6 @@
           "value": "Programa TeX (nada por defecto)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -11535,13 +11365,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -11630,15 +11453,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(por defecto: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -11826,13 +11640,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Texto suave y arte lineal"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -13104,10 +12911,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "Al guardar"
         },
@@ -13415,7 +13218,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Ouvrir le fichier-maître avec le fichier associé",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "Fichier-maître du projet",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "Pendant l’enregistrement du fichier",
@@ -13425,12 +13227,10 @@
           "vEF-zd-SJl.title": "Moteur TeX alternatif",
           "DU3-gi-QzY.title": "Choix d’étiquette XML",
           "mPz-qG-Toi.title": "Commande TeX (pas de défaut)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script personnel",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Conversion automatique de UTF-8-Mac à UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Journalière",
@@ -13443,7 +13243,6 @@
           "oSw-pG-JGB.title": "Hebdomadaire",
           "8Bw-D6-HlO.title": "Commande LaTeX (pas de défaut)",
           "a5N-7n-3da.title": "(par défaut :  pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensuelle"
         },
@@ -13471,7 +13270,6 @@
           "342.title": "Nouvelle taille de la fenêtre",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Lisser le texte et les dessins au trait",
           "tVs-uh-QcM.title": "Choisir une position fixe",
           "507.title": "Les pages défilent de droite à gauche",
           "343.title": "Page double",
@@ -14743,15 +14541,6 @@
           "value": "Ouvrir le fichier-maître avec le fichier associé"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -14815,13 +14604,6 @@
           "value": "Commande TeX (pas de défaut)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -14848,13 +14630,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -14943,15 +14718,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(par défaut :  pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -15139,13 +14905,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Lisser le texte et les dessins au trait"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -16417,10 +16176,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "Pendant l’enregistrement du fichier"
         },
@@ -16728,7 +16483,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Apri il file principale automaticamente",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "File Principale del Progetto",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "Quando si salva un file",
@@ -16738,12 +16492,10 @@
           "vEF-zd-SJl.title": "Motore alternativo",
           "DU3-gi-QzY.title": "Scelta di Tag XML",
           "mPz-qG-Toi.title": "Programma TeX (no default)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script Personale",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Conversione automatica da UTF-8-Mac a UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "giorno",
@@ -16756,7 +16508,6 @@
           "oSw-pG-JGB.title": "una volta alla settimana",
           "8Bw-D6-HlO.title": "Programma LaTeX (no default)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "una volta al mese"
         },
@@ -16784,7 +16535,6 @@
           "342.title": "Dopo un ridimensionamento",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Testo regolare e disegni al tratto",
           "tVs-uh-QcM.title": "Scegli una posizione prefissata",
           "507.title": "Impaginazione anteprima da destra a sinistra",
           "343.title": "Pagine affiancate",
@@ -18056,15 +17806,6 @@
           "value": "Apri il file principale automaticamente"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -18128,13 +17869,6 @@
           "value": "Programma TeX (no default)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -18161,13 +17895,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -18256,15 +17983,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(default: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -18452,13 +18170,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Testo regolare e disegni al tratto"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -19730,10 +19441,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "Quando si salva un file"
         },
@@ -20041,7 +19748,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "ファイルオープン時にルートファイルを自動的に開く",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "プロジェクトルートファイル",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "ファイル保存時",
@@ -20051,12 +19757,10 @@
           "vEF-zd-SJl.title": " 代替エンジン",
           "DU3-gi-QzY.title": "リストアップするXMLタグ",
           "mPz-qG-Toi.title": "TeX プログラム（デフォルト：空）",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "パーソナルスクリプト",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "UTF-8-MAC を UTF-8 に自動変換",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "毎日",
@@ -20069,7 +19773,6 @@
           "oSw-pG-JGB.title": "毎週",
           "8Bw-D6-HlO.title": "LaTeX プログラム（デフォルト：空）",
           "a5N-7n-3da.title": "(デフォルト:  pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "毎月"
         },
@@ -20097,7 +19800,6 @@
           "342.title": "ウィンドウのリサイズ後",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "テキストとラインアートを滑らかに表示",
           "tVs-uh-QcM.title": "いつも同じ位置で開く",
           "507.title": "右から左へ",
           "343.title": "見開きページ",
@@ -21369,15 +21071,6 @@
           "value": "ファイルオープン時にルートファイルを自動的に開く"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -21441,13 +21134,6 @@
           "value": "TeX プログラム（デフォルト：空）"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -21474,13 +21160,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -21569,15 +21248,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(デフォルト:  pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -21765,13 +21435,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "テキストとラインアートを滑らかに表示"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -23043,10 +22706,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "ファイル保存時"
         },
@@ -23354,7 +23013,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "루트 파일을 함께 열기",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "프로젝트 루트 파일",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "일본어 파일 저장",
@@ -23364,12 +23022,10 @@
           "vEF-zd-SJl.title": "대체 엔진",
           "DU3-gi-QzY.title": "XML 테그 선택",
           "mPz-qG-Toi.title": "TeX 프로그램 (기본값없음)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "사용자 스크립트",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "UTF-8-Mac을 UTF-8로 자동 변환",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "매일",
@@ -23382,7 +23038,6 @@
           "oSw-pG-JGB.title": "매주",
           "8Bw-D6-HlO.title": "LaTeX 프로그램 (기본값없음)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "매월"
         },
@@ -23410,7 +23065,6 @@
           "342.title": "창 리사이즈",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "텍스트와 라인아트를 부드럽게",
           "tVs-uh-QcM.title": "항상 같은 위치에서 열기",
           "507.title": "오른쪽에서 왼쪽으로 페이지 배열",
           "343.title": "단일 페이지 맞쪽보기",
@@ -24682,15 +24336,6 @@
           "value": "루트 파일을 함께 열기"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -24754,13 +24399,6 @@
           "value": "TeX 프로그램 (기본값없음)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -24787,13 +24425,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -24882,15 +24513,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(default: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -25078,13 +24700,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "텍스트와 라인아트를 부드럽게"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -26356,10 +25971,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "일본어 파일 저장"
         },
@@ -26667,7 +26278,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Open root file automatically on opening a child",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "Project Root File",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "During File Save",
@@ -26677,12 +26287,10 @@
           "vEF-zd-SJl.title": "Alternatieve engine",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "mPz-qG-Toi.title": "TeX-programma (geen standaard)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Eigen script",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Automatic UTF-8-Mac to UTF-8 Conversion",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Dagelijks",
@@ -26695,7 +26303,6 @@
           "oSw-pG-JGB.title": "Wekelijks",
           "8Bw-D6-HlO.title": "LaTeX-programma (geen standaard)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Maandelijks"
         },
@@ -26723,7 +26330,6 @@
           "342.title": "Magnification Method",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Text und Linien glätten",
           "tVs-uh-QcM.title": "Alle vensters op vaste positie openen",
           "507.title": "Pagina’s lopen van rechts naar links",
           "343.title": "Twee pagina’s",
@@ -27995,15 +27601,6 @@
           "value": "Open root file automatically on opening a child"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -28067,13 +27664,6 @@
           "value": "TeX-programma (geen standaard)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -28100,13 +27690,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -28195,15 +27778,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(default: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -28391,13 +27965,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Text und Linien glätten"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -29669,10 +29236,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "During File Save"
         },
@@ -29980,7 +29543,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Open root file automatically on opening a child",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "Project Root File",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "During File Save",
@@ -29990,12 +29552,10 @@
           "vEF-zd-SJl.title": "Motor alternativo",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "mPz-qG-Toi.title": "Programa TeX (nenhum por omissão):",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script pessoal",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Automatic UTF-8-Mac to UTF-8 Conversion",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Diariamente",
@@ -30008,7 +29568,6 @@
           "oSw-pG-JGB.title": "Semanalmente",
           "8Bw-D6-HlO.title": "Programa LaTeX (nenhum por omissão):",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensalmente"
         },
@@ -30036,7 +29595,6 @@
           "342.title": "Magnification Method",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Suavizar texto e ilustrações",
           "tVs-uh-QcM.title": "Abrir todas as janelas numa posição fixa",
           "507.title": "Páginas da direita para a esquerda",
           "343.title": "Duas páginas",
@@ -31308,15 +30866,6 @@
           "value": "Open root file automatically on opening a child"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -31380,13 +30929,6 @@
           "value": "Programa TeX (nenhum por omissão):"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -31413,13 +30955,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -31508,15 +31043,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(default: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -31704,13 +31230,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Suavizar texto e ilustrações"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -32982,10 +32501,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "During File Save"
         },
@@ -33293,7 +32808,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Abrir automaticamente o arquivo raiz ",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "Arquivo raiz do projeto",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "Ao salvar o arquivo",
@@ -33303,12 +32817,10 @@
           "vEF-zd-SJl.title": "Compilador alternativo",
           "DU3-gi-QzY.title": "Escolhas para elementos XML",
           "mPz-qG-Toi.title": "Programa TeX (nenhum por padrão):",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script pessoal",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Conversão automática do UTF-8-Mac para UTF-8",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Diariamente",
@@ -33321,7 +32833,6 @@
           "oSw-pG-JGB.title": "Semanalmente",
           "8Bw-D6-HlO.title": "Programa LaTeX (nenhum por padrão):",
           "a5N-7n-3da.title": "(por padrão: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Mensalmente"
         },
@@ -33349,7 +32860,6 @@
           "342.title": "Método de ampliação",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Suavizar texto e ilustrações",
           "tVs-uh-QcM.title": "Abrir sempre em uma posição fixa",
           "507.title": "Páginas fluem da direita para a esquerda",
           "343.title": "Páginas duplas",
@@ -34621,15 +34131,6 @@
           "value": "Abrir automaticamente o arquivo raiz "
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -34693,13 +34194,6 @@
           "value": "Programa TeX (nenhum por padrão):"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -34726,13 +34220,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -34821,15 +34308,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(por padrão: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -35017,13 +34495,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Suavizar texto e ilustrações"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -36295,10 +35766,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "Ao salvar o arquivo"
         },
@@ -36606,7 +36073,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "Open root file automatically on opening a child",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "Project Root File",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "During File Save",
@@ -36616,12 +36082,10 @@
           "vEF-zd-SJl.title": "Motor alternativ",
           "DU3-gi-QzY.title": "XML Tag Choices",
           "mPz-qG-Toi.title": "TeX Program (no default)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "Script Personal",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "Automatic UTF-8-Mac to UTF-8 Conversion",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "Zilnic",
@@ -36634,7 +36098,6 @@
           "oSw-pG-JGB.title": "Săptămânal",
           "8Bw-D6-HlO.title": "LaTeX Program (no default)",
           "a5N-7n-3da.title": "(default: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "Lunar"
         },
@@ -36662,7 +36125,6 @@
           "342.title": "După Redimensionarea Ferestrei",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "Netezește textul și liniile",
           "tVs-uh-QcM.title": "Deschide toate ferestrele în poziția fixată",
           "507.title": "Pagini de la dreapta la stânga",
           "343.title": "Pagină Dublă",
@@ -37934,15 +37396,6 @@
           "value": "Open root file automatically on opening a child"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -38006,13 +37459,6 @@
           "value": "TeX Program (no default)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -38039,13 +37485,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -38134,15 +37573,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(default: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -38330,13 +37760,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "Netezește textul și liniile"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -39608,10 +39031,6 @@
       ],
       "MiscTwoHeadings": [
         {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
-        {
           "id": "heading.settings.03p-fB-1K3",
           "title": "During File Save"
         },
@@ -39919,7 +39338,6 @@
           "J50-iI-WzV.title": "project",
           "Ggu-ax-oma.title": "section",
           "YtS-5V-eM9.title": "打开子文件时自动打开根文件",
-          "kY2-vG-FLS.title": "Apple Distiller",
           "Kin-Cw-xVc.title": "项目根文件",
           "6Fu-n9-vh6.title": "subsubsection ",
           "03p-fB-1K3.title": "文件存储时",
@@ -39929,12 +39347,10 @@
           "vEF-zd-SJl.title": "替代引擎",
           "DU3-gi-QzY.title": "XML 标签选择",
           "mPz-qG-Toi.title": "TeX 程序 (无默认值)",
-          "SCh-Ca-qiI.title": "Radio",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "个性化脚本",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "SXg-YM-OVa.title": "Distiller",
           "K8n-in-y4T.title": "自动转换 UTF-8-Mac 为 UTF-8 ",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "每天",
@@ -39947,7 +39363,6 @@
           "oSw-pG-JGB.title": "每周",
           "8Bw-D6-HlO.title": "LaTeX 程序 (无默认值)",
           "a5N-7n-3da.title": "(默认: pdflatexmk)",
-          "i9l-Ll-3us.title": "Ghostscript",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "每月"
         },
@@ -39975,7 +39390,6 @@
           "342.title": "放大方式",
           "910.title": "Radio",
           "865.title": "100",
-          "jgT-n6-lh0.title": "平滑文字和线稿",
           "tVs-uh-QcM.title": "所有窗口从固定位置打开",
           "507.title": "页面顺序从右到左",
           "343.title": "双页",
@@ -41247,15 +40661,6 @@
           "value": "打开子文件时自动打开根文件"
         },
         {
-          "key": "kY2-vG-FLS.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Apple Distiller",
-          "row": 1,
-          "column": 0
-        },
-        {
           "key": "Kin-Cw-xVc.title",
           "view": "settings.Kin-Cw-xVc",
           "kind": "view",
@@ -41319,13 +40724,6 @@
           "value": "TeX 程序 (无默认值)"
         },
         {
-          "key": "SCh-Ca-qiI.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "prototype",
-          "property": "title",
-          "value": "Radio"
-        },
-        {
           "key": "xaE-Ux-0eA.title",
           "view": "settings.ZIN-eZ-jRd",
           "kind": "cell",
@@ -41352,13 +40750,6 @@
           "kind": "cell",
           "property": "title",
           "value": "subsection"
-        },
-        {
-          "key": "SXg-YM-OVa.title",
-          "view": "settings.SXg-YM-OVa",
-          "kind": "view",
-          "property": "title",
-          "value": "Distiller"
         },
         {
           "key": "K8n-in-y4T.title",
@@ -41447,15 +40838,6 @@
           "kind": "cell",
           "property": "title",
           "value": "(默认: pdflatexmk)"
-        },
-        {
-          "key": "i9l-Ll-3us.title",
-          "view": "settings.eiU-B8-j8t",
-          "kind": "matrix",
-          "property": "title",
-          "value": "Ghostscript",
-          "row": 0,
-          "column": 0
         },
         {
           "key": "ERD-h5-S0j.title",
@@ -41643,13 +41025,6 @@
           "kind": "cell",
           "property": "title",
           "value": "100"
-        },
-        {
-          "key": "jgT-n6-lh0.title",
-          "view": "settings.fjQ-he-GFL",
-          "kind": "cell",
-          "property": "title",
-          "value": "平滑文字和线稿"
         },
         {
           "key": "tVs-uh-QcM.title",
@@ -42920,10 +42295,6 @@
         }
       ],
       "MiscTwoHeadings": [
-        {
-          "id": "heading.settings.SXg-YM-OVa",
-          "title": "Distiller"
-        },
         {
           "id": "heading.settings.03p-fB-1K3",
           "title": "文件存储时"

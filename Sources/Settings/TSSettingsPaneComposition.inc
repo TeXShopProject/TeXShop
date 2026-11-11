@@ -125,13 +125,9 @@
             [TSSettingsLayoutRow controls:@[@"settings.DU3-gi-QzY"] kind:TSSettingsRowSection indentation:0], // XML Tag Choices
             [TSSettingsLayoutRow controls:@[@"settings.vEF-zd-SJl"] kind:TSSettingsRowSection indentation:0], // Alternate Engine
             [TSSettingsLayoutRow controls:@[@"settings.SS5-tZ-cDa"] kind:TSSettingsRowSection indentation:0], // pTeX support (for Japan)
-            [TSSettingsLayoutRow controls:@[@"settings.SXg-YM-OVa"] kind:TSSettingsRowSection indentation:0], // Distiller
             [TSSettingsLayoutRow controls:@[@"settings.03p-fB-1K3"] kind:TSSettingsRowSection indentation:0], // During File Save
             [TSSettingsLayoutRow controls:@[@"settings.Kin-Cw-xVc"] kind:TSSettingsRowSection indentation:0], // Project Root File
             [TSSettingsLayoutRow controls:@[@"settings.e3h-Wk-X7D"] kind:TSSettingsRowSection indentation:0], // Sparkle Updater
-        ]],
-        @"settings.aFF-a7-Car": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.eiU-B8-j8t"] kind:TSSettingsRowControls indentation:0], // distillerMatrix
         ]],
         @"settings.CTJ-d3-TKI": [TSSettingsLayoutGroup rows:@[
             [TSSettingsLayoutRow controls:@[@"settings.sPQ-5E-qId"] kind:TSSettingsRowControls indentation:0], // convertUTFButton
@@ -199,7 +195,6 @@
             [TSSettingsLayoutRow controls:@[@"settings.557"] kind:TSSettingsRowControls indentation:0], // autoPDFButton
         ]],
         @"settings.024-V2-dVf": [TSSettingsLayoutGroup rows:@[
-            [TSSettingsLayoutRow controls:@[@"settings.fjQ-he-GFL"] kind:TSSettingsRowControls indentation:0], // antialiasButton
             [TSSettingsLayoutRow controls:@[@"settings.preview-link-popups-button"] kind:TSSettingsRowControls indentation:0], // linkPopupsButton
             [TSSettingsLayoutRow controls:@[@"settings.preview-scroll-page-turn-button"] kind:TSSettingsRowControls indentation:0], // scrollPageTurnButton
         ]],
