@@ -31,6 +31,7 @@
 "group.general.0.title" = "Al iniciar";
 "catalog.general.0.0.title" = "Abrir documento vacío";
 "catalog.general.0.1.title" = "Configurar para editor externo";
+"catalog.general.0.1.note" = "Al abrir un archivo de código se muestra solo la vista previa; el código se edita en otro editor. Para editarlo en TeXShop, use Abrir para editar...";
 "group.general.1.title" = "Ventanas";
 "catalog.general.1.0.title" = "Fuente y vista previa";
 "catalog.general.1.0.note" = "Valor inicial para documentos nuevos. En los documentos abiertos, use el menú.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "Al hacer clic en una ventana de código que no está delante, el mismo clic también mueve el cursor.";
 "catalog.editor.2.1.title" = "Rodear el texto seleccionado al escribir un delimitador";
 "catalog.editor.2.2.title" = "Idiomas de derecha a izquierda (árabe, hebreo, persa)";
+"catalog.editor.2.2.note" = "Alinea a la derecha las líneas que empiezan con escritura hebrea o árabe. Funciona cuando «Colores para sintaxis» está activado.";
 "group.editor.3.title" = "Coloreado de sintaxis";
 "catalog.editor.3.0.title" = "@ en nombres de comando";
 "catalog.editor.3.1.title" = "Colorear expl3 por omisión";

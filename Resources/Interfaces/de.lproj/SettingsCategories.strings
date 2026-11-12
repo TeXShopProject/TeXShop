@@ -31,6 +31,7 @@
 "group.general.0.title" = "Beim Start";
 "catalog.general.0.0.title" = "Zeige leeres Dokument";
 "catalog.general.0.1.title" = "Externen Editor benutzen";
+"catalog.general.0.1.note" = "Beim Öffnen einer Quelltextdatei nur die Vorschau anzeigen; der Quelltext wird in einem anderen Editor bearbeitet. Zum Bearbeiten in TeXShop „Zum Bearbeiten öffnen...“ wählen.";
 "group.general.1.title" = "Fenster";
 "catalog.general.1.0.title" = "Quelltext und Vorschau";
 "catalog.general.1.0.note" = "Vorgabe für neue Dokumente. Für geöffnete Dokumente das Menü verwenden.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "Wenn Sie in ein Quelltextfenster klicken, das nicht vorne liegt, setzt derselbe Klick auch den Cursor.";
 "catalog.editor.2.1.title" = "Ausgewählten Text beim Eingeben einer Klammer einschließen";
 "catalog.editor.2.2.title" = "Rechts-nach-links-Sprachen (Arabisch, Hebräisch, Persisch)";
+"catalog.editor.2.2.note" = "Zeilen, die mit hebräischer oder arabischer Schrift beginnen, rechtsbündig anzeigen. Wirkt nur, wenn „Syntax farblich hervorheben“ eingeschaltet ist.";
 "group.editor.3.title" = "Syntaxfarben";
 "catalog.editor.3.0.title" = "@ als Teil von Befehlsnamen";
 "catalog.editor.3.1.title" = "expl3 standardmäßig färben";

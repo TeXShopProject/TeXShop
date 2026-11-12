@@ -31,6 +31,7 @@
 "group.general.0.title" = "Startup";
 "catalog.general.0.0.title" = "Open Empty Document";
 "catalog.general.0.1.title" = "Configure for External Editor";
+"catalog.general.0.1.note" = "Opening a source file shows only its preview; edit the source in another editor. To edit in TeXShop, choose File > Open for Editing...";
 "group.general.1.title" = "Windows";
 "catalog.general.1.0.title" = "Source and Preview";
 "catalog.general.1.0.note" = "Default for new documents. For open documents, use the menu.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "When you click a source window that is not in front, the same click also moves the cursor.";
 "catalog.editor.2.1.title" = "Enclose selected text when typing a bracket";
 "catalog.editor.2.2.title" = "Right-to-left languages (Arabic, Hebrew, Persian)";
+"catalog.editor.2.2.note" = "Right-aligns lines that begin with Hebrew or Arabic script. Works when Syntax Coloring is on.";
 "group.editor.3.title" = "Syntax Coloring";
 "catalog.editor.3.0.title" = "@ as Part of Command Names";
 "catalog.editor.3.1.title" = "Color expl3 Code by Default";

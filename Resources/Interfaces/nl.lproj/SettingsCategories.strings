@@ -31,6 +31,7 @@
 "group.general.0.title" = "Opstarten";
 "catalog.general.0.0.title" = "Open leeg document";
 "catalog.general.0.1.title" = "Stel in voor externe editor";
+"catalog.general.0.1.note" = "Bij het openen van een bronbestand alleen het voorbeeld tonen; de bron bewerkt u in een andere editor. Gebruik Open in TeXShop Editor om in TeXShop te bewerken.";
 "group.general.1.title" = "Vensters";
 "catalog.general.1.0.title" = "Bron en voorvertoning";
 "catalog.general.1.0.note" = "Standaard voor nieuwe documenten. Gebruik voor geopende documenten het menu.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "Als u klikt in een bronvenster dat niet vooraan staat, verplaatst dezelfde klik ook de cursor.";
 "catalog.editor.2.1.title" = "Geselecteerde tekst omsluiten bij het typen van een haakje";
 "catalog.editor.2.2.title" = "Talen van rechts naar links (Arabisch, Hebreeuws, Perzisch)";
+"catalog.editor.2.2.note" = "Regels die beginnen met Hebreeuws of Arabisch schrift rechts uitlijnen. Werkt als Kleur taalelementen aan staat.";
 "group.editor.3.title" = "Syntaxiskleuren";
 "catalog.editor.3.0.title" = "@ in opdrachtnamen";
 "catalog.editor.3.1.title" = "expl3 standaard kleuren";
