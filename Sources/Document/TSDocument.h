@@ -393,6 +393,7 @@ enum RootCommand
    NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData, *sourceReloadFingerprint;
    NSUInteger sourceIOGeneration;
    BOOL sourceSaving;
+   BOOL sourceExternalWriteFinished; // set off the main thread under @synchronized (self)
 // END PATCH
     
 // NSDate              *_pdfLastModDate;
