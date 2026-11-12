@@ -60,7 +60,7 @@
 "Can't find required tool." = "必要なツールが見つかりません。";
 "Typesetting engine cannot be found." = "タイプセットエンジンが見つかりません。";
 "The source LaTeX document cannot be found." = "LaTeX のソースが見つかりません。";
-"Sync Marks" = "Sync";
+"Sync Marks" = "Syncマーク";
 "%@ does not exist." = "%@ が見つかりません。";
 "%@ does not have the executable bit set." = "%@ に実行権限がセットされていません。";
 "This file was opened with IsoLatin9 encoding." = "このファイルは IsoLatin9 エンコーディングで開かれました。";
@@ -74,10 +74,10 @@
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "このバージョンの TeXShop が動作するためには Mac OS X 10.4 以上が必要です。代わりに TeXShop 1.37 をお使いください。";
 "Hard Wrap" = "改行を挿入";
 "Newline Removal" = "改行を削除";
-"Color Index" = "Color Index";
+"Color Index" = "索引の色づけ";
 "Help" = "ヘルプ";
 "TeXShop Demos" = "TeXShop デモ";
-"Sync" = "Sync";
+"Sync" = "同期";
 "ShowFullPath" = "フルパス表示";
 "Close Current Environment" = "現在の環境を閉じる"; // Terada
 "Your current setting of %@ will be replaced. OK?" = "既存の %@ の設定が置き換えられます。よろしいですか？"; // Terada
@@ -102,13 +102,13 @@
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "デモ動画の再生には OS X 10.9 Mavericks 以上が必要です。";
 "Source" = "ソース";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "ここにサンプルテキストを打ち込んでください。\n行間隔をチェックするには複数行にまたがる文字列が必要です。";
-"<<Close All - unlocalized>>" = "すべて閉じる";
-"Close All" = "すべて閉じる";
+"<<Close All - unlocalized>>" = "すべてを閉じる";
+"Close All" = "すべてを閉じる";
 "File Already Exists" = "同名ファイルが存在しています。";
 "Labels" = "ラベル";
 "New Tag" = "タグを追加";
 "Split Window" = "ウインドウを分割する";
-"New Document" = "新しいドキュメント";
+"New Document" = "新規書類";
 "Link Popups" = "リンク先をポップアップ";
 "Syntax Color expl3 Code" = "expl3コードをハイライト";
 "PDF File Has No Annotations" = "PDFファイルに注釈が含まれません";
@@ -162,7 +162,7 @@
 "Shortcut" = "ショートカット";
 "Change…" = "変更…";
 "Remove Shortcut" = "解除";
-"Restore Default" = "元に戻す";
+"Restore Default" = "デフォルトに戻す";
 "Restore All…" = "すべて元に戻す…";
 "Restore All" = "すべて元に戻す";
 "Change Shortcut" = "ショートカットを変更";

@@ -121,8 +121,8 @@ tiLabelSearchKIT				= "検索";
 tiPaletteLabelSearchKIT         = "検索";
 tiToolTipSearchKIT				= "検索";
 
-tiLabelColorIndex				= "ColorIndex";
-tiPaletteLabelColorIndex		= "Color Index";
+tiLabelColorIndex				= "索引の色づけ";
+tiPaletteLabelColorIndex		= "索引の色づけ";
 tiToolTipColorIndex				= "\\index と \\esindex を別色で色づけします";
 
 tiLabelTypesetKIT				= "タイプセット";
@@ -162,8 +162,8 @@ tiLabelMouseModeKIT				= "マウスモード";
 tiPaletteLabelMouseModeKIT		= "マウスモード";
 tiToolTipMouseModeKIT			= "マウスモードを変更します";
 
-tiLabelSyncMarksKIT				= "Sync";
-tiPaletteLabelSyncMarksKIT		= "Sync";
+tiLabelSyncMarksKIT				= "Syncマーク";
+tiPaletteLabelSyncMarksKIT		= "Syncマーク";
 tiToolTipSyncMarksKIT			= "Sync マークを表示します";
 
 tiLabelBackForthKIT				= "戻る／進む";
@@ -202,8 +202,8 @@ tiLabelMagnificationSplit		= "ズーム倍率";
 tiPaletteLabelMagnificationSplit   = "ズーム倍率";
 tiToolTipMagnificationSplit     = "プレビュー画面のズーム倍率を設定します";
 
-tiLabelColorIndexSplit			= "ColorIndex";
-tiPaletteLabelColorIndexSplit     = "ColorIndex";
+tiLabelColorIndexSplit			= "索引の色づけ";
+tiPaletteLabelColorIndexSplit     = "索引の色づけ";
 tiToolTipColorIndexSplit          = "\\index と \\esindex を別色で色づけします";
 
 tiLabelAutoCompleteSplit		= "キーバインド";
@@ -271,8 +271,8 @@ tiToolTipHtmlSearch           = "検索";
 "Page Layout" = "ページレイアウト";
 "Two-Page Arrangement" = "見開きの配置";
 "Applies when displaying two pages" = "見開き表示時に適用します";
-"Left to right" = "左から右へ";
-"Right to left" = "右から左へ";
+"Left to right" = "左から右";
+"Right to left" = "右から左";
 "Show first page alone as cover" = "先頭ページを表紙として単独表示";
 "Restore Document Settings" = "文書の指定に戻す";
 "Single Page" = "単一ページ";
@@ -285,6 +285,6 @@ tiToolTipHtmlSearch           = "検索";
 "ExperimentToolSelectText" = "文字選択";
 "ExperimentToolMagnify" = "拡大鏡";
 "ExperimentToolSelectPDF" = "範囲指定";
-"ExperimentZoomOut" = "ズームアウト";
-"ExperimentZoomIn" = "ズームイン";
+"ExperimentZoomOut" = "縮小";
+"ExperimentZoomIn" = "拡大";
 "ExperimentZoomToContent" = "内容に合わせる";

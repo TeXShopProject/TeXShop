@@ -570,7 +570,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="923">
                     <rect key="frame" x="485" y="62" width="92" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="ColorIndex" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3870">
+                    <buttonCell key="cell" type="check" title="Kleurindex" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3870">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -609,31 +609,31 @@ DQ
                     </buttonCell>
                     <cells>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="Scroll" tag="1" inset="2" id="787">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="Scrollen" tag="1" inset="2" id="787">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Text" tag="2" inset="2" id="788">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst" tag="2" inset="2" id="788">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify" tag="3" inset="2" id="789">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten" tag="3" inset="2" id="789">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify (Large)" tag="4" inset="2" id="790">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groter)" tag="4" inset="2" id="790">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selection" tag="5" inset="2" id="791">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecteren" tag="5" inset="2" id="791">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -736,9 +736,9 @@ DQ
                     <font key="titleFont" metaFont="system"/>
                 </box>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="672">
-                    <rect key="frame" x="388" y="62" width="93" height="18"/>
+                    <rect key="frame" x="388" y="62" width="101" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="SyncMarks" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3860">
+                    <buttonCell key="cell" type="check" title="Syncpunten" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="3860">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -777,19 +777,19 @@ DQ
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify" tag="2" inset="2" id="564">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten" tag="2" inset="2" id="564">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify (Large)" tag="3" inset="2" id="565">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groter)" tag="3" inset="2" id="565">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Selection" tag="4" inset="2" id="568">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Selectie" tag="4" inset="2" id="568">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -1022,7 +1022,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3921">
                     <rect key="frame" x="439" y="195" width="116" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Show Full Path" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
+                    <buttonCell key="cell" type="check" title="Volledig pad" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="3922">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1049,12 +1049,12 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L1c-Vw-kBP">
                     <rect key="frame" x="790" y="87" width="84" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="Macros" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="6cg-gI-gSa" id="MS1-8n-5dm">
+                    <popUpButtonCell key="cell" type="push" title="Macro's" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="6cg-gI-gSa" id="MS1-8n-5dm">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="wGV-cI-94F">
                             <items>
-                                <menuItem title="Macros" hidden="YES" id="6cg-gI-gSa"/>
+                                <menuItem title="Macro's" hidden="YES" id="6cg-gI-gSa"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -1191,7 +1191,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qYp-2D-7n2">
                     <rect key="frame" x="15" y="23" width="92" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="ColorIndex" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2L3-if-tnw">
+                    <buttonCell key="cell" type="check" title="Kleurindex" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2L3-if-tnw">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1298,7 +1298,7 @@ DQ
             </subviews>
             <point key="canvasLocation" x="-897" y="-3742"/>
         </customView>
-        <window title="PageNumber" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="457" userLabel="PageNumberPanel" customClass="NSPanel">
+        <window title="Paginanummer" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="457" userLabel="PageNumberPanel" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="371" y="652" width="198" height="67"/>
@@ -1375,7 +1375,7 @@ DQ
                 </subviews>
             </view>
         </window>
-        <window title="Panel" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="471" userLabel="MagnifyPanel" customClass="NSPanel">
+        <window title="Paneel" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="471" userLabel="MagnifyPanel" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="592" y="556" width="143" height="63"/>
@@ -1450,7 +1450,7 @@ DQ
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="558">
                     <rect key="frame" x="12" y="42" width="82" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Encoding:" id="3881">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Codering:" id="3881">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1474,27 +1474,27 @@ DQ
         </customView>
         <menu title="Menu" id="577" userLabel="KitMouseMode">
             <items>
-                <menuItem title="Scroll" tag="1" id="580">
+                <menuItem title="Scrollen" tag="1" id="580">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3695"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Select  Text" tag="2" id="838">
+                <menuItem title="Tekst selecteren" tag="2" id="838">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3696"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Magnify" tag="3" id="581">
+                <menuItem title="Vergroten" tag="3" id="581">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3697"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Magnify (Large)" tag="4" id="578">
+                <menuItem title="Vergroten (groter)" tag="4" id="578">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3698"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Select  Pdf" tag="5" id="579">
+                <menuItem title="PDF selecteren" tag="5" id="579">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3699"/>
                     </connections>
@@ -1502,11 +1502,11 @@ DQ
             </items>
         </menu>
         <customView id="582" userLabel="ImageExportType">
-            <rect key="frame" x="0.0" y="0.0" width="304" height="36"/>
+            <rect key="frame" x="0.0" y="0.0" width="337" height="36"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="593">
-                    <rect key="frame" x="114" y="8" width="173" height="26"/>
+                    <rect key="frame" x="114" y="8" width="210" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <popUpButtonCell key="cell" type="push" title="JPEG (hoge kwaliteit)" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="11" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="596" id="3883">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1854,7 +1854,7 @@ DQ
                 </customView>
             </subviews>
         </customView>
-        <window title="Panel" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="802" userLabel="MagnifyPanelKit" customClass="NSPanel">
+        <window title="Paneel" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="802" userLabel="MagnifyPanelKit" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="757" y="470" width="150" height="63"/>
@@ -1919,7 +1919,7 @@ DQ
                 </subviews>
             </view>
         </window>
-        <window title="PageNumber" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="810" userLabel="PagePanelKit" customClass="NSPanel">
+        <window title="Paginanummer" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="810" userLabel="PagePanelKit" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="87" y="331" width="198" height="67"/>
@@ -2020,23 +2020,23 @@ DQ
         </menu>
         <menu id="Oqj-vP-Qfn">
             <items>
-                <menuItem title="Selections" id="Als-gv-Hsw">
+                <menuItem title="Selecties" id="Als-gv-Hsw">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Selections" id="Mge-cO-hDK">
+                    <menu key="submenu" title="Selecties" id="Mge-cO-hDK">
                         <items>
-                            <menuItem title="Strikeout" id="c9w-n7-sQL">
+                            <menuItem title="Doorgehaald" id="c9w-n7-sQL">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="strikeoutAnnotation:" target="-1" id="KEa-21-5Nc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Highlight" id="ArZ-fq-6PG">
+                            <menuItem title="Tekstmarkering" id="ArZ-fq-6PG">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="highlightAnnotation:" target="-1" id="FPo-du-Kwz"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Underline" id="nvm-oj-Prl">
+                            <menuItem title="Onderstreept" id="nvm-oj-Prl">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="underlineAnnotation:" target="-1" id="HAe-p2-w2s"/>
@@ -2045,35 +2045,35 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Objects" id="Aw7-Jb-gse">
+                <menuItem title="Objecten" id="Aw7-Jb-gse">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Objects" id="fmD-8Z-eEL">
+                    <menu key="submenu" title="Objecten" id="fmD-8Z-eEL">
                         <items>
-                            <menuItem title="Square" id="jtl-18-Zmj">
+                            <menuItem title="Vierkant" id="jtl-18-Zmj">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="squareAnnotation:" target="-1" id="2nf-qX-Hg8"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Bordered Square" id="soM-tp-UXM">
+                            <menuItem title="Vierkant met rand" id="soM-tp-UXM">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="bsquareAnnotation:" target="-1" id="Dt1-ZD-Kvc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Circle" id="wia-Eq-44B">
+                            <menuItem title="Cirkel" id="wia-Eq-44B">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="circleAnnotation:" target="-1" id="xdH-3x-ars"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Bordered Circle" id="rWd-JQ-hLP">
+                            <menuItem title="Cirkel met rand" id="rWd-JQ-hLP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="bcircleAnnotation:" target="-1" id="cCU-vT-9mE"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Arrow" id="Jj0-rh-OuT">
+                            <menuItem title="Pijl" id="Jj0-rh-OuT">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="arrowAnnotation:" target="-1" id="dMx-6s-hUZ"/>
@@ -2082,23 +2082,23 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Strings" id="L4E-bT-IHi">
+                <menuItem title="Tekstobjecten" id="L4E-bT-IHi">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Strings" id="Sga-HQ-VvU">
+                    <menu key="submenu" title="Tekstobjecten" id="Sga-HQ-VvU">
                         <items>
-                            <menuItem title="Text" id="dP2-ja-qjL">
+                            <menuItem title="Tekst" id="dP2-ja-qjL">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="textAnnotation:" target="-1" id="AHl-sV-jdO"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Bordered Text" id="dnx-su-M6R">
+                            <menuItem title="Tekst met rand" id="dnx-su-M6R">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="btextAnnotation:" target="-1" id="L50-vY-tp6"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Popup" id="Sg3-Do-n1Q">
+                            <menuItem title="Pop-up" id="Sg3-Do-n1Q">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="popupAnnotation:" target="-1" id="PRZ-FT-D16"/>
@@ -2107,23 +2107,23 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Panels" id="LH9-8q-tdt">
+                <menuItem title="Vensters" id="LH9-8q-tdt">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Panels" id="sqg-HA-zWs">
+                    <menu key="submenu" title="Vensters" id="sqg-HA-zWs">
                         <items>
-                            <menuItem title="Open Color Panel" id="fnG-eJ-Mms">
+                            <menuItem title="Toon kleuren" id="fnG-eJ-Mms">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showColorPanel:" target="-1" id="UZE-fj-5ZH"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open Font Panel" id="Qd1-xc-RgS">
+                            <menuItem title="Toon lettertypen" id="Qd1-xc-RgS">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showFontPanel:" target="-1" id="wXQ-UC-fhP"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open Text Panel" id="qf7-Ei-fJf">
+                            <menuItem title="Toon tekstvenster" id="qf7-Ei-fJf">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showTextPanel:" target="-1" id="6xf-dx-cFz"/>
@@ -2132,19 +2132,19 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Set Run Mode" id="NUh-8w-hL3">
+                <menuItem title="Stel gebruiksmodus in" id="NUh-8w-hL3">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="setRunMode:" target="-1" id="xoZ-4Q-3Td"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Save Annotations" id="2SQ-c4-92s">
+                <menuItem title="Bewaar annotaties" id="2SQ-c4-92s">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="saveAnnotations:" target="-1" id="cpl-1o-MNs"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Remove Streams" id="6cs-vp-9hq">
+                <menuItem title="Verwijder streams" id="6cs-vp-9hq">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="removeStreams:" target="-1" id="Zf5-Da-HHH"/>
@@ -2213,7 +2213,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nS2-h4-yOJ">
                         <rect key="frame" x="503" y="512" width="105" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Redo" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GQe-w1-AvU">
+                        <buttonCell key="cell" type="push" title="Vernieuw" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GQe-w1-AvU">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2222,9 +2222,9 @@ DQ
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7c1-b2-sVS">
-                        <rect key="frame" x="18" y="560" width="98" height="18"/>
+                        <rect key="frame" x="18" y="560" width="113" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="all warnings" bezelStyle="regularSquare" imagePosition="left" inset="2" id="d89-Ut-iQj">
+                        <buttonCell key="cell" type="check" title="alle meldingen" bezelStyle="regularSquare" imagePosition="left" inset="2" id="d89-Ut-iQj">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2232,7 +2232,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZLT-bL-t4M">
                         <rect key="frame" x="18" y="540" width="121" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="underfull boxes" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Keb-F6-Hj0">
+                        <buttonCell key="cell" type="check" title="ondervolle box" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Keb-F6-Hj0">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2240,7 +2240,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f4N-T7-9kn">
                         <rect key="frame" x="18" y="520" width="111" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="overfull boxes" bezelStyle="regularSquare" imagePosition="left" inset="2" id="JaY-dA-dfb">
+                        <buttonCell key="cell" type="check" title="overvolle box" bezelStyle="regularSquare" imagePosition="left" inset="2" id="JaY-dA-dfb">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2248,7 +2248,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EA7-3g-iMk">
                         <rect key="frame" x="18" y="500" width="142" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="reference warnings" bezelStyle="regularSquare" imagePosition="left" inset="2" id="lIj-IK-ErI">
+                        <buttonCell key="cell" type="check" title="verwijzingen" bezelStyle="regularSquare" imagePosition="left" inset="2" id="lIj-IK-ErI">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2256,7 +2256,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hl1-V1-KGV">
                         <rect key="frame" x="179" y="560" width="143" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="horiz box warnings" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Goq-ys-htC">
+                        <buttonCell key="cell" type="check" title="hbox-meldingen" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Goq-ys-htC">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2264,7 +2264,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zfM-6e-lL9">
                         <rect key="frame" x="179" y="540" width="135" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="vert box warnings" bezelStyle="regularSquare" imagePosition="left" inset="2" id="xqa-K2-gK5">
+                        <buttonCell key="cell" type="check" title="vbox-meldingen" bezelStyle="regularSquare" imagePosition="left" inset="2" id="xqa-K2-gK5">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2272,7 +2272,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qfi-8x-aXT">
                         <rect key="frame" x="179" y="520" width="126" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="font information" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Yok-tu-3Tf">
+                        <buttonCell key="cell" type="check" title="lettertype-info" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Yok-tu-3Tf">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2280,7 +2280,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jh2-7E-CJZ">
                         <rect key="frame" x="179" y="500" width="110" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="end of log file" bezelStyle="regularSquare" imagePosition="left" inset="2" id="H0k-dh-YJn">
+                        <buttonCell key="cell" type="check" title="einde van log" bezelStyle="regularSquare" imagePosition="left" inset="2" id="H0k-dh-YJn">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2288,7 +2288,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D2e-Ql-53E">
                         <rect key="frame" x="336" y="560" width="109" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title=".tex files used" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Hbv-qU-KG8">
+                        <buttonCell key="cell" type="check" title=".tex gebruikt" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Hbv-qU-KG8">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2296,7 +2296,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mw7-Vv-Rk1">
                         <rect key="frame" x="336" y="540" width="159" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title=".sty and .cls files used" bezelStyle="regularSquare" imagePosition="left" inset="2" id="xcH-wf-hDQ">
+                        <buttonCell key="cell" type="check" title=".sty en .cls gebruikt" bezelStyle="regularSquare" imagePosition="left" inset="2" id="xcH-wf-hDQ">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2304,7 +2304,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iTL-2M-tAA">
                         <rect key="frame" x="336" y="520" width="101" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="images used" bezelStyle="regularSquare" imagePosition="left" inset="2" id="W29-zr-IQU">
+                        <buttonCell key="cell" type="check" title="afbeeldingen" bezelStyle="regularSquare" imagePosition="left" inset="2" id="W29-zr-IQU">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2312,7 +2312,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uWQ-2D-nWh">
                         <rect key="frame" x="336" y="500" width="153" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="package information" bezelStyle="regularSquare" imagePosition="left" inset="2" id="gkQ-Q1-mKG">
+                        <buttonCell key="cell" type="check" title="pakketinfo" bezelStyle="regularSquare" imagePosition="left" inset="2" id="gkQ-Q1-mKG">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2320,7 +2320,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rin-gY-03n">
                         <rect key="frame" x="508" y="560" width="74" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="errors" bezelStyle="regularSquare" imagePosition="left" inset="2" id="qT1-rk-8A6">
+                        <buttonCell key="cell" type="check" title="fouten" bezelStyle="regularSquare" imagePosition="left" inset="2" id="qT1-rk-8A6">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2377,7 +2377,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2432">
                         <rect key="frame" x="46" y="17" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3896">
+                        <buttonCell key="cell" type="push" title="Annuleer" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3896">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -2461,7 +2461,7 @@ Gw
                 </subviews>
             </view>
         </window>
-        <window title="Full Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="FullSplitWindow" animationBehavior="default" id="eh1-KF-Iys" customClass="TSFullSplitWindow">
+        <window title="Volledig venster" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="FullSplitWindow" animationBehavior="default" id="eh1-KF-Iys" customClass="TSFullSplitWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -2503,7 +2503,7 @@ Gw
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Jf-rl-ekG">
                     <rect key="frame" x="12" y="45" width="82" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Encoding:" id="Vh6-Sy-3VD">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Codering:" id="Vh6-Sy-3VD">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2523,9 +2523,9 @@ Gw
                     </popUpButtonCell>
                 </popUpButton>
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jCK-qQ-3AS">
-                    <rect key="frame" x="10" y="11" width="82" height="17"/>
+                    <rect key="frame" x="-2" y="11" width="94" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="File Type:" id="Jpd-zh-kZ7">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Bestandstype:" id="Jpd-zh-kZ7">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2597,31 +2597,31 @@ Gw
                     </buttonCell>
                     <cells>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="Scroll" tag="1" inset="2" id="Itf-wT-2Xl">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="Scrollen" tag="1" inset="2" id="Itf-wT-2Xl">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Text" tag="2" inset="2" id="Lfg-78-nhT">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst" tag="2" inset="2" id="Lfg-78-nhT">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify" tag="3" inset="2" id="Vcx-kB-Cr4">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten" tag="3" inset="2" id="Vcx-kB-Cr4">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify (Large)" tag="4" inset="2" id="RO8-Xz-u2g">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groter)" tag="4" inset="2" id="RO8-Xz-u2g">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Select" tag="5" inset="2" id="ZP5-Xg-ZHD">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecteren" tag="5" inset="2" id="ZP5-Xg-ZHD">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2655,31 +2655,31 @@ Gw
                     </buttonCell>
                     <cells>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="Scroll" tag="1" inset="2" id="dSl-FI-1LH">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="Scrollen" tag="1" inset="2" id="dSl-FI-1LH">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Text" tag="2" inset="2" id="FHc-KC-TYv">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Tekst" tag="2" inset="2" id="FHc-KC-TYv">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify" tag="3" inset="2" id="G5P-wZ-lN2">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten" tag="3" inset="2" id="G5P-wZ-lN2">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify (Large)" tag="4" inset="2" id="YAs-Ct-IDd">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Vergroten (groter)" tag="4" inset="2" id="YAs-Ct-IDd">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Select" tag="5" inset="2" id="WU5-V5-cnL">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Selecteren" tag="5" inset="2" id="WU5-V5-cnL">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2700,7 +2700,7 @@ Gw
             </subviews>
             <point key="canvasLocation" x="-1057" y="-4046"/>
         </customView>
-        <window title="HTML Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="HTML Window" animationBehavior="default" toolbarStyle="expanded" id="bDj-No-YCO" customClass="TSHTMLWindow">
+        <window title="HTML-venster" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="HTML Window" animationBehavior="default" toolbarStyle="expanded" id="bDj-No-YCO" customClass="TSHTMLWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="480" height="270"/>
@@ -2752,7 +2752,7 @@ Gw
             </view>
             <point key="canvasLocation" x="813" y="-117"/>
         </box>
-        <window identifier="TextPanel" title="Text" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="TextAnnotationWindow" animationBehavior="default" id="V91-iY-TxV" customClass="NSPanel">
+        <window identifier="TextPanel" title="Tekst" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="TextAnnotationWindow" animationBehavior="default" id="V91-iY-TxV" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1812" y="261" width="370" height="157"/>
@@ -2806,7 +2806,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qpa-dw-WgT">
                         <rect key="frame" x="18" y="12" width="57" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="radio" title="Left" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Skw-ao-tCm">
+                        <buttonCell key="cell" type="radio" title="Links" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Skw-ao-tCm">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                             <connections>
@@ -2815,9 +2815,9 @@ DQ
                         </buttonCell>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gvA-cf-BED">
-                        <rect key="frame" x="79" y="12" width="67" height="18"/>
+                        <rect key="frame" x="79" y="12" width="79" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="radio" title="Center" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="O3k-Lj-xzk">
+                        <buttonCell key="cell" type="radio" title="Centreer" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="O3k-Lj-xzk">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                             <connections>
@@ -2828,7 +2828,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YMm-eg-Had">
                         <rect key="frame" x="158" y="12" width="68" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="radio" title="Right" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="OjU-gx-S4S">
+                        <buttonCell key="cell" type="radio" title="Rechts" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="OjU-gx-S4S">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                             <connections>
@@ -2840,7 +2840,7 @@ DQ
             </view>
             <point key="canvasLocation" x="1621" y="819.5"/>
         </window>
-        <window title="Annotation Panel" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="AnnotationPanel" animationBehavior="default" id="7W5-C2-wvj" customClass="NSPanel">
+        <window title="Annotaties" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="AnnotationPanel" animationBehavior="default" id="7W5-C2-wvj" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="272" y="172" width="414" height="194"/>
@@ -2852,7 +2852,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gzY-GP-hmi">
                         <rect key="frame" x="18" y="167" width="88" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Edit Mode" bezelStyle="regularSquare" imagePosition="left" inset="2" id="rM2-76-yAZ">
+                        <buttonCell key="cell" type="check" title="Wijzig" bezelStyle="regularSquare" imagePosition="left" inset="2" id="rM2-76-yAZ">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2863,7 +2863,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SJZ-EE-qe6">
                         <rect key="frame" x="13" y="129" width="140" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Show Color Panel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jSr-k2-mkD">
+                        <buttonCell key="cell" type="push" title="Toon kleuren" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jSr-k2-mkD">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2874,7 +2874,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rlo-R4-82t">
                         <rect key="frame" x="13" y="97" width="135" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Show Font Panel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sfU-k8-SYy">
+                        <buttonCell key="cell" type="push" title="Toon lettertypen" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="sfU-k8-SYy">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <connections>
@@ -2885,7 +2885,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yu9-1p-yZ5">
                         <rect key="frame" x="13" y="21" width="136" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Remove Streams" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="d6w-lN-Rey">
+                        <buttonCell key="cell" type="push" title="Verwijder streams" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="d6w-lN-Rey">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -3030,7 +3030,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MjW-pf-rXz">
                         <rect key="frame" x="13" y="59" width="140" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Show Text Panel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8dC-PC-4lD">
+                        <buttonCell key="cell" type="push" title="Toon tekstvenster" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8dC-PC-4lD">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -3041,7 +3041,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SOV-HH-BRz">
                         <rect key="frame" x="136" y="159" width="140" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Save Annotations" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="I4P-Ls-WIM">
+                        <buttonCell key="cell" type="push" title="Bewaar annotaties" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="I4P-Ls-WIM">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>

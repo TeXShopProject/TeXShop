@@ -1,9 +1,9 @@
 
     tiLabelAutoComplete = "\U6309\U952e\U7ed1\U5b9a";
-    tiLabelBackForthKIT = "\U540e\U9000/\U524d\U8fdb";
-    tiLabelBackForthKITSplit = "\U540e\U9000/\U524d\U8fdb";
+    tiLabelBackForthKIT = "返回/前进";
+    tiLabelBackForthKITSplit = "返回/前进";
     tiLabelBibTeX = BibTeX;
-    tiLabelColorIndex = ColorIndex;
+    tiLabelColorIndex = "索引着色";
     tiLabelConTeX = ConTeXt;
     tiLabelDrawerKIT = "\U8f85\U52a9\U9762\U677f";
     tiLabelGotoPage = "\U8f6c\U5230\U9875";
@@ -14,7 +14,7 @@
     tiLabelMacrosKIT = "\U5b8f";
     tiLabelMagnification = "\U653e\U5927";
     tiLabelMagnificationKIT = "\U653e\U5927";
-    tiLabelMakeIndex = "Make Index";
+    tiLabelMakeIndex = "MakeIndex";
     tiLabelMetaFont = MetaFont;
     tiLabelMetaPost = MetaPost;
     tiLabelMouseMode = "\U9f20\U6807\U6a21\U5f0f";
@@ -28,7 +28,7 @@
     tiLabelProgram = "\U7a0b\U5e8f";
     tiLabelProgramEE = "\U7a0b\U5e8f";
     tiLabelProgramKIT = "\U7a0b\U5e8f";
-    tiLabelSave = "\U5b58\U50a8";
+    tiLabelSave = "保存";
     tiLabelShowFullPath = "\U5b8c\U6574\U8def\U5f84";
     tiLabelSplit = "\U5206\U5272\U7a97\U53e3";
     tiLabelSplitKIT = "\U5206\U5272\U7a97\U53e3";
@@ -41,10 +41,10 @@
     tiLabelTypesetEE = "\U6392\U7248";
     tiLabelTypesetKIT = "\U6392\U7248";
     tiPaletteLabelAutoComplete = "\U6309\U952e\U7ed1\U5b9a";
-    tiPaletteLabelBackForthKIT = "\U540e\U9000/\U524d\U8fdb";
-    tiPaletteLabelBackForthKITSplit = "\U540e\U9000/\U524d\U8fdb";
+    tiPaletteLabelBackForthKIT = "返回/前进";
+    tiPaletteLabelBackForthKITSplit = "返回/前进";
     tiPaletteLabelBibTeX = BibTeX;
-    tiPaletteLabelColorIndex = "Color Index";
+    tiPaletteLabelColorIndex = "索引着色";
     tiPaletteLabelConTeX = ConTeXt;
     tiPaletteLabelDrawerKIT = "\U8f85\U52a9\U9762\U677f";
     tiPaletteLabelGotoPage = "\U8f6c\U5230\U9875";
@@ -55,7 +55,7 @@
     tiPaletteLabelMacrosKIT = "\U5b8f";
     tiPaletteLabelMagnification = "\U653e\U5927";
     tiPaletteLabelMagnificationKIT = "\U653e\U5927";
-    tiPaletteLabelMakeIndex = "Make Index";
+    tiPaletteLabelMakeIndex = "MakeIndex";
     tiPaletteLabelMetaFont = MetaFont;
     tiPaletteLabelMetaPost = MetaPost;
     tiPaletteLabelMouseMode = "\U9f20\U6807\U6a21\U5f0f";
@@ -69,7 +69,7 @@
     tiPaletteLabelProgram = "\U7a0b\U5e8f";
     tiPaletteLabelProgramEE = "\U7a0b\U5e8f";
     tiPaletteLabelProgramKIT = "\U7a0b\U5e8f";
-    tiPaletteLabelSave = "\U5b58\U50a8";
+    tiPaletteLabelSave = "保存";
     tiPaletteLabelShowFullPath = "\U5b8c\U6574\U8def\U5f84";
     tiPaletteLabelSplit = "\U5206\U5272\U7a97\U53e3";
     tiPaletteLabelSplitKIT = "\U5206\U5272\U7a97\U53e3";
@@ -85,7 +85,7 @@
     tiToolTipBackForthKIT = "\U540e\U9000\U524d\U8fdb\U6309\U94ae";
     tiToolTipBackForthKITSplit = "\U540e\U9000\U524d\U8fdb\U6309\U94ae";
     tiToolTipBibTeX = "\U8fd0\U884c BibTeX";
-    tiToolTipColorIndex = "Color Index \U547d\U4ee4";
+    tiToolTipColorIndex = "为索引命令着色";
     tiToolTipConTeX = "\U8fd0\U884c ConTeXt";
     tiToolTipDrawerKIT = "\U5207\U6362\U8f85\U52a9\U9762\U677f";
     tiToolTipGotoPage = "\U8f6c\U5230\U9875";
@@ -96,7 +96,7 @@
     tiToolTipMacrosKIT = "\U63d2\U5165\U5b8f";
     tiToolTipMagnification = "\U8bbe\U7f6e\U9875\U9762\U653e\U5927\U7387";
     tiToolTipMagnificationKIT = "\U8bbe\U7f6e\U9875\U9762\U653e\U5927\U7387";
-    tiToolTipMakeIndex = "Make Index";
+    tiToolTipMakeIndex = "运行 MakeIndex";
     tiToolTipMetaFont = "\U8fd0\U884c MetaFont";
     tiToolTipMetaPost = "\U8fd0\U884c MetaPost";
     tiToolTipMouseMode = "\U66f4\U6539\U9f20\U6807\U6a21\U5f0f";
@@ -112,7 +112,7 @@
     tiToolTipProgram = "\U9009\U62e9\U6392\U7248\U7a0b\U5e8f";
     tiToolTipProgramEE = "\U9009\U62e9\U6392\U7248\U7a0b\U5e8f";
     tiToolTipProgramKIT = "\U9009\U62e9\U6392\U7248\U7a0b\U5e8f";
-    tiToolTipSave = "\U5b58\U50a8\U6587\U6863\U6e90\U4ee3\U7801";
+    tiToolTipSave = "保存文稿的源代码";
     tiToolTipShowFullPath = "\U5728\U7a97\U53e3\U6807\U9898\U4e2d\U663e\U793a\U5b8c\U6574\U8def\U5f84";
     tiToolTipSplit = "\U5207\U6362\U7a97\U53e3\U5206\U5272";
     tiToolTipSplitKIT = "\U5207\U6362\U7a97\U53e3\U5206\U5272";
@@ -191,8 +191,8 @@
     tiPaletteLabelUpdateSplit         = "更新";
     tiToolTipUpdateSplit              = "更新标签";
     
-    tiLabelHtmlPreviousPageButton                = "后退";
-    tiPaletteLabelHtmlPreviousPageButton            = "后退";
+    tiLabelHtmlPreviousPageButton                = "返回";
+    tiPaletteLabelHtmlPreviousPageButton            = "返回";
     tiToolTipHtmlPreviousPageButton            = "后退";
 
     tiLabelHtmlNextPageButton                = "前进";
@@ -213,3 +213,26 @@
     ExperimentZoomOut = "缩小";
     ExperimentZoomIn = "放大";
     ExperimentZoomToContent = "缩放到内容";
+
+"tiLabelAutoCompleteSplit" = "按键绑定";
+"Page Layout" = "页面布局";
+"tiLabelTSPreviewAppearance" = "外观";
+"Continuous Two Pages" = "对开多页";
+"Restore Document Settings" = "恢复文稿设置";
+"Single Page" = "单页";
+"PreviewAppearanceDark" = "深色";
+"PreviewAppearanceLight" = "浅色";
+"Two Pages" = "双页";
+"PreviewAppearanceSystem" = "系统";
+"tiPaletteLabelAutoCompleteSplit" = "按键绑定";
+"tiToolTipAutoCompleteSplit" = "切换按键绑定";
+"Left to right" = "从左到右";
+"Two-Page Arrangement" = "双页模式";
+"Applies when displaying two pages" = "显示双页时适用";
+"Continuous" = "多页";
+"Right to left" = "从右到左";
+"tiToolTipColorIndexSplit" = "为索引命令着色";
+"Show first page alone as cover" = "将第一页单独显示为封面";
+
+"tiLabelColorIndexSplit" = "索引着色";
+"tiPaletteLabelColorIndexSplit" = "索引着色";

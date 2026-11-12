@@ -3,17 +3,17 @@
 /* Tags menu */
 "Tags" = "Etichette";
 "Typeset" = "Compilatore";
-"Save" = "Registra";
+"Save" = "Salva";
 "Print..." = "Stampa...";
 "Print Source..." = "Stampa Sorgente...";
 "Set Project Root..." = "Definisci Documento Principale...";
 "LaTeX Panel..." = "Pannello LaTeX...";
 "Close LaTeX Panel" = "Chiudi Pannello LaTeX";
-"Matrix Panel..." = "Pannello matrici...";
-"Close Matrix Panel" = "Chiudi Pannello matrici";
+"Matrix Panel..." = "Pannello Matrici...";
+"Close Matrix Panel" = "Chiudi Pannello Matrici";
 "Open for Preview..." = "Apri per Anteprima...";
 "Open for Editing..." = "Apri per Editare...";
-"File" = "Composizione";
+"File" = "File";
 "Goto Error" = "Vai all'Errore";
 "RotateClockwise" = "Ruota in Senso Orario";
 "RotateCounterclockwise" = "Ruota in Senso Antiorario";
@@ -28,14 +28,14 @@
 "Save selection to file..." = "Salva la selezione...";
 "Convert \\yen to \\ in Pasteboard" = "Converti \\yen in \\ nel Pasteboard";
 "Convert \\ to \\yen in Pasteboard" = "Converti \\ in \\yen nel Pasteboard"; 
-"Edit" = "Composizione";
+"Edit" = "Modifica";
 "Warning" = "Avviso";
 "Don't Save" = "Non registrare";
 "Cancel" = "Annulla";
 "Do you want to save macros?" = "Vuoi salvare le macro?";
 "Save Spot" = "Salva Spot";
-"Template" = "Template";
-"Typing" = "Typing";
+"Template" = "Modello";
+"Typing" = "Digitazione";
 "AutoComplete" = "Completa automaticamente";   //Should be translation of "Key Bindings", even in English
 "Page Number" = "Numero di pagina";
 "Page Number Panel" = "Pannello Numero di pagina";
@@ -43,7 +43,7 @@
 "Omit Shell Escape" = "Ometti Shell Escape";
 "Warning: Using Shell Escape" = "Avviso: si sta usando il comando di Shell Escape";
 "Preview" = "Anteprima";
-"Display Format" = "Vista Documento";// mitsu 1.29b
+"Display Format" = "Vista documento";// mitsu 1.29b
 "Magnification" = "Ingrandimento";// mitsu 1.29b
 "Copy Format" = "Formato di copia";// mitsu 1.29b
 "ToolbarItems" = "Elementi della Barra degli Strumenti";
@@ -54,34 +54,34 @@
 "%@\n\nCharacters: %d" = "%@\n\Caratteri: %d";
 "The file encoding changed; characters can be lost if the wrong encoding is used." = "La codifica del file è cambiata; alcuni caratteri possono essere persi se si usa una codifica non appropriata.";
 "Currently open files retain their old encoding." = "I file attualmente aperti mantengono la propria codifica.";
-"Drag && Drop" = "Drag && Drop";
+"Drag && Drop" = "Trascinamento";
 "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "Il link /Library/TeX/texbin non esiste. Per correggere il problema, visita https://tug.org/mactex e installa MacTeX o Basic TeX (2015 o oltre).";
 "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ non esiste. TeXShop è un front end per TeX, ma richiede anche l’installazione di una distribuzione TeX. Forse tale distribuzione non è stata installata oppure è stata rimossa durante un aggiornamento di sistema. Se è così, visita https://tug.org/mactex e segui le istruzioni per installare MacTeX o BasicTeX.";
-"Can't find required tool." = "Can't find required tool.";
-"Typesetting engine cannot be found." = "Typesetting engine cannot be found.";
-"The source LaTeX document cannot be found." = "The source LaTeX document cannot be found.";
-"Sync Marks" = "Sync Marks";
-"%@ does not exist." = "%@ does not exist.";
-"%@ does not have the executable bit set." = "%@ does not have the executable bit set.";
-"This file was opened with IsoLatin9 encoding." = "This file was opened with IsoLatin9 encoding.";
-"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again.";
-"Error" = "Error";
-"There was an error checking for updates." = "There was an error checking for updates.";
-"Your copy of TeXShop is up-to-date" = "Your copy of TeXShop is up-to-date";
-"You have the most recent version of TeXShop." = "You have the most recent version of TeXShop.";
-"New version available" = "New version available";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "A new version of TeXShop is available (version %@). Would you like to download it now?";
-"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead.";
-"Hard Wrap" = "Hard Wrap";
-"Newline Removal" = "Newline Removal";
-"Color Index" = "Color Index";
+"Can't find required tool." = "Impossibile trovare lo strumento richiesto.";
+"Typesetting engine cannot be found." = "Impossibile trovare il motore di composizione.";
+"The source LaTeX document cannot be found." = "Impossibile trovare il documento sorgente LaTeX.";
+"Sync Marks" = "Segni sync";
+"%@ does not exist." = "%@ non esiste.";
+"%@ does not have the executable bit set." = "%@ non ha il permesso di esecuzione.";
+"This file was opened with IsoLatin9 encoding." = "Questo file è stato aperto con la codifica IsoLatin9.";
+"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Impossibile aprire il file con la codifica %@ perché non è stato salvato con questa codifica. Per aprirlo con un’altra codifica, chiudi la finestra e aprilo di nuovo.";
+"Error" = "Errore";
+"There was an error checking for updates." = "Si è verificato un errore durante la ricerca di aggiornamenti.";
+"Your copy of TeXShop is up-to-date" = "La tua copia di TeXShop è aggiornata";
+"You have the most recent version of TeXShop." = "Hai la versione più recente di TeXShop.";
+"New version available" = "Nuova versione disponibile";
+"A new version of TeXShop is available (version %@). Would you like to download it now?" = "È disponibile una nuova versione di TeXShop (versione %@). Vuoi scaricarla ora?";
+"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Questa versione di TeXShop richiede Mac OS X 10.4 o versione successiva. Usa invece TeXShop 1.37.";
+"Hard Wrap" = "A capo forzato";
+"Newline Removal" = "Rimozione a capo";
+"Color Index" = "Colora indice";
 "Help" = "Aiuto";
-"TeXShop Demos" = "TeXShop Demos";
-"Sync" = "Sync";
-"ShowFullPath" = "ShowFullPath";
-"Close Current Environment" = "Close Current Environment"; // Terada
-"Your current setting of %@ will be replaced. OK?" = "Your current setting of %@ will be replaced. OK?"; // Terada
-"Convert" = "Convert";
+"TeXShop Demos" = "Demo di TeXShop";
+"Sync" = "Sincronizza";
+"ShowFullPath" = "Mostra percorso completo";
+"Close Current Environment" = "Chiudi Ambiente Corrente"; // Terada
+"Your current setting of %@ will be replaced. OK?" = "L’impostazione attuale di %@ verrà sostituita. Continuare?"; // Terada
+"Convert" = "Converti";
 "The program " = "Il programma ";
 " does not exist." = " non esiste.";
 "failed to copy selection." = "non è possibile copiare la selezione.";
@@ -102,15 +102,15 @@
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "I filmati dimostrativi richiedono Mac OS 10.9, Mavericks, o superiore.";
 "Source" = "Sorgente";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Scrivi un testo d’esempio qui.\nScrivi su più linee per controllare\nla spaziatura interlinea.";
-"<<Close All - unlocalized>>" = "Close All";
-"Close All" = "Close All";
+"<<Close All - unlocalized>>" = "Chiudi tutto";
+"Close All" = "Chiudi tutto";
 "File Already Exists" = "Il file esiste già";
 "Labels" = "Etichette";
 "New Tag" = "Nuovo contrassegno";
 "Split Window" = "Dividi finestra";
 "New Document" = "Nuovo documento";
 "Link Popups" = "Collegamento popup";
-"Syntax Color expl3 Code" = "Sintassi Colore espl Codice";
+"Syntax Color expl3 Code" = "Colorazione sintassi codice expl3";
 "PDF File Has No Annotations" = "Il file PDF non ha annotazioni";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
@@ -170,20 +170,20 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "The selected profile is invalid.";
-"Apply Settings Profile?" = "Apply Settings Profile?";
+"The selected profile is invalid." = "Il profilo selezionato non è valido.";
+"Apply Settings Profile?" = "Applicare il profilo di impostazioni?";
 
-"Apply Profile" = "Apply Profile";
-"Settings could not be saved" = "Settings could not be saved";
-"Enter a valid setting" = "Enter a valid setting";
+"Apply Profile" = "Applica profilo";
+"Settings could not be saved" = "Impossibile salvare le impostazioni";
+"Enter a valid setting" = "Inserisci un’impostazione valida";
 
-"Continue Editing" = "Continue Editing";
-"Restore This Field" = "Restore This Field";
-"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Continue Editing" = "Continua a modificare";
+"Restore This Field" = "Ripristina questo campo";
+"The theme could not be saved. Its last saved colors have been restored." = "Impossibile salvare il tema. Sono stati ripristinati gli ultimi colori salvati.";
 "Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Scegli un altro nome per il tema. Non sono consentiti nomi che iniziano con un punto, separatori di percorso, caratteri di controllo o collegamenti simbolici.";
-"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+"The new theme could not be saved. The original theme is unchanged." = "Impossibile salvare il nuovo tema. Il tema originale non è stato modificato.";
 
-"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Riapri Impostazioni o seleziona un tema leggibile prima di modificarlo o duplicarlo.";
 
 "Back" = "Indietro";
 
@@ -213,9 +213,9 @@
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Risultati: %lu";
 
-"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+"The theme “%@” already exists. Replace it?" = "Il tema “%@” esiste già. Vuoi sostituirlo?";
 
-"Replace" = "Replace";
+"Replace" = "Sostituisci";
 
 "General" = "Generali";
 "Documents and Saving" = "Documenti e salvataggio";
@@ -282,21 +282,21 @@
 "Experiment stopped.\n" = "Esperimento interrotto.\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"Assign" = "Assign";
-"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
-"Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
-"Return to Editing" = "Return to Editing";
-"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"Assign" = "Assegna";
+"Assign a shortcut used by macros?" = "Assegnare un’abbreviazione usata dalle macro?";
+"Macro shortcut conflicts" = "Conflitti tra abbreviazioni delle macro";
+"Remove Conflicting Shortcuts and Save" = "Rimuovi le abbreviazioni in conflitto e salva";
+"Return to Editing" = "Torna alla modifica";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Salva comunque (abbreviazioni in conflitto inattive)";
 
-"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
-"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
-"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
-"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
-"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
-"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+"These macro shortcuts will become inactive:" = "Queste abbreviazioni delle macro diventeranno inattive:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "Queste abbreviazioni appena assegnate o modificate si sovrappongono ad altre assegnazioni. L’elenco indica quali abbreviazioni saranno inattive. Puoi modificarle, mantenerle così come sono o rimuovere solo le abbreviazioni modificate in conflitto. I nomi e i contenuti delle macro verranno mantenuti.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Questa abbreviazione è in conflitto con la macro “%@” (%@), la cui abbreviazione sarà inattiva perché compare più avanti.";
+"This shortcut is already used by:\n%@" = "Questa abbreviazione è già usata da:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "Questa abbreviazione è inattiva perché è in conflitto con “%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "Questa abbreviazione è inattiva perché la macro “%@” (%@) la usa per prima.";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Modifica il file condiviso da tutti i documenti. Questa impostazione determina il valore predefinito per i nuovi documenti.";
 
 "The newest detected installation is selected. You can choose another candidate below." = "È selezionata l’installazione più recente rilevata. Puoi sceglierne un’altra qui sotto.";
 
@@ -310,7 +310,7 @@
 
 "Custom menu shortcuts will be removed." = "Le scorciatoie personalizzate dei menu saranno rimosse.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Reimposta motore, modifica, visualizzazione, impostazioni nascoste note e icona del Dock. La selezione dei temi può cambiare. Percorso del motore TeX: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Rilevamento automatico della lingua";

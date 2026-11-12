@@ -15,7 +15,7 @@
 "878.title" = "LaTeX ";
 "880.title" = "TeX";
 "882.title" = "Shell Escape 警告";
-"887.title" = "存储 Postscript 文件";
+"887.title" = "保存 PostScript 文件";
 "889.title" = "(pdf)TeX (默认: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (ghostscript) (默认: /usr/local/bin)";
 "BYT-g3-3p0.title" = "替代路径 (默认: ~/bin/context/tex/texmf-osx-arm64/bin)";

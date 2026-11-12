@@ -3,7 +3,7 @@
 "2wp-bc-jxK.title" = "Texto";
 "2yn-uH-GIB.title" = "Caracteres";
 "55d-iy-6im.title" = "Alfa";
-"7hF-dm-sw0.title" = "Modos";
+"7hF-dm-sw0.title" = "Temas";
 "8Xd-ca-aMe.title" = "Marca";
 "AHf-yj-qsp.title" = "Comando";
 "BCt-qg-0VZ.title" = "Sintaxis";
@@ -12,14 +12,14 @@
 "GMo-pb-qym.title" = "Sincronía";
 "H91-VW-6OK.title" = "expl3";
 "J68-pe-b8Y.title" = "Modo oscuro";
-"J9P-9m-Ehr.title" = "Nuevo modo desde ajustes";
+"J9P-9m-Ehr.title" = "Nuevo tema desde ajustes";
 "JAR-4h-Udf.title" = "msg";
 "M3K-Bv-8B1.title" = "Código";
 "O6J-e1-meg.title" = "Escape";
 "OFK-Td-Bas.title" = "Índice";
 "Odq-MM-jdm.title" = "Comentario";
 "Qws-5c-CFu.title" = "Atributo";
-"Rzg-NG-sNa.title" = " Crear nuevo modo";
+"Rzg-NG-sNa.title" = "Crear nuevo tema";
 "Sb2-DV-n4h.title" = "Invisible";
 "Xkh-fT-Rfi.title" = "Línea actual";
 "Z9i-kS-FGf.title" = "Primer plano";
@@ -42,7 +42,7 @@
 "oZx-IF-VfJ.title" = "PDF";
 "olb-4z-mYu.title" = "Log";
 "pgC-m9-k8Z.title" = "Function";
-"rad-zH-Nv2.title" = "Editar el modo";
+"rad-zH-Nv2.title" = "Tema a editar";
 "rpP-GF-uJp.title" = "Inserción";
 "s3b-sE-3Ix.title" = "Valor";
 "tQ6-6v-qml.title" = "Destello";

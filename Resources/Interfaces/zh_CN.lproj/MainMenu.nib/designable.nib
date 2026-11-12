@@ -115,8 +115,8 @@
                                     <action selector="displayStyleFile:" target="705" id="1075"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="打开最近文件" id="146">
-                                <menu key="submenu" title="打开最近文件" systemMenu="recentDocuments" id="147">
+                            <menuItem title="打开最近使用" id="146">
+                                <menu key="submenu" title="打开最近使用" systemMenu="recentDocuments" id="147">
                                     <items>
                                         <menuItem title="清除菜单" id="148" identifier="TSShortcut.clearRecentDocuments:.0">
                                             <connections>
@@ -152,22 +152,22 @@
                                     <action selector="performClose:" target="-1" id="106"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="存储" keyEquivalent="s" id="78" identifier="TSShortcut.saveDocument:.0">
+                            <menuItem title="保存" keyEquivalent="s" id="78" identifier="TSShortcut.saveDocument:.0">
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="107"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="存储为..." keyEquivalent="S" id="81" identifier="TSShortcut.saveDocumentAs:.0">
+                            <menuItem title="保存为..." keyEquivalent="S" id="81" identifier="TSShortcut.saveDocumentAs:.0">
                                 <connections>
                                     <action selector="saveDocumentAs:" target="-1" id="108"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="存储到..." id="94" identifier="TSShortcut.saveDocumentTo:.0">
+                            <menuItem title="保存到..." id="94" identifier="TSShortcut.saveDocumentTo:.0">
                                 <connections>
                                     <action selector="saveDocumentTo:" target="-1" id="127"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="复原到已存储文件" keyEquivalent="u" id="119" identifier="TSShortcut.revertDocumentToSaved:.0">
+                            <menuItem title="复原到已保存文件" keyEquivalent="u" id="119" identifier="TSShortcut.revertDocumentToSaved:.0">
                                 <connections>
                                     <action selector="revertDocumentToSaved:" target="-1" id="121"/>
                                 </connections>
@@ -216,7 +216,7 @@
                 <menuItem title="编辑" id="15">
                     <menu key="submenu" title="编辑" id="13">
                         <items>
-                            <menuItem title="还原" keyEquivalent="z" id="22" identifier="TSShortcut.undo:.0">
+                            <menuItem title="撤销" keyEquivalent="z" id="22" identifier="TSShortcut.undo:.0">
                                 <connections>
                                     <action selector="undo:" target="-1" id="30"/>
                                 </connections>
@@ -289,12 +289,12 @@
                                                 <action selector="performFindPanelAction:" target="-1" id="1164"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="查找所选内容" tag="7" keyEquivalent="e" id="1133" identifier="TSShortcut.performFindPanelAction:.7">
+                                        <menuItem title="用所选内容查找" tag="7" keyEquivalent="e" id="1133" identifier="TSShortcut.performFindPanelAction:.7">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1161"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="跳到所选部分" keyEquivalent="j" id="1134" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
+                                        <menuItem title="跳到所选内容" keyEquivalent="j" id="1134" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
                                             <connections>
                                                 <action selector="centerSelectionInVisibleArea:" target="-1" id="1163"/>
                                             </connections>
@@ -589,13 +589,13 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="语音" id="976">
                                     <items>
-                                        <menuItem title="开始讲话" id="977" identifier="TSShortcut.startSpeaking:.0">
+                                        <menuItem title="开始朗读" id="977" identifier="TSShortcut.startSpeaking:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="startSpeaking:" target="-1" id="999"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="停止讲话" id="978" identifier="TSShortcut.stopSpeaking:.0">
+                                        <menuItem title="停止朗读" id="978" identifier="TSShortcut.stopSpeaking:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="stopSpeaking:" target="-1" id="996"/>
@@ -808,12 +808,12 @@
                                         <menuItem isSeparatorItem="YES" id="805">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="增大" tag="3" keyEquivalent="=" id="804" identifier="TSShortcut.modifyFont:.3">
+                                        <menuItem title="调大" tag="3" keyEquivalent="=" id="804" identifier="TSShortcut.modifyFont:.3">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="814"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="减小" tag="4" keyEquivalent="-" id="803" identifier="TSShortcut.modifyFont:.4">
+                                        <menuItem title="调小" tag="4" keyEquivalent="-" id="803" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="815"/>
                                             </connections>
@@ -868,7 +868,7 @@
                                                             <action selector="turnOffLigatures:" target="-1" id="JMx-JZ-Yha"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="全部使用" id="zqH-AC-ivP" identifier="TSShortcut.useAllLigatures:.0">
+                                                    <menuItem title="使用全部" id="zqH-AC-ivP" identifier="TSShortcut.useAllLigatures:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useAllLigatures:" target="-1" id="iPC-4Z-OBr"/>
@@ -936,7 +936,7 @@
                                     <action selector="saveSourcePosition:" target="-1" id="686"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="存储源代码窗口的多屏幕位置" id="1168" identifier="TSShortcut.savePortableSourcePosition:.0">
+                            <menuItem title="保存源代码窗口的多屏幕位置" id="1168" identifier="TSShortcut.savePortableSourcePosition:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="savePortableSourcePosition:" target="-1" id="1170"/>
@@ -1043,12 +1043,12 @@
                             <menuItem isSeparatorItem="YES" id="661">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="下一页" id="339" identifier="TSShortcut.previousPage:.0">
+                            <menuItem title="上一页" id="339" identifier="TSShortcut.previousPage:.0">
                                 <connections>
                                     <action selector="previousPage:" target="-1" id="349"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="上一页" id="337" identifier="TSShortcut.nextPage:.0">
+                            <menuItem title="下一页" id="337" identifier="TSShortcut.nextPage:.0">
                                 <connections>
                                     <action selector="nextPage:" target="-1" id="350"/>
                                 </connections>
@@ -1056,7 +1056,7 @@
                             <menuItem isSeparatorItem="YES" id="448">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="后退" id="658" identifier="TSShortcut.goBack:.0">
+                            <menuItem title="返回" id="658" identifier="TSShortcut.goBack:.0">
                                 <connections>
                                     <action selector="goBack:" target="-1" id="664"/>
                                 </connections>
@@ -1208,7 +1208,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="存储选取到文件..." id="603" identifier="TSShortcut.saveSelectionToFile:.0">
+                            <menuItem title="保存选区到文件..." id="603" identifier="TSShortcut.saveSelectionToFile:.0">
                                 <connections>
                                     <action selector="saveSelectionToFile:" target="-1" id="604"/>
                                 </connections>
@@ -1236,7 +1236,7 @@
                                     <action selector="savePreviewPosition:" target="-1" id="689"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="存储预览窗口的多屏幕位置" id="1169" identifier="TSShortcut.savePortablePreviewPosition:.0">
+                            <menuItem title="保存预览窗口的多屏幕位置" id="1169" identifier="TSShortcut.savePortablePreviewPosition:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="savePortablePreviewPosition:" target="-1" id="1171"/>

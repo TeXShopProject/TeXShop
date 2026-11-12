@@ -6756,7 +6756,7 @@
           "48.title": "Fenster immer an fester Position",
           "333.title": "Einzelseiten",
           "45.title": "Merke zuletzt benutzte Position",
-          "637.title": "Tatsächliche Größe",
+          "637.title": "Originalgröße",
           "vOt-2m-d2s.title": "Ein gemeinsames Fenster",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "PDF-Darstellung",
@@ -6788,7 +6788,7 @@
           "31.title": "Fenster immer an fester Position",
           "566.title": "-- DO NOT LOCALIZE THIS! --",
           "582.title": "Apple Suchmaske",
-          "Mo3-zf-BYT.title": "Niemals",
+          "Mo3-zf-BYT.title": "Nie",
           "927.title": "Escape-Taste",
           "236.title": "Bei Programmstart",
           "ts-aware-spelling.ibShadowedToolTip": "Ausschlussregeln für LaTeX-Dokumente verwenden.",
@@ -6817,7 +6817,7 @@
           "32.title": "Merke zuletzt benutzte Position"
         },
         "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Theme-Titel",
+          "PHE-fW-LeB.title": "Titel des Themas",
           "ZJe-8t-Rwa.title": " Titel:",
           "jJY-ql-JXD.title": "Abbrechen",
           "RC5-Ef-iJJ.title": "OK"
@@ -6826,9 +6826,9 @@
           "rpP-GF-uJp.title": "Eingabe",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Fußnote",
-          "rad-zH-Nv2.title": "Zu bearbeitendes Theme",
+          "rad-zH-Nv2.title": "Zu bearbeitendes Thema",
           "Sb2-DV-n4h.title": "Unsichtbar",
-          "7hF-dm-sw0.title": "Themes",
+          "7hF-dm-sw0.title": "Themen",
           "BCt-qg-0VZ.title": "Syntax",
           "Z9i-kS-FGf.title": "Vordergrund",
           "lAb-Fn-Tpo.title": "Marker",
@@ -6841,7 +6841,7 @@
           "Xkh-fT-Rfi.title": "Aktuelle Zeile",
           "jba-58-UZp.title": "__Function",
           "EUV-vV-ULj.title": "XML-Syntax",
-          "29d-sK-CAr.title": "Hellmodus-Theme",
+          "29d-sK-CAr.title": "Hellmodus-Thema",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Attribut",
           "J9P-9m-Ehr.title": "Neu aus Einstellungen",
@@ -6855,14 +6855,14 @@
           "fbI-WL-RD5.title": "Hintergrund",
           "xz1-SF-It8.title": "Klammer",
           "yPD-Wd-E6K.title": "Quelltext",
-          "J68-pe-b8Y.title": "Dunkelmodus-Theme",
+          "J68-pe-b8Y.title": "Dunkelmodus-Thema",
           "M3K-Bv-8B1.title": "Quelltext",
           "Zgh-Qy-lNy.title": "Umgekehrt",
           "H91-VW-6OK.title": "Syntax",
           "ftM-jT-ZvT.title": "Direkt",
           "dAq-I3-00S.title": "Bildkopie",
           "8Xd-ca-aMe.title": "Tag",
-          "Rzg-NG-sNa.title": "Neues Theme erstellen",
+          "Rzg-NG-sNa.title": "Neues Thema erstellen",
           "cPa-5P-FPE.title": "Marker",
           "2yn-uH-GIB.title": "Zeichen",
           "m2P-eK-MuA.title": "Umschlossen",
@@ -8508,7 +8508,7 @@
           "view": "settings.334",
           "kind": "menuItem",
           "property": "title",
-          "value": "Tatsächliche Größe",
+          "value": "Originalgröße",
           "index": 0
         },
         {
@@ -8728,7 +8728,7 @@
           "view": "settings.M7m-FU-qKi",
           "kind": "menuItem",
           "property": "title",
-          "value": "Niemals",
+          "value": "Nie",
           "index": 0
         },
         {
@@ -8940,7 +8940,7 @@
           "view": "settings.PHE-fW-LeB",
           "kind": "window",
           "property": "title",
-          "value": "Theme-Titel"
+          "value": "Titel des Themas"
         },
         {
           "key": "ZJe-8t-Rwa.title",
@@ -8991,7 +8991,7 @@
           "view": "settings.FOl-CH-y3R",
           "kind": "cell",
           "property": "title",
-          "value": "Zu bearbeitendes Theme"
+          "value": "Zu bearbeitendes Thema"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -9005,7 +9005,7 @@
           "view": "settings.7hF-dm-sw0",
           "kind": "view",
           "property": "title",
-          "value": "Themes"
+          "value": "Themen"
         },
         {
           "key": "BCt-qg-0VZ.title",
@@ -9096,7 +9096,7 @@
           "view": "settings.cy6-ep-C9P",
           "kind": "cell",
           "property": "title",
-          "value": "Hellmodus-Theme"
+          "value": "Hellmodus-Thema"
         },
         {
           "key": "cXx-KS-HoL.title",
@@ -9208,7 +9208,7 @@
           "view": "settings.zWc-ak-WM8",
           "kind": "cell",
           "property": "title",
-          "value": "Dunkelmodus-Theme"
+          "value": "Dunkelmodus-Thema"
         },
         {
           "key": "M3K-Bv-8B1.title",
@@ -9257,7 +9257,7 @@
           "view": "settings.8bu-du-vzc",
           "kind": "cell",
           "property": "title",
-          "value": "Neues Theme erstellen"
+          "value": "Neues Thema erstellen"
         },
         {
           "key": "cPa-5P-FPE.title",
@@ -9677,7 +9677,7 @@
       "ThemesHeadings": [
         {
           "id": "heading.settings.7hF-dm-sw0",
-          "title": "Themes"
+          "title": "Themen"
         },
         {
           "id": "heading.settings.ycd-ZH-bzw",
@@ -9874,19 +9874,19 @@
           "889.title": "(pdf)TeX (por defecto: /Library/TeX/texbin OR /usr/texbin)",
           "BYT-g3-3p0.title": "Ruta alternativa (por defecto:  ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configurar automáticamente…",
-          "1071.title": "por defecto",
+          "1071.title": "Por omisión",
           "1020.title": "Comando de búsqueda ",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
           "1030.title": "Por defecto: bibtex",
           "1024.title": "kpsewhich (por defecto: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "por defecto",
+          "1063.title": "Por omisión",
           "878.title": "LaTeX ",
           "882.title": "Avisos shell-escape",
-          "1068.title": "por defecto",
+          "1068.title": "Por omisión",
           "891.title": "Distiller (por defecto: /usr/local/bin)",
-          "1074.title": "por defecto",
+          "1074.title": "Por omisión",
           "887.title": "Guardar el archivo PostScript",
           "215.title": "Rutas",
           "200.title": "TeX + dvips + distiller",
@@ -9992,7 +9992,7 @@
           "MEp-AF-AgT.title": "Con una sola ventana",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "Usar ventanas separadas",
-          "505.title": "Paginación de izquierda a derecha",
+          "505.title": "De izquierda a derecha",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "Derecha",
           "330.title": "Modo de ratón",
@@ -10006,7 +10006,7 @@
           "910.title": "Radio",
           "865.title": "100",
           "tVs-uh-QcM.title": "Comenzar con posición fija",
-          "507.title": "Paginación de derecha a izquierda",
+          "507.title": "De derecha a izquierda",
           "343.title": "Página doble",
           "911.title": "Radio",
           "332.title": "Aumentar",
@@ -10082,18 +10082,18 @@
           "32.title": "Conservar la última posición"
         },
         "SettingsThemeName": {
-          "PHE-fW-LeB.title": "Título de modo",
+          "PHE-fW-LeB.title": "Título del tema",
           "ZJe-8t-Rwa.title": "Título:",
           "jJY-ql-JXD.title": "Cancelar",
-          "RC5-Ef-iJJ.title": "OK"
+          "RC5-Ef-iJJ.title": "Aceptar"
         },
         "SettingsThemes": {
           "rpP-GF-uJp.title": "Inserción",
           "iOU-s7-VWK.title": "Variable",
           "brV-c3-Y89.title": "Nota al pie",
-          "rad-zH-Nv2.title": "Editar el modo",
+          "rad-zH-Nv2.title": "Tema a editar",
           "Sb2-DV-n4h.title": "Invisible",
-          "7hF-dm-sw0.title": "Modos",
+          "7hF-dm-sw0.title": "Temas",
           "BCt-qg-0VZ.title": "Sintaxis",
           "Z9i-kS-FGf.title": "Primer plano",
           "lAb-Fn-Tpo.title": "Delimitadores",
@@ -10109,7 +10109,7 @@
           "29d-sK-CAr.title": "Modo claro",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "Atributo",
-          "J9P-9m-Ehr.title": "Nuevo modo desde ajustes",
+          "J9P-9m-Ehr.title": "Nuevo tema desde ajustes",
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "PDF",
           "kuS-x2-ZGi.title": "Consola",
@@ -10127,7 +10127,7 @@
           "ftM-jT-ZvT.title": "Directo",
           "dAq-I3-00S.title": "Copiar imagen",
           "8Xd-ca-aMe.title": "Marca",
-          "Rzg-NG-sNa.title": " Crear nuevo modo",
+          "Rzg-NG-sNa.title": "Crear nuevo tema",
           "cPa-5P-FPE.title": "Marcador",
           "2yn-uH-GIB.title": "Caracteres",
           "m2P-eK-MuA.title": "Encerrado",
@@ -10727,7 +10727,7 @@
           "view": "settings.1070",
           "kind": "cell",
           "property": "title",
-          "value": "por defecto"
+          "value": "Por omisión"
         },
         {
           "key": "1020.title",
@@ -10776,7 +10776,7 @@
           "view": "settings.1062",
           "kind": "cell",
           "property": "title",
-          "value": "por defecto"
+          "value": "Por omisión"
         },
         {
           "key": "878.title",
@@ -10797,7 +10797,7 @@
           "view": "settings.1067",
           "kind": "cell",
           "property": "title",
-          "value": "por defecto"
+          "value": "Por omisión"
         },
         {
           "key": "891.title",
@@ -10811,7 +10811,7 @@
           "view": "settings.1073",
           "kind": "cell",
           "property": "title",
-          "value": "por defecto"
+          "value": "Por omisión"
         },
         {
           "key": "887.title",
@@ -11552,7 +11552,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Paginación de izquierda a derecha",
+          "value": "De izquierda a derecha",
           "row": 0,
           "column": 0
         },
@@ -11655,7 +11655,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Paginación de derecha a izquierda",
+          "value": "De derecha a izquierda",
           "row": 1,
           "column": 0
         },
@@ -12205,7 +12205,7 @@
           "view": "settings.PHE-fW-LeB",
           "kind": "window",
           "property": "title",
-          "value": "Título de modo"
+          "value": "Título del tema"
         },
         {
           "key": "ZJe-8t-Rwa.title",
@@ -12226,7 +12226,7 @@
           "view": "settings.N2G-gi-llW",
           "kind": "cell",
           "property": "title",
-          "value": "OK"
+          "value": "Aceptar"
         }
       ],
       "Themes": [
@@ -12256,7 +12256,7 @@
           "view": "settings.FOl-CH-y3R",
           "kind": "cell",
           "property": "title",
-          "value": "Editar el modo"
+          "value": "Tema a editar"
         },
         {
           "key": "Sb2-DV-n4h.title",
@@ -12270,7 +12270,7 @@
           "view": "settings.7hF-dm-sw0",
           "kind": "view",
           "property": "title",
-          "value": "Modos"
+          "value": "Temas"
         },
         {
           "key": "BCt-qg-0VZ.title",
@@ -12382,7 +12382,7 @@
           "view": "settings.uXA-S0-9dP",
           "kind": "cell",
           "property": "title",
-          "value": "Nuevo modo desde ajustes"
+          "value": "Nuevo tema desde ajustes"
         },
         {
           "key": "s3b-sE-3Ix.title",
@@ -12522,7 +12522,7 @@
           "view": "settings.8bu-du-vzc",
           "kind": "cell",
           "property": "title",
-          "value": " Crear nuevo modo"
+          "value": "Crear nuevo tema"
         },
         {
           "key": "cPa-5P-FPE.title",
@@ -12942,7 +12942,7 @@
       "ThemesHeadings": [
         {
           "id": "heading.settings.7hF-dm-sw0",
-          "title": "Modos"
+          "title": "Temas"
         },
         {
           "id": "heading.settings.ycd-ZH-bzw",
@@ -13139,19 +13139,19 @@
           "889.title": "(pdf)TeX & dvips (par défaut: /Library/TeX/texbin OR /usr/texbin)",
           "BYT-g3-3p0.title": "Chemin alternatif (par défaut : ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configuration automatique…",
-          "1071.title": "défaut",
+          "1071.title": "Par défaut",
           "1020.title": "Commande pour la Recherche",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Moteur BibTeX",
           "1030.title": "Par défaut : bibtex",
           "1024.title": "kpsewhich (Par défaut : kpsewhich -progname=latex -format=tex)",
-          "1063.title": "défaut",
+          "1063.title": "Par défaut",
           "878.title": "LaTeX ",
           "882.title": "Avertissement de Shell Escape",
-          "1068.title": "défaut",
+          "1068.title": "Par défaut",
           "891.title": "Distiller (ghostscript) (par défaut: /usr/local/bin)",
-          "1074.title": "défaut",
+          "1074.title": "Par défaut",
           "887.title": "Sauvegarder le fichier PostScript",
           "215.title": "Réglage des chemins",
           "200.title": "TeX + dvips + distiller",
@@ -13414,7 +13414,7 @@
           "163-F5-v8Z.title": "Options de Ghostscript",
           "191.title": "pdfTeX",
           "920.title": "Radio",
-          "W5U-9S-4OG.title": "Si la sync. ouvre une nouvelle fenêtre",
+          "W5U-9S-4OG.title": "Si la synchro ouvre une nouvelle fenêtre",
           "YQv-fE-Uzg.title": "Ouvrir un onglet dans la fenêtre initiale",
           "314.title": "Pendant la sauvegarde des fichiers",
           "898.title": "Fichiers apparentés sauvegardés",
@@ -13992,7 +13992,7 @@
           "view": "settings.1070",
           "kind": "cell",
           "property": "title",
-          "value": "défaut"
+          "value": "Par défaut"
         },
         {
           "key": "1020.title",
@@ -14041,7 +14041,7 @@
           "view": "settings.1062",
           "kind": "cell",
           "property": "title",
-          "value": "défaut"
+          "value": "Par défaut"
         },
         {
           "key": "878.title",
@@ -14062,7 +14062,7 @@
           "view": "settings.1067",
           "kind": "cell",
           "property": "title",
-          "value": "défaut"
+          "value": "Par défaut"
         },
         {
           "key": "891.title",
@@ -14076,7 +14076,7 @@
           "view": "settings.1073",
           "kind": "cell",
           "property": "title",
-          "value": "défaut"
+          "value": "Par défaut"
         },
         {
           "key": "887.title",
@@ -15919,7 +15919,7 @@
           "view": "settings.W5U-9S-4OG",
           "kind": "view",
           "property": "title",
-          "value": "Si la sync. ouvre une nouvelle fenêtre"
+          "value": "Si la synchro ouvre une nouvelle fenêtre"
         },
         {
           "key": "YQv-fE-Uzg.title",
@@ -16237,7 +16237,7 @@
         },
         {
           "id": "heading.settings.W5U-9S-4OG",
-          "title": "Si la sync. ouvre une nouvelle fenêtre"
+          "title": "Si la synchro ouvre une nouvelle fenêtre"
         },
         {
           "id": "heading.settings.163-F5-v8Z",
@@ -16363,7 +16363,7 @@
           "942.title": "Evidenzia caratteri racchiusi",
           "915.title": "Switch",
           "841.title": "Controllo Ortografia",
-          "EgL-0e-rdg.title": "Mai",
+          "EgL-0e-rdg.title": "Nessuno",
           "LJw-Jj-VBR.title": "A Fine Parola",
           "CPb-hk-Gqb.title": "L’editor può aggiungere parentesi",
           "YsC-bl-8G6.title": "Rientranza resto paragrafo",
@@ -16498,7 +16498,7 @@
           "fDa-Qp-dfQ.title": "subsection",
           "K8n-in-y4T.title": "Conversione automatica da UTF-8-Mac a UTF-8",
           "R9c-Rj-59Z.title": "table",
-          "GUV-qt-mM2.title": "giorno",
+          "GUV-qt-mM2.title": "una volta al giorno",
           "ahm-aK-Qi9.title": "utf export",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "Riduci la finestra principale all'apertura",
@@ -16540,7 +16540,7 @@
           "343.title": "Pagine affiancate",
           "911.title": "Radio",
           "332.title": "Ingrandimento",
-          "866.title": "Ripristina",
+          "866.title": "Imposta",
           "501.title": "Modalità pagine affiancate",
           "871.title": "Controlla sempre le modifiche al PDF fatte da altre app",
           "636.title": "Selezione testo",
@@ -16615,7 +16615,7 @@
           "PHE-fW-LeB.title": "Titolo del tema",
           "ZJe-8t-Rwa.title": "Titolo:",
           "jJY-ql-JXD.title": "Annulla",
-          "RC5-Ef-iJJ.title": "Salva"
+          "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
           "rpP-GF-uJp.title": "Inserimento",
@@ -16643,7 +16643,7 @@
           "s3b-sE-3Ix.title": "Valore",
           "oZx-IF-VfJ.title": "Anteprima",
           "kuS-x2-ZGi.title": "Console",
-          "GMo-pb-qym.title": "Sincroni-zzazione",
+          "GMo-pb-qym.title": "Sync",
           "bHA-VU-6ZK.title": "argument",
           "Odq-MM-jdm.title": "Commento",
           "AHf-yj-qsp.title": "Comando",
@@ -16679,7 +16679,7 @@
           "163-F5-v8Z.title": "Opzioni Ghostscript",
           "191.title": "pdfTeX",
           "920.title": "Radio",
-          "W5U-9S-4OG.title": "Se la Sync apre una nuova finestra",
+          "W5U-9S-4OG.title": "Se la sincronizzazione apre una nuova finestra",
           "YQv-fE-Uzg.title": "Apri come scheda nella finestra principale",
           "314.title": "Quando un file è salvato",
           "898.title": "Salva i file correlati",
@@ -16953,7 +16953,7 @@
           "view": "settings.TUV-ZL-JgG",
           "kind": "matrix",
           "property": "title",
-          "value": "Mai",
+          "value": "Nessuno",
           "row": 0,
           "column": 0
         },
@@ -17915,7 +17915,7 @@
           "view": "settings.ssL-3D-6IR",
           "kind": "matrix",
           "property": "title",
-          "value": "giorno",
+          "value": "una volta al giorno",
           "row": 0,
           "column": 0
         },
@@ -18217,7 +18217,7 @@
           "view": "settings.116",
           "kind": "cell",
           "property": "title",
-          "value": "Ripristina"
+          "value": "Imposta"
         },
         {
           "key": "501.title",
@@ -18756,7 +18756,7 @@
           "view": "settings.N2G-gi-llW",
           "kind": "cell",
           "property": "title",
-          "value": "Salva"
+          "value": "OK"
         }
       ],
       "Themes": [
@@ -18940,7 +18940,7 @@
           "view": "settings.88k-zC-g06",
           "kind": "cell",
           "property": "title",
-          "value": "Sincroni-zzazione"
+          "value": "Sync"
         },
         {
           "key": "bHA-VU-6ZK.title",
@@ -19184,7 +19184,7 @@
           "view": "settings.W5U-9S-4OG",
           "kind": "view",
           "property": "title",
-          "value": "Se la Sync apre una nuova finestra"
+          "value": "Se la sincronizzazione apre una nuova finestra"
         },
         {
           "key": "YQv-fE-Uzg.title",
@@ -19502,7 +19502,7 @@
         },
         {
           "id": "heading.settings.W5U-9S-4OG",
-          "title": "Se la Sync apre una nuova finestra"
+          "title": "Se la sincronizzazione apre una nuova finestra"
         },
         {
           "id": "heading.settings.163-F5-v8Z",
@@ -19787,7 +19787,7 @@
           "MEp-AF-AgT.title": "統合ウインドウの挙動",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "別々のウインドウで開く",
-          "505.title": "左から右へ",
+          "505.title": "左から右",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "右",
           "330.title": "マウスモード",
@@ -19801,7 +19801,7 @@
           "910.title": "Radio",
           "865.title": "100",
           "tVs-uh-QcM.title": "いつも同じ位置で開く",
-          "507.title": "右から左へ",
+          "507.title": "右から左",
           "343.title": "見開きページ",
           "911.title": "Radio",
           "332.title": "拡大鏡",
@@ -19816,7 +19816,7 @@
           "48.title": "いつも同じ位置で開く",
           "333.title": "単一ページ",
           "45.title": "閉じたときの位置を保存",
-          "637.title": "実際の大きさ",
+          "637.title": "実際のサイズ",
           "vOt-2m-d2s.title": "1つのウインドウに統合",
           "preview-cover-note-cell.title": "これから開く文書に適用。マジックコメントと\nPDF内の表示方向を優先します。",
           "329.title": "ページレイアウト",
@@ -21347,7 +21347,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "左から右へ",
+          "value": "左から右",
           "row": 0,
           "column": 0
         },
@@ -21450,7 +21450,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "右から左へ",
+          "value": "右から左",
           "row": 1,
           "column": 0
         },
@@ -21568,7 +21568,7 @@
           "view": "settings.334",
           "kind": "menuItem",
           "property": "title",
-          "value": "実際の大きさ",
+          "value": "実際のサイズ",
           "index": 0
         },
         {
@@ -22876,7 +22876,7 @@
           "PqO-5d-lRv.title": "항상 같은 위치에서 열기",
           "mNl-sx-FY0.title": "현재 위치 저장",
           "830.title": "항상 보이기",
-          "752.title": "콘솔 폰트"
+          "752.title": "콘솔 서체"
         },
         "SettingsEditor": {
           "963.title": "전각 스페이스 (일본어)",
@@ -22892,7 +22892,7 @@
           "inv-956-item-1.title": "■",
           "942.title": "괄호 여닫기 하일라이트",
           "915.title": "Switch",
-          "841.title": "철자 검사",
+          "841.title": "맞춤법 검사",
           "EgL-0e-rdg.title": "없음",
           "LJw-Jj-VBR.title": "단어기준",
           "CPb-hk-Gqb.title": "괄호 자동 완성",
@@ -22902,7 +22902,7 @@
           "pdc-GP-Cbb.title": "탭 문자 사용",
           "943.title": "홑괄호 경고음",
           "842.title": "키 바인딩",
-          "PhR-Vr-jce.title": "자동 철자 교정",
+          "PhR-Vr-jce.title": "맞춤법 자동 수정",
           "1LL-Ls-rVW.title": "Radio",
           "87S-PS-ZQu.title": "현재 줄 강조",
           "inv-955-item-3.title": "⏎",
@@ -23043,12 +23043,12 @@
         },
         "SettingsPreview": {
           "FSn-iA-3oc.title": "창 배치",
-          "346.title": "연속 페이지 맞쪽보기",
+          "346.title": "연속 두 페이지",
           "335.title": "확대경 (크게)",
           "47.title": "보기 창 위치",
           "Zdh-Ch-Ndh.title": "현재 위치 저장",
           "sa2-VV-W1K.title": "닫을 때 위치 저장",
-          "347.title": "연속 페이지",
+          "347.title": "연속 스크롤",
           "MEp-AF-AgT.title": "단일 창 모드",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "별도 창으로",
@@ -23067,11 +23067,11 @@
           "865.title": "100",
           "tVs-uh-QcM.title": "항상 같은 위치에서 열기",
           "507.title": "오른쪽에서 왼쪽으로 페이지 배열",
-          "343.title": "단일 페이지 맞쪽보기",
+          "343.title": "두 페이지",
           "911.title": "Radio",
           "332.title": "확대경",
           "866.title": "설정",
-          "501.title": "맞쪽보기",
+          "501.title": "두 페이지 배열",
           "871.title": "다른 앱의 PDF 변경을 항상 감시",
           "636.title": "글자 선택",
           "339.title": "창에 맞추기",
@@ -23102,7 +23102,7 @@
           "ts-aware-spelling-cell.title": "LaTeX 인식 맞춤법 검사",
           "uAi-0W-9KI.title": "Switch",
           "874.title": "현재 위치 저장",
-          "kgx-Sa-LDF.title": "철자 검사",
+          "kgx-Sa-LDF.title": "맞춤법 검사",
           "953.title": "< >",
           "8Wq-gx-FqO.title": "주석문 제외",
           "19.title": "편집창 위치",
@@ -23133,7 +23133,7 @@
           "872.title": "선택...",
           "277.title": "OtherViews",
           "951.title": "[ ]",
-          "14.title": "폰트",
+          "14.title": "서체",
           "eIA-mh-q2u.title": "행 번호 크기",
           "odm-Dy-TNW.title": "크게",
           "ypQ-Gc-HUa.title": "항상",
@@ -23143,9 +23143,9 @@
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": " 테마 타이틀",
-          "ZJe-8t-Rwa.title": "타이틀",
+          "ZJe-8t-Rwa.title": "제목:",
           "jJY-ql-JXD.title": "취소",
-          "RC5-Ef-iJJ.title": "승인"
+          "RC5-Ef-iJJ.title": "확인"
         },
         "SettingsThemes": {
           "rpP-GF-uJp.title": "삽입",
@@ -23156,7 +23156,7 @@
           "7hF-dm-sw0.title": "테마",
           "BCt-qg-0VZ.title": "구문",
           "Z9i-kS-FGf.title": "전경색",
-          "lAb-Fn-Tpo.title": "Marker",
+          "lAb-Fn-Tpo.title": "마커",
           "z0I-4l-zwC.title": "주석문",
           "tQ6-6v-qml.title": "플래시",
           "olb-4z-mYu.title": "로그",
@@ -23171,9 +23171,9 @@
           "Qws-5c-CFu.title": "속성",
           "J9P-9m-Ehr.title": "설정에서 새 테마",
           "s3b-sE-3Ix.title": "값",
-          "oZx-IF-VfJ.title": "결과보기",
+          "oZx-IF-VfJ.title": "미리보기",
           "kuS-x2-ZGi.title": "콘솔",
-          "GMo-pb-qym.title": "Sync",
+          "GMo-pb-qym.title": "동기화",
           "bHA-VU-6ZK.title": "argument",
           "Odq-MM-jdm.title": "주석",
           "AHf-yj-qsp.title": "명령어",
@@ -23362,7 +23362,7 @@
           "view": "settings.752",
           "kind": "view",
           "property": "title",
-          "value": "콘솔 폰트"
+          "value": "콘솔 서체"
         }
       ],
       "Editor": [
@@ -23474,7 +23474,7 @@
           "view": "settings.621",
           "kind": "matrix",
           "property": "title",
-          "value": "철자 검사",
+          "value": "맞춤법 검사",
           "row": 4,
           "column": 0
         },
@@ -23554,7 +23554,7 @@
           "view": "settings.621",
           "kind": "matrix",
           "property": "title",
-          "value": "자동 철자 교정",
+          "value": "맞춤법 자동 수정",
           "row": 11,
           "column": 0
         },
@@ -24544,7 +24544,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "연속 페이지 맞쪽보기",
+          "value": "연속 두 페이지",
           "index": 3
         },
         {
@@ -24583,7 +24583,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "연속 페이지",
+          "value": "연속 스크롤",
           "index": 2
         },
         {
@@ -24724,7 +24724,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "단일 페이지 맞쪽보기",
+          "value": "두 페이지",
           "index": 1
         },
         {
@@ -24754,7 +24754,7 @@
           "view": "settings.501",
           "kind": "view",
           "property": "title",
-          "value": "맞쪽보기"
+          "value": "두 페이지 배열"
         },
         {
           "key": "871.title",
@@ -24969,7 +24969,7 @@
           "view": "settings.kgx-Sa-LDF",
           "kind": "view",
           "property": "title",
-          "value": "철자 검사"
+          "value": "맞춤법 검사"
         },
         {
           "key": "953.title",
@@ -25205,7 +25205,7 @@
           "view": "settings.14",
           "kind": "view",
           "property": "title",
-          "value": "폰트"
+          "value": "서체"
         },
         {
           "key": "eIA-mh-q2u.title",
@@ -25272,7 +25272,7 @@
           "view": "settings.JhE-OB-yPt",
           "kind": "cell",
           "property": "title",
-          "value": "타이틀"
+          "value": "제목:"
         },
         {
           "key": "jJY-ql-JXD.title",
@@ -25286,7 +25286,7 @@
           "view": "settings.N2G-gi-llW",
           "kind": "cell",
           "property": "title",
-          "value": "승인"
+          "value": "확인"
         }
       ],
       "Themes": [
@@ -25351,7 +25351,7 @@
           "view": "settings.zPQ-Ry-gvz",
           "kind": "cell",
           "property": "title",
-          "value": "Marker"
+          "value": "마커"
         },
         {
           "key": "z0I-4l-zwC.title",
@@ -25456,7 +25456,7 @@
           "view": "settings.Kmh-HA-3xm",
           "kind": "cell",
           "property": "title",
-          "value": "결과보기"
+          "value": "미리보기"
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -25470,7 +25470,7 @@
           "view": "settings.88k-zC-g06",
           "kind": "cell",
           "property": "title",
-          "value": "Sync"
+          "value": "동기화"
         },
         {
           "key": "bHA-VU-6ZK.title",
@@ -25920,7 +25920,7 @@
         },
         {
           "id": "heading.settings.501",
-          "title": "맞쪽보기"
+          "title": "두 페이지 배열"
         },
         {
           "id": "heading.settings.555",
@@ -26064,7 +26064,7 @@
         },
         {
           "id": "heading.settings.14",
-          "title": "폰트"
+          "title": "서체"
         },
         {
           "id": "heading.settings.19",
@@ -26088,7 +26088,7 @@
         },
         {
           "id": "heading.settings.kgx-Sa-LDF",
-          "title": "철자 검사"
+          "title": "맞춤법 검사"
         },
         {
           "id": "heading.settings.585",
@@ -26106,7 +26106,7 @@
       "ConsoleHeadings": [
         {
           "id": "heading.settings.752",
-          "title": "콘솔 폰트"
+          "title": "콘솔 서체"
         },
         {
           "id": "heading.settings.WQX-9X-AFi",
@@ -26322,7 +26322,7 @@
           "V7d-ht-Pe3.title": "Rechts",
           "330.title": "Default Mouse Mode",
           "864.title": "Kies huidige positie",
-          "5HT-3x-Zr6.title": "Monitor",
+          "5HT-3x-Zr6.title": "Weergave",
           "555.title": "Externe editor",
           "348.title": "OtherViews",
           "111.title": "Zoom for new PDFs",
@@ -26335,7 +26335,7 @@
           "343.title": "Twee pagina’s",
           "911.title": "Radio",
           "332.title": "Vergroten",
-          "866.title": "Reset",
+          "866.title": "Stel in",
           "501.title": "Indeling van dubbele pagina’s",
           "871.title": "Pdf-wijzigingen door andere apps altijd volgen",
           "636.title": "Tekst selecteren",
@@ -26367,7 +26367,7 @@
           "ts-aware-spelling-cell.title": "LaTeX-bewuste spellingcontrole",
           "uAi-0W-9KI.title": "Switch",
           "874.title": "Kies huidige positie",
-          "kgx-Sa-LDF.title": "Spell Checking",
+          "kgx-Sa-LDF.title": "Spellingcontrole",
           "953.title": "< >",
           "8Wq-gx-FqO.title": "Commentaar overslaan",
           "19.title": "Positie vensters",
@@ -26409,7 +26409,7 @@
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
           "ZJe-8t-Rwa.title": "Naam:",
-          "jJY-ql-JXD.title": "Annuleren",
+          "jJY-ql-JXD.title": "Annuleer",
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
@@ -26447,14 +26447,14 @@
           "yPD-Wd-E6K.title": "Brontekst",
           "J68-pe-b8Y.title": "Thema voor donkere modus",
           "M3K-Bv-8B1.title": "Brontekst",
-          "Zgh-Qy-lNy.title": "Reverse",
+          "Zgh-Qy-lNy.title": "Omgekeerd",
           "H91-VW-6OK.title": "expl3",
           "ftM-jT-ZvT.title": "Direct ",
           "dAq-I3-00S.title": "Afbeelding kopiëren",
           "8Xd-ca-aMe.title": "Tag",
           "Rzg-NG-sNa.title": "Create New Theme",
           "cPa-5P-FPE.title": "Markering",
-          "2yn-uH-GIB.title": "Characters",
+          "2yn-uH-GIB.title": "Tekens",
           "m2P-eK-MuA.title": "Ingesloten tekst",
           "2wp-bc-jxK.title": "Tekst",
           "OFK-Td-Bas.title": "Index",
@@ -27914,7 +27914,7 @@
           "view": "settings.5HT-3x-Zr6",
           "kind": "view",
           "property": "title",
-          "value": "Monitor"
+          "value": "Weergave"
         },
         {
           "key": "555.title",
@@ -28012,7 +28012,7 @@
           "view": "settings.116",
           "kind": "cell",
           "property": "title",
-          "value": "Reset"
+          "value": "Stel in"
         },
         {
           "key": "501.title",
@@ -28234,7 +28234,7 @@
           "view": "settings.kgx-Sa-LDF",
           "kind": "view",
           "property": "title",
-          "value": "Spell Checking"
+          "value": "Spellingcontrole"
         },
         {
           "key": "953.title",
@@ -28544,7 +28544,7 @@
           "view": "settings.fck-0B-Qsq",
           "kind": "cell",
           "property": "title",
-          "value": "Annuleren"
+          "value": "Annuleer"
         },
         {
           "key": "RC5-Ef-iJJ.title",
@@ -28812,7 +28812,7 @@
           "view": "settings.kGY-aO-HYV",
           "kind": "cell",
           "property": "title",
-          "value": "Reverse"
+          "value": "Omgekeerd"
         },
         {
           "key": "H91-VW-6OK.title",
@@ -28861,7 +28861,7 @@
           "view": "settings.EgD-4a-cyP",
           "kind": "cell",
           "property": "title",
-          "value": "Characters"
+          "value": "Tekens"
         },
         {
           "key": "m2P-eK-MuA.title",
@@ -29193,7 +29193,7 @@
         },
         {
           "id": "heading.settings.5HT-3x-Zr6",
-          "title": "Monitor"
+          "title": "Weergave"
         },
         {
           "id": "heading.settings.FSn-iA-3oc",
@@ -29353,7 +29353,7 @@
         },
         {
           "id": "heading.settings.kgx-Sa-LDF",
-          "title": "Spell Checking"
+          "title": "Spellingcontrole"
         },
         {
           "id": "heading.settings.585",
@@ -29464,19 +29464,19 @@
           "889.title": "(pdf)TeX (por omissão: /Library/TeX/texbin OR /usr/texbin)",
           "BYT-g3-3p0.title": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configuração automática…",
-          "1071.title": "omissão",
+          "1071.title": "Predefinição",
           "1020.title": "Search command",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
           "1030.title": "default: bibtex",
           "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "omissão",
+          "1063.title": "Predefinição",
           "878.title": "LaTeX ",
           "882.title": "Aviso de shell escape",
-          "1068.title": "omissão",
+          "1068.title": "Predefinição",
           "891.title": "Distiller (por omissão: /usr/local/bin)",
-          "1074.title": "omissão",
+          "1074.title": "Predefinição",
           "887.title": "Guardar o ficheiro PostScript",
           "215.title": "Caminho",
           "200.title": "TeX + dvips + distiller",
@@ -29573,7 +29573,7 @@
         },
         "SettingsPreview": {
           "FSn-iA-3oc.title": "Opening Source and Preview",
-          "346.title": "Páginas duplas contínuas",
+          "346.title": "Duas páginas contínuas",
           "335.title": "Ampliar mais",
           "47.title": "Posição da janela",
           "Zdh-Ch-Ndh.title": "Usar a posição atual",
@@ -29582,7 +29582,7 @@
           "MEp-AF-AgT.title": "One Window Mode",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "Abrir em janelas separadas",
-          "505.title": "Páginas da esquerda para a direita",
+          "505.title": "Da esquerda para a direita",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "Direita",
           "330.title": "Default Mouse Mode",
@@ -29596,7 +29596,7 @@
           "910.title": "Radio",
           "865.title": "100",
           "tVs-uh-QcM.title": "Abrir todas as janelas numa posição fixa",
-          "507.title": "Páginas da direita para a esquerda",
+          "507.title": "Da direita para a esquerda",
           "343.title": "Duas páginas",
           "911.title": "Radio",
           "332.title": "Ampliar",
@@ -29609,7 +29609,7 @@
           "344.title": "Ampliação fixa",
           "1uj-kt-7Pj.title": "Esquerda",
           "48.title": "Abrir sempre numa posição fixa",
-          "333.title": "Página única",
+          "333.title": "Uma página",
           "45.title": "Lembrar-se da última posição",
           "637.title": "Tamanho real",
           "vOt-2m-d2s.title": "Unir numa única janela",
@@ -29632,7 +29632,7 @@
           "ts-aware-spelling-cell.title": "Ortografia adaptada ao LaTeX",
           "uAi-0W-9KI.title": "Switch",
           "874.title": "Escolher a posição actual",
-          "kgx-Sa-LDF.title": "Spell Checking",
+          "kgx-Sa-LDF.title": "Ortografia",
           "953.title": "< >",
           "8Wq-gx-FqO.title": "Ignorar comentários",
           "19.title": "Source Window Position",
@@ -29703,7 +29703,7 @@
           "s3b-sE-3Ix.title": "Valor",
           "oZx-IF-VfJ.title": "Pré-visualização",
           "kuS-x2-ZGi.title": "Consola",
-          "GMo-pb-qym.title": "Sync",
+          "GMo-pb-qym.title": "Sincronização",
           "bHA-VU-6ZK.title": "argument",
           "Odq-MM-jdm.title": "Comentário",
           "AHf-yj-qsp.title": "Comando",
@@ -29712,14 +29712,14 @@
           "yPD-Wd-E6K.title": "Código-fonte",
           "J68-pe-b8Y.title": "Tema do modo escuro",
           "M3K-Bv-8B1.title": "Código-fonte",
-          "Zgh-Qy-lNy.title": "Reverse",
+          "Zgh-Qy-lNy.title": "Inverso",
           "H91-VW-6OK.title": "expl3",
           "ftM-jT-ZvT.title": "Direct ",
           "dAq-I3-00S.title": "Cópia de imagem",
           "8Xd-ca-aMe.title": "Etiqueta",
           "Rzg-NG-sNa.title": "Create New Theme",
           "cPa-5P-FPE.title": "Marcador",
-          "2yn-uH-GIB.title": "Characters",
+          "2yn-uH-GIB.title": "Caracteres",
           "m2P-eK-MuA.title": "Texto entre parênteses",
           "2wp-bc-jxK.title": "Texto",
           "OFK-Td-Bas.title": "Índice",
@@ -30317,7 +30317,7 @@
           "view": "settings.1070",
           "kind": "cell",
           "property": "title",
-          "value": "omissão"
+          "value": "Predefinição"
         },
         {
           "key": "1020.title",
@@ -30366,7 +30366,7 @@
           "view": "settings.1062",
           "kind": "cell",
           "property": "title",
-          "value": "omissão"
+          "value": "Predefinição"
         },
         {
           "key": "878.title",
@@ -30387,7 +30387,7 @@
           "view": "settings.1067",
           "kind": "cell",
           "property": "title",
-          "value": "omissão"
+          "value": "Predefinição"
         },
         {
           "key": "891.title",
@@ -30401,7 +30401,7 @@
           "view": "settings.1073",
           "kind": "cell",
           "property": "title",
-          "value": "omissão"
+          "value": "Predefinição"
         },
         {
           "key": "887.title",
@@ -31074,7 +31074,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Páginas duplas contínuas",
+          "value": "Duas páginas contínuas",
           "index": 3
         },
         {
@@ -31142,7 +31142,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Páginas da esquerda para a direita",
+          "value": "Da esquerda para a direita",
           "row": 0,
           "column": 0
         },
@@ -31245,7 +31245,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Páginas da direita para a esquerda",
+          "value": "Da direita para a esquerda",
           "row": 1,
           "column": 0
         },
@@ -31346,7 +31346,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Página única",
+          "value": "Uma página",
           "index": 0
         },
         {
@@ -31499,7 +31499,7 @@
           "view": "settings.kgx-Sa-LDF",
           "kind": "view",
           "property": "title",
-          "value": "Spell Checking"
+          "value": "Ortografia"
         },
         {
           "key": "953.title",
@@ -32000,7 +32000,7 @@
           "view": "settings.88k-zC-g06",
           "kind": "cell",
           "property": "title",
-          "value": "Sync"
+          "value": "Sincronização"
         },
         {
           "key": "bHA-VU-6ZK.title",
@@ -32077,7 +32077,7 @@
           "view": "settings.kGY-aO-HYV",
           "kind": "cell",
           "property": "title",
-          "value": "Reverse"
+          "value": "Inverso"
         },
         {
           "key": "H91-VW-6OK.title",
@@ -32126,7 +32126,7 @@
           "view": "settings.EgD-4a-cyP",
           "kind": "cell",
           "property": "title",
-          "value": "Characters"
+          "value": "Caracteres"
         },
         {
           "key": "m2P-eK-MuA.title",
@@ -32618,7 +32618,7 @@
         },
         {
           "id": "heading.settings.kgx-Sa-LDF",
-          "title": "Spell Checking"
+          "title": "Ortografia"
         },
         {
           "id": "heading.settings.585",
@@ -32847,7 +32847,7 @@
           "MEp-AF-AgT.title": "No modo de janela única",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "Usar janelas separadas",
-          "505.title": "Páginas fluem da esquerda para a direita",
+          "505.title": "Da esquerda para a direita",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "Direita",
           "330.title": "Comportamento padrão do mouse",
@@ -32861,8 +32861,8 @@
           "910.title": "Radio",
           "865.title": "100",
           "tVs-uh-QcM.title": "Abrir sempre em uma posição fixa",
-          "507.title": "Páginas fluem da direita para a esquerda",
-          "343.title": "Páginas duplas",
+          "507.title": "Da direita para a esquerda",
+          "343.title": "Página dupla",
           "911.title": "Radio",
           "332.title": "Ampliar",
           "866.title": "Definir",
@@ -32874,9 +32874,9 @@
           "344.title": "Ampliação fixa",
           "1uj-kt-7Pj.title": "Esquerda",
           "48.title": "Abrir sempre em uma posição fixa",
-          "333.title": "Página simples",
+          "333.title": "Uma única página",
           "45.title": "Lembrar-se da última posição",
-          "637.title": "Tamanho atual",
+          "637.title": "Tamanho real",
           "vOt-2m-d2s.title": "Usar uma única janela",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Estilo de visualização padrão",
@@ -32966,7 +32966,7 @@
           "Qws-5c-CFu.title": "Atributo",
           "J9P-9m-Ehr.title": "Novo tema a partir dos ajustes",
           "s3b-sE-3Ix.title": "Valor",
-          "oZx-IF-VfJ.title": "Pré visualização",
+          "oZx-IF-VfJ.title": "Pré-visualização",
           "kuS-x2-ZGi.title": "Console",
           "GMo-pb-qym.title": "Sinc",
           "bHA-VU-6ZK.title": "argument",
@@ -34407,7 +34407,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Páginas fluem da esquerda para a direita",
+          "value": "Da esquerda para a direita",
           "row": 0,
           "column": 0
         },
@@ -34510,7 +34510,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Páginas fluem da direita para a esquerda",
+          "value": "Da direita para a esquerda",
           "row": 1,
           "column": 0
         },
@@ -34519,7 +34519,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Páginas duplas",
+          "value": "Página dupla",
           "index": 1
         },
         {
@@ -34611,7 +34611,7 @@
           "view": "settings.340",
           "kind": "menuItem",
           "property": "title",
-          "value": "Página simples",
+          "value": "Uma única página",
           "index": 0
         },
         {
@@ -34628,7 +34628,7 @@
           "view": "settings.334",
           "kind": "menuItem",
           "property": "title",
-          "value": "Tamanho atual",
+          "value": "Tamanho real",
           "index": 0
         },
         {
@@ -35251,7 +35251,7 @@
           "view": "settings.Kmh-HA-3xm",
           "kind": "cell",
           "property": "title",
-          "value": "Pré visualização"
+          "value": "Pré-visualização"
         },
         {
           "key": "kuS-x2-ZGi.title",
@@ -35953,7 +35953,7 @@
           "942.title": "Evidențiază caracterele dintre paranteze",
           "915.title": "Switch",
           "841.title": "Verifică Ortografia",
-          "EgL-0e-rdg.title": "Niciuna",
+          "EgL-0e-rdg.title": "Fără",
           "LJw-Jj-VBR.title": "După cuvânt",
           "CPb-hk-Gqb.title": "Editor Can Add Brackets",
           "YsC-bl-8G6.title": "Indentarea celorlalte rânduri:",
@@ -35994,19 +35994,19 @@
           "889.title": "(pdf)TeX (default: /Library/TeX/texbin OR /usr/texbin)",
           "BYT-g3-3p0.title": "Alternate Path (default: ~/bin/context/tex/texmf-osx-arm64/bin)",
           "engine-auto-cell.title": "Configurare automată…",
-          "1071.title": "default",
+          "1071.title": "Implicit",
           "1020.title": "Search command",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
           "1027.title": "Motor BibTeX",
           "1030.title": "default: bibtex",
           "1024.title": "kpsewhich (default: kpsewhich -progname=latex -format=tex)",
-          "1063.title": "default",
+          "1063.title": "Implicit",
           "878.title": "LaTeX ",
           "882.title": "Avertisment shell escape",
-          "1068.title": "default",
+          "1068.title": "Implicit",
           "891.title": "Distiller (ghostscript) (default: /usr/local/bin)",
-          "1074.title": "default",
+          "1074.title": "Implicit",
           "887.title": "Salvează fișierul PostScript",
           "215.title": "Path settings",
           "200.title": "TeX + dvips + distiller",
@@ -36104,7 +36104,7 @@
         "SettingsPreview": {
           "FSn-iA-3oc.title": "Opening Source and Preview",
           "346.title": "Pagină Dublă Multiplă",
-          "335.title": "Mărire mare",
+          "335.title": "Lupă (mare)",
           "47.title": "Poziția Ferestrei de Previzualizare",
           "Zdh-Ch-Ndh.title": "Folosește poziția actuală",
           "sa2-VV-W1K.title": "Păstrează poziția la închidere",
@@ -36112,12 +36112,12 @@
           "MEp-AF-AgT.title": "One Window Mode",
           "336.title": "OtherViews",
           "SfP-Ak-pn3.title": "Deschide în ferestre separate",
-          "505.title": "Pagini de la stânga la dreapta",
+          "505.title": "De la stânga la dreapta",
           "341.title": "OtherViews",
           "V7d-ht-Pe3.title": "Dreapta",
-          "330.title": "Efectul Mausului",
+          "330.title": "Mod maus implicit",
           "864.title": "Folosește poziția actuală",
-          "5HT-3x-Zr6.title": "Display",
+          "5HT-3x-Zr6.title": "Afișare",
           "555.title": "External Editor",
           "348.title": "OtherViews",
           "111.title": "Zoom for new PDFs",
@@ -36126,10 +36126,10 @@
           "910.title": "Radio",
           "865.title": "100",
           "tVs-uh-QcM.title": "Deschide toate ferestrele în poziția fixată",
-          "507.title": "Pagini de la dreapta la stânga",
+          "507.title": "De la dreapta la stânga",
           "343.title": "Pagină Dublă",
           "911.title": "Radio",
-          "332.title": "Mărire",
+          "332.title": "Lupă",
           "866.title": "Stabilește",
           "501.title": "Aranjarea paginilor duble",
           "871.title": "Urmărește permanent modificările PDF-ului făcute de alte aplicații",
@@ -36141,7 +36141,7 @@
           "48.title": "Toate ferestrele apar la poziția fixată",
           "333.title": "Pagină Simplă",
           "45.title": "Înregistrează  ultima poziție la închidere",
-          "637.title": "Dimensiune reală",
+          "637.title": "Dimensiune efectivă",
           "vOt-2m-d2s.title": "Unește într-o singură fereastră",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "Stilul Standard al Paginii",
@@ -36162,7 +36162,7 @@
           "ts-aware-spelling-cell.title": "Verificare ortografică LaTeX",
           "uAi-0W-9KI.title": "Switch",
           "874.title": "Folosește poziția actuală",
-          "kgx-Sa-LDF.title": "Spell Checking",
+          "kgx-Sa-LDF.title": "Ortografie",
           "953.title": "< >",
           "8Wq-gx-FqO.title": "Omite comentariile",
           "19.title": "Poziția Ferestrei Sursă",
@@ -36204,7 +36204,7 @@
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
           "ZJe-8t-Rwa.title": "Titlu:",
-          "jJY-ql-JXD.title": "Anulează",
+          "jJY-ql-JXD.title": "Anulați",
           "RC5-Ef-iJJ.title": "OK"
         },
         "SettingsThemes": {
@@ -36233,7 +36233,7 @@
           "s3b-sE-3Ix.title": "Valoare",
           "oZx-IF-VfJ.title": "Previzualizare",
           "kuS-x2-ZGi.title": "Consolă",
-          "GMo-pb-qym.title": "Sync",
+          "GMo-pb-qym.title": "Sincronizare",
           "bHA-VU-6ZK.title": "argument",
           "Odq-MM-jdm.title": "Comentariu",
           "AHf-yj-qsp.title": "Comandă",
@@ -36242,14 +36242,14 @@
           "yPD-Wd-E6K.title": "Sursă",
           "J68-pe-b8Y.title": "Tema modului întunecat",
           "M3K-Bv-8B1.title": "Sursă",
-          "Zgh-Qy-lNy.title": "Reverse",
+          "Zgh-Qy-lNy.title": "Inversare",
           "H91-VW-6OK.title": "expl3",
           "ftM-jT-ZvT.title": "Direct ",
           "dAq-I3-00S.title": "Copierea imaginii",
           "8Xd-ca-aMe.title": "Etichetă",
           "Rzg-NG-sNa.title": "Create New Theme",
           "cPa-5P-FPE.title": "Marcaj",
-          "2yn-uH-GIB.title": "Characters",
+          "2yn-uH-GIB.title": "Caractere",
           "m2P-eK-MuA.title": "Textul dintre paranteze",
           "2wp-bc-jxK.title": "Text",
           "OFK-Td-Bas.title": "Index",
@@ -36543,7 +36543,7 @@
           "view": "settings.TUV-ZL-JgG",
           "kind": "matrix",
           "property": "title",
-          "value": "Niciuna",
+          "value": "Fără",
           "row": 0,
           "column": 0
         },
@@ -36847,7 +36847,7 @@
           "view": "settings.1070",
           "kind": "cell",
           "property": "title",
-          "value": "default"
+          "value": "Implicit"
         },
         {
           "key": "1020.title",
@@ -36896,7 +36896,7 @@
           "view": "settings.1062",
           "kind": "cell",
           "property": "title",
-          "value": "default"
+          "value": "Implicit"
         },
         {
           "key": "878.title",
@@ -36917,7 +36917,7 @@
           "view": "settings.1067",
           "kind": "cell",
           "property": "title",
-          "value": "default"
+          "value": "Implicit"
         },
         {
           "key": "891.title",
@@ -36931,7 +36931,7 @@
           "view": "settings.1073",
           "kind": "cell",
           "property": "title",
-          "value": "default"
+          "value": "Implicit"
         },
         {
           "key": "887.title",
@@ -37612,7 +37612,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Mărire mare",
+          "value": "Lupă (mare)",
           "index": 3
         },
         {
@@ -37672,7 +37672,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pagini de la stânga la dreapta",
+          "value": "De la stânga la dreapta",
           "row": 0,
           "column": 0
         },
@@ -37695,7 +37695,7 @@
           "view": "settings.330",
           "kind": "view",
           "property": "title",
-          "value": "Efectul Mausului"
+          "value": "Mod maus implicit"
         },
         {
           "key": "864.title",
@@ -37709,7 +37709,7 @@
           "view": "settings.5HT-3x-Zr6",
           "kind": "view",
           "property": "title",
-          "value": "Display"
+          "value": "Afișare"
         },
         {
           "key": "555.title",
@@ -37775,7 +37775,7 @@
           "view": "settings.506",
           "kind": "matrix",
           "property": "title",
-          "value": "Pagini de la dreapta la stânga",
+          "value": "De la dreapta la stânga",
           "row": 1,
           "column": 0
         },
@@ -37799,7 +37799,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "Mărire",
+          "value": "Lupă",
           "index": 2
         },
         {
@@ -37893,7 +37893,7 @@
           "view": "settings.334",
           "kind": "menuItem",
           "property": "title",
-          "value": "Dimensiune reală",
+          "value": "Dimensiune efectivă",
           "index": 0
         },
         {
@@ -38029,7 +38029,7 @@
           "view": "settings.kgx-Sa-LDF",
           "kind": "view",
           "property": "title",
-          "value": "Spell Checking"
+          "value": "Ortografie"
         },
         {
           "key": "953.title",
@@ -38339,7 +38339,7 @@
           "view": "settings.fck-0B-Qsq",
           "kind": "cell",
           "property": "title",
-          "value": "Anulează"
+          "value": "Anulați"
         },
         {
           "key": "RC5-Ef-iJJ.title",
@@ -38530,7 +38530,7 @@
           "view": "settings.88k-zC-g06",
           "kind": "cell",
           "property": "title",
-          "value": "Sync"
+          "value": "Sincronizare"
         },
         {
           "key": "bHA-VU-6ZK.title",
@@ -38607,7 +38607,7 @@
           "view": "settings.kGY-aO-HYV",
           "kind": "cell",
           "property": "title",
-          "value": "Reverse"
+          "value": "Inversare"
         },
         {
           "key": "H91-VW-6OK.title",
@@ -38656,7 +38656,7 @@
           "view": "settings.EgD-4a-cyP",
           "kind": "cell",
           "property": "title",
-          "value": "Characters"
+          "value": "Caractere"
         },
         {
           "key": "m2P-eK-MuA.title",
@@ -38968,7 +38968,7 @@
         },
         {
           "id": "heading.settings.330",
-          "title": "Efectul Mausului"
+          "title": "Mod maus implicit"
         },
         {
           "id": "heading.settings.342",
@@ -38988,7 +38988,7 @@
         },
         {
           "id": "heading.settings.5HT-3x-Zr6",
-          "title": "Display"
+          "title": "Afișare"
         },
         {
           "id": "heading.settings.FSn-iA-3oc",
@@ -39148,7 +39148,7 @@
         },
         {
           "id": "heading.settings.kgx-Sa-LDF",
-          "title": "Spell Checking"
+          "title": "Ortografie"
         },
         {
           "id": "heading.settings.585",
@@ -39272,7 +39272,7 @@
           "1068.title": "默认",
           "891.title": "Distiller (ghostscript) (默认: /usr/local/bin)",
           "1074.title": "默认",
-          "887.title": "存储 Postscript 文件",
+          "887.title": "保存 PostScript 文件",
           "215.title": "路径设置",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -39299,7 +39299,7 @@
           "409.title": "TIFF (LZW)",
           "903.title": "使用颜色映射",
           "441.title": "3",
-          "5ba-33-JZx.title": "存储文稿",
+          "5ba-33-JZx.title": "保存文稿",
           "PVm-Il-A7W.title": "启用自动保存和版本",
           "904.title": "前景色突出:",
           "442.title": "OtherViews",
@@ -39321,7 +39321,7 @@
           "437.ibShadowedToolTip": "将黑白映射为其他颜色。",
           "CBT-8e-Ayl.title": "靠右",
           "407.title": "JPEG (低)",
-          "hmg-EV-KUC.title": "存储时将之前的文件保留为“名称~”",
+          "hmg-EV-KUC.title": "保存时将之前的文件保留为“名称~”",
           "423.title": "JPEG (中)",
           "sto-5E-9Q5.title": "编辑时自动覆盖文件的 macOS 功能。",
           "tg5-uf-NZU.title": "Radio",
@@ -39329,7 +39329,7 @@
           "g92-sP-oZU.title": "两侧",
           "4k3-5Y-CEt.title": "靠左或靠右时宽度:",
           "435.title": "-1",
-          "jjy-QZ-C0q.title": "在存储对话框中显示编码",
+          "jjy-QZ-C0q.title": "在保存对话框中显示编码",
           "shH-XU-nyE.title": "双字符",
           "440.title": "1",
           "xvd-dM-RGh.title": "插入位置:"
@@ -39340,7 +39340,7 @@
           "YtS-5V-eM9.title": "打开子文件时自动打开根文件",
           "Kin-Cw-xVc.title": "项目根文件",
           "6Fu-n9-vh6.title": "subsubsection ",
-          "03p-fB-1K3.title": "文件存储时",
+          "03p-fB-1K3.title": "文件保存时",
           "e3h-Wk-X7D.title": "升级工具",
           "5c4-N7-glC.title": "chapter",
           "SS5-tZ-cDa.title": "pTeX 支持 (仅日语用户)",
@@ -39446,7 +39446,7 @@
           "928.title": "Tab 键",
           "583.title": "Apple 查找栏",
           "ts-edit-spelling.ibShadowedToolTip": "编辑 LaTeX 拼写检查使用的排除规则。",
-          "Xrb-Fe-9cg.title": "小的",
+          "Xrb-Fe-9cg.title": "小",
           "929.title": "Radio",
           "aig-4m-gAG.title": "以标签页打开新窗口",
           "934.title": "配对目标和高亮颜色",
@@ -39460,7 +39460,7 @@
           "951.title": "[ ]",
           "14.title": "文档字体",
           "eIA-mh-q2u.title": "行号字体大小",
-          "odm-Dy-TNW.title": "大的",
+          "odm-Dy-TNW.title": "大",
           "ypQ-Gc-HUa.title": "始终",
           "1080.title": "OgreKit 查找面板",
           "3eF-XA-ahc.title": "不检查命令参数",
@@ -39536,8 +39536,8 @@
           "920.title": "Radio",
           "W5U-9S-4OG.title": "代码同步新建窗口时",
           "YQv-fE-Uzg.title": "在主窗口打开标签页",
-          "314.title": "存储文件时",
-          "898.title": "存储相关文件",
+          "314.title": "保存文件时",
+          "898.title": "保存相关文件",
           "823.title": "同步方式",
           "190.title": "个性化脚本",
           "590.title": "采用键入的指令",
@@ -40203,7 +40203,7 @@
           "view": "settings.225",
           "kind": "cell",
           "property": "title",
-          "value": "存储 Postscript 文件"
+          "value": "保存 PostScript 文件"
         },
         {
           "key": "215.title",
@@ -40382,7 +40382,7 @@
           "view": "settings.5ba-33-JZx",
           "kind": "view",
           "property": "title",
-          "value": "存储文稿"
+          "value": "保存文稿"
         },
         {
           "key": "PVm-Il-A7W.title",
@@ -40549,7 +40549,7 @@
           "view": "settings.jhC-up-cya",
           "kind": "cell",
           "property": "title",
-          "value": "存储时将之前的文件保留为“名称~”"
+          "value": "保存时将之前的文件保留为“名称~”"
         },
         {
           "key": "423.title",
@@ -40611,7 +40611,7 @@
           "view": "settings.5xa-en-KkV",
           "kind": "cell",
           "property": "title",
-          "value": "在存储对话框中显示编码"
+          "value": "在保存对话框中显示编码"
         },
         {
           "key": "shH-XU-nyE.title",
@@ -40679,7 +40679,7 @@
           "view": "settings.03p-fB-1K3",
           "kind": "view",
           "property": "title",
-          "value": "文件存储时"
+          "value": "文件保存时"
         },
         {
           "key": "e3h-Wk-X7D.title",
@@ -41441,7 +41441,7 @@
           "view": "settings.yo8-RP-pZK",
           "kind": "matrix",
           "property": "title",
-          "value": "小的",
+          "value": "小",
           "row": 0,
           "column": 0
         },
@@ -41544,7 +41544,7 @@
           "view": "settings.yo8-RP-pZK",
           "kind": "matrix",
           "property": "title",
-          "value": "大的",
+          "value": "大",
           "row": 1,
           "column": 0
         },
@@ -42053,14 +42053,14 @@
           "view": "settings.314",
           "kind": "view",
           "property": "title",
-          "value": "存储文件时"
+          "value": "保存文件时"
         },
         {
           "key": "898.title",
           "view": "settings.316",
           "kind": "cell",
           "property": "title",
-          "value": "存储相关文件"
+          "value": "保存相关文件"
         },
         {
           "key": "823.title",
@@ -42297,7 +42297,7 @@
       "MiscTwoHeadings": [
         {
           "id": "heading.settings.03p-fB-1K3",
-          "title": "文件存储时"
+          "title": "文件保存时"
         },
         {
           "id": "heading.settings.Kin-Cw-xVc",
@@ -42341,7 +42341,7 @@
         },
         {
           "id": "heading.settings.314",
-          "title": "存储文件时"
+          "title": "保存文件时"
         },
         {
           "id": "heading.settings.675",
@@ -42375,7 +42375,7 @@
         },
         {
           "id": "heading.settings.5ba-33-JZx",
-          "title": "存储文稿"
+          "title": "保存文稿"
         },
         {
           "id": "heading.settings.cSu-im-H1E",

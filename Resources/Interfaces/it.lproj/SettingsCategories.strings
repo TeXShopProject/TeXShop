@@ -127,7 +127,7 @@
 "catalog.editor.6.1.title" = "Colore cursore:";
 "catalog.editor.6.2.title" = "Posizione linea d'inserimento:";
 "catalog.editor.6.3.title" = "Larghezza per sinistra o destra:";
-"group.editor.7.title" = "Ricerca";
+"group.editor.7.title" = "Trova";
 "catalog.editor.7.0.title" = "Interfaccia di ricerca";
 
 "group.editor.8.title" = "Tag XML nell’elenco dei tag";
@@ -215,7 +215,7 @@
 "catalog.preview.0.1.title" = "Dopo il ridimensionamento della finestra";
 "catalog.preview.0.2.title" = "Ingrandimento";
 "catalog.preview.0.2.unit" = "%";
-"catalog.preview.0.2.button" = "Ripristina";
+"catalog.preview.0.2.button" = "Imposta";
 "catalog.preview.0.3.title" = "Funzione predefinita del mouse";
 "catalog.preview.0.4.title" = "Non cambiare pagina scorrendo";
 "catalog.preview.0.4.note" = "Con «Pagina singola» e «Pagine affiancate», lo scorrimento con la rotella del mouse o il trackpad si ferma all’inizio e alla fine della pagina.";
@@ -247,7 +247,7 @@
 "catalog.typesetting.1.0.title" = "Dopo la compilazione";
 "group.typesetting.2.title" = "Sincronizzazione di sorgente e anteprima";
 "catalog.typesetting.2.0.title" = "Metodo di sincronizzazione";
-"catalog.typesetting.2.1.title" = "Aprire i documenti raggiunti da Sync come pannelli nella finestra principale";
+"catalog.typesetting.2.1.title" = "Aprire come pannelli nella finestra principale i documenti raggiunti dalla sincronizzazione";
 "catalog.typesetting.2.1.note" = "Di solito disattivato.";
 "group.typesetting.3.title" = "Percorsi";
 "catalog.typesetting.3.0.title" = "pdfTeX";

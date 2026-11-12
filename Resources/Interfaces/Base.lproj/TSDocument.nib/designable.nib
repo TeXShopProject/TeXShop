@@ -1433,7 +1433,7 @@ DQ
                     </connections>
                 </popUpButton>
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V4g-xj-3k6">
-                    <rect key="frame" x="10" y="11" width="82" height="17"/>
+                    <rect key="frame" x="-2" y="11" width="94" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="File Type:" id="OMr-PF-LTk">
                         <font key="font" metaFont="message"/>
@@ -1475,11 +1475,11 @@ DQ
             <point key="canvasLocation" x="2175" y="-702"/>
         </menu>
         <customView id="582" userLabel="ImageExportType">
-            <rect key="frame" x="0.0" y="0.0" width="283" height="31"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="31"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="593">
-                    <rect key="frame" x="97" y="3" width="173" height="26"/>
+                    <rect key="frame" x="97" y="3" width="210" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <popUpButtonCell key="cell" type="push" title="JPEG (High)" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="11" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="596" id="3883">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>

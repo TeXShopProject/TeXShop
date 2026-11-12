@@ -49,7 +49,7 @@
       {"text": "Editor", "id": "category.title", "category": "editor", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Index", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Tag", "id": "", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
-      {"text": "Themes", "id": "heading.group.appearance.0", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
+      {"text": "Themen", "id": "heading.group.appearance.0", "category": "appearance", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Updates", "id": "category.title", "category": "updates", "role": "label", "reason": "Word also used in this locale"},
       {"text": "Button", "id": "", "category": "appearance", "role": "button", "reason": "AppKit image-button placeholder; independently audited in all languages"},
       {"category": "editor", "id": "", "role": "label", "text": "pt", "reason": "Point unit for dimensions"},

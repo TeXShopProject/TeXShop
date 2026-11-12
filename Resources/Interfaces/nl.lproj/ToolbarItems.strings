@@ -14,7 +14,7 @@ tiToolTipTypeset			= "Voer zetprogramma uit";
 
 tiLabelSharing				= "Sharing";
 tiPaletteLabelSharing		= "Sharing";
-tiToolTipSharing			= "Share text and pictures";
+tiToolTipSharing			= "Deel tekst en afbeeldingen";
 
 
 tiLabelProgram				= "Programma";
@@ -33,8 +33,8 @@ tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
 tiToolTipBibTeX				= "Voer BibTeX uit";
 
-tiLabelMakeIndex			= "Make Index";
-tiPaletteLabelMakeIndex			= "Make Index";
+tiLabelMakeIndex			= "Maak index";
+tiPaletteLabelMakeIndex			= "Maak index";
 tiToolTipMakeIndex			= "Voer MakeIndex uit";
 
 tiLabelMetaPost				= "MetaPost";
@@ -113,12 +113,12 @@ tiLabelMouseMode			= "Muismodus";
 tiPaletteLabelMouseMode			= "Muismodus";
 tiToolTipMouseMode			= "Verander de muismodus";
 
-tiLabelSyncMarks			= "SyncMarks";
-tiPaletteLabelSyncMarks			= "Sync Marks";
+tiLabelSyncMarks			= "Syncpunten";
+tiPaletteLabelSyncMarks			= "Synchronisatiepunten";
 tiToolTipSyncMarks			= "Toon Sync Marks";
 
-tiLabelColorIndex				= "ColorIndex";
-tiPaletteLabelColorIndex		= "Color Index";
+tiLabelColorIndex				= "Kleurindex";
+tiPaletteLabelColorIndex		= "Kleurindex";
 tiToolTipColorIndex				= "Commando's Color Index";
 
 tiLabelTypesetKIT				= "Zet";
@@ -131,11 +131,11 @@ tiToolTipSearchKIT				= "Zoek";
 
 tiLabelSharingKIT				= "Sharing";
 tiPaletteLabelSharingKIT		= "Sharing";
-tiToolTipSharingKIT				= "Share text and images";
+tiToolTipSharingKIT				= "Deel tekst en afbeeldingen";
 
 
-tiLabelProgramKIT				= "Program";
-tiPaletteLabelProgramKIT		= "Program";
+tiLabelProgramKIT				= "Programma";
+tiPaletteLabelProgramKIT		= "Programma";
 tiToolTipProgramKIT				= "Kies zetprogramma";
 
 tiLabelPreviousPageButtonKIT		= "Vorige";
@@ -162,8 +162,8 @@ tiLabelMouseModeKIT				= "Muismodus";
 tiPaletteLabelMouseModeKIT		= "Muismodus";
 tiToolTipMouseModeKIT			= "Verander de muismodus";
 
-tiLabelSyncMarksKIT				= "SyncMarks";
-tiPaletteLabelSyncMarksKIT		= "Sync Marks";
+tiLabelSyncMarksKIT				= "Syncpunten";
+tiPaletteLabelSyncMarksKIT		= "Synchronisatiepunten";
 tiToolTipSyncMarksKIT			= "Toon Sync Marks";
 
 tiLabelBackForthKIT				= "Vorige/Volgende";
@@ -178,9 +178,9 @@ tiLabelDrawerKIT				= "Navigatiekolom";
 tiPaletteLabelDrawerKIT			= "Navigatiekolom";
 tiToolTipDrawerKIT				= "Toon/verberg navigatiekolom";
 
-tiLabelShowFullPath				= "FullPath";
-tiPaletteLabelShowFullPath		= "FullPath";
-tiToolTipShowFullPath			= "Show Full Path in Window Title";
+tiLabelShowFullPath				= "Volledig pad";
+tiPaletteLabelShowFullPath		= "Volledig pad";
+tiToolTipShowFullPath			= "Toon volledig pad in venstertitel";
 
 tiLabelProgramSplit				= "Zet";
 tiPaletteLabelProgramSplit		= "Zet";
@@ -202,8 +202,8 @@ tiLabelMagnificationSplit		= "Vergroting";
 tiPaletteLabelMagnificationSplit   = "Vergroting";
 tiToolTipMagnificationSplit     = "Stel vergroting in";
 
-tiLabelColorIndexSplit			= "ColorIndex";
-tiPaletteLabelColorIndexSplit     = "ColorIndex";
+tiLabelColorIndexSplit			= "Kleurindex";
+tiPaletteLabelColorIndexSplit     = "Kleurindex";
 tiToolTipColorIndexSplit          = "Commando's Color Index";
 
 tiLabelAutoCompleteSplit		= "Automatisch aanvullen";
@@ -214,9 +214,9 @@ tiLabelTemplatesSplit            = "Sjablonen";
 tiPaletteLabelTemplatesSplit            = "Sjablonen";
 tiToolTipTemplatesSplit            = "Kies een Sjabloon om in te voegen";
 
-tiLabelSharingSplit                = "Share Source";
-tiPaletteLabelSharingSplit        = "Share Source";
-tiToolTipSharingSplit            = "Share text and pictures";
+tiLabelSharingSplit                = "Deel bron";
+tiPaletteLabelSharingSplit        = "Deel bron";
+tiToolTipSharingSplit            = "Deel tekst en afbeeldingen";
 
 tiLabelMouseModeKITSplit                = "Muismodus";
 tiPaletteLabelMouseModeKITSplit        = "Muismodus";
@@ -232,35 +232,35 @@ tiToolTipTypesetSplit            = "Voer zetprogramma uit";
 
 tiLabelLabels                = "Labels";
 tiPaletteLabelLabels            = "Labels";
-tiToolTipLabels                = "Select a label to scroll to";
+tiToolTipLabels                = "Kies een label om naartoe te scrollen";
 
 tiLabelLabelsSplit                = "Labels";
 tiPaletteLabelLabelsSplit         = "Labels";
-tiToolTipLabelsSplit              = "Select a label to scroll to";
+tiToolTipLabelsSplit              = "Kies een label om naartoe te scrollen";
 
-tiLabelUpdate              = "Update";
-tiPaletteLabelUpdate         = "Update";
-tiToolTipUpdate              = "Update tags and labels";
+tiLabelUpdate              = "Werk bij";
+tiPaletteLabelUpdate         = "Werk bij";
+tiToolTipUpdate              = "Werk markeringen en labels bij";
 
-tiLabelUpdateSplit                = "Update";
-tiPaletteLabelUpdateSplit         = "Update";
-tiToolTipUpdateSplit              = "Update tags and labels";
+tiLabelUpdateSplit                = "Werk bij";
+tiPaletteLabelUpdateSplit         = "Werk bij";
+tiToolTipUpdateSplit              = "Werk markeringen en labels bij";
 
-tiLabelHtmlPreviousPageButton                = "Back";
-tiPaletteLabelHtmlPreviousPageButton            = "Back";
-tiToolTipHtmlPreviousPageButton            = "Go to previous page";
+tiLabelHtmlPreviousPageButton                = "Terug";
+tiPaletteLabelHtmlPreviousPageButton            = "Terug";
+tiToolTipHtmlPreviousPageButton            = "Ga naar vorige pagina";
 
-tiLabelHtmlNextPageButton                = "Forward";
-tiPaletteLabelHtmlNextPageButton            = "Forward";
-tiToolTipHtmlNextPageButton           = "Go to next page";
+tiLabelHtmlNextPageButton                = "Vooruit";
+tiPaletteLabelHtmlNextPageButton            = "Vooruit";
+tiToolTipHtmlNextPageButton           = "Ga naar volgende pagina";
 
 tiLabelHtmlURLField                = "URL";
 tiPaletteLabelHtmlURLField            = "URL";
-tiToolTipHtmlURLField            = "To go this URL";
+tiToolTipHtmlURLField            = "Ga naar deze URL";
 
-tiLabelHtmlSearch             = "Search";
-tiPaletteLabelHtmlSearch      = "Search";
-tiToolTipHtmlSearch           = "Search";
+tiLabelHtmlSearch             = "Zoek";
+tiPaletteLabelHtmlSearch      = "Zoek";
+tiToolTipHtmlSearch           = "Zoek";
 
 /* Experiment preview tools */
 "ExperimentToolScroll" = "Scrollen";
@@ -270,3 +270,19 @@ tiToolTipHtmlSearch           = "Search";
 "ExperimentZoomOut" = "Zoom uit";
 "ExperimentZoomIn" = "Zoom in";
 "ExperimentZoomToContent" = "Zoom naar inhoud";
+
+"Page Layout" = "Pagina-indeling";
+"tiLabelTSPreviewAppearance" = "Weergave";
+"Continuous Two Pages" = "Dubbel doorlopend";
+"Restore Document Settings" = "Herstel documentinstellingen";
+"Single Page" = "Enkele pagina";
+"PreviewAppearanceDark" = "Donker";
+"PreviewAppearanceLight" = "Licht";
+"Two Pages" = "Dubbele pagina";
+"PreviewAppearanceSystem" = "Systeem";
+"Left to right" = "Van links naar rechts";
+"Two-Page Arrangement" = "Indeling dubbele pagina’s";
+"Applies when displaying two pages" = "Geldt bij weergave van dubbele pagina’s";
+"Continuous" = "Doorlopend";
+"Right to left" = "Van rechts naar links";
+"Show first page alone as cover" = "Eerste pagina apart als omslag tonen";

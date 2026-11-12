@@ -23,7 +23,7 @@
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="145"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Vérifier les mises à jour..." id="624" identifier="TSShortcut.checkForUpdates:.0">
+                            <menuItem title="Rechercher les mises à jour..." id="624" identifier="TSShortcut.checkForUpdates:.0">
                                 <connections>
                                     <action selector="checkForUpdates:" target="809" id="810"/>
                                 </connections>
@@ -115,8 +115,8 @@
                                     <action selector="displayStyleFile:" target="675" id="934"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Ouvrir récent" id="146">
-                                <menu key="submenu" title="Ouvrir récent" systemMenu="recentDocuments" id="147">
+                            <menuItem title="Ouvrir l’élément récent" id="146">
+                                <menu key="submenu" title="Ouvrir l’élément récent" systemMenu="recentDocuments" id="147">
                                     <items>
                                         <menuItem title="Effacer le menu" id="148" identifier="TSShortcut.clearRecentDocuments:.0">
                                             <connections>
@@ -175,7 +175,7 @@
                             <menuItem isSeparatorItem="YES" id="85">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Mise en page" keyEquivalent="P" id="83" identifier="TSShortcut.runPageLayout:.0">
+                            <menuItem title="Format d’impression..." keyEquivalent="P" id="83" identifier="TSShortcut.runPageLayout:.0">
                                 <connections>
                                     <action selector="runPageLayout:" target="-1" id="91"/>
                                 </connections>
@@ -279,22 +279,22 @@
                                                 <action selector="performFindPanelAction:" target="-1" id="1021"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Rech. Suivant" tag="2" keyEquivalent="g" id="990" identifier="TSShortcut.performFindPanelAction:.2">
+                                        <menuItem title="Rechercher le suivant" tag="2" keyEquivalent="g" id="990" identifier="TSShortcut.performFindPanelAction:.2">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1019"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Rech. Précédent" tag="3" keyEquivalent="G" id="991" identifier="TSShortcut.performFindPanelAction:.3">
+                                        <menuItem title="Rechercher le précédent" tag="3" keyEquivalent="G" id="991" identifier="TSShortcut.performFindPanelAction:.3">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1023"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Rechercher Texte Sélectionné" tag="7" keyEquivalent="e" id="992" identifier="TSShortcut.performFindPanelAction:.7">
+                                        <menuItem title="Rechercher la sélection" tag="7" keyEquivalent="e" id="992" identifier="TSShortcut.performFindPanelAction:.7">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1020"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Tout Rechercher" keyEquivalent="j" id="993" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
+                                        <menuItem title="Aller à la sélection" keyEquivalent="j" id="993" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
                                             <connections>
                                                 <action selector="centerSelectionInVisibleArea:" target="-1" id="1022"/>
                                             </connections>
@@ -595,7 +595,7 @@
                                                 <action selector="startSpeaking:" target="-1" id="877"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Arrêter le lecture" id="875" identifier="TSShortcut.stopSpeaking:.0">
+                                        <menuItem title="Arrêter la lecture" id="875" identifier="TSShortcut.stopSpeaking:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="stopSpeaking:" target="-1" id="878"/>
@@ -731,7 +731,7 @@
                                                 <action selector="hardWrapSelection:" target="-1" id="645"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Soft Wrap" id="837" identifier="TSShortcut.removeNewLinesFromSelection:.0">
+                                        <menuItem title="Joindre les lignes" id="837" identifier="TSShortcut.removeNewLinesFromSelection:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="removeNewLinesFromSelection:" target="-1" id="846"/>
@@ -787,10 +787,10 @@
                             <menuItem isSeparatorItem="YES" id="537">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Polices" id="286">
-                                <menu key="submenu" title="Polices" systemMenu="font" id="303">
+                            <menuItem title="Police" id="286">
+                                <menu key="submenu" title="Police" systemMenu="font" id="303">
                                     <items>
-                                        <menuItem title="Fenêtre des polices" keyEquivalent="k" id="295" identifier="TSShortcut.orderFrontFontPanel:.0">
+                                        <menuItem title="Afficher les polices" keyEquivalent="k" id="295" identifier="TSShortcut.orderFrontFontPanel:.0">
                                             <connections>
                                                 <action selector="orderFrontFontPanel:" target="202" id="319"/>
                                             </connections>
@@ -864,7 +864,7 @@
                                                             <action selector="useStandardLigatures:" target="-1" id="gpp-tl-L4F"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Aucun" id="pxW-ij-PUw" identifier="TSShortcut.turnOffLigatures:.0">
+                                                    <menuItem title="Aucune" id="pxW-ij-PUw" identifier="TSShortcut.turnOffLigatures:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="turnOffLigatures:" target="-1" id="gXU-St-iMz"/>
@@ -950,7 +950,7 @@
                 <menuItem title="Macros" id="481">
                     <menu key="submenu" title="Macros" id="482">
                         <items>
-                            <menuItem title="Ouvrir l'éditeur des macros..." id="483" identifier="TSShortcut.openMacroEditor:.0">
+                            <menuItem title="Ouvrir l'éditeur de macros..." id="483" identifier="TSShortcut.openMacroEditor:.0">
                                 <connections>
                                     <action selector="openMacroEditor:" target="486" id="488"/>
                                 </connections>
@@ -1137,8 +1137,8 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Afficher le format" id="555">
-                                <menu key="submenu" title="Afficher le format" id="556">
+                            <menuItem title="Format d’affichage" id="555">
+                                <menu key="submenu" title="Format d’affichage" id="556">
                                     <items>
                                         <menuItem title="Page simple" tag="1" id="557" identifier="TSShortcut.changePageStyle:.1">
                                             <connections>
@@ -1264,13 +1264,13 @@
                                     <action selector="fullscreen:" target="-1" id="660"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Activer lemode plein êcran" keyEquivalent="f" id="1024" identifier="TSShortcut.toggleFullScreen:.0">
+                            <menuItem title="Activer le mode plein écran" keyEquivalent="f" id="1024" identifier="TSShortcut.toggleFullScreen:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="1025"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Tout ramener au premier plan" id="5" identifier="TSShortcut.arrangeInFront:.0">
+                            <menuItem title="Organiser au premier plan" id="5" identifier="TSShortcut.arrangeInFront:.0">
                                 <connections>
                                     <action selector="arrangeInFront:" target="-1" id="39"/>
                                 </connections>
@@ -1524,9 +1524,9 @@
                     </popUpButtonCell>
                 </popUpButton>
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="518">
-                    <rect key="frame" x="26" y="13" width="61" height="14"/>
+                    <rect key="frame" x="26" y="13" width="65" height="14"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Encoding:" id="831">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Encodage :" id="831">
                         <font key="font" metaFont="controlContent" size="11"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1612,7 +1612,7 @@ Gw
                 <outlet property="tableView" destination="896" id="907"/>
             </connections>
         </customObject>
-        <window title="Select Source:" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Stationery" animationBehavior="default" id="890" userLabel="StationeryWindow" customClass="NSPanel">
+        <window title="Sélectionner la source :" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Stationery" animationBehavior="default" id="890" userLabel="StationeryWindow" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="425" y="845" width="511" height="441"/>
@@ -1637,7 +1637,7 @@ Gw
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn identifier="Source" width="100" minWidth="100" maxWidth="3.4028234663852886e+38" id="900">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Source">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Modèle">
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
@@ -1698,7 +1698,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="892">
                         <rect key="frame" x="293" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
-                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="904">
+                        <buttonCell key="cell" type="push" title="Annuler" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="904">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">

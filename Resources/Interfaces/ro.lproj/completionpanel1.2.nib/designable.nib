@@ -4214,7 +4214,7 @@
 												<object class="NSTextFieldCell" key="NSCell" id="746316199">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">4194304</int>
-													<string key="NSContents">Generics</string>
+													<string key="NSContents">Generice</string>
 													<reference key="NSSupport" ref="698508377"/>
 													<reference key="NSControlView" ref="87086702"/>
 													<bool key="NSDrawsBackground">YES</bool>
@@ -4276,7 +4276,7 @@
 													<object class="NSButtonCell" id="501810595">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Itemize</string>
+														<string key="NSContents">Listă</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSButtonFlags">-2037628673</int>
@@ -4291,7 +4291,7 @@
 													<object class="NSButtonCell" id="85268428">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Enumerate</string>
+														<string key="NSContents">Numerotare</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">1</int>
@@ -4305,7 +4305,7 @@
 													<object class="NSButtonCell" id="271557729">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Description</string>
+														<string key="NSContents">Descriere</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">2</int>
@@ -4319,7 +4319,7 @@
 													<object class="NSButtonCell" id="857141752">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Cases</string>
+														<string key="NSContents">Cazuri</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">3</int>
@@ -4333,7 +4333,7 @@
 													<object class="NSButtonCell" id="168199610">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Figure</string>
+														<string key="NSContents">Figură</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">4</int>
@@ -4347,7 +4347,7 @@
 													<object class="NSButtonCell" id="820486610">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Center</string>
+														<string key="NSContents">Centrat</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">5</int>
@@ -4389,7 +4389,7 @@
 													<object class="NSButtonCell" id="737441891">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Table</string>
+														<string key="NSContents">Tabel</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">8</int>
@@ -4431,7 +4431,7 @@
 													<object class="NSButtonCell" id="410014267">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Matrix</string>
+														<string key="NSContents">Matrice</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">11</int>
@@ -4445,7 +4445,7 @@
 													<object class="NSButtonCell" id="283312983">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Equation</string>
+														<string key="NSContents">Ecuație</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">12</int>
@@ -4487,7 +4487,7 @@
 													<object class="NSButtonCell" id="1009174280">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Customized</string>
+														<string key="NSContents">Personalizat</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="602764115"/>
 														<int key="NSTag">15</int>
@@ -4580,7 +4580,7 @@
 													<object class="NSButtonCell" id="839239760">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Bold</string>
+														<string key="NSContents">Aldin</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="712090884"/>
 														<int key="NSTag">2</int>
@@ -4594,7 +4594,7 @@
 													<object class="NSButtonCell" id="552916708">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Italic</string>
+														<string key="NSContents">Cursiv</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="712090884"/>
 														<int key="NSTag">3</int>
@@ -4608,7 +4608,7 @@
 													<object class="NSButtonCell" id="328469892">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">CAPS</string>
+														<string key="NSContents">Majuscule</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="712090884"/>
 														<int key="NSTag">4</int>
@@ -4622,7 +4622,7 @@
 													<object class="NSButtonCell" id="333425018">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Slanted</string>
+														<string key="NSContents">Înclinat</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="712090884"/>
 														<int key="NSTag">5</int>
@@ -4636,7 +4636,7 @@
 													<object class="NSButtonCell" id="757512880">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Medium</string>
+														<string key="NSContents">Mediu</string>
 														<reference key="NSSupport" ref="698508377"/>
 														<reference key="NSControlView" ref="712090884"/>
 														<int key="NSTag">6</int>

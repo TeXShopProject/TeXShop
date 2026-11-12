@@ -703,7 +703,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="735931834">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">205520896</int>
-								<string key="NSContents">Colonnes:</string>
+								<string key="NSContents">Colonnes</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="649910861"/>
 								<reference key="NSBackgroundColor" ref="393773709"/>

@@ -6,7 +6,7 @@
 "Prr-63-EQ4.title" = "Cambiar la codificación de un archivo puede acarrear pérdida de datos. Usa este panel sólo si el archivo actual es una copia del original.";
 
 /* Class = "NSButtonCell"; title = "OK"; ObjectID = "V5P-DF-wCP"; */
-"V5P-DF-wCP.title" = "OK";
+"V5P-DF-wCP.title" = "Aceptar";
 
 /* Class = "NSMenuItem"; title = "Item 1"; ObjectID = "VTQ-2K-Yam"; */
 "VTQ-2K-Yam.title" = "Item 1";

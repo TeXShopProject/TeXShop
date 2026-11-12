@@ -3,11 +3,11 @@
 "1024.title" = "kpsewhich (por defecto: kpsewhich -progname=latex -format=tex)";
 "1027.title" = "Motor BibTeX";
 "1030.title" = "Por defecto: bibtex";
-"1063.title" = "por defecto";
-"1068.title" = "por defecto";
+"1063.title" = "Por omisión";
+"1068.title" = "Por omisión";
 "1069.title" = "TeX";
-"1071.title" = "por defecto";
-"1074.title" = "por defecto";
+"1071.title" = "Por omisión";
+"1074.title" = "Por omisión";
 "1075.title" = "LaTeX ";
 "200.title" = "TeX + dvips + distiller";
 "215.title" = "Rutas";
