@@ -928,7 +928,8 @@ extern NSPanel *pageNumberWindow;
 // part becomes the active view, which Back and Forward and the toolbar work with.
 - (void)showLinkDestination: (PDFDestination *)destination besideView: (PDFView *)view
 {
-    if (destination == nil)
+    // The PDF may have been reloaded while the menu was open; the target then belongs to the old one.
+    if (destination.page == nil || destination.page.document == nil || destination.page.document != view.document)
         return;
     if (! self.windowIsSplit) {
         if (view != self.myPDFKitView)
@@ -939,6 +940,8 @@ extern NSPanel *pageNumberWindow;
     MyPDFKitView *otherView = (MyPDFKitView *)(view == self.myPDFKitView ? self.myPDFKitView2 : self.myPDFKitView);
     NSSplitView *splitView = self.pdfKitSplitView;
     if (! self.windowIsSplit || linkView.superview != splitView || otherView.superview != splitView || splitView.subviews.count != 2)
+        return;
+    if (otherView.document != linkView.document)
         return;
     NSWindow *window = linkView.window;
 

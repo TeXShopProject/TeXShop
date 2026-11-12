@@ -19,6 +19,7 @@ MUTATIONS = {
     'no-item': ('view', '            [theMenu insertItem: linkItem atIndex: 2];\n', ''),
     'any-link': ('view', '    if (destination.page == nil || destination.page.document != self.document)\n        return nil;\n',
                  '    if (destination == nil)\n        return (PDFDestination *)[NSNull null];\n'),
+    'stale-target': ('window', '    if (destination.page == nil || destination.page.document == nil || destination.page.document != view.document)\n        return;\n', ''),
     'no-split': ('window', '        [self splitPdfKitWindow: nil];\n', ''),
     'clicked-part-moves': ('window', '    [otherView goToDestination: destination];\n', '    [linkView goToDestination: destination];\n'),
     'always-second-view': ('window', '    MyPDFKitView *otherView = (MyPDFKitView *)(view == self.myPDFKitView ? self.myPDFKitView2 : self.myPDFKitView);\n',
@@ -491,6 +492,30 @@ int main(int argc, char **argv) { @autoreleasepool {
               @"hidden, unsplit: the second part gets half the window");
         check(near(distanceFromTop(p.upper, top)), @"hidden, unsplit: the part with the link stays");
         checkAtTarget(p.lower, forward.destination, @"hidden, unsplit");
+        [p.window close];
+    }
+    for (NSNumber *wasSplit in @[@NO, @YES]) {
+        // The PDF is reloaded while the menu is open: the item then does nothing, since its
+        // target belongs to the old PDF.
+        NSString *name = wasSplit.boolValue ? @"reloaded, split" : @"reloaded, unsplit";
+        Preview p = makePreview(doc, nil);
+        if (wasSplit.boolValue) split(p, NO);
+        scrollTo(p.upper, 1, 750); scrollTo(p.lower, 5, 500); settle(p.window);
+        NSMenu *menu = menuAt(p.upper, 1, middle(forward));
+        NSMenuItem *item = linkItem(menu);
+        check(item != nil, describe(name, @"the menu has the item"));
+        PDFDocument *reloaded = [[PDFDocument alloc] initWithURL:doc.documentURL];
+        p.upper.document = reloaded;
+        if (wasSplit.boolValue) p.lower.document = reloaded;
+        settle(p.window);
+        NSInteger lowerPage = wasSplit.boolValue ? pageOf(p.lower) : -1;
+        [NSApp sendAction:item.action to:item.target from:item];
+        for (int i = 0; i < 5; i++) settle(p.window);
+        check(p.window.windowIsSplit == wasSplit.boolValue, describe(name, @"the window stays as it was"));
+        check(p.upper.document == reloaded && pageOf(p.upper) >= 0 && pageOf(p.upper) < (NSInteger)reloaded.pageCount,
+              describe(name, @"the first part shows the reloaded PDF"));
+        if (wasSplit.boolValue)
+            check(pageOf(p.lower) == lowerPage, describe(name, @"the second part stays where it was"));
         [p.window close];
     }
     for (NSNumber *wasSplit in @[@NO, @YES]) {
