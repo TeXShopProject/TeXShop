@@ -12,7 +12,7 @@
 このページで説明しているのは、隠し設定の一部だけです。すべての隠し設定と、それぞれを変更するターミナルのコマンドは、ヘルプメニューの「マジックコメントと隠し設定（英語）」にまとめてあります。
 </p>
 <p>
-TeXShop では、\section ・ \subsection ・ \subsubsection あるいは \chapter という語で始まっている行をタグメニューに追加します。これをオフにするには、ターミナルを起動し、以下のコマンドを打ち込みます。NO を YES に変えれば、動作はまた元に戻ります。
+TeXShopでは、\section・ \subsection・ \subsubsectionあるいは \chapterという語で始まっている行をタグメニューに追加します。これをオフにするには、ターミナルを起動し、以下のコマンドを打ち込みます。NOをYESに変えれば、動作はまた元に戻ります。
 </p>
 <tt>
 <dl>
@@ -20,7 +20,7 @@ TeXShop では、\section ・ \subsection ・ \subsubsection あるいは \chapter という
 		</dd></dl>
 </tt>
 <p>
-ConTeXt ユーザーは、もっと多くの語句がタグメニューに追加されることをお望みでしょう。以下の設定をすると、\subsubsubsection, \subsubsubsubsection, \part, \title, \subject, \subsubject, \subsubsubject, \subsubsubsubject, そして \subsubsubsubsubject などの語句が認識されるようになって、タグメニューに追加されます。
+ConTeXtユーザーは、もっと多くの語句がタグメニューに追加されることをお望みでしょう。以下の設定をすると、\subsubsubsection, \subsubsubsubsection, \part, \title, \subject, \subsubject, \subsubsubject, \subsubsubsubject, そして \subsubsubsubsubjectなどの語句が認識されるようになって、タグメニューに追加されます。
 </p>
 <tt>
 <dl>
@@ -33,7 +33,7 @@ ConTeXt ユーザーは、もっと多くの語句がタグメニューに追加されることをお望みでしょ
 </p>
 <hr/>
 <p>
-タイプセットの際に時たま、TeX によって自動的に生成される .aux ファイルや .log ファイル、その他のファイルがおかしくなったりして、取り除かねばならないことがあります。TeXShop には「作業ファイルを削除」というメニュー項目があり、さらにコンソールウインドウにもこれと連動しているボタンがあります。このいずれかを選択すると TeXShop は、ソースファイルを含むフォルダ内にあって、ソースと同じ名前で、拡張子が aux ・ bcf ・ blg ・ brf ・ css ・ ent ・ fdb_latexmk ・ fff ・ fls ・ gaux ・ glo ・ glog ・ gtex ・ idv ・ idx ・ ilg ・ ind ・ lg ・ loa ・ lof ・ log ・ lot ・ mlf ・ mtc ・ out ・ pdfsync ・ run.xml ・ synctex ・ synctex.gz ・ synctex(busy) ・ toc ・ ttt ・ wrm ・ xref ・ 4ct ・ 4tc となっているファイルをすべてゴミ箱へと移動します。このリストには、その他の拡張子を、ひとつずつ追加することができます。例として、.dvi ファイルを加えるには：
+タイプセットの際に時たま、TeXによって自動的に生成される .auxファイルや .logファイル、その他のファイルがおかしくなったりして、取り除かねばならないことがあります。TeXShopには「作業ファイルを削除」というメニュー項目があり、さらにコンソールウインドウにもこれと連動しているボタンがあります。このいずれかを選択するとTeXShopは、ソースファイルを含むフォルダ内にあって、ソースと同じ名前で、拡張子がaux・bcf・blg・brf・css・ent・fdb_latexmk・fff・fls・gaux・glo・glog・gtex・idv・idx・ilg・ind・lg・loa・lof・log・lot・mlf・mtc・out・pdfsync・run.xml・synctex・synctex.gz・synctex(busy) ・toc・ttt・wrm・xref・4ct・4tcとなっているファイルをすべてゴミ箱へと移動します。このリストには、その他の拡張子を、ひとつずつ追加することができます。例として、.dviファイルを加えるには：
 </p>
 <tt>
 <dl>
@@ -49,7 +49,7 @@ ConTeXt ユーザーは、もっと多くの語句がタグメニューに追加されることをお望みでしょ
 		</dd></dl>
 </tt>
 <p>
-時として、さらに徹底したクリーンナップが望ましいことがあります。オプションキーを押しながら「作業ファイルを削除」を選択すると TeXShop は、「% !TEX root = ...」および「プロジェクトルートの設定」機能を使ってルートファイルを探し当てます。そしてルートファイルのあるフォルダ内、およびこのフォルダ内のサブフォルダの中にあり、該当する拡張子の付いたすべてのファイルを、そのファイル名の如何に関わらず、ゴミ箱に移します。「作業ファイルを削除」の動作を、オプションキーを押すことなく上述のようにすることもできます ； 次のようなコマンドを入れてください──
+時として、さらに徹底したクリーンナップが望ましいことがあります。オプションキーを押しながら「作業ファイルを削除」を選択するとTeXShopは、「% !TEX root = ...」および「プロジェクトルートの設定」機能を使ってルートファイルを探し当てます。そしてルートファイルのあるフォルダ内、およびこのフォルダ内のサブフォルダの中にあり、該当する拡張子の付いたすべてのファイルを、そのファイル名の如何に関わらず、ゴミ箱に移します。「作業ファイルを削除」の動作を、オプションキーを押すことなく上述のようにすることもできます ； 次のようなコマンドを入れてください──
 </p>
 <tt>
 <dl>
@@ -58,7 +58,7 @@ ConTeXt ユーザーは、もっと多くの語句がタグメニューに追加されることをお望みでしょ
 </tt>
 <hr/>
 <p>
-pdf ファイルが変更されたときに pdf 画面を自動的に更新するよう TeXShop を設定することができます。自動更新のためにTeXShop は、１秒に１度、pdf が最後に書き変えられた日付と時刻に変更があったかどうかチェックします。このチェックの間隔は変更することができます。Terminal を立ち上げ、次のコマンドを打ち込みます。1.00 をお好みの秒数に変えてください。
+pdfファイルが変更されたときにpdf画面を自動的に更新するようTeXShopを設定することができます。自動更新のためにTeXShopは、１秒に１度、pdfが最後に書き変えられた日付と時刻に変更があったかどうかチェックします。このチェックの間隔は変更することができます。Terminalを立ち上げ、次のコマンドを打ち込みます。1.00をお好みの秒数に変えてください。
 </p>
 <tt>
 <dl>
@@ -66,7 +66,7 @@ pdf ファイルが変更されたときに pdf 画面を自動的に更新するよう TeXShop を設定する
 		</dd></dl>
 </tt>
 <p>
-pdf の自動更新は、外部エディタを使うよう設定しているか、あるいは「プレビューを開く...」で TeX ファイルを開いたときに便利です。これらの場合には、.tex ファイルは開かれていますが、TeXShop ではただ関連づけの行なわれた pdf ファイルを表示しているにすぎません。TeXShop はまた、pdf ファイルを直接開くこともできます ； これはイラストを TeX 文書に埋め込む前に一瞥しておくのに便利です。外部エディタのために開いた pdf ファイルは自動的に更新させたいけれども、一瞥するために開いた pdf ファイルは自動更新させたくない場合には、Terminal を立ち上げ、以下のコマンドを打ち込みます。この設定のデフォルトの値は YES です。
+pdfの自動更新は、外部エディタを使うよう設定しているか、あるいは「プレビューを開く...」でTeXファイルを開いたときに便利です。これらの場合には、.texファイルは開かれていますが、TeXShopではただ関連づけの行なわれたpdfファイルを表示しているにすぎません。TeXShopはまた、pdfファイルを直接開くこともできます ； これはイラストをTeX文書に埋め込む前に一瞥しておくのに便利です。外部エディタのために開いたpdfファイルは自動的に更新させたいけれども、一瞥するために開いたpdfファイルは自動更新させたくない場合には、Terminalを立ち上げ、以下のコマンドを打ち込みます。この設定のデフォルトの値はYESです。
 </p>
 <tt>
 <dl>
@@ -74,7 +74,7 @@ pdf の自動更新は、外部エディタを使うよう設定しているか、あるいは「プレビューを開
 		</dd></dl>
 </tt>
 <p>
-外部エディタで .tex ファイルを開いた際に、TeXShop は TeX ファイルと pdf ファイルの日付をチェックし、pdf 出力が最新の状態になっているかどうか確認します。もし出力が古くなっているか、まったく存在しないようなら、TeXShop は .tex ファイルを改めてタイプセットします。この動作をオフにするには、Terminal を立ち上げ、以下のコマンドを打ち込みます。
+外部エディタで .texファイルを開いた際に、TeXShopはTeXファイルとpdfファイルの日付をチェックし、pdf出力が最新の状態になっているかどうか確認します。もし出力が古くなっているか、まったく存在しないようなら、TeXShopは .texファイルを改めてタイプセットします。この動作をオフにするには、Terminalを立ち上げ、以下のコマンドを打ち込みます。
 </p>
 <tt>
 <dl>
@@ -101,7 +101,7 @@ pdf の自動更新は、外部エディタを使うよう設定しているか、あるいは「プレビューを開
 </tt>
 <hr/>
 <p>
-タイプセット後にプレビューウインドウが更新されると、ウインドウは前面に来ます。この動作は、Apple の X11 Window Manager で実行させている X11 エディタの使用でトラブルの種になります。そうした場合には、以下のようにしてこの動作をオフにできます：
+タイプセット後にプレビューウインドウが更新されると、ウインドウは前面に来ます。この動作は、AppleのX11 Window Managerで実行させているX11エディタの使用でトラブルの種になります。そうした場合には、以下のようにしてこの動作をオフにできます：
 </p>
 <tt>
 <dl>
@@ -110,7 +110,7 @@ pdf の自動更新は、外部エディタを使うよう設定しているか、あるいは「プレビューを開
 </tt>
 <hr/>
 <p>
-TeXShop ではこれまで、タイプセットエンジンやファイルのエンコーディング方式、ルートファイルを決めるのに、現行のものとは異なるソースコマンドをサポートしていました； たとえば、%&amp;latex ・ %&amp;encoding=UTF-8 Unicode ・ %SourceDoc ../Main.tex などといったものです。この構文は私の不用意な選定によるものでしたので、変更しました。もし古いファイルがたくさんあって、一時的に以前の状態に戻すには、下記のコマンドを使用してください。そうすれば、新しいソースコマンドが認識されるだけでなく、古いソースコマンドもまた同様に機能します。この設定変更は応急の場合にのみ用いてください。
+TeXShopではこれまで、タイプセットエンジンやファイルのエンコーディング方式、ルートファイルを決めるのに、現行のものとは異なるソースコマンドをサポートしていました； たとえば、%&amp;latex・ %&amp;encoding=UTF-8 Unicode・ %SourceDoc ../Main.texなどといったものです。この構文は私の不用意な選定によるものでしたので、変更しました。もし古いファイルがたくさんあって、一時的に以前の状態に戻すには、下記のコマンドを使用してください。そうすれば、新しいソースコマンドが認識されるだけでなく、古いソースコマンドもまた同様に機能します。この設定変更は応急の場合にのみ用いてください。
 </p>
 <tt>
 <dl>
@@ -148,24 +148,24 @@ TeXShop ではこれまで、タイプセットエンジンやファイルのエンコーディング方式、ルー
 		</dd></dl>
 </tt>
 <hr/>
-<p> TeXShop はコマンド補完をサポートしています。TeX の複雑なコマンドの最初数文字を入力してエスケープキーを押すと残りが補完されます。これは，引数を含む複雑なコマンドでも大丈夫です。引数を含む場合，TeXShop は「マーク」という引数のプレースホルダをサポートしています。メニューコマンドの コマンド補完→マーク でマーク間をジャンプできます。そのショートカットはメニューに書かれています。
+<p> TeXShopはコマンド補完をサポートしています。TeXの複雑なコマンドの最初数文字を入力してエスケープキーを押すと残りが補完されます。これは，引数を含む複雑なコマンドでも大丈夫です。引数を含む場合，TeXShopは「マーク」という引数のプレースホルダをサポートしています。メニューコマンドの コマンド補完→マーク でマーク間をジャンプできます。そのショートカットはメニューに書かれています。
 </p>
-<p> 次のマーク・前のマークにジャンプするのは極めて頻繁に行うので，「次のマーク」を option + escape, 「前のマーク」を control + escape にも割り当てています。</p>
-<p> コマンド補完のキーとして，設定ウインドウでエスケープキーの代わりにタブキーを選ぶことも出来ます。その場合，マーク間のジャンプは option + tab と control + tab になります。</p>
-<p> しかし，時々，サードパーティ製のユーティリティが option + escape, control + escape, option + tab, control + tab を他の目的で使用していて，TeXShop と衝突する場合があります。その場合のために，TeXShop がこれらのショートカットを使わないよう設定変更できます。
+<p> 次のマーク・前のマークにジャンプするのは極めて頻繁に行うので，「次のマーク」をoption + escape, 「前のマーク」をcontrol + escapeにも割り当てています。</p>
+<p> コマンド補完のキーとして，設定ウインドウでエスケープキーの代わりにタブキーを選ぶことも出来ます。その場合，マーク間のジャンプはoption + tabとcontrol + tabになります。</p>
+<p> しかし，時々，サードパーティ製のユーティリティがoption + escape, control + escape, option + tab, control + tabを他の目的で使用していて，TeXShopと衝突する場合があります。その場合のために，TeXShopがこれらのショートカットを使わないよう設定変更できます。
 <dl>
 <dd>
 					defaults write TeXShop CommandCompletionAlternateMarkShortcut NO
 			</dd></dl>
 <hr/>
-<p> TeXShop Ver.2.38 では，括弧を打ち込んだときに，対応する括弧が黄色いインジケータで浮き上がり，すぐに消えます。これにより，長い間要求されていた，見やすさの改善要望を満たすことができました。（この機能には Leopard 以降が必要です。）ただし，この黄色いインジケータを消したい場合は，次の設定で変更できます。
+<p> TeXShop Ver.2.38では，括弧を打ち込んだときに，対応する括弧が黄色いインジケータで浮き上がり，すぐに消えます。これにより，長い間要求されていた，見やすさの改善要望を満たすことができました。（この機能にはLeopard以降が必要です。）ただし，この黄色いインジケータを消したい場合は，次の設定で変更できます。
 <dl>
 <dd> defaults write TeXShop brieflyFlashYellowForMatch NO
 </dd></dl>
-</p></p><p><a href="basic_preferences.htm#settings-search">設定の使い方と設定の検索</a></p><p>隠し設定の WatchServer、ExtraCommandsToCheckParameters、ExtraCommandsNotToCheckParameters と、macOS の設定 ApplePersistence は、TeXShop の起動時に読み込まれます。変更した場合は TeXShop を再起動してください。</p></div>
+</p></p><p><a href="basic_preferences.htm#settings-search">設定の使い方と設定の検索</a></p><p>隠し設定のWatchServer、ExtraCommandsToCheckParameters、ExtraCommandsNotToCheckParametersと、macOSの設定ApplePersistenceは、TeXShopの起動時に読み込まれます。変更した場合はTeXShopを再起動してください。</p></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><img border="0" height="40" src="../gfx/xicnsc.gif" width="40"/></a></div>
-<div id="header_chapter">TeXShop の設定はどうすればよいか？</div>
+<div id="header_chapter">TeXShopの設定はどうすればよいか？</div>
 <div id="header_title">隠れた設定項目</div>
 <div id="menu_border">
 <ul>
@@ -174,10 +174,10 @@ TeXShop ではこれまで、タイプセットエンジンやファイルのエンコーディング方式、ルー
 <li><a href="configure_prefchanges.htm">おすすめの設定変更</a>
 <li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
 <li><a href="configure_defaults.htm">初期設定について</a>
-<li><a href="configure_latextemplate.htm">デフォルトの LaTeX テンプレート</a>
+<li><a href="configure_latextemplate.htm">デフォルトのLaTeXテンプレート</a>
 <li><a href="configure_hidden.htm">隠れた設定項目</a>
-<li><a href="configure_plist.htm">.plist ファイル</a>
-<li><a href="configure_panel.htm">LaTeX パネルを一部変更する</a>
+<li><a href="configure_plist.htm">.plistファイル</a>
+<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a>
 <li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
 <li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 <li><a href="configure_macros.htm">マクロメニューを変更する</a>
