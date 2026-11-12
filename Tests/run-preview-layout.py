@@ -16,6 +16,10 @@ prefs=(root/'Sources/Settings/TSPreferences.m').read_text()
 controller='\n'.join(method(toolbar,s) for s in ['- (BOOL)previewDisplaysAsBook','- (BOOL)previewDisplaysRTL','- (void)changePreviewLayout:', '- (void)changePreviewArrangement:', '- (BOOL)validatePreviewLayoutItem:', '- (void)updatePreviewLayoutControls'])
 viewmethods='\n'.join(method(view,s) for s in ['- (void) setupPageStyle','- (void) setupMagnificationStyle','- (void)performPreviewLayoutChange:','- (void)applyPreviewArrangement','- (void)changePageStyleTo:', '- (void)setDisplayMode:', '- (void)setScaleFactor:', '- (NSInteger)pageStyle', '- (void)setDocument:(PDFDocument *)document'])
 parse=method(doc,'- (void)readPreviewArrangementFromData:')
+# updatePreviewLayoutControls also validates the Back/Forward item: compile its class too.
+item_start=toolbar.index('@interface TSBackForwardToolbarItem : NSToolbarItem')
+item_end=toolbar.index('    [control setEnabled: view.canGoForward forSegment: 1];\n}\n@end',item_start)+len('    [control setEnabled: view.canGoForward forSegment: 1];\n}\n@end')
+backforward=toolbar[item_start:item_end];fragments.append(('statements:@interface TSBackForwardToolbarItem',toolbar,backforward))
 # Guard the production call paths as well as exercising the production parser.
 assert '[self readPreviewArrangementFromData:myData];' in method(doc, '- (BOOL)readFromURL:')
 assert all(name not in method(doc, '- (NSStringEncoding)dataEncoding:') for name in ('bookDisplay', 'RTLDisplay', 'previewHasDirectionComment'))
@@ -67,6 +71,7 @@ static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
 - (void)updatePreviewLayoutControls;
 - (BOOL)validatePreviewLayoutItem:(NSMenuItem *)item;
 @end
+BACKFORWARDITEM
 @interface MyPDFKitView : PDFView {
  @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady;
 }
@@ -253,7 +258,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSLog(@"PASS: PDF catalog direction and precedence, toolbar priority, 16 layout combinations, precedence, split panes, menu synchronization, reload, position/zoom, immediate preferences");
 }}
 '''
-for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('REGRESSION',(root/'Tests/PreviewLayoutRegression.inc').read_text()),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:')+'\n'+method(prefs,'- (IBAction)linkPopupsChanged:'))]:program=program.replace(key,value)
+for key,value in [('VIEWMETHODS',viewmethods),('INITIALIZE',initialize),('CONTROLLER',controller),('PARSE',parse),('BACKFORWARDITEM',backforward),('REGRESSION',(root/'Tests/PreviewLayoutRegression.inc').read_text()),('PREFMETHODS',method(prefs,'- (IBAction)displayAsBookChanged:')+'\n'+method(prefs,'- (IBAction)linkPopupsChanged:'))]:program=program.replace(key,value)
 verify_embedded(program,[f for f in fragments if f[0] not in ['complete method:- (BOOL)readFromURL:', 'complete method:- (NSStringEncoding)dataEncoding:', 'complete method:- (void) doTemplate:']]+[('preview initialization',doc,initialize)])
 lang=next((a for a in sys.argv[1:] if a in ('en','ja')),'en')
 with tempfile.TemporaryDirectory(prefix='TeXShop-layout-test-') as tmp:
