@@ -50,7 +50,6 @@
   "PDF",
   "PNG",
   "Panel",
-  "Pdftex",
   "Plain TeX",
   "Radio",
   "Rnw",
@@ -63,7 +62,6 @@
   "Tabbing",
   "Tabular",
   "TeX",
-  "TeX + DVI",
   "TeXShop",
   "TeXShop Help",
   "Tex",
@@ -101,7 +99,6 @@
   "matrix",
   "max",
   "min",
-  "pdfTeX",
   "sec",
   "sin",
   "sinh",
@@ -185,7 +182,8 @@
     "Services",
     "Source",
     "Substitutions",
-    "Transformations"
+    "Transformations",
+    "Via DVI"
    ],
    "TSDocument.nib": [
     "Console",
@@ -248,12 +246,14 @@
     "Test"
    ],
    "MainMenu.nib": [
+    "Direct PDF",
     "Experiment...",
     "Help",
     "Open ~/Library/TeXShop",
     "Open...",
     "Subscript",
-    "Superscript"
+    "Superscript",
+    "Via DVI"
    ],
    "Movie.nib": [
     "Demo"
@@ -282,7 +282,8 @@
     "Submenu"
    ],
    "MainMenu.nib": [
-    "Macros"
+    "Macros",
+    "Via DVI"
    ],
    "Movie.nib": [
     "Demo"
@@ -308,7 +309,8 @@
     "Submenu"
    ],
    "MainMenu.nib": [
-    "Macros"
+    "Macros",
+    "Via DVI"
    ],
    "Movie.nib": [
     "Demo"

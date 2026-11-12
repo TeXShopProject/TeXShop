@@ -1014,12 +1014,12 @@
                             <menuItem isSeparatorItem="YES" id="406">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Pdftex" state="on" tag="100" id="408" identifier="TSShortcut.doChooseMethod:.100">
+                            <menuItem title="PDF direct" state="on" tag="100" id="408" identifier="TSShortcut.doChooseMethod:.100">
                                 <connections>
                                     <action selector="doChooseMethod:" target="-1" id="413"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Tex și  DVI" tag="101" id="407" identifier="TSShortcut.doChooseMethod:.101">
+                            <menuItem title="Prin DVI" tag="101" id="407" identifier="TSShortcut.doChooseMethod:.101">
                                 <connections>
                                     <action selector="doChooseMethod:" target="-1" id="414"/>
                                 </connections>

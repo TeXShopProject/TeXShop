@@ -240,7 +240,7 @@
 "group.typesetting.0.title" = "默认值";
 "catalog.typesetting.0.0.title" = "默认指令";
 "catalog.typesetting.0.1.title" = "使用的命令";
-"catalog.typesetting.0.2.title" = "个性化脚本";
+"catalog.typesetting.0.2.title" = "排版方式";
 "catalog.typesetting.0.3.title" = "替代引擎";
 "catalog.typesetting.0.3.note" = "“使用替代引擎排版”时使用的引擎。默认值：pdflatexmk";
 "group.typesetting.1.title" = "排版后";
@@ -250,12 +250,12 @@
 "catalog.typesetting.2.1.title" = "将通过同步定位的文档作为主窗口中的标签页打开";
 "catalog.typesetting.2.1.note" = "通常保持关闭。";
 "group.typesetting.3.title" = "路径";
-"catalog.typesetting.3.0.title" = "pdfTeX";
+"catalog.typesetting.3.0.title" = "TeX引擎";
 "catalog.typesetting.3.0.note" = "默认值：/Library/TeX/texbin 或 /usr/texbin";
-"catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
+"catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.1.note" = "默认值：/usr/local/bin";
-"catalog.typesetting.3.2.title" = "附加路径";
-"catalog.typesetting.3.2.note" = "默认值：~/bin/context/tex/texmf-osx-arm64/bin";
+"catalog.typesetting.3.2.title" = "第二组TeX引擎";
+"catalog.typesetting.3.2.note" = "用于含有“% !TEX useAlternatePath”的文档。默认值：~/bin/context/tex/texmf-osx-arm64/bin";
 "catalog.typesetting.3.3.title" = "自动设置…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";

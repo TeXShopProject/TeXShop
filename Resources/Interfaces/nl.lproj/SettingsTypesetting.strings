@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "163-F5-v8Z.title" = "Ghostscript Options";
 "183.title" = "Standaard TeX-opdracht";
-"187.title" = "TeX + DVI";
+"187.title" = "Via DVI";
 "188.title" = "Standaard script";
 "190.title" = "Eigen script";
-"191.title" = "pdfTeX";
+"191.title" = "Direct PDF";
 "314.title" = "Bestanden opslaan";
 "588.title" = "TeX";
 "589.title" = "LaTeX";

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "163-F5-v8Z.title" = "Ghostscript Options";
 "183.title" = "Comanda Standard";
-"187.title" = "TeX + DVI";
+"187.title" = "Prin DVI";
 "188.title" = "Scriptul Standard";
 "190.title" = "Script personal";
-"191.title" = "pdfTeX";
+"191.title" = "PDF direct";
 "314.title" = "La Salvarea Fișierelor";
 "588.title" = "TeX";
 "589.title" = "LaTeX";

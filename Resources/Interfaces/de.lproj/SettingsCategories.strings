@@ -240,7 +240,7 @@
 "group.typesetting.0.title" = "Vorgaben";
 "catalog.typesetting.0.0.title" = "Standardbefehl";
 "catalog.typesetting.0.1.title" = "Zu verwendender Befehl";
-"catalog.typesetting.0.2.title" = "Persönliches Skript";
+"catalog.typesetting.0.2.title" = "Satzmethode";
 "catalog.typesetting.0.3.title" = "Alternativer Engine";
 "catalog.typesetting.0.3.note" = "Die Engine für das Setzen mit der alternativen Engine. Vorgabe: pdflatexmk";
 "group.typesetting.1.title" = "Nach dem Textsatz";
@@ -250,12 +250,12 @@
 "catalog.typesetting.2.1.title" = "Über Sync geöffnete Dokumente als Tabs im Hauptfenster öffnen";
 "catalog.typesetting.2.1.note" = "Normalerweise deaktiviert lassen.";
 "group.typesetting.3.title" = "Pfade";
-"catalog.typesetting.3.0.title" = "pdfTeX";
+"catalog.typesetting.3.0.title" = "TeX-Engines";
 "catalog.typesetting.3.0.note" = "Vorgabe: /Library/TeX/texbin oder /usr/texbin";
-"catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
+"catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.1.note" = "Vorgabe: /usr/local/bin";
-"catalog.typesetting.3.2.title" = "Zusätzlicher Pfad";
-"catalog.typesetting.3.2.note" = "Vorgabe: ~/bin/context/tex/texmf-osx-arm64/bin";
+"catalog.typesetting.3.2.title" = "Zweite TeX-Engines";
+"catalog.typesetting.3.2.note" = "Für Dokumente mit % !TEX useAlternatePath. Vorgabe: ~/bin/context/tex/texmf-osx-arm64/bin";
 "catalog.typesetting.3.3.title" = "Automatisch einrichten…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";

@@ -28,6 +28,20 @@ static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
     if (anchor != NSNotFound) [items insertObject:moved atIndex:anchor + 1];
     return items;
 }
+// Titles of the Typeset menu's typesetting methods before 5.60 named them by
+// what they do (Direct PDF, Via DVI), in every language.
+static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
+{
+    static NSDictionary<NSString *, NSString *> *identifiers;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        NSMutableDictionary<NSString *, NSString *> *map = [NSMutableDictionary dictionary];
+        for (NSString *former in @[@"Pdftex", @"pdfTeX"]) map[former] = @"TSShortcut.doChooseMethod:.100";
+        for (NSString *former in @[@"TeX and DVI", @"TeX und DVI", @"TeX y DVI", @"TeX et DVI", @"TeX e DVI", @"TeX en DVI", @"TeX + DVI", @"Tex și  DVI", @"TeX 和 DVI"]) map[former] = @"TSShortcut.doChooseMethod:.101";
+        identifiers = map;
+    });
+    return identifiers[title];
+}
 static NSMenuItem *TSLegacyMenuItem(NSMenu *menu, id key)
 {
     if (![key isKindOfClass:NSString.class] || menu == nil) return nil;
@@ -35,7 +49,11 @@ static NSMenuItem *TSLegacyMenuItem(NSMenu *menu, id key)
     NSInteger index = [key integerValue];
     if (index == 0) {
         for (NSMenuItem *item in items) if ([item.title isEqualToString:key]) return item;
-        return [menu itemWithTitle:key];
+        NSMenuItem *titled = [menu itemWithTitle:key];
+        if (titled != nil) return titled;
+        NSString *identifier = TSLegacyFormerTitleIdentifier(key);
+        if (identifier != nil) for (NSMenuItem *item in items) if ([item.identifier isEqualToString:identifier]) return item;
+        return nil;
     }
     return index > 0 && index <= (NSInteger)items.count ? items[index - 1] : nil;
 }

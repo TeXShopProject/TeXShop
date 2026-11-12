@@ -240,7 +240,7 @@
 "group.typesetting.0.title" = "Valori predefiniti";
 "catalog.typesetting.0.0.title" = "Formato TeX Default";
 "catalog.typesetting.0.1.title" = "Comando da usare";
-"catalog.typesetting.0.2.title" = "Script personale";
+"catalog.typesetting.0.2.title" = "Metodo di composizione";
 "catalog.typesetting.0.3.title" = "Motore alternativo";
 "catalog.typesetting.0.3.note" = "Il motore usato per la composizione con il motore alternativo. Predefinito: pdflatexmk";
 "group.typesetting.1.title" = "Dopo la composizione";
@@ -250,12 +250,12 @@
 "catalog.typesetting.2.1.title" = "Aprire come pannelli nella finestra principale i documenti raggiunti dalla sincronizzazione";
 "catalog.typesetting.2.1.note" = "Di solito disattivato.";
 "group.typesetting.3.title" = "Percorsi";
-"catalog.typesetting.3.0.title" = "pdfTeX";
+"catalog.typesetting.3.0.title" = "Motori TeX";
 "catalog.typesetting.3.0.note" = "Predefinito: /Library/TeX/texbin o /usr/texbin";
-"catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
+"catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.1.note" = "Predefinito: /usr/local/bin";
-"catalog.typesetting.3.2.title" = "Percorso aggiuntivo";
-"catalog.typesetting.3.2.note" = "Predefinito: ~/bin/context/tex/texmf-osx-arm64/bin";
+"catalog.typesetting.3.2.title" = "Secondi motori TeX";
+"catalog.typesetting.3.2.note" = "Per i documenti con % !TEX useAlternatePath. Predefinito: ~/bin/context/tex/texmf-osx-arm64/bin";
 "catalog.typesetting.3.3.title" = "Configurazione automatica…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";

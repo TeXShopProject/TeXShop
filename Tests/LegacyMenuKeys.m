@@ -72,5 +72,21 @@ int main(int argc,char **argv){@autoreleasepool{
   reset();Apply(main,@{fileKey:@{@"Open Style File...":@[@"j",@NO,@NO],@"Save":@[@"s",@NO,@NO]}});
   Check([style.keyEquivalent isEqual:@"j"] && [save.keyEquivalent isEqual:@"s"],@"Names in the current File menu still apply");
  }
- puts("PASS: 12 legacy title fixtures; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File");
+ // The typesetting methods in the Typeset menu were renamed Direct PDF and Via DVI.
+ // Entries naming them by a former title in any language still reach them.
+ NSDictionary *methods=fixture[@"typeset_methods"];
+ Check(methods.count==12,@"Former typesetting method titles for 12 languages");
+ for(NSString *language in methods){
+  NSArray *former=methods[language];
+  NSMenu *main=[NSMenu new];NSMenuItem *typesetTop=Item(main,@"Typeset");typesetTop.submenu=[NSMenu new];NSMenu *typeset=typesetTop.submenu;
+  Item(typeset,@"Typeset");NSMenuItem *pdf=Item(typeset,@"Direct PDF");pdf.identifier=@"TSShortcut.doChooseMethod:.100";
+  NSMenuItem *dvi=Item(typeset,@"Via DVI");dvi.identifier=@"TSShortcut.doChooseMethod:.101";
+  NSMenuItem *personal=Item(typeset,@"Personal Script");personal.identifier=@"TSShortcut.doChooseMethod:.102";
+  Apply(main,@{@"Typeset":@{former[0]:@[@"1",@NO,@YES],former[1]:@[@"2",@YES,@NO]}});
+  Check([pdf.keyEquivalent isEqual:@"1"] && (pdf.keyEquivalentModifierMask & NSEventModifierFlagControl) && [dvi.keyEquivalent isEqual:@"2"] && (dvi.keyEquivalentModifierMask & NSEventModifierFlagOption) && [personal.keyEquivalent isEqual:@""],[NSString stringWithFormat:@"Former %@ titles reach Direct PDF and Via DVI",language]);
+  for(NSMenuItem *item in @[pdf,dvi,personal])item.keyEquivalent=@"";
+  Apply(main,@{@"Typeset":@{@"Direct PDF":@[@"3",@NO,@NO],@"4":@[@"4",@NO,@NO]}});
+  Check([pdf.keyEquivalent isEqual:@"3"] && [personal.keyEquivalent isEqual:@"4"] && [dvi.keyEquivalent isEqual:@""],@"Current titles and positions still apply");
+ }
+ puts("PASS: 12 legacy title fixtures; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File; former typesetting method titles in 12 languages");
 }return 0;}
