@@ -153,9 +153,36 @@ int main(void) { @autoreleasepool {
     [p discoverEnginePaths:button]; spin(); validPaths = NO; finish(NSAlertFirstButtonReturn);
     check([[defaults stringForKey:TetexBinPath] isEqual:@"/old/tex"], @"removed installation not applied");
     validPaths = YES;
+    // Only one of the two found: the other keeps its path, and the dialog says only Not found.
+    for (NSString *missing in @[@"Ghostscript", @"TeX"]) {
+        NSString *found = [missing isEqual:@"TeX"] ? @"Ghostscript" : @"TeX";
+        [defaults setObject:@"/old/tex" forKey:TetexBinPath]; [defaults setObject:@"/old/gs" forKey:GSBinPath];
+        p->_tetexBinPathField.stringValue = @"/old/tex"; p->_gsBinPathField.stringValue = @"/old/gs";
+        results = @{found:@[candidate([found isEqual:@"TeX"] ? @"/new/tex" : @"/new/gs", @"1")], missing:@[]};
+        shown = nil; [p discoverEnginePaths:button]; spin();
+        NSMutableArray<NSString *> *labels = [NSMutableArray array];
+        NSMutableArray<NSView *> *pending = [NSMutableArray arrayWithObject:shown.accessoryView];
+        while (pending.count) {
+            NSView *view = pending.lastObject; [pending removeLastObject];
+            if ([view isKindOfClass:NSTextField.class]) [labels addObject:((NSTextField *)view).stringValue];
+            [pending addObjectsFromArray:view.subviews];
+            if ([view isKindOfClass:NSScrollView.class] && ((NSScrollView *)view).documentView) [pending addObject:((NSScrollView *)view).documentView];
+        }
+        check(matrices().count == 1 && shown.buttons.count == 2, [NSString stringWithFormat:@"%@ only: one list and both buttons", found]);
+        check([labels containsObject:@"Not found"] && ![[labels componentsJoinedByString:@"\n"] containsString:@"current setting"], [NSString stringWithFormat:@"missing %@ is shown as Not found only", missing]);
+        finish(NSAlertFirstButtonReturn);
+        BOOL texFound = [found isEqual:@"TeX"];
+        check([[defaults stringForKey:TetexBinPath] isEqual:texFound ? @"/new/tex" : @"/old/tex"] &&
+              [[defaults stringForKey:GSBinPath] isEqual:texFound ? @"/old/gs" : @"/new/gs"] &&
+              [p->_gsBinPathField.stringValue isEqual:texFound ? @"/old/gs" : @"/new/gs"] &&
+              [p->_tetexBinPathField.stringValue isEqual:texFound ? @"/new/tex" : @"/old/tex"],
+              [NSString stringWithFormat:@"%@ only: the found path is applied and the missing one is kept", found]);
+    }
+    [defaults setObject:@"/old/tex" forKey:TetexBinPath]; [defaults setObject:@"/old/gs" forKey:GSBinPath];
+    p->_tetexBinPathField.stringValue = @"/old/tex"; p->_gsBinPathField.stringValue = @"/old/gs";
     results = @{@"TeX":@[],@"Ghostscript":@[]};
     [p discoverEnginePaths:button]; spin();
     check(matrices().count == 0 && shown.buttons.count == 1, @"nothing found gives informational dialog");
     finish(NSAlertFirstButtonReturn);
-    NSLog(@"PASS: candidate selection, local Cancel, immediate saving, stale results, initial setup, removed and missing tools");
+    NSLog(@"PASS: candidate selection, local Cancel, immediate saving, stale results, initial setup, removed and missing tools, TeX or Ghostscript alone");
 } return 0; }

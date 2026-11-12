@@ -240,6 +240,7 @@
 "Advanced" = "Avançado";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instale uma distribuição TeX e execute a configuração automática em Ajustes > Composição.";
+"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "O Ghostscript não foi encontrado. Instale o Ghostscript e execute a configuração automática em Ajustes > Composição.";
 
 "Completion trigger" = "Tecla de ativação";
 

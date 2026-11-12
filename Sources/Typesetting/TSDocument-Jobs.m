@@ -37,6 +37,7 @@
 
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
+#include "TSGhostscriptCheck.inc"
 
 
 @implementation TSDocument (JobProcessing)
@@ -57,7 +58,7 @@
     enginePath = [[NSBundle mainBundle] pathForResource:@"gstestwrap" ofType:nil inDirectory:@"Shellscripts"];
     tetexBinPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
     args = [NSMutableArray array];
-    [args addObject:tetexBinPath];
+    [args addObject:tetexBinPath ?: @""];
     if ((enginePath != nil) && ([[NSFileManager defaultManager] fileExistsAtPath: enginePath])) {
         [self.gsversionTask setLaunchPath:enginePath];
         [self.gsversionTask setArguments:args];
@@ -75,6 +76,30 @@
         return NO;
     
  }
+
+// Ghostscript is looked for where the conversion looks for it: in the folders a
+// command adds in front of the PATH, and in the PATH given to the tasks, which
+// includes the Ghostscript path in Settings. When it is missing, say so instead
+// of starting a conversion that cannot make a PDF.
+- (BOOL)ghostscriptIsAvailableAlsoIn:(NSArray<NSString *> *)folders
+{
+    NSString *path = [[self environmentForSubTask] objectForKey:@"PATH"] ?: @"";
+    if (folders.count > 0)
+        path = [[[folders componentsJoinedByString:@":"] stringByAppendingString:@":"] stringByAppendingString:path];
+    if (TSGhostscriptFoundInPath(path))
+        return YES;
+    NSString *title = NSLocalizedString(@"Can't find required tool.", @"Can't find required tool.");
+    NSString *message = NSLocalizedString(@"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting.", @"");
+    NSWindow *window = [[textView window] isVisible] ? [textView window] : ([self.pdfKitWindow isVisible] ? self.pdfKitWindow : nil);
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = title;
+    alert.informativeText = message;
+    if (window != nil)
+        [alert beginSheetModalForWindow:window completionHandler:nil];
+    else
+        [alert runModal];
+    return NO;
+}
     
     
     
@@ -600,21 +625,34 @@ for(NSString *key in enu)
 				enginePath = [enginePath stringByAppendingString: argumentString];
 			}
 			enginePath = [self separate:enginePath into: args];
+			NSArray *ghostscriptFolders = TSGhostscriptFoldersForCommand(enginePath, args);
+			if ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders]) {
+				self.texTask = nil;
+				return;
+			}
 			if ([SUD boolForKey:SavePSEnabledKey])
 				[args addObject: @"--keep-psfile"];
 		} else if ([[myFileName pathExtension] isEqualToString:@"ps"]) {
+			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
+				self.texTask = nil;
+				return;
+			}
             if ([SUD boolForKey:UseTransparencyKey])
                 enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdftransparencywrap" ofType:nil inDirectory:@"Shellscripts"];
             else
                 enginePath = [[NSBundle mainBundle] pathForResource:@"ps2pdfwrap" ofType:nil inDirectory:@"Shellscripts"];
 			[args addObject: @"Ghostscript"];
 			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
-			[args addObject: gsPath];
+			[args addObject: gsPath ?: @""];
 		} else if  ([[myFileName pathExtension] isEqualToString:@"eps"]) {
+			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
+				self.texTask = nil;
+				return;
+			}
 			enginePath = [[NSBundle mainBundle] pathForResource:@"epstopdfwrap" ofType:nil inDirectory:@"Shellscripts"];
 			[args addObject: @"Ghostscript"];
 			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
-			[args addObject: gsPath];
+			[args addObject: gsPath ?: @""];
 			tetexBinPath = [[[SUD stringForKey:TetexBinPath] stringByExpandingTildeInPath] stringByAppendingString:@"/"];
 			epstopdfPath = [tetexBinPath stringByAppendingString:@"epstopdf"];
 			[args addObject: epstopdfPath];
@@ -1621,7 +1659,10 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 			 }
 			 else {
 				 */
-			if ([self startTask: self.texTask running: enginePath withArgs: args inDirectoryContaining: sourcePath withEngine:whichEngineLocal] == FALSE) {
+			NSArray *ghostscriptFolders = (theScript == kTypesetViaGhostScript) ? TSGhostscriptFoldersForCommand(enginePath, args) : nil;
+			if ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders]) {
+				self.texTask = nil;
+			} else if ([self startTask: self.texTask running: enginePath withArgs: args inDirectoryContaining: sourcePath withEngine:whichEngineLocal] == FALSE) {
 		//		[self.inputPipe release];
 		//		[self.outputPipe release];
 		//		[self.texTask release];

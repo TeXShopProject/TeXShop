@@ -241,6 +241,7 @@
 "Advanced" = "고급";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "TeX 배포판을 설치한 다음 설정 > 조판에서 자동 설정을 실행하십시오.";
+"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript를 찾을 수 없습니다. Ghostscript를 설치한 다음 설정 > 조판에서 자동 설정을 실행하십시오.";
 
 "Completion trigger" = "호출 키";
 
