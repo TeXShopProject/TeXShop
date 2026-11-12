@@ -549,8 +549,6 @@ Settings has ten categories: General, Documents and Saving, Editor, Spell Checki
 
 Use Search Settings above the sidebar to find categories, labels, options and menu commands. Results list individual settings with their category names. A match on a category name or description provides one entry to the top of that category. Color fields on the same row share one result. Words separated by spaces must describe the same setting, optionally qualified by its category. Case, Latin accents, fullwidth characters and hiragana/katakana variants are matched. Select a result to scroll to and highlight that setting and add the visit to normal navigation history. Clearing the query keeps the current pane. Back and Forward remain available according to the history and navigate accordingly. A menu-command match opens Keyboard and fills its Search by Function field. Search by Key keeps priority while recording.
 
-Some screenshots in this manual show the former tabs. Use the category names above for the current Settings window.
-
 
 This is a useful time to consider a few other items in Settings which affect the source window. These items occur under the General and Editor categories. But several items in these categories are better explained later and will be skipped.
 
@@ -576,7 +574,7 @@ Some users found them hard to read. This setting allows users to request larger 
 \section{Other Editor Preference Items}
 
 
-The source window is also configured by various items in the Editor category of Settings. See the picture on the next page. We will discuss these items in a different order than listed there.
+The source window is also configured by various items in the Editor category of Settings. See \cref{fig:SettingsEditor}. We will discuss these items in a different order than listed there.
 
 \newpage
 Several source window features  can  also be changed using menu items in the Source menu. We'll list these items first; the corresponding items in Settings select the default behavior when a window is first opened. For example, the text in the source window is usually 
@@ -586,10 +584,12 @@ syntax colored, but a menu item can toggle this behavior for the active window. 
 
 {\bf Highlight Current Line} When selected, the background of the line containing the cursor is tinted a light blue. Lines can cover several physical lines, ending when the user finally types a linefeed.
 
-\begin{figure}[H] %  figure placement: here, top, bottom, or page
+\begin{figure}[htbp] %  figure placement: here, top, bottom, or page
        \centering
-       \includegraphics[width=\hsize]{Graphics/EditTab} 
-    \end{figure} 
+       \includegraphics[height=0.85\textheight,keepaspectratio]{Graphics/SettingsEditor.png}
+       \caption{The Editor Category of TeXShop Settings}
+       \label{fig:SettingsEditor}
+    \end{figure}
 
 
 {\bf Syntax Coloring} When selected, the source text is syntax colored.
@@ -873,8 +873,8 @@ After making these choices, typesetting with TeXShop is easy. When you want to t
 Near the bottom of this Settings category, the ``Ghostscript'' group has a switch labeled
 ``-dALLOWPSTRANSPARENCY''. This is only active when using TeX + DVI mode.
 In this mode, when a graphic is created, it is processed by Ghostscript.
-In modern versions of Ghostscript, the postscript code has been converted to C and made
-safer, but this modernization can break transparency. This preference sets a flag
+Modern versions of Ghostscript have been made
+safer, and by default they no longer accept the postscript transparency operators. This preference sets a flag
 telling Ghostscript to process transparency calls correctly. The preference will be irrelevant for most
 people.
 
@@ -3555,7 +3555,7 @@ which reads
 
 TeXShop uses customizable colors for syntax coloring, for various window backgrounds, and for other purposes. In the original version of TeXShop, users could modify these colors with a fairly baroque set of preference items. Then in macOS Mojave, Apple introduced ``Lite Mode'' and ``Dark Mode'' and an entirely new set of colors was required. At that point the old color preferences were ripped out of TeXShop and replaced by the Themes category in Settings, see \cref{fig:Theme}. While previously many colors could only be changed using  obscure hidden Preference settings, now all color choices are available in the Themes category.
 
-The illustration on the next page shows the earlier tabbed Themes interface for reference. The current Themes category groups theme colors by their purpose. In the Windows group, each window opacity slider runs from 0\% (transparent) to 100\% (opaque), with an editable numeric field beside it. Enter a whole percentage and press Return or leave the field to apply it, or click the arrow buttons beside the field to raise or lower it by one percent. Out-of-range integers are clamped to 0 or 100. Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. These themes are listed in three pulldown menus: Lite Mode Theme, Dark Mode Theme, Theme to Edit. The first menu sets the theme used in Lite Mode, and the second menu sets the theme used in Dark Mode. The final menu sets the theme which Settings is currently editing.
+\Cref{fig:Theme} shows the Themes category of TeXShop Settings. It groups theme colors by their purpose. In the Windows group, each window opacity slider runs from 0\% (transparent) to 100\% (opaque), with an editable numeric field beside it. Enter a whole percentage and press Return or leave the field to apply it, or click the arrow buttons beside the field to raise or lower it by one percent. Out-of-range integers are clamped to 0 or 100. Invalid input, including decimals, restores the previous value at the end of editing. Typed and pasted input follow the same rule. Some items have an obvious meaning and others will be explained shortly. A full set of such choices is called a ``Theme''. TeXShop allows users to create as many themes as they like. These themes are listed in three pulldown menus: Lite Mode Theme, Dark Mode Theme, Theme to Edit. The first menu sets the theme used in Lite Mode, and the second menu sets the theme used in Dark Mode. The final menu sets the theme which Settings is currently editing.
 
 TeXShop is shipped with several themes, including ``LiteTheme'' and ``DarkTheme''. These are the default themes for Lite Mode and Dark Mode. As explained later, there is a way for users to rename or remove Themes known to TeXShop. But TeXShop will always replace ``LiteTheme'' and ``DarkTheme''
 and use them if other required themes are missing.
@@ -3564,8 +3564,8 @@ Gary Gray contributed GLG-Dark for Dark mode. Gray then tweaked this theme, and 
 
 \begin{figure}[htbp] %  figure placement: here, top, bottom, or page
    \centering
-   \includegraphics[width=5.5in]{Graphics/Theme.png} 
-   \caption{Theme Preference Items (earlier layout; current versions save immediately)}
+   \includegraphics[height=0.85\textheight,keepaspectratio]{Graphics/SettingsThemes.png}
+   \caption{The Themes Category of TeXShop Settings}
    \label{fig:Theme}
 \end{figure}
 
@@ -4166,7 +4166,7 @@ The toolbar of the second panel has four tools, as in the Preview window: Scroll
 Both panels have close buttons. The ESCAPE key will also close panels when they are active.
 Although the two panels do not have resize buttons, they can both be resized. TeXShop will remember the new sizes and locations and use them the next time ``Experiment...'' is selected. The source panel uses the font, tabs, line spacing and wrapping of the document's source window, and shows invisible characters, line numbers and the current line as that window does. The keyboard shortcuts ``command +'' and ``command -'' work in the source panel to enlarge the text if desired. Key bindings and command completion are available in the source panel, but with one caveat. Command completion uses the tab key in the panel even if it uses the escape key for regular source, since the escape key in a panel closes the panel.
 
-The ``Experiment...'' feature requires a latex-like engine. It will not work with ordinary plain tex. The source panel's Typeset button looks at the main source window's toolbar to determine a typesetting engine, and also uses the magic comment line mechanism if available at the top of the source window. If ``Plain TeX'' or ``Context'' is selected, nothing happens. If ``BibTeX'' or ``MakeIndex'' are chosen, pdflatex is used. Obviously ``pdflatex, xelatex, and lualatex'' can be used. The panel will try to use any user-defined engine selected, but some such engines may fail if they don't expect latex-like code or don't output pdf. The fragment is typeset in a temporary folder that holds copy-on-write clones of the files and folders next to the document, so pictures and other files are found as when the document is typeset, also with paths that begin with \verb|./|, such as \verb|\graphicspath{{./figures/}}|, while whatever the typesetting writes leaves the document's folder alone. Items that cannot be cloned, for example on another disk, files whose contents are not on this Mac, such as online-only files of a cloud service, and folders with more than 5000 items are not cloned; then files are still found next to the document, but not with paths that begin with \verb|./|. A copy of the document's \verb|.aux| file from its last typesetting is read at the start of each run, so \verb|\ref|, \verb|\pageref| and \verb|\cite| show the numbers of the document.
+The ``Experiment...'' feature requires a latex-like engine. It will not work with ordinary plain tex. The source panel's Typeset button looks at the main source window's toolbar to determine a typesetting engine, and also uses the magic comment line mechanism if available at the top of the source window. Plain TeX, ConTeXt, and MetaPost cannot be used for an experiment. If ``BibTeX'' or ``MakeIndex'' are chosen, pdflatex is used. Obviously ``pdflatex, xelatex, and lualatex'' can be used. The panel will try to use any user-defined engine selected, but some such engines may fail if they don't expect latex-like code or don't output pdf. The fragment is typeset in a temporary folder that holds copy-on-write clones of the files and folders next to the document, so pictures and other files are found as when the document is typeset, also with paths that begin with \verb|./|, such as \verb|\graphicspath{{./figures/}}|, while whatever the typesetting writes leaves the document's folder alone. Items that cannot be cloned, for example on another disk, files whose contents are not on this Mac, such as online-only files of a cloud service, and folders with more than 5000 items are not cloned; then files are still found next to the document, but not with paths that begin with \verb|./|. A copy of the document's \verb|.aux| file from its last typesetting is read at the start of each run, so \verb|\ref|, \verb|\pageref| and \verb|\cite| show the numbers of the document.
 
 The preview panel understands mouse scroll commands and trackpad gesture commands to scroll and resize. 
 %It understands "command-shift +" and "command-shift -" to resize contents.
@@ -6195,7 +6195,7 @@ it converts the postscript file to a pdf file using ps2pdf, a program in the Gho
 and then displays the pdf file. Second, TeXShop typesets in DVI mode by calling tex or latex to create a dvi file, and then calling dvips to convert the dvi file to postscript, and finally calling Ghostscript to convert the postscript file
 to a pdf file. An advantage of this chain is that PSTricks package can be used in the source to create special effects in the typeset output.
 
-The Ghostscript program  was originally written in postscript. Recently, the authors of Ghostscript rewrote the program in C. This rewrite revealed several spots where the original code introduced security bugs, and these bugs have been removed, occasionally by breaking very obscure features of postscript. Unfortunately for TeX, among the obscure features were all postscript transparency operators, so any transparency in the original postscript file is ignored in the pdf version of the file.
+In recent years, the authors of Ghostscript removed several security problems, occasionally by disabling very obscure features of postscript. Unfortunately for TeX, among the obscure features were all postscript transparency operators, so any transparency in the original postscript file is ignored in the pdf version of the file.
 
 To fix this, the Ghostscript authors added a special flag, ``-dALLOWPSTRANSPARENCY''.
 When Ghostscript is called with this flag set, the transparency operators are recognized (while the other more serious security bugs are still quashed).  This flag is available in Ghostscript 9.51 and higher. 
@@ -6993,7 +6993,7 @@ and NoodleLineNumberView Cocoa classes by Paul Kim. The Sparkle update code used
 
 \subsubsection{Localization}
 
-Localization must be done by native speakers. Nine languages including English are currently supported. French by Jean-Claude De Soza, German by Steffen Wolfrum, Italian by Nicola Vitacolonna, Spanish by Juan Luis Varona Malumbres, Brazilian Portuguese by Emerson Ribeiro de Mello, Chinese by Linus Yang, Korean by Karnes Kim, Japanese by Yusuke Terada. 
+Localization must be done by native speakers. Twelve localizations including English are currently provided: English, French, German, Italian, Spanish, Dutch, Brazilian and European Portuguese, Romanian, Chinese, Korean, and Japanese. French by Jean-Claude De Soza, German by Steffen Wolfrum, Italian by Nicola Vitacolonna, Spanish by Juan Luis Varona Malumbres, Brazilian Portuguese by Emerson Ribeiro de Mello, Chinese by Linus Yang, Korean by Karnes Kim, Japanese by Yusuke Terada. 
 
 \subsubsection{Icon}
 
