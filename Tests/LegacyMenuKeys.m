@@ -46,6 +46,16 @@ int main(int argc,char **argv){@autoreleasepool{
   Check([other.keyEquivalent isEqual:@"z"],@"Malformed entries do not rewrite unrelated keys");
   Check([[completion.submenu itemAtIndex:0].keyEquivalent isEqual:@"a"] && [[completion.submenu itemAtIndex:1].keyEquivalent isEqual:@"b"],@"Every child dictionary entry is processed");
  }
+ // Japanese and Chinese titles lost the space between CJK and Latin text in 5.60.
+ {
+  NSMenu *main=[NSMenu new];NSMenuItem *appTop=Item(main,@"TeXShop");appTop.submenu=[NSMenu new];
+  NSMenuItem *hide=Item(appTop.submenu,@"TeXShopを隠す");NSMenuItem *engine=Item(appTop.submenu,@"TeX引擎");
+  NSMenuItem *korean=Item(appTop.submenu,@"Safari종료");NSMenuItem *exact=Item(appTop.submenu,@"LaTeX パネル");NSMenuItem *joined=Item(appTop.submenu,@"LaTeXパネル");
+  Apply(main,@{@"TeXShop":@{@"TeXShop を隠す":@[@"h",@NO,@NO],@"TeX 引擎":@[@"e",@NO,@NO],@"Safari 종료":@[@"q",@NO,@NO],@"LaTeX パネル":@[@"l",@NO,@NO]}});
+  Check([hide.keyEquivalent isEqual:@"h"] && [engine.keyEquivalent isEqual:@"e"],@"Titles saved with a space between CJK and Latin text reach the current titles");
+  Check([korean.keyEquivalent isEqual:@""],@"Korean word spacing is not ignored");
+  Check([exact.keyEquivalent isEqual:@"l"] && [joined.keyEquivalent isEqual:@""],@"An exact title match wins over a spacing match");
+ }
  // Open Style File moved from Help (after Show Help for Package) to File (after Open).
  // Legacy entries name or number the items as they were before the move.
  for(NSNumber *numericMenus in @[@NO,@YES]){
@@ -72,5 +82,5 @@ int main(int argc,char **argv){@autoreleasepool{
   reset();Apply(main,@{fileKey:@{@"Open Style File...":@[@"j",@NO,@NO],@"Save":@[@"s",@NO,@NO]}});
   Check([style.keyEquivalent isEqual:@"j"] && [save.keyEquivalent isEqual:@"s"],@"Names in the current File menu still apply");
  }
- puts("PASS: 12 legacy title fixtures; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File");
+ puts("PASS: 12 legacy title fixtures; CJK-Latin spacing; numeric/named migration, removed entries, bounds and sibling assignments; Open Style File moved from Help to File");
 }return 0;}
