@@ -131,7 +131,7 @@
 					// added by Terada (until this line)
 					*/
 				} else if (task == RootForTrashAUX) {
-					[obj trashAUX];
+					[obj trashAUXWithAggressiveness:aggressiveTrash];
 				}
 				return YES;
 			}
@@ -208,7 +208,7 @@
             [obj setCallingWindow: textWindow];
             [obj bringPdfWindowFront];
         } else if (task == RootForTrashAUX) {
-			[obj trashAUX];
+			[obj trashAUXWithAggressiveness:aggressiveTrash];
 		}
 		return YES;
 	} else {
@@ -240,7 +240,7 @@
 			// added by Terada (until this line)
 			[[obj textWindow] miniaturize:self];
 		} else if (task == RootForTrashAUX) {
-			[obj trashAUX];
+			[obj trashAUXWithAggressiveness:aggressiveTrash];
 		}
 		return YES;
 	} else {
