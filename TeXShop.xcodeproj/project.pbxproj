@@ -148,6 +148,7 @@
 		4078818A0519249A006979EA /* TSEncodingSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AA2B8203C79AF800000009 /* TSEncodingSupport.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818B0519249A006979EA /* TSMacroEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62303C7FAE800000009 /* TSMacroEditor.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62503C7FAE800000009 /* TSMacroMenuController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A0000100000000000000C2 /* TSMacroContentKind.m */; };
 		4078818D0519249A006979EA /* TSMacroTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818E0519249A006979EA /* TSMacroOutlineController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62F03C7FB1E00000009 /* TSMacroOutlineController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818F0519249A006979EA /* TSDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40EB71E60400BE1000000009 /* TSDocumentController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -543,6 +544,8 @@
 		4077C62403C7FAE800000009 /* TSMacroMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroMenuController.h; sourceTree = "<group>"; };
 		4077C62503C7FAE800000009 /* TSMacroMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMacroMenuController.m; sourceTree = "<group>"; };
 		A2A000010000000000000001 /* TSMacroSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroSelection.h; sourceTree = "<group>"; };
+		A2A0000100000000000000C1 /* TSMacroContentKind.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroContentKind.h; sourceTree = "<group>"; };
+		A2A0000100000000000000C2 /* TSMacroContentKind.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroContentKind.m; sourceTree = "<group>"; };
 		4077C62A03C7FB0200000009 /* TSMacroTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroTreeNode.h; sourceTree = "<group>"; };
 		4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMacroTreeNode.m; sourceTree = "<group>"; };
 		4077C62E03C7FB1E00000009 /* TSMacroOutlineController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroOutlineController.h; sourceTree = "<group>"; };
@@ -1171,6 +1174,8 @@
 		D4903D8FE8A591CB57821229 /* Macros */ = {
 			isa = PBXGroup;
 			children = (
+				A2A0000100000000000000C1 /* TSMacroContentKind.h */,
+				A2A0000100000000000000C2 /* TSMacroContentKind.m */,
 				4077C62203C7FAE800000009 /* TSMacroEditor.h */,
 				4077C62303C7FAE800000009 /* TSMacroEditor.m */,
 				4077C62403C7FAE800000009 /* TSMacroMenuController.h */,
@@ -1917,6 +1922,7 @@
 				4016DD872109FC6200745019 /* TSColorSupport.m in Sources */,
 				4078818B0519249A006979EA /* TSMacroEditor.m in Sources */,
 				4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */,
+				A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */,
 				4078818D0519249A006979EA /* TSMacroTreeNode.m in Sources */,
 				403649E4211BDA810086DDD1 /* TSPreferenceWindow.m in Sources */,
 				4078818E0519249A006979EA /* TSMacroOutlineController.m in Sources */,
