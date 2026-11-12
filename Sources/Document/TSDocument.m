@@ -71,6 +71,7 @@
 #import "TSGlyphPopoverController.h"  // Terada
 #import "TSWindowController.h"
 #import "TSFileChangeMonitor.h"
+#import <sys/stat.h>
 #import "TSExternalPDFReload.h"
 #import "TSSourceFormatRanges.h"
 #import "TSPreviewAppearance.h"  // added by Terada
@@ -2888,23 +2889,189 @@ else {
 {
 
 	BOOL	value;
+	BOOL	afterExternalWrite = NO;
 
+	// TeXShop's own monitor reverts with sourceReloadData; NSDocument may still revert after it.
+	if (!sourceReloadData) {
+		@synchronized (self) {
+			afterExternalWrite = sourceExternalWriteFinished;
+			sourceExternalWriteFinished = NO;
+		}
+	}
+	if (afterExternalWrite && [self keepsSourceAfterExternalWriteToURL:absoluteURL])
+		return YES;
+
+	NSString *previousText = [[_textStorage string] copy];
+	NSArray *viewStates = [self sourceViewStates];
 	value = [super revertToContentsOfURL:absoluteURL ofType:typeName error:outError];
 	if (value) {
 		[self setupTags];
 		[self colorizeAll];
-
+		[self restoreSourceViewStates:viewStates previousText:previousText];
 	}
-	
+
 	// FIXME: Is the following even needed? Changin the textstorage should trigger a redraw anyway,
 	// shouldn't it? But if we do have to call this, shouldn't we also do the same for textView2?
 	[textView setNeedsDisplayInRect: [textView bounds]];
-	
+
 	return value;
+}
+
+// NSDocument reverts after every coordinated write by another process, even when only the
+// attributes or the modification date changed, when the same bytes were written again, and
+// when the document has unsaved edits. File providers such as OneDrive and Google Drive do
+// this repeatedly while the user types. Each revert replaced the text, moved the insertion
+// point to the end and discarded the keystrokes typed since the last autosave.
+// Mark a write that changed the file, so that the revert that follows it can be checked.
+- (void)relinquishPresentedItemToWriter:(void (^)(void (^reacquirer)(void)))writer
+{
+	NSString *path = [[self presentedItemURL] path];
+	__weak TSDocument *weakSelf = self;
+	[super relinquishPresentedItemToWriter:^(void (^reacquirer)(void)) {
+		NSString *before = [TSDocument sourceStampAtPath:path];
+		writer(^{
+			TSDocument *document = weakSelf;
+			NSString *after = [TSDocument sourceStampAtPath:path];
+			if (document && !(before == after || [before isEqualToString:after])) {
+				@synchronized (document) {
+					document->sourceExternalWriteFinished = YES;
+				}
+			}
+			if (reacquirer)
+				reacquirer();
+		});
+	}];
+}
+
++ (NSString *)sourceStampAtPath:(NSString *)path
+{
+	struct stat s;
+	if (!path || stat([path fileSystemRepresentation], &s) != 0)
+		return nil;
+	return [NSString stringWithFormat:@"%llu/%llu/%lld/%lld:%ld/%lld:%ld",
+			(unsigned long long)s.st_dev, (unsigned long long)s.st_ino, (long long)s.st_size,
+			(long long)s.st_mtimespec.tv_sec, s.st_mtimespec.tv_nsec,
+			(long long)s.st_ctimespec.tv_sec, s.st_ctimespec.tv_nsec];
+}
+
+// Keep the editor after another process's write when the source still has the bytes the
+// document last read or saved; adopt the new modification date so that saving does not
+// report a change. Also keep unsaved edits: a real change is reported when saving, as
+// TeXShop's own monitor does.
+- (BOOL)keepsSourceAfterExternalWriteToURL:(NSURL *)url
+{
+	NSString *path = [url isFileURL] ? [[url path] stringByStandardizingPath] : nil;
+	if (!path || ![path isEqualToString:[[[self fileURL] path] stringByStandardizingPath]])
+		return NO;
+	if (sourceAcceptedFingerprint) {
+		NSFileManager *manager = [NSFileManager defaultManager];
+		NSDate *before = [manager attributesOfItemAtPath:path error:NULL][NSFileModificationDate];
+		NSData *data = [NSData dataWithContentsOfFile:path options:0 error:NULL];
+		NSDate *after = [manager attributesOfItemAtPath:path error:NULL][NSFileModificationDate];
+		if (data && before && [before isEqual:after] &&
+			[TSSourceFingerprint(data) isEqual:sourceAcceptedFingerprint]) {
+			[self setFileModificationDate:after];
+			return YES;
+		}
+	}
+	return [self isDocumentEdited] || [self hasUnautosavedChanges];
+}
+
+// The selection and the first visible line of each editing view.
+- (NSArray *)sourceViewStates
+{
+	NSMutableArray *states = [NSMutableArray array];
+	for (NSTextView *view in @[textView1 ?: (id)[NSNull null], textView2 ?: (id)[NSNull null]]) {
+		if (![view isKindOfClass:[NSTextView class]])
+			continue;
+		NSRect visible = [view visibleRect];
+		NSLayoutManager *layout = [view layoutManager];
+		NSTextContainer *container = [view textContainer];
+		NSUInteger top = 0;
+		CGFloat offset = 0;
+		if (layout && container && [[view textStorage] length] > 0) {
+			NSPoint origin = [view textContainerOrigin];
+			NSUInteger glyph = [layout glyphIndexForPoint:NSMakePoint(NSMinX(visible) - origin.x, NSMinY(visible) - origin.y)
+										  inTextContainer:container];
+			top = [layout characterIndexForGlyphAtIndex:glyph];
+			offset = NSMinY(visible) - (NSMinY([layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL]) + origin.y);
+		}
+		[states addObject:@{@"view": view, @"ranges": [view selectedRanges], @"top": @(top),
+							@"offset": @(offset), @"x": @(NSMinX(visible))}];
+	}
+	return states;
+}
+
+// Text before and after the changed part keeps its selection and scroll position;
+// a position inside the changed part moves to the end of its replacement.
+- (void)restoreSourceViewStates:(NSArray *)states previousText:(NSString *)previous
+{
+	NSString *text = [_textStorage string];
+	NSUInteger oldLength = [previous length], newLength = [text length];
+	NSUInteger shared = MIN(oldLength, newLength);
+	NSUInteger prefix = [TSDocument sharedLengthOf:previous and:text limit:shared fromEnd:NO];
+	NSUInteger suffix = [TSDocument sharedLengthOf:previous and:text limit:shared - prefix fromEnd:YES];
+	NSUInteger (^map)(NSUInteger) = ^NSUInteger(NSUInteger location) {
+		location = MIN(location, oldLength);
+		if (location <= prefix)
+			return location;
+		if (location >= oldLength - suffix)
+			return location + newLength - oldLength;
+		return newLength - suffix;
+	};
+	for (NSDictionary *state in states) {
+		NSTextView *view = state[@"view"];
+		NSMutableArray *ranges = [NSMutableArray array];
+		for (NSValue *value in state[@"ranges"]) {
+			NSRange range = [value rangeValue];
+			NSUInteger start = map(range.location), end = map(NSMaxRange(range));
+			[ranges addObject:[NSValue valueWithRange:NSMakeRange(start, end > start ? end - start : 0)]];
+		}
+		if ([ranges count] > 0)
+			[view setSelectedRanges:ranges affinity:NSSelectionAffinityDownstream stillSelecting:NO];
+		NSLayoutManager *layout = [view layoutManager];
+		NSTextContainer *container = [view textContainer];
+		if (!layout || !container || ![view enclosingScrollView])
+			continue;
+		CGFloat y = 0;
+		if (newLength > 0) {
+			NSUInteger top = MIN(map([state[@"top"] unsignedIntegerValue]), newLength - 1);
+			NSUInteger glyph = [layout glyphIndexForCharacterAtIndex:top];
+			y = NSMinY([layout lineFragmentRectForGlyphAtIndex:glyph effectiveRange:NULL]) +
+				[view textContainerOrigin].y + [state[@"offset"] doubleValue];
+		}
+		[view scrollPoint:NSMakePoint([state[@"x"] doubleValue], y)];
+	}
+}
+
+// The number of characters two strings share at their start, or at their end.
++ (NSUInteger)sharedLengthOf:(NSString *)a and:(NSString *)b limit:(NSUInteger)limit fromEnd:(BOOL)fromEnd
+{
+	enum { chunk = 1024 };
+	unichar x[chunk], y[chunk];
+	NSUInteger aLength = [a length], bLength = [b length], done = 0;
+	while (done < limit) {
+		NSUInteger count = MIN((NSUInteger)chunk, limit - done);
+		[a getCharacters:x range:fromEnd ? NSMakeRange(aLength - done - count, count) : NSMakeRange(done, count)];
+		[b getCharacters:y range:fromEnd ? NSMakeRange(bLength - done - count, count) : NSMakeRange(done, count)];
+		if (memcmp(x, y, count * sizeof(unichar)) != 0) {
+			for (NSUInteger i = 0; i < count; i++) {
+				NSUInteger k = fromEnd ? count - 1 - i : i;
+				if (x[k] != y[k])
+					return done + i;
+			}
+		}
+		done += count;
+	}
+	return done;
 }
 
 //ULRICH BAUER PATCH
 - (void)revertDocumentToSaved:(id)sender {
+    // A revert the user asks for is never one that follows another process's write.
+    @synchronized (self) {
+        sourceExternalWriteFinished = NO;
+    }
     [super revertDocumentToSaved: sender];
 }
 //END PATCH

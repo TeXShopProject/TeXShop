@@ -9,7 +9,8 @@ from pathlib import Path
 from source_tree import git_show
 parser = argparse.ArgumentParser()
 parser.add_argument('--revision')
-parser.add_argument('--mutation', choices=['read-baseline', 'write-baseline', 'disk-baseline', 'generation', 'reload-catch', 'autosave-as-baseline'])
+parser.add_argument('--mutation', choices=['read-baseline', 'write-baseline', 'disk-baseline', 'generation', 'reload-catch', 'autosave-as-baseline',
+                                               'writer-mark', 'dirty-keep', 'adopt-date', 'view-state'])
 parser.add_argument('modes', nargs='*')
 args = parser.parse_args()
 REPO = Path(__file__).resolve().parents[1]
@@ -36,6 +37,22 @@ def show(rev, path):
         elif args.mutation == 'reload-catch':
             text, count = re.subn(r'\} @catch \(NSException \*exception\) \{\n\s*NSLog\(@"Automatic reload of %@ failed: %@", path, exception\);\n\s*result = NO;\n', '', text)
             if count != 1: raise SystemExit('reload-catch replacement count')
+        elif args.mutation == 'writer-mark':
+            old = 'document->sourceExternalWriteFinished = YES;'
+            if text.count(old) != 1: raise SystemExit('writer-mark replacement count')
+            text = text.replace(old, '')
+        elif args.mutation == 'dirty-keep':
+            old = 'return [self isDocumentEdited] || [self hasUnautosavedChanges];\n}'
+            if text.count(old) != 1: raise SystemExit('dirty-keep replacement count')
+            text = text.replace(old, 'return NO;\n}')
+        elif args.mutation == 'adopt-date':
+            old = '[self setFileModificationDate:after];'
+            if text.count(old) != 1: raise SystemExit('adopt-date replacement count')
+            text = text.replace(old, '')
+        elif args.mutation == 'view-state':
+            old = '[self restoreSourceViewStates:viewStates previousText:previousText];'
+            if text.count(old) != 1: raise SystemExit('view-state replacement count')
+            text = text.replace(old, '')
         elif args.mutation == 'autosave-as-baseline':
             old = ' || operation == NSAutosaveAsOperation'
             if text.count(old) != 1: raise SystemExit('autosave-as-baseline replacement count')
@@ -156,8 +173,9 @@ static void ExtWrite(NSString *path, NSString *text, int how){
  NSUInteger sourceIOGeneration;
  BOOL sourceSaving;
 #endif
- NSTextView *textView;
+ NSTextView *textView, *textView1, *textView2;
  NSTextStorage *_textStorage;
+ BOOL sourceExternalWriteFinished;
  NSStringEncoding _encoding, _tempencoding, _badEncoding;
  BOOL showBadEncodingDialog, isLoading, firstTime;
  BOOL _encodingFromMagicComment, _hasReadSource;
@@ -246,8 +264,41 @@ static BOOL Save(TSDocument *d, NSURL *u, NSSaveOperationType op){
 static NSString *Disk(NSString *p){ return [NSString stringWithContentsOfFile:p encoding:NSUTF8StringEncoding error:NULL]; }
 static int CountFDs(void){int n=0;for(int fd=0;fd<4096;fd++) if(fcntl(fd,F_GETFD)!=-1) n++; return n;}
 static NSString *Short(NSString *s){ return s.length>40? [NSString stringWithFormat:@"<%lu chars>",(unsigned long)s.length] : s; }
+// Another process writes the file with file coordination, as file providers do.
+static NSString *gCoordinatedWriter=nil;
+static int CoordinatedWrite(NSString *path, NSString *how, NSString *text){
+ NSTask *t=[NSTask new]; t.executableURL=[NSURL fileURLWithPath:gCoordinatedWriter];
+ t.arguments=@[path,how,text?:@""]; if(![t launchAndReturnError:NULL]) return -1;
+ while(t.running) Pump(.01);
+ return t.terminationStatus;
+}
+static NSTextView *EditingView(NSTextStorage *storage){
+ NSScrollView *scroll=[[NSScrollView alloc] initWithFrame:NSMakeRect(0,0,400,160)];
+ NSTextView *view=[[NSTextView alloc] initWithFrame:NSMakeRect(0,0,400,160)];
+ view.verticallyResizable=YES; view.textContainer.widthTracksTextView=YES;
+ scroll.hasVerticalScroller=YES; scroll.documentView=view;
+ [view.layoutManager replaceTextStorage:storage];
+ return view;
+}
+static NSUInteger TopCharacter(NSTextView *view){
+ NSRect visible=view.visibleRect; NSPoint origin=view.textContainerOrigin;
+ NSUInteger glyph=[view.layoutManager glyphIndexForPoint:NSMakePoint(NSMinX(visible)-origin.x,NSMinY(visible)-origin.y) inTextContainer:view.textContainer];
+ return [view.layoutManager characterIndexForGlyphAtIndex:glyph];
+}
+static NSString *Lines(int first,int count){NSMutableString *s=[NSMutableString string];for(int i=first;i<first+count;i++)[s appendFormat:@"line %03d of the source\n",i];return s;}
+static int gPresentedErrors=0;
+static BOOL FakePresentError(id d,SEL s,NSError *e){gPresentedErrors++;fprintf(stderr,"presented: %s\n",e.localizedDescription.UTF8String);return NO;}
+static void FakePresentErrorSheet(id d,SEL s,NSError *e,id w,id del,SEL sel,void *c){gPresentedErrors++;fprintf(stderr,"presented: %s\n",e.localizedDescription.UTF8String);}
+static BOOL UserSave(TSDocument *d){
+ Method m=class_getInstanceMethod(NSDocument.class,@selector(presentError:)); method_setImplementation(m,(IMP)FakePresentError);
+ m=class_getInstanceMethod(NSDocument.class,@selector(presentError:modalForWindow:delegate:didPresentSelector:contextInfo:)); method_setImplementation(m,(IMP)FakePresentErrorSheet);
+ [d edit:[d.storage.string stringByAppendingString:@"% saved\n"]];
+ int before=gPresentedErrors; [d saveDocumentWithDelegate:nil didSaveSelector:NULL contextInfo:NULL]; Pump(1.0);
+ return gPresentedErrors==before && !d.isDocumentEdited;
+}
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation(); [NSApplication sharedApplication];
+ gCoordinatedWriter=@(getenv("TS_COORDINATED_WRITER")?:"");
  Method m=class_getClassMethod([NSData class],@selector(dataWithContentsOfURL:options:error:));
  origDWCOU=(void*)method_getImplementation(m); method_setImplementation(m,(IMP)countingDWCOU);
  Method am=class_getInstanceMethod([TSFileChangeMonitor class],NSSelectorFromString(@"acceptData:fingerprint:generation:"));
@@ -255,6 +306,7 @@ int main(int argc,char **argv){@autoreleasepool{
  NSString *path=@(argv[1]),*mode=@(argv[2]); gPath=path; long mb=argc>3? atol(argv[3]):0;
  NSString *initial=@"initial!";
  if(mb>0){ NSMutableString *b=[NSMutableString stringWithCapacity:mb<<20]; NSString *line=@"\\section{x} 0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJ\n"; while(b.length<(NSUInteger)(mb<<20)) [b appendString:line]; initial=b; }
+ if([mode hasPrefix:@"coord-"]) initial=Lines(1,200);
  [initial writeToFile:path atomically:NO encoding:NSUTF8StringEncoding error:NULL];
  NSURL *url=[NSURL fileURLWithPath:path];
  TSDocument *d=nil; NSError *e=nil;
@@ -268,6 +320,11 @@ int main(int argc,char **argv){@autoreleasepool{
  }
  d=[[TSDocProbe alloc] initWithContentsOfURL:url ofType:@"public.plain-text" error:&e];
  if(!d){fprintf(stderr,"open failed %s\n",e.description.UTF8String);return 2;}
+ if([mode hasPrefix:@"coord-"]){
+  // A shown document is a file presenter, so NSDocument hears other processes' writes.
+  [[NSDocumentController sharedDocumentController] addDocument:d];
+  d->textView1=EditingView(d.storage); d->textView2=EditingView(d.storage);
+ }
  Pump(.3);
  NSUInteger r0=d.reads; unsigned long c0=gContentReads; gMaxStall=0;
  #define EXTRA (unsigned long)(d.reads-r0)
@@ -466,6 +523,28 @@ int main(int argc,char **argv){@autoreleasepool{
   ExtWrite(path,@"external content",1); Pump(.6);
   [d.undoManager undo]; Pump(3.0);
   printf("%s edited=%d editor=%s disk=%s extraReads=%lu\n",mode.UTF8String,d.isDocumentEdited,d.storage.string.UTF8String,Disk(path).UTF8String,EXTRA);
+ } else if([mode hasPrefix:@"coord-"]){
+  // Line 120 is at the top of the first view and the insertion point is in line 150.
+  NSUInteger line=Lines(1,1).length, caret=149*line+5, top=119*line;
+  [d->textView1 setSelectedRange:NSMakeRange(caret,0)]; [d->textView2 setSelectedRange:NSMakeRange(30,4)];
+  [d->textView1.layoutManager ensureLayoutForTextContainer:d->textView1.textContainer];
+  [d->textView1 scrollPoint:NSMakePoint(0,[d->textView1.layoutManager lineFragmentRectForGlyphAtIndex:top effectiveRange:NULL].origin.y)];
+  NSString *how=[mode componentsSeparatedByString:@"-"][1];
+  BOOL dirty=[mode hasSuffix:@"-dirty"];
+  if(dirty){ [d edit:[d.storage.string stringByAppendingString:@"% typed\n"]]; [d->textView1 setSelectedRange:NSMakeRange(caret,0)]; [d->textView2 setSelectedRange:NSMakeRange(30,4)]; }
+  NSString *before=d.storage.string.copy; NSUInteger topBefore=TopCharacter(d->textView1);
+  // "insert" adds a line above the visible part, "same" writes the same bytes again.
+  NSString *disk=Disk(path);
+  NSString *text=[how isEqual:@"insert"] ? [@"% added above\n" stringByAppendingString:disk] : disk;
+  int status=CoordinatedWrite(path,how,text); Pump(2.6);
+  NSUInteger shift=[how isEqual:@"insert"] && !dirty ? 14 : 0;
+  BOOL kept=[d.storage.string isEqual:before], edited=d.isDocumentEdited, canUndo=d.undoManager.canUndo;
+  BOOL caretKept=d->textView1.selectedRange.location==caret+shift, selection2=NSEqualRanges(d->textView2.selectedRange,NSMakeRange(30+shift,4));
+  BOOL topKept=TopCharacter(d->textView1)==topBefore+shift;
+  // Saving must neither report a change by another application nor lose the external text silently.
+  BOOL saved=UserSave(d);
+  printf("%s writer=%d extraReads=%lu kept=%d edited=%d canUndo=%d caret=%d selection2=%d top=%d userSave=%d disk=%s\n",mode.UTF8String,status,EXTRA,kept,edited,canUndo,
+   caretKept,selection2,topKept,saved,[Disk(path) isEqual:d.storage.string]?"editor":([Disk(path) isEqual:text]?"external":"other"));
  } else if([mode isEqualToString:@"fdleak"]){
   int before=CountFDs();
   for(int i=0;i<300;i++){[d cancelWatchFile];[d watchFile:path];}
@@ -507,6 +586,14 @@ checks = {
  'revert-throws': ['thrown=1 acceptAfterThrow=0 readsAfterThrow=1 text=second external'],
  'autosave-as': ['saved=1 reads=0 canUndo=1', 'text=untitled text disk=untitled text'],
  'fdleak': [],
+ # Writes by a file provider with file coordination, which NSDocument follows with a revert.
+ 'coord-xattr': ['writer=0 extraReads=0 kept=1 edited=0', 'caret=1 selection2=1 top=1 userSave=1 disk=editor'],
+ 'coord-touch': ['writer=0 extraReads=0 kept=1 edited=0', 'caret=1 selection2=1 top=1 userSave=1 disk=editor'],
+ 'coord-same': ['writer=0 extraReads=0 kept=1 edited=0', 'caret=1 selection2=1 top=1 userSave=1 disk=editor'],
+ 'coord-xattr-dirty': ['writer=0 extraReads=0 kept=1 edited=1 canUndo=1 caret=1 selection2=1 top=1'],
+ 'coord-same-dirty': ['writer=0 extraReads=0 kept=1 edited=1 canUndo=1 caret=1 selection2=1 top=1'],
+ 'coord-insert-dirty': ['writer=0 extraReads=0 kept=1 edited=1 canUndo=1 caret=1 selection2=1 top=1 userSave=0 disk=external'],
+ 'coord-insert': ['writer=0 extraReads=1 kept=0 edited=0', 'caret=1 selection2=1 top=1 userSave=1 disk=editor'],
 }
 modes = args.modes or list(checks)
 for mode in modes:
@@ -520,13 +607,32 @@ for suffix in ['m', 'h']:
         for name in ['stat', 'fstat', 'open']:
             content = re.sub(r'\b'+name+r'\(', 'TSProbe'+name.capitalize()+'(', content)
     (OUT / ('TSFileChangeMonitor.' + suffix)).write_text(content)
+WRITER = r'''
+#import <Foundation/Foundation.h>
+#import <sys/xattr.h>
+#import <sys/time.h>
+int main(int argc,char **argv){@autoreleasepool{
+ NSURL *url=[NSURL fileURLWithPath:@(argv[1])]; NSString *how=@(argv[2]); NSData *data=[@(argv[3]) dataUsingEncoding:NSUTF8StringEncoding];
+ NSFileCoordinator *coordinator=[[NSFileCoordinator alloc] initWithFilePresenter:nil]; __block BOOL ok=NO; NSError *error=nil;
+ [coordinator coordinateWritingItemAtURL:url options:NSFileCoordinatorWritingForReplacing error:&error byAccessor:^(NSURL *u){
+  if([how isEqual:@"xattr"]) ok=setxattr(u.fileSystemRepresentation,"com.example.sync-status","1",1,0,0)==0;
+  else if([how isEqual:@"touch"]) ok=utimes(u.fileSystemRepresentation,NULL)==0;
+  else ok=[data writeToURL:u atomically:YES];
+ }];
+ return ok&&!error?0:1;
+}}
+'''
+writer_source = OUT / 'coordinated-writer.m'; writer_source.write_text(WRITER)
+writer = OUT / 'coordinated-writer'
+subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Foundation', str(writer_source), '-o', str(writer)], check=True)
 exe = OUT / 'probe'
 subprocess.run(['xcrun', 'clang', '-I', str(REPO/'Tests'), '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I'+str(OUT),
                 '-DV5', '-DV6', str(m), str(OUT/'TSFileChangeMonitor.m'), '-o', str(exe)], check=True)
 for mode in modes:
     with tempfile.TemporaryDirectory(dir=OUT) as td:
         result = subprocess.run([str(exe), str(Path(td)/'source.tex'), mode],
-                                capture_output=True, text=True, timeout=30)
+                                capture_output=True, text=True, timeout=30,
+                                env=dict(os.environ, TS_COORDINATED_WRITER=str(writer)))
         print(result.stdout.strip(), flush=True)
         if result.returncode: raise SystemExit(result.stderr)
         for expected in checks[mode]:
