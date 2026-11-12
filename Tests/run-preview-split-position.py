@@ -89,6 +89,7 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 @property BOOL oldUsed, doScroll; @property NSRect oldVisibleRect; @property NSInteger oldIndex;
 @property BOOL singlePage;
 - (void)moveSplitToCorrectSpot:(NSInteger)index;
+- (void)notificationSetup;
 - (void)saveLocation;
 - (void)restoreLocation;
 @end
@@ -105,6 +106,8 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)setupPageStyle { [self setDisplayMode:pageStyle == 1 ? kPDFDisplaySinglePage : kPDFDisplaySinglePageContinuous]; [self setDisplaysPageBreaks:pageStyle != 1]; }
 - (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_WINDOW) [self setAutoScales:YES]; else [self setScaleFactor:self.fixedScale]; }
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
+// Watching the page number does not change the place shown.
+- (void)notificationSetup {}
 - (void)resetSearchDelegate {}
 - (void)becomeActiveView {}
 - (BOOL)hasPinnedLinkPreview { return YES; }

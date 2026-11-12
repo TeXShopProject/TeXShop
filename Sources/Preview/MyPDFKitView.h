@@ -325,6 +325,8 @@
 - (void)applyPreviewArrangement;
 - (void)changePDFViewSizeTo: (NSInteger)newResizeOption;
 - (void)moveSplitToCorrectSpot:(NSInteger)index;
+// Watches the page and magnification of this view; can be called again.
+- (void) notificationSetup;
 - (NSInteger)index;
 - (NSImage *)imageFromSelection;
 - (NSDrawer *)drawer;
