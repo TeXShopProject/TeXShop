@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "163-F5-v8Z.title" = "Ghostscript 选项";
 "183.title" = "默认指令";
-"187.title" = "TeX + DVI";
+"187.title" = "经由DVI";
 "188.title" = "默认脚本";
 "190.title" = "个性化脚本";
-"191.title" = "pdfTeX";
+"191.title" = "直接生成PDF";
 "314.title" = "保存文件时";
 "588.title" = "TeX";
 "589.title" = "LaTeX";

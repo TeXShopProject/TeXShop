@@ -240,7 +240,7 @@
 "group.typesetting.0.title" = "Standaardwaarden";
 "catalog.typesetting.0.0.title" = "Standaard TeX-opdracht";
 "catalog.typesetting.0.1.title" = "Te gebruiken commando";
-"catalog.typesetting.0.2.title" = "Eigen script";
+"catalog.typesetting.0.2.title" = "Zetmethode";
 "catalog.typesetting.0.3.title" = "Alternatieve engine";
 "catalog.typesetting.0.3.note" = "De engine voor zetten met de alternatieve engine. Standaard: pdflatexmk";
 "group.typesetting.1.title" = "Na het zetten";
@@ -250,12 +250,12 @@
 "catalog.typesetting.2.1.title" = "Documenten die via synchronisatie worden bereikt als tabs in het hoofdvenster openen";
 "catalog.typesetting.2.1.note" = "Meestal uitgeschakeld.";
 "group.typesetting.3.title" = "Paden";
-"catalog.typesetting.3.0.title" = "pdfTeX";
+"catalog.typesetting.3.0.title" = "TeX-engines";
 "catalog.typesetting.3.0.note" = "Standaard: /Library/TeX/texbin of /usr/texbin";
-"catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
+"catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.1.note" = "Standaard: /usr/local/bin";
-"catalog.typesetting.3.2.title" = "Extra pad";
-"catalog.typesetting.3.2.note" = "Standaard: ~/bin/context/tex/texmf-osx-arm64/bin";
+"catalog.typesetting.3.2.title" = "Tweede TeX-engines";
+"catalog.typesetting.3.2.note" = "Voor documenten met % !TEX useAlternatePath. Standaard: ~/bin/context/tex/texmf-osx-arm64/bin";
 "catalog.typesetting.3.3.title" = "Automatisch instellen…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";

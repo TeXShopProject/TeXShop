@@ -240,7 +240,7 @@
 "group.typesetting.0.title" = "Defaults";
 "catalog.typesetting.0.0.title" = "Default Command";
 "catalog.typesetting.0.1.title" = "Command to use";
-"catalog.typesetting.0.2.title" = "Personal Script";
+"catalog.typesetting.0.2.title" = "Typesetting Method";
 "catalog.typesetting.0.3.title" = "Alternate Engine";
 "catalog.typesetting.0.3.note" = "The engine used by Typeset with Alternate Engine. Default: pdflatexmk";
 "group.typesetting.1.title" = "After Typesetting";
@@ -250,12 +250,12 @@
 "catalog.typesetting.2.1.title" = "Open documents reached by Sync as tabs in the root window";
 "catalog.typesetting.2.1.note" = "Usually left off.";
 "group.typesetting.3.title" = "Paths";
-"catalog.typesetting.3.0.title" = "pdfTeX";
+"catalog.typesetting.3.0.title" = "TeX Engines";
 "catalog.typesetting.3.0.note" = "Default: /Library/TeX/texbin or /usr/texbin";
-"catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
+"catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.1.note" = "Default: /usr/local/bin";
-"catalog.typesetting.3.2.title" = "Additional path";
-"catalog.typesetting.3.2.note" = "Default: ~/bin/context/tex/texmf-osx-arm64/bin";
+"catalog.typesetting.3.2.title" = "Second TeX Engines";
+"catalog.typesetting.3.2.note" = "Used for documents that contain % !TEX useAlternatePath. Default: ~/bin/context/tex/texmf-osx-arm64/bin";
 "catalog.typesetting.3.3.title" = "Auto Setup…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";

@@ -240,7 +240,7 @@
 "group.typesetting.0.title" = "Valori implicite";
 "catalog.typesetting.0.0.title" = "Comanda Standard";
 "catalog.typesetting.0.1.title" = "Comanda utilizată";
-"catalog.typesetting.0.2.title" = "Script personal";
+"catalog.typesetting.0.2.title" = "Metoda de tehnoredactare";
 "catalog.typesetting.0.3.title" = "Motor alternativ";
 "catalog.typesetting.0.3.note" = "Motorul folosit la culegerea cu motorul alternativ. Implicit: pdflatexmk";
 "group.typesetting.1.title" = "După tehnoredactare";
@@ -250,12 +250,12 @@
 "catalog.typesetting.2.1.title" = "Deschide ca file în fereastra principală documentele accesate prin sincronizare";
 "catalog.typesetting.2.1.note" = "De obicei, dezactivat.";
 "group.typesetting.3.title" = "Căi";
-"catalog.typesetting.3.0.title" = "pdfTeX";
+"catalog.typesetting.3.0.title" = "Motoare TeX";
 "catalog.typesetting.3.0.note" = "Implicit: /Library/TeX/texbin sau /usr/texbin";
-"catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
+"catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.1.note" = "Implicit: /usr/local/bin";
-"catalog.typesetting.3.2.title" = "Cale suplimentară";
-"catalog.typesetting.3.2.note" = "Implicit: ~/bin/context/tex/texmf-osx-arm64/bin";
+"catalog.typesetting.3.2.title" = "Al doilea set de motoare TeX";
+"catalog.typesetting.3.2.note" = "Pentru documentele cu % !TEX useAlternatePath. Implicit: ~/bin/context/tex/texmf-osx-arm64/bin";
 "catalog.typesetting.3.3.title" = "Configurare automată…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";

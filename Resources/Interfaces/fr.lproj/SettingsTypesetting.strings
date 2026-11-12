@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "163-F5-v8Z.title" = "Options de Ghostscript";
 "183.title" = "Format par défaut";
-"187.title" = "TeX + DVI";
+"187.title" = "Via DVI";
 "188.title" = "Script par défaut";
 "190.title" = "Script personnel";
-"191.title" = "pdfTeX";
+"191.title" = "PDF direct";
 "314.title" = "Pendant la sauvegarde des fichiers";
 "588.title" = "TeX";
 "589.title" = "LaTeX";

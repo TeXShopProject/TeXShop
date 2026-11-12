@@ -240,7 +240,7 @@
 "group.typesetting.0.title" = "既定";
 "catalog.typesetting.0.0.title" = "デフォルトのコマンド";
 "catalog.typesetting.0.1.title" = "利用するコマンド";
-"catalog.typesetting.0.2.title" = "パーソナルスクリプト";
+"catalog.typesetting.0.2.title" = "コンパイル法";
 "catalog.typesetting.0.3.title" = "代替エンジン";
 "catalog.typesetting.0.3.note" = "「代替エンジンでタイプセット」で使うエンジンです。デフォルト: pdflatexmk";
 "group.typesetting.1.title" = "タイプセット後";
@@ -250,12 +250,12 @@
 "catalog.typesetting.2.1.title" = "Sync で開く新しい書類を、ルートウインドウのタブで開く";
 "catalog.typesetting.2.1.note" = "通常はオフにします。";
 "group.typesetting.3.title" = "パス";
-"catalog.typesetting.3.0.title" = "(pdf)TeX";
+"catalog.typesetting.3.0.title" = "TeXエンジン";
 "catalog.typesetting.3.0.note" = "デフォルト: /Library/TeX/texbin または /usr/texbin";
-"catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
+"catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.1.note" = "デフォルト: /usr/local/bin";
-"catalog.typesetting.3.2.title" = "別のパス";
-"catalog.typesetting.3.2.note" = "デフォルト: ~/bin/context/tex/texmf-osx-arm64/bin";
+"catalog.typesetting.3.2.title" = "第二のTeXエンジン";
+"catalog.typesetting.3.2.note" = "「% !TEX useAlternatePath」を書いた書類で使います。デフォルト: ~/bin/context/tex/texmf-osx-arm64/bin";
 "catalog.typesetting.3.3.title" = "自動設定…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";

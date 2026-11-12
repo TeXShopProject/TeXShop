@@ -17,7 +17,7 @@
       "dDq-0W-EuL.title": "( )"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "PDF direkt",
       "785.title": "PDF durchsuchen"
     },
     "SettingsFooter.strings": {
@@ -41,7 +41,7 @@
       "dDq-0W-EuL.title": "( )"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "PDF directo",
       "785.title": "Buscar en PDF"
     },
     "SettingsFooter.strings": {
@@ -65,7 +65,7 @@
       "dDq-0W-EuL.title": "( )"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "PDF direct",
       "785.title": "Rechercher dans le PDF"
     },
     "SettingsFooter.strings": {
@@ -89,7 +89,7 @@
       "dDq-0W-EuL.title": "( )"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "PDF diretto",
       "785.title": "Cerca nel PDF"
     },
     "SettingsFooter.strings": {
@@ -98,7 +98,7 @@
   },
   "ja": {
     "SettingsCategories.strings": {
-      "catalog.typesetting.3.0.title": "(pdf)TeX"
+      "catalog.typesetting.3.0.title": "TeXエンジン"
     },
     "SettingsThemes.strings": {
       "dDq-0W-EuL.title": "( )"
@@ -120,7 +120,7 @@
       "dDq-0W-EuL.title": "( )"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "PDF 직접 생성",
       "785.title": "PDF 검색"
     }
   },
@@ -278,7 +278,7 @@
       "z0I-4l-zwC.title": "Commentaar"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "Direct PDF",
       "YQv-fE-Uzg.title": "Als tabblad in hoofdvenster openen",
       "bYh-V5-ri6.title": "In huidig venster blijven",
       "785.title": "PDF doorzoeken"
@@ -301,7 +301,7 @@
       "dDq-0W-EuL.title": "( )"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "PDF direto",
       "785.title": "Pesquisar PDF"
     },
     "SettingsFooter.strings": {
@@ -484,7 +484,7 @@
       "z0I-4l-zwC.title": "Comentário"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "PDF direto",
       "YQv-fE-Uzg.title": "Abrir como separador na janela principal",
       "823.title": "Método de sincronização",
       "590.title": "Comando indicado abaixo",
@@ -514,7 +514,7 @@
       "catalog.editor.1.3.title": "Indentarea celorlalte rânduri:",
       "catalog.spelling.1.4.title": "Omite parametrii selectați",
       "catalog.console.0.1.title": "Folosește și pentru editorul de macrocomenzi",
-      "catalog.typesetting.0.2.title": "Script personal",
+      "catalog.typesetting.0.2.title": "Metoda de tehnoredactare",
       "catalog.appearance.3.0.item.2": "Rândul curent",
       "catalog.appearance.2.0.item.1": "Consolă",
       "catalog.preview.2.0.title": "Urmărește permanent modificările PDF-ului făcute de alte aplicații",
@@ -737,7 +737,7 @@
       "z0I-4l-zwC.title": "Comentariu"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "PDF direct",
       "YQv-fE-Uzg.title": "Deschide ca filă în fereastra principală",
       "823.title": "Metoda de sincronizare",
       "190.title": "Script personal",
@@ -766,7 +766,7 @@
       "dDq-0W-EuL.title": "( )"
     },
     "SettingsTypesetting.strings": {
-      "191.title": "pdfTeX",
+      "191.title": "直接生成PDF",
       "785.title": "搜索 PDF"
     },
     "SettingsFooter.strings": {

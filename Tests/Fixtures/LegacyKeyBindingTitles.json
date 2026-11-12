@@ -13,5 +13,56 @@
     "pt": "Alternar Ligar/Desligar",
     "ro": "Toggle On/Off",
     "zh_CN": "打开/关闭"
+  },
+  "typeset_methods_origin": "db040b9b (5.58) and 3771d9f8 Typeset menu titles of the typesetting methods before they were named Direct PDF and Via DVI",
+  "typeset_methods": {
+    "Base": [
+      "Pdftex",
+      "TeX and DVI"
+    ],
+    "de": [
+      "Pdftex",
+      "TeX und DVI"
+    ],
+    "es": [
+      "Pdftex",
+      "TeX y DVI"
+    ],
+    "fr": [
+      "Pdftex",
+      "TeX et DVI"
+    ],
+    "it": [
+      "Pdftex",
+      "TeX e DVI"
+    ],
+    "ja": [
+      "pdfTeX",
+      "TeX + DVI"
+    ],
+    "ko": [
+      "pdfTeX",
+      "TeX + DVI"
+    ],
+    "nl": [
+      "Pdftex",
+      "TeX en DVI"
+    ],
+    "pt-PT": [
+      "Pdftex",
+      "TeX e DVI"
+    ],
+    "pt": [
+      "Pdftex",
+      "TeX e DVI"
+    ],
+    "ro": [
+      "Pdftex",
+      "Tex și  DVI"
+    ],
+    "zh_CN": [
+      "Pdftex",
+      "TeX 和 DVI"
+    ]
   }
 }

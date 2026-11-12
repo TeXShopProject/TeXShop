@@ -2,6 +2,7 @@
 """Approved wording and retired keys, independent of layout implementation."""
 from pathlib import Path
 import argparse,json,subprocess,re
+import xml.etree.ElementTree as ET
 p=argparse.ArgumentParser();p.add_argument('--interfaces',type=Path);args=p.parse_args()
 r=Path(__file__).resolve().parents[1];interfaces=args.interfaces or r/'Resources/Interfaces'
 fixture=json.loads((r/'Tests/Fixtures/SettingsChangeNoteStrings.json').read_text())
@@ -105,3 +106,33 @@ for loc in sorted(interfaces.glob("*.lproj/SettingsCategories.strings")):
     actual=strings(loc)
     for key in notes:assert actual.get(key,"").strip(),(loc.parent.name,key,"row explanation in every language")
 print("PASS: every row explanation exists in every language, including External Editor and right-to-left lines")
+
+# A pop-up row's title names the setting, not one of its choices.
+catalog=(r/"Sources/Settings/TSSettingsSearchCatalog.inc").read_text()
+popups={"row."+i for i in re.findall(r'@"id": @"(catalog\.[^"]+)", @"kind": @"popup"',layout)}
+entries={}
+for row,table,key,weight in re.findall(r'add\(\w+, @"(row\.[^"]+)", @"(\w+)", @"([^"]+)", TSSettingsSearchWeight(Label|Choice)\)',catalog):
+    if row in popups:entries.setdefault(row,{'Label':[],'Choice':[]})[weight].append((table,key))
+assert 'row.catalog.typesetting.0.2' in entries and len([e for e in entries.values() if e['Label'] and e['Choice']])>=20,'pop-up rows with choices are found'
+for loc in sorted(interfaces.glob("*.lproj/SettingsCategories.strings")):
+    tables={}
+    def text(table,key):
+        if table not in tables:
+            path=loc.parent/(table+'.strings');tables[table]=strings(path) if path.exists() else {}
+        return tables[table].get(key)
+    for row,entry in entries.items():
+        choices={text(*choice) for choice in entry['Choice']}-{None}
+        for label in entry['Label']:assert text(*label) not in choices,(loc.parent.name,row,text(*label),'pop-up title repeats one of its choices')
+names=json.loads((r/"Tests/Fixtures/SettingsTypesettingNames.json").read_text())['languages']
+assert {p.parent.stem for p in interfaces.glob("*.lproj/SettingsCategories.strings")}==set(names),'every language has reviewed Typesetting names'
+for lang,expected in names.items():
+    for table in ('SettingsCategories.strings','SettingsTypesetting.strings'):
+        actual=strings(interfaces/f"{lang}.lproj"/table)
+        for key,value in expected[table].items():assert actual[key]==value,(lang,table,key,'reviewed Typesetting name')
+    note=strings(interfaces/f"{lang}.lproj/SettingsCategories.strings")['catalog.typesetting.3.2.note']
+    assert note.startswith(expected['note_prefix']) and note.endswith('~/bin/context/tex/texmf-osx-arm64/bin'),(lang,'second engines note names the magic comment, then the default')
+    menu=f"{lang}.lproj/MainMenu.nib/designable.nib";menu=ET.parse(interfaces/menu if (interfaces/menu).exists() else r/"Resources/Interfaces"/menu).getroot()
+    titles={e.get('identifier'):e.get('title') for e in menu.iter('menuItem') if (e.get('identifier') or '').startswith('TSShortcut.doChooseMethod:.')}
+    choices=expected['SettingsTypesetting.strings']
+    assert titles['TSShortcut.doChooseMethod:.100']==choices['191.title'] and titles['TSShortcut.doChooseMethod:.101']==choices['187.title'],(lang,'Typeset menu and Settings name the methods alike',titles)
+print("PASS: pop-up titles differ from their choices; reviewed Typesetting names match in Settings and the Typeset menu")
