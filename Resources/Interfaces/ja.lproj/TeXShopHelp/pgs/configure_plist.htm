@@ -2,9 +2,9 @@
 
 <HEAD>
 			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-			<TITLE>.plist ファイル</TITLE>
+			<TITLE>.plistファイル</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="TeXShop で使われている plistファイルについて">
+			<META NAME="description" CONTENT="TeXShopで使われているplistファイルについて">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -12,30 +12,30 @@
 <div id="content_border">
 
 <p>
-Mac OS X は xml ファイルを広汎に利用しています ；  xml は html と密接な関連のある構造化言語です。
+Mac OS Xはxmlファイルを広汎に利用しています ；  xmlはhtmlと密接な関連のある構造化言語です。
 </p>
 
 <p>
-TeXShop は５つの xml ファイルを設定のために用いています： completion.plist ・ autocompletion.plist ・ KeyEquivalents.plist ・ Macros_Latex.plist それに Macros_Context.plist です。これらのファイルは LaTeX パネル、キーバインド、メニュー項目のショートカットキー、マクロメニューなどの設定に利用されています。詳細については後述します。これらのファイルは TeXShop を初めて起動する際に ~/Library/TeXShop のサブフォルダの中に作られます。
+TeXShopは５つのxmlファイルを設定のために用いています：completion.plist・autocompletion.plist・KeyEquivalents.plist・Macros_Latex.plistそれにMacros_Context.plistです。これらのファイルはLaTeXパネル、キーバインド、メニュー項目のショートカットキー、マクロメニューなどの設定に利用されています。詳細については後述します。これらのファイルはTeXShopを初めて起動する際に ~/Library/TeXShopのサブフォルダの中に作られます。
 </p>
 
 <p>
-plist 形式のファイルはごく普通のテキストファイルです。TeXShop や TextEdit あるいはその他のテキストエディタで開いたり編集したりできます。Macros.plist 以外は、それぞれのファイルの最初にファイル形式について説明されています。編集は簡単ですが、いくぶん退屈です。Macros_Latex.plist と Macros_Context.plist と autocompletion.plist の３つは、編集の必要はないでしょう──TeXShop には専用の編集エディタが内蔵されていますので。
+plist形式のファイルはごく普通のテキストファイルです。TeXShopやTextEditあるいはその他のテキストエディタで開いたり編集したりできます。Macros.plist以外は、それぞれのファイルの最初にファイル形式について説明されています。編集は簡単ですが、いくぶん退屈です。Macros_Latex.plistとMacros_Context.plistとautocompletion.plistの３つは、編集の必要はないでしょう──TeXShopには専用の編集エディタが内蔵されていますので。
 </p>
 
 <p>
-もし plist ファイルが Unicode 文字を含んでいるのであれば、UTF-8 形式で編集し保存する必要があります。TeXShop でそうしたファイルを開く前に、TeXShop のエンコーディング設定を UTF-8 に変更してください。そのうえでファイルを編集したり保存したりします。その後エンコーディング設定は元に戻しておきます。もし以前に設定しなおしていないなら、デフォルトでは MacOSRoman です。
+もしplistファイルがUnicode文字を含んでいるのであれば、UTF-8形式で編集し保存する必要があります。TeXShopでそうしたファイルを開く前に、TeXShopのエンコーディング設定をUTF-8に変更してください。そのうえでファイルを編集したり保存したりします。その後エンコーディング設定は元に戻しておきます。もし以前に設定しなおしていないなら、デフォルトではMacOSRomanです。
 </p>
 
 <p>
-Developer Tools をインストールしたユーザーなら、.plist ファイルをダブルクリックすると、Property List Editor というプログラムでファイルが開かれることでしょう。Property List Editor は plist ファイルを編集するのに便利ですが、バグだらけですし、コメントを表示できません。TeXShop を使うほうがいいでしょう。
+Developer Toolsをインストールしたユーザーなら、.plistファイルをダブルクリックすると、Property List Editorというプログラムでファイルが開かれることでしょう。Property List Editorはplistファイルを編集するのに便利ですが、バグだらけですし、コメントを表示できません。TeXShopを使うほうがいいでしょう。
 </p>
 
 </div>		
 		<div id="header_background"></div>
 		<div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
-		<div id="header_chapter">TeXShop の設定はどうすればよいか？</div>
-		<div id="header_title">.plist ファイル</div>
+		<div id="header_chapter">TeXShopの設定はどうすればよいか？</div>
+		<div id="header_title">.plistファイル</div>
 		<div id="menu_border">
 			<UL>
 				<li><a href="configure_preliminaries.htm">まえがき</a>
@@ -44,10 +44,10 @@ Developer Tools をインストールしたユーザーなら、.plist ファイルをダブルクリック�
 				<li><a href="configure_convertgraphics.htm">画像形式を自動的に変換する</a>
 				<li><a href="configure_defaults.htm">初期設定について</a>
 		
-				<li><a href="configure_latextemplate.htm">デフォルトの LaTeX テンプレート</a>
+				<li><a href="configure_latextemplate.htm">デフォルトのLaTeXテンプレート</a>
 				<li><a href="configure_hidden.htm">隠れた設定項目</a>
-				<li><a href="configure_plist.htm">.plist ファイル</a>
-				<li><a href="configure_panel.htm">LaTeX パネルを一部変更する</a>
+				<li><a href="configure_plist.htm">.plistファイル</a>
+				<li><a href="configure_panel.htm">LaTeXパネルを一部変更する</a>
 				<li><a href="configure_autocompletion.htm">キーバインドを変更する</a>
 		
 				<li><a href="configure_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>

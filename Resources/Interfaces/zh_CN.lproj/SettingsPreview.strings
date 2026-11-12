@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "111.title" = "Zoom for new PDFs";
-"113.ibShadowedToolTip" = "新打开的 PDF 的默认缩放比例。";
+"113.ibShadowedToolTip" = "新打开的PDF的默认缩放比例。";
 "1uj-kt-7Pj.title" = "左";
 "328.title" = "滚动";
 "329.title" = "默认页面格式";
@@ -9,7 +9,7 @@
 "333.title" = "单页";
 "335.title" = "放大镜 (大号)";
 "336.title" = "OtherViews";
-"337.title" = "选择 PDF";
+"337.title" = "选择PDF";
 "339.title" = "适合窗口";
 "341.title" = "OtherViews";
 "342.title" = "放大方式";
@@ -31,7 +31,7 @@
 "864.title" = "设成当前位置";
 "865.title" = "100";
 "866.title" = "设定";
-"871.title" = "始终监视其他应用对 PDF 的更改";
+"871.title" = "始终监视其他应用对PDF的更改";
 "910.title" = "Radio";
 "911.title" = "Radio";
 "FSn-iA-3oc.title" = "源代码和预览窗口";
@@ -39,9 +39,9 @@
 "Sb3-3h-ll4.title" = "Radio";
 "SfP-Ak-pn3.title" = "分开窗口";
 "V7d-ht-Pe3.title" = "右";
-"YrC-m9-abH.title" = "HTML 窗口位置";
+"YrC-m9-abH.title" = "HTML窗口位置";
 "Zdh-Ch-Ndh.title" = "设成当前位置";
-"p2D-Mi-Gyc.title" = "主页 URL";
+"p2D-Mi-Gyc.title" = "主页URL";
 "preview-cover-cell.title" = "将第一页单独显示为封面";
 "preview-cover-note-cell.title" = "Applies on opening. Magic comments and\nPDF reading direction take precedence.";
 "preview-link-popups-cell.title" = "链接预览";

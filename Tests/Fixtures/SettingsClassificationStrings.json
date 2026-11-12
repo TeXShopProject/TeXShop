@@ -221,7 +221,7 @@
         "pt-PT": "Usar verificação adaptada ao LaTeX (recomendado)",
         "ro": "Folosește verificarea adaptată la LaTeX (recomandat)",
         "ko": "LaTeX 구조를 고려한 맞춤법 검사 사용(권장)",
-        "zh_CN": "使用考虑 LaTeX 结构的拼写检查（推荐）"
+        "zh_CN": "使用考虑LaTeX结构的拼写检查（推荐）"
       }
     },
     "Use legacy spell checking": {
@@ -253,7 +253,7 @@
         "pt-PT": "Ortografia LaTeX",
         "ro": "Ortografie LaTeX",
         "ko": "LaTeX 맞춤법 검사",
-        "zh_CN": "LaTeX 拼写检查"
+        "zh_CN": "LaTeX拼写检查"
       }
     },
     "Edit Key Bindings…": {
@@ -333,7 +333,7 @@
         "pt-PT": "Quando Tab aciona a conclusão de comandos, fica reservado para ela e não pode ser atribuído a um atalho de menu.",
         "ro": "Când Tab activează completarea comenzilor, tasta este rezervată acesteia și nu poate fi atribuită unei scurtături de meniu.",
         "ko": "Tab으로 명령어 완성을 실행하면 Tab은 완성용으로 예약되어 메뉴 단축키에 지정할 수 없습니다.",
-        "zh_CN": "使用 Tab 触发命令补全时，Tab 将保留用于补全，不能分配给菜单快捷键。"
+        "zh_CN": "使用Tab触发命令补全时，Tab将保留用于补全，不能分配给菜单快捷键。"
       }
     },
     "Source and Preview Windows": {
@@ -397,7 +397,7 @@
         "pt-PT": "Instale uma distribuição TeX e execute a configuração automática em Definições > Composição.",
         "ro": "Instalați o distribuție TeX, apoi rulați configurarea automată în Configurări > Tehnoredactare.",
         "ko": "TeX 배포판을 설치한 다음 설정 > 조판에서 자동 설정을 실행하십시오.",
-        "zh_CN": "安装 TeX 发行版，然后在设置 > 排版中运行自动设置。"
+        "zh_CN": "安装TeX发行版，然后在设置 > 排版中运行自动设置。"
       }
     },
     "Completion trigger": {

@@ -2,5 +2,5 @@
  "Not found" = "見つかりません";
  
 /* Status displayed in find panel when indicated number of matches are replaced. */
- "%d replaced" = "%d 件を置換しました";
+ "%d replaced" = "%d件を置換しました";
  

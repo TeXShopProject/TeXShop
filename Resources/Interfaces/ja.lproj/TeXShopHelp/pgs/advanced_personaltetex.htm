@@ -2,9 +2,9 @@
 
 <HEAD>
 		<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
-		<TITLE>スタイルとマクロを teTeX に追加する</TITLE>
+		<TITLE>スタイルとマクロをteTeXに追加する</TITLE>
 		<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-		<META NAME="description" CONTENT="自己作成した texmf と環境変数について">
+		<META NAME="description" CONTENT="自己作成したtexmfと環境変数について">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,31 +13,31 @@
 <div id="content_border">
 	
 <p>
-ユーザはいくつかの異なるプロジェクトで共用するために追加の sty ・ cls ・ bib および tex などのファイルを作成することもあります。tex のソース・ファイルをタイプセットするときに、それらのファイルが同一のフォルダ内にあれば、TeX や LaTeX にはきちんと読み取ってもらえますが、ファイルの多重コピーをコンピュータ上に保持しなければなりません。
+ユーザはいくつかの異なるプロジェクトで共用するために追加のsty・cls・bibおよびtexなどのファイルを作成することもあります。texのソース・ファイルをタイプセットするときに、それらのファイルが同一のフォルダ内にあれば、TeXやLaTeXにはきちんと読み取ってもらえますが、ファイルの多重コピーをコンピュータ上に保持しなければなりません。
 </p>
 
 <p>
-すべての teTeX プロジェクトに対してこれらのファイルを読み取り可能にすることができます──タイプセットを TeXShop から行なうにしろ、ターミナルから行なうにしろ。そうするためには、ホーム・ディレクトリ内のライブラリ・フォルダに texmf という名前でサブフォルダを作ります。そして tex と bibtex という名前でサブフォルダを作ります。tex フォルダ内には latex という名前のサブフォルダも作ります。これらのフォルダに個人的なファイルをしまっておきます。
+すべてのteTeXプロジェクトに対してこれらのファイルを読み取り可能にすることができます──タイプセットをTeXShopから行なうにしろ、ターミナルから行なうにしろ。そうするためには、ホーム・ディレクトリ内のライブラリ・フォルダにtexmfという名前でサブフォルダを作ります。そしてtexとbibtexという名前でサブフォルダを作ります。texフォルダ内にはlatexという名前のサブフォルダも作ります。これらのフォルダに個人的なファイルをしまっておきます。
 </p>
 
 <p>
-TeX は ~/Library/texmf/tex ないしはこのディレクトリ以下のサブフォルダ内にあるすべてのファイルを検知します。LaTeX は ~/Library/texmf/tex/latex ないしはこのディレクトリ以下のサブフォルダ内にあるすべてのファイルを検知し、BibTeX と MakeIndex はそれぞれ ~/Library/texmf/bibtex あるいは ~/Library/texmf/makeindex にあるすべてのファイルを検知するでしょう。これらのフォルダにファイルを追加した後で texhash を実行する必要はありません。
+TeXは ~/Library/texmf/texないしはこのディレクトリ以下のサブフォルダ内にあるすべてのファイルを検知します。LaTeXは ~/Library/texmf/tex/latexないしはこのディレクトリ以下のサブフォルダ内にあるすべてのファイルを検知し、BibTeXとMakeIndexはそれぞれ ~/Library/texmf/bibtexあるいは ~/Library/texmf/makeindexにあるすべてのファイルを検知するでしょう。これらのフォルダにファイルを追加した後でtexhashを実行する必要はありません。
 </p>
 
 <p>
-他の UNIX マシンにおいて、TeX は個人的な入力ファイルの所在を環境変数（ TEXINPUTS ・ BSTINPUTS および BIBINPUTS ）の設定により知らされることもあります。これは Gerben Wierda の teTeX ディストリビューションでは通常は不要ですけれども、特別な状況ではそうすることもできます。Mac OS X では ~/.MacOSX/environment.plist という名前のファイルをホーム・ディレクトリに作ることで、環境変数についてプログラムに知らせることをユーザに許可しています。これらの環境変数はすべてのユーザ・シェルおよびすべての Carbon と Cocoa プログラムに読み込まれます──ですから、このファイルを作るに際しては注意を払うべきです。
+他のUNIXマシンにおいて、TeXは個人的な入力ファイルの所在を環境変数（TEXINPUTS・BSTINPUTSおよびBIBINPUTS）の設定により知らされることもあります。これはGerben WierdaのteTeXディストリビューションでは通常は不要ですけれども、特別な状況ではそうすることもできます。Mac OS Xでは ~/.MacOSX/environment.plistという名前のファイルをホーム・ディレクトリに作ることで、環境変数についてプログラムに知らせることをユーザに許可しています。これらの環境変数はすべてのユーザ・シェルおよびすべてのCarbonとCocoaプログラムに読み込まれます──ですから、このファイルを作るに際しては注意を払うべきです。
 </p>
 
 <!-- 
 <p>
-下にあるのは Nathan Potter が送ってくれた environment.plist ファイルのサンプルです ； ありがとう！ さらなる詳細については、
+下にあるのはNathan Potterが送ってくれたenvironment.plistファイルのサンプルです ； ありがとう！ さらなる詳細については、
 <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>
 でお調べください
 </p>
  -->
 
 <p>
-下にあるのは Nathan Potter さんが送ってくれた environment.plist ファイルのサンプルです ； ありがとう！ さらなる詳細については、
+下にあるのはNathan Potterさんが送ってくれたenvironment.plistファイルのサンプルです ； ありがとう！ さらなる詳細については、
 <a href="http://developer.apple.com/qa/qa2001/qa1067.html">http://developer.apple.com/qa/qa2001/qa1067.html</a>
 でお調べください
 </p>
@@ -49,11 +49,11 @@ TeX は ~/Library/texmf/tex ないしはこのディレクトリ以下のサブフォルダ内にあるす�
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>
 <div id="header_chapter">上級向けのヘルプ</div>
-<div id="header_title">スタイルとマクロを teTeX に追加する</div>
+<div id="header_title">スタイルとマクロをteTeXに追加する</div>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロを teTeX に追加する</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
 			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
 			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
 			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
@@ -64,17 +64,17 @@ TeX は ~/Library/texmf/tex ないしはこのディレクトリ以下のサブフォルダ内にあるす�
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
 			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルを TeXShop で開く</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
 			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
 			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape の保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeX における文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">teTeX についてさらに</a>
-			<li><a href="advanced_fink.htm">Fink との共存</a>
-			<li><a href="advanced_otherdistributions.htm">他の TeX ディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXt と MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist ファイル</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
 			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>

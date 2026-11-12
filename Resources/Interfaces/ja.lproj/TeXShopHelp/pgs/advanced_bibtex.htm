@@ -13,31 +13,31 @@
 <div id="content_border">
 
 <p>
-BibTeX は LaTeX 文書内に参考文献目録を作成するためのツールです。このツールは、しばしば引用する文献を集成したデータベースがあることを前提としています。シンプルなコマンドを使って LaTeX ソース内で文献の一部を参照することができます──BibTeX は、論文内で参照した項目だけを含んだ参考文献目録を作成します。
+BibTeXはLaTeX文書内に参考文献目録を作成するためのツールです。このツールは、しばしば引用する文献を集成したデータベースがあることを前提としています。シンプルなコマンドを使ってLaTeXソース内で文献の一部を参照することができます──BibTeXは、論文内で参照した項目だけを含んだ参考文献目録を作成します。
 </p>
 
 <BLOCKQUOTE>
 <p>
 <small>
-訳注：pTeX ディストリビューションには日本語に対応した jBibTeX が含まれています。TeXShop の設定ウインドウでは、BibTeX の代わりに jBibTeX を使うよう、設定することができます。
+訳注：pTeXディストリビューションには日本語に対応したjBibTeXが含まれています。TeXShopの設定ウインドウでは、BibTeXの代わりにjBibTeXを使うよう、設定することができます。
 </small>
 </p>
 </BLOCKQUOTE>
 
 <!-- 
 <p>
-ここに Goossens ・ Mittelbach ・ Samarin の共著『The LaTeX Companion』から取った短い例があります。より詳しいことについてはこの本でお調べください。データベースは「mybibliography.bib」という名前のファイルで、以下に示すテキストを含むものとします。このテキスト内の、登録項目 「Felici:1991」 「Knuth:WEB」 「Liang:1983」は、LaTeX ソース内で論文を参照するのに使われる鍵値（参照名）です。
+ここにGoossens・Mittelbach・Samarinの共著『The LaTeX Companion』から取った短い例があります。より詳しいことについてはこの本でお調べください。データベースは「mybibliography.bib」という名前のファイルで、以下に示すテキストを含むものとします。このテキスト内の、登録項目 「Felici:1991」 「Knuth:WEB」 「Liang:1983」は、LaTeXソース内で論文を参照するのに使われる鍵値（参照名）です。
 </p>
  -->
 
 <p>
-ここに Goossens さん・ Mittelbach さん・ Samarin さんの共著『The LaTeX Companion』から取った短い例があります。より詳しいことについてはこの本でお調べください。データベースは「mybibliography.bib」という名前のファイルで、以下に示すテキストを含むものとします。このテキスト内の、登録項目「Felici:1991」 「Knuth:WEB」 「Liang:1983」は、LaTeX ソース内で論文を参照するのに使われる鍵値（参照名）です。
+ここにGoossensさん・Mittelbachさん・Samarinさんの共著『The LaTeX Companion』から取った短い例があります。より詳しいことについてはこの本でお調べください。データベースは「mybibliography.bib」という名前のファイルで、以下に示すテキストを含むものとします。このテキスト内の、登録項目「Felici:1991」 「Knuth:WEB」 「Liang:1983」は、LaTeXソース内で論文を参照するのに使われる鍵値（参照名）です。
 </p>
 
 <BLOCKQUOTE>
 <p>
 <small>
-補足：『The LaTeX コンパニオン』アスキー書籍編集部監訳（1998年）
+補足：『The LaTeXコンパニオン』アスキー書籍編集部監訳（1998年）
 </small>
 </p>
 </BLOCKQUOTE>
@@ -76,7 +76,7 @@ BibTeX は LaTeX 文書内に参考文献目録を作成するためのツールです。このツールは、し
 </tt>
 
 <p>
-LaTeX のソースファイルは「myfile.tex」という名前で、以下のテキストを含むものとします：
+LaTeXのソースファイルは「myfile.tex」という名前で、以下のテキストを含むものとします：
 </p>
 
 <tt>
@@ -92,15 +92,15 @@ LaTeX のソースファイルは「myfile.tex」という名前で、以下のテキストを含むものとし
 </tt>
 
 <p>
-このソースをタイプセットすると、Felici の論文への参照が文章内に示され、参考文献目録が文章の最後に作成されます──そこには Felici と Liang の論文はありますが、Knuth の論文は見あたりません。
+このソースをタイプセットすると、Feliciの論文への参照が文章内に示され、参考文献目録が文章の最後に作成されます──そこにはFeliciとLiangの論文はありますが、Knuthの論文は見あたりません。
 </p>
 
 <p>
-TeXShop では次に示す方法でこの例を利用できます。最初に「myfile.tex」という文書をいつも通りに編集してタイプセットします。参照は「 [?] 」として出力結果に示され、参考文献目録は欠落します。そのままプログラム・ボタンにある「BibTeX」を選択して実行します。次に「LaTeX」を選んで再度タイプセットします。参照はなおも「 [?] 」と表示されますが、参考文献目録は出力に付け加わります。最終的にタイプセットすると、参照も正しい値になっています。
+TeXShopでは次に示す方法でこの例を利用できます。最初に「myfile.tex」という文書をいつも通りに編集してタイプセットします。参照は「 [?] 」として出力結果に示され、参考文献目録は欠落します。そのままプログラム・ボタンにある「BibTeX」を選択して実行します。次に「LaTeX」を選んで再度タイプセットします。参照はなおも「 [?] 」と表示されますが、参考文献目録は出力に付け加わります。最終的にタイプセットすると、参照も正しい値になっています。
 </p>
 
 <p>
-「mybibliography.bib」というファイルは、TeXShop で開いたり編集したりできます。もし最初から TeXShop を使って「mybibliography.bib」を作成するのであれば、保存画面の「フォーマット：」と表示のあるプルダウンメニューで、tex ファイルではなく bib ファイルとして保存します。
+「mybibliography.bib」というファイルは、TeXShopで開いたり編集したりできます。もし最初からTeXShopを使って「mybibliography.bib」を作成するのであれば、保存画面の「フォーマット：」と表示のあるプルダウンメニューで、texファイルではなくbibファイルとして保存します。
 </p>
 
 <div id="header_background"></div>
@@ -110,7 +110,7 @@ TeXShop では次に示す方法でこの例を利用できます。最初に「myfile.tex」という文書を
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロを teTeX に追加する</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
 			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
 			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
 			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
@@ -121,17 +121,17 @@ TeXShop では次に示す方法でこの例を利用できます。最初に「myfile.tex」という文書を
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
 			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルを TeXShop で開く</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
 			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
 			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape の保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeX における文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">teTeX についてさらに</a>
-			<li><a href="advanced_fink.htm">Fink との共存</a>
-			<li><a href="advanced_otherdistributions.htm">他の TeX ディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXt と MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist ファイル</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
 			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>

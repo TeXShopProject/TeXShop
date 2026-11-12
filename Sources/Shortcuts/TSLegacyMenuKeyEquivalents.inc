@@ -28,6 +28,19 @@ static NSArray<NSMenuItem *> *TSLegacyItems(NSMenu *menu)
     if (anchor != NSNotFound) [items insertObject:moved atIndex:anchor + 1];
     return items;
 }
+// Japanese and Chinese titles dropped the space between CJK and Latin text,
+// as macOS does; titles saved before that still name the same items.
+static NSString *TSLegacyComparableTitle(NSString *title)
+{
+    static NSRegularExpression *space;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        NSString *cjk = @"[\\x{3000}-\\x{30FF}\\x{3400}-\\x{9FFF}\\x{FF01}-\\x{FF60}]";
+        NSString *pattern = [NSString stringWithFormat:@"(?<=%@) (?=[A-Za-z0-9])|(?<=[A-Za-z0-9]) (?=%@)", cjk, cjk];
+        space = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:NULL];
+    });
+    return [space stringByReplacingMatchesInString:title options:0 range:NSMakeRange(0, title.length) withTemplate:@""];
+}
 // Titles of the Typeset menu's typesetting methods before 5.60 named them by
 // what they do (Direct PDF, Via DVI), in every language.
 static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
@@ -36,11 +49,11 @@ static NSString *TSLegacyFormerTitleIdentifier(NSString *title)
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         NSMutableDictionary<NSString *, NSString *> *map = [NSMutableDictionary dictionary];
-        for (NSString *former in @[@"Pdftex", @"pdfTeX"]) map[former] = @"TSShortcut.doChooseMethod:.100";
-        for (NSString *former in @[@"TeX and DVI", @"TeX und DVI", @"TeX y DVI", @"TeX et DVI", @"TeX e DVI", @"TeX en DVI", @"TeX + DVI", @"Tex și  DVI", @"TeX 和 DVI"]) map[former] = @"TSShortcut.doChooseMethod:.101";
+        for (NSString *former in @[@"Pdftex", @"pdfTeX"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.100";
+        for (NSString *former in @[@"TeX and DVI", @"TeX und DVI", @"TeX y DVI", @"TeX et DVI", @"TeX e DVI", @"TeX en DVI", @"TeX + DVI", @"Tex și  DVI", @"TeX 和 DVI"]) map[TSLegacyComparableTitle(former)] = @"TSShortcut.doChooseMethod:.101";
         identifiers = map;
     });
-    return identifiers[title];
+    return identifiers[TSLegacyComparableTitle(title)];
 }
 static NSMenuItem *TSLegacyMenuItem(NSMenu *menu, id key)
 {
@@ -51,6 +64,8 @@ static NSMenuItem *TSLegacyMenuItem(NSMenu *menu, id key)
         for (NSMenuItem *item in items) if ([item.title isEqualToString:key]) return item;
         NSMenuItem *titled = [menu itemWithTitle:key];
         if (titled != nil) return titled;
+        NSString *comparable = TSLegacyComparableTitle(key);
+        for (NSMenuItem *item in items) if ([TSLegacyComparableTitle(item.title) isEqualToString:comparable]) return item;
         NSString *identifier = TSLegacyFormerTitleIdentifier(key);
         if (identifier != nil) for (NSMenuItem *item in items) if ([item.identifier isEqualToString:identifier]) return item;
         return nil;

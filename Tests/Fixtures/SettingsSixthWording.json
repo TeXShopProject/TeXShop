@@ -760,17 +760,17 @@
     "SettingsPreview.strings": {
       "V7d-ht-Pe3.title": "右",
       "1uj-kt-7Pj.title": "左",
-      "337.title": "选择 PDF"
+      "337.title": "选择PDF"
     },
     "SettingsThemes.strings": {
       "dDq-0W-EuL.title": "( )"
     },
     "SettingsTypesetting.strings": {
       "191.title": "直接生成PDF",
-      "785.title": "搜索 PDF"
+      "785.title": "搜索PDF"
     },
     "SettingsFooter.strings": {
-      "1100.title": "TeXShop 标准"
+      "1100.title": "TeXShop标准"
     }
   }
 }

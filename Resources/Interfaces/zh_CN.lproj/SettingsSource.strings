@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1080.title" = "OgreKit 查找面板";
+"1080.title" = "OgreKit查找面板";
 "14.title" = "文档字体";
 "19.title" = "源代码窗口位置";
 "236.title" = "启动时";
@@ -9,8 +9,8 @@
 "32.title" = "关闭时记住上一次位置";
 "3eF-XA-ahc.title" = "不检查命令参数";
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
-"582.title" = "Apple 查找面板";
-"583.title" = "Apple 查找栏";
+"582.title" = "Apple查找面板";
+"583.title" = "Apple查找栏";
 "585.title" = "查找面板";
 "872.title" = "设置...";
 "873.title" = "Helvetica 12";
@@ -21,8 +21,8 @@
 "912.title" = "Radio";
 "914.title" = "Radio";
 "925.title" = "命令补全触发键:";
-"927.title" = "Escape 键";
-"928.title" = "Tab 键";
+"927.title" = "Escape键";
+"928.title" = "Tab键";
 "929.title" = "Radio";
 "934.title" = "配对目标和高亮颜色";
 "950.title" = "{ }";
@@ -38,10 +38,10 @@
 "eIA-mh-q2u.title" = "行号字体大小";
 "kgx-Sa-LDF.title" = "拼写检查";
 "odm-Dy-TNW.title" = "大";
-"teg-0p-Q8J.title" = "不检查 LaTeX 命令";
-"ts-aware-spelling-cell.title" = "识别 LaTeX 的拼写检查";
-"ts-aware-spelling.ibShadowedToolTip" = "对 LaTeX 文档使用排除规则。";
-"ts-edit-spelling-cell.title" = "编辑 LaTeX 排除规则…";
-"ts-edit-spelling.ibShadowedToolTip" = "编辑 LaTeX 拼写检查使用的排除规则。";
+"teg-0p-Q8J.title" = "不检查LaTeX命令";
+"ts-aware-spelling-cell.title" = "识别LaTeX的拼写检查";
+"ts-aware-spelling.ibShadowedToolTip" = "对LaTeX文档使用排除规则。";
+"ts-edit-spelling-cell.title" = "编辑LaTeX排除规则…";
+"ts-edit-spelling.ibShadowedToolTip" = "编辑LaTeX拼写检查使用的排除规则。";
 "uAi-0W-9KI.title" = "Switch";
 "ypQ-Gc-HUa.title" = "始终";

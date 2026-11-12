@@ -5,8 +5,8 @@ tiPaletteLabelSave			= "保存";
 tiToolTipSave				= "書類を保存します";
 
 /* tool tips for the default Print item. Different actions depending on the window */
-tiToolTipPrintSource			= "TeX ソースを印刷します";
-tiToolTipPrint				= "PDF イメージを印刷します";
+tiToolTipPrintSource			= "TeXソースを印刷します";
+tiToolTipPrint				= "PDFイメージを印刷します";
 
 tiLabelTypeset				= "タイプセット";
 tiPaletteLabelTypeset			= "タイプセット";
@@ -23,31 +23,31 @@ tiToolTipProgram			= "タイプセットプログラムを選択します";
 
 tiLabelTeX				= "TeX";
 tiPaletteLabelTeX			= "TeX";
-tiToolTipTeX				= "ソースを plain TeX で処理します";
+tiToolTipTeX				= "ソースをplain TeXで処理します";
 
 tiLabelLaTeX				= "LaTeX";
 tiPaletteLabelLaTeX			= "LaTeX";
-tiToolTipLaTeX				= "ソースを LaTeX で処理します";
+tiToolTipLaTeX				= "ソースをLaTeXで処理します";
 
 tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
-tiToolTipBibTeX				= "BibTeX を起動します";
+tiToolTipBibTeX				= "BibTeXを起動します";
 
 tiLabelMakeIndex			= "MakeIndex";
 tiPaletteLabelMakeIndex			= "MakeIndex";
-tiToolTipMakeIndex			= "MakeIndex を起動します";
+tiToolTipMakeIndex			= "MakeIndexを起動します";
 
 tiLabelMetaPost				= "MetaPost";
 tiPaletteLabelMetaPost			= "MetaPost";
-tiToolTipMetaPost			= "MetaPost を起動します";
+tiToolTipMetaPost			= "MetaPostを起動します";
 
 tiLabelConTeX				= "ConTeXt";
 tiPaletteLabelConTeX			= "ConTeXt";
-tiToolTipConTeX				= "ConTeXt を起動します";
+tiToolTipConTeX				= "ConTeXtを起動します";
 
 tiLabelMetaFont				= "MetaFont";
 tiPaletteLabelMetaFont			= "MetaFont";
-tiToolTipMetaFont			= "MetaFont を起動します";
+tiToolTipMetaFont			= "MetaFontを起動します";
 
 tiLabelPreviousPage			= "前のページ";
 tiPaletteLabelPreviousPage		= "前のページ";
@@ -95,7 +95,7 @@ tiToolTipMacrosEE				= "マクロを挿入します";
 
 tiLabelAutoComplete			= "キーバインド";
 tiPaletteLabelAutoComplete		= "キーバインド";
-tiToolTipAutoComplete			= "キーバインドによる入力を ON/OFF します";
+tiToolTipAutoComplete			= "キーバインドによる入力をON/OFFします";
 
 tiLabelSplit				= "ウインドウ分割";
 tiPaletteLabelSplit			= "ウインドウ分割";
@@ -123,7 +123,7 @@ tiToolTipSearchKIT				= "検索";
 
 tiLabelColorIndex				= "索引の色づけ";
 tiPaletteLabelColorIndex		= "索引の色づけ";
-tiToolTipColorIndex				= "\\index と \\esindex を別色で色づけします";
+tiToolTipColorIndex				= "\\indexと \\esindexを別色で色づけします";
 
 tiLabelTypesetKIT				= "タイプセット";
 tiPaletteLabelTypesetKIT		= "タイプセット";
@@ -164,7 +164,7 @@ tiToolTipMouseModeKIT			= "マウスモードを変更します";
 
 tiLabelSyncMarksKIT				= "Syncマーク";
 tiPaletteLabelSyncMarksKIT		= "Syncマーク";
-tiToolTipSyncMarksKIT			= "Sync マークを表示します";
+tiToolTipSyncMarksKIT			= "Syncマークを表示します";
 
 tiLabelBackForthKIT				= "戻る／進む";
 tiPaletteLabelBackForthKIT		= "戻る／進む";
@@ -204,11 +204,11 @@ tiToolTipMagnificationSplit     = "プレビュー画面のズーム倍率を設
 
 tiLabelColorIndexSplit			= "索引の色づけ";
 tiPaletteLabelColorIndexSplit     = "索引の色づけ";
-tiToolTipColorIndexSplit          = "\\index と \\esindex を別色で色づけします";
+tiToolTipColorIndexSplit          = "\\indexと \\esindexを別色で色づけします";
 
 tiLabelAutoCompleteSplit		= "キーバインド";
 tiPaletteLabelAutoCompleteSplit   = "キーバインド";
-tiToolTipAutoCompleteSplit     = "キーバインドによる入力を ON/OFF します";
+tiToolTipAutoCompleteSplit     = "キーバインドによる入力をON/OFFします";
 
 tiLabelTemplatesSplit            = "テンプレート";
 tiPaletteLabelTemplatesSplit            = "テンプレート";
