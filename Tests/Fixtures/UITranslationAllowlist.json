@@ -97,6 +97,7 @@
   "lim",
   "lim inf",
   "lim sup",
+  "log",
   "matrix",
   "max",
   "min",
@@ -137,6 +138,11 @@
    "ToolbarItems.strings": [
     "Labels",
     "System"
+   ],
+   "completionpanel1.2.nib": [
+    "Matrix",
+    "Roman",
+    "Sans"
    ]
   },
   "es": {
@@ -158,6 +164,10 @@
    "ToolbarItems.strings": [
     "Macros",
     "Make Index"
+   ],
+   "completionpanel1.2.nib": [
+    "Roman",
+    "Sans"
    ]
   },
   "fr": {
@@ -187,6 +197,12 @@
    "ToolbarItems.strings": [
     "Labels",
     "Macros"
+   ],
+   "completionpanel1.2.nib": [
+    "Description",
+    "Figure",
+    "Roman",
+    "Sans"
    ]
   },
   "it": {
@@ -249,6 +265,11 @@
    ],
    "ToolbarItems.strings": [
     "Labels"
+   ],
+   "completionpanel1.2.nib": [
+    "Matrix",
+    "Roman",
+    "Sans"
    ]
   },
   "pt": {
@@ -283,6 +304,9 @@
     "Editor",
     "Macros"
    ],
+   "MacroEditor.nib": [
+    "Submenu"
+   ],
    "MainMenu.nib": [
     "Macros"
    ],
@@ -300,6 +324,9 @@
    "Localizable.strings": [
     "Editor",
     "General"
+   ],
+   "MacroEditor.nib": [
+    "Separator"
    ],
    "MainMenu.nib": [
     "Experiment...",
