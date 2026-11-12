@@ -38,6 +38,49 @@
 
 
 
+// An experiment typesets a LaTeX document, so Plain TeX, MetaPost and ConTeXt cannot typeset it.
+static BOOL TSExperimentRejectsEngine(NSString *name)
+{
+    name = name.lowercaseString;
+    return [@[@"plaintex", @"tex", @"pdftex", @"personaltex", @"metapost", @"context"] containsObject:name]
+        || [name hasPrefix:@"context-"];
+}
+
+// The engine of an experiment: pdflatex, latex, personallatex, or the name of an engine in
+// ~/Library/TeXShop/Engines; nil when the engine cannot typeset an experiment. A "% !TEX program"
+// line (program, in lower case) is read as typesetting reads it, and otherwise the engine of the
+// source toolbar, numbered as typesetting numbers it (menuEngine, of menuTitles), with the script
+// of the document for LaTeX.
+static NSString *TSExperimentEngine(NSString *program, NSInteger menuEngine, NSArray<NSString *> *menuTitles, NSInteger script)
+{
+    NSString *engine;
+
+    if (program.length > 0) {
+        engine = program.lowercaseString;
+        if ([engine isEqualToString:@"bibtex"] || [engine isEqualToString:@"makeindex"])
+            return @"pdflatex";
+        if ([@[@"pdflatex", @"latex", @"personallatex"] containsObject:engine])
+            return engine;
+        for (NSUInteger i = UserEngine - 1; i < menuTitles.count; i++)
+            if ([menuTitles[i].lowercaseString isEqualToString:engine]) {
+                engine = menuTitles[i];
+                break;
+            }
+    } else if (menuEngine == LatexEngine) {
+        if (script == kTypesetViaPersonalScript)
+            return @"personallatex";
+        if (script == kTypesetViaGhostScript)
+            return @"latex";
+        return @"pdflatex";
+    } else if (menuEngine == BibtexEngine || menuEngine == IndexEngine)
+        return @"pdflatex";
+    else if (menuEngine >= UserEngine && menuEngine <= (NSInteger)menuTitles.count)
+        engine = menuTitles[menuEngine - 1];
+    else
+        return nil;   // Plain TeX, MetaPost, or no engine
+    return TSExperimentRejectsEngine(engine) ? nil : engine;
+}
+
 @implementation TSDocument (Scrap)
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -166,7 +209,9 @@
         theDocument = self.rootDocument;
     else
         theDocument = self;
-    self.scrapMenuEngine = [[theDocument programButton] titleOfSelectedItem];
+    // The engine of the source toolbar, numbered as typesetting numbers it (chooseProgram:)
+    self.scrapMenuEngine = [[theDocument programButton] indexOfSelectedItem] + 1;
+    self.scrapMenuTitles = [[theDocument programButton] itemTitles];
     self.scrapDVI = [theDocument useDVI];
     self.scrapScript = theDocument->whichScript;
     
@@ -420,31 +465,12 @@
     //       pdflatex, latex, or personallatex depending on whichScript
     
     // get program and use it to typeset the file
-    // first get program selected in pulldown menu
-    if (self.scrapProgram == nil)
-        {
-        userEngine = [[self.scrapMenuEngine stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
-        if ([userEngine isEqualToString: @"latex"])
-            {
-            if (self.scrapScript == 102)
-                userEngine = @"personallatex";
-            else if (self.scrapScript == 101)
-                userEngine = @"latex";
-            else
-                userEngine = @"pdflatex";
-            }
-        }
-     else
-        userEngine = self.scrapProgram;
-            
-         
-    if ([@[@"plaintex", @"tex", @"metapost", @"personaltex"] containsObject:userEngine ?: @""]) {
+    userEngine = TSExperimentEngine(self.scrapProgram, self.scrapMenuEngine, self.scrapMenuTitles, self.scrapScript);
+    if (userEngine == nil) {
         [[NSFileManager defaultManager] removeItemAtURL:[fileURL URLByDeletingLastPathComponent] error:NULL];
         NSBeep();
         return;
     }
-    if ([userEngine isEqualToString:@"bibtex"] || [userEngine isEqualToString:@"makeindex"])
-        userEngine = @"pdflatex";
 
 //  Fixed to use settings in Preferences RMK
     

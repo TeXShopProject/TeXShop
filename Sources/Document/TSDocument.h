@@ -561,7 +561,8 @@ enum RootCommand
 @property NSInteger scrapScript;
 @property (retain)  NSString    *scrapEncoding;
 @property (retain)  NSString    *scrapProgram;
-@property (retain)  NSString    *scrapMenuEngine;
+@property           NSInteger   scrapMenuEngine;
+@property (copy)    NSArray<NSString *> *scrapMenuTitles;
 @property           BOOL        scrapDVI;
 @property           BOOL        syntaxColor;
 
