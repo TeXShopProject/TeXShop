@@ -11,6 +11,11 @@
 - (instancetype)initWithFrame:(NSRect)frame image:(NSImage *)image source:(NSRect)source
                      pageSize:(NSSize)pageSize page:(PDFPage *)page
                     transform:(CGAffineTransform)transform;
+// An image of one or two pages, such as a page and the next one below it (#14). Each page
+// occupies its rectangle in the image, whose size is `pageSize`.
+- (instancetype)initWithFrame:(NSRect)frame image:(NSImage *)image source:(NSRect)source
+                     pageSize:(NSSize)pageSize pages:(NSArray<PDFPage *> *)pages
+                    pageRects:(const NSRect *)pageRects;
 
 @property (nonatomic) BOOL pinned;
 @property (readonly) NSRect source;
