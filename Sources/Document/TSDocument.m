@@ -59,6 +59,7 @@
 #import "TSAppDelegate.h"
 #import "TSTextView.h"
 #import "TSSpellSupport.h"
+#import "TSSpellingLanguage.h"
 #import "TSEncodingSupport.h"
 #import "TSMacroMenuController.h"
 #import "TSDocumentController.h"
@@ -436,8 +437,12 @@ withDarkColors = NO;
 	firstTime = NO;
 	fromMenu = NO;
 	willClose = NO;
-    self.spellLanguage = [SUD stringForKey: spellingLanguageDefaultKey];
-    self.automaticSpelling = [SUD boolForKey:spellingAutomaticDefaultKey];
+    NSString *defaultSpellLanguage = nil;
+    self.automaticSpelling = TSSpellingDefaultIsAutomatic(SUD, [[NSSpellChecker sharedSpellChecker] availableLanguages], &defaultSpellLanguage);
+    self.spellLanguage = defaultSpellLanguage;
+    self.spellLanguageFollowsDefault = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(spellingLanguageDefaultChanged:)
+        name:TSSpellingLanguageChangedNotification object:nil];
     fromAlternate = NO;
     self.PreviewType = 0; // use old method
     // [stringCenter setState:1];
@@ -2361,7 +2366,10 @@ in other code when an external editor is being used. */
                 
                 self.automaticSpelling = NO;
                 self.spellLanguage = spellcheckString;
-                [self resetSpelling];
+                self.spellLanguageFollowsDefault = NO;
+                // While a file is being opened, another document's window is main.
+                if ([self spellingWindowIsMain])
+                    [self resetSpelling];
                 
               /*
                 NSSpellChecker *theChecker = [NSSpellChecker sharedSpellChecker];
@@ -3082,7 +3090,11 @@ else {
         return;
 	NSSpellChecker *theChecker = [NSSpellChecker sharedSpellChecker];
     theChecker.automaticallyIdentifiesLanguages = self.automaticSpelling;
-	[theChecker setLanguage:self.spellLanguage];
+    if ([self.spellLanguage length] > 0)
+        [theChecker setLanguage:self.spellLanguage];
+    // The checker may name the language differently ("en" for "en_US").
+    self.appliedSpellLanguage = [theChecker language];
+    self.appliedAutomaticSpelling = theChecker.automaticallyIdentifiesLanguages;
 }
 
 - (void)resignSpelling {
@@ -3092,8 +3104,31 @@ else {
     NSSpellChecker *theChecker = [NSSpellChecker sharedSpellChecker];
     BOOL identifiesLanguages = theChecker.automaticallyIdentifiesLanguages;
     NSString *theLanguage = [theChecker language];
+    // A language chosen in the Spelling panel belongs to this document from now on.
+    if (identifiesLanguages != self.appliedAutomaticSpelling ||
+        (! identifiesLanguages && ! [theLanguage isEqualToString:self.appliedSpellLanguage]))
+        self.spellLanguageFollowsDefault = NO;
     self.automaticSpelling = identifiesLanguages;
     self.spellLanguage = theLanguage;
+}
+
+// A new dictionary chosen in Settings applies to the documents that still use the old one.
+- (void)spellingLanguageDefaultChanged:(NSNotification *)notification {
+    
+    if (! self.spellLanguageFollowsDefault)
+        return;
+    NSString *defaultSpellLanguage = nil;
+    self.automaticSpelling = TSSpellingDefaultIsAutomatic(SUD, [[NSSpellChecker sharedSpellChecker] availableLanguages], &defaultSpellLanguage);
+    self.spellLanguage = defaultSpellLanguage;
+    if ([self spellingWindowIsMain])
+        [self resetSpelling];
+}
+
+// The spell checker has this document's language while its source window is main.
+- (BOOL)spellingWindowIsMain {
+    
+    NSWindow *mainWindow = [NSApp mainWindow];
+    return mainWindow != nil && (mainWindow == textWindow || mainWindow == fullSplitWindow);
 }
 
 
