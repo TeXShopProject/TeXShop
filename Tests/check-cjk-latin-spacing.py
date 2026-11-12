@@ -64,6 +64,31 @@ for language in ('ja', 'zh_CN'):
                 failures.append(f'{path.relative_to(root)}: {text[max(0, match.start() - 12):match.end() + 12]!r}')
 assert compiled > 40, compiled
 
+# The Japanese help lost the same spaces where it quotes the interface (checked by
+# check-settings-guidance.py). Font names in its attributes are names, not text:
+# they must still name a font.
+import json, subprocess
+help_pages, font_names = 0, set()
+for path in sorted((root / 'Resources/Interfaces/ja.lproj/TeXShopHelp').rglob('*.htm*')):
+    raw = path.read_bytes()
+    try:
+        page = raw.decode('utf-8')
+    except UnicodeDecodeError:
+        page = raw.decode('cp932')
+    if mutation == 'help-font' and path.name == 'basic_j_ptex.htm':
+        page = page.replace('ヒラギノ角ゴ Pro W3', 'ヒラギノ角ゴPro W3')
+    help_pages += 1
+    for value in re.findall(r'face="([^"]*)"|font-family:\s*([^;"}]*)', page, re.I):
+        font_names.update(name.strip(" '") for name in ''.join(value).split(','))
+    for value in re.findall(r'<meta\s+name="Apple(?:SearchResults)?Font"\s+content="([^"]*)"', page, re.I):
+        font_names.update(name.strip(" '") for name in value.split(','))
+assert help_pages > 60, help_pages
+japanese_fonts = sorted(name for name in font_names if not name.isascii())
+assert japanese_fonts, 'the help names a Japanese font'
+probe = 'ObjC.import("AppKit");JSON.stringify(%s.filter(n => $.NSFont.fontWithNameSize(n, 12).isNil()))' % json.dumps(japanese_fonts, ensure_ascii=False)
+missing = json.loads(subprocess.run(['osascript', '-l', 'JavaScript', '-e', probe], capture_output=True, text=True, check=True).stdout)
+failures += [f'help font name that names no font: {name!r}' for name in missing]
+
 # Korean keeps its word spacing.
 korean = read(root / 'Resources/Interfaces/ko.lproj/SettingsCategories.strings')
 assert re.search('[A-Za-z0-9] [가-힯]', korean), 'Korean interface text keeps spaces between words'
@@ -76,4 +101,4 @@ if mutation:
 elif failures:
     raise SystemExit('Space between CJK and Latin text:\n' + '\n'.join(failures))
 else:
-    print(f'PASS: {files} Japanese and Chinese interface sources and {compiled} compiled nibs have no space between CJK and Latin text; Korean keeps word spacing')
+    print(f'PASS: {files} Japanese and Chinese interface sources and {compiled} compiled nibs have no space between CJK and Latin text; the {help_pages} Japanese help pages name existing fonts; Korean keeps word spacing')
