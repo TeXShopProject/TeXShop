@@ -789,6 +789,7 @@ enum RootCommand
 - (void)resignSpelling;
 - (void)spellingLanguageDefaultChanged:(NSNotification *)notification;
 - (BOOL)spellingWindowIsMain;
++ (void)applySpellingDefaultUnlessDocumentIsMain;
 - (void)closeCurrentEnvironment:(id)sender;
 - (void)invalidateCompletionConnection;
 // Forward Routines Not Found by Source
