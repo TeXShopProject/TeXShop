@@ -117,17 +117,17 @@
 <hr>
 
 <p>
-pTeX＋TeXShopで日本語TeX文書を作成する際の注意点について述べておかねばなりません。TeXShopには「pdfTeX」 「TeX＋Ghostscript」 「パーソナルスクリプト」の３種類のモードがあり、それぞれにタイプセットの方式が異なっています。日本語環境では「<b>TeX＋Ghostscript</b>」を使うとよいでしょう。TeXファイルはpTeXによってdviファイルに変換され、さらにdvipdfmxによってpdfファイルに変換されます。「TeX＋Ghostscript」モードで利用できる画像形式は、基本的にはepsとpsですが、dvipdfmx自体はpdf・jpg・png・mpsを扱うことも可能です（jpg・png・pdf画像の扱いについては、ヘルプ項目「<A HREF = "basic_graphics.htm">画像を入れる</A>」を参照してください）。
+pTeX＋TeXShopで日本語TeX文書を作成する際の注意点について述べておかねばなりません。TeXShopには「PDF直接生成」 「DVI経由」 「パーソナルスクリプト」の３種類のモードがあり、それぞれにタイプセットの方式が異なっています。日本語環境では「<b>DVI経由</b>」を使うとよいでしょう。TeXファイルはpTeXによってdviファイルに変換され、さらにdvipdfmxによってpdfファイルに変換されます。「DVI経由」モードで利用できる画像形式は、基本的にはepsとpsですが、dvipdfmx自体はpdf・jpg・png・mpsを扱うことも可能です（jpg・png・pdf画像の扱いについては、ヘルプ項目「<A HREF = "basic_graphics.htm">画像を入れる</A>」を参照してください）。
 </p>
 
 <p>
 	<dl>
-		<dd>「TeX＋Ghostscript」が＋記号で結ばれていることに触れておくべきかもしれません──これはシェルスクリプトによりplatex -> dvipdfmxという動作が実行されているにすぎないことを意味しています。つまり、たとえば目次の作成などのように複数回のタイプセットが必要な場合には、いくぶん無駄が生じる、ということです。こうした無駄を省きたいユーザは、platex -> platex -> dvipdfmxというように動作するマクロ・スクリプトを利用することができます。マクロについて詳しく知りたい場合は「<A HREF = "macros.htm">マクロ・ヘルプ</A>」をお調べください。
+		<dd>「DVI経由」モードでは、シェルスクリプトによりplatex -> dvipdfmxという動作が実行されているにすぎないことに触れておくべきかもしれません。つまり、たとえば目次の作成などのように複数回のタイプセットが必要な場合には、いくぶん無駄が生じる、ということです。こうした無駄を省きたいユーザは、platex -> platex -> dvipdfmxというように動作するマクロ・スクリプトを利用することができます。マクロについて詳しく知りたい場合は「<A HREF = "macros.htm">マクロ・ヘルプ</A>」をお調べください。
 	</dl>
 </p>
 
 <p>
-「pdfTeX」モードは、pdftexプログラムを利用してtexファイルを直接pdfファイルに変換します。「TeX＋Ghostscript」モードよりも高速にタイプセットを行なうことができます。しかし残念なことに日本語には対応していません──科学系の学術論文など、英文だけを扱う場合に使うと便利でしょう。「pdfTeX」モードではpdf・jpg・png・mps形式の画像ファイルを貼り込むことができます。epsやtifといった形式のファイルは、直接は扱えませんが、タイプセット時に自動的にpdfないしはpng形式に変換する仕組みが用意されています（詳細はヘルプ項目の「<A HREF = "basic_graphics.htm">画像を入れる</A>」 「<A HREF = "configure_convertgraphics.htm">画像形式を自動的に変換する</A>」を参照してください）。
+「PDF直接生成」モードは、pdftexプログラムを利用してtexファイルを直接pdfファイルに変換します。「DVI経由」モードよりも高速にタイプセットを行なうことができます。しかし残念なことに日本語には対応していません──科学系の学術論文など、英文だけを扱う場合に使うと便利でしょう。「PDF直接生成」モードではpdf・jpg・png・mps形式の画像ファイルを貼り込むことができます。epsやtifといった形式のファイルは、直接は扱えませんが、タイプセット時に自動的にpdfないしはpng形式に変換する仕組みが用意されています（詳細はヘルプ項目の「<A HREF = "basic_graphics.htm">画像を入れる</A>」 「<A HREF = "configure_convertgraphics.htm">画像形式を自動的に変換する</A>」を参照してください）。
 </p>
 
 <center>
@@ -138,7 +138,7 @@ pTeX＋TeXShopで日本語TeX文書を作成する際の注意点について述べておかねばなりません
 
 <center>
 <table border cellpadding="2">
-<tr align="center"><th><font size="1">タイプセットモード<th><font size="1">pdfTeX<th><font size="1">TeX＋Ghostscript</tr>
+<tr align="center"><th><font size="1">タイプセットモード<th><font size="1">PDF直接生成<th><font size="1">DVI経由</tr>
 <tr align="center"><th><font size="1">タイプセット<td><font size="1">高速<td><font size="1">やや遅い</tr>
 <tr align="center"><th><font size="1">日本語<td><font size="1">不可<td><font size="1">可</tr>
 <tr align="center"><th><font size="1">画像形式<td><font size="1">pdf・jpg・png・mps<sup>※</sup><td><font size="1">eps・ps</font></tr>
@@ -149,7 +149,7 @@ pTeX＋TeXShopで日本語TeX文書を作成する際の注意点について述べておかねばなりません
 </center>
 
 <p>
-タイプセットモードは メニューバーの「タイプセット」メニューで書類ごとに設定することができます。また、設定ウインドウの「タイプセット > デフォルトのスクリプト」で デフォルトのタイプセットモードを変更することができます。
+タイプセットモードは メニューバーの「タイプセット」メニューで書類ごとに設定することができます。また、設定ウインドウの「タイプセット > 既定 > コンパイル法」で デフォルトのタイプセットモードを変更することができます。
 </p>
 
 <hr>
