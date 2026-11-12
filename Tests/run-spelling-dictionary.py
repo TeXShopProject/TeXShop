@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Check the spelling dictionary chosen in Settings and how documents follow it.
 
-Production TSDocument methods are copied verbatim into a probe with a fake spell
-checker (it names "en_US" "en", as macOS 27 does) and in-memory defaults. Its
-main bundle is a fixture carrying the twelve real Localizable.strings files. No
-window is ordered, and the system spell checker and its settings are not used.
+Production TSDocument methods, and the TSAppDelegate statements that give the
+checker the Settings choice at launch, are copied verbatim into a probe with a
+fake spell checker (it names "en_US" "en", as macOS 27 does) and in-memory
+defaults. Its main bundle is a fixture carrying the twelve real
+Localizable.strings files. No window is ordered, and the system spell checker
+and its settings are not used.
 """
 from pathlib import Path
 import argparse, plistlib, shutil, subprocess, sys, tempfile
@@ -12,8 +14,8 @@ from production_fragments import method, verify_embedded
 from source_tree import include_args
 
 root = Path(__file__).resolve().parents[1]
-document = (root/'Sources/Document/TSDocument.m').read_text()
-header = (root/'Sources/Editor/TSSpellingLanguage.h').read_text()
+sources = {path: (root/path).read_text() for path in
+           ('Sources/Document/TSDocument.m', 'Sources/Editor/TSSpellingLanguage.h', 'Sources/App/TSAppDelegate.m')}
 
 MUTATIONS = {
     'resign-ignores-panel': ('Sources/Document/TSDocument.m',
@@ -37,6 +39,19 @@ MUTATIONS = {
         '(TSSpellingLanguageMatching(stored, available ?: @[]) ?: stored)', 'stored'),
     'no-automatic-title': ('Sources/Editor/TSSpellingLanguage.h',
         '|| TSSpellingLanguageIsAutomaticTitle(stored)', ''),
+    'launch-not-applied': ('Sources/App/TSAppDelegate.m',
+        '[TSDocument applySpellingDefaultUnlessDocumentIsMain];\n    [[NSNotificationCenter', '[[NSNotificationCenter'),
+    'app-ignores-settings-change': ('Sources/App/TSAppDelegate.m',
+        '{\n    [TSDocument applySpellingDefaultUnlessDocumentIsMain];\n}', '{\n}'),
+    'applies-over-main-document': ('Sources/Document/TSDocument.m',
+        '[document isKindOfClass:self] && [document spellingWindowIsMain]', 'NO'),
+    'close-not-applied': ('Sources/Document/TSDocument.m',
+        '\t[super close];\n    [TSDocument applySpellingDefaultUnlessDocumentIsMain];\n', '\t[super close];\n'),
+    'unknown-changes-checker': ('Sources/Document/TSDocument.m',
+        '    if (! automatic && ! [available containsObject:defaultSpellLanguage])\n        return;\n', ''),
+    'original-spelling-at-launch': ('Sources/Document/TSDocument.m',
+        '+ (void)applySpellingDefaultUnlessDocumentIsMain {\n    \n    if ([SUD boolForKey: originalSpellingKey])\n        return;\n',
+        '+ (void)applySpellingDefaultUnlessDocumentIsMain {\n    \n'),
 }
 
 parser = argparse.ArgumentParser()
@@ -44,18 +59,24 @@ parser.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
 if args.mutation:
     path, old, new = MUTATIONS[args.mutation]
-    source = document if path.endswith('.m') else header
-    assert source.count(old) == 1, args.mutation
-    source = source.replace(old, new)
-    if path.endswith('.m'): document = source
-    else: header = source
+    assert sources[path].count(old) == 1, args.mutation
+    sources[path] = sources[path].replace(old, new)
+document, header, delegate = (sources[path] for path in
+    ('Sources/Document/TSDocument.m', 'Sources/Editor/TSSpellingLanguage.h', 'Sources/App/TSAppDelegate.m'))
 
 init_block = document[document.index('    NSString *defaultSpellLanguage = nil;\n    self.automaticSpelling = TSSpellingDefaultIsAutomatic'):]
 init_block = init_block[:init_block.index('name:TSSpellingLanguageChangedNotification object:nil];\n') + len('name:TSSpellingLanguageChangedNotification object:nil];\n')]
 tex_block = document[document.index('                self.automaticSpelling = NO;\n                self.spellLanguage = spellcheckString;\n'):]
 tex_block = tex_block[:tex_block.index('[self resetSpelling];\n') + len('[self resetSpelling];\n')]
 methods = [method(document, s) for s in ('- (void)resetSpelling {', '- (void)resignSpelling {',
-    '- (void)spellingLanguageDefaultChanged:(NSNotification *)notification {', '- (BOOL)spellingWindowIsMain {')]
+    '- (void)spellingLanguageDefaultChanged:(NSNotification *)notification {', '- (BOOL)spellingWindowIsMain {',
+    '+ (void)applySpellingDefaultUnlessDocumentIsMain {')]
+close_method = method(document, '- (void)close\n{')
+close_tail = close_method[close_method.index('\t[super close];\n'):]
+launch_marker = "    // Until a document's source window is main, the Spelling panel shows the dictionary chosen in Settings.\n"
+launch_block = delegate[delegate.index(launch_marker):]
+launch_block = launch_block[:launch_block.index('name:TSSpellingLanguageChangedNotification object:nil];\n') + len('name:TSSpellingLanguageChangedNotification object:nil];\n')]
+delegate_method = method(delegate, '- (void)spellingLanguageDefaultChanged:(NSNotification *)notification\n{')
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -99,17 +120,40 @@ static void Check(BOOL ok, const char *what) { if (!ok) { fprintf(stderr, "FAIL:
 }
 @end
 #define NSSpellChecker FakeChecker
+#define TSDocument ProbeDocument
+
+// The documents that are open, as TSDocumentController lists them.
+static NSMutableArray *documentsForTest;
+@interface TSDocumentController : NSObject
++ (instancetype)sharedDocumentController;
+@property (readonly) NSArray *documents;
+@end
+@implementation TSDocumentController
++ (instancetype)sharedDocumentController { static TSDocumentController *c; if (!c) c = [TSDocumentController new]; return c; }
+- (NSArray *)documents { return [documentsForTest copy]; }
+@end
 
 static NSBundle *strings;
 static id StringsBundle(id bundleClass, SEL selector) { return strings; }
 static NSWindow *mainWindowForTest;
 static id MainWindow(id app, SEL selector) { return mainWindowForTest; }
 
-@interface ProbeDocument : NSObject {
+// NSDocument's close: the document's windows close and it leaves the list.
+@interface ProbeBaseDocument : NSObject {
 @public
     NSWindow *textWindow;
     NSWindow *fullSplitWindow;
 }
+- (void)close;
+@end
+@implementation ProbeBaseDocument
+- (void)close {
+    if (mainWindowForTest == textWindow) mainWindowForTest = nil;
+    [documentsForTest removeObject:self];
+}
+@end
+
+@interface ProbeDocument : ProbeBaseDocument
 @property (retain) NSString *spellLanguage;
 @property BOOL automaticSpelling;
 @property BOOL spellLanguageFollowsDefault;
@@ -129,9 +173,20 @@ static id MainWindow(id app, SEL selector) { return mainWindowForTest; }
 @@TEX@@
 }
 @@METHODS@@
+- (void)close {
+@@CLOSE@@
 // The document's source window becomes main or resigns, as TSTextEditorWindow does.
 - (void)becomeMain { mainWindowForTest = textWindow; [self resetSpelling]; }
 - (void)resignMain { [self resignSpelling]; mainWindowForTest = nil; }
+@end
+
+@interface ProbeAppDelegate : NSObject
+@end
+@implementation ProbeAppDelegate
+- (void)applicationWillFinishLaunching {
+@@LAUNCH@@
+}
+@@DELEGATE@@
 @end
 
 static void ChooseInSettings(NSString *language) {
@@ -144,6 +199,7 @@ static ProbeDocument *NewDocument(void) {
     ProbeDocument *d = [ProbeDocument new];
     d->textWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 10, 10) styleMask:NSWindowStyleMaskBorderless backing:NSBackingStoreBuffered defer:YES];
     d->textWindow.releasedWhenClosed = NO;
+    [documentsForTest addObject:d];
     return d;
 }
 
@@ -154,6 +210,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     [NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
     method_setImplementation(class_getInstanceMethod(NSApplication.class, @selector(mainWindow)), (IMP)MainWindow);
     defaults = [TSMemoryDefaults new];
+    documentsForTest = [NSMutableArray array];
     FakeChecker *checker = [FakeChecker sharedSpellChecker];
     NSArray *available = @[@"en", @"en_GB", @"en_AU", @"de", @"fr", @"pt_BR", @"pt_PT", @"ja"];
 
@@ -283,16 +340,126 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(checker.sets == sets, "OriginalSpelling never sets the checker");
     [defaults setBool:NO forKey:originalSpellingKey];
 
+    // At launch the checker has the Settings choice before any document is main.
+    for (ProbeDocument *d in [documentsForTest copy]) [d close];
+    mainWindowForTest = nil;
+    [defaults setBool:NO forKey:spellingAutomaticDefaultKey]; [defaults setObject:@"en_US" forKey:spellingLanguageDefaultKey];
+    [checker reportLanguage:@"fr"]; checker.automaticallyIdentifiesLanguages = YES;
+    ProbeAppDelegate *app = [ProbeAppDelegate new];
+    [app applicationWillFinishLaunching];
+    Check([checker.language isEqual:@"en"] && !checker.automaticallyIdentifiesLanguages, "At launch the checker has the Settings choice");
+    NSDictionary *atLaunch = @{@"german": @"de", @" en-GB ": @"en_GB", @"de_DE": @"de"};
+    for (NSString *value in atLaunch) {
+        [defaults setObject:value forKey:spellingLanguageDefaultKey];
+        [checker reportLanguage:@"fr"]; checker.automaticallyIdentifiesLanguages = YES;
+        [ProbeDocument applySpellingDefaultUnlessDocumentIsMain];
+        Check([checker.language isEqual:atLaunch[value]] && !checker.automaticallyIdentifiesLanguages, value.UTF8String);
+    }
+    for (NSString *value in @[@" ", @"Automatic Language", @"言語を自動判別"]) {
+        [defaults setBool:[value isEqual:@" "] forKey:spellingAutomaticDefaultKey]; [defaults setObject:value forKey:spellingLanguageDefaultKey];
+        [checker reportLanguage:@"fr"]; checker.automaticallyIdentifiesLanguages = NO;
+        sets = checker.sets;
+        [ProbeDocument applySpellingDefaultUnlessDocumentIsMain];
+        Check(checker.automaticallyIdentifiesLanguages && checker.sets == sets && [checker.language isEqual:@"fr"], "Automatic detection at launch");
+    }
+    // A dictionary that is not installed leaves the checker alone.
+    [defaults setBool:NO forKey:spellingAutomaticDefaultKey]; [defaults setObject:@"tlh_XX" forKey:spellingLanguageDefaultKey];
+    [checker reportLanguage:@"fr"]; checker.automaticallyIdentifiesLanguages = YES;
+    sets = checker.sets;
+    [ProbeDocument applySpellingDefaultUnlessDocumentIsMain];
+    Check(checker.sets == sets && [checker.language isEqual:@"fr"] && checker.automaticallyIdentifiesLanguages, "An unknown dictionary does not change the checker at launch");
+
+    // A document opened at launch, with a "% !TEX spellcheck" line or without, gets its own language.
+    ChooseInSettings(@"en");
+    Check([checker.language isEqual:@"en"] && !checker.automaticallyIdentifiesLanguages, "A Settings change with no document reaches the checker");
+    ProbeDocument *texLine = NewDocument();
+    [texLine applySpellcheckLine:@"de_DE"];
+    Check([checker.language isEqual:@"en"], "The line waits for its document");
+    [texLine becomeMain];
+    Check([checker.language isEqual:@"de"], "The line wins over the launch choice");
+    [texLine resignMain];   // Settings comes to the front.
+    Check(!texLine.spellLanguageFollowsDefault && [texLine.spellLanguage isEqual:@"de"], "The line's document keeps its language");
+    ProbeDocument *plain = NewDocument();
+    [plain becomeMain];
+    Check([checker.language isEqual:@"en"], "A document without a line uses Settings");
+    [checker setLanguage:@"fr"];   // Chosen in the Spelling panel for this document.
+    [plain resignMain];
+    Check(!plain.spellLanguageFollowsDefault && [plain.spellLanguage isEqual:@"fr"], "Panel choice kept");
+
+    // With Settings in front, a new choice reaches the checker; documents get theirs back.
+    ProbeDocument *follower = NewDocument();
+    [follower becomeMain]; [follower resignMain];
+    ChooseInSettings(@"en_GB");
+    Check([checker.language isEqual:@"en_GB"], "A Settings change with no document main reaches the checker at once");
+    [texLine becomeMain];
+    Check([checker.language isEqual:@"de"], "The TeX line document gets its language back");
+    [texLine resignMain];
+    Check(!texLine.spellLanguageFollowsDefault && [texLine.spellLanguage isEqual:@"de"], "Returning is not a panel choice");
+    [plain becomeMain];
+    Check([checker.language isEqual:@"fr"], "The panel choice comes back");
+    [plain resignMain];
+    Check([plain.spellLanguage isEqual:@"fr"], "The panel choice is kept");
+    [follower becomeMain];
+    Check([checker.language isEqual:@"en_GB"], "A following document has the new choice");
+    [follower resignMain];
+    Check(follower.spellLanguageFollowsDefault, "The Settings choice applied without a document is not a panel choice");
+    ChooseInSettings(nil);
+    Check(checker.automaticallyIdentifiesLanguages, "Automatic detection chosen with no document main");
+    [follower becomeMain]; [follower resignMain];
+    Check(follower.spellLanguageFollowsDefault && follower.automaticSpelling, "Still following");
+
+    // While a document is main, only that document decides the checker's language.
+    ChooseInSettings(@"en");
+    [plain becomeMain];
+    sets = checker.sets;
+    ChooseInSettings(@"de");
+    Check(checker.sets == sets && [checker.language isEqual:@"fr"], "A Settings change does not reach the checker under a document's own language");
+    [plain resignMain];
+    Check(!plain.spellLanguageFollowsDefault && [plain.spellLanguage isEqual:@"fr"], "The main document keeps its language");
+    [follower becomeMain];
+    ChooseInSettings(@"en_GB");
+    Check([checker.language isEqual:@"en_GB"], "A following main document takes the change");
+    [follower resignMain];
+    Check(follower.spellLanguageFollowsDefault, "Not a panel choice");
+
+    // Closing documents: the checker returns to Settings when none is main.
+    [plain becomeMain];
+    [follower close];   // A document in the background closes.
+    Check([checker.language isEqual:@"fr"], "Closing another document leaves the main document's language");
+    [plain resignMain];
+    [plain close];
+    Check([checker.language isEqual:@"en_GB"] && !checker.automaticallyIdentifiesLanguages, "After closing, no document is main: Settings");
+    [texLine becomeMain];
+    [texLine resignMain];
+    [texLine close];
+    Check(documentsForTest.count == 0 && [checker.language isEqual:@"en_GB"], "After the last document the checker has the Settings choice");
+
+    // The hidden OriginalSpelling setting: TeXShop leaves the checker alone at launch,
+    // on a Settings change and after closing.
+    [defaults setBool:YES forKey:originalSpellingKey];
+    [checker reportLanguage:@"fr"]; checker.automaticallyIdentifiesLanguages = YES;
+    sets = checker.sets;
+    [app applicationWillFinishLaunching];
+    ChooseInSettings(@"de");
+    ProbeDocument *last = NewDocument();
+    [last becomeMain]; [last resignMain]; [last close];
+    Check(checker.sets == sets && [checker.language isEqual:@"fr"] && checker.automaticallyIdentifiesLanguages, "OriginalSpelling leaves the checker alone");
+    [defaults setBool:NO forKey:originalSpellingKey];
+    [[NSNotificationCenter defaultCenter] removeObserver:app];
+
     if (failures) return 1;
-    puts("PASS: language names, stored values, automatic titles, open documents follow Settings, panel choices and TeX lines kept");
+    puts("PASS: language names, stored values, automatic titles, open documents follow Settings, panel choices and TeX lines kept, Settings choice with no document main");
 } return 0; }
 '''
 program = (program.replace('@@HEADER@@', header.replace('#import "globals.h"\n', ''))
-           .replace('@@INIT@@', init_block).replace('@@TEX@@', tex_block).replace('@@METHODS@@', '\n'.join(methods)))
+           .replace('@@INIT@@', init_block).replace('@@TEX@@', tex_block).replace('@@METHODS@@', '\n'.join(methods))
+           .replace('@@CLOSE@@', close_tail).replace('@@LAUNCH@@', launch_block).replace('@@DELEGATE@@', delegate_method))
 if not args.mutation:
     verify_embedded(program, [('complete method:' + m.split('\n')[0], document, m) for m in methods] +
                     [('init statements', document, init_block), ('TeX line statements', document, tex_block),
-                     ('header', header, header[header.index('NS_ASSUME_NONNULL_BEGIN'):])])
+                     ('header', header, header[header.index('NS_ASSUME_NONNULL_BEGIN'):]),
+                     ('close statements', document, close_tail), ('launch statements', delegate, launch_block),
+                     ('complete method: TSAppDelegate spellingLanguageDefaultChanged:', delegate, delegate_method)])
 
 with tempfile.TemporaryDirectory(prefix='texshop-spelling-dictionary-') as temp:
     t = Path(temp)
