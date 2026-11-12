@@ -33,11 +33,15 @@ mutations={
  # Returning to the preview does not check the PDF.
  'noactivation': ('[self checkExternalPDF:YES];\n}', '}'),
  # A change found on returning is not followed until the file settles.
- 'nofollow': ('    self.externalPDFQuietChecks = 0;\n    if (self.pdfRefreshTimer || self.externalPDFFollowTimer) return;', '    return;'),
+ 'nofollow': ('    self.externalPDFQuietSince = now;\n    if (self.pdfRefreshTimer || self.externalPDFFollowTimer) return;', '    return;'),
  # Following never stops once the file is quiet.
- 'nostop': ('else if (self.externalPDFFollowTimer && ++self.externalPDFQuietChecks >= 3) [self stopFollowingExternalPDF];', ''),
+ 'nostop': ('else if (self.externalPDFFollowTimer && now - self.externalPDFQuietSince > 2.5) [self stopFollowingExternalPDF];', ''),
+ # Each quiet check counts as a second, so returning several times in a row ends following early.
+ 'countchecks': ('now - self.externalPDFQuietSince > 2.5', '(self.externalPDFQuietSince -= 1, now - self.externalPDFQuietSince > 2.5)'),
  # A PDF that stays unopenable counts as quiet, so a writer pausing between pages ends following.
- 'pausestop': ('else if (![signature isEqualToString:self.externalPDFLoadedSignature]) self.externalPDFQuietChecks = 0;\n', ''),
+ 'pausestop': ('else if (!matching) self.externalPDFQuietSince = now;\n', ''),
+ # A state turned down a moment ago counts as quiet when its cheap signature matches the display.
+ 'failedquiet': ('BOOL matching = !key;\n        if ([key isEqualToString:failed]) key = changeTime = nil;', 'if ([key isEqualToString:failed]) key = changeTime = nil;\n        BOOL matching = !key && [signature isEqualToString:loaded];'),
  # Checks on returning wait for a second observation, as the timer does.
  'twoobservations': ('BOOL attempted = key && (immediate || [key isEqualToString:pending]);', 'BOOL attempted = [key isEqualToString:pending];'),
  # Ignore a new ctime when the cheap signature is unchanged, as before content comparison.
@@ -92,7 +96,7 @@ static void RunInline(dispatch_block_t block) { block(); }
 @property BOOL externalPDFCheckRunning;
 @property NSTimer *externalPDFFollowTimer;
 @property NSTimeInterval externalPDFFollowDeadline;
-@property NSUInteger externalPDFQuietChecks;
+@property NSTimeInterval externalPDFQuietSince;
 - (void)refreshPDFWindow:(NSTimer*)timer;
 - (void)checkExternalPDF:(BOOL)immediate;
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime;
@@ -364,6 +368,12 @@ int main(int argc,char **argv){@autoreleasepool{
  Return(NSApp);Check(v.document!=old,@"Off: returning to TeXShop reloads at once");SamePosition(v,kept,@"return to TeXShop");
  Check(r.externalPDFFollowTimer!=nil,@"Off: a change found on returning is followed");
  Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops after the PDF is quiet for three seconds");
+ // Returning several times in a row does not shorten the three quiet seconds.
+ old=v.document;[first writeToFile:pdf atomically:YES];Return(NSApp);Check(v.document!=old,@"Off: returning again reloads");
+ Return(shown);Return(NSApp);Return(shown);Check(r.externalPDFFollowTimer!=nil,@"Off: returning again and again does not end following early");
+ old=v.document;Pump(1.2);[changed writeToFile:pdf atomically:YES];Pump(1.6);
+ Check(v.document!=old,@"Off: a pass written soon after repeated returns is loaded");
+ Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops after repeated returns");
  // A PDF still being written does not open; it is shown once complete.
  old=v.document;kept=TSExternalPDFCapture(v);NSData *third=PDF(12,3);
  [[third subdataWithRange:NSMakeRange(0,third.length/2)] writeToFile:pdf atomically:NO];
@@ -384,6 +394,21 @@ int main(int argc,char **argv){@autoreleasepool{
  [fourth writeToFile:pdf atomically:NO];Pump(2.4);
  Check(v.document!=old,@"Off: the PDF completed after a pause is loaded");SamePosition(v,kept,@"completed after a pause");
  Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops once the completed PDF is quiet");
+ // An unreadable PDF written in place with the same size and modification time
+ // is not quiet either; the completed PDF written the same way is loaded.
+ {
+  NSData *fifth=PDF(12,5),*sixth=PDF(12,6);NSUInteger size=MAX(fifth.length,sixth.length)+64;
+  [Padded(fifth,size) writeToFile:pdf atomically:YES];Return(NSApp);Check(v.document.pageCount==12,@"Off: padded PDF loaded");
+  Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops before the same-size overwrite");
+  old=v.document;kept=TSExternalPDFCapture(v);
+  NSMutableData *broken=[Padded(fifth,size) mutableCopy];memset((char *)broken.mutableBytes+size/3,'x',size-size/3);
+  OverwriteKeepingTimes(pdf,broken);Return(shown);
+  Check(v.document==old && r.externalPDFFollowTimer!=nil,@"Off: an unreadable same-size overwrite is not loaded and is followed");
+  Pump(4.6);Check(v.document==old && r.externalPDFFollowTimer!=nil,@"Off: following continues while the same-size overwrite does not open");
+  OverwriteKeepingTimes(pdf,Padded(sixth,size));Pump(2.4);
+  Check(v.document!=old,@"Off: the completed same-size overwrite is loaded");SamePosition(v,kept,@"same-size overwrite");
+  Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops after the same-size overwrite");
+ }
  // Following ends after two minutes even while the file keeps changing.
  [changed writeToFile:pdf atomically:YES];Return(NSApp);Check(r.externalPDFFollowTimer!=nil,@"Off: following restarts");
  r.externalPDFFollowDeadline=0;Pump(1.3);Check(r.externalPDFFollowTimer==nil,@"Off: following ends at its deadline");

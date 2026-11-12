@@ -97,7 +97,7 @@
 // file for a short while; see -followExternalPDFChange.
 @property (strong) NSTimer *externalPDFFollowTimer;
 @property NSTimeInterval externalPDFFollowDeadline;
-@property NSUInteger externalPDFQuietChecks;
+@property NSTimeInterval externalPDFQuietSince;
 - (void)configureExternalPDFObservation;
 - (void)stopExternalPDFObservation;
 - (BOOL)externalPDFObservationEnabled;
@@ -7278,20 +7278,21 @@ if (! useFullSplitWindow) {
 
 // After a check started by returning to the preview finds a change, check every
 // second until the file has matched the display for three seconds, for at most
-// two minutes. A PDF still being written is then shown once complete, even if
+// two minutes. Times are taken from the uptime clock, which the user cannot set. A PDF still being written is then shown once complete, even if
 // its writer pauses between pages, and so is the output of later typesetting
 // passes, as with latexmk. This follows one
 // change; continuous watching is the PdfRefresh timer, which makes it unneeded.
 - (void)followExternalPDFChange
 {
-    self.externalPDFQuietChecks = 0;
+    NSTimeInterval now = NSProcessInfo.processInfo.systemUptime;
+    self.externalPDFQuietSince = now;
     if (self.pdfRefreshTimer || self.externalPDFFollowTimer) return;
-    self.externalPDFFollowDeadline = NSDate.timeIntervalSinceReferenceDate + 120;
+    self.externalPDFFollowDeadline = now + 120;
     __weak TSDocument *weakSelf = self;
     self.externalPDFFollowTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer *timer) {
         TSDocument *document = weakSelf;
         if (!document) { [timer invalidate]; return; }
-        if (NSDate.timeIntervalSinceReferenceDate > document.externalPDFFollowDeadline ||
+        if (NSProcessInfo.processInfo.systemUptime > document.externalPDFFollowDeadline ||
             [document externalPDFReloadBlocked]) [document stopFollowingExternalPDF];
         else [document checkExternalPDF:YES];
     }];
@@ -7415,10 +7416,11 @@ if (! useFullSplitWindow) {
         self.externalPDFFailedSignature : nil;
     // The worker never touches the document; only this main-queue block does.
     __weak TSDocument *weakSelf = self;
-    void (^finish)(NSString *, NSString *, NSString *, BOOL, PDFDocument *, NSDate *) =
-        ^(NSString *key, NSString *signature, NSString *changeTime, BOOL attempted, PDFDocument *replacement, NSDate *modified) {
+    void (^finish)(NSString *, NSString *, NSString *, BOOL, BOOL, PDFDocument *, NSDate *) =
+        ^(NSString *key, NSString *signature, NSString *changeTime, BOOL matching, BOOL attempted, PDFDocument *replacement, NSDate *modified) {
             [weakSelf finishExternalPDFCheck:generation path:path key:key signature:signature changeTime:changeTime
-                                   attempted:attempted replacement:replacement modified:modified immediate:immediate];
+                                    matching:matching attempted:attempted replacement:replacement modified:modified
+                                   immediate:immediate];
         };
     dispatch_async(self.externalPDFQueue, ^{
         NSString *changeTime = nil;
@@ -7436,6 +7438,8 @@ if (! useFullSplitWindow) {
             } else changeTime = nil;
         }
         // Without a key, a change time is reported only for content found to be the same.
+        // A state turned down a moment ago is not tried again, but it does not match the display.
+        BOOL matching = !key;
         if ([key isEqualToString:failed]) key = changeTime = nil;
         // Two unchanged observations avoid loading each chunk of a writer's output.
         BOOL attempted = key && (immediate || [key isEqualToString:pending]);
@@ -7443,33 +7447,39 @@ if (! useFullSplitWindow) {
         NSDate *modified = replacement ? [[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL]
                                           objectForKey:NSFileModificationDate] : nil;
         dispatch_async(dispatch_get_main_queue(), ^{
-            finish(key, signature, changeTime, attempted, replacement, modified);
+            finish(key, signature, changeTime, matching, attempted, replacement, modified);
         });
     });
 }
 
 // Apply a check only if nothing has superseded it and reloading is still allowed.
 // A key identifies a changed file state for stability checks and back-off; it is
-// nil when nothing needs reloading.
+// nil when nothing needs reloading. Matching means the file was found to hold
+// the displayed content.
 - (void)finishExternalPDFCheck:(NSUInteger)generation path:(NSString *)path key:(NSString *)key
-                     signature:(NSString *)signature changeTime:(NSString *)changeTime attempted:(BOOL)attempted
-                   replacement:(PDFDocument *)replacement modified:(NSDate *)modified immediate:(BOOL)immediate
+                     signature:(NSString *)signature changeTime:(NSString *)changeTime matching:(BOOL)matching
+                     attempted:(BOOL)attempted replacement:(PDFDocument *)replacement modified:(NSDate *)modified
+                     immediate:(BOOL)immediate
 {
     self.externalPDFCheckRunning = NO;
     if (generation == self.externalPDFGeneration && [path isEqualToString:[self externalPDFPath]])
-        [self applyExternalPDFPath:path key:key signature:signature changeTime:changeTime attempted:attempted
-                       replacement:replacement modified:modified immediate:immediate];
+        [self applyExternalPDFPath:path key:key signature:signature changeTime:changeTime matching:matching
+                         attempted:attempted replacement:replacement modified:modified immediate:immediate];
 }
 
 - (void)applyExternalPDFPath:(NSString *)path key:(NSString *)key signature:(NSString *)signature
-                  changeTime:(NSString *)changeTime attempted:(BOOL)attempted
+                  changeTime:(NSString *)changeTime matching:(BOOL)matching attempted:(BOOL)attempted
                  replacement:(PDFDocument *)replacement modified:(NSDate *)modified immediate:(BOOL)immediate
 {
     if (immediate) {
+        NSTimeInterval now = NSProcessInfo.processInfo.systemUptime;
         if (key) [self followExternalPDFChange];
         // A file that does not open yet is not quiet, however long it stays the same.
-        else if (![signature isEqualToString:self.externalPDFLoadedSignature]) self.externalPDFQuietChecks = 0;
-        else if (self.externalPDFFollowTimer && ++self.externalPDFQuietChecks >= 3) [self stopFollowingExternalPDF];
+        else if (!matching) self.externalPDFQuietSince = now;
+        // Quiet time is measured, not counted, so returning to the preview several
+        // times in a row does not shorten it. The third check of the one-second
+        // timer ends it, allowing for the timer's tolerance.
+        else if (self.externalPDFFollowTimer && now - self.externalPDFQuietSince > 2.5) [self stopFollowingExternalPDF];
     }
     if (!key || [self externalPDFReloadBlocked]) {
         // The same content under a new change time: remember the time, so the
