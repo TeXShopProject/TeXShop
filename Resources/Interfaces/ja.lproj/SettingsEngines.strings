@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1020.title" = "検索用コマンド";
 "1024.title" = "kpsewhich (デフォルト: kpsewhich -progname=latex -format=tex)";
-"1027.title" = "BibTeX エンジン";
+"1027.title" = "BibTeXエンジン";
 "1030.title" = "デフォルト: bibtex";
 "1063.title" = "デフォルト";
 "1068.title" = "デフォルト";
@@ -14,8 +14,8 @@
 "54.title" = "pdfTeX";
 "878.title" = "LaTeX";
 "880.title" = "TeX";
-"882.title" = "Shell Escape を警告";
-"887.title" = "PostScript ファイルを保存";
+"882.title" = "Shell Escapeを警告";
+"887.title" = "PostScriptファイルを保存";
 "889.title" = "(pdf)TeX (デフォルト: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (Ghostscript) (デフォルト: /usr/local/bin)";
 "BYT-g3-3p0.title" = "別のパス (デフォルト:  ~/bin/context/tex/texmf-osx-arm64/bin)";

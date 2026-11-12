@@ -19616,7 +19616,7 @@
         "SettingsEditor": {
           "963.title": "全角スペース",
           "846.title": "Arabic, Hebrew, Persian",
-          "f1k-jx-ley.title": "expl3 を既定でハイライト",
+          "f1k-jx-ley.title": "expl3を既定でハイライト",
           "4a3-VM-Tgq.title": "折り返し表示",
           "840.title": "括弧の対応チェック",
           "UXo-9g-NNW.title": "文字単位で",
@@ -19648,7 +19648,7 @@
           "674-8W-hQ6.title": "行間スペース",
           "933.title": "不可視文字の表示",
           "1044.title": "ファイルを開いた直後から表示",
-          "843.title": "BibDesk 自動補完",
+          "843.title": "BibDesk自動補完",
           "inv-955-item-0.title": "↵",
           "inv-956-item-0.title": "□",
           "XoX-gZ-pO3.title": "メニューにタグリストを表示",
@@ -19673,32 +19673,32 @@
           "1020.title": "検索用コマンド",
           "1075.title": "LaTeX",
           "1069.title": "TeX",
-          "1027.title": "BibTeX エンジン",
+          "1027.title": "BibTeXエンジン",
           "1030.title": "デフォルト: bibtex",
           "1024.title": "kpsewhich (デフォルト: kpsewhich -progname=latex -format=tex)",
           "1063.title": "デフォルト",
           "878.title": "LaTeX",
-          "882.title": "Shell Escape を警告",
+          "882.title": "Shell Escapeを警告",
           "1068.title": "デフォルト",
           "891.title": "Distiller (Ghostscript) (デフォルト: /usr/local/bin)",
           "1074.title": "デフォルト",
-          "887.title": "PostScript ファイルを保存",
+          "887.title": "PostScriptファイルを保存",
           "215.title": "パス設定",
           "200.title": "TeX+dvipdfmx / TeX+dvips+distiller",
           "880.title": "TeX",
           "54.title": "pdfTeX"
         },
         "SettingsFooter": {
-          "1093.title": "旧 pTeX (Shift JIS)",
+          "1093.title": "旧pTeX (Shift JIS)",
           "1098.title": "upTeX (latexmk)",
           "1095.title": "pTeX (latexmk)",
-          "1092.title": "旧 pTeX (EUC)",
+          "1092.title": "旧pTeX (EUC)",
           "1097.title": "upTeX (シェルスクリプト)",
           "1101.title": "設定プロファイル",
           "1094.title": "pTeX (シェルスクリプト)",
           "1099.title": "upTeX (ptex2pdf)",
           "1091.title": "OtherViews",
-          "1100.title": "TeXShop 標準",
+          "1100.title": "TeXShop標準",
           "1096.title": "pTeX (ptex2pdf)"
         },
         "SettingsMiscOne": {
@@ -19733,7 +19733,7 @@
           "407.title": "JPEG (低画質)",
           "hmg-EV-KUC.title": "保存時に以前のファイルを「名前~」として残す",
           "423.title": "JPEG (中画質)",
-          "sto-5E-9Q5.title": "編集中に自動でファイルを上書きする macOS の機能です。",
+          "sto-5E-9Q5.title": "編集中に自動でファイルを上書きするmacOSの機能です。",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "1文字分",
           "g92-sP-oZU.title": "両側",
@@ -19753,25 +19753,25 @@
           "03p-fB-1K3.title": "ファイル保存時",
           "e3h-Wk-X7D.title": "アップデート",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "pTeX サポート（日本用）",
+          "SS5-tZ-cDa.title": "pTeXサポート（日本用）",
           "vEF-zd-SJl.title": " 代替エンジン",
           "DU3-gi-QzY.title": "リストアップするXMLタグ",
-          "mPz-qG-Toi.title": "TeX プログラム（デフォルト：空）",
+          "mPz-qG-Toi.title": "TeXプログラム（デフォルト：空）",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "パーソナルスクリプト",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "K8n-in-y4T.title": "UTF-8-MAC を UTF-8 に自動変換",
+          "K8n-in-y4T.title": "UTF-8-MACをUTF-8に自動変換",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "毎日",
-          "ahm-aK-Qi9.title": "otf パッケージ対応",
+          "ahm-aK-Qi9.title": "otfパッケージ対応",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "開いたルートファイルを最小化する",
           "A9l-al-gxE.title": "Radio",
           "2Mp-Uf-8n2.title": "カスタムマーク",
           "2x0-tc-yWg.title": "アップデートを自動的に確認",
           "oSw-pG-JGB.title": "毎週",
-          "8Bw-D6-HlO.title": "LaTeX プログラム（デフォルト：空）",
+          "8Bw-D6-HlO.title": "LaTeXプログラム（デフォルト：空）",
           "a5N-7n-3da.title": "(デフォルト:  pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "毎月"
@@ -19807,7 +19807,7 @@
           "332.title": "拡大鏡",
           "866.title": "設定",
           "501.title": "見開きの配置",
-          "871.title": "ほかのアプリによる PDF の変更を常に監視",
+          "871.title": "ほかのアプリによるPDFの変更を常に監視",
           "636.title": "文字選択",
           "339.title": "ウインドウに合わせる",
           "328.title": "スクロール",
@@ -19847,14 +19847,14 @@
           "875.title": "新しいファイルを作成する",
           "31.title": "いつも同じ位置で開く",
           "566.title": "-- DO NOT LOCALIZE THIS! --",
-          "582.title": "Apple 標準検索パネル",
+          "582.title": "Apple標準検索パネル",
           "Mo3-zf-BYT.title": "しない",
-          "927.title": "Escape キー",
+          "927.title": "Escapeキー",
           "236.title": "起動時に",
-          "ts-aware-spelling.ibShadowedToolTip": "LaTeX 文書では除外規則を使います。",
+          "ts-aware-spelling.ibShadowedToolTip": "LaTeX文書では除外規則を使います。",
           "876.title": "外部エディタでソースを編集",
-          "928.title": "Tab キー",
-          "583.title": "Apple 標準検索バー",
+          "928.title": "Tabキー",
+          "583.title": "Apple標準検索バー",
           "ts-edit-spelling.ibShadowedToolTip": "LaTeX対応のスペルチェックで使用する除外規則を編集します。",
           "Xrb-Fe-9cg.title": "小",
           "929.title": "Radio",
@@ -19872,7 +19872,7 @@
           "eIA-mh-q2u.title": "行番号の文字サイズ",
           "odm-Dy-TNW.title": "大",
           "ypQ-Gc-HUa.title": "すべて",
-          "1080.title": "OgreKit 検索パネル",
+          "1080.title": "OgreKit検索パネル",
           "3eF-XA-ahc.title": "特定のコマンド引数を対象外にする",
           "32.title": "閉じたときの位置を保存"
         },
@@ -19944,18 +19944,18 @@
           "163-F5-v8Z.title": "Ghostscriptオプション",
           "191.title": "pdfTeX",
           "920.title": "Radio",
-          "W5U-9S-4OG.title": "Sync で新ドキュメントが開くとき",
+          "W5U-9S-4OG.title": "Syncで新ドキュメントが開くとき",
           "YQv-fE-Uzg.title": "ルートウインドウのタブで開く",
           "314.title": "ファイル保存時に",
           "898.title": "関連ファイルも保存する",
-          "823.title": "Sync 方式",
+          "823.title": "Sync方式",
           "190.title": "パーソナルスクリプト",
           "590.title": "次のコマンドを利用",
           "680.title": "編集を続ける",
           "919.title": "Radio",
           "786.title": "SyncTeX",
           "675.title": "タイプセット後の動作",
-          "785.title": "PDF を検索",
+          "785.title": "PDFを検索",
           "922.title": "Radio",
           "xwP-lA-zVw.title": "-dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
@@ -20122,7 +20122,7 @@
           "view": "settings.621",
           "kind": "matrix",
           "property": "title",
-          "value": "expl3 を既定でハイライト",
+          "value": "expl3を既定でハイライト",
           "row": 2,
           "column": 0
         },
@@ -20373,7 +20373,7 @@
           "view": "settings.621",
           "kind": "matrix",
           "property": "title",
-          "value": "BibDesk 自動補完",
+          "value": "BibDesk自動補完",
           "row": 6,
           "column": 0
         },
@@ -20550,7 +20550,7 @@
           "view": "settings.1027",
           "kind": "view",
           "property": "title",
-          "value": "BibTeX エンジン"
+          "value": "BibTeXエンジン"
         },
         {
           "key": "1030.title",
@@ -20585,7 +20585,7 @@
           "view": "settings.325",
           "kind": "cell",
           "property": "title",
-          "value": "Shell Escape を警告"
+          "value": "Shell Escapeを警告"
         },
         {
           "key": "1068.title",
@@ -20613,7 +20613,7 @@
           "view": "settings.225",
           "kind": "cell",
           "property": "title",
-          "value": "PostScript ファイルを保存"
+          "value": "PostScriptファイルを保存"
         },
         {
           "key": "215.title",
@@ -20650,7 +20650,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "旧 pTeX (Shift JIS)",
+          "value": "旧pTeX (Shift JIS)",
           "index": 8
         },
         {
@@ -20674,7 +20674,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "旧 pTeX (EUC)",
+          "value": "旧pTeX (EUC)",
           "index": 9
         },
         {
@@ -20721,7 +20721,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "TeXShop 標準",
+          "value": "TeXShop標準",
           "index": 1
         },
         {
@@ -20974,7 +20974,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "編集中に自動でファイルを上書きする macOS の機能です。"
+          "value": "編集中に自動でファイルを上書きするmacOSの機能です。"
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -21110,7 +21110,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "pTeX サポート（日本用）"
+          "value": "pTeXサポート（日本用）"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -21131,7 +21131,7 @@
           "view": "settings.e8o-CH-MrS",
           "kind": "cell",
           "property": "title",
-          "value": "TeX プログラム（デフォルト：空）"
+          "value": "TeXプログラム（デフォルト：空）"
         },
         {
           "key": "xaE-Ux-0eA.title",
@@ -21166,7 +21166,7 @@
           "view": "settings.sPQ-5E-qId",
           "kind": "cell",
           "property": "title",
-          "value": "UTF-8-MAC を UTF-8 に自動変換"
+          "value": "UTF-8-MACをUTF-8に自動変換"
         },
         {
           "key": "R9c-Rj-59Z.title",
@@ -21189,7 +21189,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "otf パッケージ対応"
+          "value": "otfパッケージ対応"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -21240,7 +21240,7 @@
           "view": "settings.0GI-vh-5wv",
           "kind": "cell",
           "property": "title",
-          "value": "LaTeX プログラム（デフォルト：空）"
+          "value": "LaTeXプログラム（デフォルト：空）"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -21496,7 +21496,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "ほかのアプリによる PDF の変更を常に監視"
+          "value": "ほかのアプリによるPDFの変更を常に監視"
         },
         {
           "key": "636.title",
@@ -21779,7 +21779,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple 標準検索パネル",
+          "value": "Apple標準検索パネル",
           "row": 0,
           "column": 0
         },
@@ -21796,7 +21796,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escape キー",
+          "value": "Escapeキー",
           "row": 0,
           "column": 0
         },
@@ -21812,7 +21812,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "LaTeX 文書では除外規則を使います。"
+          "value": "LaTeX文書では除外規則を使います。"
         },
         {
           "key": "876.title",
@@ -21826,7 +21826,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tab キー",
+          "value": "Tabキー",
           "row": 1,
           "column": 0
         },
@@ -21835,7 +21835,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple 標準検索バー",
+          "value": "Apple標準検索バー",
           "row": 1,
           "column": 0
         },
@@ -21971,7 +21971,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit 検索パネル",
+          "value": "OgreKit検索パネル",
           "row": 2,
           "column": 0
         },
@@ -22449,7 +22449,7 @@
           "view": "settings.W5U-9S-4OG",
           "kind": "view",
           "property": "title",
-          "value": "Sync で新ドキュメントが開くとき"
+          "value": "Syncで新ドキュメントが開くとき"
         },
         {
           "key": "YQv-fE-Uzg.title",
@@ -22477,7 +22477,7 @@
           "view": "settings.823",
           "kind": "view",
           "property": "title",
-          "value": "Sync 方式"
+          "value": "Sync方式"
         },
         {
           "key": "190.title",
@@ -22534,7 +22534,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "PDF を検索",
+          "value": "PDFを検索",
           "row": 0,
           "column": 0
         },
@@ -22701,7 +22701,7 @@
         },
         {
           "id": "heading.settings.1027",
-          "title": "BibTeX エンジン"
+          "title": "BibTeXエンジン"
         }
       ],
       "MiscTwoHeadings": [
@@ -22719,7 +22719,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "pTeX サポート（日本用）"
+          "title": "pTeXサポート（日本用）"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -22759,7 +22759,7 @@
         },
         {
           "id": "heading.settings.823",
-          "title": "Sync 方式"
+          "title": "Sync方式"
         },
         {
           "id": "heading.settings.183",
@@ -22767,7 +22767,7 @@
         },
         {
           "id": "heading.settings.W5U-9S-4OG",
-          "title": "Sync で新ドキュメントが開くとき"
+          "title": "Syncで新ドキュメントが開くとき"
         },
         {
           "id": "heading.settings.163-F5-v8Z",
@@ -39206,7 +39206,7 @@
         "SettingsEditor": {
           "963.title": "全角空格",
           "846.title": "阿拉伯语、希伯来语、波斯语",
-          "f1k-jx-ley.title": "默认高亮 expl3 代码",
+          "f1k-jx-ley.title": "默认高亮expl3代码",
           "4a3-VM-Tgq.title": "自动换行",
           "840.title": "配对括号",
           "UXo-9g-NNW.title": "按字母",
@@ -39238,7 +39238,7 @@
           "674-8W-hQ6.title": "行间距",
           "933.title": "显示不可见字符",
           "1044.title": "默认显示",
-          "843.title": "BibDesk 补全",
+          "843.title": "BibDesk补全",
           "inv-955-item-0.title": "↵",
           "inv-956-item-0.title": "□",
           "XoX-gZ-pO3.title": "在菜单栏显示标签菜单",
@@ -39263,16 +39263,16 @@
           "1020.title": "搜索命令",
           "1075.title": "LaTeX ",
           "1069.title": "TeX",
-          "1027.title": "BibTeX 引擎",
+          "1027.title": "BibTeX引擎",
           "1030.title": "默认: bibtex",
           "1024.title": "kpsewhich (默认: kpsewhich -progname=latex -format=tex)",
           "1063.title": "默认",
           "878.title": "LaTeX ",
-          "882.title": "Shell Escape 警告",
+          "882.title": "Shell Escape警告",
           "1068.title": "默认",
           "891.title": "Distiller (ghostscript) (默认: /usr/local/bin)",
           "1074.title": "默认",
-          "887.title": "保存 PostScript 文件",
+          "887.title": "保存PostScript文件",
           "215.title": "路径设置",
           "200.title": "TeX + dvips + distiller",
           "880.title": "TeX",
@@ -39288,7 +39288,7 @@
           "1094.title": "pTeX (shell script)",
           "1099.title": "upTeX (ptex2pdf)",
           "1091.title": "OtherViews",
-          "1100.title": "TeXShop 标准",
+          "1100.title": "TeXShop标准",
           "1096.title": "pTeX (ptex2pdf)"
         },
         "SettingsMiscOne": {
@@ -39323,7 +39323,7 @@
           "407.title": "JPEG (低)",
           "hmg-EV-KUC.title": "保存时将之前的文件保留为“名称~”",
           "423.title": "JPEG (中)",
-          "sto-5E-9Q5.title": "编辑时自动覆盖文件的 macOS 功能。",
+          "sto-5E-9Q5.title": "编辑时自动覆盖文件的macOS功能。",
           "tg5-uf-NZU.title": "Radio",
           "i6L-IX-ZLk.title": "单字符",
           "g92-sP-oZU.title": "两侧",
@@ -39343,25 +39343,25 @@
           "03p-fB-1K3.title": "文件保存时",
           "e3h-Wk-X7D.title": "升级工具",
           "5c4-N7-glC.title": "chapter",
-          "SS5-tZ-cDa.title": "pTeX 支持 (仅日语用户)",
+          "SS5-tZ-cDa.title": "pTeX支持 (仅日语用户)",
           "vEF-zd-SJl.title": "替代引擎",
-          "DU3-gi-QzY.title": "XML 标签选择",
-          "mPz-qG-Toi.title": "TeX 程序 (无默认值)",
+          "DU3-gi-QzY.title": "XML标签选择",
+          "mPz-qG-Toi.title": "TeX程序 (无默认值)",
           "xaE-Ux-0eA.title": "introduction",
           "Eb6-59-PxD.title": "个性化脚本",
           "pkV-qe-XIq.title": "exercises",
           "fDa-Qp-dfQ.title": "subsection",
-          "K8n-in-y4T.title": "自动转换 UTF-8-Mac 为 UTF-8 ",
+          "K8n-in-y4T.title": "自动转换UTF-8-Mac为UTF-8 ",
           "R9c-Rj-59Z.title": "table",
           "GUV-qt-mM2.title": "每天",
-          "ahm-aK-Qi9.title": "utf 输出",
+          "ahm-aK-Qi9.title": "utf输出",
           "WeQ-Qd-mPg.title": "figure",
           "h3F-qB-MHw.title": "最小化打开的根窗口",
           "A9l-al-gxE.title": "Radio",
           "2Mp-Uf-8n2.title": "自定义标记",
           "2x0-tc-yWg.title": "自动检查更新",
           "oSw-pG-JGB.title": "每周",
-          "8Bw-D6-HlO.title": "LaTeX 程序 (无默认值)",
+          "8Bw-D6-HlO.title": "LaTeX程序 (无默认值)",
           "a5N-7n-3da.title": "(默认: pdflatexmk)",
           "ERD-h5-S0j.title": "conclusion",
           "naM-Et-WMn.title": "每月"
@@ -39386,7 +39386,7 @@
           "555.title": "外部编辑器",
           "348.title": "OtherViews",
           "111.title": "Zoom for new PDFs",
-          "337.title": "选择 PDF",
+          "337.title": "选择PDF",
           "342.title": "放大方式",
           "910.title": "Radio",
           "865.title": "100",
@@ -39397,7 +39397,7 @@
           "332.title": "放大镜",
           "866.title": "设定",
           "501.title": "双页模式",
-          "871.title": "始终监视其他应用对 PDF 的更改",
+          "871.title": "始终监视其他应用对PDF的更改",
           "636.title": "选择文本",
           "339.title": "适合窗口",
           "328.title": "滚动",
@@ -39410,21 +39410,21 @@
           "vOt-2m-d2s.title": "单一窗口",
           "preview-cover-note-cell.title": "Applies on opening. Magic comments and\nPDF reading direction take precedence.",
           "329.title": "默认页面格式",
-          "113.ibShadowedToolTip": "新打开的 PDF 的默认缩放比例。",
+          "113.ibShadowedToolTip": "新打开的PDF的默认缩放比例。",
           "preview-cover-cell.title": "将第一页单独显示为封面",
           "Sb3-3h-ll4.title": "Radio",
-          "YrC-m9-abH.title": "HTML 窗口位置",
-          "p2D-Mi-Gyc.title": "主页 URL",
+          "YrC-m9-abH.title": "HTML窗口位置",
+          "p2D-Mi-Gyc.title": "主页URL",
           "preview-link-popups-cell.title": "链接预览",
           "preview-scroll-page-turn-cell.title": "滚动时不翻页"
         },
         "SettingsSource": {
           "873.title": "Helvetica 12",
-          "ts-edit-spelling-cell.title": "编辑 LaTeX 排除规则…",
+          "ts-edit-spelling-cell.title": "编辑LaTeX排除规则…",
           "952.title": "( )",
           "925.title": "命令补全触发键:",
           "914.title": "Radio",
-          "ts-aware-spelling-cell.title": "识别 LaTeX 的拼写检查",
+          "ts-aware-spelling-cell.title": "识别LaTeX的拼写检查",
           "uAi-0W-9KI.title": "Switch",
           "874.title": "设成当前位置",
           "kgx-Sa-LDF.title": "拼写检查",
@@ -39437,21 +39437,21 @@
           "875.title": "打开空文档",
           "31.title": "所有窗口从固定位置打开",
           "566.title": "-- DO NOT LOCALIZE THIS! --",
-          "582.title": "Apple 查找面板",
+          "582.title": "Apple查找面板",
           "Mo3-zf-BYT.title": "永不",
-          "927.title": "Escape 键",
+          "927.title": "Escape键",
           "236.title": "启动时",
-          "ts-aware-spelling.ibShadowedToolTip": "对 LaTeX 文档使用排除规则。",
+          "ts-aware-spelling.ibShadowedToolTip": "对LaTeX文档使用排除规则。",
           "876.title": "配置为外部编辑器",
-          "928.title": "Tab 键",
-          "583.title": "Apple 查找栏",
-          "ts-edit-spelling.ibShadowedToolTip": "编辑 LaTeX 拼写检查使用的排除规则。",
+          "928.title": "Tab键",
+          "583.title": "Apple查找栏",
+          "ts-edit-spelling.ibShadowedToolTip": "编辑LaTeX拼写检查使用的排除规则。",
           "Xrb-Fe-9cg.title": "小",
           "929.title": "Radio",
           "aig-4m-gAG.title": "以标签页打开新窗口",
           "934.title": "配对目标和高亮颜色",
           "950.title": "{ }",
-          "teg-0p-Q8J.title": "不检查 LaTeX 命令",
+          "teg-0p-Q8J.title": "不检查LaTeX命令",
           "912.title": "Radio",
           "585.title": "查找面板",
           "aI9-3B-vVE.title": "自动",
@@ -39462,7 +39462,7 @@
           "eIA-mh-q2u.title": "行号字体大小",
           "odm-Dy-TNW.title": "大",
           "ypQ-Gc-HUa.title": "始终",
-          "1080.title": "OgreKit 查找面板",
+          "1080.title": "OgreKit查找面板",
           "3eF-XA-ahc.title": "不检查命令参数",
           "32.title": "关闭时记住上一次位置"
         },
@@ -39490,7 +39490,7 @@
           "BmX-0m-4y7.title": "用于 {",
           "Xkh-fT-Rfi.title": "当前行",
           "jba-58-UZp.title": "__Function",
-          "EUV-vV-ULj.title": "XML 语法",
+          "EUV-vV-ULj.title": "XML语法",
           "29d-sK-CAr.title": "浅色主题",
           "cXx-KS-HoL.title": "__Variable",
           "Qws-5c-CFu.title": "属性",
@@ -39518,7 +39518,7 @@
           "m2P-eK-MuA.title": "带圈符号",
           "2wp-bc-jxK.title": "文本",
           "OFK-Td-Bas.title": "索引",
-          "55d-iy-6im.title": "Alpha 值",
+          "55d-iy-6im.title": "Alpha值",
           "dDq-0W-EuL.title": "( )",
           "arA-mu-ATY.title": "用于 [",
           "jw1-hy-rHZ.title": "key",
@@ -39531,7 +39531,7 @@
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(通常无需开启)",
           "187.title": "TeX + DVI",
-          "163-F5-v8Z.title": "Ghostscript 选项",
+          "163-F5-v8Z.title": "Ghostscript选项",
           "191.title": "pdfTeX",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "代码同步新建窗口时",
@@ -39545,7 +39545,7 @@
           "919.title": "Radio",
           "786.title": "SyncTeX",
           "675.title": "排版后",
-          "785.title": "搜索 PDF",
+          "785.title": "搜索PDF",
           "922.title": "Radio",
           "xwP-lA-zVw.title": "使用 -dALLOWPSTRANSPARENCY",
           "589.title": "LaTeX",
@@ -39712,7 +39712,7 @@
           "view": "settings.621",
           "kind": "matrix",
           "property": "title",
-          "value": "默认高亮 expl3 代码",
+          "value": "默认高亮expl3代码",
           "row": 2,
           "column": 0
         },
@@ -39963,7 +39963,7 @@
           "view": "settings.621",
           "kind": "matrix",
           "property": "title",
-          "value": "BibDesk 补全",
+          "value": "BibDesk补全",
           "row": 6,
           "column": 0
         },
@@ -40140,7 +40140,7 @@
           "view": "settings.1027",
           "kind": "view",
           "property": "title",
-          "value": "BibTeX 引擎"
+          "value": "BibTeX引擎"
         },
         {
           "key": "1030.title",
@@ -40175,7 +40175,7 @@
           "view": "settings.325",
           "kind": "cell",
           "property": "title",
-          "value": "Shell Escape 警告"
+          "value": "Shell Escape警告"
         },
         {
           "key": "1068.title",
@@ -40203,7 +40203,7 @@
           "view": "settings.225",
           "kind": "cell",
           "property": "title",
-          "value": "保存 PostScript 文件"
+          "value": "保存PostScript文件"
         },
         {
           "key": "215.title",
@@ -40311,7 +40311,7 @@
           "view": "settings.1089",
           "kind": "menuItem",
           "property": "title",
-          "value": "TeXShop 标准",
+          "value": "TeXShop标准",
           "index": 1
         },
         {
@@ -40564,7 +40564,7 @@
           "view": "settings.N8r-9Y-N2R",
           "kind": "cell",
           "property": "title",
-          "value": "编辑时自动覆盖文件的 macOS 功能。"
+          "value": "编辑时自动覆盖文件的macOS功能。"
         },
         {
           "key": "tg5-uf-NZU.title",
@@ -40700,7 +40700,7 @@
           "view": "settings.SS5-tZ-cDa",
           "kind": "view",
           "property": "title",
-          "value": "pTeX 支持 (仅日语用户)"
+          "value": "pTeX支持 (仅日语用户)"
         },
         {
           "key": "vEF-zd-SJl.title",
@@ -40714,14 +40714,14 @@
           "view": "settings.DU3-gi-QzY",
           "kind": "view",
           "property": "title",
-          "value": "XML 标签选择"
+          "value": "XML标签选择"
         },
         {
           "key": "mPz-qG-Toi.title",
           "view": "settings.e8o-CH-MrS",
           "kind": "cell",
           "property": "title",
-          "value": "TeX 程序 (无默认值)"
+          "value": "TeX程序 (无默认值)"
         },
         {
           "key": "xaE-Ux-0eA.title",
@@ -40756,7 +40756,7 @@
           "view": "settings.sPQ-5E-qId",
           "kind": "cell",
           "property": "title",
-          "value": "自动转换 UTF-8-Mac 为 UTF-8 "
+          "value": "自动转换UTF-8-Mac为UTF-8 "
         },
         {
           "key": "R9c-Rj-59Z.title",
@@ -40779,7 +40779,7 @@
           "view": "settings.spX-dz-ROL",
           "kind": "cell",
           "property": "title",
-          "value": "utf 输出"
+          "value": "utf输出"
         },
         {
           "key": "WeQ-Qd-mPg.title",
@@ -40830,7 +40830,7 @@
           "view": "settings.0GI-vh-5wv",
           "kind": "cell",
           "property": "title",
-          "value": "LaTeX 程序 (无默认值)"
+          "value": "LaTeX程序 (无默认值)"
         },
         {
           "key": "a5N-7n-3da.title",
@@ -41002,7 +41002,7 @@
           "view": "settings.345",
           "kind": "menuItem",
           "property": "title",
-          "value": "选择 PDF",
+          "value": "选择PDF",
           "index": 4
         },
         {
@@ -41086,7 +41086,7 @@
           "view": "settings.557",
           "kind": "cell",
           "property": "title",
-          "value": "始终监视其他应用对 PDF 的更改"
+          "value": "始终监视其他应用对PDF的更改"
         },
         {
           "key": "636.title",
@@ -41187,7 +41187,7 @@
           "view": "settings.113",
           "kind": "view",
           "property": "toolTip",
-          "value": "新打开的 PDF 的默认缩放比例。"
+          "value": "新打开的PDF的默认缩放比例。"
         },
         {
           "key": "preview-cover-cell.title",
@@ -41222,14 +41222,14 @@
           "view": "settings.YrC-m9-abH",
           "kind": "view",
           "property": "title",
-          "value": "HTML 窗口位置"
+          "value": "HTML窗口位置"
         },
         {
           "key": "p2D-Mi-Gyc.title",
           "view": "settings.p2D-Mi-Gyc",
           "kind": "view",
           "property": "title",
-          "value": "主页 URL"
+          "value": "主页URL"
         }
       ],
       "Source": [
@@ -41245,7 +41245,7 @@
           "view": "settings.ts-edit-spelling",
           "kind": "cell",
           "property": "title",
-          "value": "编辑 LaTeX 排除规则…"
+          "value": "编辑LaTeX排除规则…"
         },
         {
           "key": "952.title",
@@ -41273,7 +41273,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "cell",
           "property": "title",
-          "value": "识别 LaTeX 的拼写检查"
+          "value": "识别LaTeX的拼写检查"
         },
         {
           "key": "uAi-0W-9KI.title",
@@ -41369,7 +41369,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple 查找面板",
+          "value": "Apple查找面板",
           "row": 0,
           "column": 0
         },
@@ -41386,7 +41386,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Escape 键",
+          "value": "Escape键",
           "row": 0,
           "column": 0
         },
@@ -41402,7 +41402,7 @@
           "view": "settings.ts-aware-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "对 LaTeX 文档使用排除规则。"
+          "value": "对LaTeX文档使用排除规则。"
         },
         {
           "key": "876.title",
@@ -41416,7 +41416,7 @@
           "view": "settings.926",
           "kind": "matrix",
           "property": "title",
-          "value": "Tab 键",
+          "value": "Tab键",
           "row": 1,
           "column": 0
         },
@@ -41425,7 +41425,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Apple 查找栏",
+          "value": "Apple查找栏",
           "row": 1,
           "column": 0
         },
@@ -41434,7 +41434,7 @@
           "view": "settings.ts-edit-spelling",
           "kind": "view",
           "property": "toolTip",
-          "value": "编辑 LaTeX 拼写检查使用的排除规则。"
+          "value": "编辑LaTeX拼写检查使用的排除规则。"
         },
         {
           "key": "Xrb-Fe-9cg.title",
@@ -41478,7 +41478,7 @@
           "view": "settings.cp7-bc-avh",
           "kind": "matrix",
           "property": "title",
-          "value": "不检查 LaTeX 命令",
+          "value": "不检查LaTeX命令",
           "row": 0,
           "column": 0
         },
@@ -41561,7 +41561,7 @@
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit 查找面板",
+          "value": "OgreKit查找面板",
           "row": 2,
           "column": 0
         },
@@ -41739,7 +41739,7 @@
           "view": "settings.tDp-OY-PiU",
           "kind": "cell",
           "property": "title",
-          "value": "XML 语法"
+          "value": "XML语法"
         },
         {
           "key": "29d-sK-CAr.title",
@@ -41949,7 +41949,7 @@
           "view": "settings.ae7-a9-Qgg",
           "kind": "cell",
           "property": "title",
-          "value": "Alpha 值"
+          "value": "Alpha值"
         },
         {
           "key": "dDq-0W-EuL.title",
@@ -42016,7 +42016,7 @@
           "view": "settings.163-F5-v8Z",
           "kind": "view",
           "property": "title",
-          "value": "Ghostscript 选项"
+          "value": "Ghostscript选项"
         },
         {
           "key": "191.title",
@@ -42124,7 +42124,7 @@
           "view": "settings.782",
           "kind": "matrix",
           "property": "title",
-          "value": "搜索 PDF",
+          "value": "搜索PDF",
           "row": 0,
           "column": 0
         },
@@ -42265,11 +42265,11 @@
         },
         {
           "id": "heading.settings.YrC-m9-abH",
-          "title": "HTML 窗口位置"
+          "title": "HTML窗口位置"
         },
         {
           "id": "heading.settings.p2D-Mi-Gyc",
-          "title": "主页 URL"
+          "title": "主页URL"
         }
       ],
       "EnginesHeadings": [
@@ -42291,7 +42291,7 @@
         },
         {
           "id": "heading.settings.1027",
-          "title": "BibTeX 引擎"
+          "title": "BibTeX引擎"
         }
       ],
       "MiscTwoHeadings": [
@@ -42309,7 +42309,7 @@
         },
         {
           "id": "heading.settings.SS5-tZ-cDa",
-          "title": "pTeX 支持 (仅日语用户)"
+          "title": "pTeX支持 (仅日语用户)"
         },
         {
           "id": "heading.settings.Eb6-59-PxD",
@@ -42321,7 +42321,7 @@
         },
         {
           "id": "heading.settings.DU3-gi-QzY",
-          "title": "XML 标签选择"
+          "title": "XML标签选择"
         }
       ],
       "ThemesHeadings": [
@@ -42361,7 +42361,7 @@
         },
         {
           "id": "heading.settings.163-F5-v8Z",
-          "title": "Ghostscript 选项"
+          "title": "Ghostscript选项"
         }
       ],
       "MiscOneHeadings": [

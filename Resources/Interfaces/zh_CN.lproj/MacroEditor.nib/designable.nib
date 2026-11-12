@@ -780,7 +780,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="45027186">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">(始终使用 Command 键)</string>
+								<string key="NSContents">(始终使用Command键)</string>
 								<reference key="NSSupport" ref="77137806"/>
 								<reference key="NSControlView" ref="74815699"/>
 								<reference key="NSBackgroundColor" ref="841892820"/>

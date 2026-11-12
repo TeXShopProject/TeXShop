@@ -76,12 +76,12 @@ for strings in sorted((root / 'Resources/Interfaces').glob('*.lproj/SettingsCate
     values = json.loads(subprocess.check_output(['plutil', '-convert', 'json', '-o', '-', str(strings)]))
     notes[strings.parent.name] = values['catalog.preview.4.1.note']
 if mutation == 'note-background':
-    notes['ja.lproj'] = notes['ja.lproj'].replace('PDF と EPS には適用されません。', 'PDF と EPS では背景の色だけが付きます。')
+    notes['ja.lproj'] = notes['ja.lproj'].replace('PDFとEPSには適用されません。', 'PDFとEPSでは背景の色だけが付きます。')
 assert len(notes) == 12, notes.keys()
 for language, note in notes.items():
     assert 'PDF' in note and 'EPS' in note, ('note names PDF and EPS', language)
 assert notes['Base.lproj'].endswith('PDF and EPS copies are not changed.'), 'English note'
-assert notes['ja.lproj'].endswith('PDF と EPS には適用されません。'), 'Japanese note'
+assert notes['ja.lproj'].endswith('PDFとEPSには適用されません。'), 'Japanese note'
 for language, note in notes.items():
     last = [part for part in re.split(r'[.。]\s*', note) if part.strip()][-1]
     assert 'PDF' in last and 'EPS' in last, ('last sentence is the PDF and EPS exception', language)

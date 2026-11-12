@@ -9,7 +9,7 @@
 "840.title" = "括弧の対応チェック";
 "841.title" = "スペルチェック";
 "842.title" = "キーバインド";
-"843.title" = "BibDesk 自動補完";
+"843.title" = "BibDesk自動補完";
 "844.title" = "選択時にカーソルを移動";
 "845.title" = "行番号";
 "846.title" = "Arabic, Hebrew, Persian";
@@ -35,7 +35,7 @@
 "XoX-gZ-pO3.title" = "メニューにタグリストを表示";
 "YsC-bl-8G6.title" = "段落2行目以降の\nインデント量";
 "cgA-o7-Bdw.title" = "@ をコマンド名の一部と見なす";
-"f1k-jx-ley.title" = "expl3 を既定でハイライト";
+"f1k-jx-ley.title" = "expl3を既定でハイライト";
 "inv-954-item-0.title" = "‣";
 "inv-954-item-1.title" = "▹";
 "inv-954-item-2.title" = "⇥";

@@ -38,7 +38,7 @@
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{493, 449}, {380, 413}}</string>
 				<int key="NSWTFlags">-260571136</int>
-				<string key="NSWindowTitle">LaTeX 面板</string>
+				<string key="NSWindowTitle">LaTeX面板</string>
 				<string key="NSWindowClass">NSPanel</string>
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>

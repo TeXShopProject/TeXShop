@@ -1,5 +1,5 @@
 {
- "note": "TeXShop 5.60（master 1f4a1ac）の日本語の設定画面の全項目を、新しいカテゴリへ振り分けたもの。src は ja.lproj/Preferences.nib の部品の id（matrix の各セルは id#番号）。window: は窓の下の部品、code: はコードで足される部品、menu: はメニューから移すもの、new: は新しく足すもの。動作には結び付けていない（スタブ）。",
+ "note": "TeXShop 5.60（master 1f4a1ac）の日本語の設定画面の全項目を、新しいカテゴリへ振り分けたもの。srcはja.lproj/Preferences.nibの部品のid（matrixの各セルはid#番号）。window: は窓の下の部品、code: はコードで足される部品、menu: はメニューから移すもの、new: は新しく足すもの。動作には結び付けていない（スタブ）。",
  "categories": [
   {
    "id": "general",
@@ -7,7 +7,7 @@
    "symbol": "gearshape",
    "color": "#888780",
    "section": 0,
-   "summary": "起動時の動作、ウインドウの開き方と位置、設定プロファイル、Dock のアイコンを設定します。",
+   "summary": "起動時の動作、ウインドウの開き方と位置、設定プロファイル、Dockのアイコンを設定します。",
    "groups": [
     {
      "title": "起動時",
@@ -166,11 +166,11 @@
      ]
     },
     {
-     "title": "起動中の Dock アイコン",
+     "title": "起動中のDockアイコン",
      "rows": [
       {
        "kind": "dock",
-       "title": "TeXShop の起動中に適用します。終了後は標準のアイコンに戻ります。",
+       "title": "TeXShopの起動中に適用します。終了後は標準のアイコンに戻ります。",
        "choices": [
         "初期版",
         "旧三角アイコン",
@@ -180,7 +180,7 @@
        ],
        "items": [
         {
-         "title": "1.0 以前",
+         "title": "1.0以前",
          "cells": [
           "original"
          ]
@@ -228,15 +228,15 @@
        "kind": "popup",
        "title": "プロファイル",
        "choices": [
-        "TeXShop 標準",
+        "TeXShop標準",
         "upTeX (ptex2pdf)",
         "upTeX (latexmk)",
         "upTeX (シェルスクリプト)",
         "pTeX (ptex2pdf)",
         "pTeX (latexmk)",
         "pTeX (シェルスクリプト)",
-        "旧 pTeX (Shift JIS)",
-        "旧 pTeX (EUC)"
+        "旧pTeX (Shift JIS)",
+        "旧pTeX (EUC)"
        ],
        "button": "適用…",
        "src": [
@@ -306,7 +306,7 @@
        "kind": "switch",
        "title": "オートセーブとバージョンを有効にする",
        "on": true,
-       "note": "編集中に自動でファイルを上書きする macOS の機能です。TeXShop の再起動後に有効になります。",
+       "note": "編集中に自動でファイルを上書きするmacOSの機能です。TeXShopの再起動後に有効になります。",
        "src": [
         "kug-je-PQb"
        ],
@@ -335,7 +335,7 @@
       },
       {
        "kind": "switch",
-       "title": "UTF-8-MAC を UTF-8 に自動変換",
+       "title": "UTF-8-MACをUTF-8に自動変換",
        "src": [
         "1226"
        ]
@@ -451,7 +451,7 @@
        "src": [
         "6Ic-Ft-d2h"
        ],
-       "note": "改行から次の改行までを 1 つの段落として、その最初の行を右に下げて表示します。"
+       "note": "改行から次の改行までを1つの段落として、その最初の行を右に下げて表示します。"
       },
       {
        "kind": "integer",
@@ -461,7 +461,7 @@
        "src": [
         "4dC-45-e52"
        ],
-       "note": "「折り返し表示」で折り返した段落の、2 行目以降を右に下げて表示します。"
+       "note": "「折り返し表示」で折り返した段落の、2行目以降を右に下げて表示します。"
       },
       {
        "kind": "integer",
@@ -514,7 +514,7 @@
       },
       {
        "kind": "switch",
-       "title": "expl3 を既定でハイライト",
+       "title": "expl3を既定でハイライト",
        "src": [
         "621#3"
        ],
@@ -721,12 +721,12 @@
        "kind": "popup",
        "title": "検索パネル",
        "choices": [
-        "Apple 標準検索パネル",
-        "Apple 標準検索バー",
-        "OgreKit 検索パネル"
+        "Apple標準検索パネル",
+        "Apple標準検索バー",
+        "OgreKit検索パネル"
        ],
        "selected": 2,
-       "note": "TeXShop の再起動後に有効になります。",
+       "note": "TeXShopの再起動後に有効になります。",
        "src": [
         "581"
        ]
@@ -734,7 +734,7 @@
      ]
     },
     {
-     "title": "タグリストに表示する XML タグ",
+     "title": "タグリストに表示するXMLタグ",
      "rows": [
       {
        "kind": "checkgrid",
@@ -776,7 +776,7 @@
    "symbol": "text.badge.checkmark",
    "color": "#639922",
    "section": 1,
-   "summary": "スペルチェックと、LaTeX の構造を考慮するスペルチェックを設定します。",
+   "summary": "スペルチェックと、LaTeXの構造を考慮するスペルチェックを設定します。",
    "groups": [
     {
      "title": "スペルチェック",
@@ -1333,7 +1333,7 @@
      ]
     },
     {
-     "title": "XML 構文",
+     "title": "XML構文",
      "rows": [
       {
        "kind": "colors",
@@ -1396,7 +1396,7 @@
    "symbol": "doc.text.magnifyingglass",
    "color": "#E24B4A",
    "section": 2,
-   "summary": "PDF のプレビューの表示と操作を設定します。",
+   "summary": "PDFのプレビューの表示と操作を設定します。",
    "groups": [
     {
      "title": "表示",
@@ -1494,7 +1494,7 @@
       },
       {
        "kind": "description",
-       "title": "これから開く文書に適用します。マジックコメントと、PDF 内の表示方向が優先されます。"
+       "title": "これから開く文書に適用します。マジックコメントと、PDF内の表示方向が優先されます。"
       }
      ]
     },
@@ -1503,8 +1503,8 @@
      "rows": [
       {
        "kind": "switch",
-       "title": "ほかのアプリによる PDF の変更を常に監視",
-       "note": "外部エディタや latexmk などで PDF が書き換えられたら、TeXShop が後ろにあるときもすぐにプレビューを読み直します。",
+       "title": "ほかのアプリによるPDFの変更を常に監視",
+       "note": "外部エディタやlatexmkなどでPDFが書き換えられたら、TeXShopが後ろにあるときもすぐにプレビューを読み直します。",
        "src": [
         "557"
        ]
@@ -1538,7 +1538,7 @@
         "437"
        ],
        "id": "colorMap",
-       "note": "プレビューで選んだ範囲を画像としてコピー・ドラッグ・保存するとき、黒を文字の色に、白を背景の色に置き換えます。2 つの色は、使用中のテーマの「画像コピー時のカラーマップ」で設定します。PDF と EPS には適用されません。"
+       "note": "プレビューで選んだ範囲を画像としてコピー・ドラッグ・保存するとき、黒を文字の色に、白を背景の色に置き換えます。2つの色は、使用中のテーマの「画像コピー時のカラーマップ」で設定します。PDFとEPSには適用されません。"
       },
       {
        "kind": "popup",
@@ -1572,12 +1572,12 @@
      "rows": [
       {
        "kind": "path",
-       "title": "ホーム URL",
+       "title": "ホームURL",
        "value": "https://texshop.app",
        "src": [
         "Q1c-5s-qjb"
        ],
-       "note": "HTML ウインドウを表示したときに最初に開くページです。Web のアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app"
+       "note": "HTMLウインドウを表示したときに最初に開くページです。Webのアドレスか、ファイルのパスを入れます。デフォルト: https://texshop.app"
       }
      ]
     }
@@ -1589,7 +1589,7 @@
    "symbol": "hammer",
    "color": "#534AB7",
    "section": 2,
-   "summary": "既定のエンジンとスクリプト、TeX・Ghostscript の場所、各エンジンのコマンドを設定します。",
+   "summary": "既定のエンジンとスクリプト、TeX・Ghostscriptの場所、各エンジンのコマンドを設定します。",
    "groups": [
     {
      "title": "既定",
@@ -1667,9 +1667,9 @@
      "rows": [
       {
        "kind": "popup",
-       "title": "Sync 方式",
+       "title": "Sync方式",
        "choices": [
-        "PDF を検索",
+        "PDFを検索",
         "SyncTeX"
        ],
        "selected": 1,
@@ -1679,7 +1679,7 @@
       },
       {
        "kind": "switch",
-       "title": "Sync で開く新しい書類を、ルートウインドウのタブで開く",
+       "title": "Syncで開く新しい書類を、ルートウインドウのタブで開く",
        "note": "通常はオフにします。",
        "src": [
         "snd-4x-vSh"
@@ -1694,7 +1694,7 @@
        "kind": "path",
        "title": "(pdf)TeX",
        "value": "/Library/TeX/texbin",
-       "note": "デフォルト: /Library/TeX/texbin または /usr/texbin",
+       "note": "デフォルト: /Library/TeX/texbinまたは /usr/texbin",
        "src": [
         "217"
        ]
@@ -1751,12 +1751,12 @@
       },
       {
        "kind": "switch",
-       "title": "Shell Escape を警告",
+       "title": "Shell Escapeを警告",
        "on": true,
        "src": [
         "325"
        ],
-       "note": "上の TeX・LaTeX のコマンドに --shell-escape が含まれているとき、タイプセットの前に確認します。"
+       "note": "上のTeX・LaTeXのコマンドに --shell-escapeが含まれているとき、タイプセットの前に確認します。"
       }
      ]
     },
@@ -1785,11 +1785,11 @@
       },
       {
        "kind": "switch",
-       "title": "PostScript ファイルを保存",
+       "title": "PostScriptファイルを保存",
        "src": [
         "225"
        ],
-       "note": "「TeX + dvips + distiller」でタイプセットするとき、途中で作る PostScript ファイルを残します。"
+       "note": "「TeX + dvips + distiller」でタイプセットするとき、途中で作るPostScriptファイルを残します。"
       }
      ]
     },
@@ -1798,7 +1798,7 @@
      "rows": [
       {
        "kind": "path",
-       "title": "TeX プログラム",
+       "title": "TeXプログラム",
        "value": "",
        "note": "デフォルト: 空",
        "src": [
@@ -1807,7 +1807,7 @@
       },
       {
        "kind": "path",
-       "title": "LaTeX プログラム",
+       "title": "LaTeXプログラム",
        "value": "",
        "note": "デフォルト: 空",
        "src": [
@@ -1825,12 +1825,12 @@
        "src": [
         "217-aa-RyX"
        ],
-       "note": "Ghostscript で PostScript を PDF に変換するときにこのオプションを付け、PSTricks などの透明効果を残します。Ghostscript 9.51 以降が必要です。"
+       "note": "GhostscriptでPostScriptをPDFに変換するときにこのオプションを付け、PSTricksなどの透明効果を残します。Ghostscript 9.51以降が必要です。"
       }
      ]
     },
     {
-     "title": "検索用コマンドと BibTeX",
+     "title": "検索用コマンドとBibTeX",
      "rows": [
       {
        "kind": "path",
@@ -1843,7 +1843,7 @@
       },
       {
        "kind": "path",
-       "title": "BibTeX エンジン",
+       "title": "BibTeXエンジン",
        "value": "bibtex",
        "note": "デフォルト: bibtex",
        "src": [
@@ -1853,11 +1853,11 @@
      ]
     },
     {
-     "title": "pTeX サポート（日本用）",
+     "title": "pTeXサポート（日本用）",
      "rows": [
       {
        "kind": "switch",
-       "title": "otf パッケージ対応",
+       "title": "otfパッケージ対応",
        "src": [
         "573"
        ]
@@ -1958,8 +1958,8 @@
        "kind": "popup",
        "title": "呼び出すキー",
        "choices": [
-        "Escape キー",
-        "Tab キー"
+        "Escapeキー",
+        "Tabキー"
        ],
        "id": "completionKey",
        "src": [
@@ -1968,11 +1968,11 @@
       },
       {
        "kind": "switch",
-       "title": "BibDesk 自動補完",
+       "title": "BibDesk自動補完",
        "src": [
         "621#7"
        ],
-       "note": "\\cite などの中で、BibDesk の文献の引用キーを補完の候補に出します。"
+       "note": "\\citeなどの中で、BibDeskの文献の引用キーを補完の候補に出します。"
       },
       {
        "kind": "button",
@@ -2003,7 +2003,7 @@
    "symbol": "arrow.triangle.2.circlepath",
    "color": "#1D9E75",
    "section": 3,
-   "summary": "TeXShop のアップデートを確認する方法を設定します。",
+   "summary": "TeXShopのアップデートを確認する方法を設定します。",
    "groups": [
     {
      "title": "自動確認",

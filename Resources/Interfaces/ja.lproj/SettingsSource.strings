@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1080.title" = "OgreKit 検索パネル";
+"1080.title" = "OgreKit検索パネル";
 "14.title" = "フォント";
 "19.title" = "ソースウインドウの位置";
 "236.title" = "起動時に";
@@ -9,8 +9,8 @@
 "32.title" = "閉じたときの位置を保存";
 "3eF-XA-ahc.title" = "特定のコマンド引数を対象外にする";
 "566.title" = "-- DO NOT LOCALIZE THIS! --";
-"582.title" = "Apple 標準検索パネル";
-"583.title" = "Apple 標準検索バー";
+"582.title" = "Apple標準検索パネル";
+"583.title" = "Apple標準検索バー";
 "585.title" = "検索パネル";
 "872.title" = "設定...";
 "873.title" = "Helvetica 12";
@@ -21,8 +21,8 @@
 "912.title" = "Radio";
 "914.title" = "Radio";
 "925.title" = "コマンド補完キー";
-"927.title" = "Escape キー";
-"928.title" = "Tab キー";
+"927.title" = "Escapeキー";
+"928.title" = "Tabキー";
 "929.title" = "Radio";
 "934.title" = "括弧の対応チェック対象";
 "950.title" = "{ }";
@@ -40,7 +40,7 @@
 "odm-Dy-TNW.title" = "大";
 "teg-0p-Q8J.title" = "LaTeXコマンドを対象外にする";
 "ts-aware-spelling-cell.title" = "LaTeX対応のスペルチェック";
-"ts-aware-spelling.ibShadowedToolTip" = "LaTeX 文書では除外規則を使います。";
+"ts-aware-spelling.ibShadowedToolTip" = "LaTeX文書では除外規則を使います。";
 "ts-edit-spelling-cell.title" = "LaTeXの除外規則を編集…";
 "ts-edit-spelling.ibShadowedToolTip" = "LaTeX対応のスペルチェックで使用する除外規則を編集します。";
 "uAi-0W-9KI.title" = "Switch";
