@@ -160,7 +160,11 @@ tiToolTipMacrosKIT              = "Voer macro uit";
 
 tiLabelMouseModeKIT				= "Muismodus";
 tiPaletteLabelMouseModeKIT		= "Muismodus";
-tiToolTipMouseModeKIT			= "Verander de muismodus";
+tiToolTipMouseModeScroll = "Scrollen: sleep om het document te verplaatsen";
+tiToolTipMouseModeSelectText = "Tekst selecteren: sleep om tekst te selecteren om te kopiëren";
+tiToolTipMouseModeMagnify = "Vergroten: houd ingedrukt om door een kleine loep te kijken";
+tiToolTipMouseModeMagnifyLarge = "Vergroten (groter): houd ingedrukt om door een grote loep te kijken";
+tiToolTipMouseModeSelectPDF = "PDF selecteren: sleep om een gebied te selecteren om als afbeelding te kopiëren";
 
 tiLabelSyncMarksKIT				= "Syncpunten";
 tiPaletteLabelSyncMarksKIT		= "Synchronisatiepunten";
@@ -220,7 +224,6 @@ tiToolTipSharingSplit            = "Deel tekst en afbeeldingen";
 
 tiLabelMouseModeKITSplit                = "Muismodus";
 tiPaletteLabelMouseModeKITSplit        = "Muismodus";
-tiToolTipMouseModeKITSplit            = "Verander de muismodus";
 
 tiLabelSearchKITSplit                = "Zoek";
 tiPaletteLabelSearchKITSplit         = "Zoek";

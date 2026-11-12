@@ -160,7 +160,11 @@ tiToolTipMacrosKIT              = "マクロを挿入します";
 
 tiLabelMouseModeKIT				= "マウスモード";
 tiPaletteLabelMouseModeKIT		= "マウスモード";
-tiToolTipMouseModeKIT			= "マウスモードを変更します";
+tiToolTipMouseModeScroll = "スクロール：ドラッグして書類を動かします";
+tiToolTipMouseModeSelectText = "テキスト選択：ドラッグしてコピーするテキストを選択します";
+tiToolTipMouseModeMagnify = "拡大鏡：押したままにすると小さい拡大鏡で拡大します";
+tiToolTipMouseModeMagnifyLarge = "拡大鏡（大）：押したままにすると大きい拡大鏡で拡大します";
+tiToolTipMouseModeSelectPDF = "範囲選択：ドラッグして画像としてコピーする範囲を選択します";
 
 tiLabelSyncMarksKIT				= "Syncマーク";
 tiPaletteLabelSyncMarksKIT		= "Syncマーク";
@@ -220,7 +224,6 @@ tiToolTipSharingSplit            = "テキストや画像を共有";
 
 tiLabelMouseModeKITSplit                = "マウスモード";
 tiPaletteLabelMouseModeKITSplit        = "マウスモード";
-tiToolTipMouseModeKITSplit            = "マウスモードを変更します";
 
 tiLabelSearchKITSplit                = "検索";
 tiPaletteLabelSearchKITSplit         = "検索";

@@ -100,7 +100,11 @@
     tiToolTipMetaFont = "\U8fd0\U884cMetaFont";
     tiToolTipMetaPost = "\U8fd0\U884cMetaPost";
     tiToolTipMouseMode = "\U66f4\U6539\U9f20\U6807\U6a21\U5f0f";
-    tiToolTipMouseModeKIT = "\U66f4\U6539\U9f20\U6807\U6a21\U5f0f";
+    tiToolTipMouseModeScroll = "滚动：拖移以移动文稿";
+    tiToolTipMouseModeSelectText = "选择文本：拖移以选择要拷贝的文本";
+    tiToolTipMouseModeMagnify = "放大镜：按住以通过小放大镜查看";
+    tiToolTipMouseModeMagnifyLarge = "放大镜 (大号)：按住以通过大放大镜查看";
+    tiToolTipMouseModeSelectPDF = "选择PDF：拖移以选择要作为图像拷贝的区域";
     tiToolTipNextPage = "\U663e\U793a\U4e0b\U4e00\U9875";
     tiToolTipNextPageButton = "\U663e\U793a\U4e0b\U4e00\U9875";
     tiToolTipNextPageButtonKIT = "\U663e\U793a\U4e0b\U4e00\U9875";
@@ -165,7 +169,6 @@
     
     tiLabelMouseModeKITSplit                = "\U9f20\U6807\U6a21\U5f0f";
     tiPaletteLabelMouseModeKITSplit        = "\U9f20\U6807\U6a21\U5f0f";
-    tiToolTipMouseModeKITSplit            = "\U9f20\U6807\U6a21\U5f0f";
     
     tiLabelSearchKITSplit                = "搜索";
     tiPaletteLabelSearchKITSplit         = "搜索";
