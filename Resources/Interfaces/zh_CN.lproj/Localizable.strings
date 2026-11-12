@@ -1,22 +1,22 @@
         "%@\n\nCharacters: %d" = "%@\n\n字符数：%d";
     "%@ does not exist." = "%@ \U4e0d\U5b58\U5728\U3002";
-"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "目录链接 /Library/TeX/texbin 不存在。若要修复，请访问 https://tug.org/mactex 并安装 MacTeX 或 Basic TeX (2015 或更新版)。";
-"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ 不存在。TeXShop 仅为 TeX 的前端，您还需要安装 TeX 发行包。发行包可能尚未安装，或在系统升级时被删除。若有此 况，请访问 https://tug.org/mactex 并按照说明安装 MacTeX 或 BasicTeX。";
-"%@ does not have the executable bit set." = "%@ 不存在。TeXShop 仅为 TeX 的前端，您还需要安装 TeX 发行包。发行包可能尚未安装，或在系统升级时被删除。若有此 况，请访问 http://tug.org/mactex 并按照说明安装 MacTeX 或 BasicTeX。";
+"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "目录链接 /Library/TeX/texbin不存在。若要修复，请访问https://tug.org/mactex并安装MacTeX或Basic TeX (2015或更新版)。";
+"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ 不存在。TeXShop仅为TeX的前端，您还需要安装TeX发行包。发行包可能尚未安装，或在系统升级时被删除。若有此 况，请访问https://tug.org/mactex并按照说明安装MacTeX或BasicTeX。";
+"%@ does not have the executable bit set." = "%@ 不存在。TeXShop仅为TeX的前端，您还需要安装TeX发行包。发行包可能尚未安装，或在系统升级时被删除。若有此 况，请访问http://tug.org/mactex并按照说明安装MacTeX或BasicTeX。";
     "Add macros from file..." = "\U4ece\U6587\U4ef6\U6dfb\U52a0\U5b8f...";
     AutoComplete = "\U6309\U952e\U7ed1\U5b9a";
     Autocompletion = "\U6309\U952e\U7ed1\U5b9a\U8f93\U5165";
     "Can't find required tool." = "\U627e\U4e0d\U5230\U5fc5\U8981\U7684\U5de5\U5177\U3002";
     Cancel = "\U53d6\U6d88";
     "Close Current Environment" = "\U5173\U95ed\U5f53\U524d\U73af\U5883";
-    "Close LaTeX Panel" = "\U5173\U95ed LaTeX \U9762\U677f";
+    "Close LaTeX Panel" = "\U5173\U95edLaTeX\U9762\U677f";
     "Close Macro Editor" = "\U5173\U95ed\U5b8f\U7f16\U8f91\U5668";
     "Close Matrix Panel" = "\U5173\U95ed\U77e9\U9635\U9762\U677f";
     "Color Index" = "索引着色";
     Comment = "\U6ce8\U91ca";
     Completion = "\U8865\U5168";
     "Convert \\ to \\yen in Pasteboard" = "\U5728\U5939\U7eb8\U677f\U4e2d\U8f6c\U6362 \\ \U5230 \\yen";
-    "Convert \\yen to \\ in Pasteboard" = "\U5728\U5939\U7eb8\U677f\U4e2d\U8f6c\U6362 \\yen \U5230 \\";
+    "Convert \\yen to \\ in Pasteboard" = "\U5728\U5939\U7eb8\U677f\U4e2d\U8f6c\U6362 \\yen\U5230 \\";
     "Copy Format" = "\U62f7\U8d1d\U6837\U5f0f";
     "Currently open files retain their old encoding." = "\U5f53\U524d\U6253\U5f00\U7684\U6587\U4ef6\U4ecd\U4fdd\U7559\U65e7\U7684\U7f16\U7801\U3002";
     "Display Format" = "\U663e\U793a\U6837\U5f0f";
@@ -31,14 +31,14 @@
     Help = "\U5e2e\U52a9";
     Indent = "\U7f29\U8fdb";
     "Info: %@" = "\U4fe1\U606f: %@";
-    "LaTeX Panel..." = "LaTeX \U9762\U677f...";
+    "LaTeX Panel..." = "LaTeX\U9762\U677f...";
     Macros = "\U5b8f";
     Magnification = "\U653e\U5927";
     "Magnification Panel" = "\U653e\U5927\U9762\U677f";
     "Matrix Panel..." = "\U77e9\U9635\U9762\U677f...";
     "New version available" = "\U65b0\U7248\U672c\U53ef\U7528";
     "Newline Removal" = "\U5220\U9664\U65b0\U884c";
-    "Omit Shell Escape" = "\U5ffd\U7565 Shell Escape";
+    "Omit Shell Escape" = "\U5ffd\U7565Shell Escape";
     "Open Macro Editor..." = "\U6253\U5f00\U5b8f\U7f16\U8f91\U5668...";
     "Open for Editing..." = "\U6253\U5f00\U4ee5\U7f16\U8f91...";
     "Open for Preview..." = "\U6253\U5f00\U4ee5\U9884\U89c8...";
@@ -58,14 +58,14 @@
     Sync = "\U540c\U6b65";
     "Sync Marks" = "\U540c\U6b65\U6807\U8bb0";
     Tags = "标签";
-    "TeXShop Demos" = "TeXShop \U6f14\U793a";
+    "TeXShop Demos" = "TeXShop\U6f14\U793a";
     Template = "\U6a21\U677f";
     "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "该文件无法以 %@ 编码打开，因为它并未以此编码保存。如果您想以其他编码打开，请关闭窗口再打开。";
     "The file encoding changed; characters can be lost if the wrong encoding is used." = "\U6587\U4ef6\U7f16\U7801\U5df2\U66f4\U6539\Uff0c\U5982\U679c\U4f7f\U7528\U9519\U8bef\U7684\U7f16\U7801\U5c06\U4f1a\U5bfc\U81f4\U5b57\U7b26\U4e22\U5931\U3002";
-    "The source LaTeX document cannot be found." = "\U627e\U4e0d\U5230 LaTeX \U6e90\U4ee3\U7801\U6587\U6863\U3002";
+    "The source LaTeX document cannot be found." = "\U627e\U4e0d\U5230LaTeX\U6e90\U4ee3\U7801\U6587\U6863\U3002";
     "There was an error checking for updates." = "\U68c0\U67e5\U66f4\U65b0\U65f6\U53d1\U751f\U9519\U8bef\U3002";
-    "This file was opened with IsoLatin9 encoding." = "\U672c\U6587\U4ef6\U4ee5 IsoLatin9 \U897f\U6587\U7f16\U7801\U6253\U5f00\U3002";
-    "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "\U672c\U7248 TeXShop \U9700\U8981 Mac OS X 10.4 \U6216\U66f4\U9ad8\U7248\U672c\U3002\U8bf7\U4f7f\U7528 TeXShop 1.37\U3002";
+    "This file was opened with IsoLatin9 encoding." = "\U672c\U6587\U4ef6\U4ee5IsoLatin9\U897f\U6587\U7f16\U7801\U6253\U5f00\U3002";
+    "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "\U672c\U7248TeXShop\U9700\U8981Mac OS X 10.4\U6216\U66f4\U9ad8\U7248\U672c\U3002\U8bf7\U4f7f\U7528TeXShop 1.37\U3002";
     ToolbarItems = "\U5de5\U5177\U680f\U9879\U76ee";
     Typeset = "\U6392\U7248";
     "Typesetting engine cannot be found." = "\U627e\U4e0d\U5230\U6392\U7248\U5f15\U64ce\U3002";
@@ -73,18 +73,18 @@
     Uncomment = "\U53d6\U6d88\U6ce8\U91ca";
     Unindent = "\U53d6\U6d88\U7f29\U8fdb";
     Warning = "\U8b66\U544a";
-    "Warning: Using Shell Escape" = "\U8b66\U544a: \U6b63\U5728\U4f7f\U7528 Shell Escape";
-    "You have the most recent version of TeXShop." = "\U60a8\U6b63\U5728\U4f7f\U7528\U6700\U65b0\U7248\U672c\U7684 TeXShop\U3002";
-    "Your copy of TeXShop is up-to-date" = "TeXShop \U7684\U7248\U672c\U662f\U6700\U65b0\U7684";
+    "Warning: Using Shell Escape" = "\U8b66\U544a: \U6b63\U5728\U4f7f\U7528Shell Escape";
+    "You have the most recent version of TeXShop." = "\U60a8\U6b63\U5728\U4f7f\U7528\U6700\U65b0\U7248\U672c\U7684TeXShop\U3002";
+    "Your copy of TeXShop is up-to-date" = "TeXShop\U7684\U7248\U672c\U662f\U6700\U65b0\U7684";
     "Your current setting of %@ will be replaced. OK?" = "\U60a8\U5f53\U524d %@ \U7684\U8bbe\U7f6e\U5c06\U4f1a\U88ab\U66ff\U6362\U3002\U786e\U5b9a\U5417?";
     "Convert" = "转换";
     "The program " = "程序 ";
     " does not exist." = " 未找到。";
     "failed to copy selection." = "无法拷贝选中的区域。";
     "failed to save selection to the file." = "无法将选中的区域保存至文件。";
-    "<a letter consisting of %d characters>" = "<包含 %d 个字符的单字>";
-    "%d letters, %d words, %d lines" = "%d 个字符, %d 个单词, 共 %d 行";
-    "Emoji Style" = "Emoji 样式";
+    "<a letter consisting of %d characters>" = "<包含 %d个字符的单字>";
+    "%d letters, %d words, %d lines" = "%d个字符, %d个单词, 共 %d行";
+    "Emoji Style" = "Emoji样式";
     "Text Style" = "文本样式";
     "Character Info" = "字符信息";
     "Variant" = "变形";
@@ -94,10 +94,10 @@
 "Skin Tone IV" = "中等";
 "Skin Tone V" = "较深";
 "Skin Tone VI" = "深色";
-"Unknown encoding; using UTF-8." = "未知编码；使用 UTF-8 编码。";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "演示视频需要 Mac OS 10.9 Mavericks 或更高版本。";
+"Unknown encoding; using UTF-8." = "未知编码；使用UTF-8编码。";
+"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "演示视频需要Mac OS 10.9 Mavericks或更高版本。";
 "Source" = "源代码";
-"Type sample text here.\nUse several lines to test\ninterline spacing." = "在此输入示例文本。\n输入多行\n 以测试行间距。";
+"Type sample text here.\nUse several lines to test\ninterline spacing." = "在此输入示例文本。\n输入多行\n以测试行间距。";
 "<<Close All - unlocalized>>" = "全部关闭";
 "Close All" = "全部关闭";
 "File Already Exists" = "文件已存在";
@@ -106,18 +106,18 @@
 "Split Window" = "分割窗口";
 "New Document" = "新文件";
 "Link Popups" = "链接预览";
-"Syntax Color expl3 Code" = "高亮 expl3 代码";
-"PDF File Has No Annotations" = "PDF 文件未发现批注";
+"Syntax Color expl3 Code" = "高亮expl3代码";
+"PDF File Has No Annotations" = "PDF文件未发现批注";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
 "Forget Learned Words…" = "忘记已学习的单词…";
 "Edit Spelling Exclusions…" = "编辑拼写例外…";
 "Spell Checking Help" = "拼写检查帮助";
 "Forget learned words" = "忘记已学习的单词";
-"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "此文稿中的以下单词已为%@学习。请选择要忘记的单词。按住 Shift 或 Command 键点按可选择多个。";
+"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several." = "此文稿中的以下单词已为%@学习。请选择要忘记的单词。按住Shift或Command键点按可选择多个。";
 "Forget Selected" = "忘记所选单词";
-"Forgot %lu word." = "已忘记 %lu 个单词。";
-"Forgot %lu words." = "已忘记 %lu 个单词。";
+"Forgot %lu word." = "已忘记 %lu个单词。";
+"Forgot %lu words." = "已忘记 %lu个单词。";
 "No learned words in this document" = "此文稿中没有已学习的单词";
 "None of the words in this document have been learned for %@." = "此文稿中的单词都尚未为%@学习。";
 "The spell checking help could not be found" = "找不到拼写检查帮助";
@@ -134,13 +134,13 @@
 
 /* Notice after line endings were converted to LF when a document was opened */
 "This document mixes different line endings." = "此文稿混用了不同的换行符。";
-"This document uses Windows line endings (CRLF)." = "此文稿使用 Windows 换行符（CRLF）。";
-"This document uses classic Mac line endings (CR)." = "此文稿使用经典 Mac 换行符（CR）。";
-"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop 已将所有换行符转换为 LF。保存文稿时，文件将使用 LF 换行符。";
+"This document uses Windows line endings (CRLF)." = "此文稿使用Windows换行符（CRLF）。";
+"This document uses classic Mac line endings (CR)." = "此文稿使用经典Mac换行符（CR）。";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop已将所有换行符转换为LF。保存文稿时，文件将使用LF换行符。";
 "Don’t show again for this document" = "对此文稿不再显示";
 
 /* Engine path discovery */
-"Set Up TeX Engine Paths" = "设置 TeX 引擎路径";
+"Set Up TeX Engine Paths" = "设置TeX引擎路径";
 "Detected Engine Paths" = "检测到的引擎路径";
 
 "Not found (current setting will be kept)" = "未找到（将保留当前设置）";
@@ -201,7 +201,7 @@
 "Inactive for this key" = "此按键无效";
 "No command uses this key." = "没有命令使用此按键。";
 "Press a key" = "请按键";
-"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与 Command 或 Control 组合使用，或使用 F1–F20。";
+"This key cannot be used as a shortcut. Use Command or Control with a key, or F1–F20." = "此按键不能用作快捷键。请与Command或Control组合使用，或使用F1–F20。";
 
 
 "This key cannot be assigned to a new shortcut." = "此按键不能分配给新的快捷键。";
@@ -224,19 +224,19 @@
 "Defaults for New Documents" = "新文稿的默认设置";
 "Matching Brackets" = "括号匹配";
 "Spelling While Typing" = "键入时检查拼写";
-"Use LaTeX-aware spell checking (recommended)" = "使用考虑 LaTeX 结构的拼写检查（推荐）";
+"Use LaTeX-aware spell checking (recommended)" = "使用考虑LaTeX结构的拼写检查（推荐）";
 "Use legacy spell checking" = "使用传统拼写检查";
-"LaTeX Spell Checking" = "LaTeX 拼写检查";
+"LaTeX Spell Checking" = "LaTeX拼写检查";
 "Edit Key Bindings…" = "按键绑定编辑器…";
 "Key Bindings" = "按键绑定";
 "Edit Command Completion…" = "编辑命令补全文件…";
 "Command Completion" = "命令补全";
-"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "使用 Tab 触发命令补全时，Tab 将保留用于补全，不能分配给菜单快捷键。";
+"When Tab triggers command completion, Tab is reserved for completion and cannot be assigned to a menu shortcut." = "使用Tab触发命令补全时，Tab将保留用于补全，不能分配给菜单快捷键。";
 "Source and Preview Windows" = "源文件和预览窗口";
 "Comment Lines and Hidden Settings" = "注释行与隐藏设置";
 "Advanced" = "高级";
 
-"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "安装 TeX 发行版，然后在设置 > 排版中运行自动设置。";
+"Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "安装TeX发行版，然后在设置 > 排版中运行自动设置。";
 
 "Completion trigger" = "触发按键";
 
@@ -278,7 +278,7 @@
 "Experiment stopped.\n" = "实验台已停止。\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "有新版本的 TeXShop 可用（版本 %@）。要现在下载吗？";
+"A new version of TeXShop is available (version %@). Would you like to download it now?" = "有新版本的TeXShop可用（版本 %@）。要现在下载吗？";
 "Assign" = "分配";
 "Assign a shortcut used by macros?" = "要分配宏正在使用的快捷键吗？";
 "Macro shortcut conflicts" = "宏快捷键冲突";
@@ -301,13 +301,13 @@
 
 "This does not turn spell checking while typing on or off." = "此设置不会开启或关闭键入时的拼写检查。";
 
-"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "已打开的 PDF 保持当前缩放比例。新值适用于此后打开的 PDF。";
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "已打开的PDF保持当前缩放比例。新值适用于此后打开的PDF。";
 
-"Takes effect after you restart TeXShop." = "重新启动 TeXShop 后生效。";
+"Takes effect after you restart TeXShop." = "重新启动TeXShop后生效。";
 
 "Custom menu shortcuts will be removed." = "将移除自定菜单快捷键。";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "将重置引擎、编辑、显示、已知的隐藏设置和 Dock 图标。主题选择可能会更改。TeX 引擎路径：%@";
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "将重置引擎、编辑、显示、已知的隐藏设置和Dock图标。主题选择可能会更改。TeX引擎路径：%@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "自动检测语言";
@@ -316,7 +316,7 @@
 "Apply \"%@\" to the whole document?" = "要将“%@”应用到整个文稿吗？";
 
 /* Macro editor placeholder guide */
-"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 所选文本，#INS# = 插入宏后的光标位置，#PASTE# = 剪贴板中的文本。AppleScript 宏还可以使用 #FILEPATH# 等占位符（参见帮助）。";
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 所选文本，#INS# = 插入宏后的光标位置，#PASTE# = 剪贴板中的文本。AppleScript宏还可以使用 #FILEPATH# 等占位符（参见帮助）。";
 /* Key binding editor placeholder guide */
 "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 已选字符，#INS# = 插入点，#PASTE# = 剪贴板中的文本";
 

@@ -18,7 +18,7 @@
                 <menuItem title="TeXShop" id="56">
                     <menu key="submenu" title="TeXShop" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="关于 TeXShop" id="58" identifier="TSShortcut.orderFrontStandardAboutPanel:.0">
+                            <menuItem title="关于TeXShop" id="58" identifier="TSShortcut.orderFrontStandardAboutPanel:.0">
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="145"/>
                                 </connections>
@@ -48,7 +48,7 @@
                                     <action selector="GotoLibraryTeXShop:" target="-1" id="GVI-6r-1Bb"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="设置 TeXShop 为默认 TeX 编辑器" id="VKh-pv-PPa" identifier="TSShortcut.makeDefaultEditor:.0">
+                            <menuItem title="设置TeXShop为默认TeX编辑器" id="VKh-pv-PPa" identifier="TSShortcut.makeDefaultEditor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="makeDefaultEditor:" target="-1" id="Fsd-hl-6B3"/>
@@ -63,7 +63,7 @@
                             <menuItem isSeparatorItem="YES" id="401">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="隐藏 TeXShop" keyEquivalent="h" id="228" identifier="TSShortcut.hide:.0">
+                            <menuItem title="隐藏TeXShop" keyEquivalent="h" id="228" identifier="TSShortcut.hide:.0">
                                 <connections>
                                     <action selector="hide:" target="-2" id="229"/>
                                 </connections>
@@ -82,7 +82,7 @@
                             <menuItem isSeparatorItem="YES" id="224">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="退出 TeXShop" keyEquivalent="q" id="226" identifier="TSShortcut.terminate:.0">
+                            <menuItem title="退出TeXShop" keyEquivalent="q" id="226" identifier="TSShortcut.terminate:.0">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="227"/>
                                 </connections>
@@ -193,7 +193,7 @@
                             <menuItem isSeparatorItem="YES" id="234">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="转换 TIFF 格式" id="235" identifier="TSShortcut.convertTiff:.0">
+                            <menuItem title="转换TIFF格式" id="235" identifier="TSShortcut.convertTiff:.0">
                                 <connections>
                                     <action selector="convertTiff:" target="-1" id="1167"/>
                                 </connections>
@@ -204,7 +204,7 @@
                                     <action selector="abort:" target="-1" id="896"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="删除 Aux 文件" keyEquivalent="a" id="653" identifier="TSShortcut.trashAUXFiles:.0">
+                            <menuItem title="删除Aux文件" keyEquivalent="a" id="653" identifier="TSShortcut.trashAUXFiles:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="trashAUXFiles:" target="-1" id="654"/>
@@ -507,26 +507,26 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Tgi-QF-ABd"/>
-                                        <menuItem title="Unicode 字符 → ajmacros" tag="7" id="1ZF-CJ-IVR" identifier="TSShortcut.convertCharacterType:.7">
+                                        <menuItem title="Unicode字符 → ajmacros" tag="7" id="1ZF-CJ-IVR" identifier="TSShortcut.convertCharacterType:.7">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="convertCharacterType:" target="-1" id="BwT-5M-Q4l"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="ajmacros → Unicode 字符" tag="8" id="lJj-MD-rRo" identifier="TSShortcut.convertCharacterType:.8">
+                                        <menuItem title="ajmacros → Unicode字符" tag="8" id="lJj-MD-rRo" identifier="TSShortcut.convertCharacterType:.8">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="convertCharacterType:" target="-1" id="QZI-ci-2Al"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="X15-lG-P0r"/>
-                                        <menuItem title="Unicode 字符 → \UTF / \CID" tag="9" id="2Fi-N5-Hoo" identifier="TSShortcut.convertCharacterType:.9">
+                                        <menuItem title="Unicode字符 → \UTF / \CID" tag="9" id="2Fi-N5-Hoo" identifier="TSShortcut.convertCharacterType:.9">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="convertCharacterType:" target="-1" id="OXC-1o-3BC"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="\UTF / \CID → Unicode 字符" tag="10" id="scz-71-v8r" identifier="TSShortcut.convertCharacterType:.10">
+                                        <menuItem title="\UTF / \CID → Unicode字符" tag="10" id="scz-71-v8r" identifier="TSShortcut.convertCharacterType:.10">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="convertCharacterType:" target="-1" id="GJl-HA-E6Y"/>
@@ -542,9 +542,9 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Unicode 规范化" id="lb0-g0-FU8">
+                            <menuItem title="Unicode规范化" id="lb0-g0-FU8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Unicode 规范化" id="pd4-g4-3AM">
+                                <menu key="submenu" title="Unicode规范化" id="pd4-g4-3AM">
                                     <items>
                                         <menuItem title="NFC" tag="1" id="bnS-kq-N7J" identifier="TSShortcut.normalizeSelectedString:.1">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -678,7 +678,7 @@
                                     <action selector="closeTag:" target="-1" id="h1V-Xp-JLn"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="切换 XML" id="cSC-Zn-vL8" identifier="TSShortcut.toggleXML:.0">
+                            <menuItem title="切换XML" id="cSC-Zn-vL8" identifier="TSShortcut.toggleXML:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleXML:" target="-1" id="8Is-LA-HI8"/>
@@ -752,7 +752,7 @@
                                     <action selector="toggleSyntaxColor:" target="-1" id="hm1-xg-ZiD"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="高亮 expl3 代码" id="Vb6-aU-CA6" identifier="TSShortcut.toggleExplColor:.0">
+                            <menuItem title="高亮expl3代码" id="Vb6-aU-CA6" identifier="TSShortcut.toggleExplColor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleExplColor:" target="-1" id="mPT-5c-a8V"/>
@@ -971,7 +971,7 @@
                                     <action selector="doTypeset:" target="-1" id="464"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="删除 Aux 文件 &amp; 开始排版" tag="-2" alternate="YES" keyEquivalent="t" id="1172" identifier="TSShortcut.doTypeset:.-2">
+                            <menuItem title="删除Aux文件 &amp; 开始排版" tag="-2" alternate="YES" keyEquivalent="t" id="1172" identifier="TSShortcut.doTypeset:.-2">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="doTypeset:" target="-1" id="1173"/>
@@ -1216,13 +1216,13 @@
                             <menuItem isSeparatorItem="YES" id="687">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="显示 HTML 窗口" id="y4P-Sv-Y7M" identifier="TSShortcut.showHTMLWindow:.0">
+                            <menuItem title="显示HTML窗口" id="y4P-Sv-Y7M" identifier="TSShortcut.showHTMLWindow:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showHTMLWindow:" target="-1" id="a1p-hE-EkY"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="记住 HTML 窗口位置" id="aU9-ng-IX2" identifier="TSShortcut.saveHTMLPosition:.0">
+                            <menuItem title="记住HTML窗口位置" id="aU9-ng-IX2" identifier="TSShortcut.saveHTMLPosition:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="saveHTMLPosition:" target="-1" id="mFK-8U-Q3M"/>
@@ -1340,7 +1340,7 @@
                             <menuItem isSeparatorItem="YES" id="441">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="LaTeX 面板..." keyEquivalent="-" id="435" identifier="TSShortcut.displayLatexPanel:.0">
+                            <menuItem title="LaTeX面板..." keyEquivalent="-" id="435" identifier="TSShortcut.displayLatexPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="displayLatexPanel:" target="382" id="436"/>
@@ -1373,7 +1373,7 @@
                             <menuItem isSeparatorItem="YES" id="tDL-cD-YX6">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeX Live 文档" id="RcD-aZ-WS0" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
+                            <menuItem title="TeX Live文档" id="RcD-aZ-WS0" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXLiveDocumentation:" target="705" id="dde-FX-Nix"/>
@@ -1388,26 +1388,26 @@
                             <menuItem isSeparatorItem="YES" id="892">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeXShop 入门" id="698" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
+                            <menuItem title="TeXShop入门" id="698" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
                                     <action selector="displayGettingStartedTeXShop:" target="705" id="710"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop 演示" id="699"/>
-                            <menuItem title="TeXShop 手册" id="wEg-wt-tOY" identifier="TSShortcut.displayManual:.0">
+                            <menuItem title="TeXShop演示" id="699"/>
+                            <menuItem title="TeXShop手册" id="wEg-wt-tOY" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayManual:" target="705" id="TRv-FF-0V8"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="KBF-MQ-E1k"/>
-                            <menuItem title="HTML 指令" id="7LB-Zs-kjL" identifier="TSShortcut.displayHTMLHelp:.0">
+                            <menuItem title="HTML指令" id="7LB-Zs-kjL" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayHTMLHelp:" target="705" id="BN4-vm-BYY"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop 帮助面板..." keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
+                            <menuItem title="TeXShop帮助面板..." keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
@@ -1418,13 +1418,13 @@
                                     <action selector="displayFileEncoding:" target="705" id="wuT-Cx-dPF"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop 提示与技巧" id="1059" identifier="TSShortcut.displayTipsandTricks:.0">
+                            <menuItem title="TeXShop提示与技巧" id="1059" identifier="TSShortcut.displayTipsandTricks:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="705" id="1060"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop 功能答疑" id="2RH-ib-DJ5" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                            <menuItem title="TeXShop功能答疑" id="2RH-ib-DJ5" identifier="TSShortcut.displayTeXShopConfusion:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXShopConfusion:" target="705" id="fnI-bz-Egx"/>
@@ -1436,13 +1436,13 @@
                                     <action selector="displayCommentLines:" target="705" id="H62-yO-JaR"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="最近使用的 TeX 字体" id="MOP-CJ-Rvn" identifier="TSShortcut.displayRecentTeXFonts:.0">
+                            <menuItem title="最近使用的TeX字体" id="MOP-CJ-Rvn" identifier="TSShortcut.displayRecentTeXFonts:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayRecentTeXFonts:" target="705" id="E5X-f6-7LR"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="在 TeXShop 中使用 AppleScript" id="dxu-Z4-tmW" identifier="TSShortcut.displayNotesonApplescript:.0">
+                            <menuItem title="在TeXShop中使用AppleScript" id="dxu-Z4-tmW" identifier="TSShortcut.displayNotesonApplescript:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayNotesonApplescript:" target="705" id="htU-ot-VUB"/>
@@ -1464,7 +1464,7 @@
                                     <action selector="displayGettingStartedLatex:" target="705" id="749"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="George Grätzer 的快速教程" id="718" identifier="TSShortcut.displayShortCourse:.0">
+                            <menuItem title="George Grätzer的快速教程" id="718" identifier="TSShortcut.displayShortCourse:.0">
                                 <connections>
                                     <action selector="displayShortCourse:" target="705" id="777"/>
                                 </connections>
@@ -1544,7 +1544,7 @@
         </customObject>
         <customObject id="706" userLabel="TSMovie" customClass="TSMovie"/>
         <customObject id="837" userLabel="SUUpdater" customClass="TSSparkleController"/>
-        <window title="Tex 文档" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="854" userLabel="PackageHelp" customClass="NSPanel">
+        <window title="Tex文档" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="854" userLabel="PackageHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="633" y="424" width="323" height="136"/>

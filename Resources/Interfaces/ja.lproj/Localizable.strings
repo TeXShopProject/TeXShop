@@ -7,8 +7,8 @@
 "Print..." = "プリント...";
 "Print Source..." = "ソースをプリント...";
 "Set Project Root..." = "プロジェクトルートの設定...";
-"LaTeX Panel..." = "LaTeX パネル...";
-"Close LaTeX Panel" = "LaTeX パネルを閉じる";
+"LaTeX Panel..." = "LaTeXパネル...";
+"Close LaTeX Panel" = "LaTeXパネルを閉じる";
 "Matrix Panel..." = "行列パネル...";
 "Close Matrix Panel" = "行列パネルを閉じる";
 "Open for Preview..." = "プレビューを開く...";
@@ -41,42 +41,42 @@
 "Page Number" = "ページ数";
 "Page Number Panel" = "ページ数パネル";
 "Magnification Panel" = "ズーム倍率パネル";
-"Omit Shell Escape" = "Shell Escape を無視する";
-"Warning: Using Shell Escape" = "警告： Shell Escape が使われています";
+"Omit Shell Escape" = "Shell Escapeを無視する";
+"Warning: Using Shell Escape" = "警告：Shell Escapeが使われています";
 "Preview" = "プレビュー";
 "Display Format" = "ページレイアウト";// mitsu 1.29b
 "Magnification" = "ズーム倍率";// mitsu 1.29b
 "Copy Format" = "コピーフォーマット";// mitsu 1.29b
 "ToolbarItems" = "ツールバー項目";
 "Completion" = "コマンド補完";
-"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "場所： %@\nファイルサイズ： %d バイト\n作成日： %@\n変更日： %@";
+"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "場所： %@\nファイルサイズ： %dバイト\n作成日： %@\n変更日： %@";
 "Info: %@" = "情報: %@";
-"%@\n\nCharacters: %d" = "%@\n\文字数: %d 文字";
+"%@\n\nCharacters: %d" = "%@\n\文字数: %d文字";
 "The file encoding changed; characters can be lost if the wrong encoding is used." = "ファイルのエンコーディングが変更されました。違うエンコーディングを使うと、文字情報が失われることがあります。";
 "Currently open files retain their old encoding." = "現在開かれているファイルのエンコーディングは変更されません。";
 "Drag && Drop" = "ドラッグ＆ドロップ"; // zenitani 1.33
-"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "/Library/TeX/texbin が見つかりません。これを修正するには、https://tug.org/mactex から MacTeX / BasicTeX を再インストールし、TeX Wiki https://texwiki.texjp.org/?Mac の記述を参照して日本語設定を行ってください。";
-"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ が見つかりません。TeXShop は TeX のフロントエンドに過ぎず、別途 TeX 本体のインストールが必要です。TeX 本体がインストールされていないか、システムのアップグレードの際に削除された可能性があります。もしそうなら、TeX Wiki https://texwiki.texjp.org/?Mac の記述を参照して、https://tug.org/mactex/ から MacTeX / BasicTeX をインストールするなどの対応をとってください。";
+"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "/Library/TeX/texbinが見つかりません。これを修正するには、https://tug.org/mactexからMacTeX / BasicTeXを再インストールし、TeX Wiki https://texwiki.texjp.org/?Macの記述を参照して日本語設定を行ってください。";
+"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ が見つかりません。TeXShopはTeXのフロントエンドに過ぎず、別途TeX本体のインストールが必要です。TeX本体がインストールされていないか、システムのアップグレードの際に削除された可能性があります。もしそうなら、TeX Wiki https://texwiki.texjp.org/?Macの記述を参照して、https://tug.org/mactex/ からMacTeX / BasicTeXをインストールするなどの対応をとってください。";
 "Can't find required tool." = "必要なツールが見つかりません。";
 "Typesetting engine cannot be found." = "タイプセットエンジンが見つかりません。";
-"The source LaTeX document cannot be found." = "LaTeX のソースが見つかりません。";
+"The source LaTeX document cannot be found." = "LaTeXのソースが見つかりません。";
 "Sync Marks" = "Syncマーク";
 "%@ does not exist." = "%@ が見つかりません。";
 "%@ does not have the executable bit set." = "%@ に実行権限がセットされていません。";
-"This file was opened with IsoLatin9 encoding." = "このファイルは IsoLatin9 エンコーディングで開かれました。";
+"This file was opened with IsoLatin9 encoding." = "このファイルはIsoLatin9エンコーディングで開かれました。";
 "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "エンコーディングが違うため、ファイルを %@ エンコーディングで開くことができませんでした。ファイルを他のエンコーディングで開きたい場合は、ウインドウを閉じてもう一度開いて下さい。";
 "Error" = "エラー";
 "There was an error checking for updates." = "アップデートを確認中にエラーが起きました。";
 "Your copy of TeXShop is up-to-date" = "お使いのソフトウェアは最新のものです。";
-"You have the most recent version of TeXShop." = "この TeXShop は最新のバージョンです。";
+"You have the most recent version of TeXShop." = "このTeXShopは最新のバージョンです。";
 "New version available" = "新しいバージョンが公開されています。";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "TeXShop の新しいバージョン (version %@) が公開されています。今すぐダウンロードしますか？";
-"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "このバージョンの TeXShop が動作するためには Mac OS X 10.4 以上が必要です。代わりに TeXShop 1.37 をお使いください。";
+"A new version of TeXShop is available (version %@). Would you like to download it now?" = "TeXShopの新しいバージョン (version %@) が公開されています。今すぐダウンロードしますか？";
+"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "このバージョンのTeXShopが動作するためにはMac OS X 10.4以上が必要です。代わりにTeXShop 1.37をお使いください。";
 "Hard Wrap" = "改行を挿入";
 "Newline Removal" = "改行を削除";
 "Color Index" = "索引の色づけ";
 "Help" = "ヘルプ";
-"TeXShop Demos" = "TeXShop デモ";
+"TeXShop Demos" = "TeXShopデモ";
 "Sync" = "同期";
 "ShowFullPath" = "フルパス表示";
 "Close Current Environment" = "現在の環境を閉じる"; // Terada
@@ -93,13 +93,13 @@
 "Character Info" = "文字情報";
 "Variant" = "異体字";
 "Revert To" = "バージョンを戻す";
-"Skin Tone I-II" = "スキントーン I-II";
-"Skin Tone III" = "スキントーン III";
-"Skin Tone IV" = "スキントーン IV";
-"Skin Tone V" = "スキントーン V";
-"Skin Tone VI" = "スキントーン VI";
-"Unknown encoding; using UTF-8." = "未知のエンコーディングが指定されたため、代わりに UTF-8 エンコーディングを使用しました。";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "デモ動画の再生には OS X 10.9 Mavericks 以上が必要です。";
+"Skin Tone I-II" = "スキントーンI-II";
+"Skin Tone III" = "スキントーンIII";
+"Skin Tone IV" = "スキントーンIV";
+"Skin Tone V" = "スキントーンV";
+"Skin Tone VI" = "スキントーンVI";
+"Unknown encoding; using UTF-8." = "未知のエンコーディングが指定されたため、代わりにUTF-8エンコーディングを使用しました。";
+"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "デモ動画の再生にはOS X 10.9 Mavericks以上が必要です。";
 "Source" = "ソース";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "ここにサンプルテキストを打ち込んでください。\n行間隔をチェックするには複数行にまたがる文字列が必要です。";
 "<<Close All - unlocalized>>" = "すべてを閉じる";
@@ -138,9 +138,9 @@
 
 /* Notice after line endings were converted to LF when a document was opened */
 "This document mixes different line endings." = "この書類では異なる改行コードが混在しています。";
-"This document uses Windows line endings (CRLF)." = "この書類の改行コードは Windows 形式（CRLF）です。";
-"This document uses classic Mac line endings (CR)." = "この書類の改行コードは旧 Mac 形式（CR）です。";
-"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop はすべての改行を LF に揃えました。書類を保存すると、ファイルの改行コードは LF になります。";
+"This document uses Windows line endings (CRLF)." = "この書類の改行コードはWindows形式（CRLF）です。";
+"This document uses classic Mac line endings (CR)." = "この書類の改行コードは旧Mac形式（CR）です。";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShopはすべての改行をLFに揃えました。書類を保存すると、ファイルの改行コードはLFになります。";
 "Don’t show again for this document" = "この書類では今後表示しない";
 
 "Set Up TeX Engine Paths" = "TeXエンジンのパス設定";
@@ -311,9 +311,9 @@
 
 "This does not turn spell checking while typing on or off." = "入力中のスペルチェックの入／切は、この設定では変わりません。";
 
-"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "開いている PDF の倍率は変わりません。新しく開く PDF から使われます。";
+"Open PDFs keep their zoom. The new value applies to PDFs opened from now on." = "開いているPDFの倍率は変わりません。新しく開くPDFから使われます。";
 
-"Takes effect after you restart TeXShop." = "TeXShop を再起動すると有効になります。";
+"Takes effect after you restart TeXShop." = "TeXShopを再起動すると有効になります。";
 
 "Custom menu shortcuts will be removed." = "メニューのカスタムショートカットを削除します。";
 
@@ -326,7 +326,7 @@
 "Apply \"%@\" to the whole document?" = "「%@」を書類全体に適用しますか？";
 
 /* Macro editor placeholder guide */
-"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 選択中の文字列、#INS# = 挿入後のカーソル位置、#PASTE# = クリップボードの文字列。AppleScript のマクロでは #FILEPATH# なども使えます（ヘルプ参照）。";
+"#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = 選択中の文字列、#INS# = 挿入後のカーソル位置、#PASTE# = クリップボードの文字列。AppleScriptのマクロでは #FILEPATH# なども使えます（ヘルプ参照）。";
 /* Key binding editor placeholder guide */
 "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = 選択中の文字列、#INS# = 出力後のカーソル位置、#PASTE# = クリップボードの文字列";
 

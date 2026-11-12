@@ -15,7 +15,7 @@
     IsoLatinGreek = "\U5e0c\U814a\U6587 (ISO 8859-7)";
     JISJapanese = "\U65e5\U6587 (ISO 2022-JP)";
     "KOI8_R" = "\U4fc4\U6587 (KOI8-R)";
-    "Mac Central European Roman" = "Mac \U4e2d\U6b27\U8bed\U7cfb";
+    "Mac Central European Roman" = "Mac\U4e2d\U6b27\U8bed\U7cfb";
     "Mac Chinese Simplified" = "\U7b80\U4f53\U4e2d\U6587 (Mac OS)";
     "Mac Chinese Traditional" = "\U7e41\U4f53\U4e2d\U6587 (Mac OS)";
     "Mac Cyrillic" = "\U897f\U91cc\U5c14\U6587 (Mac OS)";

@@ -4,7 +4,7 @@
 			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
 			<TITLE>新規フォーマットの作成と利用</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="フォーマット フォーマットファイル fmt">
+			<META NAME="description" CONTENT="フォーマット フォーマットファイルfmt">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -24,7 +24,7 @@ a large number of \input, \include, and \usepackage statements. Every time the d
 this process is repeated even though large portions of the header did not change.</P>
  -->
 <p>
-TeX がタイプセットを行なう際には、文書のヘッダを処理しなければなりませんが、そこには \input や \includde あるいは \usepackage などの命令が数多く含まれているかもしれません。文書をタイプセットするたびに、このプロセスはくり返されます──ヘッダの大部分に変化がなかったとしてもです。
+TeXがタイプセットを行なう際には、文書のヘッダを処理しなければなりませんが、そこには \inputや \includdeあるいは \usepackageなどの命令が数多く含まれているかもしれません。文書をタイプセットするたびに、このプロセスはくり返されます──ヘッダの大部分に変化がなかったとしてもです。
 </p>
 
 <!-- 
@@ -33,7 +33,7 @@ the format file is created when TeX is installed on your machine and the command
  -->
 
 <p>
-TeX にはこのプロセスを高速化するための機構が組み込まれています。それにより、ソースを処理した結果を「フォーマットファイル」に出力するよう指示することができます。そうしておいてから TeX でタイプセットを実行すると、素早くフォーマットを読み込んだ上で文書をタイプセットすることができます。LaTeX はこの方法で構築されています──TeX をコンピュータにインストールする際にフォーマットファイルが生成されますが、コマンド「latex file」が TeX に対してこのフォーマットを読み込むよう命じ、その上で「ファイル」をタイプセットするのです。
+TeXにはこのプロセスを高速化するための機構が組み込まれています。それにより、ソースを処理した結果を「フォーマットファイル」に出力するよう指示することができます。そうしておいてからTeXでタイプセットを実行すると、素早くフォーマットを読み込んだ上で文書をタイプセットすることができます。LaTeXはこの方法で構築されています──TeXをコンピュータにインストールする際にフォーマットファイルが生成されますが、コマンド「latex file」がTeXに対してこのフォーマットを読み込むよう命じ、その上で「ファイル」をタイプセットするのです。
 </p>
 
 <!-- 
@@ -58,24 +58,24 @@ This is done less often today, but dealing with format files may still be useful
 <!-- 
 <li> Move uo.fmt to "~/Library/texmf/web2c/uo.fmt". You may need to create some of these directories.
  -->
-<li>「uo.fmt」を ~/Library/texmf/web2c/uo.fmt へと移します。このうちのいくつかのディレクトリは新たに作成する必要があるかもしません。
+<li>「uo.fmt」を ~/Library/texmf/web2c/uo.fmtへと移します。このうちのいくつかのディレクトリは新たに作成する必要があるかもしません。
 
 <!-- 
 <li> Create a new "engine file" by going to ~/Library/TeXShop/Engines and duplicating the file
 XeLaTeX.engine. Engine files need to have the execute bit set, and this duplication step automatically does that.
  -->
-<li>新しい「エンジンファイル」を作成します──~/Library/TeXShop/Engines へ行き「XeLaTeX.engine」というファイルを複製してください。エンジンファイルには実行ビットセットが必要ですが、この複製の過程で自動的に備わります。
+<li>新しい「エンジンファイル」を作成します──~/Library/TeXShop/Enginesへ行き「XeLaTeX.engine」というファイルを複製してください。エンジンファイルには実行ビットセットが必要ですが、この複製の過程で自動的に備わります。
 
 <!-- 
 <li> Rename this new file. The name need not
 match the name of the format. Since the name will appear in the TeXShop interface, it should make sense to a user. We'll choose "Oregon.engine".
  -->
-<li>複製したファイルの名称を変更します。この名称をフォーマット名と同じにする必要はありません。名称は TeXShop のインターフェイスに表示されるので、ユーザにとってわかりやすいものにします。ここでは「Oregon.engine」とします。
+<li>複製したファイルの名称を変更します。この名称をフォーマット名と同じにする必要はありません。名称はTeXShopのインターフェイスに表示されるので、ユーザにとってわかりやすいものにします。ここでは「Oregon.engine」とします。
 
 <!-- 
 <li> Open Oregon.engine in TeXShop and edit it to read as follows
  -->
-<li>「Oregon.engine」を TeXShop で開き、下記のように編集します──
+<li>「Oregon.engine」をTeXShopで開き、下記のように編集します──
 
 	<tt>
 		<dl>
@@ -99,11 +99,11 @@ be changed to "i386".
 <!-- 
 <p> This completes the installation. The next time you start TeXShop, the pulldown menu beside
 the typeset button on the Source Window Toolbar will list "Oregon" as an option. Choose this to typeset using the uo.fmt format. If you want this typesetting method to be the default, go to
-TeXShop Settings under the 「タイプセット」カテゴリ, and in the Default Command box select "Command Listed Below" and fill in the edit box with the word Oregon.</p>
+TeXShop Settings under the「タイプセット」カテゴリ, and in the Default Command box select "Command Listed Below" and fill in the edit box with the word Oregon.</p>
  -->
 
 <p>
-これで導入作業は済みました。次回 TeXShop を起動すると、ソースウインドウのツールバーにあるタイプセットボタン脇のプルダウンメニューに「Oregon」がタイプセット・オプションとして入っています。これを選択し「uo.fmt」フォーマットを使用してタイプセットします。もしもこのタイプセット方法をデフォルトにしたければ、TeXShop の設定を開き、「タイプセット」タブのところにある「デフォルトのコマンド」から「次のコマンドを利用」を選択し、テキストボックスに“Oregon”と書き入れておきます。
+これで導入作業は済みました。次回TeXShopを起動すると、ソースウインドウのツールバーにあるタイプセットボタン脇のプルダウンメニューに「Oregon」がタイプセット・オプションとして入っています。これを選択し「uo.fmt」フォーマットを使用してタイプセットします。もしもこのタイプセット方法をデフォルトにしたければ、TeXShopの設定を開き、「タイプセット」タブのところにある「デフォルトのコマンド」から「次のコマンドを利用」を選択し、テキストボックスに“Oregon”と書き入れておきます。
 </p>
 
 <!-- 
@@ -135,7 +135,7 @@ following line to the top of the source file:</p>
  -->
 
 <p>
-以上の解説は、ユーザが既に pdflatex 用のフォーマットを所持しているものと想定しています。ユーザが plain TeX 用のフォーマットを作成することもできます──この場合にはエンジンファイルを「pdflatex」ではなく「pdftex」としておきます。
+以上の解説は、ユーザが既にpdflatex用のフォーマットを所持しているものと想定しています。ユーザがplain TeX用のフォーマットを作成することもできます──この場合にはエンジンファイルを「pdflatex」ではなく「pdftex」としておきます。
 </p>
 
 <!-- 
@@ -146,7 +146,7 @@ Here is a typical engine file for uo.fmt in that case:</p>
  -->
 
 <p>
-「TeX + Ghostscript」でタイプセットする場合でも、フォーマットを利用することはできます。TeXShop では、エンジンファイルに１つないしはそれ以上のコマンドライン指定が含まれており、最終的には pdf ファイルを生成するものと想定しています。そのためエンジンファイルには、dvi ファイルを pdf ファイルに変換するためのコマンドが含まれていなければなりません。こういった場合における「uo.fmt」用の典型的なエンジンファイルは以下のようなものです──
+「TeX + Ghostscript」でタイプセットする場合でも、フォーマットを利用することはできます。TeXShopでは、エンジンファイルに１つないしはそれ以上のコマンドライン指定が含まれており、最終的にはpdfファイルを生成するものと想定しています。そのためエンジンファイルには、dviファイルをpdfファイルに変換するためのコマンドが含まれていなければなりません。こういった場合における「uo.fmt」用の典型的なエンジンファイルは以下のようなものです──
 </p>
 
 	<tt>
@@ -173,7 +173,7 @@ machine and TeX installation that you do.<p>
  -->
 
 <p>
-フォーマットファイルには、ソースのタイプセットについて、内部におけるバイナリの再現性（リプリゼンテーション）が含まれています。この再現性はプロセッサと個々の TeX の実装に依存します。ですから他から提供されたフォーマットファイルが利用可能なことは滅多にありません──先方でも同じマシンを持っていて、そっくり同じように TeX をインストールしてあるのでない限りは。
+フォーマットファイルには、ソースのタイプセットについて、内部におけるバイナリの再現性（リプリゼンテーション）が含まれています。この再現性はプロセッサと個々のTeXの実装に依存します。ですから他から提供されたフォーマットファイルが利用可能なことは滅多にありません──先方でも同じマシンを持っていて、そっくり同じようにTeXをインストールしてあるのでない限りは。
 </p>
 
 <!-- 
@@ -185,7 +185,7 @@ format. Then type</p>
  -->
 
 <p>
-しかしながら、フォーマットを生成するために必要なソースを組織で配布することは、ごく普通に行なわれています。こうした場合には「initTeX」を使ってフォーマットを作成するように、と言われることでしょう。そこで、たとえばフォーマット用のソーステキストを「uo.tex」としてみましょう。フォーマットを作るには、Apple の Terminal.app を起動し、フォーマット用のソースがあるディレクトリへ移動します。そして次のようにタイプします──
+しかしながら、フォーマットを生成するために必要なソースを組織で配布することは、ごく普通に行なわれています。こうした場合には「initTeX」を使ってフォーマットを作成するように、と言われることでしょう。そこで、たとえばフォーマット用のソーステキストを「uo.tex」としてみましょう。フォーマットを作るには、AppleのTerminal.appを起動し、フォーマット用のソースがあるディレクトリへ移動します。そして次のようにタイプします──
 </p>
 
 	<tt>
@@ -247,7 +247,7 @@ the required "uo.fmt".</p>
 
 		<div id="menu_border">
 		<ul>
-			<li><a href="advanced_personaltetex.htm">スタイルとマクロを teTeX に追加する</a>
+			<li><a href="advanced_personaltetex.htm">スタイルとマクロをteTeXに追加する</a>
 			<li><a href="advanced_addengine.htm">追加のタイプセットエンジン</a>
 			<li><a href="advanced_removeaux.htm">作業ファイルを削除する</a>
 			<li><a href="advanced_externaleditor.htm">外部エディタを使用する</a>
@@ -258,17 +258,17 @@ the required "uo.fmt".</p>
 			<li><a href="advanced_bibtex.htm">BibTeX</a>
 			<li><a href="advanced_makeindex.htm">MakeIndex</a>
 			<li><a href="advanced_formats.htm">新規フォーマットの作成と利用</a>
-			<li><a href="advanced_otherfiles.htm">その他のファイルを TeXShop で開く</a>
+			<li><a href="advanced_otherfiles.htm">その他のファイルをTeXShopで開く</a>
 			<li><a href="advanced_mathematica.htm">Mathematica</a>
 			<li><a href="advanced_localization.htm">各国語版へのローカライズ</a>
 			<li><a href="advanced_syntaxcolor.htm">ソースのカラー表示</a>
-			<li><a href="advanced_shellescape.htm">Shell-Escape の保護</a>			
-			<li><a href="advanced_coloredtext.htm">TeX における文字の色指定</a>			
-			<li><a href="advanced_moretetex.htm">teTeX についてさらに</a>
-			<li><a href="advanced_fink.htm">Fink との共存</a>
-			<li><a href="advanced_otherdistributions.htm">他の TeX ディストリビューションとの共存</a>
-			<li><a href="advanced_context.htm">ConTeXt と MetaPost</a>
-			<li><a href="advanced_plist.htm">Plist ファイル</a>
+			<li><a href="advanced_shellescape.htm">Shell-Escapeの保護</a>			
+			<li><a href="advanced_coloredtext.htm">TeXにおける文字の色指定</a>			
+			<li><a href="advanced_moretetex.htm">teTeXについてさらに</a>
+			<li><a href="advanced_fink.htm">Finkとの共存</a>
+			<li><a href="advanced_otherdistributions.htm">他のTeXディストリビューションとの共存</a>
+			<li><a href="advanced_context.htm">ConTeXtとMetaPost</a>
+			<li><a href="advanced_plist.htm">Plistファイル</a>
 			<li><a href="advanced_menushortcuts.htm">メニュー項目のショートカットキーを再定義する</a>
 		</ul>
 	</div>

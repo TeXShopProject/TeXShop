@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1020.title" = "搜索命令";
 "1024.title" = "kpsewhich (默认: kpsewhich -progname=latex -format=tex)";
-"1027.title" = "BibTeX 引擎";
+"1027.title" = "BibTeX引擎";
 "1030.title" = "默认: bibtex";
 "1063.title" = "默认";
 "1068.title" = "默认";
@@ -14,8 +14,8 @@
 "54.title" = "pdfTeX";
 "878.title" = "LaTeX ";
 "880.title" = "TeX";
-"882.title" = "Shell Escape 警告";
-"887.title" = "保存 PostScript 文件";
+"882.title" = "Shell Escape警告";
+"887.title" = "保存PostScript文件";
 "889.title" = "(pdf)TeX (默认: /Library/TeX/texbin OR /usr/texbin)";
 "891.title" = "Distiller (ghostscript) (默认: /usr/local/bin)";
 "BYT-g3-3p0.title" = "替代路径 (默认: ~/bin/context/tex/texmf-osx-arm64/bin)";

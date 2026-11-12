@@ -4,7 +4,7 @@
 			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
 			<TITLE>日本語エンコーディングと &#x005C; &#x00A5; 文字の扱い</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="日本語環境のエンコード方式５種【 JIS ・ EUC ・ ShiftJIS ( &#x005C; ・ &#x00A5; ・  X0213 )】">
+			<META NAME="description" CONTENT="日本語環境のエンコード方式５種【JIS・EUC・ShiftJIS ( &#x005C; ・ &#x00A5; ・  X0213 )】">
 		<link href="../sty/screen.css" rel="stylesheet" media="all">
 
 </HEAD>
@@ -15,7 +15,7 @@
 
 
 <p>
-TeXShop は下の５種類の日本語エンコーディングに対応しています。これらは設定ウインドウの「書類 > エンコーディング」で設定できます。</p>
+TeXShopは下の５種類の日本語エンコーディングに対応しています。これらは設定ウインドウの「書類 > エンコーディング」で設定できます。</p>
 
 <p>
 <ul>
@@ -28,15 +28,15 @@ TeXShop は下の５種類の日本語エンコーディングに対応しています。これらは設定ウイン
 </p>
 
 <p>
-このうち「<font color="green">Japanese (ShiftJIS &#x00A5;)</font>」と「<font color="brown">Japanese (ShiftJIS X0213)</font>」では TeX 記号が &#x00A5; で表示されます。一方、他のエンコーディングでは、TeX 記号が &#x005C; で表示されます（「<font color="orange">Japanese (ShiftJIS &#x005C;)</font>」と「<font color="green">Japanese (ShiftJIS &#x00A5;)</font>」は TeX 記号の表示が違うだけです）。
+このうち「<font color="green">Japanese (ShiftJIS &#x00A5;)</font>」と「<font color="brown">Japanese (ShiftJIS X0213)</font>」ではTeX記号が &#x00A5; で表示されます。一方、他のエンコーディングでは、TeX記号が &#x005C; で表示されます（「<font color="orange">Japanese (ShiftJIS &#x005C;)</font>」と「<font color="green">Japanese (ShiftJIS &#x00A5;)</font>」はTeX記号の表示が違うだけです）。
 </p>
 
 <p>
-TeX 記号の &#x005C; を入力するとき、手元に &#x005C; キーがなければ 代わりに &#x00A5; キーを押して下さい。編集画面には &#x005C; が入力されるでしょう。逆に、TeX 記号が &#x00A5; と表示されていて、手元に &#x00A5; キーがないときは（ USキーボード） &#x005C; キーを押して下さい。つまり、&#x005C;・&#x00A5; のどちらのキーを押しても、そのときの TeX 記号に TeXShop が自動変換してくれます。また、他のアプリケーションからコピー＆ペーストした文字列に &#x005C; や &#x00A5; が含まれている場合も、適切な TeX 記号に変換されます。
+TeX記号の &#x005C; を入力するとき、手元に &#x005C; キーがなければ 代わりに &#x00A5; キーを押して下さい。編集画面には &#x005C; が入力されるでしょう。逆に、TeX記号が &#x00A5; と表示されていて、手元に &#x00A5; キーがないときは（USキーボード） &#x005C; キーを押して下さい。つまり、&#x005C;・&#x00A5; のどちらのキーを押しても、そのときのTeX記号にTeXShopが自動変換してくれます。また、他のアプリケーションからコピー＆ペーストした文字列に &#x005C; や &#x00A5; が含まれている場合も、適切なTeX記号に変換されます。
 </p>
 
 <p>
-また、TeXShop から他のアプリケーションにテキストをペーストする際に、&#x005C; や &#x00A5; を自動変換することもできます。「編集」メニューの一番下に次のオプション項目があって、クリップボード中の &#x005C; &#x00A5; 文字を調整することができます。お使いの環境にあわせて調整して下さい。</p>
+また、TeXShopから他のアプリケーションにテキストをペーストする際に、&#x005C; や &#x00A5; を自動変換することもできます。「編集」メニューの一番下に次のオプション項目があって、クリップボード中の &#x005C; &#x00A5; 文字を調整することができます。お使いの環境にあわせて調整して下さい。</p>
 
 <center>
 <table border>
@@ -59,7 +59,7 @@ TeX 記号の &#x005C; を入力するとき、手元に &#x005C; キーがなければ 代わりに &#x0
 </center>
 
 <p>
-こうした &#x005C; ⇔ &#x00A5; の自動変換機能は、宍倉光弘さんによって実装されました。なお、これらの機能は TeXShop で 日本語エンコーディング（上記５つ）を設定している場合にのみ動作します。
+こうした &#x005C; ⇔ &#x00A5; の自動変換機能は、宍倉光弘さんによって実装されました。なお、これらの機能はTeXShopで 日本語エンコーディング（上記５つ）を設定している場合にのみ動作します。
 </p>
 
 </div>
@@ -72,16 +72,16 @@ TeX 記号の &#x005C; を入力するとき、手元に &#x005C; キーがなければ 代わりに &#x0
 		<div id="menu_border">
 		<ul>
 			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeX とTeXShop で日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">teTeX の入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShop の入手とインストール</a>
+			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
+			<li><a href="basic_installtetex.htm">teTeXの入手とインストール</a>
+			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
 			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
 			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
 			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latex パネル</a>
+			<li><a href="basic_latexpanel.htm">Latexパネル</a>
 			<li><a href="basic_matrixpanel.htm">行列パネル</a>
 			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーと Applescript</a>
+			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
 			<li><a href="basic_graphics.htm">画像を入れる</a>
 			<li><a href="basic_printing.htm">印刷</a>
 			<li><a href="basic_preferences.htm">設定</a>

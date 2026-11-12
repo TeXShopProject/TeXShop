@@ -18,7 +18,7 @@
                 <menuItem title="TeXShop" id="609">
                     <menu key="submenu" title="TeXShop" systemMenu="apple" id="620">
                         <items>
-                            <menuItem title="TeXShop について..." id="614" identifier="TSShortcut.orderFrontStandardAboutPanel:.0">
+                            <menuItem title="TeXShopについて..." id="614" identifier="TSShortcut.orderFrontStandardAboutPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="625"/>
@@ -43,13 +43,13 @@
                                     <action selector="displayGPLLicense:" target="690" id="oWT-tY-hu2"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="~/Library/TeXShop を開く" id="rb4-xv-QFv" identifier="TSShortcut.GotoLibraryTeXShop:.0">
+                            <menuItem title="~/Library/TeXShopを開く" id="rb4-xv-QFv" identifier="TSShortcut.GotoLibraryTeXShop:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="GotoLibraryTeXShop:" target="-1" id="tpC-9k-Dcw"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop を既定の TeX エディタにする" id="YiR-xW-KIH" identifier="TSShortcut.makeDefaultEditor:.0">
+                            <menuItem title="TeXShopを既定のTeXエディタにする" id="YiR-xW-KIH" identifier="TSShortcut.makeDefaultEditor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="makeDefaultEditor:" target="-1" id="JNL-uS-WgK"/>
@@ -64,7 +64,7 @@
                             <menuItem isSeparatorItem="YES" id="615">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeXShop を非表示" keyEquivalent="h" id="608" identifier="TSShortcut.hide:.0">
+                            <menuItem title="TeXShopを非表示" keyEquivalent="h" id="608" identifier="TSShortcut.hide:.0">
                                 <connections>
                                     <action selector="hide:" target="-1" id="624"/>
                                 </connections>
@@ -84,7 +84,7 @@
                             <menuItem isSeparatorItem="YES" id="607">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeXShop を終了" keyEquivalent="q" id="610" identifier="TSShortcut.terminate:.0">
+                            <menuItem title="TeXShopを終了" keyEquivalent="q" id="610" identifier="TSShortcut.terminate:.0">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="622"/>
                                 </connections>
@@ -195,7 +195,7 @@
                             <menuItem isSeparatorItem="YES" id="234">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TIFF ファイルを変換" id="235" identifier="TSShortcut.convertTiff:.0">
+                            <menuItem title="TIFFファイルを変換" id="235" identifier="TSShortcut.convertTiff:.0">
                                 <connections>
                                     <action selector="convertTiff:" target="-1" id="1027"/>
                                 </connections>
@@ -544,9 +544,9 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Unicode 正規化" id="2Jg-4j-19w">
+                            <menuItem title="Unicode正規化" id="2Jg-4j-19w">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Unicode 正規化" id="EHu-Cy-fel">
+                                <menu key="submenu" title="Unicode正規化" id="EHu-Cy-fel">
                                     <items>
                                         <menuItem title="NFC" tag="1" id="FWC-X5-KkB" identifier="TSShortcut.normalizeSelectedString:.1">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -1341,7 +1341,7 @@
                             <menuItem isSeparatorItem="YES" id="441">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="LaTeX パネル..." keyEquivalent="-" id="435" identifier="TSShortcut.displayLatexPanel:.0">
+                            <menuItem title="LaTeXパネル..." keyEquivalent="-" id="435" identifier="TSShortcut.displayLatexPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="displayLatexPanel:" target="382" id="436"/>
@@ -1387,14 +1387,14 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="849"/>
-                            <menuItem title="TeXShop 入門（英語）" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
+                            <menuItem title="TeXShop入門（英語）" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
                                     <action selector="displayGettingStartedTeXShop:" target="690" id="694"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop デモ" id="683">
+                            <menuItem title="TeXShopデモ" id="683">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="TeXShop デモ" id="684"/>
+                                <menu key="submenu" title="TeXShopデモ" id="684"/>
                             </menuItem>
                             <menuItem title="TeXShopマニュアル（英語）" id="b5r-ty-w98" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1409,7 +1409,7 @@
                                     <action selector="displayHTMLHelp:" target="690" id="SF9-kB-uN1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop ヘルプパネル" keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
+                            <menuItem title="TeXShopヘルプパネル" keyEquivalent="?" id="138" identifier="TSShortcut.showHelp:.0">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
@@ -1420,13 +1420,13 @@
                                     <action selector="displayFileEncoding:" target="690" id="OaD-xa-cXF"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop のヒントと技巧（英語）" id="920" identifier="TSShortcut.displayTipsandTricks:.0">
+                            <menuItem title="TeXShopのヒントと技巧（英語）" id="920" identifier="TSShortcut.displayTipsandTricks:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="690" id="921"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop の様々な補完機能の解説（英語）" id="f2W-Pd-rBL" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                            <menuItem title="TeXShopの様々な補完機能の解説（英語）" id="f2W-Pd-rBL" identifier="TSShortcut.displayTeXShopConfusion:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXShopConfusion:" target="690" id="GlT-Bd-pji"/>
@@ -1438,13 +1438,13 @@
                                     <action selector="displayCommentLines:" target="690" id="j9N-BE-7YM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="近年の TeX フォントについて（英語）" id="Jg2-Kq-3vh" identifier="TSShortcut.displayRecentTeXFonts:.0">
+                            <menuItem title="近年のTeXフォントについて（英語）" id="Jg2-Kq-3vh" identifier="TSShortcut.displayRecentTeXFonts:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayRecentTeXFonts:" target="690" id="f48-XO-tUM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop の Applescript の解説（英語）" id="gbB-GG-p4L" identifier="TSShortcut.displayNotesonApplescript:.0">
+                            <menuItem title="TeXShopのApplescriptの解説（英語）" id="gbB-GG-p4L" identifier="TSShortcut.displayNotesonApplescript:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayNotesonApplescript:" target="690" id="0Dx-ic-g4e"/>
@@ -1466,7 +1466,7 @@
                                     <action selector="displayGettingStartedLatex:" target="690" id="757"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="George Grätzer によるショートコース（英語）" id="700" identifier="TSShortcut.displayShortCourse:.0">
+                            <menuItem title="George Grätzerによるショートコース（英語）" id="700" identifier="TSShortcut.displayShortCourse:.0">
                                 <connections>
                                     <action selector="displayShortCourse:" target="690" id="758"/>
                                 </connections>

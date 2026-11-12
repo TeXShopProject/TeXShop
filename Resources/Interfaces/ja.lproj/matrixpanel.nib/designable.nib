@@ -839,7 +839,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											<object class="NSButtonCell" key="NSCell" id="881441252">
 												<int key="NSCellFlags">604110336</int>
 												<int key="NSCellFlags2">262144</int>
-												<string key="NSContents">table 環境に埋め込む</string>
+												<string key="NSContents">table環境に埋め込む</string>
 												<reference key="NSSupport" ref="22"/>
 												<reference key="NSControlView" ref="528458114"/>
 												<int key="NSButtonFlags">1211912703</int>

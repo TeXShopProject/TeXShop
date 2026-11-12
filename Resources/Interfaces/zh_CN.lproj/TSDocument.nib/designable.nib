@@ -311,7 +311,7 @@
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="670">
                         <rect key="frame" x="363" y="398" width="142" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="删除 Aux 文件" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3827">
+                        <buttonCell key="cell" type="square" title="删除Aux文件" bezelStyle="shadowlessSquare" alignment="center" borderStyle="border" inset="2" id="3827">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -1473,7 +1473,7 @@ DQ
                         <action selector="changeMouseMode:" target="675" id="3698"/>
                     </connections>
                 </menuItem>
-                <menuItem title="选择 Pdf" tag="5" id="579">
+                <menuItem title="选择Pdf" tag="5" id="579">
                     <connections>
                         <action selector="changeMouseMode:" target="675" id="3699"/>
                     </connections>
@@ -2210,7 +2210,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dVT-xB-Oyg">
                         <rect key="frame" x="18" y="532" width="110" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="underfull 盒子" bezelStyle="regularSquare" imagePosition="left" inset="2" id="5lu-4j-6sz">
+                        <buttonCell key="cell" type="check" title="underfull盒子" bezelStyle="regularSquare" imagePosition="left" inset="2" id="5lu-4j-6sz">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2218,7 +2218,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eG4-vO-PXk">
                         <rect key="frame" x="18" y="512" width="100" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="overfull 盒子" bezelStyle="regularSquare" imagePosition="left" inset="2" id="roS-Aa-bLL">
+                        <buttonCell key="cell" type="check" title="overfull盒子" bezelStyle="regularSquare" imagePosition="left" inset="2" id="roS-Aa-bLL">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2266,7 +2266,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RBf-z8-pMg">
                         <rect key="frame" x="336" y="552" width="119" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title=" .tex 文件" bezelStyle="regularSquare" imagePosition="left" inset="2" id="x7O-hh-EQY">
+                        <buttonCell key="cell" type="check" title=" .tex文件" bezelStyle="regularSquare" imagePosition="left" inset="2" id="x7O-hh-EQY">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2274,7 +2274,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8LD-T8-Vwi">
                         <rect key="frame" x="336" y="532" width="159" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title=".sty 和 .cls 文件" bezelStyle="regularSquare" imagePosition="left" inset="2" id="fbJ-aF-GYK">
+                        <buttonCell key="cell" type="check" title=".sty和 .cls文件" bezelStyle="regularSquare" imagePosition="left" inset="2" id="fbJ-aF-GYK">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2678,7 +2678,7 @@ Gw
             </subviews>
             <point key="canvasLocation" x="269" y="-764"/>
         </customView>
-        <window title="HTML 窗口" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="HTML Window" animationBehavior="default" toolbarStyle="expanded" id="Twu-Es-Nm7" customClass="TSHTMLWindow">
+        <window title="HTML窗口" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="HTML Window" animationBehavior="default" toolbarStyle="expanded" id="Twu-Es-Nm7" customClass="TSHTMLWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="480" height="290"/>

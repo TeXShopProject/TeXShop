@@ -418,7 +418,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="203">
                         <rect key="frame" x="109" y="90" width="203" height="14"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="例：Main.tex あるいは ../Main.tex" id="3834">
+                        <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="center" title="例：Main.texあるいは ../Main.tex" id="3834">
                             <font key="font" metaFont="message" size="11"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2231,7 +2231,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jg7-4i-CBd">
                         <rect key="frame" x="18" y="540" width="136" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="underfull ボックス" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Mrq-oZ-mF9">
+                        <buttonCell key="cell" type="check" title="underfullボックス" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Mrq-oZ-mF9">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2239,7 +2239,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NV8-uU-NpZ">
                         <rect key="frame" x="18" y="520" width="126" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="overfull ボックス" bezelStyle="regularSquare" imagePosition="left" inset="2" id="H6l-hv-qSO">
+                        <buttonCell key="cell" type="check" title="overfullボックス" bezelStyle="regularSquare" imagePosition="left" inset="2" id="H6l-hv-qSO">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2247,7 +2247,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="19P-tE-rO1">
                         <rect key="frame" x="18" y="500" width="112" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="reference 警告" bezelStyle="regularSquare" imagePosition="left" inset="2" id="1aX-Lf-GFZ">
+                        <buttonCell key="cell" type="check" title="reference警告" bezelStyle="regularSquare" imagePosition="left" inset="2" id="1aX-Lf-GFZ">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2287,7 +2287,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f2E-7U-tl8">
                         <rect key="frame" x="336" y="560" width="141" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title=".tex ファイルの使用" bezelStyle="regularSquare" imagePosition="left" inset="2" id="fMF-B4-SX5">
+                        <buttonCell key="cell" type="check" title=".texファイルの使用" bezelStyle="regularSquare" imagePosition="left" inset="2" id="fMF-B4-SX5">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2295,7 +2295,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MPh-hb-AgE">
                         <rect key="frame" x="336" y="540" width="167" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title=".sty/.cls ファイルの使用" bezelStyle="regularSquare" imagePosition="left" inset="2" id="FtJ-mS-hqN">
+                        <buttonCell key="cell" type="check" title=".sty/.clsファイルの使用" bezelStyle="regularSquare" imagePosition="left" inset="2" id="FtJ-mS-hqN">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2699,7 +2699,7 @@ Gw
             </subviews>
             <point key="canvasLocation" x="140.5" y="1176"/>
         </customView>
-        <window title="HTML ウインドウ" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="HTML Window" animationBehavior="default" toolbarStyle="expanded" id="Maa-fJ-K9a" customClass="TSHTMLWindow">
+        <window title="HTMLウインドウ" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="HTML Window" animationBehavior="default" toolbarStyle="expanded" id="Maa-fJ-K9a" customClass="TSHTMLWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="480" height="270"/>

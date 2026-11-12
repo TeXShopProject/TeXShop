@@ -4,7 +4,7 @@
 			<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=Shift_JIS">
 			<TITLE>画像を入れる</TITLE>
 			<META NAME="copyright" CONTENT="Copyright (c) 2003 Richard Koch under the GNU FDL">
-			<META NAME="description" CONTENT="TeX 文書に画像を含めるための方法">
+			<META NAME="description" CONTENT="TeX文書に画像を含めるための方法">
 			<link href="../sty/screen.css" rel="stylesheet" media="all">
 </HEAD>
 
@@ -13,7 +13,7 @@
 <div id="content_border">
 
 <p>
-「TeX＋Ghostscript」モードで jpg ・ png および pdf 形式の画像を挿入するには、dvipdfmx を使用します。プリアンブルに次の１行を追加しておいてください。
+「TeX＋Ghostscript」モードでjpg・pngおよびpdf形式の画像を挿入するには、dvipdfmxを使用します。プリアンブルに次の１行を追加しておいてください。
 </p>
 
 	<dl>
@@ -21,11 +21,11 @@
 	</dl>
 
 <p>
-dvipdfmx を使用する際も、パッケージのオプション部分は [dvipdfm] としておくことに注意します。
+dvipdfmxを使用する際も、パッケージのオプション部分は [dvipdfm] としておくことに注意します。
 </p>
 
 <p>
-そのうえで画像を入れたい箇所に、たとえば次のように書きます。この例では filename.jpg というのが画像ファイルです（ png ・ pdf ファイルについても同様です）。
+そのうえで画像を入れたい箇所に、たとえば次のように書きます。この例ではfilename.jpgというのが画像ファイルです（png・pdfファイルについても同様です）。
 </p>
 
 	<dl>
@@ -33,7 +33,7 @@ dvipdfmx を使用する際も、パッケージのオプション部分は [dvipdfm] としておくことに
 	</dl>
 
 <p>
-width により紙面上の画像の横幅を３cmと指定してありますが、指定しない場合は不要です。640と480は画像ファイルの横と縦のピクセル数です。文字列「bb=0 0 640 480」は .bbファイル（ BoundingBoxファイル）から得られる情報です。filename.jpg に対する .bbファイルを取得するには、Terminal を起動し、画像ファイルのあるディレクトリに移動後、以下のコマンドを打ち込みます。
+widthにより紙面上の画像の横幅を３cmと指定してありますが、指定しない場合は不要です。640と480は画像ファイルの横と縦のピクセル数です。文字列「bb=0 0 640 480」は .bbファイル（BoundingBoxファイル）から得られる情報です。filename.jpgに対する .bbファイルを取得するには、Terminalを起動し、画像ファイルのあるディレクトリに移動後、以下のコマンドを打ち込みます。
 </p>
 
 	<dl>
@@ -41,7 +41,7 @@ width により紙面上の画像の横幅を３cmと指定してありますが、指定しない場合は不要で
 	</dl>
 
 <p>
-これで filename.bb が生成されます<small>（<tt> ebb: Command not found.</tt>となる場合は<tt>/usr/local/bin/ebb filename.jpg</tt> としてみてください）</small>。.bbファイルは短いテキストファイルです。たとえばこのような──
+これでfilename.bbが生成されます<small>（<tt> ebb: Command not found.</tt>となる場合は<tt>/usr/local/bin/ebb filename.jpg</tt> としてみてください）</small>。.bbファイルは短いテキストファイルです。たとえばこのような──
 </p>
 
 <tt>
@@ -54,7 +54,7 @@ width により紙面上の画像の横幅を３cmと指定してありますが、指定しない場合は不要で
 </tt>
 
 <p>
-BoundingBox の情報をここからコピーして使用することができます。この場合、filename.bb は不要になります。あるいは .bbファイルを保持したまま、コードを縮めることもできます。こんなふうに──
+BoundingBoxの情報をここからコピーして使用することができます。この場合、filename.bbは不要になります。あるいは .bbファイルを保持したまま、コードを縮めることもできます。こんなふうに──
 </p>
 
 	<dl>
@@ -76,11 +76,11 @@ BoundingBox の情報をここからコピーして使用することができます。この場合、filename
 <hr>
 
 <p>
-プログラム pdftex と pdflatex では、pdf ・ jpg ・ png ないしは mps 形式の画像ファイルを使用できます。デフォルトの LaTeX テンプレートを使っており、Gerben Wierda のディストリビューションから画像変換パッケージをインストールしているのであれば、eps あるいは tif 形式の画像ファイルも同じように使用できます ； タイプセット時にこれらは自動的に pdf または png 形式に変換されます。ひとつ変わっている点は、tiff ファイルは拡張子が「.tiff」ではなく「.tif」でなくてはならないことです。Mac OS X のネイティブなグラフィック・フォーマットは pdf （ portable document format ）なので、この形式のファイルならどんなサイズでも印刷がうまくゆきます。おそらくこの先、Mac のグラフィックス・プログラムのほとんどが pdf を出力するようになりそうです。
+プログラムpdftexとpdflatexでは、pdf・jpg・pngないしはmps形式の画像ファイルを使用できます。デフォルトのLaTeXテンプレートを使っており、Gerben Wierdaのディストリビューションから画像変換パッケージをインストールしているのであれば、epsあるいはtif形式の画像ファイルも同じように使用できます ； タイプセット時にこれらは自動的にpdfまたはpng形式に変換されます。ひとつ変わっている点は、tiffファイルは拡張子が「.tiff」ではなく「.tif」でなくてはならないことです。Mac OS Xのネイティブなグラフィック・フォーマットはpdf（portable document format）なので、この形式のファイルならどんなサイズでも印刷がうまくゆきます。おそらくこの先、Macのグラフィックス・プログラムのほとんどがpdfを出力するようになりそうです。
 </p>
 
 <p>
-過去に TeX を使ったことがある場合、イラストが eps 形式になっているかもしれません。この形式のファイルは、pdftex や pdflatex でタイプセットする前に、pdf 形式に変換されねばなりません。上で説明したように、デフォルトの LaTeX テンプレートを使っていれば、これは自動で行なわれます。TeXShop で開くことによってもまた、eps 形式のイラストを変換することができます。イラストがグラフィックウインドウに表示されるのと同時に、当該する pdf ファイルを TeXShop がディスクに書き込みます。Ghostscript にも変換用のコマンドライン・プログラムがあります ； 実際に TeXShop でもこのプログラムを呼び出します。myfile.eps を myfile.pdf に変換するには、Terminal で次のように打ち込みます──
+過去にTeXを使ったことがある場合、イラストがeps形式になっているかもしれません。この形式のファイルは、pdftexやpdflatexでタイプセットする前に、pdf形式に変換されねばなりません。上で説明したように、デフォルトのLaTeXテンプレートを使っていれば、これは自動で行なわれます。TeXShopで開くことによってもまた、eps形式のイラストを変換することができます。イラストがグラフィックウインドウに表示されるのと同時に、当該するpdfファイルをTeXShopがディスクに書き込みます。Ghostscriptにも変換用のコマンドライン・プログラムがあります ； 実際にTeXShopでもこのプログラムを呼び出します。myfile.epsをmyfile.pdfに変換するには、Terminalで次のように打ち込みます──
 </p>
 
 	<dl>
@@ -88,7 +88,7 @@ BoundingBox の情報をここからコピーして使用することができます。この場合、filename
 	</dl>
 
 <p>
-pdflatex の作者とグラフィックス・パッケージ graphicx の作者は、pdflatex でタイプセットする LaTeX 文書の中に画像ファイルを含めるのを容易にしました──たとえその書類が後に、標準的な LaTeX でタイプセットされ、他の人たちに配布するための dvi ファイルに書き出されるとしても、です。こうした LaTeX 入力ファイルの冒頭には、次の１行を含めておきます──
+pdflatexの作者とグラフィックス・パッケージgraphicxの作者は、pdflatexでタイプセットするLaTeX文書の中に画像ファイルを含めるのを容易にしました──たとえその書類が後に、標準的なLaTeXでタイプセットされ、他の人たちに配布するためのdviファイルに書き出されるとしても、です。こうしたLaTeX入力ファイルの冒頭には、次の１行を含めておきます──
 </p>
 
 	<dl>
@@ -104,17 +104,17 @@ pdflatex の作者とグラフィックス・パッケージ graphicx の作者は、pdflatex でタイプ
 	</dl>
 
 <p>
-このコマンドは TeX に対し、pdflatex でテキストをタイプセットするときには画像ファイル「f1.pdf」を入力させますが、LaTeX でタイプセットする際には画像ファイル「f1.eps」を入力させます。
+このコマンドはTeXに対し、pdflatexでテキストをタイプセットするときには画像ファイル「f1.pdf」を入力させますが、LaTeXでタイプセットする際には画像ファイル「f1.eps」を入力させます。
 </p>
 
 <p>
-もし以前のバージョンの TeXShop からアップグレードしており、タイプセット時に eps および tif ファイルの自動変換をお望みなら、次の点を確認してください──
+もし以前のバージョンのTeXShopからアップグレードしており、タイプセット時にepsおよびtifファイルの自動変換をお望みなら、次の点を確認してください──
 </p>
 
 	<ol>
-		<li type="a">Gerben Wierda のインストーラで Ghostscript 8 ・ Freetype 2 ・ wmf ・ iconv conversion support それから ImageMagick をインストールしてある。
-		<li type="a">pdflatex プログラムの設定が「pdflatex --shell-escape」になっている。
-		<li type="a">LaTeX ヘッダに以下の行が含まれている──
+		<li type="a">Gerben WierdaのインストーラでGhostscript 8・Freetype 2・wmf・iconv conversion supportそれからImageMagickをインストールしてある。
+		<li type="a">pdflatexプログラムの設定が「pdflatex --shell-escape」になっている。
+		<li type="a">LaTeXヘッダに以下の行が含まれている──
 	</ol>
 
 <tt>
@@ -135,16 +135,16 @@ pdflatex の作者とグラフィックス・パッケージ graphicx の作者は、pdflatex でタイプ
 		<div id="menu_border">
 		<ul>
 			<li><a href="basic_preliminaries.htm">まえがき</a>
-			<li><a href="basic_j_ptex.htm">pTeX とTeXShop で日本語環境を構築する</a>
-			<li><a href="basic_installtetex.htm">teTeX の入手とインストール</a>
-			<li><a href="basic_installtexshop.htm">TeXShop の入手とインストール</a>
+			<li><a href="basic_j_ptex.htm">pTeXとTeXShopで日本語環境を構築する</a>
+			<li><a href="basic_installtetex.htm">teTeXの入手とインストール</a>
+			<li><a href="basic_installtexshop.htm">TeXShopの入手とインストール</a>
 			<li><a href="basic_typesetting.htm">ドキュメントをタイプセットする</a>
 			<li><a href="basic_alternatetypeset.htm">もうひとつのタイプセット方式</a>	
 			<li><a href="basic_spelling.htm">スペルをチェックする</a>
-			<li><a href="basic_latexpanel.htm">Latex パネル</a>
+			<li><a href="basic_latexpanel.htm">Latexパネル</a>
 			<li><a href="basic_matrixpanel.htm">行列パネル</a>
 			<li><a href="basic_macros.htm">マクロ</a>
-			<li><a href="basic_toolbar.htm">ツールバーと Applescript</a>
+			<li><a href="basic_toolbar.htm">ツールバーとApplescript</a>
 			<li><a href="basic_graphics.htm">画像を入れる</a>
 			<li><a href="basic_printing.htm">印刷</a>
 			<li><a href="basic_preferences.htm">設定</a>
