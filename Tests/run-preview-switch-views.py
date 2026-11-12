@@ -29,6 +29,7 @@ MUTATIONS = {
     'page-count-cached': ('view', '\tNSInteger pageCount = (NSInteger)[[self document] pageCount];\n', '\tNSInteger pageCount = totalPages;\n'),
     'page-field-not-followed': ('view', '\tif (activePage)\n\t\t[self displayPageChange:', '\tif (NO)\n\t\t[self displayPageChange:'),
     'single-field-not-shared': ('view', '        scurrentPage = first->scurrentPage;\n', '        ;\n'),
+    'second-not-observed': ('window', '        [(MyPDFKitView *)self.myPDFKitView2 notificationSetup];\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -56,7 +57,9 @@ view_methods = [last_method(view_source, s) for s in (
     '- (BOOL)becomeFirstResponder\n', '- (void)becomeActiveView\n',
     # The toolbar's page number field and the views' setup when the nib is loaded and the PDF is opened (#14).
     '- (void)awakeFromNib\n', '- (void) showForSecond;', '- (void) displayPageChange:', '- (void) goToKitPageNumber:',
-    '- (NSInteger) getModifiedValue:', '- (void) goToKitPage: (id)sender')]
+    '- (NSInteger) getModifiedValue:', '- (void) goToKitPage: (id)sender',
+    # The page number field follows the page of the active part through these notifications.
+    '- (void) notificationSetup;', '- (void) pageChanged:', '- (void) makePageChanges:')]
 fragments = [('complete method: ' + text.split('\n')[0], source, text)
              for source, texts in ((window_source, window_methods), (view_source, view_methods)) for text in texts]
 window_text = '\n'.join(window_methods)
@@ -86,6 +89,10 @@ enum { MOUSE_MODE_MAG_GLASS = 2 };
 #define SUD NSUserDefaults.standardUserDefaults
 #define PdfMouseModeKey @"PdfMouseMode"
 #define PdfKitMouseModeKey @"PdfKitMouseMode"
+static NSString *MagnificationChangedNotification = @"TestMagnificationChanged";
+static NSString *PreviewColorChangedNotification = @"TestPreviewColorChanged";
+// Whether the document was opened with its PDF: only then the second view runs showForSecond.
+static BOOL openedWithPDF = YES;
 #define PDF_MAX_SCALE 2000
 static NSUInteger checks;
 static void check(BOOL ok, NSString *message) {
@@ -138,8 +145,10 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
     NSInteger totalPages, currentMouseMode;
     NSMatrix *mouseModeMatrix;
     NSMenu *mouseModeMenu;
+    NSOutlineView *_outlineView;
 }
 @property NSArray *sourceFiles;
+@property PDFOutline *outline;
 @property (weak) TestWindow *myPDFWindow;
 @property (weak) TestDocument *myDocument;
 @property BOOL locationSaved, verticalSplitSaved, horizontalSplitSaved;
@@ -169,11 +178,13 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
     currentPage0 = field; scurrentPage = single;
 }
 - (NSString *)romanStringValue:(NSInteger)n { return @"i"; }
-- (void)notificationSetup {}
+- (void)previewZoomBoundsChanged:(NSNotification *)notification {}
+- (void)previewLiveMagnify:(NSNotification *)notification {}
+- (void)changeMagnification:(NSNotification *)notification {}
+- (void)previewBackgroundChange:(NSNotification *)notification {}
 - (void)initializeDisplay {}
 // As in MyPDFKitView, cleaning up the marquee closes a popup that is not kept.
 - (void)cleanupMarquee:(BOOL)terminate { [self doKillPopup]; }
-- (void)pageChanged:(NSNotification *)notification {}
 - (void)setupPageStyle {
     PDFDisplayMode modes[] = {kPDFDisplaySinglePageContinuous, kPDFDisplaySinglePage, kPDFDisplayTwoUp,
                               kPDFDisplaySinglePageContinuous, kPDFDisplayTwoUpContinuous};
@@ -275,7 +286,7 @@ static Preview makePreview(PDFDocument *doc, BOOL sideBySide) {
     [a awakeFromNib]; [b awakeFromNib];
     // Opening the PDF: the second view counts the pages before it has the PDF.
     a.document = doc; [a setupPageStyle]; [a setupMagnificationStyle];
-    [b showForSecond];
+    if (openedWithPDF) [b showForSecond];
     settle(w);
     flags = sideBySide ? NSEventModifierFlagOption : 0; [w splitPdfKitWindow:nil]; flags = 0;
     settle(w);
@@ -494,6 +505,29 @@ int main(int argc, char **argv) { @autoreleasepool {
         [p.window splitPdfKitWindow:nil]; settle(p.window);
         enterPage(p, p.pageField, @"2");
         check(!p.window.windowIsSplit && pageOf(p.upper) == 2, describe(name, @"the unsplit window goes to the page typed"));
+        [p.window close];
+    }
+    for (NSNumber *withPDF in @[@YES, @NO]) {
+        // The page number field follows the active second part when it scrolls, also when the
+        // document was opened without a PDF and typeset before the window was split, and with
+        // page numbers corrected for front matter (#14).
+        NSString *name = withPDF.boolValue ? @"follow, opened with the PDF" : @"follow, typeset after opening";
+        openedWithPDF = withPDF.boolValue;
+        Preview p = makePreview(doc, NO);
+        openedWithPDF = YES;
+        p.document.numberingCorrection = 2;
+        scrollTo(p.lower, 4, 600); settle(p.window);
+        [p.window makeFirstResponder:p.lower]; settle(p.window);
+        check(p.pageField.integerValue == 3 && p.singlePageField.integerValue == 3,
+              describe(name, [NSString stringWithFormat:@"the field shows the corrected page of the second part (%ld)", (long)p.pageField.integerValue]));
+        scrollTo(p.lower, 6, 600); settle(p.window);
+        check(pageOf(p.lower) == 7 && p.pageField.integerValue == 5 && p.singlePageField.integerValue == 5,
+              describe(name, [NSString stringWithFormat:@"the field follows the second part as it scrolls (%ld)", (long)p.pageField.integerValue]));
+        enterPage(p, p.pageField, @"4");
+        check(pageOf(p.lower) == 6 && p.pageField.integerValue == 4,
+              describe(name, [NSString stringWithFormat:@"a corrected page number moves the second part (page %ld, field %ld)", (long)pageOf(p.lower), (long)p.pageField.integerValue]));
+        scrollTo(p.upper, 2, 600); settle(p.window);
+        check(p.pageField.integerValue == 4, describe(name, @"scrolling the inactive first part leaves the field"));
         [p.window close];
     }
     printf("PASS: %lu checks\n", (unsigned long)checks);

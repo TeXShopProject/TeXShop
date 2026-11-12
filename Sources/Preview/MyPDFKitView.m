@@ -380,6 +380,13 @@
 
 - (void) notificationSetup;
 {
+    // This runs again for each PDF the first view shows and when the window is split;
+    // observe each notification once (#14).
+    for (NSNotificationName name in @[PDFViewPageChangedNotification, PDFViewScaleChangedNotification,
+                                      NSViewBoundsDidChangeNotification, NSScrollViewWillStartLiveMagnifyNotification,
+                                      NSScrollViewDidEndLiveMagnifyNotification, MagnificationChangedNotification,
+                                      PreviewColorChangedNotification])
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:name object:nil];
     // [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(documentChanged:)
     //                                            name: PDFViewDocumentChangedNotification object: self];
     
