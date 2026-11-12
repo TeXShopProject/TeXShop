@@ -141,9 +141,59 @@ static inline CGFloat TSLinkPreviewClamp(CGFloat value, CGFloat lower, CGFloat u
     return MIN(MAX(value, lower), upper);
 }
 
+// The lowest crop, in page points, of a popup whose destination is at the bottom of its page.
+static const CGFloat TSLinkPreviewMinimumCrop = 40;
+// The gap between a page and the next one below it in a popup, in page points, as between
+// the pages of the continuous displays.
+static const CGFloat TSLinkPreviewPageGap = 6;
+
+// In the continuous displays a popup goes on with the next page, as the display does: the
+// linked page lies above the next one in a strip, each centered horizontally. Returns the
+// strip's size and the rectangle of each page in it (#14).
+static inline NSSize TSLinkPreviewStrip(NSSize first, NSSize second, NSRect *firstRect, NSRect *secondRect)
+{
+    CGFloat width = MAX(first.width, second.width);
+    *secondRect = NSMakeRect(round((width - second.width) / 2), 0, second.width, second.height);
+    *firstRect = NSMakeRect(round((width - first.width) / 2), second.height + TSLinkPreviewPageGap,
+                            first.width, first.height);
+    return NSMakeSize(width, NSMaxY(*firstRect));
+}
+
+// The pages drawn at their rectangles in an image of `size`, on the gray of the gap.
+static inline NSImage *TSLinkPreviewStripImage(NSArray<PDFPage *> *pages, const NSRect *rects, NSSize size)
+{
+    NSUInteger count = pages.count;
+    NSMutableArray<NSValue *> *places = [NSMutableArray array];
+    for (NSUInteger i = 0; i < count; i++) [places addObject:[NSValue valueWithRect:rects[i]]];
+    return [NSImage imageWithSize:size flipped:NO drawingHandler:^BOOL(NSRect destination) {
+        CGContextRef context = NSGraphicsContext.currentContext.CGContext;
+        if (!context) return NO;
+        CGContextSetGrayFillColor(context, 0.6, 1);
+        CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
+        for (NSUInteger i = 0; i < count; i++) {
+            CGPDFPageRef reference = pages[i].pageRef;
+            CGRect rect = NSRectToCGRect(places[i].rectValue);
+            if (!reference) continue;
+            CGContextSaveGState(context);
+            CGContextSetGrayFillColor(context, 1, 1);
+            CGContextFillRect(context, rect);
+            CGContextClipToRect(context, rect);
+            CGContextConcatCTM(context, CGPDFPageGetDrawingTransform(reference, kCGPDFCropBox, rect, 0, true));
+            CGContextDrawPDFPage(context, reference);
+            CGContextRestoreGState(context);
+        }
+        return YES;
+    }];
+}
+
+// The popup appears below the cursor, or above it when `above` (Shift) is set. When it does not
+// fit there, it moves to the other side and shrinks to fit the visible area, unless `keepSide`
+// is set: then it stays on its side, even partly outside the visible area, and only moves
+// sideways, so it never covers the text around the link (#14).
 static inline BOOL TSLinkPreviewRects(NSSize pageSize, NSPoint destination, NSRect textBounds,
                                       NSRect visible, NSPoint cursor, BOOL enlarged,
-                                      BOOL above, BOOL flipped, NSRect *source, NSRect *output)
+                                      BOOL above, BOOL flipped, BOOL keepSide,
+                                      NSRect *source, NSRect *output)
 {
     if (!isfinite(pageSize.width) || !isfinite(pageSize.height) ||
         pageSize.width <= 0 || pageSize.height <= 0 ||
@@ -184,7 +234,11 @@ static inline BOOL TSLinkPreviewRects(NSSize pageSize, NSPoint destination, NSRe
         width = MIN(pageSize.width, nominal);
         x = TSLinkPreviewClamp(anchorX - padding, 0, pageSize.width - width);
     }
-    CGFloat y = TSLinkPreviewClamp(destination.y - height + 10, 0, pageSize.height - height);
+    // The popup starts just above the destination and shows what follows it. Near the bottom
+    // of the page it becomes lower instead of filling up with what comes before (#14).
+    CGFloat top = TSLinkPreviewClamp(destination.y + 10, MIN(height, TSLinkPreviewMinimumCrop), pageSize.height);
+    CGFloat y = MAX(top - height, 0);
+    height = top - y;
 
     // Shrink only for lack of room, continuously, down to a readable floor; beyond that,
     // narrow the crop from the right, sliding it only to keep the destination visible.
@@ -192,7 +246,7 @@ static inline BOOL TSLinkPreviewRects(NSSize pageSize, NSPoint destination, NSRe
     CGFloat desiredScale = enlarged ? 1 : 2.0 / 3.0;
     CGFloat floorScale = enlarged ? 0.75 : 0.5;
     CGFloat scale = MAX(floorScale, MIN(desiredScale, available.size.width / width));
-    scale = MIN(scale, available.size.height / height);
+    if (!keepSide) scale = MIN(scale, available.size.height / height);
     CGFloat shown = MIN(width, available.size.width / scale);
     if (shown < width) {
         x = TSLinkPreviewClamp(MAX(x, anchorX + padding - shown), 0, pageSize.width - shown);
@@ -205,14 +259,16 @@ static inline BOOL TSLinkPreviewRects(NSSize pageSize, NSPoint destination, NSRe
     x = cursor.x + (enlarged ? -5 : 10);
     BOOL positiveY = above != flipped;
     y = positiveY ? cursor.y + 10 : cursor.y - height - 10;
-    if (y < NSMinY(available) || y + height > NSMaxY(available)) {
-        CGFloat alternative = positiveY ? cursor.y - height - 10 : cursor.y + 10;
-        if (alternative >= NSMinY(available) && alternative + height <= NSMaxY(available))
-            y = alternative;
+    if (!keepSide) {
+        if (y < NSMinY(available) || y + height > NSMaxY(available)) {
+            CGFloat alternative = positiveY ? cursor.y - height - 10 : cursor.y + 10;
+            if (alternative >= NSMinY(available) && alternative + height <= NSMaxY(available))
+                y = alternative;
+        }
+        y = TSLinkPreviewClamp(y, NSMinY(available), NSMaxY(available) - height);
     }
     *output = NSMakeRect(TSLinkPreviewClamp(x, NSMinX(available), NSMaxX(available) - width),
-                        TSLinkPreviewClamp(y, NSMinY(available), NSMaxY(available) - height),
-                        width, height);
+                        y, width, height);
     return YES;
 }
 

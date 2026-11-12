@@ -16,6 +16,8 @@ static const CGFloat TSLinkPreviewLineSlack = 2;
 // The page label in the lower right corner: white bold text on a gray capsule.
 static const CGFloat TSLinkPreviewLabelFontSize = 11;
 static const CGFloat TSLinkPreviewLabelMargin = 3;
+// A popup shows its linked page and, in the continuous displays, the next one (#14).
+#define TSLinkPreviewMaximumPages 2
 
 typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     TSLinkPreviewDragNone,
@@ -28,11 +30,16 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
 {
     NSImage *_image;
     NSSize _pageSize;
-    PDFPage *_page;
-    CGAffineTransform _transform;
+    // The pages in the image, from top to bottom, with their rectangles in the image and
+    // the transforms from page space to the image.
+    PDFPage *_pages[TSLinkPreviewMaximumPages];
+    NSRect _pageRects[TSLinkPreviewMaximumPages];
+    CGAffineTransform _transforms[TSLinkPreviewMaximumPages];
+    NSUInteger _pageCount;
     TSLinkPreviewDrag _drag;
     TSLinkPreviewEdge _dragEdges;
     NSPoint _dragStart, _selectionStart;
+    PDFPage *_selectionStartPage;
     NSRect _startFrame, _startSource;
 }
 
@@ -40,12 +47,32 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
                      pageSize:(NSSize)pageSize page:(PDFPage *)page
                     transform:(CGAffineTransform)transform
 {
+    if ((self = [self initWithFrame:frame image:image source:source pageSize:pageSize pages:@[] pageRects:NULL]) && page) {
+        _pages[0] = page;
+        _pageRects[0] = NSMakeRect(0, 0, pageSize.width, pageSize.height);
+        _transforms[0] = transform;
+        _pageCount = 1;
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(NSRect)frame image:(NSImage *)image source:(NSRect)source
+                     pageSize:(NSSize)pageSize pages:(NSArray<PDFPage *> *)pages
+                    pageRects:(const NSRect *)pageRects
+{
     if ((self = [super initWithFrame:frame])) {
         _image = image;
         _source = source;
         _pageSize = pageSize;
-        _page = page;
-        _transform = transform;
+        for (PDFPage *page in pages) {
+            if (_pageCount == TSLinkPreviewMaximumPages || !page.pageRef) break;
+            NSRect rect = pageRects[_pageCount];
+            CGPDFPageRef reference = page.pageRef;
+            _pages[_pageCount] = page;
+            _pageRects[_pageCount] = rect;
+            _transforms[_pageCount] = CGPDFPageGetDrawingTransform(reference, kCGPDFCropBox, NSRectToCGRect(rect), 0, true);
+            _pageCount++;
+        }
         // The image draws its whole page; only the part inside the popup may be seen (#21).
         self.clipsToBounds = YES;
         // The preview sees the pointer move only while it is over the preview, so the popup
@@ -79,18 +106,19 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     NSRectFill(bounds);
     [_image drawInRect:bounds fromRect:_source operation:NSCompositingOperationSourceOver fraction:1.0
         respectFlipped:YES hints:nil];
-    if (_selection && _page) {
+    if (_selection && _pageCount) {
         // The page is always drawn light, so use the light selection color.
         [[NSAppearance appearanceNamed:NSAppearanceNameAqua] performAsCurrentDrawingAppearance:^{
             [[NSColor selectedTextBackgroundColor] set];
         }];
-        for (PDFSelection *line in _selection.selectionsByLine) {
-            NSRect pageRect = [line boundsForPage:_page];
-            if (NSIsEmptyRect(pageRect)) continue;
-            NSRect imageRect = NSRectFromCGRect(CGRectApplyAffineTransform(NSRectToCGRect(pageRect), _transform));
-            NSRectFillUsingOperation(NSIntersectionRect(bounds, [self viewRectForImageRect:imageRect]),
-                                     NSCompositingOperationMultiply);
-        }
+        for (PDFSelection *line in _selection.selectionsByLine)
+            for (NSUInteger i = 0; i < _pageCount; i++) {
+                NSRect pageRect = [line boundsForPage:_pages[i]];
+                if (NSIsEmptyRect(pageRect)) continue;
+                NSRect imageRect = NSRectFromCGRect(CGRectApplyAffineTransform(NSRectToCGRect(pageRect), _transforms[i]));
+                NSRectFillUsingOperation(NSIntersectionRect(bounds, [self viewRectForImageRect:imageRect]),
+                                         NSCompositingOperationMultiply);
+            }
     }
     [self drawPageLabelInRect:bounds];
     [[NSColor blackColor] set];
@@ -163,30 +191,61 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
                                self.superview.isFlipped);
 }
 
-// The page point under a point in the superview's coordinates.
-- (NSPoint)pagePointAtPoint:(NSPoint)point
+// The page under a point in the superview's coordinates, and the point on that page: the
+// page whose rectangle in the image is nearest, so a point in the gap between two pages
+// belongs to one of them.
+- (PDFPage *)pageAtPoint:(NSPoint)point pagePoint:(NSPoint *)pagePoint
 {
+    *pagePoint = NSZeroPoint;
+    if (!_pageCount) return nil;
     NSPoint local = [self convertPoint:point fromView:self.superview];
     NSRect bounds = self.bounds;
     CGFloat sx = NSWidth(bounds) > 0 ? NSWidth(_source) / NSWidth(bounds) : 1;
     CGFloat sy = NSHeight(bounds) > 0 ? NSHeight(_source) / NSHeight(bounds) : 1;
     CGPoint image = CGPointMake(NSMinX(_source) + (local.x - NSMinX(bounds)) * sx,
                                 NSMinY(_source) + (local.y - NSMinY(bounds)) * sy);
-    return NSPointFromCGPoint(CGPointApplyAffineTransform(image, CGAffineTransformInvert(_transform)));
+    NSUInteger nearest = 0;
+    CGFloat distance = CGFLOAT_MAX;
+    for (NSUInteger i = 0; i < _pageCount; i++) {
+        CGFloat d = MAX(MAX(NSMinY(_pageRects[i]) - image.y, image.y - NSMaxY(_pageRects[i])), 0);
+        if (d < distance) { distance = d; nearest = i; }
+    }
+    *pagePoint = NSPointFromCGPoint(CGPointApplyAffineTransform(image, CGAffineTransformInvert(_transforms[nearest])));
+    return _pages[nearest];
 }
 
 - (BOOL)selectsText
 {
-    return _page && !(self.usesHandTool && self.usesHandTool());
+    return _pageCount && !(self.usesHandTool && self.usesHandTool());
 }
 
-- (BOOL)isTextAtPagePoint:(NSPoint)point
+- (BOOL)isTextOnPage:(PDFPage *)page atPoint:(NSPoint)point
 {
-    if (!_page) return NO;
-    PDFSelection *line = [_page selectionForLineAtPoint:point];
+    if (!page) return NO;
+    PDFSelection *line = [page selectionForLineAtPoint:point];
     if (!line.string.length) return NO;
-    NSRect bounds = NSInsetRect([line boundsForPage:_page], -TSLinkPreviewLineSlack, -TSLinkPreviewLineSlack);
+    NSRect bounds = NSInsetRect([line boundsForPage:page], -TSLinkPreviewLineSlack, -TSLinkPreviewLineSlack);
     return NSPointInRect(point, bounds);
+}
+
+- (BOOL)isTextAtPoint:(NSPoint)point
+{
+    NSPoint pagePoint;
+    PDFPage *page = [self pageAtPoint:point pagePoint:&pagePoint];
+    return [self isTextOnPage:page atPoint:pagePoint];
+}
+
+// The text from where the drag started to `page` and `point`, also across the two pages.
+- (PDFSelection *)selectionToPage:(PDFPage *)page point:(NSPoint)point
+{
+    PDFPage *start = _selectionStartPage;
+    if (!start || !page) return nil;
+    if (page == start) return [page selectionFromPoint:_selectionStart toPoint:point];
+    PDFDocument *document = start.document;
+    if (!document || document != page.document) return nil;
+    if ([document indexForPage:page] < [document indexForPage:start])
+        return [document selectionFromPage:page atPoint:point toPage:start atPoint:_selectionStart];
+    return [document selectionFromPage:start atPoint:_selectionStart toPage:page atPoint:point];
 }
 
 - (NSCursor *)cursorForEdges:(TSLinkPreviewEdge)edges
@@ -214,7 +273,7 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // lie under the toolbar (#14).
     if (!NSPointInRect(point, self.frame) || !NSPointInRect(point, self.superview.visibleRect)) return nil;
     TSLinkPreviewEdge edges = [self edgesAtPoint:point];
-    if (edges == TSLinkPreviewEdgeNone && [self selectsText] && [self isTextAtPagePoint:[self pagePointAtPoint:point]])
+    if (edges == TSLinkPreviewEdgeNone && [self selectsText] && [self isTextAtPoint:point])
         return NSCursor.IBeamCursor;
     return [self cursorForEdges:edges];
 }
@@ -264,14 +323,16 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     _dragStart = point;
     _startFrame = self.frame;
     _startSource = _source;
-    NSPoint pagePoint = [self pagePointAtPoint:point];
+    NSPoint pagePoint;
+    PDFPage *page = [self pageAtPoint:point pagePoint:&pagePoint];
     if (_dragEdges != TSLinkPreviewEdgeNone) {
         _drag = TSLinkPreviewDragResize;
-    } else if ([self selectsText] && [self isTextAtPagePoint:pagePoint]) {
+    } else if ([self selectsText] && [self isTextOnPage:page atPoint:pagePoint]) {
         _drag = TSLinkPreviewDragSelect;
         _selectionStart = pagePoint;
-        if (event.clickCount == 2) self.selection = [_page selectionForWordAtPoint:pagePoint];
-        else if (event.clickCount >= 3) self.selection = [_page selectionForLineAtPoint:pagePoint];
+        _selectionStartPage = page;
+        if (event.clickCount == 2) self.selection = [page selectionForWordAtPoint:pagePoint];
+        else if (event.clickCount >= 3) self.selection = [page selectionForLineAtPoint:pagePoint];
         else self.selection = nil;
     } else {
         _drag = TSLinkPreviewDragMove;
@@ -284,7 +345,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     if (_drag == TSLinkPreviewDragNone) return;
     NSPoint point = [self locationOfEvent:event];
     if (_drag == TSLinkPreviewDragSelect) {
-        self.selection = [_page selectionFromPoint:_selectionStart toPoint:[self pagePointAtPoint:point]];
+        NSPoint pagePoint;
+        PDFPage *page = [self pageAtPoint:point pagePoint:&pagePoint];
+        self.selection = [self selectionToPage:page point:pagePoint];
         return;
     }
     NSSize delta = NSMakeSize(point.x - _dragStart.x, point.y - _dragStart.y);

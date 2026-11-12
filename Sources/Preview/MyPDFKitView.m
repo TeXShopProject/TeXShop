@@ -4548,13 +4548,41 @@ if (!self.skipLinks && !self.globalLongTerm)
             if (!TSLinkPreviewHasHorizontalDestination([theDestination point], pageTransform) &&
                 !NSIsEmptyRect(textBounds))
                 linkedPoint.x = NSMinX(textBounds);
-            if (!TSLinkPreviewRects(imageSize, linkedPoint, textBounds, documentView.visibleRect,
+            // In the continuous displays the popup stays below the link, or above it with Shift,
+            // even where part of it falls outside the window, so that it does not cover the text
+            // around the link (#14).
+            PDFDisplayMode displayMode = self.displayMode;
+            BOOL keepSide = displayMode == kPDFDisplaySinglePageContinuous ||
+                            displayMode == kPDFDisplayTwoUpContinuous;
+            // There the popup also goes on with the next page below the linked one, as the
+            // display does, so that a statement broken by a page break can be read on (#14).
+            PDFDocument *linkedDocument = linkedPage.document;
+            NSUInteger linkedIndex = linkedDocument ? [linkedDocument indexForPage:linkedPage] : NSNotFound;
+            PDFPage *nextPage = nil;
+            NSSize nextSize;
+            CGAffineTransform nextTransform;
+            if (keepSide && linkedIndex != NSNotFound && linkedIndex + 1 < linkedDocument.pageCount) {
+                nextPage = [linkedDocument pageAtIndex:linkedIndex + 1];
+                if (!TSLinkPreviewPageGeometry(nextPage, &nextSize, &nextTransform)) nextPage = nil;
+            }
+            NSSize previewSize = imageSize;
+            NSRect pageRects[2] = {NSMakeRect(0, 0, imageSize.width, imageSize.height), NSZeroRect};
+            if (nextPage) {
+                previewSize = TSLinkPreviewStrip(imageSize, nextSize, &pageRects[0], &pageRects[1]);
+                linkedPoint.x += NSMinX(pageRects[0]);
+                linkedPoint.y += NSMinY(pageRects[0]);
+                if (!NSIsEmptyRect(textBounds))
+                    textBounds = NSOffsetRect(textBounds, NSMinX(pageRects[0]), NSMinY(pageRects[0]));
+            }
+            if (!TSLinkPreviewRects(previewSize, linkedPoint, textBounds, documentView.visibleRect,
                                     mouseLocDocumentView, largerSize, pushUp, documentView.isFlipped,
-                                    &aRect, &bRect)) {
+                                    keepSide, &aRect, &bRect)) {
                 self.handlingLink = 0;
                 return;
             }
-            NSImage *myImageNew = TSLinkPreviewImage(linkedPage, imageSize);
+            NSArray<PDFPage *> *previewPages = nextPage ? @[linkedPage, nextPage] : @[linkedPage];
+            NSImage *myImageNew = nextPage ? TSLinkPreviewStripImage(previewPages, pageRects, previewSize)
+                                           : TSLinkPreviewImage(linkedPage, imageSize);
             if (!myImageNew) { self.handlingLink = 0; return; }
             if (self.overView) {
                 [self.overView removeFromSuperview];
@@ -4562,8 +4590,8 @@ if (!self.skipLinks && !self.globalLongTerm)
             }
             [linkPreview removeFromSuperview];
             linkPreview = [[TSLinkPreviewView alloc] initWithFrame:bRect image:myImageNew source:aRect
-                                                          pageSize:imageSize page:linkedPage
-                                                         transform:pageTransform];
+                                                          pageSize:previewSize pages:previewPages
+                                                         pageRects:pageRects];
             if (linkedPage.label.length)
                 linkPreview.pageLabel = [NSString stringWithFormat:NSLocalizedString(@"Page %@",
                     @"Page label in the corner of a link popup; %@ is the page label given in the PDF"), linkedPage.label];
