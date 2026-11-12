@@ -51,7 +51,7 @@ Files without an encoding magic comment are now checked for their encoding when 
 
 Settings now exposes several formerly hidden options: autosave and Versions, backup files when autosave is off, and the encoding menu in the Save dialog (Misc1); syntax coloring of command names containing @ and of expl3 code (Editor); and showing a cover page alone in two-page PDF layouts (Preview).
 
-The PDF preview can follow updates made by other applications when Automatic Preview Update is enabled. Unsaved PDF annotations are protected. The new Page Layout and Two-Page Arrangement toolbar menus affect the current document; choose Restore Document Settings to return to its settings and magic comments.
+When another application such as latexmk rewrites the PDF, the preview is reloaded on returning to TeXShop or to the preview, also for sources edited in TeXShop's own editor. Automatic Preview Update is now called Always Watch for PDF Changes by Other Apps in Preview settings; it reloads the preview also while TeXShop is in the background. Unsaved PDF annotations are protected. The new Page Layout and Two-Page Arrangement toolbar menus affect the current document; choose Restore Document Settings to return to its settings and magic comments.
 
 Settings, Misc2 offers five Dock icons. A selected historical icon is used only while TeXShop is running. Quitting restores the standard Dock icon, and the Finder icon does not change.
 

@@ -224,8 +224,8 @@
 "catalog.preview.1.1.title" = "将第一页单独显示为封面";
 "catalog.preview.1.2.title" = "适用于此后打开的文档。特殊注释和 PDF 的查看方向优先。";
 "group.preview.2.title" = "刷新";
-"catalog.preview.2.0.title" = "自动更新预览";
-"catalog.preview.2.0.note" = "使用外部编辑器编辑源文件时，重新载入已更改的 PDF。";
+"catalog.preview.2.0.title" = "始终监视其他应用对 PDF 的更改";
+"catalog.preview.2.0.note" = "外部编辑器、latexmk 或其他应用改写 PDF 时，即使 TeXShop 在后台也立即重新载入预览。";
 "group.preview.4.title" = "复制图像";
 "catalog.preview.4.0.title" = "图像副本类型";
 "catalog.preview.4.1.title" = "使用颜色映射";

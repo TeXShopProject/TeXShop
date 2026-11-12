@@ -732,6 +732,7 @@ enum RootCommand
 - (BOOL) externalEditor;
 - (void) refreshPDFAndBringFront: (BOOL)front;
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime;
+- (BOOL)externalPDFChecksAllowed;
 - (void) refreshTEXT;
 - (NSString *)displayName;
 - (BOOL) isTexExtension: (NSString *)extension;  //needed?

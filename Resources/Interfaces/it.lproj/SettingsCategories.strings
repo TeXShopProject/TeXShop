@@ -224,8 +224,8 @@
 "catalog.preview.1.1.title" = "Mostra la prima pagina da sola come copertina";
 "catalog.preview.1.2.title" = "Si applica ai documenti aperti in seguito. Hanno precedenza i commenti magici e la direzione di lettura del PDF.";
 "group.preview.2.title" = "Aggiornamento";
-"catalog.preview.2.0.title" = "Aggiornam. anteprima automatico";
-"catalog.preview.2.0.note" = "Ricaricare i PDF modificati quando si usa un editor esterno per il sorgente.";
+"catalog.preview.2.0.title" = "Controlla sempre le modifiche al PDF fatte da altre app";
+"catalog.preview.2.0.note" = "Ricaricare l’anteprima appena un editor esterno, latexmk o un’altra app riscrive il PDF, anche con TeXShop in secondo piano.";
 "group.preview.4.title" = "Copia delle immagini";
 "catalog.preview.4.0.title" = "Copia immagine usando il formato";
 "catalog.preview.4.1.title" = "Usa la mappatura dei colori";

@@ -224,8 +224,8 @@
 "catalog.preview.1.1.title" = "Afficher la première page seule comme couverture";
 "catalog.preview.1.2.title" = "S’applique aux documents ouverts ultérieurement. Les commentaires magiques et le sens de lecture du PDF sont prioritaires.";
 "group.preview.2.title" = "Actualisation";
-"catalog.preview.2.0.title" = "Mise à jour automatique de l'aperçu";
-"catalog.preview.2.0.note" = "Recharger les PDF modifiés lors de l’édition de la source dans un éditeur externe.";
+"catalog.preview.2.0.title" = "Toujours surveiller les modifications du PDF par d’autres apps";
+"catalog.preview.2.0.note" = "Recharger l’aperçu dès qu’un éditeur externe, latexmk ou une autre app réécrit le PDF, même quand TeXShop est en arrière-plan.";
 "group.preview.4.title" = "Copie d’images";
 "catalog.preview.4.0.title" = "Type de copie de l'image";
 "catalog.preview.4.1.title" = "Utiliser le coloriage";
