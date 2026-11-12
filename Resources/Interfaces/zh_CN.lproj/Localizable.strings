@@ -106,6 +106,7 @@
 "Split Window" = "分割窗口";
 "New Document" = "新文件";
 "Link Popups" = "链接预览";
+"Split Window with Link" = "分割窗口并显示链接目标";
 "Syntax Color expl3 Code" = "高亮expl3代码";
 "PDF File Has No Annotations" = "PDF文件未发现批注";
 

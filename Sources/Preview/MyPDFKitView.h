@@ -309,6 +309,8 @@
 - (void)updateBackground: (NSRect)aRect;
 // - (void)goToKitPageNumber: (NSInteger) thePage;
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent;
+- (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint;
+- (void)splitWindowWithLink: (id)sender;
 - (void)fixMagnificationControls;
 - (NSMutableArray *)getSearchResults;
 - (void)resetSearchDelegate;

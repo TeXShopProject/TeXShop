@@ -130,6 +130,7 @@
 - (void)toggleApplicationMenu: (id)sender;
 - (void)switchSplitViews: (id)sender;
 - (void) splitWindow: (id)sender; // so menu item can split both source and preview window
+- (void)showLinkDestination: (PDFDestination *)destination besideView: (PDFView *)view;
 - (void)fixAfterRotation: (BOOL) clockwise;
 // - (BOOL) validateMenuItem:(NSMenuItem *)anItem;
 - (void) changeMouseMode: sender;
