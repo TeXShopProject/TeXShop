@@ -753,6 +753,7 @@ enum RootCommand
 - (void)doPreviewSyncWithFilename:(NSString *)fileName andLine:(NSInteger)line andCharacterIndex:(NSUInteger)idx andTextView:(id)aTextView;
 - (BOOL)doNewPreviewSyncWithFilename:(NSString *)fileName andLine:(NSInteger)line andCharacterIndex:(NSUInteger)idx andTextView:(id)aTextView;
 - (void)trashAUXFiles: sender;
+- (void)trashAUXWithAggressiveness:(BOOL)aggressive;
 - (void)trashAUX;
 - (void)tryBadEncodingDialog: (NSWindow *)theWindow;
 - (BOOL)fromKit;

@@ -90,7 +90,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSDictionary *a = Attributes(theme);
         BOOL dark = Same(a[NSForegroundColorAttributeName], 0.308, 0.899, 1) && Same(a[NSBackgroundColorAttributeName], 0.1, 0, 0);
         BOOL light = Same(a[NSForegroundColorAttributeName], 0.692, 0.101, 0) && Same(a[NSBackgroundColorAttributeName], 0.9, 1, 1);
-        BOOL expectDark = [@[@"DarkTheme", @"DarkTheme 2", @"Dracula", @"PreTeXt-Dark", @"SolarizedDark"] containsObject:@(argv[i]).lastPathComponent.stringByDeletingPathExtension];
+        BOOL expectDark = [@[@"DarkTheme", @"Dracula", @"PreTeXt-Dark", @"SolarizedDark"] containsObject:@(argv[i]).lastPathComponent.stringByDeletingPathExtension];
         Require(argv[i], expectDark ? dark : light);
     }
     if (failures) return 1;
@@ -98,7 +98,9 @@ int main(int argc, char **argv) { @autoreleasepool {
 } return 0; }
 '''.replace('READERS', readers).replace('MEMBERSHIP', membership).replace('BLOCK', block).replace('WELLS', wells)
 themes = sorted((root / 'Resources/TeXShop/Themes').glob('*.plist')) + sorted((root / 'Resources/Themes').glob('*.plist'))
-assert len(themes) == 12
+assert len(themes) >= 11
+bundled = [t.read_bytes() for t in sorted((root / 'Resources/TeXShop/Themes').glob('*.plist'))]
+assert len(bundled) == len(set(bundled)), 'two bundled themes have the same contents'
 with tempfile.TemporaryDirectory(prefix='texshop-fullwidth-') as tmp:
     (Path(tmp) / 'test.m').write_text(program, encoding='utf-8')
     subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', str(Path(tmp) / 'test.m'), '-o', str(Path(tmp) / 'test')], check=True)

@@ -9265,18 +9265,20 @@ static NSArray *tabStopArrayForFontAndTabWidth(NSFont *font, NSUInteger tabWidth
 	if (! fileIsTex)
 		return;
 	
-	if (! [SUD boolForKey:AggressiveTrashAUXKey]) {
-		[self trashAUX];
-	} else {
-		theSource = [[self textView] string];
-		if ([self checkMasterFile:theSource forTask:RootForTrashAUX])
-			return;
-		if ([self fileURL] == nil)
-			return;
-		if ([self checkRootFile_forTask:RootForTrashAUX])
-			return;
-		[self trashAUX];
-	}
+	theSource = [[self textView] string];
+	if ([self checkMasterFile:theSource forTask:RootForTrashAUX])
+		return;
+	if ([self fileURL] == nil)
+		return;
+	if ([self checkRootFile_forTask:RootForTrashAUX])
+		return;
+	[self trashAUX];
+}
+
+- (void)trashAUXWithAggressiveness:(BOOL)aggressive
+{
+	aggressiveTrash = aggressive;
+	[self trashAUX];
 }
 
 /*
