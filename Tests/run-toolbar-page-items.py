@@ -3,7 +3,9 @@
 
 The customization lists and default sets offer one pair of page items (document
 arrows). Toolbars saved with the former arrow-only identifiers still show working
-document-arrow items. Nothing is shown on screen and no user settings are read.
+document-arrow items. Toolbars saved with both pairs, or with the arrow-only pair,
+keep one pair under the document arrow identifiers when the window is set up.
+Nothing is shown on screen and no user settings are read.
 """
 import argparse, os, plistlib, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
@@ -11,7 +13,8 @@ from production_fragments import method as production_method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['legacy-allowed', 'legacy-default', 'no-legacy-map', 'symbol-key'])
+parser.add_argument('--mutation', choices=['legacy-allowed', 'legacy-default', 'no-legacy-map', 'symbol-key',
+                                           'keep-duplicates', 'keep-arrow-only-ident', 'keep-last'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 toolbar = (root/'Sources/Windows/TSToolbarController.m').read_text()
@@ -34,6 +37,7 @@ signatures = ['static NSString *TSPreviewPageItemKey(NSString *itemIdent)',
               '- (NSToolbarItem*) makeToolbarItemWithItemIdentifier:(NSString*)itemIdent key:(NSString*)itemKey image:',
               '- (NSToolbarItem*) makeToolbarSymbolsItemWithItemIdentifier:',
               '- (NSToolbarItem *)makePreviewPageItemWithItemIdentifier:',
+              '- (void)keepOnePreviewPagePairInToolbar:',
               '- (void)doPreviousPageKK:', '- (void)doNextPageKK:',
               '- (NSArray *) toolbarDefaultItemIdentifiers:', '- (NSArray *) toolbarAllowedItemIdentifiers:',
               '- (BOOL) validateToolbarItem:']
@@ -46,6 +50,15 @@ route = '    toolbarItem = [self makePreviewPageItemWithItemIdentifier:itemIdent
 assert item_for.count(route) == 1, 'itemForItemIdentifier routes page items through the helper'
 for name in ('kPreviousPageKKTID', 'kNextPageKKTID', 'kPreviousPageButtonKKTID', 'kNextPageButtonKKTID'):
     assert name not in item_for, 'No other branch builds the preview page item '+name
+# Every document window cleans up both preview toolbars once they are attached,
+# before the layout items are inserted at fixed places.
+setup = production_method(toolbar, '- (void) setupToolbar')
+attach = ('    [[self fullSplitWindow] setToolbar: [self makeToolbar: kFullWindowToolbarIdentifier]];\n'
+          '    [self keepOnePreviewPagePairInToolbar: self.pdfKitWindow.toolbar];\n'
+          '    [self keepOnePreviewPagePairInToolbar: [[self fullSplitWindow] toolbar]];\n')
+assert setup.count(attach) == 1 and setup.count('keepOnePreviewPagePairInToolbar') == 2, 'setupToolbar keeps one page pair in both preview toolbars'
+assert setup.index(attach) < setup.index('TSPreviewAppearanceToolbarInstalled-') < setup.index('TSPreviewLayoutControlsInstalled-')
+assert setup.index('[self.pdfKitWindow setToolbar: [self makeToolbar: kPDFKitToolbarIdentifier]];') < setup.index(attach)
 # The arrow-only symbols remain only on the PDFView toolbar used for JPEG/TIFF images.
 for symbol in ('@"arrow.up"', '@"arrow.down"'):
     for m in re.finditer(re.escape(symbol), toolbar):
@@ -69,6 +82,18 @@ elif args.mutation == 'symbol-key':
     old = 'return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemKey\n                                                     image:symbolImage'
     assert methods.count(old) == 1
     methods = methods.replace(old, 'return [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent\n                                                     image:symbolImage')
+elif args.mutation == 'keep-duplicates':
+    old = '            [extra addIndex: index];'
+    assert methods.count(old) == 1
+    methods = methods.replace(old, '            ;')
+elif args.mutation == 'keep-arrow-only-ident':
+    old = '            [toolbar removeItemAtIndex: index];\n            [toolbar insertItemWithItemIdentifier: itemKey atIndex: index];'
+    assert methods.count(old) == 1
+    methods = methods.replace(old, '            ;')
+elif args.mutation == 'keep-last':
+    old = '    for (NSUInteger index = 0; index < items.count; index++) {\n        NSString *itemKey'
+    assert methods.count(old) == 1
+    methods = methods.replace(old, '    for (NSUInteger index = items.count; index-- > 0;) {\n        NSString *itemKey')
 
 program = r'''
 #import <Cocoa/Cocoa.h>
@@ -99,7 +124,7 @@ CONSTANTS
 - (PageView *)pdfKitView { return self.view; }
 METHODS
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)ident willBeInsertedIntoToolbar:(BOOL)inserted
-{ return [self makePreviewPageItemWithItemIdentifier:ident]; }
+{ return [self makePreviewPageItemWithItemIdentifier:ident] ?: [[NSToolbarItem alloc] initWithItemIdentifier:ident]; }
 @end
 static void Check(BOOL ok, NSString *message) { if (!ok) { NSLog(@"FAIL: %@", message); exit(1); } }
 static NSUInteger Count(NSArray *list, NSString *ident) { return [list indexesOfObjectsPassingTest:^BOOL(id o, NSUInteger i, BOOL *s) { return [o isEqual:ident]; }].count; }
@@ -119,6 +144,30 @@ int main(int argc, char **argv) { @autoreleasepool {
  TSDocument *d = [TSDocument new]; d.view = [PageView new]; d.documentType = isPDF; d->fileIsTex = YES;
  NSArray *legacy = @[kPreviousPageKKTID, kNextPageKKTID], *current = @[kPreviousPageButtonKKTID, kNextPageButtonKKTID];
  Check([legacy isEqual:@[@"PreviousPageKIT", @"NextPageKIT"]] && [current isEqual:@[@"PreviousPageButtonKIT", @"NextPageButtonKIT"]], @"Saved toolbar identifiers keep their spelling");
+
+ // A configuration saved with both pairs, loaded the way AppKit loads a saved
+ // configuration: the configuration AppKit saves afterwards, and another window
+ // with that toolbar, keep one pair. Nothing is saved to disk here.
+ for (NSString *ident in @[kPDFKitToolbarIdentifier, kFullWindowToolbarIdentifier]) {
+  NSArray *saved = @[legacy[0], legacy[1], current[0], current[1], kDrawerKKTID, NSToolbarPrintItemIdentifier];
+  NSArray *kept = @[current[0], current[1], kDrawerKKTID, NSToolbarPrintItemIdentifier];
+  NSToolbar *bar = [[NSToolbar alloc] initWithIdentifier:ident]; bar.autosavesConfiguration = NO; bar.delegate = d;
+  NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 600, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+  window.releasedWhenClosed = NO; window.toolbar = bar;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  [bar setConfigurationFromDictionary:@{@"TB Item Identifiers": saved, @"TB Display Mode": @2, @"TB Is Shown": @YES, @"TB Size Mode": @1}];
+  Check([[bar.items valueForKey:@"itemIdentifier"] isEqual:saved], @"Saved toolbar with both pairs loads as saved");
+  [d keepOnePreviewPagePairInToolbar:bar];
+  Check([[bar.items valueForKey:@"itemIdentifier"] isEqual:kept], @"One pair kept in the open window");
+  Check([bar.configurationDictionary[@"TB Item Identifiers"] isEqual:kept], [NSString stringWithFormat:@"Configuration to save keeps one pair: %@", bar.configurationDictionary]);
+  Check([bar.configurationDictionary[@"TB Display Mode"] isEqual:@2], @"Other toolbar settings kept");
+#pragma clang diagnostic pop
+  NSToolbar *again = [[NSToolbar alloc] initWithIdentifier:ident]; again.autosavesConfiguration = NO; again.delegate = d;
+  NSWindow *other = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 600, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+  other.releasedWhenClosed = NO; other.toolbar = again;
+  Check([[again.items valueForKey:@"itemIdentifier"] isEqual:kept], [NSString stringWithFormat:@"Another window with that toolbar shows one pair: %@", [again.items valueForKey:@"itemIdentifier"]]);
+ }
 
  // Customization lists and default sets: one pair, the document arrows.
  NSUInteger lists = 0;
@@ -195,7 +244,65 @@ int main(int argc, char **argv) { @autoreleasepool {
   d->fileIsTex = YES; d.documentType = isPDF;
  }
  Check(checkedText == (EXPECTED_TEXT[language] ? 2 : 0), @"Exact text checked where listed");
- NSLog(@"%@ PASS: one previous/next pair offered and in default sets; former identifiers show working document-arrow items", language);
+
+ // Saved toolbars with both pairs (shown as the same buttons twice), or with the
+ // arrow-only pair, keep the first previous and the first next page item in place
+ // under the document arrow identifiers. Other items keep their order.
+ NSString *P = current[0], *N = current[1], *p = legacy[0], *n = legacy[1];
+ NSString *B = kBackForthKKTID, *D = kDrawerKKTID, *R = NSToolbarPrintItemIdentifier, *F = NSToolbarFlexibleSpaceItemIdentifier;
+ NSArray *cases = @[
+  @[@[p, n, P, N, B, D], @[P, N, B, D]],
+  @[@[P, N, p, n, B, D], @[P, N, B, D]],
+  @[@[P, N, B, D, R, F, p, n], @[P, N, B, D, R, F]],
+  @[@[p, n, B, D, R], @[P, N, B, D, R]],
+  @[@[D, p, F, N, n, P, R], @[D, P, F, N, R]],
+  @[@[n, D, p, R], @[N, D, P, R]],
+  @[@[D, n, F, N], @[D, N, F]],
+  @[@[B, P, N, D, F, R], @[B, P, N, D, F, R]],
+  @[@[p], @[P]], @[@[N], @[N]], @[@[D, R], @[D, R]], @[@[], @[]],
+ ];
+ NSUInteger merged = 0;
+ for (NSString *ident in @[kPDFKitToolbarIdentifier, kFullWindowToolbarIdentifier]) for (NSArray *pair in cases) {
+  NSToolbar *bar = [[NSToolbar alloc] initWithIdentifier:ident]; bar.autosavesConfiguration = NO; bar.delegate = d;
+  NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 600, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+  window.releasedWhenClosed = NO; window.toolbar = bar;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  [bar setConfigurationFromDictionary:@{@"TB Item Identifiers": pair[0], @"TB Display Mode": @1, @"TB Is Shown": @YES, @"TB Size Mode": @1}];
+#pragma clang diagnostic pop
+  NSString *where = [NSString stringWithFormat:@"%@ %@", ident, [pair[0] componentsJoinedByString:@","]];
+  Check([[bar.items valueForKey:@"itemIdentifier"] isEqual:pair[0]], [@"Saved toolbar loads as saved: " stringByAppendingString:where]);
+  [d keepOnePreviewPagePairInToolbar:bar];
+  Check([[bar.items valueForKey:@"itemIdentifier"] isEqual:pair[1]], [NSString stringWithFormat:@"One page pair kept in place: %@ -> %@", where, [[bar.items valueForKey:@"itemIdentifier"] componentsJoinedByString:@","]]);
+  [d keepOnePreviewPagePairInToolbar:bar];
+  Check([[bar.items valueForKey:@"itemIdentifier"] isEqual:pair[1]], [@"Keeping one page pair twice changes nothing: " stringByAppendingString:where]);
+  NSInteger previous = d.view.previous, next = d.view.next;
+  for (NSToolbarItem *item in bar.items) {
+   if (![current containsObject:item.itemIdentifier]) continue;
+   Check([Pixels(item.image) isEqual:Pixels([d makePreviewPageItemWithItemIdentifier:item.itemIdentifier].image)] && item.label.length, @"Kept page item shows the document arrow");
+   Check([NSApp sendAction:item.action to:item.target from:item], @"Kept page item sends its command");
+  }
+  Check(d.view.previous == previous + Count(pair[1], P) && d.view.next == next + Count(pair[1], N), @"Kept page items turn the preview page");
+  merged++;
+ }
+ Check(merged == 24, @"All saved toolbars checked");
+ // The default sets are left as they are.
+ for (NSString *ident in @[kPDFKitToolbarIdentifier, kFullWindowToolbarIdentifier]) for (int share = 0; share < 2; share++) for (int swap = 0; swap < 2; swap++) {
+  sharing = share; [defaults setBool:swap forKey:SwitchSidesKey];
+  NSToolbar *bar = [[NSToolbar alloc] initWithIdentifier:ident]; bar.autosavesConfiguration = NO; bar.delegate = d;
+  NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 900, 300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+  window.releasedWhenClosed = NO; window.toolbar = bar;
+  NSArray *standard = [d toolbarDefaultItemIdentifiers:bar];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  [bar setConfigurationFromDictionary:@{@"TB Item Identifiers": standard, @"TB Display Mode": @1, @"TB Is Shown": @YES, @"TB Size Mode": @1}];
+#pragma clang diagnostic pop
+  Check([[bar.items valueForKey:@"itemIdentifier"] isEqual:standard], @"Default set loads as listed");
+  [d keepOnePreviewPagePairInToolbar:bar];
+  Check([[bar.items valueForKey:@"itemIdentifier"] isEqual:standard], @"Default set unchanged");
+ }
+ sharing = YES; [defaults setBool:NO forKey:SwitchSidesKey];
+ NSLog(@"%@ PASS: one previous/next pair offered and in default sets; former identifiers show working document-arrow items; saved toolbars keep one pair", language);
 }}
 '''
 # Exact text in the languages where the two pairs had been translated differently.

@@ -510,6 +510,8 @@ if (@available(macOS 11.0, *))
 	[[self pdfWindow] setToolbar: [self makeToolbar: kPDFToolbarIdentifier]];
 	[self.pdfKitWindow setToolbar: [self makeToolbar: kPDFKitToolbarIdentifier]];
     [[self fullSplitWindow] setToolbar: [self makeToolbar: kFullWindowToolbarIdentifier]];
+    [self keepOnePreviewPagePairInToolbar: self.pdfKitWindow.toolbar];
+    [self keepOnePreviewPagePairInToolbar: [[self fullSplitWindow] toolbar]];
 // added by Terada (from this line)
     for (NSString *identifier in @[kPDFKitToolbarIdentifier, kFullWindowToolbarIdentifier]) {
         NSToolbar *previewToolbar = [identifier isEqual:kPDFKitToolbarIdentifier]
@@ -619,6 +621,37 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
         return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemKey symbolName: @"arrow.down.doc" accessibility: @"Next Page" imageName:@"NextPageAlternateAction" newImageName:@"NextPageAlternateAction" target:self action:@selector(doNextPageKK:)];
 
     return nil;
+}
+
+// A toolbar saved with both pairs shows the document arrow items twice, and a saved
+// arrow-only item lets Customize Toolbar add the document arrow item a second time.
+// Keep the first previous and the first next page item in place, under the
+// document arrow identifier, and remove the others.
+- (void)keepOnePreviewPagePairInToolbar:(NSToolbar *)toolbar
+{
+    NSMutableSet *kept = [NSMutableSet set];
+    NSMutableIndexSet *extra = [NSMutableIndexSet indexSet];
+    NSArray *items = toolbar.items;
+    for (NSUInteger index = 0; index < items.count; index++) {
+        NSString *itemKey = TSPreviewPageItemKey([items[index] itemIdentifier]);
+        if (![itemKey isEqual: kPreviousPageButtonKKTID] && ![itemKey isEqual: kNextPageButtonKKTID])
+            continue;
+        if ([kept containsObject: itemKey])
+            [extra addIndex: index];
+        else
+            [kept addObject: itemKey];
+    }
+    [extra enumerateIndexesWithOptions: NSEnumerationReverse usingBlock: ^(NSUInteger index, BOOL *stop) {
+        [toolbar removeItemAtIndex: index];
+    }];
+    for (NSUInteger index = 0; index < toolbar.items.count; index++) {
+        NSString *itemIdent = [toolbar.items[index] itemIdentifier];
+        NSString *itemKey = TSPreviewPageItemKey(itemIdent);
+        if (![itemKey isEqual: itemIdent]) {
+            [toolbar removeItemAtIndex: index];
+            [toolbar insertItemWithItemIdentifier: itemKey atIndex: index];
+        }
+    }
 }
 
 - (NSToolbarItem *) toolbar: (NSToolbar *)toolbar itemForItemIdentifier: (NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
