@@ -1,12 +1,19 @@
 {
-  "origin": "Names chosen on 2026-11-12 for Settings › Typesetting and the Typeset menu: the method pop-up and its first two choices, and the three path rows",
+  "origin": "Names chosen on 2026-11-12 for Settings › Typesetting and the Typeset menu: the method pop-up and its first two choices, and the three path rows; the Direct PDF and Via DVI group headings, their rows and the Ghostscript group placed after Via DVI",
   "languages": {
     "Base": {
       "SettingsCategories.strings": {
         "catalog.typesetting.0.2.title": "Typesetting Method",
         "catalog.typesetting.3.0.title": "TeX Engines",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Second TeX Engines"
+        "catalog.typesetting.3.2.title": "Second TeX Engines",
+        "group.typesetting.4.title": "Direct PDF",
+        "group.typesetting.5.title": "Via DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Confirm Shell Escape",
+        "catalog.typesetting.5.2.note": "Adds --keep-psfile to the TeX or LaTeX command above, which keeps the intermediate PostScript file.",
+        "catalog.typesetting.5.2.title": "Save PostScript File"
       },
       "SettingsTypesetting.strings": {
         "191.title": "Direct PDF",
@@ -19,7 +26,14 @@
         "catalog.typesetting.0.2.title": "Satzmethode",
         "catalog.typesetting.3.0.title": "TeX-Engines",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Zweite TeX-Engines"
+        "catalog.typesetting.3.2.title": "Zweite TeX-Engines",
+        "group.typesetting.4.title": "PDF direkt",
+        "group.typesetting.5.title": "Über DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Bei Shell-Escape nachfragen",
+        "catalog.typesetting.5.2.note": "Hängt an den TeX- oder LaTeX-Befehl oben --keep-psfile an und behält so die PostScript-Zwischendatei.",
+        "catalog.typesetting.5.2.title": "Als PostScript-Datei sichern"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direkt",
@@ -32,7 +46,13 @@
         "catalog.typesetting.0.2.title": "Método de composición",
         "catalog.typesetting.3.0.title": "Motores TeX",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Segundos motores TeX"
+        "catalog.typesetting.3.2.title": "Segundos motores TeX",
+        "group.typesetting.4.title": "PDF directo",
+        "group.typesetting.5.title": "Vía DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Confirmar shell-escape",
+        "catalog.typesetting.5.2.note": "Añade --keep-psfile a la orden TeX o LaTeX de arriba para conservar el archivo PostScript intermedio."
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF directo",
@@ -45,7 +65,13 @@
         "catalog.typesetting.0.2.title": "Méthode de composition",
         "catalog.typesetting.3.0.title": "Moteurs TeX",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Seconds moteurs TeX"
+        "catalog.typesetting.3.2.title": "Seconds moteurs TeX",
+        "group.typesetting.4.title": "PDF direct",
+        "group.typesetting.5.title": "Via DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Confirmer le shell-escape",
+        "catalog.typesetting.5.2.note": "Ajoute --keep-psfile à la commande TeX ou LaTeX ci-dessus pour conserver le fichier PostScript intermédiaire."
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direct",
@@ -58,7 +84,14 @@
         "catalog.typesetting.0.2.title": "Metodo di composizione",
         "catalog.typesetting.3.0.title": "Motori TeX",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Secondi motori TeX"
+        "catalog.typesetting.3.2.title": "Secondi motori TeX",
+        "group.typesetting.4.title": "PDF diretto",
+        "group.typesetting.5.title": "Tramite DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Chiedi conferma per shell-escape",
+        "catalog.typesetting.5.2.note": "Aggiunge --keep-psfile al comando TeX o LaTeX qui sopra per conservare il file PostScript intermedio.",
+        "catalog.typesetting.5.2.title": "Salva Documento PostScript"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF diretto",
@@ -71,7 +104,13 @@
         "catalog.typesetting.0.2.title": "コンパイル法",
         "catalog.typesetting.3.0.title": "TeXエンジン",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "第二のTeXエンジン"
+        "catalog.typesetting.3.2.title": "第二のTeXエンジン",
+        "group.typesetting.4.title": "PDF直接生成",
+        "group.typesetting.5.title": "DVI経由",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "shell-escapeのとき確認",
+        "catalog.typesetting.5.2.note": "上のTeX・LaTeXのコマンドに --keep-psfileを付け、途中で作るPostScriptファイルを残します。"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF直接生成",
@@ -84,7 +123,14 @@
         "catalog.typesetting.0.2.title": "조판 방식",
         "catalog.typesetting.3.0.title": "TeX 엔진",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "두 번째 TeX 엔진"
+        "catalog.typesetting.3.2.title": "두 번째 TeX 엔진",
+        "group.typesetting.4.title": "PDF 직접 생성",
+        "group.typesetting.5.title": "DVI 경유",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "shell-escape 시 확인",
+        "catalog.typesetting.5.2.note": "위의 TeX 또는 LaTeX 명령에 --keep-psfile을 붙여 중간에 만드는 PostScript 파일을 남깁니다.",
+        "catalog.typesetting.5.2.title": "PostScript 파일 저장"
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF 직접 생성",
@@ -97,7 +143,14 @@
         "catalog.typesetting.0.2.title": "Zetmethode",
         "catalog.typesetting.3.0.title": "TeX-engines",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Tweede TeX-engines"
+        "catalog.typesetting.3.2.title": "Tweede TeX-engines",
+        "group.typesetting.4.title": "Direct PDF",
+        "group.typesetting.5.title": "Via DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Bevestigen bij shell-escape",
+        "catalog.typesetting.5.2.note": "Voegt --keep-psfile toe aan de TeX- of LaTeX-opdracht hierboven en bewaart zo het tussentijdse PostScript-bestand.",
+        "catalog.typesetting.5.2.title": "Bewaar PostScript-bestand"
       },
       "SettingsTypesetting.strings": {
         "191.title": "Direct PDF",
@@ -110,7 +163,13 @@
         "catalog.typesetting.0.2.title": "Método de composição",
         "catalog.typesetting.3.0.title": "Motores TeX",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Segundos motores TeX"
+        "catalog.typesetting.3.2.title": "Segundos motores TeX",
+        "group.typesetting.4.title": "PDF direto",
+        "group.typesetting.5.title": "Via DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Confirmar shell-escape",
+        "catalog.typesetting.5.2.note": "Acrescenta --keep-psfile ao comando TeX ou LaTeX acima para manter o ficheiro PostScript intermédio."
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direto",
@@ -123,7 +182,13 @@
         "catalog.typesetting.0.2.title": "Método de composição",
         "catalog.typesetting.3.0.title": "Motores TeX",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Segundos motores TeX"
+        "catalog.typesetting.3.2.title": "Segundos motores TeX",
+        "group.typesetting.4.title": "PDF direto",
+        "group.typesetting.5.title": "Via DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Confirmar shell-escape",
+        "catalog.typesetting.5.2.note": "Acrescenta --keep-psfile ao comando TeX ou LaTeX acima para manter o arquivo PostScript intermediário."
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direto",
@@ -136,7 +201,13 @@
         "catalog.typesetting.0.2.title": "Metoda de tehnoredactare",
         "catalog.typesetting.3.0.title": "Motoare TeX",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "Al doilea set de motoare TeX"
+        "catalog.typesetting.3.2.title": "Al doilea set de motoare TeX",
+        "group.typesetting.4.title": "PDF direct",
+        "group.typesetting.5.title": "Prin DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "Confirmare la shell-escape",
+        "catalog.typesetting.5.2.note": "Adaugă --keep-psfile la comanda TeX sau LaTeX de mai sus, pentru a păstra fișierul PostScript intermediar."
       },
       "SettingsTypesetting.strings": {
         "191.title": "PDF direct",
@@ -149,7 +220,13 @@
         "catalog.typesetting.0.2.title": "排版方式",
         "catalog.typesetting.3.0.title": "TeX引擎",
         "catalog.typesetting.3.1.title": "Ghostscript",
-        "catalog.typesetting.3.2.title": "第二组TeX引擎"
+        "catalog.typesetting.3.2.title": "第二组TeX引擎",
+        "group.typesetting.4.title": "直接生成PDF",
+        "group.typesetting.5.title": "经由DVI",
+        "catalog.typesetting.4.1.title": "LaTeX",
+        "catalog.typesetting.5.1.title": "LaTeX",
+        "catalog.typesetting.4.2.title": "shell-escape时确认",
+        "catalog.typesetting.5.2.note": "在上方的TeX或LaTeX命令中加上 --keep-psfile，保留中间生成的PostScript文件。"
       },
       "SettingsTypesetting.strings": {
         "191.title": "直接生成PDF",

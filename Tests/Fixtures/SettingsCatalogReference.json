@@ -1727,7 +1727,7 @@
      ]
     },
     {
-     "title": "pdfTeX",
+     "title": "PDF直接生成",
      "rows": [
       {
        "kind": "path",
@@ -1751,7 +1751,7 @@
       },
       {
        "kind": "switch",
-       "title": "Shell Escapeを警告",
+       "title": "shell-escapeのとき確認",
        "on": true,
        "src": [
         "325"
@@ -1761,7 +1761,7 @@
      ]
     },
     {
-     "title": "TeX + dvipdfmx／TeX + dvips + distiller",
+     "title": "DVI経由",
      "rows": [
       {
        "kind": "path",
@@ -1789,7 +1789,20 @@
        "src": [
         "225"
        ],
-       "note": "「TeX + dvips + distiller」でタイプセットするとき、途中で作るPostScriptファイルを残します。"
+       "note": "上のTeX・LaTeXのコマンドに --keep-psfileを付け、途中で作るPostScriptファイルを残します。"
+      }
+     ]
+    },
+    {
+     "title": "Ghostscript",
+     "rows": [
+      {
+       "kind": "switch",
+       "title": "-dALLOWPSTRANSPARENCY",
+       "src": [
+        "217-aa-RyX"
+       ],
+       "note": "GhostscriptでPostScriptをPDFに変換するときにこのオプションを付け、PSTricksなどの透明効果を残します。Ghostscript 9.51以降が必要です。"
       }
      ]
     },
@@ -1813,19 +1826,6 @@
        "src": [
         "152"
        ]
-      }
-     ]
-    },
-    {
-     "title": "Ghostscript",
-     "rows": [
-      {
-       "kind": "switch",
-       "title": "-dALLOWPSTRANSPARENCY",
-       "src": [
-        "217-aa-RyX"
-       ],
-       "note": "GhostscriptでPostScriptをPDFに変換するときにこのオプションを付け、PSTricksなどの透明効果を残します。Ghostscript 9.51以降が必要です。"
       }
      ]
     },

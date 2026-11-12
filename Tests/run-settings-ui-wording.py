@@ -135,4 +135,9 @@ for lang,expected in names.items():
     titles={e.get('identifier'):e.get('title') for e in menu.iter('menuItem') if (e.get('identifier') or '').startswith('TSShortcut.doChooseMethod:.')}
     choices=expected['SettingsTypesetting.strings']
     assert titles['TSShortcut.doChooseMethod:.100']==choices['191.title'] and titles['TSShortcut.doChooseMethod:.101']==choices['187.title'],(lang,'Typeset menu and Settings name the methods alike',titles)
-print("PASS: pop-up titles differ from their choices; reviewed Typesetting names match in Settings and the Typeset menu")
+    categories=strings(interfaces/f"{lang}.lproj/SettingsCategories.strings")
+    assert categories['group.typesetting.4.title']==choices['191.title'] and categories['group.typesetting.5.title']==choices['187.title'] and categories['group.typesetting.6.title']==strings(interfaces/f"{lang}.lproj/SettingsTypesetting.strings")['190.title'],(lang,'command groups are named after the typesetting methods')
+    assert all(categories[k]==categories[k].strip() for k in categories if k.startswith('catalog.typesetting.') and k.endswith('.title')),(lang,'Typesetting row titles have no stray spaces')
+order=[g for g in re.findall(r'@"id": @"(group\.typesetting\.\d+)"',layout)]
+assert order.index('group.typesetting.7')==order.index('group.typesetting.5')+1,'Ghostscript follows the Via DVI commands'
+print("PASS: pop-up titles differ from their choices; reviewed Typesetting names match in Settings and the Typeset menu; command groups are named after the methods and Ghostscript follows Via DVI")
