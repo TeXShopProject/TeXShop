@@ -19,7 +19,9 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'window-magnifier-bypass', 'window-resign-kills-pin', 'window-split-kills-pin', 'window-unsplit-drops-pin',
                                            'window-layout-not-kept', 'drag-cursor-stays', 'hidden-part-cursor', 'no-exit-tracking', 'exit-ignored',
                                            'outside-always-arrow', 'visible-beyond-bounds', 'escape-ignores-active-part',
-                                           'popup-side-fitted', 'popup-side-always-kept', 'no-next-page', 'selection-first-page'])
+                                           'popup-side-fitted', 'popup-side-always-kept', 'no-next-page', 'selection-first-page',
+                                           'command-ignored-when-off', 'command-toggles', 'command-popup-stays', 'timer-ignores-release',
+                                           'tooltip-ignores-command', 'tooltip-back-under-popup'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -42,7 +44,7 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void) mouseDown:', '- (void) mouseDownKeepingPinnedLinkPreview:', '- (void) initializeDisplay',
     '- (NSCursor *) cursorForToolWithEvent:', '- (void) showToolCursorOutsideLinkPreviewWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:',
     '- (void) keepingPinnedLinkPreview:', '- (void) changeMouseMode:',
-    '- (void) linkPopupsChanged', '- (BOOL) skipLinks', '- (void) setSkipLinks:',
+    '- (void) linkPopupsChanged', '- (BOOL) skipLinks', '- (void) setSkipLinks:', '- (BOOL) showsLinkPopupsWithModifierFlags:',
     '+ (void)initialize', '- (BOOL)showsLinkPreviewForAnnotation:',
     '- (void) fancyMouseDown:', '- (void) fancyMouseDownKeepingPinnedLinkPreview:',
     '- (void)cleanupMarqueeKeepingPinnedLinkPreview', '- (BOOL)hasPinnedLinkPreview',
@@ -77,8 +79,26 @@ if args.mutation in view_mutations:
     old, new = view_mutations[args.mutation]
     assert methods.count(old) == 1, args.mutation
     methods = methods.replace(old, new)
+command_mutations = {
+    'command-ignored-when-off': ('    return !self.skipLinks || (flags & NSEventModifierFlagCommand) != 0;', '    return !self.skipLinks;'),
+    'command-toggles': ('    return !self.skipLinks || (flags & NSEventModifierFlagCommand) != 0;',
+                        '    return !self.skipLinks != ((flags & NSEventModifierFlagCommand) != 0);'),
+    'command-popup-stays': ('if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent modifierFlags]]))',
+                            'if (!self.globalLongTerm && [self showsLinkPopupsWithModifierFlags: [theEvent modifierFlags]])'),
+    'timer-ignores-release': ('    if (![self showsLinkPopupsWithModifierFlags: modifiers]) {',
+                              '    if (![self showsLinkPopupsWithModifierFlags: [(NSEvent *)theTimer.userInfo[2] modifierFlags]]) {'),
+    'tooltip-ignores-command': ('    BOOL showsPopups = [self showsLinkPopupsWithModifierFlags: [NSEvent modifierFlags]] ||',
+                                '    BOOL showsPopups = !self.skipLinks ||'),
+    'tooltip-back-under-popup': ('                       (self.handlingLink && !self.globalLongTerm);', '                       NO;'),
+}
+if args.mutation in command_mutations:
+    old, new = command_mutations[args.mutation]
+    assert methods.count(old) == 1, args.mutation
+    methods = methods.replace(old, new)
 if args.mutation == 'move-dismisses':
-    methods = methods.replace('!self.skipLinks && !self.globalLongTerm', '!self.skipLinks')
+    old = 'if (!self.globalLongTerm && (self.handlingLink > 0 || '
+    assert methods.count(old) == 1
+    methods = methods.replace(old, 'if ((self.handlingLink > 0 || ')
 elif args.mutation == 'stale-timer':
     methods = methods.replace('aTimerNumber != self.timerNumber || ', '')
 elif args.mutation == 'other-window':
@@ -107,7 +127,9 @@ elif args.mutation == 'label-from-index':
         '@"Page label in the corner of a link popup; %@ is the page label given in the PDF"), linkedPage.label]',
         '@"Page label in the corner of a link popup; %@ is the page label given in the PDF"), @([linkedPage.document indexForPage:linkedPage] + 1).stringValue]')
 elif args.mutation == 'tooltip-always-hidden':
-    methods = methods.replace('return !self.skipLinks && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&', 'return')
+    old = 'return showsPopups && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&'
+    assert methods.count(old) == 1
+    methods = methods.replace(old, 'return')
 elif args.mutation == 'copy-ignores-popup':
     methods = methods.replace('\tif (previewText.length) {', '\tif (NO) {')
 elif args.mutation == 'modified-escape':
@@ -833,6 +855,16 @@ static void testPageLabelAndToolTips(MyPDFKitView *view, NSWindow *window, PDFDo
           @"user data that is not the link reaches PDFKit untouched");
     view.skipLinks = YES;
     check([toolTip(view, link, (__bridge void *)link) length] > 0, @"tool tip stays when link popups are off");
+    // With Link Popups off, Command brings the popup and keeps the tool tip away (#30).
+    flags = NSEventModifierFlagCommand;
+    check(toolTip(view, link, (__bridge void *)link) == nil, @"with link popups off, Command leaves out the tool tip");
+    eventFlags = NSEventModifierFlagCommand;
+    show(view, NSEventModifierFlagCommand);
+    flags = 0; eventFlags = 0;
+    check(toolTip(view, link, (__bridge void *)link) == nil,
+          @"a popup shown with Command keeps the tool tip away after Command is released");
+    [view doKillPopup];
+    check([toolTip(view, link, (__bridge void *)link) length] > 0, @"once that popup is gone, the tool tip is back");
     view.skipLinks = NO;
     [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
     check([toolTip(view, link, (__bridge void *)link) length] > 0, @"tool tip stays with the selection tool, which shows no popups");
@@ -1155,6 +1187,160 @@ static void testSplitEscape(MyPDFKitView *view, MyPDFKitView *second, TestPrevie
     }
     view.frame = bounds; [view layoutDocumentView];
 }
+// With Link Popups off, hovering over a link with Command held shows its popup: the larger
+// popup, as Command always gives, with Shift and Option keeping their meanings. Without
+// Command nothing appears. With Link Popups on, Command only enlarges the popup (#30).
+static void testCommandHover(MyPDFKitView *view, NSWindow *window) {
+    [view doKillPopup];
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_TEXT];
+    // In the continuous display Shift keeps the popup above the link even where it does not fit.
+    PDFDisplayMode previousMode = view.displayMode;
+    view.displayMode = kPDFDisplaySinglePageContinuous; view.autoScales = YES; [view layoutDocumentView];
+    linkPoint = NSMakePoint(30,730);
+    NSRect visible = [view.documentView convertRect:view.documentView.visibleRect toView:nil];
+    NSPoint away = NSMakePoint(NSMinX(visible) + 3, NSMinY(visible) + 3);
+    const NSEventModifierFlags C = NSEventModifierFlagCommand, S = NSEventModifierFlagShift,
+        O = NSEventModifierFlagOption, K = NSEventModifierFlagControl;
+    NSEventModifierFlags combinations[] = {0, S, O, S|O, K, C, C|S, C|O, C|S|O, C|K};
+    NSMutableDictionary<NSNumber *, NSValue *> *framesWithPopupsOn = [NSMutableDictionary new];
+    for (NSNumber *popupsOn in @[@YES, @NO]) {
+        view.skipLinks = !popupsOn.boolValue;
+        for (int c = 0; c < 10; c++) {
+            NSEventModifierFlags m = combinations[c];
+            BOOL shows = popupsOn.boolValue || (m & C);
+            // The pointer moves onto the link with the keys held down.
+            view.inLink = YES; view.handlingLink = 0;
+            flags = m; eventFlags = m;
+            [view mouseMoved:event(window, NSEventTypeMouseMoved, m, @"", away)];
+            check((view.handlingLink == 1) == shows,
+                  shows ? (popupsOn.boolValue ? @"with link popups on, hovering with any keys starts a popup"
+                                              : @"with link popups off, hovering with Command starts a popup")
+                        : @"with link popups off, hovering without Command starts no popup");
+            if (!shows) {
+                view.handlingLink = 1;
+                [view handleLink:showTimer(view)];
+                check(!view.preview && !view.handlingLink, @"with link popups off, no popup appears without Command");
+                continue;
+            }
+            [view handleLink:showTimer(view)];
+            check(view.handlingLink == 2 && view.preview.superview == view.documentView,
+                  popupsOn.boolValue ? @"with link popups on, Command still shows a popup"
+                                     : @"with link popups off, hovering with Command shows the popup");
+            check(view.preview.pinned == ((m & O) != 0), @"Option pins a popup shown with Command too");
+            NSRect frame = view.preview.frame;
+            if (popupsOn.boolValue)
+                framesWithPopupsOn[@(m)] = [NSValue valueWithRect:frame];
+            else
+                check(NSEqualRects(frame, framesWithPopupsOn[@(m)].rectValue),
+                      @"with link popups off, the keys give the popup they give with link popups on");
+            flags = 0; eventFlags = 0;
+            if (m & O) {
+                // A pinned popup keeps new popups away, also with Command.
+                view.inLink = YES;
+                flags = C; eventFlags = C;
+                [view mouseMoved:event(window, NSEventTypeMouseMoved, C, @"", away)];
+                flags = 0; eventFlags = 0;
+                check(view.preview && view.handlingLink == 2 && view.globalLongTerm,
+                      @"a pinned popup keeps new popups away, also with Command");
+                [view doKillPopup];
+            } else {
+                // Moving on within the link keeps the popup once Command is released;
+                // leaving the link dismisses it.
+                [view mouseMoved:event(window, NSEventTypeMouseMoved, 0, @"", away)];
+                check(view.preview && view.handlingLink == 2, @"moving within the link keeps a popup after the keys are released");
+                view.inLink = NO;
+                [view mouseMoved:event(window, NSEventTypeMouseMoved, 0, @"", away)];
+                check(!view.preview && !view.handlingLink && !handlers.count,
+                      @"leaving the link dismisses a popup shown with Command");
+            }
+        }
+    }
+    NSRect plain = framesWithPopupsOn[@0].rectValue, larger = framesWithPopupsOn[@(C)].rectValue,
+        above = framesWithPopupsOn[@(S)].rectValue;
+    check(NSWidth(larger) > NSWidth(plain) && NSHeight(larger) > NSHeight(plain), @"Command gives the larger popup");
+    check(view.documentView.isFlipped ? NSMinY(above) < NSMinY(plain) : NSMinY(above) > NSMinY(plain),
+          @"Shift puts the popup above the link");
+
+    // With link popups off, Command released before the popup appears leaves it out; pressing
+    // it again over the link brings it, and it goes like any other popup.
+    view.skipLinks = YES; view.inLink = YES; view.handlingLink = 0;
+    flags = C; eventFlags = C;
+    [view mouseMoved:event(window, NSEventTypeMouseMoved, C, @"", away)];
+    NSTimer *pending = showTimer(view);
+    flags = 0; eventFlags = 0;
+    [view handleLink:pending];
+    check(!view.preview && !view.handlingLink, @"releasing Command before the popup appears shows none");
+    [view mouseMoved:event(window, NSEventTypeMouseMoved, 0, @"", away)];
+    check(!view.handlingLink, @"moving on without Command starts no popup");
+    flags = C; eventFlags = C;
+    [view mouseMoved:event(window, NSEventTypeMouseMoved, C, @"", away)];
+    check(view.handlingLink == 1, @"pressing Command again over the link starts the popup");
+    [view handleLink:showTimer(view)];
+    flags = 0; eventFlags = 0;
+    check(view.preview != nil, @"the popup appears with Command held");
+    [view killPopup:timeout(view)];
+    check(!view.preview && !view.handlingLink && !handlers.count, @"a popup shown with Command goes after its time");
+    // Option pins it once it is shown, as with link popups on.
+    flags = C; eventFlags = C;
+    [view mouseMoved:event(window, NSEventTypeMouseMoved, C, @"", away)];
+    [view handleLink:showTimer(view)];
+    flags = NSEventModifierFlagOption; eventFlags = 0;
+    NSEvent *(^handler)(NSEvent *) = handlers.lastObject;
+    handler(event(window, NSEventTypeFlagsChanged, NSEventModifierFlagOption, @"", NSZeroPoint));
+    flags = 0;
+    check(view.preview.pinned && view.globalLongTerm, @"Option pins a popup shown with Command");
+    [view killPopup:timeout(view)];
+    check(view.preview != nil, @"a pinned popup shown with Command stays after its time");
+    check(handler(event(window, NSEventTypeKeyDown, 0, @"\033", NSZeroPoint)) == nil && !view.preview,
+          @"Escape dismisses a pinned popup shown with Command");
+    // Switching link popups on and off again closes such a pinned popup, as before.
+    flags = C|O; eventFlags = C|O;
+    [view mouseMoved:event(window, NSEventTypeMouseMoved, C|O, @"", away)];
+    [view handleLink:showTimer(view)];
+    flags = 0; eventFlags = 0;
+    [view changeLinkPopups];
+    check(view.preview && !view.skipLinks, @"switching link popups on keeps a popup shown with Command");
+    [view changeLinkPopups];
+    check(!view.preview && !handlers.count && view.skipLinks, @"switching link popups off closes it");
+    // The Select PDF tool shows no popups, also with Command.
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
+    flags = C; eventFlags = C;
+    [view mouseMoved:event(window, NSEventTypeMouseMoved, C, @"", away)];
+    flags = 0; eventFlags = 0;
+    check(!view.handlingLink, @"the Select PDF tool shows no popups, also with Command");
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_TEXT];
+    view.inLink = NO; view.skipLinks = NO;
+    [view doKillPopup];
+    view.displayMode = previousMode; [view layoutDocumentView];
+}
+// In a split window both parts follow the document's Link Popups; with it off, Command
+// shows a popup in the part under the pointer only (#30).
+static void testSplitCommandHover(MyPDFKitView *view, MyPDFKitView *second, NSWindow *window) {
+    TestDocument *document = [TestDocument new];
+    document.linkPopups = NO;
+    view.myDocument = document; second.myDocument = document;
+    document.myPDFKitView = view; document.myPDFKitView2 = second;
+    check(view.skipLinks && second.skipLinks, @"both parts follow Link Popups off");
+    [view doKillPopup]; [second doKillPopup];
+    for (MyPDFKitView *pane in @[view, second]) {
+        MyPDFKitView *other = pane == view ? second : view;
+        NSRect visible = [pane.documentView convertRect:pane.documentView.visibleRect toView:nil];
+        NSPoint inside = NSMakePoint(NSMinX(visible) + 3, NSMinY(visible) + 3);
+        pane.inLink = YES; other.inLink = NO;
+        flags = 0; eventFlags = 0;
+        [pane mouseMoved:event(window, NSEventTypeMouseMoved, 0, @"", inside)];
+        check(!pane.handlingLink, @"in a split window, no popup appears without Command");
+        flags = NSEventModifierFlagCommand; eventFlags = NSEventModifierFlagCommand;
+        [pane mouseMoved:event(window, NSEventTypeMouseMoved, NSEventModifierFlagCommand, @"", inside)];
+        [pane handleLink:showTimer(pane)];
+        flags = 0; eventFlags = 0;
+        check(pane.preview && !other.preview && !other.handlingLink, @"in a split window, Command shows the popup in the part under the pointer");
+        pane.inLink = NO;
+        [pane mouseMoved:event(window, NSEventTypeMouseMoved, 0, @"", inside)];
+        check(!pane.preview, @"in a split window, leaving the link dismisses that popup");
+    }
+    view.myDocument = nil; second.myDocument = nil;
+}
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     installFakeToolTip();
@@ -1184,6 +1370,7 @@ int main(void) { @autoreleasepool {
     testPageLabelAndToolTips(view, window, textDocument());
     testDocumentLinkPopups(view, window, doc);
     view.document = doc; [view layoutDocumentView];
+    testCommandHover(view, window);
     {
         // A second pane beside the first, as when the window is split.
         NSRect bounds = window.contentView.bounds;
@@ -1193,6 +1380,7 @@ int main(void) { @autoreleasepool {
         second.document = doc; second.autoScales = YES; [view layoutDocumentView]; [second layoutDocumentView];
         testKeepingPinned(view, second, window);
         testSplitEscape(view, second, window);
+        testSplitCommandHover(view, second, window);
         [second removeFromSuperview];
         view.frame = bounds; [view layoutDocumentView];
     }
@@ -1363,7 +1551,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'popup-side-fitted':'in the continuous displays the popup stays below the link, or above it with Shift',
                     'popup-side-always-kept':'in Single Page and Double Page display a popup that does not fit moves to the other side',
                     'no-next-page':'in the continuous displays the popup goes on with the next page',
-                    'selection-first-page':('the text of the next page shows an I-beam', 'text can be selected across the two pages')}[args.mutation]
+                    'selection-first-page':('the text of the next page shows an I-beam', 'text can be selected across the two pages'),
+                    'command-ignored-when-off':('with link popups off, hovering with Command starts a popup', 'with link popups off, Command leaves out the tool tip'),
+                    'command-toggles':'with link popups on, hovering with any keys starts a popup',
+                    'command-popup-stays':'leaving the link dismisses a popup shown with Command',
+                    'timer-ignores-release':'releasing Command before the popup appears shows none',
+                    'tooltip-ignores-command':'with link popups off, Command leaves out the tool tip',
+                    'tooltip-back-under-popup':'a popup shown with Command keeps the tool tip away'}[args.mutation]
         if isinstance(expected, str): expected = (expected,)
         assert result.returncode == 1 and any(message in result.stderr for message in expected), result.stderr
         print('PASS: detected mutation ' + args.mutation)
