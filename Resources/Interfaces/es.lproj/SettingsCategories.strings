@@ -224,8 +224,8 @@
 "catalog.preview.1.1.title" = "Mostrar la primera página sola como portada";
 "catalog.preview.1.2.title" = "Se aplica a los documentos que se abran después. Tienen prioridad los comentarios mágicos y la dirección de lectura del PDF.";
 "group.preview.2.title" = "Actualización";
-"catalog.preview.2.0.title" = "Actualizar PDF automáticamente";
-"catalog.preview.2.0.note" = "Recargar los PDF modificados al editar la fuente en un editor externo.";
+"catalog.preview.2.0.title" = "Vigilar siempre los cambios del PDF hechos por otras apps";
+"catalog.preview.2.0.note" = "Recargar la vista previa en cuanto un editor externo, latexmk u otra app reescribe el PDF, incluso con TeXShop en segundo plano.";
 "group.preview.4.title" = "Copia de imágenes";
 "catalog.preview.4.0.title" = "Formato de imagen al copiar";
 "catalog.preview.4.1.title" = "Usar correspondencia de color";

@@ -6,7 +6,6 @@ static TSPreferenceKey const TSProfileKeyDarkModeInvertPreview = @"DarkModeInver
 
 static TSPreferenceKey const TSProfileKeyAppleLanguages = @"AppleLanguages";
 static TSPreferenceKey const TSProfileKeyApplePersistence = @"ApplePersistence";
-static TSPreferenceKey const TSProfileKeyAutoReloadExternalPDF = @"AutoReloadExternalPDF";
 static TSPreferenceKey const TSProfileKeyContiguousTextLayout = @"ContiguousTextLayout";
 static TSPreferenceKey const TSProfileKeyConvertToBackslash = @"ConvertToBackslash";
 static TSPreferenceKey const TSProfileKeyConvertToYen = @"ConvertToYen";
@@ -36,7 +35,6 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             TSProfileKeyApplePersistence,
             AutoCompleteEnabledKey,
             AutoOpenRootFileKey,
-            TSProfileKeyAutoReloadExternalPDF,
             AutoSaveEnabledKey,
             AutomaticDashSubstitutionKey,
             AutomaticDataDetectionKey,

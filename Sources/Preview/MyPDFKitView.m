@@ -469,9 +469,9 @@
 	
 	mouseMode = [SUD integerForKey: PdfKitMouseModeKey];
 	
-	// A watched PDF must survive an in-place overwrite of its file.
-	// If no snapshot can be made, load the file as when it is not watched.
-	pdfDoc = self.myDocument.pdfRefreshTimer ? TSInitialPDFSnapshot(imagePath, loadedSignature) : nil;
+	// The PDF on display must survive an in-place overwrite of its file, as it is
+	// checked against the file. If no snapshot can be made, load the file itself.
+	pdfDoc = [self.myDocument externalPDFChecksAllowed] ? TSInitialPDFSnapshot(imagePath, loadedSignature) : nil;
 	if (pdfDoc) {
         [self setDocument:pdfDoc];
     } else if ([self doReleaseDocument]) {
@@ -1206,8 +1206,8 @@ In March, 2024, an important bug surfaced in the previous routine. The routine b
 {
     NSString *loadedChangeTime = nil;
     NSString *loadedSignature = TSExternalPDFState(imagePath, &loadedChangeTime);
-    PDFDocument *pdfDoc = self.myDocument.pdfRefreshTimer ? TSInitialPDFSnapshot(imagePath, loadedSignature) : nil;
-    // If no snapshot can be made, load the file as when it is not watched.
+    PDFDocument *pdfDoc = [self.myDocument externalPDFChecksAllowed] ? TSInitialPDFSnapshot(imagePath, loadedSignature) : nil;
+    // If no snapshot can be made, load the file itself.
     if (!pdfDoc && [self doReleaseDocument])
         pdfDoc = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:imagePath]];
     else if (!pdfDoc)

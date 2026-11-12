@@ -67,6 +67,7 @@ static NSInteger screenUpdates=0;
 @implementation TestDocument
 - (void)updatePreviewLayoutControls {}
 - (void)notePDFLoadedAtPath:(NSString *)path signature:(NSString *)signature changeTime:(NSString *)changeTime {}
+- (BOOL)externalPDFChecksAllowed {return self.pdfRefreshTimer != nil;}
 - (void)callSaveAnnotations {}
 - (void)close {}
 @end

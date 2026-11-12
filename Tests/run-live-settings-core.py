@@ -65,7 +65,7 @@ int main(int argc,const char **argv) { @autoreleasepool {
             defaults.values[@"TeXAwareSpellChecking"]=@NO;
             defaults.values[@"TSHasBeenUsed"]=@NO;
             defaults.values[@"DocumentFontAttributes"]=@"old";
-            defaults.values[@"AltPath"]=@"stale";defaults.values[@"AutoReloadExternalPDF"]=@NO;
+            defaults.values[@"AltPath"]=@"stale";
             // Exercise every B key, including hidden preferences absent from all profiles.
             for (NSString *key in TSKnownPreferenceKeys())
                 if (profile[key] == nil && !TSPreferenceProfilePreservesKey(key)) defaults.values[key]=@"stale";
@@ -88,7 +88,6 @@ int main(int argc,const char **argv) { @autoreleasepool {
                     check(defaults.values[key]==nil,"every B key resets including hidden settings");
             }
             check([defaults boolForKey:@"ConvertToYen"],"generated yen conversion default");
-            check(defaults.values[@"AutoReloadExternalPDF"]==nil,"hidden PDF reload preference is B not preserved");
             check(defaults.values[@"DockIconStyle"]==nil,"B Dock defaults to current");
             check(defaults.values[@"DocumentFontAttributes"]==nil && [defaults.values[@"DocumentFont"] isEqual:font],"font generation");
             if (profile[@"TeXAwareSpellChecking"]==nil) check([defaults boolForKey:@"TeXAwareSpellChecking"],"B registered default");
