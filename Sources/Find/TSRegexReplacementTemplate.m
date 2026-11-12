@@ -196,7 +196,13 @@ static NSUInteger TSGroupEscapeLength(NSString *s, NSUInteger index, NSString *_
             if (i + 1 >= length) // A lone backslash at the end stands for nothing, as in NSRegularExpression.
                 break;
             unichar n = [s characterAtIndex:i + 1];
-            [text appendString:n == 't' ? @"\t" : n == 'n' ? @"\n" : n == 'r' ? @"\r" : [NSString stringWithCharacters:&n length:1]];
+            if (n == 't' || n == 'n' || n == 'r') {
+                [text appendString:n == 't' ? @"\t" : n == 'n' ? @"\n" : @"\r"];
+                i += 2;
+                continue;
+            }
+            // The escaped character is one UTF-16 unit, as in NSRegularExpression.
+            [text appendString:[s substringWithRange:NSMakeRange(i + 1, 1)]];
             i += 2;
         } else if (c == '$' && i + 1 < length && TSIsDigit([s characterAtIndex:i + 1])) {
             // As many digits are read as the number of groups has (at least one), as NSRegularExpression does;
@@ -212,6 +218,12 @@ static NSUInteger TSGroupEscapeLength(NSString *s, NSUInteger index, NSString *_
                 [text setString:@""];
             }
             [tokens addObject:[[TSReplacementToken alloc] initWithKind:TSReplacementTokenGroup text:@"" group:group]];
+        } else if (CFStringIsSurrogateHighCharacter(c) || CFStringIsSurrogateLowCharacter(c)) {
+            // NSRegularExpression copies a surrogate and the unit after it as they stand, whatever that unit is
+            // (macOS 27.2): `😀$1` gives `😀a`, but `\😀$1` gives `😀$1` and a lone surrogate keeps the `$1` after it.
+            NSUInteger size = MIN((NSUInteger)2, length - i);
+            [text appendString:[s substringWithRange:NSMakeRange(i, size)]];
+            i += size;
         } else {
             [text appendFormat:@"%C", c];
             i++;

@@ -35,6 +35,10 @@ MUTATIONS = {
     'rules see the original text': ('TSRegexMultipleReplace.m', '            current = next;', '            (void)next;'),
     'disabled rules run': ('TSRegexMultipleReplace.m', '        if (!rule.enabled)\n            continue;', '        if (NO)\n            continue;'),
     'anchoring bounds are used': ('TSRegexFindPattern.m', 'NSMatchingWithTransparentBounds | NSMatchingWithoutAnchoringBounds', 'NSMatchingWithoutAnchoringBounds'),
+    'ICU surrogates are single units': ('TSRegexReplacementTemplate.m', '            NSUInteger size = MIN((NSUInteger)2, length - i);\n', '            NSUInteger size = 1;\n'),
+    'ICU escapes take a whole character': ('TSRegexReplacementTemplate.m', '            [text appendString:[s substringWithRange:NSMakeRange(i + 1, 1)]];\n            i += 2;\n', '            NSRange whole = [s rangeOfComposedCharacterSequenceAtIndex:i + 1];\n            [text appendString:[s substringWithRange:whole]];\n            i = NSMaxRange(whole);\n'),
+    'whole words read UTF-16 units after the match': ('TSRegexFindPattern.m', '&& TSIsWordCharacter(TSCodePointAt(string, end)))', '&& TSIsWordCharacter([string characterAtIndex:end]))'),
+    'whole words read UTF-16 units before the match': ('TSRegexFindPattern.m', '&& TSIsWordCharacter(TSCodePointBefore(string, match.location)))', '&& TSIsWordCharacter([string characterAtIndex:match.location - 1]))'),
 }
 
 

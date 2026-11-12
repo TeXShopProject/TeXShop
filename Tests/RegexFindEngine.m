@@ -70,10 +70,31 @@ static void ExpectICU(NSString *find, TSRegexFindOptions options, NSString *repl
     ExpectReplaceIn(TSRegexReplacementSyntaxICU, find, options, replace, text, expected);
 }
 
+/// The string with every unit outside ASCII written as \uXXXX, so that lone surrogates can be printed.
+static const char *Shown(NSString *string)
+{
+    NSMutableString *shown = [NSMutableString string];
+    for (NSUInteger i = 0; i < string.length; i++) {
+        unichar c = [string characterAtIndex:i];
+        if (c < 0x80)
+            [shown appendFormat:@"%C", c];
+        else
+            [shown appendFormat:@"\\u%04X", c];
+    }
+    return shown.UTF8String;
+}
+
 /// The ICU syntax gives what NSRegularExpression gives, for templates without \t \n \r.
 static void CompareWithFoundation(NSString *find, NSString *text, NSUInteger count, uint32_t seed)
 {
-    static NSString *const alphabet = @"$$$\\\0123456789ax{}&g<>+`'-";
+    // Single characters, and characters outside the BMP whole and as lone surrogates.
+    static NSString *const alphabet = @"$$$\\\0123456789ax{}&g<>+`'-uU";
+    NSMutableArray<NSString *> *pieces = [NSMutableArray array];
+    for (NSUInteger j = 0; j < alphabet.length; j++)
+        [pieces addObject:[alphabet substringWithRange:NSMakeRange(j, 1)]];
+    unichar high = 0xD83D, low = 0xDE00;
+    [pieces addObjectsFromArray:@[@"\U0001F600", @"\U0001F600", @"\U00020BB7", @"あ",
+                                  [NSString stringWithCharacters:&high length:1], [NSString stringWithCharacters:&low length:1]]];
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:find options:0 error:NULL];
     uint32_t state = seed;
     NSUInteger mismatches = 0;
@@ -83,13 +104,12 @@ static void CompareWithFoundation(NSString *find, NSString *text, NSUInteger cou
         NSUInteger length = (state >> 24) % 9;
         for (NSUInteger j = 0; j < length; j++) {
             state = state * 1664525u + 1013904223u;
-            unichar c = [alphabet characterAtIndex:(state >> 16) % alphabet.length];
-            [replace appendFormat:@"%C", c];
+            [replace appendString:pieces[(state >> 16) % pieces.count]];
         }
         NSString *expected = [regex stringByReplacingMatchesInString:text options:0 range:NSMakeRange(0, text.length) withTemplate:replace];
         NSString *actual = ReplaceAll(find, TSRegexFindRegularExpression, replace, text, TSRegexReplacementSyntaxICU);
         if (![actual isEqualToString:expected] && mismatches++ < 5)
-            printf("FAIL ICU template %s on %s: got [%s], Foundation gives [%s]\n", replace.UTF8String, find.UTF8String, actual.UTF8String, expected.UTF8String);
+            printf("FAIL ICU template %s on %s: got [%s], Foundation gives [%s]\n", Shown(replace), find.UTF8String, Shown(actual), Shown(expected));
     }
     if (mismatches)
         failures++;
@@ -134,6 +154,10 @@ int main(void)
         ExpectICU(@"(?<n>a)", R, @"${n}$n\\g<n>", @"a", @"${n}$ng<n>");
         ExpectICU(@"¥d+", R, @"<$0¥$>", @"a12", @"a<12$>");
         ExpectICU(@"a.", T, @"\\1$0", @"a.a", @"\\1$0a");
+        // NSRegularExpression copies a surrogate with the unit after it, so an escaped character outside the BMP
+        // keeps the next character as it stands. `\\u` is only a `u`.
+        ExpectICU(@"(a)", R, @"\\\U0001F600$1|\\\U00020BB7\U0001F600$1$1|\\\U0001F600\\$1|\\\U0001F600\\\\$1|\\あ$1", @"a",
+                  @"\U0001F600$1|\U00020BB7\U0001F600$1a|\U0001F600\\a|\U0001F600\\$1|あa");
         CompareWithFoundation(@"(a)(b)?(c)", @"xacy abcz ac", 3000, 1);
         CompareWithFoundation(@"(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)", @"-abcdefghijkl-", 3000, 7);
 
@@ -153,6 +177,10 @@ int main(void)
         ExpectMatches(@"cat", T | TSRegexFindWholeWord, @"cat concat cat_ cat.", @"cat|cat");
         ExpectMatches(@"aa", T, @"aaaa", @"aa|aa");
         ExpectMatches(@"aa", T | TSRegexFindWholeWord, @"aaa aa", @"aa");
+        // Characters outside the BMP are letters too.
+        ExpectMatches(@"a", T | TSRegexFindWholeWord, @"a\U00020BB7 \U00020BB7a a\U00010400 a", @"a");
+        ExpectMatches(@"\U00020BB7", T | TSRegexFindWholeWord, @"x\U00020BB7y \U00020BB7", @"\U00020BB7");
+        ExpectMatches(@"a", T | TSRegexFindWholeWord, @"\U0001F600a\U0001F600", @"a");
         ExpectMatches(@"foo bar", T | TSRegexFindDelimitByWhitespace, @"bar foo foobar", @"bar|foo|foo|bar");
         ExpectMatches(@"a ab", T | TSRegexFindDelimitByWhitespace, @"ab", @"ab");
         ExpectMatches(@"A", T | TSRegexFindIgnoreCase, @"aA", @"a|A");
