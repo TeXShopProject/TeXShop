@@ -48,6 +48,11 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
         _transform = transform;
         // The image draws its whole page; only the part inside the popup may be seen (#21).
         self.clipsToBounds = YES;
+        // The preview sees the pointer move only while it is over the preview, so the popup
+        // itself notices the pointer leaving it, also straight onto the toolbar (#14).
+        [self addTrackingArea:[[NSTrackingArea alloc] initWithRect:NSZeroRect
+            options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect
+              owner:self userInfo:nil]];
     }
     return self;
 }
@@ -205,7 +210,9 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     if (!self.pinned || !self.superview) return nil;
     if (_drag == TSLinkPreviewDragSelect) return NSCursor.IBeamCursor;
     if (_drag != TSLinkPreviewDragNone) return [self cursorForEdges:_dragEdges];
-    if (!NSPointInRect(point, self.frame)) return nil;
+    // A popup moved partly out of the preview has no cursor over its hidden part, which can
+    // lie under the toolbar (#14).
+    if (!NSPointInRect(point, self.frame) || !NSPointInRect(point, self.superview.visibleRect)) return nil;
     TSLinkPreviewEdge edges = [self edgesAtPoint:point];
     if (edges == TSLinkPreviewEdgeNone && [self selectsText] && [self isTextAtPagePoint:[self pagePointAtPoint:point]])
         return NSCursor.IBeamCursor;
@@ -219,14 +226,39 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     [self setNeedsDisplay:YES];
 }
 
+- (PDFView *)ownerPDFView
+{
+    for (NSView *owner = self.superview; owner; owner = owner.superview)
+        if ([owner isKindOfClass:PDFView.class]) return (PDFView *)owner;
+    return nil;
+}
+
+// Once the pointer is outside the popup: the preview's tool shows its cursor over the
+// preview, and anywhere else, such as over the toolbar, the arrow comes back (#14).
+- (void)showCursorOutsideWithEvent:(NSEvent *)event
+{
+    PDFView *owner = [self ownerPDFView];
+    NSPoint point = owner ? [owner convertPoint:event.locationInWindow fromView:nil] : NSZeroPoint;
+    // A view that does not clip has a visible rect beyond its bounds, up to the toolbar.
+    if (owner && owner.window == event.window && NSPointInRect(point, NSIntersectionRect(owner.bounds, owner.visibleRect))
+        && [owner respondsToSelector:@selector(showToolCursorOutsideLinkPreviewWithEvent:)])
+        [owner showToolCursorOutsideLinkPreviewWithEvent:event];
+    else
+        [NSCursor.arrowCursor set];
+}
+
+- (void)mouseExited:(NSEvent *)event
+{
+    // While dragging, the popup has the drag's cursor everywhere until the button is released.
+    if (!self.pinned || [self cursorAtPoint:[self locationOfEvent:event]]) return;
+    [self showCursorOutsideWithEvent:event];
+}
+
 - (void)mouseDown:(NSEvent *)event
 {
     // A click makes the popup's preview the active one, so that Copy and the keyboard reach it.
-    for (NSView *owner = self.superview; owner; owner = owner.superview)
-        if ([owner isKindOfClass:PDFView.class]) {
-            if (self.window.firstResponder != owner) [self.window makeFirstResponder:owner];
-            break;
-        }
+    PDFView *owner = [self ownerPDFView];
+    if (owner && self.window.firstResponder != owner) [self.window makeFirstResponder:owner];
     NSPoint point = [self locationOfEvent:event];
     _dragEdges = [self edgesAtPoint:point];
     _dragStart = point;
@@ -279,8 +311,11 @@ typedef NS_ENUM(NSInteger, TSLinkPreviewDrag) {
     // A click that moved nothing clears the selection, as in the preview.
     if (_drag == TSLinkPreviewDragMove && NSEqualRects(self.frame, _startFrame)) self.selection = nil;
     _drag = TSLinkPreviewDragNone;
+    // A drag can end outside the popup, as when its edge stops below the toolbar and the
+    // pointer goes on: the drag's cursor must not stay there (#14).
     NSCursor *cursor = [self cursorAtPoint:[self locationOfEvent:event]];
     if (cursor) [cursor set];
+    else [self showCursorOutsideWithEvent:event];
 }
 
 // Scrolls only the popup's page: the preview underneath stays where it is.

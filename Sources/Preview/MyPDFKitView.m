@@ -4209,6 +4209,13 @@ The system then remembers the new number and sends is to the Timer which will di
 	}
 }
 
+- (void) showToolCursorOutsideLinkPreviewWithEvent: (NSEvent *) theEvent
+{
+    showsLinkPreviewCursor = NO;
+    [[self window] invalidateCursorRectsForView: self];
+    [[self cursorForToolWithEvent: theEvent] set];
+}
+
 - (void) mouseMoved: (NSEvent *) theEvent
 {
     // A pinned popup shows how it can be moved or resized.
@@ -4220,11 +4227,8 @@ The system then remembers the new number and sends is to the Timer which will di
         return;
     }
     // Leaving a pinned popup, however fast, shows the tool's cursor again.
-    if (showsLinkPreviewCursor) {
-        showsLinkPreviewCursor = NO;
-        [[self window] invalidateCursorRectsForView: self];
-        [[self cursorForToolWithEvent: theEvent] set];
-    }
+    if (showsLinkPreviewCursor)
+        [self showToolCursorOutsideLinkPreviewWithEvent: theEvent];
     
 if (!self.skipLinks && !self.globalLongTerm)
     
