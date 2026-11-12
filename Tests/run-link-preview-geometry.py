@@ -15,6 +15,11 @@ MUTATIONS = {
     'pan-unclamped': ('    source.origin.x = TSLinkPreviewClamp(NSMinX(source) - contentDelta.width, 0,\n                                         MAX(0, pageSize.width - NSWidth(source)));\n',
                       '    source.origin.x = NSMinX(source) - contentDelta.width;\n'),
     'edge-orientation': ('    if (flipped) point.y = -point.y;\n    grip', '    grip'),
+    'kept-side-moves': ('    if (!keepSide) {\n        if (y < NSMinY(available)', '    {\n        if (y < NSMinY(available)'),
+    'bottom-fills-up': ('    CGFloat y = MAX(top - height, 0);\n    height = top - y;\n',
+                        '    CGFloat y = TSLinkPreviewClamp(top - height, 0, pageSize.height - height);\n'),
+    'kept-side-shrinks': ('    if (!keepSide) scale = MIN(scale, available.size.height / height);\n',
+                          '    scale = MIN(scale, available.size.height / height);\n'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
