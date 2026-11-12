@@ -1267,6 +1267,9 @@ extern NSPanel *pageNumberWindow;
         // The second view holds the document only while the preview is split;
         // give it the document before its display parameters are set.
         [self.myPDFKitView2 setDocument:[self.myPDFKitView document]];
+        // When the document was opened without a PDF, the second view did not start
+        // watching its page then, so the page number box would not follow it (#14).
+        [(MyPDFKitView *)self.myPDFKitView2 notificationSetup];
         
         // ADJUST DISPLAY PARAMETERS
         

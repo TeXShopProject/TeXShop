@@ -130,7 +130,11 @@
     currentMouseMode = mouseMode;
     [mouseModeMatrix selectCellWithTag: mouseMode];
     [[mouseModeMenu itemWithTag: mouseMode] setState: NSOnState];
-    
+    // Only the first view is connected to the page number field of the single window
+    // toolbar; the second view shows its page there too (#14).
+    MyPDFKitView *first = self.myDocument.myPDFKitView;
+    if (!scurrentPage && first && first != self)
+        scurrentPage = first->scurrentPage;
 }
 
 /*
@@ -376,6 +380,13 @@
 
 - (void) notificationSetup;
 {
+    // This runs again for each PDF the first view shows and when the window is split;
+    // observe each notification once (#14).
+    for (NSNotificationName name in @[PDFViewPageChangedNotification, PDFViewScaleChangedNotification,
+                                      NSViewBoundsDidChangeNotification, NSScrollViewWillStartLiveMagnifyNotification,
+                                      NSScrollViewDidEndLiveMagnifyNotification, MagnificationChangedNotification,
+                                      PreviewColorChangedNotification])
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:name object:nil];
     // [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(documentChanged:)
     //                                            name: PDFViewDocumentChangedNotification object: self];
     
@@ -2418,10 +2429,15 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 
 
+	// Count the pages of the PDF shown now. The second view of a split window gets its
+	// PDF when the window is split, after it last counted the pages (#14).
+	NSInteger pageCount = (NSInteger)[[self document] pageCount];
+	if (pageCount < 1)
+		return;
 	if (myPage < 1)
 		myPage = 1;
-	if (myPage > totalPages)
-		myPage = totalPages;
+	if (myPage > pageCount)
+		myPage = pageCount;
 
 	[currentPage0 setIntegerValue:myPage];
     [scurrentPage setIntegerValue:myPage];
@@ -4606,6 +4622,13 @@ if (!self.skipLinks && !self.globalLongTerm)
         && !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl
                                     | NSEventModifierFlagOption | NSEventModifierFlagShift))
         && [event.charactersIgnoringModifiers isEqualToString:@"\033"]) {
+        // Both parts of a split window watch Escape, the part that showed its popup last
+        // first. Escape dismisses the popup of the active part, and that of the other part
+        // only when the active part has none (#14).
+        MyPDFKitView *active = (MyPDFKitView *)self.myPDFWindow.activeView;
+        if (active != self && active.window == self.window && [active isKindOfClass:[MyPDFKitView class]]
+            && [active hasPinnedLinkPreview])
+            return event;
         [self doKillPopup];
         return nil;
     }
@@ -8093,7 +8116,10 @@ else
 	//-------Magnification Controls----------
 	[self fixMagnificationControls]; //needed when magnify in split mode
 	[self scaleChanged: nil];
-	[self pageChanged: nil];
+	// The page number fields show the page of this view, which the toolbar now works with (#14).
+	PDFPage *activePage = [self currentPage];
+	if (activePage)
+		[self displayPageChange: [[self document] indexForPage: activePage]];
 }
 
 - (BOOL)becomeFirstResponder
