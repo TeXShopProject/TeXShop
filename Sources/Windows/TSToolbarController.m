@@ -343,7 +343,15 @@ else
             [mySegmentedControl setTag: 3 forSegment: 2];
             [mySegmentedControl setTag: 4 forSegment: 3];
             [mySegmentedControl setTag: 5 forSegment: 4];
+            NSArray *toolTipKeys = @[@"tiToolTipMouseModeScroll", @"tiToolTipMouseModeSelectText",
+                                     @"tiToolTipMouseModeMagnify", @"tiToolTipMouseModeMagnifyLarge",
+                                     @"tiToolTipMouseModeSelectPDF"];
+            for (NSInteger segment = 0; segment < 5; segment++)
+                [mySegmentedControl setToolTip: NSLocalizedStringFromTable(toolTipKeys[segment], @"ToolbarItems", nil)
+                                    forSegment: segment];
             theToolbarItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemIdent customView:mySegmentedControl];
+            // Each tool has its own tool tip, so the item has none of its own.
+            theToolbarItem.toolTip = nil;
             }
                 
         else

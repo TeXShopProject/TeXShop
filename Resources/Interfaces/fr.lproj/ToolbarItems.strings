@@ -164,7 +164,11 @@ tiToolTipMacrosKIT              = "Insérer les macros";
 
 tiLabelMouseModeKIT				= "Mode de la souris";
 tiPaletteLabelMouseModeKIT		= "Mode de la souris";
-tiToolTipMouseModeKIT			= "Changer le mode de la souris";
+tiToolTipMouseModeScroll = "Dérouler : faire glisser pour déplacer le document";
+tiToolTipMouseModeSelectText = "Sélectionner le texte : faire glisser pour sélectionner du texte à copier";
+tiToolTipMouseModeMagnify = "Agrandir : maintenir enfoncé pour regarder à travers une petite loupe";
+tiToolTipMouseModeMagnifyLarge = "Agrandissement maximal : maintenir enfoncé pour regarder à travers une grande loupe";
+tiToolTipMouseModeSelectPDF = "Sélectionner (PDF) : faire glisser pour sélectionner une zone à copier comme image";
 
 tiLabelSyncMarksKIT				= "Marques synchro";
 tiPaletteLabelSyncMarksKIT		= "Marques synchro";
@@ -229,7 +233,6 @@ tiToolTipSharingSplit            = "Partager texte et images";
 
 tiLabelMouseModeKITSplit                = "Mode de la souris";
 tiPaletteLabelMouseModeKITSplit        = "Mode de la souris";
-tiToolTipMouseModeKITSplit            = "Changer le mode de la souris";
 
 tiLabelSearchKITSplit                = "Rechercher";
 tiPaletteLabelSearchKITSplit         = "Rechercher";
