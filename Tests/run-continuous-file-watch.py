@@ -21,6 +21,7 @@ program = r'''
 #import <Cocoa/Cocoa.h>
 #import "TSFileChangeMonitor.h"
 #import <unistd.h>
+#import <sys/stat.h>
 static BOOL activateBauerPatch=YES;
 static NSString *writerScript, *python;
 static void Write(NSString *path, NSString *mode, NSString *value) {
@@ -35,8 +36,10 @@ static void Write(NSString *path, NSString *mode, NSString *value) {
  TSFileChangeMonitor *sourceFileMonitor;
  NSData *sourceAcceptedFingerprint, *sourceWrittenFingerprint, *sourceReloadData, *sourceReloadFingerprint;
  NSUInteger sourceIOGeneration;
- BOOL sourceSaving;
+ BOOL sourceSaving, sourceExternalWriteFinished;
  NSView *textView;
+ NSTextView *textView1, *textView2;
+ NSTextStorage *_textStorage;
 }
 @property NSString *observed, *injectMode;
 @property NSUInteger reads;
