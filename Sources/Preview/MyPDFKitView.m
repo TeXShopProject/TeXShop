@@ -130,7 +130,11 @@
     currentMouseMode = mouseMode;
     [mouseModeMatrix selectCellWithTag: mouseMode];
     [[mouseModeMenu itemWithTag: mouseMode] setState: NSOnState];
-    
+    // Only the first view is connected to the page number field of the single window
+    // toolbar; the second view shows its page there too (#14).
+    MyPDFKitView *first = self.myDocument.myPDFKitView;
+    if (!scurrentPage && first && first != self)
+        scurrentPage = first->scurrentPage;
 }
 
 /*
@@ -2418,10 +2422,15 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	
 
 
+	// Count the pages of the PDF shown now. The second view of a split window gets its
+	// PDF when the window is split, after it last counted the pages (#14).
+	NSInteger pageCount = (NSInteger)[[self document] pageCount];
+	if (pageCount < 1)
+		return;
 	if (myPage < 1)
 		myPage = 1;
-	if (myPage > totalPages)
-		myPage = totalPages;
+	if (myPage > pageCount)
+		myPage = pageCount;
 
 	[currentPage0 setIntegerValue:myPage];
     [scurrentPage setIntegerValue:myPage];
@@ -8100,7 +8109,10 @@ else
 	//-------Magnification Controls----------
 	[self fixMagnificationControls]; //needed when magnify in split mode
 	[self scaleChanged: nil];
-	[self pageChanged: nil];
+	// The page number fields show the page of this view, which the toolbar now works with (#14).
+	PDFPage *activePage = [self currentPage];
+	if (activePage)
+		[self displayPageChange: [[self document] indexForPage: activePage]];
 }
 
 - (BOOL)becomeFirstResponder

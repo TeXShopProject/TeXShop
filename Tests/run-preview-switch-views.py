@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Switch the parts of a split preview with the production code in a window that is never
 shown (#25): the parts change places with their size, place, display format, magnification,
-selection, pinned link popup and focus, and switching again gives back the first arrangement."""
+selection, pinned link popup and focus, and switching again gives back the first arrangement.
+The toolbar's page number field shows the page of the active part and moves it (#14)."""
 from pathlib import Path
 import argparse
 import subprocess
@@ -24,6 +25,10 @@ MUTATIONS = {
     # view code
     'search-not-followed': ('view', '\t[self resetSearchDelegate];\n    [self.myDocument', '    [self.myDocument'),
     'places-not-swapped': ('window', '    TSPreviewPaneRestore(upperView, lower);\n    TSPreviewPaneRestore(lowerView, upper);\n', ''),
+    # The page number field (#14).
+    'page-count-cached': ('view', '\tNSInteger pageCount = (NSInteger)[[self document] pageCount];\n', '\tNSInteger pageCount = totalPages;\n'),
+    'page-field-not-followed': ('view', '\tif (activePage)\n\t\t[self displayPageChange:', '\tif (NO)\n\t\t[self displayPageChange:'),
+    'single-field-not-shared': ('view', '        scurrentPage = first->scurrentPage;\n', '        ;\n'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -39,7 +44,8 @@ def last_method(source, signature):
     return source[start:closing_brace(source, source.index('{', start))]
 
 window_methods = [last_method(window_source, s) for s in (
-    '- (void) mainSplitPdfKitWindow', '- (void)switchViews;', '- (void)switchSplitParts\n', '- (void) splitPdfKitWindow:')]
+    '- (void) mainSplitPdfKitWindow', '- (void)switchViews;', '- (void)switchSplitParts\n', '- (void) splitPdfKitWindow:',
+    '- (void) goToKitPage: sender')]
 view_methods = [last_method(view_source, s) for s in (
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
     '- (BOOL)hasPinnedLinkPreview\n', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
@@ -47,7 +53,10 @@ view_methods = [last_method(view_source, s) for s in (
     # What the toolbar, the menus and the search results follow (#25 audit).
     '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
     '- (void)fixMagnificationControls\n', '- (void)fixStuff\n', '- (void)resetSearchDelegate\n',
-    '- (BOOL)becomeFirstResponder\n', '- (void)becomeActiveView\n')]
+    '- (BOOL)becomeFirstResponder\n', '- (void)becomeActiveView\n',
+    # The toolbar's page number field and the views' setup when the nib is loaded and the PDF is opened (#14).
+    '- (void)awakeFromNib\n', '- (void) showForSecond;', '- (void) displayPageChange:', '- (void) goToKitPageNumber:',
+    '- (NSInteger) getModifiedValue:', '- (void) goToKitPage: (id)sender')]
 fragments = [('complete method: ' + text.split('\n')[0], source, text)
              for source, texts in ((window_source, window_methods), (view_source, view_methods)) for text in texts]
 window_text = '\n'.join(window_methods)
@@ -72,6 +81,11 @@ program = r'''
 enum { PDF_SINGLE_PAGE_STYLE = 1, PDF_TWO_PAGE_STYLE = 2, PDF_MULTI_PAGE_STYLE = 3, PDF_DOUBLE_MULTI_PAGE_STYLE = 4 };
 enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3, NEW_PDF_FIT_TO_WIDTH = 4 };
 enum { NEW_MOUSE_MODE_SCROLL = 1, NEW_MOUSE_MODE_SELECT_TEXT = 2 };
+enum { MOUSE_MODE_MAG_GLASS = 2 };
+// The settings are in memory only (TestAppKitIsolation.h).
+#define SUD NSUserDefaults.standardUserDefaults
+#define PdfMouseModeKey @"PdfMouseMode"
+#define PdfKitMouseModeKey @"PdfKitMouseMode"
 #define PDF_MAX_SCALE 2000
 static NSUInteger checks;
 static void check(BOOL ok, NSString *message) {
@@ -96,13 +110,19 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)mainSplitPdfKitWindow;
 - (void)splitPdfKitWindow:(id)sender;
 - (void)switchViews;
+- (void)goToKitPage:(id)sender;
 @end
 #define TSPreviewWindow TestWindow
 @interface TestDocument : NSObject
 @property (weak) TestWindow *window;
+@property NSInteger numberingCorrection;
+- (id)myPDFKitView;
+- (NSWindow *)pagenumberPanel;
 @end
 @implementation TestDocument
 - (id)topView { return self.window.myPDFKitView; }
+- (id)myPDFKitView { return self.window.myPDFKitView; }
+- (NSWindow *)pagenumberPanel { return nil; }
 - (void)updatePreviewLayoutControls {}
 @end
 @interface MyPDFKitView : PDFView {
@@ -113,7 +133,13 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
     NSTextField *myScale, *smyScale, *myScale1;
     NSStepper *myStepper, *smyStepper, *myStepper1;
     NSTableView *_searchTable;
+    // The toolbar's page number fields: the Preview window's and the single window's.
+    NSTextField *currentPage0, *scurrentPage, *currentPage1;
+    NSInteger totalPages, currentMouseMode;
+    NSMatrix *mouseModeMatrix;
+    NSMenu *mouseModeMenu;
 }
+@property NSArray *sourceFiles;
 @property (weak) TestWindow *myPDFWindow;
 @property (weak) TestDocument *myDocument;
 @property BOOL locationSaved, verticalSplitSaved, horizontalSplitSaved;
@@ -138,6 +164,13 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)useScaleField:(NSTextField *)field stepper:(NSStepper *)stepper searchTable:(NSTableView *)table {
     myScale = field; myStepper = stepper; _searchTable = table;
 }
+// As the nib connects them: the single window's page field only to the first view.
+- (void)usePageField:(NSTextField *)field singleWindowField:(NSTextField *)single {
+    currentPage0 = field; scurrentPage = single;
+}
+- (NSString *)romanStringValue:(NSInteger)n { return @"i"; }
+- (void)notificationSetup {}
+- (void)initializeDisplay {}
 // As in MyPDFKitView, cleaning up the marquee closes a popup that is not kept.
 - (void)cleanupMarquee:(BOOL)terminate { [self doKillPopup]; }
 - (void)pageChanged:(NSNotification *)notification {}
@@ -203,6 +236,7 @@ static NSString *selectionText(PDFView *v) { return v.currentSelection.string ?:
 typedef struct {
     TestWindow *window; MyPDFKitView *upper, *lower;
     TestDocument *document; NSTextField *scaleField; NSTableView *searchTable; NSSearchField *searchField;
+    NSTextField *pageField, *singlePageField;
 } Preview;
 static Preview makePreview(PDFDocument *doc, BOOL sideBySide) {
     TestWindow *w = [[TestWindow alloc] initWithContentRect:NSMakeRect(0, 0, 900, 900)
@@ -228,16 +262,24 @@ static Preview makePreview(PDFDocument *doc, BOOL sideBySide) {
     // The search field of the drawer, which can have the focus instead of either part.
     NSSearchField *search = [[NSSearchField alloc] initWithFrame:NSMakeRect(0, 0, 100, 20)];
     [w.contentView addSubview:search];
+    // The page number fields of the Preview window's and of the single window's toolbar.
+    NSTextField *pageField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 50, 20)];
+    NSTextField *singlePageField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 50, 20)];
+    [w.contentView addSubview:pageField];
     for (MyPDFKitView *v in @[a, b]) {
         v.myPDFWindow = w; v.myDocument = document;
         [v useScaleField:field stepper:stepper searchTable:table];
+        [v usePageField:pageField singleWindowField:v == a ? singlePageField : nil];
         [NSNotificationCenter.defaultCenter addObserver:v selector:@selector(scaleChanged:) name:PDFViewScaleChangedNotification object:v];
     }
+    [a awakeFromNib]; [b awakeFromNib];
+    // Opening the PDF: the second view counts the pages before it has the PDF.
     a.document = doc; [a setupPageStyle]; [a setupMagnificationStyle];
+    [b showForSecond];
     settle(w);
     flags = sideBySide ? NSEventModifierFlagOption : 0; [w splitPdfKitWindow:nil]; flags = 0;
     settle(w);
-    return (Preview){w, a, b, document, field, table, search};
+    return (Preview){w, a, b, document, field, table, search, pageField, singlePageField};
 }
 
 typedef struct {
@@ -266,6 +308,18 @@ static void checkControls(Preview p, NSString *name) {
           describe(name, [NSString stringWithFormat:@"the magnification field shows the active part (%ld for %.0f)",
                           (long)p.scaleField.integerValue, active.scaleFactor * 100]));
     check(p.searchTable.delegate == (id)active, describe(name, @"the search results work with the active part"));
+    NSInteger page = (NSInteger)[active.document indexForPage:active.currentPage] + 1;
+    check(p.pageField.integerValue == page && p.singlePageField.integerValue == page,
+          describe(name, [NSString stringWithFormat:@"the page number fields show the active part (%ld, %ld for %ld)",
+                          (long)p.pageField.integerValue, (long)p.singlePageField.integerValue, (long)page]));
+}
+static NSInteger pageOf(PDFView *v) { return (NSInteger)[v.document indexForPage:v.currentPage] + 1; }
+// Typing a page number in the toolbar and pressing Return, after clicking in the field.
+static void enterPage(Preview p, NSTextField *field, NSString *text) {
+    check([p.window makeFirstResponder:field], @"the page number field takes the focus");
+    field.stringValue = text;
+    [p.window goToKitPage:field];
+    settle(p.window);
 }
 
 // After a switch each view holds what the other part had; `s` is the state before it.
@@ -414,6 +468,32 @@ int main(int argc, char **argv) { @autoreleasepool {
         checkSwitched(p, before, @"fit, first switch", NO);
         [p.window switchViews]; settle(p.window);
         checkSame(p, before, @"fit, second switch");
+        [p.window close];
+    }
+    for (NSNumber *sideBySide in @[@NO, @YES]) {
+        // The page number field moves the active part, also the second one, whose page count
+        // was taken before it had the PDF; the other part stays where it is (#14).
+        NSString *name = sideBySide.boolValue ? @"page field, side by side" : @"page field, top and bottom";
+        Preview p = makePreview(doc, sideBySide.boolValue);
+        scrollTo(p.upper, 1, 500); scrollTo(p.lower, 4, 600); settle(p.window);
+        [p.window makeFirstResponder:p.lower]; settle(p.window);
+        checkControls(p, [name stringByAppendingString:@", second part clicked"]);
+        enterPage(p, p.pageField, @"3");
+        check(pageOf(p.lower) == 3 && pageOf(p.upper) == 2,
+              describe(name, [NSString stringWithFormat:@"the second part goes to the page typed (%ld, first part %ld)", (long)pageOf(p.lower), (long)pageOf(p.upper)]));
+        check(p.window.activeView == p.lower && p.pageField.integerValue == 3 && p.singlePageField.integerValue == 3,
+              describe(name, @"the second part stays active and the fields show its page"));
+        enterPage(p, p.singlePageField, [NSString stringWithFormat:@"%lu", (unsigned long)doc.pageCount + 5]);
+        check(pageOf(p.lower) == (NSInteger)doc.pageCount && pageOf(p.upper) == 2,
+              describe(name, @"a number past the end goes to the last page of the second part"));
+        [p.window makeFirstResponder:p.upper]; settle(p.window);
+        checkControls(p, [name stringByAppendingString:@", first part clicked"]);
+        enterPage(p, p.pageField, @"6");
+        check(pageOf(p.upper) == 6 && pageOf(p.lower) == (NSInteger)doc.pageCount,
+              describe(name, @"the first part goes to the page typed and the second part stays"));
+        [p.window splitPdfKitWindow:nil]; settle(p.window);
+        enterPage(p, p.pageField, @"2");
+        check(!p.window.windowIsSplit && pageOf(p.upper) == 2, describe(name, @"the unsplit window goes to the page typed"));
         [p.window close];
     }
     printf("PASS: %lu checks\n", (unsigned long)checks);
