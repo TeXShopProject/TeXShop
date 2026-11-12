@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "163-F5-v8Z.title" = "Ghostscriptオプション";
 "183.title" = "デフォルトのコマンド";
-"187.title" = "TeX + DVI";
+"187.title" = "DVI経由";
 "188.title" = "デフォルトのスクリプト";
 "190.title" = "パーソナルスクリプト";
-"191.title" = "pdfTeX";
+"191.title" = "PDF直接生成";
 "314.title" = "ファイル保存時に";
 "588.title" = "TeX";
 "589.title" = "LaTeX";

@@ -1,0 +1,161 @@
+{
+  "origin": "Names chosen on 2026-11-12 for Settings › Typesetting and the Typeset menu: the method pop-up and its first two choices, and the three path rows",
+  "languages": {
+    "Base": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Typesetting Method",
+        "catalog.typesetting.3.0.title": "TeX Engines",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Second TeX Engines"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "Direct PDF",
+        "187.title": "Via DVI"
+      },
+      "note_prefix": "Used for documents that contain % !TEX useAlternatePath. "
+    },
+    "de": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Satzmethode",
+        "catalog.typesetting.3.0.title": "TeX-Engines",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Zweite TeX-Engines"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF direkt",
+        "187.title": "Über DVI"
+      },
+      "note_prefix": "Für Dokumente mit % !TEX useAlternatePath. "
+    },
+    "es": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Método de composición",
+        "catalog.typesetting.3.0.title": "Motores TeX",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Segundos motores TeX"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF directo",
+        "187.title": "Vía DVI"
+      },
+      "note_prefix": "Para documentos con % !TEX useAlternatePath. "
+    },
+    "fr": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Méthode de composition",
+        "catalog.typesetting.3.0.title": "Moteurs TeX",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Seconds moteurs TeX"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF direct",
+        "187.title": "Via DVI"
+      },
+      "note_prefix": "Pour les documents contenant % !TEX useAlternatePath. "
+    },
+    "it": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Metodo di composizione",
+        "catalog.typesetting.3.0.title": "Motori TeX",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Secondi motori TeX"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF diretto",
+        "187.title": "Tramite DVI"
+      },
+      "note_prefix": "Per i documenti con % !TEX useAlternatePath. "
+    },
+    "ja": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "コンパイル法",
+        "catalog.typesetting.3.0.title": "TeXエンジン",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "第二のTeXエンジン"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF直接生成",
+        "187.title": "DVI経由"
+      },
+      "note_prefix": "「% !TEX useAlternatePath」を書いた書類で使います。"
+    },
+    "ko": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "조판 방식",
+        "catalog.typesetting.3.0.title": "TeX 엔진",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "두 번째 TeX 엔진"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF 직접 생성",
+        "187.title": "DVI 경유"
+      },
+      "note_prefix": "% !TEX useAlternatePath가 있는 문서에 사용합니다. "
+    },
+    "nl": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Zetmethode",
+        "catalog.typesetting.3.0.title": "TeX-engines",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Tweede TeX-engines"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "Direct PDF",
+        "187.title": "Via DVI"
+      },
+      "note_prefix": "Voor documenten met % !TEX useAlternatePath. "
+    },
+    "pt-PT": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Método de composição",
+        "catalog.typesetting.3.0.title": "Motores TeX",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Segundos motores TeX"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF direto",
+        "187.title": "Via DVI"
+      },
+      "note_prefix": "Para documentos com % !TEX useAlternatePath. "
+    },
+    "pt": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Método de composição",
+        "catalog.typesetting.3.0.title": "Motores TeX",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Segundos motores TeX"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF direto",
+        "187.title": "Via DVI"
+      },
+      "note_prefix": "Para documentos com % !TEX useAlternatePath. "
+    },
+    "ro": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "Metoda de tehnoredactare",
+        "catalog.typesetting.3.0.title": "Motoare TeX",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "Al doilea set de motoare TeX"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "PDF direct",
+        "187.title": "Prin DVI"
+      },
+      "note_prefix": "Pentru documentele cu % !TEX useAlternatePath. "
+    },
+    "zh_CN": {
+      "SettingsCategories.strings": {
+        "catalog.typesetting.0.2.title": "排版方式",
+        "catalog.typesetting.3.0.title": "TeX引擎",
+        "catalog.typesetting.3.1.title": "Ghostscript",
+        "catalog.typesetting.3.2.title": "第二组TeX引擎"
+      },
+      "SettingsTypesetting.strings": {
+        "191.title": "直接生成PDF",
+        "187.title": "经由DVI"
+      },
+      "note_prefix": "用于含有“% !TEX useAlternatePath”的文档。"
+    }
+  }
+}

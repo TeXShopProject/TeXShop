@@ -208,7 +208,7 @@
       "catalog.editor.4.1.choice.1": "( )"
     },
     "ja": {
-      "catalog.typesetting.3.0.title": "(pdf)TeX"
+      "catalog.typesetting.3.0.title": "TeXエンジン"
     },
     "ko": {
       "catalog.appearance.5.0.item.0": "( )",
@@ -236,7 +236,7 @@
       "catalog.editor.1.3.title": "Indentarea celorlalte rânduri:",
       "catalog.spelling.1.4.title": "Omite parametrii selectați",
       "catalog.console.0.1.title": "Folosește și pentru editorul de macrocomenzi",
-      "catalog.typesetting.0.2.title": "Script personal",
+      "catalog.typesetting.0.2.title": "Metoda de tehnoredactare",
       "catalog.appearance.3.0.item.2": "Rândul curent",
       "catalog.appearance.2.0.item.1": "Consolă",
       "catalog.preview.2.0.title": "Urmărește permanent modificările PDF-ului făcute de alte aplicații",

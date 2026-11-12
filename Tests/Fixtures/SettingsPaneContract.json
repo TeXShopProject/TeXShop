@@ -3615,9 +3615,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
-          "187.title": "TeX + DVI",
+          "187.title": "Via DVI",
           "163-F5-v8Z.title": "Ghostscript Options",
-          "191.title": "pdfTeX",
+          "191.title": "Direct PDF",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Open as Tab in Root Window",
@@ -6092,7 +6092,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Via DVI",
           "row": 1,
           "column": 0
         },
@@ -6108,7 +6108,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "Direct PDF",
           "row": 0,
           "column": 0
         },
@@ -6880,9 +6880,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Sollte AUS sein für die meisten Systeme)",
-          "187.title": "TeX + DVI",
+          "187.title": "Über DVI",
           "163-F5-v8Z.title": "Ghostscript Optionen",
-          "191.title": "pdfTeX",
+          "191.title": "PDF direkt",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Wenn Sync ein neues Fenster öffnet",
           "YQv-fE-Uzg.title": "Öffnen als Tab im Stammfenster",
@@ -9357,7 +9357,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Über DVI",
           "row": 1,
           "column": 0
         },
@@ -9373,7 +9373,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF direkt",
           "row": 0,
           "column": 0
         },
@@ -10145,9 +10145,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(En general, desactivado.)",
-          "187.title": "TeX + DVI",
+          "187.title": "Vía DVI",
           "163-F5-v8Z.title": "Opciones Ghostscript",
-          "191.title": "pdfTeX",
+          "191.title": "PDF directo",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Si Sync abre nueva ventana",
           "YQv-fE-Uzg.title": "Abrirla como pestaña",
@@ -12622,7 +12622,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Vía DVI",
           "row": 1,
           "column": 0
         },
@@ -12638,7 +12638,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF directo",
           "row": 0,
           "column": 0
         },
@@ -13410,9 +13410,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "Obsoleto; dovrebbe essere spento",
-          "187.title": "TeX + DVI",
+          "187.title": "Via DVI",
           "163-F5-v8Z.title": "Options de Ghostscript",
-          "191.title": "pdfTeX",
+          "191.title": "PDF direct",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Si la synchro ouvre une nouvelle fenêtre",
           "YQv-fE-Uzg.title": "Ouvrir un onglet dans la fenêtre initiale",
@@ -15887,7 +15887,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Via DVI",
           "row": 1,
           "column": 0
         },
@@ -15903,7 +15903,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF direct",
           "row": 0,
           "column": 0
         },
@@ -16675,9 +16675,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
-          "187.title": "TeX + DVI",
+          "187.title": "Tramite DVI",
           "163-F5-v8Z.title": "Opzioni Ghostscript",
-          "191.title": "pdfTeX",
+          "191.title": "PDF diretto",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Se la sincronizzazione apre una nuova finestra",
           "YQv-fE-Uzg.title": "Apri come scheda nella finestra principale",
@@ -19152,7 +19152,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Tramite DVI",
           "row": 1,
           "column": 0
         },
@@ -19168,7 +19168,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF diretto",
           "row": 0,
           "column": 0
         },
@@ -19940,9 +19940,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "（通常はオフに）",
-          "187.title": "TeX + DVI",
+          "187.title": "DVI経由",
           "163-F5-v8Z.title": "Ghostscriptオプション",
-          "191.title": "pdfTeX",
+          "191.title": "PDF直接生成",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Sync で新ドキュメントが開くとき",
           "YQv-fE-Uzg.title": "ルートウインドウのタブで開く",
@@ -22417,7 +22417,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "DVI経由",
           "row": 1,
           "column": 0
         },
@@ -22433,7 +22433,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF直接生成",
           "row": 0,
           "column": 0
         },
@@ -23205,9 +23205,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(옛날 방식. 비활성화됨)",
-          "187.title": "TeX + DVI",
+          "187.title": "DVI 경유",
           "163-F5-v8Z.title": "Ghostscript 옵션",
-          "191.title": "pdfTeX",
+          "191.title": "PDF 직접 생성",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Sync로 새 창을 열 때",
           "YQv-fE-Uzg.title": "새 탭으로 열기",
@@ -25682,7 +25682,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "DVI 경유",
           "row": 1,
           "column": 0
         },
@@ -25698,7 +25698,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF 직접 생성",
           "row": 0,
           "column": 0
         },
@@ -26470,9 +26470,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
-          "187.title": "TeX + DVI",
+          "187.title": "Via DVI",
           "163-F5-v8Z.title": "Ghostscript Options",
-          "191.title": "pdfTeX",
+          "191.title": "Direct PDF",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Als tabblad in hoofdvenster openen",
@@ -28947,7 +28947,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Via DVI",
           "row": 1,
           "column": 0
         },
@@ -28963,7 +28963,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "Direct PDF",
           "row": 0,
           "column": 0
         },
@@ -29735,9 +29735,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
-          "187.title": "TeX + DVI",
+          "187.title": "Via DVI",
           "163-F5-v8Z.title": "Ghostscript Options",
-          "191.title": "pdfTeX",
+          "191.title": "PDF direto",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Abrir como separador na janela principal",
@@ -32212,7 +32212,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Via DVI",
           "row": 1,
           "column": 0
         },
@@ -32228,7 +32228,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF direto",
           "row": 0,
           "column": 0
         },
@@ -33000,9 +33000,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "Deve permanecer DESATIVADO  para a maioria dos usuários",
-          "187.title": "TeX + DVI",
+          "187.title": "Via DVI",
           "163-F5-v8Z.title": "Opções do Ghostscript",
-          "191.title": "pdfTeX",
+          "191.title": "PDF direto",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "Se Sync abre uma nova janela",
           "YQv-fE-Uzg.title": "Abrir como aba na janela principal",
@@ -35477,7 +35477,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Via DVI",
           "row": 1,
           "column": 0
         },
@@ -35493,7 +35493,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF direto",
           "row": 0,
           "column": 0
         },
@@ -36265,9 +36265,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(Should be OFF for most users.)",
-          "187.title": "TeX + DVI",
+          "187.title": "Prin DVI",
           "163-F5-v8Z.title": "Ghostscript Options",
-          "191.title": "pdfTeX",
+          "191.title": "PDF direct",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "If Sync Opens a New Window",
           "YQv-fE-Uzg.title": "Deschide ca filă în fereastra principală",
@@ -38742,7 +38742,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "Prin DVI",
           "row": 1,
           "column": 0
         },
@@ -38758,7 +38758,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "PDF direct",
           "row": 0,
           "column": 0
         },
@@ -39530,9 +39530,9 @@
         },
         "SettingsTypesetting": {
           "O6H-3y-7Ca.title": "(通常无需开启)",
-          "187.title": "TeX + DVI",
+          "187.title": "经由DVI",
           "163-F5-v8Z.title": "Ghostscript 选项",
-          "191.title": "pdfTeX",
+          "191.title": "直接生成PDF",
           "920.title": "Radio",
           "W5U-9S-4OG.title": "代码同步新建窗口时",
           "YQv-fE-Uzg.title": "在主窗口打开标签页",
@@ -42007,7 +42007,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "TeX + DVI",
+          "value": "经由DVI",
           "row": 1,
           "column": 0
         },
@@ -42023,7 +42023,7 @@
           "view": "settings.186",
           "kind": "matrix",
           "property": "title",
-          "value": "pdfTeX",
+          "value": "直接生成PDF",
           "row": 0,
           "column": 0
         },

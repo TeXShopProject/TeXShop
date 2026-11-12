@@ -44,11 +44,11 @@
                 </buttonCell>
                 <cells>
                   <column>
-                    <buttonCell type="radio" title="pdfTeX" imagePosition="left" alignment="left" state="on" tag="100" inset="2" id="191">
+                    <buttonCell type="radio" title="Direct PDF" imagePosition="left" alignment="left" state="on" tag="100" inset="2" id="191">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>
-                    <buttonCell type="radio" title="TeX + DVI" imagePosition="left" alignment="left" tag="101" inset="2" id="187">
+                    <buttonCell type="radio" title="Via DVI" imagePosition="left" alignment="left" tag="101" inset="2" id="187">
                       <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES" />
                       <font key="font" metaFont="system" />
                     </buttonCell>

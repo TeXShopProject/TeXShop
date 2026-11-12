@@ -240,7 +240,7 @@
 "group.typesetting.0.title" = "초기값";
 "catalog.typesetting.0.0.title" = "기본 조판 명령";
 "catalog.typesetting.0.1.title" = "사용할 명령";
-"catalog.typesetting.0.2.title" = "사용자 스크립트";
+"catalog.typesetting.0.2.title" = "조판 방식";
 "catalog.typesetting.0.3.title" = "대체 엔진";
 "catalog.typesetting.0.3.note" = "'대체 엔진으로 조판'에 사용하는 엔진입니다. 기본값: pdflatexmk";
 "group.typesetting.1.title" = "조판 후";
@@ -250,12 +250,12 @@
 "catalog.typesetting.2.1.title" = "동기화로 이동한 문서를 루트 윈도우의 탭으로 열기";
 "catalog.typesetting.2.1.note" = "보통 꺼 둡니다.";
 "group.typesetting.3.title" = "경로";
-"catalog.typesetting.3.0.title" = "pdfTeX";
+"catalog.typesetting.3.0.title" = "TeX 엔진";
 "catalog.typesetting.3.0.note" = "기본값: /Library/TeX/texbin 또는 /usr/texbin";
-"catalog.typesetting.3.1.title" = "Distiller (Ghostscript)";
+"catalog.typesetting.3.1.title" = "Ghostscript";
 "catalog.typesetting.3.1.note" = "기본값: /usr/local/bin";
-"catalog.typesetting.3.2.title" = "추가 경로";
-"catalog.typesetting.3.2.note" = "기본값: ~/bin/context/tex/texmf-osx-arm64/bin";
+"catalog.typesetting.3.2.title" = "두 번째 TeX 엔진";
+"catalog.typesetting.3.2.note" = "% !TEX useAlternatePath가 있는 문서에 사용합니다. 기본값: ~/bin/context/tex/texmf-osx-arm64/bin";
 "catalog.typesetting.3.3.title" = "자동 설정…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";

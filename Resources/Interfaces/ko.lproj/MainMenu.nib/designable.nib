@@ -1016,12 +1016,12 @@
                             <menuItem isSeparatorItem="YES" id="155">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="pdfTeX" state="on" tag="100" id="156" identifier="TSShortcut.doChooseMethod:.100">
+                            <menuItem title="PDF 직접 생성" state="on" tag="100" id="156" identifier="TSShortcut.doChooseMethod:.100">
                                 <connections>
                                     <action selector="doChooseMethod:" target="-1" id="349"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeX + DVI" tag="101" id="157" identifier="TSShortcut.doChooseMethod:.101">
+                            <menuItem title="DVI 경유" tag="101" id="157" identifier="TSShortcut.doChooseMethod:.101">
                                 <connections>
                                     <action selector="doChooseMethod:" target="-1" id="348"/>
                                 </connections>

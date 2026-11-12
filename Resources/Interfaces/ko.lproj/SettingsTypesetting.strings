@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "163-F5-v8Z.title" = "Ghostscript 옵션";
 "183.title" = "기본 조판 명령";
-"187.title" = "TeX + DVI";
+"187.title" = "DVI 경유";
 "188.title" = "디폴트 스트립트";
 "190.title" = "사용자 스크립트";
-"191.title" = "pdfTeX";
+"191.title" = "PDF 직접 생성";
 "314.title" = "파일 저장시";
 "588.title" = "TeX";
 "589.title" = "LaTeX";
