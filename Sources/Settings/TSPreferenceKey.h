@@ -9,3 +9,6 @@ static TSPreferenceKey const TSCommandCompletionCharacterKey = @"CommandCompleti
 static NSNotificationName const TSCompletionChangedNotification = @"CommandCompletionCharNotification";
 
 static NSNotificationName const TSFindMethodChangedNotification = @"TSFindMethodChangedNotification";
+
+// Open documents that still use the spelling dictionary chosen in Settings follow a new choice.
+static NSNotificationName const TSSpellingLanguageChangedNotification = @"TSSpellingLanguageChangedNotification";

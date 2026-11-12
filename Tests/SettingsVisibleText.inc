@@ -11,7 +11,10 @@ static void CollectSettingsVisibleText(NSView *view, NSString *category, NSMutab
         return; // Menu command names are runtime data, not settings labels.
     }
     if ([view isKindOfClass:NSPopUpButton.class]) {
-        if (!userData) for (NSString *title in ((NSPopUpButton *)view).itemTitles) record(title,@"choice");
+        // Spelling dictionaries are named by the system's languages, the same in every locale.
+        BOOL dictionary=[view.identifier isEqual:@"settings.o1v-YF-ekd"];
+        if (!userData) for (NSMenuItem *item in ((NSPopUpButton *)view).itemArray)
+            record(item.title,dictionary && [item.representedObject isKindOfClass:NSString.class] ? @"language" : @"choice");
     } else if ([view isKindOfClass:NSButton.class]) {
         record(((NSButton *)view).title,@"button");
     } else if ([view isKindOfClass:NSTextField.class]) {

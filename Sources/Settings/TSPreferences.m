@@ -41,6 +41,7 @@
 #import "TSDockIconController.h"
 #import "TSKeyboardShortcuts.h"
 #import "TSSpellSupport.h"
+#import "TSSpellingLanguage.h"
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
@@ -1731,12 +1732,9 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
 
 - (IBAction)dictionaryPressed: sender
 {
-    
-    NSString *language = [[sender selectedItem] title];
-    
-    
-    
-    if ([language isEqualToString: @"Automatic Language"])
+    // The automatic choice has no identifier; the others keep the checker's.
+    NSString *language = [[sender selectedItem] representedObject];
+    if (![language isKindOfClass:[NSString class]] || [language length] == 0)
     {
         [SUD setBool:YES forKey:spellingAutomaticDefaultKey];
         [SUD setObject:@" " forKey:spellingLanguageDefaultKey];
@@ -1746,7 +1744,7 @@ A tag of 0 means "always", a tag of 1 means "when errors occur".
         [SUD setBool:NO forKey:spellingAutomaticDefaultKey];
         [SUD setObject:language forKey:spellingLanguageDefaultKey];
     }
-    
+    TSPostPreferenceNotifications([NSSet setWithArray:@[spellingLanguageDefaultKey, spellingAutomaticDefaultKey]], self);
 }
 
 
