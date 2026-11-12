@@ -31,6 +31,7 @@
 "group.general.0.title" = "Au démarrage";
 "catalog.general.0.0.title" = "Ouvrir un document vierge";
 "catalog.general.0.1.title" = "Configurer pour éditeur externe";
+"catalog.general.0.1.note" = "L’ouverture d’un fichier source n’affiche que l’aperçu ; la source se modifie dans un autre éditeur. Pour la modifier dans TeXShop, utilisez Ouvrir pour éditer...";
 "group.general.1.title" = "Fenêtres";
 "catalog.general.1.0.title" = "Source et aperçu";
 "catalog.general.1.0.note" = "Valeur initiale des nouveaux documents. Pour les documents ouverts, utilisez le menu.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "Quand vous cliquez dans une fenêtre source qui n’est pas au premier plan, ce même clic déplace aussi le curseur.";
 "catalog.editor.2.1.title" = "Entourer le texte sélectionné lors de la saisie d’une parenthèse";
 "catalog.editor.2.2.title" = "Langues de droite à gauche (arabe, hébreu, persan)";
+"catalog.editor.2.2.note" = "Aligne à droite les lignes qui commencent par de l’écriture hébraïque ou arabe. Fonctionne lorsque « Distinctions syntaxiques en couleurs » est activé.";
 "group.editor.3.title" = "Coloration syntaxique";
 "catalog.editor.3.0.title" = "@ fait partie des noms de commande";
 "catalog.editor.3.1.title" = "Colorer expl3 par défaut";

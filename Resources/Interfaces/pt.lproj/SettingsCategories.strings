@@ -31,6 +31,7 @@
 "group.general.0.title" = "Ao iniciar";
 "catalog.general.0.0.title" = "Abrir um documento vazio";
 "catalog.general.0.1.title" = "Usar editor externo";
+"catalog.general.0.1.note" = "Ao abrir um arquivo de código-fonte, mostra apenas a pré-visualização; o código-fonte é editado em outro editor. Para editá-lo no TeXShop, use Abrir para editar...";
 "group.general.1.title" = "Janelas";
 "catalog.general.1.0.title" = "Código-fonte e pré-visualização";
 "catalog.general.1.0.note" = "Padrão para novos documentos. Nos documentos abertos, use o menu.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "Ao clicar em uma janela de código-fonte que não está na frente, o mesmo clique também move o cursor.";
 "catalog.editor.2.1.title" = "Envolver o texto selecionado ao digitar um parêntese";
 "catalog.editor.2.2.title" = "Idiomas da direita para a esquerda (árabe, hebraico, persa)";
+"catalog.editor.2.2.note" = "Alinha à direita as linhas que começam com escrita hebraica ou árabe. Funciona quando Colorir a sintaxe está ativado.";
 "group.editor.3.title" = "Cores da sintaxe";
 "catalog.editor.3.0.title" = "@ faz parte dos comandos";
 "catalog.editor.3.1.title" = "Colorir expl3 por padrão";

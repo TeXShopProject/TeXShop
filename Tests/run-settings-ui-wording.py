@@ -92,3 +92,16 @@ for lang,tables in translated.items():
         actual=strings(interfaces/f"{lang}.lproj"/table)
         for key,value in expected.items():assert actual[key]==value,(lang,table,key,"integration audit reviewed wording")
 print("PASS: integration audit translations and consistent local terminology")
+
+translated=json.loads((r/"Tests/Fixtures/SettingsRowNotes.json").read_text())
+for lang,tables in translated.items():
+    for table,expected in tables.items():
+        actual=strings(interfaces/f"{lang}.lproj"/table)
+        for key,value in expected.items():assert actual[key]==value,(lang,table,key,"reviewed row explanation")
+layout=(r/"Sources/Settings/TSSettingsCatalogLayout.inc").read_text()
+notes=sorted(set(re.findall(r'@"note": @"(catalog\.[^"]+)"',layout)))
+assert {'catalog.general.0.1.note','catalog.editor.2.2.note'}<=set(notes),'row explanations are shown'
+for loc in sorted(interfaces.glob("*.lproj/SettingsCategories.strings")):
+    actual=strings(loc)
+    for key in notes:assert actual.get(key,"").strip(),(loc.parent.name,key,"row explanation in every language")
+print("PASS: every row explanation exists in every language, including External Editor and right-to-left lines")
