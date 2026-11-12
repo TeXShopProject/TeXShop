@@ -101,6 +101,12 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
 - (void)setSearchBundle:(NSBundle *)bundle { _searchBundle = bundle; self.categoryTextIndex = nil; }
 - (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
 - (void)windowResignedKey:(NSNotification *)notification { if (self.keyboardPane != nil) { [self.keyboardPane stopKeySearch]; } }
+- (void)sidebarListViewportChanged:(NSNotification *)notification
+{
+    CGFloat width = NSWidth(self.categoryTable.enclosingScrollView.contentView.bounds);
+    if (width > 0 && fabs(NSWidth(self.categoryTable.frame) - width) >= 0.5)
+        [self.categoryTable setFrameSize:NSMakeSize(width, NSHeight(self.categoryTable.frame))];
+}
 - (void)sidebarFrameChanged:(NSNotification *)notification
 {
     CGFloat width = self.categoryTable.tableColumns.firstObject.width;
@@ -132,6 +138,7 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     listScroll.translatesAutoresizingMaskIntoConstraints = NO;
     listScroll.drawsBackground = NO;
     listScroll.hasVerticalScroller = YES;
+    listScroll.horizontalScrollElasticity = NSScrollElasticityNone;
     self.categoryTable = [[NSTableView alloc] initWithFrame:sidebar.view.bounds];
     self.categoryTable.style = NSTableViewStyleSourceList;
     self.categoryTable.headerView = nil;
@@ -148,6 +155,8 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
     listScroll.documentView = self.categoryTable;
     self.categoryTable.postsFrameChangedNotifications = YES;
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(sidebarFrameChanged:) name:NSViewFrameDidChangeNotification object:self.categoryTable];
+    listScroll.contentView.postsFrameChangedNotifications = YES;
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(sidebarListViewportChanged:) name:NSViewFrameDidChangeNotification object:listScroll.contentView];
     self.settingsSearchField = [NSSearchField new];
     self.settingsSearchField.translatesAutoresizingMaskIntoConstraints = NO;
     self.settingsSearchField.placeholderString = NSLocalizedString(@"Search Settings", @"");
