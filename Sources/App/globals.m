@@ -218,6 +218,7 @@ NSString *TagMenuInMenuBarKey = @"TagMenuInMenuBar";
 NSString *ResetSourceTextColorEachTimeKey = @"ResetSourceTextColorEachTime";
 NSString *SourceAndPreviewInSameWindowKey = @"SourceAndPreviewInSameWindow";
 NSString *DocumentSplitWindowPositionKey = @"DocumentSplitWindowPosition";
+NSString *FullSplitSourceFractionKey = @"FullSplitSourceFraction";
 NSString *TabIndentKey = @"TabIndent";
 NSString *SwitchSidesKey = @"SwitchSides";
 NSString *InterpolationValueKey = @"InterpolationValue";

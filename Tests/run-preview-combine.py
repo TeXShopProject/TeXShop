@@ -57,11 +57,14 @@ static Defaults *defaults;
 @property NSURL *fileURL;
 @property id rootDocument;
 @property Node *pdfKitWindow, *splitController;
+@property NSInteger dividerRestores;
 - (void)addWindowController:(id)controller;
+- (void)restoreFullSplitDivider;
 - (void)doMove:(id)sender;
 @end
 @implementation Document
 - (void)addWindowController:(id)controller {}
+- (void)restoreFullSplitDivider { if(self.splitController.showCount==0) self.dividerRestores++; }
 METHOD
 @end
 static void check(BOOL ok, NSString *message) {
@@ -89,6 +92,7 @@ int main(int argc, char **argv) { @autoreleasepool {
   check(d.splitController.showCount==1 && d.pdfKitWindow.hidden,@"Combined window replaces separate preview");
   Node *destination=side.boolValue?d->leftView:d->rightView;
   check(destination.child==d.pdfKitWindow.pdfKitSplitView,@"PDF is moved into the visible combined window");
+  check(d.dividerRestores==1,@"The divider goes to its remembered place before the combined window is shown");
   [d doMove:nil];check(d.splitController.showCount==1,@"Already combined is a no-op");
  }
  for(NSNumber *kind in @[@0,@1,@2,@3]) {
@@ -97,7 +101,7 @@ int main(int argc, char **argv) { @autoreleasepool {
   if(kind.intValue==1) d->_externalEditor=YES;
   if(kind.intValue==2) d->fileIsTex=NO;
   if(kind.intValue==3) d->textView1.string=@"%!TEX root = root.tex";
-  [d doMove:nil];check(d.pdfKitWindow.previewClosed && !d->useFullSplitWindow,@"Rejected transition retains closed state");
+  [d doMove:nil];check(d.pdfKitWindow.previewClosed && !d->useFullSplitWindow && d.dividerRestores==0,@"Rejected transition retains closed state");
  }
  [[NSFileManager defaultManager] removeItemAtURL:pdf error:NULL];
  Document *d=document(url);[d doMove:nil];
