@@ -77,24 +77,27 @@
     
  }
 
-// Ghostscript is looked for where typesetting looks for it: in the PATH given to
-// the tasks, which includes the Ghostscript path in Settings. When it is missing,
-// say so instead of starting a conversion that cannot make a PDF.
-- (BOOL)ghostscriptIsAvailable
+// Ghostscript is looked for where the conversion looks for it: in the folders a
+// command adds in front of the PATH, and in the PATH given to the tasks, which
+// includes the Ghostscript path in Settings. When it is missing, say so instead
+// of starting a conversion that cannot make a PDF.
+- (BOOL)ghostscriptIsAvailableAlsoIn:(NSArray<NSString *> *)folders
 {
-    if (TSGhostscriptFoundInPath([[self environmentForSubTask] objectForKey:@"PATH"]))
+    NSString *path = [[self environmentForSubTask] objectForKey:@"PATH"] ?: @"";
+    if (folders.count > 0)
+        path = [[[folders componentsJoinedByString:@":"] stringByAppendingString:@":"] stringByAppendingString:path];
+    if (TSGhostscriptFoundInPath(path))
         return YES;
     NSString *title = NSLocalizedString(@"Can't find required tool.", @"Can't find required tool.");
     NSString *message = NSLocalizedString(@"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting.", @"");
     NSWindow *window = [[textView window] isVisible] ? [textView window] : ([self.pdfKitWindow isVisible] ? self.pdfKitWindow : nil);
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = title;
+    alert.informativeText = message;
     if (window != nil)
-        NSBeginAlertSheet(title, nil, nil, nil, window, nil, nil, nil, nil, @"%@", message);
-    else {
-        NSAlert *alert = [[NSAlert alloc] init];
-        alert.messageText = title;
-        alert.informativeText = message;
+        [alert beginSheetModalForWindow:window completionHandler:nil];
+    else
         [alert runModal];
-    }
     return NO;
 }
     
@@ -622,14 +625,15 @@ for(NSString *key in enu)
 				enginePath = [enginePath stringByAppendingString: argumentString];
 			}
 			enginePath = [self separate:enginePath into: args];
-			if (TSCommandNeedsGhostscript(enginePath, args) && ! [self ghostscriptIsAvailable]) {
+			NSArray *ghostscriptFolders = TSGhostscriptFoldersForCommand(enginePath, args);
+			if ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders]) {
 				self.texTask = nil;
 				return;
 			}
 			if ([SUD boolForKey:SavePSEnabledKey])
 				[args addObject: @"--keep-psfile"];
 		} else if ([[myFileName pathExtension] isEqualToString:@"ps"]) {
-			if (! [self ghostscriptIsAvailable]) {
+			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
 				self.texTask = nil;
 				return;
 			}
@@ -641,7 +645,7 @@ for(NSString *key in enu)
 			gsPath = [[SUD stringForKey:GSBinPath] stringByExpandingTildeInPath];
 			[args addObject: gsPath ?: @""];
 		} else if  ([[myFileName pathExtension] isEqualToString:@"eps"]) {
-			if (! [self ghostscriptIsAvailable]) {
+			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
 				self.texTask = nil;
 				return;
 			}
@@ -1655,7 +1659,8 @@ if ((whichEngineLocal != 3) && (whichEngineLocal != 4) && (! fromMenu)) { //don'
 			 }
 			 else {
 				 */
-			if ((theScript == kTypesetViaGhostScript) && TSCommandNeedsGhostscript(enginePath, args) && ! [self ghostscriptIsAvailable]) {
+			NSArray *ghostscriptFolders = (theScript == kTypesetViaGhostScript) ? TSGhostscriptFoldersForCommand(enginePath, args) : nil;
+			if ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders]) {
 				self.texTask = nil;
 			} else if ([self startTask: self.texTask running: enginePath withArgs: args inDirectoryContaining: sourcePath withEngine:whichEngineLocal] == FALSE) {
 		//		[self.inputPipe release];

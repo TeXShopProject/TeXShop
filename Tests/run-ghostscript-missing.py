@@ -28,13 +28,31 @@ int main(int argc, char **argv) { @autoreleasepool {
     check(TSGhostscriptFoundInPath([@[plain, with] componentsJoinedByString:@":"]), @"gs in a later PATH folder is found");
     check(!TSGhostscriptFoundInPath([@[plain, notExecutable, folder, @""] componentsJoinedByString:@":"]), @"no executable gs file is not Ghostscript");
     check(!TSGhostscriptFoundInPath(nil) && !TSGhostscriptFoundInPath(@""), @"no PATH has no Ghostscript");
+    NSArray *transparency = @[@"latex", @"--maxpfb", @"--distilleropts", @"\"-dALLOWPSTRANSPARENCY\""];
     for (NSString *program in @[@"simpdftex", @"/Library/TeX/texbin/simpdftex", @"/Applications/TeXShop.app/Contents/Resources/Shellscripts/altpdflatex", @"altpdftex"])
-        check(TSCommandNeedsGhostscript(program, @[@"latex", @"--maxpfb", @"--distilleropts", @"-dALLOWPSTRANSPARENCY"]), [NSString stringWithFormat:@"%@ needs Ghostscript", program]);
+        check([TSGhostscriptFoldersForCommand(program, transparency) isEqual:@[@"/usr/local/bin"]], [NSString stringWithFormat:@"%@ runs ps2pdf after adding /usr/local/bin", program]);
     for (NSString *program in @[@"ptex2pdf", @"/Users/x/Library/TeXShop/bin/uplatex2pdf", @"pdflatex", @"lualatex", @"xelatex", @"latexmk", @"", @"simpdftex-old"])
-        check(!TSCommandNeedsGhostscript(program, @[@"-l"]), [NSString stringWithFormat:@"%@ does not need Ghostscript", program]);
-    check(!TSCommandNeedsGhostscript(@"simpdftex", @[@"latex", @"--distiller", @"/usr/local/bin/other"]) &&
-          !TSCommandNeedsGhostscript(@"simpdftex", @[@"latex", @"--distiller=other"]), @"another distiller does not need Ghostscript");
-    check(!TSCommandNeedsGhostscript(nil, nil), @"no command does not need Ghostscript");
+        check(TSGhostscriptFoldersForCommand(program, @[@"-l", @"--distiller", @"ps2pdf"]) == nil, [NSString stringWithFormat:@"%@ does not run Ghostscript", program]);
+    NSDictionary *cases = @{
+        @[@"--distiller-path", @"/no-gs"]: @[@"/no-gs"],
+        @[@"--distiller-path=/opt/gs/bin"]: @[@"/opt/gs/bin"],
+        @[@"--distiller-path", @""]: @[],
+        @[@"--distiller", @"ps2pdf"]: @[@"/usr/local/bin"],
+        @[@"--distiller", @"ps2pdf13"]: @[@"/usr/local/bin"],
+        @[@"--distiller=/usr/local/bin/ps2pdf13"]: @[@"/usr/local/bin", @"/usr/local/bin"],
+        @[@"--distiller", @"/opt/local/bin/ps2pdf -dCompatibilityLevel=1.5"]: @[@"/usr/local/bin", @"/opt/local/bin"],
+        @[@"--distiller-filter", @"gs -q -dNOPAUSE"]: @[@"/usr/local/bin"],
+        @[@"--distiller-path", @"/a", @"--distiller", @"ps2pdf"]: @[@"/a"],
+    };
+    for (NSArray *arguments in cases)
+        check([TSGhostscriptFoldersForCommand(@"altpdflatex", [@[@"latex"] arrayByAddingObjectsFromArray:arguments]) isEqual:cases[arguments]],
+              [NSString stringWithFormat:@"%@ runs Ghostscript with the folders %@", [arguments componentsJoinedByString:@" "], cases[arguments]]);
+    for (NSArray *arguments in @[@[@"--distiller", @"/usr/local/alternate/bin/pstill"], @[@"--distiller=pstill"], @[@"--distiller-filter", @"u-psbuild"],
+                                 @[@"--distiller-path", @"/a", @"--distiller", @"other"]])
+        check(TSGhostscriptFoldersForCommand(@"simpdftex", [@[@"latex"] arrayByAddingObjectsFromArray:arguments]) == nil,
+              [NSString stringWithFormat:@"%@ uses another converter", [arguments componentsJoinedByString:@" "]]);
+    check(TSGhostscriptFoldersForCommand(@"simpdftex", @[@"latex", @"--distilleropts", @"--distiller"]) != nil, @"the value of --distilleropts is not an option");
+    check(TSGhostscriptFoldersForCommand(nil, nil) == nil, @"no command does not run Ghostscript");
     puts("PASS checks");
 }}
 '''
@@ -49,8 +67,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-ghostscript-') as temp:
     check_source = (ROOT / 'Sources/Typesetting/TSGhostscriptCheck.inc').read_text()
     if mutation == 'any-gs-file':
         check_source = check_source.replace('&& !isFolder &&\n            [[NSFileManager defaultManager] isExecutableFileAtPath:program]', '')
-    if mutation == 'ignore-distiller':
-        check_source = check_source.replace('return NO;\n    return YES;', 'return YES;\n    return YES;')
+    if mutation == 'any-distiller-option':
+        check_source = check_source.replace('if (![options containsObject:name])\n            continue;', 'if ([name hasPrefix:@"--distiller"]) return nil;\n        if (![options containsObject:name])\n            continue;')
+    if mutation == 'path-not-searched':
+        check_source = check_source.replace('[folders addObject:distillerPath];', ';')
     (include / 'TSGhostscriptCheck.inc').write_text(check_source)
     (temp / 'probe.m').write_text(PROBE)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-Wall', '-Werror', '-I', str(include), '-framework', 'Foundation',
@@ -98,7 +118,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-ghostscript-') as temp:
 # Where Ghostscript is needed, TeXShop looks for it first.
 jobs = (ROOT / 'Sources/Typesetting/TSDocument-Jobs.m').read_text(encoding='latin1')
 if mutation == 'no-eps-check':
-    jobs = jobs.replace('''			if (! [self ghostscriptIsAvailable]) {
+    jobs = jobs.replace('''			if (! [self ghostscriptIsAvailableAlsoIn: nil]) {
 				self.texTask = nil;
 				return;
 			}
@@ -108,14 +128,14 @@ convert = jobs[jobs.index('- (void) convertDocument'):jobs.index('- (void) saveF
 for kind, marker in [('dvi', 'isEqualToString:@"dvi"]) {\n\t\t\t[self testGSCommandKey];'), ('ps', 'isEqualToString:@"ps"]) {'), ('eps', 'isEqualToString:@"eps"]) {')]:
     branch = convert[convert.index(marker):]
     branch = branch[:branch.index('} else if') if kind != 'eps' else branch.index('\n\t\t}')]
-    guard = 'TSCommandNeedsGhostscript(enginePath, args) && ! [self ghostscriptIsAvailable]' if kind == 'dvi' else '! [self ghostscriptIsAvailable]'
+    guard = 'TSGhostscriptFoldersForCommand(enginePath, args);\n\t\t\tif ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders])' if kind == 'dvi' else '! [self ghostscriptIsAvailableAlsoIn: nil]'
     assert guard in branch and 'self.texTask = nil;\n\t\t\t\treturn;' in branch, (kind, 'opening the file looks for Ghostscript first')
 typeset = jobs[jobs.index('- (void) saveFinished:'):]
 start = typeset.index('[self startTask: self.texTask running: enginePath')
-assert '(theScript == kTypesetViaGhostScript) && TSCommandNeedsGhostscript(enginePath, args) && ! [self ghostscriptIsAvailable]' in typeset[start - 300:start], 'Via DVI typesetting looks for Ghostscript first'
-available = jobs[jobs.index('- (BOOL)ghostscriptIsAvailable'):]
+assert '(theScript == kTypesetViaGhostScript) ? TSGhostscriptFoldersForCommand(enginePath, args) : nil;\n\t\t\tif ((ghostscriptFolders != nil) && ! [self ghostscriptIsAvailableAlsoIn: ghostscriptFolders])' in typeset[start - 400:start], 'Via DVI typesetting looks for Ghostscript first, also where the command looks'
+available = jobs[jobs.index('- (BOOL)ghostscriptIsAvailableAlsoIn:'):]
 available = available[:available.index('\n}\n')]
-assert 'TSGhostscriptFoundInPath([[self environmentForSubTask] objectForKey:@"PATH"])' in available and \
+assert 'path = [[[folders componentsJoinedByString:@":"] stringByAppendingString:@":"] stringByAppendingString:path];' in available and 'TSGhostscriptFoundInPath(path)' in available and \
        'NSLocalizedString(@"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting."' in available
 assert '[args addObject:tetexBinPath ?: @""];' in jobs, 'no Ghostscript path does not raise in TestGSVersion'
 
