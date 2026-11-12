@@ -8,6 +8,7 @@ r=Path(__file__).resolve().parents[1];interfaces=args.interfaces or r/'Resources
 fixture=json.loads((r/'Tests/Fixtures/SettingsChangeNoteStrings.json').read_text())
 def strings(path):return json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(path)]))
 retired=[
+'Not found (current setting will be kept)',
 'Select a command to change its shortcut. Changes take effect immediately. Macros and text input key bindings use their own editors.',
 'The newest detected installation is selected. You can choose another candidate below. Custom engine commands and the alternate path are unchanged.',
 'The following macros use this shortcut. Assigning it to the menu command will make their shortcuts inactive. Their files will not be changed.\n\n%@',
@@ -126,8 +127,8 @@ for loc in sorted(interfaces.glob("*.lproj/SettingsCategories.strings")):
 names=json.loads((r/"Tests/Fixtures/SettingsTypesettingNames.json").read_text())['languages']
 assert {p.parent.stem for p in interfaces.glob("*.lproj/SettingsCategories.strings")}==set(names),'every language has reviewed Typesetting names'
 for lang,expected in names.items():
-    for table in ('SettingsCategories.strings','SettingsTypesetting.strings'):
-        actual=strings(interfaces/f"{lang}.lproj"/table)
+    for table in ('SettingsCategories.strings','SettingsTypesetting.strings','Localizable.strings'):
+        actual=strings(interfaces/f"{'en' if lang=='Base' and table=='Localizable.strings' else lang}.lproj"/table)
         for key,value in expected[table].items():assert actual[key]==value,(lang,table,key,'reviewed Typesetting name')
     note=strings(interfaces/f"{lang}.lproj/SettingsCategories.strings")['catalog.typesetting.3.2.note']
     assert note.startswith(expected['note_prefix']) and note.endswith('~/bin/context/tex/texmf-osx-arm64/bin'),(lang,'second engines note names the magic comment, then the default')
@@ -138,6 +139,7 @@ for lang,expected in names.items():
     categories=strings(interfaces/f"{lang}.lproj/SettingsCategories.strings")
     assert categories['group.typesetting.4.title']==choices['191.title'] and categories['group.typesetting.5.title']==choices['187.title'] and categories['group.typesetting.6.title']==strings(interfaces/f"{lang}.lproj/SettingsTypesetting.strings")['190.title'],(lang,'command groups are named after the typesetting methods')
     assert all(categories[k]==categories[k].strip() for k in categories if k.startswith('catalog.typesetting.') and k.endswith('.title')),(lang,'Typesetting row titles have no stray spaces')
+assert 'NSLocalizedString(@"Not found", @"")' in (r/'Sources/Settings/TSPreferences.m').read_text(encoding='latin1'),'Auto Setup says only Not found'
 order=[g for g in re.findall(r'@"id": @"(group\.typesetting\.\d+)"',layout)]
 assert order.index('group.typesetting.7')==order.index('group.typesetting.5')+1,'Ghostscript follows the Via DVI commands'
 print("PASS: pop-up titles differ from their choices; reviewed Typesetting names match in Settings and the Typeset menu; command groups are named after the methods and Ghostscript follows Via DVI")
