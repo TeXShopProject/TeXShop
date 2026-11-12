@@ -54,9 +54,18 @@ MUTATIONS = {
     'literal patterns list group names': ('TSRegexFindPattern.m', '(options & TSRegexFindIgnoreMetacharacters) ? @[] :', 'NO ? @[] :'),
     'a file\'s literal option is dropped': ('TSRegexMultipleReplace.m', '    if (regexOptions & NSRegularExpressionIgnoreMetacharacters) regularExpressionOptions |= TSRegexFindIgnoreMetacharacters;\n', ''),
     'a file\'s Unix option is not written': ('TSRegexMultipleReplace.m', '    if (regex & TSRegexFindUseUnixLineSeparators) regexOptions |= NSRegularExpressionUseUnixLineSeparators;\n', ''),
-    'the upper limit is not checked': ('TSRegexMultipleReplace.m', 'd >= 0 && d < 18446744073709551616.0 && ', 'd >= 0 && '),
+    'the upper limit is not checked': ('TSRegexMultipleReplace.m', 'd >= 0 && d < 0x1p64 && d == floor(d)', 'd >= 0 && d == floor(d)'),
     'fractions are accepted': ('TSRegexMultipleReplace.m', ' && d == floor(d)))', '))'),
-    'negative numbers are accepted': ('TSRegexMultipleReplace.m', '    if (signedValue < 0)\n        return NO;\n', ''),
+    'negative numbers are accepted': ('TSRegexMultipleReplace.m', 'if (!(d >= 0 && ', 'if (!(d > -2 && '),
+    'large numbers are read as doubles': ('TSRegexMultipleReplace.m', 'if (d < 0x1p53) {', 'if (d < 0x1p64) {'),
+    'large digits are not limited to 64 bits': ('TSRegexMultipleReplace.m', ' || negative || mantissa > UINT64_MAX)', ' || negative)'),
+    'large fractions are rounded': ('TSRegexMultipleReplace.m', '        value /= 10;\n', '        value = (value + 5) / 10;\n'),
+    'trailing zeros are kept': ('TSRegexMultipleReplace.m', 'while (m % 10 == 0) {', 'while (NO && m % 10 == 0) {'),
+    'digits beyond 128 bits are refused': ('TSRegexMultipleReplace.m', '                tooBig = YES;\n                continue;\n', '                return NO;\n'),
+    'the last of duplicate keys is used': ('TSRegexMultipleReplace.m', '        if (!members[key])\n', '        if (YES)\n'),
+    'escaped keys are not decoded': ('TSRegexMultipleReplace.m', '[keyText rangeOfString:@"\\\\"].location == NSNotFound\n', 'YES\n'),
+    'numbers are read from NSJSONSerialization': ('TSRegexMultipleReplace.m', 'return TSUnsignedValueOfNumberText((NSString *_Nonnull)text, result);', 'return TSUnsignedValueOfNumberText([value stringValue], result);'),
+    'other encodings are read as UTF-8': ('TSRegexMultipleReplace.m', 'initWithData:data encoding:encoding];', 'initWithData:data encoding:NSUTF8StringEncoding];'),
 }
 
 

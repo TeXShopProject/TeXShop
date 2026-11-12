@@ -366,14 +366,45 @@ int main(void)
         Check([literalSettings[@"regexOptions"] isEqual:@52] && [literalSettings[@"textualOptions"] isEqual:@(NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch)], @"they are written again; ignored ones are not");
         TSRegexMultipleReplace *unix = [[TSRegexMultipleReplace alloc] initWithJSONData:[@"{\"replacements\":[{\"findString\":\"^b\",\"replacementString\":\"X\",\"usesRegularExpression\":true}],\"settings\":{\"textualOptions\":0,\"regexOptions\":48}}" dataUsingEncoding:NSUTF8StringEncoding] error:NULL];
         Check([[unix applyToString:@"a\rb\nb" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil].string isEqualToString:@"a\rb\nX"], @"Unix line separators are used as in CotEditor");
-        // Option values are read as Swift reads a UInt.
-        for (NSString *number in @[@"0", @"1", @"1.0", @"1e0", @"1.0000000000000001", @"18446744073709551615"]) {
-            NSString *file = [NSString stringWithFormat:@"{\"replacements\":[],\"settings\":{\"textualOptions\":%@,\"regexOptions\":0}}", number];
-            Check([[TSRegexMultipleReplace alloc] initWithJSONData:[file dataUsingEncoding:NSUTF8StringEncoding] error:NULL] != nil, [@"a whole number is accepted: " stringByAppendingString:number]);
+        // Option values are read from their text as the JSONDecoder of macOS reads a UInt (answers measured with Swift);
+        // the low bits of the value read as regexOptions show which whole number it became.
+        const TSRegexFindOptions bitOptions[] = {TSRegexFindIgnoreCase, TSRegexFindAllowCommentsAndWhitespace, TSRegexFindIgnoreMetacharacters,
+            TSRegexFindDotMatchesLineSeparators, TSRegexFindAnchorsMatchLines, TSRegexFindUseUnixLineSeparators, TSRegexFindUnicodeWordBoundaries};
+        NSDictionary<NSString *, NSNumber *> *wholeNumbers = @{
+            @"0": @0, @"1": @1, @"1.0": @1, @"1e0": @1, @"-0": @0, @"-0.0": @0, @"1e-400": @0, @"1.0000000000000001": @1, @"0.5e1": @5,
+            @"18446744073709551615": @127, @"9223372036854775807.0": @127, @"9223372036854775808e0": @0, @"1e19": @0,
+            // From 2^53 the fraction is cut off, not rounded as a double would be.
+            @"9007199254740993.9": @1, @"9007199254740995.5": @3, @"12345678901234567890e-1": @21, @"90071992547409930000e-4": @1,
+            @"9007199254740993.00000000000000000000000000000000000001": @1};
+        for (NSString *number in wholeNumbers) {
+            NSString *textual = [NSString stringWithFormat:@"{\"replacements\":[],\"settings\":{\"textualOptions\":%@,\"regexOptions\":0}}", number];
+            NSString *regex = [NSString stringWithFormat:@"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":%@}}", number];
+            TSRegexMultipleReplace *set = [[TSRegexMultipleReplace alloc] initWithJSONData:[regex dataUsingEncoding:NSUTF8StringEncoding] error:NULL];
+            TSRegexFindOptions expected = 0;
+            for (NSUInteger bit = 0; bit < 7; bit++)
+                if (wholeNumbers[number].unsignedIntegerValue & (1u << bit))
+                    expected |= bitOptions[bit];
+            Check([[TSRegexMultipleReplace alloc] initWithJSONData:[textual dataUsingEncoding:NSUTF8StringEncoding] error:NULL] != nil
+                  && set && set.regularExpressionOptions == expected, [@"a whole number is accepted as Swift reads it: " stringByAppendingString:number]);
         }
-        for (NSString *number in @[@"18446744073709551616", @"18446744073709551617", @"18446744073709551614.9", @"1.5", @"-1", @"1e40", @"true", @"null", @"\"1\""]) {
-            NSString *file = [NSString stringWithFormat:@"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":%@}}", number];
-            Check([[TSRegexMultipleReplace alloc] initWithJSONData:[file dataUsingEncoding:NSUTF8StringEncoding] error:NULL] == nil, [@"a value that is not a UInt is refused: " stringByAppendingString:number]);
+        for (NSString *number in @[@"18446744073709551616", @"18446744073709551617", @"18446744073709551614.9", @"1.5", @"-1", @"1e40", @"1e309",
+                                   @"9223372036854775807.9", @"9223372036854775792.9", @"9007199254740993.000001", @"18446744073709551600.0",
+                                   @"18446744073709551600e0", @"18446744073709551615.0", @"1.8446744073709551615e19", @"18446744073709550592.0",
+                                   @"true", @"null", @"\"1\""]) {
+            for (NSString *format in @[@"{\"replacements\":[],\"settings\":{\"textualOptions\":%@,\"regexOptions\":0}}",
+                                       @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":%@}}"]) {
+                NSString *file = [NSString stringWithFormat:format, number];
+                Check([[TSRegexMultipleReplace alloc] initWithJSONData:[file dataUsingEncoding:NSUTF8StringEncoding] error:NULL] == nil, [@"a value that is not a UInt is refused: " stringByAppendingString:file]);
+            }
+        }
+        // The number is found wherever the file puts it, as Swift finds it: the first of duplicate keys, escaped keys,
+        // other encodings, and look-alikes in strings and nested objects.
+        NSString *shaped = @"{\"replacements\":[{\"findString\":\"\\\"settings\\\":{\\\"regexOptions\\\":2} } ] {\",\"replacementString\":\"\\\\\"}],"
+                           "\"x\":{\"settings\":{\"regexOptions\":2}},\"settings\":{\"x\":[{\"regexOptions\":2},\"]}\"],\"textualOptions\":0,"
+                           "\"regex\\u004fptions\" :\r\n 9007199254740993.9\n,\"regexOptions\":2},\"settings\":{\"textualOptions\":0,\"regexOptions\":2}}";
+        for (NSNumber *encoding in @[@(NSUTF8StringEncoding), @(NSUTF16LittleEndianStringEncoding), @(NSUTF16StringEncoding), @(NSUTF32BigEndianStringEncoding)]) {
+            TSRegexMultipleReplace *set = [[TSRegexMultipleReplace alloc] initWithJSONData:(NSData *_Nonnull)[shaped dataUsingEncoding:encoding.unsignedIntegerValue] error:NULL];
+            Check(set.regularExpressionOptions == TSRegexFindIgnoreCase, [@"the number is found as Swift finds it, in encoding " stringByAppendingString:encoding.stringValue]);
         }
         NSString *missingUnescape = @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}";
         Check([[TSRegexMultipleReplace alloc] initWithJSONData:[missingUnescape dataUsingEncoding:NSUTF8StringEncoding] error:NULL].regularExpressionOptions == 0, @"a missing unescape value reads as off, as in CotEditor");

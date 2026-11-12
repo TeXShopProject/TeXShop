@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSRegexMultipleReplace.h"
 #import "TSRegexTextFind.h"
+#include <xlocale.h>
 
 // The keys of a CotEditor replacement definition.
 static NSString *const TSDefinitionRulesKey = @"replacements";
@@ -29,32 +30,272 @@ static BOOL TSIsBooleanValue(id value)
     return value && CFGetTypeID((__bridge CFTypeRef)value) == CFBooleanGetTypeID();
 }
 
-/// Reads a JSON number as Swift's JSONDecoder reads a UInt: a whole number from 0 to UInt64.max, given as an integer
-/// or as a fraction whose double value is exactly such a number. Booleans and numbers beyond 64 bits are refused.
-static BOOL TSUnsignedValue(id value, uint64_t *result)
+#pragma mark - Numbers read as Swift reads them
+
+// CotEditor reads its options with Swift's JSONDecoder, which reads a number from its text; NSJSONSerialization keeps
+// only a double for most fractions, so the text of the two option numbers is taken from the data itself.
+
+/// The text of JSON data, in the encoding NSJSONSerialization detects.
+static NSString *_Nullable TSJSONText(NSData *data)
 {
-    if (![value isKindOfClass:[NSNumber class]] || TSIsBooleanValue(value))
-        return NO;
-    NSNumber *number = value;
-    const char *type = number.objCType;
-    if (strcmp(type, @encode(unsigned long long)) == 0 || strcmp(type, @encode(unsigned long)) == 0) {
-        *result = number.unsignedLongLongValue;
-        return YES;
+    const uint8_t *b = data.bytes;
+    NSUInteger n = data.length;
+    NSStringEncoding encoding = NSUTF8StringEncoding;
+    if (n >= 4 && ((b[0] == 0 && b[1] == 0 && b[2] == 0xFE && b[3] == 0xFF) || (b[0] == 0xFF && b[1] == 0xFE && b[2] == 0 && b[3] == 0)))
+        encoding = NSUTF32StringEncoding;
+    else if (n >= 2 && ((b[0] == 0xFE && b[1] == 0xFF) || (b[0] == 0xFF && b[1] == 0xFE)))
+        encoding = NSUTF16StringEncoding;
+    else if (n >= 4 && b[0] == 0 && b[1] == 0 && b[2] == 0)
+        encoding = NSUTF32BigEndianStringEncoding;
+    else if (n >= 4 && b[1] == 0 && b[2] == 0 && b[3] == 0)
+        encoding = NSUTF32LittleEndianStringEncoding;
+    else if (n >= 2 && b[0] == 0)
+        encoding = NSUTF16BigEndianStringEncoding;
+    else if (n >= 2 && b[1] == 0)
+        encoding = NSUTF16LittleEndianStringEncoding;
+    NSString *text = [[NSString alloc] initWithData:data encoding:encoding];
+    if ([text hasPrefix:@"﻿"])
+        text = [text substringFromIndex:1];
+    return text;
+}
+
+typedef struct {
+    CFStringInlineBuffer buffer;
+    CFIndex length, index;
+} TSJSONScanner;
+
+static UniChar TSJSONPeek(TSJSONScanner *scanner)
+{
+    return scanner->index < scanner->length ? CFStringGetCharacterFromInlineBuffer(&scanner->buffer, scanner->index) : 0;
+}
+
+static void TSJSONSkipSpace(TSJSONScanner *scanner)
+{
+    for (UniChar c = TSJSONPeek(scanner); c == ' ' || c == '\t' || c == '\n' || c == '\r'; c = TSJSONPeek(scanner))
+        scanner->index++;
+}
+
+/// Moves past the value at the scanner, which NSJSONSerialization has already found valid.
+static BOOL TSJSONSkipValue(TSJSONScanner *scanner)
+{
+    NSInteger depth = 0;
+    BOOL inString = NO;
+    while (scanner->index < scanner->length) {
+        UniChar c = TSJSONPeek(scanner);
+        if (inString) {
+            scanner->index += (c == '\\') ? 2 : 1;
+            if (c == '"') {
+                inString = NO;
+                if (depth == 0)
+                    return YES;
+            }
+            continue;
+        }
+        if (c == '"') {
+            inString = YES;
+        } else if (c == '{' || c == '[') {
+            depth++;
+        } else if (c == '}' || c == ']') {
+            if (depth == 0)
+                return YES;     // The end of a number or a literal that closes its container.
+            if (--depth == 0) {
+                scanner->index++;
+                return YES;
+            }
+        } else if (depth == 0 && (c == ',' || c == ' ' || c == '\t' || c == '\n' || c == '\r')) {
+            return YES;
+        }
+        scanner->index++;
     }
-    // Fractions, and the NSDecimalNumber NSJSONSerialization gives for numbers beyond 64 bits, go through a double.
-    if (strcmp(type, @encode(double)) == 0 || strcmp(type, @encode(float)) == 0) {
-        double d = number.doubleValue;
-        // 2^64 is the first double above UInt64.max.
-        if (!(d >= 0 && d < 18446744073709551616.0 && d == floor(d)))
+    return depth == 0 && !inString;
+}
+
+/// The range of the first value of each member of the object at the scanner, by key: NSJSONSerialization and Swift's
+/// JSONDecoder both use the first of duplicate keys.
+static NSDictionary<NSString *, NSValue *> *_Nullable TSJSONMemberRanges(TSJSONScanner *scanner, NSString *text)
+{
+    TSJSONSkipSpace(scanner);
+    if (TSJSONPeek(scanner) != '{')
+        return nil;
+    scanner->index++;
+    NSMutableDictionary<NSString *, NSValue *> *members = [NSMutableDictionary dictionary];
+    for (;;) {
+        TSJSONSkipSpace(scanner);
+        if (TSJSONPeek(scanner) == '}')
+            return members;
+        CFIndex keyStart = scanner->index;
+        if (TSJSONPeek(scanner) != '"' || !TSJSONSkipValue(scanner))
+            return nil;
+        NSString *keyText = [text substringWithRange:NSMakeRange((NSUInteger)keyStart, (NSUInteger)(scanner->index - keyStart))];
+        id key = [keyText rangeOfString:@"\\"].location == NSNotFound
+            ? [keyText substringWithRange:NSMakeRange(1, keyText.length - 2)]
+            : [NSJSONSerialization JSONObjectWithData:[keyText dataUsingEncoding:NSUTF8StringEncoding] ?: [NSData data]
+                                              options:NSJSONReadingFragmentsAllowed error:NULL];
+        TSJSONSkipSpace(scanner);
+        if (![key isKindOfClass:[NSString class]] || TSJSONPeek(scanner) != ':')
+            return nil;
+        scanner->index++;
+        TSJSONSkipSpace(scanner);
+        CFIndex valueStart = scanner->index;
+        if (!TSJSONSkipValue(scanner))
+            return nil;
+        if (!members[key])
+            members[key] = [NSValue valueWithRange:NSMakeRange((NSUInteger)valueStart, (NSUInteger)(scanner->index - valueStart))];
+        TSJSONSkipSpace(scanner);
+        if (TSJSONPeek(scanner) == ',')
+            scanner->index++;
+    }
+}
+
+/// The texts of the values of the settings object, by key.
+static NSDictionary<NSString *, NSString *> *TSSettingsTexts(NSData *data)
+{
+    NSString *text = TSJSONText(data);
+    if (!text)
+        return @{};
+    TSJSONScanner scanner = {.length = (CFIndex)text.length, .index = 0};
+    CFStringInitInlineBuffer((__bridge CFStringRef)text, &scanner.buffer, CFRangeMake(0, scanner.length));
+    NSValue *settingsRange = TSJSONMemberRanges(&scanner, text)[TSDefinitionSettingsKey];
+    if (!settingsRange)
+        return @{};
+    scanner.index = (CFIndex)settingsRange.rangeValue.location;
+    NSMutableDictionary<NSString *, NSString *> *texts = [NSMutableDictionary dictionary];
+    [TSJSONMemberRanges(&scanner, text) enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSValue *range, BOOL *stop) {
+        texts[key] = [text substringWithRange:range.rangeValue];
+    }];
+    return texts;
+}
+
+/// A decimal number as Foundation's Decimal reads its text: up to 128 bits of digits and an exponent from -128 to
+/// 127, without trailing zeros. NO when Decimal refuses the text.
+static BOOL TSDecimalOfNumberText(const char *s, BOOL *negative, unsigned __int128 *mantissa, int *exponent)
+{
+    const unsigned __int128 max = ~(unsigned __int128)0;
+    unsigned __int128 m = 0;
+    int e = 0;
+    BOOL tooBig = NO;
+    *negative = (*s == '-');
+    if (*s == '-' || *s == '+')
+        s++;
+    for (; *s >= '0' && *s <= '9'; s++) {
+        unsigned digit = (unsigned)(*s - '0');
+        if (!tooBig && m <= (max - digit) / 10) {
+            m = m * 10 + digit;
+            continue;
+        }
+        // Digits that do not fit only raise the exponent.
+        tooBig = YES;
+        if (e == 127)
             return NO;
+        e++;
+    }
+    if (*s == '.') {
+        for (s++; *s >= '0' && *s <= '9'; s++) {
+            unsigned digit = (unsigned)(*s - '0');
+            if (tooBig)
+                continue;
+            if (m > (max - digit) / 10) {
+                tooBig = YES;
+                continue;
+            }
+            m = m * 10 + digit;
+            if (e == -128)
+                return NO;
+            e--;
+        }
+    }
+    if (*s == 'e' || *s == 'E') {
+        s++;
+        BOOL negativeExponent = (*s == '-');
+        if (*s == '-' || *s == '+')
+            s++;
+        int value = 0;
+        for (; *s >= '0' && *s <= '9'; s++) {
+            value = value * 10 + (*s - '0');
+            if (value > 254)
+                return NO;
+        }
+        value = (negativeExponent ? -value : value) + e;
+        if (value > 127 || value < -128)
+            return NO;
+        e = value;
+    }
+    if (m != 0) {
+        BOOL changed = NO;
+        while (m % 10 == 0) {
+            m /= 10;
+            e++;
+            changed = YES;
+        }
+        while (changed && e > 127) {
+            m *= 10;
+            e--;
+        }
+    }
+    *mantissa = m;
+    *exponent = e;
+    return YES;
+}
+
+/// Reads the text of a JSON number as the JSONDecoder of macOS reads a UInt:
+/// - an integer is read exactly, from 0 to UInt64.max;
+/// - anything else is read as a double, which must be a whole number below 2^64; below 2^53 that double is the value;
+/// - from 2^53 the text is read as a Decimal, whose digits must fit in 64 bits; the fraction is cut off.
+/// So `1.0` is 1, `1.5` and `-1` are refused, `9007199254740993.9` is 9007199254740993, and `9223372036854775807.9`
+/// is refused.
+static BOOL TSUnsignedValueOfNumberText(NSString *text, uint64_t *result)
+{
+    const char *s = text.UTF8String;
+    if (!s || !*s)
+        return NO;
+    if (strpbrk(s, ".eE") == NULL && *s != '-') {
+        uint64_t value = 0;
+        BOOL fits = YES;
+        for (const char *p = s; *p && fits; p++) {
+            if (*p < '0' || *p > '9')
+                return NO;
+            fits = !__builtin_mul_overflow(value, 10, &value) && !__builtin_add_overflow(value, (uint64_t)(*p - '0'), &value);
+        }
+        if (fits) {
+            *result = value;
+            return YES;
+        }
+    }
+    static locale_t cLocale;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        cLocale = newlocale(LC_ALL_MASK, "C", NULL);
+    });
+    double d = strtod_l(s, NULL, cLocale);
+    // UInt(exactly:); -0.0 is 0. 2^64 is the first double above UInt64.max.
+    if (!(d >= 0 && d < 0x1p64 && d == floor(d)))
+        return NO;
+    if (d < 0x1p53) {
         *result = (uint64_t)d;
         return YES;
     }
-    long long signedValue = number.longLongValue;
-    if (signedValue < 0)
+    BOOL negative = NO;
+    unsigned __int128 mantissa = 0;
+    int exponent = 0;
+    if (!TSDecimalOfNumberText(s, &negative, &mantissa, &exponent) || negative || mantissa > UINT64_MAX)
         return NO;
-    *result = (uint64_t)signedValue;
+    uint64_t value = (uint64_t)mantissa;
+    for (; exponent < 0; exponent++)
+        value /= 10;
+    for (; exponent > 0; exponent--) {
+        if (__builtin_mul_overflow(value, 10, &value))
+            return NO;
+    }
+    *result = value;
     return YES;
+}
+
+/// Reads an option number of the settings as Swift's JSONDecoder reads a UInt. Booleans are refused.
+static BOOL TSUnsignedValue(id value, NSString *_Nullable text, uint64_t *result)
+{
+    if (![value isKindOfClass:[NSNumber class]] || TSIsBooleanValue(value) || !text)
+        return NO;
+    return TSUnsignedValueOfNumberText((NSString *_Nonnull)text, result);
 }
 
 static NSError *TSDefinitionError(NSString *description)
@@ -143,7 +384,8 @@ static NSError *TSDefinitionError(NSString *description)
     if (wholeWord == (id)kCFNull) wholeWord = nil;
     if (unescapes == (id)kCFNull) unescapes = nil;
     uint64_t compareValue = 0, regexValue = 0;
-    if (!TSUnsignedValue(textual, &compareValue) || !TSUnsignedValue(regex, &regexValue)
+    NSDictionary<NSString *, NSString *> *texts = TSSettingsTexts(data);
+    if (!TSUnsignedValue(textual, texts[TSSettingsTextualKey], &compareValue) || !TSUnsignedValue(regex, texts[TSSettingsRegexKey], &regexValue)
         || (wholeWord && !TSIsBooleanValue(wholeWord)) || (unescapes && !TSIsBooleanValue(unescapes))) {
         if (error)
             *error = TSDefinitionError(@"The settings of the replacement definition are not valid.");
