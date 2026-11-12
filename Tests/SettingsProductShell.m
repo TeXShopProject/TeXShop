@@ -171,7 +171,7 @@ int main(int argc,char **argv){@autoreleasepool{
 
  [[TSDockIconController sharedController]installInPreferencesPane:[shell viewForCategoryIdentifier:TSSettingsCategoryAppearance]];
  [shell beginSession];NSDictionary *saved=[TSIsolatedAppKitDefaults dictionaryRepresentation];
- for(NSNumber *windowWidth in @[@900,@1040])for(NSNumber *sidebarWidth in @[@190,@330]){
+ for(NSNumber *windowWidth in @[@900,@1040])for(NSNumber *sidebarWidth in @[@190,@330,@190,@260]){
   [shell.window setContentSize:NSMakeSize(windowWidth.doubleValue,780)];[shell.splitController.splitView setPosition:sidebarWidth.doubleValue ofDividerAtIndex:0];[shell.window.contentView layoutSubtreeIfNeeded];
   NSSplitViewItem *sidebar=shell.splitController.splitViewItems.firstObject;
   Check(sidebar.minimumThickness==190 && sidebar.maximumThickness==330 && !sidebar.canCollapse,@"Sidebar limits preserve the approved usable width");
@@ -179,6 +179,11 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(fabs(NSWidth(sidebar.viewController.view.frame)-feasible)<2,[NSString stringWithFormat:@"Sidebar width %.1f requested %@, window %@",NSWidth(sidebar.viewController.view.frame),sidebarWidth,windowWidth]);
   Check(NSMinX(shell.settingsSearchField.frame)>=0 && NSMaxX(shell.settingsSearchField.frame)<=NSWidth(sidebar.viewController.view.bounds),@"Search field fits narrow sidebar");
   Check(shell.categoryTable.rowHeight==30 && shell.categoryTable.headerView==nil,@"Sidebar uses compact rows with no table heading");
+  NSScrollView *listScroll=shell.categoryTable.enclosingScrollView;NSClipView *listClip=listScroll.contentView;
+  Check(NSWidth(shell.categoryTable.frame)<=NSWidth(listClip.bounds)+0.5,[NSString stringWithFormat:@"Sidebar list %.1f fits its %.1f-point column, sidebar %@, window %@",NSWidth(shell.categoryTable.frame),NSWidth(listClip.bounds),sidebarWidth,windowWidth]);
+  Check(!listScroll.hasHorizontalScroller && listScroll.horizontalScrollElasticity==NSScrollElasticityNone,@"Sidebar list has no horizontal scroller or horizontal bounce");
+  NSRect shifted=listClip.bounds;shifted.origin.x=60;
+  Check(fabs([listClip constrainBoundsRect:shifted].origin.x)<0.5,[NSString stringWithFormat:@"Sidebar list cannot be scrolled sideways (%.1f), sidebar %@, window %@",[listClip constrainBoundsRect:shifted].origin.x,sidebarWidth,windowWidth]);
   for(NSInteger row=0;row<shell.categoryTable.numberOfRows;row++){CGFloat height=[shell tableView:shell.categoryTable heightOfRow:row];Check(height==8 || (height>=30 && height<=42),@"Category spacing uses compact one-line or necessary two-line rows");}
  }
  [shell.window setContentSize:NSMakeSize(1040,780)];[shell.splitController.splitView setPosition:220 ofDividerAtIndex:0];
