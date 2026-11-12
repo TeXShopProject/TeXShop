@@ -146,7 +146,7 @@
 "Set Up TeX Engine Paths" = "TeX-Programmpfade einrichten";
 "Detected Engine Paths" = "Gefundene Programmpfade";
 
-"Not found (current setting will be kept)" = "Nicht gefunden (die aktuelle Einstellung bleibt erhalten)";
+"Not found" = "Nicht gefunden";
 "Version unavailable" = "Unbekannt";
 "Use These Paths" = "Diese Pfade verwenden";
 

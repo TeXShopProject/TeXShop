@@ -146,7 +146,7 @@
 "Set Up TeX Engine Paths" = "Configurar rutas de los motores TeX";
 "Detected Engine Paths" = "Rutas de motores detectadas";
 
-"Not found (current setting will be kept)" = "No encontrado (se conservará el ajuste actual)";
+"Not found" = "No encontrado";
 "Version unavailable" = "Desconocida";
 "Use These Paths" = "Usar estas rutas";
 
