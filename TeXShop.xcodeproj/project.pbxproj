@@ -764,6 +764,7 @@
 		1B07AF9DC05BCC3F8444C4D5 /* TSSpellExclusions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSpellExclusions.h; sourceTree = "<group>"; };
 		DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSpellExclusions.m; sourceTree = "<group>"; };
 		3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSpellSupport.h; sourceTree = "<group>"; };
+		E1720000000000000000A032 /* TSSpellingLanguage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSSpellingLanguage.h; sourceTree = "<group>"; };
 		02810215E6051B57C001C799 /* TSSpellSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSSpellSupport.m; sourceTree = "<group>"; };
 		40AA2B8103C79AF800000009 /* TSEncodingSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSEncodingSupport.h; sourceTree = "<group>"; };
 		40AA2B8203C79AF800000009 /* TSEncodingSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSEncodingSupport.m; sourceTree = "<group>"; };
@@ -1162,6 +1163,7 @@
 				1B07AF9DC05BCC3F8444C4D5 /* TSSpellExclusions.h */,
 				DB778C6DE0EE0C1AE1E0909B /* TSSpellExclusions.m */,
 				3086BAFCCC5CABC6D0FD3D2C /* TSSpellSupport.h */,
+				E1720000000000000000A032 /* TSSpellingLanguage.h */,
 				02810215E6051B57C001C799 /* TSSpellSupport.m */,
 				3DBCF2332BEF8B0487C42BD9 /* TSMarkMenu.h */,
 				068A0284B4D8986B4C59306F /* TSMarkMenu.m */,
