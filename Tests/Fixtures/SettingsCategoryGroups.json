@@ -56,8 +56,8 @@
       "group.typesetting.3",
       "group.typesetting.4",
       "group.typesetting.5",
-      "group.typesetting.6",
       "group.typesetting.7",
+      "group.typesetting.6",
       "group.typesetting.8",
       "group.typesetting.9"
     ],
@@ -128,10 +128,10 @@
       "タイプセット後",
       "ソースとプレビューの同期",
       "パス",
-      "pdfTeX",
-      "TeX + dvipdfmx／TeX + dvips + distiller",
+      "PDF直接生成",
+      "DVI経由",
+      "Ghostscript",
       "パーソナルスクリプト",
-      "Distiller",
       "検索用コマンドとBibTeX",
       "pTeXサポート（日本用）"
     ],

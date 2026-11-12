@@ -147,7 +147,7 @@
 "Set Up TeX Engine Paths" = "Configurarea căilor motoarelor TeX";
 "Detected Engine Paths" = "Căi ale motoarelor detectate";
 
-"Not found (current setting will be kept)" = "Nu a fost găsit (se păstrează configurarea actuală)";
+"Not found" = "Nu a fost găsit";
 "Version unavailable" = "Necunoscută";
 "Use These Paths" = "Folosește aceste căi";
 

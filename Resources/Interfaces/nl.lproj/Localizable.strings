@@ -144,7 +144,7 @@
 "Set Up TeX Engine Paths" = "TeX-enginepaden instellen";
 "Detected Engine Paths" = "Gevonden enginepaden";
 
-"Not found (current setting will be kept)" = "Niet gevonden (de huidige instelling blijft behouden)";
+"Not found" = "Niet gevonden";
 "Version unavailable" = "Onbekend";
 "Use These Paths" = "Deze paden gebruiken";
 

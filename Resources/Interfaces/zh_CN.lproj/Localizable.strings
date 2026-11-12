@@ -143,7 +143,7 @@
 "Set Up TeX Engine Paths" = "设置TeX引擎路径";
 "Detected Engine Paths" = "检测到的引擎路径";
 
-"Not found (current setting will be kept)" = "未找到（将保留当前设置）";
+"Not found" = "未找到";
 "Version unavailable" = "未知";
 "Use These Paths" = "使用这些路径";
 

@@ -268,7 +268,7 @@
 "Forgot %lu words." = "Forgot %lu words.";
 "No learned words in this document" = "No learned words in this document";
 "None of the words in this document have been learned for %@." = "None of the words in this document have been learned for %@.";
-"Not found (current setting will be kept)" = "Not found (current setting will be kept)";
+"Not found" = "Not found";
 "OK" = "OK";
 "New shortcut" = "New shortcut";
 "Problems in the spelling exclusions file" = "Problems in the spelling exclusions file";

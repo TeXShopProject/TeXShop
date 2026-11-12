@@ -1299,7 +1299,7 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
                 [choices addSubview:label];
                 NSArray *candidates = found[key];
                 if (candidates.count == 0) {
-                    NSTextField *missing = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Not found (current setting will be kept)", @"")];
+                    NSTextField *missing = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Not found", @"")];
                     top -= 30;
                     missing.frame = NSMakeRect(0, top, 560, 28);
                     [choices addSubview:missing];
