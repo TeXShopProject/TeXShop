@@ -34,6 +34,12 @@ MUTATIONS = {
     'pdf-top-before-show': ('typesetFile', '        [document->scrapPDFWindow makeKeyAndOrderFront:nil];\n        [document->scrapPDFKitView didShowOutputWindow];',
                             '        [document->scrapPDFKitView didShowOutputWindow];\n        [document->scrapPDFWindow makeKeyAndOrderFront:nil];'),
     'pdf-top-missing': ('typesetFile', '        [document->scrapPDFKitView didShowOutputWindow];\n', ''),
+    # Plain TeX, MetaPost and ConTeXt cannot typeset an Experiment, also when named by a
+    # "% !TEX program" line; an engine of ~/Library/TeXShop/Engines keeps its name.
+    'engine-plain-tex-runs': ('engine', '        return nil;   // Plain TeX, MetaPost, or no engine', '        return @"pdflatex";'),
+    'engine-context-runs': ('engine', '    return TSExperimentRejectsEngine(engine) ? nil : engine;', '    return engine;'),
+    'engine-pdftex-runs': ('engine', '@"tex", @"pdftex", ', '@"tex", '),
+    'engine-name-lowercased': ('engine', '        engine = menuTitles[menuEngine - 1];', '        engine = menuTitles[menuEngine - 1].lowercaseString;'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('root', nargs='?', type=Path, default=Path(__file__).resolve().parents[1])
@@ -52,10 +58,23 @@ methods = {name: method('TSDocument-Scrap.m', sig) for name, sig in [
     ('windowWillClose', '- (void)windowWillClose:'), ('closeExperiment', '- (void)closeExperiment'),
     ('getFilePath', '- (NSString *)getFilePath'), ('searchFile', '- (void)searchFile:')]}
 methods['close'] = method('TSDocument.m', '- (void)close\n')
+# The engine of an Experiment and the constants it uses, from the product sources
+scrap = source_file(args.root, 'TSDocument-Scrap.m').read_text(errors='replace')
+engine = scrap[scrap.index('// An experiment typesets a LaTeX document'):scrap.index('@implementation TSDocument (Scrap)')]
+globals_h = source_file(args.root, 'globals.h').read_text(errors='replace')
+document_h = source_file(args.root, 'TSDocument.h').read_text(errors='replace')
+engine_start = globals_h.index('enum EngineCommand')
+mode_end = document_h.index('} DefaultTypesetMode;') + len('} DefaultTypesetMode;')
+constants = (globals_h[engine_start:globals_h.index('};', engine_start) + 2] + '\n'
+             + document_h[document_h.rindex('typedef enum', 0, mode_end):mode_end] + '\n')
 if args.mutation:
     name, old, new = MUTATIONS[args.mutation]
-    assert methods[name].count(old) == 1, args.mutation
-    methods[name] = methods[name].replace(old, new, 1)
+    if name == 'engine':
+        assert engine.count(old) == 1, args.mutation
+        engine = engine.replace(old, new, 1)
+    else:
+        assert methods[name].count(old) == 1, args.mutation
+        methods[name] = methods[name].replace(old, new, 1)
 
 program = r'''
 #import <Foundation/Foundation.h>
@@ -65,8 +84,12 @@ static void Check(BOOL b, NSString *label) {
     if (!b) { failures++; fprintf(stderr, "FAIL: %s\n", label.UTF8String); }
 }
 static void NSBeep(void) { beeps++; }
+@@CONSTANTS@@
+@@ENGINE@@
 @interface Node : NSObject
-@property (copy) NSString *string, *title, *titleOfSelectedItem;
+@property (copy) NSString *string, *title;
+@property NSInteger indexOfSelectedItem;
+@property (copy) NSArray<NSString *> *itemTitles;
 @property BOOL isVisible, hidesOnDeactivate;
 @property NSUInteger closes, shows, reloads, breaks, outputShows, shownBeforeOutput;
 @property (strong) id document;
@@ -203,7 +226,9 @@ static BOOL auxCopied;
 @property (strong) NSTimer *tagTimer, *pdfRefreshTimer;
 @property (strong) id pdfActivity;
 @property BOOL useDVI, scrapDVI, annotationsExist;
-@property (copy) NSString *scrapMenuEngine, *scrapProgram, *scrapEncoding;
+@property (copy) NSString *scrapProgram, *scrapEncoding;
+@property NSInteger scrapMenuEngine;
+@property (copy) NSArray<NSString *> *scrapMenuTitles;
 @property NSInteger scrapScript;
 @property NSStringEncoding encoding, scrapEffectiveEncoding;
 @property (strong) NSURL *fileURL;
@@ -253,7 +278,8 @@ static Document *D(void) {
     d->outputText.string = @"normal running output"; d->outputWindow.title = @"normal console";
     d.inputPipe = [NSObject new]; d.outputPipe = [NSObject new];
     d.readHandle = [NSObject new]; d.writeHandle = [NSObject new];
-    d.programButton = [Node new]; d.programButton.titleOfSelectedItem = @"LaTeX";
+    d.programButton = [Node new]; d.programButton.indexOfSelectedItem = 1;
+    d.programButton.itemTitles = @[@"Plain TeX", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"];
     d.textView = [Node new]; d.textView.string = @"child preamble\\begin{document}child body";
     d.encoding = NSUTF8StringEncoding; d->whichScript = 100; d->fileIsTex = YES;
     d.fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"child.tex"]];
@@ -315,7 +341,68 @@ static void CheckSource(NSString *source, NSString *header, NSInteger rootScript
         RemoveOutput(d.experimentConsole);
     }
 }
+// The engine of the source toolbar (its index in the menu: Plain TeX, LaTeX, BibTeX, MakeIndex,
+// MetaPost, then the engines of ~/Library/TeXShop/Engines) or of a "% !TEX program" line.
+static NSString *ExperimentExecutable(NSInteger index, NSArray *titles, NSString *magic, NSInteger script, BOOL *refused) {
+    Document *d = D();
+    d.programButton.itemTitles = titles;
+    d.programButton.indexOfSelectedItem = index;
+    d->whichScript = script;
+    d.textView.string = magic ? [magic stringByAppendingString:@"\n\\begin{document}x"] : @"\\begin{document}x";
+    NSUInteger before = beeps;
+    clonedInto = nil;
+    [d typesetScrap:nil];
+    Console *c = d.experimentConsole;
+    *refused = c.starts == 0 && beeps == before + 1 && clonedInto != nil
+        && ![[NSFileManager defaultManager] fileExistsAtPath:clonedInto.path];
+    NSString *executable = c.starts == 1 && beeps == before ? c.executable : nil;
+    RemoveOutput(c);
+    return executable;
+}
+static NSArray *Engines(NSArray *users) {
+    return [@[@"Plain TeX", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"] arrayByAddingObjectsFromArray:users];
+}
+static void CheckRefused(NSInteger index, NSArray *titles, NSString *magic, NSString *label) {
+    BOOL refused = NO;
+    ExperimentExecutable(index, titles, magic, 100, &refused);
+    Check(refused, [label stringByAppendingString:@": no job starts, a beep, and the Experiment folder is removed"]);
+}
+static void CheckEngine(NSInteger index, NSArray *titles, NSString *magic, NSInteger script, NSString *expected, NSString *label) {
+    BOOL refused = YES;
+    NSString *executable = ExperimentExecutable(index, titles, magic, script, &refused);
+    Check(!refused && [executable isEqualToString:expected],
+          [NSString stringWithFormat:@"%@: expected %@, got %@", label, expected, executable]);
+}
+static void CheckEngines(void) {
+    NSArray *users = Engines(@[@"ConTeXt", @"ConTeXt-TL", @"My Engine", @"XeLaTeX"]);
+    CheckRefused(0, users, nil, @"Plain TeX of the toolbar");
+    CheckRefused(0, @[@"TeX (localized)", @"LaTeX", @"BibTeX", @"MakeIndex", @"MetaPost"], nil, @"Plain TeX of the toolbar under another title");
+    CheckRefused(4, users, nil, @"MetaPost of the toolbar");
+    CheckRefused(5, users, nil, @"ConTeXt engine of the toolbar");
+    CheckRefused(6, users, nil, @"ConTeXt-TL engine of the toolbar");
+    CheckRefused(-1, users, nil, @"no engine selected in the toolbar");
+    CheckEngine(1, users, nil, 100, @"/engine/pdf", @"LaTeX with pdfTeX");
+    CheckEngine(1, users, nil, 101, @"/engine/dvi", @"LaTeX with TeX and DVI");
+    CheckEngine(1, users, nil, 102, @"/engine/personal", @"LaTeX with a personal script");
+    CheckEngine(2, users, nil, 101, @"/engine/pdf", @"BibTeX of the toolbar");
+    CheckEngine(3, users, nil, 102, @"/engine/pdf", @"MakeIndex of the toolbar");
+    CheckEngine(7, users, nil, 100, @"/custom-engines/My Engine.engine", @"engine with a space in its name");
+    CheckEngine(8, users, nil, 100, @"/custom-engines/XeLaTeX.engine", @"engine keeps the case of its name");
+    CheckEngine(5, Engines(@[@"LaTeX"]), nil, 100, @"/custom-engines/LaTeX.engine", @"an engine named LaTeX is that engine");
+    for (NSString *program in @[@"plaintex", @"tex", @"pdftex", @"PdfTeX", @"personaltex", @"metapost", @"context", @"ConTeXt-TL"])
+        CheckRefused(1, users, [@"% !TEX program = " stringByAppendingString:program],
+                     [@"% !TEX program = " stringByAppendingString:program]);
+    CheckEngine(0, users, @"% !TEX program = bibtex", 100, @"/engine/pdf", @"% !TEX program = bibtex");
+    CheckEngine(0, users, @"%!TEX TS-program = makeindex", 101, @"/engine/pdf", @"%!TEX TS-program = makeindex");
+    CheckEngine(0, users, @"% !TEX program = latex", 100, @"/engine/dvi", @"% !TEX program = latex");
+    CheckEngine(0, users, @"% !TEX program = pdflatex", 101, @"/engine/pdf", @"% !TEX program = pdflatex");
+    CheckEngine(0, users, @"% !TEX program = personallatex", 100, @"/engine/personal", @"% !TEX program = personallatex");
+    CheckEngine(0, users, @"% !TEX program = xelatex", 100, @"/custom-engines/XeLaTeX.engine", @"% !TEX program names an engine of the toolbar");
+    CheckEngine(0, users, @"% !TEX program = my engine", 100, @"/custom-engines/My Engine.engine", @"% !TEX program names an engine with a space");
+    CheckEngine(4, users, @"% !TEX program = lualatex", 100, @"/custom-engines/lualatex.engine", @"% !TEX program names an engine not in the toolbar");
+}
 int main(void) { @autoreleasepool {
+    CheckEngines();
     CheckSource(@"\\begin{document}body", @"", 101, NSISOLatin1StringEncoding, @"/engine/dvi");
     CheckSource(@"preamble\\begin{document}body", @"preamble", 102, NSUTF8StringEncoding, @"/engine/personal");
     CheckSource(@"preamble\n\\begin{document}body", @"preamble\n", 100, NSUnicodeStringEncoding, @"/engine/pdf");
@@ -363,7 +450,7 @@ int main(void) { @autoreleasepool {
     printf("%lu checks, %lu failures\n", (unsigned long)checks, (unsigned long)failures);
     return failures ? 1 : 0;
 } }
-'''.replace('@@METHODS@@', '\n'.join(methods.values()))
+'''.replace('@@METHODS@@', '\n'.join(methods.values())).replace('@@CONSTANTS@@', constants).replace('@@ENGINE@@', engine)
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-document-') as temporary:
     temporary = Path(temporary)
     source, executable = temporary / 'test.m', temporary / 'test'
@@ -381,5 +468,5 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-document-') as tempo
     else:
         if result.returncode:
             raise SystemExit(result.stdout + result.stderr)
-        print('PASS: production Experiment launch/close isolation, preamble, root settings and inactive completion')
+        print('PASS: production Experiment launch/close isolation, preamble, root settings, engines and inactive completion')
         print(result.stdout.strip())
