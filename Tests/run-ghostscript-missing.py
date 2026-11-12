@@ -53,6 +53,18 @@ int main(int argc, char **argv) { @autoreleasepool {
               [NSString stringWithFormat:@"%@ uses another converter", [arguments componentsJoinedByString:@" "]]);
     check(TSGhostscriptFoldersForCommand(@"simpdftex", @[@"latex", @"--distilleropts", @"--distiller"]) != nil, @"the value of --distilleropts is not an option");
     check(TSGhostscriptFoldersForCommand(nil, nil) == nil, @"no command does not run Ghostscript");
+    // simpdftex can make the PDF with dvipdfm or dvipdfmx instead; the last choice counts.
+    NSDictionary *modes = @{
+        @[@"--mode", @"dvipdfmx"]: @NO, @[@"--mode", @"dvipdfm"]: @NO, @[@"--dpx"]: @NO, @[@"--dpm"]: @NO,
+        @[@"--mode", @"dvips"]: @YES, @[@"--dpx", @"--mode", @"dvips"]: @YES, @[@"--mode", @"dvipdfmx", @"--mode", @"dvips"]: @YES,
+        @[@"--mode", @"dvips", @"--dpx"]: @NO, @[@"--mode", @"unknown"]: @YES, @[@"--dpx", @"--distiller", @"ps2pdf"]: @NO,
+    };
+    for (NSArray *arguments in modes) {
+        NSArray *full = [[@[@"latex"] arrayByAddingObjectsFromArray:arguments] arrayByAddingObject:@"a.tex"];
+        check((TSGhostscriptFoldersForCommand(@"/Library/TeX/texbin/simpdftex", full) != nil) == [modes[arguments] boolValue],
+              [NSString stringWithFormat:@"simpdftex %@ %@ Ghostscript", [arguments componentsJoinedByString:@" "], [modes[arguments] boolValue] ? @"needs" : @"does not need"]);
+    }
+    check(TSGhostscriptFoldersForCommand(@"altpdflatex", @[@"--dpx", @"--mode", @"dvipdfmx"]) != nil, @"altpdflatex has no dvipdfmx mode");
     puts("PASS checks");
 }}
 '''
@@ -69,6 +81,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-ghostscript-') as temp:
         check_source = check_source.replace('&& !isFolder &&\n            [[NSFileManager defaultManager] isExecutableFileAtPath:program]', '')
     if mutation == 'any-distiller-option':
         check_source = check_source.replace('if (![options containsObject:name])\n            continue;', 'if ([name hasPrefix:@"--distiller"]) return nil;\n        if (![options containsObject:name])\n            continue;')
+    if mutation == 'ignore-mode':
+        check_source = check_source.replace('if (![dviProgram isEqualToString:@"dvips"])', 'if (dviProgram == nil)')
+    if mutation == 'mode-for-all':
+        check_source = check_source.replace('BOOL simpdftex = [program.lastPathComponent isEqualToString:@"simpdftex"];', 'BOOL simpdftex = YES;')
     if mutation == 'path-not-searched':
         check_source = check_source.replace('[folders addObject:distillerPath];', ';')
     (include / 'TSGhostscriptCheck.inc').write_text(check_source)

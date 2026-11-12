@@ -21,19 +21,27 @@ static BOOL TSGhostscriptFoundInPath(NSString *path)
 // simpdftex, and the altpdftex and altpdflatex scripts used for continuous
 // typesetting, run dvips and then a distiller: ps2pdf unless --distiller or
 // --distiller-filter names another program. Before that they put the folder of
-// --distiller-path, /usr/local/bin by default, in front of the PATH.
+// --distiller-path, /usr/local/bin by default, in front of the PATH. simpdftex
+// can instead make the PDF with dvipdfm or dvipdfmx (--mode, --dpm, --dpx; the
+// last one counts), and then no distiller runs.
 // Returns nil when the command does not run Ghostscript, and otherwise the
 // folders the command adds to the PATH before it runs the distiller.
 static NSArray<NSString *> *TSGhostscriptFoldersForCommand(NSString *program, NSArray *arguments)
 {
     if (![@[@"simpdftex", @"altpdftex", @"altpdflatex"] containsObject:program.lastPathComponent ?: @""])
         return nil;
-    NSString *distiller = @"ps2pdf", *distillerPath = @"/usr/local/bin";
-    NSArray<NSString *> *options = @[@"--distiller", @"--distiller-filter", @"--distiller-path", @"--distilleropts"];
+    BOOL simpdftex = [program.lastPathComponent isEqualToString:@"simpdftex"];
+    NSString *distiller = @"ps2pdf", *distillerPath = @"/usr/local/bin", *dviProgram = @"dvips";
+    NSArray<NSString *> *options = simpdftex ? @[@"--distiller", @"--distiller-filter", @"--distiller-path", @"--distilleropts", @"--mode"]
+                                             : @[@"--distiller", @"--distiller-filter", @"--distiller-path", @"--distilleropts"];
     for (NSUInteger index = 0; index < arguments.count; index++) {
         if (![arguments[index] isKindOfClass:NSString.class])
             continue;
         NSString *argument = arguments[index], *name = argument, *value = nil;
+        if (simpdftex && [argument isEqualToString:@"--dpx"])
+            dviProgram = @"dvipdfmx";
+        if (simpdftex && [argument isEqualToString:@"--dpm"])
+            dviProgram = @"dvipdfm";
         NSRange equals = [argument rangeOfString:@"="];
         if ([argument hasPrefix:@"--"] && equals.location != NSNotFound) {
             name = [argument substringToIndex:equals.location];
@@ -46,11 +54,16 @@ static NSArray<NSString *> *TSGhostscriptFoldersForCommand(NSString *program, NS
             index++;
         }
         value = [value stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\"' "]];
-        if ([name isEqualToString:@"--distiller-path"])
+        if ([name isEqualToString:@"--mode"]) {
+            if ([@[@"dvips", @"dvipdfm", @"dvipdfmx"] containsObject:value])
+                dviProgram = value;
+        } else if ([name isEqualToString:@"--distiller-path"])
             distillerPath = value;
         else if (![name isEqualToString:@"--distilleropts"])
             distiller = value;
     }
+    if (![dviProgram isEqualToString:@"dvips"])
+        return nil;
     NSString *converter = [[distiller componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceCharacterSet] firstObject] ?: @"";
     NSString *converterName = converter.lastPathComponent;
     if (!([converterName hasPrefix:@"ps2pdf"] || [@[@"gs", @"gsc", @"gsx"] containsObject:converterName]))
