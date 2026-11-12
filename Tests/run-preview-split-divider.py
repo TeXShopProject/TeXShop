@@ -1,28 +1,46 @@
 #!/usr/bin/env python3
-"""Dragging the divider of a Preview window split into a top and a bottom part.
+"""Dragging the divider of a Preview window split into a top and a bottom part,
+and changing the height of such a window.
 
-Each part keeps the text at its top edge: the top part shows more or less below
-it, and the text of the bottom part moves with the divider. Other resizes are
-left alone.
+Each part keeps the text at its top edge: when the divider is dragged, the top part
+shows more or less below it and the text of the bottom part moves with the divider;
+when the window gets taller or shorter, both parts keep their tops. Moves of the
+divider by the program, an unsplit window and a window split side by side are left
+alone.
 
-The production TSPreviewSplitDivider runs unchanged with two real PDFViews in an
-NSSplitView, in a window that is never ordered on screen. The divider is dragged
-through NSSplitView's own tracking: a mouse-down on the divider, with the drag and
-the mouse-up queued as events for the window.
+During a drag, PDFKit must not scroll the parts away at any step only for them to be
+put back, and a part pushed to no height must come back with its text. How far the
+text moves is measured at every step of the drag.
+
+The production TSPreviewSplitDivider runs unchanged with two real PDFViews, set up as
+in TSDocument.nib, in an NSSplitView in a window that is never ordered on screen. The
+divider is dragged through NSSplitView's own tracking: a mouse-down on the divider,
+with the drags and the mouse-up queued as events for the window.
 """
 import argparse, subprocess, sys, tempfile
 from pathlib import Path
 from source_tree import include_args, source_file
 
 MUTATIONS = {
-    'no-scroll': ('TSPreviewSplitDivider.m',
-        '        [clipView scrollToPoint:[clipView constrainBoundsRect:bounds].origin];\n', ''),
+    'no-scroll': ('TSPreviewSplitDivider.m', '            [clip scrollToPoint:target];\n', ''),
     'mouse-overrides-program': ('TSPreviewSplitDivider.m',
         '    if (byUser != nil)\n        return byUser.boolValue;\n', '    if (byUser.boolValue)\n        return YES;\n'),
     'every-resize': ('TSPreviewSplitDivider.m',
         '+ (BOOL)isDividerDrag:(NSNotification *)notification\n{\n', '+ (BOOL)isDividerDrag:(NSNotification *)notification\n{\n    return YES;\n'),
     'not-installed': ('TSPreviewWindow.m',
         '        self.previewSplitDivider = [[TSPreviewSplitDivider alloc] initWithSplitView:self.pdfKitSplitView];\n', ''),
+    # PDFKit is told about every step of a drag, and scrolls the parts away each time.
+    'pdfkit-every-step': ('TSPreviewSplitDivider.m',
+        '            view.postsFrameChangedNotifications = NO;\n            anchor.quiet = YES;\n', ''),
+    # A part pushed to no height loses its place.
+    'empty-part-forgotten': ('TSPreviewSplitDivider.m',
+        '        (empty || NSEqualPoints(clip.bounds.origin, anchor.origin)))', '        !empty && NSEqualPoints(clip.bounds.origin, anchor.origin))'),
+    # PDFKit is never told about the size after a drag.
+    'never-finished': ('TSPreviewSplitDivider.m',
+        '        view.postsFrameChangedNotifications = YES;\n        if (view.superview', '        if (view.superview'),
+    # Window resizes are not seen.
+    'no-window-resize': ('TSPreviewSplitDivider.m',
+        '        if (splitView.delegate == nil)\n            splitView.delegate = self;\n', ''),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -48,18 +66,11 @@ program = r'''
 #import "TestAppKitIsolation.h"
 #import "TSPreviewSplitDivider.h"
 static int failures;
-static void Check(BOOL ok, const char *name) { if (!ok) { printf("FAIL: %s\n", name); failures++; } }
+static void Check(BOOL ok, NSString *name) { if (!ok) { printf("FAIL: %s\n", name.UTF8String); failures++; } }
 
-// The page and the height on it at the top or bottom edge of a part.
-static NSString *Edge(PDFView *view, BOOL top) {
-    NSRect b = view.bounds;
-    NSPoint p = NSMakePoint(NSMidX(b), top ? NSMaxY(b) - 0.5 : NSMinY(b) + 0.5);
-    PDFPage *page = [view pageForPoint:p nearest:YES];
-    return [NSString stringWithFormat:@"%lu:%.0f", [view.document indexForPage:page], [view convertPoint:p toPage:page].y];
-}
 static PDFDocument *MakeDocument(void) {
     PDFDocument *document = [PDFDocument new];
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 8; i++) {
         NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(600, 800)];
         [image lockFocus]; [NSColor.whiteColor set]; NSRectFill(NSMakeRect(0, 0, 600, 800)); [image unlockFocus];
         [document insertPage:[[PDFPage alloc] initWithImage:image] atIndex:i];
@@ -70,111 +81,277 @@ static NSEvent *MouseEvent(NSWindow *window, NSEventType type, NSPoint point) {
     return [NSEvent mouseEventWithType:type location:point modifierFlags:0 timestamp:NSProcessInfo.processInfo.systemUptime
                           windowNumber:window.windowNumber context:nil eventNumber:0 clickCount:1 pressure:1];
 }
-// Drags the divider to a position, through NSSplitView's own tracking.
-static void DragDivider(NSSplitView *split, CGFloat position) {
+// The event loop back in the default mode, as after a drag or a live resize.
+static void RunLoop(void) { [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]]; }
+
+// The text at the top edge of a part, kept as a point on a page.
+typedef struct { PDFPage *page; NSPoint point; } Mark;
+static NSClipView *Clip(PDFView *view) { return view.documentView.enclosingScrollView.contentView; }
+static Mark TopMark(PDFView *view) {
+    NSClipView *clip = Clip(view); NSRect b = clip.bounds;
+    NSPoint top = [view convertPoint:NSMakePoint(NSMidX(b), clip.isFlipped ? NSMinY(b) : NSMaxY(b)) fromView:clip];
+    PDFPage *page = [view pageForPoint:top nearest:YES];
+    return (Mark){page, [view convertPoint:top toPage:page]};
+}
+// How far the marked text is from the top edge of the part, in points in the window.
+static CGFloat Off(PDFView *view, Mark mark) {
+    NSClipView *clip = Clip(view); NSRect b = clip.bounds;
+    if (NSIsEmptyRect(b)) return 0;
+    NSPoint edge = [clip convertPoint:NSMakePoint(NSMidX(b), clip.isFlipped ? NSMinY(b) : NSMaxY(b)) toView:nil];
+    return [view convertPoint:[view convertPoint:mark.point fromPage:mark.page] toView:nil].y - edge.y;
+}
+
+// Both parts are scrolled into the middle of a page, away from where they are.
+static void ScrollParts(PDFView *upper, PDFView *lower) {
+    for (PDFView *view in @[upper, lower]) {
+        NSClipView *clip = Clip(view);
+        NSRect page = [view.documentView convertRect:[view convertRect:[[view.document pageAtIndex:view == upper ? 1 : 4]
+            boundsForBox:kPDFDisplayBoxCropBox] fromPage:[view.document pageAtIndex:view == upper ? 1 : 4]] fromView:view];
+        // A point a little more than half way down the page.
+        CGFloat y = clip.isFlipped ? NSMinY(page) + NSHeight(page) * 0.55 : NSMaxY(page) - NSHeight(page) * 0.55 - NSHeight(clip.bounds);
+        [clip scrollToPoint:[clip constrainBoundsRect:NSMakeRect(NSMinX(clip.bounds), y, NSWidth(clip.bounds), NSHeight(clip.bounds))].origin];
+        [view.documentView.enclosingScrollView reflectScrolledClipView:clip];
+    }
+    [upper.window layoutIfNeeded];
+    // PDFKit takes the scrolled pages as its current pages.
+    RunLoop();
+}
+
+// A Preview window split in two, set up as in TSDocument.nib and mainSplitPdfKitWindow.
+typedef struct { NSWindow *window; NSSplitView *split; PDFView *upper, *lower; TSPreviewSplitDivider *keeper; } Preview;
+static Preview MakePreview(PDFDocument *document, BOOL vertical, BOOL keeper, BOOL autoScales) {
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 786, 984)
+        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
+    window.releasedWhenClosed = NO;
+    NSSplitView *split = [[NSSplitView alloc] initWithFrame:window.contentView.bounds];
+    split.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    split.vertical = vertical;
+    [window.contentView addSubview:split];
+    PDFView *upper = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 786, 487)];
+    PDFView *lower = [[PDFView alloc] initWithFrame:NSMakeRect(0, 496, 786, 488)];
+    for (PDFView *view in @[upper, lower]) {
+        view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        view.autoresizesSubviews = NO; view.wantsLayer = YES;
+        view.document = document; view.displayMode = kPDFDisplaySinglePageContinuous;
+        if (autoScales) view.autoScales = YES; else { view.autoScales = NO; view.scaleFactor = 1.0; }
+        [split addSubview:view];
+    }
+    [split adjustSubviews];
+    [window layoutIfNeeded];
+    Preview p = {window, split, upper, lower, keeper ? [[TSPreviewSplitDivider alloc] initWithSplitView:split] : nil};
+    ScrollParts(p.upper, p.lower);
+    return p;
+}
+// One drag of the divider through the positions, in a single mouse-down.
+static void Drag(NSSplitView *split, NSArray<NSNumber *> *positions) {
     NSWindow *window = split.window;
-    NSPoint from = [split convertPoint:NSMakePoint(300, NSMaxY(split.subviews[0].frame) + split.dividerThickness / 2) toView:nil];
-    NSPoint to = [split convertPoint:NSMakePoint(300, position + split.dividerThickness / 2) toView:nil];
-    [NSApp postEvent:MouseEvent(window, NSEventTypeLeftMouseDragged, to) atStart:NO];
-    [NSApp postEvent:MouseEvent(window, NSEventTypeLeftMouseUp, to) atStart:NO];
+    CGFloat half = split.dividerThickness / 2;
+    NSPoint from = [split convertPoint:NSMakePoint(300, NSMaxY(split.subviews[0].frame) + half) toView:nil];
+    for (NSNumber *position in positions)
+        [NSApp postEvent:MouseEvent(window, NSEventTypeLeftMouseDragged,
+                                    [split convertPoint:NSMakePoint(300, position.doubleValue + half) toView:nil]) atStart:NO];
+    [NSApp postEvent:MouseEvent(window, NSEventTypeLeftMouseUp,
+                                [split convertPoint:NSMakePoint(300, positions.lastObject.doubleValue + half) toView:nil]) atStart:NO];
     [split mouseDown:MouseEvent(window, NSEventTypeLeftMouseDown, from)];
     [window layoutIfNeeded];
 }
+// The window keeps its top edge, as when its bottom edge is dragged.
+static void SetWindowSize(NSWindow *window, CGFloat width, CGFloat height) {
+    NSRect frame = window.frame; CGFloat top = NSMaxY(frame);
+    frame.size = NSMakeSize(width, height); frame.origin.y = top - height;
+    [window setFrame:frame display:NO];
+    [window layoutIfNeeded];
+}
+
+// Measures the marked texts at each step of a resize: before the keeper (what PDFKit
+// did) and after it (what is shown).
+static PDFView *watchedUpper, *watchedLower; static Mark upperMark, lowerMark;
+static CGFloat worstBefore, worstAfter; static int steps;
+@interface Watcher : NSObject @end
+@implementation Watcher
+- (void)before:(NSNotification *)n {
+    worstBefore = fmax(worstBefore, fmax(fabs(Off(watchedUpper, upperMark)), fabs(Off(watchedLower, lowerMark))));
+}
+- (void)after:(NSNotification *)n {
+    steps++;
+    worstAfter = fmax(worstAfter, fmax(fabs(Off(watchedUpper, upperMark)), fabs(Off(watchedLower, lowerMark))));
+}
+@end
+static void Watch(Preview p) {
+    watchedUpper = p.upper; watchedLower = p.lower;
+    upperMark = TopMark(p.upper); lowerMark = TopMark(p.lower);
+    worstBefore = worstAfter = 0; steps = 0;
+}
+static BOOL Kept(Preview p) { return fabs(Off(p.upper, upperMark)) <= 0.5 && fabs(Off(p.lower, lowerMark)) <= 0.5; }
+
 static NSEvent *CurrentEvent;
 static NSEvent *TestCurrentEvent(id application, SEL selector) { return CurrentEvent; }
 
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
-    Check(INSTALLED, "the Preview window installs the divider keeper when it splits");
-
+    Check(INSTALLED, @"the Preview window installs the divider keeper when it splits");
     PDFDocument *document = MakeDocument();
-    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 600, 800)
-        styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
-    window.releasedWhenClosed = NO;
-    NSSplitView *split = [[NSSplitView alloc] initWithFrame:NSMakeRect(0, 0, 600, 800)];
-    split.vertical = NO;
-    window.contentView = split;
-    PDFView *upper = [[PDFView alloc] initWithFrame:NSMakeRect(0, 0, 600, 400)];
-    PDFView *lower = [[PDFView alloc] initWithFrame:NSMakeRect(0, 400, 600, 400)];
-    for (PDFView *view in @[upper, lower]) {
-        view.document = document; view.displayMode = kPDFDisplaySinglePageContinuous;
-        view.autoScales = NO; view.scaleFactor = 1.0;
-        [split addSubview:view];
-    }
-    [split adjustSubviews];
-    [window layoutIfNeeded];
-    TSPreviewSplitDivider *keeper = [[TSPreviewSplitDivider alloc] initWithSplitView:split];
-    NSDictionary *user = @{@"NSSplitViewUserResizeKey": @YES, @"NSSplitViewDividerIndex": @0};
-    NSDictionary *program = @{@"NSSplitViewUserResizeKey": @NO, @"NSSplitViewDividerIndex": @0};
 
     // Which resizes count as divider drags.
-    NSNotification *(^note)(NSDictionary *) = ^(NSDictionary *info) {
-        return [NSNotification notificationWithName:NSSplitViewWillResizeSubviewsNotification object:split userInfo:info]; };
-    Check([TSPreviewSplitDivider isDividerDrag:note(user)], "a resize by the user is a divider drag");
-    Check(![TSPreviewSplitDivider isDividerDrag:note(program)], "a resize by the program is not a divider drag");
-    Check(![TSPreviewSplitDivider isDividerDrag:note(@{@"NSSplitViewDividerIndex": @0})],
-          "a resize of the window, without a mouse drag, is not a divider drag");
-    // During a mouse drag in the window: the split view's own word comes first.
-    Method current = class_getInstanceMethod(NSApplication.class, @selector(currentEvent));
-    IMP originalCurrent = method_setImplementation(current, (IMP)TestCurrentEvent);
-    CurrentEvent = MouseEvent(window, NSEventTypeLeftMouseDragged, NSMakePoint(20, 20));
-    Check(![TSPreviewSplitDivider isDividerDrag:note(program)], "a resize by the program during a mouse drag is not a divider drag");
-    Check([TSPreviewSplitDivider isDividerDrag:note(@{@"NSSplitViewDividerIndex": @0})],
-          "without the split view's word, a resize during a mouse drag in the window is a divider drag");
-    method_setImplementation(current, originalCurrent);
+    {
+        Preview p = MakePreview(document, NO, YES, NO);
+        NSSplitView *split = p.split;
+        NSDictionary *user = @{@"NSSplitViewUserResizeKey": @YES, @"NSSplitViewDividerIndex": @0};
+        NSDictionary *program = @{@"NSSplitViewUserResizeKey": @NO, @"NSSplitViewDividerIndex": @0};
+        NSNotification *(^note)(NSDictionary *) = ^(NSDictionary *info) {
+            return [NSNotification notificationWithName:NSSplitViewWillResizeSubviewsNotification object:split userInfo:info]; };
+        Check([TSPreviewSplitDivider isDividerDrag:note(user)], @"a resize by the user is a divider drag");
+        Check(![TSPreviewSplitDivider isDividerDrag:note(program)], @"a resize by the program is not a divider drag");
+        Check(![TSPreviewSplitDivider isDividerDrag:note(@{@"NSSplitViewDividerIndex": @0})],
+              @"a resize of the window, without a mouse drag, is not a divider drag");
+        Method current = class_getInstanceMethod(NSApplication.class, @selector(currentEvent));
+        IMP originalCurrent = method_setImplementation(current, (IMP)TestCurrentEvent);
+        CurrentEvent = MouseEvent(p.window, NSEventTypeLeftMouseDragged, NSMakePoint(20, 20));
+        Check(![TSPreviewSplitDivider isDividerDrag:note(program)], @"a resize by the program during a mouse drag is not a divider drag");
+        Check([TSPreviewSplitDivider isDividerDrag:note(@{@"NSSplitViewDividerIndex": @0})],
+              @"without the split view's word, a resize during a mouse drag in the window is a divider drag");
+        method_setImplementation(current, originalCurrent);
+    }
 
-    // Both parts are scrolled into the middle of a page.
-    [upper goToRect:NSMakeRect(0, 420, 10, 10) onPage:[document pageAtIndex:1]];
-    [lower goToRect:NSMakeRect(0, 300, 10, 10) onPage:[document pageAtIndex:3]];
-    [window layoutIfNeeded];
-    NSString *upperTop = Edge(upper, YES), *lowerTop = Edge(lower, YES), *upperBottom = Edge(upper, NO);
-    CGFloat lowerTopInWindow = NSMaxY([lower convertRect:lower.bounds toView:nil]);
+    Watcher *watcher = [Watcher new];
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+    for (NSNumber *autoScales in @[@NO, @YES]) {
+        NSString *how = autoScales.boolValue ? @" (fit to width)" : @" (fixed scale)";
+        // The watcher sees each step before the keeper, as it is registered first.
+        Preview p = MakePreview(document, NO, NO, autoScales.boolValue);
+        [center addObserver:watcher selector:@selector(before:) name:NSSplitViewDidResizeSubviewsNotification object:p.split];
+        p.keeper = [[TSPreviewSplitDivider alloc] initWithSplitView:p.split];
+        [center addObserver:watcher selector:@selector(after:) name:NSSplitViewDidResizeSubviewsNotification object:p.split];
+        Watch(p);
+        CGFloat lowerTopInWindow = NSMaxY([p.lower convertRect:p.lower.bounds toView:nil]);
 
-    // Dragging the divider down, in steps.
-    for (CGFloat position = 420; position <= 560; position += 20)
-        DragDivider(split, position);
-    Check([Edge(upper, YES) isEqual:upperTop], "dragging the divider down keeps the text at the top of the upper part");
-    Check(![Edge(upper, NO) isEqual:upperBottom], "the upper part shows more below");
-    Check([Edge(lower, YES) isEqual:lowerTop], "the text of the lower part moves down with the divider");
-    Check(NSMaxY([lower convertRect:lower.bounds toView:nil]) < lowerTopInWindow && NSHeight(upper.frame) > 500,
-          "the divider and the top edge of the lower part moved down");
+        NSMutableArray<NSNumber *> *path = [NSMutableArray array];
+        for (CGFloat y = 500; y <= 700; y += 25) [path addObject:@(y)];
+        Drag(p.split, path);
+        Check(Kept(p) && NSHeight(p.upper.frame) > 650 && NSMaxY([p.lower convertRect:p.lower.bounds toView:nil]) < lowerTopInWindow,
+              [@"dragging the divider down keeps the top of the upper part, and the lower part's text moves with the divider" stringByAppendingString:how]);
+        // One drag, in steps: down past the bottom of the window, up past its top, and back.
+        [path removeAllObjects];
+        CGFloat height = NSHeight(p.split.bounds);
+        for (CGFloat y = 700; y <= height + 30; y += 13) [path addObject:@(y)];
+        for (CGFloat y = height + 30; y >= -30; y -= 13) [path addObject:@(y)];
+        for (CGFloat y = -30; y <= 440; y += 13) [path addObject:@(y)];
+        Drag(p.split, path);
+        printf("drag%s: %d steps; the text at the tops moved %.2f pt before the keeper and %.2f pt as shown\n",
+               how.UTF8String, steps, worstBefore, worstAfter);
+        Check(steps > 100, [@"the drag went through many steps" stringByAppendingString:how]);
+        Check(worstBefore <= 0.5, [@"PDFKit does not scroll the parts away at any step of the drag" stringByAppendingString:how]);
+        Check(worstAfter <= 0.5, [@"at every step of the drag, the text at the top of both parts stays where it is" stringByAppendingString:how]);
+        Check(Kept(p) && fabs(NSHeight(p.upper.frame) - 440) < 4,
+              [@"after pushing each part to no height, both come back with the same text at the top" stringByAppendingString:how]);
+        RunLoop();
+        Check(p.upper.postsFrameChangedNotifications && p.lower.postsFrameChangedNotifications,
+              [@"PDFKit hears about the new sizes once the drag is over" stringByAppendingString:how]);
+        Check(Kept(p) && NSEqualSizes(p.upper.documentView.enclosingScrollView.frame.size, p.upper.bounds.size) &&
+              NSEqualSizes(p.lower.documentView.enclosingScrollView.frame.size, p.lower.bounds.size),
+              [@"after the drag both parts keep their text and their scroll views fill them" stringByAppendingString:how]);
 
-    // And up again, past where it started.
-    for (CGFloat position = 540; position >= 300; position -= 30)
-        DragDivider(split, position);
-    Check([Edge(upper, YES) isEqual:upperTop] && [Edge(lower, YES) isEqual:lowerTop],
-          "dragging the divider up keeps the text at the top of both parts");
+        // Changing the height of the window.
+        ScrollParts(p.upper, p.lower);
+        Watch(p);
+        CGFloat upperHeight = NSHeight(p.upper.frame);
+        for (NSNumber *h in @[@900, @760, @1040, @980])
+            SetWindowSize(p.window, 786, h.doubleValue);
+        printf("window height%s: %d steps; the text at the tops moved %.2f pt\n", how.UTF8String, steps, worstAfter);
+        Check(steps >= 4 && worstAfter <= 0.5 && Kept(p) && NSHeight(p.upper.frame) != upperHeight,
+              [@"changing the height of the window keeps the text at the top of both parts" stringByAppendingString:how]);
+        RunLoop();
+        Check(Kept(p) && p.upper.postsFrameChangedNotifications && p.lower.postsFrameChangedNotifications,
+              [@"after the window was resized both parts keep their text, and PDFKit has seen the sizes" stringByAppendingString:how]);
+        // And its width with it.
+        ScrollParts(p.upper, p.lower);
+        Watch(p);
+        SetWindowSize(p.window, 700, 880);
+        SetWindowSize(p.window, 820, 1000);
+        RunLoop();
+        Check(Kept(p), [@"changing the width and the height of the window keeps the text at the top of both parts" stringByAppendingString:how]);
+        [center removeObserver:watcher];
+    }
+
+    // An unsplit window, or one split side by side, is resized as before.
+    for (NSNumber *vertical in @[@NO, @YES]) {
+        Preview with = MakePreview(document, vertical.boolValue, YES, NO), without = MakePreview(document, vertical.boolValue, NO, NO);
+        Preview *both[] = {&with, &without};
+        if (!vertical.boolValue)
+            for (int k = 0; k < 2; k++) { [both[k]->lower removeFromSuperview]; [both[k]->split adjustSubviews]; [both[k]->window layoutIfNeeded]; }
+        BOOL same = YES;
+        for (NSValue *size in @[[NSValue valueWithSize:NSMakeSize(786, 900)], [NSValue valueWithSize:NSMakeSize(700, 760)],
+                                [NSValue valueWithSize:NSMakeSize(786, 1040)]]) {
+            for (int k = 0; k < 2; k++) SetWindowSize(both[k]->window, size.sizeValue.width, size.sizeValue.height);
+            RunLoop();
+            for (NSUInteger i = 0; i < with.split.subviews.count; i++) {
+                PDFView *a = (PDFView *)with.split.subviews[i], *b = (PDFView *)without.split.subviews[i];
+                same = same && NSEqualRects(a.frame, b.frame) && NSEqualPoints(Clip(a).bounds.origin, Clip(b).bounds.origin);
+            }
+        }
+        Check(same, vertical.boolValue ? @"resizing a window split side by side is left as it was"
+                                       : @"resizing an unsplit window is left as it was");
+    }
+    // The parts of a window split into a top and a bottom part get the same sizes as before.
+    {
+        Preview with = MakePreview(document, NO, YES, NO), without = MakePreview(document, NO, NO, NO);
+        Preview *both[] = {&with, &without};
+        BOOL same = YES;
+        for (NSValue *size in @[[NSValue valueWithSize:NSMakeSize(786, 900)], [NSValue valueWithSize:NSMakeSize(700, 640)]]) {
+            for (int k = 0; k < 2; k++) SetWindowSize(both[k]->window, size.sizeValue.width, size.sizeValue.height);
+            for (NSUInteger i = 0; i < 2; i++)
+                same = same && NSEqualRects(with.split.subviews[i].frame, without.split.subviews[i].frame);
+        }
+        RunLoop();
+        Check(same, @"resizing the window gives the parts the same sizes as before");
+    }
 
     // The last page cannot scroll past its end: the lower part shows its bottom.
-    [lower goToPage:[document pageAtIndex:5]];
-    [lower scrollPageDown:nil]; [lower scrollPageDown:nil]; [lower scrollPageDown:nil];
-    [window layoutIfNeeded];
-    DragDivider(split, 500);
-    Check(lower.documentView.enclosingScrollView != nil && [Edge(lower, NO) hasPrefix:@"5:"],
-          "at the end of the document the lower part still shows the last page");
+    {
+        Preview p = MakePreview(document, NO, YES, NO);
+        [p.lower goToPage:[document pageAtIndex:7]];
+        [p.lower scrollPageDown:nil]; [p.lower scrollPageDown:nil]; [p.lower scrollPageDown:nil];
+        [p.window layoutIfNeeded];
+        Drag(p.split, @[@450, @400, @500]);
+        RunLoop();
+        NSRect b = p.lower.bounds;
+        Check([document indexForPage:[p.lower pageForPoint:NSMakePoint(NSMidX(b), NSMinY(b) + 0.5) nearest:YES]] == 7,
+              @"at the end of the document the lower part still shows the last page");
+    }
 
     // Moving the divider from the program leaves the parts to PDFKit.
-    [upper goToRect:NSMakeRect(0, 420, 10, 10) onPage:[document pageAtIndex:1]];
-    [window layoutIfNeeded];
-    NSString *beforeProgram = Edge(upper, YES);
-    [NSNotificationCenter.defaultCenter postNotificationName:NSSplitViewWillResizeSubviewsNotification object:split userInfo:program];
-    [upper scrollPageDown:nil];
-    [NSNotificationCenter.defaultCenter postNotificationName:NSSplitViewDidResizeSubviewsNotification object:split userInfo:program];
-    Check(![Edge(upper, YES) isEqual:beforeProgram], "a resize by the program does not bring the top back");
+    {
+        Preview p = MakePreview(document, NO, YES, NO), q = MakePreview(document, NO, NO, NO);
+        [p.split setPosition:600 ofDividerAtIndex:0]; [q.split setPosition:600 ofDividerAtIndex:0];
+        [p.window layoutIfNeeded]; [q.window layoutIfNeeded];
+        RunLoop();
+        Check(NSEqualPoints(Clip(p.upper).bounds.origin, Clip(q.upper).bounds.origin) &&
+              NSEqualPoints(Clip(p.lower).bounds.origin, Clip(q.lower).bounds.origin),
+              @"a move of the divider by the program is left to PDFKit");
+    }
 
-    // An unsplit window has one part, which is left as it is.
-    [lower removeFromSuperview];
-    [split adjustSubviews];
-    [upper goToRect:NSMakeRect(0, 420, 10, 10) onPage:[document pageAtIndex:2]];
-    [window layoutIfNeeded];
-    [NSNotificationCenter.defaultCenter postNotificationName:NSSplitViewWillResizeSubviewsNotification object:split userInfo:user];
-    [NSNotificationCenter.defaultCenter postNotificationName:NSSplitViewDidResizeSubviewsNotification object:split userInfo:user];
-    Check([Edge(upper, YES) hasPrefix:@"2:"], "an unsplit window is unchanged");
-    (void)keeper;
+    // A drag in a window split side by side is left alone.
+    {
+        Preview p = MakePreview(document, YES, YES, NO), q = MakePreview(document, YES, NO, NO);
+        Preview *both[] = {&p, &q};
+        for (int k = 0; k < 2; k++) {
+            NSWindow *w = both[k]->window; NSSplitView *s = both[k]->split;
+            NSPoint from = [s convertPoint:NSMakePoint(NSMaxX(s.subviews[0].frame) + s.dividerThickness / 2, 300) toView:nil];
+            NSPoint to = [s convertPoint:NSMakePoint(250, 300) toView:nil];
+            [NSApp postEvent:MouseEvent(w, NSEventTypeLeftMouseDragged, to) atStart:NO];
+            [NSApp postEvent:MouseEvent(w, NSEventTypeLeftMouseUp, to) atStart:NO];
+            [s mouseDown:MouseEvent(w, NSEventTypeLeftMouseDown, from)];
+            [w layoutIfNeeded];
+            RunLoop();
+        }
+        Check(NSEqualRects(p.upper.frame, q.upper.frame) && NSEqualPoints(Clip(p.upper).bounds.origin, Clip(q.upper).bounds.origin) &&
+              NSEqualPoints(Clip(p.lower).bounds.origin, Clip(q.lower).bounds.origin),
+              @"a drag in a window split side by side is left as it was");
+    }
 
     if (failures) return 1;
-    printf("PASS: dragging the divider keeps the top of both Preview parts; other resizes are left alone\n");
+    printf("PASS: both Preview parts keep their tops when the divider is dragged or the window height changes; other resizes are left alone\n");
 } return 0; }
 '''.replace('INSTALLED', 'YES' if installed else 'NO')
 
@@ -185,7 +362,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-preview-split-') as tmp:
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'Quartz', *include_args(root),
                     '-I', str(root / 'Tests'), str(tmp / 'probe.m'), str(tmp / 'TSPreviewSplitDivider.m'),
                     '-o', str(tmp / 'probe')], check=True)
-    result = subprocess.run([str(tmp / 'probe')], capture_output=True, text=True, timeout=120)
+    result = subprocess.run([str(tmp / 'probe')], capture_output=True, text=True, timeout=300)
     print(result.stdout, end='')
     if args.mutation:
         if result.returncode == 0:
