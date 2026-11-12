@@ -7438,8 +7438,9 @@ if (! useFullSplitWindow) {
             } else changeTime = nil;
         }
         // Without a key, a change time is reported only for content found to be the same.
-        // A state turned down a moment ago is not tried again, but it does not match the display.
-        BOOL matching = !key;
+        // A state turned down a moment ago is not tried again, but it does not match the
+        // display; neither does a file that is missing for the moment.
+        BOOL matching = signature && !key;
         if ([key isEqualToString:failed]) key = changeTime = nil;
         // Two unchanged observations avoid loading each chunk of a writer's output.
         BOOL attempted = key && (immediate || [key isEqualToString:pending]);

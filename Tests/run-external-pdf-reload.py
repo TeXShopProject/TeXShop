@@ -41,7 +41,9 @@ mutations={
  # A PDF that stays unopenable counts as quiet, so a writer pausing between pages ends following.
  'pausestop': ('else if (!matching) self.externalPDFQuietSince = now;\n', ''),
  # A state turned down a moment ago counts as quiet when its cheap signature matches the display.
- 'failedquiet': ('BOOL matching = !key;\n        if ([key isEqualToString:failed]) key = changeTime = nil;', 'if ([key isEqualToString:failed]) key = changeTime = nil;\n        BOOL matching = !key && [signature isEqualToString:loaded];'),
+ 'failedquiet': ('BOOL matching = signature && !key;\n        if ([key isEqualToString:failed]) key = changeTime = nil;', 'if ([key isEqualToString:failed]) key = changeTime = nil;\n        BOOL matching = !key && [signature isEqualToString:loaded];'),
+ # A PDF missing for the moment counts as quiet.
+ 'missingquiet': ('BOOL matching = signature && !key;', 'BOOL matching = !key;'),
  # Checks on returning wait for a second observation, as the timer does.
  'twoobservations': ('BOOL attempted = key && (immediate || [key isEqualToString:pending]);', 'BOOL attempted = [key isEqualToString:pending];'),
  # Ignore a new ctime when the cheap signature is unchanged, as before content comparison.
@@ -409,6 +411,16 @@ int main(int argc,char **argv){@autoreleasepool{
   Check(v.document!=old,@"Off: the completed same-size overwrite is loaded");SamePosition(v,kept,@"same-size overwrite");
   Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops after the same-size overwrite");
  }
+ // A PDF deleted while following, as some tools do before writing, is not quiet;
+ // the PDF written later is loaded.
+ old=v.document;kept=TSExternalPDFCapture(v);[changed writeToFile:pdf atomically:YES];Return(NSApp);
+ Check(v.document!=old && r.externalPDFFollowTimer!=nil,@"Off: a change before deletion is loaded and followed");
+ old=v.document;kept=TSExternalPDFCapture(v);
+ [NSFileManager.defaultManager removeItemAtPath:pdf error:NULL];Return(shown);
+ Pump(4.6);Check(v.document==old && r.externalPDFFollowTimer!=nil,@"Off: following continues while the PDF is missing");
+ [first writeToFile:pdf atomically:YES];Pump(2.4);
+ Check(v.document!=old,@"Off: the PDF written after deletion is loaded");SamePosition(v,kept,@"written after deletion");
+ Pump(4.6);Check(r.externalPDFFollowTimer==nil,@"Off: following stops after the PDF is written again");
  // Following ends after two minutes even while the file keeps changing.
  [changed writeToFile:pdf atomically:YES];Return(NSApp);Check(r.externalPDFFollowTimer!=nil,@"Off: following restarts");
  r.externalPDFFollowDeadline=0;Pump(1.3);Check(r.externalPDFFollowTimer==nil,@"Off: following ends at its deadline");
