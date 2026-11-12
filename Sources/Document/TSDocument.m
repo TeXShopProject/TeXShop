@@ -3131,6 +3131,27 @@ else {
     return mainWindow != nil && (mainWindow == textWindow || mainWindow == fullSplitWindow);
 }
 
+// While no document's source window is main (at launch, after the last document
+// closes, while Settings is in front), the spell checker has the dictionary chosen
+// in Settings. A stored value that names no installed language leaves it alone.
++ (void)applySpellingDefaultUnlessDocumentIsMain {
+    
+    if ([SUD boolForKey: originalSpellingKey])
+        return;
+    for (id document in [[TSDocumentController sharedDocumentController] documents])
+        if ([document isKindOfClass:self] && [document spellingWindowIsMain])
+            return;
+    NSSpellChecker *theChecker = [NSSpellChecker sharedSpellChecker];
+    NSArray *available = [theChecker availableLanguages];
+    NSString *defaultSpellLanguage = nil;
+    BOOL automatic = TSSpellingDefaultIsAutomatic(SUD, available, &defaultSpellLanguage);
+    if (! automatic && ! [available containsObject:defaultSpellLanguage])
+        return;
+    theChecker.automaticallyIdentifiesLanguages = automatic;
+    if (! automatic)
+        [theChecker setLanguage:defaultSpellLanguage];
+}
+
 
 
 // - (void) printDocumentWithSettings: (NSDictionary :)printSettings showPrintPanel:(BOOL)showPrintPanel delegate:(id)delegate 
@@ -3313,6 +3334,7 @@ else {
 
 
 	[super close];
+    [TSDocument applySpellingDefaultUnlessDocumentIsMain];
 }
 
 - (NSDictionary *)fileAttributesToWriteToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation
