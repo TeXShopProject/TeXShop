@@ -1018,8 +1018,8 @@ TeXShop calls the typesetting engine in exactly the same way. These four setting
 
 The pdftex defaults use two flags. The first, --file-line-error, tells pdftex how to display errors in the console; TeXShop uses this to take you directly to the source lines with the reported error, as explained later. The second flag, --synctex=1, activates code by Jerome Laurens which tells pdftex to generate sync data during typesetting. TeXShop later uses this data to sync between spots in the source file and corresponding spots in the preview output, as explained later.
 
-There is one other flag you might want to add, --shell-escape. This flag gives pdftex permission to call other programs during typesetting. If you typeset source files which other people send you, this could be  dangerous because pdftex will call any program requested, even a program which erases your entire home directory. So we recommend avoiding the flag. But if you use it, you might want to check the item {\bf Shell Escape Warning}
-underneath. After that, when you typeset a file for the first time, a warning dialog will appear reminding you of ``shell-escape'' and asking if you still want to proceed.
+There is one other flag you might want to add, --shell-escape. This flag gives pdftex permission to call other programs during typesetting. If you typeset source files which other people send you, this could be  dangerous because pdftex will call any program requested, even a program which erases your entire home directory. So we recommend avoiding the flag. But if you use it, you might want to turn on the item {\bf Confirm Shell Escape}
+underneath, in the same {\bf Direct PDF} group. After that, when you typeset a file for the first time, a warning dialog will appear reminding you of ``shell-escape'' and asking if you still want to proceed.
 
 Typesetting ``Via DVI'' calls a script named ``simpdftex'' which is part of TeX Live. If you want to know how the script works, open it in TeX Live and read it.
 
@@ -6206,7 +6206,7 @@ The switch ``-dALLOWPSTRANSPARENCY'' in the Ghostscript group of the Typesetting
 
 The flag only affects the two TeXShop operations described in the initial paragraph of this section. Earlier versions of TeXShop could also use a distiller provided by Apple in macOS instead of Ghostscript, but macOS 14 removed that distiller, so TeXShop 5.60 always uses Ghostscript. I suspect the flag works for users who have a Ghostscript provided by MacPorts or Homebrew rather than the Ghostscript provided in MacTeX, but this has not been tested. 
 
-The DVI typesetting chain is controlled by the items in the group ``TeX + dvipdfmx / TeX + dvips + distiller'' in the Typesetting category of TeXShop Settings.
+The DVI typesetting chain is controlled by the items in the group ``Via DVI'' in the Typesetting category of TeXShop Settings.
 These items call a script named {\em simpdftex} in TeXLive to control the typesetting process. This script recognizes many optional flags. A few are set by default. One of the optional flags not set by default is named
 {\em --distilleropts}; it allows a user to send  flags directly to the distiller (i.e., Ghostscript) portion of the chain. 
 If TeXShop discovers that this flag has been set by the user in TeXShop Settings, then it does not add the
