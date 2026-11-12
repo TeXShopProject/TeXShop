@@ -8,11 +8,11 @@
  /* In the list below, the left side is the official name of a UTI and the right side is
  	the translation for the interface */
 
-  "TeX File" = "TeX File";
-  "LaTeX File" = "LaTeX File";
-  "ConTeXt File" = "ConTeXt File";
-  "HTML File" = "HTML File";
-  "TEXI File" = "TEXI File";
+  "TeX File" = "TeX ファイル";
+  "LaTeX File" = "LaTeX ファイル";
+  "ConTeXt File" = "ConTeXt ファイル";
+  "HTML File" = "HTML ファイル";
+  "TEXI File" = "TEXI ファイル";
   "mp" = "mp";
   "sty" = "sty";
   "cls" = "cls";
@@ -21,17 +21,17 @@
   "bib" = "bib";
   "comment" = "comment";
   "engine" = "engine";
-  "PDF Data" = "PDF Data";
-  NSTIFFPboardType = "TIFF File";
-  "PNG image" = "PNG image";
-  "jpeg" = "jpeg";
-  NSEPSPboardType = "EPS File";
+  "PDF Data" = "PDF 書類";
+  NSTIFFPboardType = "TIFF 書類";
+  "PNG image" = "PNG 画像";
+  "jpeg" = "JPEG 画像";
+  NSEPSPboardType = "EPS 画像";
   "epsi" = "epsi";
   "log" = "log";
   "aux" = "aux";
-  "PostscriptFile" = "Postscript File";
-  "HieroTeX File" = "HieroTeX File";
-  "Sketch File" = "Sketch File";
+  "PostscriptFile" = "PostScript ファイル";
+  "HieroTeX File" = "HieroTeX ファイル";
+  "Sketch File" = "Sketch ファイル";
   "texshop" = "texshop";
   "dvi" = "dvi";
   "ins" = "ins";
@@ -56,10 +56,10 @@
   "bbx" = "bbx";
   "skt" = "skt";
   "py" = "py";
-  NSStringPboardType = "UTF8 Plain Text";
+  NSStringPboardType = "UTF-8 標準テキスト";
   "md" = "md";
-  "Plain Text" = "Plain Text";
-  "Any File" = "Any File";
+  "Plain Text" = "標準テキスト";
+  "Any File" = "任意のファイル";
   
   /* Help book localization */
   CFBundleHelpBookName = "TeXShop Help";

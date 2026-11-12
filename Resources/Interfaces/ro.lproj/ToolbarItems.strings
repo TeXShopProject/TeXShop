@@ -1,93 +1,93 @@
 /* needs to be localized */
 
-tiLabelSave				= "Save";
-tiPaletteLabelSave			= "Save";
-tiToolTipSave				= "Save the source of the document";
+tiLabelSave				= "Salvați";
+tiPaletteLabelSave			= "Salvați";
+tiToolTipSave				= "Salvați sursa documentului";
 
 /* tool tips for the default Print item. Different actions depending on the window */
-tiToolTipPrintSource			= "Print the TeX source";
-tiToolTipPrint				= "Print the PDF image";
+tiToolTipPrintSource			= "Tipăriți sursa TeX";
+tiToolTipPrint				= "Tipăriți imaginea PDF";
 
 tiLabelTypeset				= "Compilare";
 tiPaletteLabelTypeset			= "Compilare";
-tiToolTipTypeset			= "Run typesetting program";
+tiToolTipTypeset			= "Rulați programul de tehnoredactare";
 
 tiLabelSharing				= "Sharing";
 tiPaletteLabelSharing		= "Sharing";
-tiToolTipSharing			= "Share text and pictures";
+tiToolTipSharing			= "Partajați text și imagini";
 
 
 tiLabelProgram				= "Programare";
 tiPaletteLabelProgram			= "Programare";
-tiToolTipProgram			= "Choose typesetting program";
+tiToolTipProgram			= "Alegeți programul de tehnoredactare";
 
 tiLabelTeX				= "TeX";
 tiPaletteLabelTeX			= "TeX";
-tiToolTipTeX				= "Process the source using plain TeX tool";
+tiToolTipTeX				= "Procesați sursa cu instrumentul plain TeX";
 
 tiLabelLaTeX				= "LaTeX";
 tiPaletteLabelLaTeX			= "LaTeX";
-tiToolTipLaTeX				= "Process the source using LaTeX";
+tiToolTipLaTeX				= "Procesați sursa cu LaTeX";
 
 tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
-tiToolTipBibTeX				= "Run BibTeX";
+tiToolTipBibTeX				= "Rulați BibTeX";
 
-tiLabelMakeIndex			= "Make Index";
-tiPaletteLabelMakeIndex			= "Make Index";
-tiToolTipMakeIndex			= "Make Index";
+tiLabelMakeIndex			= "Creare index";
+tiPaletteLabelMakeIndex			= "Creare index";
+tiToolTipMakeIndex			= "Creare index";
 
 tiLabelMetaPost				= "MetaPost";
 tiPaletteLabelMetaPost			= "MetaPost";
-tiToolTipMetaPost			= "Run MetaPost";
+tiToolTipMetaPost			= "Rulați MetaPost";
 
 tiLabelConTeX				= "ConTeXt";
 tiPaletteLabelConTeX			= "ConTeXt";
-tiToolTipConTeX				= "Run ConTeXt";
+tiToolTipConTeX				= "Rulați ConTeXt";
 
 tiLabelMetaFont				= "MetaFont";
 tiPaletteLabelMetaFont			= "MetaFont";
-tiToolTipMetaFont			= "Run MetaFont";
+tiToolTipMetaFont			= "Rulați MetaFont";
 
-tiLabelPreviousPage			= "Previous";
-tiPaletteLabelPreviousPage		= "Alternate Previous Page";
-tiToolTipPreviousPage			= "Show previous page";
+tiLabelPreviousPage			= "Anter.";
+tiPaletteLabelPreviousPage		= "Pagina anterioară (alternativ)";
+tiToolTipPreviousPage			= "Afișați pagina anterioară";
 
-tiLabelNextPage				= "Next";
-tiPaletteLabelNextPage			= "Alternate Next Page";
-tiToolTipNextPage			= "Show next page";
+tiLabelNextPage				= "Următ.";
+tiPaletteLabelNextPage			= "Pagina următoare (alternativ)";
+tiToolTipNextPage			= "Afișați pagina următoare";
 
-tiLabelGotoPage				= "Go to page";
-tiPaletteLabelGotoPage			= "Go to page";
-tiToolTipGotoPage			= "Go to page";
+tiLabelGotoPage				= "Accesați pagina";
+tiPaletteLabelGotoPage			= "Accesați pagina";
+tiToolTipGotoPage			= "Accesați pagina";
 
-tiLabelMagnification			= "Magnification";
-tiPaletteLabelMagnification		= "Magnification";
-tiToolTipMagnification			= "Set page magnification";
+tiLabelMagnification			= "Mărire";
+tiPaletteLabelMagnification		= "Mărire";
+tiToolTipMagnification			= "Stabiliți mărirea paginii";
 
 tiLabelTemplates			= "Modele";
 tiPaletteLabelTemplates			= "Modele";
-tiToolTipTemplates			= "Select a template to insert at cursor";
+tiToolTipTemplates			= "Selectați un model de inserat la cursor";
 
 tiLabelTags				= "Etichete";
 tiPaletteLabelTags			= "Etichete";
-tiToolTipTags				= "Select a tag to scroll to";
+tiToolTipTags				= "Selectați o etichetă la care să derulați";
 
-tiLabelPreviousPageButton		= "Previous";
-tiPaletteLabelPreviousPageButton	= "Previous Page";
-tiToolTipPreviousPageButton		= "Show previous page";
+tiLabelPreviousPageButton		= "Anter.";
+tiPaletteLabelPreviousPageButton	= "Pagina anterioară";
+tiToolTipPreviousPageButton		= "Afișați pagina anterioară";
 
-tiLabelNextPageButton			= "Next";
-tiPaletteLabelNextPageButton		= "Next Page";
-tiToolTipNextPageButton			= "Show next page";
+tiLabelNextPageButton			= "Următ.";
+tiPaletteLabelNextPageButton		= "Pagina următoare";
+tiToolTipNextPageButton			= "Afișați pagina următoare";
 
 tiLabelTypesetEE			= "Compilare";
 tiPaletteLabelTypesetEE			= "Compilare";
-tiToolTipTypesetEE			= "Run typesetting program";
+tiToolTipTypesetEE			= "Rulați programul de tehnoredactare";
 
 tiLabelProgramEE			= "Programare";
 tiPaletteLabelProgramEE			= "Programare";
-tiToolTipProgramEE			= "Choose typesetting program";
+tiToolTipProgramEE			= "Alegeți programul de tehnoredactare";
 
 tiLabelAutoComplete			= "Completare Automată";
 tiPaletteLabelAutoComplete		= "Completare Automată";
@@ -103,170 +103,186 @@ tiToolTipSplitKIT			= "Toggle window split";
 
 tiLabelMacros				= "Macro";
 tiPaletteLabelMacros			= "Macro";
-tiToolTipMacros				= "Insert macros";
+tiToolTipMacros				= "Inserați macrocomenzi";
 
-tiLabelMacrosEE				= "Macros";
-tiPaletteLabelMacrosEE			= "Macros";
-tiToolTipMacrosEE                       = "Insert macros";
+tiLabelMacrosEE				= "Macro";
+tiPaletteLabelMacrosEE			= "Macro";
+tiToolTipMacrosEE                       = "Inserați macrocomenzi";
 
-tiLabelMouseMode			= "MouseMode";
-tiPaletteLabelMouseMode			= "Mouse Mode";
-tiToolTipMouseMode			= "Change Mouse Mode";
+tiLabelMouseMode			= "Mod maus";
+tiPaletteLabelMouseMode			= "Mod maus";
+tiToolTipMouseMode			= "Schimbați modul maus";
 
-tiLabelSyncMarks			= "SyncMarks";
-tiPaletteLabelSyncMarks			= "Sync Marks";
-tiToolTipSyncMarks			= "Show Sync Marks";
+tiLabelSyncMarks			= "Marcaje sinc.";
+tiPaletteLabelSyncMarks			= "Marcaje de sincronizare";
+tiToolTipSyncMarks			= "Afișați marcajele de sincronizare";
 
-tiLabelSearchKIT				= "Ricerca";
-tiPaletteLabelSearchKIT         = "Ricerca";
-tiToolTipSearchKIT				= "Ricerca";
+tiLabelSearchKIT				= "Caută în PDF";
+tiPaletteLabelSearchKIT         = "Caută în PDF";
+tiToolTipSearchKIT				= "Caută în PDF";
 
-tiLabelColorIndex				= "ColorIndex";
-tiPaletteLabelColorIndex		= "Color Index";
-tiToolTipColorIndex				= "Color Index Commands";
+tiLabelColorIndex				= "Index culori";
+tiPaletteLabelColorIndex		= "Index de culori";
+tiToolTipColorIndex				= "Comenzi pentru indexul de culori";
 
-tiLabelTypesetKIT				= "Typeset";
-tiPaletteLabelTypesetKIT		= "Typeset";
-tiToolTipTypesetKIT				= "Run typesetting program";
+tiLabelTypesetKIT				= "Compilare";
+tiPaletteLabelTypesetKIT		= "Compilare";
+tiToolTipTypesetKIT				= "Rulați programul de tehnoredactare";
 
 tiLabelSharingKIT				= "Sharing";
 tiPaletteLabelSharingKIT		= "Sharing";
-tiToolTipSharingKIT				= "Share text and images";
+tiToolTipSharingKIT				= "Partajați text și imagini";
 
 
 tiLabelProgramKIT				= "Program";
 tiPaletteLabelProgramKIT		= "Program";
-tiToolTipProgramKIT				= "Choose typesetting program";
+tiToolTipProgramKIT				= "Alegeți programul de tehnoredactare";
 
-tiLabelPreviousPageButtonKIT		= "Previous";
-tiPaletteLabelPreviousPageButtonKIT	= "Previous Page";
-tiToolTipPreviousPageButtonKIT		= "Show previous page";
+tiLabelPreviousPageButtonKIT		= "Anter.";
+tiPaletteLabelPreviousPageButtonKIT	= "Pagina anterioară";
+tiToolTipPreviousPageButtonKIT		= "Afișați pagina anterioară";
 
-tiLabelNextPageButtonKIT			= "Next";
-tiPaletteLabelNextPageButtonKIT		= "Next Page";
-tiToolTipNextPageButtonKIT			= "Show next page";
+tiLabelNextPageButtonKIT			= "Următ.";
+tiPaletteLabelNextPageButtonKIT		= "Pagina următoare";
+tiToolTipNextPageButtonKIT			= "Afișați pagina următoare";
 
-tiLabelGotoPageKIT				= "Go to page";
-tiPaletteLabelGotoPageKIT		= "Go to page";
-tiToolTipGotoPageKIT			= "Go to page";
+tiLabelGotoPageKIT				= "Accesați pagina";
+tiPaletteLabelGotoPageKIT		= "Accesați pagina";
+tiToolTipGotoPageKIT			= "Accesați pagina";
 
-tiLabelMagnificationKIT			= "Magnification";
-tiPaletteLabelMagnificationKIT	= "Magnification";
-tiToolTipMagnificationKIT		= "Set page magnification";
+tiLabelMagnificationKIT			= "Mărire";
+tiPaletteLabelMagnificationKIT	= "Mărire";
+tiToolTipMagnificationKIT		= "Stabiliți mărirea paginii";
 
-tiLabelMacrosKIT				= "Macros";
-tiPaletteLabelMacrosKIT			= "Macros";
-tiToolTipMacrosKIT              = "Insert macros";
+tiLabelMacrosKIT				= "Macro";
+tiPaletteLabelMacrosKIT			= "Macro";
+tiToolTipMacrosKIT              = "Inserați macrocomenzi";
 
-tiLabelMouseModeKIT				= "MouseMode";
-tiPaletteLabelMouseModeKIT		= "Mouse Mode";
-tiToolTipMouseModeKIT			= "Change Mouse Mode";
+tiLabelMouseModeKIT				= "Mod maus";
+tiPaletteLabelMouseModeKIT		= "Mod maus";
+tiToolTipMouseModeKIT			= "Schimbați modul maus";
 
-tiLabelSyncMarksKIT				= "SyncMarks";
-tiPaletteLabelSyncMarksKIT		= "Sync Marks";
-tiToolTipSyncMarksKIT			= "Show Sync Marks";
+tiLabelSyncMarksKIT				= "Marcaje sinc.";
+tiPaletteLabelSyncMarksKIT		= "Marcaje de sincronizare";
+tiToolTipSyncMarksKIT			= "Afișați marcajele de sincronizare";
 
-tiLabelBackForthKIT				= "Back/Forward";
-tiPaletteLabelBackForthKIT		= "Back/Forward";
-tiToolTipBackForthKIT			= "Back Forward Buttons";
+tiLabelBackForthKIT				= "Înapoi/Înainte";
+tiPaletteLabelBackForthKIT		= "Înapoi/Înainte";
+tiToolTipBackForthKIT			= "Butoane Înapoi/Înainte";
 
-tiLabelBackForthKITSplit                = "Back/Forward";
-tiPaletteLabelBackForthKITSplit        = "Back/Forward";
-tiToolTipBackForthKITSplit            = "Back Forward Buttons";
+tiLabelBackForthKITSplit                = "Înapoi/Înainte";
+tiPaletteLabelBackForthKITSplit        = "Înapoi/Înainte";
+tiToolTipBackForthKITSplit            = "Butoane Înapoi/Înainte";
 
-tiLabelDrawerKIT				= "Drawer";
-tiPaletteLabelDrawerKIT			= "Drawer";
-tiToolTipDrawerKIT				= "Toggle Drawer";
+tiLabelDrawerKIT				= "Sertar";
+tiPaletteLabelDrawerKIT			= "Sertar";
+tiToolTipDrawerKIT				= "Comutați sertarul";
 
-tiLabelShowFullPath				= "FullPath";
-tiPaletteLabelShowFullPath		= "FullPath";
-tiToolTipShowFullPath			= "Show Full Path in Window Title";
+tiLabelShowFullPath				= "Cale completă";
+tiPaletteLabelShowFullPath		= "Cale completă";
+tiToolTipShowFullPath			= "Afișați calea completă în titlul ferestrei";
 
 tiLabelProgramSplit				= "Program";
 tiPaletteLabelProgramSplit		= "Program";
-tiToolTipProgramSplit			= "Choose typesetting program";
+tiToolTipProgramSplit			= "Alegeți programul de tehnoredactare";
 
-tiLabelMacrosSplit				= "Macros";
-tiPaletteLabelMacrosSplit		= "Macros";
-tiToolTipMacrosSplit			= "Insert macros";
+tiLabelMacrosSplit				= "Macro";
+tiPaletteLabelMacrosSplit		= "Macro";
+tiToolTipMacrosSplit			= "Inserați macrocomenzi";
 
 tiLabelTagsSplit				= "Etichete";
 tiPaletteLabelTagsSplit         = "Etichete";
-tiToolTipTagsSplit              = "Select a tag to scroll to";
+tiToolTipTagsSplit              = "Selectați o etichetă la care să derulați";
 
-tiLabelGotoPageSplit			= "Go to page";
-tiPaletteLabelGotoPageSplit     = "Go to page";
-tiToolTipGotoPageSplit          = "Go to page";
+tiLabelGotoPageSplit			= "Accesați pagina";
+tiPaletteLabelGotoPageSplit     = "Accesați pagina";
+tiToolTipGotoPageSplit          = "Accesați pagina";
 
-tiLabelMagnificationSplit		= "Magnification";
-tiPaletteLabelMagnificationSplit   = "Magnification";
-tiToolTipMagnificationSplit     = "Set page magnification";
+tiLabelMagnificationSplit		= "Mărire";
+tiPaletteLabelMagnificationSplit   = "Mărire";
+tiToolTipMagnificationSplit     = "Stabiliți mărirea paginii";
 
-tiLabelColorIndexSplit			= "ColorIndex";
-tiPaletteLabelColorIndexSplit     = "ColorIndex";
-tiToolTipColorIndexSplit          = "Color Index Commands";
+tiLabelColorIndexSplit			= "Index culori";
+tiPaletteLabelColorIndexSplit     = "Index culori";
+tiToolTipColorIndexSplit          = "Comenzi pentru indexul de culori";
 
 tiLabelAutoCompleteSplit		= "Completare Automată";
 tiPaletteLabelAutoCompleteSplit   = "Completare Automată";
 tiToolTipAutoCompleteSplit     = "Toggle auto completion";
 
-tiLabelTemplatesSplit            = "Templates";
-tiPaletteLabelTemplatesSplit            = "Templates";
-tiToolTipTemplatesSplit            = "Select a template to insert at cursor";
+tiLabelTemplatesSplit            = "Modele";
+tiPaletteLabelTemplatesSplit            = "Modele";
+tiToolTipTemplatesSplit            = "Selectați un model de inserat la cursor";
 
-tiLabelSharingSplit                = "Share Source";
-tiPaletteLabelSharingSplit        = "Share Source";
-tiToolTipSharingSplit            = "Share text and pictures";
+tiLabelSharingSplit                = "Partajați sursa";
+tiPaletteLabelSharingSplit        = "Partajați sursa";
+tiToolTipSharingSplit            = "Partajați text și imagini";
 
-tiLabelMouseModeKITSplit                = "MouseMode";
-tiPaletteLabelMouseModeKITSplit        = "Mouse Mode";
-tiToolTipMouseModeKITSplit            = "Change Mouse Mode";
+tiLabelMouseModeKITSplit                = "Mod maus";
+tiPaletteLabelMouseModeKITSplit        = "Mod maus";
+tiToolTipMouseModeKITSplit            = "Schimbați modul maus";
 
-tiLabelSearchKITSplit                = "Search PDF";
-tiPaletteLabelSearchKITSplit         = "Search PDF";
-tiToolTipSearchKITSplit                = "Search PDF";
+tiLabelSearchKITSplit                = "Caută în PDF";
+tiPaletteLabelSearchKITSplit         = "Caută în PDF";
+tiToolTipSearchKITSplit                = "Caută în PDF";
 
-tiLabelTypesetSplit                = "Typeset";
-tiPaletteLabelTypesetSplit            = "Typeset";
-tiToolTipTypesetSplit            = "Run typesetting program";
+tiLabelTypesetSplit                = "Compilare";
+tiPaletteLabelTypesetSplit            = "Compilare";
+tiToolTipTypesetSplit            = "Rulați programul de tehnoredactare";
 
-tiLabelLabels                = "Labels";
-tiPaletteLabelLabels            = "Labels";
-tiToolTipLabels                = "Select a label to scroll to";
+tiLabelLabels                = "Referințe";
+tiPaletteLabelLabels            = "Referințe";
+tiToolTipLabels                = "Selectați o referință la care să derulați";
 
-tiLabelLabelsSplit                = "Labels";
-tiPaletteLabelLabelsSplit         = "Labels";
-tiToolTipLabelsSplit              = "Select a label to scroll to";
+tiLabelLabelsSplit                = "Referințe";
+tiPaletteLabelLabelsSplit         = "Referințe";
+tiToolTipLabelsSplit              = "Selectați o referință la care să derulați";
 
-tiLabelUpdate              = "Update";
-tiPaletteLabelUpdate         = "Update";
-tiToolTipUpdate              = "Update tags and labels";
+tiLabelUpdate              = "Actualizare";
+tiPaletteLabelUpdate         = "Actualizare";
+tiToolTipUpdate              = "Actualizați etichetele și referințele";
 
-tiLabelUpdateSplit                = "Update";
-tiPaletteLabelUpdateSplit         = "Update";
-tiToolTipUpdateSplit              = "Update tags and labels";
+tiLabelUpdateSplit                = "Actualizare";
+tiPaletteLabelUpdateSplit         = "Actualizare";
+tiToolTipUpdateSplit              = "Actualizați etichetele și referințele";
 
-tiLabelHtmlPreviousPageButton                = "Back";
-tiPaletteLabelHtmlPreviousPageButton            = "Back";
-tiToolTipHtmlPreviousPageButton            = "Go to previous page";
+tiLabelHtmlPreviousPageButton                = "Înapoi";
+tiPaletteLabelHtmlPreviousPageButton            = "Înapoi";
+tiToolTipHtmlPreviousPageButton            = "Accesați pagina anterioară";
 
-tiLabelHtmlNextPageButton                = "Forward";
-tiPaletteLabelHtmlNextPageButton            = "Forward";
-tiToolTipHtmlNextPageButton           = "Go to next page";
+tiLabelHtmlNextPageButton                = "Înainte";
+tiPaletteLabelHtmlNextPageButton            = "Înainte";
+tiToolTipHtmlNextPageButton           = "Accesați pagina următoare";
 
 tiLabelHtmlURLField                = "URL";
 tiPaletteLabelHtmlURLField            = "URL";
-tiToolTipHtmlURLField            = "To go this URL";
+tiToolTipHtmlURLField            = "Accesați acest URL";
 
-tiLabelHtmlSearch             = "Search";
-tiPaletteLabelHtmlSearch      = "Search";
-tiToolTipHtmlSearch           = "Search";
+tiLabelHtmlSearch             = "Căutare";
+tiPaletteLabelHtmlSearch      = "Căutare";
+tiToolTipHtmlSearch           = "Căutare";
 
 /* Experiment preview tools */
 "ExperimentToolScroll" = "Derulare";
 "ExperimentToolSelectText" = "Selectează textul";
-"ExperimentToolMagnify" = "Mărire";
+"ExperimentToolMagnify" = "Lupă";
 "ExperimentToolSelectPDF" = "Selectează PDF";
-"ExperimentZoomOut" = "Zoom Out";
-"ExperimentZoomIn" = "Zoom In";
+"ExperimentZoomOut" = "Zoom înapoi";
+"ExperimentZoomIn" = "Zoom înainte";
 "ExperimentZoomToContent" = "Potrivește la conținut";
+
+"Page Layout" = "Dispunerea paginilor";
+"tiLabelTSPreviewAppearance" = "Aspect";
+"Continuous Two Pages" = "Pagină Dublă Multiplă";
+"Restore Document Settings" = "Restaurați configurările documentului";
+"Single Page" = "Pagină Simplă";
+"PreviewAppearanceDark" = "Întunecat";
+"PreviewAppearanceLight" = "Luminos";
+"Two Pages" = "Pagină Dublă";
+"PreviewAppearanceSystem" = "Sistem";
+"Left to right" = "De la stânga la dreapta";
+"Two-Page Arrangement" = "Aranjarea paginilor duble";
+"Applies when displaying two pages" = "Se aplică la afișarea a două pagini";
+"Continuous" = "Pagină Multiplă";
+"Right to left" = "De la dreapta la stânga";
+"Show first page alone as cover" = "Afișați prima pagină separat, ca o copertă";

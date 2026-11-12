@@ -1,7 +1,7 @@
 /* needs to be localized */
 
 tiLabelSave				= "Enregistrer";
-tiPaletteLabelSave			= "Enregistre";
+tiPaletteLabelSave			= "Enregistrer";
 tiToolTipSave				= "Enregistre la source du document";
 
 /* tool tips for the default Print item. Different actions depending on the window */
@@ -19,71 +19,71 @@ tiToolTipSharing			= "Partager texte et images";
 
 tiLabelProgram				= "Programme";
 tiPaletteLabelProgram		= "Programme";
-tiToolTipProgram			= "Choose typesetting program";
+tiToolTipProgram			= "Choisir le programme de composition";
 
 tiLabelTeX				= "TeX";
 tiPaletteLabelTeX			= "TeX";
-tiToolTipTeX				= "Process the source using plain TeX tool";
+tiToolTipTeX				= "Traiter la source avec Plain TeX";
 
 tiLabelLaTeX				= "LaTeX";
 tiPaletteLabelLaTeX			= "LaTeX";
-tiToolTipLaTeX				= "Process the source using LaTeX";
+tiToolTipLaTeX				= "Traiter la source avec LaTeX";
 
 tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
-tiToolTipBibTeX				= "Run BibTeX";
+tiToolTipBibTeX				= "Exécuter BibTeX";
 
-tiLabelMakeIndex			= "Make Index";
-tiPaletteLabelMakeIndex			= "Make Index";
-tiToolTipMakeIndex			= "Make Index";
+tiLabelMakeIndex			= "MakeIndex";
+tiPaletteLabelMakeIndex			= "MakeIndex";
+tiToolTipMakeIndex			= "Exécuter MakeIndex";
 
 tiLabelMetaPost				= "MetaPost";
 tiPaletteLabelMetaPost			= "MetaPost";
-tiToolTipMetaPost			= "Run MetaPost";
+tiToolTipMetaPost			= "Exécuter MetaPost";
 
 tiLabelConTeX				= "ConTeXt";
 tiPaletteLabelConTeX			= "ConTeXt";
-tiToolTipConTeX				= "Run ConTeXt";
+tiToolTipConTeX				= "Exécuter ConTeXt";
 
 tiLabelMetaFont				= "MetaFont";
 tiPaletteLabelMetaFont			= "MetaFont";
-tiToolTipMetaFont			= "Run MetaFont";
+tiToolTipMetaFont			= "Exécuter MetaFont";
 
-tiLabelPreviousPage			= "Previous";
-tiPaletteLabelPreviousPage		= "Alternate Previous Page";
-tiToolTipPreviousPage			= "Show previous page";
+tiLabelPreviousPage			= "Précédent";
+tiPaletteLabelPreviousPage		= "Page précédente (variante)";
+tiToolTipPreviousPage			= "Afficher la page précédente";
 
-tiLabelNextPage				= "Next";
-tiPaletteLabelNextPage			= "Alternate Next Page";
-tiToolTipNextPage			= "Show next page";
+tiLabelNextPage				= "Suivant";
+tiPaletteLabelNextPage			= "Page suivante (variante)";
+tiToolTipNextPage			= "Afficher la page suivante";
 
-tiLabelGotoPage				= "Go to page";
-tiPaletteLabelGotoPage			= "Go to page";
-tiToolTipGotoPage			= "Go to page";
+tiLabelGotoPage				= "Aller à la page";
+tiPaletteLabelGotoPage			= "Aller à la page";
+tiToolTipGotoPage			= "Aller à la page";
 
-tiLabelMagnification			= "Magnification";
-tiPaletteLabelMagnification		= "Magnification";
-tiToolTipMagnification			= "Set page magnification";
+tiLabelMagnification			= "Agrandissement";
+tiPaletteLabelMagnification		= "Agrandissement";
+tiToolTipMagnification			= "Régler l’agrandissement de la page";
 
 tiLabelTemplates			= "Modèle";
 tiPaletteLabelTemplates			= "Modèle";
 tiToolTipTemplates			= "Modèle";
 
-tiLabelTags				= "Etiquettes";
-tiPaletteLabelTags			= "Etiquettes";
-tiToolTipTags				= "Select a tag to scroll to";
+tiLabelTags				= "Étiquettes";
+tiPaletteLabelTags			= "Étiquettes";
+tiToolTipTags				= "Choisir une étiquette à atteindre";
 
 tiLabelLabels                = "Labels";
 tiPaletteLabelLabels            = "Labels";
 tiToolTipLabels                = "Sélectionner un label vers où défiler";
 
-tiLabelPreviousPageButton		= "Previous";
-tiPaletteLabelPreviousPageButton	= "Previous Page";
-tiToolTipPreviousPageButton		= "Show previous page";
+tiLabelPreviousPageButton		= "Précédent";
+tiPaletteLabelPreviousPageButton	= "Page précédente";
+tiToolTipPreviousPageButton		= "Afficher la page précédente";
 
-tiLabelNextPageButton			= "Next";
-tiPaletteLabelNextPageButton		= "Next Page";
-tiToolTipNextPageButton			= "Show next page";
+tiLabelNextPageButton			= "Suivant";
+tiPaletteLabelNextPageButton		= "Page suivante";
+tiToolTipNextPageButton			= "Afficher la page suivante";
 
 tiLabelTypesetEE			= "Composer";
 tiPaletteLabelTypesetEE			= "Composer";
@@ -91,7 +91,7 @@ tiToolTipTypesetEE			= "Composer";
 
 tiLabelProgramEE			= "Programme";
 tiPaletteLabelProgramEE			= "Programme";
-tiToolTipProgramEE			= "Choose typesetting program";
+tiToolTipProgramEE			= "Choisir le programme de composition";
 
 tiLabelAutoComplete			= "Raccourcis clavier";
 tiPaletteLabelAutoComplete	= "Raccourcis clavier";
@@ -117,13 +117,13 @@ tiLabelMouseMode			= "Mode de la souris";
 tiPaletteLabelMouseMode		= "Mode de la souris";
 tiToolTipMouseMode			= "Changer le mode de la souris";
 
-tiLabelSyncMarks			= "SyncMarks";
-tiPaletteLabelSyncMarks		= "Sync Marks";
-tiToolTipSyncMarks			= "Affiche Sync Marks";
+tiLabelSyncMarks			= "Marques synchro";
+tiPaletteLabelSyncMarks		= "Marques synchro";
+tiToolTipSyncMarks			= "Afficher les marques synchro";
 
-tiLabelColorIndex				= "ColorIndex";
-tiPaletteLabelColorIndex		= "Color Index";
-tiToolTipColorIndex				= "Color Index Commands";
+tiLabelColorIndex				= "Index des couleurs";
+tiPaletteLabelColorIndex		= "Index des couleurs";
+tiToolTipColorIndex				= "Commandes de l’index des couleurs";
 
 tiLabelTypesetKIT				= "Composer";
 tiPaletteLabelTypesetKIT		= "Composer";
@@ -146,7 +146,7 @@ tiLabelPreviousPageButtonKIT		= "Précédent";
 tiPaletteLabelPreviousPageButtonKIT	= "Page précédente";
 tiToolTipPreviousPageButtonKIT		= "Affiche la page précédente";
 
-tiLabelNextPageButtonKIT			= "Prochain";
+tiLabelNextPageButtonKIT			= "Suivant";
 tiPaletteLabelNextPageButtonKIT		= "Page suivante";
 tiToolTipNextPageButtonKIT			= "Affiche la page suivante";
 
@@ -166,17 +166,17 @@ tiLabelMouseModeKIT				= "Mode de la souris";
 tiPaletteLabelMouseModeKIT		= "Mode de la souris";
 tiToolTipMouseModeKIT			= "Changer le mode de la souris";
 
-tiLabelSyncMarksKIT				= "SyncMarks";
-tiPaletteLabelSyncMarksKIT		= "Sync Marks";
-tiToolTipSyncMarksKIT			= "Afficher les Sync Marks";
+tiLabelSyncMarksKIT				= "Marques synchro";
+tiPaletteLabelSyncMarksKIT		= "Marques synchro";
+tiToolTipSyncMarksKIT			= "Afficher les marques synchro";
 
-tiLabelBackForthKIT				= "Avancer/Revenir";
+tiLabelBackForthKIT				= "Revenir/Avancer";
 tiPaletteLabelBackForthKIT		= "Revenir/Avancer";
-tiToolTipBackForthKIT			= "Back Forward Buttons";
+tiToolTipBackForthKIT			= "Boutons Revenir et Avancer";
 
-tiLabelBackForthKITSplit                = "Avancer/Revenir";
+tiLabelBackForthKITSplit                = "Revenir/Avancer";
 tiPaletteLabelBackForthKITSplit        = "Revenir/Avancer";
-tiToolTipBackForthKITSplit            = "Back Forward Buttons";
+tiToolTipBackForthKITSplit            = "Boutons Revenir et Avancer";
 
 tiLabelDrawerKIT				= "Tiroir";
 tiPaletteLabelDrawerKIT			= "Tiroir";
@@ -194,9 +194,9 @@ tiLabelMacrosSplit				= "Macros";
 tiPaletteLabelMacrosSplit		= "Macros";
 tiToolTipMacrosSplit			= "Insère les macros";
 
-tiLabelTagsSplit				= "Etiquettes";
-tiPaletteLabelTagsSplit         = "Etiquettes";
-tiToolTipTagsSplit              = "Select a tag to scroll to";
+tiLabelTagsSplit				= "Étiquettes";
+tiPaletteLabelTagsSplit         = "Étiquettes";
+tiToolTipTagsSplit              = "Choisir une étiquette à atteindre";
 
 tiLabelLabelsSplit                = "Labels";
 tiPaletteLabelLabelsSplit         = "Labels";
@@ -207,13 +207,13 @@ tiLabelGotoPageSplit			= "Aller à la page";
 tiPaletteLabelGotoPageSplit     = "Aller à la page";
 tiToolTipGotoPageSplit          = "Aller à la page";
 
-tiLabelMagnificationSplit		= "Magnification";
-tiPaletteLabelMagnificationSplit   = "Magnification";
-tiToolTipMagnificationSplit     = "Set page magnification";
+tiLabelMagnificationSplit		= "Agrandissement";
+tiPaletteLabelMagnificationSplit   = "Agrandissement";
+tiToolTipMagnificationSplit     = "Régler l’agrandissement de la page";
 
-tiLabelColorIndexSplit			= "ColorIndex";
-tiPaletteLabelColorIndexSplit     = "ColorIndex";
-tiToolTipColorIndexSplit          = "Color Index Commands";
+tiLabelColorIndexSplit			= "Index des couleurs";
+tiPaletteLabelColorIndexSplit     = "Index des couleurs";
+tiToolTipColorIndexSplit          = "Commandes de l’index des couleurs";
 
 tiLabelAutoCompleteSplit		= "Raccourcis clavier";
 tiPaletteLabelAutoCompleteSplit   = "Raccourcis clavier";
@@ -247,13 +247,13 @@ tiLabelUpdateSplit                = "Actualiser";
 tiPaletteLabelUpdateSplit         = "Actualiser";
 tiToolTipUpdateSplit              = "Actualiser les étiquettes et labels";
 
-tiLabelHtmlPreviousPageButton                = "Rétablir";
-tiPaletteLabelHtmlPreviousPageButton            = "Rétablir";
-tiToolTipHtmlPreviousPageButton            = "Rétablir";
+tiLabelHtmlPreviousPageButton                = "Précédent";
+tiPaletteLabelHtmlPreviousPageButton            = "Précédent";
+tiToolTipHtmlPreviousPageButton            = "Précédent";
 
-tiLabelHtmlNextPageButton                = "Avancer";
-tiPaletteLabelHtmlNextPageButton            = "Avancer";
-tiToolTipHtmlNextPageButton           = "Avancer";
+tiLabelHtmlNextPageButton                = "Suivant";
+tiPaletteLabelHtmlNextPageButton            = "Suivant";
+tiToolTipHtmlNextPageButton           = "Suivant";
 
 tiLabelHtmlURLField                = "URL";
 tiPaletteLabelHtmlURLField            = "URL";
@@ -271,3 +271,19 @@ tiToolTipHtmlSearch           = "Rechercher";
 "ExperimentZoomOut" = "Zoom arrière";
 "ExperimentZoomIn" = "Zoom avant";
 "ExperimentZoomToContent" = "Zoom sur le contenu";
+
+"Page Layout" = "Format d’affichage";
+"tiLabelTSPreviewAppearance" = "Apparence";
+"Continuous Two Pages" = "Page multiple en double";
+"Restore Document Settings" = "Rétablir les réglages du document";
+"Single Page" = "Page simple";
+"PreviewAppearanceDark" = "Sombre";
+"PreviewAppearanceLight" = "Clair";
+"Two Pages" = "Page double";
+"PreviewAppearanceSystem" = "Système";
+"Left to right" = "De gauche à droite";
+"Two-Page Arrangement" = "Page double (variantes)";
+"Applies when displaying two pages" = "S’applique à l’affichage en page double";
+"Continuous" = "Page multiple";
+"Right to left" = "De droite à gauche";
+"Show first page alone as cover" = "Afficher la première page seule comme couverture";

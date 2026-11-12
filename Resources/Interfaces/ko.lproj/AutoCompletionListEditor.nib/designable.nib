@@ -405,7 +405,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="422998071">
 								<int key="NSCellFlags">68157504</int>
 								<int key="NSCellFlags2">272761856</int>
-								<string key="NSContents">입력문자：</string>
+								<string key="NSContents">입력문자:</string>
 								<reference key="NSSupport" ref="13263635"/>
 								<reference key="NSControlView" ref="94525971"/>
 								<object class="NSColor" key="NSBackgroundColor" id="774999359">
@@ -430,7 +430,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="67624648">
 								<int key="NSCellFlags">68157504</int>
 								<int key="NSCellFlags2">272761856</int>
-								<string key="NSContents">출력문자열：</string>
+								<string key="NSContents">출력문자열:</string>
 								<reference key="NSSupport" ref="13263635"/>
 								<reference key="NSControlView" ref="1009110395"/>
 								<reference key="NSBackgroundColor" ref="774999359"/>

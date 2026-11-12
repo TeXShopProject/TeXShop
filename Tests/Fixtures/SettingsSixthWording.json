@@ -243,7 +243,7 @@
     },
     "SettingsThemeName.strings": {
       "ZJe-8t-Rwa.title": "Naam:",
-      "jJY-ql-JXD.title": "Annuleren"
+      "jJY-ql-JXD.title": "Annuleer"
     },
     "SettingsThemes.strings": {
       "dAq-I3-00S.title": "Afbeelding kopiëren",
@@ -401,7 +401,7 @@
       "naM-Et-WMn.title": "Mensalmente"
     },
     "SettingsPreview.strings": {
-      "346.title": "Páginas duplas contínuas",
+      "346.title": "Duas páginas contínuas",
       "335.title": "Ampliar mais",
       "Zdh-Ch-Ndh.title": "Usar a posição atual",
       "sa2-VV-W1K.title": "Guardar a posição ao fechar",
@@ -419,7 +419,7 @@
       "328.title": "Deslocar",
       "344.title": "Ampliação fixa",
       "1uj-kt-7Pj.title": "Esquerda",
-      "333.title": "Página única",
+      "333.title": "Uma página",
       "637.title": "Tamanho real",
       "vOt-2m-d2s.title": "Unir numa única janela",
       "preview-cover-cell.title": "Mostrar a primeira página como capa",
@@ -605,7 +605,7 @@
       "UXo-9g-NNW.title": "După caracter",
       "964.title": "Rând nou",
       "942.title": "Evidențiază caracterele dintre paranteze",
-      "EgL-0e-rdg.title": "Niciuna",
+      "EgL-0e-rdg.title": "Fără",
       "LJw-Jj-VBR.title": "După cuvânt",
       "YsC-bl-8G6.title": "Indentarea celorlalte rânduri:",
       "LYC-Qf-9zP.title": "Indentarea primului rând:",
@@ -659,7 +659,7 @@
       "naM-Et-WMn.title": "Lunar"
     },
     "SettingsPreview.strings": {
-      "335.title": "Mărire mare",
+      "335.title": "Lupă (mare)",
       "Zdh-Ch-Ndh.title": "Folosește poziția actuală",
       "sa2-VV-W1K.title": "Păstrează poziția la închidere",
       "SfP-Ak-pn3.title": "Deschide în ferestre separate",
@@ -667,14 +667,14 @@
       "864.title": "Folosește poziția actuală",
       "337.title": "Selectează PDF",
       "tVs-uh-QcM.title": "Deschide toate ferestrele în poziția fixată",
-      "332.title": "Mărire",
+      "332.title": "Lupă",
       "866.title": "Stabilește",
       "501.title": "Aranjarea paginilor duble",
       "871.title": "Urmărește permanent modificările PDF-ului făcute de alte aplicații",
       "636.title": "Selectează textul",
       "328.title": "Derulare",
       "1uj-kt-7Pj.title": "Stânga",
-      "637.title": "Dimensiune reală",
+      "637.title": "Dimensiune efectivă",
       "vOt-2m-d2s.title": "Unește într-o singură fereastră",
       "preview-cover-cell.title": "Arată prima pagină separat, ca o copertă",
       "p2D-Mi-Gyc.title": "URL inițial"
@@ -700,7 +700,7 @@
     },
     "SettingsThemeName.strings": {
       "ZJe-8t-Rwa.title": "Titlu:",
-      "jJY-ql-JXD.title": "Anulează"
+      "jJY-ql-JXD.title": "Anulați"
     },
     "SettingsThemes.strings": {
       "dAq-I3-00S.title": "Copierea imaginii",

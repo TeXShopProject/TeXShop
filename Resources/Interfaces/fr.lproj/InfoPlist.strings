@@ -9,10 +9,10 @@
  	the translation for the interface */
 
   "TeX File" = "Fichier TeX";
-  "LaTeX File" = "LaTeX File";
-  "ConTeXt File" = "ConTeXt File";
-  "HTML File" = "HTML File";
-  "TEXI File" = "TEXI File";
+  "LaTeX File" = "Fichier LaTeX";
+  "ConTeXt File" = "Fichier ConTeXt";
+  "HTML File" = "Fichier HTML";
+  "TEXI File" = "Fichier TEXI";
   "mp" = "mp";
   "sty" = "sty";
   "cls" = "cls";
@@ -21,17 +21,17 @@
   "bib" = "bib";
   "comment" = "comment";
   "engine" = "engine";
-  "PDF Data" = "PDF Data";
-  NSTIFFPboardType = "TIFF File";
-  "PNG image" = "PNG image";
-  "jpeg" = "jpeg";
+  "PDF Data" = "Données PDF";
+  NSTIFFPboardType = "Document TIFF";
+  "PNG image" = "Image PNG";
+  "jpeg" = "Image JPEG";
   NSEPSPboardType = "EPS File";
   "epsi" = "epsi";
   "log" = "log";
   "aux" = "aux";
   "PostscriptFile" = "Postscript File";
-  "HieroTeX File" = "HieroTeX File";
-  "Sketch File" = "Sketch File";
+  "HieroTeX File" = "Fichier HieroTeX";
+  "Sketch File" = "Fichier Sketch";
   "texshop" = "texshop";
   "dvi" = "dvi";
   "ins" = "ins";
@@ -58,8 +58,8 @@
   "py" = "py";
   NSStringPboardType = "UTF8 Plain Text";
   "md" = "md";
-  "Plain Text" = "Plain Text";
-  "Any File" = "Any File";
+  "Plain Text" = "Texte brut";
+  "Any File" = "Fichier quelconque";
   
   /* Help book localization */
   CFBundleHelpBookName = "TeXShop Help";

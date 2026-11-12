@@ -4215,7 +4215,7 @@
 												<object class="NSTextFieldCell" key="NSCell" id="643414620">
 													<int key="NSCellFlags">67239424</int>
 													<int key="NSCellFlags2">4194304</int>
-													<string key="NSContents">Generics</string>
+													<string key="NSContents">重音符号等</string>
 													<reference key="NSSupport" ref="796996426"/>
 													<reference key="NSControlView" ref="243515791"/>
 													<bool key="NSDrawsBackground">YES</bool>
@@ -4277,7 +4277,7 @@
 													<object class="NSButtonCell" id="470860708">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Itemize</string>
+														<string key="NSContents">项目列表</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSButtonFlags">-2037628673</int>
@@ -4292,7 +4292,7 @@
 													<object class="NSButtonCell" id="668496128">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Enumerate</string>
+														<string key="NSContents">编号列表</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSTag">1</int>
@@ -4306,7 +4306,7 @@
 													<object class="NSButtonCell" id="547389736">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Description</string>
+														<string key="NSContents">描述列表</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSTag">2</int>
@@ -4334,7 +4334,7 @@
 													<object class="NSButtonCell" id="80965422">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Figure</string>
+														<string key="NSContents">插图</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSTag">4</int>
@@ -4348,7 +4348,7 @@
 													<object class="NSButtonCell" id="76144150">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Center</string>
+														<string key="NSContents">居中</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSTag">5</int>
@@ -4390,7 +4390,7 @@
 													<object class="NSButtonCell" id="129928564">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Table</string>
+														<string key="NSContents">表格</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSTag">8</int>
@@ -4432,7 +4432,7 @@
 													<object class="NSButtonCell" id="773342184">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Matrix</string>
+														<string key="NSContents">矩阵</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSTag">11</int>
@@ -4446,7 +4446,7 @@
 													<object class="NSButtonCell" id="786431649">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Equation</string>
+														<string key="NSContents">公式</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSTag">12</int>
@@ -4488,7 +4488,7 @@
 													<object class="NSButtonCell" id="42671087">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Customized</string>
+														<string key="NSContents">自定义</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="629056200"/>
 														<int key="NSTag">15</int>
@@ -4551,7 +4551,7 @@
 													<object class="NSButtonCell" id="1007960371">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Emph</string>
+														<string key="NSContents">强调</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="316496468"/>
 														<int key="NSButtonFlags">-2037628673</int>
@@ -4566,7 +4566,7 @@
 													<object class="NSButtonCell" id="329983261">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Roman</string>
+														<string key="NSContents">罗马体</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="316496468"/>
 														<int key="NSTag">1</int>
@@ -4580,7 +4580,7 @@
 													<object class="NSButtonCell" id="555104349">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Bold</string>
+														<string key="NSContents">粗体</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="316496468"/>
 														<int key="NSTag">2</int>
@@ -4594,7 +4594,7 @@
 													<object class="NSButtonCell" id="795479470">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Italic</string>
+														<string key="NSContents">斜体</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="316496468"/>
 														<int key="NSTag">3</int>
@@ -4608,7 +4608,7 @@
 													<object class="NSButtonCell" id="581411149">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">CAPS</string>
+														<string key="NSContents">小型大写</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="316496468"/>
 														<int key="NSTag">4</int>
@@ -4622,7 +4622,7 @@
 													<object class="NSButtonCell" id="325052326">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Slanted</string>
+														<string key="NSContents">倾斜体</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="316496468"/>
 														<int key="NSTag">5</int>
@@ -4636,7 +4636,7 @@
 													<object class="NSButtonCell" id="98727807">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Medium</string>
+														<string key="NSContents">中等粗细</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="316496468"/>
 														<int key="NSTag">6</int>
@@ -4650,7 +4650,7 @@
 													<object class="NSButtonCell" id="937409375">
 														<int key="NSCellFlags">67239424</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Sans</string>
+														<string key="NSContents">无衬线</string>
 														<reference key="NSSupport" ref="796996426"/>
 														<reference key="NSControlView" ref="316496468"/>
 														<int key="NSTag">7</int>

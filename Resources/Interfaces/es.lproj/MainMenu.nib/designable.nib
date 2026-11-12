@@ -23,7 +23,7 @@
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="145"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Comprobar actualizaciones..." id="624" identifier="TSShortcut.checkForUpdates:.0">
+                            <menuItem title="Buscar actualizaciones..." id="624" identifier="TSShortcut.checkForUpdates:.0">
                                 <connections>
                                     <action selector="checkForUpdates:" target="806" id="807"/>
                                 </connections>
@@ -115,10 +115,10 @@
                                     <action selector="displayStyleFile:" target="675" id="932"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Documentos recientes" id="146">
-                                <menu key="submenu" title="Documentos recientes" systemMenu="recentDocuments" id="147">
+                            <menuItem title="Abrir recientes" id="146">
+                                <menu key="submenu" title="Abrir recientes" systemMenu="recentDocuments" id="147">
                                     <items>
-                                        <menuItem title="Borrar menú" id="148" identifier="TSShortcut.clearRecentDocuments:.0">
+                                        <menuItem title="Vaciar menú" id="148" identifier="TSShortcut.clearRecentDocuments:.0">
                                             <connections>
                                                 <action selector="clearRecentDocuments:" target="-1" id="149"/>
                                             </connections>
@@ -256,7 +256,7 @@
                                     <action selector="pasteAsComment:" target="-1" id="hd9-PE-gVp"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Borrar" id="128" identifier="TSShortcut.delete:.0">
+                            <menuItem title="Eliminar" id="128" identifier="TSShortcut.delete:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="delete:" target="-1" id="129"/>
@@ -274,7 +274,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Buscar" id="986">
                                     <items>
-                                        <menuItem title="Panel de búsqueda..." tag="1" keyEquivalent="f" id="987" identifier="TSShortcut.performFindPanelAction:.1">
+                                        <menuItem title="Buscar…" tag="1" keyEquivalent="f" id="987" identifier="TSShortcut.performFindPanelAction:.1">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1019"/>
                                             </connections>
@@ -294,7 +294,7 @@
                                                 <action selector="performFindPanelAction:" target="-1" id="1018"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Ir a la selection" keyEquivalent="j" id="991" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
+                                        <menuItem title="Ir a la selección" keyEquivalent="j" id="991" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
                                             <connections>
                                                 <action selector="centerSelectionInVisibleArea:" target="-1" id="1020"/>
                                             </connections>
@@ -424,7 +424,7 @@
                                                 <action selector="toggleAutomaticDataDetection:" target="-1" id="885"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Reemplazar texto" id="874" identifier="TSShortcut.toggleAutomaticTextReplacement:.0">
+                                        <menuItem title="Sustitución de texto" id="874" identifier="TSShortcut.toggleAutomaticTextReplacement:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleAutomaticTextReplacement:" target="-1" id="886"/>
@@ -788,7 +788,7 @@
                             <menuItem title="Tipo de letra " id="286">
                                 <menu key="submenu" title="Tipo de letra " systemMenu="font" id="303">
                                     <items>
-                                        <menuItem title="Panel de tipos..." keyEquivalent="k" id="295" identifier="TSShortcut.orderFrontFontPanel:.0">
+                                        <menuItem title="Mostrar tipos de letra" keyEquivalent="k" id="295" identifier="TSShortcut.orderFrontFontPanel:.0">
                                             <connections>
                                                 <action selector="orderFrontFontPanel:" target="202" id="319"/>
                                             </connections>
@@ -808,12 +808,12 @@
                                         <menuItem isSeparatorItem="YES" id="787">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Aumentar" tag="3" keyEquivalent="=" id="786" identifier="TSShortcut.modifyFont:.3">
+                                        <menuItem title="Más grande" tag="3" keyEquivalent="=" id="786" identifier="TSShortcut.modifyFont:.3">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="788"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Disminuir" tag="4" keyEquivalent="-" id="785" identifier="TSShortcut.modifyFont:.4">
+                                        <menuItem title="Más pequeño" tag="4" keyEquivalent="-" id="785" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="789"/>
                                             </connections>
@@ -825,7 +825,7 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Interletraje" id="kVA-2q-9l1">
                                                 <items>
-                                                    <menuItem title="Valor por omisión " id="uAp-R1-cWb" identifier="TSShortcut.useStandardKerning:.0">
+                                                    <menuItem title="Utilizar por omisión" id="uAp-R1-cWb" identifier="TSShortcut.useStandardKerning:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useStandardKerning:" target="-1" id="xrC-yK-V6O"/>
@@ -856,13 +856,13 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Ligaduras" id="rxQ-7q-OLm">
                                                 <items>
-                                                    <menuItem title="Valor por omisión " id="AMd-z6-gpb" identifier="TSShortcut.useStandardLigatures:.0">
+                                                    <menuItem title="Utilizar por omisión" id="AMd-z6-gpb" identifier="TSShortcut.useStandardLigatures:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useStandardLigatures:" target="-1" id="bOd-9X-dZP"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Ninguna" id="tqu-52-Toc" identifier="TSShortcut.turnOffLigatures:.0">
+                                                    <menuItem title="Ninguno" id="tqu-52-Toc" identifier="TSShortcut.turnOffLigatures:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="turnOffLigatures:" target="-1" id="ze9-TW-FvH"/>
@@ -877,11 +877,11 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Líneabase" id="IWO-3r-pE2">
+                                        <menuItem title="Línea base" id="IWO-3r-pE2">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Líneabase" id="Md9-R7-HvU">
+                                            <menu key="submenu" title="Línea base" id="Md9-R7-HvU">
                                                 <items>
-                                                    <menuItem title="Valor por omisión " id="Ytu-9C-3Cz" identifier="TSShortcut.unscript:.0">
+                                                    <menuItem title="Utilizar por omisión" id="Ytu-9C-3Cz" identifier="TSShortcut.unscript:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="unscript:" target="-1" id="szK-me-PNy"/>
@@ -1124,13 +1124,13 @@
                                         <menuItem isSeparatorItem="YES" id="646">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Aumentar" keyEquivalent="+" id="647" identifier="TSShortcut.zoomIn:.0">
+                                        <menuItem title="Acercar" keyEquivalent="+" id="647" identifier="TSShortcut.zoomIn:.0">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="zoomIn:" target="-1" id="793"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Disminuir" keyEquivalent="_" id="649" identifier="TSShortcut.zoomOut:.0">
+                                        <menuItem title="Alejar" keyEquivalent="_" id="649" identifier="TSShortcut.zoomOut:.0">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="zoomOut:" target="-1" id="794"/>
@@ -1330,7 +1330,7 @@
                             <menuItem isSeparatorItem="YES" id="915">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Mostrar barra de herramientas" id="439" identifier="TSShortcut.toggleToolbarShown:.0">
+                            <menuItem title="Ocultar barra de herramientas" id="439" identifier="TSShortcut.toggleToolbarShown:.0">
                                 <connections>
                                     <action selector="toggleToolbarShown:" target="-1" id="444"/>
                                 </connections>
@@ -1397,7 +1397,7 @@
                             <menuItem title="Demos de TeXShop en vídeo" id="668">
                                 <menu key="submenu" title="Demos de TeXShop en vídeo" id="669">
                                     <items>
-                                        <menuItem title="TeXShop Manual" id="VGz-FQ-HYI">
+                                        <menuItem title="Manual de TeXShop" id="VGz-FQ-HYI">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                     </items>
@@ -1568,7 +1568,7 @@
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="818">
                         <rect key="frame" x="225" y="11" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="831">
+                        <buttonCell key="cell" type="push" title="Aceptar" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="831">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -1692,7 +1692,7 @@ Gw
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="891">
                         <rect key="frame" x="401" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="901">
+                        <buttonCell key="cell" type="push" title="Aceptar" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="901">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -1733,7 +1733,7 @@ Gw
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="925">
                         <rect key="frame" x="225" y="12" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="930">
+                        <buttonCell key="cell" type="push" title="Aceptar" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="930">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">

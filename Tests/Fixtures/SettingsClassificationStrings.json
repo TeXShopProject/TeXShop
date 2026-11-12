@@ -76,11 +76,11 @@
         "ja": "外観",
         "de": "Erscheinungsbild",
         "fr": "Apparence",
-        "es": "Apariencia",
+        "es": "Aspecto",
         "it": "Aspetto",
         "nl": "Weergave",
         "pt": "Aparência",
-        "pt-PT": "Aparência",
+        "pt-PT": "Apresentação",
         "ro": "Aspect",
         "ko": "모양",
         "zh_CN": "外观"
@@ -506,7 +506,7 @@
         "it": "Aspetto PDF",
         "nl": "PDF-vormgeving",
         "pt": "Aparência do PDF",
-        "pt-PT": "Aspeto do PDF",
+        "pt-PT": "Apresentação do PDF",
         "ro": "Aspect PDF",
         "ko": "PDF 모양",
         "zh_CN": "PDF外观"

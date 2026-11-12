@@ -34,6 +34,23 @@ static void Walk(NSView *v, NSString *nib) {
             if (need > have + 0.5) { printf("CLIPPED %s button \"%s\"%s: needs %.1f, has %.1f\n", nib.UTF8String, b.title.UTF8String, automaticBezel ? " (automatic bezel)" : "", need, have); problems++; }
         }
     }
+    if ([v isKindOfClass:NSPopUpButton.class] && !automaticBezel) {
+        // Every choice of a pop-up menu, and the title of a pull-down menu, fits the
+        // button: each item is selected in a copy of the cell and measured with it.
+        // Placeholder items ("Item 1") are replaced at run time.
+        NSPopUpButton *p = (NSPopUpButton *)v;
+        CGFloat have = p.bounds.size.width;
+        NSInteger count = p.pullsDown ? MIN(1, p.numberOfItems) : p.numberOfItems;
+        for (NSInteger i = 0; i < count; i++) {
+            NSMenuItem *item = [p itemAtIndex:i];
+            if (item.isSeparatorItem || item.isHidden || !item.title.length) continue;
+            if ([item.title rangeOfString:@"^Item [0-9]+$" options:NSRegularExpressionSearch].location != NSNotFound || [item.title hasPrefix:@"-- DO NOT LOCALIZE"]) continue;
+            NSPopUpButtonCell *cell = [(NSPopUpButtonCell *)p.cell copy];
+            [cell removeAllItems]; [cell addItemWithTitle:item.title]; [cell selectItemAtIndex:0];
+            CGFloat need = cell.cellSize.width;
+            if (need > have + 1) { printf("CLIPPED %s popup \"%s\": needs %.1f, has %.1f\n", nib.UTF8String, item.title.UTF8String, need, have); problems++; }
+        }
+    }
     if ([v isKindOfClass:NSTextField.class] && !((NSTextField *)v).isEditable) {
         NSString *text = [[(NSTextField *)v stringValue] stringByTrimmingCharactersInSet:NSCharacterSet.newlineCharacterSet];
         if (text.length && ![text isEqual:@"Button"]) {
@@ -67,7 +84,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     }}
     count /= 2;
     if (problems) return 1;
-    printf("PASS: labels and buttons show their whole text in %d localized interfaces (also with the automatic toolbar bezel)\n", count);
+    printf("PASS: labels, buttons and pop-up choices show their whole text in %d localized interfaces (also with the automatic toolbar bezel)\n", count);
 } return 0; }
 '''
 nibs = [str(p) for p in sorted(interfaces.glob('*.lproj/*.nib')) if p.name not in ('Preferences.nib', 'Movie.nib')]

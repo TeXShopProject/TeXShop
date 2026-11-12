@@ -22,8 +22,8 @@
 "Indent" = "Indentar";
 "Unindent" = "Remover indentação";
 "Macros" = "Macros";
-"Open Macro Editor..." = "Abrir editor de Macro...";
-"Close Macro Editor" = "Fechar editor de Macro";
+"Open Macro Editor..." = "Abrir editor de macros...";
+"Close Macro Editor" = "Fechar editor de macros";
 "Add macros from file..." = "Adicionar macros de um arquivo...";
 "Save selection to file..." = "Salvar seleção em um arquivo...";
 "Convert \\yen to \\ in Pasteboard" = "Converter \\yen para \\ na área de transferência";
@@ -35,22 +35,22 @@
 "Do you want to save macros?" = "Você quer salvar macros?";
 "Save Spot" = "Salvar ponto";
 "Template" = "Modelo";
-"Typing" = "Compondo";
+"Typing" = "Digitação";
 "AutoComplete" = "AutoCompletar";  //Should be translation of "Key Bindings", even in English
 "Page Number" = "Número da página";
 "Page Number Panel" = "Painel de número de página";
 "Magnification Panel" = "Painel de zoom";
 "Omit Shell Escape" = "Omitir Shell Escape";
 "Warning: Using Shell Escape" = "Atenção: Usando Shell Escape";
-"Preview" = "Pré-visualizar";
-"Display Format" = "Formato de exibição";// mitsu 1.29b
-"Magnification" = "Zoom";// mitsu 1.29b
-"Copy Format" = "Copiar Formato";// mitsu 1.29b
+"Preview" = "Página";
+"Display Format" = "Formato de visualização";// mitsu 1.29b
+"Magnification" = "Ampliação";// mitsu 1.29b
+"Copy Format" = "Copiar formato";// mitsu 1.29b
 "ToolbarItems" = "ItemsBarraDeFerramentas";
 "Autocompletion" = "Autocompletar";
 "Completion" = "Completar";
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Caminho: %@\nTamanho do arquivo: %d bytes\nData de criação: %@\nData de modificação: %@";
-"Info: %@" = "Info: %@";
+"Info: %@" = "Informações: %@";
 "%@\n\nCharacters: %d" = "%@\n\nCaracteres: %d";
 "The file encoding changed; characters can be lost if the wrong encoding is used." = "A codificação do arquivo foi alterada; caracteres podem ser perdidos se uma codificação errada for usada.";
 "Currently open files retain their old encoding." = "Arquivos abertos continuarão a manter a codificação antiga.";
@@ -76,8 +76,8 @@
 "Newline Removal" = "Remoção de nova linha";
 "Color Index" = "Índice de cor";
 "Help" = "Ajuda";
-"TeXShop Demos" = "TeXShop Demos";
-"Sync" = "Sync";
+"TeXShop Demos" = "Demos do TeXShop";
+"Sync" = "Sincronizar";
 "ShowFullPath" = "ExibirCaminhoCompleto";
 "Close Current Environment" = "Fechar ambiente atual"; // Terada
 "Your current setting of %@ will be replaced. OK?" = "Suas configurações atuais de %@ serão substituídas. OK?"; // Terada
@@ -89,7 +89,7 @@
 "<a letter consisting of %d characters>" = "<uma letra formada por %d caracteres>";
 "%d letters, %d words, %d lines" = "%d letras, %d palavras, %d linhas";
 "Emoji Style" = "Estilo Emoji";
-"Text Style" = "Estilo Texto";
+"Text Style" = "Estilo do texto";
 "Character Info" = "Informação do caractere";
 "Revert To" = "Reverter Para";
 "Skin Tone I-II" = "Branca";
@@ -101,10 +101,10 @@
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Vídeos demo requerem Mac OS 10.9, Mavericks, ou superior";
 "Source" = "Fonte";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Digite algum texto aqui.\nEscreva diversas para testar\no espaçamento entre linhas.";
-"<<Close All - unlocalized>>" = "Fechar tudo";
-"Close All" = "Fechar tudo";
+"<<Close All - unlocalized>>" = "Fechar todas";
+"Close All" = "Fechar todas";
 "File Already Exists" = "Arquivo já existe";
-"Labels" = "Labels";
+"Labels" = "Rótulos";
 "New Tag" = "Nova marca";
 "Split Window" = "Dividir janela";
 "New Document" = "Novo Documento";
@@ -169,20 +169,20 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "The selected profile is invalid.";
-"Apply Settings Profile?" = "Apply Settings Profile?";
+"The selected profile is invalid." = "O perfil selecionado é inválido.";
+"Apply Settings Profile?" = "Aplicar o perfil de ajustes?";
 
-"Apply Profile" = "Apply Profile";
-"Settings could not be saved" = "Settings could not be saved";
-"Enter a valid setting" = "Enter a valid setting";
+"Apply Profile" = "Aplicar perfil";
+"Settings could not be saved" = "Não foi possível salvar os ajustes";
+"Enter a valid setting" = "Digite um ajuste válido";
 
-"Continue Editing" = "Continue Editing";
-"Restore This Field" = "Restore This Field";
-"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Continue Editing" = "Continuar editando";
+"Restore This Field" = "Restaurar este campo";
+"The theme could not be saved. Its last saved colors have been restored." = "Não foi possível salvar o tema. As últimas cores salvas foram restauradas.";
 "Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Escolha outro nome para o tema. Não são permitidos nomes que comecem com ponto, separadores de caminho, caracteres de controle ou links simbólicos.";
-"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+"The new theme could not be saved. The original theme is unchanged." = "Não foi possível salvar o novo tema. O tema original não foi alterado.";
 
-"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Reabra os Ajustes ou selecione um tema legível antes de editá-lo ou duplicá-lo.";
 
 "Back" = "Voltar";
 
@@ -212,9 +212,9 @@
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Resultados: %lu";
 
-"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+"The theme “%@” already exists. Replace it?" = "O tema “%@” já existe. Deseja substituí-lo?";
 
-"Replace" = "Replace";
+"Replace" = "Substituir";
 
 "General" = "Geral";
 "Documents and Saving" = "Documentos e salvamento";
@@ -281,22 +281,22 @@
 "Experiment stopped.\n" = "Experimento interrompido.\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"Assign" = "Assign";
-"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
-"Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
-"Return to Editing" = "Return to Editing";
-"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"Assign" = "Atribuir";
+"Assign a shortcut used by macros?" = "Atribuir um atalho usado por macros?";
+"Macro shortcut conflicts" = "Conflitos de atalhos de macros";
+"Remove Conflicting Shortcuts and Save" = "Remover atalhos em conflito e salvar";
+"Return to Editing" = "Voltar à edição";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Salvar mesmo assim (atalhos em conflito inativos)";
 
-"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
-"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
-"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
-"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
-"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
-"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
-"Variant" = "Variant";
+"These macro shortcuts will become inactive:" = "Estes atalhos de macros ficarão inativos:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "Estes atalhos recém-atribuídos ou alterados coincidem com outras atribuições. A lista explica quais atalhos ficarão inativos. Você pode editá-los, mantê-los como estão ou remover apenas os atalhos alterados que estão em conflito. Os nomes e o conteúdo das macros serão mantidos.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Este atalho entra em conflito com a macro “%@” (%@), cujo atalho ficará inativo porque aparece depois.";
+"This shortcut is already used by:\n%@" = "Este atalho já é usado por:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "Este atalho está inativo porque entra em conflito com “%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "Este atalho está inativo porque a macro “%@” (%@) o usa primeiro.";
+"Variant" = "Variante";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Edita o arquivo compartilhado por todos os documentos. Este ajuste define o padrão para novos documentos.";
 
 "The newest detected installation is selected. You can choose another candidate below." = "A instalação mais recente encontrada está selecionada. Você pode escolher outra abaixo.";
 
@@ -310,7 +310,7 @@
 
 "Custom menu shortcuts will be removed." = "Os atalhos de menu personalizados serão removidos.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Redefine o motor, a edição, a exibição, os ajustes ocultos conhecidos e o ícone do Dock. A seleção de temas pode mudar. Caminho do motor TeX: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Detecção automática do idioma";

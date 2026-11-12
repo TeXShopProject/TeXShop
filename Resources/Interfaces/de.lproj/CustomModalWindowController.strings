@@ -3,10 +3,10 @@
 "F0z-JX-Cv5.title" = "Modal Sheet (title will be hidden)";
 
 /* Class = "NSTextFieldCell"; title = "Changing the encoding of a file can lead to loss of data. Only use this panel if the current file is a copy of the original file."; ObjectID = "Prr-63-EQ4"; */
-"Prr-63-EQ4.title" = "Die Codierung einer Datei zu verändern kann zu Datenverlust führen. Verwenden Sie dieses Feld nur, wenn die aktuelle Datei eine Kopie der ursprünglichen Datei ist.";
+"Prr-63-EQ4.title" = "Die Kodierung einer Datei zu verändern kann zu Datenverlust führen. Verwenden Sie dieses Feld nur, wenn die aktuelle Datei eine Kopie der ursprünglichen Datei ist.";
 
 /* Class = "NSButtonCell"; title = "OK"; ObjectID = "V5P-DF-wCP"; */
-"V5P-DF-wCP.title" = "O.K.";
+"V5P-DF-wCP.title" = "OK";
 
 /* Class = "NSMenuItem"; title = "Item 1"; ObjectID = "VTQ-2K-Yam"; */
 "VTQ-2K-Yam.title" = "Item 1";
@@ -15,7 +15,7 @@
 "fX0-Jq-Okq.title" = "Abbrechen";
 
 /* Class = "NSTextFieldCell"; title = "Encoding: "; ObjectID = "gGW-lx-NCF"; */
-"gGW-lx-NCF.title" = "Codierung: ";
+"gGW-lx-NCF.title" = "Kodierung: ";
 
 /* Class = "NSMenuItem"; title = "Item 2"; ObjectID = "zIv-Ih-V69"; */
 "zIv-Ih-V69.title" = "Item 2";

@@ -18,12 +18,12 @@
                 <menuItem title="TeXShop" id="56">
                     <menu key="submenu" title="TeXShop" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="Despre TexShop" id="58" identifier="TSShortcut.orderFrontStandardAboutPanel:.0">
+                            <menuItem title="Despre TeXShop" id="58" identifier="TSShortcut.orderFrontStandardAboutPanel:.0">
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="145"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Check for Updates..." id="644" identifier="TSShortcut.checkForUpdates:.0">
+                            <menuItem title="Căutați actualizări..." id="644" identifier="TSShortcut.checkForUpdates:.0">
                                 <connections>
                                     <action selector="checkForUpdates:" target="803" id="804"/>
                                 </connections>
@@ -42,13 +42,13 @@
                                     <action selector="displayGPLLicense:" target="690" id="sRn-fF-Lgg"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open ~/Library/TeXShop" id="sfF-ru-T17" identifier="TSShortcut.GotoLibraryTeXShop:.0">
+                            <menuItem title="Deschide ~/Library/TeXShop" id="sfF-ru-T17" identifier="TSShortcut.GotoLibraryTeXShop:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="GotoLibraryTeXShop:" target="-1" id="s6A-ra-Lrv"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Select TeXShop as Default TeX Editor" id="8EP-C6-4if" identifier="TSShortcut.makeDefaultEditor:.0">
+                            <menuItem title="Setează TeXShop ca editor TeX implicit" id="8EP-C6-4if" identifier="TSShortcut.makeDefaultEditor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="makeDefaultEditor:" target="-1" id="fHd-s7-hgc"/>
@@ -63,18 +63,18 @@
                             <menuItem isSeparatorItem="YES" id="401">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Maschează TeXShop" keyEquivalent="h" id="228" identifier="TSShortcut.hide:.0">
+                            <menuItem title="Ascundeți TeXShop" keyEquivalent="h" id="228" identifier="TSShortcut.hide:.0">
                                 <connections>
                                     <action selector="hide:" target="-2" id="229"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Maschează  Altele" keyEquivalent="h" id="402" identifier="TSShortcut.hideOtherApplications:.0">
+                            <menuItem title="Ascundeți restul" keyEquivalent="h" id="402" identifier="TSShortcut.hideOtherApplications:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="hideOtherApplications:" target="-2" id="404"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Arată Toate" id="403" identifier="TSShortcut.unhideAllApplications:.0">
+                            <menuItem title="Afișați tot" id="403" identifier="TSShortcut.unhideAllApplications:.0">
                                 <connections>
                                     <action selector="unhideAllApplications:" target="-2" id="405"/>
                                 </connections>
@@ -82,7 +82,7 @@
                             <menuItem isSeparatorItem="YES" id="224">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Ieși din TeXShop" keyEquivalent="q" id="226" identifier="TSShortcut.terminate:.0">
+                            <menuItem title="Închideți TeXShop" keyEquivalent="q" id="226" identifier="TSShortcut.terminate:.0">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="227"/>
                                 </connections>
@@ -98,27 +98,27 @@
                                     <action selector="newDocument:" target="-1" id="104"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="New from Stationery..." id="906" identifier="TSShortcut.newFromStationery:.0">
+                            <menuItem title="Nou din șablon..." id="906" identifier="TSShortcut.newFromStationery:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="newFromStationery:" target="884" id="907"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Deschide..." keyEquivalent="o" id="80" identifier="TSShortcut.openDocument:.0">
+                            <menuItem title="Deschideți..." keyEquivalent="o" id="80" identifier="TSShortcut.openDocument:.0">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="105"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open Style File..." id="908" identifier="TSShortcut.displayStyleFile:.0">
+                            <menuItem title="Deschide fișierul de stil..." id="908" identifier="TSShortcut.displayStyleFile:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayStyleFile:" target="690" id="929"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Deschide Recente" id="146">
-                                <menu key="submenu" title="Deschide Recente" systemMenu="recentDocuments" id="147">
+                            <menuItem title="Deschideți recente" id="146">
+                                <menu key="submenu" title="Deschideți recente" systemMenu="recentDocuments" id="147">
                                     <items>
-                                        <menuItem title="Clear Menu" id="148" identifier="TSShortcut.clearRecentDocuments:.0">
+                                        <menuItem title="Degajați meniul" id="148" identifier="TSShortcut.clearRecentDocuments:.0">
                                             <connections>
                                                 <action selector="clearRecentDocuments:" target="-1" id="149"/>
                                             </connections>
@@ -134,12 +134,12 @@
                             <menuItem isSeparatorItem="YES" id="79">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Show Console" id="808" keyEquivalent="0" identifier="TSShortcut.displayConsole:.0">
+                            <menuItem title="Afișează consola" id="808" keyEquivalent="0" identifier="TSShortcut.displayConsole:.0">
                                 <connections>
                                     <action selector="displayConsole:" target="-1" id="810"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Log File" id="807" identifier="TSShortcut.displayLog:.0">
+                            <menuItem title="Afișează fișierul jurnal" id="807" identifier="TSShortcut.displayLog:.0">
                                 <connections>
                                     <action selector="displayLog:" target="-1" id="811"/>
                                 </connections>
@@ -147,17 +147,17 @@
                             <menuItem isSeparatorItem="YES" id="809">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Închide" keyEquivalent="w" id="86" identifier="TSShortcut.performClose:.0">
+                            <menuItem title="Închideți" keyEquivalent="w" id="86" identifier="TSShortcut.performClose:.0">
                                 <connections>
                                     <action selector="performClose:" target="-1" id="106"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Salvează" keyEquivalent="s" id="78" identifier="TSShortcut.saveDocument:.0">
+                            <menuItem title="Salvați" keyEquivalent="s" id="78" identifier="TSShortcut.saveDocument:.0">
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="107"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Salvează sub Numele..." keyEquivalent="S" id="81" identifier="TSShortcut.saveDocumentAs:.0">
+                            <menuItem title="Salvați ca..." keyEquivalent="S" id="81" identifier="TSShortcut.saveDocumentAs:.0">
                                 <connections>
                                     <action selector="saveDocumentAs:" target="-1" id="108"/>
                                 </connections>
@@ -167,7 +167,7 @@
                                     <action selector="saveDocumentTo:" target="-1" id="127"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Revino la Versiunea Salvată" keyEquivalent="u" id="119" identifier="TSShortcut.revertDocumentToSaved:.0">
+                            <menuItem title="Reveniți la versiunea salvată" keyEquivalent="u" id="119" identifier="TSShortcut.revertDocumentToSaved:.0">
                                 <connections>
                                     <action selector="revertDocumentToSaved:" target="-1" id="121"/>
                                 </connections>
@@ -175,17 +175,17 @@
                             <menuItem isSeparatorItem="YES" id="85">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Format de Imprimare..." keyEquivalent="P" id="83" identifier="TSShortcut.runPageLayout:.0">
+                            <menuItem title="Configurare pagină..." keyEquivalent="P" id="83" identifier="TSShortcut.runPageLayout:.0">
                                 <connections>
                                     <action selector="runPageLayout:" target="-1" id="91"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Imprimă..." keyEquivalent="p" id="87" identifier="TSShortcut.printDocument:.0">
+                            <menuItem title="Tipăriți..." keyEquivalent="p" id="87" identifier="TSShortcut.printDocument:.0">
                                 <connections>
                                     <action selector="printDocument:" target="-1" id="90"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Imprimă Sursa..." id="230" identifier="TSShortcut.printSource:.0">
+                            <menuItem title="Tipăriți sursa..." id="230" identifier="TSShortcut.printSource:.0">
                                 <connections>
                                     <action selector="printSource:" target="-1" id="231"/>
                                 </connections>
@@ -193,18 +193,18 @@
                             <menuItem isSeparatorItem="YES" id="234">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Convert TIFF" id="235" identifier="TSShortcut.convertTiff:.0">
+                            <menuItem title="Convertește TIFF" id="235" identifier="TSShortcut.convertTiff:.0">
                                 <connections>
                                     <action selector="convertTiff:" target="-1" id="1021"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Abort Typesetting" keyEquivalent="a" id="851" identifier="TSShortcut.abort:.0">
+                            <menuItem title="Abandonează compilarea" keyEquivalent="a" id="851" identifier="TSShortcut.abort:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="abort:" target="-1" id="852"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Trash Aux Files" keyEquivalent="a" id="640" identifier="TSShortcut.trashAUXFiles:.0">
+                            <menuItem title="Șterge fișierele aux" keyEquivalent="a" id="640" identifier="TSShortcut.trashAUXFiles:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="trashAUXFiles:" target="-1" id="641"/>
@@ -216,12 +216,12 @@
                 <menuItem title="Editare" id="15">
                     <menu key="submenu" title="Editare" id="13">
                         <items>
-                            <menuItem title="Anulează" keyEquivalent="z" id="22" identifier="TSShortcut.undo:.0">
+                            <menuItem title="Infirmați" keyEquivalent="z" id="22" identifier="TSShortcut.undo:.0">
                                 <connections>
                                     <action selector="undo:" target="-1" id="30"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Refă ce s-a Anulat" keyEquivalent="Z" id="112" identifier="TSShortcut.redo:.0">
+                            <menuItem title="Refaceți" keyEquivalent="Z" id="112" identifier="TSShortcut.redo:.0">
                                 <connections>
                                     <action selector="redo:" target="-1" id="113"/>
                                 </connections>
@@ -229,17 +229,17 @@
                             <menuItem isSeparatorItem="YES" id="114">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Decupează" keyEquivalent="x" id="110" identifier="TSShortcut.cut:.0">
+                            <menuItem title="Tăiați" keyEquivalent="x" id="110" identifier="TSShortcut.cut:.0">
                                 <connections>
                                     <action selector="cut:" target="-1" id="111"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Copiază" keyEquivalent="c" id="4" identifier="TSShortcut.copy:.0">
+                            <menuItem title="Copiați" keyEquivalent="c" id="4" identifier="TSShortcut.copy:.0">
                                 <connections>
                                     <action selector="copy:" target="-1" id="31"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Lipește" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
+                            <menuItem title="Lipiți" keyEquivalent="v" id="8" identifier="TSShortcut.paste:.0">
                                 <connections>
                                     <action selector="paste:" target="-1" id="32"/>
                                 </connections>
@@ -250,19 +250,19 @@
                                     <action selector="exchangePaste:" target="-1" id="45X-IK-ski"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Lipește As Comment" id="9ui-VT-faV" identifier="TSShortcut.pasteAsComment:.0">
+                            <menuItem title="Lipește ca comentariu" id="9ui-VT-faV" identifier="TSShortcut.pasteAsComment:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="pasteAsComment:" target="-1" id="ICK-rk-guk"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Elimină" id="128" identifier="TSShortcut.delete:.0">
+                            <menuItem title="Ștergeți" id="128" identifier="TSShortcut.delete:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="delete:" target="-1" id="129"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Selectează Totul" keyEquivalent="a" id="11" identifier="TSShortcut.selectAll:.0">
+                            <menuItem title="Selectați tot" keyEquivalent="a" id="11" identifier="TSShortcut.selectAll:.0">
                                 <connections>
                                     <action selector="selectAll:" target="-1" id="33"/>
                                 </connections>
@@ -270,31 +270,31 @@
                             <menuItem isSeparatorItem="YES" id="132">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Caută" id="955">
+                            <menuItem title="Găsiți" id="955">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Caută" id="983">
+                                <menu key="submenu" title="Găsiți" id="983">
                                     <items>
-                                        <menuItem title="Caută..." tag="1" keyEquivalent="f" id="984" identifier="TSShortcut.performFindPanelAction:.1">
+                                        <menuItem title="Găsiți…" tag="1" keyEquivalent="f" id="984" identifier="TSShortcut.performFindPanelAction:.1">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1016"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Caută Următorul" tag="2" keyEquivalent="g" id="985" identifier="TSShortcut.performFindPanelAction:.2">
+                                        <menuItem title="Găsiți următorul" tag="2" keyEquivalent="g" id="985" identifier="TSShortcut.performFindPanelAction:.2">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1014"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Caută Precedentul" tag="3" keyEquivalent="G" id="986" identifier="TSShortcut.performFindPanelAction:.3">
+                                        <menuItem title="Găsiți anteriorul" tag="3" keyEquivalent="G" id="986" identifier="TSShortcut.performFindPanelAction:.3">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1018"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Folosește Selecția pentru Căutare" tag="7" keyEquivalent="e" id="987" identifier="TSShortcut.performFindPanelAction:.7">
+                                        <menuItem title="Găsiți selecția" tag="7" keyEquivalent="e" id="987" identifier="TSShortcut.performFindPanelAction:.7">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1015"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Mergi la Selecție" keyEquivalent="j" id="988" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
+                                        <menuItem title="Salt la selecție" keyEquivalent="j" id="988" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
                                             <connections>
                                                 <action selector="centerSelectionInVisibleArea:" target="-1" id="1017"/>
                                             </connections>
@@ -302,11 +302,11 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Marks" id="832">
+                            <menuItem title="Marcaje" id="832">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Marks" id="833">
+                                <menu key="submenu" title="Marcaje" id="833">
                                     <items>
-                                        <menuItem title="Insert Mark" keyEquivalent="8" id="838" identifier="TSShortcut.placeBullet:.0">
+                                        <menuItem title="Inserează marcaj" keyEquivalent="8" id="838" identifier="TSShortcut.placeBullet:.0">
                                             <connections>
                                                 <action selector="placeBullet:" target="-1" id="846"/>
                                             </connections>
@@ -320,25 +320,25 @@
                                         <menuItem isSeparatorItem="YES" id="TSm-Mk-Sep">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Next Mark" keyEquivalent="f" id="834" identifier="TSShortcut.doNextBullet:.0">
+                                        <menuItem title="Marcajul următor" keyEquivalent="f" id="834" identifier="TSShortcut.doNextBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBullet:" target="-1" id="842"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Next Mark (Del)" alternate="YES" keyEquivalent="f" id="836" identifier="TSShortcut.doNextBulletAndDelete:.0">
+                                        <menuItem title="Marcajul următor (șterge)" alternate="YES" keyEquivalent="f" id="836" identifier="TSShortcut.doNextBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doNextBulletAndDelete:" target="-1" id="843"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Previous Mark" keyEquivalent="g" id="835" identifier="TSShortcut.doPreviousBullet:.0">
+                                        <menuItem title="Marcajul anterior" keyEquivalent="g" id="835" identifier="TSShortcut.doPreviousBullet:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBullet:" target="-1" id="844"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Previous Mark (Del)" alternate="YES" keyEquivalent="g" id="837" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
+                                        <menuItem title="Marcajul anterior (șterge)" alternate="YES" keyEquivalent="g" id="837" identifier="TSShortcut.doPreviousBulletAndDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="doPreviousBulletAndDelete:" target="-1" id="845"/>
@@ -351,30 +351,30 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Ortografie și gramatică" id="Dud-xa-jps">
                                     <items>
-                                        <menuItem title="Afișează ortografia și gramatica" keyEquivalent=":" id="M5M-Cw-leI" identifier="TSShortcut.showGuessPanel:.0">
+                                        <menuItem title="Afișați ortografia și gramatica" keyEquivalent=":" id="M5M-Cw-leI" identifier="TSShortcut.showGuessPanel:.0">
                                             <connections>
                                                 <action selector="showGuessPanel:" target="-1" id="oKo-Zg-7Ru"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Controleer document nu" keyEquivalent=";" id="RdM-te-EBC" identifier="TSShortcut.checkSpelling:.0">
+                                        <menuItem title="Verificați documentul acum" keyEquivalent=";" id="RdM-te-EBC" identifier="TSShortcut.checkSpelling:.0">
                                             <connections>
                                                 <action selector="checkSpelling:" target="-1" id="Pnw-hL-3kT"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="E0z-41-cGp"/>
-                                        <menuItem title="Controleer spelling tijdens typen" id="cVj-kI-mgv" identifier="TSShortcut.toggleContinuousSpellChecking:.0">
+                                        <menuItem title="Verificați ortografia în timpul scrierii" id="cVj-kI-mgv" identifier="TSShortcut.toggleContinuousSpellChecking:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleContinuousSpellChecking:" target="-1" id="lK5-46-gtC"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Controleer grammatica tegelijk met spelling" id="4Uq-Sv-GdP" identifier="TSShortcut.toggleGrammarChecking:.0">
+                                        <menuItem title="Verificați gramatica odată cu ortografia" id="4Uq-Sv-GdP" identifier="TSShortcut.toggleGrammarChecking:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleGrammarChecking:" target="-1" id="KRI-r7-SaM"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Corrigeer spelling automatisch" id="yVZ-mU-6E1" identifier="TSShortcut.toggleAutomaticSpellingCorrection:.0">
+                                        <menuItem title="Corectați ortografia automat" id="yVZ-mU-6E1" identifier="TSShortcut.toggleAutomaticSpellingCorrection:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleAutomaticSpellingCorrection:" target="-1" id="y04-vV-Gbp"/>
@@ -383,48 +383,48 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Substitutions" id="853">
+                            <menuItem title="Înlocuiri" id="853">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Substitutions" id="863">
+                                <menu key="submenu" title="Înlocuiri" id="863">
                                     <items>
-                                        <menuItem title="Show Substitutions" id="864" identifier="TSShortcut.orderFrontSubstitutionsPanel:.0">
+                                        <menuItem title="Afișați înlocuirile" id="864" identifier="TSShortcut.orderFrontSubstitutionsPanel:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="orderFrontSubstitutionsPanel:" target="-1" id="877"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="865"/>
-                                        <menuItem title="Smart Copy/Paste" id="866" identifier="TSShortcut.toggleSmartInsertDelete:.0">
+                                        <menuItem title="Copiere/lipire inteligentă" id="866" identifier="TSShortcut.toggleSmartInsertDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleSmartInsertDelete:" target="-1" id="878"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Smart Quotes" id="867" identifier="TSShortcut.toggleAutomaticQuoteSubstitution:.0">
+                                        <menuItem title="Ghilimele inteligente" id="867" identifier="TSShortcut.toggleAutomaticQuoteSubstitution:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleAutomaticQuoteSubstitution:" target="-1" id="879"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Smart Dashes" id="868" identifier="TSShortcut.toggleAutomaticDashSubstitution:.0">
+                                        <menuItem title="Cratime inteligente" id="868" identifier="TSShortcut.toggleAutomaticDashSubstitution:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleAutomaticDashSubstitution:" target="-1" id="880"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Smart Links" id="869" identifier="TSShortcut.toggleAutomaticLinkDetection:.0">
+                                        <menuItem title="Linkuri inteligente" id="869" identifier="TSShortcut.toggleAutomaticLinkDetection:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleAutomaticLinkDetection:" target="-1" id="881"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Data Detectors" id="870" identifier="TSShortcut.toggleAutomaticDataDetection:.0">
+                                        <menuItem title="Detectoare de date" id="870" identifier="TSShortcut.toggleAutomaticDataDetection:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleAutomaticDataDetection:" target="-1" id="882"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Text Replacement" id="871" identifier="TSShortcut.toggleAutomaticTextReplacement:.0">
+                                        <menuItem title="Înlocuire text" id="871" identifier="TSShortcut.toggleAutomaticTextReplacement:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleAutomaticTextReplacement:" target="-1" id="883"/>
@@ -433,9 +433,9 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Transformations" id="854">
+                            <menuItem title="Transformări" id="854">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Transformations" id="859">
+                                <menu key="submenu" title="Transformări" id="859">
                                     <items>
                                         <menuItem title="New Encoding" id="VHb-xD-2Gz" identifier="TSShortcut.changeEncoding:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -443,19 +443,19 @@
                                                 <action selector="changeEncoding:" target="-1" id="iNv-RY-Oyu"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Make Upper Case" id="860" identifier="TSShortcut.uppercaseWord:.0">
+                                        <menuItem title="Transformați în majuscule" id="860" identifier="TSShortcut.uppercaseWord:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="uppercaseWord:" target="-1" id="874"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Make Lower Case" id="861" identifier="TSShortcut.lowercaseWord:.0">
+                                        <menuItem title="Transformați în minuscule" id="861" identifier="TSShortcut.lowercaseWord:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="lowercaseWord:" target="-1" id="875"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Capitalize" id="862" identifier="TSShortcut.capitalizeWord:.0">
+                                        <menuItem title="Inițială cu majusculă" id="862" identifier="TSShortcut.capitalizeWord:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="capitalizeWord:" target="-1" id="876"/>
@@ -585,17 +585,17 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Speech" id="855">
+                            <menuItem title="Enunțare" id="855">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Speech" id="856">
+                                <menu key="submenu" title="Enunțare" id="856">
                                     <items>
-                                        <menuItem title="Start Speaking" id="857" identifier="TSShortcut.startSpeaking:.0">
+                                        <menuItem title="Porniți enunțarea" id="857" identifier="TSShortcut.startSpeaking:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="startSpeaking:" target="-1" id="872"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Stop Speaking" id="858" identifier="TSShortcut.stopSpeaking:.0">
+                                        <menuItem title="Opriți enunțarea" id="858" identifier="TSShortcut.stopSpeaking:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="stopSpeaking:" target="-1" id="873"/>
@@ -624,12 +624,12 @@
                                     <action selector="doError:" target="-1" id="369"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Statistics..." id="642" identifier="TSShortcut.showStatistics:.0">
+                            <menuItem title="Statistici..." id="642" identifier="TSShortcut.showStatistics:.0">
                                 <connections>
                                     <action selector="showStatistics:" target="-1" id="643"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Character Info..." id="HhL-PZ-y1g" identifier="TSShortcut.showCharacterInfo:.0">
+                            <menuItem title="Informații despre caracter..." id="HhL-PZ-y1g" identifier="TSShortcut.showCharacterInfo:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showCharacterInfo:" target="-1" id="0Mw-v5-jMs"/>
@@ -638,8 +638,8 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Source" id="183">
-                    <menu key="submenu" title="Source" id="166">
+                <menuItem title="Sursă" id="183">
+                    <menu key="submenu" title="Sursă" id="166">
                         <items>
                             <menuItem title="Transformă în Comentariu" tag="1" keyEquivalent="{" id="416" identifier="TSShortcut.doCommentOrIndent:.1">
                                 <connections>
@@ -661,18 +661,18 @@
                                     <action selector="doCommentOrIndent:" target="-1" id="550"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="New Tag" keyEquivalent="2" id="627" identifier="TSShortcut.newTag:.0">
+                            <menuItem title="Etichetă de poziție" keyEquivalent="2" id="627" identifier="TSShortcut.newTag:.0">
                                 <connections>
                                     <action selector="newTag:" target="-1" id="628"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Close Current Environment" keyEquivalent="c" id="935" identifier="TSShortcut.closeCurrentEnvironment:.0">
+                            <menuItem title="Închide mediul curent" keyEquivalent="c" id="935" identifier="TSShortcut.closeCurrentEnvironment:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="closeCurrentEnvironment:" target="-1" id="942"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Close Tag" keyEquivalent="." id="TeD-rK-k8i" identifier="TSShortcut.closeTag:.0">
+                            <menuItem title="Închide eticheta" keyEquivalent="." id="TeD-rK-k8i" identifier="TSShortcut.closeTag:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="closeTag:" target="-1" id="rBu-oa-dLx"/>
@@ -687,7 +687,7 @@
                             <menuItem isSeparatorItem="YES" id="543">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Auto Completion" id="938" identifier="TSShortcut.changeAutoComplete:.0">
+                            <menuItem title="Completare automată" id="938" identifier="TSShortcut.changeAutoComplete:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="changeAutoComplete:" target="-1" id="940"/>
@@ -704,20 +704,20 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Wrap Lines" id="654">
-                                <menu key="submenu" title="Wrap Lines" id="655">
+                            <menuItem title="Împarte rândurile" id="654">
+                                <menu key="submenu" title="Împarte rândurile" id="655">
                                     <items>
-                                        <menuItem title="None" id="657" identifier="TSShortcut.setLineBreakMode:.0">
+                                        <menuItem title="Fără" id="657" identifier="TSShortcut.setLineBreakMode:.0">
                                             <connections>
                                                 <action selector="setLineBreakMode:" target="-1" id="664"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="by Word" tag="1" id="660" identifier="TSShortcut.setLineBreakMode:.1">
+                                        <menuItem title="După cuvânt" tag="1" id="660" identifier="TSShortcut.setLineBreakMode:.1">
                                             <connections>
                                                 <action selector="setLineBreakMode:" target="-1" id="661"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="by Character" tag="2" id="656" identifier="TSShortcut.setLineBreakMode:.2">
+                                        <menuItem title="După caracter" tag="2" id="656" identifier="TSShortcut.setLineBreakMode:.2">
                                             <connections>
                                                 <action selector="setLineBreakMode:" target="-1" id="662"/>
                                             </connections>
@@ -725,13 +725,13 @@
                                         <menuItem isSeparatorItem="YES" id="658">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Hard Wrap" id="659" identifier="TSShortcut.hardWrapSelection:.0">
+                                        <menuItem title="Împărțire fixă" id="659" identifier="TSShortcut.hardWrapSelection:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="hardWrapSelection:" target="-1" id="663"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Soft Wrap" id="831" identifier="TSShortcut.removeNewLinesFromSelection:.0">
+                                        <menuItem title="Împărțire flexibilă" id="831" identifier="TSShortcut.removeNewLinesFromSelection:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="removeNewLinesFromSelection:" target="-1" id="840"/>
@@ -740,7 +740,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Show Line Numbers" keyEquivalent="l" id="798" identifier="TSShortcut.showHideLineNumbers:.0">
+                            <menuItem title="Afișează numerele de linie" keyEquivalent="l" id="798" identifier="TSShortcut.showHideLineNumbers:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="showHideLineNumbers:" target="-1" id="799"/>
@@ -758,25 +758,25 @@
                                     <action selector="toggleExplColor:" target="-1" id="uwS-Ev-kp7"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Highlight Current Line" tag="14" id="utP-Tw-Ra7" identifier="TSShortcut.toggleSyntaxColorEntry:.14">
+                            <menuItem title="Evidențiază rândul curent" tag="14" id="utP-Tw-Ra7" identifier="TSShortcut.toggleSyntaxColorEntry:.14">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleSyntaxColorEntry:" target="-1" id="RRl-tg-uLm"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Use Block Insertion Cursor" id="oRe-EQ-no1" identifier="TSShortcut.toggleBlockCursor:.0">
+                            <menuItem title="Folosește un cursor bloc" id="oRe-EQ-no1" identifier="TSShortcut.toggleBlockCursor:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="toggleBlockCursor:" target="-1" id="1tu-UI-Hnd"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Invisible Characters" keyEquivalent="i" id="917" identifier="TSShortcut.showHideInvisibleCharacters:.0">
+                            <menuItem title="Afișează caracterele invizibile" keyEquivalent="i" id="917" identifier="TSShortcut.showHideInvisibleCharacters:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="showHideInvisibleCharacters:" target="-1" id="918"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Rescan Magic Comments" id="DwR-MQ-SFS" identifier="TSShortcut.RescanMagicComments:.0">
+                            <menuItem title="Rescanează comentariile speciale" id="DwR-MQ-SFS" identifier="TSShortcut.RescanMagicComments:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="RescanMagicComments:" target="-1" id="1Es-sD-YGz"/>
@@ -788,18 +788,18 @@
                             <menuItem title="Font" id="286">
                                 <menu key="submenu" title="Font" systemMenu="font" id="303">
                                     <items>
-                                        <menuItem title="Arată Fonturile" keyEquivalent="k" id="295" identifier="TSShortcut.orderFrontFontPanel:.0">
+                                        <menuItem title="Afișați fonturile" keyEquivalent="k" id="295" identifier="TSShortcut.orderFrontFontPanel:.0">
                                             <connections>
                                                 <action selector="orderFrontFontPanel:" target="202" id="319"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Gras" tag="2" id="287" identifier="TSShortcut.addFontTrait:.2">
+                                        <menuItem title="Aldin" tag="2" id="287" identifier="TSShortcut.addFontTrait:.2">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="addFontTrait:" target="202" id="318"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Italic" tag="1" id="296" identifier="TSShortcut.addFontTrait:.1">
+                                        <menuItem title="Cursiv" tag="1" id="296" identifier="TSShortcut.addFontTrait:.1">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="addFontTrait:" target="202" id="333"/>
@@ -808,12 +808,12 @@
                                         <menuItem isSeparatorItem="YES" id="782">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Bigger" tag="3" keyEquivalent="=" id="781" identifier="TSShortcut.modifyFont:.3">
+                                        <menuItem title="Mai mare" tag="3" keyEquivalent="=" id="781" identifier="TSShortcut.modifyFont:.3">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="783"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Smaller" tag="4" keyEquivalent="-" id="780" identifier="TSShortcut.modifyFont:.4">
+                                        <menuItem title="Mai mic" tag="4" keyEquivalent="-" id="780" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="784"/>
                                             </connections>
@@ -821,29 +821,29 @@
                                         <menuItem isSeparatorItem="YES" id="GT6-7Y-iyO">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Kern" id="F0e-1B-9C6">
+                                        <menuItem title="Spațiere selectivă" id="F0e-1B-9C6">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Kern" id="QFZ-FK-HEV">
+                                            <menu key="submenu" title="Spațiere selectivă" id="QFZ-FK-HEV">
                                                 <items>
-                                                    <menuItem title="Use Default" id="Ej2-gg-Sj8" identifier="TSShortcut.useStandardKerning:.0">
+                                                    <menuItem title="Utilizare valori implicite" id="Ej2-gg-Sj8" identifier="TSShortcut.useStandardKerning:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useStandardKerning:" target="-1" id="iy9-Xo-cxn"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Use None" id="cgc-Rt-kMq" identifier="TSShortcut.turnOffKerning:.0">
+                                                    <menuItem title="Nu utilizați nimic" id="cgc-Rt-kMq" identifier="TSShortcut.turnOffKerning:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="turnOffKerning:" target="-1" id="EQO-5R-3WE"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Tighten" id="WIX-Vk-vF8" identifier="TSShortcut.tightenKerning:.0">
+                                                    <menuItem title="Mai strâns" id="WIX-Vk-vF8" identifier="TSShortcut.tightenKerning:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="tightenKerning:" target="-1" id="uqs-ac-8UQ"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Loosen" id="1nf-QJ-vHI" identifier="TSShortcut.loosenKerning:.0">
+                                                    <menuItem title="Mai larg" id="1nf-QJ-vHI" identifier="TSShortcut.loosenKerning:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="loosenKerning:" target="-1" id="4VD-I5-D7T"/>
@@ -852,23 +852,23 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Ligatures" id="86K-Xm-hbp">
+                                        <menuItem title="Ligaturi" id="86K-Xm-hbp">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Ligatures" id="lbv-82-wI9">
+                                            <menu key="submenu" title="Ligaturi" id="lbv-82-wI9">
                                                 <items>
-                                                    <menuItem title="Use Default" id="q3W-1k-Z36" identifier="TSShortcut.useStandardLigatures:.0">
+                                                    <menuItem title="Utilizare valori implicite" id="q3W-1k-Z36" identifier="TSShortcut.useStandardLigatures:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useStandardLigatures:" target="-1" id="KvK-tJ-07m"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Use None" id="YTr-NE-77Z" identifier="TSShortcut.turnOffLigatures:.0">
+                                                    <menuItem title="Nu utilizați nimic" id="YTr-NE-77Z" identifier="TSShortcut.turnOffLigatures:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="turnOffLigatures:" target="-1" id="T9x-WE-IB8"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Use All" id="yDW-8c-Lzt" identifier="TSShortcut.useAllLigatures:.0">
+                                                    <menuItem title="Utilizați tot" id="yDW-8c-Lzt" identifier="TSShortcut.useAllLigatures:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="useAllLigatures:" target="-1" id="hMR-iU-oAL"/>
@@ -877,34 +877,34 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Baseline" id="gtZ-Os-miU">
+                                        <menuItem title="Linie de bază" id="gtZ-Os-miU">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Baseline" id="lSS-8H-A0N">
+                                            <menu key="submenu" title="Linie de bază" id="lSS-8H-A0N">
                                                 <items>
-                                                    <menuItem title="Use Default" id="dnD-8h-wHM" identifier="TSShortcut.unscript:.0">
+                                                    <menuItem title="Utilizare valori implicite" id="dnD-8h-wHM" identifier="TSShortcut.unscript:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="unscript:" target="-1" id="r5m-UH-bgl"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Superscript" id="2QB-zu-5FC" identifier="TSShortcut.superscript:.0">
+                                                    <menuItem title="Exponent" id="2QB-zu-5FC" identifier="TSShortcut.superscript:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="superscript:" target="-1" id="0ZD-WC-IZa"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Subscript" id="Z4j-Xn-8CE" identifier="TSShortcut.subscript:.0">
+                                                    <menuItem title="Indice" id="Z4j-Xn-8CE" identifier="TSShortcut.subscript:.0">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="subscript:" target="-1" id="AmL-gq-dh7"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Raise" keyEquivalent="5" id="xVi-te-ph8" identifier="TSShortcut.raiseBaseline:.0">
+                                                    <menuItem title="Mai sus" keyEquivalent="5" id="xVi-te-ph8" identifier="TSShortcut.raiseBaseline:.0">
                                                         <connections>
                                                             <action selector="raiseBaseline:" target="-1" id="rxk-4N-ccZ"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Lower" keyEquivalent="6" id="f0k-vI-pSH" identifier="TSShortcut.lowerBaseline:.0">
+                                                    <menuItem title="Mai jos" keyEquivalent="6" id="f0k-vI-pSH" identifier="TSShortcut.lowerBaseline:.0">
                                                         <connections>
                                                             <action selector="lowerBaseline:" target="-1" id="mzH-zR-2Am"/>
                                                         </connections>
@@ -913,13 +913,13 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="4fU-wS-rFh"/>
-                                        <menuItem title="Copy Style" keyEquivalent="c" id="tfh-pA-b5F" identifier="TSShortcut.copyFont:.0">
+                                        <menuItem title="Copiați stilul" keyEquivalent="c" id="tfh-pA-b5F" identifier="TSShortcut.copyFont:.0">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="copyFont:" target="-1" id="4eH-hs-a3Y"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Paste Style" keyEquivalent="v" id="pv0-Rf-YJt" identifier="TSShortcut.pasteFont:.0">
+                                        <menuItem title="Lipiți stilul" keyEquivalent="v" id="pv0-Rf-YJt" identifier="TSShortcut.pasteFont:.0">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="pasteFont:" target="-1" id="KPE-OG-cpN"/>
@@ -931,12 +931,12 @@
                             <menuItem isSeparatorItem="YES" id="668">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Save Source Position" id="669" identifier="TSShortcut.saveSourcePosition:.0">
+                            <menuItem title="Salvează poziția sursei" id="669" identifier="TSShortcut.saveSourcePosition:.0">
                                 <connections>
                                     <action selector="saveSourcePosition:" target="-1" id="670"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save Source Position for Portable" id="1022" identifier="TSShortcut.savePortableSourcePosition:.0">
+                            <menuItem title="Salvează poziția sursei (portabil)" id="1022" identifier="TSShortcut.savePortableSourcePosition:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="savePortableSourcePosition:" target="-1" id="1024"/>
@@ -959,9 +959,9 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Tags" id="VOh-D1-b92">
+                <menuItem title="Etichete" id="VOh-D1-b92">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Tags" id="K3E-FO-5kM"/>
+                    <menu key="submenu" title="Etichete" id="K3E-FO-5kM"/>
                 </menuItem>
                 <menuItem title="Compilare" id="344">
                     <menu key="submenu" title="Compilare" id="343">
@@ -977,7 +977,7 @@
                                     <action selector="doTypeset:" target="-1" id="1027"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Typeset with Alternate Engine" tag="-2" alternate="YES" keyEquivalent="t" id="WAv-j8-6Mt" identifier="TSShortcut.doAlternateTypeset:.-2">
+                            <menuItem title="Compilare cu motorul alternativ" tag="-2" alternate="YES" keyEquivalent="t" id="WAv-j8-6Mt" identifier="TSShortcut.doAlternateTypeset:.-2">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="doAlternateTypeset:" target="-1" id="usJ-c0-qxL"/>
@@ -1035,7 +1035,7 @@
                 <menuItem title="Previzualizare" id="335">
                     <menu key="submenu" title="Previzualizare" id="336">
                         <items>
-                            <menuItem title="Drawer" id="646" identifier="TSShortcut.toggleDrawer:.0">
+                            <menuItem title="Sertar" id="646" identifier="TSShortcut.toggleDrawer:.0">
                                 <connections>
                                     <action selector="toggleDrawer:" target="-1" id="651"/>
                                 </connections>
@@ -1043,12 +1043,12 @@
                             <menuItem isSeparatorItem="YES" id="647">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Pagina Precedentă" id="339" identifier="TSShortcut.previousPage:.0">
+                            <menuItem title="Pagina anterioară" id="339" identifier="TSShortcut.previousPage:.0">
                                 <connections>
                                     <action selector="previousPage:" target="-1" id="349"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Pagina Următoare" id="337" identifier="TSShortcut.nextPage:.0">
+                            <menuItem title="Pagina următoare" id="337" identifier="TSShortcut.nextPage:.0">
                                 <connections>
                                     <action selector="nextPage:" target="-1" id="350"/>
                                 </connections>
@@ -1056,12 +1056,12 @@
                             <menuItem isSeparatorItem="YES" id="448">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Back" id="648" identifier="TSShortcut.goBack:.0">
+                            <menuItem title="Înapoi" id="648" identifier="TSShortcut.goBack:.0">
                                 <connections>
                                     <action selector="goBack:" target="-1" id="652"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Forward" id="649" identifier="TSShortcut.goForward:.0">
+                            <menuItem title="Înainte" id="649" identifier="TSShortcut.goForward:.0">
                                 <connections>
                                     <action selector="goForward:" target="-1" id="653"/>
                                 </connections>
@@ -1090,7 +1090,7 @@
                                     <action selector="toggleLinkPopups:" target="-1" id="qef-g1-xDc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Annotation Panel..." id="GE9-Qq-3Br" identifier="TSShortcut.displayChoicesPanel:.0">
+                            <menuItem title="Panou de adnotări..." id="GE9-Qq-3Br" identifier="TSShortcut.displayChoicesPanel:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChoicesPanel:" target="-1" id="Ur9-Nc-Jl6"/>
@@ -1102,7 +1102,7 @@
                             <menuItem title="Mărire" id="552">
                                 <menu key="submenu" title="Mărire" id="553">
                                     <items>
-                                        <menuItem title="Dimensiunea Reală" tag="1" id="554" identifier="TSShortcut.changePDFViewSize:.1">
+                                        <menuItem title="Dimensiune efectivă" tag="1" id="554" identifier="TSShortcut.changePDFViewSize:.1">
                                             <connections>
                                                 <action selector="changePDFViewSize:" target="-1" id="596"/>
                                             </connections>
@@ -1120,13 +1120,13 @@
                                         <menuItem isSeparatorItem="YES" id="790">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="Zoom In" keyEquivalent="+" id="789" identifier="TSShortcut.zoomIn:.0">
+                                        <menuItem title="Zoom înainte" keyEquivalent="+" id="789" identifier="TSShortcut.zoomIn:.0">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="zoomIn:" target="-1" id="794"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Zoom Out" keyEquivalent="_" id="788" identifier="TSShortcut.zoomOut:.0">
+                                        <menuItem title="Zoom înapoi" keyEquivalent="_" id="788" identifier="TSShortcut.zoomOut:.0">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="zoomOut:" target="-1" id="795"/>
@@ -1169,7 +1169,7 @@
                                                 <action selector="changeImageCopyType:" target="-1" id="582"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="TIFF (uncompressed)" tag="1" id="580" identifier="TSShortcut.changeImageCopyType:.1">
+                                        <menuItem title="TIFF (necomprimat)" tag="1" id="580" identifier="TSShortcut.changeImageCopyType:.1">
                                             <connections>
                                                 <action selector="changeImageCopyType:" target="-1" id="589"/>
                                             </connections>
@@ -1184,17 +1184,17 @@
                                                 <action selector="changeImageCopyType:" target="-1" id="590"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="JPEG (High)" tag="11" id="579" identifier="TSShortcut.changeImageCopyType:.11">
+                                        <menuItem title="JPEG (calitate ridicată)" tag="11" id="579" identifier="TSShortcut.changeImageCopyType:.11">
                                             <connections>
                                                 <action selector="changeImageCopyType:" target="-1" id="586"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="JPEG (Medium)" tag="13" id="570" identifier="TSShortcut.changeImageCopyType:.13">
+                                        <menuItem title="JPEG (calitate medie)" tag="13" id="570" identifier="TSShortcut.changeImageCopyType:.13">
                                             <connections>
                                                 <action selector="changeImageCopyType:" target="-1" id="587"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="JPEG (Low)" tag="15" id="573" identifier="TSShortcut.changeImageCopyType:.15">
+                                        <menuItem title="JPEG (calitate redusă)" tag="15" id="573" identifier="TSShortcut.changeImageCopyType:.15">
                                             <connections>
                                                 <action selector="changeImageCopyType:" target="-1" id="585"/>
                                             </connections>
@@ -1215,13 +1215,13 @@
                             <menuItem isSeparatorItem="YES" id="671">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Show HTML Window" id="6uG-3f-Yqn" identifier="TSShortcut.showHTMLWindow:.0">
+                            <menuItem title="Afișează fereastra HTML" id="6uG-3f-Yqn" identifier="TSShortcut.showHTMLWindow:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showHTMLWindow:" target="-1" id="1OP-1X-evT"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save HTML Window Position" id="Xgt-tp-zQd" identifier="TSShortcut.saveHTMLPosition:.0">
+                            <menuItem title="Salvează poziția ferestrei HTML" id="Xgt-tp-zQd" identifier="TSShortcut.saveHTMLPosition:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="saveHTMLPosition:" target="-1" id="QwP-Sm-5cl"/>
@@ -1230,12 +1230,12 @@
                             <menuItem isSeparatorItem="YES" id="jFE-KD-r23">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Save Preview Position" id="672" identifier="TSShortcut.savePreviewPosition:.0">
+                            <menuItem title="Salvează poziția previzualizării" id="672" identifier="TSShortcut.savePreviewPosition:.0">
                                 <connections>
                                     <action selector="savePreviewPosition:" target="-1" id="673"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save Preview Position for Portable" id="1023" identifier="TSShortcut.savePortablePreviewPosition:.0">
+                            <menuItem title="Salvează poziția previzualizării (portabil)" id="1023" identifier="TSShortcut.savePortablePreviewPosition:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="savePortablePreviewPosition:" target="-1" id="1025"/>
@@ -1247,12 +1247,12 @@
                 <menuItem title="Fereastră" id="19">
                     <menu key="submenu" title="Fereastră" systemMenu="window" id="24">
                         <items>
-                            <menuItem title="Miniaturizează Fereastra" keyEquivalent="m" id="23" identifier="TSShortcut.performMiniaturize:.0">
+                            <menuItem title="Minimizați" keyEquivalent="m" id="23" identifier="TSShortcut.performMiniaturize:.0">
                                 <connections>
                                     <action selector="performMiniaturize:" target="-1" id="37"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Redimensionează   Fereastra" id="140" identifier="TSShortcut.performZoom:.0">
+                            <menuItem title="Zoom" id="140" identifier="TSShortcut.performZoom:.0">
                                 <connections>
                                     <action selector="performZoom:" target="-1" id="143"/>
                                 </connections>
@@ -1262,13 +1262,13 @@
                                     <action selector="fullscreen:" target="-1" id="678"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="1019" identifier="TSShortcut.toggleFullScreen:.0">
+                            <menuItem title="Afișați pe tot ecranul" keyEquivalent="f" id="1019" identifier="TSShortcut.toggleFullScreen:.0">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="1020"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Adu Totul în Prim-Plan" id="5" identifier="TSShortcut.arrangeInFront:.0">
+                            <menuItem title="Aranjați în față" id="5" identifier="TSShortcut.arrangeInFront:.0">
                                 <connections>
                                     <action selector="arrangeInFront:" target="-1" id="39"/>
                                 </connections>
@@ -1279,31 +1279,31 @@
                                     <action selector="splitWindow:" target="-1" id="495"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Split Window Vertically" alternate="YES" keyEquivalent="2" id="qkB-si-i0y" identifier="TSShortcut.splitWindow:.vertical">
+                            <menuItem title="Scindează fereastra vertical" alternate="YES" keyEquivalent="2" id="qkB-si-i0y" identifier="TSShortcut.splitWindow:.vertical">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES"/>
                                 <connections>
                                     <action selector="splitWindow:" target="-1" id="92E-dY-39M"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Switch Views" keyEquivalent="2" id="q2P-n7-0bW" identifier="TSShortcut.switchSplitViews:.0">
+                            <menuItem title="Comută vizualizările" keyEquivalent="2" id="q2P-n7-0bW" identifier="TSShortcut.switchSplitViews:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                 <connections>
                                     <action selector="switchSplitViews:" target="-1" id="Fik-Va-fnK"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Source ⇔ Preview" keyEquivalent="1" id="624" identifier="TSShortcut.associatedWindow:.0">
+                            <menuItem title="Sursă ⇔ Previzualizare" keyEquivalent="1" id="624" identifier="TSShortcut.associatedWindow:.0">
                                 <connections>
                                     <action selector="associatedWindow:" target="-1" id="625"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="OC6-Xy-Het"/>
-                            <menuItem title="Use One Window" id="u1M-02-XZG" identifier="TSShortcut.doMove:.0">
+                            <menuItem title="Folosește o singură fereastră" id="u1M-02-XZG" identifier="TSShortcut.doMove:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="doMove:" target="-1" id="FgF-nl-Rpr"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Use Separate Windows" id="gVH-Ej-r5w" identifier="TSShortcut.doSeparateWindows:.0">
+                            <menuItem title="Folosește ferestre separate" id="gVH-Ej-r5w" identifier="TSShortcut.doSeparateWindows:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="doSeparateWindows:" target="-1" id="MHa-RT-1k9"/>
@@ -1312,12 +1312,12 @@
                             <menuItem isSeparatorItem="YES" id="434">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Next Source Window" keyEquivalent="" id="910" identifier="TSShortcut.nextTeXWindow:.0">
+                            <menuItem title="Fereastra sursă următoare" keyEquivalent="" id="910" identifier="TSShortcut.nextTeXWindow:.0">
                                 <connections>
                                     <action selector="nextTeXWindow:" target="-1" id="915"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Previous Source Window" keyEquivalent="" id="911" identifier="TSShortcut.previousTeXWindow:.0">
+                            <menuItem title="Fereastra sursă anterioară" keyEquivalent="" id="911" identifier="TSShortcut.previousTeXWindow:.0">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="previousTeXWindow:" target="-1" id="916"/>
@@ -1326,12 +1326,12 @@
                             <menuItem isSeparatorItem="YES" id="912">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Maschează Bara cu Instrumente" id="439" identifier="TSShortcut.toggleToolbarShown:.0">
+                            <menuItem title="Ascundeți bara de instrumente" id="439" identifier="TSShortcut.toggleToolbarShown:.0">
                                 <connections>
                                     <action selector="toggleToolbarShown:" target="-1" id="444"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Personalizează Bara cu Instrumente..." id="440" identifier="TSShortcut.runToolbarCustomizationPalette:.0">
+                            <menuItem title="Personalizare bară de instrumente..." id="440" identifier="TSShortcut.runToolbarCustomizationPalette:.0">
                                 <connections>
                                     <action selector="runToolbarCustomizationPalette:" target="-1" id="445"/>
                                 </connections>
@@ -1357,13 +1357,13 @@
                 <menuItem title="Ajutor" id="136">
                     <menu key="submenu" title="Ajutor" id="137">
                         <items>
-                            <menuItem title="About This Release" id="848" identifier="TSShortcut.displayThisRelease:.0">
+                            <menuItem title="Despre această versiune" id="848" identifier="TSShortcut.displayThisRelease:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayThisRelease:" target="690" id="850"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Changes" id="yjq-1z-voZ" identifier="TSShortcut.displayChanges:.0">
+                            <menuItem title="Modificări" id="yjq-1z-voZ" identifier="TSShortcut.displayChanges:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayChanges:" target="690" id="yLf-XP-D7Y"/>
@@ -1372,35 +1372,35 @@
                             <menuItem isSeparatorItem="YES" id="ERI-3k-CFx">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeX Live Documentation" id="cqC-tt-rt6" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
+                            <menuItem title="Documentația TeX Live" id="cqC-tt-rt6" identifier="TSShortcut.displayTeXLiveDocumentation:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXLiveDocumentation:" target="690" id="AKl-ph-kR7"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Help for Package..." keyEquivalent="i" id="818" identifier="TSShortcut.displayHelpForPackage:.0">
+                            <menuItem title="Afișează ajutorul pentru pachet..." keyEquivalent="i" id="818" identifier="TSShortcut.displayHelpForPackage:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="displayHelpForPackage:" target="690" id="819"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="849"/>
-                            <menuItem title="First Steps with TeXShop" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
+                            <menuItem title="Primii pași cu TeXShop" id="682" identifier="TSShortcut.displayGettingStartedTeXShop:.0">
                                 <connections>
                                     <action selector="displayGettingStartedTeXShop:" target="690" id="694"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Demos" id="683">
-                                <menu key="submenu" title="TeXShop Demos" id="684"/>
+                            <menuItem title="Demonstrații TeXShop" id="683">
+                                <menu key="submenu" title="Demonstrații TeXShop" id="684"/>
                             </menuItem>
-                            <menuItem title="TeXShop Manual" id="IaU-hn-TM6" identifier="TSShortcut.displayManual:.0">
+                            <menuItem title="Manualul TeXShop" id="IaU-hn-TM6" identifier="TSShortcut.displayManual:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayManual:" target="690" id="g5s-hX-tA1"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="kzS-ig-cpu"/>
-                            <menuItem title="HTML Commands" id="c8z-2W-phS" identifier="TSShortcut.displayHTMLHelp:.0">
+                            <menuItem title="Comenzi HTML" id="c8z-2W-phS" identifier="TSShortcut.displayHTMLHelp:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayHTMLHelp:" target="690" id="VlR-dK-ttJ"/>
@@ -1411,37 +1411,37 @@
                                     <action selector="showHelp:" target="-1" id="144"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="File Encoding and TeXShop" id="3Rr-oG-Snr" identifier="TSShortcut.displayFileEncoding:.0">
+                            <menuItem title="Codificarea fișierelor și TeXShop" id="3Rr-oG-Snr" identifier="TSShortcut.displayFileEncoding:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayFileEncoding:" target="690" id="e3E-5P-1qc"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Tips and Tricks " id="913" identifier="TSShortcut.displayTipsandTricks:.0">
+                            <menuItem title="Sfaturi și trucuri TeXShop " id="913" identifier="TSShortcut.displayTipsandTricks:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTipsandTricks:" target="690" id="914"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="TeXShop Feature Confusion" id="qFC-td-O9D" identifier="TSShortcut.displayTeXShopConfusion:.0">
+                            <menuItem title="Confuzii privind funcțiile TeXShop" id="qFC-td-O9D" identifier="TSShortcut.displayTeXShopConfusion:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayTeXShopConfusion:" target="690" id="qrE-Fc-RtY"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Comment Lines and Hidden Settings" id="Ojz-or-SBx" identifier="TSShortcut.displayCommentLines:.0">
+                            <menuItem title="Linii de comentarii și configurări ascunse" id="Ojz-or-SBx" identifier="TSShortcut.displayCommentLines:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayCommentLines:" target="690" id="dkw-7h-AFN"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Recent TeX Fonts" id="fus-dG-kXk" identifier="TSShortcut.displayRecentTeXFonts:.0">
+                            <menuItem title="Fonturi TeX recente" id="fus-dG-kXk" identifier="TSShortcut.displayRecentTeXFonts:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayRecentTeXFonts:" target="690" id="vEK-Op-orz"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Notes on Applescript in TeXShop" id="iX4-9W-nBL" identifier="TSShortcut.displayNotesonApplescript:.0">
+                            <menuItem title="Note despre AppleScript în TeXShop" id="iX4-9W-nBL" identifier="TSShortcut.displayNotesonApplescript:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="displayNotesonApplescript:" target="690" id="fKJ-3S-UEm"/>
@@ -1450,7 +1450,7 @@
                             <menuItem isSeparatorItem="YES" id="704">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="First Steps with General Typesetting" id="703" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
+                            <menuItem title="Primii pași în tehnoredactarea generală" id="703" identifier="TSShortcut.displayGettingStartedXeTeX:.0">
                                 <connections>
                                     <action selector="displayGettingStartedXeTeX:" target="690" id="756"/>
                                 </connections>
@@ -1458,22 +1458,22 @@
                             <menuItem isSeparatorItem="YES" id="702">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="First Steps with Mathematical Typesetting" id="701" identifier="TSShortcut.displayGettingStartedLatex:.0">
+                            <menuItem title="Primii pași în tehnoredactarea matematică" id="701" identifier="TSShortcut.displayGettingStartedLatex:.0">
                                 <connections>
                                     <action selector="displayGettingStartedLatex:" target="690" id="757"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="George Grätzer's Short Course" id="700" identifier="TSShortcut.displayShortCourse:.0">
+                            <menuItem title="Cursul scurt al lui George Grätzer" id="700" identifier="TSShortcut.displayShortCourse:.0">
                                 <connections>
                                     <action selector="displayShortCourse:" target="690" id="758"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Short Course Supplements --&gt; Desktop" id="699" identifier="TSShortcut.supplementsToDesktop:.0">
+                            <menuItem title="Suplimente la cursul scurt --&gt; Birou" id="699" identifier="TSShortcut.supplementsToDesktop:.0">
                                 <connections>
                                     <action selector="supplementsToDesktop:" target="690" id="759"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Short Course Symbol Tables" id="796" identifier="TSShortcut.displayTables:.0">
+                            <menuItem title="Tabele de simboluri pentru cursul scurt" id="796" identifier="TSShortcut.displayTables:.0">
                                 <connections>
                                     <action selector="displayTables:" target="690" id="797"/>
                                 </connections>
@@ -1522,9 +1522,9 @@
                     </popUpButtonCell>
                 </popUpButton>
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="518">
-                    <rect key="frame" x="26" y="13" width="61" height="14"/>
+                    <rect key="frame" x="8" y="13" width="79" height="14"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Encoding:" id="825">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Codificare:" id="825">
                         <font key="font" metaFont="controlContent" size="11"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1579,7 +1579,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="817">
                         <rect key="frame" x="141" y="11" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="830">
+                        <buttonCell key="cell" type="push" title="Anulați" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="830">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -1610,7 +1610,7 @@ Gw
                 <outlet property="tableView" destination="891" id="904"/>
             </connections>
         </customObject>
-        <window title="Select Source:" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Stationery" animationBehavior="default" id="885" userLabel="StationeryWindow" customClass="NSPanel">
+        <window title="Selectați sursa:" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Stationery" animationBehavior="default" id="885" userLabel="StationeryWindow" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="425" y="845" width="511" height="441"/>
@@ -1635,7 +1635,7 @@ Gw
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn identifier="Source" width="100" minWidth="100" maxWidth="3.4028234663852886e+38" id="895">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Source">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Șablon">
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
@@ -1647,7 +1647,7 @@ Gw
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         </tableColumn>
                                         <tableColumn identifier="Description" width="389" minWidth="100" maxWidth="1000" id="894">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Description">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Descriere">
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
                                             </tableHeaderCell>
@@ -1696,7 +1696,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="887">
                         <rect key="frame" x="293" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
-                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="899">
+                        <buttonCell key="cell" type="push" title="Anulați" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="899">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -1710,7 +1710,7 @@ Gw
                 </subviews>
             </view>
         </window>
-        <window title="Open Style File" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="919" userLabel="StyleHelp" customClass="NSPanel">
+        <window title="Deschide fișierul de stil" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="919" userLabel="StyleHelp" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="633" y="424" width="323" height="136"/>
@@ -1746,7 +1746,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="923">
                         <rect key="frame" x="141" y="11" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="926">
+                        <buttonCell key="cell" type="push" title="Anulați" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="926">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -1760,7 +1760,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="924">
                         <rect key="frame" x="17" y="89" width="289" height="27"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Style File Name" id="925">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Numele fișierului de stil" id="925">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

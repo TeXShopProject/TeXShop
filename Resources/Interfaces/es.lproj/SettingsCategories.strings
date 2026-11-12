@@ -6,7 +6,7 @@
 "engines" = "Motor";
 "misc-1" = "Misc1";
 "misc-2" = "Misc2";
-"themes" = "Modos";
+"themes" = "Temas";
 
 "general" = "General";
 "documents" = "Documentos y guardado";
@@ -92,7 +92,7 @@
 "catalog.editor.1.4.title" = "Interlineado:";
 "catalog.editor.1.4.unit" = "pt";
 "catalog.editor.1.4.note" = "El espacio que se añade entre las líneas, también entre las líneas de un párrafo dividido.";
-"group.editor.2.title" = "Tecleando";
+"group.editor.2.title" = "Escritura";
 "catalog.editor.2.0.title" = "Seleccionar al activar";
 "catalog.editor.2.0.note" = "Al hacer clic en una ventana de código que no está delante, el mismo clic también mueve el cursor.";
 "catalog.editor.2.1.title" = "Rodear el texto seleccionado al escribir un delimitador";
@@ -143,7 +143,7 @@
 "catalog.editor.8.0.choice.9" = "table";
 "catalog.editor.8.0.choice.10" = "marca personal";
 "group.spelling.0.title" = "Comprobar ortografía";
-"catalog.spelling.0.0.title" = "Comprobar la ortografía al escribir";
+"catalog.spelling.0.0.title" = "Comprobar ortografía mientras se escribe";
 "catalog.spelling.0.1.title" = "Autocorregir ortografía";
 "catalog.spelling.0.2.title" = "Diccionario";
 "group.spelling.1.title" = "Método";
@@ -154,11 +154,11 @@
 "catalog.spelling.1.3.title" = "No comprobar comandos LaTeX";
 "catalog.spelling.1.4.title" = "No comprobar parámetros";
 "catalog.spelling.1.5.title" = "No comprobar comentarios";
-"group.appearance.0.title" = "Modos";
+"group.appearance.0.title" = "Temas";
 "catalog.appearance.0.0.title" = "Modo claro";
 "catalog.appearance.0.1.title" = "Modo oscuro";
 "group.appearance.1.title" = "Editar tema";
-"catalog.appearance.1.0.title" = "Editar el modo";
+"catalog.appearance.1.0.title" = "Tema a editar";
 "catalog.appearance.1.1.choice.0" = "Migrar ajustes anteriores";
 "catalog.appearance.1.1.choice.1" = "Nuevo tema";
 "catalog.appearance.1.1.choice.2" = "Sobrescribir tema";
@@ -259,16 +259,16 @@
 "catalog.typesetting.3.3.title" = "Configurar automáticamente…";
 "group.typesetting.4.title" = "pdfTeX";
 "catalog.typesetting.4.0.title" = "TeX";
-"catalog.typesetting.4.0.button" = "por defecto";
+"catalog.typesetting.4.0.button" = "Por omisión";
 "catalog.typesetting.4.1.title" = "LaTeX ";
-"catalog.typesetting.4.1.button" = "por defecto";
+"catalog.typesetting.4.1.button" = "Por omisión";
 "catalog.typesetting.4.2.title" = "Avisos shell-escape";
 "catalog.typesetting.4.2.note" = "Pregunta antes de componer si la orden TeX o LaTeX de arriba contiene --shell-escape.";
 "group.typesetting.5.title" = "TeX + dvipdfmx / TeX + dvips + distiller";
 "catalog.typesetting.5.0.title" = "TeX";
-"catalog.typesetting.5.0.button" = "por defecto";
+"catalog.typesetting.5.0.button" = "Por omisión";
 "catalog.typesetting.5.1.title" = "LaTeX ";
-"catalog.typesetting.5.1.button" = "por defecto";
+"catalog.typesetting.5.1.button" = "Por omisión";
 "catalog.typesetting.5.2.title" = "Guardar el archivo PostScript";
 "catalog.typesetting.5.2.note" = "Al componer con TeX + dvips + distiller, conserva el archivo PostScript intermedio.";
 "group.typesetting.6.title" = "Script personal";
@@ -286,7 +286,7 @@
 "catalog.typesetting.8.1.note" = "Predeterminado: bibtex";
 "group.typesetting.9.title" = "Soporte pTeX (japonés)";
 "catalog.typesetting.9.0.title" = "Compatibilidad con el paquete otf";
-"group.console.0.title" = "Tipografía";
+"group.console.0.title" = "Tipo de letra";
 "catalog.console.0.0.title" = "Tipografía para la consola";
 "catalog.console.0.1.title" = "Usar también en editor de macros";
 "group.console.1.title" = "Acciones";

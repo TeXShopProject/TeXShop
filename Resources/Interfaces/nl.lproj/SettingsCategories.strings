@@ -215,7 +215,7 @@
 "catalog.preview.0.1.title" = "Na wijziging van de venstergrootte";
 "catalog.preview.0.2.title" = "Vergroting";
 "catalog.preview.0.2.unit" = "%";
-"catalog.preview.0.2.button" = "Reset";
+"catalog.preview.0.2.button" = "Stel in";
 "catalog.preview.0.3.title" = "Standaard muismodus";
 "catalog.preview.0.4.title" = "Niet bladeren door te scrollen";
 "catalog.preview.0.4.note" = "Bij ‘Enkele pagina’ en ‘Twee pagina’s’ stopt scrollen met het muiswiel of het trackpad aan de boven- en onderkant van de pagina.";

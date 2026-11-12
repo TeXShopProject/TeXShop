@@ -6,7 +6,7 @@
 "329.title" = "Default Page Style";
 "330.title" = "Default Mouse Mode";
 "332.title" = "Ampliar";
-"333.title" = "Página única";
+"333.title" = "Uma página";
 "335.title" = "Ampliar mais";
 "336.title" = "OtherViews";
 "337.title" = "Selecionar PDF";
@@ -15,15 +15,15 @@
 "342.title" = "Magnification Method";
 "343.title" = "Duas páginas";
 "344.title" = "Ampliação fixa";
-"346.title" = "Páginas duplas contínuas";
+"346.title" = "Duas páginas contínuas";
 "347.title" = "Páginas contínuas";
 "348.title" = "OtherViews";
 "45.title" = "Lembrar-se da última posição";
 "47.title" = "Posição da janela";
 "48.title" = "Abrir sempre numa posição fixa";
 "501.title" = "Disposição de páginas duplas";
-"505.title" = "Páginas da esquerda para a direita";
-"507.title" = "Páginas da direita para a esquerda";
+"505.title" = "Da esquerda para a direita";
+"507.title" = "Da direita para a esquerda";
 "555.title" = "External Editor";
 "5HT-3x-Zr6.title" = "Monitor";
 "636.title" = "Selecionar texto";

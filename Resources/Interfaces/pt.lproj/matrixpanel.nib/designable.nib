@@ -38,7 +38,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="398" height="391"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button toolTip="Insert matrix into project" verticalHuggingPriority="750" id="2349">
+                    <button toolTip="Inserir a matriz no projeto" verticalHuggingPriority="750" id="2349">
                         <rect key="frame" x="30" y="8" width="112" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES"/>
                         <buttonCell key="cell" type="push" title="Inserir" bezelStyle="rounded" alignment="center" controlSize="small" state="on" borderStyle="border" id="2483">
@@ -49,7 +49,7 @@
                             <action selector="insertMatrix:" target="-2" id="2429"/>
                         </connections>
                     </button>
-                    <matrix toolTip="Right matrix delimiter" verticalHuggingPriority="750" allowsEmptySelection="NO" id="2352">
+                    <matrix toolTip="Delimitador direito da matriz" verticalHuggingPriority="750" allowsEmptySelection="NO" id="2352">
                         <rect key="frame" x="17" y="85" width="230" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -97,7 +97,7 @@
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="radio" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="mini" toolTip="custom right delimiter" tag="5" inset="2" id="2368">
+                                <buttonCell type="radio" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="mini" toolTip="Delimitador direito personalizado" tag="5" inset="2" id="2368">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="miniSystem"/>
                                 </buttonCell>
@@ -119,19 +119,19 @@
                         </buttonCell>
                         <cells>
                             <column>
-                                <buttonCell type="push" title="Limpar tudo" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Delete all entries" inset="2" id="2351">
+                                <buttonCell type="push" title="Limpar tudo" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Apagar todas as entradas" inset="2" id="2351">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label"/>
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="push" title="Matriz identidade" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Set matrix to identity" tag="1" inset="2" id="2350">
+                                <buttonCell type="push" title="Matriz identidade" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Definir a matriz como identidade" tag="1" inset="2" id="2350">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label"/>
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="push" title="Matriz com zeros" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Set all matrix entries to zero" tag="2" inset="2" id="2348">
+                                <buttonCell type="push" title="Matriz com zeros" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" toolTip="Definir todas as entradas da matriz como zero" tag="2" inset="2" id="2348">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label"/>
                                 </buttonCell>
@@ -141,7 +141,7 @@
                             <action selector="resetMatrix:" target="-2" id="2428"/>
                         </connections>
                     </matrix>
-                    <textField toolTip="Custom right delimiter" verticalHuggingPriority="750" id="2359">
+                    <textField toolTip="Delimitador direito personalizado" verticalHuggingPriority="750" id="2359">
                         <rect key="frame" x="235" y="87" width="38" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" bezelStyle="round" id="2485">
@@ -150,7 +150,7 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <matrix toolTip="Left matrix delimiter" verticalHuggingPriority="750" allowsEmptySelection="NO" autosizesCells="NO" id="2360">
+                    <matrix toolTip="Delimitador esquerdo da matriz" verticalHuggingPriority="750" allowsEmptySelection="NO" autosizesCells="NO" id="2360">
                         <rect key="frame" x="17" y="108" width="230" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -198,7 +198,7 @@
                                 </buttonCell>
                             </column>
                             <column>
-                                <buttonCell type="radio" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="mini" toolTip="Custom left delimiter" tag="5" inset="2" id="2358">
+                                <buttonCell type="radio" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="mini" toolTip="Delimitador esquerdo personalizado" tag="5" inset="2" id="2358">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="miniSystem"/>
                                 </buttonCell>
@@ -208,7 +208,7 @@
                             <action selector="brselChange:" target="-2" id="2447"/>
                         </connections>
                     </matrix>
-                    <scrollView toolTip="Only blue cells are being inserted" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="2384">
+                    <scrollView toolTip="Apenas as células azuis são inseridas" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="2384">
                         <rect key="frame" x="20" y="160" width="360" height="169"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="mZa-jR-1Ot">
@@ -309,7 +309,7 @@
                             <rect key="frame" x="2" y="2" width="362" height="35"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <matrix toolTip="Select environment: matrix for math and tabular for text" verticalHuggingPriority="750" allowsEmptySelection="NO" autosizesCells="NO" id="2430">
+                                <matrix toolTip="Selecione o ambiente: matrix para matemática e tabular para texto" verticalHuggingPriority="750" allowsEmptySelection="NO" autosizesCells="NO" id="2430">
                                     <rect key="frame" x="9" y="10" width="124" height="18"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -350,7 +350,7 @@
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </box>
-                    <button toolTip="Draw border" id="2441">
+                    <button toolTip="Desenhar borda" id="2441">
                         <rect key="frame" x="278" y="87" width="46" height="38"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="mat02" imagePosition="overlaps" alignment="left" borderStyle="border" inset="2" id="2493">
@@ -358,7 +358,7 @@
                             <font key="font" metaFont="label"/>
                         </buttonCell>
                     </button>
-                    <button toolTip="Draw grid" id="2442">
+                    <button toolTip="Desenhar grade" id="2442">
                         <rect key="frame" x="332" y="87" width="46" height="38"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="mat01" imagePosition="overlaps" alignment="left" borderStyle="border" inset="2" id="2494">
@@ -366,7 +366,7 @@
                             <font key="font" metaFont="label"/>
                         </buttonCell>
                     </button>
-                    <textField toolTip="Custom left delimiter" verticalHuggingPriority="750" id="2356">
+                    <textField toolTip="Delimitador esquerdo personalizado" verticalHuggingPriority="750" id="2356">
                         <rect key="frame" x="235" y="110" width="38" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" bezelStyle="round" id="2484">

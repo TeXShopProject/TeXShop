@@ -203,7 +203,7 @@ expected = {
     'en': [('Previous', 'Previous Page', 'Show previous page'), ('Next', 'Next Page', 'Show next page')],
     'ja': [('前のページ', '前のページ', '前のページを表示します'), ('次のページ', '次のページ', '次のページを表示します')],
     'de': [('Vorherige', 'Vorherige Seite', 'Vorherige Seite anzeigen'), ('Nächste', 'Nächste Seite', 'Nächste Seite anzeigen')],
-    'fr': [('Précédent', 'Page précédente', 'Affiche la page précédente'), ('Prochain', 'Page suivante', 'Affiche la page suivante')],
+    'fr': [('Précédent', 'Page précédente', 'Affiche la page précédente'), ('Suivant', 'Page suivante', 'Affiche la page suivante')],
 }
 objc = lambda text: '@"' + text.replace('\\', '\\\\').replace('"', '\\"') + '"'
 table = '@{' + ', '.join('@"%s": @[%s]' % (language, ', '.join('@[%s]' % ', '.join(map(objc, item)) for item in items))

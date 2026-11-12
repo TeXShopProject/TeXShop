@@ -40,7 +40,7 @@
 "group.general.2.title" = "Posição das janelas";
 "catalog.general.2.0.title" = "Fonte";
 "catalog.general.2.0.button" = "Escolher a posição atual";
-"catalog.general.2.1.title" = "Pré visualização";
+"catalog.general.2.1.title" = "Pré-visualização";
 "catalog.general.2.1.button" = "Escolher a posição atual";
 "catalog.general.2.2.title" = "Console";
 "catalog.general.2.2.button" = "Escolher a posição atual";
@@ -92,7 +92,7 @@
 "catalog.editor.1.4.title" = "Espaço entre linhas";
 "catalog.editor.1.4.unit" = "pt";
 "catalog.editor.1.4.note" = "O espaço acrescentado entre as linhas, inclusive entre as linhas de um parágrafo dividido.";
-"group.editor.2.title" = "Compondo";
+"group.editor.2.title" = "Digitação";
 "catalog.editor.2.0.title" = "Selecionar ao ativar";
 "catalog.editor.2.0.note" = "Ao clicar em uma janela de código-fonte que não está na frente, o mesmo clique também move o cursor.";
 "catalog.editor.2.1.title" = "Envolver o texto selecionado ao digitar um parêntese";
@@ -169,7 +169,7 @@
 "catalog.appearance.2.0.item.0" = "Fonte";
 "catalog.appearance.2.0.item.1" = "Console";
 "catalog.appearance.2.0.item.2" = "Log";
-"catalog.appearance.2.0.item.3" = "Pré visualização";
+"catalog.appearance.2.0.item.3" = "Pré-visualização";
 "group.appearance.3.title" = "Código-fonte";
 "catalog.appearance.3.0.item.0" = "Inserção";
 "catalog.appearance.3.0.item.1" = "Piscar";
@@ -213,12 +213,12 @@
 "group.preview.0.title" = "Exibição";
 "catalog.preview.0.0.title" = "Estilo de visualização padrão";
 "catalog.preview.0.1.title" = "Após redimensionar a janela";
-"catalog.preview.0.2.title" = "Zoom";
+"catalog.preview.0.2.title" = "Ampliação";
 "catalog.preview.0.2.unit" = "%";
 "catalog.preview.0.2.button" = "Definir";
 "catalog.preview.0.3.title" = "Comportamento padrão do mouse";
 "catalog.preview.0.4.title" = "Não mudar de página ao rolar";
-"catalog.preview.0.4.note" = "Em “Página simples” e “Páginas duplas”, a rolagem com a roda do mouse ou o trackpad para no topo e no fim da página.";
+"catalog.preview.0.4.note" = "Em “Uma única página” e “Página dupla”, a rolagem com a roda do mouse ou o trackpad para no topo e no fim da página.";
 "catalog.preview.0.6.title" = "Pop-ups de links";
 "catalog.preview.0.6.note" = "Valor inicial para os documentos abertos a partir de agora. Em um documento aberto, altere no menu “Página”.";
 "group.preview.1.title" = "Modo de página dupla";

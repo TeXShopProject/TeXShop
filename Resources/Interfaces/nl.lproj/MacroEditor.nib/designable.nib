@@ -92,7 +92,7 @@
 													<object class="NSTableHeaderCell" key="NSHeaderCell">
 														<int key="NSCellFlags">75497536</int>
 														<int key="NSCellFlags2">2048</int>
-														<string key="NSContents">Name</string>
+														<string key="NSContents">Naam</string>
 														<object class="NSFont" key="NSSupport" id="26">
 															<bool key="IBIsSystemFont">YES</bool>
 															<double key="NSSize">11</double>
@@ -144,7 +144,7 @@
 													<object class="NSTableHeaderCell" key="NSHeaderCell">
 														<int key="NSCellFlags">75497536</int>
 														<int key="NSCellFlags2">2048</int>
-														<string key="NSContents">Key</string>
+														<string key="NSContents">Toets</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSBackgroundColor" ref="1006921463"/>
 														<reference key="NSTextColor" ref="273357167"/>
@@ -291,7 +291,7 @@
 						<object class="NSTextField" id="83648561">
 							<reference key="NSNextResponder" ref="902523330"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{306, 71}, {30, 22}}</string>
+							<string key="NSFrame">{{318, 71}, {30, 22}}</string>
 							<reference key="NSSuperview" ref="902523330"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="594870136">
@@ -316,7 +316,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="515964291">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">Name:</string>
+								<string key="NSContents">Naam:</string>
 								<reference key="NSSupport" ref="843123216"/>
 								<reference key="NSControlView" ref="644377351"/>
 								<object class="NSColor" key="NSBackgroundColor" id="796629147">
@@ -333,13 +333,13 @@
 						<object class="NSTextField" id="669917395">
 							<reference key="NSNextResponder" ref="902523330"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{272, 73}, {38, 17}}</string>
+							<string key="NSFrame">{{272, 73}, {44, 17}}</string>
 							<reference key="NSSuperview" ref="902523330"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="98366957">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">Key:</string>
+								<string key="NSContents">Toets:</string>
 								<reference key="NSSupport" ref="843123216"/>
 								<reference key="NSControlView" ref="669917395"/>
 								<reference key="NSBackgroundColor" ref="796629147"/>
@@ -357,7 +357,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="42240423">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">Modifiers:</string>
+								<string key="NSContents">Speciaal:</string>
 								<reference key="NSSupport" ref="843123216"/>
 								<reference key="NSControlView" ref="457417270"/>
 								<reference key="NSBackgroundColor" ref="796629147"/>
@@ -567,7 +567,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="229174257">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">Content:</string>
+								<string key="NSContents">Inhoud:</string>
 								<reference key="NSSupport" ref="843123216"/>
 								<reference key="NSControlView" ref="1006741194"/>
 								<reference key="NSBackgroundColor" ref="796629147"/>
@@ -585,7 +585,7 @@
 							<object class="NSButtonCell" key="NSCell" id="344359806">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Save</string>
+								<string key="NSContents">Bewaar</string>
 								<reference key="NSSupport" ref="843123216"/>
 								<reference key="NSControlView" ref="618924028"/>
 								<int key="NSButtonFlags">-2038284288</int>
@@ -609,7 +609,7 @@
 							<object class="NSButtonCell" key="NSCell" id="202980112">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Cancel</string>
+								<string key="NSContents">Annuleer</string>
 								<reference key="NSSupport" ref="843123216"/>
 								<reference key="NSControlView" ref="783560080"/>
 								<int key="NSButtonFlags">-2038284288</int>
@@ -657,7 +657,7 @@
 							<object class="NSButtonCell" key="NSCell" id="963280836">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">New Item</string>
+								<string key="NSContents">Nieuw</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="250831801"/>
 								<int key="NSButtonFlags">-2038153216</int>
@@ -708,7 +708,7 @@
 							<object class="NSButtonCell" key="NSCell" id="16612310">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Separator</string>
+								<string key="NSContents">Scheiding</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="531318039"/>
 								<int key="NSButtonFlags">-2038022144</int>
@@ -732,7 +732,7 @@
 							<object class="NSButtonCell" key="NSCell" id="140368815">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Delete</string>
+								<string key="NSContents">Verwijder</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="177156927"/>
 								<int key="NSButtonFlags">-2038284288</int>
@@ -756,7 +756,7 @@
 							<object class="NSButtonCell" key="NSCell" id="204171404">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Duplicate</string>
+								<string key="NSContents">Dupliceer</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="65650735"/>
 								<int key="NSButtonFlags">-2038284288</int>
@@ -780,7 +780,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="547929349">
 								<int key="NSCellFlags">67108864</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">(Command Key is always used)</string>
+								<string key="NSContents">(Command-toets altijd aan)</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="510479236"/>
 								<reference key="NSBackgroundColor" ref="796629147"/>

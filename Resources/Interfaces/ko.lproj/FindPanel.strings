@@ -1,6 +1,6 @@
 /* Status displayed in find panel when the find string is not found. */
- "Not found" = "Not found";
+ "Not found" = "찾을 수 없음";
  
 /* Status displayed in find panel when indicated number of matches are replaced. */
- "%d replaced" = "%d replaced";
+ "%d replaced" = "%d개 대치됨";
  

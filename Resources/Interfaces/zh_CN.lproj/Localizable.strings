@@ -1,4 +1,4 @@
-        "%@\n\nCharacters: %d" = "%@\n\nCharacters: %d";
+        "%@\n\nCharacters: %d" = "%@\n\n字符数：%d";
     "%@ does not exist." = "%@ \U4e0d\U5b58\U5728\U3002";
 "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "目录链接 /Library/TeX/texbin 不存在。若要修复，请访问 https://tug.org/mactex 并安装 MacTeX 或 Basic TeX (2015 或更新版)。";
 "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ 不存在。TeXShop 仅为 TeX 的前端，您还需要安装 TeX 发行包。发行包可能尚未安装，或在系统升级时被删除。若有此 况，请访问 https://tug.org/mactex 并按照说明安装 MacTeX 或 BasicTeX。";
@@ -12,7 +12,7 @@
     "Close LaTeX Panel" = "\U5173\U95ed LaTeX \U9762\U677f";
     "Close Macro Editor" = "\U5173\U95ed\U5b8f\U7f16\U8f91\U5668";
     "Close Matrix Panel" = "\U5173\U95ed\U77e9\U9635\U9762\U677f";
-    "Color Index" = "Color Index";
+    "Color Index" = "索引着色";
     Comment = "\U6ce8\U91ca";
     Completion = "\U8865\U5168";
     "Convert \\ to \\yen in Pasteboard" = "\U5728\U5939\U7eb8\U677f\U4e2d\U8f6c\U6362 \\ \U5230 \\yen";
@@ -20,8 +20,8 @@
     "Copy Format" = "\U62f7\U8d1d\U6837\U5f0f";
     "Currently open files retain their old encoding." = "\U5f53\U524d\U6253\U5f00\U7684\U6587\U4ef6\U4ecd\U4fdd\U7559\U65e7\U7684\U7f16\U7801\U3002";
     "Display Format" = "\U663e\U793a\U6837\U5f0f";
-    "Do you want to save macros?" = "\U60a8\U60f3\U5b58\U50a8\U5b8f\U5417\Uff1f";
-    "Don't Save" = "\U4e0d\U5b58\U50a8";
+    "Do you want to save macros?" = "您想保存宏吗？";
+    "Don't Save" = "不保存";
     "Drag && Drop" = "\U62d6\U62fd";
     Edit = "\U7f16\U8f91";
     Error = "\U9519\U8bef";
@@ -50,9 +50,9 @@
     "Print..." = "\U6253\U5370...";
     RotateClockwise = "\U987a\U65f6\U9488\U65cb\U8f6c";
     RotateCounterclockwise = "\U9006\U65f6\U9488\U65cb\U8f6c";
-    Save = "\U5b58\U50a8";
-    "Save Spot" = "\U5b58\U50a8\U4f4d\U7f6e";
-    "Save selection to file..." = "\U5b58\U50a8\U9009\U533a\U5230\U6587\U4ef6...";
+    Save = "保存";
+    "Save Spot" = "保存位置";
+    "Save selection to file..." = "保存选区到文件...";
     "Set Project Root..." = "\U8bbe\U7f6e\U9879\U76ee\U6839\U6587\U4ef6...";
     ShowFullPath = "\U663e\U793a\U5b8c\U6574\U8def\U5f84";
     Sync = "\U540c\U6b65";
@@ -60,7 +60,7 @@
     Tags = "标签";
     "TeXShop Demos" = "TeXShop \U6f14\U793a";
     Template = "\U6a21\U677f";
-    "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "\U8be5\U6587\U4ef6\U65e0\U6cd5\U4ee5 %@ \U7f16\U7801\U6253\U5f00\Uff0c\U56e0\U4e3a\U5b83\U5e76\U672a\U5b58\U50a8\U4e3a\U6b64\U7f16\U7801\U3002\U5982\U679c\U60a8\U60f3\U4ee5\U5176\U4ed6\U7f16\U7801\U6253\U5f00\Uff0c\U8bf7\U5173\U95ed\U7a97\U53e3\U518d\U6253\U5f00\U3002";
+    "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "该文件无法以 %@ 编码打开，因为它并未以此编码保存。如果您想以其他编码打开，请关闭窗口再打开。";
     "The file encoding changed; characters can be lost if the wrong encoding is used." = "\U6587\U4ef6\U7f16\U7801\U5df2\U66f4\U6539\Uff0c\U5982\U679c\U4f7f\U7528\U9519\U8bef\U7684\U7f16\U7801\U5c06\U4f1a\U5bfc\U81f4\U5b57\U7b26\U4e22\U5931\U3002";
     "The source LaTeX document cannot be found." = "\U627e\U4e0d\U5230 LaTeX \U6e90\U4ee3\U7801\U6587\U6863\U3002";
     "There was an error checking for updates." = "\U68c0\U67e5\U66f4\U65b0\U65f6\U53d1\U751f\U9519\U8bef\U3002";
@@ -98,8 +98,8 @@
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "演示视频需要 Mac OS 10.9 Mavericks 或更高版本。";
 "Source" = "源代码";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "在此输入示例文本。\n输入多行\n 以测试行间距。";
-"<<Close All - unlocalized>>" = "Close All";
-"Close All" = "Close All";
+"<<Close All - unlocalized>>" = "全部关闭";
+"Close All" = "全部关闭";
 "File Already Exists" = "文件已存在";
 "Labels" = "标签";
 "New Tag" = "新增标签";
@@ -136,7 +136,7 @@
 "This document mixes different line endings." = "此文稿混用了不同的换行符。";
 "This document uses Windows line endings (CRLF)." = "此文稿使用 Windows 换行符（CRLF）。";
 "This document uses classic Mac line endings (CR)." = "此文稿使用经典 Mac 换行符（CR）。";
-"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop 已将所有换行符转换为 LF。存储文稿时，文件将使用 LF 换行符。";
+"TeXShop changed all line endings to LF. When you save the document, the file will have LF line endings." = "TeXShop 已将所有换行符转换为 LF。保存文稿时，文件将使用 LF 换行符。";
 "Don’t show again for this document" = "对此文稿不再显示";
 
 /* Engine path discovery */
@@ -166,22 +166,22 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "The selected profile is invalid.";
-"Apply Settings Profile?" = "Apply Settings Profile?";
+"The selected profile is invalid." = "所选配置无效。";
+"Apply Settings Profile?" = "要应用设置配置吗？";
 
-"Apply Profile" = "Apply Profile";
-"Settings could not be saved" = "Settings could not be saved";
-"Enter a valid setting" = "Enter a valid setting";
+"Apply Profile" = "应用配置";
+"Settings could not be saved" = "无法保存设置";
+"Enter a valid setting" = "请输入有效的设置";
 
-"Continue Editing" = "Continue Editing";
-"Restore This Field" = "Restore This Field";
-"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Continue Editing" = "继续编辑";
+"Restore This Field" = "恢复此栏";
+"The theme could not be saved. Its last saved colors have been restored." = "无法保存主题。已恢复上次保存的颜色。";
 "Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "请指定其他主题名称。不允许使用以点开头的名称、路径分隔符、控制字符或符号链接。";
-"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+"The new theme could not be saved. The original theme is unchanged." = "无法保存新主题。原主题未更改。";
 
-"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+"Reopen Settings or select a readable theme before editing or duplicating it." = "请先重新打开设置或选择可读取的主题，然后再编辑或复制。";
 
-"Back" = "后退";
+"Back" = "返回";
 
 "Forward" = "前进";
 
@@ -209,9 +209,9 @@
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "匹配项：%lu";
 
-"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+"The theme “%@” already exists. Replace it?" = "主题“%@”已存在。要替换吗？";
 
-"Replace" = "Replace";
+"Replace" = "替换";
 
 "General" = "通用";
 "Documents and Saving" = "文稿与保存";
@@ -278,22 +278,22 @@
 "Experiment stopped.\n" = "实验台已停止。\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "A new version of TeXShop is available (version %@). Would you like to download it now?";
-"Assign" = "Assign";
-"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
-"Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
-"Return to Editing" = "Return to Editing";
-"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"A new version of TeXShop is available (version %@). Would you like to download it now?" = "有新版本的 TeXShop 可用（版本 %@）。要现在下载吗？";
+"Assign" = "分配";
+"Assign a shortcut used by macros?" = "要分配宏正在使用的快捷键吗？";
+"Macro shortcut conflicts" = "宏快捷键冲突";
+"Remove Conflicting Shortcuts and Save" = "移除冲突的快捷键并保存";
+"Return to Editing" = "返回编辑";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "仍要保存（冲突的快捷键将停用）";
 
-"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
-"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
-"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
-"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
-"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
-"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+"These macro shortcuts will become inactive:" = "以下宏快捷键将停用：";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "这些新分配或更改的快捷键与其他分配重叠。列表中说明了哪些快捷键将停用。您可以编辑它们、保持原样，或只移除已更改的冲突快捷键。宏的名称和内容将保留。";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "此快捷键与宏“%@”（%@）冲突。由于该宏位置靠后，它的快捷键将停用。";
+"This shortcut is already used by:\n%@" = "此快捷键已被以下项目使用：\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "此快捷键与“%@”（%@）冲突，因此已停用。";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "宏“%@”（%@）先使用了此快捷键，因此此快捷键已停用。";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+"Edits the shared file for all documents. This setting controls the default for new documents." = "编辑所有文稿共用的文件。此设置决定新文稿的默认值。";
 
 "The newest detected installation is selected. You can choose another candidate below." = "已选中检测到的最新版本。您可以在下方选择其他候选项。";
 
@@ -307,7 +307,7 @@
 
 "Custom menu shortcuts will be removed." = "将移除自定菜单快捷键。";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "将重置引擎、编辑、显示、已知的隐藏设置和 Dock 图标。主题选择可能会更改。TeX 引擎路径：%@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "自动检测语言";

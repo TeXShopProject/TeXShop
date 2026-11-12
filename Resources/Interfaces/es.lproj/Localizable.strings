@@ -13,7 +13,7 @@
 "Close Matrix Panel" = "Cerrar panel matrices";
 "Open for Preview..." = "Abrir para previsualizar...";
 "Open for Editing..." = "Abrir para editar...";
-"File" = "Edición";						/*% Name of "File" menu */
+"File" = "Archivo";						/*% Name of "File" menu */
 "Goto Error" = "Ir al error";
 "RotateClockwise" = "Rotar en sentido horario";
 "RotateCounterclockwise" = "Rotar en sentido antihorario";
@@ -29,13 +29,13 @@
 "Convert \\yen to \\ in Pasteboard" = "Convertir \\yen a \\ en Portapapeles";
 "Convert \\ to \\yen in Pasteboard" = "Convertir \\ a \\yen en Portapapeles"; 
 "Edit" = "Edición";							/*% Name of "Edit" Menu */
-"Warning" = "Aviso";
+"Warning" = "Advertencia";
 "Don't Save" = "No guardar";
 "Cancel" = "Cancelar";
 "Do you want to save macros?" = "¿Quieres guardar las macros?";
 "Save Spot" = "Guardar posición";
 "Template" = "Plantilla";
-"Typing" = "Tecleando";
+"Typing" = "Escritura";
 "AutoComplete" = "Autocompleción";  //Should be translation of "Key Bindings", even in English
 "Page Number" = "Número de página";
 "Page Number Panel" = "Panel de número de página";
@@ -49,7 +49,7 @@
 "Autocompletion" = "Autocompleción";
 "Completion" = "Compleción";				/*% Items immediately below not crucial! */
 "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Ruta: %@\nTamaño de archivo: %d bytes\nFecha de creación: %@\nFecha de modificación: %@";
-"Info: %@" = "Info: %@";
+"Info: %@" = "Información: %@";
 "%@\n\nCharacters: %d" = "%@\n\nCaracteres: %d";
 "The file encoding changed; characters can be lost if the wrong encoding is used." = "La codificación del archivo ha cambiado; se pueden perder caracteres si se usa una codificación equivocada.";
 "Currently open files retain their old encoding." = "Los archivos actualmente abiertos mantienen su codificación antigua.";
@@ -59,7 +59,7 @@
 "Can't find required tool." = "No puedo encontrar la herramienta requerida.";
 "Typesetting engine cannot be found." = "No puedo encontrar el motor de composición.";
 "The source LaTeX document cannot be found." = "No puedo encontrar el documento con código fuente LaTeX.";
-"Sync Marks" = "Sync Marks";
+"Sync Marks" = "Marcas de sincronización";
 "%@ does not exist." = "%@ no existe.";
 "%@ does not have the executable bit set." = "%@ no tiene puesto el bit de archivo ejecutable.";
 "This file was opened with IsoLatin9 encoding." = "Este archivo se abrirá con caracteres codificados en IsoLatin9.";
@@ -73,10 +73,10 @@
 "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Esta versión de TeXShop requiere Mac OS X 10.4 o mayor. Usa TeXShop 1.37 en su lugar.";
 "Hard Wrap" = "Ajuste de línea dinámico";
 "Newline Removal" = "Eliminar fin de línea";
-"Color Index" = "Color Index";
+"Color Index" = "Colorear índice";
 "Help" = "Ayuda";
 "TeXShop Demos" = "Demos de TeXShop en vídeo";
-"Sync" = "Sync";
+"Sync" = "Sincronizar";
 "ShowFullPath" = "Mostar ruta completa";
 "Close Current Environment" = "Cerrar el entorno actual"; // Terada
 "Your current setting of %@ will be replaced. OK?" = "Se reemplazará tu ajuste actual de %@. ¿De acuerdo?"; // Terada
@@ -101,10 +101,10 @@
 "Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Mostrar vídeos con demos requiere Mac OS 10.9, Mavericks, o superior.";
 "Source" = "Código";
 "Type sample text here.\nUse several lines to test\ninterline spacing." = "Teclea aquí un ejemplo de texto.\nUsa varias líneas para comprobar\nel interlineado.";
-"<<Close All - unlocalized>>" = "Close All";
-"Close All" = "Close All";
+"<<Close All - unlocalized>>" = "Cerrar todo";
+"Close All" = "Cerrar todo";
 "File Already Exists" = "Archivo ya existe";
-"Labels" = "Labels";
+"Labels" = "Etiquetas";
 "New Tag" = "Nueva marca";
 "Split Window" = "Dividir ventana";
 "New Document" = "Nuevo documento";
@@ -125,7 +125,7 @@
 "None of the words in this document have been learned for %@." = "Ninguna de las palabras de este documento se ha aprendido para %@.";
 "The spell checking help could not be found" = "No se encontró la ayuda de la revisión ortográfica";
 "Problems in the spelling exclusions file" = "Problemas en el archivo de excepciones de ortografía";
-"OK" = "OK";
+"OK" = "Aceptar";
 /* Button added to the Spelling and Grammar panel */
 "Change All" = "Cambiar todo";
 
@@ -169,20 +169,20 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "The selected profile is invalid.";
-"Apply Settings Profile?" = "Apply Settings Profile?";
+"The selected profile is invalid." = "El perfil seleccionado no es válido.";
+"Apply Settings Profile?" = "¿Aplicar el perfil de ajustes?";
 
-"Apply Profile" = "Apply Profile";
-"Settings could not be saved" = "Settings could not be saved";
-"Enter a valid setting" = "Enter a valid setting";
+"Apply Profile" = "Aplicar perfil";
+"Settings could not be saved" = "No se han podido guardar los ajustes";
+"Enter a valid setting" = "Introduzca un ajuste válido";
 
-"Continue Editing" = "Continue Editing";
-"Restore This Field" = "Restore This Field";
-"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Continue Editing" = "Continuar editando";
+"Restore This Field" = "Restaurar este campo";
+"The theme could not be saved. Its last saved colors have been restored." = "No se ha podido guardar el tema. Se han restaurado los últimos colores guardados.";
 "Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Elija otro nombre para el tema. No se permiten nombres que empiecen por un punto, separadores de ruta, caracteres de control ni enlaces simbólicos.";
-"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+"The new theme could not be saved. The original theme is unchanged." = "No se ha podido guardar el tema nuevo. El tema original no ha cambiado.";
 
-"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Vuelva a abrir Ajustes o seleccione un tema legible antes de editarlo o duplicarlo.";
 
 "Back" = "Atrás";
 
@@ -212,15 +212,15 @@
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Coincidencias: %lu";
 
-"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+"The theme “%@” already exists. Replace it?" = "El tema «%@» ya existe. ¿Desea reemplazarlo?";
 
-"Replace" = "Replace";
+"Replace" = "Reemplazar";
 
 "General" = "General";
 "Documents and Saving" = "Documentos y guardado";
 "Editor" = "Editor";
 "Spell Checking" = "Ortografía";
-"Appearance" = "Apariencia";
+"Appearance" = "Aspecto";
 "Preview" = "PDF";
 "Typesetting" = "Composición";
 "Console" = "Consola";
@@ -282,21 +282,21 @@
 "Experiment stopped.\n" = "Experimento detenido.\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"Assign" = "Assign";
-"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
-"Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
-"Return to Editing" = "Return to Editing";
-"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"Assign" = "Asignar";
+"Assign a shortcut used by macros?" = "¿Asignar un atajo usado por macros?";
+"Macro shortcut conflicts" = "Conflictos de atajos de macros";
+"Remove Conflicting Shortcuts and Save" = "Eliminar atajos en conflicto y guardar";
+"Return to Editing" = "Volver a la edición";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Guardar de todos modos (atajos en conflicto inactivos)";
 
-"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
-"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
-"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
-"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
-"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
-"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+"These macro shortcuts will become inactive:" = "Estos atajos de macros quedarán inactivos:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "Estos atajos recién asignados o modificados coinciden con otras asignaciones. La lista indica qué atajos quedarán inactivos. Puede editarlos, mantenerlos tal como están o eliminar solo los atajos modificados que estén en conflicto. Se conservarán los nombres y el contenido de las macros.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Este atajo entra en conflicto con la macro «%@» (%@), cuyo atajo quedará inactivo porque aparece después.";
+"This shortcut is already used by:\n%@" = "Este atajo ya se usa para:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "Este atajo está inactivo porque entra en conflicto con «%@» (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "Este atajo está inactivo porque la macro «%@» (%@) lo usa antes.";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Edita el archivo compartido por todos los documentos. Este ajuste determina el valor predeterminado de los documentos nuevos.";
 
 "The newest detected installation is selected. You can choose another candidate below." = "Se ha seleccionado la instalación más reciente detectada. Puede elegir otra a continuación.";
 
@@ -310,7 +310,7 @@
 
 "Custom menu shortcuts will be removed." = "Se eliminarán los atajos de menú personalizados.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Restablece el motor, la edición, la visualización, los ajustes ocultos conocidos y el icono del Dock. La selección de temas puede cambiar. Ruta del motor TeX: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Detección automática del idioma";

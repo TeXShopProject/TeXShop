@@ -1,245 +1,245 @@
 /* needs to be localized */
 
-tiLabelSave				= "Save";
-tiPaletteLabelSave			= "Save";
-tiToolTipSave				= "Save the source of the document";
+tiLabelSave				= "저장";
+tiPaletteLabelSave			= "저장";
+tiToolTipSave				= "문서의 소스 저장";
 
 /* tool tips for the default Print item. Different actions depending on the window */
-tiToolTipPrintSource			= "Print the TeX source";
-tiToolTipPrint				= "Print the PDF image";
+tiToolTipPrintSource			= "TeX 소스 프린트";
+tiToolTipPrint				= "PDF 이미지 프린트";
 
-tiLabelTypeset				= "Typeset";
-tiPaletteLabelTypeset			= "Typeset";
-tiToolTipTypeset			= "Run typesetting program";
+tiLabelTypeset				= "조판";
+tiPaletteLabelTypeset			= "조판";
+tiToolTipTypeset			= "조판 프로그램 실행";
 
-tiLabelSharing				= "Share Source";
-tiPaletteLabelSharing		= "Share Source";
-tiToolTipSharing			= "Share text and pictures";
+tiLabelSharing				= "소스 공유";
+tiPaletteLabelSharing		= "소스 공유";
+tiToolTipSharing			= "텍스트 및 사진 공유";
 
 
-tiLabelProgram				= "Program";
-tiPaletteLabelProgram			= "Program";
-tiToolTipProgram			= "Choose typesetting program";
+tiLabelProgram				= "프로그램";
+tiPaletteLabelProgram			= "프로그램";
+tiToolTipProgram			= "조판 프로그램 선택";
 
 tiLabelTeX				= "TeX";
 tiPaletteLabelTeX			= "TeX";
-tiToolTipTeX				= "Process the source using plain TeX tool";
+tiToolTipTeX				= "Plain TeX 도구로 소스 처리";
 
 tiLabelLaTeX				= "LaTeX";
 tiPaletteLabelLaTeX			= "LaTeX";
-tiToolTipLaTeX				= "Process the source using LaTeX";
+tiToolTipLaTeX				= "LaTeX로 소스 처리";
 
 tiLabelBibTeX				= "BibTeX";
 tiPaletteLabelBibTeX			= "BibTeX";
-tiToolTipBibTeX				= "Run BibTeX";
+tiToolTipBibTeX				= "BibTeX 실행";
 
-tiLabelMakeIndex			= "Make Index";
-tiPaletteLabelMakeIndex			= "Make Index";
-tiToolTipMakeIndex			= "Make Index";
+tiLabelMakeIndex			= "MakeIndex";
+tiPaletteLabelMakeIndex			= "MakeIndex";
+tiToolTipMakeIndex			= "MakeIndex 실행";
 
 tiLabelMetaPost				= "MetaPost";
 tiPaletteLabelMetaPost			= "MetaPost";
-tiToolTipMetaPost			= "Run MetaPost";
+tiToolTipMetaPost			= "MetaPost 실행";
 
 tiLabelConTeX				= "ConTeXt";
 tiPaletteLabelConTeX			= "ConTeXt";
-tiToolTipConTeX				= "Run ConTeXt";
+tiToolTipConTeX				= "ConTeXt 실행";
 
 tiLabelMetaFont				= "MetaFont";
 tiPaletteLabelMetaFont			= "MetaFont";
-tiToolTipMetaFont			= "Run MetaFont";
+tiToolTipMetaFont			= "MetaFont 실행";
 
-tiLabelPreviousPage			= "Previous";
-tiPaletteLabelPreviousPage		= "Alternate Previous Page";
-tiToolTipPreviousPage			= "Show previous page";
+tiLabelPreviousPage			= "이전";
+tiPaletteLabelPreviousPage		= "이전 페이지(대체)";
+tiToolTipPreviousPage			= "이전 페이지 보기";
 
-tiLabelNextPage				= "Next";
-tiPaletteLabelNextPage			= "Alternate Next Page";
-tiToolTipNextPage			= "Show next page";
+tiLabelNextPage				= "다음";
+tiPaletteLabelNextPage			= "다음 페이지(대체)";
+tiToolTipNextPage			= "다음 페이지 보기";
 
-tiLabelGotoPage				= "Go to page";
-tiPaletteLabelGotoPage			= "Go to page";
-tiToolTipGotoPage			= "Go to page";
+tiLabelGotoPage				= "페이지로 이동";
+tiPaletteLabelGotoPage			= "페이지로 이동";
+tiToolTipGotoPage			= "페이지로 이동";
 
-tiLabelMagnification			= "Magnification";
-tiPaletteLabelMagnification		= "Magnification";
-tiToolTipMagnification			= "Set page magnification";
+tiLabelMagnification			= "배율";
+tiPaletteLabelMagnification		= "배율";
+tiToolTipMagnification			= "페이지 배율 설정";
 
-tiLabelTemplates			= "Templates";
-tiPaletteLabelTemplates			= "Templates";
-tiToolTipTemplates			= "Select a template to insert at cursor";
+tiLabelTemplates			= "템플릿";
+tiPaletteLabelTemplates			= "템플릿";
+tiToolTipTemplates			= "커서 위치에 삽입할 템플릿 선택";
 
-tiLabelTags				= "Tags";
-tiPaletteLabelTags			= "Tags";
-tiToolTipTags				= "Select a tag to scroll to";
+tiLabelTags				= "태그";
+tiPaletteLabelTags			= "태그";
+tiToolTipTags				= "이동할 태그 선택";
 
-tiLabelPreviousPageButton		= "Previous";
-tiPaletteLabelPreviousPageButton	= "Previous Page";
-tiToolTipPreviousPageButton		= "Show previous page";
+tiLabelPreviousPageButton		= "이전";
+tiPaletteLabelPreviousPageButton	= "이전 페이지";
+tiToolTipPreviousPageButton		= "이전 페이지 보기";
 
-tiLabelNextPageButton			= "Next";
-tiPaletteLabelNextPageButton		= "Next Page";
-tiToolTipNextPageButton			= "Show next page";
+tiLabelNextPageButton			= "다음";
+tiPaletteLabelNextPageButton		= "다음 페이지";
+tiToolTipNextPageButton			= "다음 페이지 보기";
 
-tiLabelTypesetEE			= "Typeset";
-tiPaletteLabelTypesetEE			= "Typeset";
-tiToolTipTypesetEE			= "Run typesetting program";
+tiLabelTypesetEE			= "조판";
+tiPaletteLabelTypesetEE			= "조판";
+tiToolTipTypesetEE			= "조판 프로그램 실행";
 
-tiLabelProgramEE			= "Program";
-tiPaletteLabelProgramEE			= "Program";
-tiToolTipProgramEE			= "Choose typesetting program";
+tiLabelProgramEE			= "프로그램";
+tiPaletteLabelProgramEE			= "프로그램";
+tiToolTipProgramEE			= "조판 프로그램 선택";
 
-tiLabelAutoComplete			= "KeyBindings";
-tiPaletteLabelAutoComplete		= "KeyBindings";
-tiToolTipAutoComplete			= "Toggle key bindings";
+tiLabelAutoComplete			= "키 바인딩";
+tiPaletteLabelAutoComplete		= "키 바인딩";
+tiToolTipAutoComplete			= "키 바인딩 켜기/끄기";
 
-tiLabelSplit				= "Split Source";
-tiPaletteLabelSplit			= "Split Source";
-tiToolTipSplit				= "Toggle source split";
+tiLabelSplit				= "소스 분할";
+tiPaletteLabelSplit			= "소스 분할";
+tiToolTipSplit				= "소스 분할 켜기/끄기";
 
-tiLabelSplitKIT				= "Split Preview";
-tiPaletteLabelSplitKIT		= "Split Preview";
-tiToolTipSplitKIT			= "Toggle preview split";
+tiLabelSplitKIT				= "미리보기 분할";
+tiPaletteLabelSplitKIT		= "미리보기 분할";
+tiToolTipSplitKIT			= "미리보기 분할 켜기/끄기";
 
-tiLabelMacros				= "Macros";
-tiPaletteLabelMacros		= "Macros";
-tiToolTipMacros				= "Insert macros";
+tiLabelMacros				= "매크로";
+tiPaletteLabelMacros		= "매크로";
+tiToolTipMacros				= "매크로 삽입";
 
-tiLabelMacrosEE				= "Macros";
-tiPaletteLabelMacrosEE		= "Macros";
-tiToolTipMacrosEE           = "Insert macros";
+tiLabelMacrosEE				= "매크로";
+tiPaletteLabelMacrosEE		= "매크로";
+tiToolTipMacrosEE           = "매크로 삽입";
 
-tiLabelMouseMode			= "MouseMode";
-tiPaletteLabelMouseMode     = "Mouse Mode";
-tiToolTipMouseMode			= "Change Mouse Mode";
+tiLabelMouseMode			= "마우스 모드";
+tiPaletteLabelMouseMode     = "마우스 모드";
+tiToolTipMouseMode			= "마우스 모드 변경";
 
-tiLabelSyncMarks			= "SyncMarks";
-tiPaletteLabelSyncMarks		= "Sync Marks";
-tiToolTipSyncMarks			= "Show Sync Marks";
+tiLabelSyncMarks			= "동기화 마크";
+tiPaletteLabelSyncMarks		= "동기화 마크";
+tiToolTipSyncMarks			= "동기화 마크 보기";
 
-tiLabelColorIndex				= "ColorIndex";
-tiPaletteLabelColorIndex		= "Color Index";
-tiToolTipColorIndex				= "Color Index Commands";
+tiLabelColorIndex				= "색인 색상";
+tiPaletteLabelColorIndex		= "색인 색상";
+tiToolTipColorIndex				= "색인 명령 색상 표시";
 
-tiLabelTypesetKIT				= "Typeset";
-tiPaletteLabelTypesetKIT		= "Typeset";
-tiToolTipTypesetKIT				= "Run typesetting program";
+tiLabelTypesetKIT				= "조판";
+tiPaletteLabelTypesetKIT		= "조판";
+tiToolTipTypesetKIT				= "조판 프로그램 실행";
 
-tiLabelSearchKIT				= "Search PDF";
-tiPaletteLabelSearchKIT         = "Search PDF";
-tiToolTipSearchKIT				= "Search PDF";
+tiLabelSearchKIT				= "PDF 검색";
+tiPaletteLabelSearchKIT         = "PDF 검색";
+tiToolTipSearchKIT				= "PDF 검색";
 
-tiLabelSharingKIT				= "Share Preview";
-tiPaletteLabelSharingKIT		= "Share Preview";
-tiToolTipSharingKIT				= "Share text and images";
+tiLabelSharingKIT				= "미리보기 공유";
+tiPaletteLabelSharingKIT		= "미리보기 공유";
+tiToolTipSharingKIT				= "텍스트 및 이미지 공유";
 
-tiLabelProgramKIT				= "Program";
-tiPaletteLabelProgramKIT		= "Program";
-tiToolTipProgramKIT				= "Choose typesetting program";
+tiLabelProgramKIT				= "프로그램";
+tiPaletteLabelProgramKIT		= "프로그램";
+tiToolTipProgramKIT				= "조판 프로그램 선택";
 
-tiLabelPreviousPageButtonKIT		= "Previous";
-tiPaletteLabelPreviousPageButtonKIT	= "Previous Page";
-tiToolTipPreviousPageButtonKIT		= "Show previous page";
+tiLabelPreviousPageButtonKIT		= "이전";
+tiPaletteLabelPreviousPageButtonKIT	= "이전 페이지";
+tiToolTipPreviousPageButtonKIT		= "이전 페이지 보기";
 
-tiLabelNextPageButtonKIT			= "Next";
-tiPaletteLabelNextPageButtonKIT		= "Next Page";
-tiToolTipNextPageButtonKIT			= "Show next page";
+tiLabelNextPageButtonKIT			= "다음";
+tiPaletteLabelNextPageButtonKIT		= "다음 페이지";
+tiToolTipNextPageButtonKIT			= "다음 페이지 보기";
 
-tiLabelGotoPageKIT				= "Go to page";
-tiPaletteLabelGotoPageKIT		= "Go to page";
-tiToolTipGotoPageKIT			= "Go to page";
+tiLabelGotoPageKIT				= "페이지로 이동";
+tiPaletteLabelGotoPageKIT		= "페이지로 이동";
+tiToolTipGotoPageKIT			= "페이지로 이동";
 
-tiLabelMagnificationKIT			= "Magnification";
-tiPaletteLabelMagnificationKIT	= "Magnification";
-tiToolTipMagnificationKIT		= "Set page magnification";
+tiLabelMagnificationKIT			= "배율";
+tiPaletteLabelMagnificationKIT	= "배율";
+tiToolTipMagnificationKIT		= "페이지 배율 설정";
 
-tiLabelMacrosKIT				= "Macros";
-tiPaletteLabelMacrosKIT			= "Macros";
-tiToolTipMacrosKIT              = "Insert macros";
+tiLabelMacrosKIT				= "매크로";
+tiPaletteLabelMacrosKIT			= "매크로";
+tiToolTipMacrosKIT              = "매크로 삽입";
 
-tiLabelMouseModeKIT				= "MouseMode";
-tiPaletteLabelMouseModeKIT		= "Mouse Mode";
-tiToolTipMouseModeKIT			= "Change Mouse Mode";
+tiLabelMouseModeKIT				= "마우스 모드";
+tiPaletteLabelMouseModeKIT		= "마우스 모드";
+tiToolTipMouseModeKIT			= "마우스 모드 변경";
 
-tiLabelSyncMarksKIT				= "SyncMarks";
-tiPaletteLabelSyncMarksKIT		= "Sync Marks";
-tiToolTipSyncMarksKIT			= "Show Sync Marks";
+tiLabelSyncMarksKIT				= "동기화 마크";
+tiPaletteLabelSyncMarksKIT		= "동기화 마크";
+tiToolTipSyncMarksKIT			= "동기화 마크 보기";
 
-tiLabelBackForthKIT				= "Back/Forward";
-tiPaletteLabelBackForthKIT		= "Back/Forward";
-tiToolTipBackForthKIT			= "Back Forward Buttons";
+tiLabelBackForthKIT				= "뒤로/앞으로";
+tiPaletteLabelBackForthKIT		= "뒤로/앞으로";
+tiToolTipBackForthKIT			= "뒤로/앞으로 버튼";
 
-tiLabelBackForthKITSplit                = "Back/Forward";
-tiPaletteLabelBackForthKITSplit        = "Back/Forward";
-tiToolTipBackForthKITSplit            = "Back Forward Buttons";
+tiLabelBackForthKITSplit                = "뒤로/앞으로";
+tiPaletteLabelBackForthKITSplit        = "뒤로/앞으로";
+tiToolTipBackForthKITSplit            = "뒤로/앞으로 버튼";
 
-tiLabelDrawerKIT				= "Drawer";
-tiPaletteLabelDrawerKIT			= "Drawer";
-tiToolTipDrawerKIT				= "Toggle Drawer";
+tiLabelDrawerKIT				= "서랍";
+tiPaletteLabelDrawerKIT			= "서랍";
+tiToolTipDrawerKIT				= "서랍 여닫기";
 
-tiLabelShowFullPath				= "FullPath";
-tiPaletteLabelShowFullPath		= "FullPath";
-tiToolTipShowFullPath			= "Show Full Path in Window Title";
+tiLabelShowFullPath				= "전체 경로";
+tiPaletteLabelShowFullPath		= "전체 경로";
+tiToolTipShowFullPath			= "윈도우 제목에 전체 경로 보기";
 
-tiLabelProgramSplit				= "Program";
-tiPaletteLabelProgramSplit		= "Program";
-tiToolTipProgramSplit			= "Choose typesetting program";
+tiLabelProgramSplit				= "프로그램";
+tiPaletteLabelProgramSplit		= "프로그램";
+tiToolTipProgramSplit			= "조판 프로그램 선택";
 
-tiLabelMacrosSplit				= "Macros";
-tiPaletteLabelMacrosSplit		= "Macros";
-tiToolTipMacrosSplit			= "Insert macros";
+tiLabelMacrosSplit				= "매크로";
+tiPaletteLabelMacrosSplit		= "매크로";
+tiToolTipMacrosSplit			= "매크로 삽입";
 
-tiLabelTagsSplit				= "Tags";
-tiPaletteLabelTagsSplit         = "Tags";
-tiToolTipTagsSplit              = "Select a tag to scroll to";
+tiLabelTagsSplit				= "태그";
+tiPaletteLabelTagsSplit         = "태그";
+tiToolTipTagsSplit              = "이동할 태그 선택";
 
-tiLabelGotoPageSplit			= "Go to page";
-tiPaletteLabelGotoPageSplit     = "Go to page";
-tiToolTipGotoPageSplit          = "Go to page";
+tiLabelGotoPageSplit			= "페이지로 이동";
+tiPaletteLabelGotoPageSplit     = "페이지로 이동";
+tiToolTipGotoPageSplit          = "페이지로 이동";
 
-tiLabelMagnificationSplit		= "Magnification";
-tiPaletteLabelMagnificationSplit   = "Magnification";
-tiToolTipMagnificationSplit     = "Set page magnification";
+tiLabelMagnificationSplit		= "배율";
+tiPaletteLabelMagnificationSplit   = "배율";
+tiToolTipMagnificationSplit     = "페이지 배율 설정";
 
-tiLabelColorIndexSplit			= "ColorIndex";
-tiPaletteLabelColorIndexSplit     = "ColorIndex";
-tiToolTipColorIndexSplit          = "Color Index Commands";
+tiLabelColorIndexSplit			= "색인 색상";
+tiPaletteLabelColorIndexSplit     = "색인 색상";
+tiToolTipColorIndexSplit          = "색인 명령 색상 표시";
 
-tiLabelAutoCompleteSplit		= "KeyBindings";
-tiPaletteLabelAutoCompleteSplit   = "KeyBindings";
-tiToolTipAutoCompleteSplit     = "Toggle key bindings";
+tiLabelAutoCompleteSplit		= "키 바인딩";
+tiPaletteLabelAutoCompleteSplit   = "키 바인딩";
+tiToolTipAutoCompleteSplit     = "키 바인딩 켜기/끄기";
 
-tiLabelTemplatesSplit            = "Templates";
-tiPaletteLabelTemplatesSplit            = "Templates";
-tiToolTipTemplatesSplit            = "Select a template to insert at cursor";
+tiLabelTemplatesSplit            = "템플릿";
+tiPaletteLabelTemplatesSplit            = "템플릿";
+tiToolTipTemplatesSplit            = "커서 위치에 삽입할 템플릿 선택";
 
-tiLabelSharingSplit                = "Share Source";
-tiPaletteLabelSharingSplit        = "Share Source";
-tiToolTipSharingSplit            = "Share text and pictures";
+tiLabelSharingSplit                = "소스 공유";
+tiPaletteLabelSharingSplit        = "소스 공유";
+tiToolTipSharingSplit            = "텍스트 및 사진 공유";
 
-tiLabelMouseModeKITSplit                = "MouseMode";
-tiPaletteLabelMouseModeKITSplit        = "Mouse Mode";
-tiToolTipMouseModeKITSplit            = "Change Mouse Mode";
+tiLabelMouseModeKITSplit                = "마우스 모드";
+tiPaletteLabelMouseModeKITSplit        = "마우스 모드";
+tiToolTipMouseModeKITSplit            = "마우스 모드 변경";
 
-tiLabelSearchKITSplit                = "Search PDF";
-tiPaletteLabelSearchKITSplit         = "Search PDF";
-tiToolTipSearchKITSplit                = "Search PDF";
+tiLabelSearchKITSplit                = "PDF 검색";
+tiPaletteLabelSearchKITSplit         = "PDF 검색";
+tiToolTipSearchKITSplit                = "PDF 검색";
 
-tiLabelTypesetSplit                = "Typeset";
-tiPaletteLabelTypesetSplit            = "Typeset";
-tiToolTipTypesetSplit            = "Run typesetting program";
+tiLabelTypesetSplit                = "조판";
+tiPaletteLabelTypesetSplit            = "조판";
+tiToolTipTypesetSplit            = "조판 프로그램 실행";
 
-tiLabelLabels                = "Label";
-tiPaletteLabelLabels            = "Label";
-tiToolTipLabels                = "선택 label로 이동";
+tiLabelLabels                = "레이블";
+tiPaletteLabelLabels            = "레이블";
+tiToolTipLabels                = "이동할 레이블 선택";
 
-tiLabelLabelsSplit                = "Label";
-tiPaletteLabelLabelsSplit         = "Label";
-tiToolTipLabelsSplit              = "선택 label로 이동";
+tiLabelLabelsSplit                = "레이블";
+tiPaletteLabelLabelsSplit         = "레이블";
+tiToolTipLabelsSplit              = "이동할 레이블 선택";
 
 tiLabelUpdate              = "새로고침";
 tiPaletteLabelUpdate         = "새로고침";
-tiToolTipUpdate              = " 태그와 label 목록 갱신";
+tiToolTipUpdate              = "태그와 레이블 목록 갱신";
 
 tiLabelHtmlPreviousPageButton                = "뒤로";
 tiPaletteLabelHtmlPreviousPageButton            = "뒤로";
@@ -253,15 +253,34 @@ tiLabelHtmlURLField                = "URL";
 tiPaletteLabelHtmlURLField            = "URL";
 tiToolTipHtmlURLField            = "URL";
 
-tiLabelHtmlSearch             = "찾기";
-tiPaletteLabelHtmlSearch      = "찾기";
-tiToolTipHtmlSearch           = "찾기";
+tiLabelHtmlSearch             = "검색";
+tiPaletteLabelHtmlSearch      = "검색";
+tiToolTipHtmlSearch           = "검색";
 
 /* Experiment preview tools */
 "ExperimentToolScroll" = "스크롤";
 "ExperimentToolSelectText" = "글자 선택";
 "ExperimentToolMagnify" = "확대경";
 "ExperimentToolSelectPDF" = "영역 선택";
-"ExperimentZoomOut" = "축소하기";
-"ExperimentZoomIn" = "확대하기";
+"ExperimentZoomOut" = "축소";
+"ExperimentZoomIn" = "확대";
 "ExperimentZoomToContent" = "내용에 맞추기";
+
+"Page Layout" = "페이지 레이아웃";
+"tiLabelTSPreviewAppearance" = "화면 모드";
+"Continuous Two Pages" = "연속 두 페이지";
+"Restore Document Settings" = "문서 설정 복원";
+"Single Page" = "단일 페이지";
+"PreviewAppearanceDark" = "다크";
+"PreviewAppearanceLight" = "라이트";
+"Two Pages" = "두 페이지";
+"PreviewAppearanceSystem" = "시스템";
+"Left to right" = "왼쪽에서 오른쪽으로";
+"Two-Page Arrangement" = "두 페이지 배열";
+"Applies when displaying two pages" = "두 페이지를 표시할 때 적용됩니다";
+"Continuous" = "연속 스크롤";
+"tiLabelUpdateSplit" = "새로고침";
+"Right to left" = "오른쪽에서 왼쪽으로";
+"tiToolTipUpdateSplit" = "태그와 레이블 목록 갱신";
+"tiPaletteLabelUpdateSplit" = "새로고침";
+"Show first page alone as cover" = "첫 페이지를 표지로 따로 표시";

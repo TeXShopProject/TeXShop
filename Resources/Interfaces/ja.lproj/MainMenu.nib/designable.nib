@@ -64,12 +64,12 @@
                             <menuItem isSeparatorItem="YES" id="615">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="TeXShop を隠す" keyEquivalent="h" id="608" identifier="TSShortcut.hide:.0">
+                            <menuItem title="TeXShop を非表示" keyEquivalent="h" id="608" identifier="TSShortcut.hide:.0">
                                 <connections>
                                     <action selector="hide:" target="-1" id="624"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="ほかを隠す" keyEquivalent="h" id="616" identifier="TSShortcut.hideOtherApplications:.0">
+                            <menuItem title="ほかを非表示" keyEquivalent="h" id="616" identifier="TSShortcut.hideOtherApplications:.0">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="hideOtherApplications:" target="-1" id="623"/>
@@ -95,7 +95,7 @@
                 <menuItem title="ファイル" id="76">
                     <menu key="submenu" title="ファイル" id="88">
                         <items>
-                            <menuItem title="新規作成" keyEquivalent="n" id="77" identifier="TSShortcut.newDocument:.0">
+                            <menuItem title="新規" keyEquivalent="n" id="77" identifier="TSShortcut.newDocument:.0">
                                 <connections>
                                     <action selector="newDocument:" target="-1" id="104"/>
                                 </connections>
@@ -117,8 +117,8 @@
                                     <action selector="displayStyleFile:" target="690" id="935"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="最近使った書類" id="146">
-                                <menu key="submenu" title="最近使った書類" systemMenu="recentDocuments" id="147">
+                            <menuItem title="最近使った項目を開く" id="146">
+                                <menu key="submenu" title="最近使った項目を開く" systemMenu="recentDocuments" id="147">
                                     <items>
                                         <menuItem title="メニューを消去" id="148" identifier="TSShortcut.clearRecentDocuments:.0">
                                             <connections>
@@ -218,12 +218,12 @@
                 <menuItem title="編集" id="15">
                     <menu key="submenu" title="編集" id="13">
                         <items>
-                            <menuItem title="取り消し" keyEquivalent="z" id="22" identifier="TSShortcut.undo:.0">
+                            <menuItem title="取り消す" keyEquivalent="z" id="22" identifier="TSShortcut.undo:.0">
                                 <connections>
                                     <action selector="undo:" target="-1" id="30"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="やり直し" keyEquivalent="Z" id="112" identifier="TSShortcut.redo:.0">
+                            <menuItem title="やり直す" keyEquivalent="Z" id="112" identifier="TSShortcut.redo:.0">
                                 <connections>
                                     <action selector="redo:" target="-1" id="113"/>
                                 </connections>
@@ -258,13 +258,13 @@
                                     <action selector="pasteAsComment:" target="-1" id="xud-pv-aFK"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="消去" id="128" identifier="TSShortcut.delete:.0">
+                            <menuItem title="削除" id="128" identifier="TSShortcut.delete:.0">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="delete:" target="-1" id="129"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="全てを選択" keyEquivalent="a" id="11" identifier="TSShortcut.selectAll:.0">
+                            <menuItem title="すべてを選択" keyEquivalent="a" id="11" identifier="TSShortcut.selectAll:.0">
                                 <connections>
                                     <action selector="selectAll:" target="-1" id="33"/>
                                 </connections>
@@ -276,7 +276,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="検索" id="989">
                                     <items>
-                                        <menuItem title="検索パネル..." tag="1" keyEquivalent="f" id="990" identifier="TSShortcut.performFindPanelAction:.1">
+                                        <menuItem title="検索…" tag="1" keyEquivalent="f" id="990" identifier="TSShortcut.performFindPanelAction:.1">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1022"/>
                                             </connections>
@@ -291,12 +291,12 @@
                                                 <action selector="performFindPanelAction:" target="-1" id="1024"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="選択部分を検索" tag="7" keyEquivalent="e" id="993" identifier="TSShortcut.performFindPanelAction:.7">
+                                        <menuItem title="選択部分を検索に使用" tag="7" keyEquivalent="e" id="993" identifier="TSShortcut.performFindPanelAction:.7">
                                             <connections>
                                                 <action selector="performFindPanelAction:" target="-1" id="1021"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="選択部分にジャンプ" keyEquivalent="j" id="994" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
+                                        <menuItem title="選択部分へジャンプ" keyEquivalent="j" id="994" identifier="TSShortcut.centerSelectionInVisibleArea:.0">
                                             <connections>
                                                 <action selector="centerSelectionInVisibleArea:" target="-1" id="1023"/>
                                             </connections>
@@ -370,7 +370,7 @@
                                                 <action selector="toggleContinuousSpellChecking:" target="-1" id="Mok-wt-xa6"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="スペルと一緒に文法をチェック" id="MGa-pM-CTg" identifier="TSShortcut.toggleGrammarChecking:.0">
+                                        <menuItem title="文法とスペルをチェック" id="MGa-pM-CTg" identifier="TSShortcut.toggleGrammarChecking:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleGrammarChecking:" target="-1" id="sTa-hd-g79"/>
@@ -396,7 +396,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="865"/>
-                                        <menuItem title="スマートコピー／ペースト" id="866" identifier="TSShortcut.toggleSmartInsertDelete:.0">
+                                        <menuItem title="スマートコピー/ペースト" id="866" identifier="TSShortcut.toggleSmartInsertDelete:.0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleSmartInsertDelete:" target="-1" id="878"/>
@@ -810,12 +810,12 @@
                                         <menuItem isSeparatorItem="YES" id="782">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="文字の拡大" tag="3" keyEquivalent="=" id="781" identifier="TSShortcut.modifyFont:.3">
+                                        <menuItem title="大きく" tag="3" keyEquivalent="=" id="781" identifier="TSShortcut.modifyFont:.3">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="783"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="文字の縮小" tag="4" keyEquivalent="-" id="780" identifier="TSShortcut.modifyFont:.4">
+                                        <menuItem title="小さく" tag="4" keyEquivalent="-" id="780" identifier="TSShortcut.modifyFont:.4">
                                             <connections>
                                                 <action selector="modifyFont:" target="202" id="784"/>
                                             </connections>
@@ -1104,7 +1104,7 @@
                             <menuItem title="ズーム倍率" id="552">
                                 <menu key="submenu" title="ズーム倍率" id="553">
                                     <items>
-                                        <menuItem title="実際の大きさ" tag="1" id="554" identifier="TSShortcut.changePDFViewSize:.1">
+                                        <menuItem title="実際のサイズ" tag="1" id="554" identifier="TSShortcut.changePDFViewSize:.1">
                                             <connections>
                                                 <action selector="changePDFViewSize:" target="-1" id="596"/>
                                             </connections>
@@ -1122,13 +1122,13 @@
                                         <menuItem isSeparatorItem="YES" id="790">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </menuItem>
-                                        <menuItem title="ズームイン" keyEquivalent="+" id="789" identifier="TSShortcut.zoomIn:.0">
+                                        <menuItem title="拡大" keyEquivalent="+" id="789" identifier="TSShortcut.zoomIn:.0">
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                             <connections>
                                                 <action selector="zoomIn:" target="-1" id="794"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="ズームアウト" keyEquivalent="_" id="788" identifier="TSShortcut.zoomOut:.0">
+                                        <menuItem title="縮小" keyEquivalent="_" id="788" identifier="TSShortcut.zoomOut:.0">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="zoomOut:" target="-1" id="795"/>
@@ -1328,7 +1328,7 @@
                             <menuItem isSeparatorItem="YES" id="913">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="ツールバーを隠す" id="439" identifier="TSShortcut.toggleToolbarShown:.0">
+                            <menuItem title="ツールバーを非表示" id="439" identifier="TSShortcut.toggleToolbarShown:.0">
                                 <connections>
                                     <action selector="toggleToolbarShown:" target="-1" id="444"/>
                                 </connections>

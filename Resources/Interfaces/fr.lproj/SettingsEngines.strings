@@ -3,11 +3,11 @@
 "1024.title" = "kpsewhich (Par défaut : kpsewhich -progname=latex -format=tex)";
 "1027.title" = "Moteur BibTeX";
 "1030.title" = "Par défaut : bibtex";
-"1063.title" = "défaut";
-"1068.title" = "défaut";
+"1063.title" = "Par défaut";
+"1068.title" = "Par défaut";
 "1069.title" = "TeX";
-"1071.title" = "défaut";
-"1074.title" = "défaut";
+"1071.title" = "Par défaut";
+"1074.title" = "Par défaut";
 "1075.title" = "LaTeX ";
 "200.title" = "TeX + dvips + distiller";
 "215.title" = "Réglage des chemins";

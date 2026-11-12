@@ -38,10 +38,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-classification-') as temp:
   categories=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(category_file)]))
   assert categories['preview']==expected[lang]['Preview'],(lang,'Preview category')
   assert all(actual.get(k)==v for k,v in expected[lang].items() if k!='Preview'),lang
-  # This named confirmation deliberately uses English fallback outside Japanese.
+  # The named theme confirmation is translated in every language.
   for key,ja in [('Replace','置き換える'),('The theme “%@” already exists. Replace it?','テーマ「%@」はすでにあります。置き換えますか？')]:
    if lang=='ja':assert actual.get(key)==ja,(lang,key,actual.get(key))
-   else:assert actual.get(key,key)==key,(lang,key)
+   elif lang!='Base':assert actual.get(key) not in (None,key),(lang,key,'untranslated')
   import shutil
   dest=bundle/'Contents/Resources'/('en.lproj' if lang=='Base' else lang+'.lproj');dest.mkdir(exist_ok=True);shutil.copy2(f,dest/'Localizable.strings')
   if args.app:

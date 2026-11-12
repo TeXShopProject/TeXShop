@@ -1,117 +1,117 @@
 /* Localized Strings: English */
 
 /* Tags menu */
-"Tags" = "Tags";
+"Tags" = "Etichete";
 "Typeset" = "Compilare";
-"Save" = "Save";
-"Print..." = "Print...";
-"Print Source..." = "Print Source...";
-"Set Project Root..." = "Set Project Root...";
+"Save" = "Salvați";
+"Print..." = "Tipăriți...";
+"Print Source..." = "Tipăriți sursa...";
+"Set Project Root..." = "Stabilește Fișierul Principal al Proiectului...";
 "LaTeX Panel..." = "Tablou de Comandă LaTeX...";
-"Close LaTeX Panel" = "Close LaTeX Panel";
+"Close LaTeX Panel" = "Închide Tabloul de Comandă LaTeX";
 "Matrix Panel..." = "Tablou de Comandă Matrix...";
-"Close Matrix Panel" = "Close Matrix Panel";
-"Open for Preview..." = "Open for Preview...";
-"Open for Editing..." = "Open for Editing...";
+"Close Matrix Panel" = "Închide Tabloul de Comandă Matrix";
+"Open for Preview..." = "Deschide pentru Previzualizare...";
+"Open for Editing..." = "Deschide pentru Editare...";
 "File" = "Fișier";
-"Goto Error" = "Goto Error";
-"RotateClockwise" = "RotateClockwise";
-"RotateCounterclockwise" = "RotateCounterclockwise";
-"Comment" = "Comment";
-"Uncomment" = "Uncomment";
-"Indent" = "Indent";
-"Unindent" = "Unindent";
+"Goto Error" = "Mergi la Eroare";
+"RotateClockwise" = "Rotește în Sensul Orar";
+"RotateCounterclockwise" = "Rotește în Sens Antiorar";
+"Comment" = "Comentare";
+"Uncomment" = "Eliminare comentariu";
+"Indent" = "Indentare";
+"Unindent" = "Micșorare indentare";
 "Macros" = "Macro";
 "Open Macro Editor..." = "Deschide Editorul de Macro...";
-"Close Macro Editor" = "Close Macro Editor";
-"Add macros from file..." = "Add macros from file...";
-"Save selection to file..." = "Save selection to file...";
-"Convert \\yen to \\ in Pasteboard" = "Convert \\yen to \\ in Pasteboard";
-"Convert \\ to \\yen in Pasteboard" = "Convert \\ to \\yen in Pasteboard"; 
+"Close Macro Editor" = "Închide Editorul de Macro";
+"Add macros from file..." = "Adaugă Macro din Fișier...";
+"Save selection to file..." = "Salvează Selecția ca Fișier...";
+"Convert \\yen to \\ in Pasteboard" = "Înlocuiește \\yen cu \\ în clipboard";
+"Convert \\ to \\yen in Pasteboard" = "Înlocuiește \\ cu \\yen în clipboard"; 
 "Edit" = "Editare";
-"Warning" = "Warning";
-"Don't Save" = "Don't Save";
-"Cancel" = "Cancel";
-"Do you want to save macros?" = "Do you want to save macros?";
-"Save Spot" = "Save Spot";
-"Template" = "Template";
-"Typing" = "Typing";
-"AutoComplete" = "AutoComplete";  //Should be translation of "Key Bindings", even in English
-"Page Number" = "Page Number";
-"Page Number Panel" = "Page Number Panel";
-"Magnification Panel" = "Magnification Panel";
-"Omit Shell Escape" = "Omit Shell Escape";
-"Warning: Using Shell Escape" = "Warning: Using Shell Escape";
+"Warning" = "Avertisment";
+"Don't Save" = "Nu salvați";
+"Cancel" = "Anulați";
+"Do you want to save macros?" = "Doriți să salvați macrocomenzile?";
+"Save Spot" = "Salvează poziția";
+"Template" = "Model";
+"Typing" = "Tastare";
+"AutoComplete" = "Asocieri de taste";  //Should be translation of "Key Bindings", even in English
+"Page Number" = "Număr pagină";
+"Page Number Panel" = "Panoul de număr de pagină";
+"Magnification Panel" = "Panoul de mărire";
+"Omit Shell Escape" = "Omiteți shell escape";
+"Warning: Using Shell Escape" = "Avertisment: se folosește shell escape";
 "Preview" = "Previzualizare";
 "Display Format" = "Formatul de Afișare";// mitsu 1.29b
 "Magnification" = "Mărire";// mitsu 1.29b
 "Copy Format" = "Format de Copiere";// mitsu 1.29b
 "ToolbarItems" = "ToolbarItems";
-"Autocompletion" = "Autocompletion";
-"Completion" = "Completion";
-"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
-"Info: %@" = "Info: %@";
-"%@\n\nCharacters: %d" = "%@\n\nCharacters: %d";
-"The file encoding changed; characters can be lost if the wrong encoding is used." = "The file encoding changed; characters can be lost if the wrong encoding is used.";
-"Currently open files retain their old encoding." = "Currently open files retain their old encoding.";
-"Drag && Drop" = "Drag && Drop";
-"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later).";
-"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX.";
-"Can't find required tool." = "Can't find required tool.";
-"Typesetting engine cannot be found." = "Typesetting engine cannot be found.";
-"The source LaTeX document cannot be found." = "The source LaTeX document cannot be found.";
-"Sync Marks" = "Sync Marks";
-"%@ does not exist." = "%@ does not exist.";
-"%@ does not have the executable bit set." = "%@ does not have the executable bit set.";
-"This file was opened with IsoLatin9 encoding." = "This file was opened with IsoLatin9 encoding.";
-"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again.";
-"Error" = "Error";
-"There was an error checking for updates." = "There was an error checking for updates.";
-"Your copy of TeXShop is up-to-date" = "Your copy of TeXShop is up-to-date";
-"You have the most recent version of TeXShop." = "You have the most recent version of TeXShop.";
-"New version available" = "New version available";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "A new version of TeXShop is available (version %@). Would you like to download it now?";
-"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead.";
-"Hard Wrap" = "Hard Wrap";
-"Newline Removal" = "Newline Removal";
-"Color Index" = "Color Index";
+"Autocompletion" = "Expresie asociată";
+"Completion" = "Completare";
+"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Cale: %@\nDimensiunea fișierului (octeți): %d\nData creării: %@\nData modificării: %@";
+"Info: %@" = "Informații: %@";
+"%@\n\nCharacters: %d" = "%@\n\nCaractere: %d";
+"The file encoding changed; characters can be lost if the wrong encoding is used." = "Codificarea fișierului s-a schimbat; unele caractere se pot pierde dacă se folosește o codificare greșită.";
+"Currently open files retain their old encoding." = "Fișierele deschise în prezent își păstrează vechea codificare.";
+"Drag && Drop" = "Tragere și plasare";
+"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "Legătura /Library/TeX/texbin nu există. Pentru a remedia problema, accesați https://tug.org/mactex și instalați MacTeX sau Basic TeX (2015 sau o versiune ulterioară).";
+"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ nu există. TeXShop este o interfață pentru TeX, dar aveți nevoie și de o distribuție TeX. Poate că o astfel de distribuție nu a fost instalată sau a fost eliminată în timpul unei actualizări de sistem. În acest caz, accesați https://tug.org/mactex și urmați instrucțiunile pentru a instala MacTeX sau BasicTeX.";
+"Can't find required tool." = "Instrumentul necesar nu a fost găsit.";
+"Typesetting engine cannot be found." = "Motorul de tehnoredactare nu a fost găsit.";
+"The source LaTeX document cannot be found." = "Documentul LaTeX sursă nu a fost găsit.";
+"Sync Marks" = "Marcaje de sincronizare";
+"%@ does not exist." = "%@ nu există.";
+"%@ does not have the executable bit set." = "%@ nu are setat bitul de executare.";
+"This file was opened with IsoLatin9 encoding." = "Acest fișier a fost deschis cu codificarea IsoLatin9.";
+"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Fișierul nu a putut fi deschis cu codificarea %@ deoarece nu a fost salvat cu această codificare. Dacă doriți să-l deschideți cu altă codificare, închideți fereastra și deschideți-l din nou.";
+"Error" = "Eroare";
+"There was an error checking for updates." = "A apărut o eroare la căutarea actualizărilor.";
+"Your copy of TeXShop is up-to-date" = "Copia dvs. de TeXShop este actualizată";
+"You have the most recent version of TeXShop." = "Aveți cea mai recentă versiune de TeXShop.";
+"New version available" = "Versiune nouă disponibilă";
+"A new version of TeXShop is available (version %@). Would you like to download it now?" = "Este disponibilă o versiune nouă de TeXShop (versiunea %@). Doriți să o descărcați acum?";
+"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Această versiune de TeXShop necesită Mac OS X 10.4 sau o versiune ulterioară. Folosiți TeXShop 1.37.";
+"Hard Wrap" = "Împărțire fixă";
+"Newline Removal" = "Eliminarea sfârșiturilor de rând";
+"Color Index" = "Index de culori";
 "Help" = "Ajutor";
-"TeXShop Demos" = "TeXShop Demos";
-"Sync" = "Sync";
-"ShowFullPath" = "ShowFullPath";
-"Close Current Environment" = "Close Current Environment"; // Terada
-"Your current setting of %@ will be replaced. OK?" = "Your current setting of %@ will be replaced. OK?"; // Terada
-"Convert" = "Convert";
-"The program " = "The program ";
-" does not exist." = " does not exist.";
-"failed to copy selection." = "failed to copy selection.";
-"failed to save selection to the file." = "failed to save selection to the file.";
-"<a letter consisting of %d characters>" = "<a letter consisting of %d characters>";
-"%d letters, %d words, %d lines" = "%d letters, %d words, %d lines";
-"Emoji Style" = "Emoji Style";
-"Text Style" = "Text Style";
-"Character Info" = "Character Info";
-"Variant" = "Variant";
-"Revert To" = "Revino la";
-"Skin Tone I-II" = "Light";
-"Skin Tone III" = "Medium Light";
-"Skin Tone IV" = "Medium";
-"Skin Tone V" = "Medium Dark";
-"Skin Tone VI" = "Dark";
+"TeXShop Demos" = "Demonstrații TeXShop";
+"Sync" = "Sincronizați";
+"ShowFullPath" = "Afișează calea completă";
+"Close Current Environment" = "Închide mediul curent"; // Terada
+"Your current setting of %@ will be replaced. OK?" = "Configurarea actuală pentru %@ va fi înlocuită. Continuați?"; // Terada
+"Convert" = "Convertiți";
+"The program " = "Programul ";
+" does not exist." = " nu există.";
+"failed to copy selection." = "copierea selecției a eșuat.";
+"failed to save selection to the file." = "salvarea selecției în fișier a eșuat.";
+"<a letter consisting of %d characters>" = "<o literă formată din %d caractere>";
+"%d letters, %d words, %d lines" = "Litere: %d, cuvinte: %d, linii: %d";
+"Emoji Style" = "Stil emoji";
+"Text Style" = "Stil text";
+"Character Info" = "Informații despre caracter";
+"Variant" = "Variantă";
+"Revert To" = "Reveniți la";
+"Skin Tone I-II" = "Ton deschis";
+"Skin Tone III" = "Ton mediu-deschis";
+"Skin Tone IV" = "Ton mediu";
+"Skin Tone V" = "Ton mediu-închis";
+"Skin Tone VI" = "Ton închis";
 "Unknown encoding; using UTF-8." = "Codificare necunoscută; se folosește UTF-8.";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Demo Movies require Mac OS 10.9, Mavericks, or higher.";
-"Source" = "Source";
-"Type sample text here.\nUse several lines to test\ninterline spacing." = "Type sample text here.\nUse several lines to test\ninterline spacing.";
-"<<Close All - unlocalized>>" = "Close All";
-"Close All" = "Close All";
-"File Already Exists" = "File Already Exists";
-"Labels" = "Labels";
-"New Tag" = "New Tag";
+"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Filmele demonstrative necesită Mac OS 10.9 Mavericks sau o versiune ulterioară.";
+"Source" = "Sursă";
+"Type sample text here.\nUse several lines to test\ninterline spacing." = "Tastați aici un text de probă.\nFolosiți mai multe rânduri pentru a testa\nspațierea dintre rânduri.";
+"<<Close All - unlocalized>>" = "Închideți tot";
+"Close All" = "Închideți tot";
+"File Already Exists" = "Fișierul există deja";
+"Labels" = "Referințe";
+"New Tag" = "Etichetă nouă";
 "Split Window" = "Scindează Fereastra";
 "New Document" = "Document nou";
 "Link Popups" = "Ferestre pop-up";
 "Syntax Color expl3 Code" = "Sintaxă Cod expl culoare";
-"PDF File Has No Annotations" = "PDF File Has No Annotations";
+"PDF File Has No Annotations" = "Fișierul PDF nu are adnotări";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
 "Forget Learned Words…" = "Uită cuvintele învățate…";
@@ -155,35 +155,35 @@
 "Search commands" = "Caută comenzi";
 "Command" = "Comandă";
 "Shortcut" = "Scurtătură";
-"Change…" = "Modifică…";
+"Change…" = "Schimbați…";
 "Remove Shortcut" = "Elimină scurtătura";
-"Restore Default" = "Restabilește implicit";
-"Restore All…" = "Restabilește tot…";
-"Restore All" = "Restabilește tot";
+"Restore Default" = "Restaurați valoarea implicită";
+"Restore All…" = "Restaurați tot…";
+"Restore All" = "Restaurați tot";
 "Change Shortcut" = "Modificarea scurtăturii";
-"Apply" = "Aplică";
+"Apply" = "Aplicați";
 "Shortcut Unavailable" = "Scurtătură indisponibilă";
-"Restore all keyboard shortcuts?" = "Restabiliți toate scurtăturile de tastatură?";
+"Restore all keyboard shortcuts?" = "Restaurați toate scurtăturile de tastatură?";
 "New shortcut" = "Scurtătură nouă";
 "This command is no longer available." = "Această comandă nu mai este disponibilă.";
 "This shortcut is already used by “%@”." = "Această scurtătură este deja folosită de „%@”.";
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "The selected profile is invalid.";
-"Apply Settings Profile?" = "Apply Settings Profile?";
+"The selected profile is invalid." = "Profilul selectat nu este valid.";
+"Apply Settings Profile?" = "Aplicați profilul de configurare?";
 
-"Apply Profile" = "Apply Profile";
-"Settings could not be saved" = "Settings could not be saved";
-"Enter a valid setting" = "Enter a valid setting";
+"Apply Profile" = "Aplicați profilul";
+"Settings could not be saved" = "Configurările nu au putut fi salvate";
+"Enter a valid setting" = "Introduceți o valoare validă";
 
-"Continue Editing" = "Continue Editing";
-"Restore This Field" = "Restore This Field";
-"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Continue Editing" = "Continuați editarea";
+"Restore This Field" = "Restaurați acest câmp";
+"The theme could not be saved. Its last saved colors have been restored." = "Tema nu a putut fi salvată. Au fost restabilite ultimele culori salvate.";
 "Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Alegeți alt nume pentru temă. Nu sunt permise numele care încep cu punct, separatorii de cale, caracterele de control sau legăturile simbolice.";
-"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+"The new theme could not be saved. The original theme is unchanged." = "Tema nouă nu a putut fi salvată. Tema originală nu a fost modificată.";
 
-"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Redeschideți Configurările sau selectați o temă care poate fi citită înainte de a o edita sau duplica.";
 
 "Back" = "Înapoi";
 
@@ -213,9 +213,9 @@
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Rezultate: %lu";
 
-"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+"The theme “%@” already exists. Replace it?" = "Tema „%@” există deja. O înlocuiți?";
 
-"Replace" = "Replace";
+"Replace" = "Înlocuiți";
 
 "General" = "General";
 "Documents and Saving" = "Documente și salvare";
@@ -282,21 +282,21 @@
 "Experiment stopped.\n" = "Experiment oprit.\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"Assign" = "Assign";
-"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
-"Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
-"Return to Editing" = "Return to Editing";
-"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
+"Assign" = "Atribuiți";
+"Assign a shortcut used by macros?" = "Atribuiți o scurtătură folosită de macrocomenzi?";
+"Macro shortcut conflicts" = "Conflicte între scurtăturile macrocomenzilor";
+"Remove Conflicting Shortcuts and Save" = "Eliminați scurtăturile în conflict și salvați";
+"Return to Editing" = "Reveniți la editare";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Salvați oricum (scurtăturile în conflict rămân inactive)";
 
-"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
-"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
-"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
-"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
-"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
-"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
+"These macro shortcuts will become inactive:" = "Aceste scurtături de macrocomenzi vor deveni inactive:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "Aceste scurtături nou atribuite sau modificate se suprapun cu alte atribuiri. Lista arată care scurtături vor fi inactive. Le puteți edita, le puteți păstra așa cum sunt scrise sau puteți elimina doar scurtăturile modificate aflate în conflict. Numele și conținutul macrocomenzilor se păstrează.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Această scurtătură intră în conflict cu macrocomanda „%@” (%@), a cărei scurtătură va fi inactivă deoarece apare mai jos.";
+"This shortcut is already used by:\n%@" = "Această scurtătură este deja folosită de:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "Această scurtătură este inactivă deoarece intră în conflict cu „%@” (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "Această scurtătură este inactivă deoarece macrocomanda „%@” (%@) o folosește prima.";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Editează fișierul comun tuturor documentelor. Această configurare determină valoarea implicită pentru documentele noi.";
 
 "The newest detected installation is selected. You can choose another candidate below." = "Este selectată cea mai nouă instalare detectată. Puteți alege alta din lista de mai jos.";
 
@@ -310,7 +310,7 @@
 
 "Custom menu shortcuts will be removed." = "Scurtăturile de meniu personalizate vor fi eliminate.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resetează motorul, editarea, afișarea, configurările ascunse cunoscute și pictograma din Dock. Temele selectate se pot schimba. Calea motorului TeX: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Detectare automată a limbii";
@@ -333,4 +333,4 @@
 "Deletes the next • and selects its note, if it has one." = "Șterge următorul • și îi selectează nota, dacă are.";
 "Deletes the previous • and selects its note, if it has one." = "Șterge • anterior și îi selectează nota, dacă are.";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = marcaj, •‹notă› = marcaj cu notă; %@ › %@ trece de la unul la altul.";
-"Marks" = "Marks";
+"Marks" = "Marcaje";

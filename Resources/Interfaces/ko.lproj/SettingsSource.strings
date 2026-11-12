@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 "1080.title" = "OgreKit 찾기 패널";
-"14.title" = "폰트";
+"14.title" = "서체";
 "19.title" = "편집창 위치";
 "236.title" = "실행할 때";
 "262.title" = "인코딩";
@@ -36,7 +36,7 @@
 "aI9-3B-vVE.title" = "자동";
 "aig-4m-gAG.title" = "윈도우 대신 탭에서 열기";
 "eIA-mh-q2u.title" = "행 번호 크기";
-"kgx-Sa-LDF.title" = "철자 검사";
+"kgx-Sa-LDF.title" = "맞춤법 검사";
 "odm-Dy-TNW.title" = "크게";
 "teg-0p-Q8J.title" = "LaTeX 명령 제외";
 "ts-aware-spelling-cell.title" = "LaTeX 인식 맞춤법 검사";
