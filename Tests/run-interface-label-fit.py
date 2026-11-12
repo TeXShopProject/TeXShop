@@ -34,6 +34,23 @@ static void Walk(NSView *v, NSString *nib) {
             if (need > have + 0.5) { printf("CLIPPED %s button \"%s\"%s: needs %.1f, has %.1f\n", nib.UTF8String, b.title.UTF8String, automaticBezel ? " (automatic bezel)" : "", need, have); problems++; }
         }
     }
+    if ([v isKindOfClass:NSMatrix.class] && !automaticBezel) {
+        // Each titled cell of a matrix (radio buttons, check boxes, button grids) fits the cell size.
+        NSMatrix *m = (NSMatrix *)v;
+        for (NSCell *cell in m.cells) {
+            if (![cell isKindOfClass:NSButtonCell.class] || !cell.title.length || [cell.title isEqual:@"Button"] || [cell.title isEqual:@"Radio"] || [cell.title isEqual:@"Switch"]) continue;
+            NSButtonCell *b = (NSButtonCell *)cell;
+            if (b.imagePosition == NSImageOnly) continue;
+            NSRect bounds = NSMakeRect(0, 0, m.cellSize.width, m.cellSize.height);
+            CGFloat need = b.attributedTitle.size.width, have = [b titleRectForBounds:bounds].size.width;
+            if (need > have + 0.5) { printf("CLIPPED %s matrix cell \"%s\": needs %.1f, has %.1f\n", nib.UTF8String, b.title.UTF8String, need, have); problems++; }
+        }
+    }
+    if ([v isKindOfClass:NSTabView.class]) {
+        // Also the tabs that are not selected.
+        for (NSTabViewItem *item in ((NSTabView *)v).tabViewItems)
+            if (item.view && item.view.superview != v && ![v.subviews containsObject:item.view]) Walk(item.view, nib);
+    }
     if ([v isKindOfClass:NSPopUpButton.class] && !automaticBezel) {
         // Every choice of a pop-up menu, and the title of a pull-down menu, fits the
         // button: each item is selected in a copy of the cell and measured with it.
@@ -84,7 +101,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     }}
     count /= 2;
     if (problems) return 1;
-    printf("PASS: labels, buttons and pop-up choices show their whole text in %d localized interfaces (also with the automatic toolbar bezel)\n", count);
+    printf("PASS: labels, buttons, matrix cells and pop-up choices show their whole text in %d localized interfaces (also with the automatic toolbar bezel)\n", count);
 } return 0; }
 '''
 nibs = [str(p) for p in sorted(interfaces.glob('*.lproj/*.nib')) if p.name not in ('Preferences.nib', 'Movie.nib')]
