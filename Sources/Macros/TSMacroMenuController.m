@@ -23,6 +23,7 @@
  */
 
 #import "TSMacroMenuController.h"
+#import "TSMacroContentKind.h"
 #import "TSKeyboardShortcuts.h"
 
 #import "TSTextEditorWindow.h"
@@ -343,10 +344,8 @@ static id sharedMacroMenuController = nil;
 	if (macroString == nil)
 		return;    // zenitani 1.33
 	
-	if ([macroString length] <14 ||
-		(![[[macroString substringToIndex: 13] lowercaseString] isEqualToString:@"--applescript"]
-		 && ![[[macroString substringToIndex: 14] lowercaseString] isEqualToString:@"-- applescript"]))
-		
+	TSMacroContentKind contentKind = TSMacroContentKindForString(macroString);
+	if (contentKind == TSMacroContentKindTeX)
 	{
 		// do ordinary macro
 		// mitsu 1.29 (T2)
@@ -433,10 +432,7 @@ static id sharedMacroMenuController = nil;
             [NSString stringWithFormat: @"\"%@\"", folderPath] options: 0 range: NSMakeRange(0, [newString length])];
 		
 		
-		if (([macroString length] >= 20) &&
-			( ([[[macroString substringToIndex: 20] lowercaseString] isEqualToString:@"--applescript direct"]) ||
-			  ([[[macroString substringToIndex: 21] lowercaseString] isEqualToString:@"-- applescript direct"])))
-			
+		if (contentKind == TSMacroContentKindAppleScriptDirect)
 		{
 			
 			NSAppleScript *aScript = [[NSAppleScript alloc] initWithSource: newString];
@@ -527,9 +523,7 @@ static id sharedMacroMenuController = nil;
 	if (macroString == nil)
 		return YES;
     
-	if ([macroString length] <14 ||
-		(![[[macroString substringToIndex: 13] lowercaseString] isEqualToString:@"--applescript"]
-		 && ![[[macroString substringToIndex: 14] lowercaseString] isEqualToString:@"-- applescript"]))
+	if (TSMacroContentKindForString(macroString) == TSMacroContentKindTeX)
 		return ([[NSApp mainWindow] isMemberOfClass: [TSTextEditorWindow class]] ||
                 [[NSApp mainWindow] isMemberOfClass: [TSFullSplitWindow class]]);
 	else
