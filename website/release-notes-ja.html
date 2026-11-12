@@ -31,7 +31,7 @@
 <h3>タイプセットと安定性</h3>
 <ul>
 <li><strong>重大な不具合の修正</strong>：「中止」を押してもTeXの処理が残り、次のタイプセットを開始しても前の処理が停止しない問題を修正しました。関連する子プロセスも含めて停止します。</li>
-<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、「実験」の処理を専用コンソールに分離し、入力・中止・後片付けを通常のタイプセットと独立させました。実験を閉じたり置き換えたりしても、その実験の処理だけを停止します（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>）。</li>
+<li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の報告により、「実験」の処理を専用コンソールに分離し、入力・中止・後片付けを通常のタイプセットと独立させました。実験を閉じたり置き換えたりしても、その実験の処理だけを停止します。「実験」のコンソールは、「実験」のソースとプレビューのパネルと同じく、書類のウインドウの上に浮かびます。「実験」をタイプセットしたときと「コンソールを表示」（Command＋0）でパネルの前に出て、パネルをクリックするとそのパネルが前に出ます。設定の「コンソール」で「エラーがあったとき表示」を選んでいるときは、TeX がエラーを報告するか入力を待つまで、「実験」のコンソールは表示しません（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>）。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「実験」の一時フォルダに書類のフォルダの中身のクローン（コピーオンライト）を置き、書類そのものを組版するときと同じように画像などのファイルを見つけるようにしました。<code>\graphicspath{{./figures/}}</code>のように<code>./</code>で始まるパスも使え、組版で書き出すものは書類のフォルダに影響しません。また、書類を最後に組版したときの<code>.aux</code>を使い、<code>\ref</code>・<code>\pageref</code>・<code>\cite</code>を解決するようにしました（<a href="https://github.com/TeXShopProject/TeXShop/issues/8">#8</a>）。</li>
 <li><a href="https://github.com/Uwe-Schmock">Uwe Schmock</a>氏の提案により、「実験」の最初のタイプセットのあと、ページの中ほどではなく、出力のある1ページ目の上端を表示するようにしました。2回目以降のタイプセットでは、見ていた位置を保ちます（<a href="https://github.com/TeXShopProject/TeXShop/issues/20">#20</a>）。</li>
 <li>「実験」のソースを、書類のソースと同じように表示するようにしました。フォント、タブ、行間、行の折り返し、シンタックスハイライト、現在の行のハイライト、ブロックカーソル、不可視文字、行番号、対応する括弧の表示が同じになります。メニューや設定でこれらを変えると、「実験」のウインドウにもすぐに反映されます。</li>
