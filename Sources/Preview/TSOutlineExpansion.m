@@ -122,10 +122,13 @@ static NSString *const TSOutlineKeySeparator = @"\x1E";
     _reloading = NO;
 
     if (clipView != nil) {
-        CGFloat maxY = MAX(0, NSHeight(outlineView.frame) - NSHeight(clipView.bounds));
-        origin.y = MIN(MAX(origin.y, 0), maxY);
-        origin.x = 0;
-        [clipView scrollToPoint:origin];
+        // The top of the outline is above 0 by the height of the column header
+        // and the scroll view's insets, so let the clip view keep the position
+        // within the outline as it is now.
+        NSRect bounds = clipView.bounds;
+        bounds.origin = origin;
+        bounds = [clipView constrainBoundsRect:bounds];
+        [clipView scrollToPoint:bounds.origin];
         [outlineView.enclosingScrollView reflectScrolledClipView:clipView];
     }
 }

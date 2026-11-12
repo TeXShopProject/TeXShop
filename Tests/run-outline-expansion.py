@@ -12,7 +12,7 @@ MUTATIONS = {
     'no-reopen': ('    [outlineView reloadData];\n    [self expandRememberedChildrenOf:nil];\n',
                   '    [outlineView reloadData];\n'),
     'title-only': ('                occurrence++;\n', '                ;\n'),
-    'no-scroll': ('        [clipView scrollToPoint:origin];\n', ''),
+    'no-scroll': ('        [clipView scrollToPoint:bounds.origin];\n', ''),
     'forget-inner': ('    // as NSOutlineView does for items it already knows.\n    [self expandRememberedChildrenOf:item];\n',
                      '    // as NSOutlineView does for items it already knows.\n'),
     'keep-closed': ('    [_expandedKeys removeObject:', '    [_expandedKeys member:'),
