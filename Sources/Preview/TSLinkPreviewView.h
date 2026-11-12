@@ -24,7 +24,8 @@
 // page's label (#17).
 @property (copy, nonatomic) NSString *pageLabel;
 
-// The cursor for a point in the superview's coordinates, or nil outside a pinned popup.
+// The cursor for a point in the superview's coordinates, or nil outside the part of a pinned
+// popup that is in view.
 - (NSCursor *)cursorAtPoint:(NSPoint)point;
 // Moves the popup back into view as far as dragging it would allow, keeping its size.
 - (void)keepInView;
@@ -40,3 +41,9 @@
 - (BOOL)showsLinkPreviewForAnnotation:(PDFAnnotation *)annotation;
 @end
 BOOL TSLinkPreviewInstallToolTipFilter(void);
+
+// A PDFView that implements this shows its tool's cursor for the event's location when the
+// pointer has left its pinned popup, also when a drag of the popup ends outside it.
+@interface PDFView (TSLinkPreviewCursor)
+- (void)showToolCursorOutsideLinkPreviewWithEvent:(NSEvent *)event;
+@end

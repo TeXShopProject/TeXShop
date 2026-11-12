@@ -17,7 +17,8 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'magnifier-kills-pin', 'switch-kills-pin', 'keep-marquee', 'contains-unpinned', 'contains-hidden-part',
                                            'detach-keeps-state', 'attach-keeps-old-tool', 'attach-replaces-pin', 'not-kept-in-view',
                                            'window-magnifier-bypass', 'window-resign-kills-pin', 'window-split-kills-pin', 'window-unsplit-drops-pin',
-                                           'window-layout-not-kept'])
+                                           'window-layout-not-kept', 'drag-cursor-stays', 'hidden-part-cursor', 'no-exit-tracking', 'exit-ignored',
+                                           'outside-always-arrow', 'visible-beyond-bounds'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -38,7 +39,7 @@ methods = '\n'.join(method(signature) for signature in (
     '- (void)viewWillMoveToWindow:', '- (void)doKillPopup', '- (void)killPopup:',
     '- (void)setDocument:(PDFDocument *)document', '- (void)cleanupMarquee:',
     '- (void) mouseDown:', '- (void) mouseDownKeepingPinnedLinkPreview:', '- (void) initializeDisplay',
-    '- (NSCursor *) cursorForToolWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:',
+    '- (NSCursor *) cursorForToolWithEvent:', '- (void) showToolCursorOutsideLinkPreviewWithEvent:', '- (void) copy:', '- (BOOL) validateMenuItem:',
     '- (void) keepingPinnedLinkPreview:', '- (void) changeMouseMode:',
     '- (void) linkPopupsChanged', '- (BOOL) skipLinks', '- (void) setSkipLinks:',
     '+ (void)initialize', '- (BOOL)showsLinkPreviewForAnnotation:',
@@ -91,7 +92,8 @@ elif args.mutation == 'tool-change-kills-pin':
 elif args.mutation == 'flag-not-restored':
     methods = methods.replace('    @finally {\n        keepsPinnedLinkPreview = previous;\n    }', '    @finally {\n    }')
 elif args.mutation == 'cursor-not-restored':
-    methods = methods.replace('        [[self cursorForToolWithEvent: theEvent] set];\n', '')
+    assert methods.count('    [[self cursorForToolWithEvent: theEvent] set];\n') == 1
+    methods = methods.replace('    [[self cursorForToolWithEvent: theEvent] set];\n', '')
 elif args.mutation == 'label-from-index':
     methods = methods.replace('if (linkedPage.label.length)', 'if ((linkedPage = [linkedPage.document pageAtIndex:[linkedPage.document indexForPage:linkedPage]]).label.length)').replace(
         '@"Page label in the corner of a link popup; %@ is the page label given in the PDF"), linkedPage.label]',
@@ -113,7 +115,7 @@ preview_mutations = {
     'move-confined': ('frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], [self keptSizeForFrame:frame], flipped);',
                       'frame = TSLinkPreviewMove(_startFrame, delta, [self availableRect], _startFrame.size, flipped);'),
     'click-keeps-selection': ('NSEqualRects(self.frame, _startFrame)) self.selection = nil;', 'NO) self.selection = nil;'),
-    'click-keeps-focus': ('            if (self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
+    'click-keeps-focus': ('    if (owner && self.window.firstResponder != owner) [self.window makeFirstResponder:owner];\n', ''),
     'no-page-label': ('    if (!self.pageLabel.length) return;\n', '    return;\n'),
     'label-unscaled': ('[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize * unit]', '[NSFont boldSystemFontOfSize:TSLinkPreviewLabelFontSize]'),
     'tooltip-kept': ('if (annotation && (__bridge void *)annotation == data && [pdfView showsLinkPreviewForAnnotation:annotation])', 'if (NO)'),
@@ -121,6 +123,12 @@ preview_mutations = {
                             'if (annotation && [pdfView showsLinkPreviewForAnnotation:annotation])'),
     'resize-scales': ('                            [self availableRect], _pageSize, flipped, &frame, &source);',
                       '                            [self availableRect], _pageSize, flipped, &frame, &source);\n        source = _startSource;'),
+    'drag-cursor-stays': ('    else [self showCursorOutsideWithEvent:event];\n', ''),
+    'hidden-part-cursor': (' || !NSPointInRect(point, self.superview.visibleRect)) return nil;', ') return nil;'),
+    'no-exit-tracking': ('        [self addTrackingArea:', '        if (NO) [self addTrackingArea:'),
+    'exit-ignored': ('    [self showCursorOutsideWithEvent:event];\n}\n\n- (void)mouseDown:', '}\n\n- (void)mouseDown:'),
+    'outside-always-arrow': ('    if (owner && owner.window == event.window', '    if (NO && owner && owner.window == event.window'),
+    'visible-beyond-bounds': ('NSIntersectionRect(owner.bounds, owner.visibleRect)', 'owner.visibleRect'),
 }
 if args.mutation in preview_mutations:
     old, new = preview_mutations[args.mutation]
@@ -610,6 +618,96 @@ static void testTools(MyPDFKitView *view, NSWindow *window, PDFDocument *doc) {
     [view doKillPopup];
     [view setTestMouseMode:0];
 }
+static NSEvent *exited(NSWindow *window, NSPoint point) {
+    return [NSEvent enterExitEventWithType:NSEventTypeMouseExited location:point modifierFlags:0 timestamp:0
+        windowNumber:window.windowNumber context:nil eventNumber:0 trackingNumber:0 userData:NULL];
+}
+// The pointer leaves a pinned popup, or a drag of it ends, outside the popup: no cursor of the
+// popup stays there, as the resize arrows did over the toolbar (#14).
+static void testCursorOutside(MyPDFKitView *view, NSWindow *window) {
+    view.document = textDocument(); [view layoutDocumentView];
+    NSRect content = window.contentLayoutRect;
+    // TeXShop's toolbar lies above the content, as the title bar does in this window.
+    NSPoint toolbar = NSMakePoint(NSMidX(content), NSMaxY(content) + 5);
+    NSRect visible = [view.documentView convertRect:view.documentView.visibleRect toView:nil];
+    NSPoint away = NSMakePoint(NSMinX(visible) + 3, NSMinY(visible) + 3);
+    check(!NSPointInRect(toolbar, content) && toolbar.y < NSHeight(window.frame) && NSMaxY(visible) <= NSMaxY(content),
+          @"the toolbar point lies above the preview, in the window");
+
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
+    show(view, NSEventModifierFlagOption); flags = 0;
+    TSLinkPreviewView *preview = view.preview;
+    BOOL watches = NO;
+    for (NSTrackingArea *area in preview.trackingAreas)
+        watches |= area.owner == preview && (area.options & NSTrackingMouseEnteredAndExited) && (area.options & NSTrackingInVisibleRect);
+    check(watches, @"the popup watches the pointer leave it");
+    NSRect onScreen = [preview.superview convertRect:preview.frame toView:nil];
+    NSPoint top = NSMakePoint(NSMidX(onScreen), NSMaxY(onScreen) - 2);
+    NSCursor *resize = [preview cursorAtPoint:[view.documentView convertPoint:top fromView:nil]];
+    check(resize && !sameCursor(resize, NSCursor.openHandCursor) && !sameCursor(resize, NSCursor.arrowCursor),
+          @"the top edge of the popup shows a resize cursor");
+    [preview mouseDown:mouse(window, NSEventTypeLeftMouseDown, top)];
+    [preview mouseDragged:mouse(window, NSEventTypeLeftMouseDragged, toolbar)];
+    [preview mouseExited:exited(window, toolbar)];
+    check(sameCursor(NSCursor.currentCursor, resize), @"a drag keeps its cursor when the pointer leaves the popup");
+    [preview mouseUp:mouse(window, NSEventTypeLeftMouseUp, toolbar)];
+    NSRect resized = [preview.superview convertRect:preview.frame toView:nil];
+    check(NSMaxY(resized) > NSMaxY(onScreen) && NSMaxY(resized) < NSMaxY(visible) && approx(NSMinY(resized), NSMinY(onScreen)),
+          @"the top edge stops below the toolbar");
+    check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"releasing the edge over the toolbar shows the arrow");
+
+    // Released in the preview but outside the popup: the tool's cursor, whichever tool it is.
+    NSDictionary *expected = @{@(NEW_MOUSE_MODE_SCROLL): NSCursor.openHandCursor, @(NEW_MOUSE_MODE_SELECT_PDF): NSCursor.crosshairCursor,
+                               @(NEW_MOUSE_MODE_MAG_GLASS): NSCursor.arrowCursor, @(NEW_MOUSE_MODE_SELECT_TEXT): NSCursor.arrowCursor};
+    for (NSNumber *mode in expected) {
+        [view setTestMouseMode:mode.integerValue];
+        NSPoint edge = windowPoint(preview, 2, 20);
+        [preview mouseDown:mouse(window, NSEventTypeLeftMouseDown, edge)];
+        [preview mouseDragged:mouse(window, NSEventTypeLeftMouseDragged, away)];
+        check(!sameCursor(NSCursor.currentCursor, expected[mode]), @"a drag of the edge shows a resize cursor");
+        [preview mouseUp:mouse(window, NSEventTypeLeftMouseUp, away)];
+        check([preview cursorAtPoint:[view.documentView convertPoint:away fromView:nil]] == nil &&
+              sameCursor(NSCursor.currentCursor, expected[mode]),
+              @"releasing a drag in the preview outside the popup shows the tool's cursor");
+    }
+
+    // Leaving the popup straight onto the toolbar, with no move over the preview between.
+    [view setTestMouseMode:NEW_MOUSE_MODE_SELECT_PDF];
+    NSPoint edge = windowPoint(preview, 2, 20);
+    [view mouseMoved:mouse(window, NSEventTypeMouseMoved, edge)];
+    check(!sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"the edge shows a resize cursor before leaving");
+    [preview mouseExited:exited(window, toolbar)];
+    check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"leaving the popup straight onto the toolbar shows the arrow");
+    [view mouseMoved:mouse(window, NSEventTypeMouseMoved, edge)];
+    [preview mouseExited:exited(window, away)];
+    check(sameCursor(NSCursor.currentCursor, NSCursor.crosshairCursor), @"leaving the popup into the preview shows the tool's cursor");
+    [view mouseMoved:mouse(window, NSEventTypeMouseMoved, edge)];
+    NSCursor *before = NSCursor.currentCursor;
+    [preview mouseExited:exited(window, edge)];
+    check(NSCursor.currentCursor == before, @"an exit while the pointer is still on the popup changes nothing");
+
+    // Moved under the toolbar, the popup's hidden part shows no hand there.
+    [view setTestMouseMode:NEW_MOUSE_MODE_SCROLL];
+    NSPoint start = findPoint(view, NSCursor.openHandCursor);
+    [preview mouseDown:mouse(window, NSEventTypeLeftMouseDown, start)];
+    [preview mouseDragged:mouse(window, NSEventTypeLeftMouseDragged, toolbar)];
+    check(sameCursor(NSCursor.currentCursor, NSCursor.closedHandCursor), @"moving the popup shows a closed hand");
+    [preview mouseUp:mouse(window, NSEventTypeLeftMouseUp, toolbar)];
+    check(NSPointInRect([view.documentView convertPoint:toolbar fromView:nil], preview.frame),
+          @"the moved popup lies under the toolbar point");
+    check(sameCursor(NSCursor.currentCursor, NSCursor.arrowCursor), @"releasing a moved popup over the toolbar shows the arrow");
+    check(![preview cursorAtPoint:[view.documentView convertPoint:toolbar fromView:nil]],
+          @"the hidden part of the popup shows no cursor of its own");
+
+    // An ordinary popup leaves the cursor to the preview.
+    [view doKillPopup];
+    show(view, 0);
+    [NSCursor.IBeamCursor set];
+    [view.preview mouseExited:exited(window, toolbar)];
+    check(NSCursor.currentCursor == NSCursor.IBeamCursor, @"leaving an ordinary popup changes no cursor");
+    [view doKillPopup];
+    [view setTestMouseMode:0];
+}
 // Fraction of the pixels in `rect` (view points, y up) that are the label's gray, not page white or text black.
 static double grayShare(NSBitmapImageRep *rep, NSView *view, NSRect rect) {
     double scale = rep.pixelsWide / NSWidth(view.bounds); NSUInteger gray = 0, all = 0;
@@ -862,6 +960,7 @@ int main(void) { @autoreleasepool {
     view.document = doc; view.autoScales = YES; [view layoutDocumentView];
     testInteraction(view, window);
     testTools(view, window, textDocument());
+    testCursorOutside(view, window);
     testPageLabelAndToolTips(view, window, textDocument());
     testDocumentLinkPopups(view, window, doc);
     view.document = doc; [view layoutDocumentView];
@@ -1030,7 +1129,13 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'detach-keeps-state':'the pane that gives up its popup is left without one',
                     'attach-keeps-old-tool':'the moved popup follows the tool of its new pane',
                     'attach-replaces-pin':'a pane keeps its own pinned popup',
-                    'not-kept-in-view':'a pinned popup outside the pane comes back into view'}[args.mutation]
+                    'not-kept-in-view':'a pinned popup outside the pane comes back into view',
+                    'drag-cursor-stays':'releasing the edge over the toolbar shows the arrow',
+                    'hidden-part-cursor':'releasing a moved popup over the toolbar shows the arrow',
+                    'no-exit-tracking':'the popup watches the pointer leave it',
+                    'exit-ignored':'leaving the popup straight onto the toolbar shows the arrow',
+                    'outside-always-arrow':"releasing a drag in the preview outside the popup shows the tool's cursor",
+                    'visible-beyond-bounds':'releasing the edge over the toolbar shows the arrow'}[args.mutation]
         if isinstance(expected, str): expected = (expected,)
         assert result.returncode == 1 and any(message in result.stderr for message in expected), result.stderr
         print('PASS: detected mutation ' + args.mutation)
