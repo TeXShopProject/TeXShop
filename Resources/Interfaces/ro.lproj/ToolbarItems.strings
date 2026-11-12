@@ -160,7 +160,11 @@ tiToolTipMacrosKIT              = "Inserați macrocomenzi";
 
 tiLabelMouseModeKIT				= "Mod maus";
 tiPaletteLabelMouseModeKIT		= "Mod maus";
-tiToolTipMouseModeKIT			= "Schimbați modul maus";
+tiToolTipMouseModeScroll = "Derulare: trageți pentru a muta documentul";
+tiToolTipMouseModeSelectText = "Selectează textul: trageți pentru a selecta textul de copiat";
+tiToolTipMouseModeMagnify = "Lupă: țineți apăsat pentru a privi printr-o lupă mică";
+tiToolTipMouseModeMagnifyLarge = "Lupă (mare): țineți apăsat pentru a privi printr-o lupă mare";
+tiToolTipMouseModeSelectPDF = "Selectează PDF: trageți pentru a selecta o zonă de copiat ca imagine";
 
 tiLabelSyncMarksKIT				= "Marcaje sinc.";
 tiPaletteLabelSyncMarksKIT		= "Marcaje de sincronizare";
@@ -220,7 +224,6 @@ tiToolTipSharingSplit            = "Partajați text și imagini";
 
 tiLabelMouseModeKITSplit                = "Mod maus";
 tiPaletteLabelMouseModeKITSplit        = "Mod maus";
-tiToolTipMouseModeKITSplit            = "Schimbați modul maus";
 
 tiLabelSearchKITSplit                = "Caută în PDF";
 tiPaletteLabelSearchKITSplit         = "Caută în PDF";

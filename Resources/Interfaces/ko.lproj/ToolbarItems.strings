@@ -159,7 +159,11 @@ tiToolTipMacrosKIT              = "매크로 삽입";
 
 tiLabelMouseModeKIT				= "마우스 모드";
 tiPaletteLabelMouseModeKIT		= "마우스 모드";
-tiToolTipMouseModeKIT			= "마우스 모드 변경";
+tiToolTipMouseModeScroll = "스크롤: 드래그하여 문서 이동";
+tiToolTipMouseModeSelectText = "텍스트 선택: 드래그하여 복사할 텍스트 선택";
+tiToolTipMouseModeMagnify = "확대경: 누르고 있는 동안 작은 확대경으로 보기";
+tiToolTipMouseModeMagnifyLarge = "확대경 (크게): 누르고 있는 동안 큰 확대경으로 보기";
+tiToolTipMouseModeSelectPDF = "범위 선택: 드래그하여 이미지로 복사할 영역 선택";
 
 tiLabelSyncMarksKIT				= "동기화 마크";
 tiPaletteLabelSyncMarksKIT		= "동기화 마크";
@@ -219,7 +223,6 @@ tiToolTipSharingSplit            = "텍스트 및 사진 공유";
 
 tiLabelMouseModeKITSplit                = "마우스 모드";
 tiPaletteLabelMouseModeKITSplit        = "마우스 모드";
-tiToolTipMouseModeKITSplit            = "마우스 모드 변경";
 
 tiLabelSearchKITSplit                = "PDF 검색";
 tiPaletteLabelSearchKITSplit         = "PDF 검색";
