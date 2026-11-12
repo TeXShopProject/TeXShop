@@ -25,10 +25,10 @@
                 <rect key="frame" x="0.0" y="0.0" width="348" height="352"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button toolTip="編集したマクロを保存します" verticalHuggingPriority="750" id="22">
+                    <button toolTip="保存所做的编辑" verticalHuggingPriority="750" id="22">
                         <rect key="frame" x="242" y="12" width="92" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="push" title="存储" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="123">
+                        <buttonCell key="cell" type="push" title="保存" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="123">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -36,7 +36,7 @@
                             <action selector="savePressed:" target="-2" id="173"/>
                         </connections>
                     </button>
-                    <button toolTip="マクロの変更をキャンセルします" verticalHuggingPriority="750" id="23">
+                    <button toolTip="取消所做的更改" verticalHuggingPriority="750" id="23">
                         <rect key="frame" x="150" y="12" width="92" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="取消" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="124">
@@ -143,7 +143,7 @@ DQ
                     <button verticalHuggingPriority="750" id="153">
                         <rect key="frame" x="14" y="12" width="96" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                        <buttonCell key="cell" type="push" title="删除" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="154">
+                        <buttonCell key="cell" type="push" title="移除" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="154">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>

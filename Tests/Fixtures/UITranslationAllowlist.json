@@ -1,0 +1,353 @@
+{
+ "policy": "Text that may equal the English text. all_languages: program, format, LaTeX command and environment names, math operators, and placeholders that are replaced at run time or never shown (prototype cells, window titles replaced by document names, sheet titles). languages: words that are the same in that language, per file, each reviewed for this localization. Never add a wording because a check failed; translate it.",
+ "all_languages": [
+  "-- DO NOT LOCALIZE THIS! --",
+  "Align",
+  "Array",
+  "BibTeX",
+  "Box",
+  "Button",
+  "Cases",
+  "ConTeXt",
+  "Control",
+  "Displaymath",
+  "EPS",
+  "Emph",
+  "Enumerate",
+  "Eqnarray",
+  "Field:",
+  "Full Window",
+  "GIF",
+  "GNU Public License",
+  "HTML",
+  "Hiragana → Katakana",
+  "Item 1",
+  "Item 2",
+  "Item 3",
+  "Itemize",
+  "Katakana → Hiragana",
+  "LaTeX",
+  "LaTeX ",
+  "Löschen",
+  "MainMenu",
+  "MakeIndex",
+  "MathBb",
+  "MathBf",
+  "MathCal",
+  "MathRm",
+  "Menu",
+  "MetaFont",
+  "MetaPost",
+  "Modal Sheet (title will be hidden)",
+  "Modified NFC",
+  "Modified NFD",
+  "NFC",
+  "NFD",
+  "NFKC",
+  "NFKD",
+  "Option",
+  "OtherViews",
+  "PDF",
+  "PNG",
+  "Panel",
+  "Pdftex",
+  "Plain TeX",
+  "Radio",
+  "Rnw",
+  "Shift",
+  "Stex",
+  "Switch",
+  "SyncTeX",
+  "TIFF (LZW)",
+  "TIFF (PackBits)",
+  "Tabbing",
+  "Tabular",
+  "TeX",
+  "TeX + DVI",
+  "TeXShop",
+  "TeXShop Help",
+  "Tex",
+  "Texdoc",
+  "Text Cell",
+  "ToolbarItems",
+  "Try This",
+  "Try This Output",
+  "URL",
+  "URL:",
+  "Unicode (UTF-16)",
+  "Unicode (UTF-8)",
+  "Verbatim",
+  "Window",
+  "arccos",
+  "arcsin",
+  "arctan",
+  "arg",
+  "cos",
+  "cosh",
+  "cot",
+  "coth",
+  "csc",
+  "det",
+  "dim",
+  "exp",
+  "gcd",
+  "hom",
+  "inf",
+  "ker",
+  "lim",
+  "lim inf",
+  "lim sup",
+  "log",
+  "matrix",
+  "max",
+  "min",
+  "pdfTeX",
+  "sec",
+  "sin",
+  "sinh",
+  "sup",
+  "tabular",
+  "tan",
+  "tanh"
+ ],
+ "languages": {
+  "de": {
+   "Localizable.strings": [
+    "Drag && Drop",
+    "Editor",
+    "Info: %@",
+    "Labels",
+    "TeXShop Demos",
+    "Updates"
+   ],
+   "MacroEditor.nib": [
+    "Name",
+    "Name:",
+    "Test"
+   ],
+   "MainMenu.nib": [
+    "TeXShop Demos"
+   ],
+   "Movie.nib": [
+    "Demo"
+   ],
+   "TSDocument.nib": [
+    "Labels",
+    "Text"
+   ],
+   "ToolbarItems.strings": [
+    "Labels",
+    "System"
+   ],
+   "completionpanel1.2.nib": [
+    "Matrix",
+    "Roman",
+    "Sans"
+   ]
+  },
+  "es": {
+   "Localizable.strings": [
+    "Editor",
+    "Error",
+    "General",
+    "Macros"
+   ],
+   "MainMenu.nib": [
+    "Macros"
+   ],
+   "Movie.nib": [
+    "Demo"
+   ],
+   "TSDocument.nib": [
+    "Macros"
+   ],
+   "ToolbarItems.strings": [
+    "Macros",
+    "Make Index"
+   ],
+   "completionpanel1.2.nib": [
+    "Roman",
+    "Sans"
+   ]
+  },
+  "fr": {
+   "Localizable.strings": [
+    "Console",
+    "Labels",
+    "Macros",
+    "Page %@",
+    "Source"
+   ],
+   "MainMenu.nib": [
+    "Description",
+    "Ligatures",
+    "Macros",
+    "Services",
+    "Source",
+    "Substitutions",
+    "Transformations"
+   ],
+   "TSDocument.nib": [
+    "Console",
+    "Labels",
+    "Macros",
+    "Page",
+    "Section"
+   ],
+   "ToolbarItems.strings": [
+    "Labels",
+    "Macros"
+   ],
+   "completionpanel1.2.nib": [
+    "Description",
+    "Figure",
+    "Roman",
+    "Sans"
+   ]
+  },
+  "it": {
+   "Localizable.strings": [
+    "Console",
+    "Editor",
+    "File",
+    "Info: %@"
+   ],
+   "MainMenu.nib": [
+    "File",
+    "Font"
+   ],
+   "Movie.nib": [
+    "Demo"
+   ],
+   "TSDocument.nib": [
+    "Console",
+    "Popup"
+   ],
+   "completionpanel1.2.nib": [
+    "Sans",
+    "log"
+   ]
+  },
+  "ko": {
+   "completionpanel1.2.nib": [
+    "log"
+   ]
+  },
+  "nl": {
+   "Localizable.strings": [
+    "Console",
+    "Editor",
+    "Help",
+    "Info: %@",
+    "Labels",
+    "Updates",
+    "Variant"
+   ],
+   "MacroEditor.nib": [
+    "Submenu",
+    "Test"
+   ],
+   "MainMenu.nib": [
+    "Experiment...",
+    "Help",
+    "Open ~/Library/TeXShop",
+    "Open...",
+    "Subscript",
+    "Superscript"
+   ],
+   "Movie.nib": [
+    "Demo"
+   ],
+   "TSDocument.nib": [
+    "Console",
+    "Labels",
+    "Project"
+   ],
+   "ToolbarItems.strings": [
+    "Labels"
+   ],
+   "completionpanel1.2.nib": [
+    "Matrix",
+    "Roman",
+    "Sans"
+   ]
+  },
+  "pt": {
+   "Localizable.strings": [
+    "Console",
+    "Editor",
+    "Macros"
+   ],
+   "MacroEditor.nib": [
+    "Submenu"
+   ],
+   "MainMenu.nib": [
+    "Macros"
+   ],
+   "Movie.nib": [
+    "Demo"
+   ],
+   "TSDocument.nib": [
+    "Console",
+    "Macros"
+   ],
+   "ToolbarItems.strings": [
+    "Macros"
+   ],
+   "completionpanel1.2.nib": [
+    "Matrix",
+    "log"
+   ]
+  },
+  "pt-PT": {
+   "Localizable.strings": [
+    "Editor",
+    "Macros"
+   ],
+   "MacroEditor.nib": [
+    "Submenu"
+   ],
+   "MainMenu.nib": [
+    "Macros"
+   ],
+   "Movie.nib": [
+    "Demo"
+   ],
+   "TSDocument.nib": [
+    "Macros"
+   ],
+   "ToolbarItems.strings": [
+    "Macros"
+   ]
+  },
+  "ro": {
+   "Localizable.strings": [
+    "Editor",
+    "General"
+   ],
+   "MacroEditor.nib": [
+    "Separator"
+   ],
+   "MainMenu.nib": [
+    "Experiment...",
+    "Font"
+   ],
+   "TSDocument.nib": [
+    "Text"
+   ],
+   "ToolbarItems.strings": [
+    "Program"
+   ],
+   "completionpanel1.2.nib": [
+    "Roman",
+    "Sans",
+    "log"
+   ]
+  },
+  "zh_CN": {
+   "completionpanel1.2.nib": [
+    "log"
+   ]
+  }
+ }
+}

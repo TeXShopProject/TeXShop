@@ -50,8 +50,8 @@ tiPaletteLabelMetaFont			= "MetaFont";
 tiToolTipMetaFont			= "Starte MetaFont";
 
 tiLabelPreviousPage			= "Zurück";
-tiPaletteLabelPreviousPage		= "Alternative letzte Seite";
-tiToolTipPreviousPage			= "Zeige letzte Seite";
+tiPaletteLabelPreviousPage		= "Alternative vorherige Seite";
+tiToolTipPreviousPage			= "Vorherige Seite anzeigen";
 
 tiLabelNextPage				= "Nächste";
 tiPaletteLabelNextPage			= "Alternative nächste Seite";
@@ -74,8 +74,8 @@ tiPaletteLabelTags			= "Markierungen";
 tiToolTipTags				= "Markierung auswählen, zu der gescrollt werden soll";
 
 tiLabelPreviousPageButton		= "Zurück";
-tiPaletteLabelPreviousPageButton	= "Letzte Seite";
-tiToolTipPreviousPageButton		= "Letzte Seite anzeigen";
+tiPaletteLabelPreviousPageButton	= "Vorherige Seite";
+tiToolTipPreviousPageButton		= "Vorherige Seite anzeigen";
 
 tiLabelNextPageButton			= "Nächste";
 tiPaletteLabelNextPageButton		= "Nächste Seite";
@@ -257,9 +257,9 @@ tiLabelHtmlURLField                = "URL-Adresse";
 tiPaletteLabelHtmlURLField            = "URL-Adresse";
 tiToolTipHtmlURLField            = "URL-Adresse";
 
-tiLabelHtmlSearch             = "Suche";
-tiPaletteLabelHtmlSearch      = "Suche";
-tiToolTipHtmlSearch           = "Suche";
+tiLabelHtmlSearch             = "Suchen";
+tiPaletteLabelHtmlSearch      = "Suchen";
+tiToolTipHtmlSearch           = "Suchen";
 
 /* Experiment preview tools */
 "ExperimentToolScroll" = "Verschieben";
@@ -269,3 +269,20 @@ tiToolTipHtmlSearch           = "Suche";
 "ExperimentZoomOut" = "Verkleinern";
 "ExperimentZoomIn" = "Vergrößern";
 "ExperimentZoomToContent" = "Auf Inhalt zoomen";
+
+"Page Layout" = "Seitenlayout";
+"tiLabelTSPreviewAppearance" = "Erscheinungsbild";
+"Continuous Two Pages" = "Doppelseiten, kontinuierlich";
+"Restore Document Settings" = "Dokumenteinstellungen wiederherstellen";
+"Single Page" = "Einzelseiten";
+"PreviewAppearanceDark" = "Dunkel";
+"PreviewAppearanceLight" = "Hell";
+"Two Pages" = "Doppelseiten";
+"Left to right" = "Von links nach rechts";
+"Two-Page Arrangement" = "Doppelseiten-Anordnung";
+"Applies when displaying two pages" = "Gilt bei der Anzeige von Doppelseiten";
+"Continuous" = "Einzelseiten, kontinuierlich";
+"Right to left" = "Von rechts nach links";
+"Show first page alone as cover" = "Erste Seite einzeln als Deckblatt anzeigen";
+
+"PreviewAppearanceSystem" = "System";

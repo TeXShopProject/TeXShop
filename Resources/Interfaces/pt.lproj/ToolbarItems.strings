@@ -113,8 +113,8 @@ tiLabelMouseMode			= "Modo do Mouse";
 tiPaletteLabelMouseMode			= "Modo do Mouse";
 tiToolTipMouseMode			= "Alterar modo do Mouse";
 
-tiLabelSyncMarks			= "SyncMarks";
-tiPaletteLabelSyncMarks			= "Sync Marks";
+tiLabelSyncMarks			= "Marcas sinc.";
+tiPaletteLabelSyncMarks			= "Marcas de sincronismo";
 tiToolTipSyncMarks			= "Exibir Sync Marks";
 
 tiLabelColorIndex				= "Índice de cores";
@@ -137,8 +137,8 @@ tiLabelPreviousPageButtonKIT		= "Anterior";
 tiPaletteLabelPreviousPageButtonKIT	= "Página anterior";
 tiToolTipPreviousPageButtonKIT		= "Exibir página anterior";
 
-tiLabelNextPageButtonKIT			= "Próxima";
-tiPaletteLabelNextPageButtonKIT		= "Próxima página";
+tiLabelNextPageButtonKIT			= "Seguinte";
+tiPaletteLabelNextPageButtonKIT		= "Página seguinte";
 tiToolTipNextPageButtonKIT			= "Exibir próxima página";
 
 tiLabelGotoPageKIT				= "Ir para a página";
@@ -157,8 +157,8 @@ tiLabelMouseModeKIT				= "Modo do Mouse";
 tiPaletteLabelMouseModeKIT		= "Modo do Mouse";
 tiToolTipMouseModeKIT			= "Alterar Modo do Mouse";
 
-tiLabelSyncMarksKIT				= "SyncMarks";
-tiPaletteLabelSyncMarksKIT		= "Sync Marks";
+tiLabelSyncMarksKIT				= "Marcas sinc.";
+tiPaletteLabelSyncMarksKIT		= "Marcas de sincronismo";
 tiToolTipSyncMarksKIT			= "Exibir Sync Marks";
 
 tiLabelSearchKIT				= "Buscar";
@@ -229,21 +229,21 @@ tiLabelTypesetSplit                = "Compor";
 tiPaletteLabelTypesetSplit            = "Compor";
 tiToolTipTypesetSplit            = "Executar o programa de composição";
 
-tiLabelLabels                = "Labels";
-tiPaletteLabelLabels            = "Labels";
-tiToolTipLabels                = "Selecione um label para mover o cursor";
+tiLabelLabels                = "Rótulos";
+tiPaletteLabelLabels            = "Rótulos";
+tiToolTipLabels                = "Selecione um rótulo para mover o cursor";
 
-tiLabelLabelsSplit                = "Labels";
-tiPaletteLabelLabelsSplit         = "Labels";
-tiToolTipLabelsSplit              = "Selecione um label para mover o cursor";
+tiLabelLabelsSplit                = "Rótulos";
+tiPaletteLabelLabelsSplit         = "Rótulos";
+tiToolTipLabelsSplit              = "Selecione um rótulo para mover o cursor";
 
 tiLabelUpdate              = "Atualizar";
 tiPaletteLabelUpdate         = "Atualizar";
-tiToolTipUpdate              = "Atualizar etiquetas e labels";
+tiToolTipUpdate              = "Atualizar marcas e rótulos";
 
 tiLabelUpdateSplit                = "Atualizar";
 tiPaletteLabelUpdateSplit         = "Atualizar";
-tiToolTipUpdateSplit              = "Atualizar etiquetas e labels";
+tiToolTipUpdateSplit              = "Atualizar marcas e rótulos";
 
 tiLabelHtmlPreviousPageButton                = "Voltar";
 tiPaletteLabelHtmlPreviousPageButton            = "Voltar";
@@ -266,6 +266,22 @@ tiToolTipHtmlSearch           = "Buscar";
 "ExperimentToolSelectText" = "Selecionar texto";
 "ExperimentToolMagnify" = "Ampliar";
 "ExperimentToolSelectPDF" = "Selecionar PDF";
-"ExperimentZoomOut" = "Diminuir Zoom";
-"ExperimentZoomIn" = "Aumentar Zoom";
+"ExperimentZoomOut" = "Reduzir";
+"ExperimentZoomIn" = "Ampliar";
 "ExperimentZoomToContent" = "Ajustar ao conteúdo";
+
+"Page Layout" = "Layout da página";
+"tiLabelTSPreviewAppearance" = "Aparência";
+"Continuous Two Pages" = "Várias páginas duplas";
+"Restore Document Settings" = "Restaurar ajustes do documento";
+"Single Page" = "Uma única página";
+"PreviewAppearanceDark" = "Escuro";
+"PreviewAppearanceLight" = "Claro";
+"Two Pages" = "Página dupla";
+"PreviewAppearanceSystem" = "Sistema";
+"Left to right" = "Da esquerda para a direita";
+"Two-Page Arrangement" = "Modo de página dupla";
+"Applies when displaying two pages" = "Aplica-se ao exibir duas páginas";
+"Continuous" = "Várias páginas";
+"Right to left" = "Da direita para a esquerda";
+"Show first page alone as cover" = "Mostrar a primeira página sozinha como capa";

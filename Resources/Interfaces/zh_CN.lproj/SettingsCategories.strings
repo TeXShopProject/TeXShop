@@ -59,12 +59,12 @@
 "catalog.general.5.1.title" = "打开注释行和隐藏设置";
 "group.encoding.title" = "编码";
 "catalog.documents.0.0.title" = "新文档的编码";
-"catalog.documents.0.1.title" = "在存储对话框中显示编码";
+"catalog.documents.0.1.title" = "在保存对话框中显示编码";
 "group.saving.title" = "保存文稿";
 "catalog.documents.1.0.title" = "启用自动保存和版本";
 "catalog.documents.1.0.note" = "编辑时自动覆盖文件的 macOS 功能。";
-"catalog.documents.1.1.title" = "存储时将之前的文件保留为“名称~”";
-"catalog.documents.1.2.title" = "存储相关文件";
+"catalog.documents.1.1.title" = "保存时将之前的文件保留为“名称~”";
+"catalog.documents.1.2.title" = "保存相关文件";
 "catalog.documents.1.2.note" = "保存文档时，同时保存同一项目中已打开的文件。";
 "catalog.documents.1.3.title" = "自动将 UTF-8-MAC 转换为 UTF-8";
 "group.editor.0.title" = "显示";
@@ -231,7 +231,7 @@
 "group.preview.4.title" = "复制图像";
 "catalog.preview.4.0.title" = "图像副本类型";
 "catalog.preview.4.1.title" = "使用颜色映射";
-"catalog.preview.4.1.note" = "将预览中的选区作为图像复制、拖移或存储时，黑色替换为文字颜色，白色替换为背景颜色。这两种颜色在当前主题的“复制图像时的颜色映射”中设置。PDF 和 EPS 不受影响。";
+"catalog.preview.4.1.note" = "将预览中的选区作为图像复制、拖移或保存时，黑色替换为文字颜色，白色替换为背景颜色。这两种颜色在当前主题的“复制图像时的颜色映射”中设置。PDF 和 EPS 不受影响。";
 "catalog.preview.4.2.title" = "前景色突出:";
 "catalog.preview.4.2.note" = "复制位图图像时，数值越大，文字越突出。";
 "group.preview.5.title" = "HTML";
@@ -269,7 +269,7 @@
 "catalog.typesetting.5.0.button" = "默认";
 "catalog.typesetting.5.1.title" = "LaTeX ";
 "catalog.typesetting.5.1.button" = "默认";
-"catalog.typesetting.5.2.title" = "存储 Postscript 文件";
+"catalog.typesetting.5.2.title" = "保存 PostScript 文件";
 "catalog.typesetting.5.2.note" = "使用 TeX + dvips + distiller 排版时，保留中间生成的 PostScript 文件。";
 "group.typesetting.6.title" = "个性化脚本";
 "catalog.typesetting.6.0.title" = "TeX 程序";

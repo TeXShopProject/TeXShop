@@ -11,8 +11,8 @@
   "TeX File" = "TeX Dokument";
   "LaTeX File" = "LTX File";
   "ConTeXt File" = "ctx Datei";
-  "HTML File" = "HTML File";
-  "TEXI File" = "TEXI File";
+  "HTML File" = "HTML-Datei";
+  "TEXI File" = "TEXI-Datei";
   "mp" = "mp Datei";
   "sty" = "sty Datei";
   "cls" = "cls Datei";
@@ -21,7 +21,7 @@
   "bib" = "bib Datei";
   "comment" = "comment";
   "engine" = "engine";
-  "PDF Data" = "PDF Data";
+  "PDF Data" = "PDF-Daten";
   NSTIFFPboardType = "TIFF-Dokument";
   "PNG image" = "PNG-Bild";
   "jpeg" = "JPEG-Bild";
@@ -58,8 +58,8 @@
   "py" = "py Datei";
   NSStringPboardType = "Reines Textdokument";
   "md" = "md Datei";
-  "Plain Text" = "Plain Text";
-  "Any File" = "Any File";
+  "Plain Text" = "Reiner Text";
+  "Any File" = "Beliebige Datei";
   
   /* Help book localization */
   CFBundleHelpBookName = "TeXShop Help";

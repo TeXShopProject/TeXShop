@@ -4284,7 +4284,7 @@
 													<object class="NSButtonCell" id="479548836">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Itemize</string>
+														<string key="NSContents">글머리표</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSButtonFlags">-2037628928</int>
@@ -4299,7 +4299,7 @@
 													<object class="NSButtonCell" id="513465780">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Enumerate</string>
+														<string key="NSContents">번호 목록</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSTag">1</int>
@@ -4313,7 +4313,7 @@
 													<object class="NSButtonCell" id="612781250">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Description</string>
+														<string key="NSContents">설명 목록</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSTag">2</int>
@@ -4341,7 +4341,7 @@
 													<object class="NSButtonCell" id="51402556">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Figure</string>
+														<string key="NSContents">그림</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSTag">4</int>
@@ -4355,7 +4355,7 @@
 													<object class="NSButtonCell" id="356011153">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Center</string>
+														<string key="NSContents">가운데 정렬</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSTag">5</int>
@@ -4397,7 +4397,7 @@
 													<object class="NSButtonCell" id="900363531">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Table</string>
+														<string key="NSContents">표</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSTag">8</int>
@@ -4439,7 +4439,7 @@
 													<object class="NSButtonCell" id="645714444">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Matrix</string>
+														<string key="NSContents">행렬</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSTag">11</int>
@@ -4453,7 +4453,7 @@
 													<object class="NSButtonCell" id="775813192">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Equation</string>
+														<string key="NSContents">수식</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSTag">12</int>
@@ -4495,7 +4495,7 @@
 													<object class="NSButtonCell" id="339841750">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Customized</string>
+														<string key="NSContents">사용자 정의</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="365639842"/>
 														<int key="NSTag">15</int>
@@ -4558,7 +4558,7 @@
 													<object class="NSButtonCell" id="727333853">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Emph</string>
+														<string key="NSContents">강조</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="605258249"/>
 														<int key="NSButtonFlags">-2037628928</int>
@@ -4573,7 +4573,7 @@
 													<object class="NSButtonCell" id="431103409">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Roman</string>
+														<string key="NSContents">로만체</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="605258249"/>
 														<int key="NSTag">1</int>
@@ -4587,7 +4587,7 @@
 													<object class="NSButtonCell" id="345263461">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Bold</string>
+														<string key="NSContents">볼드체</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="605258249"/>
 														<int key="NSTag">2</int>
@@ -4601,7 +4601,7 @@
 													<object class="NSButtonCell" id="588913939">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Italic</string>
+														<string key="NSContents">이탤릭체</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="605258249"/>
 														<int key="NSTag">3</int>
@@ -4615,7 +4615,7 @@
 													<object class="NSButtonCell" id="1040693128">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">CAPS</string>
+														<string key="NSContents">작은 대문자</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="605258249"/>
 														<int key="NSTag">4</int>
@@ -4629,7 +4629,7 @@
 													<object class="NSButtonCell" id="793834741">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Slanted</string>
+														<string key="NSContents">기울임꼴</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="605258249"/>
 														<int key="NSTag">5</int>
@@ -4643,7 +4643,7 @@
 													<object class="NSButtonCell" id="1006988200">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Medium</string>
+														<string key="NSContents">중간 굵기</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="605258249"/>
 														<int key="NSTag">6</int>
@@ -4657,7 +4657,7 @@
 													<object class="NSButtonCell" id="5730574">
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">138018816</int>
-														<string key="NSContents">Sans</string>
+														<string key="NSContents">산세리프</string>
 														<reference key="NSSupport" ref="26"/>
 														<reference key="NSControlView" ref="605258249"/>
 														<int key="NSTag">7</int>

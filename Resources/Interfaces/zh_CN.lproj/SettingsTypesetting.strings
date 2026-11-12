@@ -5,7 +5,7 @@
 "188.title" = "默认脚本";
 "190.title" = "个性化脚本";
 "191.title" = "pdfTeX";
-"314.title" = "存储文件时";
+"314.title" = "保存文件时";
 "588.title" = "TeX";
 "589.title" = "LaTeX";
 "590.title" = "采用键入的指令";
@@ -15,7 +15,7 @@
 "785.title" = "搜索 PDF";
 "786.title" = "SyncTeX";
 "823.title" = "同步方式";
-"898.title" = "存储相关文件";
+"898.title" = "保存相关文件";
 "919.title" = "Radio";
 "920.title" = "Radio";
 "921.title" = "Radio";

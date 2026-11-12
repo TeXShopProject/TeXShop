@@ -7,7 +7,7 @@
 "674-8W-hQ6.title" = "줄 간격";
 "839.title" = "구문 색상 표시";
 "840.title" = "괄호 여닫기 체크";
-"841.title" = "철자 검사";
+"841.title" = "맞춤법 검사";
 "842.title" = "키 바인딩";
 "843.title" = "BibDesk 자동 완성";
 "844.title" = "선택시 커서 이동";
@@ -30,7 +30,7 @@
 "Gj7-Yx-1Hv.title" = "에디터 스타일";
 "LJw-Jj-VBR.title" = "단어기준";
 "LYC-Qf-9zP.title" = "첫 줄 들여쓰기";
-"PhR-Vr-jce.title" = "자동 철자 교정";
+"PhR-Vr-jce.title" = "맞춤법 자동 수정";
 "UXo-9g-NNW.title" = "글자기준";
 "XoX-gZ-pO3.title" = "메뉴바에 태그 리스트 보이기";
 "YsC-bl-8G6.title" = "문단 들여쓰기";

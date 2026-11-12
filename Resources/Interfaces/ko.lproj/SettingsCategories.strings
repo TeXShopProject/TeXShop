@@ -31,7 +31,7 @@
 "group.general.0.title" = "시작 시";
 "catalog.general.0.0.title" = "빈 문서 열기";
 "catalog.general.0.1.title" = "외부 에디터 사용";
-"catalog.general.0.1.note" = "소스 파일을 열면 미리보기만 표시하고, 소스는 다른 편집기에서 편집합니다. TeXShop에서 편집하려면 Open for Editing...을 사용합니다.";
+"catalog.general.0.1.note" = "소스 파일을 열면 미리보기만 표시하고, 소스는 다른 편집기에서 편집합니다. TeXShop에서 편집하려면 ‘편집용으로 열기...’를 사용합니다.";
 "group.general.1.title" = "윈도우";
 "catalog.general.1.0.title" = "소스와 미리보기";
 "catalog.general.1.0.note" = "새 문서의 초기값입니다. 열려 있는 문서는 메뉴에서 전환합니다.";
@@ -40,7 +40,7 @@
 "group.general.2.title" = "윈도우 위치";
 "catalog.general.2.0.title" = "소스";
 "catalog.general.2.0.button" = "현재 위치 저장";
-"catalog.general.2.1.title" = "결과보기";
+"catalog.general.2.1.title" = "미리보기";
 "catalog.general.2.1.button" = "현재 위치 저장";
 "catalog.general.2.2.title" = "콘솔";
 "catalog.general.2.2.button" = "현재 위치 저장";
@@ -68,7 +68,7 @@
 "catalog.documents.1.2.note" = "문서를 저장할 때 같은 프로젝트의 열린 파일도 저장합니다.";
 "catalog.documents.1.3.title" = "UTF-8-MAC을 UTF-8로 자동 변환";
 "group.editor.0.title" = "표시";
-"catalog.editor.0.0.title" = "폰트";
+"catalog.editor.0.0.title" = "서체";
 "catalog.editor.0.1.title" = "구문 색상 표시";
 "catalog.editor.0.1.note" = "새 문서의 초기값입니다. 열려 있는 문서는 소스 메뉴에서 전환합니다.";
 "catalog.editor.0.2.title" = "행 번호 보이기";
@@ -142,9 +142,9 @@
 "catalog.editor.8.0.choice.8" = "figure";
 "catalog.editor.8.0.choice.9" = "table";
 "catalog.editor.8.0.choice.10" = "사용자 표시";
-"group.spelling.0.title" = "철자 검사";
+"group.spelling.0.title" = "맞춤법 검사";
 "catalog.spelling.0.0.title" = "입력 중 맞춤법 검사";
-"catalog.spelling.0.1.title" = "자동 철자 교정";
+"catalog.spelling.0.1.title" = "맞춤법 자동 수정";
 "catalog.spelling.0.2.title" = "사전";
 "group.spelling.1.title" = "방식";
 "catalog.spelling.1.0.title" = "LaTeX 구조를 고려한 맞춤법 검사 사용(권장)";
@@ -169,7 +169,7 @@
 "catalog.appearance.2.0.item.0" = "소스";
 "catalog.appearance.2.0.item.1" = "콘솔";
 "catalog.appearance.2.0.item.2" = "로그";
-"catalog.appearance.2.0.item.3" = "결과보기";
+"catalog.appearance.2.0.item.3" = "미리보기";
 "group.appearance.3.title" = "소스";
 "catalog.appearance.3.0.item.0" = "삽입";
 "catalog.appearance.3.0.item.1" = "플래시";
@@ -218,10 +218,10 @@
 "catalog.preview.0.2.button" = "설정";
 "catalog.preview.0.3.title" = "마우스 모드";
 "catalog.preview.0.4.title" = "스크롤로 페이지를 넘기지 않음";
-"catalog.preview.0.4.note" = "‘단일 페이지’와 ‘단일 페이지 맞쪽보기’에서 마우스 휠이나 트랙패드로 스크롤하면 페이지의 위아래 끝에서 멈춥니다.";
+"catalog.preview.0.4.note" = "‘단일 페이지’와 ‘두 페이지’에서 마우스 휠이나 트랙패드로 스크롤하면 페이지의 위아래 끝에서 멈춥니다.";
 "catalog.preview.0.6.title" = "링크 팝업";
 "catalog.preview.0.6.note" = "앞으로 여는 문서의 초기값입니다. 열려 있는 문서에서는 ‘보기’ 메뉴에서 바꿉니다.";
-"group.preview.1.title" = "맞쪽보기";
+"group.preview.1.title" = "두 페이지 배열";
 "catalog.preview.1.0.title" = "페이지 방향";
 "catalog.preview.1.1.title" = "첫 페이지를 표지로 따로 표시";
 "catalog.preview.1.2.title" = "이후 여는 문서에 적용됩니다. 매직 주석과 PDF의 보기 방향이 우선합니다.";
@@ -287,7 +287,7 @@
 "group.typesetting.9.title" = "일본어 pTeX 지원";
 "catalog.typesetting.9.0.title" = "otf 패키지 지원";
 "group.console.0.title" = "서체";
-"catalog.console.0.0.title" = "콘솔 폰트";
+"catalog.console.0.0.title" = "콘솔 서체";
 "catalog.console.0.1.title" = "매크로 편집기에도 적용";
 "group.console.1.title" = "작업";
 "catalog.console.1.0.title" = "콘솔 표시";

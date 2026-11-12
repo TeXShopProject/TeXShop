@@ -8,11 +8,11 @@
  /* In the list below, the left side is the official name of a UTI and the right side is
  	the translation for the interface */
 
-  "TeX File" = "TeX File";
-  "LaTeX File" = "LaTeX File";
-  "ConTeXt File" = "ConTeXt File";
-  "HTML File" = "HTML File";
-  "TEXI File" = "TEXI File";
+  "TeX File" = "TeX-bestand";
+  "LaTeX File" = "LaTeX-bestand";
+  "ConTeXt File" = "ConTeXt-bestand";
+  "HTML File" = "HTML-bestand";
+  "TEXI File" = "TEXI-bestand";
   "mp" = "mp";
   "sty" = "sty";
   "cls" = "cls";
@@ -21,17 +21,17 @@
   "bib" = "bib";
   "comment" = "comment";
   "engine" = "engine";
-  "PDF Data" = "PDF Data";
-  NSTIFFPboardType = "TIFF File";
-  "PNG image" = "PNG image";
-  "jpeg" = "jpeg";
+  "PDF Data" = "PDF-gegevens";
+  NSTIFFPboardType = "TIFF-document";
+  "PNG image" = "PNG-afbeelding";
+  "jpeg" = "JPEG-afbeelding";
   NSEPSPboardType = "EPS File";
   "epsi" = "epsi";
   "log" = "log";
   "aux" = "aux";
   "PostscriptFile" = "Postscript File";
-  "HieroTeX File" = "HieroTeX File";
-  "Sketch File" = "Sketch File";
+  "HieroTeX File" = "HieroTeX-bestand";
+  "Sketch File" = "Sketch-bestand";
   "texshop" = "texshop";
   "dvi" = "dvi";
   "ins" = "ins";
@@ -47,9 +47,9 @@
   "glog" = "glog";
   "gaux" = "gaux";
   "ly" = "ly";
-  "Rnw" = "Rnw";
+  "Rnw" = "Rnw-bestand";
   "asy" = "asy";
-  "Stex" = "Stex";
+  "Stex" = "Stex-bestand";
   "lytex" = "lytex";
   "cbx" = "cbx";
   "lbx" = "lbc";
@@ -58,8 +58,8 @@
   "py" = "py";
   NSStringPboardType = "UTF8 Plain Text";
   "md" = "md";
-  "Plain Text" = "Plain Text";
-  "Any File" = "Any File";
+  "Plain Text" = "Platte tekst";
+  "Any File" = "Willekeurig bestand";
   
   /* Help book localization */
   CFBundleHelpBookName = "TeXShop Help";

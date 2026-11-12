@@ -3,11 +3,11 @@
 "1024.title" = "kpsewhich (default: kpsewhich -progname=latex -format=tex)";
 "1027.title" = "Motor BibTeX";
 "1030.title" = "default: bibtex";
-"1063.title" = "default";
-"1068.title" = "default";
+"1063.title" = "Implicit";
+"1068.title" = "Implicit";
 "1069.title" = "TeX";
-"1071.title" = "default";
-"1074.title" = "default";
+"1071.title" = "Implicit";
+"1074.title" = "Implicit";
 "1075.title" = "LaTeX ";
 "200.title" = "TeX + dvips + distiller";
 "215.title" = "Path settings";

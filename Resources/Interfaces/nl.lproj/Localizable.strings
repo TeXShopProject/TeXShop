@@ -4,111 +4,111 @@
 "Tags" = "Markeringen";
 "Typeset" = "Zet";
 "Save" = "Bewaar";
-"Print..." = "Print...";
+"Print..." = "Druk af...";
 "Print Source..." = "Print broncode";
 "Set Project Root..." = "Stel moederbestand ln...";
-"LaTeX Panel..." = "LaTeX venster...";
-"Close LaTeX Panel" = "Sluit LaTeX venster";
-"Matrix Panel..." = "Matrix venster...";
-"Close Matrix Panel" = "Sluit Matrix venster";
+"LaTeX Panel..." = "LaTeX-venster...";
+"Close LaTeX Panel" = "Sluit LaTeX-venster";
+"Matrix Panel..." = "Matrix-venster...";
+"Close Matrix Panel" = "Sluit Matrix-venster";
 "Open for Preview..." = "Open alleen Printvoorbeeld";
 "Open for Editing..." = "Open in TeXShop Editor";
 "File" = "Archief";
 "Goto Error" = "Ga naar fout...";
 "RotateClockwise" = "Roteer met klok mee";
 "RotateCounterclockwise" = "Roteer tegen klok in";
-"Comment" = "Comment";
-"Uncomment" = "Uncomment";
-"Indent" = "Indent";
-"Unindent" = "Unindent";
-"Macros" = "Macros";
-"Open Macro Editor..." = "Open Macro Editor...";
-"Close Macro Editor" = "Close Macro Editor";
-"Add macros from file..." = "Add macros from file...";
-"Save selection to file..." = "Save selection to file...";
-"Convert \\yen to \\ in Pasteboard" = "Convert \\yen to \\ in Pasteboard";
-"Convert \\ to \\yen in Pasteboard" = "Convert \\ to \\yen in Pasteboard"; 
+"Comment" = "Maak commentaar";
+"Uncomment" = "Hef commentaar op";
+"Indent" = "Verhoog inspringniveau";
+"Unindent" = "Verlaag inspringniveau";
+"Macros" = "Macro's";
+"Open Macro Editor..." = "Open macro-editor...";
+"Close Macro Editor" = "Sluit macro-editor";
+"Add macros from file..." = "Voeg macro’s toe uit bestand...";
+"Save selection to file..." = "Sla selectie op als bestand...";
+"Convert \\yen to \\ in Pasteboard" = "Zet \\yen om in \\ op klembord";
+"Convert \\ to \\yen in Pasteboard" = "Zet \\ om in \\yen op klembord"; 
 "Edit" = "Wijzig";
-"Warning" = "Warning";
+"Warning" = "Waarschuwing";
 "Don't Save" = "Bewaar niet";
 "Cancel" = "Annuleer";
-"Do you want to save macros?" = "Do you want to save macros?";
-"Save Spot" = "Save Spot";
-"Template" = "Template";
-"Typing" = "Typing";
-"AutoComplete" = "AutoComplete";
-"Page Number" = "Page Number";
-"Page Number Panel" = "Page Number Panel";
-"Magnification Panel" = "Magnification Panel";
-"Omit Shell Escape" = "Omit Shell Escape";
-"Warning: Using Shell Escape" = "Warning: Using Shell Escape";
-"Preview" = "Preview";
-"Display Format" = "Display Format";// mitsu 1.29b
-"Magnification" = "Magnification";// mitsu 1.29b
-"Copy Format" = "Copy Format";// mitsu 1.29b
-"ToolbarItems" = "ToolbarItems";
-"Autocompletion" = "Autocompletion";
-"Completion" = "Completion";
-"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@";
+"Do you want to save macros?" = "Wilt u de macro’s bewaren?";
+"Save Spot" = "Bewaarpunt";
+"Template" = "Sjabloon";
+"Typing" = "Typen";
+"AutoComplete" = "Toetsbindingen";
+"Page Number" = "Paginanummer";
+"Page Number Panel" = "Paginanummervenster";
+"Magnification Panel" = "Vergrotingsvenster";
+"Omit Shell Escape" = "Zonder shell-escape";
+"Warning: Using Shell Escape" = "Waarschuwing: shell-escape wordt gebruikt";
+"Preview" = "Pagina";
+"Display Format" = "Weergavetype";// mitsu 1.29b
+"Magnification" = "Zoomen";// mitsu 1.29b
+"Copy Format" = "Formaat kopiëren";// mitsu 1.29b
+"ToolbarItems" = "Knoppenbalkonderdelen";
+"Autocompletion" = "Invoer via toetsbinding";
+"Completion" = "Aanvulling";
+"Path: %@\nFile size: %d bytes\nCreation date: %@\nModification date: %@" = "Pad: %@\nBestandsgrootte: %d bytes\nAanmaakdatum: %@\nWijzigingsdatum: %@";
 "Info: %@" = "Info: %@";
-"%@\n\nCharacters: %d" = "%@\n\nCharacters: %d";
-"The file encoding changed; characters can be lost if the wrong encoding is used." = "The file encoding changed; characters can be lost if the wrong encoding is used.";
-"Currently open files retain their old encoding." = "Currently open files retain their old encoding.";
-"Drag && Drop" = "Drag && Drop";
-"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later).";
-"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX.";
-"Can't find required tool." = "Can't find required tool.";
-"Typesetting engine cannot be found." = "Typesetting engine cannot be found.";
-"The source LaTeX document cannot be found." = "The source LaTeX document cannot be found.";
-"Sync Marks" = "Sync Marks";
-"%@ does not exist." = "%@ does not exist.";
-"%@ does not have the executable bit set." = "%@ does not have the executable bit set.";
-"This file was opened with IsoLatin9 encoding." = "This file was opened with IsoLatin9 encoding.";
-"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again.";
-"Error" = "Error";
-"There was an error checking for updates." = "There was an error checking for updates.";
-"Your copy of TeXShop is up-to-date" = "Your copy of TeXShop is up-to-date";
-"You have the most recent version of TeXShop." = "You have the most recent version of TeXShop.";
-"New version available" = "New version available";
-"A new version of TeXShop is available (version %@). Would you like to download it now?" = "A new version of TeXShop is available (version %@). Would you like to download it now?";
-"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead.";
-"Hard Wrap" = "Hard Wrap";
-"Newline Removal" = "Newline Removal";
-"Color Index" = "Color Index";
+"%@\n\nCharacters: %d" = "%@\n\nTekens: %d";
+"The file encoding changed; characters can be lost if the wrong encoding is used." = "De bestandscodering is gewijzigd; als de verkeerde codering wordt gebruikt, kunnen tekens verloren gaan.";
+"Currently open files retain their old encoding." = "Geopende bestanden behouden hun oude codering.";
+"Drag && Drop" = "Slepen && neerzetten";
+"The link /Library/TeX/texbin does not exist. To fix this, go to https://tug.org/mactex and install MacTeX or Basic TeX (2015 or later)." = "De koppeling /Library/TeX/texbin bestaat niet. Ga om dit op te lossen naar https://tug.org/mactex en installeer MacTeX of Basic TeX (2015 of later).";
+"%@ does not exist. TeXShop is a front end for TeX, but you also need a TeX distribution. Perhaps such a distribution was not installed or was removed during a system upgrade. If so, go to https://tug.org/mactex and follow the instructions to install MacTeX or BasicTeX." = "%@ bestaat niet. TeXShop is een front-end voor TeX, maar u hebt ook een TeX-distributie nodig. Misschien is zo’n distributie niet geïnstalleerd of is ze bij een systeemupgrade verwijderd. Ga in dat geval naar https://tug.org/mactex en volg de instructies om MacTeX of BasicTeX te installeren.";
+"Can't find required tool." = "Kan vereist hulpprogramma niet vinden.";
+"Typesetting engine cannot be found." = "Het zetprogramma is niet gevonden.";
+"The source LaTeX document cannot be found." = "Het LaTeX-brondocument is niet gevonden.";
+"Sync Marks" = "Synchronisatiepunten";
+"%@ does not exist." = "%@ bestaat niet.";
+"%@ does not have the executable bit set." = "Bij %@ is de uitvoerbaarheidsbit niet ingesteld.";
+"This file was opened with IsoLatin9 encoding." = "Dit bestand is geopend met IsoLatin9-codering.";
+"The file could not be opened with %@ encoding because it was not saved with that encoding. If you wish to open in another encoding, close the window and open again." = "Het bestand kan niet worden geopend met de codering %@, omdat het niet met die codering is bewaard. Als u het met een andere codering wilt openen, sluit u het venster en opent u het opnieuw.";
+"Error" = "Fout";
+"There was an error checking for updates." = "Er is een fout opgetreden bij het zoeken naar updates.";
+"Your copy of TeXShop is up-to-date" = "Uw exemplaar van TeXShop is up-to-date";
+"You have the most recent version of TeXShop." = "U hebt de nieuwste versie van TeXShop.";
+"New version available" = "Nieuwe versie beschikbaar";
+"A new version of TeXShop is available (version %@). Would you like to download it now?" = "Er is een nieuwe versie van TeXShop beschikbaar (versie %@). Wilt u deze nu downloaden?";
+"This version of TeXShop requires Mac OS X 10.4 or higher. Use TeXShop 1.37 instead." = "Voor deze versie van TeXShop is Mac OS X 10.4 of hoger vereist. Gebruik in plaats daarvan TeXShop 1.37.";
+"Hard Wrap" = "Harde omloop";
+"Newline Removal" = "Regeleinden verwijderen";
+"Color Index" = "Kleurindex";
 "Help" = "Help";
-"TeXShop Demos" = "TeXShop Demos";
-"Sync" = "Sync";
-"Convert" = "Convert";
-"The program " = "The program ";
-" does not exist." = " does not exist.";
-"failed to copy selection." = "failed to copy selection.";
-"failed to save selection to the file." = "failed to save selection to the file.";
-"<a letter consisting of %d characters>" = "<a letter consisting of %d characters>";
-"%d letters, %d words, %d lines" = "%d letters, %d words, %d lines";
-"Emoji Style" = "Emoji Style";
-"Text Style" = "Text Style";
-"Character Info" = "Character Info";
+"TeXShop Demos" = "TeXShop demo's";
+"Sync" = "Synchroniseer";
+"Convert" = "Converteer";
+"The program " = "Het programma ";
+" does not exist." = " bestaat niet.";
+"failed to copy selection." = "kopiëren van selectie mislukt.";
+"failed to save selection to the file." = "bewaren van selectie in bestand mislukt.";
+"<a letter consisting of %d characters>" = "<een letter bestaande uit %d tekens>";
+"%d letters, %d words, %d lines" = "%d letters, %d woorden, %d regels";
+"Emoji Style" = "Emojistijl";
+"Text Style" = "Tekststijl";
+"Character Info" = "Tekeninfo";
 "Variant" = "Variant";
 "Revert To" = "Vorige versie";
-"Skin Tone I-II" = "Light";
-"Skin Tone III" = "Medium Light";
-"Skin Tone IV" = "Medium";
-"Skin Tone V" = "Medium Dark";
-"Skin Tone VI" = "Dark";
+"Skin Tone I-II" = "Lichte huidskleur";
+"Skin Tone III" = "Lichtgetinte huidskleur";
+"Skin Tone IV" = "Getinte huidskleur";
+"Skin Tone V" = "Donkergetinte huidskleur";
+"Skin Tone VI" = "Donkere huidskleur";
 "Unknown encoding; using UTF-8." = "Onbekende codering; UTF-8 wordt gebruikt.";
-"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Demo Movies require Mac OS 10.9, Mavericks, or higher.";
+"Demo Movies require Mac OS 10.9, Mavericks, or higher." = "Voor demofilms is Mac OS 10.9 (Mavericks) of hoger vereist.";
 "Source" = "Bron";
-"Type sample text here.\nUse several lines to test\ninterline spacing." = "Type sample text here.\nUse several lines to test\ninterline spacing.";
-"<<Close All - unlocalized>>" = "Close All";
-"Close All" = "Close All";
-"File Already Exists" = "File Already Exists";
+"Type sample text here.\nUse several lines to test\ninterline spacing." = "Typ hier voorbeeldtekst.\nGebruik meerdere regels om\nde regelafstand te testen.";
+"<<Close All - unlocalized>>" = "Sluit alles";
+"Close All" = "Sluit alles";
+"File Already Exists" = "Bestand bestaat al";
 "Labels" = "Labels";
 "New Tag" = "Nieuwe tag";
 "Split Window" = "Splits venster";
 "New Document" = "Nieuw document";
 "Link Popups" = "Beweeg pop-ups";
 "Syntax Color expl3 Code" = "Syntaxis Kleur expl3-code";
-"PDF File Has No Annotations" = "PDF File Has No Annotations";
+"PDF File Has No Annotations" = "PDF-bestand bevat geen annotaties";
 
 /* TeX-aware spell checking: Spelling and Grammar menu, Help menu, Forget Learned Words sheet */
 "Forget Learned Words…" = "Geleerde woorden vergeten…";
@@ -167,20 +167,20 @@
 
 
 /* Immediate settings: new text uses English fallback outside en/ja. */
-"The selected profile is invalid." = "The selected profile is invalid.";
-"Apply Settings Profile?" = "Apply Settings Profile?";
+"The selected profile is invalid." = "Het geselecteerde profiel is ongeldig.";
+"Apply Settings Profile?" = "Instellingenprofiel toepassen?";
 
-"Apply Profile" = "Apply Profile";
-"Settings could not be saved" = "Settings could not be saved";
-"Enter a valid setting" = "Enter a valid setting";
+"Apply Profile" = "Pas profiel toe";
+"Settings could not be saved" = "Instellingen konden niet worden bewaard";
+"Enter a valid setting" = "Voer een geldige instelling in";
 
-"Continue Editing" = "Continue Editing";
-"Restore This Field" = "Restore This Field";
-"The theme could not be saved. Its last saved colors have been restored." = "The theme could not be saved. Its last saved colors have been restored.";
+"Continue Editing" = "Ga door met bewerken";
+"Restore This Field" = "Herstel dit veld";
+"The theme could not be saved. Its last saved colors have been restored." = "Het thema kan niet worden bewaard. De laatst bewaarde kleuren zijn hersteld.";
 "Choose another theme name. Names beginning with a dot, path separators, control characters, and symbolic links are not allowed." = "Kies een andere themanaam. Namen die met een punt beginnen, padscheidingstekens, besturingstekens en symbolische koppelingen zijn niet toegestaan.";
-"The new theme could not be saved. The original theme is unchanged." = "The new theme could not be saved. The original theme is unchanged.";
+"The new theme could not be saved. The original theme is unchanged." = "Het nieuwe thema kan niet worden bewaard. Het oorspronkelijke thema is niet gewijzigd.";
 
-"Reopen Settings or select a readable theme before editing or duplicating it." = "Reopen Settings or select a readable theme before editing or duplicating it.";
+"Reopen Settings or select a readable theme before editing or duplicating it." = "Open Instellingen opnieuw of selecteer een leesbaar thema voordat u het wijzigt of dupliceert.";
 
 "Back" = "Terug";
 
@@ -210,9 +210,9 @@
 /* Number of key search results, announced by VoiceOver. */
 "Matches: %lu" = "Resultaten: %lu";
 
-"The theme “%@” already exists. Replace it?" = "The theme “%@” already exists. Replace it?";
+"The theme “%@” already exists. Replace it?" = "Het thema ‘%@’ bestaat al. Wilt u het vervangen?";
 
-"Replace" = "Replace";
+"Replace" = "Vervang";
 
 "General" = "Algemeen";
 "Documents and Saving" = "Documenten en bewaren";
@@ -279,24 +279,24 @@
 "Experiment stopped.\n" = "Experiment gestopt.\n";
 
 /* Explicit fallback for shared keys without a translation. */
-"Assign" = "Assign";
-"Assign a shortcut used by macros?" = "Assign a shortcut used by macros?";
-"Close Current Environment" = "Close Current Environment";
-"Macro shortcut conflicts" = "Macro shortcut conflicts";
-"Remove Conflicting Shortcuts and Save" = "Remove Conflicting Shortcuts and Save";
-"Return to Editing" = "Return to Editing";
-"Save Anyway (Conflicting Shortcuts Inactive)" = "Save Anyway (Conflicting Shortcuts Inactive)";
-"ShowFullPath" = "ShowFullPath";
+"Assign" = "Wijs toe";
+"Assign a shortcut used by macros?" = "Een toetscombinatie toewijzen die door macro’s wordt gebruikt?";
+"Close Current Environment" = "Sluit huidige omgeving";
+"Macro shortcut conflicts" = "Conflicten tussen macrotoetscombinaties";
+"Remove Conflicting Shortcuts and Save" = "Verwijder conflicterende toetscombinaties en bewaar";
+"Return to Editing" = "Ga terug naar bewerken";
+"Save Anyway (Conflicting Shortcuts Inactive)" = "Bewaar toch (conflicterende toetscombinaties inactief)";
+"ShowFullPath" = "Toon volledig pad";
 
-"These macro shortcuts will become inactive:" = "These macro shortcuts will become inactive:";
-"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept.";
-"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later.";
-"This shortcut is already used by:\n%@" = "This shortcut is already used by:\n%@";
-"This shortcut is inactive because it conflicts with “%@” (%@)." = "This shortcut is inactive because it conflicts with “%@” (%@).";
-"This shortcut is inactive because macro “%@” (%@) uses it first." = "This shortcut is inactive because macro “%@” (%@) uses it first.";
-"Your current setting of %@ will be replaced. OK?" = "Your current setting of %@ will be replaced. OK?";
+"These macro shortcuts will become inactive:" = "Deze macrotoetscombinaties worden inactief:";
+"These newly assigned or changed shortcuts overlap other assignments. The list explains which shortcuts will be inactive. You can edit them, keep them as written, or remove only the changed conflicting shortcuts. Macro names and contents will be kept." = "Deze nieuw toegewezen of gewijzigde toetscombinaties overlappen met andere toewijzingen. De lijst geeft aan welke toetscombinaties inactief worden. U kunt ze wijzigen, ze laten zoals ze zijn of alleen de gewijzigde conflicterende toetscombinaties verwijderen. Namen en inhoud van de macro’s blijven behouden.";
+"This shortcut conflicts with macro “%@” (%@), whose shortcut will be inactive because it appears later." = "Deze toetscombinatie conflicteert met macro ‘%@’ (%@), waarvan de toetscombinatie inactief wordt omdat die verderop staat.";
+"This shortcut is already used by:\n%@" = "Deze toetscombinatie wordt al gebruikt door:\n%@";
+"This shortcut is inactive because it conflicts with “%@” (%@)." = "Deze toetscombinatie is inactief omdat ze conflicteert met ‘%@’ (%@).";
+"This shortcut is inactive because macro “%@” (%@) uses it first." = "Deze toetscombinatie is inactief omdat macro ‘%@’ (%@) haar als eerste gebruikt.";
+"Your current setting of %@ will be replaced. OK?" = "Uw huidige instelling van %@ wordt vervangen. Akkoord?";
 
-"Edits the shared file for all documents. This setting controls the default for new documents." = "Edits the shared file for all documents. This setting controls the default for new documents.";
+"Edits the shared file for all documents. This setting controls the default for new documents." = "Wijzigt het gedeelde bestand voor alle documenten. Deze instelling bepaalt de standaard voor nieuwe documenten.";
 
 "The newest detected installation is selected. You can choose another candidate below." = "De nieuwste gevonden installatie is geselecteerd. U kunt hieronder een andere kiezen.";
 
@@ -310,7 +310,7 @@
 
 "Custom menu shortcuts will be removed." = "Aangepaste menusneltoetsen worden verwijderd.";
 
-"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@";
+"Resets engine, editing, display, known hidden settings, and the Dock icon. Theme selections may change. TeX engine path: %@" = "Zet engine-, bewerkings- en weergave-instellingen, bekende verborgen instellingen en het Dock-symbool terug. De themaselectie kan veranderen. Pad van TeX-engine: %@";
 
 /* System spelling dictionary selection. */
 "Automatic Language" = "Automatische taalherkenning";
@@ -324,13 +324,13 @@
 "* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = geselecteerde tekens, #INS# = invoegpositie, #PASTE# = tekst op het klembord";
 
 /* Edit › Mark */
-"Insert Mark with Note" = "Mark met notitie invoegen";
-"How to Use Marks…" = "Marks gebruiken…";
-"Inserts a mark (•) to come back to later." = "Voegt een mark (•) in om later naar terug te keren.";
-"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Voegt een mark met notitie (•‹notitie›) in. Geselecteerde tekst wordt de notitie.";
-"Selects the next mark, with its note; typing replaces it." = "Selecteert de volgende mark met notitie; typen vervangt hem.";
-"Selects the previous mark, with its note; typing replaces it." = "Selecteert de vorige mark met notitie; typen vervangt hem.";
+"Insert Mark with Note" = "Voeg markeerpunt met notitie in";
+"How to Use Marks…" = "Markeerpunten gebruiken…";
+"Inserts a mark (•) to come back to later." = "Voegt een markeerpunt (•) in om later naar terug te keren.";
+"Inserts a mark with a note (•‹note›). Selected text becomes the note." = "Voegt een markeerpunt met notitie (•‹notitie›) in. Geselecteerde tekst wordt de notitie.";
+"Selects the next mark, with its note; typing replaces it." = "Selecteert het volgende markeerpunt met notitie; typen vervangt het.";
+"Selects the previous mark, with its note; typing replaces it." = "Selecteert het vorige markeerpunt met notitie; typen vervangt het.";
 "Deletes the next • and selects its note, if it has one." = "Verwijdert de volgende • en selecteert de notitie, als die er is.";
 "Deletes the previous • and selects its note, if it has one." = "Verwijdert de vorige • en selecteert de notitie, als die er is.";
-"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = mark, •‹notitie› = mark met notitie; met %@ › %@ gaat u ertussen heen en weer.";
-"Marks" = "Marks";
+"• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = markeerpunt, •‹notitie› = markeerpunt met notitie; met %@ › %@ gaat u ertussen heen en weer.";
+"Marks" = "Markeerpunten";

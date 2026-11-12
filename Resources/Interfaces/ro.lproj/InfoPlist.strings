@@ -8,11 +8,11 @@
  /* In the list below, the left side is the official name of a UTI and the right side is
  	the translation for the interface */
 
-  "TeX File" = "TeX File";
-  "LaTeX File" = "LaTeX File";
-  "ConTeXt File" = "ConTeXt File";
-  "HTML File" = "HTML File";
-  "TEXI File" = "TEXI File";
+  "TeX File" = "Fișier TeX";
+  "LaTeX File" = "Fișier LaTeX";
+  "ConTeXt File" = "Fișier ConTeXt";
+  "HTML File" = "Fișier HTML";
+  "TEXI File" = "Fișier TEXI";
   "mp" = "mp";
   "sty" = "sty";
   "cls" = "cls";
@@ -21,17 +21,17 @@
   "bib" = "bib";
   "comment" = "comment";
   "engine" = "engine";
-  "PDF Data" = "PDF Data";
-  NSTIFFPboardType = "TIFF File";
-  "PNG image" = "PNG image";
-  "jpeg" = "jpeg";
+  "PDF Data" = "Date PDF";
+  NSTIFFPboardType = "Document TIFF";
+  "PNG image" = "Imagine PNG";
+  "jpeg" = "Imagine JPEG";
   NSEPSPboardType = "EPS File";
   "epsi" = "epsi";
   "log" = "log";
   "aux" = "aux";
   "PostscriptFile" = "Postscript File";
-  "HieroTeX File" = "HieroTeX File";
-  "Sketch File" = "Sketch File";
+  "HieroTeX File" = "Fișier HieroTeX";
+  "Sketch File" = "Fișier Sketch";
   "texshop" = "texshop";
   "dvi" = "dvi";
   "ins" = "ins";
@@ -58,8 +58,8 @@
   "py" = "py";
   NSStringPboardType = "UTF8 Plain Text";
   "md" = "md";
-  "Plain Text" = "Plain Text";
-  "Any File" = "Any File";
+  "Plain Text" = "Text simplu";
+  "Any File" = "Orice fișier";
   
   /* Help book localization */
   CFBundleHelpBookName = "TeXShop Help";

@@ -20,13 +20,13 @@
 "IsoLatin9"	= "Westeuropäisch (ISO Latin 9)";
 
 /* "IsoLatinGreek" corresponds to code 0x00000207 in TextEncodingNames.string */
-"IsoLatinGreek"	= "Greek (ISO 8859-7)";
+"IsoLatinGreek"	= "Griechisch (ISO 8859-7)";
 
 /* "Windows Latin 1" corresponds to code 0x00000500 in TextEncodingNames.string */
-"Windows Latin 1" = "Windows Latin 1";
+"Windows Latin 1" = "Westeuropäisch (Windows Latin 1)";
 
 /* "Mac Central European Roman" corresponds to code 0x00000029 in TextEncodingNames.string */
-"Mac Central European Roman" = "Mac Central European Roman";
+"Mac Central European Roman" = "Mitteleuropäisch (Mac OS)";
 
 /* "MacJapanese" corresponds to code 0x00000001 in TextEncodingNames.string */
 "MacJapanese"	= "Japanisch (Mac OS, ShiftJIS ¥)";
@@ -65,7 +65,7 @@
 "DOS Russian"	= "Russisch (DOS)";
 
 /* "WindowsCentralEurRoman" corresponds to code 0x00000501 in TextEncodingNames.string */
-"WindowsCentralEurRoman" = "Central European Roman (Windows)";
+"WindowsCentralEurRoman" = "Mitteleuropäisch (Windows Latin 2)";
 
 /* "Windows Cyrillic" corresponds to code 0x00000502 in TextEncodingNames.string */
 "Windows Cyrillic"	= "Kyrillisch (Windows)";
@@ -95,4 +95,4 @@
 "GB 18030"	= "Chinesisch (GB 18030)";
 
 /* "Ascii" corresponds to code ???? in TextEncodingNames.string */
-"Ascii"    = "Ascii";
+"Ascii"    = "Westeuropäisch (ASCII)";

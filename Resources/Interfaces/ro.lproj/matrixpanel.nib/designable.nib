@@ -59,7 +59,7 @@
 							<object class="NSButtonCell" key="NSCell" id="185722272">
 								<int key="NSCellFlags">-2080244224</int>
 								<int key="NSCellFlags2">134348800</int>
-								<string key="NSContents">Insert</string>
+								<string key="NSContents">Inserați</string>
 								<object class="NSFont" key="NSSupport" id="845154435">
 									<string key="NSName">LucidaGrande</string>
 									<double key="NSSize">10</double>
@@ -243,7 +243,7 @@
 								<object class="NSButtonCell" id="857081111">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">Delete</string>
+									<string key="NSContents">Ștergeți</string>
 									<reference key="NSSupport" ref="845154435"/>
 									<reference key="NSControlView" ref="463363829"/>
 									<int key="NSButtonFlags">-2038284033</int>
@@ -257,7 +257,7 @@
 								<object class="NSButtonCell" id="66665054">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">Identitymatrix</string>
+									<string key="NSContents">Matrice unitate</string>
 									<reference key="NSSupport" ref="845154435"/>
 									<reference key="NSControlView" ref="463363829"/>
 									<int key="NSTag">1</int>
@@ -272,7 +272,7 @@
 								<object class="NSButtonCell" id="100694509">
 									<int key="NSCellFlags">67239424</int>
 									<int key="NSCellFlags2">134348800</int>
-									<string key="NSContents">Zeromatrix</string>
+									<string key="NSContents">Matrice nulă</string>
 									<reference key="NSSupport" ref="845154435"/>
 									<reference key="NSControlView" ref="463363829"/>
 									<int key="NSTag">2</int>
@@ -676,13 +676,13 @@
 						<object class="NSTextField" id="886691729">
 							<reference key="NSNextResponder" ref="522376682"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{17, 126}, {40, 14}}</string>
+							<string key="NSFrame">{{5, 126}, {54, 14}}</string>
 							<reference key="NSSuperview" ref="522376682"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="553237106">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">4194304</int>
-								<string key="NSContents">Rows:</string>
+								<string key="NSContents">Rânduri:</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="886691729"/>
 								<reference key="NSBackgroundColor" ref="461218993"/>
@@ -697,13 +697,13 @@
 						<object class="NSTextField" id="25255267">
 							<reference key="NSNextResponder" ref="522376682"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{131, 126}, {56, 14}}</string>
+							<string key="NSFrame">{{115, 126}, {74, 14}}</string>
 							<reference key="NSSuperview" ref="522376682"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="639307358">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">205520896</int>
-								<string key="NSContents">Columns:</string>
+								<string key="NSContents">Coloane:</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSControlView" ref="25255267"/>
 								<reference key="NSBackgroundColor" ref="461218993"/>
@@ -839,7 +839,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											<object class="NSButtonCell" key="NSCell" id="877282626">
 												<int key="NSCellFlags">604110336</int>
 												<int key="NSCellFlags2">262144</int>
-												<string key="NSContents">Embed in table environment</string>
+												<string key="NSContents">Include în mediul table</string>
 												<reference key="NSSupport" ref="22"/>
 												<reference key="NSControlView" ref="251358669"/>
 												<int key="NSButtonFlags">1211912703</int>
@@ -862,7 +862,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">0</int>
-								<string key="NSContents">Environment</string>
+								<string key="NSContents">Mediu</string>
 								<reference key="NSSupport" ref="26"/>
 								<reference key="NSBackgroundColor" ref="144476482"/>
 								<object class="NSColor" key="NSTextColor">

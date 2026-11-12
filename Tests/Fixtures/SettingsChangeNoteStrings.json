@@ -112,11 +112,11 @@
     "es": "Los archivos actualmente abiertos mantienen su codificación antigua.",
     "fr": "Les fichiers déjà ouverts gardent leurs encodages.",
     "it": "I file attualmente aperti mantengono la propria codifica.",
-    "nl": "Currently open files retain their old encoding.",
-    "pt-PT": "Currently open files retain their old encoding.",
+    "nl": "Geopende bestanden behouden hun oude codering.",
+    "pt-PT": "Os ficheiros abertos mantêm a codificação anterior.",
     "pt": "Arquivos abertos continuarão a manter a codificação antiga.",
-    "ro": "Currently open files retain their old encoding.",
-    "ko": "Currently open files retain their old encoding.",
+    "ro": "Fișierele deschise în prezent își păstrează vechea codificare.",
+    "ko": "현재 열려 있는 파일은 이전 인코딩을 유지합니다.",
     "zh_CN": "当前打开的文件仍保留旧的编码。"
   }
 }

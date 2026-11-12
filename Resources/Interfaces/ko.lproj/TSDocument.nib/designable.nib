@@ -281,7 +281,7 @@
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="30">
                         <rect key="frame" x="20" y="0.0" width="464" height="53"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" placeholderString="On error: &lt;ret&gt; ignore, [s] ignore all, [x] complete, [i]+text to insert replacement" bezelStyle="round" id="31">
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" placeholderString="오류 시: &lt;ret&gt; 무시, [s] 모두 무시, [x] 완료, [i]+텍스트로 대체 입력" bezelStyle="round" id="31">
                             <font key="font" metaFont="message" size="11"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -388,7 +388,7 @@
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="44">
                         <rect key="frame" x="352" y="11" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="45">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="45">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -457,7 +457,7 @@ Gw
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="56">
                         <rect key="frame" x="97" y="31" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="57">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="57">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -485,7 +485,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="60">
                         <rect key="frame" x="151" y="15" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="61">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="61">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -545,7 +545,7 @@ Gw
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="70">
                         <rect key="frame" x="24" y="81" width="229" height="34"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="인쇄하기 전에 이 문서를 조판하십시오." id="71">
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="프린트하기 전에 이 문서를 조판하십시오." id="71">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -554,7 +554,7 @@ Gw
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="72">
                         <rect key="frame" x="92" y="30" width="84" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="73">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="73">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -596,7 +596,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="84">
                     <rect key="frame" x="488" y="55" width="92" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="ColorIndex" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="85">
+                    <buttonCell key="cell" type="check" title="색인 색상" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="85">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -762,7 +762,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="113">
                     <rect key="frame" x="391" y="53" width="93" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="SyncMarks" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="114">
+                    <buttonCell key="cell" type="check" title="동기화 마크" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="114">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -883,7 +883,7 @@ DQ
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="146">
                     <rect key="frame" x="8" y="87" width="105" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="앞페이지" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="147">
+                    <buttonCell key="cell" type="push" title="이전" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="147">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -894,7 +894,7 @@ DQ
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="148">
                     <rect key="frame" x="112" y="87" width="105" height="32"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="push" title="다음페이지" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="149">
+                    <buttonCell key="cell" type="push" title="다음" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="149">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1053,7 +1053,7 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="180">
                     <rect key="frame" x="670" y="89" width="84" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <popUpButtonCell key="cell" type="push" title="Macros" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="183" id="181">
+                    <popUpButtonCell key="cell" type="push" title="매크로" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="183" id="181">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="182">
@@ -1193,7 +1193,7 @@ DQ
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="213">
                     <rect key="frame" x="12" y="12" width="92" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="ColorIndex" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="214">
+                    <buttonCell key="cell" type="check" title="색인 색상" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="214">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -1236,7 +1236,7 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m1l-di-FbE">
                     <rect key="frame" x="612" y="182" width="87" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Labels" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="mixed" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="zIc-sv-cBN" id="Wwq-Vr-bn7">
+                    <popUpButtonCell key="cell" type="push" title="레이블" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="mixed" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="zIc-sv-cBN" id="Wwq-Vr-bn7">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="D29-Iw-Iwl">
@@ -1254,7 +1254,7 @@ DQ
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pz7-wA-fCt">
                     <rect key="frame" x="743" y="173" width="87" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title="Labels" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="mixed" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="hal-Zc-XqC" id="riZ-Yl-DlK">
+                    <popUpButtonCell key="cell" type="push" title="레이블" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="mixed" borderStyle="borderAndBezel" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="hal-Zc-XqC" id="riZ-Yl-DlK">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="message"/>
                         <menu key="menu" title="OtherViews" id="fo4-qH-OUa">
@@ -1361,7 +1361,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="226">
                         <rect key="frame" x="109" y="-33" width="84" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="227">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="227">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -1427,7 +1427,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="237">
                         <rect key="frame" x="34" y="-36" width="78" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="238">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="238">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -1501,11 +1501,11 @@ DQ
             </items>
         </menu>
         <customView id="252">
-            <rect key="frame" x="0.0" y="0.0" width="283" height="31"/>
+            <rect key="frame" x="0.0" y="0.0" width="322" height="31"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="253">
-                    <rect key="frame" x="99" y="3" width="173" height="26"/>
+                    <rect key="frame" x="99" y="3" width="210" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
                     <popUpButtonCell key="cell" type="push" title="JPEG（高画質）" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="11" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="256" id="254">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1581,7 +1581,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="276">
                         <rect key="frame" x="132" y="12" width="83" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="갱신" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="277">
+                        <buttonCell key="cell" type="push" title="업데이트" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="277">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -1701,7 +1701,7 @@ DQ
                                         <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="288">
                                             <rect key="frame" x="82" y="138" width="114" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="No Outline" id="289">
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="목차 없음" id="289">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1809,7 +1809,7 @@ DQ
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                             </tableColumn>
                                                             <tableColumn identifier="section" width="187" minWidth="50.564453" maxWidth="1000" id="307">
-                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Section">
+                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="섹션">
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </tableHeaderCell>
@@ -1906,7 +1906,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="321">
                         <rect key="frame" x="34" y="-36" width="78" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="322">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="322">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -1980,7 +1980,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="334">
                         <rect key="frame" x="109" y="-33" width="84" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="335">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="335">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -2028,7 +2028,7 @@ DQ
                                     <action selector="strikeoutAnnotation:" target="-1" id="ux2-Qr-oWq"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="하일라이트" id="jup-vn-Zdh">
+                            <menuItem title="하이라이트" id="jup-vn-Zdh">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="highlightAnnotation:" target="-1" id="kBW-ik-5AA"/>
@@ -2115,7 +2115,7 @@ DQ
                                     <action selector="showColorPanel:" target="-1" id="M1b-GK-88P"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="글꼴 패널" id="Gre-gC-cP6">
+                            <menuItem title="서체 패널" id="Gre-gC-cP6">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="showFontPanel:" target="-1" id="iAt-N8-Vuj"/>
@@ -2171,7 +2171,7 @@ DQ
                 <outlet property="myDocument" destination="-2" id="544"/>
             </connections>
         </window>
-        <window title="Log File" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Log" animationBehavior="default" id="344" customClass="TSLogWindow">
+        <window title="로그 파일" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Log" animationBehavior="default" id="344" customClass="TSLogWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1217" y="199" width="622" height="596"/>
@@ -2211,7 +2211,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="351">
                         <rect key="frame" x="492" y="512" width="105" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="다시표시" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="352">
+                        <buttonCell key="cell" type="push" title="새로 고침" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="352">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2270,7 +2270,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="365">
                         <rect key="frame" x="179" y="520" width="100" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="폰트 정보" bezelStyle="regularSquare" imagePosition="left" inset="2" id="366">
+                        <buttonCell key="cell" type="check" title="서체 정보" bezelStyle="regularSquare" imagePosition="left" inset="2" id="366">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2318,7 +2318,7 @@ DQ
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N96-5D-KgD">
                         <rect key="frame" x="497" y="560" width="74" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="errors" bezelStyle="regularSquare" imagePosition="left" inset="2" id="TKD-Zb-JAv">
+                        <buttonCell key="cell" type="check" title="오류" bezelStyle="regularSquare" imagePosition="left" inset="2" id="TKD-Zb-JAv">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -2343,7 +2343,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="379">
                         <rect key="frame" x="130" y="17" width="105" height="33"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="380">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="380">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -2389,7 +2389,7 @@ Gw
                 </subviews>
             </view>
         </window>
-        <window title="Try This" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="ScrapWindow" animationBehavior="default" id="387" customClass="NSPanel">
+        <window title="실험 입력" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="ScrapWindow" animationBehavior="default" id="387" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="272" y="172" width="276" height="378"/>
@@ -2443,7 +2443,7 @@ Gw
             </connections>
             <point key="canvasLocation" x="139" y="825"/>
         </window>
-        <window title="Try This Output" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="ScrapPDFWindow" animationBehavior="default" id="396" customClass="NSPanel">
+        <window title="실험 출력" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="ScrapPDFWindow" animationBehavior="default" id="396" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="272" y="172" width="276" height="378"/>
@@ -2459,7 +2459,7 @@ Gw
                 </subviews>
             </view>
         </window>
-        <window title="Full Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="FullSplitWindow" animationBehavior="default" id="399" customClass="TSFullSplitWindow">
+        <window title="단일 창" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="FullSplitWindow" animationBehavior="default" id="399" customClass="TSFullSplitWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -2521,9 +2521,9 @@ Gw
                     </popUpButtonCell>
                 </popUpButton>
                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NQm-9F-XnM">
-                    <rect key="frame" x="10" y="11" width="82" height="17"/>
+                    <rect key="frame" x="-2" y="11" width="94" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="File Type:" id="JFo-lr-Cth">
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="파일 유형:" id="JFo-lr-Cth">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -2595,31 +2595,31 @@ Gw
                     </buttonCell>
                     <cells>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="Scroll" tag="1" inset="2" id="TMj-fz-Im3">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="스크롤" tag="1" inset="2" id="TMj-fz-Im3">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Text" tag="2" inset="2" id="Evj-iU-nVB">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="텍스트 선택" tag="2" inset="2" id="Evj-iU-nVB">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify" tag="3" inset="2" id="tGp-4B-7Nj">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="확대경" tag="3" inset="2" id="tGp-4B-7Nj">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify (Large)" tag="4" inset="2" id="0tT-8R-2f1">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="확대경 (크게)" tag="4" inset="2" id="0tT-8R-2f1">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Select" tag="5" inset="2" id="mAj-1y-QcU">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="범위 선택" tag="5" inset="2" id="mAj-1y-QcU">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2653,31 +2653,31 @@ Gw
                     </buttonCell>
                     <cells>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="Scroll" tag="1" inset="2" id="QuT-DH-ikm">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="OpenHandCursor" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" toolTip="스크롤" tag="1" inset="2" id="QuT-DH-ikm">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Text" tag="2" inset="2" id="E8x-05-KKi">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="TextTool" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="텍스트 선택" tag="2" inset="2" id="E8x-05-KKi">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify" tag="3" inset="2" id="ycC-qr-n7F">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlass" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="확대경" tag="3" inset="2" id="ycC-qr-n7F">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="Magnify (Large)" tag="4" inset="2" id="0Pm-tO-LPe">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="MagGlassL" imagePosition="overlaps" alignment="center" borderStyle="border" toolTip="확대경 (크게)" tag="4" inset="2" id="0Pm-tO-LPe">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
                         </column>
                         <column>
-                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="Select" tag="5" inset="2" id="Qt1-Sg-OxD">
+                            <buttonCell type="square" bezelStyle="shadowlessSquare" image="Select" imagePosition="overlaps" alignment="left" borderStyle="border" toolTip="범위 선택" tag="5" inset="2" id="Qt1-Sg-OxD">
                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="miniSystem"/>
                             </buttonCell>
@@ -2699,7 +2699,7 @@ Gw
             <point key="canvasLocation" x="11" y="-723"/>
         </customView>
         <menuItem title="ConTeXt" state="on" tag="6" id="83"/>
-        <window title="HTML Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="HTML Window" animationBehavior="default" toolbarStyle="expanded" id="BPj-82-7qf" customClass="TSHTMLWindow">
+        <window title="HTML 윈도우" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="HTML Window" animationBehavior="default" toolbarStyle="expanded" id="BPj-82-7qf" customClass="TSHTMLWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="305" width="480" height="270"/>
@@ -2791,7 +2791,7 @@ Gw
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LFJ-qp-RI2">
                         <rect key="frame" x="284" y="4" width="73" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="push" title="승인" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Gab-bY-8wr">
+                        <buttonCell key="cell" type="push" title="확인" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Gab-bY-8wr">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <string key="keyEquivalent" base64-UTF8="YES">
@@ -2873,7 +2873,7 @@ DQ
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nac-F3-NFX">
                         <rect key="frame" x="13" y="97" width="101" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="글꼴 패널" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8gk-BJ-rpE">
+                        <buttonCell key="cell" type="push" title="서체 패널" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8gk-BJ-rpE">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <connections>

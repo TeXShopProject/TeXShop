@@ -3,11 +3,11 @@
 "1024.title" = "kpsewhich (default: kpsewhich -progname=latex -format=tex)";
 "1027.title" = "Motor BibTeX";
 "1030.title" = "default: bibtex";
-"1063.title" = "omissão";
-"1068.title" = "omissão";
+"1063.title" = "Predefinição";
+"1068.title" = "Predefinição";
 "1069.title" = "TeX";
-"1071.title" = "omissão";
-"1074.title" = "omissão";
+"1071.title" = "Predefinição";
+"1074.title" = "Predefinição";
 "1075.title" = "LaTeX ";
 "200.title" = "TeX + dvips + distiller";
 "215.title" = "Caminho";
