@@ -17,7 +17,7 @@ def contrast(a, b):
 
 bundled = sorted((root / 'Resources/TeXShop/Themes').glob('*.plist'))
 reserve = sorted((root / 'Resources/Themes').glob('*.plist'))
-assert len(bundled) == 10 and len(reserve) == 2, (bundled, reserve)
+assert len(bundled) == 9 and len(reserve) == 2, (bundled, reserve)
 themes = {path: plistlib.loads(path.read_bytes()) for path in bundled + reserve}
 if mutation == 'missing-key':
     del themes[bundled[0]]['explmsg']
