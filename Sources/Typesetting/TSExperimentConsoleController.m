@@ -27,6 +27,27 @@
 }
 @end
 
+// A line that TeX writes for an error with -file-line-error, such as "./file.tex:12: Undefined control sequence."
+// The file name has a dot or a slash, so that a time such as "12:34: " is not taken for one.
+static NSRegularExpression *TSExperimentFileLineError(void)
+{
+    static NSRegularExpression *expression;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        expression = [NSRegularExpression regularExpressionWithPattern:@"^[^\\s:][^\\n:]*[./][^\\n:]*:[0-9]+: "
+            options:NSRegularExpressionAnchorsMatchLines error:NULL];
+    });
+    return expression;
+}
+
+// The line TeX has written when it waits for the user: "?" after an error, "*" or "**" for more input,
+// or "Enter file name:" when a file is missing. It counts only when no output follows it.
+static BOOL TSExperimentIsPrompt(NSString *line)
+{
+    return [line isEqualToString:@"?"] || [line isEqualToString:@"*"] || [line isEqualToString:@"**"] ||
+        [line hasSuffix:@"Enter file name:"];
+}
+
 @interface TSExperimentConsoleWindow : NSPanel
 @property (nonatomic, weak) TSExperimentConsoleController *controller;
 @end
@@ -48,6 +69,8 @@
 @property (nonatomic, strong) NSData *carry;
 @property (nonatomic) NSStringEncoding encoding;
 @property (nonatomic) NSUInteger generation;
+@property (nonatomic, copy) NSString *engineLine;
+@property (nonatomic) NSUInteger outputCount;
 @end
 
 @implementation TSExperimentConsoleController
@@ -94,6 +117,9 @@
     window.controller = self;
     window.releasedWhenClosed = NO;
     window.hidesOnDeactivate = YES;
+    // The Experiment source and preview panels are utility panels, which float.
+    // The console floats with them; otherwise they would always cover it.
+    window.floatingPanel = YES;
     window.minSize = NSMakeSize(420, 220);
     TSExperimentConsoleContentView *content = [[TSExperimentConsoleContentView alloc] initWithFrame:window.contentView.bounds];
     window.contentView = content;
@@ -162,6 +188,45 @@
         [self.outputText scrollRangeToVisible:NSMakeRange(self.outputText.string.length, 0)];
 }
 
+- (void)showForError
+{
+    if (self.window.isKeyWindow) return;
+    NSWindow *origin = NSApp.keyWindow;
+    if (origin && origin != self.window) self.returnWindow = origin;
+    [self.window makeKeyAndOrderFront:nil];
+}
+
+// Output of the running job. When the console is shown only for errors, an error line
+// or a prompt at which TeX stops brings it to the front. Only the engine's output is read:
+// engineLine is the line TeX is still writing, without the lines typed in the console.
+- (void)appendOutput:(NSString *)text
+{
+    [self appendText:text];
+    self.outputCount++;
+    NSString *output = [(self.engineLine ?: @"") stringByAppendingString:text];
+    BOOL error = NO;
+    NSRange lastBreak = [output rangeOfString:@"\n" options:NSBackwardsSearch];
+    if (lastBreak.location != NSNotFound) {
+        error = [TSExperimentFileLineError() firstMatchInString:output options:0 range:NSMakeRange(0, NSMaxRange(lastBreak))] != nil;
+        output = [output substringFromIndex:NSMaxRange(lastBreak)];
+    }
+    self.engineLine = output;
+    if (!self.job || ![SUD boolForKey:ConsoleBehaviorKey]) return;
+    if (error) {
+        [self showForError];
+        return;
+    }
+    if (!TSExperimentIsPrompt([output stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet])) return;
+    // Output arrives in pieces, so "*" or "?" may begin an ordinary line. Wait to see whether TeX stops.
+    NSUInteger count = self.outputCount, generation = self.generation;
+    __weak TSExperimentConsoleController *weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        TSExperimentConsoleController *controller = weakSelf;
+        if (controller && controller.generation == generation && controller.outputCount == count && controller.job.active)
+            [controller showForError];
+    });
+}
+
 - (void)appendData:(NSData *)data atEnd:(BOOL)atEnd
 {
     NSMutableData *joined = [NSMutableData dataWithData:self.carry ?: NSData.data];
@@ -169,7 +234,7 @@
     NSUInteger incomplete = atEnd ? 0 : [TSEncodingSupport lengthOfIncompleteCharacterAtEndOfData:joined encoding:self.encoding];
     NSUInteger ready = joined.length - incomplete;
     self.carry = incomplete ? [joined subdataWithRange:NSMakeRange(ready, incomplete)] : nil;
-    if (ready) [self appendText:[TSEncodingSupport displayStringForData:[joined subdataWithRange:NSMakeRange(0, ready)] encoding:self.encoding]];
+    if (ready) [self appendOutput:[TSEncodingSupport displayStringForData:[joined subdataWithRange:NSMakeRange(0, ready)] encoding:self.encoding]];
     // Release complete ambiguous bytes at a paused prompt, but retain partial characters.
     if (incomplete) {
         NSUInteger generation = self.generation;
@@ -180,7 +245,7 @@
             if (!controller || controller.generation != generation || controller.carry != carry) return;
             NSUInteger unfinished = [TSEncodingSupport lengthOfUnfinishedCharacterAtEndOfData:carry encoding:controller.encoding];
             if (carry.length > unfinished) {
-                [controller appendText:[TSEncodingSupport displayStringForData:[carry subdataWithRange:NSMakeRange(0, carry.length - unfinished)] encoding:controller.encoding]];
+                [controller appendOutput:[TSEncodingSupport displayStringForData:[carry subdataWithRange:NSMakeRange(0, carry.length - unfinished)] encoding:controller.encoding]];
                 controller.carry = unfinished ? [carry subdataWithRange:NSMakeRange(carry.length - unfinished, unfinished)] : nil;
             }
         });
@@ -204,15 +269,16 @@
     self.carry = nil;
     self.window.title = [NSString stringWithFormat:NSLocalizedString(@"%@ — Experiment Console", @"Experiment console title"), title];
     self.outputText.string = @"";
+    self.engineLine = @"";
     self.commandField.stringValue = @"";
     self.commandField.enabled = YES;
     self.stopButton.enabled = YES;
     [self.window makeFirstResponder:self.commandField];
+    // When the console is shown only for errors, it stays as it is until an error.
+    // Ordering it back would still put it above the document's windows.
     if (![SUD boolForKey:ConsoleBehaviorKey]) {
         if ([SUD boolForKey:BringPdfFrontOnTypesetKey]) [self.window makeKeyAndOrderFront:nil];
         else [self.window orderFront:nil];
-    } else if (!self.window.isVisible) {
-        [self.window orderBack:nil];
     }
     NSUInteger generation = self.generation;
     TSExperimentJob *job = [[TSExperimentJob alloc] init];
@@ -258,6 +324,9 @@
     NSError *error = nil;
     if ([self.job sendData:data error:&error]) {
         [self appendText:displayCommand];
+        // TeX continues at the start of a line, and is no longer waiting.
+        self.engineLine = @"";
+        self.outputCount++;
         return YES;
     }
     NSBeep();
