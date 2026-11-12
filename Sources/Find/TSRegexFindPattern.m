@@ -170,48 +170,20 @@ static NSString *const TSYenSign = @"¥";
     }];
 }
 
-static BOOL TSIsWordCharacter(UTF32Char character)
-{
-    return character == '_' || [NSCharacterSet.alphanumericCharacterSet longCharacterIsMember:character];
-}
-
-/// The code point that starts at the index, reading a surrogate pair as one character.
-static UTF32Char TSCodePointAt(NSString *string, NSUInteger index)
-{
-    unichar c = [string characterAtIndex:index];
-    if (CFStringIsSurrogateHighCharacter(c) && index + 1 < string.length) {
-        unichar low = [string characterAtIndex:index + 1];
-        if (CFStringIsSurrogateLowCharacter(low))
-            return CFStringGetLongCharacterForSurrogatePair(c, low);
-    }
-    return c;
-}
-
-/// The code point that ends just before the index, reading a surrogate pair as one character.
-static UTF32Char TSCodePointBefore(NSString *string, NSUInteger index)
-{
-    unichar c = [string characterAtIndex:index - 1];
-    if (CFStringIsSurrogateLowCharacter(c) && index >= 2) {
-        unichar high = [string characterAtIndex:index - 2];
-        if (CFStringIsSurrogateHighCharacter(high))
-            return CFStringGetLongCharacterForSurrogatePair(high, c);
-    }
-    return c;
-}
-
-/// A match is a whole word unless a word character on its edge continues into the text beside it.
+/// A match is a whole word when it starts at a word boundary or with a non-word character, and ends at a word
+/// boundary or with a non-word character; word characters and boundaries are ICU's `\w` and `\b`, as in CotEditor.
 - (BOOL)isWholeWord:(NSRange)match inString:(NSString *)string
 {
+    static NSRegularExpression *edges;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        // `\b` comes before the lookbehind: `(?:(?<=\W)|\b)` never matches at the end of the text (macOS 27.2).
+        edges = [NSRegularExpression regularExpressionWithPattern:@"\\A(?:(?=\\W)|\\b)(?>[\\s\\S]*)(?:\\b|(?<=\\W))\\z" options:0 error:NULL];
+    });
     if (match.length == 0)
         return NO;
-    if (match.location > 0 && TSIsWordCharacter(TSCodePointAt(string, match.location))
-        && TSIsWordCharacter(TSCodePointBefore(string, match.location)))
-        return NO;
-    NSUInteger end = NSMaxRange(match);
-    if (end < string.length && TSIsWordCharacter(TSCodePointBefore(string, end))
-        && TSIsWordCharacter(TSCodePointAt(string, end)))
-        return NO;
-    return YES;
+    // Transparent bounds let `\b` see the characters beside the match.
+    return [edges firstMatchInString:string options:NSMatchingWithTransparentBounds range:match] != nil;
 }
 
 - (NSRange)rangeOfWord:(NSString *)word inString:(NSString *)string from:(NSUInteger)location limit:(NSUInteger)limit compare:(NSStringCompareOptions)compare

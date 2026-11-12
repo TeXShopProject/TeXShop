@@ -84,11 +84,28 @@ static const char *Shown(NSString *string)
     return shown.UTF8String;
 }
 
-/// The ICU syntax gives what NSRegularExpression gives, for templates without \t \n \r.
-static void CompareWithFoundation(NSString *find, NSString *text, NSUInteger count, uint32_t seed)
+/// CotEditor's "Unescape replacement text", written here with a regular expression as CotEditor does.
+static NSString *UnescapedLikeCotEditor(NSString *template)
+{
+    NSRegularExpression *escapes = [NSRegularExpression regularExpressionWithPattern:@"\\\\([0tnr\"'\\\\])" options:0 error:NULL];
+    NSMutableString *result = [NSMutableString string];
+    __block NSUInteger location = 0;
+    [escapes enumerateMatchesInString:template options:0 range:NSMakeRange(0, template.length) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+        [result appendString:[template substringWithRange:NSMakeRange(location, match.range.location - location)]];
+        NSString *c = [template substringWithRange:[match rangeAtIndex:1]];
+        NSDictionary *map = @{@"0": [NSString stringWithFormat:@"%C", (unichar)0], @"t": @"\t", @"n": @"\n", @"r": @"\r", @"\"": @"\"", @"'": @"'", @"\\": @"\\\\"};
+        [result appendString:map[c]];
+        location = NSMaxRange(match.range);
+    }];
+    [result appendString:[template substringFromIndex:location]];
+    return result;
+}
+
+/// The ICU syntax gives what NSRegularExpression gives; with unescaping, what it gives for CotEditor's unescaped template.
+static void CompareWithFoundation(NSString *find, NSString *text, NSUInteger count, uint32_t seed, BOOL unescapes)
 {
     // Single characters, and characters outside the BMP whole and as lone surrogates.
-    static NSString *const alphabet = @"$$$\\\0123456789ax{}&g<>+`'-uU";
+    static NSString *const alphabet = @"$$$\\\\0123456789ax{}&g<>+`'-uUtnr\"\n";
     NSMutableArray<NSString *> *pieces = [NSMutableArray array];
     for (NSUInteger j = 0; j < alphabet.length; j++)
         [pieces addObject:[alphabet substringWithRange:NSMakeRange(j, 1)]];
@@ -106,8 +123,8 @@ static void CompareWithFoundation(NSString *find, NSString *text, NSUInteger cou
             state = state * 1664525u + 1013904223u;
             [replace appendString:pieces[(state >> 16) % pieces.count]];
         }
-        NSString *expected = [regex stringByReplacingMatchesInString:text options:0 range:NSMakeRange(0, text.length) withTemplate:replace];
-        NSString *actual = ReplaceAll(find, TSRegexFindRegularExpression, replace, text, TSRegexReplacementSyntaxICU);
+        NSString *expected = [regex stringByReplacingMatchesInString:text options:0 range:NSMakeRange(0, text.length) withTemplate:unescapes ? UnescapedLikeCotEditor(replace) : replace];
+        NSString *actual = ReplaceAll(find, TSRegexFindRegularExpression | (unescapes ? TSRegexFindUnescapesReplacement : 0), replace, text, TSRegexReplacementSyntaxICU);
         if (![actual isEqualToString:expected] && mismatches++ < 5)
             printf("FAIL ICU template %s on %s: got [%s], Foundation gives [%s]\n", Shown(replace), find.UTF8String, Shown(actual), Shown(expected));
     }
@@ -158,8 +175,14 @@ int main(void)
         // keeps the next character as it stands. `\\u` is only a `u`.
         ExpectICU(@"(a)", R, @"\\\U0001F600$1|\\\U00020BB7\U0001F600$1$1|\\\U0001F600\\$1|\\\U0001F600\\\\$1|\\あ$1", @"a",
                   @"\U0001F600$1|\U00020BB7\U0001F600$1a|\U0001F600\\a|\U0001F600\\$1|あa");
-        CompareWithFoundation(@"(a)(b)?(c)", @"xacy abcz ac", 3000, 1);
-        CompareWithFoundation(@"(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)", @"-abcdefghijkl-", 3000, 7);
+        CompareWithFoundation(@"(a)(b)?(c)", @"xacy abcz ac", 3000, 1, NO);
+        CompareWithFoundation(@"(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)", @"-abcdefghijkl-", 3000, 7, NO);
+        CompareWithFoundation(@"(a)(b)?(c)", @"xacy abcz ac", 3000, 11, YES);
+        CompareWithFoundation(@"(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)", @"-abcdefghijkl-", 3000, 17, YES);
+        // Without unescaping, \t is a t, as in NSRegularExpression; with it, \0 is NUL and \\ stays one backslash.
+        ExpectICU(@"(a)", TSRegexFindRegularExpression, @"\\t\\n$1\\0", @"a", @"tna0");
+        ExpectICU(@"(a)", TSRegexFindRegularExpression | TSRegexFindUnescapesReplacement, @"\\t\\n$1\\0|\\\\n|\\\\\\n|\\\"", @"a",
+                  [NSString stringWithFormat:@"\t\na%C|\\n|\\\n|\"", (unichar)0]);
 
         // Options of the regular expression.
         ExpectMatches(@"^\\w", R, @"ab\ncd", @"a|c");
@@ -181,6 +204,11 @@ int main(void)
         ExpectMatches(@"a", T | TSRegexFindWholeWord, @"a\U00020BB7 \U00020BB7a a\U00010400 a", @"a");
         ExpectMatches(@"\U00020BB7", T | TSRegexFindWholeWord, @"x\U00020BB7y \U00020BB7", @"\U00020BB7");
         ExpectMatches(@"a", T | TSRegexFindWholeWord, @"\U0001F600a\U0001F600", @"a");
+        // Word characters are ICU's \w, as in CotEditor: not circled digits or superscripts, but full-width low lines.
+        ExpectMatches(@"a", T | TSRegexFindWholeWord, @"a\u2460 a\u00B2 a\uFF3F \u203Fa", @"a|a");
+        // An edge that is not a word character needs no boundary.
+        ExpectMatches(@"-a", T | TSRegexFindWholeWord, @"x-a x-ab --a", @"-a|-a");
+        ExpectMatches(@"a-", T | TSRegexFindWholeWord, @"a-x ba- a--", @"a-|a-");
         ExpectMatches(@"foo bar", T | TSRegexFindDelimitByWhitespace, @"bar foo foobar", @"bar|foo|foo|bar");
         ExpectMatches(@"a ab", T | TSRegexFindDelimitByWhitespace, @"ab", @"ab");
         ExpectMatches(@"A", T | TSRegexFindIgnoreCase, @"aA", @"a|A");
@@ -256,40 +284,85 @@ int main(void)
         Check([cancel matchRangesWithCancellation:^BOOL { return ++polls > 10; }] == nil, @"cancelling a search returns nothing");
         Check([cancel replaceAllWithTemplate:[[TSRegexReplacementTemplate alloc] initWithString:@"" pattern:cancel.pattern syntax:TSRegexReplacementSyntaxICU] cancellation:^BOOL { return YES; }] == nil, @"cancelling replace all returns nothing");
 
-        // Multiple replacement: rules in order, each on the previous result.
-        TSRegexReplacementRule *(^ruleIn)(TSRegexReplacementSyntax, NSString *, NSString *, TSRegexFindOptions, BOOL) = ^(TSRegexReplacementSyntax x, NSString *f, NSString *r, TSRegexFindOptions o, BOOL on) {
-            return [[TSRegexReplacementRule alloc] initWithFindString:f replaceString:r options:o replacementSyntax:x enabled:on note:@""];
+        // Multiple replacement, as CotEditor's: rules in order, each on the previous result, with the set's options.
+        NSArray<NSValue *> *whole = @[[NSValue valueWithRange:NSMakeRange(0, 0)]];
+        TSRegexReplacementRule *(^rule)(NSString *, NSString *, BOOL, BOOL, BOOL) = ^(NSString *f, NSString *r, BOOL regex, BOOL ignoresCase, BOOL on) {
+            return [[TSRegexReplacementRule alloc] initWithFindString:f replaceString:r usesRegularExpression:regex ignoresCase:ignoresCase enabled:on note:nil];
         };
-        TSRegexReplacementRule *(^rule)(NSString *, NSString *, TSRegexFindOptions, BOOL) = ^(NSString *f, NSString *r, TSRegexFindOptions o, BOOL on) {
-            return ruleIn(TSRegexReplacementSyntaxOgreKit, f, r, o, on);
+        TSRegexMultipleReplace *(^set)(NSArray *, TSRegexFindOptions, TSRegexFindOptions, TSRegexReplacementSyntax) = ^(NSArray *rules, TSRegexFindOptions textual, TSRegexFindOptions regex, TSRegexReplacementSyntax syntax) {
+            return [[TSRegexMultipleReplace alloc] initWithRules:rules textualOptions:textual regularExpressionOptions:regex replacementSyntax:syntax];
         };
-        NSArray *rules = @[rule(@"a", @"b", T, YES), rule(@"b", @"c", T, YES), rule(@"c", @"X", T, NO),
-                           rule(@"(", @"", R, YES), rule(@"(\\w+)\\{(\\w)\\}", @"\\1[\\2]", R, YES)];
-        TSRegexMultipleReplaceResult *multi = [TSRegexMultipleReplace applyRules:rules toString:@"a b \\x{y}" selectedRanges:@[[NSValue valueWithRange:NSMakeRange(0, 0)]] inSelection:NO sharedOptions:0 cancellation:nil];
+        NSArray *rules = @[rule(@"a", @"b", NO, NO, YES), rule(@"b", @"c", NO, NO, YES), rule(@"c", @"X", NO, NO, NO),
+                           rule(@"(", @"", YES, NO, YES), rule(@"(\\w+)\\{(\\w)\\}", @"$1[$2]", YES, NO, YES)];
+        TSRegexMultipleReplace *plain = set(rules, 0, TSRegexFindAnchorsMatchLines, TSRegexReplacementSyntaxICU);
+        TSRegexMultipleReplaceResult *multi = [plain applyToString:@"a b \\x{y}" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil];
         Check([multi.string isEqualToString:@"c c \\x[y]"], [@"rules apply in order: " stringByAppendingString:multi.string]);
         Check([multi.counts isEqual:@[@1, @2, @0, @0, @1]] && multi.totalCount == 4, @"counts per rule; disabled and invalid rules count 0");
-        Check(multi.errors.count == 1 && multi.errors[@3].code == TSRegexFindErrorInvalidPattern, @"an invalid rule is reported and skipped");
-        TSRegexMultipleReplaceResult *scopedMulti = [TSRegexMultipleReplace applyRules:@[rule(@"a", @"aaa", T, YES), rule(@"a", @"b", T, YES)] toString:@"a|a"
-                                                                        selectedRanges:@[[NSValue valueWithRange:NSMakeRange(2, 1)]] inSelection:YES sharedOptions:0 cancellation:nil];
+        Check(multi.errors.count == 1 && multi.errors[@3].code == TSRegexFindErrorInvalidPattern, @"an invalid rule is skipped and reported");
+        TSRegexMultipleReplaceResult *scopedMulti = [set(@[rule(@"a", @"aaa", NO, NO, YES), rule(@"a", @"b", NO, NO, YES)], 0, 0, TSRegexReplacementSyntaxICU)
+            applyToString:@"a|a" selectedRanges:@[[NSValue valueWithRange:NSMakeRange(2, 1)]] inSelection:YES lineEnding:nil cancellation:nil];
         Check([scopedMulti.string isEqualToString:@"a|bbb"] && [scopedMulti.selectedRanges isEqual:@[[NSValue valueWithRange:NSMakeRange(2, 3)]]], @"the selection follows each rule");
-        TSRegexMultipleReplaceResult *yen = [TSRegexMultipleReplace applyRules:@[rule(@"\u00A5d", @"#", R, YES)] toString:@"a1" selectedRanges:@[[NSValue valueWithRange:NSMakeRange(0, 0)]] inSelection:NO sharedOptions:TSRegexFindYenIsBackslash cancellation:nil];
-        Check([yen.string isEqualToString:@"a#"], @"the shared yen setting applies to every rule");
-        TSRegexReplacementRule *stored = rules[4];
-        Check([[[TSRegexReplacementRule alloc] initWithDictionary:stored.dictionaryRepresentation] isEqual:stored], @"a rule survives its dictionary");
-        Check([[TSRegexReplacementRule alloc] initWithDictionary:@{@"replace": @"x"}] == nil, @"a rule needs a find string");
-        // Each rule reads its replacement in its own syntax.
-        TSRegexMultipleReplaceResult *mixed = [TSRegexMultipleReplace applyRules:@[ruleIn(TSRegexReplacementSyntaxICU, @"(a)", @"$1$1\\1", R, YES),
-                                                                                   ruleIn(TSRegexReplacementSyntaxOgreKit, @"(1)", @"\\1$1", R, YES)]
-                                                                       toString:@"a" selectedRanges:@[[NSValue valueWithRange:NSMakeRange(0, 0)]] inSelection:NO sharedOptions:0 cancellation:nil];
-        Check([mixed.string isEqualToString:@"aa1$1"], [@"rules keep their own syntax: " stringByAppendingString:mixed.string]);
-        TSRegexReplacementRule *icuRule = ruleIn(TSRegexReplacementSyntaxICU, @"x", @"$0", R, YES);
-        Check([[[TSRegexReplacementRule alloc] initWithDictionary:icuRule.dictionaryRepresentation] isEqual:icuRule] && [icuRule.dictionaryRepresentation[@"syntax"] isEqual:@0], @"the ICU syntax is stored");
-        Check([[TSRegexReplacementRule alloc] initWithDictionary:stored.dictionaryRepresentation].replacementSyntax == TSRegexReplacementSyntaxOgreKit, @"the OgreKit syntax is stored");
-        Check([[TSRegexReplacementRule alloc] initWithDictionary:@{@"find": @"x"}].replacementSyntax == TSRegexReplacementSyntaxICU, @"a rule without a syntax reads as ICU");
-        Check([[TSRegexReplacementRule alloc] initWithDictionary:@{@"find": @"x", @"syntax": @7}].replacementSyntax == TSRegexReplacementSyntaxICU, @"an unknown syntax reads as ICU");
+        // The set's options apply by kind; the rule's case option is added to them.
+        TSRegexMultipleReplace *kinds = set(@[rule(@"A", @"1", NO, NO, YES), rule(@"^B", @"2", YES, NO, YES), rule(@"c", @"3", NO, YES, YES), rule(@"¥.", @"#", YES, NO, YES)],
+                                            TSRegexFindIgnoreCase, TSRegexFindAnchorsMatchLines | TSRegexFindYenIsBackslash, TSRegexReplacementSyntaxICU);
+        TSRegexMultipleReplaceResult *kindResult = [kinds applyToString:@"aA\nB b\nC." selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil];
+        Check([kindResult.string isEqualToString:@"11\n2 b\n3#"], [@"options by kind of rule: " stringByAppendingString:kindResult.string]);
+        TSRegexMultipleReplaceResult *ruleCase = [set(@[rule(@"c", @"3", NO, YES, YES), rule(@"d", @"4", YES, YES, YES), rule(@"e", @"5", NO, NO, YES)], 0, 0, TSRegexReplacementSyntaxICU)
+            applyToString:@"CDE" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil];
+        Check([ruleCase.string isEqualToString:@"34E"], [@"a rule's own case option: " stringByAppendingString:ruleCase.string]);
+        Check((kinds.textualOptions & TSRegexFindYenIsBackslash) && (kinds.regularExpressionOptions & TSRegexFindYenIsBackslash), @"the yen sign is one setting of the set");
+        Check(!(set(@[], TSRegexFindDotMatchesLineSeparators, TSRegexFindWholeWord, 0).textualOptions & TSRegexFindDotMatchesLineSeparators)
+              && !(set(@[], TSRegexFindDotMatchesLineSeparators, TSRegexFindWholeWord, 0).regularExpressionOptions & TSRegexFindWholeWord), @"options of the other kind are dropped");
+        // The set's syntax reads every replacement.
+        TSRegexMultipleReplaceResult *ogre = [set(@[rule(@"(a)", @"\\1$1", YES, NO, YES)], 0, TSRegexFindUnescapesReplacement, TSRegexReplacementSyntaxOgreKit)
+            applyToString:@"a" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil];
+        Check([ogre.string isEqualToString:@"a$1"], [@"the OgreKit syntax of the set: " stringByAppendingString:ogre.string]);
+        // Line endings: find strings and replaced text follow the document's.
+        TSRegexMultipleReplaceResult *crlf = [set(@[rule(@"a\nb", @"x\ny", NO, NO, YES), rule(@"(y)", @"$1\\n", YES, NO, YES)], 0, TSRegexFindUnescapesReplacement, TSRegexReplacementSyntaxICU)
+            applyToString:@"a\r\nb" selectedRanges:whole inSelection:NO lineEnding:@"\r\n" cancellation:nil];
+        Check([crlf.string isEqualToString:@"x\r\ny\r\n"], @"find strings and replacements take the document's line ending");
+        NSArray<NSValue *> *highlights = [plain matchRangesInString:@"a b" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil];
+        Check([highlights isEqual:@[[NSValue valueWithRange:NSMakeRange(0, 1)], [NSValue valueWithRange:NSMakeRange(2, 1)]]], @"matches of every rule are found in the unchanged string");
+
+        // CotEditor's definition files.
+        TSRegexReplacementRule *noted = [[TSRegexReplacementRule alloc] initWithFindString:@"x/y" replaceString:@"$0" usesRegularExpression:YES ignoresCase:YES enabled:NO note:@"memo"];
+        TSRegexMultipleReplace *stored = set(@[noted, rule(@"a", @"b", NO, NO, YES)], TSRegexFindWholeWord | TSRegexFindIgnoreWidth | TSRegexFindDelimitByWhitespace | TSRegexFindYenIsBackslash,
+                                            TSRegexFindAnchorsMatchLines | TSRegexFindUnicodeWordBoundaries | TSRegexFindUnescapesReplacement | TSRegexFindIgnoreEmptyMatches, TSRegexReplacementSyntaxOgreKit);
+        NSData *json = stored.JSONData;
+        Check([[[TSRegexMultipleReplace alloc] initWithJSONData:json error:NULL] isEqual:stored], @"a set survives its JSON");
+        NSDictionary *object = [NSJSONSerialization JSONObjectWithData:json options:0 error:NULL];
+        Check([object[@"settings"] isEqual:@{@"textualOptions": @(NSWidthInsensitiveSearch), @"regexOptions": @(NSRegularExpressionAnchorsMatchLines | NSRegularExpressionUseUnicodeWordBoundaries),
+                                             @"matchesFullWord": @YES, @"unescapesReplacementString": @YES, @"texshopReplacementSyntax": @"OgreKit",
+                                             @"texshopYenIsBackslash": @YES, @"texshopIgnoresEmptyMatches": @YES, @"texshopDelimitsByWhitespace": @YES}], @"settings are written with CotEditor's keys");
+        Check([object[@"replacements"] isEqual:@[@{@"findString": @"x/y", @"replacementString": @"$0", @"usesRegularExpression": @YES, @"ignoresCase": @YES, @"isEnabled": @NO, @"description": @"memo"},
+                                                 @{@"findString": @"a", @"replacementString": @"b"}]], @"default values are left out as CotEditor does");
+        Check([[[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding] containsString:@"\"x/y\""], @"slashes are not escaped");
+        NSString *cot = @"{\"replacements\":[{\"findString\":\"(\\\\d)\",\"replacementString\":\"<$1>\\\\t\",\"usesRegularExpression\":true},{\"findString\":\"b\",\"replacementString\":\"c\",\"isEnabled\":false,\"description\":null}],"
+                         "\"settings\":{\"textualOptions\":1,\"regexOptions\":16,\"matchesFullWord\":false,\"unescapesReplacementString\":true,\"unknown\":3}}";
+        TSRegexMultipleReplace *fromCot = [[TSRegexMultipleReplace alloc] initWithJSONData:[cot dataUsingEncoding:NSUTF8StringEncoding] error:NULL];
+        Check(fromCot && fromCot.rules.count == 2 && fromCot.textualOptions == TSRegexFindIgnoreCase
+              && fromCot.regularExpressionOptions == (TSRegexFindAnchorsMatchLines | TSRegexFindUnescapesReplacement)
+              && fromCot.replacementSyntax == TSRegexReplacementSyntaxICU && !fromCot.rules[1].enabled && !fromCot.rules[1].note, @"a CotEditor file is read; unknown keys are ignored");
+        Check([[fromCot applyToString:@"a1b" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil].string isEqualToString:@"a<1>\tb"], @"a CotEditor file replaces as in CotEditor");
+        NSString *missingUnescape = @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}";
+        Check([[TSRegexMultipleReplace alloc] initWithJSONData:[missingUnescape dataUsingEncoding:NSUTF8StringEncoding] error:NULL].regularExpressionOptions == 0, @"a missing unescape value reads as off, as in CotEditor");
+        for (NSString *bad in @[@"{\"replacements\":[]}", @"{\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}", @"[]", @"{",
+                                @"{\"replacements\":[{\"findString\":\"a\"}],\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}",
+                                @"{\"replacements\":[{\"findString\":\"a\",\"replacementString\":\"b\",\"isEnabled\":1}],\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}",
+                                @"{\"replacements\":[],\"settings\":{\"textualOptions\":-1,\"regexOptions\":0}}",
+                                @"{\"replacements\":[],\"settings\":{\"textualOptions\":true,\"regexOptions\":0}}",
+                                @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":0,\"matchesFullWord\":\"yes\"}}"]) {
+            NSError *error = nil;
+            Check([[TSRegexMultipleReplace alloc] initWithJSONData:[bad dataUsingEncoding:NSUTF8StringEncoding] error:&error] == nil && error,
+                  [@"an invalid definition is refused: " stringByAppendingString:bad]);
+        }
+        TSRegexMultipleReplace *tsv = [[TSRegexMultipleReplace alloc] initWithTabSeparatedText:@"a\tb\textra\r\n\nnotab\n\tempty\r\nc\t d\te"];
+        Check(tsv.rules.count == 3 && [tsv.rules[0].findString isEqualToString:@"a"] && [tsv.rules[0].replaceString isEqualToString:@"b"]
+              && [tsv.rules[1].replaceString isEqualToString:@""] && [tsv.rules[2].findString isEqualToString:@"d"]
+              && tsv.regularExpressionOptions == (TSRegexFindAnchorsMatchLines | TSRegexFindUnescapesReplacement), @"tab-separated lines are read as CotEditor reads them");
 
         if (failures == 0)
-            puts("PASS: multiple replacement in order, per-rule syntax, counts and errors, selection scope, shared yen setting, stored rules");
+            puts("PASS: multiple replacement in order, options by kind of rule, the set's syntax, counts and errors, selection scope, line endings, CotEditor definition files and tab-separated text");
         if (failures == 0)
             puts("PASS: ICU replacement strings (compared with Foundation), OgreKit replacement strings, TeX dollars, yen signs, regex and plain-text options, next/previous/wrap, selection scope, groups, cancellation");
     }

@@ -1,10 +1,31 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSRegexTextFind.h"
 
+NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEnding)
+{
+    static NSRegularExpression *lineEndings;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        lineEndings = [NSRegularExpression regularExpressionWithPattern:@"\\r\\n|[\\r\\n\\u0085\\u2028\\u2029]" options:0 error:NULL];
+    });
+    return [lineEndings stringByReplacingMatchesInString:string options:0 range:NSMakeRange(0, string.length)
+                                            withTemplate:[NSRegularExpression escapedTemplateForString:lineEnding]];
+}
+
 @implementation TSRegexTextFind
 
 - (nullable instancetype)initWithString:(NSString *)string
                                 pattern:(TSRegexFindPattern *)pattern
+                         selectedRanges:(NSArray<NSValue *> *)selectedRanges
+                            inSelection:(BOOL)inSelection
+                                  error:(NSError **)error
+{
+    return [self initWithString:string pattern:pattern lineEnding:nil selectedRanges:selectedRanges inSelection:inSelection error:error];
+}
+
+- (nullable instancetype)initWithString:(NSString *)string
+                                pattern:(TSRegexFindPattern *)pattern
+                             lineEnding:(nullable NSString *)lineEnding
                          selectedRanges:(NSArray<NSValue *> *)selectedRanges
                             inSelection:(BOOL)inSelection
                                   error:(NSError **)error
@@ -32,6 +53,7 @@
     }
     _string = [string copy];
     _pattern = pattern;
+    _lineEnding = [lineEnding copy];
     _selectedRanges = [selectedRanges copy];
     _inSelection = inSelection;
     _scopeRanges = scope;
@@ -104,12 +126,18 @@
     return (forward ? matches.firstObject : matches.lastObject).rangeValue;
 }
 
+- (NSString *)normalizedLineEndings:(NSString *)text
+{
+    NSString *lineEnding = self.lineEnding;
+    return lineEnding ? TSRegexStringByReplacingLineEndings(text, (NSString *_Nonnull)lineEnding) : text;
+}
+
 - (nullable TSRegexFindReplacement *)replacementInSelectionWithTemplate:(TSRegexReplacementTemplate *)replacementTemplate
 {
     NSRange selection = self.selectedRanges.firstObject.rangeValue;
     __block TSRegexFindReplacement *replacement = nil;
     [self.pattern enumerateMatchesInString:self.string range:selection cancellation:nil usingBlock:^(NSRange matchRange, NSTextCheckingResult *result, BOOL *stop) {
-        NSString *text = [replacementTemplate replacementForMatchRange:matchRange result:result inString:self.string previousMatchEnd:selection.location];
+        NSString *text = [self normalizedLineEndings:[replacementTemplate replacementForMatchRange:matchRange result:result inString:self.string previousMatchEnd:selection.location]];
         replacement = [[TSRegexFindReplacement alloc] initWithRange:matchRange string:text];
         *stop = YES;
     }];
@@ -132,7 +160,7 @@
         __block NSUInteger count = 0;
         [self.pattern enumerateMatchesInString:string range:scope cancellation:isCancelled usingBlock:^(NSRange matchRange, NSTextCheckingResult *result, BOOL *stop) {
             [scopeText appendString:[string substringWithRange:NSMakeRange(location, matchRange.location - location)]];
-            [scopeText appendString:[replacementTemplate replacementForMatchRange:matchRange result:result inString:string previousMatchEnd:location]];
+            [scopeText appendString:[self normalizedLineEndings:[replacementTemplate replacementForMatchRange:matchRange result:result inString:string previousMatchEnd:location]]];
             location = NSMaxRange(matchRange);
             count++;
         }];

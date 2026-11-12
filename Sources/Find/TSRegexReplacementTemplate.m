@@ -52,7 +52,8 @@ typedef NS_ENUM(NSInteger, TSReplacementTokenKind) {
     NSString *normalized = [TSRegexFindPattern normalizedString:string options:pattern.options];
     _tokens = _literal ? @[[[TSReplacementToken alloc] initWithKind:TSReplacementTokenText text:normalized group:0]]
              : syntax == TSRegexReplacementSyntaxOgreKit ? [TSRegexReplacementTemplate ogreKitTokensOfString:normalized]
-                                                         : [TSRegexReplacementTemplate icuTokensOfString:normalized numberOfCaptureGroups:_numberOfCaptureGroups];
+                                                         : [TSRegexReplacementTemplate icuTokensOfString:(pattern.options & TSRegexFindUnescapesReplacement) ? [TSRegexReplacementTemplate unescapedTemplate:normalized] : normalized
+                                                                                         numberOfCaptureGroups:_numberOfCaptureGroups];
     return self;
 }
 
@@ -184,7 +185,31 @@ static NSUInteger TSGroupEscapeLength(NSString *s, NSUInteger index, NSString *_
     return tokens;
 }
 
-/// Reads a template as NSRegularExpression does, and also takes \t \n \r for tab, line feed and carriage return.
+/// Turns \0 \t \n \r \" \' into the characters they stand for, from left to right, before the template is read.
+/// `\\` stays `\\`, so that the template still reads it as one backslash.
++ (NSString *)unescapedTemplate:(NSString *)s
+{
+    NSMutableString *result = [NSMutableString stringWithCapacity:s.length];
+    NSUInteger length = s.length;
+    for (NSUInteger i = 0; i < length; i++) {
+        unichar c = [s characterAtIndex:i];
+        unichar n = i + 1 < length ? [s characterAtIndex:i + 1] : 0;
+        if (c != '\\' || !(n == '0' || n == 't' || n == 'n' || n == 'r' || n == '"' || n == '\'' || n == '\\')) {
+            [result appendFormat:@"%C", c];
+            continue;
+        }
+        i++;
+        if (n == '\\')
+            [result appendString:@"\\\\"];
+        else {
+            unichar character = n == '0' ? 0 : n == 't' ? '\t' : n == 'n' ? '\n' : n == 'r' ? '\r' : n;
+            [result appendString:[NSString stringWithCharacters:&character length:1]];
+        }
+    }
+    return result;
+}
+
+/// Reads a template as NSRegularExpression does.
 + (NSArray<TSReplacementToken *> *)icuTokensOfString:(NSString *)s numberOfCaptureGroups:(NSUInteger)groups
 {
     NSMutableArray<TSReplacementToken *> *tokens = [NSMutableArray array];
@@ -195,12 +220,6 @@ static NSUInteger TSGroupEscapeLength(NSString *s, NSUInteger index, NSString *_
         if (c == '\\') {
             if (i + 1 >= length) // A lone backslash at the end stands for nothing, as in NSRegularExpression.
                 break;
-            unichar n = [s characterAtIndex:i + 1];
-            if (n == 't' || n == 'n' || n == 'r') {
-                [text appendString:n == 't' ? @"\t" : n == 'n' ? @"\n" : @"\r"];
-                i += 2;
-                continue;
-            }
             // The escaped character is one UTF-16 unit, as in NSRegularExpression.
             [text appendString:[s substringWithRange:NSMakeRange(i + 1, 1)]];
             i += 2;

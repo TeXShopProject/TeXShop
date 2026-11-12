@@ -8,6 +8,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// One search over a snapshot of a text. Pure computation: it never touches a view, so it can run on any thread.
+/// The string with every CRLF, CR, LF, NEL, line separator and paragraph separator replaced by the line ending.
+/// The find string and the replaced text are put into the document's line ending with it, as in CotEditor.
+FOUNDATION_EXPORT NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEnding);
+
 NS_SWIFT_NAME(RegexTextFind)
 @interface TSRegexTextFind : NSObject
 
@@ -18,12 +22,22 @@ NS_SWIFT_NAME(RegexTextFind)
 /// The ranges searched: the selected ranges in selection mode, otherwise the whole text.
 @property (nonatomic, readonly, copy) NSArray<NSValue *> *scopeRanges;
 
+/// The line ending put into replaced text (as CotEditor does with the document's line ending), or nil to keep
+/// the line endings the replacement gives.
+@property (nonatomic, readonly, copy, nullable) NSString *lineEnding;
 /// Fails with TSRegexFindErrorEmptySelection when searching in a selection that is empty.
+- (nullable instancetype)initWithString:(NSString *)string
+                                pattern:(TSRegexFindPattern *)pattern
+                             lineEnding:(nullable NSString *)lineEnding
+                         selectedRanges:(NSArray<NSValue *> *)selectedRanges
+                            inSelection:(BOOL)inSelection
+                                  error:(NSError **)error NS_DESIGNATED_INITIALIZER;
+/// Keeps the line endings of the replacements.
 - (nullable instancetype)initWithString:(NSString *)string
                                 pattern:(TSRegexFindPattern *)pattern
                          selectedRanges:(NSArray<NSValue *> *)selectedRanges
                             inSelection:(BOOL)inSelection
-                                  error:(NSError **)error NS_DESIGNATED_INITIALIZER;
+                                  error:(NSError **)error;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

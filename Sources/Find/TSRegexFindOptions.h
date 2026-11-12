@@ -30,9 +30,13 @@ typedef NS_OPTIONS(NSUInteger, TSRegexFindOptions) {
     TSRegexFindLiteral                  = 1 << 11,
     /// A yen sign (U+00A5) typed in the find or replacement string stands for a backslash.
     TSRegexFindYenIsBackslash           = 1 << 12,
+    /// ICU replacement syntax: \0 \t \n \r \" \' in the replacement string become NUL, tab, line feed, carriage return
+    /// and quotes before the template is read, as CotEditor's "Unescape replacement text" does.
+    TSRegexFindUnescapesReplacement     = 1 << 13,
 } NS_SWIFT_NAME(RegexFindOptions);
 
-/// The options used when nothing has been chosen yet: anchors match lines, as in OgreKit's Ruby syntax.
+/// The options used when nothing has been chosen yet, as in CotEditor: anchors match lines and the replacement
+/// string is unescaped; and, for TeX on Japanese keyboards, a yen sign stands for a backslash.
 FOUNDATION_EXPORT const TSRegexFindOptions TSRegexFindDefaultOptions NS_SWIFT_NAME(RegexFindOptions.default);
 
 /// Errors of the find engine.
@@ -42,6 +46,8 @@ typedef NS_ERROR_ENUM(TSRegexFindErrorDomain, TSRegexFindError) {
     TSRegexFindErrorEmptyFindString = 1,
     TSRegexFindErrorInvalidPattern  = 2,
     TSRegexFindErrorEmptySelection  = 3,
+    /// A multiple replacement definition that cannot be read.
+    TSRegexFindErrorInvalidDefinition = 4,
 } NS_SWIFT_NAME(RegexFindError);
 
 NS_ASSUME_NONNULL_END
