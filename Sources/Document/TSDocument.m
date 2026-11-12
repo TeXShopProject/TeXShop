@@ -438,7 +438,7 @@ withDarkColors = NO;
 	fromMenu = NO;
 	willClose = NO;
     NSString *defaultSpellLanguage = nil;
-    self.automaticSpelling = TSSpellingDefaultIsAutomatic(SUD, &defaultSpellLanguage);
+    self.automaticSpelling = TSSpellingDefaultIsAutomatic(SUD, [[NSSpellChecker sharedSpellChecker] availableLanguages], &defaultSpellLanguage);
     self.spellLanguage = defaultSpellLanguage;
     self.spellLanguageFollowsDefault = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(spellingLanguageDefaultChanged:)
@@ -3118,7 +3118,7 @@ else {
     if (! self.spellLanguageFollowsDefault)
         return;
     NSString *defaultSpellLanguage = nil;
-    self.automaticSpelling = TSSpellingDefaultIsAutomatic(SUD, &defaultSpellLanguage);
+    self.automaticSpelling = TSSpellingDefaultIsAutomatic(SUD, [[NSSpellChecker sharedSpellChecker] availableLanguages], &defaultSpellLanguage);
     self.spellLanguage = defaultSpellLanguage;
     if ([self spellingWindowIsMain])
         [self resetSpelling];

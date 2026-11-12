@@ -78,13 +78,16 @@ static inline BOOL TSSpellingLanguageIsAutomaticTitle(NSString *_Nullable stored
     return [titles containsObject:trimmed];
 }
 
-// The Settings choice: YES for automatic language detection. *language is the
-// stored identifier ("" with automatic detection).
-static inline BOOL TSSpellingDefaultIsAutomatic(NSUserDefaults *defaults, NSString *_Nonnull *_Nullable language)
+// The Settings choice: YES for automatic language detection. *language is ""
+// with automatic detection; otherwise the language in `available` that the
+// stored value names, as Settings shows it, or the stored value if none does.
+static inline BOOL TSSpellingDefaultIsAutomatic(NSUserDefaults *defaults, NSArray<NSString *> *_Nullable available,
+                                                NSString *_Nonnull *_Nullable language)
 {
     NSString *stored = [defaults stringForKey:spellingLanguageDefaultKey] ?: @"";
     BOOL automatic = [defaults boolForKey:spellingAutomaticDefaultKey] || TSSpellingLanguageIsAutomaticTitle(stored);
-    if (language != NULL) *language = automatic ? @"" : stored;
+    if (language != NULL)
+        *language = automatic ? @"" : (TSSpellingLanguageMatching(stored, available ?: @[]) ?: stored);
     return automatic;
 }
 

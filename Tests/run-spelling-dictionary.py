@@ -33,6 +33,8 @@ MUTATIONS = {
     'no-region-fallback': ('Sources/Editor/TSSpellingLanguage.h',
         '            if ([TSSpellingLanguageNormalized(language) caseInsensitiveCompare:base] == NSOrderedSame) return language;',
         '            ;'),
+    'document-raw-stored': ('Sources/Editor/TSSpellingLanguage.h',
+        '(TSSpellingLanguageMatching(stored, available ?: @[]) ?: stored)', 'stored'),
     'no-automatic-title': ('Sources/Editor/TSSpellingLanguage.h',
         '|| TSSpellingLanguageIsAutomaticTitle(stored)', ''),
 }
@@ -78,16 +80,18 @@ static void Check(BOOL ok, const char *what) { if (!ok) { fprintf(stderr, "FAIL:
 - (void)reportLanguage:(NSString *)language;
 @property BOOL automaticallyIdentifiesLanguages;
 @property NSUInteger sets;
+@property (readonly) NSArray *availableLanguages;
 + (instancetype)sharedSpellChecker;
 - (BOOL)setLanguage:(NSString *)language;
 @end
 @implementation FakeChecker
 + (instancetype)sharedSpellChecker { static FakeChecker *c; if (!c) { c = [FakeChecker new]; [c reportLanguage:@"fr"]; } return c; }
 - (NSString *)language { return _language; }
+- (NSArray *)availableLanguages { return @[@"en", @"en_GB", @"de", @"fr", @"ja"]; }
 - (void)reportLanguage:(NSString *)language { _language = [language copy]; }
 - (BOOL)setLanguage:(NSString *)language {
     self.sets++;
-    NSDictionary *names = @{@"en": @"en", @"en_US": @"en", @"en-US": @"en", @"English": @"en", @"en_GB": @"en_GB",
+    NSDictionary *names = @{@"en": @"en", @"en_US": @"en", @"en-US": @"en", @"English": @"en", @"German": @"de", @"en_GB": @"en_GB",
                             @"de": @"de", @"de_DE": @"de", @"fr": @"fr", @"ja": @"ja"};
     if (!names[language]) return NO;
     _language = names[language];
@@ -172,19 +176,19 @@ int main(int argc, char **argv) { @autoreleasepool {
         titles++;
         NSString *language = @"unset";
         [defaults setBool:NO forKey:spellingAutomaticDefaultKey]; [defaults setObject:title forKey:spellingLanguageDefaultKey];
-        Check(TSSpellingDefaultIsAutomatic(defaults, &language) && language.length == 0, title.UTF8String);
+        Check(TSSpellingDefaultIsAutomatic(defaults, nil, &language) && language.length == 0, title.UTF8String);
     }
     Check(titles == 12, "Twelve localized automatic titles");
     NSString *language = nil;
     [defaults setObject:@"de" forKey:spellingLanguageDefaultKey];
-    Check(!TSSpellingDefaultIsAutomatic(defaults, &language) && [language isEqual:@"de"], "A stored identifier is not automatic");
+    Check(!TSSpellingDefaultIsAutomatic(defaults, nil, &language) && [language isEqual:@"de"], "A stored identifier is not automatic");
     [defaults setBool:YES forKey:spellingAutomaticDefaultKey];
-    Check(TSSpellingDefaultIsAutomatic(defaults, &language) && language.length == 0, "Automatic detection");
+    Check(TSSpellingDefaultIsAutomatic(defaults, nil, &language) && language.length == 0, "Automatic detection");
 
     // A document follows the dictionary chosen in Settings, also while open.
     ChooseInSettings(@"en_US");
     ProbeDocument *a = NewDocument();
-    Check(a.spellLanguageFollowsDefault && [a.spellLanguage isEqual:@"en_US"] && !a.automaticSpelling, "New document takes the Settings choice");
+    Check(a.spellLanguageFollowsDefault && [a.spellLanguage isEqual:@"en"] && !a.automaticSpelling, "New document takes the Settings choice as the checker names it");
     [a becomeMain];
     Check([checker.language isEqual:@"en"] && !checker.automaticallyIdentifiesLanguages, "Main document gives the checker its language");
     [a resignMain];
@@ -218,6 +222,37 @@ int main(int argc, char **argv) { @autoreleasepool {
     checker.automaticallyIdentifiesLanguages = YES;
     [b resignMain];
     Check(!b.spellLanguageFollowsDefault && b.automaticSpelling, "Turning on automatic detection in the panel is a panel choice");
+
+    // Stored values that Settings reads as an installed language are given to the
+    // checker as that language, also when the checker would not take them.
+    NSDictionary *stored = @{@"en_US": @"en", @" en_us ": @"en", @"english": @"en", @"german": @"de", @"German": @"de", @"de_DE": @"de"};
+    for (NSString *value in stored) {
+        [defaults setBool:NO forKey:spellingAutomaticDefaultKey]; [defaults setObject:value forKey:spellingLanguageDefaultKey];
+        [checker setLanguage:@"fr"];
+        ProbeDocument *d = NewDocument();
+        [d becomeMain];
+        Check([checker.language isEqual:stored[value]], value.UTF8String);
+        [d resignMain];
+        Check(d.spellLanguageFollowsDefault && [d.spellLanguage isEqual:stored[value]], "The document keeps following Settings");
+        ChooseInSettings(@"en_GB"); [checker setLanguage:@"fr"];
+        [defaults setObject:value forKey:spellingLanguageDefaultKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:TSSpellingLanguageChangedNotification object:nil];
+        [d becomeMain];
+        Check([checker.language isEqual:stored[value]], "A changed stored value is read the same way");
+        [d resignMain];
+    }
+    // A dictionary that is not installed: the checker keeps its language, and the
+    // document still follows Settings.
+    ChooseInSettings(@"tlh_XX");
+    ProbeDocument *missing = NewDocument();
+    [missing becomeMain];
+    [missing resignMain];
+    Check(missing.spellLanguageFollowsDefault, "A language the checker refuses is not a panel choice");
+    ChooseInSettings(@"de");
+    Check([missing.spellLanguage isEqual:@"de"], "The document follows the next Settings choice");
+    [defaults setObject:@"tlh_XX" forKey:spellingLanguageDefaultKey];
+    language = nil;
+    Check(!TSSpellingDefaultIsAutomatic(defaults, @[@"en"], &language) && [language isEqual:@"tlh_XX"], "An unknown stored value is not replaced");
 
     // "% !TEX spellcheck" lines.
     ChooseInSettings(@"en");

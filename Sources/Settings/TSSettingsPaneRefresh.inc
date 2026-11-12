@@ -149,7 +149,7 @@
         item.toolTip = theLanguages[i];
     }
     NSString *myLanguage = nil;
-    if (TSSpellingDefaultIsAutomatic(defaults, &myLanguage)) {
+    if (TSSpellingDefaultIsAutomatic(defaults, nil, &myLanguage)) {
         [dictionaryPopup selectItemAtIndex:0];
         return;
     }
