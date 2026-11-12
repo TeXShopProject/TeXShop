@@ -155,7 +155,8 @@ window_mutations = {
     'window-split-kills-pin': ('preview', '    [(MyPDFKitView *)self.myPDFKitView cleanupMarqueeKeepingPinnedLinkPreview];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarqueeKeepingPinnedLinkPreview];\n    \n',
                                '    [(MyPDFKitView *)self.myPDFKitView cleanupMarquee: YES];\n    [(MyPDFKitView *)self.myPDFKitView2 cleanupMarquee: YES];\n    \n'),
     'window-unsplit-drops-pin': ('preview', '        [(MyPDFKitView *)self.myPDFKitView attachPinnedLinkPreview: movedPreview windowFrame: movedPreviewFrame];', '        ;'),
-    'window-layout-not-kept': ('preview', '    [self keepPinnedLinkPreviewsInView];\n}', '}'),
+    'window-layout-not-kept': ('preview', 'windowFrame: movedPreviewFrame];\n    [self keepPinnedLinkPreviewsInView];\n}',
+                               'windowFrame: movedPreviewFrame];\n}'),
 }
 if args.mutation in window_mutations:
     which, old, new = window_mutations[args.mutation]
