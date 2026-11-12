@@ -18,7 +18,7 @@ parser.add_argument('--mutation', choices=['move-dismisses', 'stale-timer', 'oth
                                            'detach-keeps-state', 'attach-keeps-old-tool', 'attach-replaces-pin', 'not-kept-in-view',
                                            'window-magnifier-bypass', 'window-resign-kills-pin', 'window-split-kills-pin', 'window-unsplit-drops-pin',
                                            'window-layout-not-kept', 'drag-cursor-stays', 'hidden-part-cursor', 'no-exit-tracking', 'exit-ignored',
-                                           'outside-always-arrow', 'visible-beyond-bounds'])
+                                           'outside-always-arrow', 'visible-beyond-bounds', 'escape-ignores-active-part'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Preview/MyPDFKitView.m').read_text(encoding='latin1')
@@ -64,6 +64,8 @@ view_mutations = {
                               '        return NO;\n    };\n    [documentView addSubview:linkPreview];'),
     'attach-replaces-pin': ('    if (!preview || !documentView || [self hasPinnedLinkPreview]) return;', '    if (!preview || !documentView) return;'),
     'not-kept-in-view': ('    if ([self hasPinnedLinkPreview]) [linkPreview keepInView];', ''),
+    'escape-ignores-active-part': ('            && [active hasPinnedLinkPreview])\n            return event;\n',
+                                   '            && [active hasPinnedLinkPreview])\n            ;\n'),
 }
 if args.mutation in view_mutations:
     old, new = view_mutations[args.mutation]
@@ -264,6 +266,12 @@ static NSPasteboard *generalPasteboard(id self, SEL sel) { return testPasteboard
 DOCUMENTMETHODS
 @end
 #define TSDocument TestDocument
+// The preview window's active view, which the toolbar and Escape work with (#14).
+@interface TestPreviewWindow : NSWindow
+@property PDFView *activeView;
+@end
+@implementation TestPreviewWindow
+@end
 @interface MyPDFKitView : PDFView {
     NSInteger mouseMode, currentMouseMode;
     BOOL _editMode,protectFind,downOverLink,showSync,fromTypesetOrQuit,firstTimeSave,drawMark;
@@ -284,7 +292,7 @@ DOCUMENTMETHODS
 @property BOOL firstTime,oldUsed,doScroll,PDFFlashFix;
 @property NSInteger stringAlignment;
 @property NSString *oneOffSearchString;
-@property NSWindow *myPDFWindow;
+@property TestPreviewWindow *myPDFWindow;
 @property NSTimeInterval PDFFlashDelay;
 @property NSView *myHideView1,*myHideView2;
 @property NSTimer *selRectTimer;
@@ -937,6 +945,64 @@ static void testKeepingPinned(MyPDFKitView *view, MyPDFKitView *second, NSWindow
     [view cleanupMarqueeKeepingPinnedLinkPreview];
     check(!view.preview && !handlers.count, @"another window becoming main closes an ordinary popup");
 }
+// AppKit calls each local monitor with what the one before returned and stops at nil;
+// try both orders, since both parts watch Escape while they show a pinned popup.
+static NSEvent *dispatchEvent(NSEvent *e, BOOL lastFirst) {
+    NSArray *monitors = lastFirst ? handlers.reverseObjectEnumerator.allObjects : [handlers copy];
+    for (NSEvent *(^monitor)(NSEvent *) in monitors) {
+        if (![handlers containsObject:monitor]) continue;
+        e = monitor(e);
+        if (!e) break;
+    }
+    return e;
+}
+// In a split window Escape dismisses the pinned popup of the active part first (#14).
+static void testSplitEscape(MyPDFKitView *view, MyPDFKitView *second, TestPreviewWindow *window) {
+    NSRect bounds = window.contentView.bounds;
+    view.frame = NSMakeRect(0, 0, NSWidth(bounds) / 2, NSHeight(bounds));
+    second.frame = NSMakeRect(NSWidth(bounds) / 2, 0, NSWidth(bounds) / 2, NSHeight(bounds));
+    [view layoutDocumentView]; [second layoutDocumentView];
+    view.myPDFWindow = window; second.myPDFWindow = window;
+    for (NSNumber *lastFirst in @[@YES, @NO]) {
+        for (MyPDFKitView *active in @[view, second]) {
+            MyPDFKitView *other = active == view ? second : view;
+            for (MyPDFKitView *pinnedFirst in @[view, second]) {
+                MyPDFKitView *pinnedLast = pinnedFirst == view ? second : view;
+                [view doKillPopup]; [second doKillPopup];
+                show(pinnedFirst, NSEventModifierFlagOption);
+                show(pinnedLast, NSEventModifierFlagOption);
+                flags = 0;
+                TSLinkPreviewView *otherPreview = other.preview;
+                window.activeView = active;
+                check(handlers.count == 2 && active.preview && otherPreview, @"both parts show a pinned popup");
+                NSEvent *escape = event(window, NSEventTypeKeyDown, 0, @"\033", NSZeroPoint);
+                check(dispatchEvent(escape, lastFirst.boolValue) == nil, @"Escape is used by a pinned popup");
+                check(!active.preview && other.preview == otherPreview && otherPreview.superview && other.globalLongTerm &&
+                      handlers.count == 1, @"Escape dismisses the pinned popup of the active part, whichever was shown last");
+                check(dispatchEvent(escape, lastFirst.boolValue) == nil && !other.preview && !handlers.count,
+                      @"with none in the active part, Escape dismisses the pinned popup of the other part");
+            }
+            // An ordinary popup in the active part leaves Escape to the pinned one in the other part.
+            show(other, NSEventModifierFlagOption);
+            show(active, 0);
+            window.activeView = active;
+            NSEvent *escape = event(window, NSEventTypeKeyDown, 0, @"\033", NSZeroPoint);
+            check(dispatchEvent(escape, lastFirst.boolValue) == nil && !other.preview && active.preview,
+                  @"an ordinary popup in the active part leaves Escape to the pinned popup of the other part");
+            [active doKillPopup];
+        }
+        // Without an active part in this window, as when the other window of the document has it,
+        // Escape still dismisses one of the popups.
+        show(view, NSEventModifierFlagOption); show(second, NSEventModifierFlagOption); flags = 0;
+        window.activeView = nil;
+        NSEvent *escape = event(window, NSEventTypeKeyDown, 0, @"\033", NSZeroPoint);
+        check(dispatchEvent(escape, lastFirst.boolValue) == nil && handlers.count == 1 && (!view.preview) != (!second.preview),
+              @"without an active part Escape dismisses one pinned popup");
+        check(dispatchEvent(escape, lastFirst.boolValue) == nil && !view.preview && !second.preview && !handlers.count,
+              @"and the next Escape the other");
+    }
+    view.frame = bounds; [view layoutDocumentView];
+}
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication];
     installFakeToolTip();
@@ -947,7 +1013,7 @@ int main(void) { @autoreleasepool {
     TSReplaceTestMethod(class_getClassMethod(NSEvent.class,@selector(removeMonitor:)), (IMP)removeMonitor);
     testPasteboard = [NSPasteboard pasteboardWithUniqueName];
     TSReplaceTestMethod(class_getClassMethod(NSPasteboard.class,@selector(generalPasteboard)), (IMP)generalPasteboard);
-    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,650,850) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+    TestPreviewWindow *window = [[TestPreviewWindow alloc] initWithContentRect:NSMakeRect(0,0,650,850) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     NSWindow *otherWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,650,850) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
     window.releasedWhenClosed = NO; otherWindow.releasedWhenClosed = NO;
     MyPDFKitView *view = [[MyPDFKitView alloc] initWithFrame:window.contentView.bounds];
@@ -973,6 +1039,7 @@ int main(void) { @autoreleasepool {
         [window.contentView addSubview:second];
         second.document = doc; second.autoScales = YES; [view layoutDocumentView]; [second layoutDocumentView];
         testKeepingPinned(view, second, window);
+        testSplitEscape(view, second, window);
         [second removeFromSuperview];
         view.frame = bounds; [view layoutDocumentView];
     }
@@ -1136,7 +1203,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-pinned-link-') as directory:
                     'no-exit-tracking':'the popup watches the pointer leave it',
                     'exit-ignored':'leaving the popup straight onto the toolbar shows the arrow',
                     'outside-always-arrow':"releasing a drag in the preview outside the popup shows the tool's cursor",
-                    'visible-beyond-bounds':'releasing the edge over the toolbar shows the arrow'}[args.mutation]
+                    'visible-beyond-bounds':'releasing the edge over the toolbar shows the arrow',
+                    'escape-ignores-active-part':'Escape dismisses the pinned popup of the active part'}[args.mutation]
         if isinstance(expected, str): expected = (expected,)
         assert result.returncode == 1 and any(message in result.stderr for message in expected), result.stderr
         print('PASS: detected mutation ' + args.mutation)

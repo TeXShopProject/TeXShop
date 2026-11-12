@@ -4606,6 +4606,13 @@ if (!self.skipLinks && !self.globalLongTerm)
         && !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl
                                     | NSEventModifierFlagOption | NSEventModifierFlagShift))
         && [event.charactersIgnoringModifiers isEqualToString:@"\033"]) {
+        // Both parts of a split window watch Escape, the part that showed its popup last
+        // first. Escape dismisses the popup of the active part, and that of the other part
+        // only when the active part has none (#14).
+        MyPDFKitView *active = (MyPDFKitView *)self.myPDFWindow.activeView;
+        if (active != self && active.window == self.window && [active isKindOfClass:[MyPDFKitView class]]
+            && [active hasPinnedLinkPreview])
+            return event;
         [self doKillPopup];
         return nil;
     }
