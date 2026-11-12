@@ -4,31 +4,21 @@
 # at least 9.51.
 # By Richard Koch, Sept 16, 2023
 
+# Ghostscript is taken from the Ghostscript path in Settings, or else
+# from the PATH. Without Ghostscript the answer is no.
 
 set mygspath = "$argv[1]"
+if (-x "${mygspath}/ps2pdf") then
+    setenv PATH "${mygspath}:${PATH}"
+    rehash
+endif
 
-if (-x ${mygspath}/ps2pdf) then
-	setenv PATH "${mygspath}:${PATH}"
-	rehash
- 
-    set gsversion = `gs --version`
-    set major =  `echo $gsversion | cut -d. -f1`
-    set minor =  `echo $gsversion | cut -d. -f2`
- 
-    if ( $major >= 10 || ( $major >= 9 && $minor >= 51 ) ) then
-    
-        exit 0
-        
-    else
-        
-        exit 1
-        
-    endif
- 
- 
- else
- 
-    exit 1
-    
- endif
-    
+set gsversion = `gs --version`
+if ( "$gsversion" !~ [0-9]*.[0-9]* ) exit 1
+set major = `echo $gsversion | cut -d. -f1`
+set minor = `echo $gsversion | cut -d. -f2`
+
+if ( $major >= 10 || ( $major >= 9 && $minor >= 51 ) ) then
+    exit 0
+endif
+exit 1

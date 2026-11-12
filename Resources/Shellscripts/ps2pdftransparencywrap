@@ -4,26 +4,25 @@
 # By Richard Koch, July 29, 2001, following similar code by
 # Gerben Wierda
 
+# Ghostscript is taken from the Ghostscript path in Settings, or else
+# from the PATH, like ps2pdfwrap. Versions before 9.51 do not know
+# -dALLOWPSTRANSPARENCY.
 
-    set mygspath = "$argv[2]"
-    if (-x ${mygspath}/ps2pdf) then
-        setenv PATH "${mygspath}:${PATH}"
-        rehash
+set mygspath = "$argv[2]"
+if (-x "${mygspath}/ps2pdf") then
+    setenv PATH "${mygspath}:${PATH}"
+    rehash
+endif
 
-
-        set gsversion = `gs --version`
-        set major =  `echo $gsversion | cut -d. -f1`
-        set minor =  `echo $gsversion | cut -d. -f2`
-
-        if ( $major >= 10 || ( $major >= 9 && $minor >= 51 ) ) then
-            set filename = "$argv[3]"
-            ps2pdf -dALLOWPSTRANSPARENCY "${filename}"
-
-        else
-            set filename = "$argv[3]"
-            ps2pdf  "${filename}"
-	
-        endif
-
+set filename = "$argv[3]"
+set gsversion = `gs --version`
+if ( "$gsversion" =~ [0-9]*.[0-9]* ) then
+    set major = `echo $gsversion | cut -d. -f1`
+    set minor = `echo $gsversion | cut -d. -f2`
+    if ( $major >= 10 || ( $major >= 9 && $minor >= 51 ) ) then
+        ps2pdf -dALLOWPSTRANSPARENCY "${filename}"
+        exit $status
     endif
-	
+endif
+
+ps2pdf "${filename}"

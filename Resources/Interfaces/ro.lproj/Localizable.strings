@@ -241,6 +241,7 @@
 "Advanced" = "Avansat";
 
 "Install a TeX distribution, then run Auto Setup in Settings > Typesetting." = "Instalați o distribuție TeX, apoi rulați configurarea automată în Configurări > Tehnoredactare.";
+"Ghostscript was not found. Install Ghostscript, then run Auto Setup in Settings > Typesetting." = "Ghostscript nu a fost găsit. Instalați Ghostscript, apoi rulați configurarea automată în Configurări > Tehnoredactare.";
 
 "Completion trigger" = "Tastă de activare";
 
