@@ -2620,7 +2620,7 @@ modifier key, as explained below.
 
 There is a menu item in the Preview menu called ``Link Popups'', suggested by Uwe Schmock. This menu is a toggle turning the hover behavior on or off. When it is on, the menu item is checked. Whether the hover behavior is on when a document is opened is set by the ``Link Popups'' switch under Display in the {\em Preview} category of Settings; it is on by default. While ``Link Popups'' is off, a popup can still be seen for a particular link by holding down the Command key while moving the pointer onto it, as explained in the next section; without Command, hovering shows nothing. This too was suggested by Uwe Schmock.
 
-If you click in the contents of the Preview window while the Control key is down, a contextual menu opens. The ``Link Popups'' item is also in this contextual menu.
+If you click in the contents of the Preview window while the Control key is down, a contextual menu opens. Clicking with the right mouse button, or with two fingers on a trackpad, opens it too. The ``Link Popups'' item is also in this contextual menu. When the menu is opened over an internal link, it also contains ``Split Window with Link'', which shows the linked place in the other part of a split window (see \cref{Split_Window_With_Link_Section}).
 
 \subsection{Modifying Popup Windows}
 \label{Modifying_Popup_Windows_Section}
@@ -3790,6 +3790,14 @@ Switch Views exchanges the two parts completely. Each part keeps its size, so if
 This feature is not available for the Source Window because it is not needed there. When the source window has been split into two views, the  view with the cursor will become the active window when the window is unsplit.
 
 
+\section{Showing a Link in the Other Part}
+\label{Split_Window_With_Link_Section}
+
+When the contextual menu of the Preview window is opened over an internal link, such as a reference to a theorem or an entry of the table of contents, it contains the item ``Split Window with Link'', suggested by Uwe Schmock. The menu opens when you click with the Control key held down, or with the right mouse button. The item shows the linked place in the other part of a split window, while the part with the link stays where it is. If the window is not split, it is first split as by ``Split Window'', and the linked place appears in the bottom part; hold down the Option key while choosing the item to split the window side by side. If the window is already split, the other part moves to the linked place, whichever part contains the link. The other part keeps its display format and magnification. If it is too small to show anything, for instance because the divider was dragged to the edge of the window, the divider first moves to the middle.
+
+The part that shows the linked place becomes the active view, so the left chevron of the Back/Forward item in the toolbar takes it back to where it was, as after clicking a link in that part. The item is not in the menu over a link to a web page or to another file.
+
+
 \section{Revising the Document and Typesetting}
 
 When the preview window is split, it is still easy to revise the source for either view and then typeset to see the result in Preview.  Click on either view and use synctex to find the corresponding spot in the source. Edit the source. Typeset. The revision will appear in both views of the split Preview window.
@@ -4085,6 +4093,8 @@ When you switch back, i.e.\ unsplit the Preview window (no modifier key necessar
 
 TeXShop remembers the position of the dividing bar and the view of the lower part is saved.
 If you split again (without any modifier key), you get back the setting which you just left.
+
+Instead of these steps, you can also Control-click the link in the upper part and choose ``Split Window with Link'' from the contextual menu: the window is split, and the lower part shows the linked place at once. When the window is already split, the same item moves the other part to the linked place, so it also works for links in the lower part; see \cref{Split_Window_With_Link_Section}.
 
 \item
 The ``Split Window'' just explained is also helpful when presenting a theorem.

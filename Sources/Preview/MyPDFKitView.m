@@ -8104,6 +8104,15 @@ else
         [theMenu insertItemWithTitle: NSLocalizedString(@"Split Window", @"Split Window") action:@selector(splitWindow:) keyEquivalent:@"" atIndex:1];
         [theMenu insertItemWithTitle: NSLocalizedString(@"Link Popups", @"Link Popups") action:@selector(toggleLinkPopups:) keyEquivalent:@"" atIndex:2];
 		[theMenu insertItem:[NSMenuItem separatorItem] atIndex:3];
+        // Over an internal link, the other part of the window can show its target (#31).
+        PDFDestination *linkDestination = [self internalLinkDestinationAtPoint: [self convertPoint: menuPoint fromView: nil]];
+        if (linkDestination) {
+            NSMenuItem *linkItem = [[NSMenuItem alloc] initWithTitle: NSLocalizedString(@"Split Window with Link", @"Split Window with Link")
+                                                              action: @selector(splitWindowWithLink:) keyEquivalent: @""];
+            linkItem.target = self;
+            linkItem.representedObject = linkDestination;
+            [theMenu insertItem: linkItem atIndex: 2];
+        }
         
         aMenu = [self.myDocument getContextMenu];
         if (aMenu)
@@ -8112,6 +8121,31 @@ else
         //    theMenu = [self.myDocument getAnnotationMenu];
 	}
     return theMenu;
+}
+
+// The target of the internal link at a point of this view, or nil where there is no link or
+// where the link goes to a URL or to another file. These are the links that show popups.
+- (PDFDestination *)internalLinkDestinationAtPoint: (NSPoint)viewPoint
+{
+    PDFPage *page = [self pageForPoint: viewPoint nearest: NO];
+    if (page == nil)
+        return nil;
+    PDFAnnotation *annotation = [page annotationAtPoint: [self convertPoint: viewPoint toPage: page]];
+    if (![annotation.type isEqualToString: @"Link"])
+        return nil;
+    PDFDestination *destination = annotation.destination;
+    if (destination.page == nil || destination.page.document != self.document)
+        return nil;
+    return destination;
+}
+
+// Split Window with Link (#31): the other part of the window goes to the target of the link,
+// and this part stays where it is.
+- (void)splitWindowWithLink: (id)sender
+{
+    PDFDestination *destination = [sender representedObject];
+    if ([destination isKindOfClass: [PDFDestination class]])
+        [self.myPDFWindow showLinkDestination: destination besideView: self];
 }
 
 - (void)doMenuSync: (id)theItem
