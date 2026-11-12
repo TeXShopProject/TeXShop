@@ -542,7 +542,7 @@ The solution was simple: choose a source font which contains Hebrew. The Apple F
 
 \section{Settings for the Source Window}
 
-Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles: recreate an assignment whose title changed. The file editors are now buttons in Settings, Keyboard and cannot be assigned by their former menu titles.
+Existing KeyEquivalents.plist entries for the former Key Bindings submenu's first item still apply to the Key Bindings item in Source. Entries for removed editing items or out-of-range numbers are ignored. macOS App Shortcuts (NSUserKeyEquivalents) use exact menu titles, so an assignment stops working when a title changes; assign the shortcut in the Keyboard category of Settings instead (see Section \ref{sec:MenuShortcutKeystrokes}). The file editors are now buttons in Settings, Keyboard and cannot be assigned by their former menu titles.
 
 
 Settings has ten categories: General, Documents and Saving, Editor, Spell Checking, Themes, Preview, Typesetting, Console, Keyboard, Updates. In Spell Checking, choose the \LaTeX{}-aware or legacy method. The former has a rule editor; the latter has three indented options. Searching for Tab when it triggers completion shows a reservation message and reveals the completion trigger. General links to Comment Lines and Hidden Settings.
@@ -861,9 +861,9 @@ using whatever engine you decide to use. You'll do this by using TeXShop Setting
 Go to TeXShop Settings and select the {\bf Typesetting} category. In the {\bf Defaults} group, use the {\bf Default Command} pop-up menu to select either \TeX\ or \LaTeX\ as the default command. Most people use \LaTeX, so that is the default choice.
 We'll describe the third choice in this menu shortly.
 
-A second pop-up menu in the same group sets the default script. Select either ``pdfTeX'' or ``TeX + DVI'' as the default script.  Most people select ``pdfTeX''. If you use pstricks or have many very old documents, ``TeX + DVI'' may be a better choice. 
+The {\bf Typesetting Method} pop-up menu in the same group sets the default method. Select either ``Direct PDF'' or ``Via DVI''.  Most people select ``Direct PDF''. If you use pstricks or have many very old documents, ``Via DVI'' may be a better choice. 
 
-To switch between these two methods for an occasional document, go to the Typeset menu and select ``Pdftex'' or ``TeX and DVI'' at the bottom. This only affects the active document, so if you have two documents open, you can switch the typesetting method for one without changing it for the other.
+To switch between these two methods for an occasional document, go to the Typeset menu and select ``Direct PDF'' or ``Via DVI'' at the bottom. This only affects the active document, so if you have two documents open, you can switch the typesetting method for one without changing it for the other.
 
 
  If you want to use Xe\TeX\ rather than \LaTeX, choose {\bf Command Listed Below} in the {\bf Default Command} pop-up menu and write XeLaTeX in the {\bf Command to use} field. If you want to use Lua\TeX\ rather than \LaTeX, write the word LuaLaTeX in that field. 
@@ -871,7 +871,7 @@ To switch between these two methods for an occasional document, go to the Typese
 After making these choices, typesetting with TeXShop is easy. When you want to typeset, just push the ``Typeset'' button in the Source toolbar or select the ``Typeset'' menu at the top of the Typeset menu. This menu has a keyboard shortcut, command-T. After a few days, you'll ignore the toolbar item and the menu item and type command-T when you want to typeset.
 
 Near the bottom of this Settings category, the ``Ghostscript'' group has a switch labeled
-``-dALLOWPSTRANSPARENCY''. This is only active when using TeX + DVI mode.
+``-dALLOWPSTRANSPARENCY''. This is only active when typesetting Via DVI.
 In this mode, when a graphic is created, it is processed by Ghostscript.
 Modern versions of Ghostscript have been made
 safer, and by default they no longer accept the postscript transparency operators. This setting sets a flag
@@ -999,16 +999,16 @@ Many additional details can be found in The LaTeX Companion by Goossens, Mittelb
 
 If you installed using MacTeX or BasicTeX, you can  ignore this section because TeXShop is preconfigured for those distributions.
  
-Otherwise open TeXShop Settings and select  the {\bf Typesetting} category. The first item in the {\bf Paths} group, {\bf pdfTeX}, is a  full path to the \TeX\ Distribution command line programs. When TeX Live is installed, it creates a symbolic link to these binaries with path /Library/TeX/texbin. That is the default value for the setting. An advantage is that when TeX Live is updated for a new year, the link is also updated and thus the setting does not change.
+Otherwise open TeXShop Settings and select  the {\bf Typesetting} category. The first item in the {\bf Paths} group, {\bf TeX Engines}, is a  full path to the \TeX\ Distribution command line programs. When TeX Live is installed, it creates a symbolic link to these binaries with path /Library/TeX/texbin. That is the default value for the setting. An advantage is that when TeX Live is updated for a new year, the link is also updated and thus the setting does not change.
  
 If you installed \TeX\ using MacPorts, 
 Homebrew, or MiKTeX, the location of the binaries will be different. Consult the documentation for these distributions to discover the required value.
 
-The second item in this group, {\bf Distiller (Ghostscript)}, is a full path to the Ghostscript binary. This is /usr/local/bin for the copy of Ghostscript installed by MacTeX. The standard build sequence for Ghostscript will also install it at this location. If you use the Ghostscript in MacPorts or Homebrew, consult their documentation for the proper location. Many typesetting engines do not use Ghostscript, so this is not a crucial setting.
+The second item in this group, {\bf Ghostscript}, is a full path to the Ghostscript binary. This is /usr/local/bin for the copy of Ghostscript installed by MacTeX. The standard build sequence for Ghostscript will also install it at this location. If you use the Ghostscript in MacPorts or Homebrew, consult their documentation for the proper location. Many typesetting engines do not use Ghostscript, so this is not a crucial setting.
 
 Starting with TeXShop 5.60, TeXShop can set these two items for you. When TeXShop is first used, and whenever the button {\bf Auto Setup...} in the {\bf Paths} group of the Typesetting category is pressed, TeXShop looks for \TeX\ and Ghostscript in the usual places: the folders listed in /etc/paths and /etc/paths.d, /Library/TeX/texbin, the TeX Live folders in /usr/local/texlive and /Applications/TeXLive, and the folders used by Homebrew, MacPorts, and Fink. It checks that the programs run, asks each one for its version, and lists the installations it finds, newest first; \TeX\ Live installations are ordered by year and then by pdfTeX version. The newest one is selected, but another one can be chosen, separately for \TeX\ and for Ghostscript. Press {\bf Use These Paths} to select the installation. Installations in other places can still be entered by hand.
 
-The {\bf Additional path} setting will be explained later and is not used by the toolchains discussed in this chapter.
+The {\bf Second TeX Engines} setting will be explained later and is not used by the toolchains discussed in this chapter.
 
 Below these items, the command line calls are listed for each of the four typesetting methods discussed so far that call pdftex. These items are irrelevant if you switched to Xe\TeX\ or Lua\TeX. Suppose you have a \LaTeX\ source file named Galois.tex and you have opened Apple's Terminal program and changed to the directory containing this source. You could typeset the source file with pdflatex by typing the following line in Terminal:
 \begin{verbatim}
@@ -1021,7 +1021,7 @@ The pdftex defaults use two flags. The first, --file-line-error, tells pdftex ho
 There is one other flag you might want to add, --shell-escape. This flag gives pdftex permission to call other programs during typesetting. If you typeset source files which other people send you, this could be  dangerous because pdftex will call any program requested, even a program which erases your entire home directory. So we recommend avoiding the flag. But if you use it, you might want to check the item {\bf Shell Escape Warning}
 underneath. After that, when you typeset a file for the first time, a warning dialog will appear reminding you of ``shell-escape'' and asking if you still want to proceed.
 
-Typesetting with ``TeX + DVI'' calls a script named ``simpdftex'' which is part of TeX Live. If you want to know how the script works, open it in TeX Live and read it.
+Typesetting ``Via DVI'' calls a script named ``simpdftex'' which is part of TeX Live. If you want to know how the script works, open it in TeX Live and read it.
 
 \chapter{Typesetting Engines II}
 \section{More History}
@@ -1092,9 +1092,9 @@ If you get in the habit of adding  magic lines to the top of sources files, then
 In all of these places you select one of the four original typesetting methods using the following scheme:
 
 $$\begin{array}{ll} 
-\mbox{tex} & \mbox{TeX with TeX and DVI} \\ 
+\mbox{tex} & \mbox{TeX, Via DVI} \\ 
 \mbox{pdftex} & \mbox{TeX outputting pdf} \\ 
-\mbox{latex} & \mbox{LaTeX with TeX and DVI} \\ 
+\mbox{latex} & \mbox{LaTeX, Via DVI} \\ 
 \mbox{pdflatex} & \mbox{LaTeX outputting pdf} \\ 
 \end{array} $$
 
@@ -1180,10 +1180,10 @@ If a project has a root file and several include files, the magic comment must b
 The magic line might be used to pass one or more flags to engines.
 For instance, Herbert Schulz used this line to add a --shell-escape flag when pdflatex needs to call an external program during typesetting. 
 
-Finally, \verb|"|\$3\verb|"| contains a path to the \TeX\  binaries. Therefore \verb|"|\$3\verb|"| will usually contain \verb|"|/Library/TeX/texbin\verb|"|. However users who install TeX using MacPorts or MiKTeX or something else will have set a different location for binaries in the {\bf pdfTeX} field of the {\bf Paths} group in the Typesetting category of TeXShop Settings, and then \verb|"|\$3\verb|"| will contain that location. For the cases of TeX Live, MacPorts, and MiKTeX, this parameter is not needed because the Cocoa call to a binary contains its location. So  \verb|"|\$3\verb|"|  is usually not mentioned in an engine.
+Finally, \verb|"|\$3\verb|"| contains a path to the \TeX\  binaries. Therefore \verb|"|\$3\verb|"| will usually contain \verb|"|/Library/TeX/texbin\verb|"|. However users who install TeX using MacPorts or MiKTeX or something else will have set a different location for binaries in the {\bf TeX Engines} field of the {\bf Paths} group in the Typesetting category of TeXShop Settings, and then \verb|"|\$3\verb|"| will contain that location. For the cases of TeX Live, MacPorts, and MiKTeX, this parameter is not needed because the Cocoa call to a binary contains its location. So  \verb|"|\$3\verb|"|  is usually not mentioned in an engine.
 
 But there is one special situation when it is needed. ConTeXt is a set of macros by Hans Hagen providing a different approach to typesetting. It is usually used with LuaTeX, another version of \TeX. The ConTeXt community has its own distribution of both ConTeXt and LuaTeX, which is small and updated often. So TeXShop has 
-a setting under the Typesetting category named {\bf Additional path} listing the location of this distribution. The ConTeXt users then add a magic comment to the top of their source code
+a setting under the Typesetting category named {\bf Second TeX Engines} listing the location of this distribution. The ConTeXt users then add a magic comment to the top of their source code
 \begin{verbatim}
      % !TEX useAlternatePath
 \end{verbatim}
@@ -2993,13 +2993,13 @@ ConTeXt is a special case because its author, Hans Hagen, is constantly making i
 
 
 
-A recent version of TeXShop makes it easy for the two distributions to coexist. In TeXShop Settings, the Paths group of the Typesetting category has an item named ``Additional path.'' Set this item to the path of the binaries of your  ConTeXt distribution, which depends on the location you picked to install it. Then add the magic line below to the top of your ConTeXt source files:
+A recent version of TeXShop makes it easy for the two distributions to coexist. In TeXShop Settings, the Paths group of the Typesetting category has an item named ``Second TeX Engines.'' Set this item to the path of the binaries of your  ConTeXt distribution, which depends on the location you picked to install it. Then add the magic line below to the top of your ConTeXt source files:
 \begin{verbatim}
      % !TEX useAlternatePath
 \end{verbatim}
 These ConTeXt documents will be typeset by the ConTeXt Garden distribution, while ordinary LaTeX documents will continue to use TeX Live.
 
-Other users may find this feature useful in special circumstances. The ``Additional path'' item can point to any TeX distribution and the magic line can be used in any source file. However, the magic line only affects typesetting ``engines'', and not the built-in calls to TeX, LaTeX, BibTeX, or Make Index. Recall that these engine files are just shell scripts. When such a script is called, it is called with three arguments:
+Other users may find this feature useful in special circumstances. The ``Second TeX Engines'' item can point to any TeX distribution and the magic line can be used in any source file. However, the magic line only affects typesetting ``engines'', and not the built-in calls to TeX, LaTeX, BibTeX, or Make Index. Recall that these engine files are just shell scripts. When such a script is called, it is called with three arguments:
 
 \begin{itemize}
 \item "\$1": the name of the source file; the script runs in the folder containing that file
@@ -3118,7 +3118,7 @@ To update if a new version of the distribution is made available, just repeat th
 \section{Typesetting ConTeXt from ConTeXt Garden}
 
 Drag the engine {\bf ConTeXt-CG.engine} from the Inactive folder of engines in TeXShop to the active engine section
-\path{~/Library/TeXShop/Engines}. Use this engine to typeset. Before doing this for the first time, modify an item in TeXShop Settings. Open Settings, go to the Typesetting category, and change the ``Additional path'' item in the Paths group to read
+\path{~/Library/TeXShop/Engines}. Use this engine to typeset. Before doing this for the first time, modify an item in TeXShop Settings. Open Settings, go to the Typesetting category, and change the ``Second TeX Engines'' item in the Paths group to read
 \begin{verbatim}
 	~/context/context-osx-arm64/tex/texmf-osx-arm64/bin
 \end{verbatim}
@@ -3130,7 +3130,7 @@ Use the magic lines
    % !TEX useAlternatePath
    % !TEX useConTeXtSyncParser
 \end{verbatim}
-The  second line tells TeXShop to use the ConTeXt Garden distribution in your home directory rather than the standard TeX Live distribution. TeXShop knows the location of the distribution in your home directory because it is determined by the ``Additional path'' item in TeXShop Settings, which you set above.
+The  second line tells TeXShop to use the ConTeXt Garden distribution in your home directory rather than the standard TeX Live distribution. TeXShop knows the location of the distribution in your home directory because it is determined by the ``Second TeX Engines'' item in TeXShop Settings, which you set above.
  Include the line
 \begin{verbatim}
 		\setupsynctex[state=start,method=min] 
@@ -3405,7 +3405,7 @@ Eight new AppleScript commands have been added to TeXShop:
 \end{verbatim}
 These commands return nothing and have no parameters. The commands apply to the front window in TeXShop. The commands are only needed when an external editor is used; otherwise use the magic lines explained earlier.
 
-The first command says that typesetting commands are in the standard location, set by the ``pdfTeX'' item in the Paths group of the Typesetting category of Settings (by default \path{/Library/TeX/texbin}). The second command says that the ``Additional path'' set in the same group should be used to find typesetting commands. By default, the first statement is active.
+The first command says that typesetting commands are in the standard location, set by the ``TeX Engines'' item in the Paths group of the Typesetting category of Settings (by default \path{/Library/TeX/texbin}). The second command says that the ``Second TeX Engines'' item in the same group should be used to find typesetting commands. By default, the first statement is active.
 
 The third command says that sync commands for the active window should use Jerome Laurens' code; the fourth command says that sync commands for the active window should use the new ConTeXt sync. By default, SyncRegular is active.
 
@@ -4420,6 +4420,8 @@ The two older methods described below still work. Shortcuts set in KeyEquivalent
 
 One method is provided by Apple in System Settings under Keyboard. The details which follow apply to Ventura and later, but similar methods are available for earlier systems. Select Keyboard and push the button {\em Keyboard Shortcuts...}. On the left side, select {\em App Shortcuts}. In the resulting dialog, push the plus key. A new dialog appears. On the top line in the pull-down menu, select TeXShop. TeXShop may not be in the resulting list; in that case select {\em Other} at the end of the menu and then choose TeXShop.
 On the second line, type the exact name of the menu command you want to work with. This will be the menu name in the localization you use, not necessarily the English menu name. On the final line, type the desired shortcut. Press {\em Cancel} or {\em Done} to end the session.
+
+App Shortcuts are matched by the exact menu title. When TeXShop renames a menu item, a shortcut assigned this way no longer applies. For example, TeXShop 5.60 renamed ``Pdftex'' and ``TeX and DVI'' in the Typeset menu to ``Direct PDF'' and ``Via DVI'', and the Japanese and Chinese menus no longer put a space between Chinese characters or kana and Latin letters. Assign menu shortcuts in the Keyboard category of TeXShop Settings instead; those assignments do not depend on the titles.
 
 Before Apple created this Preference Item, TeXShop provided a way for users to modify its shortcuts. This method still exists, but it is seldom used. In a pinch, you can try it. 
 
@@ -6259,8 +6261,8 @@ Here is a complete list.
 \begin{verbatim}
      Set the typesetting program used for this file, overriding all other 
      ways to determine the program. The words ``tex'', ``pdftex'',
-     ``latex'', ``pdflatex'' indicate the built-in TeX + DVI, pdftex,
-     LaTeX + DVI, pdflatex engines. Otherwise use the exact name and
+     ``latex'', ``pdflatex'' indicate the built-in TeX (Via DVI), pdftex,
+     LaTeX (Via DVI), pdflatex engines. Otherwise use the exact name and
      spelling of the appropriate engine.
 \end{verbatim}
 
@@ -6333,7 +6335,7 @@ Here is a complete list.
 {\bf \% !TEX useAlternatePath }
 \begin{verbatim}
      Tells the typesetting engine to find the binary program in
-     the location "Additional path" set in the Paths group of
+     the location "Second TeX Engines" set in the Paths group of
      the Typesetting category of TeXShop Settings. This is mainly
      used by ConTeXt, which provides an alternate distribution
      containing only files required by ConTeXt.
