@@ -1,0 +1,74 @@
+{
+ "Base": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "Opening a source file shows only its preview; edit the source in another editor. To edit in TeXShop, choose File > Open for Editing...",
+   "catalog.editor.2.2.note": "Right-aligns lines that begin with Hebrew or Arabic script. Works when Syntax Coloring is on."
+  }
+ },
+ "de": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "Beim Öffnen einer Quelltextdatei nur die Vorschau anzeigen; der Quelltext wird in einem anderen Editor bearbeitet. Zum Bearbeiten in TeXShop „Zum Bearbeiten öffnen...“ wählen.",
+   "catalog.editor.2.2.note": "Zeilen, die mit hebräischer oder arabischer Schrift beginnen, rechtsbündig anzeigen. Wirkt nur, wenn „Syntax farblich hervorheben“ eingeschaltet ist."
+  }
+ },
+ "es": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "Al abrir un archivo de código se muestra solo la vista previa; el código se edita en otro editor. Para editarlo en TeXShop, use Abrir para editar...",
+   "catalog.editor.2.2.note": "Alinea a la derecha las líneas que empiezan con escritura hebrea o árabe. Funciona cuando «Colores para sintaxis» está activado."
+  }
+ },
+ "fr": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "L’ouverture d’un fichier source n’affiche que l’aperçu ; la source se modifie dans un autre éditeur. Pour la modifier dans TeXShop, utilisez Ouvrir pour éditer...",
+   "catalog.editor.2.2.note": "Aligne à droite les lignes qui commencent par de l’écriture hébraïque ou arabe. Fonctionne lorsque « Distinctions syntaxiques en couleurs » est activé."
+  }
+ },
+ "it": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "Aprendo un file sorgente si mostra solo l’anteprima; il sorgente si modifica in un altro editor. Per modificarlo in TeXShop, usare Apri per Editare...",
+   "catalog.editor.2.2.note": "Allinea a destra le righe che iniziano con caratteri ebraici o arabi. Funziona quando Sintassi Colorata è attiva."
+  }
+ },
+ "ja": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "ソースのファイルを開くとプレビューだけを表示し、ソースはほかのエディタで編集します。TeXShop で編集するときは、「ファイル」メニューの「開いて編集する...」を使います。",
+   "catalog.editor.2.2.note": "ヘブライ文字やアラビア文字で始まる行を右寄せで表示します。「ソースのカラー表示」がオンのときに働きます。"
+  }
+ },
+ "ko": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "소스 파일을 열면 미리보기만 표시하고, 소스는 다른 편집기에서 편집합니다. TeXShop에서 편집하려면 Open for Editing...을 사용합니다.",
+   "catalog.editor.2.2.note": "히브리 문자나 아랍 문자로 시작하는 줄을 오른쪽 정렬합니다. 구문 색상 표시가 켜져 있을 때 작동합니다."
+  }
+ },
+ "nl": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "Bij het openen van een bronbestand alleen het voorbeeld tonen; de bron bewerkt u in een andere editor. Gebruik Open in TeXShop Editor om in TeXShop te bewerken.",
+   "catalog.editor.2.2.note": "Regels die beginnen met Hebreeuws of Arabisch schrift rechts uitlijnen. Werkt als Kleur taalelementen aan staat."
+  }
+ },
+ "pt-PT": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "Ao abrir um ficheiro de código-fonte, mostra apenas a pré-visualização; o código-fonte edita-se noutro editor. Para o editar no TeXShop, use Abrir para alterar...",
+   "catalog.editor.2.2.note": "Alinha à direita as linhas que começam com escrita hebraica ou árabe. Funciona quando Colorir a sintaxe está ativado."
+  }
+ },
+ "pt": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "Ao abrir um arquivo de código-fonte, mostra apenas a pré-visualização; o código-fonte é editado em outro editor. Para editá-lo no TeXShop, use Abrir para editar...",
+   "catalog.editor.2.2.note": "Alinha à direita as linhas que começam com escrita hebraica ou árabe. Funciona quando Colorir a sintaxe está ativado."
+  }
+ },
+ "ro": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "La deschiderea unui fișier sursă se afișează doar previzualizarea; sursa se editează într-un alt editor. Pentru a o edita în TeXShop, folosiți Open for Editing...",
+   "catalog.editor.2.2.note": "Aliniază la dreapta rândurile care încep cu scriere ebraică sau arabă. Funcționează când Colorarea Sintaxei este activată."
+  }
+ },
+ "zh_CN": {
+  "SettingsCategories.strings": {
+   "catalog.general.0.1.note": "打开源文件时只显示预览，源文件在其他编辑器中编辑。要在 TeXShop 中编辑，请使用“打开以编辑...”。",
+   "catalog.editor.2.2.note": "将以希伯来文或阿拉伯文开头的行右对齐。仅在“语法高亮”打开时起作用。"
+  }
+ }
+}

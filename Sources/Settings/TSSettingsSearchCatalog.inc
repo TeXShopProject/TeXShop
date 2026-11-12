@@ -3,6 +3,7 @@
 add(TSSettingsCategoryGeneral, @"heading.group.general.0", @"SettingsCategories", @"group.general.0.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.0.0", @"SettingsCategories", @"catalog.general.0.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.0.1", @"SettingsCategories", @"catalog.general.0.1.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryGeneral, @"row.catalog.general.0.1", @"SettingsCategories", @"catalog.general.0.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryGeneral, @"heading.group.general.1", @"SettingsCategories", @"group.general.1.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.1.0", @"SettingsCategories", @"catalog.general.1.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.1.0", @"SettingsCategories", @"catalog.general.1.0.note", TSSettingsSearchWeightDescription);
@@ -74,6 +75,7 @@ add(TSSettingsCategoryEditor, @"row.catalog.editor.2.0", @"SettingsCategories", 
 add(TSSettingsCategoryEditor, @"row.catalog.editor.2.0", @"SettingsCategories", @"catalog.editor.2.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.2.1", @"SettingsCategories", @"catalog.editor.2.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.2.2", @"SettingsCategories", @"catalog.editor.2.2.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryEditor, @"row.catalog.editor.2.2", @"SettingsCategories", @"catalog.editor.2.2.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryEditor, @"heading.group.editor.3", @"SettingsCategories", @"group.editor.3.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.3.0", @"SettingsCategories", @"catalog.editor.3.0.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.3.1", @"SettingsCategories", @"catalog.editor.3.1.title", TSSettingsSearchWeightLabel);

@@ -31,6 +31,7 @@
 "group.general.0.title" = "La pornire";
 "catalog.general.0.0.title" = "Deschide Document Vid";
 "catalog.general.0.1.title" = "Configurează pentru Editor Extern";
+"catalog.general.0.1.note" = "La deschiderea unui fișier sursă se afișează doar previzualizarea; sursa se editează într-un alt editor. Pentru a o edita în TeXShop, folosiți Open for Editing...";
 "group.general.1.title" = "Ferestre";
 "catalog.general.1.0.title" = "Sursă și previzualizare";
 "catalog.general.1.0.note" = "Valoare inițială pentru documentele noi. Pentru documentele deschise, folosiți meniul.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "Când faceți clic pe o fereastră sursă care nu este în față, același clic mută și cursorul.";
 "catalog.editor.2.1.title" = "Încadrează textul selectat la tastarea unei paranteze";
 "catalog.editor.2.2.title" = "Limbi de la dreapta la stânga (arabă, ebraică, persană)";
+"catalog.editor.2.2.note" = "Aliniază la dreapta rândurile care încep cu scriere ebraică sau arabă. Funcționează când Colorarea Sintaxei este activată.";
 "group.editor.3.title" = "Colorarea sintaxei";
 "catalog.editor.3.0.title" = "@ face parte din comenzi";
 "catalog.editor.3.1.title" = "Colorează expl3 implicit";

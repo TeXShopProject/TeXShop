@@ -31,6 +31,7 @@
 "group.general.0.title" = "起動時";
 "catalog.general.0.0.title" = "新しいファイルを作成する";
 "catalog.general.0.1.title" = "外部エディタでソースを編集";
+"catalog.general.0.1.note" = "ソースのファイルを開くとプレビューだけを表示し、ソースはほかのエディタで編集します。TeXShop で編集するときは、「ファイル」メニューの「開いて編集する...」を使います。";
 "group.general.1.title" = "ウインドウ";
 "catalog.general.1.0.title" = "ソースとプレビュー";
 "catalog.general.1.0.note" = "新しい書類の初期値です。開いている書類では、メニューで切り替えます。";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "前面にないソースのウインドウをクリックしたとき、そのクリックでカーソルも移動します。";
 "catalog.editor.2.1.title" = "選択中に括弧類を入力したら、選択範囲を囲む";
 "catalog.editor.2.2.title" = "右から左に書く言語（Arabic、Hebrew、Persian）";
+"catalog.editor.2.2.note" = "ヘブライ文字やアラビア文字で始まる行を右寄せで表示します。「ソースのカラー表示」がオンのときに働きます。";
 "group.editor.3.title" = "構文の色分け";
 "catalog.editor.3.0.title" = "@ をコマンド名の一部と見なす";
 "catalog.editor.3.1.title" = "expl3 を既定でハイライト";

@@ -31,6 +31,7 @@
 "group.general.0.title" = "启动时";
 "catalog.general.0.0.title" = "打开空文档";
 "catalog.general.0.1.title" = "配置为外部编辑器";
+"catalog.general.0.1.note" = "打开源文件时只显示预览，源文件在其他编辑器中编辑。要在 TeXShop 中编辑，请使用“打开以编辑...”。";
 "group.general.1.title" = "窗口";
 "catalog.general.1.0.title" = "源文件和预览";
 "catalog.general.1.0.note" = "新文档的初始值。已打开的文档可通过菜单切换。";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "点按不在最前面的源文件窗口时，同一次点按也会移动光标。";
 "catalog.editor.2.1.title" = "输入括号时将选中文本括起来";
 "catalog.editor.2.2.title" = "从右向左的语言（阿拉伯语、希伯来语、波斯语）";
+"catalog.editor.2.2.note" = "将以希伯来文或阿拉伯文开头的行右对齐。仅在“语法高亮”打开时起作用。";
 "group.editor.3.title" = "语法颜色";
 "catalog.editor.3.0.title" = "将 @ 视为命令名的一部分";
 "catalog.editor.3.1.title" = "默认高亮 expl3 代码";

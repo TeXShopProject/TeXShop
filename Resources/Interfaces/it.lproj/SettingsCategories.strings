@@ -31,6 +31,7 @@
 "group.general.0.title" = "All’avvio";
 "catalog.general.0.0.title" = "Apri Documento Vuoto";
 "catalog.general.0.1.title" = "Configura per Editor Esterno";
+"catalog.general.0.1.note" = "Aprendo un file sorgente si mostra solo l’anteprima; il sorgente si modifica in un altro editor. Per modificarlo in TeXShop, usare Apri per Editare...";
 "group.general.1.title" = "Finestre";
 "catalog.general.1.0.title" = "Sorgente e anteprima";
 "catalog.general.1.0.note" = "Valore iniziale per i nuovi documenti. Per i documenti aperti, usare il menu.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "Quando fai clic su una finestra sorgente che non è in primo piano, lo stesso clic sposta anche il cursore.";
 "catalog.editor.2.1.title" = "Racchiudere il testo selezionato quando si digita una parentesi";
 "catalog.editor.2.2.title" = "Lingue da destra a sinistra (arabo, ebraico, persiano)";
+"catalog.editor.2.2.note" = "Allinea a destra le righe che iniziano con caratteri ebraici o arabi. Funziona quando Sintassi Colorata è attiva.";
 "group.editor.3.title" = "Colorazione della sintassi";
 "catalog.editor.3.0.title" = "@ fa parte dei nomi dei comandi";
 "catalog.editor.3.1.title" = "Colora expl3 di default";

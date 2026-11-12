@@ -31,6 +31,7 @@
 "group.general.0.title" = "시작 시";
 "catalog.general.0.0.title" = "빈 문서 열기";
 "catalog.general.0.1.title" = "외부 에디터 사용";
+"catalog.general.0.1.note" = "소스 파일을 열면 미리보기만 표시하고, 소스는 다른 편집기에서 편집합니다. TeXShop에서 편집하려면 Open for Editing...을 사용합니다.";
 "group.general.1.title" = "윈도우";
 "catalog.general.1.0.title" = "소스와 미리보기";
 "catalog.general.1.0.note" = "새 문서의 초기값입니다. 열려 있는 문서는 메뉴에서 전환합니다.";
@@ -96,6 +97,7 @@
 "catalog.editor.2.0.note" = "앞에 있지 않은 소스 창을 클릭하면 그 클릭으로 커서도 이동합니다.";
 "catalog.editor.2.1.title" = "괄호 입력 시 선택한 텍스트를 감싸기";
 "catalog.editor.2.2.title" = "오른쪽에서 왼쪽으로 쓰는 언어(아랍어, 히브리어, 페르시아어)";
+"catalog.editor.2.2.note" = "히브리 문자나 아랍 문자로 시작하는 줄을 오른쪽 정렬합니다. 구문 색상 표시가 켜져 있을 때 작동합니다.";
 "group.editor.3.title" = "구문 색상";
 "catalog.editor.3.0.title" = "@를 명령 이름의 일부로 취급";
 "catalog.editor.3.1.title" = "기본으로 expl3 구문 강조";
