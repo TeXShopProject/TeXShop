@@ -21,6 +21,7 @@ static const TSRegexFindOptions TSTextualOptionsMask = TSRegexFindIgnoreCase | T
     | TSRegexFindIgnoreWidth | TSRegexFindWholeWord | TSRegexFindDelimitByWhitespace | TSRegexFindYenIsBackslash;
 static const TSRegexFindOptions TSRegexOptionsMask = TSRegexFindIgnoreCase | TSRegexFindDotMatchesLineSeparators
     | TSRegexFindAnchorsMatchLines | TSRegexFindAllowCommentsAndWhitespace | TSRegexFindUnicodeWordBoundaries
+    | TSRegexFindIgnoreMetacharacters | TSRegexFindUseUnixLineSeparators
     | TSRegexFindUnescapesReplacement | TSRegexFindIgnoreEmptyMatches | TSRegexFindYenIsBackslash;
 
 static BOOL TSIsBooleanValue(id value)
@@ -28,13 +29,32 @@ static BOOL TSIsBooleanValue(id value)
     return value && CFGetTypeID((__bridge CFTypeRef)value) == CFBooleanGetTypeID();
 }
 
-/// A non-negative integer that is not a boolean, as a Swift UInt.
-static BOOL TSIsUnsignedValue(id value)
+/// Reads a JSON number as Swift's JSONDecoder reads a UInt: a whole number from 0 to UInt64.max, given as an integer
+/// or as a fraction whose double value is exactly such a number. Booleans and numbers beyond 64 bits are refused.
+static BOOL TSUnsignedValue(id value, uint64_t *result)
 {
     if (![value isKindOfClass:[NSNumber class]] || TSIsBooleanValue(value))
         return NO;
     NSNumber *number = value;
-    return number.doubleValue >= 0 && number.doubleValue == floor(number.doubleValue) && number.doubleValue <= (double)NSUIntegerMax;
+    const char *type = number.objCType;
+    if (strcmp(type, @encode(unsigned long long)) == 0 || strcmp(type, @encode(unsigned long)) == 0) {
+        *result = number.unsignedLongLongValue;
+        return YES;
+    }
+    // Fractions, and the NSDecimalNumber NSJSONSerialization gives for numbers beyond 64 bits, go through a double.
+    if (strcmp(type, @encode(double)) == 0 || strcmp(type, @encode(float)) == 0) {
+        double d = number.doubleValue;
+        // 2^64 is the first double above UInt64.max.
+        if (!(d >= 0 && d < 18446744073709551616.0 && d == floor(d)))
+            return NO;
+        *result = (uint64_t)d;
+        return YES;
+    }
+    long long signedValue = number.longLongValue;
+    if (signedValue < 0)
+        return NO;
+    *result = (uint64_t)signedValue;
+    return YES;
 }
 
 static NSError *TSDefinitionError(NSString *description)
@@ -122,14 +142,17 @@ static NSError *TSDefinitionError(NSString *description)
     id yen = settings[TSSettingsYenKey], empty = settings[TSSettingsEmptyKey], words = settings[TSSettingsWordsKey];
     if (wholeWord == (id)kCFNull) wholeWord = nil;
     if (unescapes == (id)kCFNull) unescapes = nil;
-    if (!TSIsUnsignedValue(textual) || !TSIsUnsignedValue(regex)
+    uint64_t compareValue = 0, regexValue = 0;
+    if (!TSUnsignedValue(textual, &compareValue) || !TSUnsignedValue(regex, &regexValue)
         || (wholeWord && !TSIsBooleanValue(wholeWord)) || (unescapes && !TSIsBooleanValue(unescapes))) {
         if (error)
             *error = TSDefinitionError(@"The settings of the replacement definition are not valid.");
         return nil;
     }
-    NSStringCompareOptions compare = [textual unsignedIntegerValue];
-    NSRegularExpressionOptions regexOptions = [regex unsignedIntegerValue];
+    // Comparison options that the panel does not show (backwards, anchored, numeric, regular expression...) are
+    // ignored rather than kept, so that nothing invisible changes what a set does (user's decision, 2026-11-12).
+    NSStringCompareOptions compare = (NSStringCompareOptions)compareValue;
+    NSRegularExpressionOptions regexOptions = (NSRegularExpressionOptions)regexValue;
     TSRegexFindOptions textualOptions = 0, regularExpressionOptions = 0;
     if (compare & NSCaseInsensitiveSearch) textualOptions |= TSRegexFindIgnoreCase;
     if (compare & NSLiteralSearch) textualOptions |= TSRegexFindLiteral;
@@ -141,6 +164,8 @@ static NSError *TSDefinitionError(NSString *description)
     if (regexOptions & NSRegularExpressionDotMatchesLineSeparators) regularExpressionOptions |= TSRegexFindDotMatchesLineSeparators;
     if (regexOptions & NSRegularExpressionAnchorsMatchLines) regularExpressionOptions |= TSRegexFindAnchorsMatchLines;
     if (regexOptions & NSRegularExpressionUseUnicodeWordBoundaries) regularExpressionOptions |= TSRegexFindUnicodeWordBoundaries;
+    if (regexOptions & NSRegularExpressionIgnoreMetacharacters) regularExpressionOptions |= TSRegexFindIgnoreMetacharacters;
+    if (regexOptions & NSRegularExpressionUseUnixLineSeparators) regularExpressionOptions |= TSRegexFindUseUnixLineSeparators;
     // CotEditor reads a missing value as NO, though a new set unescapes.
     if ([unescapes boolValue]) regularExpressionOptions |= TSRegexFindUnescapesReplacement;
     // TeXShop's own keys: anything but true is NO, so that CotEditor's files mean what they mean in CotEditor.
@@ -212,6 +237,8 @@ static NSError *TSDefinitionError(NSString *description)
     if (regex & TSRegexFindDotMatchesLineSeparators) regexOptions |= NSRegularExpressionDotMatchesLineSeparators;
     if (regex & TSRegexFindAnchorsMatchLines) regexOptions |= NSRegularExpressionAnchorsMatchLines;
     if (regex & TSRegexFindUnicodeWordBoundaries) regexOptions |= NSRegularExpressionUseUnicodeWordBoundaries;
+    if (regex & TSRegexFindIgnoreMetacharacters) regexOptions |= NSRegularExpressionIgnoreMetacharacters;
+    if (regex & TSRegexFindUseUnixLineSeparators) regexOptions |= NSRegularExpressionUseUnixLineSeparators;
     NSMutableDictionary<NSString *, id> *settings = [@{
         TSSettingsTextualKey: @(compare),
         TSSettingsRegexKey: @(regexOptions),

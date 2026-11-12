@@ -49,6 +49,14 @@ MUTATIONS = {
     'booleans are written as numbers': ('TSRegexMultipleReplace.m', 'TSSettingsWholeWordKey: (textual & TSRegexFindWholeWord) ? @YES : @NO,', 'TSSettingsWholeWordKey: @((textual & TSRegexFindWholeWord) != 0),'),
     'numbers are read as booleans': ('TSRegexReplacementRule.m', 'return CFGetTypeID((__bridge CFTypeRef)value) == CFBooleanGetTypeID();', 'return [value isKindOfClass:[NSNumber class]];'),
     'tab-separated lines without a tab are read': ('TSRegexMultipleReplace.m', 'if (items.count < 2 || items[0].length == 0)', 'if (items[0].length == 0)'),
+    'literal patterns are regular expressions': ('TSRegexFindPattern.m', '    if (options & TSRegexFindIgnoreMetacharacters) result |= NSRegularExpressionIgnoreMetacharacters;\n', ''),
+    'Unix line separators are ignored': ('TSRegexFindPattern.m', '    if (options & TSRegexFindUseUnixLineSeparators) result |= NSRegularExpressionUseUnixLineSeparators;\n', ''),
+    'literal patterns list group names': ('TSRegexFindPattern.m', '(options & TSRegexFindIgnoreMetacharacters) ? @[] :', 'NO ? @[] :'),
+    'a file\'s literal option is dropped': ('TSRegexMultipleReplace.m', '    if (regexOptions & NSRegularExpressionIgnoreMetacharacters) regularExpressionOptions |= TSRegexFindIgnoreMetacharacters;\n', ''),
+    'a file\'s Unix option is not written': ('TSRegexMultipleReplace.m', '    if (regex & TSRegexFindUseUnixLineSeparators) regexOptions |= NSRegularExpressionUseUnixLineSeparators;\n', ''),
+    'the upper limit is not checked': ('TSRegexMultipleReplace.m', 'd >= 0 && d < 18446744073709551616.0 && ', 'd >= 0 && '),
+    'fractions are accepted': ('TSRegexMultipleReplace.m', ' && d == floor(d)))', '))'),
+    'negative numbers are accepted': ('TSRegexMultipleReplace.m', '    if (signedValue < 0)\n        return NO;\n', ''),
 }
 
 

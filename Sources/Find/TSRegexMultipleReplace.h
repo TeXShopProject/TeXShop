@@ -33,8 +33,9 @@ NS_SWIFT_NAME(RegexMultipleReplace)
 /// Options of the rules that are not regular expressions: case, literal, diacritics, width, whole word,
 /// and TeXShop's words separated by whitespace and yen sign.
 @property (nonatomic, readonly) TSRegexFindOptions textualOptions;
-/// Options of the regular expression rules: case, dot, anchors, comments, Unicode word boundaries, unescaping
-/// the replacement string, and TeXShop's empty matches and yen sign.
+/// Options of the regular expression rules: every NSRegularExpression option (case, comments, literal pattern, dot,
+/// anchors, Unix line separators, Unicode word boundaries), unescaping the replacement string, and TeXShop's empty
+/// matches and yen sign.
 @property (nonatomic, readonly) TSRegexFindOptions regularExpressionOptions;
 @property (nonatomic, readonly) TSRegexReplacementSyntax replacementSyntax;
 
@@ -50,7 +51,8 @@ NS_SWIFT_NAME(RegexMultipleReplace)
             replacementSyntax:(TSRegexReplacementSyntax)replacementSyntax NS_DESIGNATED_INITIALIZER;
 
 /// Reads a replacement definition written by CotEditor or by TeXShop. Fails, as CotEditor does, when the
-/// structure or a required value is missing or has the wrong type.
+/// structure or a required value is missing or has the wrong type. Comparison options that the panel does not show
+/// are ignored, and are not written again.
 - (nullable instancetype)initWithJSONData:(NSData *)data error:(NSError **)error;
 /// Reads lines of `find<TAB>replacement` as CotEditor does: other columns are ignored, and a line without a tab
 /// or with an empty find string is skipped. The set has CotEditor's defaults.

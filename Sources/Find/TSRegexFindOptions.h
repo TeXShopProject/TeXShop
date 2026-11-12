@@ -33,6 +33,11 @@ typedef NS_OPTIONS(NSUInteger, TSRegexFindOptions) {
     /// ICU replacement syntax: \0 \t \n \r \" \' in the replacement string become NUL, tab, line feed, carriage return
     /// and quotes before the template is read, as CotEditor's "Unescape replacement text" does.
     TSRegexFindUnescapesReplacement     = 1 << 13,
+    /// Regular expression: the find string is matched as it is written; the replacement string is still read as
+    /// a template ("Treat the pattern in the find field literally").
+    TSRegexFindIgnoreMetacharacters     = 1 << 14,
+    /// Regular expression: only LF ends a line for `.`, `^` and `$`.
+    TSRegexFindUseUnixLineSeparators    = 1 << 15,
 } NS_SWIFT_NAME(RegexFindOptions);
 
 /// The options used when nothing has been chosen yet, as in CotEditor: anchors match lines and the replacement

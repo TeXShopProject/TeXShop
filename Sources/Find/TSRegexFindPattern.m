@@ -34,6 +34,8 @@ static NSString *const TSYenSign = @"¥";
     if (options & TSRegexFindAnchorsMatchLines) result |= NSRegularExpressionAnchorsMatchLines;
     if (options & TSRegexFindAllowCommentsAndWhitespace) result |= NSRegularExpressionAllowCommentsAndWhitespace;
     if (options & TSRegexFindUnicodeWordBoundaries) result |= NSRegularExpressionUseUnicodeWordBoundaries;
+    if (options & TSRegexFindIgnoreMetacharacters) result |= NSRegularExpressionIgnoreMetacharacters;
+    if (options & TSRegexFindUseUnixLineSeparators) result |= NSRegularExpressionUseUnixLineSeparators;
     return result;
 }
 
@@ -81,7 +83,8 @@ static NSString *const TSYenSign = @"¥";
                 *error = [TSRegexFindPattern errorWithCode:TSRegexFindErrorInvalidPattern description:regexError.localizedDescription underlyingError:regexError];
             return nil;
         }
-        _captureGroupNames = [TSRegexFindPattern groupNamesInPattern:normalized];
+        // A pattern read literally has no groups, whatever it looks like.
+        _captureGroupNames = (options & TSRegexFindIgnoreMetacharacters) ? @[] : [TSRegexFindPattern groupNamesInPattern:normalized];
         _words = @[];
     } else {
         _captureGroupNames = @[];

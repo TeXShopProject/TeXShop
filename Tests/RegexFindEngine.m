@@ -195,6 +195,16 @@ int main(void)
         ExpectMatches(@"x*", R | TSRegexFindIgnoreEmptyMatches, @"axb", @"x");
         ExpectMatches(@"\\R", R, @"a\r\nb\nc", @"\r\n|\n");
 
+        // Literal patterns and Unix line separators, for regular expressions.
+        const TSRegexFindOptions L = R | TSRegexFindIgnoreMetacharacters;
+        ExpectMatches(@"a.b", L, @"a.b axb", @"a.b");
+        ExpectMatches(@"(?<x>a)", L, @"a (?<x>a)", @"(?<x>a)");
+        Check(Pattern(@"(?<x>a)", L).captureGroupNames.count == 0 && Pattern(@"(?<x>a)", L).numberOfCaptureGroups == 0, @"a literal pattern has no groups");
+        ExpectICU(@"\u3002", L, @"$0\\n", @"a\u3002b", @"a\u3002\nb");
+        ExpectMatches(@"^b", R, @"a\rb", @"b");
+        ExpectMatches(@"^b", R | TSRegexFindUseUnixLineSeparators, @"a\rb", @"");
+        ExpectMatches(@"a.b", R | TSRegexFindUseUnixLineSeparators, @"a\rb", @"a\rb");
+
         // Plain text search.
         ExpectMatches(@"a.", T, @"a.ab", @"a.");
         ExpectMatches(@"cat", T | TSRegexFindWholeWord, @"cat concat cat_ cat.", @"cat|cat");
@@ -344,6 +354,27 @@ int main(void)
               && fromCot.regularExpressionOptions == (TSRegexFindAnchorsMatchLines | TSRegexFindUnescapesReplacement)
               && fromCot.replacementSyntax == TSRegexReplacementSyntaxICU && !fromCot.rules[1].enabled && !fromCot.rules[1].note, @"a CotEditor file is read; unknown keys are ignored");
         Check([[fromCot applyToString:@"a1b" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil].string isEqualToString:@"a<1>\tb"], @"a CotEditor file replaces as in CotEditor");
+        // Every regular expression option of a file is used and written again; comparison options the panel does not
+        // show are ignored (user's decision, 2026-11-12).
+        NSString *literalFile = @"{\"replacements\":[{\"findString\":\"a.b\",\"replacementString\":\"X\",\"usesRegularExpression\":true},{\"findString\":\"^q\",\"replacementString\":\"Q\",\"usesRegularExpression\":true}],"
+                                 "\"settings\":{\"textualOptions\":1677,\"regexOptions\":52}}";
+        TSRegexMultipleReplace *literal = [[TSRegexMultipleReplace alloc] initWithJSONData:[literalFile dataUsingEncoding:NSUTF8StringEncoding] error:NULL];
+        Check(literal.regularExpressionOptions == (TSRegexFindIgnoreMetacharacters | TSRegexFindAnchorsMatchLines | TSRegexFindUseUnixLineSeparators)
+              && literal.textualOptions == (TSRegexFindIgnoreCase | TSRegexFindIgnoreDiacritics), @"regular expression options are all read; hidden comparison options are ignored");
+        Check([[literal applyToString:@"a.b axb\r^q" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil].string isEqualToString:@"X axb\rQ"], @"a literal set replaces as in CotEditor");
+        NSDictionary *literalSettings = [NSJSONSerialization JSONObjectWithData:literal.JSONData options:0 error:NULL][@"settings"];
+        Check([literalSettings[@"regexOptions"] isEqual:@52] && [literalSettings[@"textualOptions"] isEqual:@(NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch)], @"they are written again; ignored ones are not");
+        TSRegexMultipleReplace *unix = [[TSRegexMultipleReplace alloc] initWithJSONData:[@"{\"replacements\":[{\"findString\":\"^b\",\"replacementString\":\"X\",\"usesRegularExpression\":true}],\"settings\":{\"textualOptions\":0,\"regexOptions\":48}}" dataUsingEncoding:NSUTF8StringEncoding] error:NULL];
+        Check([[unix applyToString:@"a\rb\nb" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil].string isEqualToString:@"a\rb\nX"], @"Unix line separators are used as in CotEditor");
+        // Option values are read as Swift reads a UInt.
+        for (NSString *number in @[@"0", @"1", @"1.0", @"1e0", @"1.0000000000000001", @"18446744073709551615"]) {
+            NSString *file = [NSString stringWithFormat:@"{\"replacements\":[],\"settings\":{\"textualOptions\":%@,\"regexOptions\":0}}", number];
+            Check([[TSRegexMultipleReplace alloc] initWithJSONData:[file dataUsingEncoding:NSUTF8StringEncoding] error:NULL] != nil, [@"a whole number is accepted: " stringByAppendingString:number]);
+        }
+        for (NSString *number in @[@"18446744073709551616", @"18446744073709551617", @"18446744073709551614.9", @"1.5", @"-1", @"1e40", @"true", @"null", @"\"1\""]) {
+            NSString *file = [NSString stringWithFormat:@"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":%@}}", number];
+            Check([[TSRegexMultipleReplace alloc] initWithJSONData:[file dataUsingEncoding:NSUTF8StringEncoding] error:NULL] == nil, [@"a value that is not a UInt is refused: " stringByAppendingString:number]);
+        }
         NSString *missingUnescape = @"{\"replacements\":[],\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}";
         Check([[TSRegexMultipleReplace alloc] initWithJSONData:[missingUnescape dataUsingEncoding:NSUTF8StringEncoding] error:NULL].regularExpressionOptions == 0, @"a missing unescape value reads as off, as in CotEditor");
         for (NSString *bad in @[@"{\"replacements\":[]}", @"{\"settings\":{\"textualOptions\":0,\"regexOptions\":0}}", @"[]", @"{",
