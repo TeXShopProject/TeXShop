@@ -11,7 +11,7 @@ import subprocess, tempfile, os, argparse
 from source_tree import include_args
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "no-appearance-hook", "stale-child-appearance", "no-console-alpha",
-                                           "no-floating", "no-error-front", "no-prompt", "front-always"])
+                                           "no-floating", "no-error-front", "no-prompt", "front-always", "prompt-no-wait", "echo-scanned"])
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
@@ -42,11 +42,19 @@ elif args.mutation == "no-error-front":
     assert "if (self.window.isKeyWindow) return;" in controller
     controller = controller.replace("if (self.window.isKeyWindow) return;", "return;", 1)
 elif args.mutation == "no-prompt":
-    assert "return error || TSExperimentIsPrompt(line);" in controller
-    controller = controller.replace("return error || TSExperimentIsPrompt(line);", "return error;", 1)
+    prompt = "if (!TSExperimentIsPrompt([output stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet])) return;"
+    assert prompt in controller
+    controller = controller.replace(prompt, "return;", 1)
 elif args.mutation == "front-always":
-    assert "![SUD boolForKey:ConsoleBehaviorKey] || " in controller
-    controller = controller.replace("![SUD boolForKey:ConsoleBehaviorKey] || ", "", 1)
+    assert "if (!self.job || ![SUD boolForKey:ConsoleBehaviorKey]) return;" in controller
+    controller = controller.replace("if (!self.job || ![SUD boolForKey:ConsoleBehaviorKey]) return;", "if (!self.job) return;", 1)
+elif args.mutation == "prompt-no-wait":
+    assert "controller.outputCount == count && " in controller
+    controller = controller.replace("controller.outputCount == count && ", "", 1)
+elif args.mutation == "echo-scanned":
+    echo = "        self.engineLine = @\"\";\n        self.outputCount++;"
+    assert echo in controller
+    controller = controller.replace(echo, "        self.engineLine = [self.engineLine stringByAppendingString:displayCommand];\n        self.outputCount++;", 1)
 if args.mutation == "no-console-alpha":
     controller = controller.replace('self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemeConsoleAlphaKey);', '')
 prefix = r'''
@@ -162,6 +170,21 @@ static NSURL *directory(void) {
     return d;
 }
 static BOOL exists(NSURL *d) { return [[NSFileManager defaultManager] fileExistsAtPath:d.path]; }
+static void waitSeconds(double seconds) {
+    NSDate *end = [NSDate dateWithTimeIntervalSinceNow:seconds];
+    while (end.timeIntervalSinceNow > 0) [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+}
+// Runs a job with the console hidden and the source panel key; returns whether the console came forward.
+static BOOL showsConsole(TSExperimentConsoleController *console, NSWindow *panel, NSString *script, void (^during)(void)) {
+    [console.window orderOut:nil]; [panel makeKeyAndOrderFront:nil];
+    [console startExecutable:@"/bin/sh" arguments:@[@"-c", script] environment:@{@"PATH":@"/usr/bin:/bin"} directory:directory() encoding:NSUTF8StringEncoding title:@"Case" completion:nil];
+    if (during) during();
+    BOOL ended = waitFor(^BOOL{ return !console.job.active; });
+    waitSeconds(0.7);
+    BOOL shown = console.window.isVisible && [stack lastObject] == console.window;
+    if (!ended) [console abort:nil];
+    return shown;
+}
 int main(void) { @autoreleasepool {
     TSInstallAppKitIsolation(); [NSApplication sharedApplication]; InstallWindowModel();
     liteColors = @{@"ConsoleBackground":NSColor.whiteColor, @"ConsoleText":NSColor.blackColor};
@@ -281,6 +304,7 @@ int main(void) { @autoreleasepool {
     check(stack.lastObject == outputPanel && above(console.window, text) && above(console.window, documentConsole), @"clicked panel returns to the front");
     // "Always" keeps its behavior: an error does not bring the console forward again.
     check(waitFor(^BOOL{ return [console.outputText.string hasSuffix:@"? "]; }), @"always: error prompt shown");
+    waitSeconds(0.8);
     check(stack.lastObject == outputPanel, @"always: error leaves the clicked panel in front");
     // Command-0 in a panel brings the console to the front, and again returns to the panel.
     [console toggleFromWindow:outputPanel];
@@ -306,6 +330,21 @@ int main(void) { @autoreleasepool {
     check(waitFor(^BOOL{ return console.window.isVisible; }), @"error-only: file:line: error shows the console");
     check(stack.lastObject == console.window, @"error-only: file:line: console in front");
     check(waitFor(^BOOL{ return !console.job.active; }), @"error-only: file-line job ends");
+    // Pieces of ordinary lines that look like prompts, and times, do not show the console.
+    check(!showsConsole(console, sourcePanel, @"printf '*'; sleep 0.1; printf 'geometry* driver: auto-detecting\\n'; sleep 0.7", nil), @"error-only: split '*geometry*' line is not a prompt");
+    check(!showsConsole(console, sourcePanel, @"printf '?'; sleep 0.1; printf 'x\\n'; sleep 0.7", nil), @"error-only: split '?x' line is not a prompt");
+    check(!showsConsole(console, sourcePanel, @"printf '**'; sleep 0.1; printf 'file.tex\\n'; sleep 0.7", nil), @"error-only: split '**file' line is not a prompt");
+    check(!showsConsole(console, sourcePanel, @"printf '12:34: time\\n'; sleep 0.2", nil), @"error-only: a time is not a file:line: error");
+    // Prompts at which TeX stops show the console.
+    check(showsConsole(console, sourcePanel, @"printf '*'; read line", ^{ check(waitFor(^BOOL{ return console.window.isVisible; }), @"star prompt"); [console sendLine:@""]; }), @"error-only: '*' prompt shows the console");
+    check(showsConsole(console, sourcePanel, @"printf 'Enter file name: '; read line", ^{ check(waitFor(^BOOL{ return console.window.isVisible; }), @"file name prompt"); [console sendLine:@""]; }), @"error-only: 'Enter file name:' shows the console");
+    // A line typed in the console is not engine output; the same text written by TeX is.
+    check(!showsConsole(console, sourcePanel, @"printf 'ready'; read line; printf 'OK\\n'; sleep 0.2", ^{
+        check(waitFor(^BOOL{ return [console.outputText.string isEqualToString:@"ready"]; }), @"echo case ready");
+        [console sendLine:@"file.tex:7: user text"]; }), @"error-only: typed file:line: text is not an error");
+    check(showsConsole(console, sourcePanel, @"printf 'ready'; read line; printf './file.tex:7: Undefined control sequence.\\n'; sleep 0.2", ^{
+        check(waitFor(^BOOL{ return [console.outputText.string isEqualToString:@"ready"]; }), @"answer case ready");
+        [console sendLine:@"x"]; }), @"error-only: file:line: error right after an answer shows the console");
     // Output without errors leaves the console hidden to the end; a stopped job does not show it.
     [console.window orderOut:nil]; [sourcePanel makeKeyAndOrderFront:nil]; dir = directory(); fronts = frontCount;
     [console startExecutable:@"/bin/sh" arguments:@[@"-c", @"printf 'Document Class: article 2024/06/29 v1.4n\\nWhy?\\n?x\\n*\\nOutput written on file.pdf (2 pages, 1234 bytes).\\nTranscript written on file.log.\\n'"] environment:@{@"PATH":@"/usr/bin:/bin"} directory:dir encoding:NSUTF8StringEncoding title:@"Clean" completion:nil];

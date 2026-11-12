@@ -28,19 +28,20 @@
 @end
 
 // A line that TeX writes for an error with -file-line-error, such as "./file.tex:12: Undefined control sequence."
+// The file name has a dot or a slash, so that a time such as "12:34: " is not taken for one.
 static NSRegularExpression *TSExperimentFileLineError(void)
 {
     static NSRegularExpression *expression;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        expression = [NSRegularExpression regularExpressionWithPattern:@"^[^\\s:][^\\n:]*:[0-9]+: "
+        expression = [NSRegularExpression regularExpressionWithPattern:@"^[^\\s:][^\\n:]*[./][^\\n:]*:[0-9]+: "
             options:NSRegularExpressionAnchorsMatchLines error:NULL];
     });
     return expression;
 }
 
-// The last line when TeX waits for the user: "?" after an error, "*" or "**" for more input,
-// or "Enter file name:" when a file is missing.
+// The line TeX has written when it waits for the user: "?" after an error, "*" or "**" for more input,
+// or "Enter file name:" when a file is missing. It counts only when no output follows it.
 static BOOL TSExperimentIsPrompt(NSString *line)
 {
     return [line isEqualToString:@"?"] || [line isEqualToString:@"*"] || [line isEqualToString:@"**"] ||
@@ -68,7 +69,8 @@ static BOOL TSExperimentIsPrompt(NSString *line)
 @property (nonatomic, strong) NSData *carry;
 @property (nonatomic) NSStringEncoding encoding;
 @property (nonatomic) NSUInteger generation;
-@property (nonatomic) NSUInteger scannedLength;
+@property (nonatomic, copy) NSString *engineLine;
+@property (nonatomic) NSUInteger outputCount;
 @end
 
 @implementation TSExperimentConsoleController
@@ -186,33 +188,43 @@ static BOOL TSExperimentIsPrompt(NSString *line)
         [self.outputText scrollRangeToVisible:NSMakeRange(self.outputText.string.length, 0)];
 }
 
-// The complete lines added since the last check, and the line TeX is still writing.
-- (BOOL)outputShowsError
+- (void)showForError
 {
-    NSString *output = self.outputText.string;
-    NSUInteger start = MIN(self.scannedLength, output.length);
-    BOOL error = NO;
-    NSRange lastBreak = [output rangeOfString:@"\n" options:NSBackwardsSearch range:NSMakeRange(start, output.length - start)];
-    if (lastBreak.location != NSNotFound) {
-        NSRange lines = NSMakeRange(start, NSMaxRange(lastBreak) - start);
-        error = [TSExperimentFileLineError() firstMatchInString:output options:0 range:lines] != nil;
-        start = NSMaxRange(lastBreak);
-    }
-    self.scannedLength = start;
-    NSString *line = [[output substringFromIndex:start] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
-    return error || TSExperimentIsPrompt(line);
-}
-
-// Output of the running job. When the console is shown only for errors,
-// an error line or a prompt brings it to the front, as for the document's console.
-- (void)appendOutput:(NSString *)text
-{
-    [self appendText:text];
-    if (!self.job || ![SUD boolForKey:ConsoleBehaviorKey] || ![self outputShowsError]) return;
     if (self.window.isKeyWindow) return;
     NSWindow *origin = NSApp.keyWindow;
     if (origin && origin != self.window) self.returnWindow = origin;
     [self.window makeKeyAndOrderFront:nil];
+}
+
+// Output of the running job. When the console is shown only for errors, an error line
+// or a prompt at which TeX stops brings it to the front. Only the engine's output is read:
+// engineLine is the line TeX is still writing, without the lines typed in the console.
+- (void)appendOutput:(NSString *)text
+{
+    [self appendText:text];
+    self.outputCount++;
+    NSString *output = [(self.engineLine ?: @"") stringByAppendingString:text];
+    BOOL error = NO;
+    NSRange lastBreak = [output rangeOfString:@"\n" options:NSBackwardsSearch];
+    if (lastBreak.location != NSNotFound) {
+        error = [TSExperimentFileLineError() firstMatchInString:output options:0 range:NSMakeRange(0, NSMaxRange(lastBreak))] != nil;
+        output = [output substringFromIndex:NSMaxRange(lastBreak)];
+    }
+    self.engineLine = output;
+    if (!self.job || ![SUD boolForKey:ConsoleBehaviorKey]) return;
+    if (error) {
+        [self showForError];
+        return;
+    }
+    if (!TSExperimentIsPrompt([output stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet])) return;
+    // Output arrives in pieces, so "*" or "?" may begin an ordinary line. Wait to see whether TeX stops.
+    NSUInteger count = self.outputCount, generation = self.generation;
+    __weak TSExperimentConsoleController *weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        TSExperimentConsoleController *controller = weakSelf;
+        if (controller && controller.generation == generation && controller.outputCount == count && controller.job.active)
+            [controller showForError];
+    });
 }
 
 - (void)appendData:(NSData *)data atEnd:(BOOL)atEnd
@@ -257,7 +269,7 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     self.carry = nil;
     self.window.title = [NSString stringWithFormat:NSLocalizedString(@"%@ — Experiment Console", @"Experiment console title"), title];
     self.outputText.string = @"";
-    self.scannedLength = 0;
+    self.engineLine = @"";
     self.commandField.stringValue = @"";
     self.commandField.enabled = YES;
     self.stopButton.enabled = YES;
@@ -312,6 +324,9 @@ static BOOL TSExperimentIsPrompt(NSString *line)
     NSError *error = nil;
     if ([self.job sendData:data error:&error]) {
         [self appendText:displayCommand];
+        // TeX continues at the start of a line, and is no longer waiting.
+        self.engineLine = @"";
+        self.outputCount++;
         return YES;
     }
     NSBeep();
