@@ -4187,6 +4187,14 @@ The system then remembers the new number and sends is to the Timer which will di
         _skipLinks = skip;
 }
 
+// Whether hovering over a link with these modifier keys shows its popup. With Link Popups
+// off, Command shows it all the same, and as always Command makes it the larger popup, so
+// that Command keeps that meaning whether Link Popups is on or off (#30).
+- (BOOL) showsLinkPopupsWithModifierFlags: (NSEventModifierFlags)flags
+{
+    return !self.skipLinks || (flags & NSEventModifierFlagCommand) != 0;
+}
+
 /*
 - (void) changeAnnotationMenu
 {
@@ -4246,7 +4254,8 @@ The system then remembers the new number and sends is to the Timer which will di
     if (showsLinkPreviewCursor)
         [self showToolCursorOutsideLinkPreviewWithEvent: theEvent];
     
-if (!self.skipLinks && !self.globalLongTerm)
+// A popup shown with Command while Link Popups is off goes away like any other.
+if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent modifierFlags]]))
     
     {
         
@@ -4500,8 +4509,14 @@ if (!self.skipLinks && !self.globalLongTerm)
     
     NSNumber *timerNumberObject = (NSNumber *)theTimer.userInfo[0];
     NSInteger aTimerNumber = [(NSNumber *)theTimer.userInfo[0] integerValue];
-    if (aTimerNumber != self.timerNumber || self.handlingLink != 1 || self.skipLinks || !self.window)
+    NSEventModifierFlags modifiers = [[NSApp currentEvent] modifierFlags];
+    if (aTimerNumber != self.timerNumber || self.handlingLink != 1 || !self.window)
         return;
+    // With Link Popups off, Command has to be held still when the popup would appear.
+    if (![self showsLinkPopupsWithModifierFlags: modifiers]) {
+        self.handlingLink = 0;
+        return;
+    }
     NSPoint originalPoint = [(NSValue *)theTimer.userInfo[1] pointValue];
     NSEvent *theEvent = (NSEvent *)theTimer.userInfo[2];
     NSPoint currentPoint = [NSEvent mouseLocation];
@@ -4532,9 +4547,9 @@ if (!self.skipLinks && !self.globalLongTerm)
             }
             linkedPoint = TSLinkPreviewDestinationPoint([theDestination point], imageSize, pageTransform);
 
-            if ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask)
+            if (modifiers & NSCommandKeyMask)
                 largerSize = YES;
-            if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
+            if (modifiers & NSShiftKeyMask)
                 pushUp = YES;
 
             
@@ -4631,9 +4646,13 @@ if (!self.skipLinks && !self.globalLongTerm)
 
 
 // Links whose target hovering shows in a popup, which replaces PDFKit's tool tip (#17).
+// With Link Popups off, that is while Command is held or the popup of the link under the
+// pointer is still to come or on screen (#30).
 - (BOOL)showsLinkPreviewForAnnotation:(PDFAnnotation *)annotation
 {
-    return !self.skipLinks && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&
+    BOOL showsPopups = [self showsLinkPopupsWithModifierFlags: [NSEvent modifierFlags]] ||
+                       (self.handlingLink && !self.globalLongTerm);
+    return showsPopups && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&
            [annotation.type isEqualToString:@"Link"] && annotation.destination != nil;
 }
 
