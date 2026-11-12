@@ -177,7 +177,8 @@ static NSString *const TSYenSign = @"¥";
     static NSRegularExpression *edges;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        // `\b` comes before the lookbehind: `(?:(?<=\W)|\b)` never matches at the end of the text (macOS 27.2).
+        // `\b` comes before the lookbehind. ICU's UText path, which NSRegularExpression takes, judges `\b` at the end
+        // of the text from wherever a failed lookbehind left the text (RegexMatcher::isWordBoundary, ICU 78.3).
         edges = [NSRegularExpression regularExpressionWithPattern:@"\\A(?:(?=\\W)|\\b)(?>[\\s\\S]*)(?:\\b|(?<=\\W))\\z" options:0 error:NULL];
     });
     if (match.length == 0)
