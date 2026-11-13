@@ -5,7 +5,8 @@ Sample documents (plain LaTeX, expl3, Japanese and fullwidth characters, XML,
 right-to-left text, broken input, a real manual and a large document) are
 colored with every combination of the settings that change the coloring:
 expl3, index and footnote colors, \\makeatletter, the spelling exclusions, the
-fullwidth highlight, the active line and block cursor, the yen sign as the TeX
+fullwidth highlight (in each shape a theme can give it: both colors, either one, or
+none), the active line and block cursor, the yen sign as the TeX
 character, XML and right justification. For each character the harness records
 which color the layout manager shows (named after the document property it came
 from, not by its value), the background, which characters lose their spelling
@@ -42,6 +43,9 @@ MUTATIONS = {
     'no-minus-sign': ('Sources/Syntax/TSSyntaxTeXScanner.h', ' || c == 0x2212;', ';'),
     # The character after a command whose parameters are not spell checked is scanned again.
     'rescan-after-parameters': (SCANNER, 'spellLocation = (*location)++;', 'spellLocation = (*location);'),
+    # Fullwidth characters are highlighted only when the theme gives them a foreground.
+    'fullwidth-needs-foreground': (SYNTAX, 'options.marksFullwidthSymbols = [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;',
+                                   'options.marksFullwidthSymbols = [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol][NSForegroundColorAttributeName] != nil;'),
     # An XML comment one character shorter.
     'xml-comment-short': (XML, 'colorRange.length = search1Range.location - colorRange.location + 3;\n            TSXMLToken',
                           'colorRange.length = search1Range.location - colorRange.location + 2;\n            TSXMLToken'),
@@ -198,6 +202,8 @@ static void SetUpColors(TSDocument *doc, NSString *fullwidth)
         doc.fullwidthSymbolColorAttribute = @{NSForegroundColorAttributeName: fullwidthForeground, NSBackgroundColorAttributeName: fullwidthBackground};
     else if ([fullwidth isEqual:@"foreground"])
         doc.fullwidthSymbolColorAttribute = @{NSForegroundColorAttributeName: fullwidthForeground};
+    else if ([fullwidth isEqual:@"background"])
+        doc.fullwidthSymbolColorAttribute = @{NSBackgroundColorAttributeName: fullwidthBackground};
     else
         doc.fullwidthSymbolColorAttribute = nil;
     // The same colors by role, as -changeColorsUsingDictionary: makes them.
@@ -539,7 +545,9 @@ VARIANTS = {
                             'userUnchecked': ['\\textbf'], 'userChecked': ['\\ref']},
     'spelling-index-expl3': {'spellParameter': True, 'index': True, 'footnote': True, 'expl3': True},
     'spelling-texaware': {'spellCommand': True, 'spellComment': True, 'spellParameter': True, 'texAware': True, 'expl3': True},
+    # Every shape a theme can give the fullwidth highlight: both colors, either one, or none.
     'fullwidth-foreground': {'fullwidth': 'foreground'},
+    'fullwidth-background': {'fullwidth': 'background'},
     'fullwidth-none': {'fullwidth': 'none'},
     'entry': {'entry': True, 'selection': 30},
     'always-highlight': {'alwaysHighlight': True},
