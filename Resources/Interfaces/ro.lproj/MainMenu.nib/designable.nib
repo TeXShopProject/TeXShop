@@ -693,7 +693,7 @@
                                     <action selector="changeAutoComplete:" target="-1" id="940"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Adăugați la lista de completare" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
+                            <menuItem title="Adăugați la lista de completare a comenzilor" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
                                 <connections>
                                     <action selector="registerForCommandCompletion:" target="-1" id="545"/>
                                 </connections>
