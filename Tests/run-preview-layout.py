@@ -75,6 +75,7 @@ static NSStringEncoding NSISOLatin9StringEncoding = 0x8000020f;
 BACKFORWARDITEM
 @interface MyPDFKitView : PDFView {
  @public NSInteger pageStyle,firstPageStyle,resizeOption; id myStepper,myStepper1; BOOL _pdfViewReady;
+ NSView *pinnedLinkPreview;
 }
 @property (weak) TSDocument *myDocument;
 @property BOOL doScroll;
@@ -86,6 +87,8 @@ BACKFORWARDITEM
 @implementation MyPDFKitView
 - (void)doKillPopup { self.handlingLink = 0; }
 - (void)cleanupMarquee:(BOOL)b {}
+- (void)cleanupMarqueeKeepingPinnedLinkPreview {}
+- (void)keepPinnedLinkPreviewInView {}
 - (void)updateDarkModeInversion {}
 - (void)scaleChanged:(id)sender {}
 VIEWMETHODS

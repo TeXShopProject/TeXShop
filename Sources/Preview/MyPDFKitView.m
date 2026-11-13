@@ -74,7 +74,10 @@
 {
     TSExternalPDFPosition secondViewport;
     id linkPreviewEventMonitor;
+    // The popup that hovering over a link shows, and the popup pinned with Option, which
+    // stays until Escape or until this part goes elsewhere (#35).
     TSLinkPreviewView *linkPreview;
+    TSLinkPreviewView *pinnedLinkPreview;
     BOOL showsLinkPreviewCursor;
     BOOL keepsPinnedLinkPreview;
     BOOL _skipLinks;
@@ -221,7 +224,7 @@
     self.firstTime = YES;
     
     protectFind = NO;
-    if (self.handlingLink) [self doKillPopup];
+    if (self.handlingLink || pinnedLinkPreview) [self doKillPopup];
     [self increaseTimerNumber];
     self.oneOffSearchString = NULL;
     self.PDFFlashFix = [SUD boolForKey: FlashFixKey];
@@ -247,7 +250,6 @@
     // A document holds its own state from when it was opened; see skipLinks.
     if (!self.myDocument)
         self.skipLinks = (! [SUD boolForKey: LinkPopupsKey]);
-    self.globalLongTerm = NO;
    // self.useAnnotationMenu = NO;
     self.stringAlignment = 1;
     [self.myDocument setStringWindowAlignment: self.stringAlignment];
@@ -1719,8 +1721,12 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	// [self layoutDocumentView];
 }
 
+// Back and Forward go to another place: the pinned popup of this part closes, and it does
+// not come back when this part returns to where it was (#35).
 - (void) goBack:sender
 {
+	if ([self canGoBack])
+		[self closePinnedLinkPreview];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarquee: YES];
 	[super goBack:sender];
@@ -1728,6 +1734,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 - (void) goForward: sender
 {
+	if ([self canGoForward])
+		[self closePinnedLinkPreview];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarquee: YES];
 	[super goForward:sender];
@@ -2176,7 +2184,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 // set as Zoom In and Zoom Out set it.
 - (void)zoomToContentWidthOnly:(BOOL)widthOnly
 {
-	[self cleanupMarquee: YES];
+	[self cleanupMarqueeKeepingPinnedLinkPreview];
 	TSContentZoom(self, widthOnly, ^CGFloat(CGFloat scale) {
 		// Rounded down, so that the content stays within the view.
 		NSInteger percent = MAX(20, MIN((NSInteger)floor(scale * 100.0 + 1e-6), PDF_MAX_SCALE));
@@ -2193,7 +2201,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	NSInteger		scale;
 	double	magSize;
 	
-	[self cleanupMarquee: YES];
+	// A pinned popup stays, growing and shrinking with the page it is on (#35).
+	[self cleanupMarqueeKeepingPinnedLinkPreview];
 
 	if (sender == myScale1) {
 		[myScale setIntegerValue:[myScale1 integerValue]];
@@ -2229,6 +2238,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	magSize = [myScale doubleValue] / 100.0;
 // changed by Terada (until this line)
 	[self setScaleFactor: magSize];
+	[self keepPinnedLinkPreviewInView];
 	if (sender == myScale1) {
 		[NSApp endSheet: [self.myDocument magnificationPanel]];
 	}
@@ -2442,23 +2452,28 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     TSExternalPDFRestore(self, viewport);
 }
 
+// Turning one page, like scrolling, keeps a pinned popup; going to the first or the last page
+// goes to another place and closes it (#35).
 - (void) previousPage: (id)sender
 {
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
-		[self cleanupMarquee: YES];
+		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[self stepPageForward:NO sender:self];
+	[self keepPinnedLinkPreviewInView];
 }
 
 - (void) nextPage: (id)sender
 {
 	
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
-		[self cleanupMarquee: YES];
+		[self cleanupMarqueeKeepingPinnedLinkPreview];
 	[self stepPageForward:YES sender:sender];
+	[self keepPinnedLinkPreviewInView];
 }
 
 - (void) firstPage: (id)sender
 {
+	[self closePinnedLinkPreview];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarquee: YES];
 	[self goToFirstPage:self];
@@ -2466,6 +2481,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 - (void) lastPage: (id)sender
 {
+	[self closePinnedLinkPreview];
 	if  ((pageStyle == PDF_SINGLE_PAGE_STYLE) || (pageStyle == PDF_TWO_PAGE_STYLE))
 		[self cleanupMarquee: YES];
 	[self goToLastPage:sender];
@@ -2488,6 +2504,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	NSInteger pageCount = (NSInteger)[[self document] pageCount];
 	if (pageCount < 1)
 		return;
+	// A page number goes to another place: the pinned popup of this part closes (#35).
+	[self closePinnedLinkPreview];
 	if (myPage < 1)
 		myPage = 1;
 	if (myPage > pageCount)
@@ -2599,11 +2617,13 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 {
     if (newStyle < PDF_SINGLE_PAGE_STYLE || newStyle > PDF_DOUBLE_MULTI_PAGE_STYLE || newStyle == pageStyle) return;
     self.doScroll = NO;
-    [self cleanupMarquee:YES];
+    // A pinned popup stays; the display format does not go elsewhere (#35).
+    [self cleanupMarqueeKeepingPinnedLinkPreview];
     [self performPreviewLayoutChange:^{
         self->pageStyle = newStyle;
         [self setupPageStyle];
     }];
+    [self keepPinnedLinkPreviewInView];
 }
 
 // action for menu items "Single Page/Two Page/Multi-Page/Double Multi-Page"
@@ -2653,7 +2673,8 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         NSInteger number, i;
         id item;
     
-        [self cleanupMarquee: YES];
+        // A pinned popup stays, as with any change of magnification (#35).
+        [self cleanupMarqueeKeepingPinnedLinkPreview];
         
         if (newResizeOption == 0) return;
         
@@ -2671,6 +2692,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
         
         resizeOption = newResizeOption;
         [self setupMagnificationStyle];
+        [self keepPinnedLinkPreviewInView];
         
         /*
          if (resizeOption == PDF_ACTUAL_SIZE)
@@ -2753,7 +2775,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (void) copy: (id)sender
 {
 	// Text selected last in a pinned popup is what Copy copies.
-	NSString *previewText = linkPreview.selectionIsRecent ? linkPreview.selection.string : nil;
+	NSString *previewText = pinnedLinkPreview.selectionIsRecent ? pinnedLinkPreview.selection.string : nil;
 	if (previewText.length) {
 		NSPasteboard *pboard = [NSPasteboard generalPasteboard];
 		[pboard clearContents];
@@ -2800,7 +2822,11 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 - (IBAction) takeDestinationFromOutline: (id) sender
 {
 	// Get the destination associated with the search result list.  Tell the PDFView to go there.
-	[self goToDestination: [[sender itemAtRow: [sender selectedRow]] destination]];
+	PDFDestination *destination = [[sender itemAtRow: [sender selectedRow]] destination];
+	// The outline goes to another place: the pinned popup of this part closes (#35).
+	if (destination)
+		[self closePinnedLinkPreview];
+	[self goToDestination: destination];
 }
 
 
@@ -2956,6 +2982,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     {
         NSArray *thePages = [searchSelection pages];
         PDFPage *thePage =  [thePages firstObject];
+        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView closePinnedLinkPreview];
         [self.myDocument.pdfKitWindow.activeView goToPage: thePage];
         [self.myDocument.pdfKitWindow.activeView setCurrentSelection: searchSelection];
         [self.myDocument.pdfKitWindow.activeView scrollSelectionToVisible:self];
@@ -3007,6 +3034,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     {
         NSArray *thePages = [searchSelection pages];
         PDFPage *thePage =  [thePages firstObject];
+        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView closePinnedLinkPreview];
         [self.myDocument.pdfKitWindow.activeView goToPage: thePage];
         [self setCurrentSelection: searchSelection];
         [self.myDocument.pdfKitWindow.activeView scrollSelectionToVisible:self];
@@ -3041,6 +3069,7 @@ TeXShop supports search through the drawer in the Preview Window using sample co
     {
         NSArray *thePages = [searchSelection pages];
         PDFPage *thePage =  [thePages firstObject];
+        [(MyPDFKitView *)self.myDocument.pdfKitWindow.activeView closePinnedLinkPreview];
         [self.myDocument.pdfKitWindow.activeView goToPage: thePage];
         [self setCurrentSelection: searchSelection];
         [self.myDocument.pdfKitWindow.activeView scrollSelectionToVisible:self];
@@ -3280,6 +3309,8 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 	rowIndex = [(NSTableView *)[notification object] selectedRow];
 	if (rowIndex >= 0)
 	{
+		// A search result is another place: the pinned popup of the part that goes there closes (#35).
+		[self closePinnedLinkPreview];
 		if (self != [self.myDocument topView]) {
 			_firstSearchResults = [[self.myDocument topView] getSearchResults];
 			[self setCurrentSelection:[_firstSearchResults objectAtIndex: rowIndex]];
@@ -3437,8 +3468,11 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 
 #pragma mark =====drawPage=====
 
+// Every sync from the source to the preview marks where it goes in the part that goes there;
+// the pinned popup of that part closes, as other ways to go to another place close it (#35).
 - (void)setIndexForMark: (NSInteger)idx
 {
+	[self closePinnedLinkPreview];
 	pageIndexForMark = idx;
 }
 
@@ -4018,13 +4052,13 @@ if (self.myDocument.useConTeXtSyncParser)
  - (void) mouseDown: (NSEvent *) theEvent
 {
     // A pinned popup stays until Escape; an ordinary one goes away.
-    if (self.handlingLink && !self.globalLongTerm) [self doKillPopup];
-    linkPreview.selectionIsRecent = NO;
+    if (self.handlingLink) [self killTransientLinkPreview];
+    pinnedLinkPreview.selectionIsRecent = NO;
     [self keepingPinnedLinkPreview:^{ [self mouseDownKeepingPinnedLinkPreview: theEvent]; }];
 }
 
-// While `block` runs, -cleanupMarquee: leaves a pinned popup in place: clicks in the preview
-// and changes of tool keep it, whereas page changes, zoom or reloading still dismiss it.
+// While `block` runs, -cleanupMarquee: leaves a pinned popup in place: clicks in the preview,
+// changes of tool, zoom and turning pages keep it, whereas reloading still dismisses it.
 - (void) keepingPinnedLinkPreview: (void (^)(void))block
 {
     BOOL previous = keepsPinnedLinkPreview;
@@ -4296,10 +4330,12 @@ The system then remembers the new number and sends is to the Timer which will di
 
 - (void) mouseMoved: (NSEvent *) theEvent
 {
-    // A pinned popup shows how it can be moved or resized.
-    NSCursor *previewCursor = [linkPreview cursorAtPoint:
+    // A pinned popup shows how it can be moved or resized. The pointer has left any link
+    // there, so a popup it would show goes away.
+    NSCursor *previewCursor = [pinnedLinkPreview cursorAtPoint:
         [self.documentView convertPoint:theEvent.locationInWindow fromView:nil]];
     if (previewCursor) {
+        if (self.handlingLink) [self killTransientLinkPreview];
         [previewCursor set];
         showsLinkPreviewCursor = YES;
         return;
@@ -4308,8 +4344,9 @@ The system then remembers the new number and sends is to the Timer which will di
     if (showsLinkPreviewCursor)
         [self showToolCursorOutsideLinkPreviewWithEvent: theEvent];
     
-// A popup shown with Control while Link Popups is off goes away like any other.
-if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent modifierFlags]]))
+// A popup shown with Control while Link Popups is off goes away like any other. A pinned
+// popup does not keep other links from showing theirs (#35).
+if (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent modifierFlags]])
     
     {
         
@@ -4318,7 +4355,7 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
         
         if ( (! inLink) && (self.handlingLink > 0) && (mouseMode != 5)) {
             // [self increaseTimerNumber];
-            [self doKillPopup]; // sets handlingLink to 0
+            [self killTransientLinkPreview]; // sets handlingLink to 0
         }
         
         
@@ -4677,8 +4714,6 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
             // if (outputString)
             // NSLog(outputString);
             self.handlingLink = 2;
-            self.globalLongTerm = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
-            linkPreview.pinned = self.globalLongTerm;
             [self observeLinkPreviewEvents];
             NSArray *info = [NSArray arrayWithObjects: timerNumberObject, nil];
             [NSTimer scheduledTimerWithTimeInterval:4.0
@@ -4686,6 +4721,9 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
                                            selector:@selector(killPopup:)
                                            userInfo:info
                                             repeats:NO];
+            // Option, held when the popup appears, pins it.
+            if ([NSEvent modifierFlags] & NSEventModifierFlagOption)
+                [self pinLinkPreview];
             
             return;
             
@@ -4706,7 +4744,7 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 - (BOOL)showsLinkPreviewForAnnotation:(PDFAnnotation *)annotation
 {
     BOOL showsPopups = [self showsLinkPopupsWithModifierFlags: [NSEvent modifierFlags]] ||
-                       (self.handlingLink && !self.globalLongTerm);
+                       self.handlingLink != 0;
     return showsPopups && mouseMode != NEW_MOUSE_MODE_SELECT_PDF &&
            [annotation.type isEqualToString:@"Link"] && annotation.destination != nil;
 }
@@ -4714,31 +4752,46 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 // Observe only this window; hovering must not steal keyboard focus from its controls.
 - (NSEvent *)handleLinkPreviewEvent:(NSEvent *)event
 {
-    if (!self.window || event.window != self.window || self.handlingLink != 2)
+    if (!self.window || event.window != self.window)
         return event;
-    if (event.type == NSEventTypeFlagsChanged && (event.modifierFlags & NSEventModifierFlagOption)) {
-        self.globalLongTerm = YES;
-        linkPreview.pinned = YES;
-    }
-    if (self.globalLongTerm && event.type == NSEventTypeKeyDown
+    // Option, pressed while a popup is shown, pins it.
+    if (event.type == NSEventTypeFlagsChanged && (event.modifierFlags & NSEventModifierFlagOption)
+        && self.handlingLink == 2 && linkPreview)
+        [self pinLinkPreview];
+    if (pinnedLinkPreview && event.type == NSEventTypeKeyDown
         && !(event.modifierFlags & (NSEventModifierFlagCommand | NSEventModifierFlagControl
                                     | NSEventModifierFlagOption | NSEventModifierFlagShift))
         && [event.charactersIgnoringModifiers isEqualToString:@"\033"]) {
-        // Both parts of a split window watch Escape, the part that showed its popup last
-        // first. Escape dismisses the popup of the active part, and that of the other part
-        // only when the active part has none (#14).
-        MyPDFKitView *active = (MyPDFKitView *)self.myPDFWindow.activeView;
-        if (active != self && active.window == self.window && [active isKindOfClass:[MyPDFKitView class]]
-            && [active hasPinnedLinkPreview])
+        // Escape dismisses the pinned popup of the active part only, the part clicked last,
+        // which Back and Forward and the toolbar also work with. Both parts of a split window
+        // watch Escape; the other one leaves it alone (#14).
+        if (![self isActivePreviewPart])
             return event;
-        [self doKillPopup];
+        [self closePinnedLinkPreview];
         return nil;
     }
     return event;
 }
 
+// Whether this is the part of its window that the toolbar, Back and Forward and Escape work
+// with: the part clicked last of a split window, and the only part of an unsplit one.
+- (BOOL)isActivePreviewPart
+{
+    MyPDFKitView *active = (MyPDFKitView *)self.myPDFWindow.activeView;
+    return active == self || ![active isKindOfClass:[MyPDFKitView class]] || active.window != self.window;
+}
+
+// Keyboard events are watched while this part shows a popup or has one pinned.
 - (void)observeLinkPreviewEvents
 {
+    if (!linkPreview && !pinnedLinkPreview) {
+        if (linkPreviewEventMonitor) {
+            [NSEvent removeMonitor:linkPreviewEventMonitor];
+            linkPreviewEventMonitor = nil;
+        }
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:nil];
+        return;
+    }
     if (linkPreviewEventMonitor) return;
     __weak MyPDFKitView *weakSelf = self;
     linkPreviewEventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:
@@ -4757,7 +4810,7 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
-    if (newWindow != self.window && self.handlingLink) [self doKillPopup];
+    if (newWindow != self.window && (self.handlingLink || pinnedLinkPreview)) [self doKillPopup];
     [super viewWillMoveToWindow:newWindow];
 }
 
@@ -4768,24 +4821,24 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 
 - (BOOL)hasPinnedLinkPreview
 {
-    return self.handlingLink == 2 && self.globalLongTerm && linkPreview.pinned && linkPreview.superview;
+    return pinnedLinkPreview.superview != nil;
 }
 
 - (BOOL)pinnedLinkPreviewContainsWindowPoint:(NSPoint)point
 {
-    if (![self hasPinnedLinkPreview] || linkPreview.window != self.window) return NO;
-    NSView *documentView = linkPreview.superview;
+    if (![self hasPinnedLinkPreview] || pinnedLinkPreview.window != self.window) return NO;
+    NSView *documentView = pinnedLinkPreview.superview;
     NSPoint local = [documentView convertPoint:point fromView:nil];
-    return NSPointInRect(local, documentView.visibleRect) && NSPointInRect(local, linkPreview.frame);
+    return NSPointInRect(local, documentView.visibleRect) && NSPointInRect(local, pinnedLinkPreview.frame);
 }
 
 - (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:(NSRect *)frame
 {
     if (![self hasPinnedLinkPreview]) return nil;
-    TSLinkPreviewView *preview = linkPreview;
+    TSLinkPreviewView *preview = pinnedLinkPreview;
     if (frame) *frame = [preview.superview convertRect:preview.frame toView:nil];
     [preview removeFromSuperview];
-    linkPreview = nil;
+    pinnedLinkPreview = nil;
     [self doKillPopup];
     return preview;
 }
@@ -4794,49 +4847,71 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 {
     NSView *documentView = self.documentView;
     if (!preview || !documentView || [self hasPinnedLinkPreview]) return;
-    if (self.handlingLink) [self doKillPopup];
-    linkPreview = preview;
+    if (self.handlingLink) [self killTransientLinkPreview];
+    pinnedLinkPreview = preview;
     __weak MyPDFKitView *weakView = self;
-    linkPreview.usesHandTool = ^BOOL {
+    pinnedLinkPreview.usesHandTool = ^BOOL {
         MyPDFKitView *view = weakView;
         return view && view->mouseMode == NEW_MOUSE_MODE_SCROLL;
     };
-    [documentView addSubview:linkPreview];
-    linkPreview.frame = [documentView convertRect:frame fromView:nil];
-    linkPreview.pinned = YES;
-    self.handlingLink = 2;
-    self.globalLongTerm = YES;
+    [documentView addSubview:pinnedLinkPreview];
+    pinnedLinkPreview.frame = [documentView convertRect:frame fromView:nil];
+    pinnedLinkPreview.pinned = YES;
     [self observeLinkPreviewEvents];
     [self keepPinnedLinkPreviewInView];
 }
 
 - (void)keepPinnedLinkPreviewInView
 {
-    if ([self hasPinnedLinkPreview]) [linkPreview keepInView];
+    if ([self hasPinnedLinkPreview]) [pinnedLinkPreview keepInView];
 }
 
-- (void)doKillPopup
+// Pins the popup shown by hovering. It replaces a popup pinned before in this part. The
+// pointer is still over its link, which shows no other popup until the pointer leaves it,
+// and the popup no longer times out.
+- (void)pinLinkPreview
+{
+    if (!linkPreview) return;
+    [pinnedLinkPreview removeFromSuperview];
+    pinnedLinkPreview = linkPreview;
+    linkPreview = nil;
+    pinnedLinkPreview.pinned = YES;
+    [self increaseTimerNumber];
+}
+
+// Closes the popup shown by hovering, or one still to come; a pinned popup stays.
+- (void)killTransientLinkPreview
 {
     // Invalidate a pending show timer as well as the previous popup's timeout.
     [self increaseTimerNumber];
-    if (linkPreviewEventMonitor) {
-        [NSEvent removeMonitor:linkPreviewEventMonitor];
-        linkPreviewEventMonitor = nil;
-    }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:nil];
     [linkPreview removeFromSuperview];
     linkPreview = nil;
     [self.overView removeFromSuperview];
     self.overView = nil;
-    self.globalLongTerm = NO;
     self.handlingLink = 0;
+    [self observeLinkPreviewEvents];
+}
+
+- (void)closePinnedLinkPreview
+{
+    if (!pinnedLinkPreview) return;
+    [pinnedLinkPreview removeFromSuperview];
+    pinnedLinkPreview = nil;
+    [self observeLinkPreviewEvents];
+}
+
+// Closes both popups.
+- (void)doKillPopup
+{
+    [self closePinnedLinkPreview];
+    [self killTransientLinkPreview];
 }
 
 - (void)killPopup:(NSTimer *)theTimer
 {
     NSInteger aTimerNumber = [(NSNumber *)theTimer.userInfo[0] integerValue];
     if (aTimerNumber != self.timerNumber || self.handlingLink != 2) return;
-    if (!self.globalLongTerm) [self doKillPopup];
+    [self killTransientLinkPreview];
 }
 
 
@@ -4945,8 +5020,13 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
     
 	if (downOverLink) {
 		downOverLink = NO;
-		if (([self areaOfInterestForMouse: theEvent] &  kPDFLinkArea) != 0)
-				[super mouseUp: theEvent];
+		if (([self areaOfInterestForMouse: theEvent] &  kPDFLinkArea) != 0) {
+			// Following an internal link goes to another place: the pinned popup of this part
+			// closes. A link to a URL or to another file leaves this part where it is (#35).
+			if ([self internalLinkDestinationAtPoint: [self convertPoint: [theEvent locationInWindow] fromView: nil]])
+				[self closePinnedLinkPreview];
+			[super mouseUp: theEvent];
+		}
 		return;
 	}
 
@@ -4985,7 +5065,7 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 {
     if (anItem.action == @selector(changePageStyle:))
         return [self.myDocument validatePreviewLayoutItem:anItem];
-    if (anItem.action == @selector(copy:) && linkPreview.selectionIsRecent && linkPreview.selection.string.length)
+    if (anItem.action == @selector(copy:) && pinnedLinkPreview.selectionIsRecent && pinnedLinkPreview.selection.string.length)
         return YES;
 	
 		
@@ -5275,7 +5355,8 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 // earses the frame of selected rectangle and cleans up the cached image
 - (void)cleanupMarquee: (BOOL)terminate
 {
-    if (self.handlingLink && !(self.globalLongTerm && keepsPinnedLinkPreview)) { [self doKillPopup]; return; }
+    if (!keepsPinnedLinkPreview && (self.handlingLink || pinnedLinkPreview)) { [self doKillPopup]; return; }
+    if (self.handlingLink) [self killTransientLinkPreview];
     // for Mavericks
    //  if (atLeastMavericks) {
     {
@@ -7947,7 +8028,7 @@ else
 {
 	NSInteger		scale;
 
-	[self cleanupMarquee: YES];
+	[self cleanupMarqueeKeepingPinnedLinkPreview];
 
 	scale = magnification * 100.0;
 	if (scale < 20)
@@ -7965,7 +8046,7 @@ else
 	[myStepper1 setIntegerValue:scale];
 
 	[self setScaleFactor: magnification];
-
+	[self keepPinnedLinkPreviewInView];
 }
 
 - (void)resetMagnification
@@ -8457,7 +8538,7 @@ else
 
 - (void)setDocument:(PDFDocument *)document
 {
-    if (self.handlingLink) [self doKillPopup];
+    if (self.handlingLink || pinnedLinkPreview) [self doKillPopup];
     BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
     CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
     [super setDocument:document];
