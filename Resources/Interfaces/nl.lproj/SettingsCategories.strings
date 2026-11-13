@@ -170,6 +170,7 @@
 "catalog.appearance.2.0.item.1" = "Console";
 "catalog.appearance.2.0.item.2" = "Logboek";
 "catalog.appearance.2.0.item.3" = "Voorvertoning";
+"catalog.appearance.2.0.item.3.heading.1" = "Lichte pagina's";
 "group.appearance.3.title" = "Bron";
 "catalog.appearance.3.0.item.0" = "Invoegpunt";
 "catalog.appearance.3.0.item.1" = "Flits";

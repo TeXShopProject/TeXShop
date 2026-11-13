@@ -189,6 +189,19 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
             }
         }
         for(NSDictionary *item in model[@"items"]){
+            // A row of headings above an item names what its colors are for, column by column.
+            if(table && [item[@"headings"] count]){
+                [cells addObject:NSGridCell.emptyContentView];
+                for(NSString *key in item[@"headings"]){
+                    if(!key.length){[cells addObject:NSGridCell.emptyContentView];continue;}
+                    NSTextField *heading=[self label:text(key) small:YES];
+                    heading.identifier=[@"heading." stringByAppendingString:key];
+                    heading.maximumNumberOfLines=1;heading.lineBreakMode=NSLineBreakByClipping;
+                    CGFloat width=ceil([heading.stringValue sizeWithAttributes:@{NSFontAttributeName:TSCatalogRequired(heading.font)}].width)+4;
+                    [heading.widthAnchor constraintGreaterThanOrEqualToConstant:width].active=YES;
+                    [cells addObject:heading];
+                }
+            }
             NSTextField *label=[self label:text(item[@"title"]) small:NO];
             NSMutableArray *wells=[NSMutableArray array];
             for(NSString *key in item[@"controls"]){NSView *well=[self take:key from:views];[self prepare:well];well.accessibilityLabel=label.stringValue;

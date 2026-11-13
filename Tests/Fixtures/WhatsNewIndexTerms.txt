@@ -57,6 +57,7 @@
 36
 37
 38
+39
 4
 41
 42
@@ -91,6 +92,7 @@
 89
 9
 a
+a11y
 ability
 aborted
 about
@@ -619,6 +621,7 @@ esc
 escape
 escaped
 etc
+ethanphil4
 euc
 european
 eventually
@@ -952,7 +955,6 @@ japanese
 jis
 job
 jobs
-john
 jp
 jpeg
 juan
@@ -1294,7 +1296,6 @@ parsing
 part
 particular
 particularly
-partly
 parts
 party
 passages
@@ -1493,7 +1494,6 @@ require
 required
 requires
 reread
-rescan
 reserved
 reset
 resize

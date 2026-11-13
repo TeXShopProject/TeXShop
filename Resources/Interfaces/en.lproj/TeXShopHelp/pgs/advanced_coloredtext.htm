@@ -46,32 +46,15 @@ named colors were defined automatically for the dvips driver. To use them genera
 
 <P>
 	When output is colored, the output may be difficult to read on the preview screen.
-		TeXShop has hidden settings to set the background color of the preview window.
-		This background color will not appear when the document is printed. To set the
-		background to gray, issue the following commands in Terminal:
+		The pages in the preview can be given another color in the Themes category of the Settings window:
+		the color under “Light Pages” in the Preview row fills the pages while they are shown light.
+		Each theme has its own color, so the Lite Mode Theme and the Dark Mode Theme can use different colors.
+		The color is not printed, and it does not appear when part of a page is copied.
+		Pages shown dark with the Appearance item in the toolbar of the Preview window are not filled with this color.
 </P>
-<dl>
-<dd><tt>defaults write TeXShop Pdfbackground_R 0.5</tt>   
-<dd><tt>defaults write TeXShop Pdfbackground_G 0.5</tt>   
-<dd><tt>defaults write TeXShop Pdfbackground_B 0.5</tt>   
-	</dl>
-
 <P>
-	Change 0.5 to 1 to get back to white. If you find yourself changing the background often,
-		create an Applescript macro named "PDF background gray" with the Macro Editor
-		using the following text:
-</P>
-<dl>
-<dd><tt> --AppleScript</tt>   
-<dd><tt>do shell script "defaults write TeXShop Pdfbackground_R 0.5"
-</tt>   
-<dd><tt>do shell script "defaults write TeXShop Pdfbackground_G 0.5"
-</tt>   
-<dd><tt>do shell script "defaults write TeXShop Pdfbackground_B 0.5"
-</tt>   
-	</dl>
-<P>
-	and create a similar macro named "PDF background white". 
+	Earlier versions of TeXShop set this color with the hidden settings Pdfbackground_R, Pdfbackground_G and Pdfbackground_B.
+		They are now used only by Migrate Legacy Settings, which makes a theme from the settings of earlier versions.
 </P></div>
 <div id="header_background"></div>
 <div id="header_logo"><a href="../TeXShop%20Help.html"><IMG HEIGHT="40" WIDTH="40" border="0" SRC="../gfx/xicnsc.gif"></a></div>

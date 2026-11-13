@@ -15,7 +15,7 @@ parser.add_argument("--mutation", choices=["no-window-load", "no-yen-filter", "n
 parser.add_argument("--artifacts", type=Path, help="Save headless light/dark console previews")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-from experiment_console_source import prefix as console_prefix, controller_source
+from experiment_console_source import prefix as console_prefix, controller_source, advanced_find_sources
 controller = controller_source(root)
 if args.mutation == "no-window-load":
     assert "[self loadWindow];" in controller
@@ -315,7 +315,7 @@ int main(void) { @autoreleasepool {
 with tempfile.TemporaryDirectory(prefix='texshop-experiment-console-') as tmp:
     src, exe = Path(tmp) / 'test.m', Path(tmp) / 'test'
     src.write_text(prefix + controller + tests)
-    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit', '-framework', 'WebKit', '-framework', 'Quartz', *include_args(root), str(src), str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'), '-o', str(exe)], check=True)
+    subprocess.run(['xcrun', 'clang', '-I', str(root/'Tests'), '-w', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit', '-framework', 'WebKit', '-framework', 'Quartz', *include_args(root), str(src), str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'), *advanced_find_sources(root, tmp), '-o', str(exe)], check=True)
     (Path(tmp)/'home'/'Library'/'Preferences').mkdir(parents=True)
     env = dict(os.environ, HOME=str(Path(tmp)/'home'), CFFIXED_USER_HOME=str(Path(tmp)/'home'),
                TSDOCUMENT_NIB=str(root / 'Resources/Interfaces/Base.lproj/TSDocument.nib/keyedobjects.nib'))
