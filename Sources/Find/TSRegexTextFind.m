@@ -53,7 +53,7 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
         if (scope.count == 0) {
             if (error)
                 *error = [NSError errorWithDomain:TSRegexFindErrorDomain code:TSRegexFindErrorEmptySelection
-                                         userInfo:@{NSLocalizedDescriptionKey: @"There is no selection to search in."}];
+                                         userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTable(@"There is no selection to search in.", @"AdvancedFindEngine", @"Searching in the selection while nothing is selected.")}];
             return nil;
         }
         [scope sortUsingComparator:^NSComparisonResult(NSValue *a, NSValue *b) {

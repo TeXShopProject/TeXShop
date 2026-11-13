@@ -6,9 +6,10 @@ static NSString *const TSYenSign = @"¥";
 #pragma mark - Plain text found quickly
 
 // NSString's search without NSLiteralSearch finds a word where the text has the same characters, or characters with
-// the same canonical decomposition, or, for an ASCII digit, a digit of the same value. For a word of the characters
-// below, with no decomposable one, a match of the other kinds needs a character in the text whose decomposition is free
-// of marks and made of the word's own characters (U+212A KELVIN SIGN for K, U+FA03 for 糖), or a digit's look-alike.
+// the same canonical decomposition, or, for digits, numbers of the same value. For a word of the characters below, with
+// no decomposable one, a match of the other kinds needs a character in the text whose decomposition is free of marks
+// and made of the word's own characters (U+212A KELVIN SIGN for K, U+FA03 for 糖), or, for a word with a digit, another
+// number.
 // Where the text has none of them, every match is a literal match: the literal matches are found quickly, and each is
 // checked by the same search, anchored there.
 
@@ -44,50 +45,52 @@ static NSDictionary<NSNumber *, NSArray<NSArray *> *> *TSUnmarkedDecompositions(
     return table;
 }
 
-/// The characters other than ASCII digits that NSString's search without NSLiteralSearch finds as each ASCII digit:
-/// digits of other scripts and other numbers of the same value (U+0660, U+3007, U+1369...). On macOS 27.2 they are
-/// 1,026, all of them numbers (Unicode N*), which are tried one by one.
-static NSArray<NSArray<NSNumber *> *> *TSDigitLookAlikes(void)
+/// The numbers (Unicode N*) other than the ASCII digits. NSString's search without NSLiteralSearch takes a digit of
+/// another script or a number of the same value for an ASCII digit (U+0660 or U+3007 for 0), and in a row of numbers
+/// even more (９〇 is found as ９0, macOS 27.2).
+static NSCharacterSet *TSNumbersButASCIIDigits(void)
 {
-    static NSArray *table;
+    static NSCharacterSet *numbers;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        NSCharacterSet *alphanumerics = NSCharacterSet.alphanumericCharacterSet, *letters = NSCharacterSet.letterCharacterSet;
-        NSMutableArray<NSString *> *numbers = [NSMutableArray array];
-        NSMutableArray<NSNumber *> *codes = [NSMutableArray array];
+        NSMutableCharacterSet *set = [NSCharacterSet.alphanumericCharacterSet mutableCopy];
+        [set formIntersectionWithCharacterSet:NSCharacterSet.letterCharacterSet.invertedSet];
+        [set removeCharactersInRange:NSMakeRange('0', 10)];
+        numbers = [set copy];
+    });
+    return numbers;
+}
+
+/// The same numbers, one by one.
+static NSArray<NSNumber *> *TSNumbersButASCIIDigitsList(void)
+{
+    static NSArray<NSNumber *> *list;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        NSCharacterSet *numbers = TSNumbersButASCIIDigits();
+        NSMutableArray<NSNumber *> *all = [NSMutableArray array];
         for (UTF32Char c = 0; c <= 0x10FFFF; c++) {
-            if ((c & 0xFFFF) == 0 && ![alphanumerics hasMemberInPlane:(uint8_t)(c >> 16)]) {
+            if ((c & 0xFFFF) == 0 && ![numbers hasMemberInPlane:(uint8_t)(c >> 16)]) {
                 c += 0xFFFF;
                 continue;
             }
-            if ((c >= '0' && c <= '9') || (c >= 0xD800 && c <= 0xDFFF) || ![alphanumerics longCharacterIsMember:c] || [letters longCharacterIsMember:c])
-                continue;
-            UTF32Char little = NSSwapHostIntToLittle(c);
-            [numbers addObject:[[NSString alloc] initWithBytes:&little length:4 encoding:NSUTF32LittleEndianStringEncoding]];
-            [codes addObject:@(c)];
+            if (!(c >= 0xD800 && c <= 0xDFFF) && [numbers longCharacterIsMember:c])
+                [all addObject:@(c)];
         }
-        NSMutableArray<NSArray<NSNumber *> *> *byDigit = [NSMutableArray array];
-        for (unichar digit = '0'; digit <= '9'; digit++) {
-            NSString *word = [NSString stringWithCharacters:&digit length:1];
-            NSMutableArray<NSNumber *> *alikes = [NSMutableArray array];
-            for (NSUInteger i = 0; i < numbers.count; i++)
-                if ([numbers[i] rangeOfString:word options:0].location != NSNotFound)
-                    [alikes addObject:codes[i]];
-            [byDigit addObject:alikes];
-        }
-        table = byDigit;
+        list = all;
     });
-    return table;
+    return list;
 }
 
 /// The characters a quick word may hold: ASCII and Latin-1 but the controls (tab and LF are kept) and the soft hyphen,
-/// the spacing modifier letters, CJK ideographs and symbols, kana but the sound marks, and full-width forms.
-/// NSString's search matches some other characters in its own way: U+0937 U+200D is found as U+0937 U+0600, and
-/// U+00AD 1 as U+110BD 1 (macOS 27.2).
+/// the spacing modifier letters, CJK ideographs and symbols, kana but the sound marks, and full-width forms; no number
+/// but the ASCII digits. NSString's search matches some other characters in its own way: U+0937 U+200D is found as
+/// U+0937 U+0600, and U+00AD 1 as U+110BD 1 (macOS 27.2).
 static inline BOOL TSIsQuickCharacter(unichar c)
 {
-    return c == '\t' || c == '\n' || (c >= 0x20 && c < 0x7F) || (c >= 0xA0 && c < 0x0300 && c != 0xAD) || (c >= 0x3000 && c <= 0x3098) || (c >= 0x309D && c <= 0x30FF) || (c >= 0x3400 && c <= 0x4DBF)
-        || (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0xFF01 && c <= 0xFF9D);
+    return (c == '\t' || c == '\n' || (c >= 0x20 && c < 0x7F) || (c >= 0xA0 && c < 0x0300 && c != 0xAD) || (c >= 0x3000 && c <= 0x3098)
+            || (c >= 0x309D && c <= 0x30FF) || (c >= 0x3400 && c <= 0x4DBF) || (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0xFF01 && c <= 0xFF9D))
+        && ![TSNumbersButASCIIDigits() characterIsMember:c];
 }
 
 /// A word that can be found quickly: only quick characters, none decomposable.
@@ -141,10 +144,10 @@ static inline BOOL TSIsQuickCharacter(unichar c)
             others = [NSMutableData dataWithLength:0x10000 / 8];
         ((uint8_t *)others.mutableBytes)[c >> 3] |= (uint8_t)(1u << (c & 7));
     };
-    for (unichar digit = '0'; digit <= '9'; digit++)
-        if ([own containsIndex:digit])
-            for (NSNumber *alike in TSDigitLookAlikes()[digit - '0'])
-                addOther(alike);
+    // With a digit, any other number in the text is left to the search itself.
+    if ([own intersectsIndexesInRange:NSMakeRange('0', 10)])
+        for (NSNumber *number in TSNumbersButASCIIDigitsList())
+            addOther(number);
     NSDictionary<NSNumber *, NSArray<NSArray *> *> *table = TSUnmarkedDecompositions();
     [own enumerateIndexesUsingBlock:^(NSUInteger first, BOOL *stop) {
         for (NSArray *entry in table[@(first)]) {
@@ -263,7 +266,7 @@ static inline BOOL TSIsQuickCharacter(unichar c)
     NSString *normalized = [TSRegexFindPattern normalizedString:findString options:options];
     if (normalized.length == 0) {
         if (error)
-            *error = [TSRegexFindPattern errorWithCode:TSRegexFindErrorEmptyFindString description:@"The find string is empty." underlyingError:nil];
+            *error = [TSRegexFindPattern errorWithCode:TSRegexFindErrorEmptyFindString description:NSLocalizedStringFromTable(@"The find string is empty.", @"AdvancedFindEngine", @"A plain-text or regular expression find string has nothing to find.") underlyingError:nil];
         return nil;
     }
     _findString = [findString copy];
@@ -289,7 +292,7 @@ static inline BOOL TSIsQuickCharacter(unichar c)
                     [words addObject:word];
             if (words.count == 0) {
                 if (error)
-                    *error = [TSRegexFindPattern errorWithCode:TSRegexFindErrorEmptyFindString description:@"The find string is empty." underlyingError:nil];
+                    *error = [TSRegexFindPattern errorWithCode:TSRegexFindErrorEmptyFindString description:NSLocalizedStringFromTable(@"The find string is empty.", @"AdvancedFindEngine", @"A plain-text or regular expression find string has nothing to find.") underlyingError:nil];
                 return nil;
             }
             _words = words;

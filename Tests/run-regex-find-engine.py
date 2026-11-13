@@ -99,13 +99,14 @@ MUTATIONS = {
     'the skip goes one too far': ('TSRegexFindPattern.m', 'quick->_skip[u[i] & 0xFF] = (uint32_t)(length - 1 - i);', 'quick->_skip[u[i] & 0xFF] = (uint32_t)(length - i);'),
     'the character before a match is not checked': ('TSRegexFindPattern.m', 'if (at > 0 && !TSIsQuickCharacter(', 'if (NO && !TSIsQuickCharacter('),
     'soft hyphens are quick': ('TSRegexFindPattern.m', ' && c != 0xAD)', ')'),
-    'controls are quick': ('TSRegexFindPattern.m', "return c == '\\t' || c == '\\n' || (c >= 0x20 && c < 0x7F) || (c >= 0xA0 && c < 0x0300", "return (c < 0x0300 && c != '\\r'"),
+    'controls are quick': ('TSRegexFindPattern.m', "return (c == '\\t' || c == '\\n' || (c >= 0x20 && c < 0x7F) || (c >= 0xA0 && c < 0x0300 && c != 0xAD)", "return ((c < 0x0300 && c != '\\r')"),
     'replace all forgets a cancellation': ('TSRegexTextFind.m', '    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;\n    NSString *string = self.string;', '    BOOL (^cancellation)(void) = isCancelled;\n    NSString *string = self.string;'),
     'find all forgets a cancellation': ('TSRegexTextFind.m', '    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;\n    NSMutableArray<NSValue *> *matches', '    BOOL (^cancellation)(void) = isCancelled;\n    NSMutableArray<NSValue *> *matches'),
     'a multiple replacement forgets a cancellation': ('TSRegexMultipleReplace.m', '    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;\n    NSUInteger ruleCount', '    BOOL (^cancellation)(void) = isCancelled;\n    NSUInteger ruleCount'),
     'highlights forget a cancellation': ('TSRegexMultipleReplace.m', '    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;\n    NSMutableArray<NSValue *> *ranges', '    BOOL (^cancellation)(void) = isCancelled;\n    NSMutableArray<NSValue *> *ranges'),
     'rules are not asked about': ('TSRegexMultipleReplace.m', '        if (cancellation && cancellation())\n            return nil;\n        if (!rule.enabled) {\n', '        if (!rule.enabled) {\n'),
-    'digit look-alikes are ignored': ('TSRegexFindPattern.m', "    for (unichar digit = '0'; digit <= '9'; digit++)\n        if ([own containsIndex:digit])\n", "    for (unichar digit = '0'; digit <= '9' && NO; digit++)\n        if ([own containsIndex:digit])\n"),
+    'other numbers beside digits are ignored': ('TSRegexFindPattern.m', "    if ([own intersectsIndexesInRange:NSMakeRange('0', 10)])\n", "    if (NO)\n"),
+    'other numbers are quick': ('TSRegexFindPattern.m', '        && ![TSNumbersButASCIIDigits() characterIsMember:c];', ';'),
     'equal lengths are taken as no change': ('TSRegexTextFind.m', '(scopeText.length != scope.length || [scopeText compare:[string substringWithRange:scope] options:NSLiteralSearch] != NSOrderedSame)', 'scopeText.length != scope.length'),
 }
 
@@ -128,10 +129,32 @@ def run(sources: Path, tmp: Path, strict: bool = True) -> subprocess.CompletedPr
     return subprocess.CompletedProcess(second.args, second.returncode, first.stdout + second.stdout, second.stderr)
 
 
+def check_message_tables():
+    """Every message of the engine is in AdvancedFindEngine.strings of every language, and nothing else is."""
+    import json, re
+    keys = set()
+    for path in find_dir.glob('*.m'):
+        keys |= set(re.findall(r'NSLocalizedStringFromTable\(@"((?:[^"\\]|\\.)*)", @"AdvancedFindEngine"', path.read_text()))
+    problems = []
+    for table in sorted((root / 'Resources/Interfaces').glob('*.lproj/AdvancedFindEngine.strings')):
+        data = json.loads(subprocess.run(['plutil', '-convert', 'json', '-o', '-', str(table)], capture_output=True, check=True).stdout)
+        if set(data) != keys:
+            problems.append(f'{table.parent.name}: missing {sorted(keys - set(data))}, extra {sorted(set(data) - keys)}')
+        if table.parent.name != 'en.lproj':
+            problems += [f'{table.parent.name}: untranslated {k!r}' for k, v in data.items() if v == k]
+    languages = {p.name for p in (root / 'Resources/Interfaces').glob('*.lproj')} - {'Base.lproj'}
+    found = {p.parent.name for p in (root / 'Resources/Interfaces').glob('*.lproj/AdvancedFindEngine.strings')}
+    problems += [f'{name}: no AdvancedFindEngine.strings' for name in sorted(languages - found)]
+    if len(keys) < 5 or problems:
+        sys.exit('FAIL message tables: ' + '; '.join(problems or ['messages not found in the sources']))
+    print(f'PASS: the {len(keys)} messages of the engine are translated in {len(found)} languages')
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--mutations', action='store_true')
 args = parser.parse_args()
 engine = ['TSRegexFindOptions', 'TSRegexFindPattern', 'TSRegexReplacementTemplate', 'TSRegexFindReplacement', 'TSRegexReplaceAllResult', 'TSRegexTextFind', 'TSRegexReplacementRule', 'TSRegexMultipleReplace']
+check_message_tables()
 with tempfile.TemporaryDirectory(prefix='texshop-regex-find-') as tmp:
     tmp = Path(tmp)
     sources = tmp / 'src'

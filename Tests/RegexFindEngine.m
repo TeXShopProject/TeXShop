@@ -256,6 +256,25 @@ static void ComparePlainNeighbors(void)
                         printf("FAIL plain search of %s in %s %s: got %s, NSString finds %s\n", Shown(word), Shown(text), NSStringFromRange(range).UTF8String,
                                found.description.UTF8String, expected.description.UTF8String);
                 }
+    // Pairs found while comparing: a soft hyphen taken for a prepended number sign, numbers in a row.
+    NSArray<NSArray<NSString *> *> *pairs = @[@[@"\u00AD1", @"x\U000110BD1"], @[@"\uFF19\u3007", @"x\uFF190"], @[@"0", @"\u06000"], @[@"90", @"\uFF19\u3007"],
+                                              @[@"90", @"9\u3007"], @[@"\u00AD", @"a\u00ADb"], @[@"\u3007", @"x0"],
+                                              @[@"\u00AD1", @"\u0601\u00AD1\U000110BD1"]];
+    for (NSArray<NSString *> *pair in pairs) {
+        NSString *word = pair[0], *text = pair[1];
+        for (NSUInteger start = 0; start < text.length; start++) {
+            NSRange range = NSMakeRange(start, text.length - start);
+            NSMutableArray<NSValue *> *found = [NSMutableArray array];
+            [[[TSRegexFindPattern alloc] initWithFindString:word options:0 error:NULL] enumerateMatchesInString:text range:range cancellation:nil
+                                                                                                       usingBlock:^(NSRange match, NSTextCheckingResult *result, BOOL *stop) {
+                [found addObject:[NSValue valueWithRange:match]];
+            }];
+            NSArray<NSValue *> *expected = PlainMatchesBySearch(@[word], text, range);
+            if (![found isEqual:expected] && mismatches++ < 10)
+                printf("FAIL plain search of %s in %s %s: got %s, NSString finds %s\n", Shown(word), Shown(text), NSStringFromRange(range).UTF8String,
+                       found.description.UTF8String, expected.description.UTF8String);
+        }
+    }
     if (mismatches)
         failures++;
 }

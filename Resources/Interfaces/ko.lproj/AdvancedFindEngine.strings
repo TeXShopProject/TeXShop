@@ -1,0 +1,17 @@
+/* Messages of the Advanced Find engine (Sources/Find), shown by the find panel and the multiple replacement window. */
+
+/* A plain-text or regular expression find string has nothing to find. */
+"The find string is empty." = "찾을 문자열이 비어 있습니다.";
+
+/* Searching in the selection while nothing is selected. */
+"There is no selection to search in." = "찾을 선택 부분이 없습니다.";
+
+/* A multiple replacement definition (CotEditor .cotrpl) lacks its rules or its settings. */
+"The replacement definition has no replacements or settings." = "대치 정의에 규칙 또는 설정이 없습니다.";
+
+/* A rule of a multiple replacement definition is not valid. */
+"A replacement of the definition is not valid." = "대치 정의에 유효하지 않은 규칙이 있습니다.";
+
+/* The settings of a multiple replacement definition are not valid. */
+"The settings of the replacement definition are not valid." = "대치 정의의 설정이 유효하지 않습니다.";
+

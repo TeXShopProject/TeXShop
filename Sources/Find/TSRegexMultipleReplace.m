@@ -452,7 +452,7 @@ static NSError *TSDefinitionError(NSString *description)
     NSArray *objects = [root isKindOfClass:[NSDictionary class]] ? root[TSDefinitionRulesKey] : nil;
     if (![settings isKindOfClass:[NSDictionary class]] || ![objects isKindOfClass:[NSArray class]]) {
         if (error)
-            *error = parseError ?: TSDefinitionError(@"The replacement definition has no replacements or settings.");
+            *error = parseError ?: TSDefinitionError(NSLocalizedStringFromTable(@"The replacement definition has no replacements or settings.", @"AdvancedFindEngine", @"A multiple replacement definition (CotEditor .cotrpl) lacks its rules or its settings."));
         return nil;
     }
     NSMutableArray<TSRegexReplacementRule *> *rules = [NSMutableArray array];
@@ -460,7 +460,7 @@ static NSError *TSDefinitionError(NSString *description)
         TSRegexReplacementRule *rule = [[TSRegexReplacementRule alloc] initWithJSONObject:object];
         if (!rule) {
             if (error)
-                *error = TSDefinitionError(@"A replacement of the definition is not valid.");
+                *error = TSDefinitionError(NSLocalizedStringFromTable(@"A replacement of the definition is not valid.", @"AdvancedFindEngine", @"A rule of a multiple replacement definition is not valid."));
             return nil;
         }
         [rules addObject:rule];
@@ -476,7 +476,7 @@ static NSError *TSDefinitionError(NSString *description)
     if (!TSUnsignedValue(textual, texts[TSSettingsTextualKey], &compareValue) || !TSUnsignedValue(regex, texts[TSSettingsRegexKey], &regexValue)
         || (wholeWord && !TSIsBooleanValue(wholeWord)) || (unescapes && !TSIsBooleanValue(unescapes))) {
         if (error)
-            *error = TSDefinitionError(@"The settings of the replacement definition are not valid.");
+            *error = TSDefinitionError(NSLocalizedStringFromTable(@"The settings of the replacement definition are not valid.", @"AdvancedFindEngine", @"The settings of a multiple replacement definition are not valid."));
         return nil;
     }
     // Comparison options that the panel does not show (backwards, anchored, numeric, regular expression...) are
