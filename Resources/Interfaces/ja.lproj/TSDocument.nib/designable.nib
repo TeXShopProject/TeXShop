@@ -278,7 +278,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="139">
-                        <rect key="frame" x="20" y="8" width="464" height="53"/>
+                        <rect key="frame" x="20" y="5" width="464" height="36"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="wordWrapping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" placeholderString="エラー時: &lt;ret&gt; 無視、[s] 以後すべて無視、[x] 終了、[i]+文字列 置き換えて続行" bezelStyle="round" id="3825">
                             <font key="font" metaFont="message" size="11"/>
@@ -323,18 +323,18 @@
                         </connections>
                     </button>
                     <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b2m-lJ-IXR">
-                        <rect key="frame" x="0.0" y="65" width="505" height="333"/>
+                        <rect key="frame" x="0.0" y="46" width="505" height="352"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Djo-rf-dof">
-                            <rect key="frame" x="0.0" y="0.0" width="505" height="333"/>
+                            <rect key="frame" x="0.0" y="0.0" width="505" height="352"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" smartInsertDelete="YES" id="GUL-Xn-XOW">
-                                    <rect key="frame" x="0.0" y="0.0" width="505" height="333"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="505" height="352"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <size key="minSize" width="505" height="333"/>
+                                    <size key="minSize" width="505" height="352"/>
                                     <size key="maxSize" width="516" height="10000000"/>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
@@ -345,7 +345,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="nj2-dc-I8Q">
-                            <rect key="frame" x="489" y="0.0" width="16" height="333"/>
+                            <rect key="frame" x="489" y="0.0" width="16" height="352"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
