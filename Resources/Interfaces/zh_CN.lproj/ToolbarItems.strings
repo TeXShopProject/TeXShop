@@ -82,8 +82,8 @@
     tiPaletteLabelTypesetEE = "\U6392\U7248";
     tiPaletteLabelTypesetKIT = "\U6392\U7248";
     tiToolTipAutoComplete = "\U5207\U6362\U6309\U952e\U7ed1\U5b9a";
-    tiToolTipBackForthKIT = "\U540e\U9000\U524d\U8fdb\U6309\U94ae";
-    tiToolTipBackForthKITSplit = "\U540e\U9000\U524d\U8fdb\U6309\U94ae";
+    tiToolTipGoBack = "返回";
+    tiToolTipGoForward = "前进";
     tiToolTipBibTeX = "\U8fd0\U884cBibTeX";
     tiToolTipColorIndex = "为索引命令着色";
     tiToolTipConTeX = "\U8fd0\U884cConTeXt";

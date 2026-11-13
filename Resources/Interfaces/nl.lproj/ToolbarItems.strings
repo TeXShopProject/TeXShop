@@ -172,11 +172,11 @@ tiToolTipSyncMarksKIT			= "Toon Sync Marks";
 
 tiLabelBackForthKIT				= "Vorige/Volgende";
 tiPaletteLabelBackForthKIT		= "Vorige/Volgende";
-tiToolTipBackForthKIT			= "Knoppen Vorige/Volgende";
+tiToolTipGoBack				= "Terug";
+tiToolTipGoForward			= "Vooruit";
 
 tiLabelBackForthKITSplit                = "Vorige/Volgende";
 tiPaletteLabelBackForthKITSplit        = "Vorige/Volgende";
-tiToolTipBackForthKITSplit            = "Knoppen Vorige/Volgende";
 
 tiLabelDrawerKIT				= "Navigatiekolom";
 tiPaletteLabelDrawerKIT			= "Navigatiekolom";
