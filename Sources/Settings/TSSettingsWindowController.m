@@ -365,7 +365,13 @@ static void TSCollectSearchTargets(NSView *view, NSSet<NSString *> *targets, NSM
                 [pane.bottomAnchor constraintEqualToAnchor:document.bottomAnchor]]];
         }
     }
-    CGFloat minimum = keyboard && self.keyboardPane != nil ? MAX(560, self.keyboardPane.view.fittingSize.height + 28) : 560;
+    // The Keyboard pane starts below the toolbar, whose height depends on the system.
+    CGFloat toolbar = 28;
+    if (keyboard && self.keyboardScroll != nil) {
+        [self.window.contentView layoutSubtreeIfNeeded];
+        toolbar = MAX(toolbar, NSHeight(self.window.contentView.bounds) - NSHeight(self.keyboardScroll.frame));
+    }
+    CGFloat minimum = keyboard && self.keyboardPane != nil ? MAX(560, self.keyboardPane.view.fittingSize.height + toolbar) : 560;
     NSSize minSize = self.window.contentMinSize; minSize.height = minimum;
     self.window.contentMinSize = minSize;
     NSSize size = self.window.contentView.bounds.size;
