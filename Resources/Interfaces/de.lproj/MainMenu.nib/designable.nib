@@ -693,7 +693,7 @@
                                     <action selector="changeAutoComplete:" target="-1" id="926"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Zur Vervollständigungsliste hinzufügen" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
+                            <menuItem title="Zur Liste der Befehlsvervollständigung hinzufügen" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
                                 <connections>
                                     <action selector="registerForCommandCompletion:" target="-1" id="545"/>
                                 </connections>
