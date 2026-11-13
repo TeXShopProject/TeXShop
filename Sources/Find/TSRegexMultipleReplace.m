@@ -617,6 +617,21 @@ static NSError *TSDefinitionError(NSString *description)
                                               lineEnding:(nullable NSString *)lineEnding
                                             cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
 {
+    return [self applyToString:string selectedRanges:selectedRanges inSelection:inSelection lineEnding:lineEnding cancellation:isCancelled progress:nil];
+}
+
+- (nullable TSRegexMultipleReplaceResult *)applyToString:(NSString *)string
+                                          selectedRanges:(NSArray<NSValue *> *)selectedRanges
+                                             inSelection:(BOOL)inSelection
+                                              lineEnding:(nullable NSString *)lineEnding
+                                            cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
+                                                progress:(nullable void (NS_NOESCAPE ^)(NSUInteger, NSUInteger, double))progress
+{
+    NSUInteger ruleCount = self.rules.count;
+    void (^ruleDone)(NSUInteger) = ^(NSUInteger index) {
+        if (progress)
+            progress(index, ruleCount, 1.0);
+    };
     NSString *current = [string copy];
     NSArray<NSValue *> *scope = selectedRanges;
     NSMutableArray<NSNumber *> *counts = [NSMutableArray array];
@@ -624,16 +639,22 @@ static NSError *TSDefinitionError(NSString *description)
     for (NSUInteger index = 0; index < self.rules.count; index++) {
         TSRegexReplacementRule *rule = self.rules[index];
         [counts addObject:@0];
-        if (!rule.enabled)
+        if (!rule.enabled) {
+            ruleDone(index);
             continue;
+        }
         NSError *error = nil;
         TSRegexTextFind *find = [self textFindForRule:rule string:current selectedRanges:scope inSelection:inSelection lineEnding:lineEnding error:&error];
         if (!find) {
             errors[@(index)] = error;
+            ruleDone(index);
             continue;
         }
         TSRegexReplacementTemplate *template = [[TSRegexReplacementTemplate alloc] initWithString:rule.replaceString pattern:find.pattern syntax:self.replacementSyntax];
-        TSRegexReplaceAllResult *result = [find replaceAllWithTemplate:template cancellation:isCancelled];
+        // The rule's own report of 1 is its last.
+        TSRegexReplaceAllResult *result = [find replaceAllWithTemplate:template cancellation:isCancelled progress:progress ? ^(double fraction, NSUInteger matches) {
+            progress(index, ruleCount, fraction);
+        } : nil];
         if (!result)
             return nil;
         counts[index] = @(result.numberOfMatches);

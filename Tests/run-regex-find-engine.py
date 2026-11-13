@@ -30,7 +30,7 @@ MUTATIONS = {
     'search does not wrap': ('TSRegexTextFind.m', '    if (!wraps)\n', '    if (YES)\n'),
     'scope offsets are dropped': ('TSRegexTextFind.m', 'offset += (NSInteger)scopeText.length - (NSInteger)scope.length;', ';'),
     'rules see the original text': ('TSRegexMultipleReplace.m', '            current = next;', '            (void)next;'),
-    'disabled rules run': ('TSRegexMultipleReplace.m', '        [counts addObject:@0];\n        if (!rule.enabled)\n', '        [counts addObject:@0];\n        if (NO)\n'),
+    'disabled rules run': ('TSRegexMultipleReplace.m', '        [counts addObject:@0];\n        if (!rule.enabled) {\n', '        [counts addObject:@0];\n        if (NO) {\n'),
     'anchoring bounds are used': ('TSRegexFindPattern.m', 'NSMatchingWithTransparentBounds | NSMatchingWithoutAnchoringBounds', 'NSMatchingWithoutAnchoringBounds'),
     'ICU surrogates are single units': ('TSRegexReplacementTemplate.m', '            NSUInteger size = MIN((NSUInteger)2, length - i);\n', '            NSUInteger size = 1;\n'),
     'ICU escapes take a whole character': ('TSRegexReplacementTemplate.m', '            [text appendString:[s substringWithRange:NSMakeRange(i + 1, 1)]];\n            i += 2;\n', '            NSRange whole = [s rangeOfComposedCharacterSequenceAtIndex:i + 1];\n            [text appendString:[s substringWithRange:whole]];\n            i = NSMaxRange(whole);\n'),
@@ -80,6 +80,15 @@ MUTATIONS = {
     'a number may end in a non-digit': ('TSRegexMultipleReplace.m', "    return last >= '0' && last <= '9';", "    return last || YES;"),
     'the double need not read all of the text': ('TSRegexMultipleReplace.m', '    if (!*end) {', '    if (YES) {'),
     'the Decimal need not read all of the text': ('TSRegexMultipleReplace.m', '    if (*s)\n        return NO;\n    if (m != 0) {', '    if (m != 0) {'),
+    'replace all does not end with 1': ('TSRegexTextFind.m', '    if (progress)\n        progress(1.0, total);\n', ''),
+    'replace all reports every match': ('TSRegexTextFind.m', 'if ((total + count) % 256 == 0)', 'if ((total + count) % 1 == 0)'),
+    'replace all counts the scope range only': ('TSRegexTextFind.m', 'report(searched + (location - scope.location), total + count);', 'report(searched + (location - scope.location), count);'),
+    'replace all measures the scope range only': ('TSRegexTextFind.m', 'report(searched + (location - scope.location), total + count);', 'report(location - scope.location, total + count);'),
+    'the end of a scope range is not reported': ('TSRegexTextFind.m', '        if (scopeValue != self.scopeRanges.lastObject)\n            report(searched, total);\n', ''),
+    'a cancelled scope range is reported': ('TSRegexTextFind.m', '        if (isCancelled && isCancelled())\n            return nil;\n        [scopeText appendString:', '        [scopeText appendString:'),
+    'a disabled rule is not reported': ('TSRegexMultipleReplace.m', '        if (!rule.enabled) {\n            ruleDone(index);\n', '        if (!rule.enabled) {\n'),
+    'an unusable rule is not reported': ('TSRegexMultipleReplace.m', '            errors[@(index)] = error;\n            ruleDone(index);\n', '            errors[@(index)] = error;\n'),
+    'a rule reports the next index': ('TSRegexMultipleReplace.m', '            progress(index, ruleCount, fraction);', '            progress(index + 1, ruleCount, fraction);'),
 }
 
 

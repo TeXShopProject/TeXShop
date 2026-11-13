@@ -147,10 +147,26 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
 - (nullable TSRegexReplaceAllResult *)replaceAllWithTemplate:(TSRegexReplacementTemplate *)replacementTemplate
                                                 cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
 {
+    return [self replaceAllWithTemplate:replacementTemplate cancellation:isCancelled progress:nil];
+}
+
+- (nullable TSRegexReplaceAllResult *)replaceAllWithTemplate:(TSRegexReplacementTemplate *)replacementTemplate
+                                                cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
+                                                    progress:(nullable void (NS_NOESCAPE ^)(double, NSUInteger))progress
+{
     NSString *string = self.string;
+    NSUInteger scopeLength = 0;
+    for (NSValue *scopeValue in self.scopeRanges)
+        scopeLength += scopeValue.rangeValue.length;
+    __block NSUInteger searched = 0;    // Characters of the finished scope ranges.
+    // Every report follows a poll of isCancelled that returned NO.
+    void (^report)(NSUInteger, NSUInteger) = ^(NSUInteger searchedNow, NSUInteger matches) {
+        if (progress)
+            progress(scopeLength > 0 ? (double)searchedNow / (double)scopeLength : 1.0, matches);
+    };
     NSMutableArray<TSRegexFindReplacement *> *replacements = [NSMutableArray array];
     NSMutableArray<NSValue *> *selectedRanges = [NSMutableArray array];
-    NSUInteger total = 0;
+    __block NSUInteger total = 0;
     NSInteger offset = 0;
     for (NSValue *scopeValue in self.scopeRanges) {
         NSRange scope = scopeValue.rangeValue;
@@ -163,11 +179,16 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
             [scopeText appendString:[self normalizedLineEndings:[replacementTemplate replacementForMatchRange:matchRange result:result inString:string previousMatchEnd:location]]];
             location = NSMaxRange(matchRange);
             count++;
+            if ((total + count) % 256 == 0)
+                report(searched + (location - scope.location), total + count);
         }];
         if (isCancelled && isCancelled())
             return nil;
         [scopeText appendString:[string substringWithRange:NSMakeRange(location, NSMaxRange(scope) - location)]];
         total += count;
+        searched += scope.length;
+        if (scopeValue != self.scopeRanges.lastObject)
+            report(searched, total);
         // Literal comparison catches changes between canonically equivalent texts.
         if (count > 0 && [scopeText compare:[string substringWithRange:scope] options:NSLiteralSearch] != NSOrderedSame)
             [replacements addObject:[[TSRegexFindReplacement alloc] initWithRange:scope string:scopeText]];
@@ -176,6 +197,8 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
             offset += (NSInteger)scopeText.length - (NSInteger)scope.length;
         }
     }
+    if (progress)
+        progress(1.0, total);
     return [[TSRegexReplaceAllResult alloc] initWithReplacements:replacements
                                                   selectedRanges:self.inSelection ? selectedRanges : nil
                                                  numberOfMatches:total];

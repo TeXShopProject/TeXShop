@@ -75,6 +75,17 @@ NS_SWIFT_NAME(RegexMultipleReplace)
                                             cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
     NS_SWIFT_NAME(apply(to:selectedRanges:inSelection:lineEnding:isCancelled:));
 
+/// The same, telling `progress` on the calling thread which rule is being applied (from 0), the number of rules, and
+/// how much of the scope that rule has searched (0 to 1). Every rule, used or not, ends with 1; the reports never go
+/// back. Nothing is reported once `isCancelled` has returned YES.
+- (nullable TSRegexMultipleReplaceResult *)applyToString:(NSString *)string
+                                          selectedRanges:(NSArray<NSValue *> *)selectedRanges
+                                             inSelection:(BOOL)inSelection
+                                              lineEnding:(nullable NSString *)lineEnding
+                                            cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
+                                                progress:(nullable void (NS_NOESCAPE ^)(NSUInteger ruleIndex, NSUInteger ruleCount, double fractionCompleted))progress
+    NS_SWIFT_NAME(apply(to:selectedRanges:inSelection:lineEnding:isCancelled:progress:));
+
 /// The matches of every enabled rule in the unchanged string, rule after rule (for highlighting). Nil when cancelled.
 - (nullable NSArray<NSValue *> *)matchRangesInString:(NSString *)string
                                       selectedRanges:(NSArray<NSValue *> *)selectedRanges

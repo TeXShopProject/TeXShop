@@ -294,6 +294,55 @@ int main(void)
         Check([cancel matchRangesWithCancellation:^BOOL { return ++polls > 10; }] == nil, @"cancelling a search returns nothing");
         Check([cancel replaceAllWithTemplate:[[TSRegexReplacementTemplate alloc] initWithString:@"" pattern:cancel.pattern syntax:TSRegexReplacementSyntaxICU] cancellation:^BOOL { return YES; }] == nil, @"cancelling replace all returns nothing");
 
+        // The progress of replace all: the fraction of the scope searched and the matches so far, after every 256
+        // matches and at the end of each scope range, last with 1; it never goes back and does not change the result.
+        NSArray<NSValue *> *whole0 = @[[NSValue valueWithRange:NSMakeRange(0, 0)]];
+        NSString *progressText = [@"" stringByPaddingToLength:20000 withString:@"ab " startingAtIndex:0];
+        NSArray<NSValue *> *twoScopes = @[[NSValue valueWithRange:NSMakeRange(12000, 6000)], [NSValue valueWithRange:NSMakeRange(0, 9000)]];
+        TSRegexTextFind *progressFind = [[TSRegexTextFind alloc] initWithString:progressText pattern:Pattern(@"b", R) selectedRanges:twoScopes inSelection:YES error:NULL];
+        TSRegexReplacementTemplate *progressTemplate = [[TSRegexReplacementTemplate alloc] initWithString:@"cc" pattern:progressFind.pattern syntax:TSRegexReplacementSyntaxICU];
+        NSMutableArray<NSArray<NSNumber *> *> *reports = [NSMutableArray array];
+        TSRegexReplaceAllResult *withProgress = [progressFind replaceAllWithTemplate:progressTemplate cancellation:^BOOL { return NO; }
+                                                                             progress:^(double fraction, NSUInteger matches) { [reports addObject:@[@(fraction), @(matches)]]; }];
+        TSRegexReplaceAllResult *withoutProgress = [progressFind replaceAllWithTemplate:progressTemplate cancellation:nil];
+        BOOL rising = YES;
+        for (NSUInteger i = 1; i < reports.count; i++)
+            rising = rising && [reports[i][0] doubleValue] >= [reports[i - 1][0] doubleValue] && [reports[i][1] unsignedIntegerValue] >= [reports[i - 1][1] unsignedIntegerValue];
+        Check(withProgress.numberOfMatches == 5000 && [withProgress.replacements isEqual:withoutProgress.replacements]
+              && [withProgress.selectedRanges isEqual:withoutProgress.selectedRanges], @"progress does not change replace all");
+        // The 256th b is at 766; the first scope range has 3000 of them in 9000 characters, of 15000 in all.
+        Check(rising && reports.count == 5000 / 256 + 2 && [reports.firstObject isEqual:@[@(767.0 / 15000), @256]]
+              && [reports containsObject:@[@(9000.0 / 15000), @3000]] && [reports.lastObject isEqual:@[@1.0, @5000]],
+              [@"replace all reports its progress: " stringByAppendingString:reports.description]);
+        NSMutableArray<NSArray<NSNumber *> *> *emptyReports = [NSMutableArray array];
+        [[[TSRegexTextFind alloc] initWithString:@"" pattern:Pattern(@"b", R) selectedRanges:whole0 inSelection:NO error:NULL]
+            replaceAllWithTemplate:progressTemplate cancellation:nil progress:^(double fraction, NSUInteger matches) { [emptyReports addObject:@[@(fraction), @(matches)]]; }];
+        Check([emptyReports isEqual:@[@[@1.0, @0]]], @"replace all in an empty text reports 1");
+        __block BOOL cancelSeen = NO, reportedAfterCancel = NO;
+        __block NSUInteger cancelPolls = 0;
+        [progressFind replaceAllWithTemplate:progressTemplate cancellation:^BOOL { cancelPolls++; return NO; }];
+        NSUInteger allPolls = cancelPolls;
+        for (NSUInteger after = 0; after < allPolls; after += 7) {
+            cancelSeen = NO;
+            cancelPolls = 0;
+            TSRegexReplaceAllResult *cancelled = [progressFind replaceAllWithTemplate:progressTemplate cancellation:^BOOL { return cancelSeen = cancelSeen || ++cancelPolls > after; }
+                                                                             progress:^(double fraction, NSUInteger matches) { reportedAfterCancel = reportedAfterCancel || cancelSeen; }];
+            Check(!cancelled && cancelSeen, @"replace all can be cancelled while it reports its progress");
+        }
+        Check(!reportedAfterCancel, @"nothing is reported once replace all is cancelled");
+        // Reporting costs next to nothing.
+        TSRegexTextFind *manyMatches = [[TSRegexTextFind alloc] initWithString:[@"" stringByPaddingToLength:600000 withString:@"ab " startingAtIndex:0]
+                                                                       pattern:Pattern(@"b", R) selectedRanges:whole0 inSelection:NO error:NULL];
+        __block NSUInteger reportCount = 0;
+        NSDate *plainStart = NSDate.date;
+        [manyMatches replaceAllWithTemplate:progressTemplate cancellation:^BOOL { return NO; }];
+        NSTimeInterval plainTime = -plainStart.timeIntervalSinceNow;
+        NSDate *reportingStart = NSDate.date;
+        [manyMatches replaceAllWithTemplate:progressTemplate cancellation:^BOOL { return NO; } progress:^(double fraction, NSUInteger matches) { reportCount++; }];
+        NSTimeInterval reportingTime = -reportingStart.timeIntervalSinceNow;
+        Check(reportCount == 200000 / 256 + 1 && reportingTime < plainTime * 1.5 + 0.05,
+              [NSString stringWithFormat:@"progress does not slow replace all down (%lu reports, %.3f s against %.3f s)", (unsigned long)reportCount, reportingTime, plainTime]);
+
         // Multiple replacement, as CotEditor's: rules in order, each on the previous result, with the set's options.
         NSArray<NSValue *> *whole = @[[NSValue valueWithRange:NSMakeRange(0, 0)]];
         TSRegexReplacementRule *(^rule)(NSString *, NSString *, BOOL, BOOL, BOOL) = ^(NSString *f, NSString *r, BOOL regex, BOOL ignoresCase, BOOL on) {
@@ -354,6 +403,37 @@ int main(void)
               && fromCot.regularExpressionOptions == (TSRegexFindAnchorsMatchLines | TSRegexFindUnescapesReplacement)
               && fromCot.replacementSyntax == TSRegexReplacementSyntaxICU && !fromCot.rules[1].enabled && !fromCot.rules[1].note, @"a CotEditor file is read; unknown keys are ignored");
         Check([[fromCot applyToString:@"a1b" selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil].string isEqualToString:@"a<1>\tb"], @"a CotEditor file replaces as in CotEditor");
+        // The progress of a multiple replacement: each rule, used or not, from 0 to 1 in order.
+        NSString *abs = [@"" stringByPaddingToLength:2000 withString:@"ab" startingAtIndex:0];
+        TSRegexMultipleReplace *progressSet = set(@[rule(@"a", @"x", NO, NO, YES), rule(@"q", @"", NO, NO, NO), rule(@"(", @"", YES, NO, YES), rule(@"b", @"yy", NO, NO, YES)],
+                                                  TSRegexFindDefaultOptions, TSRegexFindDefaultOptions, TSRegexReplacementSyntaxICU);
+        NSMutableArray<NSArray<NSNumber *> *> *ruleReports = [NSMutableArray array];
+        TSRegexMultipleReplaceResult *progressed = [progressSet applyToString:abs selectedRanges:whole inSelection:NO lineEnding:nil cancellation:^BOOL { return NO; }
+                                                                     progress:^(NSUInteger index, NSUInteger count, double fraction) { [ruleReports addObject:@[@(index), @(count), @(fraction)]]; }];
+        TSRegexMultipleReplaceResult *unprogressed = [progressSet applyToString:abs selectedRanges:whole inSelection:NO lineEnding:nil cancellation:nil];
+        BOOL inOrder = YES;
+        for (NSUInteger i = 1; i < ruleReports.count; i++) {
+            NSUInteger a = [ruleReports[i - 1][0] unsignedIntegerValue], b = [ruleReports[i][0] unsignedIntegerValue];
+            inOrder = inOrder && [ruleReports[i][1] isEqual:@4] && (b == a ? [ruleReports[i][2] doubleValue] >= [ruleReports[i - 1][2] doubleValue] : (b == a + 1 && [ruleReports[i - 1][2] isEqual:@1.0]));
+        }
+        Check([progressed.string isEqualToString:unprogressed.string] && [progressed.counts isEqual:unprogressed.counts] && [progressed.counts isEqual:@[@1000, @0, @0, @1000]],
+              @"progress does not change a multiple replacement");
+        Check(inOrder && [ruleReports.firstObject[0] isEqual:@0] && [ruleReports.lastObject isEqual:@[@3, @4, @1.0]] && ruleReports.count == 2 * (1000 / 256 + 1) + 2
+              && [ruleReports containsObject:@[@1, @4, @1.0]] && [ruleReports containsObject:@[@2, @4, @1.0]], [@"a multiple replacement reports its progress: " stringByAppendingString:ruleReports.description]);
+        __block BOOL setCancelSeen = NO, setReportedAfterCancel = NO;
+        __block NSUInteger setPolls = 0;
+        [progressSet applyToString:abs selectedRanges:whole inSelection:NO lineEnding:nil cancellation:^BOOL { setPolls++; return NO; }];
+        NSUInteger allSetPolls = setPolls;
+        for (NSUInteger after = 0; after < allSetPolls; after++) {
+            setCancelSeen = NO;
+            setPolls = 0;
+            TSRegexMultipleReplaceResult *cancelled = [progressSet applyToString:abs selectedRanges:whole inSelection:NO lineEnding:nil
+                                                                    cancellation:^BOOL { return setCancelSeen = setCancelSeen || ++setPolls > after; }
+                                                                        progress:^(NSUInteger index, NSUInteger count, double fraction) { setReportedAfterCancel = setReportedAfterCancel || setCancelSeen; }];
+            Check(!cancelled && setCancelSeen, @"a multiple replacement can be cancelled while it reports its progress");
+        }
+        Check(!setReportedAfterCancel, @"nothing is reported once a multiple replacement is cancelled");
+
         // Every regular expression option of a file is used and written again; comparison options the panel does not
         // show are ignored (user's decision, 2026-11-12).
         NSString *literalFile = @"{\"replacements\":[{\"findString\":\"a.b\",\"replacementString\":\"X\",\"usesRegularExpression\":true},{\"findString\":\"^q\",\"replacementString\":\"Q\",\"usesRegularExpression\":true}],"
