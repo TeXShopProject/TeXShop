@@ -516,16 +516,16 @@ else
 // Zoom to Content and Zoom to Content Width (TSContentZoom.h), for the active part of the preview.
 - (NSToolbarItem *)contentZoomToolbarItem
 {
-    NSArray *labels = TSContentZoomLabels(), *symbols = TSContentZoomSymbols();
+    NSArray *names = TSContentZoomLabels(), *symbols = TSContentZoomSymbols();
     NSMutableArray *images = [NSMutableArray array];
     for (NSUInteger i = 0; i < symbols.count; i++)
-        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:labels[i]]];
+        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:names[i]] ?: [NSImage new]];
     NSToolbarItemGroup *group = [NSToolbarItemGroup groupWithItemIdentifier:kContentZoomKKTID images:images
-        selectionMode:NSToolbarItemGroupSelectionModeMomentary labels:labels target:self action:@selector(zoomPreviewToContent:)];
+        selectionMode:NSToolbarItemGroupSelectionModeMomentary labels:names target:self action:@selector(zoomPreviewToContent:)];
     // Kept as separate buttons: AppKit would size them by their labels and fold them into a menu.
     group.controlRepresentation = NSToolbarItemGroupControlRepresentationExpanded;
-    group.label = group.paletteLabel = labels[0];
-    for (NSUInteger i = 0; i < group.subitems.count; i++) group.subitems[i].toolTip = labels[i];
+    group.label = group.paletteLabel = names[0];
+    for (NSUInteger i = 0; i < group.subitems.count; i++) group.subitems[i].toolTip = names[i];
     return group;
 }
 

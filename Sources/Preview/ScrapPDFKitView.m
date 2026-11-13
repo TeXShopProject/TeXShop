@@ -465,7 +465,7 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
                          TSExperimentText(@"ExperimentZoomIn", @"Zoom In")] arrayByAddingObjectsFromArray:TSContentZoomLabels()];
     NSMutableArray *images = [NSMutableArray array];
     for (NSUInteger i = 0; i < symbols.count; i++)
-        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:labels[i]]];
+        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:labels[i]] ?: [NSImage new]];
     NSToolbarItemGroup *group = [NSToolbarItemGroup groupWithItemIdentifier:TSExperimentZoomToolbarID images:images
         selectionMode:NSToolbarItemGroupSelectionModeMomentary labels:labels target:self action:@selector(experimentZoom:)];
     // Kept as separate buttons: AppKit would size them by their labels and fold them into a menu.

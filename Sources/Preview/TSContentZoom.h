@@ -85,19 +85,21 @@ static inline NSArray<NSDictionary *> *TSContentZoomParts(PDFView *view)
     NSRect area = TSContentVisibleArea(view);
     NSPoint middle = [view convertPoint:NSMakePoint(NSMidX(area), NSMidY(area)) fromView:clip];
     PDFPage *page = [view pageForPoint:middle nearest:YES];
+    // One page or one row at a time: PDFKit also places pages that are not shown there.
+    NSArray<PDFPage *> *shown = view.visiblePages;
+    if (page && shown.count && ![shown containsObject:page]) page = view.currentPage;
     if (!page) return @[];
     PDFDisplayBox box = view.displayBox;
-    NSMutableArray *pages = [NSMutableArray arrayWithObject:page];
+    NSMutableArray<PDFPage *> *pages = [NSMutableArray arrayWithObject:page];
     if (view.displayMode == kPDFDisplayTwoUp || view.displayMode == kPDFDisplayTwoUpContinuous) {
-        // The page beside it shares its row.
-        NSRect row = [view convertRect:[page boundsForBox:box] fromPage:page];
-        NSUInteger index = [view.document indexForPage:page];
-        for (NSInteger other = (NSInteger)index - 1; other <= (NSInteger)index + 1; other += 2) {
-            if (other < 0 || other >= (NSInteger)view.document.pageCount) continue;
+        // The page beside it in its row: pages pair from the first one, or from the second one
+        // when the first is shown alone as a cover. The direction only swaps their sides.
+        NSInteger index = (NSInteger)[view.document indexForPage:page];
+        NSInteger first = view.displaysAsBook ? 1 : 0;
+        NSInteger other = index < first ? -1 : ((index - first) % 2 == 0 ? index + 1 : index - 1);
+        if (other >= 0 && other < (NSInteger)view.document.pageCount) {
             PDFPage *beside = [view.document pageAtIndex:other];
-            NSRect frame = [view convertRect:[beside boundsForBox:box] fromPage:beside];
-            CGFloat shared = MIN(NSMaxY(row), NSMaxY(frame)) - MAX(NSMinY(row), NSMinY(frame));
-            if (shared > MIN(NSHeight(row), NSHeight(frame)) / 2) [pages addObject:beside];
+            if (beside && (!shown.count || [shown containsObject:beside])) [pages addObject:beside];
         }
     }
     NSMutableArray *parts = [NSMutableArray array];
@@ -115,7 +117,9 @@ static inline NSRect TSContentZoomRectInView(PDFView *view, NSArray<NSDictionary
 {
     NSRect content = NSZeroRect;
     for (NSDictionary *part in parts) {
-        NSRect rect = [view convertRect:[part[@"rect"] rectValue] fromPage:part[@"page"]];
+        PDFPage *page = part[@"page"];
+        if (!page) continue;
+        NSRect rect = [view convertRect:[part[@"rect"] rectValue] fromPage:page];
         content = NSIsEmptyRect(content) ? rect : NSUnionRect(content, rect);
     }
     return content;
