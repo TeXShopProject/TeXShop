@@ -7,7 +7,10 @@
 //            enclosing view, which cuts it off;
 //   OVERLAP  two controls draw over each other;
 //   FOCUS    an input field's focus ring has less than 3 points of room inside
-//            the window or beside the controls and scroll views next to it.
+//            the window or beside the controls and scroll views next to it;
+//   UNEVEN   an input field that wraps has more room above two lines of its
+//            text than below, or, between a scroll view and the window edge,
+//            is further from one than from the other.
 // Each control is drawn on its own with cacheDisplayInRect: to find the pixels it
 // draws. Resizable windows are checked again at their smallest size. Nothing is
 // ordered on screen and AppKit defaults stay in memory.
@@ -328,12 +331,74 @@ static void CheckFocusRings(NSView *root, NSString *where, NSArray<Ink *> *inks)
     }
 }
 
+// An input field that wraps its text, like the console's, shows two lines with
+// the same room above the first line's box (ascender to descender) as below
+// the second's, as the field editor lays them out. When it sits between a
+// scroll view above and the window edge below, it is as far from each.
+static const CGFloat EvenTolerance = 0.5;
+static void CheckEvenMargins(NSView *root, NSString *where, NSArray<Ink *> *inks) {
+    NSWindow *window = root.window;
+    if (window.contentView != root) return;
+    NSMutableArray<NSView *> *scrolls = [NSMutableArray array];
+    CollectScrollViews(root, scrolls);
+    for (Ink *ink in inks) {
+        if (![ink.view isKindOfClass:NSTextField.class]) continue;
+        NSTextField *field = (NSTextField *)ink.view;
+        NSTextFieldCell *cell = field.cell;
+        if (!field.isEditable || !cell.wraps || cell.usesSingleLineMode) continue;
+        // Two lines of text inside the field.
+        BOOL enabled = field.enabled; NSString *value = field.stringValue;
+        field.enabled = YES; field.stringValue = @"";
+        // The first time a window's field editor edits more than one line, it lays
+        // them out 1 point closer than afterwards and than the field draws them;
+        // measure the lines as they are from the second time on.
+        if ([window makeFirstResponder:field] && [field.currentEditor isKindOfClass:NSTextView.class]) {
+            NSTextView *warm = (NSTextView *)field.currentEditor;
+            [warm insertText:@"Hxgy\u2028Hxgy" replacementRange:NSMakeRange(0, warm.string.length)];
+            [warm.layoutManager ensureLayoutForTextContainer:warm.textContainer];
+            [window makeFirstResponder:nil]; field.stringValue = @"";
+        }
+        if (![window makeFirstResponder:field] || ![field.currentEditor isKindOfClass:NSTextView.class]) { field.enabled = enabled; continue; }
+        NSTextView *editor = (NSTextView *)field.currentEditor;
+        [editor insertText:@"Hxgy Hxgy" replacementRange:NSMakeRange(0, editor.string.length)];
+        NSLayoutManager *lm = editor.layoutManager; [lm ensureLayoutForTextContainer:editor.textContainer];
+        NSFont *font = [editor.textStorage attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL] ?: field.font;
+        NSMutableArray<NSNumber *> *baselines = [NSMutableArray array];
+        [lm enumerateLineFragmentsForGlyphRange:NSMakeRange(0, lm.numberOfGlyphs) usingBlock:^(NSRect rect, NSRect used, NSTextContainer *c, NSRange glyphs, BOOL *stop) {
+            NSPoint baseline = NSMakePoint(0, NSMinY(rect) + [lm locationForGlyphAtIndex:glyphs.location].y);
+            [baselines addObject:@([field convertPoint:NSMakePoint(editor.textContainerOrigin.x, editor.textContainerOrigin.y + baseline.y) fromView:editor].y)];
+        }];
+        [window makeFirstResponder:nil];
+        field.stringValue = value; field.enabled = enabled;
+        if (baselines.count == 2) {
+            // The field is flipped: y grows downwards.
+            CGFloat top = baselines[0].doubleValue - font.ascender, bottom = NSHeight(field.bounds) - (baselines[1].doubleValue - font.descender);
+            if (fabs(top - bottom) > EvenTolerance)
+                Report([NSString stringWithFormat:@"UNEVEN %@ %@ has %.2f points above two lines of text and %.2f below", where, Describe(field), top, bottom]);
+        }
+        // Between a scroll view above and the window edge below.
+        NSRect f = [root convertRect:field.bounds fromView:field];
+        NSView *above = nil; CGFloat aboveY = CGFLOAT_MAX;
+        for (NSView *scroll in scrolls) {
+            NSRect r = [root convertRect:scroll.bounds fromView:scroll];
+            if (NSMinY(r) >= NSMaxY(f) - 0.5 && NSMinX(r) < NSMaxX(f) && NSMaxX(r) > NSMinX(f) && NSMinY(r) < aboveY) { above = scroll; aboveY = NSMinY(r); }
+        }
+        BOOL lowest = YES;
+        for (Ink *other in inks) if (other != ink && !NSIsEmptyRect(other.drawn) && NSMinY(other.drawn) < NSMinY(f)) lowest = NO;
+        if (above && lowest) {
+            CGFloat gapAbove = aboveY - NSMaxY(f), gapBelow = NSMinY(f) - NSMinY(root.bounds);
+            if (fabs(gapAbove - gapBelow) > EvenTolerance)
+                Report([NSString stringWithFormat:@"UNEVEN %@ %@ is %.1f points below the scroll view above it but %.1f above the window edge", where, Describe(field), gapAbove, gapBelow]);
+        }
+    }
+}
+
 static void CheckRoot(NSView *root, NSString *where) {
     NSMutableArray<Ink *> *inks = [NSMutableArray array];
     NSMutableArray<NSTabView *> *tabViews = [NSMutableArray array];
     [root layoutSubtreeIfNeeded];
     Collect(root, root, where, inks, tabViews);
-    if (!automaticBezel) { CheckGeometry(root, where, inks); CheckFocusRings(root, where, inks); }
+    if (!automaticBezel) { CheckGeometry(root, where, inks); CheckFocusRings(root, where, inks); CheckEvenMargins(root, where, inks); }
     // Each tab that is not selected, chosen as a person would choose it.
     for (NSTabView *tabs in tabViews) {
         NSTabViewItem *selected = tabs.selectedTabViewItem;
@@ -344,7 +409,7 @@ static void CheckRoot(NSView *root, NSString *where) {
             NSMutableArray<Ink *> *page = [NSMutableArray array];
             NSString *tab = [NSString stringWithFormat:@"%@ tab \"%@\"", where, item.label];
             Collect(item.view, root, tab, page, [NSMutableArray array]);
-            if (!automaticBezel) { CheckGeometry(root, tab, page); CheckFocusRings(root, tab, page); }
+            if (!automaticBezel) { CheckGeometry(root, tab, page); CheckFocusRings(root, tab, page); CheckEvenMargins(root, tab, page); }
         }
         if (selected) [tabs selectTabViewItem:selected];
     }
@@ -408,5 +473,5 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
     }}
     if (problems) { printf("FAIL: %d problems\n", problems); return 1; }
-    printf("PASS: text, controls and pop-up choices are whole, inside their windows and apart, and input fields have room for their focus rings, in %lu windows and views of %lu localized interfaces (also with the automatic toolbar bezel)\n", (unsigned long)roots / 2, (unsigned long)entries.count);
+    printf("PASS: text, controls and pop-up choices are whole, inside their windows and apart, input fields have room for their focus rings, and wrapping fields have even margins, in %lu windows and views of %lu localized interfaces (also with the automatic toolbar bezel)\n", (unsigned long)roots / 2, (unsigned long)entries.count);
 } return 0; }

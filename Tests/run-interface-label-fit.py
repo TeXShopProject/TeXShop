@@ -16,6 +16,9 @@ InterfaceLabelFit.m that
   * no two controls draw over each other;
   * each input field has 3 points of room for its focus ring inside the
     window and beside the controls and scroll views next to it;
+  * an input field that wraps its text has as much room above two lines of
+    text as below them, and one between a scroll view and the window edge
+    (the console's) is as far from both;
   * a resizable window still does all this at its smallest size.
 
 Both compiled variants of a nib are checked where both exist; the application
