@@ -695,16 +695,10 @@
                                     <action selector="changeAutoComplete:" target="-1" id="946"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="コマンド補完" id="539">
-                                <menu key="submenu" title="コマンド補完" id="540">
-                                    <items>
-                                        <menuItem title="用語を追加" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
-                                            <connections>
-                                                <action selector="registerForCommandCompletion:" target="-1" id="545"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="コマンド補完リストに追加" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
+                                <connections>
+                                    <action selector="registerForCommandCompletion:" target="-1" id="545"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="折り返し表示" id="654">
                                 <menu key="submenu" title="折り返し表示" id="655">

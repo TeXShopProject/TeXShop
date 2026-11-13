@@ -693,16 +693,10 @@
                                     <action selector="changeAutoComplete:" target="-1" id="940"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Completare" id="539">
-                                <menu key="submenu" title="Completare" id="540">
-                                    <items>
-                                        <menuItem title="Adaugă un Cuvânt" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
-                                            <connections>
-                                                <action selector="registerForCommandCompletion:" target="-1" id="545"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="Adăugați la lista de completare a comenzilor" keyEquivalent="W" id="541" identifier="TSShortcut.registerForCommandCompletion:.0">
+                                <connections>
+                                    <action selector="registerForCommandCompletion:" target="-1" id="545"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Împarte rândurile" id="654">
                                 <menu key="submenu" title="Împarte rândurile" id="655">
