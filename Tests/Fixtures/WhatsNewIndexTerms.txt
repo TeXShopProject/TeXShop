@@ -352,7 +352,6 @@ close
 closed
 closing
 code
-collin's
 color
 colored
 coloring
@@ -844,6 +843,7 @@ i
 i'll
 icon
 icons
+icu
 idea
 identifiers
 identifies
