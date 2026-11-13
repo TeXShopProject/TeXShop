@@ -2415,6 +2415,8 @@ The panel uses the regular expressions of ICU, which Apple's own programs use, r
 \item \verb|\h|, \verb|\K|, \verb|\g<name>| and \verb|(?m)| do not mean what they mean in OgreKit.
 \end{itemize}
 
+The small button with a question mark next to Regular expression opens the Regular Expression Reference. Its three tabs show the syntax of a find pattern, the syntax of a replacement in the style chosen among the options, and the differences from OgreKit; a link at the bottom opens the ICU User Guide on the web. Dragged away from the panel, the reference stays open as a window of its own.
+
 The replacement can be written in two ways, chosen among the options. In the ICU syntax, the default, \verb|$0| is the whole match and \verb|$1|, \verb|$2|, \ldots\ are the groups, as in CotEditor; \verb|\$| is a dollar sign. A \TeX\ formula such as \verb|$x$| is therefore written \verb|\$x\$| in a replacement. In the OgreKit syntax, \verb|\0| or \verb|\&| is the whole match, \verb|\1|, \verb|\2|, \ldots\ are the groups, \verb|\g<name>| is a named group, and \verb|$| is an ordinary character. In both, a backslash in the replacement is written twice: \verb|\\section| gives \verb|\section|.
 
 For example, to change \verb|\section{Intro}| into \verb|\section*{Intro}|, turn on Regular expression, search for \verb|\\section\{([^}]*)\}| and replace with \verb|\\section*{$1}|. To find characters that are not ASCII, search for \verb|[^[:ascii:]]|.
