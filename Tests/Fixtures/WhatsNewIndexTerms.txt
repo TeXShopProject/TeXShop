@@ -123,6 +123,7 @@ adjustment
 adjusts
 adobe
 adoc
+advanced
 advantage
 affect
 affected
@@ -451,7 +452,6 @@ critical
 crlf
 cropbox
 cropped
-crucial
 ctan
 curiously
 curly
@@ -648,6 +648,7 @@ explanations
 explicit
 export
 expression
+expressions
 extend
 extended
 extends
@@ -1217,7 +1218,6 @@ numberingcorrection
 numbers
 numerals
 numeric
-objects
 obsolete
 occurrences
 occurs

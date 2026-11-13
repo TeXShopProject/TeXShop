@@ -204,7 +204,7 @@ for language in ('en','ko'):
     assert not (ROOT/f'Resources/Interfaces/{language}.lproj/TeXShopHelp/pgs/basic_preferences1.htm').exists(),'Obsolete duplicate preferences help page'
 assert 'Transparency settings bring up a full Color Well' not in manual,'Opacity uses a slider in the manual'
 
-warning='A note with a yellow warning symbol explains changes to the spell-checking method, new-PDF zoom or default encoding when relevant. Auto Save requires a restart. The standard Find Panel and Find Bar switch immediately; switching to or from OgreKit requires a restart.'
+warning='A note with a yellow warning symbol explains changes to the spell-checking method, new-PDF zoom or default encoding when relevant. Auto Save requires a restart. The standard Find Panel, the Find Bar and the Advanced Find panel switch immediately; switching to or from OgreKit requires a restart.'
 for filename in ('Documentation/Releases/5.60.md','website/release-notes.html','Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'):
     text=(ROOT/filename).read_text()
     assert warning in text,('Current release warning copies agree',filename)

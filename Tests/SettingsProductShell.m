@@ -359,16 +359,19 @@ int main(int argc,char **argv){@autoreleasepool{
  SaveNote(shell,spellingNote.superview.superview,argc>2?@(argv[2]):nil,@"spelling");
  NSMutableDictionary *replacement=[[TSIsolatedAppKitDefaults dictionaryRepresentation]mutableCopy];
  replacement[AutoSaveEnabledKey]=@(![TSIsolatedAppKitDefaults boolForKey:AutoSaveEnabledKey]);
- replacement[FindMethodKey]=@([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==2?0:2);
+ NSInteger findMethodBefore=[TSIsolatedAppKitDefaults integerForKey:FindMethodKey];
+ replacement[FindMethodKey]=@(findMethodBefore==2?0:2); // a profile keeps the find method (plan §5), whatever the file says
  replacement[EncodingKey]=@"MacOSRoman";replacement[PdfMagnificationKey]=@1.75;
  NSFont *profileFont=[NSFont userFontOfSize:12];
  TSPreferenceProfile *profile=[[TSPreferenceProfile alloc]initWithProfile:replacement documentFont:[NSArchiver archivedDataWithRootObject:profileFont] registeredDefaults:factory];
  Check(profile!=nil,@"Actual profile proposal is valid");[owner applyPreferenceProfile:profile font:profileFont];
  Check(spellingNote.hidden,@"Actual profile replacement clears a visible transient warning");
  for(NSArray *entry in @[@[TSSettingsCategoryPreview,@"row.catalog.preview.0.2"],@[TSSettingsCategoryDocuments,@"row.catalog.documents.0.0"]])Check(Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Profile application never creates transient zoom or encoding warnings");
- NSArray *restartRows=@[@[TSSettingsCategoryDocuments,@"row.catalog.documents.1.0"],@[TSSettingsCategoryEditor,@"row.catalog.editor.7.0"]];
+ Check([TSIsolatedAppKitDefaults integerForKey:FindMethodKey]==findMethodBefore,@"A profile keeps the find method");
+ Check(Find(Find([shell viewForCategoryIdentifier:TSSettingsCategoryEditor],@"row.catalog.editor.7.0"),@"settings.change-note").hidden,@"A profile never shows the find method's restart warning");
+ NSArray *restartRows=@[@[TSSettingsCategoryDocuments,@"row.catalog.documents.1.0"]];
  for(NSArray *entry in restartRows)Check(!Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Actual profile differences show restart warnings");
- for(NSArray *entry in restartRows){[shell selectCategoryIdentifier:entry[0]];SaveNote(shell,Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),argc>2?@(argv[2]):nil,[entry[0]isEqual:TSSettingsCategoryDocuments]?@"autosave-restart":@"find-restart");}
+ for(NSArray *entry in restartRows){[shell selectCategoryIdentifier:entry[0]];SaveNote(shell,Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),argc>2?@(argv[2]):nil,@"autosave-restart");}
  [shell selectCategoryIdentifier:TSSettingsCategoryGeneral];[shell endSession];[shell beginSession];
  for(NSArray *entry in restartRows)Check(!Find(Find([shell viewForCategoryIdentifier:entry[0]],entry[1]),@"settings.change-note").hidden,@"Profile restart warnings survive category transition and reopening");
  CheckOwnerPresentation(shell);

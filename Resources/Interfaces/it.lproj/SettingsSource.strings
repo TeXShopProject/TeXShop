@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-"1080.title" = "Pannello di ricerca OgreKit";
+"1080.title" = "Pannello di ricerca OgreKit (obsoleto)";
+"adv-Fd-Pnl.title" = "Pannello di ricerca avanzata";
 "14.title" = "Font del Documento";
 "19.title" = "Posizione Finestra Sorgente";
 "236.title" = "All'avvio";

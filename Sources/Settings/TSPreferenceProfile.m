@@ -27,6 +27,14 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
     dispatch_once(&once, ^{
         keys = [NSSet setWithArray:@[
             AcceptFirstMouseKey,
+            @"AdvancedFindClosesWhenDone",
+            @"AdvancedFindHistory",
+            @"AdvancedFindHistoryLimit",
+            @"AdvancedFindInSelection",
+            @"AdvancedFindOptions",
+            @"AdvancedFindReplaceHistory",
+            @"AdvancedFindReplacementSyntax",
+            @"AdvancedFindWraps",
             AggressiveTrashAUXKey,
             AltPathKey,
             AlternateEngineKey,
@@ -317,12 +325,14 @@ BOOL TSPreferenceProfilePreservesKey(TSPreferenceKey key)
 {
     if ([key hasPrefix:@"SU"] || [key hasPrefix:@"NSWindow Frame "] ||
         [key hasPrefix:@"NSToolbar Configuration "] || [key hasPrefix:@"NSSplitView Subview Frames "] ||
-        [key hasPrefix:@"TSSettingsUI"]) return YES;
+        [key hasPrefix:@"TSSettingsUI"] ||
+        [key hasPrefix:@"AdvancedFind"]) return YES; // the Advanced Find panel's own state and recent strings
     return [@[
         TSProfileKeyAppleLanguages,
         ConsoleWindowNameKey,
         DocumentSplitWindowPositionKey,
         DocumentWindowNameKey,
+        FindMethodKey, // a matter of taste, not of the TeX engine: a profile keeps the find method (plan §5)
         FullSplitSourceFractionKey,
         HtmlWindowNameKey,
         LastStyNameKey,

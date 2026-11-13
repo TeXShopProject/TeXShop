@@ -1,0 +1,17 @@
+/* Messages of the Advanced Find engine (Sources/Find), shown by the find panel and the multiple replacement window. */
+
+/* A plain-text or regular expression find string has nothing to find. */
+"The find string is empty." = "查找文本为空。";
+
+/* Searching in the selection while nothing is selected. */
+"There is no selection to search in." = "没有可在其中查找的所选内容。";
+
+/* A multiple replacement definition (CotEditor .cotrpl) lacks its rules or its settings. */
+"The replacement definition has no replacements or settings." = "替换定义中没有规则或设置。";
+
+/* A rule of a multiple replacement definition is not valid. */
+"A replacement of the definition is not valid." = "替换定义中有无效的规则。";
+
+/* The settings of a multiple replacement definition are not valid. */
+"The settings of the replacement definition are not valid." = "替换定义的设置无效。";
+

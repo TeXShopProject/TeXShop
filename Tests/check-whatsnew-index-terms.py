@@ -13,9 +13,8 @@ import subprocess
 import sys
 
 MUTATIONS = {
-    # A word of an older release is pushed out (nstextview and started, #25 audit; started went with the macro
-    # editor's coloring in 2026-11, so crucial stands for it).
-    'word-pushed-out': lambda terms: terms - {'crucial'},
+    # A word is pushed out (nstextview and started were, #25 audit and the Advanced Find panel); the word must be in the fixture.
+    'word-pushed-out': lambda terms: terms - {'advanced'},
     # A new word comes in.
     'word-added': lambda terms: terms | {'else'},
 }
@@ -37,7 +36,9 @@ for line in listing.splitlines():
     elif page == PAGE and line.strip():
         terms.add(line.strip())
 if args.mutation:
-    terms = MUTATIONS[args.mutation](terms)
+    mutated = MUTATIONS[args.mutation](terms)
+    assert mutated != terms, f'the mutation {args.mutation} changes nothing'
+    terms = mutated
 if args.update:
     fixture.write_text(''.join(t + '\n' for t in sorted(terms)), encoding='utf-8')
     print(f'updated {fixture.name}: {len(terms)} words')

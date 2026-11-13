@@ -2703,12 +2703,21 @@
         "column": 0
       },
       {
+        "key": "adv-Fd-Pnl.tag",
+        "view": "settings.581",
+        "kind": "matrix",
+        "property": "tag",
+        "value": 3,
+        "row": 2,
+        "column": 0
+      },
+      {
         "key": "1080.tag",
         "view": "settings.581",
         "kind": "matrix",
         "property": "tag",
         "value": 2,
-        "row": 2,
+        "row": 3,
         "column": 0
       },
       {
@@ -3547,9 +3556,10 @@
           "eIA-mh-q2u.title": "Line Number Size",
           "odm-Dy-TNW.title": "Large",
           "ypQ-Gc-HUa.title": "Always",
-          "1080.title": "OgreKit Find Panel",
+          "1080.title": "OgreKit Find Panel (Legacy)",
           "3eF-XA-ahc.title": "Do not check selected parameters",
-          "32.title": "Remember last position on close"
+          "32.title": "Remember last position on close",
+          "adv-Fd-Pnl.title": "Advanced Find Panel"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Theme Title",
@@ -5642,12 +5652,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Advanced Find Panel",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit Find Panel",
-          "row": 2,
+          "value": "OgreKit Find Panel (Legacy)",
+          "row": 3,
           "column": 0
         },
         {
@@ -6812,9 +6831,10 @@
           "eIA-mh-q2u.title": "Größe der Zeilennummern",
           "odm-Dy-TNW.title": "Groß",
           "ypQ-Gc-HUa.title": "Immer",
-          "1080.title": "OgreKit Suchmaske",
+          "1080.title": "OgreKit Suchmaske (veraltet)",
           "3eF-XA-ahc.title": "Ausgewählte Parameter nicht überprüfen",
-          "32.title": "Merke zuletzt benutzte Position"
+          "32.title": "Merke zuletzt benutzte Position",
+          "adv-Fd-Pnl.title": "Erweiterte Suchmaske"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titel des Themas",
@@ -8907,12 +8927,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Erweiterte Suchmaske",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit Suchmaske",
-          "row": 2,
+          "value": "OgreKit Suchmaske (veraltet)",
+          "row": 3,
           "column": 0
         },
         {
@@ -10077,9 +10106,10 @@
           "eIA-mh-q2u.title": "Tamaño de números de línea",
           "odm-Dy-TNW.title": "Grande",
           "ypQ-Gc-HUa.title": "Siempre",
-          "1080.title": "Panel de búsquedas de OgreKit",
+          "1080.title": "Panel de búsquedas de OgreKit (heredado)",
           "3eF-XA-ahc.title": "No comprobar parámetros",
-          "32.title": "Conservar la última posición"
+          "32.title": "Conservar la última posición",
+          "adv-Fd-Pnl.title": "Panel de búsqueda avanzada"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Título del tema",
@@ -12172,12 +12202,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Panel de búsqueda avanzada",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Panel de búsquedas de OgreKit",
-          "row": 2,
+          "value": "Panel de búsquedas de OgreKit (heredado)",
+          "row": 3,
           "column": 0
         },
         {
@@ -13342,9 +13381,10 @@
           "eIA-mh-q2u.title": "Taille du numéro de ligne",
           "odm-Dy-TNW.title": "Grand",
           "ypQ-Gc-HUa.title": "Toujours",
-          "1080.title": "Palette OgreKit",
+          "1080.title": "Palette OgreKit (ancienne)",
           "3eF-XA-ahc.title": "Ne pas vérifier les paramètres",
-          "32.title": "Conserver la dernière position"
+          "32.title": "Conserver la dernière position",
+          "adv-Fd-Pnl.title": "Palette de recherche avancée"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titre du thème",
@@ -15437,12 +15477,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Palette de recherche avancée",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Palette OgreKit",
-          "row": 2,
+          "value": "Palette OgreKit (ancienne)",
+          "row": 3,
           "column": 0
         },
         {
@@ -16607,9 +16656,10 @@
           "eIA-mh-q2u.title": "Dimensione numeri di linea",
           "odm-Dy-TNW.title": "Grande",
           "ypQ-Gc-HUa.title": "Sempre",
-          "1080.title": "Pannello di ricerca OgreKit",
+          "1080.title": "Pannello di ricerca OgreKit (obsoleto)",
           "3eF-XA-ahc.title": "Non controllare i parametri selezionati",
-          "32.title": "Conserva l'ultima posizione"
+          "32.title": "Conserva l'ultima posizione",
+          "adv-Fd-Pnl.title": "Pannello di ricerca avanzata"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Titolo del tema",
@@ -18702,12 +18752,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Pannello di ricerca avanzata",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Pannello di ricerca OgreKit",
-          "row": 2,
+          "value": "Pannello di ricerca OgreKit (obsoleto)",
+          "row": 3,
           "column": 0
         },
         {
@@ -19872,9 +19931,10 @@
           "eIA-mh-q2u.title": "行番号の文字サイズ",
           "odm-Dy-TNW.title": "大",
           "ypQ-Gc-HUa.title": "すべて",
-          "1080.title": "OgreKit検索パネル",
+          "1080.title": "OgreKit検索パネル（レガシー）",
           "3eF-XA-ahc.title": "特定のコマンド引数を対象外にする",
-          "32.title": "閉じたときの位置を保存"
+          "32.title": "閉じたときの位置を保存",
+          "adv-Fd-Pnl.title": "詳細検索パネル"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "テーマのタイトル",
@@ -21967,12 +22027,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "詳細検索パネル",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit検索パネル",
-          "row": 2,
+          "value": "OgreKit検索パネル（レガシー）",
+          "row": 3,
           "column": 0
         },
         {
@@ -23137,9 +23206,10 @@
           "eIA-mh-q2u.title": "행 번호 크기",
           "odm-Dy-TNW.title": "크게",
           "ypQ-Gc-HUa.title": "항상",
-          "1080.title": "OgreKit 찾기 패널",
+          "1080.title": "OgreKit 찾기 패널(레거시)",
           "3eF-XA-ahc.title": "파라미터 부분 제외",
-          "32.title": "닫을 때 위치 저장"
+          "32.title": "닫을 때 위치 저장",
+          "adv-Fd-Pnl.title": "고급 찾기 패널"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": " 테마 타이틀",
@@ -25232,12 +25302,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "고급 찾기 패널",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit 찾기 패널",
-          "row": 2,
+          "value": "OgreKit 찾기 패널(레거시)",
+          "row": 3,
           "column": 0
         },
         {
@@ -26402,9 +26481,10 @@
           "eIA-mh-q2u.title": "Grootte van regelnummers",
           "odm-Dy-TNW.title": "Groot",
           "ypQ-Gc-HUa.title": "Altijd",
-          "1080.title": "OgreKit zoekpanee",
+          "1080.title": "OgreKit zoekpaneel (verouderd)",
           "3eF-XA-ahc.title": "Geselecteerde parameters overslaan",
-          "32.title": "Onthoud laatste positie bij sluiten"
+          "32.title": "Onthoud laatste positie bij sluiten",
+          "adv-Fd-Pnl.title": "Geavanceerd zoekpaneel"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -28497,12 +28577,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Geavanceerd zoekpaneel",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit zoekpanee",
-          "row": 2,
+          "value": "OgreKit zoekpaneel (verouderd)",
+          "row": 3,
           "column": 0
         },
         {
@@ -29667,9 +29756,10 @@
           "eIA-mh-q2u.title": "Tamanho dos números de linha",
           "odm-Dy-TNW.title": "Grande",
           "ypQ-Gc-HUa.title": "Sempre",
-          "1080.title": "Painel de pesquisa OgreKit",
+          "1080.title": "Painel de pesquisa OgreKit (legado)",
           "3eF-XA-ahc.title": "Ignorar os parâmetros selecionados",
-          "32.title": "Lembrar-se da última posição"
+          "32.title": "Lembrar-se da última posição",
+          "adv-Fd-Pnl.title": "Painel de pesquisa avançada"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -31762,12 +31852,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Painel de pesquisa avançada",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Painel de pesquisa OgreKit",
-          "row": 2,
+          "value": "Painel de pesquisa OgreKit (legado)",
+          "row": 3,
           "column": 0
         },
         {
@@ -32932,9 +33031,10 @@
           "eIA-mh-q2u.title": "Tamanho do número da linha",
           "odm-Dy-TNW.title": "Grande",
           "ypQ-Gc-HUa.title": "Sempre",
-          "1080.title": "Painel de localizar OgreKit",
+          "1080.title": "Painel de localizar OgreKit (legado)",
           "3eF-XA-ahc.title": "Não verificar parâmetros de alguns comandos",
-          "32.title": "Lembrar-se da última posição"
+          "32.title": "Lembrar-se da última posição",
+          "adv-Fd-Pnl.title": "Painel de localizar avançado"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Título do tema",
@@ -35027,12 +35127,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Painel de localizar avançado",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Painel de localizar OgreKit",
-          "row": 2,
+          "value": "Painel de localizar OgreKit (legado)",
+          "row": 3,
           "column": 0
         },
         {
@@ -36197,9 +36306,10 @@
           "eIA-mh-q2u.title": "Dimensiunea numerelor de linie",
           "odm-Dy-TNW.title": "Mare",
           "ypQ-Gc-HUa.title": "Întotdeauna",
-          "1080.title": "Panoul de căutare OgreKit",
+          "1080.title": "Panoul de căutare OgreKit (vechi)",
           "3eF-XA-ahc.title": "Omite parametrii selectați",
-          "32.title": "Înregistrează ultima poziție la închidere"
+          "32.title": "Înregistrează ultima poziție la închidere",
+          "adv-Fd-Pnl.title": "Panou de căutare avansată"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "Style Title",
@@ -38292,12 +38402,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "Panou de căutare avansată",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "Panoul de căutare OgreKit",
-          "row": 2,
+          "value": "Panoul de căutare OgreKit (vechi)",
+          "row": 3,
           "column": 0
         },
         {
@@ -39462,9 +39581,10 @@
           "eIA-mh-q2u.title": "行号字体大小",
           "odm-Dy-TNW.title": "大",
           "ypQ-Gc-HUa.title": "始终",
-          "1080.title": "OgreKit查找面板",
+          "1080.title": "OgreKit查找面板（旧版）",
           "3eF-XA-ahc.title": "不检查命令参数",
-          "32.title": "关闭时记住上一次位置"
+          "32.title": "关闭时记住上一次位置",
+          "adv-Fd-Pnl.title": "高级查找面板"
         },
         "SettingsThemeName": {
           "PHE-fW-LeB.title": "主题标题",
@@ -41557,12 +41677,21 @@
           "index": 2
         },
         {
+          "key": "adv-Fd-Pnl.title",
+          "view": "settings.581",
+          "kind": "matrix",
+          "property": "title",
+          "value": "高级查找面板",
+          "row": 2,
+          "column": 0
+        },
+        {
           "key": "1080.title",
           "view": "settings.581",
           "kind": "matrix",
           "property": "title",
-          "value": "OgreKit查找面板",
-          "row": 2,
+          "value": "OgreKit查找面板（旧版）",
+          "row": 3,
           "column": 0
         },
         {

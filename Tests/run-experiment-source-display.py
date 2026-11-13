@@ -720,7 +720,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-experiment-display-') as tmp:
     tmp = Path(tmp)
     (tmp / 'probe.m').write_text(program, encoding='latin1')
     (tmp / 'keys.m').write_text('#import <Cocoa/Cocoa.h>\n' + marker_keys + '\nNSColor *InvisibleColor;\nBOOL atLeastMonterey = YES, atLeastSonoma = YES;\n', encoding='latin1')
-    sources = [tmp / 'probe.m', tmp / 'keys.m', source_file(root, 'TSLayoutManager.m'), source_file(root, 'NoodleLineNumberView.m'),
+    sources = [tmp / 'probe.m', tmp / 'keys.m', source_file(root, 'TSLayoutManager.m'), source_file(root, 'TSAdvancedFindHighlights.m'), source_file(root, 'NoodleLineNumberView.m'),
                source_file(root, 'NoodleLineNumberMarker.m'), source_file(root, 'NSText-Extras.m'),
                *sorted((root / 'Sources/Syntax').glob('*.m')), source_file(root, 'TSMacroContentKind.m')]
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', *include_args(root),

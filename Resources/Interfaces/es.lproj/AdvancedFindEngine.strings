@@ -1,0 +1,17 @@
+/* Messages of the Advanced Find engine (Sources/Find), shown by the find panel and the multiple replacement window. */
+
+/* A plain-text or regular expression find string has nothing to find. */
+"The find string is empty." = "El texto de búsqueda está vacío.";
+
+/* Searching in the selection while nothing is selected. */
+"There is no selection to search in." = "No hay ninguna selección en la que buscar.";
+
+/* A multiple replacement definition (CotEditor .cotrpl) lacks its rules or its settings. */
+"The replacement definition has no replacements or settings." = "La definición de reemplazo no contiene reglas ni ajustes.";
+
+/* A rule of a multiple replacement definition is not valid. */
+"A replacement of the definition is not valid." = "La definición de reemplazo contiene una regla no válida.";
+
+/* The settings of a multiple replacement definition are not valid. */
+"The settings of the replacement definition are not valid." = "Los ajustes de la definición de reemplazo no son válidos.";
+
