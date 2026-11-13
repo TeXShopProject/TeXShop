@@ -89,6 +89,15 @@ MUTATIONS = {
     'a disabled rule is not reported': ('TSRegexMultipleReplace.m', '        if (!rule.enabled) {\n            ruleDone(index);\n', '        if (!rule.enabled) {\n'),
     'an unusable rule is not reported': ('TSRegexMultipleReplace.m', '            errors[@(index)] = error;\n            ruleDone(index);\n', '            errors[@(index)] = error;\n'),
     'a rule reports the next index': ('TSRegexMultipleReplace.m', '            progress(index, ruleCount, fraction);', '            progress(index + 1, ruleCount, fraction);'),
+    'line feeds are kept for any line ending': ('TSRegexTextFind.m', " || (c == '\\n' && !keepsLineFeeds)", ''),
+    'line separators are kept': ('TSRegexTextFind.m', ' || c == 0x2028', ''),
+    'look-alikes in the text are ignored': ('TSRegexFindPattern.m', '[quick addObject:(word->_others || word->_astralOthers) && ', '[quick addObject:NO && '),
+    'look-alikes outside the BMP are ignored': ('TSRegexFindPattern.m', 'quick->_astralOthers = astral.count ? astral : nil;', 'quick->_astralOthers = nil;'),
+    'literal matches are not checked': ('TSRegexFindPattern.m', 'NSRange found = [string rangeOfString:word options:NSAnchoredSearch range:NSMakeRange(at, limit - at)];', 'NSRange found = NSMakeRange(at, quick->_length);'),
+    'quick words may hold any character': ('TSRegexFindPattern.m', '        if (!TSIsQuickCharacter(u[i]))\n            return nil;\n', ''),
+    'decomposable words are quick': ('TSRegexFindPattern.m', "    if (length == 0 || [word rangeOfCharacterFromSet:NSCharacterSet.nonBaseCharacterSet].location != NSNotFound\n        || [word.decomposedStringWithCanonicalMapping compare:word options:NSLiteralSearch] != NSOrderedSame)", "    if (length == 0 || [word rangeOfCharacterFromSet:NSCharacterSet.nonBaseCharacterSet].location != NSNotFound)"),
+    'the skip goes one too far': ('TSRegexFindPattern.m', 'quick->_skip[u[i] & 0xFF] = (uint32_t)(length - 1 - i);', 'quick->_skip[u[i] & 0xFF] = (uint32_t)(length - i);'),
+    'equal lengths are taken as no change': ('TSRegexTextFind.m', '(scopeText.length != scope.length || [scopeText compare:[string substringWithRange:scope] options:NSLiteralSearch] != NSOrderedSame)', 'scopeText.length != scope.length'),
 }
 
 

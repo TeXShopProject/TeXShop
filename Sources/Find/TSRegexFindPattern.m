@@ -3,10 +3,159 @@
 
 static NSString *const TSYenSign = @"¥";
 
+#pragma mark - Plain text found quickly
+
+// NSString's search without NSLiteralSearch finds a word where the text has the same characters, or characters with
+// the same canonical decomposition. For a word with no decomposable character and no combining mark, a match of the
+// second kind needs a character in the text whose decomposition is free of marks and made of the word's own characters
+// (U+212A KELVIN SIGN for K, U+FA03 for 糖, a Hangul syllable for its jamo). Where the text has none of them, every match
+// is a literal match: the literal matches are found quickly, and each is checked by the same search, anchored there.
+
+/// The characters whose canonical decomposition has no combining mark, with that decomposition, by the decomposition's
+/// first UTF-16 unit.
+static NSDictionary<NSNumber *, NSArray<NSArray *> *> *TSUnmarkedDecompositions(void)
+{
+    static NSDictionary *table;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        NSMutableDictionary<NSNumber *, NSMutableArray<NSArray *> *> *byFirst = [NSMutableDictionary dictionary];
+        NSCharacterSet *decomposable = NSCharacterSet.decomposableCharacterSet, *marks = NSCharacterSet.nonBaseCharacterSet;
+        for (UTF32Char c = 0; c <= 0x10FFFF; c++) {
+            if ((c & 0xFFFF) == 0 && ![decomposable hasMemberInPlane:(uint8_t)(c >> 16)]) {
+                c += 0xFFFF;
+                continue;
+            }
+            if (![decomposable longCharacterIsMember:c])
+                continue;
+            UTF32Char little = NSSwapHostIntToLittle(c);
+            NSString *character = [[NSString alloc] initWithBytes:&little length:4 encoding:NSUTF32LittleEndianStringEncoding];
+            NSString *decomposition = character.decomposedStringWithCanonicalMapping;
+            if (decomposition.length == 0 || [decomposition rangeOfCharacterFromSet:marks].location != NSNotFound
+                || [decomposition compare:character options:NSLiteralSearch] == NSOrderedSame)
+                continue;
+            NSNumber *first = @([decomposition characterAtIndex:0]);
+            if (!byFirst[first])
+                byFirst[first] = [NSMutableArray array];
+            [byFirst[first] addObject:@[@(c), decomposition]];
+        }
+        table = byFirst;
+    });
+    return table;
+}
+
+/// The characters a quick word may hold: ASCII but CR, Latin-1 and the spacing modifier letters, CJK ideographs and
+/// symbols, kana but the sound marks, and full-width forms. NSString's search joins some other characters to their
+/// neighbors in its own way: U+0937 U+200D is found as U+0937 U+0600 (macOS 27.2).
+static inline BOOL TSIsQuickCharacter(unichar c)
+{
+    return (c < 0x0300 && c != '\r') || (c >= 0x3000 && c <= 0x3098) || (c >= 0x309D && c <= 0x30FF) || (c >= 0x3400 && c <= 0x4DBF)
+        || (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0xFF01 && c <= 0xFF9D);
+}
+
+/// A word that can be found quickly: only quick characters, none decomposable.
+@interface TSQuickWord : NSObject {
+@public
+    NSUInteger _length;
+    const unichar *_units;
+    uint32_t _skip[256];
+    /// The characters that a match of the word without NSLiteralSearch could hold in its place: a bitmap of the
+    /// BMP, and the others; nil when there are none.
+    NSData *_others;
+    NSSet<NSNumber *> *_astralOthers;
+}
+@property (nonatomic, readonly) NSData *unitData;
+@end
+
+@implementation TSQuickWord
+
++ (nullable TSQuickWord *)quickWordWithString:(NSString *)word
+{
+    NSUInteger length = word.length;
+    if (length == 0 || [word rangeOfCharacterFromSet:NSCharacterSet.nonBaseCharacterSet].location != NSNotFound
+        || [word.decomposedStringWithCanonicalMapping compare:word options:NSLiteralSearch] != NSOrderedSame)
+        return nil;
+    NSMutableData *units = [NSMutableData dataWithLength:length * sizeof(unichar)];
+    unichar *u = units.mutableBytes;
+    [word getCharacters:u range:NSMakeRange(0, length)];
+    NSMutableIndexSet *own = [NSMutableIndexSet indexSet];
+    for (NSUInteger i = 0; i < length; i++) {
+        if (!TSIsQuickCharacter(u[i]))
+            return nil;
+        [own addIndex:u[i]];
+    }
+    TSQuickWord *quick = [[TSQuickWord alloc] init];
+    quick->_length = length;
+    quick->_unitData = units;
+    quick->_units = u;
+    for (NSUInteger i = 0; i < 256; i++)
+        quick->_skip[i] = (uint32_t)length;
+    for (NSUInteger i = 0; i + 1 < length; i++)
+        quick->_skip[u[i] & 0xFF] = (uint32_t)(length - 1 - i);
+    __block NSMutableData *others = nil;
+    NSMutableSet<NSNumber *> *astral = [NSMutableSet set];
+    NSDictionary<NSNumber *, NSArray<NSArray *> *> *table = TSUnmarkedDecompositions();
+    [own enumerateIndexesUsingBlock:^(NSUInteger first, BOOL *stop) {
+        for (NSArray *entry in table[@(first)]) {
+            NSString *decomposition = entry[1];
+            BOOL allOwn = YES;
+            for (NSUInteger i = 0; i < decomposition.length && allOwn; i++)
+                allOwn = [own containsIndex:[decomposition characterAtIndex:i]];
+            if (!allOwn)
+                continue;
+            UTF32Char c = [entry[0] unsignedIntValue];
+            if (c > 0xFFFF) {
+                [astral addObject:entry[0]];
+            } else {
+                if (!others)
+                    others = [NSMutableData dataWithLength:0x10000 / 8];
+                ((uint8_t *)others.mutableBytes)[c >> 3] |= (uint8_t)(1u << (c & 7));
+            }
+        }
+    }];
+    quick->_others = others;
+    quick->_astralOthers = astral.count ? astral : nil;
+    return quick;
+}
+
+/// Whether the characters hold one that a match of the word without NSLiteralSearch could hold in its place.
+- (BOOL)hasOthersIn:(const unichar *)chars length:(NSUInteger)length
+{
+    const uint8_t *bits = _others.bytes;
+    for (NSUInteger i = 0; i < length; i++) {
+        unichar c = chars[i];
+        if (bits && (bits[c >> 3] & (1u << (c & 7))))
+            return YES;
+        if (_astralOthers && CFStringIsSurrogateHighCharacter(c) && i + 1 < length && CFStringIsSurrogateLowCharacter(chars[i + 1])
+            && [_astralOthers containsObject:@(CFStringGetLongCharacterForSurrogatePair(c, chars[i + 1]))])
+            return YES;
+    }
+    return NO;
+}
+
+/// The first literal match in chars[from - base ..< limit - base], or NSNotFound (Boyer-Moore-Horspool).
+- (NSUInteger)literalMatchIn:(const unichar *)chars base:(NSUInteger)base from:(NSUInteger)from limit:(NSUInteger)limit
+{
+    NSUInteger m = _length;
+    unichar last = _units[m - 1];
+    for (NSUInteger i = from; i + m <= limit; ) {
+        unichar c = chars[i - base + m - 1];
+        if (c == last && memcmp(chars + (i - base), _units, (m - 1) * sizeof(unichar)) == 0)
+            return i;
+        i += _skip[c & 0xFF];
+    }
+    return NSNotFound;
+}
+
+@end
+
+#pragma mark -
+
 @interface TSRegexFindPattern ()
 @property (nonatomic, readonly, nullable) NSRegularExpression *regex;
 /// The words to look for in plain text; one word unless whitespace delimits them.
 @property (nonatomic, readonly, copy) NSArray<NSString *> *words;
+/// For each word, its quick form, or NSNull; empty unless the comparison is the plain one.
+@property (nonatomic, readonly, copy) NSArray *quickWords;
 @end
 
 @implementation TSRegexFindPattern
@@ -86,6 +235,7 @@ static NSString *const TSYenSign = @"¥";
         // A pattern read literally has no groups, whatever it looks like.
         _captureGroupNames = (options & TSRegexFindIgnoreMetacharacters) ? @[] : [TSRegexFindPattern groupNamesInPattern:normalized];
         _words = @[];
+        _quickWords = @[];
     } else {
         _captureGroupNames = @[];
         if (options & TSRegexFindDelimitByWhitespace) {
@@ -102,6 +252,11 @@ static NSString *const TSYenSign = @"¥";
         } else {
             _words = @[normalized];
         }
+        NSMutableArray *quickWords = [NSMutableArray array];
+        if ([TSRegexFindPattern compareOptions:options] == 0)
+            for (NSString *word in _words)
+                [quickWords addObject:[TSQuickWord quickWordWithString:word] ?: NSNull.null];
+        _quickWords = quickWords;
     }
     return self;
 }
@@ -201,6 +356,26 @@ static NSString *const TSYenSign = @"¥";
     return found;
 }
 
+/// The first match of a quick word, as rangeOfWord finds it.
+- (NSRange)rangeOfQuickWord:(TSQuickWord *)quick word:(NSString *)word inString:(NSString *)string
+                      chars:(const unichar *)chars base:(NSUInteger)base from:(NSUInteger)location limit:(NSUInteger)limit
+{
+    if (location >= limit)
+        return NSMakeRange(NSNotFound, 0);
+    for (NSUInteger from = location; ; ) {
+        NSUInteger at = [quick literalMatchIn:chars base:base from:from limit:limit];
+        if (at == NSNotFound)
+            return NSMakeRange(NSNotFound, 0);
+        NSRange found = [string rangeOfString:word options:NSAnchoredSearch range:NSMakeRange(at, limit - at)];
+        if (found.location != NSNotFound) {
+            if (found.length == 0 || NSMaxRange(found) > limit)
+                return NSMakeRange(NSNotFound, 0);
+            return found;
+        }
+        from = at + 1;
+    }
+}
+
 - (void)enumerateTextualMatchesInString:(NSString *)string
                                   range:(NSRange)range
                            cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
@@ -210,9 +385,34 @@ static NSString *const TSYenSign = @"¥";
     BOOL wholeWord = (self.options & TSRegexFindWholeWord) != 0;
     NSUInteger limit = NSMaxRange(range);
     NSUInteger count = self.words.count;
+    // The characters of the range, for the quick words that can be used in it.
+    const unichar *chars = CFStringGetCharactersPtr((__bridge CFStringRef)string);
+    NSUInteger base = 0;
+    NSMutableData *copy = nil;
+    NSMutableArray *quick = [NSMutableArray arrayWithCapacity:count];
+    for (NSUInteger i = 0; i < count; i++) {
+        TSQuickWord *word = i < self.quickWords.count ? self.quickWords[i] : nil;
+        if (![word isKindOfClass:[TSQuickWord class]]) {
+            [quick addObject:NSNull.null];
+            continue;
+        }
+        if (!chars) {
+            copy = [NSMutableData dataWithLength:range.length * sizeof(unichar)];
+            [string getCharacters:copy.mutableBytes range:range];
+            chars = copy.bytes;
+            base = range.location;
+        }
+        [quick addObject:(word->_others || word->_astralOthers) && [word hasOthersIn:chars + (range.location - base) length:range.length] ? NSNull.null : word];
+    }
+    NSRange (^find)(NSUInteger, NSUInteger) = ^NSRange(NSUInteger i, NSUInteger from) {
+        TSQuickWord *word = quick[i];
+        if ([word isKindOfClass:[TSQuickWord class]])
+            return [self rangeOfQuickWord:word word:self.words[i] inString:string chars:chars base:base from:from limit:limit];
+        return [self rangeOfWord:self.words[i] inString:string from:from limit:limit compare:compare];
+    };
     NSRange next[count];
     for (NSUInteger i = 0; i < count; i++)
-        next[i] = [self rangeOfWord:self.words[i] inString:string from:range.location limit:limit compare:compare];
+        next[i] = find(i, range.location);
     NSUInteger location = range.location;
     NSUInteger steps = 0;
     while (YES) {
@@ -232,7 +432,7 @@ static NSString *const TSYenSign = @"¥";
         NSRange found = next[best];
         if (wholeWord && ![self isWholeWord:found inString:string]) {
             // The next candidate of the same word can overlap the rejected one.
-            next[best] = [self rangeOfWord:self.words[best] inString:string from:found.location + 1 limit:limit compare:compare];
+            next[best] = find(best, found.location + 1);
             continue;
         }
         BOOL stop = NO;
@@ -242,7 +442,7 @@ static NSString *const TSYenSign = @"¥";
         location = NSMaxRange(found);
         for (NSUInteger i = 0; i < count; i++)
             if (next[i].location != NSNotFound && next[i].location < location)
-                next[i] = [self rangeOfWord:self.words[i] inString:string from:location limit:limit compare:compare];
+                next[i] = find(i, location);
     }
 }
 

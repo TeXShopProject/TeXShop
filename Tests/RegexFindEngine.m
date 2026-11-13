@@ -132,6 +132,129 @@ static void CompareWithFoundation(NSString *find, NSString *text, NSUInteger cou
         failures++;
 }
 
+/// Plain text found as TSRegexFindPattern found it before quick words: NSString's search without options, the
+/// earliest of the words winning and the longer breaking a tie, a match that is empty or beyond the range ending it.
+static NSArray<NSValue *> *PlainMatchesBySearch(NSArray<NSString *> *words, NSString *string, NSRange range)
+{
+    NSUInteger limit = NSMaxRange(range), count = words.count;
+    NSRange (^find)(NSString *, NSUInteger) = ^NSRange(NSString *word, NSUInteger location) {
+        if (location >= limit)
+            return NSMakeRange(NSNotFound, 0);
+        NSRange found = [string rangeOfString:word options:0 range:NSMakeRange(location, limit - location)];
+        return found.location == NSNotFound || found.length == 0 || NSMaxRange(found) > limit ? NSMakeRange(NSNotFound, 0) : found;
+    };
+    NSRange next[count];
+    for (NSUInteger i = 0; i < count; i++)
+        next[i] = find(words[i], range.location);
+    NSMutableArray<NSValue *> *matches = [NSMutableArray array];
+    for (;;) {
+        NSUInteger best = NSNotFound;
+        for (NSUInteger i = 0; i < count; i++)
+            if (next[i].location != NSNotFound && (best == NSNotFound || next[i].location < next[best].location
+                                                   || (next[i].location == next[best].location && next[i].length > next[best].length)))
+                best = i;
+        if (best == NSNotFound)
+            return matches;
+        NSRange found = next[best];
+        [matches addObject:[NSValue valueWithRange:found]];
+        for (NSUInteger i = 0; i < count; i++)
+            if (next[i].location != NSNotFound && next[i].location < NSMaxRange(found))
+                next[i] = find(words[i], NSMaxRange(found));
+    }
+}
+
+/// Plain text is found quickly where it can be, and always where NSString's search finds it: random texts of
+/// characters that decompose, compose, join or extend others, words taken from them, and random ranges.
+static void ComparePlainSearch(NSUInteger count, uint32_t seed)
+{
+    unichar lone[] = {0xD800, 0xDC00};
+    unichar nel = 0x0085;
+    NSArray<NSString *> *pieces = @[@"a", @"b", @"K", @";", @"`", @" ", @"\n", @"\r", @"\r\n", @"\t", @"e", @"́", @"é", @"A", @"̊", @"Å",
+        @"Å", @"K", @";", @"`", @"糖", @"糖", @"か", @"゙", @"が", @"ᄀ", @"ᅡ", @"ᆨ", @"가",
+        @"‍", @"‌", @"ｶ", @"ﾞ", @"؀", @"क", @"्", @"ष", @"☺", @"️", @"\U0001F600", @"\U0002F800",
+        @"丽", @"·", @"·", @"x", @"y", @"­", @"เ", @"ก", @"ำ", @"ا", @"ل", @"क्ष",
+        @"\U0001F1EF", @"\U0001F1F5", @"\U0001F3FB", @"❤", @"　", @"゛", @"，", @"ʼ", @" ", @" ",
+        [NSString stringWithCharacters:&nel length:1], [NSString stringWithCharacters:lone length:1], [NSString stringWithCharacters:lone + 1 length:1]];
+    // Words that can be found quickly, in texts that also hold what can match them otherwise or join them to a neighbor.
+    NSArray<NSString *> *plain = @[@"a", @"b", @"K", @";", @"`", @" ", @"\n", @"\t", @"e", @"\u00E9", @"A", @"\u00C5", @"x", @"y", @"\u7CD6",
+        @"\u4E3D", @"\u00B7", @"\u304B", @"\uFF76", @"\u3000", @"\uFF0C", @"\u02BC", @"\u00A0", @"\u00AD"];
+    __block uint32_t state = seed;
+    uint32_t (^next)(uint32_t) = ^uint32_t(uint32_t n) {
+        state = state * 1664525u + 1013904223u;
+        return (state >> 8) % n;
+    };
+    NSUInteger mismatches = 0, quick = 0;
+    for (NSUInteger k = 0; k < count; k++) {
+        // Some texts only ASCII, which NSString keeps in 8 bits; some mostly the characters of quick words.
+        NSUInteger mode = next(4), alphabet = mode == 0 ? 10 : pieces.count;
+        NSMutableString *text = [NSMutableString string];
+        NSUInteger length = 1 + next(40);
+        for (NSUInteger j = 0; j < length; j++)
+            [text appendString:mode == 1 && next(4) ? plain[next((uint32_t)plain.count)] : pieces[next((uint32_t)alphabet)]];
+        NSString *string = [text copy];
+        NSString *find;
+        if (next(2)) {
+            NSUInteger start = next((uint32_t)string.length), size = 1 + next(4);
+            find = [string substringWithRange:NSMakeRange(start, MIN(size, string.length - start))];
+        } else {
+            NSMutableString *word = [NSMutableString string];
+            for (NSUInteger j = 1 + next(3); j > 0; j--)
+                [word appendString:mode == 1 ? plain[next((uint32_t)plain.count)] : pieces[next((uint32_t)alphabet)]];
+            find = word;
+        }
+        BOOL delimits = next(5) == 0;
+        NSError *error = nil;
+        TSRegexFindPattern *pattern = [[TSRegexFindPattern alloc] initWithFindString:find options:delimits ? TSRegexFindDelimitByWhitespace : 0 error:&error];
+        if (!pattern)
+            continue;
+        NSMutableArray<NSString *> *words = [NSMutableArray array];
+        for (NSString *word in delimits ? [find componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] : @[find])
+            if (word.length > 0 && ![words containsObject:word])
+                [words addObject:word];
+        NSUInteger location = next((uint32_t)string.length + 1);
+        NSRange range = NSMakeRange(location, next((uint32_t)(string.length - location) + 1));
+        NSMutableArray<NSValue *> *found = [NSMutableArray array];
+        [pattern enumerateMatchesInString:string range:range cancellation:nil usingBlock:^(NSRange match, NSTextCheckingResult *result, BOOL *stop) {
+            [found addObject:[NSValue valueWithRange:match]];
+        }];
+        NSArray<NSValue *> *expected = PlainMatchesBySearch(words, string, range);
+        quick += found.count;
+        if (![found isEqual:expected] && mismatches++ < 5)
+            printf("FAIL plain search of %s in %s %s: got %s, NSString finds %s\n", Shown(find), Shown(string), NSStringFromRange(range).UTF8String,
+                   found.description.UTF8String, expected.description.UTF8String);
+    }
+    if (mismatches || quick == 0)
+        failures++;
+}
+
+/// Line endings are put in as a replacement of every CRLF, CR, LF, NEL, line separator and paragraph separator gives them.
+static void CompareLineEndings(NSUInteger count, uint32_t seed)
+{
+    unichar nel = 0x0085;
+    NSArray<NSString *> *pieces = @[@"a", @"b", @"あ", @"\n", @"\r", @"\r\n", @" ", @" ", [NSString stringWithCharacters:&nel length:1], @"\n\r", @"\U0001F600"];
+    NSArray<NSString *> *lineEndings = @[@"\n", @"\r", @"\r\n", @" ", @"$1\\"];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\r\\n|[\\r\\n\\u0085\\u2028\\u2029]" options:0 error:NULL];
+    uint32_t state = seed;
+    NSUInteger mismatches = 0;
+    for (NSUInteger k = 0; k < count; k++) {
+        NSMutableString *text = [NSMutableString string];
+        state = state * 1664525u + 1013904223u;
+        for (NSUInteger j = (state >> 24) % 8; j > 0; j--) {
+            state = state * 1664525u + 1013904223u;
+            [text appendString:pieces[(state >> 16) % pieces.count]];
+        }
+        state = state * 1664525u + 1013904223u;
+        NSString *lineEnding = lineEndings[(state >> 16) % lineEndings.count];
+        NSString *expected = [regex stringByReplacingMatchesInString:text options:0 range:NSMakeRange(0, text.length)
+                                                         withTemplate:[NSRegularExpression escapedTemplateForString:lineEnding]];
+        NSString *actual = TSRegexStringByReplacingLineEndings(text, lineEnding);
+        if (![actual isEqualToString:expected] && mismatches++ < 5)
+            printf("FAIL line endings %s in %s: got %s, expected %s\n", Shown(lineEnding), Shown(text), Shown(actual), Shown(expected));
+    }
+    if (mismatches)
+        failures++;
+}
+
 int main(void)
 {
     @autoreleasepool {
@@ -175,6 +298,9 @@ int main(void)
         // keeps the next character as it stands. `\\u` is only a `u`.
         ExpectICU(@"(a)", R, @"\\\U0001F600$1|\\\U00020BB7\U0001F600$1$1|\\\U0001F600\\$1|\\\U0001F600\\\\$1|\\あ$1", @"a",
                   @"\U0001F600$1|\U00020BB7\U0001F600$1a|\U0001F600\\a|\U0001F600\\$1|あa");
+        CompareLineEndings(20000, 5);
+        ComparePlainSearch(60000, 11);
+        ComparePlainSearch(60000, 12);
         CompareWithFoundation(@"(a)(b)?(c)", @"xacy abcz ac", 3000, 1, NO);
         CompareWithFoundation(@"(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)", @"-abcdefghijkl-", 3000, 7, NO);
         CompareWithFoundation(@"(a)(b)?(c)", @"xacy abcz ac", 3000, 11, YES);

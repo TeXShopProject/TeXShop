@@ -3,6 +3,18 @@
 
 NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEnding)
 {
+    // Most replaced texts have no line ending but the one asked for, and reading them is far quicker than replacing.
+    BOOL keepsLineFeeds = [lineEnding isEqualToString:@"\n"];
+    CFIndex length = (CFIndex)string.length;
+    CFStringInlineBuffer buffer;
+    CFStringInitInlineBuffer((__bridge CFStringRef)string, &buffer, CFRangeMake(0, length));
+    BOOL changes = NO;
+    for (CFIndex i = 0; i < length && !changes; i++) {
+        UniChar c = CFStringGetCharacterFromInlineBuffer(&buffer, i);
+        changes = c == '\r' || c == 0x0085 || c == 0x2028 || c == 0x2029 || (c == '\n' && !keepsLineFeeds);
+    }
+    if (!changes)
+        return [string copy];
     static NSRegularExpression *lineEndings;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
@@ -190,7 +202,7 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
         if (scopeValue != self.scopeRanges.lastObject)
             report(searched, total);
         // Literal comparison catches changes between canonically equivalent texts.
-        if (count > 0 && [scopeText compare:[string substringWithRange:scope] options:NSLiteralSearch] != NSOrderedSame)
+        if (count > 0 && (scopeText.length != scope.length || [scopeText compare:[string substringWithRange:scope] options:NSLiteralSearch] != NSOrderedSame))
             [replacements addObject:[[TSRegexFindReplacement alloc] initWithRange:scope string:scopeText]];
         if (self.inSelection) {
             [selectedRanges addObject:[NSValue valueWithRange:NSMakeRange((NSUInteger)((NSInteger)scope.location + offset), scopeText.length)]];
