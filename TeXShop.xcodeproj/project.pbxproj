@@ -180,6 +180,14 @@
 		4078818A0519249A006979EA /* TSEncodingSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AA2B8203C79AF800000009 /* TSEncodingSupport.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818B0519249A006979EA /* TSMacroEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62303C7FAE800000009 /* TSMacroEditor.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62503C7FAE800000009 /* TSMacroMenuController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A2C500010000000000000012 /* TSSyntaxScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000011 /* TSSyntaxScanner.m */; };
+		A2C500010000000000000015 /* TSSyntaxTeXOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000014 /* TSSyntaxTeXOptions.m */; };
+		A2C500010000000000000018 /* TSSyntaxTeXScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000017 /* TSSyntaxTeXScanner.m */; };
+		A2C50001000000000000001B /* TSSyntaxXMLScanning.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C50001000000000000001A /* TSSyntaxXMLScanning.m */; };
+		A2C50001000000000000001E /* TSSyntaxHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C50001000000000000001D /* TSSyntaxHighlighter.m */; };
+		A2C500010000000000000032 /* TSSyntaxAppleScriptScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000031 /* TSSyntaxAppleScriptScanner.m */; };
+		A2C500010000000000000035 /* TSSyntaxMacroContentScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000034 /* TSSyntaxMacroContentScanner.m */; };
+		A2C500010000000000000005 /* TSSyntaxColorScheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A2C500010000000000000004 /* TSSyntaxColorScheme.m */; };
 		A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */ = {isa = PBXBuildFile; fileRef = A2A0000100000000000000C2 /* TSMacroContentKind.m */; };
 		4078818D0519249A006979EA /* TSMacroTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62B03C7FB0200000009 /* TSMacroTreeNode.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		4078818E0519249A006979EA /* TSMacroOutlineController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4077C62F03C7FB1E00000009 /* TSMacroOutlineController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -659,6 +667,23 @@
 		4077C62403C7FAE800000009 /* TSMacroMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroMenuController.h; sourceTree = "<group>"; };
 		4077C62503C7FAE800000009 /* TSMacroMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMacroMenuController.m; sourceTree = "<group>"; };
 		A2A000010000000000000001 /* TSMacroSelection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroSelection.h; sourceTree = "<group>"; };
+		A2C500010000000000000010 /* TSSyntaxScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxScanner.h; sourceTree = "<group>"; };
+		A2C500010000000000000011 /* TSSyntaxScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxScanner.m; sourceTree = "<group>"; };
+		A2C500010000000000000013 /* TSSyntaxTeXOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxTeXOptions.h; sourceTree = "<group>"; };
+		A2C500010000000000000014 /* TSSyntaxTeXOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxTeXOptions.m; sourceTree = "<group>"; };
+		A2C500010000000000000016 /* TSSyntaxTeXScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxTeXScanner.h; sourceTree = "<group>"; };
+		A2C500010000000000000017 /* TSSyntaxTeXScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxTeXScanner.m; sourceTree = "<group>"; };
+		A2C500010000000000000019 /* TSSyntaxXMLScanning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxXMLScanning.h; sourceTree = "<group>"; };
+		A2C50001000000000000001A /* TSSyntaxXMLScanning.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxXMLScanning.m; sourceTree = "<group>"; };
+		A2C50001000000000000001C /* TSSyntaxHighlighter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxHighlighter.h; sourceTree = "<group>"; };
+		A2C50001000000000000001D /* TSSyntaxHighlighter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxHighlighter.m; sourceTree = "<group>"; };
+		A2C500010000000000000030 /* TSSyntaxAppleScriptScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxAppleScriptScanner.h; sourceTree = "<group>"; };
+		A2C500010000000000000031 /* TSSyntaxAppleScriptScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxAppleScriptScanner.m; sourceTree = "<group>"; };
+		A2C500010000000000000033 /* TSSyntaxMacroContentScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxMacroContentScanner.h; sourceTree = "<group>"; };
+		A2C500010000000000000034 /* TSSyntaxMacroContentScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxMacroContentScanner.m; sourceTree = "<group>"; };
+		A2C500010000000000000002 /* TSSyntaxRole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxRole.h; sourceTree = "<group>"; };
+		A2C500010000000000000003 /* TSSyntaxColorScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSyntaxColorScheme.h; sourceTree = "<group>"; };
+		A2C500010000000000000004 /* TSSyntaxColorScheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSyntaxColorScheme.m; sourceTree = "<group>"; };
 		A2A0000100000000000000C1 /* TSMacroContentKind.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMacroContentKind.h; sourceTree = "<group>"; };
 		A2A0000100000000000000C2 /* TSMacroContentKind.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMacroContentKind.m; sourceTree = "<group>"; };
 		4077C62A03C7FB0200000009 /* TSMacroTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMacroTreeNode.h; sourceTree = "<group>"; };
@@ -1300,6 +1325,30 @@
 			path = Macros;
 			sourceTree = "<group>";
 		};
+		A2C500010000000000000001 /* Syntax */ = {
+			isa = PBXGroup;
+			children = (
+				A2C500010000000000000030 /* TSSyntaxAppleScriptScanner.h */,
+				A2C500010000000000000031 /* TSSyntaxAppleScriptScanner.m */,
+				A2C500010000000000000003 /* TSSyntaxColorScheme.h */,
+				A2C500010000000000000004 /* TSSyntaxColorScheme.m */,
+				A2C50001000000000000001C /* TSSyntaxHighlighter.h */,
+				A2C50001000000000000001D /* TSSyntaxHighlighter.m */,
+				A2C500010000000000000033 /* TSSyntaxMacroContentScanner.h */,
+				A2C500010000000000000034 /* TSSyntaxMacroContentScanner.m */,
+				A2C500010000000000000002 /* TSSyntaxRole.h */,
+				A2C500010000000000000010 /* TSSyntaxScanner.h */,
+				A2C500010000000000000011 /* TSSyntaxScanner.m */,
+				A2C500010000000000000013 /* TSSyntaxTeXOptions.h */,
+				A2C500010000000000000014 /* TSSyntaxTeXOptions.m */,
+				A2C500010000000000000016 /* TSSyntaxTeXScanner.h */,
+				A2C500010000000000000017 /* TSSyntaxTeXScanner.m */,
+				A2C500010000000000000019 /* TSSyntaxXMLScanning.h */,
+				A2C50001000000000000001A /* TSSyntaxXMLScanning.m */,
+			);
+			path = Syntax;
+			sourceTree = "<group>";
+		};
 		16B3298EA352468D9847E75E /* Panels */ = {
 			isa = PBXGroup;
 			children = (
@@ -1728,6 +1777,7 @@
 				4D96E83320E395C0F250DCAA /* Settings */,
 				25DD1CD6DFAF98FBE6AFC225 /* Shortcuts */,
 				2B831F948D7ED3A2FA006811 /* Sync */,
+				A2C500010000000000000001 /* Syntax */,
 				BAF32BAE67FB5165EE1435A9 /* ThirdParty */,
 				AEE62C6F00E71A95BA0EA6D8 /* Typesetting */,
 				F8ADDEB91E3D501662EC57A7 /* Utilities */,
@@ -2141,6 +2191,14 @@
 				4078818B0519249A006979EA /* TSMacroEditor.m in Sources */,
 				4078818C0519249A006979EA /* TSMacroMenuController.m in Sources */,
 				A2A0000100000000000000C3 /* TSMacroContentKind.m in Sources */,
+				A2C500010000000000000005 /* TSSyntaxColorScheme.m in Sources */,
+				A2C500010000000000000032 /* TSSyntaxAppleScriptScanner.m in Sources */,
+				A2C500010000000000000035 /* TSSyntaxMacroContentScanner.m in Sources */,
+				A2C500010000000000000012 /* TSSyntaxScanner.m in Sources */,
+				A2C500010000000000000015 /* TSSyntaxTeXOptions.m in Sources */,
+				A2C500010000000000000018 /* TSSyntaxTeXScanner.m in Sources */,
+				A2C50001000000000000001B /* TSSyntaxXMLScanning.m in Sources */,
+				A2C50001000000000000001E /* TSSyntaxHighlighter.m in Sources */,
 				4078818D0519249A006979EA /* TSMacroTreeNode.m in Sources */,
 				403649E4211BDA810086DDD1 /* TSPreferenceWindow.m in Sources */,
 				4078818E0519249A006979EA /* TSMacroOutlineController.m in Sources */,

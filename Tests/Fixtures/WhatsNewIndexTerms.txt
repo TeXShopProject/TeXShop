@@ -176,6 +176,7 @@ appeared
 appears
 apple
 apple's
+applescript
 apple’s
 application
 applications
@@ -713,6 +714,7 @@ following
 follows
 font
 fonts
+footnote
 for
 foreground
 forget
@@ -881,6 +883,7 @@ increasing
 indefinite
 indented
 independent
+index
 indicate
 indicator
 individual
@@ -952,7 +955,6 @@ japanese
 jis
 job
 jobs
-john
 jp
 jpeg
 juan
@@ -1294,7 +1296,6 @@ parsing
 part
 particular
 particularly
-partly
 parts
 party
 passages
@@ -1493,7 +1494,6 @@ require
 required
 requires
 reread
-rescan
 reserved
 reset
 resize
