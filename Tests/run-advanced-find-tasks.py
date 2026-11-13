@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from source_tree import include_args, source_file
+from source_tree import include_args, source_file, advanced_find_syntax_sources
 
 root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
@@ -82,7 +82,7 @@ def build(tmp, sources):
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-mmacosx-version-min=14.6', '-Wall', '-Wno-unused-parameter',
                     '-Wno-deprecated-declarations', '-Wno-deprecated-implementations', '-Wnullability-completeness', '-Werror=nullability-completeness',
                     '-I', str(sources), *include_args(root), '-I', str(root / 'Tests'), '-framework', 'Cocoa',
-                    str(root / 'Tests/AdvancedFindTasks.m'), str(tmp / 'keys.m'), *map(str, sorted(sources.glob('*.m'))),
+                    str(root / 'Tests/AdvancedFindTasks.m'), str(tmp / 'keys.m'), *map(str, sorted(sources.glob('*.m'))), *map(str, advanced_find_syntax_sources(root)),
                     '-o', str(probe)], check=True)
     return probe
 

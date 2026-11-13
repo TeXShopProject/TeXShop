@@ -13,7 +13,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from source_tree import include_args, source_file
+from source_tree import include_args, source_file, advanced_find_syntax_sources
 
 root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
@@ -156,14 +156,14 @@ def build(tmp, sources):
     (tmp / 'keys.m').write_text('#import <Cocoa/Cocoa.h>\n' + marker_keys + '\nNSColor *InvisibleColor;\nBOOL atLeastMonterey = YES, atLeastSonoma = YES;\n')
     probe = app / 'Contents/MacOS/probe'
     (tmp / 'routing.m').write_text(ROUTING.replace('METHODS', text_view_methods((sources / 'TSTextView.m').read_text(encoding='latin1'))))
-    finds = [str(p) for p in sorted(sources.glob('*.m')) if p.name not in ('TSLayoutManager.m', 'TSTextView.m')]
+    finds = [str(p) for p in sorted(sources.glob('*.m')) if p.name not in ('TSLayoutManager.m', 'TSTextView.m')] + list(map(str, advanced_find_syntax_sources(root)))
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-mmacosx-version-min=14.6', '-Wall', '-Wno-unused-parameter', '-Wno-unused-function',
                     '-Wno-undeclared-selector', '-I', str(sources), *include_args(root), '-I', str(root / 'Tests'), '-framework', 'Cocoa',
                     str(tmp / 'routing.m'), *finds, '-o', str(app / 'Contents/MacOS/routing')], check=True)
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-mmacosx-version-min=14.6', '-Wall', '-Wno-unused-parameter',
                     '-Wno-deprecated-declarations', '-I', str(sources), *include_args(root), '-I', str(root / 'Tests'),
                     '-framework', 'Cocoa', str(root / 'Tests/AdvancedFindPanel.m'), str(tmp / 'keys.m'),
-                    *map(str, sorted(p for p in sources.glob('*.m') if p.name != 'TSTextView.m')),
+                    *map(str, sorted(p for p in sources.glob('*.m') if p.name != 'TSTextView.m')), *map(str, advanced_find_syntax_sources(root)),
                     '-o', str(probe)], check=True)
     return probe
 

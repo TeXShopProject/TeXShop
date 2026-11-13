@@ -4,7 +4,7 @@ The document lifetime is replaced; the method and registration are read verbatim
 """
 from pathlib import Path
 import subprocess,tempfile,argparse
-from source_tree import include_args
+from source_tree import include_args, advanced_find_syntax_sources
 r=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--mutations',action='store_true');args=p.parse_args()
 s=(r/'Sources/Document/TSDocument.m').read_text();start=s.index('- (void)findInterfacePreferencesChanged:');method=s[start:s.index('\n}',start)+2]
@@ -59,7 +59,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-find-interface-')as tmp:
  d=Path(tmp);source=d/'probe.m';header=d/'TSFindInterface.h';original=(r/'Sources/Editor/TSFindInterface.h').read_text()
  def run(body=program,interface=original):
   source.write_text(body);header.write_text(interface)
-  subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-I',str(d),*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(source),str(r/'Sources/Settings/TSSettingsChangeNote.m'),str(r/'Sources/Settings/TSPrefPaneLayout.m'),str(r/'Sources/App/globals.m'),*map(str,sorted((r/'Sources/Find').glob('*.m'))),'-o',str(d/'probe')],check=True)
+  subprocess.run(['xcrun','clang','-fobjc-arc','-Wall','-Wextra','-Werror','-Wno-unused-parameter','-I',str(d),*include_args(r),'-I',str(r/'Tests'),'-framework','Cocoa',str(source),str(r/'Sources/Settings/TSSettingsChangeNote.m'),str(r/'Sources/Settings/TSPrefPaneLayout.m'),str(r/'Sources/App/globals.m'),*map(str,sorted((r/'Sources/Find').glob('*.m'))),*map(str,advanced_find_syntax_sources(r)),'-o',str(d/'probe')],check=True)
   results=[subprocess.run([str(d/'probe'),str(v)],capture_output=True,text=True,timeout=30)for v in [0,1,2]]
   return results
  for result in run():assert result.returncode==0,result.stderr;print(result.stdout,flush=True)

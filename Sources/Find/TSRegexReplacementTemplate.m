@@ -50,10 +50,13 @@ typedef NS_ENUM(NSInteger, TSReplacementTokenKind) {
     _groupNames = pattern.captureGroupNames;
     _numberOfCaptureGroups = pattern.numberOfCaptureGroups;
     NSString *normalized = [TSRegexFindPattern normalizedString:string options:pattern.options];
+    TSRegexReplacementSyntax readAs = syntax == TSRegexReplacementSyntaxOgreKit ? TSRegexReplacementSyntaxOgreKit : TSRegexReplacementSyntaxICU;
+    TSRegexFindOptions options = pattern.options;
+    NSUInteger groups = _numberOfCaptureGroups;
     _tokens = _literal ? @[[[TSReplacementToken alloc] initWithKind:TSReplacementTokenText text:normalized group:0]]
-             : syntax == TSRegexReplacementSyntaxOgreKit ? [TSRegexReplacementTemplate ogreKitTokensOfString:normalized]
-                                                         : [TSRegexReplacementTemplate icuTokensOfString:(pattern.options & TSRegexFindUnescapesReplacement) ? [TSRegexReplacementTemplate unescapedTemplate:normalized] : normalized
-                                                                                         numberOfCaptureGroups:_numberOfCaptureGroups];
+                       : TSTokensOfPieces(^(NS_NOESCAPE TSRegexReplacementPieceBlock block) {
+                             [TSRegexReplacementTemplate enumeratePiecesOfString:string syntax:readAs options:options numberOfCaptureGroups:groups usingBlock:block];
+                         });
     return self;
 }
 
@@ -101,153 +104,199 @@ static NSUInteger TSGroupEscapeLength(NSString *s, NSUInteger index, NSString *_
     return i + 1 - index;
 }
 
-+ (NSArray<TSReplacementToken *> *)ogreKitTokensOfString:(NSString *)s
+static NSString *TSCharacter(unichar c)
 {
-    NSMutableArray<TSReplacementToken *> *tokens = [NSMutableArray array];
-    NSMutableString *text = [NSMutableString string];
-    void (^flushText)(void) = ^{
-        if (text.length > 0) {
-            [tokens addObject:[[TSReplacementToken alloc] initWithKind:TSReplacementTokenText text:text group:0]];
-            [text setString:@""];
-        }
-    };
-    void (^addToken)(TSReplacementTokenKind, NSString *, NSUInteger) = ^(TSReplacementTokenKind kind, NSString *name, NSUInteger group) {
-        flushText();
-        [tokens addObject:[[TSReplacementToken alloc] initWithKind:kind text:name group:group]];
-    };
+    return [NSString stringWithCharacters:&c length:1];
+}
+
+/// As OgreKit reads it.
+static void TSOgreKitPieces(NSString *s, NS_NOESCAPE TSRegexReplacementPieceBlock block)
+{
     NSUInteger length = s.length;
     for (NSUInteger i = 0; i < length; ) {
         unichar c = [s characterAtIndex:i];
         if (c != '\\') {
-            [text appendFormat:@"%C", c];
+            block(TSRegexReplacementPieceText, NSMakeRange(i, 1), TSCharacter(c), 0);
             i++;
             continue;
         }
-        if (i + 1 >= length) // A lone backslash at the end stands for nothing, as in OgreKit.
+        if (i + 1 >= length) { // A lone backslash at the end stands for nothing, as in OgreKit.
+            block(TSRegexReplacementPieceTrailingBackslash, NSMakeRange(i, 1), @"", 0);
             break;
+        }
         unichar n = [s characterAtIndex:i + 1];
-        NSUInteger consumed = 2;
+        NSRange range = NSMakeRange(i, 2);
         if (TSIsDigit(n)) {
-            addToken(TSReplacementTokenGroup, @"", n - '0');
+            block(TSRegexReplacementPieceGroup, range, @"", n - '0');
         } else if (n == '&') {
-            addToken(TSReplacementTokenGroup, @"", 0);
+            block(TSRegexReplacementPieceGroup, range, @"", 0);
         } else if (n == '+') {
-            addToken(TSReplacementTokenLastGroup, @"", 0);
+            block(TSRegexReplacementPieceLastGroup, range, @"", 0);
         } else if (n == '`') {
-            addToken(TSReplacementTokenPrematch, @"", 0);
+            block(TSRegexReplacementPiecePrematch, range, @"", 0);
         } else if (n == '\'') {
-            addToken(TSReplacementTokenPostmatch, @"", 0);
+            block(TSRegexReplacementPiecePostmatch, range, @"", 0);
         } else if (n == '-') {
-            addToken(TSReplacementTokenSincePreviousMatch, @"", 0);
-        } else if (n == 't') {
-            [text appendString:@"\t"];
-        } else if (n == 'n') {
-            [text appendString:@"\n"];
-        } else if (n == 'r') {
-            [text appendString:@"\r"];
+            block(TSRegexReplacementPieceSincePreviousMatch, range, @"", 0);
+        } else if (n == 't' || n == 'n' || n == 'r') {
+            block(TSRegexReplacementPieceEscape, range, n == 't' ? @"\t" : n == 'n' ? @"\n" : @"\r", 0);
         } else if (n == 'x') {
             uint32_t value = 0;
             NSUInteger hexLength = TSHexEscapeLength(s, i, &value);
             if (hexLength > 0) {
-                consumed = hexLength;
+                range.length = hexLength;
                 if (value <= 0xFFFF) // Lets \x{D835}\x{DC00} form one surrogate pair, as in OgreKit.
-                    [text appendFormat:@"%C", (unichar)value];
+                    block(TSRegexReplacementPieceEscape, range, TSCharacter((unichar)value), 0);
                 else {
                     uint32_t v = value - 0x10000;
                     unichar pair[2] = {(unichar)(0xD800 + (v >> 10)), (unichar)(0xDC00 + (v & 0x3FF))};
-                    [text appendString:[NSString stringWithCharacters:pair length:2]];
+                    block(TSRegexReplacementPieceEscape, range, [NSString stringWithCharacters:pair length:2], 0);
                 }
             } else {
-                [text appendString:@"x"];
+                block(TSRegexReplacementPieceEscape, range, @"x", 0);
             }
         } else if (n == 'g') {
             NSString *name = nil;
             NSUInteger groupLength = TSGroupEscapeLength(s, i, &name);
             if (groupLength > 0) {
-                consumed = groupLength;
+                range.length = groupLength;
                 BOOL numeric = YES;
                 for (NSUInteger k = 0; k < name.length; k++)
                     numeric = numeric && TSIsDigit([name characterAtIndex:k]);
                 if (numeric)
-                    addToken(TSReplacementTokenGroup, @"", (NSUInteger)name.integerValue);
+                    block(TSRegexReplacementPieceGroup, range, @"", (NSUInteger)name.integerValue);
                 else
-                    addToken(TSReplacementTokenNamedGroup, name, 0);
+                    block(TSRegexReplacementPieceNamedGroup, range, (NSString *_Nonnull)name, 0);
             } else {
-                [text appendString:@"g"];
+                block(TSRegexReplacementPieceEscape, range, @"g", 0);
             }
         } else {
             // `\\` gives a backslash; any other escaped character stands for itself.
-            [text appendFormat:@"%C", n];
+            block(TSRegexReplacementPieceEscape, range, TSCharacter(n), 0);
         }
-        i += consumed;
+        i = NSMaxRange(range);
     }
-    flushText();
-    return tokens;
 }
 
-/// Turns \0 \t \n \r \" \' into the characters they stand for, from left to right, before the template is read.
-/// `\\` stays `\\`, so that the template still reads it as one backslash.
-+ (NSString *)unescapedTemplate:(NSString *)s
+/// As NSRegularExpression reads it.
+static void TSICUPieces(NSString *s, NSUInteger groups, NS_NOESCAPE TSRegexReplacementPieceBlock block)
+{
+    // As many digits are read as the number of groups has (at least one), as NSRegularExpression does; a group that
+    // does not exist gives nothing. With the groups unknown (NSNotFound), every digit.
+    NSUInteger maxDigits = 1;
+    if (groups == NSNotFound)
+        maxDigits = NSUIntegerMax;
+    else
+        for (NSUInteger n = groups; n >= 10; n /= 10)
+            maxDigits++;
+    NSUInteger length = s.length;
+    for (NSUInteger i = 0; i < length; ) {
+        unichar c = [s characterAtIndex:i];
+        if (c == '\\') {
+            if (i + 1 >= length) { // A lone backslash at the end stands for nothing, as in NSRegularExpression.
+                block(TSRegexReplacementPieceTrailingBackslash, NSMakeRange(i, 1), @"", 0);
+                break;
+            }
+            // The escaped character is one UTF-16 unit, as in NSRegularExpression.
+            block(TSRegexReplacementPieceEscape, NSMakeRange(i, 2), [s substringWithRange:NSMakeRange(i + 1, 1)], 0);
+            i += 2;
+        } else if (c == '$' && i + 1 < length && TSIsDigit([s characterAtIndex:i + 1])) {
+            NSUInteger start = i, group = 0, digits = 0;
+            for (i++; i < length && digits < maxDigits && TSIsDigit([s characterAtIndex:i]); i++, digits++)
+                group = group * 10 + ([s characterAtIndex:i] - '0');
+            block(TSRegexReplacementPieceGroup, NSMakeRange(start, i - start), @"", group);
+        } else if (CFStringIsSurrogateHighCharacter(c) || CFStringIsSurrogateLowCharacter(c)) {
+            // NSRegularExpression copies a surrogate and the unit after it as they stand, whatever that unit is
+            // (macOS 27.2): `😀$1` gives `😀a`, but `\😀$1` gives `😀$1` and a lone surrogate keeps the `$1` after it.
+            NSUInteger size = MIN((NSUInteger)2, length - i);
+            block(TSRegexReplacementPieceText, NSMakeRange(i, size), [s substringWithRange:NSMakeRange(i, size)], 0);
+            i += size;
+        } else {
+            block(TSRegexReplacementPieceText, NSMakeRange(i, 1), TSCharacter(c), 0);
+            i++;
+        }
+    }
+}
+
+/// CotEditor's unescaping, before the template is read: \0 \t \n \r \" \' become the characters they stand for, from
+/// left to right; `\\` stays `\\`, so that the template still reads it as one backslash. `places` gets, for each unit
+/// of the result, the range of the string it comes from.
+static NSString *TSUnescapedTemplate(NSString *s, NSMutableData *places)
 {
     NSMutableString *result = [NSMutableString stringWithCapacity:s.length];
+    void (^add)(NSString *, NSRange) = ^(NSString *units, NSRange from) {
+        [result appendString:units];
+        for (NSUInteger k = 0; k < units.length; k++)
+            [places appendBytes:&from length:sizeof from];
+    };
     NSUInteger length = s.length;
     for (NSUInteger i = 0; i < length; i++) {
         unichar c = [s characterAtIndex:i];
         unichar n = i + 1 < length ? [s characterAtIndex:i + 1] : 0;
         if (c != '\\' || !(n == '0' || n == 't' || n == 'n' || n == 'r' || n == '"' || n == '\'' || n == '\\')) {
-            [result appendFormat:@"%C", c];
+            add(TSCharacter(c), NSMakeRange(i, 1));
             continue;
         }
-        i++;
-        if (n == '\\')
-            [result appendString:@"\\\\"];
-        else {
+        if (n == '\\') {
+            add(@"\\", NSMakeRange(i, 1));
+            add(@"\\", NSMakeRange(i + 1, 1));
+        } else {
             unichar character = n == '0' ? 0 : n == 't' ? '\t' : n == 'n' ? '\n' : n == 'r' ? '\r' : n;
-            [result appendString:[NSString stringWithCharacters:&character length:1]];
+            add(TSCharacter(character), NSMakeRange(i, 2));
         }
+        i++;
     }
     return result;
 }
 
-/// Reads a template as NSRegularExpression does.
-+ (NSArray<TSReplacementToken *> *)icuTokensOfString:(NSString *)s numberOfCaptureGroups:(NSUInteger)groups
++ (void)enumeratePiecesOfString:(NSString *)string syntax:(TSRegexReplacementSyntax)syntax options:(TSRegexFindOptions)options
+          numberOfCaptureGroups:(NSUInteger)groups usingBlock:(NS_NOESCAPE TSRegexReplacementPieceBlock)block
+{
+    NSString *normalized = [TSRegexFindPattern normalizedString:string options:options]; // ¥ → \ keeps every place
+    if (syntax == TSRegexReplacementSyntaxOgreKit) {
+        TSOgreKitPieces(normalized, block);
+        return;
+    }
+    if ((options & TSRegexFindUnescapesReplacement) != 0) {
+        // Read after the unescaping, each piece then given the place in the string as written that it comes from.
+        NSMutableData *places = [NSMutableData data];
+        NSString *unescaped = TSUnescapedTemplate(normalized, places);
+        const NSRange *from = places.bytes;
+        TSICUPieces(unescaped, groups, ^(TSRegexReplacementPieceKind kind, NSRange range, NSString *text, NSUInteger group) {
+            NSUInteger start = from[range.location].location, end = NSMaxRange(from[NSMaxRange(range) - 1]);
+            block(kind, NSMakeRange(start, end - start), text, group);
+        });
+    } else
+        TSICUPieces(normalized, groups, block);
+}
+
+/// The pieces as the expansion uses them: the text of text and escapes joined.
+static NSArray<TSReplacementToken *> *TSTokensOfPieces(void (^enumerate)(NS_NOESCAPE TSRegexReplacementPieceBlock block))
 {
     NSMutableArray<TSReplacementToken *> *tokens = [NSMutableArray array];
     NSMutableString *text = [NSMutableString string];
-    NSUInteger length = s.length;
-    for (NSUInteger i = 0; i < length; ) {
-        unichar c = [s characterAtIndex:i];
-        if (c == '\\') {
-            if (i + 1 >= length) // A lone backslash at the end stands for nothing, as in NSRegularExpression.
-                break;
-            // The escaped character is one UTF-16 unit, as in NSRegularExpression.
-            [text appendString:[s substringWithRange:NSMakeRange(i + 1, 1)]];
-            i += 2;
-        } else if (c == '$' && i + 1 < length && TSIsDigit([s characterAtIndex:i + 1])) {
-            // As many digits are read as the number of groups has (at least one), as NSRegularExpression does;
-            // a group that does not exist gives nothing.
-            NSUInteger maxDigits = 1;
-            for (NSUInteger n = groups; n >= 10; n /= 10)
-                maxDigits++;
-            NSUInteger group = 0, digits = 0;
-            for (i++; i < length && digits < maxDigits && TSIsDigit([s characterAtIndex:i]); i++, digits++)
-                group = group * 10 + ([s characterAtIndex:i] - '0');
-            if (text.length > 0) {
-                [tokens addObject:[[TSReplacementToken alloc] initWithKind:TSReplacementTokenText text:text group:0]];
-                [text setString:@""];
-            }
-            [tokens addObject:[[TSReplacementToken alloc] initWithKind:TSReplacementTokenGroup text:@"" group:group]];
-        } else if (CFStringIsSurrogateHighCharacter(c) || CFStringIsSurrogateLowCharacter(c)) {
-            // NSRegularExpression copies a surrogate and the unit after it as they stand, whatever that unit is
-            // (macOS 27.2): `😀$1` gives `😀a`, but `\😀$1` gives `😀$1` and a lone surrogate keeps the `$1` after it.
-            NSUInteger size = MIN((NSUInteger)2, length - i);
-            [text appendString:[s substringWithRange:NSMakeRange(i, size)]];
-            i += size;
-        } else {
-            [text appendFormat:@"%C", c];
-            i++;
+    enumerate(^(TSRegexReplacementPieceKind kind, NSRange range, NSString *pieceText, NSUInteger group) {
+        TSReplacementTokenKind tokenKind;
+        switch (kind) {
+            case TSRegexReplacementPieceText:
+            case TSRegexReplacementPieceEscape:
+                [text appendString:pieceText];
+                return;
+            case TSRegexReplacementPieceTrailingBackslash:
+                return;
+            case TSRegexReplacementPieceGroup: tokenKind = TSReplacementTokenGroup; break;
+            case TSRegexReplacementPieceNamedGroup: tokenKind = TSReplacementTokenNamedGroup; break;
+            case TSRegexReplacementPieceLastGroup: tokenKind = TSReplacementTokenLastGroup; break;
+            case TSRegexReplacementPiecePrematch: tokenKind = TSReplacementTokenPrematch; break;
+            case TSRegexReplacementPiecePostmatch: tokenKind = TSReplacementTokenPostmatch; break;
+            case TSRegexReplacementPieceSincePreviousMatch: tokenKind = TSReplacementTokenSincePreviousMatch; break;
         }
-    }
+        if (text.length > 0) {
+            [tokens addObject:[[TSReplacementToken alloc] initWithKind:TSReplacementTokenText text:text group:0]];
+            [text setString:@""];
+        }
+        [tokens addObject:[[TSReplacementToken alloc] initWithKind:tokenKind text:kind == TSRegexReplacementPieceNamedGroup ? pieceText : @"" group:group]];
+    });
     if (text.length > 0)
         [tokens addObject:[[TSReplacementToken alloc] initWithKind:TSReplacementTokenText text:text group:0]];
     return tokens;

@@ -5,14 +5,26 @@
 #import "TSAdvancedFindInputBox.h"
 #import "TSAdvancedFindResultsView.h"
 #import "TSAdvancedFindCheatSheet.h"
+#import "TSSyntaxHighlighter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 #define TSLocalized TSAdvancedFindLocalized
 
 /// A multi-line text field: Return finds, Tab moves on; Option-Return and Option-Tab insert the character.
+/// With `bracketScanner` (the find field with "Regular expression" on), as in CotEditor: when the caret comes right
+/// after a bracket, its partner is shown with the find indicator; a double-click on a bracket selects both and what
+/// is between them. Only the scanner's pairs count: not \( nor a bracket inside a class (+Coloring).
 @interface TSAdvancedFindFieldView : NSTextView
 @property (nonatomic, weak, nullable) TSAdvancedFindInputBox *box;
+@property (nonatomic, strong, nullable) id<TSSyntaxScanner> bracketScanner;
+/// Shows a range: the find indicator when nil (the tests record it instead).
+@property (nonatomic, copy, nullable) void (^bracketIndicator)(NSTextView *view, NSRange range);
+@end
+
+@interface TSAdvancedFindFieldView (Brackets)
+/// The pair whose opening or closing bracket is at `index`, or {NSNotFound, 0}.
+- (NSRange)bracketPairAtIndex:(NSUInteger)index;
 @end
 
 @interface TSAdvancedFindPanelController () <NSTextViewDelegate, NSPopoverDelegate>
@@ -33,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<NSControl *> *buttons;
 /// The option check boxes of the open popover, enabled or not by the regular expression setting.
 @property (nonatomic, strong, nullable) TSAdvancedFindOptionsForm *optionsForm;
+/// The coloring of the find and replace fields (+Coloring).
+@property (nonatomic, strong) TSSyntaxHighlighter *findHighlighter;
+@property (nonatomic, strong) TSSyntaxHighlighter *replaceHighlighter;
 /// The list of all matches, under the options while shown (+Results).
 @property (nonatomic, strong) TSAdvancedFindResultsView *resultsView;
 /// The height of the list when it was last shown, for the next time.
@@ -55,6 +70,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateModeControls;
 - (void)optionsDidChange;
 - (void)loadStrings;
+/// Colors the fields as the engine reads them (+Coloring): starts following their edits.
+- (void)setUpFieldColoring;
+/// The scanners for the current options, pattern and replacement syntax; colors the fields again when they changed.
+- (void)updateFieldScanners;
+/// The marks of both fields, the find field's first: errors and what OgreKit reads otherwise.
+- (NSArray<TSSyntaxDiagnostic *> *)fieldDiagnostics;
 /// The list of all matches (+Results): shown in the panel, which grows downward for it, or closed.
 - (void)showResults:(TSAdvancedFindResults *)results textView:(NSTextView *)textView;
 - (void)hideResults;
