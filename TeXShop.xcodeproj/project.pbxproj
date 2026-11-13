@@ -13,6 +13,9 @@
 		8D9C544E6040A435574B945C /* TSMultipleReplaceRuleTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D6CD786A2345A199607427D /* TSMultipleReplaceRuleTable.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		68F8103ED328E7DEC5654F0D /* TSMultipleReplaceWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 794A81611DD32BA919336BF8 /* TSMultipleReplaceWindowController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		0E535BA487AD036033330CF4 /* TSAdvancedFindController.m in Sources */ = {isa = PBXBuildFile; fileRef = D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		95C92AEAEF35E49033C476EA /* TSAdvancedFindFieldScanners.m in Sources */ = {isa = PBXBuildFile; fileRef = CDB0F89D2173B57C20009B7D /* TSAdvancedFindFieldScanners.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		64C16BC63959452A63153E9F /* TSAdvancedFindPanelController+Coloring.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E48753CB168F6C34693C4AD /* TSAdvancedFindPanelController+Coloring.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		81F76D02AB2DC23DC76FB163 /* TSRegexPatternLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = E4A2535150250CF8E9A90197 /* TSRegexPatternLexer.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		7530E692A6FADDC97BE3A764 /* TSAdvancedFindController+Tasks.m in Sources */ = {isa = PBXBuildFile; fileRef = F334B074A4B975D548EC5C01 /* TSAdvancedFindController+Tasks.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		4D79D6E8FCC51539A6787C26 /* TSAdvancedFindMatchCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 51E3505E53F40BE928C10F9E /* TSAdvancedFindMatchCache.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		EDAD6FCBA6E07E73D8F030F1 /* TSAdvancedFindProgressSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 186B6B5BE36730C156DD7A82 /* TSAdvancedFindProgressSheet.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -427,6 +430,11 @@
 		794A81611DD32BA919336BF8 /* TSMultipleReplaceWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSMultipleReplaceWindowController.m; sourceTree = "<group>"; };
 		EEDE5776A4F985316C5A2148 /* TSAdvancedFindController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindController.h; sourceTree = "<group>"; };
 		D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindController.m; sourceTree = "<group>"; };
+		80307A525061C45A608A3767 /* TSAdvancedFindFieldScanners.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindFieldScanners.h; sourceTree = "<group>"; };
+		CDB0F89D2173B57C20009B7D /* TSAdvancedFindFieldScanners.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindFieldScanners.m; sourceTree = "<group>"; };
+		5E48753CB168F6C34693C4AD /* TSAdvancedFindPanelController+Coloring.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Coloring.m"; sourceTree = "<group>"; };
+		37A31621A2DC8C85D459EA88 /* TSRegexPatternLexer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexPatternLexer.h; sourceTree = "<group>"; };
+		E4A2535150250CF8E9A90197 /* TSRegexPatternLexer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexPatternLexer.m; sourceTree = "<group>"; };
 		D9ACEBB4CC50171FB2AEC94E /* TSAdvancedFindController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindController+Private.h"; sourceTree = "<group>"; };
 		F334B074A4B975D548EC5C01 /* TSAdvancedFindController+Tasks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindController+Tasks.m"; sourceTree = "<group>"; };
 		3F6C089A590CA6575408A20A /* TSAdvancedFindMatchCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindMatchCache.h; sourceTree = "<group>"; };
@@ -1803,6 +1811,11 @@
 				794A81611DD32BA919336BF8 /* TSMultipleReplaceWindowController.m */,
 				EEDE5776A4F985316C5A2148 /* TSAdvancedFindController.h */,
 				D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */,
+				80307A525061C45A608A3767 /* TSAdvancedFindFieldScanners.h */,
+				CDB0F89D2173B57C20009B7D /* TSAdvancedFindFieldScanners.m */,
+				5E48753CB168F6C34693C4AD /* TSAdvancedFindPanelController+Coloring.m */,
+				37A31621A2DC8C85D459EA88 /* TSRegexPatternLexer.h */,
+				E4A2535150250CF8E9A90197 /* TSRegexPatternLexer.m */,
 				D9ACEBB4CC50171FB2AEC94E /* TSAdvancedFindController+Private.h */,
 				F334B074A4B975D548EC5C01 /* TSAdvancedFindController+Tasks.m */,
 				3F6C089A590CA6575408A20A /* TSAdvancedFindMatchCache.h */,
@@ -2105,6 +2118,9 @@
 				8D9C544E6040A435574B945C /* TSMultipleReplaceRuleTable.m in Sources */,
 				68F8103ED328E7DEC5654F0D /* TSMultipleReplaceWindowController.m in Sources */,
 				0E535BA487AD036033330CF4 /* TSAdvancedFindController.m in Sources */,
+				95C92AEAEF35E49033C476EA /* TSAdvancedFindFieldScanners.m in Sources */,
+				64C16BC63959452A63153E9F /* TSAdvancedFindPanelController+Coloring.m in Sources */,
+				81F76D02AB2DC23DC76FB163 /* TSRegexPatternLexer.m in Sources */,
 				7530E692A6FADDC97BE3A764 /* TSAdvancedFindController+Tasks.m in Sources */,
 				4D79D6E8FCC51539A6787C26 /* TSAdvancedFindMatchCache.m in Sources */,
 				EDAD6FCBA6E07E73D8F030F1 /* TSAdvancedFindProgressSheet.m in Sources */,

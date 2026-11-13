@@ -28,7 +28,7 @@
 "In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "ICU中的 \\h 是水平空白（在OgreKit中是十六进制数字）。如需数字，请写成 [0-9a-fA-F]。";
 
 /* Cheat sheet and find field, differences from OgreKit. */
-"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU." = "ICU中的 (?m) 使 ^ 和 $ 匹配每一行（在OgreKit中它使 . 匹配换行符，在ICU中即 (?s)）。";
+"In ICU (?m) makes ^ and $ match at each line; OgreKit’s (?m), where . matches line breaks, is (?s)." = "ICU中的 (?m) 使 ^ 和 $ 匹配每一行（在OgreKit中它使 . 匹配换行符，在ICU中即 (?s)）。";
 
 /* Cheat sheet and find field, differences from OgreKit. */
 "In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "ICU中的 {n}+ 是占有量词（在OgreKit中是对重复再重复）。";

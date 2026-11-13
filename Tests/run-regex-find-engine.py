@@ -20,9 +20,9 @@ MUTATIONS = {
     'escaped digits are text': ('TSRegexReplacementTemplate.m', 'if (TSIsDigit(n)) {', 'if (NO) {'),
     'OgreKit text before the match is dropped': ('TSRegexReplacementTemplate.m', '                [output appendString:[string substringToIndex:matchRange.location]];\n', ''),
     'OgreKit surrogate escapes are joined': ('TSRegexReplacementTemplate.m', 'if (value <= 0xFFFF) //', 'if (value <= 0xD7FF) //'),
-    'ICU reads one digit only': ('TSRegexReplacementTemplate.m', '            for (NSUInteger n = groups; n >= 10; n /= 10)\n                maxDigits++;\n', ''),
+    'ICU reads one digit only': ('TSRegexReplacementTemplate.m', '        for (NSUInteger n = groups; n >= 10; n /= 10)\n            maxDigits++;\n', '        ;\n'),
     'ICU reads every digit': ('TSRegexReplacementTemplate.m', 'digits < maxDigits && ', ''),
-    'ICU keeps a lone backslash': ('TSRegexReplacementTemplate.m', '            if (i + 1 >= length) // A lone backslash at the end stands for nothing, as in NSRegularExpression.\n                break;\n', '            if (i + 1 >= length) { [text appendString:@"\\\\"]; break; }\n'),
+    'ICU keeps a lone backslash': ('TSRegexReplacementTemplate.m', '                block(TSRegexReplacementPieceTrailingBackslash, NSMakeRange(i, 1), @"", 0);\n                break;\n            }\n            // The escaped', '                block(TSRegexReplacementPieceText, NSMakeRange(i, 1), @"\\\\", 0);\n                break;\n            }\n            // The escaped'),
     'the syntax is ignored': ('TSRegexReplacementTemplate.m', 'syntax == TSRegexReplacementSyntaxOgreKit ?', 'NO ?'),
     'named groups are ignored': ('TSRegexReplacementTemplate.m', 'if (result && [self.groupNames containsObject:token.text])', 'if (NO)'),
     'whole words are not checked': ('TSRegexFindPattern.m', 'if (wholeWord && ![self isWholeWord:found inString:string]) {', 'if (NO) {'),
@@ -33,11 +33,12 @@ MUTATIONS = {
     'disabled rules run': ('TSRegexMultipleReplace.m', '            return nil;\n        if (!rule.enabled) {\n', '            return nil;\n        if (NO) {\n'),
     'anchoring bounds are used': ('TSRegexFindPattern.m', 'NSMatchingWithTransparentBounds | NSMatchingWithoutAnchoringBounds', 'NSMatchingWithoutAnchoringBounds'),
     'ICU surrogates are single units': ('TSRegexReplacementTemplate.m', '            NSUInteger size = MIN((NSUInteger)2, length - i);\n', '            NSUInteger size = 1;\n'),
-    'ICU escapes take a whole character': ('TSRegexReplacementTemplate.m', '            [text appendString:[s substringWithRange:NSMakeRange(i + 1, 1)]];\n            i += 2;\n', '            NSRange whole = [s rangeOfComposedCharacterSequenceAtIndex:i + 1];\n            [text appendString:[s substringWithRange:whole]];\n            i = NSMaxRange(whole);\n'),
+    'ICU escapes take a whole character': ('TSRegexReplacementTemplate.m', '            block(TSRegexReplacementPieceEscape, NSMakeRange(i, 2), [s substringWithRange:NSMakeRange(i + 1, 1)], 0);\n            i += 2;\n',
+        '            NSRange whole = [s rangeOfComposedCharacterSequenceAtIndex:i + 1];\n            block(TSRegexReplacementPieceEscape, NSMakeRange(i, NSMaxRange(whole) - i), [s substringWithRange:whole], 0);\n            i = NSMaxRange(whole);\n'),
     'unescaping drops line feeds': ('TSRegexReplacementTemplate.m', "n == 'n' ? '\\n' : ", ''),
     'unescaping keeps \\0': ('TSRegexReplacementTemplate.m', "n == '0' ? 0 :", "n == '0' ? '0' :"),
-    'unescaping halves backslashes': ('TSRegexReplacementTemplate.m', '            [result appendString:@"\\\\\\\\"];\n', '            [result appendString:@"\\\\"];\n'),
-    'unescaping is always on': ('TSRegexReplacementTemplate.m', '(pattern.options & TSRegexFindUnescapesReplacement) ?', 'YES ?'),
+    'unescaping halves backslashes': ('TSRegexReplacementTemplate.m', '            add(@"\\\\", NSMakeRange(i, 1));\n            add(@"\\\\", NSMakeRange(i + 1, 1));\n', '            add(@"\\\\", NSMakeRange(i, 2));\n'),
+    'unescaping is always on': ('TSRegexReplacementTemplate.m', '(options & TSRegexFindUnescapesReplacement) != 0', 'YES'),
     'whole words need a boundary before a non-word edge': ('TSRegexFindPattern.m', '\\\\A(?:(?=\\\\W)|\\\\b)(?>', '\\\\A\\\\b(?>'),
     'whole words need a boundary after a non-word edge': ('TSRegexFindPattern.m', '(?:\\\\b|(?<=\\\\W))\\\\z', '\\\\b\\\\z'),
     'replacements keep their line endings': ('TSRegexTextFind.m', 'return lineEnding ? TSRegexStringByReplacingLineEndings(text, (NSString *_Nonnull)lineEnding) : text;', 'return text;'),
@@ -51,7 +52,7 @@ MUTATIONS = {
     'tab-separated lines without a tab are read': ('TSRegexMultipleReplace.m', 'if (items.count < 2 || items[0].length == 0)', 'if (items[0].length == 0)'),
     'literal patterns are regular expressions': ('TSRegexFindPattern.m', '    if (options & TSRegexFindIgnoreMetacharacters) result |= NSRegularExpressionIgnoreMetacharacters;\n', ''),
     'Unix line separators are ignored': ('TSRegexFindPattern.m', '    if (options & TSRegexFindUseUnixLineSeparators) result |= NSRegularExpressionUseUnixLineSeparators;\n', ''),
-    'literal patterns list group names': ('TSRegexFindPattern.m', '(options & TSRegexFindIgnoreMetacharacters) ? @[] :', 'NO ? @[] :'),
+    'literal patterns list group names': ('TSRegexPatternLexer.m', '        if (!(options & TSRegexFindIgnoreMetacharacters))\n            [self scan];', '        [self scan];'),
     'a file\'s literal option is dropped': ('TSRegexMultipleReplace.m', '    if (regexOptions & NSRegularExpressionIgnoreMetacharacters) regularExpressionOptions |= TSRegexFindIgnoreMetacharacters;\n', ''),
     'a file\'s Unix option is not written': ('TSRegexMultipleReplace.m', '    if (regex & TSRegexFindUseUnixLineSeparators) regexOptions |= NSRegularExpressionUseUnixLineSeparators;\n', ''),
     'the upper limit is not checked': ('TSRegexMultipleReplace.m', 'd >= 0 && d < 0x1p64 && d == floor(d)', 'd >= 0 && d == floor(d)'),
@@ -154,7 +155,8 @@ def check_message_tables():
 parser = argparse.ArgumentParser()
 parser.add_argument('--mutations', action='store_true')
 args = parser.parse_args()
-engine = ['TSRegexFindOptions', 'TSRegexFindPattern', 'TSRegexReplacementTemplate', 'TSRegexFindReplacement', 'TSRegexReplaceAllResult', 'TSRegexTextFind', 'TSRegexReplacementRule', 'TSRegexMultipleReplace']
+engine = ['TSRegexFindOptions', 'TSRegexFindPattern', 'TSRegexReplacementTemplate', 'TSRegexFindReplacement', 'TSRegexReplaceAllResult', 'TSRegexTextFind', 'TSRegexReplacementRule', 'TSRegexMultipleReplace',
+          'TSRegexPatternLexer', 'TSRegexOnigmoIncompatibility']
 check_message_tables()
 with tempfile.TemporaryDirectory(prefix='texshop-regex-find-') as tmp:
     tmp = Path(tmp)
@@ -163,6 +165,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-regex-find-') as tmp:
     for name in engine:
         for ext in ('.h', '.m'):
             shutil.copy(find_dir / (name + ext), sources)
+    shutil.copy(root / 'Sources/Syntax/TSSyntaxRole.h', sources) # the roles of the pattern lexer's tokens (an enum only)
     result = run(sources, tmp)
     print(result.stdout, end='')
     if result.returncode:

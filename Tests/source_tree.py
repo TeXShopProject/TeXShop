@@ -29,3 +29,11 @@ def git_show(root, rev, path):
             raise
         flat = 'Sources/' + Path(path).name
         return subprocess.check_output(['git', 'show', '%s:%s' % (rev, flat)], cwd=root, text=True)
+
+
+def advanced_find_syntax_sources(root):
+    """What the Advanced Find panel's files need of the shared syntax coloring (Sources/Syntax), with a stand-in for
+    the application's TSColorSupport, which the color scheme looks themes up with."""
+    root = Path(root)
+    return [root / 'Sources/Syntax' / name for name in ('TSSyntaxScanner.m', 'TSSyntaxHighlighter.m', 'TSSyntaxColorScheme.m')] + \
+        [root / 'Tests/TSColorSupportStub.m']

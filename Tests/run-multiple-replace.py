@@ -12,7 +12,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from source_tree import include_args
+from source_tree import include_args, advanced_find_syntax_sources
 
 root = Path(__file__).resolve().parents[1]
 LANGUAGES = ['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'pt-PT', 'ro', 'zh_CN']
@@ -66,7 +66,7 @@ def build(tmp, sources):
     probe = app / 'Contents/MacOS/probe'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-fmodules', '-mmacosx-version-min=14.6', '-Wall', '-Wno-unused-parameter',
                     '-Wno-deprecated-declarations', '-I', str(sources), *include_args(root), '-I', str(root / 'Tests'),
-                    '-framework', 'Cocoa', str(root / 'Tests/MultipleReplace.m'), *map(str, sorted(sources.glob('*.m'))),
+                    '-framework', 'Cocoa', str(root / 'Tests/MultipleReplace.m'), *map(str, sorted(sources.glob('*.m'))), *map(str, advanced_find_syntax_sources(root)),
                     '-o', str(probe)], check=True)
     return probe
 

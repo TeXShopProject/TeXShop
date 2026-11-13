@@ -231,6 +231,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
 {
     self.findFieldView = [self makeField];
     self.replaceFieldView = [self makeField];
+    [self setUpFieldColoring];
     self.findBox = [self boxForField:self.findFieldView symbol:@"magnifyingglass" tag:0];
     self.replaceBox = [self boxForField:self.replaceFieldView symbol:@"pencil" tag:1];
     self.findBox.textView.accessibilityLabel = TSLocalized(@"AdvancedFind.FindLabel", @"Find:");
@@ -346,16 +347,33 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     [self loadStrings];
 }
 
-/// The engine's error on the find pattern, in the line under the options.
+/// The line under the options: the engine's error on the find pattern first, then the first mark of the fields'
+/// coloring (an error in red, what OgreKit reads otherwise in orange) and how many more there are.
 - (void)validatePattern
 {
+    [self updateFieldScanners];
     TSAdvancedFindSettings *settings = self.findController.settings;
+    NSString *message = @"";
+    NSColor *color = nil;
     NSError *error = nil;
     if ((settings.options & TSRegexFindRegularExpression) && settings.findString.length > 0
-        && ![[TSRegexFindPattern alloc] initWithFindString:settings.findString options:settings.options error:&error])
-        [self showStatus:error.localizedDescription color:NSColor.systemRedColor];
-    else if (self.status.stringValue.length > 0)
-        [self showStatus:@"" color:nil];
+        && ![[TSRegexFindPattern alloc] initWithFindString:settings.findString options:settings.options error:&error]) {
+        message = error.localizedDescription;
+        color = NSColor.systemRedColor;
+    }
+    NSArray<TSSyntaxDiagnostic *> *diagnostics = [self fieldDiagnostics];
+    if (diagnostics.count > 0) {
+        TSSyntaxDiagnostic *first = diagnostics.firstObject;
+        NSString *mark = first.message;
+        if (diagnostics.count > 1) {
+            NSString *format = TSLocalized(@"AdvancedFind.MoreMarks", @"(%lu more)");
+            mark = [mark stringByAppendingFormat:@" %@", [NSString stringWithFormat:format, (unsigned long)diagnostics.count - 1]];
+        }
+        message = message.length > 0 ? [NSString stringWithFormat:@"%@ — %@", message, mark] : mark;
+        color = color ?: (first.role == TSSyntaxRoleInvalid ? NSColor.systemRedColor : NSColor.systemOrangeColor);
+    }
+    if (message.length > 0 || self.status.stringValue.length > 0)
+        [self showStatus:message color:color];
 }
 
 - (void)optionChanged:(NSControl *)sender
@@ -402,6 +420,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
         }
     } else if (notification.object == self.replaceFieldView) {
         self.findController.settings.replaceString = self.replaceFieldView.string;
+        [self validatePattern]; // the marks of the replace field
     }
 }
 
