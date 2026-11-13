@@ -64,7 +64,7 @@ view_methods = [last_method(view_source, s) for s in (
     '- (id) outlineView: (NSOutlineView *) outlineView child:', '- (BOOL) outlineView: (NSOutlineView *) outlineView isItemExpandable:',
     '- (id) outlineView: (NSOutlineView *) outlineView objectValueForTableColumn:', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
     '- (BOOL)hasPinnedLinkPreview\n', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
-    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n',
+    '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n', '- (void)closePinnedLinkPreview\n',
     # What the toolbar, the menus and the search results follow (#25 audit).
     '- (void)setMagnification: (double)magnification', '- (void) scaleChanged: (NSNotification *) notification',
     '- (void)fixMagnificationControls\n', '- (void)fixStuff\n', '- (void)resetSearchDelegate\n',
@@ -151,6 +151,7 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
     TSPreviewPanePlace splitPlace;
     NSInteger pageStyle, firstPageStyle, resizeOption, mouseMode, scaleMag;
     TSLinkPreviewView *linkPreview;
+    TSLinkPreviewView *pinnedLinkPreview;
     // The toolbar's magnification field and stepper and the search results, shared by both parts.
     NSTextField *myScale, *smyScale, *myScale1;
     NSStepper *myStepper, *smyStepper, *myStepper1;
@@ -177,7 +178,7 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)restoreLocation;
 @end
 @implementation MyPDFKitView
-- (TSLinkPreviewView *)preview { return linkPreview; }
+- (TSLinkPreviewView *)preview { return pinnedLinkPreview ?: linkPreview; }
 - (NSInteger)pageStyle { return pageStyle; }
 - (NSInteger)firstPageStyle { return firstPageStyle; }
 - (NSInteger)resizeOption { return resizeOption; }
@@ -211,7 +212,8 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)setupMagnificationStyle { if (resizeOption == NEW_PDF_FIT_TO_NONE) [self setScaleFactor:1]; else [self setAutoScales:YES]; }
 - (void)cleanupMarqueeKeepingPinnedLinkPreview {}
 - (void)observeLinkPreviewEvents {}
-- (void)doKillPopup { [linkPreview removeFromSuperview]; linkPreview = nil; self.globalLongTerm = NO; self.handlingLink = 0; }
+- (void)killTransientLinkPreview { [linkPreview removeFromSuperview]; linkPreview = nil; self.handlingLink = 0; }
+- (void)doKillPopup { [pinnedLinkPreview removeFromSuperview]; pinnedLinkPreview = nil; [self killTransientLinkPreview]; }
 - (void)pin:(NSRect)windowFrame {
     TSLinkPreviewView *p = [[TSLinkPreviewView alloc] initWithFrame:NSZeroRect];
     [self attachPinnedLinkPreview:p windowFrame:windowFrame];
@@ -376,8 +378,8 @@ static void checkSwitched(Preview p, State s, NSString *name, BOOL fixedScales) 
     check([selectionText(p.upper) isEqualToString:s.lowerSelection] && [selectionText(p.lower) isEqualToString:s.upperSelection],
           describe(name, @"the selections change places"));
     check(p.upper.preview == s.lowerPreview && p.lower.preview == s.upperPreview, describe(name, @"the pinned popups change places"));
-    check((!s.lowerPreview || (p.upper.preview.pinned && p.upper.globalLongTerm && p.upper.handlingLink == 2)) &&
-          (!s.upperPreview || (p.lower.preview.pinned && p.lower.globalLongTerm && p.lower.handlingLink == 2)),
+    check((!s.lowerPreview || (p.upper.preview.pinned && p.upper.hasPinnedLinkPreview)) &&
+          (!s.upperPreview || (p.lower.preview.pinned && p.lower.hasPinnedLinkPreview)),
           describe(name, @"the moved popups stay pinned"));
     if (s.lowerPreview) {
         NSRect q = popupInWindow(p.upper);
