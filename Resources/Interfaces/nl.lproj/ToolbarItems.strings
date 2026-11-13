@@ -95,11 +95,11 @@ tiToolTipAutoComplete			= "Zet automatisch aanvullen aan/uit";
 
 tiLabelSplit				= "Splits venster";
 tiPaletteLabelSplit			= "Splits venster";
-tiToolTipSplit				= "Splits venster (of juist niet)";
+tiToolTipSplit				= "Splits venster (of juist niet). Option + klik om verticaal te splitsen.";
 
 tiLabelSplitKIT				= "Splits venster";
 tiPaletteLabelSplitKIT		= "Splits venster";
-tiToolTipSplitKIT			= "Splits venster (of juist niet)";
+tiToolTipSplitKIT			= "Splits venster (of juist niet). Option + klik om verticaal te splitsen.";
 
 tiLabelMacros				= "Macro's";
 tiPaletteLabelMacros			= "Macro's";

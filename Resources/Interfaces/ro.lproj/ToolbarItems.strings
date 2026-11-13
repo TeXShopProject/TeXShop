@@ -95,11 +95,11 @@ tiToolTipAutoComplete			= "Toggle auto completion";
 
 tiLabelSplit				= "Scindează Fereastra";
 tiPaletteLabelSplit			= "Scindează Fereastra";
-tiToolTipSplit				= "Toggle window split";
+tiToolTipSplit				= "Comută scindarea ferestrei; faceți Opțiune-clic pentru a scinda vertical";
 
 tiLabelSplitKIT				= "Scindează Fereastra";
 tiPaletteLabelSplitKIT		= "Scindează Fereastra";
-tiToolTipSplitKIT			= "Toggle window split";
+tiToolTipSplitKIT			= "Comută scindarea ferestrei; faceți Opțiune-clic pentru a scinda vertical";
 
 tiLabelMacros				= "Macro";
 tiPaletteLabelMacros			= "Macro";

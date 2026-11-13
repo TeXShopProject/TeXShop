@@ -95,11 +95,11 @@ tiToolTipAutoComplete			= "Toggle auto completion";
 
 tiLabelSplit				= "Split Window";
 tiPaletteLabelSplit			= "Split Window";
-tiToolTipSplit				= "Toggle window split";
+tiToolTipSplit				= "Alternar a divisão da janela; clique mantendo premida a tecla Opção para dividir verticalmente";
 
 tiLabelSplitKIT				= "Split Window";
 tiPaletteLabelSplitKIT		= "Split Window";
-tiToolTipSplitKIT			= "Toggle window split";
+tiToolTipSplitKIT			= "Alternar a divisão da janela; clique mantendo premida a tecla Opção para dividir verticalmente";
 
 tiLabelMacros				= "Macros";
 tiPaletteLabelMacros			= "Macros";

@@ -103,6 +103,8 @@ static void check(BOOL ok, NSString *message) {
 }
 static NSEventModifierFlags flags;
 static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
+// The split toolbar buttons are checked in run-split-toggle-option.py.
+static void TSSplitToggleItemsFollowSplit(void) {}
 @interface TSLinkPreviewView : NSView
 @property (nonatomic) BOOL pinned;
 @property (copy) BOOL (^usesHandTool)(void);

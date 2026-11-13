@@ -99,11 +99,11 @@ tiToolTipAutoComplete			= "キーバインドによる入力をON/OFFします";
 
 tiLabelSplit				= "ウインドウ分割";
 tiPaletteLabelSplit			= "ウインドウ分割";
-tiToolTipSplit				= "ウインドウを分割表示します";
+tiToolTipSplit				= "ウインドウを分割表示します。縦に分割するにはOption+クリックします";
 
 tiLabelSplitKIT				= "ウインドウ分割";
 tiPaletteLabelSplitKIT		= "ウインドウ分割";
-tiToolTipSplitKIT			= "ウインドウを分割表示します";
+tiToolTipSplitKIT			= "ウインドウを分割表示します。縦に分割するにはOption+クリックします";
 
 tiLabelMacros				= "マクロ";
 tiPaletteLabelMacros			= "マクロ";

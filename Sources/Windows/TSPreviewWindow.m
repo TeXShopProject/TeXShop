@@ -42,6 +42,7 @@
 #import "MyPDFKitView.h"
 #import "globals.h"
 #import "TSPreviewSplitDivider.h"
+#import "TSToolbarController.h"
 
 #define ADJUST 7
 #define ADJUST1 47
@@ -1400,7 +1401,12 @@ extern NSPanel *pageNumberWindow;
 
 if (! self.windowIsSplit)
         {
-            if ([NSEvent modifierFlags ] & NSEventModifierFlagOption)
+            BOOL sideBySide = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+            // A customized shortcut must retain the orientation of its menu command.
+            if ([sender isKindOfClass:[NSMenuItem class]] &&
+                [[sender identifier] hasPrefix:@"TSShortcut.splitWindow:."])
+                sideBySide = [[sender identifier] isEqualToString:@"TSShortcut.splitWindow:.vertical"];
+            if (sideBySide)
                 {
                     [self.pdfKitSplitView setVertical:YES];
                     self.horizontal = NO;
@@ -1413,6 +1419,7 @@ if (! self.windowIsSplit)
         }
   
     [self mainSplitPdfKitWindow];
+    TSSplitToggleItemsFollowSplit();
 
 }
 

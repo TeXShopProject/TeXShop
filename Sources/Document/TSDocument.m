@@ -3738,6 +3738,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		textView = textView1;
         [self removeCurrentLineColor:textView2];
 	}
+    TSSplitToggleItemsFollowSplit();
 }
 
 - (void)annotationPanelWillClose:(NSNotification *)notification

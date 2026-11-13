@@ -118,8 +118,8 @@
     tiToolTipProgramKIT = "\U9009\U62e9\U6392\U7248\U7a0b\U5e8f";
     tiToolTipSave = "保存文稿的源代码";
     tiToolTipShowFullPath = "\U5728\U7a97\U53e3\U6807\U9898\U4e2d\U663e\U793a\U5b8c\U6574\U8def\U5f84";
-    tiToolTipSplit = "\U5207\U6362\U7a97\U53e3\U5206\U5272";
-    tiToolTipSplitKIT = "\U5207\U6362\U7a97\U53e3\U5206\U5272";
+    tiToolTipSplit = "切换窗口分割；按住Option键点按以垂直分割";
+    tiToolTipSplitKIT = "切换窗口分割；按住Option键点按以垂直分割";
     tiToolTipSyncMarks = "\U663e\U793a\U540c\U6b65\U6807\U8bb0";
     tiToolTipSyncMarksKIT = "\U663e\U793a\U540c\U6b65\U6807\U8bb0";
     tiToolTipTags = "\U6eda\U52a8\U5230\U9009\U62e9\U7684\U6807\U7b7e";
