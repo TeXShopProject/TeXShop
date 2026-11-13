@@ -80,7 +80,9 @@ extern NSPanel *pageNumberWindow;
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    if (!self.shown)
+    // Only on the screen: not in a PDF made from the view, for instance when a
+    // selection on a rotated page is dragged out, nor when the view is printed.
+    if (!self.shown || ![NSGraphicsContext currentContextDrawingToScreen])
         return;
     NSBezierPath *line = [NSBezierPath bezierPathWithRect: NSInsetRect(self.bounds, 1, 1)];
     line.lineWidth = 2;

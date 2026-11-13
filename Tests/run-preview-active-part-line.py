@@ -15,7 +15,7 @@ from production_fragments import method as production_method, verify_embedded
 from source_tree import include_args
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mutation', choices=['no-key-check', 'no-split-check', 'line-below', 'no-resign-observer', 'fixed-size'])
+parser.add_argument('--mutation', choices=['no-key-check', 'no-split-check', 'line-below', 'no-resign-observer', 'fixed-size', 'drawn-in-pdf'])
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 source = (root/'Sources/Windows/TSPreviewWindow.m').read_text()
@@ -57,6 +57,10 @@ elif args.mutation == 'no-resign-observer':
     old = '@[NSWindowDidBecomeKeyNotification, NSWindowDidResignKeyNotification]'
     assert line_class.count(old) == 1
     line_class = line_class.replace(old, '@[NSWindowDidBecomeKeyNotification]')
+elif args.mutation == 'drawn-in-pdf':
+    old = 'if (!self.shown || ![NSGraphicsContext currentContextDrawingToScreen])'
+    assert line_class.count(old) == 1
+    line_class = line_class.replace(old, 'if (!self.shown)')
 elif args.mutation == 'fixed-size':
     old = '            [line.bottomAnchor constraintEqualToAnchor: view.bottomAnchor]]];'
     assert methods.count(old) == 1
@@ -138,6 +142,21 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(inner.alphaComponent < 0.01 && beyond.alphaComponent < 0.01, @"Nothing drawn inside the line");
     for (NSValue *corner in @[[NSValue valueWithPoint:NSMakePoint(0, 0)], [NSValue valueWithPoint:NSMakePoint(rep.pixelsWide - 1, rep.pixelsHigh - 1)]])
         Check([rep colorAtX:corner.pointValue.x y:corner.pointValue.y].alphaComponent > 0.9, @"All four edges");
+
+    // A PDF made from the part, as when a selection on a rotated page is dragged out
+    // (MyPDFKitView startDragging:), has no line.
+    NSData *pdf = [top dataWithPDFInsideRect:top.bounds];
+    NSPDFImageRep *pdfRep = [NSPDFImageRep imageRepWithData:pdf];
+    NSBitmapImageRep *made = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:NSWidth(top.bounds) pixelsHigh:NSHeight(top.bounds) bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:0 bitsPerPixel:0];
+    made = [made bitmapImageRepByRetaggingWithColorSpace:rep.colorSpace];
+    [NSGraphicsContext saveGraphicsState]; NSGraphicsContext.currentContext = [NSGraphicsContext graphicsContextWithBitmapImageRep:made];
+    [pdfRep drawInRect:top.bounds]; [NSGraphicsContext restoreGraphicsState];
+    NSUInteger accentPixels = 0;
+    for (NSInteger y = 0; y < made.pixelsHigh; y += 1) for (NSInteger x = 0; x < made.pixelsWide; x += (y < 3 || y >= made.pixelsHigh - 3) ? 1 : MAX(1, made.pixelsWide - 1)) {
+        NSColor *c = [[made colorAtX:x y:y] colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+        if (c.alphaComponent > 0.5 && fabs(c.redComponent - accent.redComponent) < 0.1 && fabs(c.greenComponent - accent.greenComponent) < 0.1 && fabs(c.blueComponent - accent.blueComponent) < 0.1) accentPixels++;
+    }
+    Check(pdf.length > 0 && accentPixels == 0, [NSString stringWithFormat:@"No line in a PDF made from the part: %lu accent pixels at the edges", (unsigned long)accentPixels]);
 
     // The active part changes.
     w.activeView = bottom;
