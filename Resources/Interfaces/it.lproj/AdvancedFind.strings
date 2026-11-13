@@ -7,6 +7,8 @@
 "AdvancedFind.DelimitByWhitespace" = "Trova una qualsiasi delle parole separate da spazi";
 "AdvancedFind.DotMatchesLineSeparators" = ". corrisponde alle interruzioni di riga";
 "AdvancedFind.Extended" = "Ignora spazi e commenti # nel modello";
+"AdvancedFind.FindAll" = "Trova tutto";
+"AdvancedFind.FindAllTip" = "Trova ed elenca tutte le corrispondenze.";
 "AdvancedFind.FindHistory" = "Ricerche recenti";
 "AdvancedFind.FindLabel" = "Trova:";
 "AdvancedFind.Found" = "Corrispondenze: %lu";
@@ -36,6 +38,13 @@
 "AdvancedFind.ReplaceHistory" = "Sostituzioni recenti";
 "AdvancedFind.ReplaceLabel" = "Sostituisci con:";
 "AdvancedFind.Replaced" = "Sostituzioni: %lu";
+"AdvancedFind.Results.Close" = "Chiudi l’elenco";
+"AdvancedFind.Results.Count" = "Corrispondenze in “%1$@”: %2$lu";
+"AdvancedFind.Results.CountStale" = "Corrispondenze in “%1$@”: %2$lu (di cui %3$lu modificate da allora)";
+"AdvancedFind.Results.FindString" = "Stringa cercata: %@";
+"AdvancedFind.Results.Line" = "Riga";
+"AdvancedFind.Results.LiveUpdate" = "Aggiornamento automatico";
+"AdvancedFind.Results.Text" = "Testo trovato";
 "AdvancedFind.Section.Common" = "Entrambe";
 "AdvancedFind.Section.Regex" = "Espressione regolare";
 "AdvancedFind.Section.Text" = "Ricerca semplice";

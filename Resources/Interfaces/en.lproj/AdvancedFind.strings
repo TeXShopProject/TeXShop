@@ -7,6 +7,8 @@
 "AdvancedFind.DelimitByWhitespace" = "Find any of the words separated by spaces";
 "AdvancedFind.DotMatchesLineSeparators" = ". matches line breaks";
 "AdvancedFind.Extended" = "Ignore spaces and # comments in the pattern";
+"AdvancedFind.FindAll" = "Find All";
+"AdvancedFind.FindAllTip" = "Find and list all matches.";
 "AdvancedFind.FindHistory" = "Recent Searches";
 "AdvancedFind.FindLabel" = "Find:";
 "AdvancedFind.Found" = "%lu found";
@@ -36,6 +38,13 @@
 "AdvancedFind.ReplaceHistory" = "Recent Replacements";
 "AdvancedFind.ReplaceLabel" = "Replace:";
 "AdvancedFind.Replaced" = "%lu replaced";
+"AdvancedFind.Results.Close" = "Close the list";
+"AdvancedFind.Results.Count" = "%2$lu found in “%1$@”";
+"AdvancedFind.Results.CountStale" = "%2$lu found in “%1$@” (%3$lu changed since)";
+"AdvancedFind.Results.FindString" = "Find string: %@";
+"AdvancedFind.Results.Line" = "Line";
+"AdvancedFind.Results.LiveUpdate" = "Live Update";
+"AdvancedFind.Results.Text" = "Matched Text";
 "AdvancedFind.Section.Common" = "Both";
 "AdvancedFind.Section.Regex" = "Regular Expression";
 "AdvancedFind.Section.Text" = "Text Search";
