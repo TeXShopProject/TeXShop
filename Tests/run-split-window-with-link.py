@@ -56,7 +56,7 @@ view_methods = [last_method(view_source, s) for s in (
     '- (BOOL)becomeFirstResponder\n', '- (void)becomeActiveView\n',
     '- (void)awakeFromNib\n', '- (void) showForSecond;', '- (void) displayPageChange:', '- (void) goToKitPageNumber:',
     '- (NSInteger) getModifiedValue:', '- (void) goToKitPage: (id)sender',
-    '- (void) notificationSetup;', '- (void) pageChanged:', '- (void) makePageChanges:')]
+    '- (void) notificationSetup;', '- (void) pageChanged:', '- (void) makePageChanges:', '- (void) showPageInOutline:')]
 fragments = [('complete method: ' + text.split('\n')[0], source, text)
              for source, texts in ((window_source, window_methods), (view_source, view_methods)) for text in texts]
 window_text = '\n'.join(window_methods)
