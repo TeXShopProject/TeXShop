@@ -2,8 +2,9 @@
 """The macro editor colors its contents as the source is colored (see
 MacroContentHighlighting.m). The production methods between "BEGIN content
 appearance" and "END content highlighting" in TSMacroEditor.m are compiled
-unchanged into a small TSMacroEditor stand-in, with Sources/Syntax. The editor
-itself makes the contents with TextKit 1 as plain text."""
+unchanged into a small TSMacroEditor stand-in, with Sources/Syntax and the
+layout manager of the Advanced Find panel. The contents are made by the editor's
+own method, as loadUI makes them."""
 from pathlib import Path
 import subprocess, sys, tempfile
 from source_tree import include_args
@@ -13,14 +14,16 @@ EDITOR = ROOT / 'Sources/Macros/TSMacroEditor.m'
 source = EDITOR.read_text(encoding='utf-8')
 body = source[source.index('// BEGIN content appearance'):source.index('// END content highlighting')]
 # The editor makes the contents with TextKit 1 and as plain text (loadUI, not compiled here).
-for statement in ('initWithFrame:\n\t\t\t\t\t\tNSMakeRect(0, 0, contentSize.width, contentSize.height) textContainer:contentContainer];',
-                  '[contentTextView setRichText:NO];',
+for statement in ('contentTextView = [self makeContentTextViewWithSize:contentSize];',
                   'name:DocumentSyntaxColorNotification object:nil];', 'name:TSPreferenceNeedsRecolorNotification object:nil];'):
     assert source.count(statement) == 1, statement
 SYNTAX = {p.name: p.read_text(encoding='utf-8') for p in (ROOT / 'Sources/Syntax').glob('*.m')}
 MUTATIONS = {
     'no-follow': ('editor', '        [self.contentHighlighter followEdits];\n', ''),
     'ignores-setting': ('editor', 'if (![SUD boolForKey:SyntaxColoringEnabledKey]) {', 'if (NO) {'),
+    # The contents get a plain layout manager, which does not draw the Advanced Find highlights.
+    'plain-layout-manager': ('editor', 'NSLayoutManager *layout = [[TSAdvancedFindLayoutManager alloc] init];',
+                             'NSLayoutManager *layout = [[NSLayoutManager alloc] init];'),
     'theme-not-followed': ('editor', '        self.contentHighlighter.scheme = scheme;\n', ''),
     'colors-composed-text': ('TSSyntaxHighlighter.m', 'if (TSSyntaxStorageHasMarkedText(textView.textStorage)) {', 'if (NO) {'),
     # Ownership by color alone: unmarked text with a color of the scheme is cleared too.
@@ -47,6 +50,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-macro-highlighting-') as tmp:
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I', str(tmp), '-I', str(ROOT / 'Tests'), *include_args(ROOT),
                     str(ROOT / 'Tests/MacroContentHighlighting.m'), *map(str, sorted(parts.glob('*.m'))),
                     str(ROOT / 'Sources/Macros/TSMacroContentKind.m'), str(ROOT / 'Sources/Editor/TSColorSupport.m'),
+                    str(ROOT / 'Sources/Find/TSAdvancedFindTextView.m'), str(ROOT / 'Sources/Find/TSAdvancedFindHighlights.m'),
                     str(ROOT / 'Sources/App/globals.m'), '-o', str(tmp / 'test')], check=True)
     themes = ROOT / 'Resources/TeXShop/Themes'
     result = subprocess.run([str(tmp / 'test'), str(themes / 'LiteTheme.plist'), str(themes / 'DarkTheme.plist')],

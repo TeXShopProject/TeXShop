@@ -12,7 +12,15 @@
 #import "TSSyntaxMacroContentScanner.h"
 #import "TSSyntaxTeXScanner.h"
 #import "TSPreferenceEffects.h"
+#import "TSAdvancedFindTextView.h"
 #import "globals.h"
+// The source's text view and the Advanced Find controller are not needed here, only their classes.
+@interface TSTextView : NSTextView
+@end
+@implementation TSTextView
+@end
+@implementation TSAdvancedFindController
+@end
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
 @implementation TSMacroEditor
 #include "MacroContentHighlighting.inc"
@@ -49,11 +57,13 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSWindow *host = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,400,300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
     host.releasedWhenClosed = NO;
     host.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-    // TextKit 1, as the editor makes it.
-    NSTextStorage *storage = [NSTextStorage new]; NSLayoutManager *layout = [NSLayoutManager new]; [storage addLayoutManager:layout];
-    NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(400, CGFLOAT_MAX)]; [layout addTextContainer:container];
-    contents = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,400,300) textContainer:container];
-    contents.richText = NO; contents.allowsUndo = YES;
+    // The contents, as the editor makes them: TextKit 1, plain text, drawing the Advanced Find highlights.
+    contents = [editor makeContentTextViewWithSize:NSMakeSize(400, 300)];
+    NSTextStorage *storage = contents.textStorage;
+    REQUIRE([contents isKindOfClass:TSTextView.class] && !contents.richText && contents.textContainer.widthTracksTextView);
+    REQUIRE([contents.layoutManager conformsToProtocol:@protocol(TSAdvancedFindHighlightDrawing)] ||
+            [contents.layoutManager isKindOfClass:TSAdvancedFindLayoutManager.class]);
+    contents.allowsUndo = YES;
     host.contentView = contents;
     [host makeFirstResponder:contents];
     [editor setValue:host forKey:@"window"]; [editor setValue:contents forKey:@"contentTextView"];
@@ -148,6 +158,29 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE(Same(ColorAt(@"\\foo"), command));
     [contents.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, contents.string.length)];
     [contents.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:NSMakeRange(0, contents.string.length)];
+    contents.string = @"\\emph{x}";
+    Spin();
+
+    // The highlights of the Advanced Find panel are drawn over the syntax colors, and go without a trace.
+    contents.string = @"\\section{alpha} plain % comment #SEL#";
+    Spin();
+    [host.contentView layoutSubtreeIfNeeded];
+    NSData *(^render)(void) = ^NSData *{
+        [contents.layoutManager ensureLayoutForTextContainer:contents.textContainer];
+        NSBitmapImageRep *image = [contents bitmapImageRepForCachingDisplayInRect:contents.bounds];
+        [contents cacheDisplayInRect:contents.bounds toBitmapImageRep:image];
+        return [NSData dataWithBytes:image.bitmapData length:image.bytesPerRow * image.pixelsHigh];
+    };
+    NSData *plainImage = render();
+    TSAdvancedFindHighlights *highlights = [TSAdvancedFindHighlights highlightsForTextStorage:storage];
+    highlights.ranges = @[[NSValue valueWithRange:[contents.string rangeOfString:@"alpha"]], [NSValue valueWithRange:[contents.string rangeOfString:@"#SEL#"]]];
+    [contents setNeedsDisplay:YES];
+    NSData *foundImage = render();
+    REQUIRE(![foundImage isEqual:plainImage]);
+    REQUIRE(Same(ColorAt(@"\\section"), command) && [At(@"#SEL#")[NSUnderlineStyleAttributeName] integerValue] == NSUnderlineStyleSingle);
+    [highlights removeAll];
+    [contents setNeedsDisplay:YES];
+    REQUIRE([render() isEqual:plainImage]);
     contents.string = @"\\emph{x}";
     Spin();
 

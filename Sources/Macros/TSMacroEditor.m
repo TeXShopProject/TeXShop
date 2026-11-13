@@ -39,6 +39,7 @@
 #import "TSSyntaxHighlighter.h"
 #import "TSSyntaxMacroContentScanner.h"
 #import "TSSyntaxTeXScanner.h"
+#import "TSAdvancedFindTextView.h"
 
 static void *TSMacroContentAppearanceContext = &TSMacroContentAppearanceContext;
 
@@ -198,6 +199,29 @@ static TSFilterMode savedFilter = kNoFilterMode;
     [self updateContentHighlightingWithTheme:theme dark:dark];
 }
 // END content appearance
+// BEGIN content text view
+// The contents: a TextKit 1 text system for syntax coloring, whose layout manager
+// also draws the highlights of the Advanced Find panel, and plain text, so that
+// what is pasted keeps no colors or fonts of its own and the Font panel changes
+// the font of all the contents. Only the text is saved.
+- (NSTextView *)makeContentTextViewWithSize:(NSSize)contentSize
+{
+    NSTextStorage *storage = [[NSTextStorage alloc] init];
+    NSLayoutManager *layout = [[TSAdvancedFindLayoutManager alloc] init];
+    [storage addLayoutManager:layout];
+    NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(contentSize.width, CGFLOAT_MAX)];
+    [container setWidthTracksTextView:YES];
+    [layout addTextContainer:container];
+    NSTextView *view = [[TSTextView alloc] initWithFrame:NSMakeRect(0, 0, contentSize.width, contentSize.height) textContainer:container];
+    [view setMinSize:NSMakeSize(0, contentSize.height)];
+    [view setMaxSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
+    [view setVerticallyResizable:YES];
+    [view setHorizontallyResizable:NO];
+    [view setAutoresizingMask:NSViewWidthSizable];
+    [view setRichText:NO];
+    return view;
+}
+// END content text view
 // BEGIN content highlighting
 // The contents are colored as the source is: a TeX macro by the rules of the source,
 // an AppleScript macro by its own, each with the placeholders it replaces, in the
@@ -256,27 +280,12 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		[outlineView setTarget: self];
 		[outlineView setDoubleAction: @selector(doMacroTest:)];
         [outlineView setBackgroundColor: NSColor.textBackgroundColor];
-		// custom text view, with a TextKit 1 text system for syntax coloring
+		// custom text view
 		NSScrollView *scrollView = [contentTextView enclosingScrollView];
 		NSSize contentSize = [scrollView contentSize];
-		NSTextStorage *contentStorage = [[NSTextStorage alloc] init];
-		NSLayoutManager *contentLayout = [[NSLayoutManager alloc] init];
-		[contentStorage addLayoutManager:contentLayout];
-		NSTextContainer *contentContainer = [[NSTextContainer alloc] initWithSize:NSMakeSize(contentSize.width, CGFLOAT_MAX)];
-		[contentContainer setWidthTracksTextView:YES];
-		[contentLayout addTextContainer:contentContainer];
-		contentTextView = [[TSTextView alloc] initWithFrame:
-						NSMakeRect(0, 0, contentSize.width, contentSize.height) textContainer:contentContainer];
-		[contentTextView setMinSize:NSMakeSize(0, contentSize.height)];
-		[contentTextView setMaxSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
-		[contentTextView setVerticallyResizable:YES];
-		[contentTextView setHorizontallyResizable:NO];
-		[contentTextView setAutoresizingMask: NSViewWidthSizable];
+		contentTextView = [self makeContentTextViewWithSize:contentSize];
 		[contentTextView setDelegate:self];
 		[contentTextView setAllowsUndo:YES];
-		// Plain text: what is pasted keeps no colors or fonts of its own, and the
-		// Font panel changes the font of all the contents. Only the text is saved.
-		[contentTextView setRichText:NO];
 		[contentTextView setUsesFontPanel:YES];
         [contentTextView setFontSafely:[self contentFont]];
         [contentTextView setContinuousSpellCheckingEnabled: NO];

@@ -147,6 +147,13 @@ NSInteger g_texChar = '\\';
 static int failures;
 static void Check(BOOL ok, const char *name) { if (!ok) { printf("FAIL: %s\n", name); failures++; } }
 static void Spin(NSTimeInterval seconds) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:seconds]]; }
+// Runs the run loop until the condition holds or the time limit passes; a slow machine waits longer, not in vain.
+static void SpinUntil(NSTimeInterval limit, BOOL (^condition)(void))
+{
+    NSDate *end = [NSDate dateWithTimeIntervalSinceNow:limit];
+    while (!condition() && [end timeIntervalSinceNow] > 0)
+        Spin(0.01);
+}
 
 @interface TSTextView : NSTextView
 - (void)fixupTabs;
@@ -491,10 +498,10 @@ int main(void) { @autoreleasepool {
     [doc toggleSyntaxColorEntry:Item(0)];
     Check(doc.syntaxcolorEntry, "active line coloring is on");
     [scrap setSelectedRange:NSMakeRange(Find(scrap, @"plain"), 0)];
-    Spin(0.2);
+    SpinUntil(3, ^BOOL { return [Background(scrap, Find(scrap, @"plain")) isEqual:entryColor]; });
     Check([Background(scrap, Find(scrap, @"plain")) isEqual:entryColor], "the active line in the Experiment source is highlighted");
     [scrap setSelectedRange:NSMakeRange(Find(scrap, @"line 0"), 0)];
-    Spin(0.2);
+    SpinUntil(3, ^BOOL { return [Background(scrap, Find(scrap, @"line 0")) isEqual:entryColor] && Background(scrap, Find(scrap, @"plain")) == nil; });
     Check([Background(scrap, Find(scrap, @"line 0")) isEqual:entryColor] && Background(scrap, Find(scrap, @"plain")) == nil,
           "moving the insertion point moves the highlight");
 
@@ -503,7 +510,7 @@ int main(void) { @autoreleasepool {
     NSColor *blockColor = [NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1];
     NSUInteger cursor = Find(scrap, @"line 0") + 2;
     [scrap setSelectedRange:NSMakeRange(cursor, 0)];
-    Spin(0.2);
+    SpinUntil(3, ^BOOL { return [Background(scrap, Find(scrap, @"line 0")) isEqual:entryColor]; });
     [doc toggleBlockCursor:Item(0)];
     // With the block on the left (BlockSideKey 0), it covers the character before the insertion point.
     Check(doc.blockCursor && [Background(scrap, cursor - 1) isEqual:blockColor] && Background(scrap, cursor - 2) == nil,
