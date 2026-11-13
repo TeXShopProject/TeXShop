@@ -23,7 +23,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-wording-audit-')as td:
  for lang in ['en','ja','de','es','ko']:
   for name in ['basic_preferences','basic_spelling','configure_menushortcuts','configure_prefchanges','configure_hidden']:
    cases.append((f'outside-{lang}-{name}',f'Resources/Interfaces/{lang}.lproj/TeXShopHelp/pgs/{name}.htm',b'</body>',b'<p>fixture paragraph</p></body>',guidance,'body text outside content_border'))
- cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>初期状態に戻す</p></div>'.encode('cp932'),guidance,'Japanese obsolete shortcut button'),('manual-find','DocumentSources/Manual Source/Manual.tex',b'Switching between the Apple Find Panel and Apple Find Bar',b'After making a selection, TeXShop must be restarted. Switching between the Apple Find Panel and Apple Find Bar',guidance,'Find Panel restart guidance')]
+ cases += [('ja-button','Resources/Interfaces/ja.lproj/TeXShopHelp/pgs/configure_menushortcuts.htm',b'</div>','<p>初期状態に戻す</p></div>'.encode('cp932'),guidance,'Japanese obsolete shortcut button'),('manual-find','DocumentSources/Manual Source/Manual.tex',b'Select each and try it. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel',b'Select each and try it. After making a selection, TeXShop must be restarted. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel',guidance,'Find Panel restart guidance')]
  for suffix in ['.md','-ja.md']:
   file='Documentation/Releases/5.60'+suffix
   # The checker examines these current release sources directly.
