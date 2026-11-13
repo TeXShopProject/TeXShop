@@ -173,7 +173,17 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     NSButton *more = [NSButton buttonWithImage:moreImage target:self action:@selector(showOptions:)];
     more.controlSize = NSControlSizeSmall;
     more.toolTip = TSLocalized(@"AdvancedFind.MoreOptions", @"More Options");
-    NSStackView *row = [NSStackView stackViewWithViews:@[self.regexBox, self.ignoreCaseBox, self.inSelectionBox]];
+    // The cheat sheet's "?" right after "Regular expression"
+    self.cheatSheetButton = [NSButton buttonWithTitle:@"" target:self action:@selector(showCheatSheet:)];
+    self.cheatSheetButton.bezelStyle = NSBezelStyleHelpButton;
+    self.cheatSheetButton.controlSize = NSControlSizeMini;
+    self.cheatSheetButton.toolTip = TSLocalized(@"AdvancedFind.CheatSheetTip", @"Show the regular expression reference");
+    self.cheatSheetButton.accessibilityLabel = TSLocalized(@"AdvancedFind.Cheat.Title", @"Regular Expression Reference");
+    NSStackView *regex = [NSStackView stackViewWithViews:@[self.regexBox, self.cheatSheetButton]];
+    regex.spacing = 4;
+    regex.alignment = NSLayoutAttributeCenterY;
+    [regex setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    NSStackView *row = [NSStackView stackViewWithViews:@[regex, self.ignoreCaseBox, self.inSelectionBox]];
     row.spacing = 16;
     [row addView:more inGravity:NSStackViewGravityTrailing];
     return row;
@@ -309,6 +319,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     self.wrapBox.state = settings.wraps ? NSControlStateValueOn : NSControlStateValueOff;
     self.inSelectionBox.state = settings.inSelection ? NSControlStateValueOn : NSControlStateValueOff;
     [self validatePattern];
+    [self updateCheatSheet];
 }
 
 - (void)showPanel
@@ -370,6 +381,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
 {
     [self updateModeControls];
     [self validatePattern];
+    [self updateCheatSheet];
 }
 
 #pragma mark Text fields

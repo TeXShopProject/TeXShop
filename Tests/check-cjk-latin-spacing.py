@@ -4,6 +4,9 @@
 macOS writes these languages without such a space and adds the visual gap when it draws
 the text. Korean separates words with spaces, so it is not checked. The help pages and
 the historical Preferences.nib are not interface text in use.
+
+Code quoted in the text keeps its spaces, so that it can be read: a backslash escape such
+as \\h or \\section in the regular expression cheat sheet may be followed by a space.
 """
 from pathlib import Path
 import re, sys
@@ -11,6 +14,14 @@ import re, sys
 root = Path(__file__).resolve().parents[1]
 CJK = '[　-〿぀-ヿ㐀-鿿！-｠]'
 spaced = re.compile(f'{CJK} [A-Za-z0-9]|[A-Za-z0-9] {CJK}')
+
+def after_escape(text, match):
+    """The letters before the space end a backslash escape: \\h or \\section in the text of a
+    .strings file, where one backslash is written as two (a single one is an escape of the file)."""
+    if not re.match('[A-Za-z0-9] ', match.group(0)):
+        return False
+    word = re.search(r'(\\+)[A-Za-z]+$', text[:match.start() + 1])
+    return word is not None and len(word.group(1)) >= 2
 
 def interface_files(language):
     for path in sorted((root / 'Resources/Interfaces' / f'{language}.lproj').rglob('*')):
@@ -38,9 +49,15 @@ for language in ('ja', 'zh_CN'):
             text = text.replace('TeXShopを終了', 'TeXShop を終了')
         if mutation == 'spaced-chinese' and language == 'zh_CN' and path.name == 'Localizable.strings':
             text += '\n"Mutation" = "PDF 文件";'
+        if mutation == 'spaced-after-code' and language == 'ja' and path.name == 'AdvancedFind.strings':
+            text += '\n"Mutation" = "\\\\h ICU の説明";'
+        if mutation == 'spaced-code-escape' and language == 'ja' and path.name == 'AdvancedFind.strings':
+            text += '\n"Mutation" = "一行目\\n 二行目";'
         if mutation == 'spaced-escape' and language == 'zh_CN' and path.name == 'ToolbarItems.strings':
             text += unescape('\n"Mutation" = "TeXShop \\U6f14\\U793a";')
         for match in spaced.finditer(text):
+            if path.suffix == '.strings' and after_escape(text, match):
+                continue
             line = text.count('\n', 0, match.start()) + 1
             failures.append(f'{path.relative_to(root)}:{line}: {text[max(0, match.start() - 12):match.end() + 12]!r}')
 

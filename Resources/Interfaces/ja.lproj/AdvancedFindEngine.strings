@@ -15,3 +15,32 @@
 /* The settings of a multiple replacement definition are not valid. */
 "The settings of the replacement definition are not valid." = "置換定義の設定が無効です。";
 
+/* Cheat sheet, differences from OgreKit: \d, \w, \s and \b have their Unicode meaning in ICU. */
+"Unicode: also full-width digits, kanji, kana and the full-width space." = "Unicodeの意味で、全角数字・漢字・かな・全角空白にも一致します。";
+
+/* Cheat sheet, differences from OgreKit. “Always capture” is an option of the OgreKit find panel. */
+"Named groups are numbered too, as with OgreKit's “Always capture” on." = "名前付きグループにも番号が付きます（OgreKitの「常に捕獲」オンと同じ）。";
+
+/* Cheat sheet and find field, differences from OgreKit: a brace by itself is an error in ICU. */
+"ICU needs \\{ and \\} for literal braces (OgreKit did not)." = "ICUでは、{ と } を文字として書くときは \\{ \\} とします（OgreKitではそのままでよかった）。";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "ICUの \\h は横方向の空白です（OgreKitでは16進数字）。数字には [0-9a-fA-F] と書きます。";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU." = "ICUの (?m) は ^ と $ を各行に一致させます（OgreKitでは「.」を改行に一致させた。ICUではそれは (?s)）。";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "ICUの {n}+ は強欲な繰り返しです（OgreKitでは繰り返しをさらに繰り返した）。";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU has no \\K. Write the part before it as a look-behind (?<=…)." = "ICUには \\K がありません。その前の部分を後読み (?<=…) で書きます。";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU cannot call a group with \\g<name>. Repeat the group's pattern instead." = "ICUでは \\g<名前> でグループを呼び出せません。グループのパターンを書き直します。";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU has no absent operator (?~…)." = "ICUには不在演算子 (?~…) がありません。";
+
+/* Cheat sheet, differences from OgreKit: OgreKit's \p{^…} is an error in ICU. */
+"Write \\P{…} in ICU." = "ICUでは \\P{…} と書きます。";
