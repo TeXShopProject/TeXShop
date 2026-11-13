@@ -46,6 +46,7 @@
 #import "TSContentZoom.h"
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
+#import "TSPreviewScrollerKeeper.h"
 #import "TSScrollPageTurn.h"
 #import "TSLinkPreviewGeometry.h"
 #import "TSLinkPreviewView.h"
@@ -171,7 +172,7 @@
 
 - (void)setScaleFactor:(CGFloat)scale
 {
-    [super setScaleFactor: scale];
+    TSPreviewChangeScale(self, ^{ [super setScaleFactor: scale]; });
     resizeOption =  NEW_PDF_FIT_TO_NONE;
 }
 
@@ -8398,6 +8399,7 @@ else
     BOOL preserveZoom = _pdfViewReady && self.document && document && !self.autoScales;
     CGFloat previousScale = preserveZoom ? self.scaleFactor : 0;
     [super setDocument:document];
+    [TSPreviewScrollerKeeper installInView:self];
     // Apply the resolved direction after PDFKit has installed the new catalog.
     // Explicit source comments and toolbar choices take precedence over the PDF.
     if (document && self.myDocument) {
@@ -8432,6 +8434,7 @@ else
 - (void)viewDidMoveToWindow
 {
     [super viewDidMoveToWindow];
+    [TSPreviewScrollerKeeper installInView:self];
     [self observePreviewAppearance];
     [self updateDarkModeInversion];
 }

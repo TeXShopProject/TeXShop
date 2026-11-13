@@ -45,7 +45,6 @@
 #import "TSWindowManager.h"
 #import "TSEncodingSupport.h"
 #import "globals.h"
-#import "TSAutoCompletionListEditor.h"
 #import "HelpDocuments.h"
 #import "TSPreviewWindow.h"
 #import "TSSettingsChangeNote.h"
@@ -89,7 +88,7 @@ typedef NS_CLOSED_ENUM(NSUInteger, TSSettingsFontDestination) {
 @end
 
 @implementation TSPreferences
-@synthesize legacySpellCheckButton = _legacySpellCheckButton, keyBindingEditor = _keyBindingEditor, settingsHelpDocuments = _settingsHelpDocuments;
+@synthesize legacySpellCheckButton = _legacySpellCheckButton, settingsHelpDocuments = _settingsHelpDocuments;
 /*"
 Format of the original prefs file:
 
@@ -1267,6 +1266,70 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
                        [_gsBinPathField.stringValue isEqualToString:snapshot[1]]);
 }
 
+// BEGIN engine path alert
+// The alert that lists the TeX and Ghostscript installations found, with the
+// newest of each selected; the radio matrices are returned in matrices.
+static NSAlert *TSEnginePathAlert(NSDictionary *found, BOOL initial, NSMutableDictionary *matrices)
+{
+    NSAlert *alert = [NSAlert new];
+    alert.messageText = NSLocalizedString(initial ? @"Set Up TeX Engine Paths" : @"Detected Engine Paths", @"");
+    BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
+    alert.informativeText = NSLocalizedString(@"The newest detected installation is selected. You can choose another candidate below.", @"");
+    NSView *choices = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 560, 340)];
+    CGFloat top = 340;
+    for (NSString *key in @[@"TeX", @"Ghostscript"]) {
+        NSTextField *label = [NSTextField labelWithString:key];
+        label.font = [NSFont boldSystemFontOfSize:13];
+        top -= 22;
+        label.frame = NSMakeRect(0, top, 560, 20);
+        [choices addSubview:label];
+        NSArray *candidates = found[key];
+        if (candidates.count == 0) {
+            NSTextField *missing = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Not found", @"")];
+            top -= 30;
+            missing.frame = NSMakeRect(0, top, 560, 28);
+            [choices addSubview:missing];
+        } else {
+            NSButtonCell *cell = [NSButtonCell new];
+            [cell setButtonType:NSButtonTypeRadio];
+            cell.font = [NSFont systemFontOfSize:12];
+            cell.wraps = YES;
+            NSMatrix *matrix = [[NSMatrix alloc] initWithFrame:NSMakeRect(0, 0, 540, 42 * candidates.count)
+                mode:NSRadioModeMatrix prototype:cell numberOfRows:candidates.count numberOfColumns:1];
+            matrix.cellSize = NSMakeSize(540, 40);
+            matrix.intercellSpacing = NSMakeSize(0, 2);
+            [matrix sizeToCells];
+            for (NSUInteger row = 0; row < candidates.count; row++) {
+                NSDictionary *candidate = candidates[row];
+                NSString *version = [candidate[@"version"] length] ? candidate[@"version"] : NSLocalizedString(@"Version unavailable", @"");
+                [[matrix cellAtRow:row column:0] setTitle:[NSString stringWithFormat:@"%@\n%@", version, candidate[@"path"]]];
+                [matrix setToolTip:candidate[@"path"] forCell:[matrix cellAtRow:row column:0]];
+            }
+            [matrix selectCellAtRow:0 column:0];
+            CGFloat height = MIN(126, NSHeight(matrix.frame));
+            NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, top - height, 560, height)];
+            scroll.hasVerticalScroller = YES;
+            scroll.autohidesScrollers = YES;
+            scroll.drawsBackground = NO;
+            scroll.documentView = matrix;
+            [matrix scrollCellToVisibleAtRow:0 column:0];
+            [choices addSubview:scroll];
+            matrices[key] = matrix;
+            top -= height;
+        }
+        top -= 16;
+    }
+    // Remove unused space when there are only one or two installations.
+    for (NSView *view in choices.subviews) [view setFrameOrigin:NSMakePoint(view.frame.origin.x, view.frame.origin.y - top)];
+    [choices setFrameSize:NSMakeSize(560, 340 - top)];
+    alert.accessoryView = choices;
+    if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Typesetting.", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(hasPaths ? @"Use These Paths" : @"OK", @"")];
+    if (hasPaths) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    return alert;
+}
+// END engine path alert
+
 - (void)searchEnginePathsForInitialSetup:(BOOL)initial sender:(NSButton *)sender
 {
     [self cancelEnginePathDiscovery];
@@ -1285,62 +1348,9 @@ A tag of 0 means don't save the window position, a tag of 1 to save the setting.
             // If Settings opened during the initial search, use its sheet.
             BOOL applyInitial = initial && !self->_prefsWindow.visible;
             if ((!initial && !self->_prefsWindow.visible) || ![self enginePathSnapshotMatches:snapshot initial:applyInitial]) return;
-            NSAlert *alert = [NSAlert new];
-            alert.messageText = NSLocalizedString(initial ? @"Set Up TeX Engine Paths" : @"Detected Engine Paths", @"");
-            BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
-            alert.informativeText = NSLocalizedString(@"The newest detected installation is selected. You can choose another candidate below.", @"");
-            NSView *choices = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 560, 340)];
             NSMutableDictionary *matrices = [NSMutableDictionary dictionary];
-            CGFloat top = 340;
-            for (NSString *key in @[@"TeX", @"Ghostscript"]) {
-                NSTextField *label = [NSTextField labelWithString:key];
-                label.font = [NSFont boldSystemFontOfSize:13];
-                top -= 22;
-                label.frame = NSMakeRect(0, top, 560, 20);
-                [choices addSubview:label];
-                NSArray *candidates = found[key];
-                if (candidates.count == 0) {
-                    NSTextField *missing = [NSTextField wrappingLabelWithString:NSLocalizedString(@"Not found", @"")];
-                    top -= 30;
-                    missing.frame = NSMakeRect(0, top, 560, 28);
-                    [choices addSubview:missing];
-                } else {
-                    NSButtonCell *cell = [NSButtonCell new];
-                    [cell setButtonType:NSButtonTypeRadio];
-                    cell.font = [NSFont systemFontOfSize:12];
-                    cell.wraps = YES;
-                    NSMatrix *matrix = [[NSMatrix alloc] initWithFrame:NSMakeRect(0, 0, 540, 42 * candidates.count)
-                        mode:NSRadioModeMatrix prototype:cell numberOfRows:candidates.count numberOfColumns:1];
-                    matrix.cellSize = NSMakeSize(540, 40);
-                    matrix.intercellSpacing = NSMakeSize(0, 2);
-                    [matrix sizeToCells];
-                    for (NSUInteger row = 0; row < candidates.count; row++) {
-                        NSDictionary *candidate = candidates[row];
-                        NSString *version = [candidate[@"version"] length] ? candidate[@"version"] : NSLocalizedString(@"Version unavailable", @"");
-                        [[matrix cellAtRow:row column:0] setTitle:[NSString stringWithFormat:@"%@\n%@", version, candidate[@"path"]]];
-                        [matrix setToolTip:candidate[@"path"] forCell:[matrix cellAtRow:row column:0]];
-                    }
-                    [matrix selectCellAtRow:0 column:0];
-                    CGFloat height = MIN(126, NSHeight(matrix.frame));
-                    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, top - height, 560, height)];
-                    scroll.hasVerticalScroller = YES;
-                    scroll.autohidesScrollers = YES;
-                    scroll.drawsBackground = NO;
-                    scroll.documentView = matrix;
-                    [matrix scrollCellToVisibleAtRow:0 column:0];
-                    [choices addSubview:scroll];
-                    matrices[key] = matrix;
-                    top -= height;
-                }
-                top -= 16;
-            }
-            // Remove unused space when there are only one or two installations.
-            for (NSView *view in choices.subviews) [view setFrameOrigin:NSMakePoint(view.frame.origin.x, view.frame.origin.y - top)];
-            [choices setFrameSize:NSMakeSize(560, 340 - top)];
-            alert.accessoryView = choices;
-            if (![found[@"TeX"] count]) alert.informativeText = [alert.informativeText stringByAppendingFormat:@"\n\n%@", NSLocalizedString(@"Install a TeX distribution, then run Auto Setup in Settings > Typesetting.", @"")];
-            [alert addButtonWithTitle:NSLocalizedString(hasPaths ? @"Use These Paths" : @"OK", @"")];
-            if (hasPaths) [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+            NSAlert *alert = TSEnginePathAlert(found, initial, matrices);
+            BOOL hasPaths = [found[@"TeX"] count] || [found[@"Ghostscript"] count];
             void (^finish)(NSModalResponse) = ^(NSModalResponse response) {
                 if (response != NSAlertFirstButtonReturn || !hasPaths || generation != self.enginePathSearchGeneration ||
                     (!applyInitial && !self->_prefsWindow.visible) ||
@@ -1711,12 +1721,6 @@ person script. See also: DefaultTypesetMode.
     [self updateSpellingControlsFromDefaults:SUD];
     [self applyEffectsForPreferenceKeys:[NSSet setWithObject:TSTeXAwareSpellCheckingKey]];
     [self.settingsChangeNotes recordUserChangeForKey:TSTeXAwareSpellCheckingKey previousValue:previousNoteValue];
-}
-
-- (IBAction)editKeyBindings:(id)sender
-{
-    if (self.keyBindingEditor == nil) self.keyBindingEditor = [TSAutoCompletionListEditor new];
-    [self.keyBindingEditor openAutoCompletionListEditor:sender];
 }
 
 - (IBAction)displayCommentLines:(id)sender

@@ -294,9 +294,11 @@
 "catalog.console.1.1.title" = "コンソールのリサイズ";
 "group.bindings.title" = "キーバインド";
 "catalog.keyboard.0.0.title" = "キーバインドを使う（新しい書類の初期値）";
-"catalog.keyboard.0.1.title" = "キーバインドエディタ…";
+"catalog.keyboard.0.0.note" = "{ を入力すると {} になるように、1文字の入力を決まった文字列に置き換えます。";
+"catalog.keyboard.0.1.title" = "キーバインドの一覧";
 "group.completion.title" = "コマンド補完";
 "catalog.keyboard.1.0.title" = "呼び出すキー";
+"catalog.keyboard.1.0.note" = "入力途中のコマンドを、呼び出すキーを押して補完します。続けて押すと次の候補になります。";
 "catalog.keyboard.1.1.title" = "BibDesk自動補完";
 "catalog.keyboard.1.1.note" = "\\citeなどの中で、BibDeskの文献の引用キーを補完の候補に出します。";
 "catalog.keyboard.1.2.title" = "コマンド補完ファイルを編集…";

@@ -232,7 +232,6 @@
 "Use LaTeX-aware spell checking (recommended)" = "Usar corrección adaptada a LaTeX (recomendado)";
 "Use legacy spell checking" = "Usar la corrección tradicional";
 "LaTeX Spell Checking" = "Ortografía de LaTeX";
-"Edit Key Bindings…" = "Editor de combinaciones de teclas…";
 "Key Bindings" = "Combinaciones de teclas";
 "Edit Command Completion…" = "Editar autocompletado de comandos…";
 "Command Completion" = "Autocompletado de comandos";
@@ -323,7 +322,6 @@
 /* Macro editor placeholder guide */
 "#SEL# = selected text, #INS# = insertion point after the macro, #PASTE# = text on the clipboard. AppleScript macros can also use #FILEPATH# and other placeholders (see Help)." = "#SEL# = texto seleccionado, #INS# = punto de inserción tras la macro, #PASTE# = texto del portapapeles. Las macros AppleScript también pueden usar #FILEPATH# y otros marcadores (véase la Ayuda).";
 /* Key binding editor placeholder guide */
-"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard" = "* #SEL# = caracteres seleccionados, #INS# = punto de inserción, #PASTE# = texto del portapapeles";
 
 /* Edit › Mark */
 "Insert Mark with Note" = "Insertar señal con nota";
@@ -336,3 +334,25 @@
 "Deletes the previous • and selects its note, if it has one." = "Borra el • anterior y selecciona su nota, si la tiene.";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = señal, •‹nota› = señal con nota; %@ › %@ permite moverse entre ellas.";
 "Marks" = "Señales";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "Carácter escrito";
+"Output String" = "Texto de salida";
+"Selected Text" = "Texto seleccionado";
+"Insertion Point" = "Punto de inserción";
+"Clipboard Text" = "Texto del portapapeles";
+"Line Break" = "Salto de línea";
+"Tab" = "Tabulador";
+"Mark" = "Señal";
+"Mark with Note" = "Señal con nota";
+"note" = "nota";
+"Insert" = "Insertar";
+"Add" = "Añadir";
+"Delete" = "Eliminar";
+"Symbols" = "Símbolos";
+"Display" = "Aspecto";
+"Typed As" = "Se escribe";
+"Add Key Binding" = "Añadir combinación de teclas";
+"Change Key Binding" = "Cambiar combinación de teclas";
+"Delete Key Binding" = "Eliminar combinación de teclas";
+"Move Key Binding" = "Mover combinación de teclas";

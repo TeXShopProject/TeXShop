@@ -9,6 +9,7 @@
 #import "globals.h"
 #import "TSPreferenceEffects.h"
 #import "TSColorSupport.h"
+#import "TSKeyBindingsController.h"
 #import "TSPreferences+LiveSettings.h"
 #import "TSWindowManager.h"
 #import "TSSettingsWindowController.h"
@@ -29,13 +30,7 @@ static TSMemoryDefaults *memory;
 @implementation TSSpellSupport
 + (void)preferencesDidChange {}
 @end
-static NSUInteger bindingOpens, helpOpens, completionOpens;
-@interface TSAutoCompletionListEditor:NSObject
-- (void)openAutoCompletionListEditor:(id)sender;
-@end
-@implementation TSAutoCompletionListEditor
-- (void)openAutoCompletionListEditor:(id)sender { bindingOpens++; }
-@end
+static NSUInteger helpOpens, completionOpens;
 @interface HelpDocuments:NSObject
 - (void)displayCommentLines:(id)sender;
 @end
@@ -81,6 +76,22 @@ static void Geometry(NSView *v) {
  if([v isKindOfClass:NSMatrix.class]) {NSMatrix *matrix=(id)v;
   for(NSInteger row=0;row<matrix.numberOfRows;row++)for(NSInteger col=0;col<matrix.numberOfColumns;col++)Check([matrix cellAtRow:row column:col].cellSize.width<=NSWidth([matrix cellFrameAtRow:row column:col])+1,@"Matrix title fits");
  }
+ // Labels show their whole text: a single-line label is as wide as its text, a
+ // wrapping one as tall, and neither is drawn over by another control beside it.
+ if([v isKindOfClass:NSTextField.class] && !((NSTextField *)v).editable && ((NSTextField *)v).stringValue.length) {
+  NSTextField *label=(id)v;NSTextFieldCell *cell=[label.cell copy];NSRect b=label.bounds;
+  BOOL wraps=(cell.lineBreakMode==NSLineBreakByWordWrapping||cell.lineBreakMode==NSLineBreakByCharWrapping)&&!cell.usesSingleLineMode;
+  CGFloat need=wraps?[cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(b),CGFLOAT_MAX)].height:cell.cellSize.width,have=wraps?NSHeight(b):NSWidth(b);
+  Check(need<=have+1,[NSString stringWithFormat:@"Label shows its whole text %@ \"%@\": needs %.1f, has %.1f",label.identifier,label.stringValue,need,have]);
+ }
+ {NSMutableArray<NSView *> *shown=[NSMutableArray array];for(NSView *c in v.subviews)if(!c.hidden && [c isKindOfClass:NSControl.class])[shown addObject:c];
+  for(NSUInteger a=0;a<shown.count;a++)for(NSUInteger b=a+1;b<shown.count;b++){NSRect x=NSIntersectionRect([shown[a] alignmentRectForFrame:shown[a].frame],[shown[b] alignmentRectForFrame:shown[b].frame]);
+   Check(NSWidth(x)<=1||NSHeight(x)<=1,[NSString stringWithFormat:@"Controls side by side do not overlap: %@ and %@",shown[a].identifier,shown[b].identifier]);}}
+ // An input field's focus ring needs 3 points around its bezel, clear of the controls beside it, also its stepper.
+ {NSMutableArray<NSView *> *shown=[NSMutableArray array];for(NSView *c in v.subviews)if(!c.hidden && [c isKindOfClass:NSControl.class])[shown addObject:c];
+  for(NSView *f in shown)if([f isKindOfClass:NSTextField.class]&&((NSTextField *)f).editable&&f.focusRingType!=NSFocusRingTypeNone){NSRect ring=NSInsetRect([f alignmentRectForFrame:f.frame],-3,-3);
+   for(NSView *o in shown)if(o!=f){NSRect x=NSIntersectionRect(ring,[o alignmentRectForFrame:o.frame]);
+    Check(NSWidth(x)<=0.5||NSHeight(x)<=0.5,[NSString stringWithFormat:@"Focus ring of %@ has room beside %@ (%@)",f.identifier,o.identifier,NSStringFromRect(x)]);}}}
  if([v.identifier hasPrefix:@"row."]) Check(NSHeight(v.frame)>=37.5,@"Minimum row height is 38");
  if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||(ancestor && stack.spacing==4)||([NSStringFromClass(stack.class) isEqual:@"TSSettingsOpacityPresentation"] && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
 }
@@ -115,7 +126,7 @@ int main(int argc,char **argv){@autoreleasepool{
   }
   Check([actual isEqual:contract[category]],[NSString stringWithFormat:@"Category group order %@: %@",category,actual]);
  }
- NSDictionary *controlCategories=@{@"settings.hidden-settings-help":@"general",@"settings.926":@"keyboard",@"settings.cell.842":@"keyboard",@"settings.cell.843":@"keyboard",@"settings.edit-bindings":@"keyboard",@"settings.edit-completion":@"keyboard",@"settings.o1v-YF-ekd":@"spelling",@"settings.ts-edit-spelling":@"spelling",@"settings.cell.teg-0p-Q8J":@"spelling"};
+ NSDictionary *controlCategories=@{@"settings.hidden-settings-help":@"general",@"settings.926":@"keyboard",@"settings.cell.842":@"keyboard",@"settings.cell.843":@"keyboard",@"settings.edit-completion":@"keyboard",@"settings.o1v-YF-ekd":@"spelling",@"settings.ts-edit-spelling":@"spelling",@"settings.cell.teg-0p-Q8J":@"spelling"};
  for(NSString *identifier in controlCategories)Check(Find([panes[Required(controlCategories[identifier])] view],identifier)!=nil,[@"Planned control category: " stringByAppendingString:identifier]);
  Check(HeadingCount(Find([panes[@"documents"] view],@"group.encoding"))==1 && HeadingCount(Find([panes[@"documents"] view],@"group.saving"))==1,@"Documents has one heading for Encoding and one for Saving");
  Check([Find([panes[@"documents"] view],@"settings.5xa-en-KkV") isDescendantOf:Find([panes[@"documents"] view],@"group.encoding")],@"Encoding dialog option belongs to Encoding");
@@ -143,12 +154,14 @@ int main(int argc,char **argv){@autoreleasepool{
  NSString *bindingsTitle=[bundle localizedStringForKey:@"group.bindings.title" value:nil table:@"SettingsCategories"];
  Check([bindings.accessibilityLabel isEqual:bindingsTitle],@"Bindings heading follows approved catalog");
  ApplicationDelegate *appDelegate=[ApplicationDelegate new];NSApp.delegate=appDelegate;
- for(NSString *identifier in @[@"settings.edit-bindings",@"settings.edit-completion",@"settings.hidden-settings-help"]) {
+ for(NSString *identifier in @[@"settings.edit-completion",@"settings.hidden-settings-help"]) {
   NSButton *button=after[identifier];Check(button!=nil,@"Editor/help button exists");
   Check([button sendAction:button.action to:button.target],@"Editor/help action reaches its intended owner");
  }
- Check(bindingOpens==1 && completionOpens==1 && helpOpens==1,@"All moved editor/help actions route once without a visible panel");
- Check(owner.keyBindingEditor!=nil && owner.settingsHelpDocuments!=nil,@"Lazily created helper owners are retained");
+ Check(completionOpens==1 && helpOpens==1,@"All moved editor/help actions route once without a visible panel");
+ Check(owner.settingsHelpDocuments!=nil,@"Lazily created helper owners are retained");
+ // Key bindings are edited in the list in the Key Bindings group, not in a window.
+ Check(after[@"settings.edit-bindings"]==nil && owner.keyBindings!=nil && [Find(bindings,@"settings.key-bindings") isEqual:owner.keyBindings.view] && [owner.keyBindings.view isDescendantOf:bindings] && Find(bindings,@"keybindings.table")!=nil,@"The key binding list is embedded in the Key Bindings group");
  // Dispatch through the migrated control and original typed owner, using the
  // production action body. A copied cell or lost target must fail here.
  NSDictionary *writes=@{@"839":@"SyntaxColoringEnabled",@"cgA-o7-Bdw":@"MakeatletterEnabled",@"f1k-jx-ley":@"expl3SyntaxColoring",@"840":@"ParensMatchingEnabled",@"841":@"SpellCheckEnabled",@"842":@"AutoCompleteEnabled",@"843":@"BibDeskCompletion",@"844":@"AcceptFirstMouse",@"845":@"LineNumberEnabled",@"846":@"RightJustify",@"XoX-gZ-pO3":@"TagMenuInMenuBar",@"PhR-Vr-jce":@"AutomaticSpellingCorrectionEnabled",@"CPb-hk-Gqb":@"EditorCanAddBrackets",@"teg-0p-Q8J":@"TurnOffCommandSpellCheck",@"3eF-XA-ahc":@"TurnOffParameterSpellCheck",@"8Wq-gx-FqO":@"TurnOffCommentSpellCheck"};

@@ -696,16 +696,10 @@
                                     <action selector="changeAutoComplete:" target="-1" id="456"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="명령 완성" id="104">
-                                <menu key="submenu" title="명령 완성" id="105">
-                                    <items>
-                                        <menuItem title="항목 추가" keyEquivalent="W" id="106" identifier="TSShortcut.registerForCommandCompletion:.0">
-                                            <connections>
-                                                <action selector="registerForCommandCompletion:" target="-1" id="367"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                            <menuItem title="명령어 완성 목록에 추가" keyEquivalent="W" id="106" identifier="TSShortcut.registerForCommandCompletion:.0">
+                                <connections>
+                                    <action selector="registerForCommandCompletion:" target="-1" id="367"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="워드랩" id="116">
                                 <menu key="submenu" title="워드랩" id="117">
