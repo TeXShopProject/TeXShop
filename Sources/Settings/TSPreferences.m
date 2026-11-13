@@ -564,12 +564,9 @@ This method will be called when the matrix changes. Target 0 means 'all windows 
 {
     id previousNoteValue = @([SUD integerForKey:FindMethodKey]);
 
-	if ([[sender selectedCell] tag] == 0)
-		[SUD setInteger:0 forKey:FindMethodKey];
-	else if ([[sender selectedCell] tag] == 1)
-		[SUD setInteger:1 forKey:FindMethodKey];
-    else
-        [SUD setInteger:2 forKey:FindMethodKey];
+	// The cell's tag is the FindMethod value: 0 Apple panel, 1 find bar, 2 OgreKit, 3 Advanced Find panel.
+	NSInteger method = [[sender selectedCell] tag];
+	[SUD setInteger:(method >= 0 && method <= 3 ? method : 0) forKey:FindMethodKey];
     [self applyEffectsForPreferenceKeys:[NSSet setWithObject:FindMethodKey]];
     [self.settingsChangeNotes recordUserChangeForKey:FindMethodKey previousValue:previousNoteValue];
 }

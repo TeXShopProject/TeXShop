@@ -44,6 +44,9 @@
 #import "NSString-CharacterConversion.h"
 #import "NSString-Extras.h"
 #import "TSSourceFormatRanges.h"
+#import "TSFindInterface.h"
+#import "TSAdvancedFindPanelController.h"
+#import "TSAdvancedFindTextView.h"
 
 @protocol BDSKCompletionProtocol <NSObject>
 - (NSArray *)completionsForString:(NSString *)searchString;
@@ -2941,8 +2944,47 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 	BOOL enabled;
 	if ([self validateEditTextCommand:anItem enabled:&enabled])
 		return enabled;
+	TSAdvancedFindController *advancedFind = [self advancedFindController];
+	if (advancedFind && ([anItem action] == @selector(performFindPanelAction:) || [anItem action] == @selector(performTextFinderAction:)))
+		return [advancedFind validateFindMenuItem:anItem inTextView:self];
     
 	return [super validateMenuItem: anItem];
+}
+
+#pragma mark ========Advanced Find Panel==========
+
+// With the Advanced Find panel (FindMethod 3) the Find menu's actions go to it instead of NSTextView's find; the menu
+// itself is not changed, so the setting takes effect without a restart (plan §5).
+- (nullable TSAdvancedFindController *)advancedFindController
+{
+	if ([SUD integerForKey:FindMethodKey] != TSFindMethodAdvancedPanel)
+		return nil;
+	static dispatch_once_t once;
+	dispatch_once(&once, ^{
+		// The text of a document has LF line endings unless ConvertLF is off; then its own line endings are kept.
+		TSAdvancedFindController.sharedController.lineEndingHandler = ^NSString *(NSTextView *textView) {
+			return [SUD boolForKey:ConvertLFKey] ? @"\n" : nil;
+		};
+	});
+	return TSAdvancedFindPanelController.sharedPanelController.findController;
+}
+
+- (void)performFindPanelAction:(id)sender
+{
+	TSAdvancedFindController *advancedFind = [self advancedFindController];
+	if (advancedFind)
+		[advancedFind performFindPanelAction:sender inTextView:self];
+	else
+		[super performFindPanelAction:sender];
+}
+
+- (void)performTextFinderAction:(id)sender
+{
+	TSAdvancedFindController *advancedFind = [self advancedFindController];
+	if (advancedFind)
+		[advancedFind performFindPanelAction:sender inTextView:self];
+	else
+		[super performTextFinderAction:sender];
 }
 
 #pragma mark ========Ruler==========

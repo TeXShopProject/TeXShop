@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E535BA487AD036033330CF4 /* TSAdvancedFindController.m in Sources */ = {isa = PBXBuildFile; fileRef = D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		3E28439E4331B75239F78E1E /* TSAdvancedFindHighlights.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		129A84463E3189A2848E7DA5 /* TSAdvancedFindInputBox.m in Sources */ = {isa = PBXBuildFile; fileRef = F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		469AA3DB7D935CA1B232678B /* TSAdvancedFindOptionsForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		F909CBB2A6D94D6A5696B0C9 /* TSAdvancedFindPanelController+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		1515E934D4D5C57D578A0B70 /* TSAdvancedFindPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		CA2B36C2CA1477FDBB2CF755 /* TSAdvancedFindSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		E7D37A94A8A25460D369D60C /* TSAdvancedFindTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C81BD7E5D80BF55BE94E34 /* TSAdvancedFindTextView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		18ED0114B6072AE86BC14850 /* TSPreferenceLaunch.m in Sources */ = {isa = PBXBuildFile; fileRef = 43313E338B87973F030A3810 /* TSPreferenceLaunch.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new"; }; };
+		00BF469646F14357C53A1246 /* AdvancedFind.strings in Resources */ = {isa = PBXBuildFile; fileRef = 377E3DDD07AA8FE81002D25F /* AdvancedFind.strings */; };
+		AD9114C58B8D73DBFEA212A9 /* AdvancedFindEngine.strings in Resources */ = {isa = PBXBuildFile; fileRef = 53E3AF03C779790C023AC048 /* AdvancedFindEngine.strings */; };
 		A12627FA47A94107E91A0354 /* TSRegexFindOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BAB36C46A874188F41DC0B2 /* TSRegexFindOptions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		24F1158918A8E62736CE6FFD /* TSRegexFindPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EB0097D0878293A8CB554 /* TSRegexFindPattern.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		925124931FE605F31756F6DD /* TSRegexReplacementTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B779315E1E594F3CC15741E /* TSRegexReplacementTemplate.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -382,6 +395,50 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EEDE5776A4F985316C5A2148 /* TSAdvancedFindController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindController.h; sourceTree = "<group>"; };
+		D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindController.m; sourceTree = "<group>"; };
+		1F8F715B9FF420B7989F30AC /* TSAdvancedFindHighlights.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindHighlights.h; sourceTree = "<group>"; };
+		3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindHighlights.m; sourceTree = "<group>"; };
+		7AEFC934AA5B01FE309793AB /* TSAdvancedFindInputBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindInputBox.h; sourceTree = "<group>"; };
+		F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindInputBox.m; sourceTree = "<group>"; };
+		8D9A0C4E9B27EA807C50DF9D /* TSAdvancedFindOptionsForm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindOptionsForm.h; sourceTree = "<group>"; };
+		8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindOptionsForm.m; sourceTree = "<group>"; };
+		DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Actions.m"; sourceTree = "<group>"; };
+		27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+History.m"; sourceTree = "<group>"; };
+		0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Options.m"; sourceTree = "<group>"; };
+		D39F26F1E3FD4FC8AF0F8847 /* TSAdvancedFindPanelController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindPanelController+Private.h"; sourceTree = "<group>"; };
+		452157E5DF6449194BF0E926 /* TSAdvancedFindPanelController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindPanelController.h; sourceTree = "<group>"; };
+		9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindPanelController.m; sourceTree = "<group>"; };
+		06EAF730931230D8B0E2F3BB /* TSAdvancedFindSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindSettings.h; sourceTree = "<group>"; };
+		80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindSettings.m; sourceTree = "<group>"; };
+		129E025F1EB924880C4110F7 /* TSAdvancedFindTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindTextView.h; sourceTree = "<group>"; };
+		92C81BD7E5D80BF55BE94E34 /* TSAdvancedFindTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindTextView.m; sourceTree = "<group>"; };
+		79386E4CA9C716CC593C87C4 /* TSPreferenceLaunch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPreferenceLaunch.h; sourceTree = "<group>"; };
+		43313E338B87973F030A3810 /* TSPreferenceLaunch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSPreferenceLaunch.m; sourceTree = "<group>"; };
+		68D59A59B5C51AE8F1C6576D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		61C24FA90E8E67BCA1E76D4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		C839101565395C1DAA12A6D0 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		3C3FDBA8541E4BCAAB06C0CA /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		DAB908B89C188D565AFE2FCF /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		FA8BFA90CC779203C3422B15 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		C0B84827762155CF6DA0E9AB /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		0D4064C3543B2A6AD2D65C1D /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		42463966167902CAE9AAA5D9 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		E0EC6F12A003D1D1E6AAD626 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/AdvancedFind.strings"; sourceTree = "<group>"; };
+		C5AD42C1E00BAFF4ADDE951E /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		2D2AF363E895884992626801 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/AdvancedFind.strings; sourceTree = "<group>"; };
+		6B5D5B335A8B1488C95B2753 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		38EA7C87B9AAF2825D90469A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		A38621F3D0CCE45110CF97A1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		223780129540EA1940F485DB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		4B5F03C074481F8C87D3D426 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		BA4276D11450A61E76A21C45 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		6ECCC0A54554F32F7265EE4E /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		C1DFF8D388534BB9611F63DA /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		07FA8F4B972874FA76FBBB5F /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		1DDD228880E2230F29F8E2EF /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/AdvancedFindEngine.strings"; sourceTree = "<group>"; };
+		1F97FB1460ABE9AFF27D3D14 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
+		2568E490DFF3393BED7721C4 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/AdvancedFindEngine.strings; sourceTree = "<group>"; };
 		AAC18B54FE17729AEBDCACD3 /* TSRegexFindOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexFindOptions.h; sourceTree = "<group>"; };
 		8BAB36C46A874188F41DC0B2 /* TSRegexFindOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSRegexFindOptions.m; sourceTree = "<group>"; };
 		44A1DA9ECAA9302F78780C97 /* TSRegexFindPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSRegexFindPattern.h; sourceTree = "<group>"; };
@@ -1272,6 +1329,8 @@
 		4D96E83320E395C0F250DCAA /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				79386E4CA9C716CC593C87C4 /* TSPreferenceLaunch.h */,
+				43313E338B87973F030A3810 /* TSPreferenceLaunch.m */,
 				9BEADA65F9CB4B3EC9B86C51 /* TSPrefConsoleController.h */,
 				9E2B2A2E258A950674839CF0 /* TSPrefConsoleController.m */,
 				163BED1EC1254A6DDD5193A1 /* TSPrefEditorController.h */,
@@ -1485,6 +1544,8 @@
 				403244B329A037A9000431A1 /* Manual.pdf */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				03E61892009B32C77F000001 /* Localizable.strings */,
+				377E3DDD07AA8FE81002D25F /* AdvancedFind.strings */,
+				53E3AF03C779790C023AC048 /* AdvancedFindEngine.strings */,
 				52B13E5108A8183B00756E5E /* MacroEditor.nib */,
 				40DD042E1C23893C00422219 /* File Encoding.pdf */,
 				52B13E4708A8182F00756E5E /* MainMenu.nib */,
@@ -1651,6 +1712,24 @@
 		D707C90D1BAD16743733C16B /* Find */ = {
 			isa = PBXGroup;
 			children = (
+				EEDE5776A4F985316C5A2148 /* TSAdvancedFindController.h */,
+				D371658982921FCA3CEAE427 /* TSAdvancedFindController.m */,
+				1F8F715B9FF420B7989F30AC /* TSAdvancedFindHighlights.h */,
+				3EE63785520FA8CB2B6FF24C /* TSAdvancedFindHighlights.m */,
+				7AEFC934AA5B01FE309793AB /* TSAdvancedFindInputBox.h */,
+				F56648C2E54E22BBF5A070A6 /* TSAdvancedFindInputBox.m */,
+				8D9A0C4E9B27EA807C50DF9D /* TSAdvancedFindOptionsForm.h */,
+				8862EBA5FD34F66E2FA2D3B6 /* TSAdvancedFindOptionsForm.m */,
+				DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */,
+				27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */,
+				0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */,
+				D39F26F1E3FD4FC8AF0F8847 /* TSAdvancedFindPanelController+Private.h */,
+				452157E5DF6449194BF0E926 /* TSAdvancedFindPanelController.h */,
+				9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */,
+				06EAF730931230D8B0E2F3BB /* TSAdvancedFindSettings.h */,
+				80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */,
+				129E025F1EB924880C4110F7 /* TSAdvancedFindTextView.h */,
+				92C81BD7E5D80BF55BE94E34 /* TSAdvancedFindTextView.m */,
 				DE76E486CF388F181690E591 /* TSRegexMultipleReplace.h */,
 				FB5FBF86FABC267FCFA5F316 /* TSRegexMultipleReplace.m */,
 				A53419A8610F75D0369307C3 /* TSRegexReplacementRule.h */,
@@ -1861,6 +1940,8 @@
 				52B13E5408A8183B00756E5E /* matrixpanel.nib in Resources */,
 				407880830519249A006979EA /* FindPanel.strings in Resources */,
 				407880A20519249A006979EA /* Localizable.strings in Resources */,
+				00BF469646F14357C53A1246 /* AdvancedFind.strings in Resources */,
+				AD9114C58B8D73DBFEA212A9 /* AdvancedFindEngine.strings in Resources */,
 				4020387D1AD5DC69001674DB /* TeXShop Feature Confusion.pdf in Resources */,
 				4078807F0519249A006979EA /* InfoPlist.strings in Resources */,
 				4078813C0519249A006979EA /* ToolbarItems.strings in Resources */,
@@ -1914,6 +1995,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E535BA487AD036033330CF4 /* TSAdvancedFindController.m in Sources */,
+				3E28439E4331B75239F78E1E /* TSAdvancedFindHighlights.m in Sources */,
+				129A84463E3189A2848E7DA5 /* TSAdvancedFindInputBox.m in Sources */,
+				469AA3DB7D935CA1B232678B /* TSAdvancedFindOptionsForm.m in Sources */,
+				D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */,
+				15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */,
+				F909CBB2A6D94D6A5696B0C9 /* TSAdvancedFindPanelController+Options.m in Sources */,
+				1515E934D4D5C57D578A0B70 /* TSAdvancedFindPanelController.m in Sources */,
+				CA2B36C2CA1477FDBB2CF755 /* TSAdvancedFindSettings.m in Sources */,
+				E7D37A94A8A25460D369D60C /* TSAdvancedFindTextView.m in Sources */,
+				18ED0114B6072AE86BC14850 /* TSPreferenceLaunch.m in Sources */,
 				A5D7F238722E8B97651943FD /* TSRegexMultipleReplace.m in Sources */,
 				5842AEFCEA920C9547F699A0 /* TSRegexReplacementRule.m in Sources */,
 				A12627FA47A94107E91A0354 /* TSRegexFindOptions.m in Sources */,
@@ -2055,6 +2147,44 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		377E3DDD07AA8FE81002D25F /* AdvancedFind.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				68D59A59B5C51AE8F1C6576D /* de */,
+				61C24FA90E8E67BCA1E76D4F /* en */,
+				C839101565395C1DAA12A6D0 /* es */,
+				3C3FDBA8541E4BCAAB06C0CA /* fr */,
+				DAB908B89C188D565AFE2FCF /* it */,
+				FA8BFA90CC779203C3422B15 /* ja */,
+				C0B84827762155CF6DA0E9AB /* ko */,
+				0D4064C3543B2A6AD2D65C1D /* nl */,
+				42463966167902CAE9AAA5D9 /* pt */,
+				E0EC6F12A003D1D1E6AAD626 /* pt-PT */,
+				C5AD42C1E00BAFF4ADDE951E /* ro */,
+				2D2AF363E895884992626801 /* zh_CN */,
+			);
+			name = AdvancedFind.strings;
+			sourceTree = "<group>";
+		};
+		53E3AF03C779790C023AC048 /* AdvancedFindEngine.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B5D5B335A8B1488C95B2753 /* de */,
+				38EA7C87B9AAF2825D90469A /* en */,
+				A38621F3D0CCE45110CF97A1 /* es */,
+				223780129540EA1940F485DB /* fr */,
+				4B5F03C074481F8C87D3D426 /* it */,
+				BA4276D11450A61E76A21C45 /* ja */,
+				6ECCC0A54554F32F7265EE4E /* ko */,
+				C1DFF8D388534BB9611F63DA /* nl */,
+				07FA8F4B972874FA76FBBB5F /* pt */,
+				1DDD228880E2230F29F8E2EF /* pt-PT */,
+				1F97FB1460ABE9AFF27D3D14 /* ro */,
+				2568E490DFF3393BED7721C4 /* zh_CN */,
+			);
+			name = AdvancedFindEngine.strings;
+			sourceTree = "<group>";
+		};
 		A53A4B59BBE2B72F965B083F /* SettingsWindow.xib */ = {isa = PBXVariantGroup; children = (E18000000000000000000005 /* Base */, ); name = SettingsWindow.xib; sourceTree = "<group>"; };
 		D61FA563CE9FC9BEE1BA8618 /* GlyphPopoverMulti.xib */ = {isa = PBXVariantGroup; children = (4054643C19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverMulti.xib; sourceTree = "<group>"; };
 		D55A1544C331DC7DE9A7D6B3 /* GlyphPopoverSingle.xib */ = {isa = PBXVariantGroup; children = (4054643D19AE9630006EE9D5 /* Base */, ); name = GlyphPopoverSingle.xib; sourceTree = "<group>"; };

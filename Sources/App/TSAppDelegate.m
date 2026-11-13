@@ -56,6 +56,7 @@
 #import "OgreKit/OgreTextFinder.h"
 #import "TSSettingsChangeNote.h"
 #import "TextFinder.h"
+#import "TSPreferenceLaunch.h"
 
 #include <sys/sysctl.h>     // for testForIntel
 #include <mach/machine.h>   // for testForIntel
@@ -339,11 +340,12 @@
 
 	// if this is the first time the app is used, register a set of defaults to make sure
 	// that the app is useable.
-	if (([[NSUserDefaults standardUserDefaults] boolForKey:TSHasBeenUsedKey] == NO) ||
-		([[NSUserDefaults standardUserDefaults] objectForKey:TetexBinPath] == nil)) {
+	if (TSPreferencesNeedFactoryReset(SUD)) {
         // then no defaults have ever been set, so we need to set them on disk
 		[[TSPreferences sharedInstance] registerFactoryDefaults];
 	} else {
+		// after the decision above, and only for those whose settings were kept
+		TSPreferencesMigrateEarlierUser(SUD, savedSettings);
 		// register defaults; this does not interfere with values previously set by the user, but provides default values for all other defaults
 		fileName = [[NSBundle mainBundle] pathForResource:@"FactoryDefaults" ofType:@"plist" inDirectory:@"Defaults"];
 		NSParameterAssert(fileName != nil);

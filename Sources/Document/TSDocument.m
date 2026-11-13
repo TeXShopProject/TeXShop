@@ -75,6 +75,7 @@
 #import "TSSourceFormatRanges.h"
 #import "TSPreviewAppearance.h"  // added by Terada
 #import "TSFullSplitDivider.h"
+#import "TSAdvancedFindPanelController.h"
 
 
 #define COLORTIME  0.02
@@ -983,6 +984,14 @@ withDarkColors = NO;
 {
     NSInteger current = [SUD integerForKey:FindMethodKey];
     NSNumber *initial = TSSettingsLaunchValues()[FindMethodKey];
+    if (current != TSFindMethodAdvancedPanel) {
+        // Away from the Advanced Find panel: it closes, and its highlights in this document go, since nothing else removes them.
+        if (TSAdvancedFindPanelController.hasSharedPanelController)
+            [TSAdvancedFindPanelController.sharedPanelController close];
+        NSTextStorage *storage = textView1.textStorage;
+        if (storage)
+            [[TSAdvancedFindHighlights existingHighlightsForTextStorage:storage] removeAll];
+    }
     if (current == 2 || (initial != nil && initial.integerValue == 2)) return;
     BOOL incremental = [SUD boolForKey:IncrementalSearchKey];
     TSConfigureFindInterface(textView1, current, incremental);

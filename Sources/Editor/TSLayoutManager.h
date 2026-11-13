@@ -34,8 +34,10 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TSAdvancedFindHighlights.h"
 
-@interface TSLayoutManager : NSLayoutManager {
+// Draws the Advanced Find panel's highlights over the background (TSAdvancedFindHighlightDrawing, plan §6).
+@interface TSLayoutManager : NSLayoutManager <TSAdvancedFindHighlightDrawing> {
 //    NSArray *tabCharacters;
 //    NSArray *newLineCharacters;
 //    NSArray *fullwidthSpaceCharacters;

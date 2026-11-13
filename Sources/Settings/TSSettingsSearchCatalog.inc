@@ -319,6 +319,7 @@ add(TSSettingsCategoryGeneral, @"row.catalog.general.2.0", @"SettingsSource", @"
 add(TSSettingsCategoryEditor, @"row.catalog.editor.7.0", @"SettingsSource", @"1080.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.7.0", @"SettingsSource", @"582.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryEditor, @"row.catalog.editor.7.0", @"SettingsSource", @"583.title", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryEditor, @"row.catalog.editor.7.0", @"SettingsSource", @"adv-Fd-Pnl.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"Mo3-zf-BYT.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"aI9-3B-vVE.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"ypQ-Gc-HUa.title", TSSettingsSearchWeightChoice);
