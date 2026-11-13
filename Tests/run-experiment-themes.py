@@ -23,7 +23,9 @@ if args.mutation == 'source-hook':
 if args.mutation == 'pdf-hook':
     pdf = pdf.replace('[self updateExperimentColors:nil];', '')
 if args.mutation == 'defaults-hook':
-    pdf = pdf.replace('[center addObserver:self selector:@selector(updateExperimentAppearance:)\n        name:NSUserDefaultsDidChangeNotification object:SUD];', '')
+    old = '[center addObserver:self selector:@selector(experimentDefaultsChanged:)\n        name:NSUserDefaultsDidChangeNotification object:SUD];'
+    assert pdf.count(old) == 1, 'defaults-hook'
+    pdf = pdf.replace(old, '')
 if args.mutation == 'reload-hook':
     start, end = pdf.index('- (void)setDocument:'), pdf.index('- (NSArray<NSToolbarItemIdentifier> *)toolbarAllowed')
     pdf = pdf[:start] + '- (void)setDocument:(PDFDocument *)document { [super setDocument:document]; }\n' + pdf[end:]
