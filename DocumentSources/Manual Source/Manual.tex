@@ -2406,6 +2406,8 @@ The list of Find All shows the line number and the text of each match, with the 
 
 Highlights are drawn over the colors and backgrounds the source already has, and follow edits. They appear in both parts of a split window.
 
+Replace All, Find All and Multiple Replace work on a copy of the text in the background. Until they end, every view of the document is read-only, and the buttons and menu items that would start another of them are dimmed. When the work takes more than a moment, a sheet comes down from the document window with the name of the action, a progress bar and the number of matches found so far, or for Multiple Replace the rule being applied. The button with a cross at the right of the bar, or the Escape key, cancels the action; the text then stays as it was and nothing is added to Undo. When the work ends, the result is applied in one step and undone with a single Undo. If the text was changed meanwhile in another way, for example when the file was reloaded, nothing is changed and the panel says so. Find Next, Find Previous and Highlight All reuse the matches already found while the text and the find options stay the same.
+
 \subsection{Regular Expressions}
 
 The panel uses the regular expressions of ICU, which Apple's own programs use, rather than the Onigmo expressions of OgreKit. Most expressions are written the same way. The differences that matter most:
