@@ -74,12 +74,15 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
 
 - (nullable NSArray<NSValue *> *)matchRangesWithCancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
 {
+    // Once isCancelled has said YES, the search is cancelled whatever it says later.
+    __block BOOL cancelled = NO;
+    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;
     NSMutableArray<NSValue *> *matches = [NSMutableArray array];
     for (NSValue *scope in self.scopeRanges) {
-        [self.pattern enumerateMatchesInString:self.string range:scope.rangeValue cancellation:isCancelled usingBlock:^(NSRange matchRange, NSTextCheckingResult *result, BOOL *stop) {
+        [self.pattern enumerateMatchesInString:self.string range:scope.rangeValue cancellation:cancellation usingBlock:^(NSRange matchRange, NSTextCheckingResult *result, BOOL *stop) {
             [matches addObject:[NSValue valueWithRange:matchRange]];
         }];
-        if (isCancelled && isCancelled())
+        if (cancellation && cancellation())
             return nil;
     }
     return matches;
@@ -166,6 +169,9 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
                                                 cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
                                                     progress:(nullable void (NS_NOESCAPE ^)(double, NSUInteger))progress
 {
+    // Once isCancelled has said YES, the search is cancelled whatever it says later.
+    __block BOOL cancelled = NO;
+    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;
     NSString *string = self.string;
     NSUInteger scopeLength = 0;
     for (NSValue *scopeValue in self.scopeRanges)
@@ -186,7 +192,7 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
         NSMutableString *scopeText = [NSMutableString string];
         __block NSUInteger location = scope.location;
         __block NSUInteger count = 0;
-        [self.pattern enumerateMatchesInString:string range:scope cancellation:isCancelled usingBlock:^(NSRange matchRange, NSTextCheckingResult *result, BOOL *stop) {
+        [self.pattern enumerateMatchesInString:string range:scope cancellation:cancellation usingBlock:^(NSRange matchRange, NSTextCheckingResult *result, BOOL *stop) {
             [scopeText appendString:[string substringWithRange:NSMakeRange(location, matchRange.location - location)]];
             [scopeText appendString:[self normalizedLineEndings:[replacementTemplate replacementForMatchRange:matchRange result:result inString:string previousMatchEnd:location]]];
             location = NSMaxRange(matchRange);
@@ -194,7 +200,7 @@ NSString *TSRegexStringByReplacingLineEndings(NSString *string, NSString *lineEn
             if ((total + count) % 256 == 0)
                 report(searched + (location - scope.location), total + count);
         }];
-        if (isCancelled && isCancelled())
+        if (cancellation && cancellation())
             return nil;
         [scopeText appendString:[string substringWithRange:NSMakeRange(location, NSMaxRange(scope) - location)]];
         total += count;

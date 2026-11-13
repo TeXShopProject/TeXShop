@@ -6,10 +6,11 @@ static NSString *const TSYenSign = @"¥";
 #pragma mark - Plain text found quickly
 
 // NSString's search without NSLiteralSearch finds a word where the text has the same characters, or characters with
-// the same canonical decomposition. For a word with no decomposable character and no combining mark, a match of the
-// second kind needs a character in the text whose decomposition is free of marks and made of the word's own characters
-// (U+212A KELVIN SIGN for K, U+FA03 for 糖, a Hangul syllable for its jamo). Where the text has none of them, every match
-// is a literal match: the literal matches are found quickly, and each is checked by the same search, anchored there.
+// the same canonical decomposition, or, for an ASCII digit, a digit of the same value. For a word of the characters
+// below, with no decomposable one, a match of the other kinds needs a character in the text whose decomposition is free
+// of marks and made of the word's own characters (U+212A KELVIN SIGN for K, U+FA03 for 糖), or a digit's look-alike.
+// Where the text has none of them, every match is a literal match: the literal matches are found quickly, and each is
+// checked by the same search, anchored there.
 
 /// The characters whose canonical decomposition has no combining mark, with that decomposition, by the decomposition's
 /// first UTF-16 unit.
@@ -43,12 +44,49 @@ static NSDictionary<NSNumber *, NSArray<NSArray *> *> *TSUnmarkedDecompositions(
     return table;
 }
 
-/// The characters a quick word may hold: ASCII but CR, Latin-1 and the spacing modifier letters, CJK ideographs and
-/// symbols, kana but the sound marks, and full-width forms. NSString's search joins some other characters to their
-/// neighbors in its own way: U+0937 U+200D is found as U+0937 U+0600 (macOS 27.2).
+/// The characters other than ASCII digits that NSString's search without NSLiteralSearch finds as each ASCII digit:
+/// digits of other scripts and other numbers of the same value (U+0660, U+3007, U+1369...). On macOS 27.2 they are
+/// 1,026, all of them numbers (Unicode N*), which are tried one by one.
+static NSArray<NSArray<NSNumber *> *> *TSDigitLookAlikes(void)
+{
+    static NSArray *table;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        NSCharacterSet *alphanumerics = NSCharacterSet.alphanumericCharacterSet, *letters = NSCharacterSet.letterCharacterSet;
+        NSMutableArray<NSString *> *numbers = [NSMutableArray array];
+        NSMutableArray<NSNumber *> *codes = [NSMutableArray array];
+        for (UTF32Char c = 0; c <= 0x10FFFF; c++) {
+            if ((c & 0xFFFF) == 0 && ![alphanumerics hasMemberInPlane:(uint8_t)(c >> 16)]) {
+                c += 0xFFFF;
+                continue;
+            }
+            if ((c >= '0' && c <= '9') || (c >= 0xD800 && c <= 0xDFFF) || ![alphanumerics longCharacterIsMember:c] || [letters longCharacterIsMember:c])
+                continue;
+            UTF32Char little = NSSwapHostIntToLittle(c);
+            [numbers addObject:[[NSString alloc] initWithBytes:&little length:4 encoding:NSUTF32LittleEndianStringEncoding]];
+            [codes addObject:@(c)];
+        }
+        NSMutableArray<NSArray<NSNumber *> *> *byDigit = [NSMutableArray array];
+        for (unichar digit = '0'; digit <= '9'; digit++) {
+            NSString *word = [NSString stringWithCharacters:&digit length:1];
+            NSMutableArray<NSNumber *> *alikes = [NSMutableArray array];
+            for (NSUInteger i = 0; i < numbers.count; i++)
+                if ([numbers[i] rangeOfString:word options:0].location != NSNotFound)
+                    [alikes addObject:codes[i]];
+            [byDigit addObject:alikes];
+        }
+        table = byDigit;
+    });
+    return table;
+}
+
+/// The characters a quick word may hold: ASCII and Latin-1 but the controls (tab and LF are kept) and the soft hyphen,
+/// the spacing modifier letters, CJK ideographs and symbols, kana but the sound marks, and full-width forms.
+/// NSString's search matches some other characters in its own way: U+0937 U+200D is found as U+0937 U+0600, and
+/// U+00AD 1 as U+110BD 1 (macOS 27.2).
 static inline BOOL TSIsQuickCharacter(unichar c)
 {
-    return (c < 0x0300 && c != '\r') || (c >= 0x3000 && c <= 0x3098) || (c >= 0x309D && c <= 0x30FF) || (c >= 0x3400 && c <= 0x4DBF)
+    return c == '\t' || c == '\n' || (c >= 0x20 && c < 0x7F) || (c >= 0xA0 && c < 0x0300 && c != 0xAD) || (c >= 0x3000 && c <= 0x3098) || (c >= 0x309D && c <= 0x30FF) || (c >= 0x3400 && c <= 0x4DBF)
         || (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0xFF01 && c <= 0xFF9D);
 }
 
@@ -93,6 +131,20 @@ static inline BOOL TSIsQuickCharacter(unichar c)
         quick->_skip[u[i] & 0xFF] = (uint32_t)(length - 1 - i);
     __block NSMutableData *others = nil;
     NSMutableSet<NSNumber *> *astral = [NSMutableSet set];
+    void (^addOther)(NSNumber *) = ^(NSNumber *character) {
+        UTF32Char c = character.unsignedIntValue;
+        if (c > 0xFFFF) {
+            [astral addObject:character];
+            return;
+        }
+        if (!others)
+            others = [NSMutableData dataWithLength:0x10000 / 8];
+        ((uint8_t *)others.mutableBytes)[c >> 3] |= (uint8_t)(1u << (c & 7));
+    };
+    for (unichar digit = '0'; digit <= '9'; digit++)
+        if ([own containsIndex:digit])
+            for (NSNumber *alike in TSDigitLookAlikes()[digit - '0'])
+                addOther(alike);
     NSDictionary<NSNumber *, NSArray<NSArray *> *> *table = TSUnmarkedDecompositions();
     [own enumerateIndexesUsingBlock:^(NSUInteger first, BOOL *stop) {
         for (NSArray *entry in table[@(first)]) {
@@ -100,16 +152,8 @@ static inline BOOL TSIsQuickCharacter(unichar c)
             BOOL allOwn = YES;
             for (NSUInteger i = 0; i < decomposition.length && allOwn; i++)
                 allOwn = [own containsIndex:[decomposition characterAtIndex:i]];
-            if (!allOwn)
-                continue;
-            UTF32Char c = [entry[0] unsignedIntValue];
-            if (c > 0xFFFF) {
-                [astral addObject:entry[0]];
-            } else {
-                if (!others)
-                    others = [NSMutableData dataWithLength:0x10000 / 8];
-                ((uint8_t *)others.mutableBytes)[c >> 3] |= (uint8_t)(1u << (c & 7));
-            }
+            if (allOwn)
+                addOther(entry[0]);
         }
     }];
     quick->_others = others;
@@ -366,6 +410,10 @@ static inline BOOL TSIsQuickCharacter(unichar c)
         NSUInteger at = [quick literalMatchIn:chars base:base from:from limit:limit];
         if (at == NSNotFound)
             return NSMakeRange(NSNotFound, 0);
+        // The search reads the text a character at a time, and some characters join the next to them (U+0600 and a
+        // digit): unless the character before the match is a quick one, the search itself is left to decide.
+        if (at > 0 && !TSIsQuickCharacter(at > base ? chars[at - base - 1] : [string characterAtIndex:at - 1]))
+            return [self rangeOfWord:word inString:string from:location limit:limit compare:0];
         NSRange found = [string rangeOfString:word options:NSAnchoredSearch range:NSMakeRange(at, limit - at)];
         if (found.location != NSNotFound) {
             if (found.length == 0 || NSMaxRange(found) > limit)

@@ -169,14 +169,15 @@ static void ComparePlainSearch(NSUInteger count, uint32_t seed)
 {
     unichar lone[] = {0xD800, 0xDC00};
     unichar nel = 0x0085;
-    NSArray<NSString *> *pieces = @[@"a", @"b", @"K", @";", @"`", @" ", @"\n", @"\r", @"\r\n", @"\t", @"e", @"́", @"é", @"A", @"̊", @"Å",
-        @"Å", @"K", @";", @"`", @"糖", @"糖", @"か", @"゙", @"が", @"ᄀ", @"ᅡ", @"ᆨ", @"가",
-        @"‍", @"‌", @"ｶ", @"ﾞ", @"؀", @"क", @"्", @"ष", @"☺", @"️", @"\U0001F600", @"\U0002F800",
-        @"丽", @"·", @"·", @"x", @"y", @"­", @"เ", @"ก", @"ำ", @"ا", @"ل", @"क्ष",
-        @"\U0001F1EF", @"\U0001F1F5", @"\U0001F3FB", @"❤", @"　", @"゛", @"，", @"ʼ", @" ", @" ",
+    NSArray<NSString *> *pieces = @[@"a", @"b", @"K", @";", @"`", @" ", @"\n", @"\r", @"\r\n", @"\t", @"e", @"\u0301", @"\u00E9", @"A", @"\u030A", @"\u00C5",
+        @"\u212B", @"\u212A", @"\u037E", @"\u1FEF", @"\u7CD6", @"\uFA03", @"\u304B", @"\u3099", @"\u304C", @"\u1100", @"\u1161", @"\u11A8", @"\uAC00",
+        @"\u200D", @"\u200C", @"\uFF76", @"\uFF9E", @"\u0600", @"\u0915", @"\u094D", @"\u0937", @"\u263A", @"\uFE0F", @"\U0001F600", @"\U0002F800",
+        @"\u4E3D", @"\u0387", @"\u00B7", @"x", @"y", @"\u00AD", @"\u0E40", @"\u0E01", @"\u0E33", @"\u0627", @"\u0644", @"\u0915\u094D\u0937",
+        @"\U0001F1EF", @"\U0001F1F5", @"\U0001F3FB", @"\u2764", @"\u3000", @"\u309B", @"\uFF0C", @"\u02BC", @"\u00A0", @"\u2028",
+        @"0", @"1", @"\uFF10", @"\u0601", @"\u06DD", @"\u070F", @"\u08E2", @"\u0D4E", @"\U000110BD", @"\u0660", @"\u0967", @"\u3007", @"\U000104A1",
         [NSString stringWithCharacters:&nel length:1], [NSString stringWithCharacters:lone length:1], [NSString stringWithCharacters:lone + 1 length:1]];
     // Words that can be found quickly, in texts that also hold what can match them otherwise or join them to a neighbor.
-    NSArray<NSString *> *plain = @[@"a", @"b", @"K", @";", @"`", @" ", @"\n", @"\t", @"e", @"\u00E9", @"A", @"\u00C5", @"x", @"y", @"\u7CD6",
+    NSArray<NSString *> *plain = @[@"a", @"b", @"K", @";", @"`", @" ", @"\n", @"\t", @"e", @"\u00E9", @"A", @"\u00C5", @"x", @"y", @"\u7CD6", @"0", @"9", @"\uFF10", @"\uFF19",
         @"\u4E3D", @"\u00B7", @"\u304B", @"\uFF76", @"\u3000", @"\uFF0C", @"\u02BC", @"\u00A0", @"\u00AD"];
     __block uint32_t state = seed;
     uint32_t (^next)(uint32_t) = ^uint32_t(uint32_t n) {
@@ -227,12 +228,44 @@ static void ComparePlainSearch(NSUInteger count, uint32_t seed)
         failures++;
 }
 
+/// Quick words beside characters that join the next or the previous one (U+0600 and a digit), over the whole text and
+/// a part of it, as NSString's search finds them.
+static void ComparePlainNeighbors(void)
+{
+    NSMutableArray<NSString *> *neighbors = [NSMutableArray arrayWithArray:@[@"\u0600", @"\u0601", @"\u0602", @"\u0603", @"\u0604", @"\u0605",
+        @"\u06DD", @"\u070F", @"\u0890", @"\u0891", @"\u08E2", @"\u0D4E", @"\U000110BD", @"\U000110CD", @"\u200D", @"\u200C", @"\u0301", @"\u094D",
+        @"\uFE0F", @"\uFF9E", @"\u00AD", @"\r", @"\u1100", @"\u1161", @"\u0E40", @"\u0915", @"\u0627", @"\u2066", @"\uFEFF", @"\u034F",
+        @"\u0660", @"\u0B66", @"\u3007", @"\u1369", @"\u0967", @"\U000104A0"]];
+    unichar lone[] = {0xD800, 0xDC00};
+    [neighbors addObject:[NSString stringWithCharacters:lone length:1]];
+    [neighbors addObject:[NSString stringWithCharacters:lone + 1 length:1]];
+    NSUInteger mismatches = 0;
+    for (NSString *word in @[@"0", @"9", @"\uFF10", @"\uFF19", @"a", @"\u30AB", @"K", @";", @"12", @"\u3042\u3044"])
+        for (NSString *t in neighbors)
+            for (NSString *text in @[[t stringByAppendingString:word], [word stringByAppendingString:t], [NSString stringWithFormat:@"%@%@%@%@", t, word, t, word],
+                                     [NSString stringWithFormat:@"x%@%@x", t, word]])
+                for (NSUInteger start = 0; start < text.length; start++) {
+                    NSRange range = NSMakeRange(start, text.length - start);
+                    TSRegexFindPattern *pattern = [[TSRegexFindPattern alloc] initWithFindString:word options:0 error:NULL];
+                    NSMutableArray<NSValue *> *found = [NSMutableArray array];
+                    [pattern enumerateMatchesInString:text range:range cancellation:nil usingBlock:^(NSRange match, NSTextCheckingResult *result, BOOL *stop) {
+                        [found addObject:[NSValue valueWithRange:match]];
+                    }];
+                    NSArray<NSValue *> *expected = PlainMatchesBySearch(@[word], text, range);
+                    if (![found isEqual:expected] && mismatches++ < 5)
+                        printf("FAIL plain search of %s in %s %s: got %s, NSString finds %s\n", Shown(word), Shown(text), NSStringFromRange(range).UTF8String,
+                               found.description.UTF8String, expected.description.UTF8String);
+                }
+    if (mismatches)
+        failures++;
+}
+
 /// Line endings are put in as a replacement of every CRLF, CR, LF, NEL, line separator and paragraph separator gives them.
 static void CompareLineEndings(NSUInteger count, uint32_t seed)
 {
     unichar nel = 0x0085;
-    NSArray<NSString *> *pieces = @[@"a", @"b", @"あ", @"\n", @"\r", @"\r\n", @" ", @" ", [NSString stringWithCharacters:&nel length:1], @"\n\r", @"\U0001F600"];
-    NSArray<NSString *> *lineEndings = @[@"\n", @"\r", @"\r\n", @" ", @"$1\\"];
+    NSArray<NSString *> *pieces = @[@"a", @"b", @"\u3042", @"\n", @"\r", @"\r\n", @"\u2028", @"\u2029", [NSString stringWithCharacters:&nel length:1], @"\n\r", @"\U0001F600"];
+    NSArray<NSString *> *lineEndings = @[@"\n", @"\r", @"\r\n", @"\u2028", @"$1\\"];
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\r\\n|[\\r\\n\\u0085\\u2028\\u2029]" options:0 error:NULL];
     uint32_t state = seed;
     NSUInteger mismatches = 0;
@@ -299,6 +332,7 @@ int main(void)
         ExpectICU(@"(a)", R, @"\\\U0001F600$1|\\\U00020BB7\U0001F600$1$1|\\\U0001F600\\$1|\\\U0001F600\\\\$1|\\あ$1", @"a",
                   @"\U0001F600$1|\U00020BB7\U0001F600$1a|\U0001F600\\a|\U0001F600\\$1|あa");
         CompareLineEndings(20000, 5);
+        ComparePlainNeighbors();
         ComparePlainSearch(60000, 11);
         ComparePlainSearch(60000, 12);
         CompareWithFoundation(@"(a)(b)?(c)", @"xacy abcz ac", 3000, 1, NO);
@@ -456,6 +490,30 @@ int main(void)
             Check(!cancelled && cancelSeen, @"replace all can be cancelled while it reports its progress");
         }
         Check(!reportedAfterCancel, @"nothing is reported once replace all is cancelled");
+        // A YES is kept, even when the question later says NO.
+        for (NSNumber *kind in @[@(T), @(R)]) {
+            TSRegexTextFind *once = [[TSRegexTextFind alloc] initWithString:progressText pattern:Pattern(@"b", kind.unsignedIntegerValue) selectedRanges:twoScopes inSelection:YES error:NULL];
+            TSRegexReplacementTemplate *onceTemplate = [[TSRegexReplacementTemplate alloc] initWithString:@"cc" pattern:once.pattern syntax:TSRegexReplacementSyntaxICU];
+            __block NSUInteger replacePolls = 0, findPolls = 0;
+            [once replaceAllWithTemplate:onceTemplate cancellation:^BOOL { replacePolls++; return NO; }];
+            [once matchRangesWithCancellation:^BOOL { findPolls++; return NO; }];
+            BOOL allNil = YES, quiet = YES;
+            for (NSUInteger yes = 1; yes <= MAX(replacePolls, findPolls); yes++) {
+                __block NSUInteger polls = 0;
+                __block BOOL said = NO, reportedAfter = NO;
+                BOOL (^onlyOnce)(void) = ^BOOL { if (++polls != yes) return NO; said = YES; return YES; };
+                if (yes <= replacePolls) {
+                    allNil = allNil && ![once replaceAllWithTemplate:onceTemplate cancellation:onlyOnce progress:^(double fraction, NSUInteger matches) { reportedAfter = reportedAfter || said; }];
+                    quiet = quiet && !reportedAfter;
+                    polls = 0;
+                    allNil = allNil && ![once replaceAllWithTemplate:onceTemplate cancellation:onlyOnce];
+                }
+                polls = 0;
+                if (yes <= findPolls)
+                    allNil = allNil && ![once matchRangesWithCancellation:onlyOnce];
+            }
+            Check(replacePolls > 2 && findPolls > 2 && allNil && quiet, [@"a single YES cancels replace all and find all, kind " stringByAppendingString:kind.stringValue]);
+        }
         // Reporting costs next to nothing.
         TSRegexTextFind *manyMatches = [[TSRegexTextFind alloc] initWithString:[@"" stringByPaddingToLength:600000 withString:@"ab " startingAtIndex:0]
                                                                        pattern:Pattern(@"b", R) selectedRanges:whole0 inSelection:NO error:NULL];
@@ -559,6 +617,29 @@ int main(void)
             Check(!cancelled && setCancelSeen, @"a multiple replacement can be cancelled while it reports its progress");
         }
         Check(!setReportedAfterCancel, @"nothing is reported once a multiple replacement is cancelled");
+        BOOL setAllNil = YES, setQuiet = YES;
+        __block NSUInteger highlightPolls = 0;
+        [progressSet matchRangesInString:abs selectedRanges:whole inSelection:NO lineEnding:nil cancellation:^BOOL { highlightPolls++; return NO; }];
+        for (NSUInteger yes = 1; yes <= MAX(allSetPolls, highlightPolls); yes++) {
+            __block NSUInteger polls = 0;
+            __block BOOL said = NO, reportedAfter = NO;
+            BOOL (^onlyOnce)(void) = ^BOOL { if (++polls != yes) return NO; said = YES; return YES; };
+            if (yes <= allSetPolls)
+                setAllNil = setAllNil && ![progressSet applyToString:abs selectedRanges:whole inSelection:NO lineEnding:nil cancellation:onlyOnce
+                                                            progress:^(NSUInteger index, NSUInteger count, double fraction) { reportedAfter = reportedAfter || said; }];
+            setQuiet = setQuiet && !reportedAfter;
+            polls = 0;
+            if (yes <= highlightPolls)
+                setAllNil = setAllNil && ![progressSet matchRangesInString:abs selectedRanges:whole inSelection:NO lineEnding:nil cancellation:onlyOnce];
+        }
+        Check(setAllNil && setQuiet, @"a single YES cancels a multiple replacement and its highlights");
+        // Rules not used are asked about too.
+        for (NSArray *unused in @[@[rule(@"q", @"", NO, NO, NO)], @[rule(@"(", @"", YES, NO, YES)], @[rule(@"q", @"", NO, NO, NO), rule(@"(", @"", YES, NO, YES)]]) {
+            __block NSUInteger polls = 0, reports = 0;
+            TSRegexMultipleReplaceResult *cancelled = [set(unused, T, R, TSRegexReplacementSyntaxICU) applyToString:abs selectedRanges:whole inSelection:NO lineEnding:nil
+                cancellation:^BOOL { polls++; return YES; } progress:^(NSUInteger index, NSUInteger count, double fraction) { reports++; }];
+            Check(!cancelled && polls > 0 && reports == 0, [NSString stringWithFormat:@"a multiple replacement of rules not used is cancelled (%lu rules)", (unsigned long)unused.count]);
+        }
 
         // Every regular expression option of a file is used and written again; comparison options the panel does not
         // show are ignored (user's decision, 2026-11-12).

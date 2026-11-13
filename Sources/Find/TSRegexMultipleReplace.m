@@ -627,6 +627,9 @@ static NSError *TSDefinitionError(NSString *description)
                                             cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
                                                 progress:(nullable void (NS_NOESCAPE ^)(NSUInteger, NSUInteger, double))progress
 {
+    // Once isCancelled has said YES, the replacement is cancelled whatever it says later.
+    __block BOOL cancelled = NO;
+    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;
     NSUInteger ruleCount = self.rules.count;
     void (^ruleDone)(NSUInteger) = ^(NSUInteger index) {
         if (progress)
@@ -639,6 +642,9 @@ static NSError *TSDefinitionError(NSString *description)
     for (NSUInteger index = 0; index < self.rules.count; index++) {
         TSRegexReplacementRule *rule = self.rules[index];
         [counts addObject:@0];
+        // Asked before every rule, so that nothing is reported, even for a rule not used, once it has said YES.
+        if (cancellation && cancellation())
+            return nil;
         if (!rule.enabled) {
             ruleDone(index);
             continue;
@@ -652,7 +658,7 @@ static NSError *TSDefinitionError(NSString *description)
         }
         TSRegexReplacementTemplate *template = [[TSRegexReplacementTemplate alloc] initWithString:rule.replaceString pattern:find.pattern syntax:self.replacementSyntax];
         // The rule's own report of 1 is its last.
-        TSRegexReplaceAllResult *result = [find replaceAllWithTemplate:template cancellation:isCancelled progress:progress ? ^(double fraction, NSUInteger matches) {
+        TSRegexReplaceAllResult *result = [find replaceAllWithTemplate:template cancellation:cancellation progress:progress ? ^(double fraction, NSUInteger matches) {
             progress(index, ruleCount, fraction);
         } : nil];
         if (!result)
@@ -676,14 +682,19 @@ static NSError *TSDefinitionError(NSString *description)
                                           lineEnding:(nullable NSString *)lineEnding
                                         cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
 {
+    // Once isCancelled has said YES, the search is cancelled whatever it says later.
+    __block BOOL cancelled = NO;
+    BOOL (^cancellation)(void) = isCancelled ? ^BOOL { return cancelled || (cancelled = isCancelled()); } : nil;
     NSMutableArray<NSValue *> *ranges = [NSMutableArray array];
     for (TSRegexReplacementRule *rule in self.rules) {
+        if (cancellation && cancellation())
+            return nil;
         if (!rule.enabled)
             continue;
         TSRegexTextFind *find = [self textFindForRule:rule string:string selectedRanges:selectedRanges inSelection:inSelection lineEnding:lineEnding error:NULL];
         if (!find)
             continue;
-        NSArray<NSValue *> *matches = [find matchRangesWithCancellation:isCancelled];
+        NSArray<NSValue *> *matches = [find matchRangesWithCancellation:cancellation];
         if (!matches)
             return nil;
         [ranges addObjectsFromArray:matches];

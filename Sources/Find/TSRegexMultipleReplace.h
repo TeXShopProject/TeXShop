@@ -67,7 +67,8 @@ NS_SWIFT_NAME(RegexMultipleReplace)
 - (TSRegexFindOptions)optionsForRule:(TSRegexReplacementRule *)rule;
 
 /// Applies the enabled rules in order; a rule that cannot be used is skipped. The find strings and the replaced
-/// text are put into the line ending when one is given. Returns nil when cancelled.
+/// text are put into the line ending when one is given. `isCancelled` is asked before each rule and while a rule
+/// searches; once it has returned YES, the result is nil.
 - (nullable TSRegexMultipleReplaceResult *)applyToString:(NSString *)string
                                           selectedRanges:(NSArray<NSValue *> *)selectedRanges
                                              inSelection:(BOOL)inSelection
@@ -86,7 +87,8 @@ NS_SWIFT_NAME(RegexMultipleReplace)
                                                 progress:(nullable void (NS_NOESCAPE ^)(NSUInteger ruleIndex, NSUInteger ruleCount, double fractionCompleted))progress
     NS_SWIFT_NAME(apply(to:selectedRanges:inSelection:lineEnding:isCancelled:progress:));
 
-/// The matches of every enabled rule in the unchanged string, rule after rule (for highlighting). Nil when cancelled.
+/// The matches of every enabled rule in the unchanged string, rule after rule (for highlighting). Nil once
+/// `isCancelled` has returned YES.
 - (nullable NSArray<NSValue *> *)matchRangesInString:(NSString *)string
                                       selectedRanges:(NSArray<NSValue *> *)selectedRanges
                                          inSelection:(BOOL)inSelection

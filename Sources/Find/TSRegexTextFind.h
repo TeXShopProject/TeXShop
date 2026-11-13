@@ -41,7 +41,7 @@ NS_SWIFT_NAME(RegexTextFind)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/// All matches in the scope in ascending order, or nil when cancelled.
+/// All matches in the scope in ascending order, or nil when cancelled: once `isCancelled` has returned YES.
 - (nullable NSArray<NSValue *> *)matchRangesWithCancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
     NS_SWIFT_NAME(matchRanges(isCancelled:));
 
@@ -64,7 +64,7 @@ NS_SWIFT_NAME(RegexTextFind)
 - (nullable TSRegexFindReplacement *)replacementInSelectionWithTemplate:(TSRegexReplacementTemplate *)replacementTemplate
     NS_SWIFT_NAME(replacementInSelection(template:));
 
-/// Replaces every match in the scope. Returns nil when cancelled.
+/// Replaces every match in the scope. Returns nil when cancelled: once `isCancelled` has returned YES.
 - (nullable TSRegexReplaceAllResult *)replaceAllWithTemplate:(TSRegexReplacementTemplate *)replacementTemplate
                                                 cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
     NS_SWIFT_NAME(replaceAll(template:isCancelled:));
@@ -72,7 +72,7 @@ NS_SWIFT_NAME(RegexTextFind)
 /// Replaces every match in the scope, telling `progress` on the calling thread how much of the scope has been
 /// searched (0 to 1) and how many matches have been found: after every 256 matches, at the end of each scope range,
 /// and last with 1. The fraction never goes down. Nothing is reported once `isCancelled` has returned YES.
-/// Returns nil when cancelled.
+/// Returns nil when cancelled: once `isCancelled` has returned YES.
 - (nullable TSRegexReplaceAllResult *)replaceAllWithTemplate:(TSRegexReplacementTemplate *)replacementTemplate
                                                 cancellation:(nullable BOOL (NS_NOESCAPE ^)(void))isCancelled
                                                     progress:(nullable void (NS_NOESCAPE ^)(double fractionCompleted, NSUInteger numberOfMatches))progress
