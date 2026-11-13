@@ -13,8 +13,9 @@ import subprocess
 import sys
 
 MUTATIONS = {
-    # A word of an older release is pushed out (nstextview and started, #25 audit).
-    'word-pushed-out': lambda terms: terms - {'started'},
+    # A word of an older release is pushed out (nstextview and started, #25 audit; started went with the macro
+    # editor's coloring in 2026-11, so crucial stands for it).
+    'word-pushed-out': lambda terms: terms - {'crucial'},
     # A new word comes in.
     'word-added': lambda terms: terms | {'else'},
 }

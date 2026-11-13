@@ -173,6 +173,7 @@ appeared
 appears
 apple
 apple's
+applescript
 apple’s
 application
 applications
@@ -710,6 +711,7 @@ following
 follows
 font
 fonts
+footnote
 for
 foreground
 forget
@@ -877,6 +879,7 @@ increasing
 indefinite
 indented
 independent
+index
 indicate
 indicator
 individual
@@ -1206,7 +1209,6 @@ now
 nstextinputtraittypedefault
 nstextinputtraittypeno
 nstextinputtraittypeyes
-nstextview
 nsuserkeyequivalents
 number
 numbered
@@ -1675,7 +1677,6 @@ standard
 standardize
 stands
 start
-started
 starting
 starts
 statement
@@ -1753,7 +1754,6 @@ takes
 taller
 target
 targets
-tasks
 tcsh
 teaching
 tell
