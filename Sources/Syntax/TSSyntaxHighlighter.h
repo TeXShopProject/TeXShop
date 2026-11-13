@@ -10,11 +10,12 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(SyntaxHighlighter)
 @interface TSSyntaxHighlighter : NSObject
 @property (nonatomic, readonly, weak) NSTextView *textView;
-@property (nonatomic, readonly) id<TSSyntaxScanner> scanner;
-@property (nonatomic, readonly) TSSyntaxColorScheme *scheme;
+/// nil: no coloring. Setting it, or the scheme, colors the whole text again when the highlighter follows edits.
+@property (nonatomic, strong, nullable) id<TSSyntaxScanner> scanner;
+@property (nonatomic, strong, nullable) TSSyntaxColorScheme *scheme;
 
-- (instancetype)initWithTextView:(NSTextView *)textView scanner:(id<TSSyntaxScanner>)scanner
-                          scheme:(TSSyntaxColorScheme *)scheme NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithTextView:(NSTextView *)textView scanner:(nullable id<TSSyntaxScanner>)scanner
+                          scheme:(nullable TSSyntaxColorScheme *)scheme NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
@@ -22,6 +23,15 @@ NS_SWIFT_NAME(SyntaxHighlighter)
 /// gave, and leaves the ranges flagged so out of spell checking. Removes nothing: the caller has cleared the range
 /// as it needs, which for the source is every foreground color.
 - (void)applyTokensInRange:(NSRange)range;
+
+/// For short texts, such as the contents of a macro: colors the whole text now, and again after every edit,
+/// including a new string, removing only the attributes it added itself, so that other features keep theirs. While
+/// text is being composed with an input method, it waits, and colors once the text is committed or removed.
+- (void)followEdits;
+/// Colors the whole text again now, or once composing ends.
+- (void)highlightWholeText;
+/// Removes the attributes this highlighter added and stops following edits.
+- (void)invalidate;
 
 @end
 

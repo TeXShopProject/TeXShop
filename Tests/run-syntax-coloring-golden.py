@@ -600,7 +600,8 @@ def run(payload):
         optimization = ['-Os'] if 'benchmark' in payload else []
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', *optimization, '-framework', 'Cocoa', '-I', str(parts),
                         *include_args(ROOT), '-I', str(ROOT / 'Tests'),
-                        str(tmp / 'probe.m'), *map(str, sorted(parts.glob('*.m'))), '-o', str(tmp / 'probe')], check=True)
+                        str(tmp / 'probe.m'), *map(str, sorted(parts.glob('*.m'))), str(source_file(ROOT, 'TSMacroContentKind.m')),
+                        '-o', str(tmp / 'probe')], check=True)
         result = subprocess.run([str(tmp / 'probe'), str(tmp / 'input.json'), str(tmp / 'output.json')],
                                 capture_output=True, text=True, timeout=600)
         output = json.loads((tmp / 'output.json').read_text(encoding='utf-8')) if (tmp / 'output.json').exists() else {}

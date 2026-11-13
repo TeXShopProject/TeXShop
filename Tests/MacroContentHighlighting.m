@@ -1,0 +1,163 @@
+// The macro editor colors its contents as the source is colored, in the theme's
+// colors: a TeX macro by the rules of the source, an AppleScript macro by its own,
+// each with its placeholders. Coloring follows a new macro, typing, undo, the
+// window's appearance and the Syntax Color setting, waits while text is composed,
+// and leaves the attributes of other features and the text itself alone. No window
+// is shown and the defaults stay in memory.
+#import <Cocoa/Cocoa.h>
+#import "TestAppKitIsolation.h"
+#import "TSMacroEditor.h"
+#import "TSColorSupport.h"
+#import "TSSyntaxHighlighter.h"
+#import "TSSyntaxMacroContentScanner.h"
+#import "TSSyntaxTeXScanner.h"
+#import "TSPreferenceEffects.h"
+#import "globals.h"
+#define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
+@implementation TSMacroEditor
+#include "MacroContentHighlighting.inc"
+- (void)setValue:(id)v forUndefinedKey:(NSString *)k {}
+@end
+static void Spin(void) { [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.02]]; }
+static BOOL Same(NSColor *a, NSColor *b) {
+    NSColor *x=[a colorUsingColorSpace:NSColorSpace.sRGBColorSpace], *y=[b colorUsingColorSpace:NSColorSpace.sRGBColorSpace];
+    return x && y && fabs(x.redComponent-y.redComponent)<.002 && fabs(x.greenComponent-y.greenComponent)<.002 && fabs(x.blueComponent-y.blueComponent)<.002;
+}
+static NSTextView *contents;
+static NSDictionary *At(NSString *text) {
+    NSRange range = [contents.string rangeOfString:text];
+    REQUIRE(range.location != NSNotFound);
+    return [contents.layoutManager temporaryAttributesAtCharacterIndex:range.location effectiveRange:NULL];
+}
+static NSColor *ColorAt(NSString *text) { return At(text)[NSForegroundColorAttributeName]; }
+static BOOL Plain(NSString *text) { return ColorAt(text) == nil; }
+static TSSyntaxColorScheme *Scheme(NSDictionary *theme, BOOL dark) { return [[TSSyntaxColorScheme alloc] initWithTheme:theme dark:dark]; }
+static NSColor *RoleColor(TSSyntaxColorScheme *scheme, TSSyntaxRole role) { return [scheme attributesForRole:role][NSForegroundColorAttributeName]; }
+
+int main(int argc, char **argv) { @autoreleasepool {
+    TSInstallAppKitIsolation();
+    [NSApplication sharedApplication];
+    liteColors = [NSDictionary dictionaryWithContentsOfFile:@(argv[1])];
+    darkColors = [NSDictionary dictionaryWithContentsOfFile:@(argv[2])];
+    REQUIRE(liteColors && darkColors);
+    g_texChar = '\\';  // as TSAppDelegate sets it for encodings other than the Japanese ones
+    NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
+    [defaults setBool:YES forKey:SyntaxColoringEnabledKey];
+    [defaults setBool:YES forKey:expl3SyntaxColoringKey];
+
+    TSMacroEditor *editor = [TSMacroEditor new];
+    NSWindow *host = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,400,300) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+    host.releasedWhenClosed = NO;
+    host.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    // TextKit 1, as the editor makes it.
+    NSTextStorage *storage = [NSTextStorage new]; NSLayoutManager *layout = [NSLayoutManager new]; [storage addLayoutManager:layout];
+    NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(400, CGFLOAT_MAX)]; [layout addTextContainer:container];
+    contents = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,400,300) textContainer:container];
+    contents.richText = NO; contents.allowsUndo = YES;
+    host.contentView = contents;
+    [host makeFirstResponder:contents];
+    [editor setValue:host forKey:@"window"]; [editor setValue:contents forKey:@"contentTextView"];
+    [editor applyContentAppearance:nil];
+    REQUIRE(editor.contentHighlighter.textView == contents);
+    TSSyntaxColorScheme *light = Scheme(liteColors, NO), *dark = Scheme(darkColors, YES);
+    NSColor *command = RoleColor(light, TSSyntaxRoleCommand), *marker = RoleColor(light, TSSyntaxRoleMarker);
+    REQUIRE(command && marker && !Same(command, marker));
+
+    // A TeX macro, as the source colors it, with its placeholders underlined and its marks.
+    contents.string = @"\\begin{#SEL#}#INS# % note\n\\l_tmpa_tl •‹n› #INS# #FILEPATH#";
+    Spin();
+    REQUIRE(Same(ColorAt(@"\\begin"), command));
+    REQUIRE(Same(ColorAt(@"{#SEL#"), RoleColor(light, TSSyntaxRoleBracketCurly)));
+    REQUIRE(Same(ColorAt(@"#SEL#"), marker) && [At(@"#SEL#")[NSUnderlineStyleAttributeName] integerValue] == NSUnderlineStyleSingle);
+    REQUIRE(Same(ColorAt(@"% note"), RoleColor(light, TSSyntaxRoleComment)));
+    REQUIRE(Same(ColorAt(@"\\l_tmpa_tl"), RoleColor(light, TSSyntaxRoleExplVariable)));
+    REQUIRE(Same(ColorAt(@"•‹n›"), marker) && At(@"•‹n›")[NSUnderlineStyleAttributeName] == nil);
+    NSUInteger second = [contents.string rangeOfString:@"#INS#" options:NSBackwardsSearch].location;
+    REQUIRE([[contents.layoutManager temporaryAttributesAtCharacterIndex:second effectiveRange:NULL][NSUnderlineStyleAttributeName] integerValue] == 0);
+    REQUIRE(At(@"#FILEPATH#")[NSUnderlineStyleAttributeName] == nil);
+    // Only temporary attributes: the text and its stored attributes stay as they were.
+    [storage enumerateAttribute:NSForegroundColorAttributeName inRange:NSMakeRange(0, storage.length) options:0 usingBlock:^(id value, NSRange range, BOOL *stop) {
+        REQUIRE(value == nil || Same(value, contents.textColor));
+    }];
+
+    // An AppleScript macro: its own rules and placeholders, in colors the source already has.
+    contents.string = @"--applescript direct\ntell application \"TeXShop\" to set n to 42 -- #SEL#\n#FILEPATH# & «event aevtodoc»";
+    Spin();
+    REQUIRE(Same(ColorAt(@"--applescript"), RoleColor(light, TSSyntaxRoleComment)));
+    REQUIRE(Same(ColorAt(@"tell"), command));
+    REQUIRE(Same(ColorAt(@"\"TeXShop\""), RoleColor(light, TSSyntaxRoleXMLValue)));
+    REQUIRE(Same(ColorAt(@"42"), RoleColor(light, TSSyntaxRoleXMLSpecial)));
+    REQUIRE(Same(ColorAt(@"«event"), RoleColor(light, TSSyntaxRoleXMLSpecial)));
+    REQUIRE(Same(ColorAt(@"#FILEPATH#"), marker) && [At(@"#FILEPATH#")[NSUnderlineStyleAttributeName] integerValue] == NSUnderlineStyleSingle);
+    REQUIRE(At(@"#SEL#")[NSUnderlineStyleAttributeName] == nil && Same(ColorAt(@"#SEL#"), RoleColor(light, TSSyntaxRoleComment)));
+    REQUIRE(Plain(@"application"));
+
+    // Typing is colored once the edit is done.
+    contents.string = @"\\emph{x}";
+    Spin();
+    [contents setSelectedRange:NSMakeRange(contents.string.length, 0)];
+    [contents insertText:@" \\textbf" replacementRange:NSMakeRange(NSNotFound, 0)];
+    Spin();
+    REQUIRE(Same(ColorAt(@"\\textbf"), command));
+    // Undo, and the text is colored as it is again.
+    [contents.undoManager undo];
+    Spin();
+    REQUIRE([contents.string isEqual:@"\\emph{x}"] && Same(ColorAt(@"\\emph"), command));
+
+    // Composed text waits: nothing is colored until it is committed.
+    [contents setSelectedRange:NSMakeRange(contents.string.length, 0)];
+    [contents setMarkedText:@"\\sect" selectedRange:NSMakeRange(5, 0) replacementRange:NSMakeRange(NSNotFound, 0)];
+    Spin();
+    REQUIRE(contents.hasMarkedText && Plain(@"\\sect"));
+    [contents setMarkedText:@"\\section" selectedRange:NSMakeRange(8, 0) replacementRange:NSMakeRange(NSNotFound, 0)];
+    Spin();
+    REQUIRE(Plain(@"\\section"));
+    [contents insertText:@"\\section" replacementRange:NSMakeRange(NSNotFound, 0)];
+    Spin();
+    REQUIRE(!contents.hasMarkedText && Same(ColorAt(@"\\section"), command));
+    // Removing composed text without committing it colors what waited too.
+    [contents setMarkedText:@"\\x" selectedRange:NSMakeRange(2, 0) replacementRange:NSMakeRange(NSNotFound, 0)];
+    Spin();
+    [contents.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:NSMakeRange(0, 5)];
+    [contents unmarkText];
+    Spin();
+    REQUIRE(Same(ColorAt(@"\\emph"), command));
+
+    // Colors of other features stay when the contents are colored again.
+    NSColor *find = NSColor.systemPinkColor;
+    NSRange x = [contents.string rangeOfString:@"x"];
+    [contents.layoutManager addTemporaryAttributes:@{NSBackgroundColorAttributeName: NSColor.cyanColor, NSForegroundColorAttributeName: find} forCharacterRange:x];
+    [editor.contentHighlighter highlightWholeText];
+    REQUIRE([contents.layoutManager temporaryAttributesAtCharacterIndex:x.location effectiveRange:NULL][NSBackgroundColorAttributeName] == NSColor.cyanColor);
+    REQUIRE([contents.layoutManager temporaryAttributesAtCharacterIndex:x.location effectiveRange:NULL][NSForegroundColorAttributeName] == find);
+    [contents.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:x];
+    [contents.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:x];
+
+    // A dark window takes the dark theme.
+    host.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    [editor applyContentAppearance:nil];
+    Spin();
+    REQUIRE(!Same(RoleColor(dark, TSSyntaxRoleCommand), command) && Same(ColorAt(@"\\emph"), RoleColor(dark, TSSyntaxRoleCommand)));
+
+    // Syntax Color off in Settings leaves the contents plain; on again, they are colored.
+    [defaults setBool:NO forKey:SyntaxColoringEnabledKey];
+    [[NSNotificationCenter defaultCenter] postNotificationName:DocumentSyntaxColorNotification object:nil];
+    [editor applyContentAppearance:nil];
+    Spin();
+    REQUIRE(editor.contentHighlighter == nil && Plain(@"\\emph"));
+    contents.string = @"\\emph{y}";
+    Spin();
+    REQUIRE(Plain(@"\\emph"));
+    [defaults setBool:YES forKey:SyntaxColoringEnabledKey];
+    [editor applyContentAppearance:nil];
+    Spin();
+    REQUIRE(Same(ColorAt(@"\\emph"), RoleColor(dark, TSSyntaxRoleCommand)));
+
+    // expl3 off in Settings: an expl3 variable is an ordinary command.
+    contents.string = @"\\l_tmpa_tl";
+    [defaults setBool:NO forKey:expl3SyntaxColoringKey];
+    [editor applyContentAppearance:nil];
+    Spin();
+    REQUIRE(Same(ColorAt(@"\\l"), RoleColor(dark, TSSyntaxRoleCommand)) && Plain(@"_tmpa"));
+    puts("PASS: macro contents are colored as the source, follow edits, composing, appearance and Settings, and keep other colors");
+} return 0; }

@@ -106,8 +106,12 @@ static NSDictionary<NSAttributedStringKey, id> *TSSyntaxFullwidthAttributes(NSDi
         const TSSyntaxRoleThemeKey *entry = &TSSyntaxRoleThemeKeys[i];
         NSDictionary<NSAttributedStringKey, id> *role = TSSyntaxAttributes(NSForegroundColorAttributeName, TSSyntaxThemeColor(theme, entry, dark));
         if (entry->underlined) {
+            // The underline has the color of the text, given as a color of its own so that whoever removes its own
+            // attributes can tell this underline by it.
             NSMutableDictionary<NSAttributedStringKey, id> *underlined = [role mutableCopy];
             underlined[NSUnderlineStyleAttributeName] = @(NSUnderlineStyleSingle);
+            if (role[NSForegroundColorAttributeName])
+                underlined[NSUnderlineColorAttributeName] = role[NSForegroundColorAttributeName];
             role = [underlined copy];
         }
         attributes[@(entry->role)] = role;

@@ -5,7 +5,8 @@ import subprocess, sys, tempfile
 from source_tree import include_args
 root = Path(__file__).resolve().parents[1]
 source = (root / 'Sources/Macros/TSMacroEditor.m').read_text()
-body = source[source.index('// BEGIN content appearance'):source.index('// END content appearance')]
+# The appearance ends by updating the coloring of the contents, which comes with it.
+body = source[source.index('// BEGIN content appearance'):source.index('// END content highlighting')]
 mutations = {
     'always-light': ('NSDictionary *theme = dark ? darkColors : liteColors;', 'NSDictionary *theme = liteColors; dark = NO;'),
     'no-background': ('contentTextView.backgroundColor = ', '(void)'),
@@ -18,7 +19,8 @@ def run(text):
         (tmp / 'MacroContentAppearance.inc').write_text(text)
         binary = tmp / 'test'
         subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
-                        str(root / 'Tests/MacroContentAppearance.m'), str(root / 'Sources/Editor/TSColorSupport.m'), str(root / 'Sources/App/globals.m'), '-o', str(binary)], check=True)
+                        str(root / 'Tests/MacroContentAppearance.m'), str(root / 'Sources/Editor/TSColorSupport.m'), str(root / 'Sources/App/globals.m'),
+                        *map(str, sorted((root / 'Sources/Syntax').glob('*.m'))), str(root / 'Sources/Macros/TSMacroContentKind.m'), '-o', str(binary)], check=True)
         themes = root / 'Resources/TeXShop/Themes'
         return subprocess.run([str(binary), str(themes / 'SolarizedLite.plist'), str(themes / 'Dracula.plist')], capture_output=True, text=True, timeout=60)
 result = run(body); print(result.stdout, end=''); assert result.returncode == 0, result.stderr
