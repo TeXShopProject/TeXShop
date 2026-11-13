@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ と $ を各行の行頭・行末に一致させる";
 "AdvancedFind.Cancel" = "キャンセル";
+"AdvancedFind.Cancelled" = "キャンセルしました";
+"AdvancedFind.Cancelling" = "キャンセル中…";
 "AdvancedFind.ClearFindHistory" = "検索履歴を消去";
 "AdvancedFind.ClearReplaceHistory" = "置換履歴を消去";
 "AdvancedFind.ClosesWhenDone" = "見つかったらパネルを閉じる";
@@ -47,6 +49,8 @@
 "AdvancedFind.Results.Line" = "行";
 "AdvancedFind.Results.LiveUpdate" = "自動更新";
 "AdvancedFind.Results.Text" = "一致したテキスト";
+"AdvancedFind.Searching" = "検索中…";
+"AdvancedFind.SearchingCount" = "検索中… %lu";
 "AdvancedFind.Section.Common" = "共通";
 "AdvancedFind.Section.Regex" = "正規表現";
 "AdvancedFind.Section.Text" = "通常の検索";
@@ -55,6 +59,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU式（$1）";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit式（\\1）";
 "AdvancedFind.SyntaxLabel" = "置換の書き方:";
+"AdvancedFind.TextChanged" = "途中で本文が変わったため、変更しませんでした。";
 "AdvancedFind.Title" = "検索と置換";
 "AdvancedFind.Unescapes" = "置換欄の\\nや\\tなどを文字に置き換える";
 "AdvancedFind.Unhighlight" = "ハイライトを消す";
@@ -88,6 +93,7 @@
 "MultipleReplace.RemoveQuestion" = "「%@」をゴミ箱に入れますか？";
 "MultipleReplace.RemoveRule" = "選択した規則を削除";
 "MultipleReplace.RemoveSet" = "組をゴミ箱に入れる";
+"MultipleReplace.RuleProgress" = "規則%1$lu/%2$lu";
 "MultipleReplace.Sets" = "組";
 "MultipleReplace.ShowInFinder" = "Finderで表示";
 "MultipleReplace.SkippedRules" = "（規則 %@ は飛ばしました。⚠︎ にポインタを置くと理由が出ます）";

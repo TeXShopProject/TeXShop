@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ 和 $ 匹配每行的行首和行尾";
 "AdvancedFind.Cancel" = "取消";
+"AdvancedFind.Cancelled" = "已取消";
+"AdvancedFind.Cancelling" = "正在取消…";
 "AdvancedFind.ClearFindHistory" = "清除最近搜索";
 "AdvancedFind.ClearReplaceHistory" = "清除最近替换";
 "AdvancedFind.ClosesWhenDone" = "找到后关闭面板";
@@ -47,6 +49,8 @@
 "AdvancedFind.Results.Line" = "行";
 "AdvancedFind.Results.LiveUpdate" = "实时更新";
 "AdvancedFind.Results.Text" = "匹配的文本";
+"AdvancedFind.Searching" = "正在搜索…";
+"AdvancedFind.SearchingCount" = "正在搜索… %lu";
 "AdvancedFind.Section.Common" = "两者通用";
 "AdvancedFind.Section.Regex" = "正则表达式";
 "AdvancedFind.Section.Text" = "文本查找";
@@ -55,6 +59,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU（$1）";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit（\\1）";
 "AdvancedFind.SyntaxLabel" = "替换语法：";
+"AdvancedFind.TextChanged" = "文本在此期间已更改，因此未作任何更改。";
 "AdvancedFind.Title" = "查找和替换";
 "AdvancedFind.Unescapes" = "识别替换内容中的\\n、\\t等转义符";
 "AdvancedFind.Unhighlight" = "移除高亮标记";
@@ -88,6 +93,7 @@
 "MultipleReplace.RemoveQuestion" = "要将“%@”移到废纸篓吗？";
 "MultipleReplace.RemoveRule" = "移除所选规则";
 "MultipleReplace.RemoveSet" = "将规则集移到废纸篓";
+"MultipleReplace.RuleProgress" = "规则%1$lu/%2$lu";
 "MultipleReplace.Sets" = "规则集";
 "MultipleReplace.ShowInFinder" = "在“访达”中显示";
 "MultipleReplace.SkippedRules" = "（已跳过规则 %@，请参阅 ⚠︎）";

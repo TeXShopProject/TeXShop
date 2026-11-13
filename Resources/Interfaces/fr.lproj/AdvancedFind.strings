@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ et $ correspondent à chaque ligne";
 "AdvancedFind.Cancel" = "Annuler";
+"AdvancedFind.Cancelled" = "Annulé";
+"AdvancedFind.Cancelling" = "Annulation…";
 "AdvancedFind.ClearFindHistory" = "Effacer les recherches récentes";
 "AdvancedFind.ClearReplaceHistory" = "Effacer les remplacements récents";
 "AdvancedFind.ClosesWhenDone" = "Fermer le panneau dès qu’une occurrence est trouvée";
@@ -47,6 +49,8 @@
 "AdvancedFind.Results.Line" = "Ligne";
 "AdvancedFind.Results.LiveUpdate" = "Mise à jour en direct";
 "AdvancedFind.Results.Text" = "Texte trouvé";
+"AdvancedFind.Searching" = "Recherche…";
+"AdvancedFind.SearchingCount" = "Recherche… %lu";
 "AdvancedFind.Section.Common" = "Les deux";
 "AdvancedFind.Section.Regex" = "Expression régulière";
 "AdvancedFind.Section.Text" = "Recherche simple";
@@ -55,6 +59,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU ($1)";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit (\\1)";
 "AdvancedFind.SyntaxLabel" = "Syntaxe de remplacement :";
+"AdvancedFind.TextChanged" = "Le texte a changé entre-temps ; rien n’a été modifié.";
 "AdvancedFind.Title" = "Rechercher et remplacer";
 "AdvancedFind.Unescapes" = "Interpréter \\n, \\t, etc. dans le remplacement";
 "AdvancedFind.Unhighlight" = "Supprimer le surlignage";
@@ -88,6 +93,7 @@
 "MultipleReplace.RemoveQuestion" = "Placer « %@ » dans la Corbeille ?";
 "MultipleReplace.RemoveRule" = "Supprimer les règles sélectionnées";
 "MultipleReplace.RemoveSet" = "Placer le jeu dans la Corbeille";
+"MultipleReplace.RuleProgress" = "Règle %1$lu sur %2$lu";
 "MultipleReplace.Sets" = "Jeux";
 "MultipleReplace.ShowInFinder" = "Afficher dans le Finder";
 "MultipleReplace.SkippedRules" = "(règle %@ ignorée ; voir ⚠︎)";

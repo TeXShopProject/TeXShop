@@ -38,6 +38,8 @@
     _library = library;
     // After every event, as menu items are: the target may have changed (another window) or become read-only.
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidUpdate:) name:NSApplicationDidUpdateNotification object:nil];
+    // A long action starts or ends: Highlight and Replace All are gray meanwhile.
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidUpdate:) name:TSAdvancedFindTaskDidChangeNotification object:findController];
     _setNames = @[];
     _ruleTable = [TSMultipleReplaceRuleTable new];
     __weak typeof(self) weakSelf = self;
@@ -429,9 +431,18 @@
         self.findController.beepHandler();
         return NO;
     }
-    TSRegexMultipleReplaceResult *result = [self.findController applyMultipleReplace:set inTextView:target inSelection:self.inSelection];
+    __weak typeof(self) weakSelf = self;
+    return [self.findController applyMultipleReplace:set inTextView:target inSelection:self.inSelection completion:^(TSRegexMultipleReplaceResult *_Nullable result) {
+        [weakSelf showResult:result];
+    }];
+}
+
+/// The counts of each rule and the status line after a multiple replacement; nothing when it was cancelled (the find
+/// panel's status says so) or the text changed meanwhile.
+- (void)showResult:(nullable TSRegexMultipleReplaceResult *)result
+{
     if (!result)
-        return NO;
+        return;
     {
         self.ruleTable.counts = result.counts;
         NSString *message = [NSString stringWithFormat:TSLocalized(@"AdvancedFind.Replaced", @"%lu replaced"), (unsigned long)result.totalCount];
@@ -444,7 +455,6 @@
         }
         [self showStatus:message error:NO];
     }
-    return result.totalCount > 0;
 }
 
 - (BOOL)highlightInTextView:(nullable NSTextView *)textView
@@ -477,7 +487,7 @@
     static const TSAdvancedFindAction actions[] = {TSAdvancedFindActionHighlight, TSAdvancedFindActionReplaceAll};
     NSArray<NSButton *> *buttons = self.actionButtons;
     for (NSUInteger index = 0; index < buttons.count && index < sizeof(actions) / sizeof(actions[0]); index++) {
-        BOOL enabled = target ? [controller validateAction:actions[index] forTextView:target] : YES;
+        BOOL enabled = target ? [controller validateAction:actions[index] forTextView:target] : controller.runningTask == nil;
         if (buttons[index].enabled != enabled)
             buttons[index].enabled = enabled;
     }

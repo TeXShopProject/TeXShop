@@ -5,6 +5,7 @@
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
+#import "AdvancedFindTaskWait.h"
 #import "TSLayoutManager.h"
 #import "TSAdvancedFindPanelController+Private.h"
 #import "TSAdvancedFindTextView.h"
@@ -160,14 +161,14 @@ static void TestController(void)
     settings.findString = @"(al)(pha)";
     settings.replaceString = @"$2$1";
     settings.inSelection = NO;
-    Check([controller performAction:TSAdvancedFindActionReplaceAll inTextView:view], @"Replace All");
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAll, view), @"Replace All");
     Check([document.storage.string isEqualToString:@"phaal beta phaal gamma phaal\nsecond line\n"], @"ICU groups in Replace All");
     Check([status containsString:@"3"], @"Replace All reports the number of replacements");
     [view.undoManager undo];
     Check([document.storage.string isEqualToString:original], @"one undo takes back the whole Replace All");
     settings.replacementSyntax = TSRegexReplacementSyntaxOgreKit;
     settings.replaceString = @"\\2\\1$";
-    [controller performAction:TSAdvancedFindActionReplaceAll inTextView:view];
+    TSTestPerform(controller, TSAdvancedFindActionReplaceAll, view);
     Check([document.storage.string hasPrefix:@"phaal$ beta"], @"OgreKit groups, $ as text");
     [view.undoManager undo];
     settings.replacementSyntax = TSRegexReplacementSyntaxICU;
@@ -175,7 +176,7 @@ static void TestController(void)
     // In selection
     view.selectedRange = NSMakeRange(6, 15); // "beta alpha gamm"
     settings.replaceString = @"X";
-    Check([controller performAction:TSAdvancedFindActionReplaceAllInSelection inTextView:view], @"Replace All in Selection");
+    Check(TSTestPerform(controller, TSAdvancedFindActionReplaceAllInSelection, view), @"Replace All in Selection");
     Check([document.storage.string isEqualToString:@"alpha beta X gamma alpha\nsecond line\n"], @"only the selection is replaced");
     [view.undoManager undo];
     Check([document.storage.string isEqualToString:original], @"undo of Replace All in Selection");

@@ -2,6 +2,8 @@
 #import <Cocoa/Cocoa.h>
 #import "TSRegexTextFind.h"
 
+@class TSAdvancedFindTextEdit;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// One match of a "Find All".
@@ -38,6 +40,10 @@ NS_SWIFT_NAME(AdvancedFindResults)
                               items:(NSArray<TSAdvancedFindResultItem *> *)items NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
+/// Moves items found in an older text by the changes made since (`edits`, in order), as if they had been listed
+/// before those changes: matches after a change move, a match a change touched becomes stale.
+- (void)followEdits:(NSArray<TSAdvancedFindTextEdit *> *)edits;
 
 @property (nonatomic, readonly, weak) NSTextStorage *textStorage;
 /// The find string as the user typed it, for the list to show.

@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ and $ match at each line";
 "AdvancedFind.Cancel" = "Cancel";
+"AdvancedFind.Cancelled" = "Cancelled";
+"AdvancedFind.Cancelling" = "Cancelling…";
 "AdvancedFind.ClearFindHistory" = "Clear Recent Searches";
 "AdvancedFind.ClearReplaceHistory" = "Clear Recent Replacements";
 "AdvancedFind.ClosesWhenDone" = "Close the panel after finding";
@@ -47,6 +49,8 @@
 "AdvancedFind.Results.Line" = "Line";
 "AdvancedFind.Results.LiveUpdate" = "Live Update";
 "AdvancedFind.Results.Text" = "Matched Text";
+"AdvancedFind.Searching" = "Searching…";
+"AdvancedFind.SearchingCount" = "Searching… %lu";
 "AdvancedFind.Section.Common" = "Both";
 "AdvancedFind.Section.Regex" = "Regular Expression";
 "AdvancedFind.Section.Text" = "Text Search";
@@ -55,6 +59,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU ($1)";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit (\\1)";
 "AdvancedFind.SyntaxLabel" = "Replacement syntax:";
+"AdvancedFind.TextChanged" = "The text changed meanwhile; nothing was changed.";
 "AdvancedFind.Title" = "Find and Replace";
 "AdvancedFind.Unescapes" = "Read \\n, \\t and other escapes in the replacement";
 "AdvancedFind.Unhighlight" = "Remove Highlights";
@@ -88,6 +93,7 @@
 "MultipleReplace.RemoveQuestion" = "Move “%@” to the Trash?";
 "MultipleReplace.RemoveRule" = "Remove the Selected Rules";
 "MultipleReplace.RemoveSet" = "Move the Set to the Trash";
+"MultipleReplace.RuleProgress" = "Rule %1$lu of %2$lu";
 "MultipleReplace.Sets" = "Sets";
 "MultipleReplace.ShowInFinder" = "Show in Finder";
 "MultipleReplace.SkippedRules" = "(rule %@ skipped; see ⚠︎)";

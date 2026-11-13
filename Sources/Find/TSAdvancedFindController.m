@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#import "TSAdvancedFindController.h"
+#import "TSAdvancedFindController+Private.h"
+#import "TSAdvancedFindMatchCache.h"
 #import "TSAdvancedFindHighlights.h"
 #import "TSRegexTextFind.h"
 
@@ -37,6 +38,8 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     return result;
 }
 
+NSNotificationName const TSAdvancedFindTaskDidChangeNotification = @"TSAdvancedFindTaskDidChange";
+
 @implementation TSAdvancedFindController
 
 + (TSAdvancedFindController *)sharedController
@@ -56,14 +59,24 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     if ((self = [super init])) {
         _settings = settings;
         _beepHandler = ^{ NSBeep(); };
+        _sheetDelay = 0.4;
     }
     return self;
+}
+
+- (void)setRunningTask:(nullable TSAdvancedFindTask *)runningTask
+{
+    _runningTask = runningTask;
+    [NSNotificationCenter.defaultCenter postNotificationName:TSAdvancedFindTaskDidChangeNotification object:self];
 }
 
 #pragma mark Validation
 
 - (BOOL)validateAction:(TSAdvancedFindAction)action forTextView:(NSTextView *)textView
 {
+    if (self.runningTask) // one task at a time; the text views are read-only meanwhile
+        return action == TSAdvancedFindActionShowFindPanel || action == TSAdvancedFindActionShowReplacePanel
+            || action == TSAdvancedFindActionHidePanel || action == TSAdvancedFindActionHideReplacePanel;
     switch (action) {
         case TSAdvancedFindActionShowFindPanel:
         case TSAdvancedFindActionShowReplacePanel:
@@ -246,10 +259,67 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     return YES;
 }
 
-/// The matches of `find`. Every action searches the text again.
+/// The matches of `find`. A search of the whole text is kept in the text storage's cache, until the characters change.
 - (NSArray<NSValue *> *)matchesOfFind:(TSRegexTextFind *)find inTextView:(NSTextView *)textView
 {
-    return [find matchRangesWithCancellation:nil] ?: @[];
+    NSTextStorage *storage = textView.textStorage;
+    if (find.isInSelection || !storage)
+        return [find matchRangesWithCancellation:nil] ?: @[];
+    TSAdvancedFindMatchCache *cache = [TSAdvancedFindMatchCache cacheForTextStorage:storage];
+    NSString *key = [NSString stringWithFormat:@"%lu\x1f%@\x1f%@", (unsigned long)find.pattern.options, find.lineEnding ?: @"", find.pattern.findString];
+    NSArray<NSValue *> *matches = [cache matchesForKey:key];
+    if (!matches) {
+        matches = [find matchRangesWithCancellation:nil] ?: @[];
+        [cache setMatches:matches forKey:key];
+    }
+    return matches;
+}
+
+#pragma mark Tasks
+
+- (void)runTaskNamed:(NSString *)title inTextView:(NSTextView *)textView
+                work:(id _Nullable (^)(TSAdvancedFindTask *task))work
+          completion:(void (^)(id _Nullable result))completion
+{
+    [self runTaskNamed:title inTextView:textView work:work followsEdits:NO completion:^(id _Nullable result, NSArray<TSAdvancedFindTextEdit *> *edits) {
+        completion(result);
+    }];
+}
+
+- (void)runTaskNamed:(NSString *)title inTextView:(NSTextView *)textView
+  followingEditsWork:(id _Nullable (^)(TSAdvancedFindTask *task))work
+          completion:(void (^)(id _Nullable result, NSArray<TSAdvancedFindTextEdit *> *edits))completion
+{
+    [self runTaskNamed:title inTextView:textView work:work followsEdits:YES completion:completion];
+}
+
+- (void)runTaskNamed:(NSString *)title inTextView:(NSTextView *)textView
+                work:(id _Nullable (^)(TSAdvancedFindTask *task))work
+        followsEdits:(BOOL)followsEdits
+          completion:(void (^)(id _Nullable result, NSArray<TSAdvancedFindTextEdit *> *edits))completion
+{
+    TSAdvancedFindTask *task = [[TSAdvancedFindTask alloc] initWithTitle:title textView:textView];
+    task.sheetDelay = self.sheetDelay;
+    self.runningTask = task;
+    NSTextStorage *storage = textView.textStorage;
+    NSUInteger version = storage ? [TSAdvancedFindMatchCache cacheForTextStorage:storage].version : 0;
+    [task runWork:work completion:^(id _Nullable result, BOOL cancelled) {
+        self.runningTask = nil;
+        NSArray<TSAdvancedFindTextEdit *> *edits = task.editsMeanwhile;
+        if (cancelled) {
+            [self report:TSLocalized(@"AdvancedFind.Cancelled", @"Cancelled") isError:NO];
+            completion(nil, edits);
+        } else if (textView.textStorage != storage) {
+            completion(nil, edits); // the text view shows another text now
+        } else if (!followsEdits && storage && [TSAdvancedFindMatchCache cacheForTextStorage:storage].version != version) {
+            // The text views were read-only, but something else changed the text: the result no longer fits it.
+            self.beepHandler();
+            [self report:TSLocalized(@"AdvancedFind.TextChanged", @"The text changed meanwhile; nothing was changed.") isError:YES];
+            completion(nil, edits);
+        } else {
+            completion(result, edits);
+        }
+    }];
 }
 
 #pragma mark Replacing
@@ -311,29 +381,6 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     return done;
 }
 
-/// Replace All in one step on the main thread, undone at once.
-- (BOOL)replaceAllInTextView:(NSTextView *)textView inSelection:(BOOL)inSelection
-{
-    TSRegexTextFind *find = [self textFindForTextView:textView inSelection:inSelection quiet:NO];
-    if (!find)
-        return NO; // already beeped and reported
-    TSRegexReplacementTemplate *template = [[TSRegexReplacementTemplate alloc] initWithString:self.settings.replaceString pattern:find.pattern
-                                                                                         syntax:self.settings.replacementSyntax];
-    [self.settings noteReplaceString];
-    TSRegexReplaceAllResult *result = [find replaceAllWithTemplate:template cancellation:nil];
-    if (result.numberOfMatches == 0) {
-        self.beepHandler();
-        [self report:TSLocalized(@"AdvancedFind.NotFound", @"Not found") isError:NO];
-        return NO;
-    }
-    if (![self applyReplacements:result.replacements toTextView:textView selectedRanges:result.selectedRanges
-                      actionName:TSLocalized(@"AdvancedFind.ReplaceAllAction", @"Replace All")])
-        return NO;
-    NSString *format = TSLocalized(@"AdvancedFind.Replaced", @"%lu replaced");
-    [self report:[NSString stringWithFormat:format, (unsigned long)result.numberOfMatches] isError:NO];
-    return YES;
-}
-
 - (BOOL)selectAllInTextView:(NSTextView *)textView inSelection:(BOOL)inSelection
 {
     TSRegexTextFind *find = [self textFindForTextView:textView inSelection:inSelection quiet:NO];
@@ -350,32 +397,6 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     [textView scrollRangeToVisible:matches.firstObject.rangeValue];
     NSString *format = TSLocalized(@"AdvancedFind.Found", @"%lu found");
     [self report:[NSString stringWithFormat:format, (unsigned long)matches.count] isError:NO];
-    return YES;
-}
-
-#pragma mark Find All
-
-/// Hands the list of every match to `findAllHandler`; nothing is listed when there is no match. As in OgreKit, the
-/// text is not highlighted: that is "Highlight All". The search runs on the main thread;
-/// +[TSAdvancedFindResults itemsOfFind:…] can run on another queue as well.
-- (BOOL)findAllInTextView:(NSTextView *)textView
-{
-    TSRegexTextFind *find = [self textFindForTextView:textView inSelection:self.settings.inSelection quiet:NO];
-    NSTextStorage *storage = textView.textStorage;
-    if (!find || !storage)
-        return NO; // already beeped and reported
-    [self.settings noteFindString];
-    NSArray<TSAdvancedFindResultItem *> *items = [TSAdvancedFindResults itemsOfFind:find cancellation:nil progress:nil] ?: @[];
-    if (items.count == 0) {
-        self.beepHandler();
-        [self report:TSLocalized(@"AdvancedFind.NotFound", @"Not found") isError:NO];
-        return NO;
-    }
-    TSAdvancedFindResults *results = [[TSAdvancedFindResults alloc] initWithTextStorage:storage find:find findString:self.settings.findString items:items];
-    NSString *format = TSLocalized(@"AdvancedFind.Found", @"%lu found");
-    [self report:[NSString stringWithFormat:format, (unsigned long)items.count] isError:NO];
-    if (self.findAllHandler)
-        self.findAllHandler(results, textView);
     return YES;
 }
 

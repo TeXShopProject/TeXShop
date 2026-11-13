@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ e $ correspondem ao início e fim de cada linha";
 "AdvancedFind.Cancel" = "Cancelar";
+"AdvancedFind.Cancelled" = "Cancelado";
+"AdvancedFind.Cancelling" = "Cancelando…";
 "AdvancedFind.ClearFindHistory" = "Limpar Buscas Recentes";
 "AdvancedFind.ClearReplaceHistory" = "Limpar Substituições Recentes";
 "AdvancedFind.ClosesWhenDone" = "Fechar o painel após encontrar";
@@ -47,6 +49,8 @@
 "AdvancedFind.Results.Line" = "Linha";
 "AdvancedFind.Results.LiveUpdate" = "Atualização Automática";
 "AdvancedFind.Results.Text" = "Texto Correspondente";
+"AdvancedFind.Searching" = "Buscando…";
+"AdvancedFind.SearchingCount" = "Buscando… %lu";
 "AdvancedFind.Section.Common" = "Ambos";
 "AdvancedFind.Section.Regex" = "Expressão Regular";
 "AdvancedFind.Section.Text" = "Busca de Texto";
@@ -55,6 +59,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU ($1)";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit (\\1)";
 "AdvancedFind.SyntaxLabel" = "Sintaxe da substituição:";
+"AdvancedFind.TextChanged" = "O texto mudou nesse meio-tempo; nada foi alterado.";
 "AdvancedFind.Title" = "Buscar e Substituir";
 "AdvancedFind.Unescapes" = "Interpretar \\n, \\t e outros escapes na substituição";
 "AdvancedFind.Unhighlight" = "Remover Destaques";
@@ -88,6 +93,7 @@
 "MultipleReplace.RemoveQuestion" = "Mover “%@” para o Lixo?";
 "MultipleReplace.RemoveRule" = "Remover as Regras Selecionadas";
 "MultipleReplace.RemoveSet" = "Mover o Conjunto para o Lixo";
+"MultipleReplace.RuleProgress" = "Regra %1$lu de %2$lu";
 "MultipleReplace.Sets" = "Conjuntos";
 "MultipleReplace.ShowInFinder" = "Mostrar no Finder";
 "MultipleReplace.SkippedRules" = "(regras ignoradas: %@; veja ⚠︎)";

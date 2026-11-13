@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSAdvancedFindController+MultipleReplace.h"
+#import "TSAdvancedFindController+Private.h"
 #import "TSAdvancedFindHighlights.h"
 
 #define TSLocalized TSAdvancedFindLocalized
@@ -25,20 +26,37 @@ static void TSChangedRange(NSString *old, NSString *new, NSRange *oldRange, NSRa
 /// The results are not sent to the status handler (the find panel's): the multiple replacement window shows its own.
 @implementation TSAdvancedFindController (MultipleReplace)
 
-- (nullable TSRegexMultipleReplaceResult *)applyMultipleReplace:(TSRegexMultipleReplace *)set inTextView:(NSTextView *)textView
-                                                    inSelection:(BOOL)inSelection
+- (BOOL)applyMultipleReplace:(TSRegexMultipleReplace *)set inTextView:(NSTextView *)textView inSelection:(BOOL)inSelection
+                  completion:(nullable void (^)(TSRegexMultipleReplaceResult *_Nullable result))completion
 {
     if (![self validateAction:TSAdvancedFindActionReplaceAll forTextView:textView]) {
         self.beepHandler();
-        return nil;
+        return NO;
     }
     NSString *lineEnding = self.lineEndingHandler ? self.lineEndingHandler(textView) : nil;
     NSString *old = [textView.string copy];
-    TSRegexMultipleReplaceResult *result = [set applyToString:old selectedRanges:textView.selectedRanges inSelection:inSelection
-                                                   lineEnding:lineEnding cancellation:nil];
-    if (result)
-        [self applyMultipleReplaceResult:result to:textView old:old];
-    return result;
+    NSArray<NSValue *> *selection = textView.selectedRanges;
+    NSString *searching = TSLocalized(@"AdvancedFind.Searching", @"Searching…");
+    NSString *format = TSLocalized(@"MultipleReplace.RuleProgress", @"Rule %1$lu of %2$lu");
+    [self runTaskNamed:TSLocalized(@"MultipleReplace.Action", @"Multiple Replace") inTextView:textView work:^id _Nullable(TSAdvancedFindTask *task) {
+        task.message = searching;
+        // The bar runs over all the rules, each taking an equal share; the line says which rule ("Rule 37 of 240").
+        __block NSUInteger shownRule = NSNotFound;
+        return [set applyToString:old selectedRanges:selection inSelection:inSelection lineEnding:lineEnding cancellation:task.cancellation
+                         progress:^(NSUInteger ruleIndex, NSUInteger ruleCount, double fraction) {
+            task.progress = ruleCount > 0 ? MIN(1.0, (ruleIndex + fraction) / ruleCount) : 1.0;
+            if (ruleIndex != shownRule) {
+                shownRule = ruleIndex;
+                task.message = [NSString localizedStringWithFormat:format, (unsigned long)ruleIndex + 1, (unsigned long)ruleCount];
+            }
+        }];
+    } completion:^(TSRegexMultipleReplaceResult *_Nullable result) {
+        if (result)
+            [self applyMultipleReplaceResult:result to:textView old:old];
+        if (completion)
+            completion(result);
+    }];
+    return YES;
 }
 
 /// Replaces only the part of the text that changed, as one undo step.
@@ -63,6 +81,10 @@ static void TSChangedRange(NSString *old, NSString *new, NSRange *oldRange, NSRa
 
 - (NSUInteger)highlightMultipleReplace:(TSRegexMultipleReplace *)set inTextView:(NSTextView *)textView inSelection:(BOOL)inSelection
 {
+    if (![self validateAction:TSAdvancedFindActionHighlight forTextView:textView]) { // another task runs
+        self.beepHandler();
+        return 0;
+    }
     NSString *lineEnding = self.lineEndingHandler ? self.lineEndingHandler(textView) : nil;
     NSArray<NSValue *> *matches = [set matchRangesInString:textView.string selectedRanges:textView.selectedRanges
                                                inSelection:inSelection lineEnding:lineEnding cancellation:nil] ?: @[];

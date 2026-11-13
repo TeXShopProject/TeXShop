@@ -105,6 +105,8 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     findController.findAllHandler = ^(TSAdvancedFindResults *results, NSTextView *textView) { [weakSelf showResults:results textView:textView]; };
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:NSApplicationDidBecomeActiveNotification object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
+    // A long action starts or ends: every button is gray meanwhile, since every action is refused.
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidUpdate:) name:TSAdvancedFindTaskDidChangeNotification object:findController];
     // After every event, as menu items are: the target may have changed (another window) or become read-only.
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidUpdate:) name:NSApplicationDidUpdateNotification object:nil];
     return self;
