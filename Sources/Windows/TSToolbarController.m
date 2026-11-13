@@ -57,6 +57,8 @@
 // end addition
 #import "TSPreviewLayout.h"
 #import "TSPreviewAppearance.h"  // added by Terada
+#import "TSSplitToggleCue.h"
+#import <objc/runtime.h>
 
 
 static NSString* 	kSourceToolbarIdentifier 	= @"Source Toolbar Identifier";
@@ -186,6 +188,123 @@ static NSString*    kHtmlSearchTID              = @"HtmlSearch";
     [control setEnabled: view.canGoForward forSegment: 1];
 }
 @end
+
+static char TSSplitToggleCueKey, TSSplitToggleSideBySideKey, TSSplitToggleImageKey;
+
+// The split buttons of a window show the side-by-side split while Option is held
+// over them in a window that is not split (TSSplitToggleCue.h).
+static void TSSplitToggleItemsFollow(NSWindow *window, NSEventModifierFlags flags)
+{
+    BOOL option = window.isKeyWindow && TSSplitToggleOptionHeld(flags);
+    NSPoint point = window.mouseLocationOutsideOfEventStream;
+    for (NSToolbarItem *item in window.toolbar.items) {
+        BOOL preview = [item.itemIdentifier isEqual: kSplitKKTID];
+        if ((!preview && ![item.itemIdentifier isEqual: kSplitID]) || ![item.target isKindOfClass: [TSDocument class]])
+            continue;
+        TSDocument *document = item.target;
+        BOOL split = preview ? document.pdfKitWindow.windowIsSplit : document.isSplit;
+        BOOL sideBySide = TSSplitToggleShowsSideBySide(flags, split, option && TSSplitTogglePointOnItem(window, item, point));
+        if (sideBySide == [objc_getAssociatedObject(item, &TSSplitToggleSideBySideKey) boolValue])
+            continue;
+        if (sideBySide) {
+            NSImage *image = item.image ? TSSplitToggleSideBySideImage(item.image) : nil;
+            if (!image)
+                continue;
+            objc_setAssociatedObject(item, &TSSplitToggleImageKey, item.image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            item.image = image;
+        } else {
+            item.image = objc_getAssociatedObject(item, &TSSplitToggleImageKey) ?: item.image;
+            objc_setAssociatedObject(item, &TSSplitToggleImageKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+        objc_setAssociatedObject(item, &TSSplitToggleSideBySideKey, @(sideBySide), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
+// While Option is held in the key window, follows the pointer over the window so
+// that a split button turns when the pointer reaches it and back when it leaves.
+@interface TSSplitToggleCue : NSObject
+@property (weak) NSWindow *window;
+@property (weak) NSView *frameView;
+@property (strong) NSTrackingArea *area;
+@end
+
+@implementation TSSplitToggleCue
+- (instancetype)initWithWindow:(NSWindow *)window
+{
+    self = [super init];
+    if (self) {
+        self.window = window;
+        NSView *frameView = window.contentView.superview;
+        self.frameView = frameView;
+        self.area = [[NSTrackingArea alloc] initWithRect: NSZeroRect
+            options: NSTrackingMouseMoved | NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect
+            owner: self userInfo: nil];
+        [frameView addTrackingArea: self.area];
+        [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(windowResignedKey:)
+                                                     name: NSWindowDidResignKeyNotification object: window];
+    }
+    return self;
+}
+
+- (void)stop
+{
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+    [self.frameView removeTrackingArea: self.area];
+    self.area = nil;
+}
+
+- (void)dealloc
+{
+    [self stop];
+}
+
+- (void)mouseMoved:(NSEvent *)event { TSSplitToggleItemsFollow(self.window, NSEvent.modifierFlags); }
+- (void)mouseEntered:(NSEvent *)event { TSSplitToggleItemsFollow(self.window, NSEvent.modifierFlags); }
+- (void)mouseExited:(NSEvent *)event { TSSplitToggleItemsFollow(self.window, 0); }
+
+- (void)windowResignedKey:(NSNotification *)notification
+{
+    NSWindow *window = self.window;
+    [self stop];
+    objc_setAssociatedObject(window, &TSSplitToggleCueKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    TSSplitToggleItemsFollow(window, 0);
+}
+@end
+
+// Option pressed or released in a window.
+static void TSSplitToggleOptionChanged(NSWindow *window, NSEventModifierFlags flags)
+{
+    if (!window.toolbar)
+        return;
+    TSSplitToggleCue *cue = objc_getAssociatedObject(window, &TSSplitToggleCueKey);
+    BOOL follow = window.isKeyWindow && TSSplitToggleOptionHeld(flags);
+    if (follow && !cue)
+        objc_setAssociatedObject(window, &TSSplitToggleCueKey, [[TSSplitToggleCue alloc] initWithWindow: window],
+                                 OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    else if (!follow && cue) {
+        [cue stop];
+        objc_setAssociatedObject(window, &TSSplitToggleCueKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    TSSplitToggleItemsFollow(window, flags);
+}
+
+void TSSplitToggleItemsFollowSplit(void)
+{
+    for (NSWindow *window in NSApp.windows)
+        if (window.toolbar)
+            TSSplitToggleItemsFollow(window, NSEvent.modifierFlags);
+}
+
+static void TSInstallSplitToggleOptionMonitor(void)
+{
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        [NSEvent addLocalMonitorForEventsMatchingMask: NSEventMaskFlagsChanged handler: ^NSEvent *(NSEvent *event) {
+            TSSplitToggleOptionChanged(event.window ?: NSApp.keyWindow, event.modifierFlags);
+            return event;
+        }];
+    });
+}
 
 @implementation TSDocument (ToolbarSupport)
 
@@ -559,6 +678,8 @@ else
 - (void) setupToolbar
 {
     NSWindow *tempWindow;
+
+    TSInstallSplitToggleOptionMonitor();
     
 	// end addition
     
@@ -889,12 +1010,12 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
 
 	if ([itemIdent isEqual: kSplitID]) {
         
-        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"rectangle.grid.1x2" accessibility: @"Split Window" imageName:@"split1" newImageName:@"fakesplit" target:self action:@selector(splitWindow:)];
+        return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"rectangle.split.1x2" accessibility: @"Split Window" imageName:@"split1" newImageName:@"fakesplit" target:self action:@selector(splitWindow:)];
     }
     
 if ([itemIdent isEqual: kSplitKKTID]) {
     
-    return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"rectangle.grid.1x2" accessibility: @"Split Preview Window" imageName:@"split1" newImageName:@"fakesplit" target:self action:@selector(splitPreviewWindow:)];
+    return [self makeToolbarSymbolsItemWithItemIdentifier:itemIdent key:itemIdent symbolName: @"rectangle.split.1x2" accessibility: @"Split Preview Window" imageName:@"split1" newImageName:@"fakesplit" target:self action:@selector(splitPreviewWindow:)];
 }
    
     /*

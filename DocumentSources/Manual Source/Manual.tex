@@ -3771,7 +3771,7 @@ all consist of a string with no spaces. More precisely, this string can contain 
 \section{Splitting Source and Preview Windows}
 \label{Splitting_Windows_Section}
 
-The toolbars for the source and preview window each contain an icon containing two stacked rectangles. This item ``splits the window'' into two independent parts. This makes it possible to examine one portion of the document while writing a separate portion. The icon is a toggle which both splits and unsplits the window.
+The toolbars for the source and preview window each contain an icon showing a rectangle divided into a top and a bottom part. This item ``splits the window'' into two independent parts. This makes it possible to examine one portion of the document while writing a separate portion. The icon is a toggle which both splits and unsplits the window.
 
 The Window Menu contains a menu item  ``Split Window'' which is a similar toggle for the currently active window.
 This menu item has a keyboard shortcut, so if you are working with, say, the Preview Window, you can
@@ -3781,6 +3781,7 @@ When the Option key is pressed, the Window menu  ``Split Window'' changes to ``S
 Thus the source and preview windows can be split horizontally, with one portion above the other,
 or vertically, with one portion to the left of the other.
 Pushing the option key while clicking the split window toolbar item has the same effect.
+While the Option key is held down with the pointer over this toolbar item in a window that is not split, its icon changes to a rectangle divided into a left and a right part, the split that a click then makes. Uwe Schmock suggested this. In a split window the item unsplits the window, and its icon does not change. A keyboard shortcut set for ``Split Window Vertically'' under Menu Shortcuts in Settings splits the window side by side even without the Option key.
 
 When the Preview window is split or unsplit, the place shown at the top edge of the top (or left) view stays where it is on the screen, at any magnification and in every display format. If that view is scrolled while the window is split, unsplitting keeps the new position. When the window is split again, the bottom (or right) view shows the place it showed when the window was last unsplit.
 
@@ -3813,6 +3814,8 @@ When the chapters in the drawer's outline view are numbered, several keyboard sh
 drawer. If you type Option-1, the drawer will select the first chapter. If you type Option-2 followed by Option-0, the drawer will switch to Chapter 20. Type Option-UpArrow to select the first item and Option-DownArrow to select the last item. Type Option-1.5 to select Chapter 1, Section 5. If Chapter 3 is selected, Option-RightArrow will open sub-levels and Option-LeftArrow will close sub-levels. Although these keystrokes select drawer items, it is still necessary to click these items to make the associated view scroll to them.
 
 The toolbar of a split Preview window also works with its active view. The page number box shows the page of the active view, and typing a page number there moves the active view to that page while the other view stays where it is. Escape dismisses only the pinned link popup of the active view; a pinned popup in the other view stays (see \cref{Modifying_Popup_Windows_Section}).
+
+To show which view this is, the active view of a split Preview window has a thin line in the accent color chosen in System Settings along its edges. The line appears only while the window is in front, as the key window, and it disappears when the window is unsplit. It lies over the edges of the view, so the contents do not move, and clicks reach the view as before. Uwe Schmock suggested a way to see the active view.
 
 There is a final item related to responders and active views. If the source window is split and we then unsplit it, the active view in the Source window will expand and become the contents of the unsplit window. So if the top portion is active and
 then we unsplit the window, we'll see that top portion. But if the bottom portion is active and then we unsplit the
@@ -4141,7 +4144,7 @@ In case \ref{PWT_LaTeX_Source}, make sure to place an internal link to every pre
 \item
 During online teaching, case \ref{PWT_Online}, you can press Option while the popup is visible to keep it on screen, then move the pointer to explain the correspondence between its contents and the current page. Press Escape to dismiss the popup.
 For a larger, independently scrollable view, you can also split the Preview; see \cref{Options_Splitting_Horizontally_Section}. Scroll the Preview so that the link is in the upper half of the window.
-Hold down the shift key and toggle ``Split Window'' in the Window menu (or the context menu) or click in the toolbar the symbol consisting of two rectangles stacked on top of each other.
+Hold down the shift key and toggle ``Split Window'' in the Window menu (or the context menu) or click in the toolbar the symbol showing a rectangle divided into a top and a bottom part.
 This splits the Preview window into equal parts and duplicates the upper part of the full view into the lower part.
 Follow the internal link in the lower part.
 If desired, scroll each part a little bit and move the dividing bar.
