@@ -4241,12 +4241,12 @@ The system then remembers the new number and sends is to the Timer which will di
         _skipLinks = skip;
 }
 
-// Whether hovering over a link with these modifier keys shows its popup. With Link Popups
-// off, Command shows it all the same, and as always Command makes it the larger popup, so
-// that Command keeps that meaning whether Link Popups is on or off (#30).
+// Whether hovering over a link with these modifier keys shows its popup. Control reverses
+// Link Popups for the link under the pointer: with Link Popups on it keeps the popup away,
+// as on the way to the contextual menu, and with Link Popups off it shows the popup (#30).
 - (BOOL) showsLinkPopupsWithModifierFlags: (NSEventModifierFlags)flags
 {
-    return !self.skipLinks || (flags & NSEventModifierFlagCommand) != 0;
+    return !self.skipLinks != ((flags & NSEventModifierFlagControl) != 0);
 }
 
 /*
@@ -4308,7 +4308,7 @@ The system then remembers the new number and sends is to the Timer which will di
     if (showsLinkPreviewCursor)
         [self showToolCursorOutsideLinkPreviewWithEvent: theEvent];
     
-// A popup shown with Command while Link Popups is off goes away like any other.
+// A popup shown with Control while Link Popups is off goes away like any other.
 if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithModifierFlags: [theEvent modifierFlags]]))
     
     {
@@ -4566,7 +4566,8 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
     NSEventModifierFlags modifiers = [[NSApp currentEvent] modifierFlags];
     if (aTimerNumber != self.timerNumber || self.handlingLink != 1 || !self.window)
         return;
-    // With Link Popups off, Command has to be held still when the popup would appear.
+    // Control, held when the popup would appear, shows it with Link Popups off and keeps it
+    // away with Link Popups on.
     if (![self showsLinkPopupsWithModifierFlags: modifiers]) {
         self.handlingLink = 0;
         return;
@@ -4700,8 +4701,8 @@ if (!self.globalLongTerm && (self.handlingLink > 0 || [self showsLinkPopupsWithM
 
 
 // Links whose target hovering shows in a popup, which replaces PDFKit's tool tip (#17).
-// With Link Popups off, that is while Command is held or the popup of the link under the
-// pointer is still to come or on screen (#30).
+// Control reverses Link Popups here too, and a popup of the link under the pointer that is
+// still to come or on screen keeps the tool tip away (#30).
 - (BOOL)showsLinkPreviewForAnnotation:(PDFAnnotation *)annotation
 {
     BOOL showsPopups = [self showsLinkPopupsWithModifierFlags: [NSEvent modifierFlags]] ||
