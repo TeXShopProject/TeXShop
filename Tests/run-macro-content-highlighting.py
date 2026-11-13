@@ -23,7 +23,9 @@ MUTATIONS = {
     'ignores-setting': ('editor', 'if (![SUD boolForKey:SyntaxColoringEnabledKey]) {', 'if (NO) {'),
     'theme-not-followed': ('editor', '        self.contentHighlighter.scheme = scheme;\n', ''),
     'colors-composed-text': ('TSSyntaxHighlighter.m', 'if (TSSyntaxStorageHasMarkedText(textView.textStorage)) {', 'if (NO) {'),
-    'clears-other-colors': ('TSSyntaxHighlighter.m', 'if (value && [self.ownValues containsObject:value]) {', 'if (value) {'),
+    # Ownership by color alone: unmarked text with a color of the scheme is cleared too.
+    'owner-by-color': ('TSSyntaxHighlighter.m', '            if (markValue) {',
+                       '            if (!markValue) markValue = [layoutManager temporaryAttribute:key atCharacterIndex:i effectiveRange:NULL];\n            if (markValue) {'),
 }
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 if mutation:

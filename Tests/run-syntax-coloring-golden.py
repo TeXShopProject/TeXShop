@@ -53,8 +53,8 @@ MUTATIONS = {
     'footnote-spelling-from-command': (SCANNER, 'TSSkipParametersForSpelling(&scan, colorRange, &location);',
                                        'TSSkipParametersForSpelling(&scan, command, &location);'),
     # The highlighter clears what it colors, taking the colors of other features with it.
-    'highlighter-clears': ('Sources/Syntax/TSSyntaxHighlighter.m', '    TSSyntaxColorScheme *scheme = self.scheme;',
-                           '    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:range];\n    TSSyntaxColorScheme *scheme = self.scheme;'),
+    'highlighter-clears': ('Sources/Syntax/TSSyntaxHighlighter.m', '    __unsafe_unretained NSDictionary<NSAttributedStringKey, id> *roles[TSSyntaxRoleCacheSize] = {nil};',
+                           '    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:range];\n    __unsafe_unretained NSDictionary<NSAttributedStringKey, id> *roles[TSSyntaxRoleCacheSize] = {nil};'),
 }
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)

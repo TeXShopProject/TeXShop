@@ -132,6 +132,24 @@ int main(int argc, char **argv) { @autoreleasepool {
     REQUIRE([contents.layoutManager temporaryAttributesAtCharacterIndex:x.location effectiveRange:NULL][NSForegroundColorAttributeName] == find);
     [contents.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:x];
     [contents.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:x];
+    // ... even when another feature uses the very color object of a role, on plain text or as the background of a
+    // token. (A foreground of another feature over a token is colored over again, as the source does.)
+    NSColor *same = [editor.contentHighlighter.scheme attributesForRole:TSSyntaxRoleCommand][NSForegroundColorAttributeName];
+    REQUIRE(same && Same(same, command));
+    contents.string = @"\\foo ordinary \\bar";
+    Spin();
+    NSRange ordinary = [contents.string rangeOfString:@"ordinary"], bar = [contents.string rangeOfString:@"\\bar"];
+    [contents.layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName: same, NSBackgroundColorAttributeName: same} forCharacterRange:ordinary];
+    [contents.layoutManager addTemporaryAttributes:@{NSBackgroundColorAttributeName: same} forCharacterRange:bar];
+    [editor.contentHighlighter highlightWholeText];
+    NSDictionary *kept = [contents.layoutManager temporaryAttributesAtCharacterIndex:ordinary.location effectiveRange:NULL];
+    REQUIRE(kept[NSForegroundColorAttributeName] == same && kept[NSBackgroundColorAttributeName] == same);
+    REQUIRE([contents.layoutManager temporaryAttributesAtCharacterIndex:bar.location effectiveRange:NULL][NSBackgroundColorAttributeName] == same);
+    REQUIRE(Same(ColorAt(@"\\foo"), command));
+    [contents.layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange(0, contents.string.length)];
+    [contents.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:NSMakeRange(0, contents.string.length)];
+    contents.string = @"\\emph{x}";
+    Spin();
 
     // A dark window takes the dark theme.
     host.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];

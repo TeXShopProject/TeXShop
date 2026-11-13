@@ -17,7 +17,7 @@ static NSSet<NSString *> *TSAppleScriptReservedWords(void)
             @"middle", @"mod", @"my", @"ninth", @"not", @"of", @"on", @"onto", @"or", @"out", @"over", @"prop", @"property",
             @"put", @"ref", @"reference", @"repeat", @"return", @"returning", @"script", @"second", @"set", @"seventh",
             @"since", @"sixth", @"some", @"tell", @"tenth", @"that", @"the", @"then", @"third", @"through", @"thru",
-            @"timeout", @"times", @"to", @"transaction", @"true", @"try", @"until", @"where", @"while", @"whose", @"with",
+            @"timeout", @"times", @"to", @"transaction", @"true", @"try", @"until", @"use", @"where", @"while", @"whose", @"with",
             @"without"]];
     });
     return words;

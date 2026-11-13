@@ -112,6 +112,9 @@ int main(int argc, char **argv) { @autoreleasepool {
     Expect(@"--applescript\nset s to \"say \\\"hi\\\" #TEXPATH#\" & «event aevtodoc» & |set|\n#SEL# #INS#",
            @"--applescript:comment set:keyword to:keyword \"say \\\"hi\\\" #TEXPATH#\":string «event aevtodoc»:raw #SEL# #INS#:comment #TEXPATH#:placeholder",
            @"escaped quotes, a placeholder in a string, a raw event, a quoted identifier; #SEL# is not replaced in AppleScript");
+    Expect(@"--applescript\nuse scripting additions\nUSE AppleScript version \"2.4\"",
+           @"--applescript:comment use:keyword USE:keyword \"2.4\":string",
+           @"use, in any case, is a reserved word");
     Expect(@"--applescript\n(* not closed\nset x to \"open", @"--applescript:comment (* not closed\nset x to \"open:comment",
            @"an unclosed comment runs to the end");
     Expect(@"--applescript\nset x to \"open\nline", @"--applescript:comment set:keyword to:keyword \"open\nline:string",
