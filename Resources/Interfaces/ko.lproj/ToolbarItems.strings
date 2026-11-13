@@ -171,11 +171,11 @@ tiToolTipSyncMarksKIT			= "동기화 마크 보기";
 
 tiLabelBackForthKIT				= "뒤로/앞으로";
 tiPaletteLabelBackForthKIT		= "뒤로/앞으로";
-tiToolTipBackForthKIT			= "뒤로/앞으로 버튼";
+tiToolTipGoBack				= "뒤로";
+tiToolTipGoForward			= "앞으로";
 
 tiLabelBackForthKITSplit                = "뒤로/앞으로";
 tiPaletteLabelBackForthKITSplit        = "뒤로/앞으로";
-tiToolTipBackForthKITSplit            = "뒤로/앞으로 버튼";
 
 tiLabelDrawerKIT				= "서랍";
 tiPaletteLabelDrawerKIT			= "서랍";

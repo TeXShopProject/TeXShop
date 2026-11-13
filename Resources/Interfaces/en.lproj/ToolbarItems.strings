@@ -175,11 +175,11 @@ tiToolTipSyncMarksKIT			= "Show Sync Marks";
 
 tiLabelBackForthKIT				= "Back/Forward";
 tiPaletteLabelBackForthKIT		= "Back/Forward";
-tiToolTipBackForthKIT			= "Back Forward Buttons";
+tiToolTipGoBack				= "Go Back";
+tiToolTipGoForward			= "Go Forward";
 
 tiLabelBackForthKITSplit          = "Back/Forward";
 tiPaletteLabelBackForthKITSplit   = "Back/Forward";
-tiToolTipBackForthKITSplit        = "Back Forward Buttons";
 
 tiLabelDrawerKIT				= "Drawer";
 tiPaletteLabelDrawerKIT			= "Drawer";

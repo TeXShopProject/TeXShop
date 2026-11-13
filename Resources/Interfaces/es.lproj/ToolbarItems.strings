@@ -172,11 +172,11 @@ tiToolTipSyncMarksKIT			= "Mostrar Sync Marks";
 
 tiLabelBackForthKIT				= "Atrás/Adelante";
 tiPaletteLabelBackForthKIT		= "Atrás/Adelante";
-tiToolTipBackForthKIT			= "Botones Atrás/Adelante";
+tiToolTipGoBack				= "Atrás";
+tiToolTipGoForward			= "Adelante";
 
 tiLabelBackForthKITSplit                = "Atrás/Adelante";
 tiPaletteLabelBackForthKITSplit        = "Atrás/Adelante";
-tiToolTipBackForthKITSplit            = "Botones Atrás/Adelante";
 
 tiLabelDrawerKIT				= "Cajón";
 tiPaletteLabelDrawerKIT			= "Cajón";

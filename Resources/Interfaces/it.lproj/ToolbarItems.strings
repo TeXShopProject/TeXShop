@@ -172,11 +172,11 @@ tiToolTipSearchKIT				= "Ricerca";
 
 tiLabelBackForthKIT				= "Indietro/Avanti";
 tiPaletteLabelBackForthKIT		= "Indietro/Avanti";
-tiToolTipBackForthKIT			= "Pulsanti Indietro e Avanti";
+tiToolTipGoBack				= "Indietro";
+tiToolTipGoForward			= "Avanti";
 
 tiLabelBackForthKITSplit                = "Indietro/Avanti";
 tiPaletteLabelBackForthKITSplit        = "Indietro/Avanti";
-tiToolTipBackForthKITSplit            = "Pulsanti Indietro e Avanti";
 
 tiLabelDrawerKIT				= "Cassetto";
 tiPaletteLabelDrawerKIT			= "Cassetto";
