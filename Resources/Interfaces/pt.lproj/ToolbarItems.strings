@@ -171,11 +171,11 @@ tiToolTipSearchKIT				= "Buscar";
 
 tiLabelBackForthKIT				= "Voltar/Avançar";
 tiPaletteLabelBackForthKIT		= "Voltar/Avançar";
-tiToolTipBackForthKIT			= "Botões de voltar e avançar";
+tiToolTipGoBack				= "Voltar";
+tiToolTipGoForward			= "Avançar";
 
 tiLabelBackForthKITSplit                = "Voltar/Avançar";
 tiPaletteLabelBackForthKITSplit        = "Voltar/Avançar";
-tiToolTipBackForthKITSplit            = "Botões de voltar e avançar";
 
 tiLabelDrawerKIT				= "Gaveta";
 tiPaletteLabelDrawerKIT			= "Gaveta";

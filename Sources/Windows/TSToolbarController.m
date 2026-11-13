@@ -412,11 +412,13 @@ else
     NSSegmentedControl *control = [NSSegmentedControl segmentedControlWithImages: @[backImage, forwardImage]
                                                                     trackingMode: NSSegmentSwitchTrackingMomentary
                                                                           target: self action: @selector(doBackForward:)];
+    [control setToolTip: NSLocalizedStringFromTable(@"tiToolTipGoBack", @"ToolbarItems", nil) forSegment: 0];
+    [control setToolTip: NSLocalizedStringFromTable(@"tiToolTipGoForward", @"ToolbarItems", nil) forSegment: 1];
     NSToolbarItem *textItem = [self makeToolbarItemWithItemIdentifier:itemIdent key:itemKey];
     TSBackForwardToolbarItem *toolbarItem = [[TSBackForwardToolbarItem alloc] initWithItemIdentifier: itemIdent];
     toolbarItem.label = textItem.label;
     toolbarItem.paletteLabel = textItem.paletteLabel;
-    toolbarItem.toolTip = textItem.toolTip;
+    // Back and Forward have their own tool tips, so the item has none of its own.
     toolbarItem.view = control;
     toolbarItem.document = self;
     return toolbarItem;

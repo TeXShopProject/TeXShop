@@ -171,11 +171,11 @@ tiToolTipSyncMarksKIT			= "Mostrar marcas de sincronização";
 
 tiLabelBackForthKIT				= "Anterior/seguinte";
 tiPaletteLabelBackForthKIT		= "Anterior/seguinte";
-tiToolTipBackForthKIT			= "Botões Retroceder e Avançar";
+tiToolTipGoBack				= "Retroceder";
+tiToolTipGoForward			= "Avançar";
 
 tiLabelBackForthKITSplit                = "Anterior/seguinte";
 tiPaletteLabelBackForthKITSplit        = "Anterior/seguinte";
-tiToolTipBackForthKITSplit            = "Botões Retroceder e Avançar";
 
 tiLabelDrawerKIT				= "Gaveta";
 tiPaletteLabelDrawerKIT			= "Gaveta";
