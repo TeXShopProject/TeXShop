@@ -1,6 +1,7 @@
 /* The Advanced Find panel (Sources/Find/TSAdvancedFind…). The keys are the code's; the English is in the code as well. */
 
 "AdvancedFind.AnchorsMatchLines" = "^ e $ correspondem ao início e fim de cada linha";
+"AdvancedFind.Cancel" = "Cancelar";
 "AdvancedFind.ClearFindHistory" = "Limpar últimas pesquisas";
 "AdvancedFind.ClearReplaceHistory" = "Limpar últimas substituições";
 "AdvancedFind.ClosesWhenDone" = "Fechar o painel depois de encontrar";
@@ -12,6 +13,7 @@
 "AdvancedFind.FindHistory" = "Últimas pesquisas";
 "AdvancedFind.FindLabel" = "Procurar:";
 "AdvancedFind.Found" = "Correspondências: %lu";
+"AdvancedFind.Highlight" = "Destacar";
 "AdvancedFind.HighlightAll" = "Destacar tudo";
 "AdvancedFind.History" = "Textos recentes";
 "AdvancedFind.IgnoreCase" = "Ignorar maiúsculas/minúsculas";
@@ -62,3 +64,32 @@
 "AdvancedFind.Wrap" = "Circular";
 "AdvancedFind.Wrapped" = "(recomeçou no início)";
 "AdvancedFind.YenIsBackslash" = "Tratar ¥ como \\";
+"MultipleReplace.Action" = "Substituição múltipla";
+"MultipleReplace.AddRule" = "Adicionar regra";
+"MultipleReplace.AddSet" = "Novo conjunto";
+"MultipleReplace.BadName" = "“%@” não pode ser o nome de um conjunto.";
+"MultipleReplace.Column.Count" = "Total";
+"MultipleReplace.Column.CountTip" = "Correspondências substituídas na última execução";
+"MultipleReplace.Column.EnabledTip" = "Usar esta regra";
+"MultipleReplace.Column.Find" = "Procurar";
+"MultipleReplace.Column.Note" = "Nota";
+"MultipleReplace.Column.Replace" = "Substituir";
+"MultipleReplace.CopyName" = "%@ - cópia";
+"MultipleReplace.Duplicate" = "Duplicar";
+"MultipleReplace.EditMenu" = "Editar substituição múltipla…";
+"MultipleReplace.Export" = "Exportar…";
+"MultipleReplace.Import" = "Importar…";
+"MultipleReplace.Imported" = "Importado";
+"MultipleReplace.MoveToTrash" = "Mover para o Lixo";
+"MultipleReplace.NameTaken" = "Já existe um conjunto denominado “%@”.";
+"MultipleReplace.NotText" = "“%@” não é texto UTF-8.";
+"MultipleReplace.Options" = "Opções…";
+"MultipleReplace.Problem" = "A regra %lu é ignorada: %@";
+"MultipleReplace.RemoveQuestion" = "Mover “%@” para o Lixo?";
+"MultipleReplace.RemoveRule" = "Remover as regras selecionadas";
+"MultipleReplace.RemoveSet" = "Mover o conjunto para o Lixo";
+"MultipleReplace.Sets" = "Conjuntos";
+"MultipleReplace.ShowInFinder" = "Mostrar no Finder";
+"MultipleReplace.SkippedRules" = "(regras ignoradas: %@; consulte ⚠︎)";
+"MultipleReplace.Title" = "Substituição múltipla";
+"MultipleReplace.Untitled" = "Sem nome";
