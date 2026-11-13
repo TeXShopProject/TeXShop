@@ -49,6 +49,7 @@
 
 #import "MyPDFView.h"
 #import "MyPDFKitView.h"
+#import "TSContentZoom.h"
 #import "TSToolbar.h"
 
 // added by mitsu --(H) Macro menu; macroButton
@@ -112,6 +113,7 @@ static NSString*	kNextPageButtonKKTID	= @"NextPageButtonKIT";
 static NSString*	kNextPageKKTID 			= @"NextPageKIT";
 static NSString*	kGotoPageKKTID 			= @"GotoPageKIT";
 static NSString*	kMagnificationKKTID 	= @"MagnificationKIT";
+static NSString*    kContentZoomKKTID       = @"ContentZoomKIT";
 #ifdef MITSU_PDF
 static NSString*	kMouseModeKKTID 		= @"MouseModeKIT";
 static NSString*	kBackForthKKTID			= @"BackForthKIT";
@@ -511,6 +513,36 @@ else
     }
 }
 
+// Zoom to Content and Zoom to Content Width (TSContentZoom.h), for the active part of the preview.
+- (NSToolbarItem *)contentZoomToolbarItem
+{
+    NSArray *labels = TSContentZoomLabels(), *symbols = TSContentZoomSymbols();
+    NSMutableArray *images = [NSMutableArray array];
+    for (NSUInteger i = 0; i < symbols.count; i++)
+        [images addObject:[NSImage imageWithSystemSymbolName:symbols[i] accessibilityDescription:labels[i]]];
+    NSToolbarItemGroup *group = [NSToolbarItemGroup groupWithItemIdentifier:kContentZoomKKTID images:images
+        selectionMode:NSToolbarItemGroupSelectionModeMomentary labels:labels target:self action:@selector(zoomPreviewToContent:)];
+    // Kept as separate buttons: AppKit would size them by their labels and fold them into a menu.
+    group.controlRepresentation = NSToolbarItemGroupControlRepresentationExpanded;
+    group.label = group.paletteLabel = labels[0];
+    for (NSUInteger i = 0; i < group.subitems.count; i++) group.subitems[i].toolTip = labels[i];
+    return group;
+}
+
+- (void)zoomPreviewToContent:(id)sender
+{
+    NSInteger index = NSNotFound;
+    if ([sender isKindOfClass:[NSToolbarItemGroup class]])
+        index = [(NSToolbarItemGroup *)sender selectedIndex];
+    else if ([sender isKindOfClass:[NSToolbarItem class]])
+        for (NSToolbarItem *item in [(NSToolbarItem *)sender toolbar].items)
+            if ([item isKindOfClass:[NSToolbarItemGroup class]] && [[(NSToolbarItemGroup *)item subitems] containsObject:sender])
+                index = [[(NSToolbarItemGroup *)item subitems] indexOfObject:sender];
+    MyPDFKitView *view = [self pdfKitView];
+    if ((index == 0 || index == 1) && view.document)
+        [view zoomToContentWidthOnly:index == 1];
+}
+
 - (void) setupToolbar
 {
     NSWindow *tempWindow;
@@ -711,6 +743,8 @@ static NSString *TSPreviewPageItemKey(NSString *itemIdent)
     
     if ([itemIdent isEqual:TSPreviewLayoutToolbarID] || [itemIdent isEqual:TSPreviewArrangementToolbarID])
         return TSPreviewLayoutItem(self, itemIdent);
+    if ([itemIdent isEqual:kContentZoomKKTID])
+        return [self contentZoomToolbarItem];
 // added by Terada (from this line)
     if ([itemIdent isEqual:TSPreviewAppearanceToolbarID])
         return TSPreviewAppearanceItem(self);
@@ -1966,6 +2000,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kMetaFontID,
 					kGotoPageKKTID,
 					kMagnificationKKTID,
+					kContentZoomKKTID,
 					kMouseModeKKTID,
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
@@ -2004,6 +2039,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kMetaFontID,
 					kGotoPageKKTID,
 					kMagnificationKKTID,
+					kContentZoomKKTID,
 					kMouseModeKKTID,
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
@@ -2046,6 +2082,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kDrawerKKTID,
 	                skGotoPageKKTID,
                     skMagnificationKKTID,
+                    kContentZoomKKTID,
 					skMouseModeTID,
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
@@ -2081,6 +2118,7 @@ if ([itemIdent isEqual: kSplitKKTID]) {
 					kDrawerKKTID,
 	                skGotoPageKKTID,
                     skMagnificationKKTID,
+                    kContentZoomKKTID,
 					skMouseModeTID,
 // added by Terada (from this line)
 					TSPreviewAppearanceToolbarID,
