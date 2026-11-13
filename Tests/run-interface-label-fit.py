@@ -14,6 +14,8 @@ InterfaceLabelFit.m that
     enclosing view, so a label wider than its window is found even when its
     frame is wide enough for its text;
   * no two controls draw over each other;
+  * each input field has 3 points of room for its focus ring inside the
+    window and beside the controls and scroll views next to it;
   * a resizable window still does all this at its smallest size.
 
 Both compiled variants of a nib are checked where both exist; the application
@@ -22,6 +24,7 @@ loads keyedobjects-101300.nib. Placeholder titles replaced at run time
 labels and is checked by run-settings-product-shell.py.
 
   --images DIR   also write each window as drawn, as PNG files
+  --focus-rings  draw the focus ring of each input field in those images
   --only NAME    check only the interfaces whose file name contains NAME"""
 from pathlib import Path
 import argparse, subprocess, sys, tempfile
@@ -31,6 +34,7 @@ interfaces = root / 'Resources/Interfaces'
 parser = argparse.ArgumentParser()
 parser.add_argument('--images')
 parser.add_argument('--only')
+parser.add_argument('--focus-rings', action='store_true')
 args = parser.parse_args()
 editor_source = root / 'Sources/Panels/TSAutoCompletionListEditor.m'
 macro_source = root / 'Sources/Macros/TSMacroEditor.m'
@@ -77,7 +81,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-label-fit-') as tmp:
                     '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root),
                     str(root / 'Tests/InterfaceLabelFit.m'), str(root / 'Sources/Windows/TSDialogButtonLayout.m'), str(root / 'Sources/Editor/TSMarkMenu.m'),
                     '-o', str(binary)], check=True)
-    extra = ['--images', str(Path(args.images).resolve())] if args.images else []
+    extra = (['--images', str(Path(args.images).resolve())] + (['--focus-rings'] if args.focus_rings else [])) if args.images else []
     if args.images:
         Path(args.images).mkdir(parents=True, exist_ok=True)
     result = subprocess.run([str(binary), *extra, *entries], capture_output=True, text=True, timeout=1800)

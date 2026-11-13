@@ -5,12 +5,14 @@
 //            wrapping label, shorter) than its text;
 //   OUTSIDE  what a control draws reaches past its window, box, tab or other
 //            enclosing view, which cuts it off;
-//   OVERLAP  two controls draw over each other.
+//   OVERLAP  two controls draw over each other;
+//   FOCUS    an input field's focus ring has less than 3 points of room inside
+//            the window or beside the controls and scroll views next to it.
 // Each control is drawn on its own with cacheDisplayInRect: to find the pixels it
 // draws. Resizable windows are checked again at their smallest size. Nothing is
 // ordered on screen and AppKit defaults stay in memory.
 // What is typed into an editable field is not measured; its placeholder is.
-// Usage: InterfaceLabelFit [--images DIR] <label>|<compiled nib>|<Localizable.strings> ...
+// Usage: InterfaceLabelFit [--images DIR [--focus-rings]] <label>|<compiled nib>|<Localizable.strings> ...
 #import <Cocoa/Cocoa.h>
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
@@ -44,6 +46,7 @@ static NSString *LocalizedString(NSBundle *self, SEL _cmd, NSString *key, NSStri
 static int problems;
 static BOOL automaticBezel;
 static NSString *imagesDirectory;
+static BOOL imagesWithFocusRings;
 
 static BOOL Placeholder(NSString *title) {
     return [title isEqual:@"Button"] || [title isEqual:@"Radio"] || [title isEqual:@"Switch"]
@@ -261,10 +264,68 @@ static void SaveImage(NSView *root, NSString *name) {
     [image lockFocus];
     [NSColor.windowBackgroundColor setFill]; NSRectFill(root.bounds);
     [rep drawInRect:root.bounds fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1 respectFlipped:NO hints:nil];
+    // With --focus-rings, the ring each input field would show when focused,
+    // cut off by the window edge as it is on screen.
+    if (imagesWithFocusRings) {
+        NSMutableArray<NSView *> *fields = [NSMutableArray array], *queue = [NSMutableArray arrayWithObject:root];
+        while (queue.count) {
+            NSView *v = queue.lastObject; [queue removeLastObject];
+            if (v.isHidden || [v isKindOfClass:NSClipView.class]) continue;
+            if ([v isKindOfClass:NSTextField.class] && ((NSTextField *)v).isEditable && v.focusRingType != NSFocusRingTypeNone) [fields addObject:v];
+            [queue addObjectsFromArray:v.subviews];
+        }
+        for (NSView *field in fields) {
+            [NSGraphicsContext saveGraphicsState];
+            NSSetFocusRingStyle(NSFocusRingOnly);
+            [[NSBezierPath bezierPathWithRoundedRect:[root convertRect:field.bounds fromView:field] xRadius:5 yRadius:5] fill];
+            [NSGraphicsContext restoreGraphicsState];
+        }
+    }
     [image unlockFocus];
     NSBitmapImageRep *out = [[NSBitmapImageRep alloc] initWithData:image.TIFFRepresentation];
     NSString *file = [[name stringByReplacingOccurrencesOfString:@"/" withString:@"-"] stringByAppendingPathExtension:@"png"];
     [[out representationUsingType:NSBitmapImageFileTypePNG properties:@{}] writeToFile:[imagesDirectory stringByAppendingPathComponent:file] atomically:YES];
+}
+
+// An input field draws its focus ring outside its bezel. The ring needs room
+// within the window and must not run into the controls and scroll views beside
+// the field.
+static const CGFloat FocusRingRoom = 3;
+static void CollectScrollViews(NSView *v, NSMutableArray<NSView *> *out) {
+    if (v.isHidden) return;
+    if ([v isKindOfClass:NSScrollView.class]) { [out addObject:v]; return; }
+    for (NSView *s in v.subviews) CollectScrollViews(s, out);
+}
+static void CheckFocusRings(NSView *root, NSString *where, NSArray<Ink *> *inks) {
+    NSMutableArray<NSView *> *scrolls = [NSMutableArray array];
+    CollectScrollViews(root, scrolls);
+    for (Ink *ink in inks) {
+        NSView *v = ink.view;
+        if (![v isKindOfClass:NSTextField.class] || !((NSTextField *)v).isEditable || v.focusRingType == NSFocusRingTypeNone) continue;
+        // The ring follows the bezel; a field that is not focused reports no mask.
+        NSRect mask = NSIsEmptyRect(v.focusRingMaskBounds) ? v.bounds : v.focusRingMaskBounds;
+        NSRect ring = NSInsetRect([root convertRect:mask fromView:v], -FocusRingRoom, -FocusRingRoom), b = root.bounds;
+        NSMutableArray *sides = [NSMutableArray array];
+        // A view loaded on its own, such as a toolbar item, has no window edge of its own.
+        if (root.window.contentView == root) {
+            if (NSMinX(b) - NSMinX(ring) > 0.5) [sides addObject:[NSString stringWithFormat:@"left %.0f", NSMinX(b) - NSMinX(ring)]];
+            if (NSMaxX(ring) - NSMaxX(b) > 0.5) [sides addObject:[NSString stringWithFormat:@"right %.0f", NSMaxX(ring) - NSMaxX(b)]];
+            if (NSMinY(b) - NSMinY(ring) > 0.5) [sides addObject:[NSString stringWithFormat:@"bottom %.0f", NSMinY(b) - NSMinY(ring)]];
+            if (NSMaxY(ring) - NSMaxY(b) > 0.5) [sides addObject:[NSString stringWithFormat:@"top %.0f", NSMaxY(ring) - NSMaxY(b)]];
+            if (sides.count) Report([NSString stringWithFormat:@"FOCUS %@ %@ has no room for its focus ring at the window edge (%@ points short)", where, Describe(v), [sides componentsJoinedByString:@", "]]);
+        }
+        NSMutableArray<NSValue *> *neighbours = [NSMutableArray array];
+        NSMutableArray<NSView *> *views = [NSMutableArray array];
+        for (Ink *other in inks) if (!NSIsEmptyRect(other.drawn)) { [neighbours addObject:[NSValue valueWithRect:other.drawn]]; [views addObject:other.view]; }
+        for (NSView *scroll in scrolls) { [neighbours addObject:[NSValue valueWithRect:[root convertRect:scroll.bounds fromView:scroll]]]; [views addObject:scroll]; }
+        for (NSUInteger i = 0; i < views.count; i++) {
+            NSView *other = views[i];
+            if (other == v || [v isDescendantOf:other] || [other isDescendantOf:v]) continue;
+            NSRect x = NSIntersectionRect(ring, NSIntersectionRect(neighbours[i].rectValue, Visible(other, root)));
+            if (NSWidth(x) > 0.5 && NSHeight(x) > 0.5)
+                Report([NSString stringWithFormat:@"FOCUS %@ %@ has no room for its focus ring beside %@ (%.1f by %.1f points)", where, Describe(v), [other isKindOfClass:NSScrollView.class] ? @"a scroll view" : Describe(other), NSWidth(x), NSHeight(x)]);
+        }
+    }
 }
 
 static void CheckRoot(NSView *root, NSString *where) {
@@ -272,7 +333,7 @@ static void CheckRoot(NSView *root, NSString *where) {
     NSMutableArray<NSTabView *> *tabViews = [NSMutableArray array];
     [root layoutSubtreeIfNeeded];
     Collect(root, root, where, inks, tabViews);
-    if (!automaticBezel) CheckGeometry(root, where, inks);
+    if (!automaticBezel) { CheckGeometry(root, where, inks); CheckFocusRings(root, where, inks); }
     // Each tab that is not selected, chosen as a person would choose it.
     for (NSTabView *tabs in tabViews) {
         NSTabViewItem *selected = tabs.selectedTabViewItem;
@@ -283,7 +344,7 @@ static void CheckRoot(NSView *root, NSString *where) {
             NSMutableArray<Ink *> *page = [NSMutableArray array];
             NSString *tab = [NSString stringWithFormat:@"%@ tab \"%@\"", where, item.label];
             Collect(item.view, root, tab, page, [NSMutableArray array]);
-            if (!automaticBezel) CheckGeometry(root, tab, page);
+            if (!automaticBezel) { CheckGeometry(root, tab, page); CheckFocusRings(root, tab, page); }
         }
         if (selected) [tabs selectTabViewItem:selected];
     }
@@ -298,6 +359,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSMutableArray<NSString *> *entries = [NSMutableArray array];
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--images") && i + 1 < argc) { imagesDirectory = @(argv[++i]); continue; }
+        if (!strcmp(argv[i], "--focus-rings")) { imagesWithFocusRings = YES; continue; }
         [entries addObject:@(argv[i])];
     }
     NSUInteger roots = 0;
@@ -346,5 +408,5 @@ int main(int argc, char **argv) { @autoreleasepool {
         }
     }}
     if (problems) { printf("FAIL: %d problems\n", problems); return 1; }
-    printf("PASS: text, controls and pop-up choices are whole, inside their windows and apart in %lu windows and views of %lu localized interfaces (also with the automatic toolbar bezel)\n", (unsigned long)roots / 2, (unsigned long)entries.count);
+    printf("PASS: text, controls and pop-up choices are whole, inside their windows and apart, and input fields have room for their focus rings, in %lu windows and views of %lu localized interfaces (also with the automatic toolbar bezel)\n", (unsigned long)roots / 2, (unsigned long)entries.count);
 } return 0; }
