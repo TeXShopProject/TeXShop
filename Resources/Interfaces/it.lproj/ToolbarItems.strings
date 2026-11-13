@@ -95,11 +95,11 @@ tiToolTipAutoComplete			= "(Dis)attiva autocompletamento";
 
 tiLabelSplit				= "Dividi finestra";
 tiPaletteLabelSplit			= "Dividi finestra";
-tiToolTipSplit				= "(Dis)attiva divisione finestra";
+tiToolTipSplit				= "(Dis)attiva divisione finestra; fai clic tenendo premuto il tasto Opzione per dividere verticalmente";
 
 tiLabelSplitKIT				= "Dividi finestra";
 tiPaletteLabelSplitKIT		= "Dividi finestra";
-tiToolTipSplitKIT			= "(Dis)attiva divisione finestra";
+tiToolTipSplitKIT			= "(Dis)attiva divisione finestra; fai clic tenendo premuto il tasto Opzione per dividere verticalmente";
 
 tiLabelMacros				= "Macro";
 tiPaletteLabelMacros			= "Macro";

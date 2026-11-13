@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ und $ gelten für jede Zeile";
 "AdvancedFind.Cancel" = "Abbrechen";
+"AdvancedFind.Cancelled" = "Abgebrochen";
+"AdvancedFind.Cancelling" = "Abbrechen …";
 "AdvancedFind.Cheat.Alternation" = "a oder b";
 "AdvancedFind.Cheat.Anchors" = "Positionen";
 "AdvancedFind.Cheat.AnyCharacter" = "jedes Zeichen außer einem Zeilenumbruch";
@@ -97,6 +99,8 @@
 "AdvancedFind.Results.Line" = "Zeile";
 "AdvancedFind.Results.LiveUpdate" = "Automatisch aktualisieren";
 "AdvancedFind.Results.Text" = "Gefundener Text";
+"AdvancedFind.Searching" = "Suchen …";
+"AdvancedFind.SearchingCount" = "Suchen … %lu";
 "AdvancedFind.Section.Common" = "Für beide";
 "AdvancedFind.Section.Regex" = "Regulärer Ausdruck";
 "AdvancedFind.Section.Text" = "Textsuche";
@@ -105,6 +109,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU ($1)";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit (\\1)";
 "AdvancedFind.SyntaxLabel" = "Ersetzungssyntax:";
+"AdvancedFind.TextChanged" = "Der Text wurde inzwischen geändert; nichts wurde geändert.";
 "AdvancedFind.Title" = "Suchen und Ersetzen";
 "AdvancedFind.Unescapes" = "\\n, \\t und andere Escape-Sequenzen im Ersatztext auswerten";
 "AdvancedFind.Unhighlight" = "Hervorhebungen entfernen";
@@ -138,6 +143,7 @@
 "MultipleReplace.RemoveQuestion" = "„%@“ in den Papierkorb legen?";
 "MultipleReplace.RemoveRule" = "Ausgewählte Regeln entfernen";
 "MultipleReplace.RemoveSet" = "Regelsatz in den Papierkorb legen";
+"MultipleReplace.RuleProgress" = "Regel %1$lu von %2$lu";
 "MultipleReplace.Sets" = "Regelsätze";
 "MultipleReplace.ShowInFinder" = "Im Finder anzeigen";
 "MultipleReplace.SkippedRules" = "(Regel %@ übersprungen; siehe ⚠︎)";
