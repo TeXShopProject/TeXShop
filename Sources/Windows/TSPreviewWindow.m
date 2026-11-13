@@ -955,7 +955,10 @@ extern NSPanel *pageNumberWindow;
         TSPreviewPaneRestore(linkView, place);
     }
 
+    // The other part goes to another place: its pinned popup closes, as when a link is
+    // followed, and that of the part with the link stays (#31, #35).
     [otherView cleanupMarqueeKeepingPinnedLinkPreview];
+    [otherView closePinnedLinkPreview];
     [otherView goToDestination: destination];
 
     NSResponder *responder = window.firstResponder;
