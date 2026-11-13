@@ -50,6 +50,77 @@
 extern NSPanel *pageNumberWindow;
 
 
+// In a split window, the part that the toolbar and the Preview menu work with has a
+// thin line in the accent color along its inside edges, like a focus ring, while the
+// window is key (#14). The line lies above the PDF and lets every click through.
+@interface TSPreviewActivePartLine : NSView
+@property (nonatomic) BOOL shown;
+@property (weak) TSPreviewWindow *previewWindow;
+@end
+
+@implementation TSPreviewActivePartLine
+
+- (NSView *)hitTest:(NSPoint)point
+{
+    return nil;
+}
+
+- (BOOL)isOpaque
+{
+    return NO;
+}
+
+- (void)setShown:(BOOL)shown
+{
+    if (_shown == shown)
+        return;
+    _shown = shown;
+    self.needsDisplay = YES;
+}
+
+- (void)drawRect:(NSRect)dirtyRect
+{
+    if (!self.shown)
+        return;
+    NSBezierPath *line = [NSBezierPath bezierPathWithRect: NSInsetRect(self.bounds, 1, 1)];
+    line.lineWidth = 2;
+    [[NSColor controlAccentColor] setStroke];
+    [line stroke];
+}
+
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow
+{
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+- (void)viewDidMoveToWindow
+{
+    if (!self.window)
+        return;
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    for (NSNotificationName name in @[NSWindowDidBecomeKeyNotification, NSWindowDidResignKeyNotification])
+        [center addObserver: self selector: @selector(keyWindowChanged:) name: name object: self.window];
+    [center addObserver: self selector: @selector(accentColorChanged:) name: NSSystemColorsDidChangeNotification object: nil];
+    [self.previewWindow showActivePart];
+}
+
+- (void)keyWindowChanged:(NSNotification *)notification
+{
+    [self.previewWindow showActivePart];
+}
+
+- (void)accentColorChanged:(NSNotification *)notification
+{
+    self.needsDisplay = YES;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+@end
+
 @implementation TSPreviewWindow
 
 
@@ -79,6 +150,55 @@ extern NSPanel *pageNumberWindow;
 	return result;
 }
 
+
+- (void)setActiveView:(PDFView *)activeView
+{
+    _activeView = activeView;
+    [self showActivePart];
+}
+
+- (void)setWindowIsSplit:(BOOL)windowIsSplit
+{
+    _windowIsSplit = windowIsSplit;
+    [self showActivePart];
+}
+
+// The line along a part, put on top of the part's own subviews.
+static TSPreviewActivePartLine *TSActivePartLineInView(TSPreviewWindow *window, PDFView *view)
+{
+    TSPreviewActivePartLine *line = nil;
+    for (NSView *subview in view.subviews)
+        if ([subview isKindOfClass: [TSPreviewActivePartLine class]])
+            line = (TSPreviewActivePartLine *)subview;
+    if (!line) {
+        line = [[TSPreviewActivePartLine alloc] initWithFrame: view.bounds];
+        line.previewWindow = window;
+        line.translatesAutoresizingMaskIntoConstraints = NO;
+        [view addSubview: line positioned: NSWindowAbove relativeTo: nil];
+        [NSLayoutConstraint activateConstraints: @[
+            [line.leadingAnchor constraintEqualToAnchor: view.leadingAnchor],
+            [line.trailingAnchor constraintEqualToAnchor: view.trailingAnchor],
+            [line.topAnchor constraintEqualToAnchor: view.topAnchor],
+            [line.bottomAnchor constraintEqualToAnchor: view.bottomAnchor]]];
+    } else if (view.subviews.lastObject != line)
+        [view addSubview: line positioned: NSWindowAbove relativeTo: nil];
+    return line;
+}
+
+- (void)showActivePart
+{
+    for (PDFView *view in @[self.myPDFKitView ?: NSNull.null, self.myPDFKitView2 ?: NSNull.null]) {
+        if (![view isKindOfClass: [PDFView class]])
+            continue;
+        BOOL shown = self.windowIsSplit && view == self.activeView && view.window.isKeyWindow;
+        TSPreviewActivePartLine *line = nil;
+        for (NSView *subview in view.subviews)
+            if ([subview isKindOfClass: [TSPreviewActivePartLine class]])
+                line = (TSPreviewActivePartLine *)subview;
+        if (shown || line)
+            TSActivePartLineInView(self, view).shown = shown;
+    }
+}
 
 - (void)close
 {
