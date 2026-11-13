@@ -91,6 +91,14 @@ NSColor *PreviewBackgroundColor, *ReverseSyncColor, *InvisibleColor, *ImageForeg
 - (void)display {}
 @end
 
+// The previews: only told to redraw their paper in the theme's color.
+@interface FakePDFView : NSView
+- (void)updatePreviewPaperColor;
+@end
+@implementation FakePDFView
+- (void)updatePreviewPaperColor {}
+@end
+
 @interface TSDocument : NSObject {
     @public
     NSTextView *textView1, *textView2, *outputText;
@@ -105,7 +113,7 @@ NSColor *PreviewBackgroundColor, *ReverseSyncColor, *InvisibleColor, *ImageForeg
 @property (strong) TSSyntaxColorScheme *syntaxColorScheme;
 @property (strong) NSTextView *logTextView;
 @property (strong) FakeWindow *logWindow, *pdfKitWindow;
-@property (strong) NSView *myPDFKitView, *myPDFKitView2;
+@property (strong) FakePDFView *myPDFKitView, *myPDFKitView2;
 @end
 @implementation TSDocument
 - (void)colorizeVisibleAreaInTextView:(NSTextView *)view {}
