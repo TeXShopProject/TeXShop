@@ -35,6 +35,7 @@ MUTATIONS = {
         '    [self runTaskNamed:title inTextView:textView work:work followsEdits:YES completion:completion];', '    [self runTaskNamed:title inTextView:textView work:work followsEdits:NO completion:completion];'),
     'the list does not follow the changes made meanwhile': ('TSAdvancedFindController+Tasks.m', '        [results followEdits:edits];\n', ''),
     'other actions run during a task': ('TSAdvancedFindController.m', '    if (self.runningTask) // one task at a time', '    if (NO) // one task at a time'),
+    'the find field searches during a task': ('TSAdvancedFindController.m', 'if (self.settings.findString.length == 0 || self.runningTask)', 'if (self.settings.findString.length == 0)'),
     'the panel\'s buttons do not hear of the task': ('TSAdvancedFindPanelController.m',
         '    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidUpdate:) name:TSAdvancedFindTaskDidChangeNotification object:findController];\n', ''),
     'the window\'s buttons ignore the task': ('TSMultipleReplaceWindowController.m',
@@ -50,8 +51,8 @@ MUTATIONS = {
     'the cache ignores the line ending': ('TSAdvancedFindController.m', 'find.lineEnding ?: @"", find.pattern.findString];', '@"", find.pattern.findString];'),
     'no cache': ('TSAdvancedFindController.m', '    NSArray<NSValue *> *matches = [cache matchesForKey:key];\n', '    NSArray<NSValue *> *matches = nil; (void)cache;\n'),
     'Escape does not cancel': ('TSAdvancedFindProgressSheet.m', '    _cancelButton.keyEquivalent = @"\\e";\n', ''),
-    'Cancel is below the bar': ('TSAdvancedFindProgressSheet.m', '    NSStackView *bar = [NSStackView stackViewWithViews:@[_progressBar, _cancelButton]];',
-                                '    NSStackView *bar = [NSStackView stackViewWithViews:@[_progressBar, _cancelButton]]; bar.orientation = NSUserInterfaceLayoutOrientationVertical;'),
+    'Cancel is left of the bar': ('TSAdvancedFindProgressSheet.m', '    NSStackView *bar = [NSStackView stackViewWithViews:@[_progressBar, _cancelButton]];',
+                                  '    NSStackView *bar = [NSStackView stackViewWithViews:@[_cancelButton, _progressBar]];'),
     'no sheet is called for': ('TSAdvancedFindTask.m', '        task.sheetWasDue = YES;\n', ''),
 }
 

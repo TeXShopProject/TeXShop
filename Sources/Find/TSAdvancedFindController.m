@@ -176,7 +176,7 @@ NSNotificationName const TSAdvancedFindTaskDidChangeNotification = @"TSAdvancedF
 
 - (BOOL)incrementalSearchInTextView:(NSTextView *)textView
 {
-    if (self.settings.findString.length == 0)
+    if (self.settings.findString.length == 0 || self.runningTask) // typing in the find field while a task runs moves nothing
         return NO;
     return [self findForward:YES inTextView:textView includingSelection:YES quiet:YES];
 }

@@ -169,6 +169,8 @@ static void TestReplaceAll(void)
     Check(![controller validateAction:TSAdvancedFindActionHighlight forTextView:upper] && [controller validateAction:TSAdvancedFindActionShowFindPanel forTextView:upper],
           @"while it runs, the menu items are gray but Find… still shows the panel");
     Check(AllEnabled(panel.buttons, NO), @"while it runs, the panel's buttons are gray");
+    NSRange selection = upper.selectedRange;
+    Check(![controller incrementalSearchInTextView:upper] && NSEqualRanges(upper.selectedRange, selection), @"while it runs, typing in the find field does not search");
     RunFor(0.05);
     [task cancel];
     NSDate *cancelled = NSDate.date;
@@ -416,11 +418,13 @@ static void TestCache(void)
     Check(cache.hits == hits + 1, @"a change of colors (syntax coloring) keeps the cache");
     [controller performAction:TSAdvancedFindActionHighlight inTextView:second.upper];
     Check([status containsString:@"1"], [NSString stringWithFormat:@"another document has its own cache (%@)", status]);
-    controller.settings.options = TSRegexFindDefaultOptions | TSRegexFindIgnoreCase;
     controller.settings.findString = @"AB";
+    [controller performAction:TSAdvancedFindActionHighlight inTextView:view];
+    Check([status containsString:@"0"], [NSString stringWithFormat:@"AB is not found with case (%@)", status]);
+    controller.settings.options = TSRegexFindDefaultOptions | TSRegexFindIgnoreCase;
     hits = cache.hits;
     [controller performAction:TSAdvancedFindActionHighlight inTextView:view];
-    Check(cache.hits == hits && [status containsString:@"3"], @"other options are another search");
+    Check(cache.hits == hits && [status containsString:@"3"], [NSString stringWithFormat:@"the same string with other options is another search (%@)", status]);
     controller.settings.options = TSRegexFindDefaultOptions;
     controller.lineEndingHandler = ^NSString *(NSTextView *textView) { return @"\r\n"; };
     controller.settings.findString = @"ab";
