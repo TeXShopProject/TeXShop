@@ -52,7 +52,9 @@ static const TSSyntaxRoleThemeKey TSSyntaxRoleThemeKeys[] = {
 
 static NSDictionary<NSAttributedStringKey, id> *TSSyntaxAttributes(NSAttributedStringKey key, NSColor *_Nullable color)
 {
-    return color ? @{key: color} : @{};
+    if (color == nil)
+        return @{};
+    return @{key: (NSColor *_Nonnull)color};
 }
 
 static NSColor *_Nullable TSSyntaxThemeColor(NSDictionary *theme, const TSSyntaxRoleThemeKey *entry, BOOL dark)
@@ -133,7 +135,12 @@ static NSDictionary<NSAttributedStringKey, id> *TSSyntaxFullwidthAttributes(NSDi
          contentHighlightAttributes:(NSDictionary<NSAttributedStringKey, id> *)contentHighlightAttributes
 {
     if ((self = [super init])) {
-        _attributes = [attributes copy];
+        // Immutable all the way down: what the caller passes in may change later.
+        NSMutableDictionary<NSNumber *, NSDictionary<NSAttributedStringKey, id> *> *copied = [NSMutableDictionary dictionary];
+        [attributes enumerateKeysAndObjectsUsingBlock:^(NSNumber *role, NSDictionary<NSAttributedStringKey, id> *roleAttributes, BOOL *stop) {
+            copied[role] = [roleAttributes copy];
+        }];
+        _attributes = [copied copy];
         _activeLineAttributes = [activeLineAttributes copy];
         _braceHighlightAttributes = [braceHighlightAttributes copy];
         _contentHighlightAttributes = [contentHighlightAttributes copy];

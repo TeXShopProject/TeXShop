@@ -35,6 +35,8 @@ MUTATIONS = {
     'no-dark-defaults': (COLOR, 'withDarkColors = YES;', 'withDarkColors = NO;'),
     # A transparent fullwidth background is added after all.
     'transparent-fullwidth-background': (SCHEME, 'if (color && color.alphaComponent > 0)', 'if (color)'),
+    # The scheme keeps the dictionaries of the roles that it was given, which may change afterwards.
+    'shares-inner-dictionaries': (SCHEME, '            copied[role] = [roleAttributes copy];', '            copied[role] = roleAttributes;'),
     # Without fullwidth colors the document gets an empty dictionary, which still takes the fullwidth branch.
     'empty-fullwidth': (COLOR, 'fullwidthAttributes.count ? fullwidthAttributes : nil', 'fullwidthAttributes'),
 }
@@ -132,7 +134,34 @@ static void Print(NSString *label, NSDictionary *attributes)
         printf("  %s %s %s\n", label.UTF8String, key.UTF8String, Describe(attributes[key]).UTF8String);
 }
 
+// A scheme is a value: changing the dictionaries it was made from, or those it returns, changes nothing in it.
+static BOOL SchemeIsImmutable(void)
+{
+    NSMutableDictionary *command = [@{NSForegroundColorAttributeName: NSColor.redColor} mutableCopy];
+    NSMutableDictionary *roles = [@{@(TSSyntaxRoleCommand): command} mutableCopy];
+    NSMutableDictionary *line = [@{NSBackgroundColorAttributeName: NSColor.yellowColor} mutableCopy];
+    TSSyntaxColorScheme *scheme = [[TSSyntaxColorScheme alloc] initWithAttributes:roles activeLineAttributes:line
+                                                         braceHighlightAttributes:line contentHighlightAttributes:line];
+    TSSyntaxColorScheme *copy = [scheme copy];
+    command[NSForegroundColorAttributeName] = NSColor.blueColor;
+    roles[@(TSSyntaxRoleComment)] = command;
+    [line removeAllObjects];
+    id returned = [scheme attributesForRole:TSSyntaxRoleCommand];
+    if ([returned isKindOfClass:NSMutableDictionary.class] && [returned respondsToSelector:@selector(removeAllObjects)]) {
+        @try { [returned removeAllObjects]; } @catch (NSException *exception) {}
+    }
+    for (TSSyntaxColorScheme *s in @[scheme, copy])
+        if (![[s attributesForRole:TSSyntaxRoleCommand][NSForegroundColorAttributeName] isEqual:NSColor.redColor] ||
+            [s attributesForRole:TSSyntaxRoleComment].count || s.activeLineAttributes.count != 1)
+            return NO;
+    return YES;
+}
+
 int main(int argc, const char **argv) { @autoreleasepool {
+    if (!SchemeIsImmutable()) {
+        printf("FAIL: the scheme changed with the dictionaries it was made from\n");
+        return 1;
+    }
     NSDictionary *themes = [NSDictionary dictionaryWithContentsOfFile:@(argv[1])];
     for (NSString *name in [themes.allKeys sortedArrayUsingSelector:@selector(compare:)]) {
         for (NSString *mode in @[@"light", @"dark"]) {
@@ -200,6 +229,10 @@ with tempfile.TemporaryDirectory(prefix='texshop-syntax-scheme-golden-') as tmp:
                     str(tmp / 'probe.m'), '-o', str(tmp / 'probe')], check=True)
     result = subprocess.run([str(tmp / 'probe'), str(tmp / 'themes.plist')], capture_output=True, text=True, timeout=120)
 if result.returncode:
+    print(result.stdout, end='')
+    if args.mutation:
+        print(f'PASS: detected mutation {args.mutation}')
+        sys.exit(0)
     sys.exit('FAIL: ' + result.stderr)
 record = f'# Syntax coloring colors of {len(themes)} themes. Rewrite with run-syntax-color-scheme-golden.py --update.\n' + result.stdout
 if args.update:
