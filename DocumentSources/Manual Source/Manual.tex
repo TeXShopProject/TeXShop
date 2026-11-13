@@ -2406,6 +2406,8 @@ The list of Find All shows the line number and the text of each match, with the 
 
 Highlights are drawn over the colors and backgrounds the source already has, and follow edits. They appear in both parts of a split window.
 
+Replace All, Find All and Multiple Replace work on a copy of the text in the background. Until they end, every view of the document is read-only, and the buttons and menu items that would start another of them are dimmed. When the work takes more than a moment, a sheet comes down from the document window with the name of the action, a progress bar and the number of matches found so far, or for Multiple Replace the rule being applied. The button with a cross at the right of the bar, or the Escape key, cancels the action; the text then stays as it was and nothing is added to Undo. When Replace All or Multiple Replace ends, its replacements are applied in one step and undone with a single Undo; if the text was changed meanwhile in another way, for example when the file was reloaded, nothing is replaced and the panel says so. Find Next, Find Previous and Highlight All reuse the matches already found in the whole text while the text and the find options stay the same; a search in the selection is made again each time.
+
 \subsection{Regular Expressions}
 
 The panel uses the regular expressions of ICU, which Apple's own programs use, rather than the Onigmo expressions of OgreKit. Most expressions are written the same way. The differences that matter most:
@@ -2414,6 +2416,8 @@ The panel uses the regular expressions of ICU, which Apple's own programs use, r
 \item \verb|\d|, \verb|\w|, \verb|\s| and \verb|\b| include full-width digits, kanji, kana and full-width spaces.
 \item \verb|\h|, \verb|\K|, \verb|\g<name>| and \verb|(?m)| do not mean what they mean in OgreKit.
 \end{itemize}
+
+The small button with a question mark next to Regular expression opens the Regular Expression Reference. Its three tabs show the syntax of a find pattern, the syntax of a replacement in the style chosen among the options, and the differences from OgreKit; a link at the bottom opens the ICU User Guide on the web. Dragged away from the panel, the reference stays open as a window of its own.
 
 The replacement can be written in two ways, chosen among the options. In the ICU syntax, the default, \verb|$0| is the whole match and \verb|$1|, \verb|$2|, \ldots\ are the groups, as in CotEditor; \verb|\$| is a dollar sign. A \TeX\ formula such as \verb|$x$| is therefore written \verb|\$x\$| in a replacement. In the OgreKit syntax, \verb|\0| or \verb|\&| is the whole match, \verb|\1|, \verb|\2|, \ldots\ are the groups, \verb|\g<name>| is a named group, and \verb|$| is an ordinary character. In both, a backslash in the replacement is written twice: \verb|\\section| gives \verb|\section|.
 
@@ -3654,9 +3658,9 @@ You can  remove Themes you no longer use by removing their plist files from the 
 
 Selecting a theme to edit fills the color wells. Choosing Lite Mode or Dark Mode themes saves those selections and updates the corresponding documents immediately.
 
-Finally we explain the actual color choices. At the top of the Theme Panel, the Foreground and Background colors can be set for the Source, Console, and Log Windows, and the Background color can be set for the Preview Window. For each of these except the Log window, transparency can also be set. In color theory, alpha value sets transparency.  Window opacity is set with a slider and a numeric field from 0\% (transparent) to 100\% (opaque). The colors themselves are always opaque, so their color wells offer no opacity.
+Finally we explain the actual color choices. At the top of the Theme Panel, the Foreground and Background colors can be set for the Source, Console, and Log Windows, and the Background color of the pages shown light can be set for the Preview Window, under the heading Light Pages. For each of these except the Log window, transparency can also be set. In color theory, alpha value sets transparency.  Window opacity is set with a slider and a numeric field from 0\% (transparent) to 100\% (opaque). The colors themselves are always opaque, so their color wells offer no opacity.
 
-Why can we set the Background Color of the Preview Window, but not its Foreground Color? That is because pdf files created by TeX have an invisible background color. When such a file is printed, the result is black characters on the actual paper. If the pdf had a background color, then the printer might print a grayish wash over the entire page, which is clearly undesirable. So TeXShop can independently set the background of the Preview Window, and it will appear except when covered by actual letters. Note that when such a document is printed, the background color setting of Preview will be ignored because this information is not in the pdf file.
+Why can we set the Background Color of the Preview Window, but not its Foreground Color? That is because pdf files created by TeX have an invisible background color. When such a file is printed, the result is black characters on the actual paper. If the pdf had a background color, then the printer might print a grayish wash over the entire page, which is clearly undesirable. So TeXShop can independently set the background of the Preview Window, and it will appear except when covered by actual letters. Note that when such a document is printed, the background color setting of Preview will be ignored because this information is not in the pdf file. The color fills the pages only while they are shown light. When the Appearance item in the toolbar of the Preview Window shows them dark, they are not filled, so that they look deep black.
 
 Illustrations are a different matter. Most illustrations set the background color, and thus the background color of Preview will not appear behind illustrations.
 
@@ -3771,7 +3775,7 @@ all consist of a string with no spaces. More precisely, this string can contain 
 \section{Splitting Source and Preview Windows}
 \label{Splitting_Windows_Section}
 
-The toolbars for the source and preview window each contain an icon containing two stacked rectangles. This item ``splits the window'' into two independent parts. This makes it possible to examine one portion of the document while writing a separate portion. The icon is a toggle which both splits and unsplits the window.
+The toolbars for the source and preview window each contain an icon showing a rectangle divided into a top and a bottom part. This item ``splits the window'' into two independent parts. This makes it possible to examine one portion of the document while writing a separate portion. The icon is a toggle which both splits and unsplits the window.
 
 The Window Menu contains a menu item  ``Split Window'' which is a similar toggle for the currently active window.
 This menu item has a keyboard shortcut, so if you are working with, say, the Preview Window, you can
@@ -3781,6 +3785,7 @@ When the Option key is pressed, the Window menu  ``Split Window'' changes to ``S
 Thus the source and preview windows can be split horizontally, with one portion above the other,
 or vertically, with one portion to the left of the other.
 Pushing the option key while clicking the split window toolbar item has the same effect.
+While the Option key is held down with the pointer over this toolbar item in a window that is not split, its icon changes to a rectangle divided into a left and a right part, the split that a click then makes. Uwe Schmock suggested this. In a split window the item unsplits the window, and its icon does not change. A keyboard shortcut set for ``Split Window Vertically'' under Menu Shortcuts in Settings splits the window side by side even without the Option key.
 
 When the Preview window is split or unsplit, the place shown at the top edge of the top (or left) view stays where it is on the screen, at any magnification and in every display format. If that view is scrolled while the window is split, unsplitting keeps the new position. When the window is split again, the bottom (or right) view shows the place it showed when the window was last unsplit.
 
@@ -3813,6 +3818,8 @@ When the chapters in the drawer's outline view are numbered, several keyboard sh
 drawer. If you type Option-1, the drawer will select the first chapter. If you type Option-2 followed by Option-0, the drawer will switch to Chapter 20. Type Option-UpArrow to select the first item and Option-DownArrow to select the last item. Type Option-1.5 to select Chapter 1, Section 5. If Chapter 3 is selected, Option-RightArrow will open sub-levels and Option-LeftArrow will close sub-levels. Although these keystrokes select drawer items, it is still necessary to click these items to make the associated view scroll to them.
 
 The toolbar of a split Preview window also works with its active view. The page number box shows the page of the active view, and typing a page number there moves the active view to that page while the other view stays where it is. Escape dismisses only the pinned link popup of the active view; a pinned popup in the other view stays (see \cref{Modifying_Popup_Windows_Section}).
+
+To show which view this is, the active view of a split Preview window has a thin line in the accent color chosen in System Settings along its edges. The line appears only while the window is in front, as the key window, and it disappears when the window is unsplit. It lies over the edges of the view, so the contents do not move, and clicks reach the view as before. Uwe Schmock suggested a way to see the active view.
 
 There is a final item related to responders and active views. If the source window is split and we then unsplit it, the active view in the Source window will expand and become the contents of the unsplit window. So if the top portion is active and
 then we unsplit the window, we'll see that top portion. But if the bottom portion is active and then we unsplit the
@@ -4141,7 +4148,7 @@ In case \ref{PWT_LaTeX_Source}, make sure to place an internal link to every pre
 \item
 During online teaching, case \ref{PWT_Online}, you can press Option while the popup is visible to keep it on screen, then move the pointer to explain the correspondence between its contents and the current page. Press Escape to dismiss the popup.
 For a larger, independently scrollable view, you can also split the Preview; see \cref{Options_Splitting_Horizontally_Section}. Scroll the Preview so that the link is in the upper half of the window.
-Hold down the shift key and toggle ``Split Window'' in the Window menu (or the context menu) or click in the toolbar the symbol consisting of two rectangles stacked on top of each other.
+Hold down the shift key and toggle ``Split Window'' in the Window menu (or the context menu) or click in the toolbar the symbol showing a rectangle divided into a top and a bottom part.
 This splits the Preview window into equal parts and duplicates the upper part of the full view into the lower part.
 Follow the internal link in the lower part.
 If desired, scroll each part a little bit and move the dividing bar.
@@ -6996,6 +7003,8 @@ The background color of the preview window could be changed. This background col
    defaults write TeXShop Pdfbackground_G 0.39
    defaults write TeXShop Pdfbackground_B 0.77
 \end{verbatim}
+It is now set by the Light Pages color of the Preview row in the Themes category of TeXShop Settings; use that instead.
+
 The transparency of the source, preview, and console windows was set by the following items. Here an alpha value of 0.00 is completely transparent and an alpha value of 1.00 is completely opaque. It is now set by the opacity sliders in the Windows group of the Themes category of TeXShop Settings; use those instead.
 \begin{verbatim}
    defaults write TeXShop ConsoleWindowAlpha 0.75

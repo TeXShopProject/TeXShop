@@ -45,9 +45,9 @@
 
 @property               BOOL            firstTime;  // only remove constraints once from split views
 @property               BOOL            willClose;
-@property               BOOL            windowIsSplit;
+@property (nonatomic)   BOOL            windowIsSplit;
 @property               BOOL            firstClose;
-@property (retain)      PDFView         *activeView;
+@property (nonatomic, retain) PDFView   *activeView;
 @property (retain)      PDFView         *myPDFKitView;
 @property (retain)      PDFView        *myPDFKitView2;
 @property (weak)      NSSplitView    *pdfKitSplitView;
@@ -142,6 +142,7 @@
 - (IBAction) convertTiff:(id)sender;
 
 - (BOOL)windowIsSplit;
+- (void)showActivePart; // the line along the active part of a split window (#14)
 
 
 @end

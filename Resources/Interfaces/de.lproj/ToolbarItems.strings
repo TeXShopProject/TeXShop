@@ -95,11 +95,11 @@ tiToolTipAutoComplete			= "Autovervollständigung umschalten";
 
 tiLabelSplit				= "Geteilter Quelltext";
 tiPaletteLabelSplit			= "Geteilter Quelltext";
-tiToolTipSplit				= "Geteilten Quelltext umschalten";
+tiToolTipSplit				= "Geteilten Quelltext umschalten. Option-Taste-Klicken teilt vertikal.";
 
 tiLabelSplitKIT				= "Geteilte Vorschau";
 tiPaletteLabelSplitKIT		= "Geteilte Vorschau";
-tiToolTipSplitKIT			= "Geteilte Vorschau umschalten";
+tiToolTipSplitKIT			= "Geteilte Vorschau umschalten. Option-Taste-Klicken teilt vertikal.";
 
 tiLabelMacros				= "Makros";
 tiPaletteLabelMacros			= "Makros";

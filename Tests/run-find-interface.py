@@ -21,14 +21,23 @@ program=r'''
 #undef SUD
 #define SUD TSIsolatedAppKitDefaults
 static void Check(BOOL ok,NSString *message){if(!ok){fprintf(stderr,"FAIL: %s\n",message.UTF8String);exit(1);}}
-@interface FindDocumentProbe:NSObject { NSTextView *textView1,*textView2,*outputText; }
+@interface ExperimentConsoleProbe:NSObject
+@property NSTextView *outputText;
+@end
+@implementation ExperimentConsoleProbe
+@end
+@interface FindDocumentProbe:NSObject { NSTextView *textView1,*textView2,*outputText,*scrapTextView; }
 @property NSTextView *logTextView;
+@property ExperimentConsoleProbe *experimentConsole;
 - (NSArray<NSTextView *> *)views;
+- (NSArray<NSTextView *> *)highlightedViews;
 @end
 @implementation FindDocumentProbe
-- (instancetype)init {self=[super init];if(self){textView1=[NSTextView new];textView2=[NSTextView new];outputText=[NSTextView new];self.logTextView=[NSTextView new];REGISTRATION}return self;}
+- (instancetype)init {self=[super init];if(self){textView1=[NSTextView new];textView2=[NSTextView new];outputText=[NSTextView new];scrapTextView=[NSTextView new];self.logTextView=[NSTextView new];self.experimentConsole=[ExperimentConsoleProbe new];self.experimentConsole.outputText=[NSTextView new];REGISTRATION}return self;}
 - (void)dealloc{[NSNotificationCenter.defaultCenter removeObserver:self];}
 - (NSArray<NSTextView *> *)views{return @[textView1,textView2,outputText,self.logTextView];}
+// The source (both split views share its storage), the console, the log and the Experiment source and output.
+- (NSArray<NSTextView *> *)highlightedViews{return @[textView1,outputText,self.logTextView,scrapTextView,self.experimentConsole.outputText];}
 METHOD
 @end
 int main(int argc,char **argv){@autoreleasepool{
@@ -40,7 +49,7 @@ int main(int argc,char **argv){@autoreleasepool{
  for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views){NSScrollView *scroll=[NSScrollView new];scroll.documentView=view;[scrollViews addObject:scroll];}
  NSInteger effective=launch;
  for(NSNumber *method in @[@1,@3,@0,@2,@0,@1,@3,@1])for(NSNumber *incremental in @[@YES,@NO]){
-  for(FindDocumentProbe *document in documents)[TSAdvancedFindHighlights highlightsForTextStorage:document.views[0].textStorage].ranges=@[[NSValue valueWithRange:NSMakeRange(0,0)]];
+  for(FindDocumentProbe *document in documents)for(NSTextView *view in document.highlightedViews)[TSAdvancedFindHighlights highlightsForTextStorage:view.textStorage].ranges=@[[NSValue valueWithRange:NSMakeRange(0,0)]];
   for(NSScrollView *scroll in scrollViews)scroll.findBarVisible=YES;
   [SUD setInteger:method.integerValue forKey:FindMethodKey];[SUD setBool:incremental.boolValue forKey:IncrementalSearchKey];
   [NSNotificationCenter.defaultCenter postNotificationName:TSFindMethodChangedNotification object:nil];
@@ -48,11 +57,11 @@ int main(int argc,char **argv){@autoreleasepool{
   for(FindDocumentProbe *document in documents)for(NSTextView *view in document.views){
    if(launch!=2 && method.integerValue==0)Check(!view.enclosingScrollView.findBarVisible,@"Switching to the panel closes every visible find bar");
    Check(view.usesFindBar==(effective==1) && view.usesFindPanel==(effective!=1),@"All source split views, console and log follow the effective find interface");
-   Check(([TSAdvancedFindHighlights existingHighlightsForTextStorage:document.views[0].textStorage].ranges.count==0)==(method.integerValue!=3),@"Leaving the Advanced Find panel removes its highlights");
+   for(NSTextView *lit in document.highlightedViews)Check(([TSAdvancedFindHighlights existingHighlightsForTextStorage:lit.textStorage].ranges.count==0)==(method.integerValue!=3),@"Leaving the Advanced Find panel removes its highlights");
    if(launch!=2 && method.integerValue!=2)Check(view.incrementalSearchingEnabled==(effective==1&&incremental.boolValue),@"Incremental searching is enabled only in the requested find bar");
   }
  }
- puts("PASS: extracted document observer and registration, two documents/four real text views, panel/bar/OgreKit and incremental state");
+ puts("PASS: extracted document observer and registration, two documents/four real text views, highlights of the source, console, log and Experiment windows, panel/bar/OgreKit and incremental state");
 }return 0;}
 '''.replace('REGISTRATION',registration).replace('METHOD',method)
 with tempfile.TemporaryDirectory(prefix='texshop-find-interface-')as tmp:
@@ -73,6 +82,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-find-interface-')as tmp:
   cases.append(('incremental',program,original.replace('method == TSFindMethodFindBar && incremental','NO && incremental'),'Incremental searching'))
   cases.append(('reverse-panel',program.replace('NSInteger current = [SUD integerForKey:FindMethodKey];','NSInteger current = [SUD integerForKey:FindMethodKey]; if (current == 0) return;'),original,'Switching to the panel closes every visible find bar'))
   cases.append(('visible-bar',program,original.replace('if (method != TSFindMethodFindBar) view.enclosingScrollView.findBarVisible = NO;',';'),'Switching to the panel closes every visible find bar'))
+  cases.append(('keep-console-highlights',program.replace('{textView1, outputText, self.logTextView, scrapTextView, self.experimentConsole.outputText}','{textView1, self.logTextView, scrapTextView, self.experimentConsole.outputText}'),original,'Leaving the Advanced Find panel removes its highlights'))
   cases.append(('keep-highlights',program.replace('[[TSAdvancedFindHighlights existingHighlightsForTextStorage:storage] removeAll];',';'),original,'Leaving the Advanced Find panel removes its highlights'))
   for name,body,interface,expected in cases:
    assert body!=program or interface!=original,(name,"No mutation applied")

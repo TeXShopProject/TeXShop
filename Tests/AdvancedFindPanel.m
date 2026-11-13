@@ -271,14 +271,19 @@ static void TestController(void)
 
 #pragma mark Routing
 
+/// The shared controller of the tests: in-memory defaults and a unique find pasteboard, not the system's.
+static TSAdvancedFindController *TestSharedController;
+static NSUInteger TestSharedBeeps;
+static id SharedControllerForTests(id self, SEL _cmd) { return TestSharedController; }
+
 static void TestRouting(void)
 {
-    NSUInteger beeps = 0;
-    TSAdvancedFindController *controller = MakeController([TSMemoryDefaults new], &beeps);
+    TSAdvancedFindController *controller = TestSharedController;
     controller.settings.findString = @"beta";
     TSAdvancedFindTextView *view = [[TSAdvancedFindTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
     view.string = @"alpha beta gamma beta";
-    view.findController = controller;
+    [NSUserDefaults.standardUserDefaults setInteger:3 forKey:@"FindMethod"];
+    Check(view.findController == controller, @"with the Advanced Find panel, a plain text view finds with the shared controller");
     NSMenuItem *next = [[NSMenuItem alloc] initWithTitle:@"Find Next" action:@selector(performFindPanelAction:) keyEquivalent:@"g"];
     next.tag = NSFindPanelActionNext;
     [view performFindPanelAction:next];
@@ -629,6 +634,8 @@ int main(int argc, const char *argv[])
         [NSApplication sharedApplication];
         NSString *mode = argc > 1 ? @(argv[1]) : @"all";
         NSString *images = argc > 2 && argv[2][0] != '-' ? @(argv[2]) : nil; // not the -AppleLanguages that follows
+        TestSharedController = MakeController([TSMemoryDefaults new], &TestSharedBeeps);
+        method_setImplementation(class_getClassMethod(TSAdvancedFindController.class, @selector(sharedController)), (IMP)SharedControllerForTests);
         if ([mode isEqualToString:@"all"] || [mode isEqualToString:@"behavior"]) {
             TestController();
             TestRouting();

@@ -74,7 +74,8 @@
     
     // EDITOR
     
-    PreviewBackgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"PreviewBackground"];
+    [self.myPDFKitView updatePreviewPaperColor];
+    [self.myPDFKitView2 updatePreviewPaperColor];
     
     myBackgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorBackground"];
     myTextColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorText"];

@@ -991,12 +991,16 @@ withDarkColors = NO;
     NSInteger current = [SUD integerForKey:FindMethodKey];
     NSNumber *initial = TSSettingsLaunchValues()[FindMethodKey];
     if (current != TSFindMethodAdvancedPanel) {
-        // Away from the Advanced Find panel: it closes, and its highlights in this document go, since nothing else removes them.
+        // Away from the Advanced Find panel: it closes, and its highlights in this document, its console, log and
+        // Experiment windows go, since nothing else removes them.
         if (TSAdvancedFindPanelController.hasSharedPanelController)
             [TSAdvancedFindPanelController.sharedPanelController close];
-        NSTextStorage *storage = textView1.textStorage;
-        if (storage)
-            [[TSAdvancedFindHighlights existingHighlightsForTextStorage:storage] removeAll];
+        NSTextView *views[] = {textView1, outputText, self.logTextView, scrapTextView, self.experimentConsole.outputText};
+        for (size_t index = 0; index < sizeof(views) / sizeof(views[0]); index++) {
+            NSTextStorage *storage = views[index].textStorage;
+            if (storage)
+                [[TSAdvancedFindHighlights existingHighlightsForTextStorage:storage] removeAll];
+        }
     }
     if (current == 2 || (initial != nil && initial.integerValue == 2)) return;
     BOOL incremental = [SUD boolForKey:IncrementalSearchKey];
@@ -3747,6 +3751,7 @@ static const char *TSLineEndingNoticeAttribute = "org.texshop.line-ending-notice
 		textView = textView1;
         [self removeCurrentLineColor:textView2];
 	}
+    TSSplitToggleItemsFollowSplit();
 }
 
 - (void)annotationPanelWillClose:(NSNotification *)notification

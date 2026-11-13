@@ -99,11 +99,11 @@ tiToolTipAutoComplete		= "Activer/Désactiver les raccourcis";
 
 tiLabelSplit				= "Fenêtre divisée";
 tiPaletteLabelSplit			= "Fenêtre divisée";
-tiToolTipSplit				= "Toggle window split";
+tiToolTipSplit				= "Diviser la fenêtre ou annuler la division ; cliquez en maintenant la touche Option enfoncée pour diviser verticalement";
 
 tiLabelSplitKIT				= "Fenêtre divisée";
 tiPaletteLabelSplitKIT		= "Fenêtre divisée";
-tiToolTipSplitKIT			= "Toggle window split";
+tiToolTipSplitKIT			= "Diviser la fenêtre ou annuler la division ; cliquez en maintenant la touche Option enfoncée pour diviser verticalement";
 
 tiLabelMacros				= "Macros";
 tiPaletteLabelMacros		= "Macros";

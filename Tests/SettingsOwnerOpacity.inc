@@ -180,9 +180,13 @@ static void CheckOwnerOpacity(TSPreferences *owner,TSSettingsWindowController *s
     [NSNotificationCenter.defaultCenter removeObserver:observer];
     NSArray *legacy=@[SourceWindowAlphaKey,ConsoleWindowAlphaKey,PreviewWindowAlphaKey];
     for(NSUInteger i=0;i<3;i++)[TSIsolatedAppKitDefaults setDouble:0.17+0.22*i forKey:legacy[i]];
+    // The preview paper of the old settings, one value written by Terminal as a string with spaces.
+    [TSIsolatedAppKitDefaults setDouble:0.42 forKey:PdfPageBack_RKey];[TSIsolatedAppKitDefaults setObject:@" 0.39 " forKey:PdfPageBack_GKey];[TSIsolatedAppKitDefaults setDouble:0.77 forKey:PdfPageBack_BKey];
     Method migrate=class_getInstanceMethod(TSPreferences.class,@selector(requestNameForThemeColors:));IMP oldMigrate=method_setImplementation(migrate,(IMP)CaptureOpacityMigration);
     [owner NewStyleFromPrefs:nil];
     for(NSUInteger i=0;i<3;i++)Check(fabs([opacityMigrated[keys[i]][3]doubleValue]-(0.17+0.22*i))<1e-9,@"Legacy defaults migration preserves each window alpha");
+    NSArray *paper=opacityMigrated[@"PreviewBackground"];
+    Check(paper.count==4 && fabs([paper[0]doubleValue]-0.42)<1e-9 && fabs([paper[1]doubleValue]-0.39)<1e-9 && fabs([paper[2]doubleValue]-0.77)<1e-9 && [paper[3]doubleValue]==1,@"Legacy defaults migration brings the preview paper into the theme");
     method_setImplementation(migrate,oldMigrate);opacityMigrated=nil;
     [choice selectItemAtIndex:0];[choice removeItemWithTitle:@"OpacityFixture"];
     TSIsolatedAppKitDefaults.values=[defaults mutableCopy];liteColors=savedLite;darkColors=savedDark;

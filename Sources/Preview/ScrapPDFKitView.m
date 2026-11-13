@@ -47,6 +47,7 @@
 #import "TSExperimentTheme.h"
 #import "TSMagnifyingGlass.h"
 #import "TSContentZoom.h"
+#import "TSPDFScreenRendering.h"
 
 
 
@@ -68,6 +69,8 @@ static const NSInteger TSExperimentToolCount = 4;
 @property (nonatomic, strong) PDFPage *selectionPage;
 @property (nonatomic) NSRect selectionPageRect;
 @property (nonatomic, strong) PDFPage *lensPage;
+@property (nonatomic, strong) NSColor *themePaperColor;
+@property (atomic, strong) NSColor *previewPaperColor;
 @end
 
 @implementation ScrapPDFKitView
@@ -92,9 +95,40 @@ static const NSInteger TSExperimentToolCount = 4;
     BOOL dark = [[self.effectiveAppearance bestMatchFromAppearancesWithNames:
         @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
     NSDictionary *theme = notification.userInfo ?: (dark ? darkColors : liteColors);
-    self.backgroundColor = [[TSColorSupport sharedInstance] opaqueColorForKey:@"PreviewBackground"
+    self.themePaperColor = [[TSColorSupport sharedInstance] opaqueColorForKey:@"PreviewBackground"
         fromDictionary:theme isWindowDark:dark];
     self.window.alphaValue = TSThemeWindowAlpha(theme, TSThemePreviewAlphaKey);
+    [self updateExperimentPaper];
+}
+
+// The paper of pages shown light, as in the document's preview.
+- (void)updateExperimentPaper
+{
+    if (!self.experimentViewReady) return;
+    NSColor *paper = TSPreviewPaperColor([SUD integerForKey:TSPreviewAppearanceModeKey], NSApp.effectiveAppearance,
+        self.themePaperColor);
+    NSColor *old = self.previewPaperColor;
+    if (old == paper || [old isEqual:paper]) return;
+    self.previewPaperColor = paper;
+    TSRedrawPreviewPages(self);
+}
+
+- (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context
+{
+    NSColor *paper = self.previewPaperColor;
+    BOOL screen = [NSGraphicsContext graphicsContextWithCGContext:context flipped:NO].drawingToScreen;
+    void (^draw)(CGContextRef) = ^(CGContextRef target) {
+        if (screen) TSFillPreviewPaper(target, page, self.displayBox, paper);
+        [super drawPage:page toContext:target];
+    };
+    // Drawing a page in a subclass needs the same care as the document's preview on macOS 27.
+    if (@available(macOS 27.0, *)) {
+        if (screen) {
+            TSDrawPDFScreenTiles(context, draw);
+            return;
+        }
+    }
+    draw(context);
 }
 
 - (void)updateExperimentAppearance:(NSNotification *)notification
@@ -103,6 +137,7 @@ static const NSInteger TSExperimentToolCount = 4;
     self.updatingExperimentAppearance = YES;
     TSApplyPreviewInversion(self.documentView.enclosingScrollView,
         TSPreviewShouldInvert([SUD integerForKey:TSPreviewAppearanceModeKey], NSApp.effectiveAppearance));
+    [self updateExperimentPaper];
     self.updatingExperimentAppearance = NO;
 }
 
@@ -587,6 +622,7 @@ NSData *TSExperimentSelectionData(PDFPage *page, NSRect rect, NSInteger type, CG
     [overlay setMagnifiedRect:drawn];
     overlay.magnifiedPage = page;
     overlay.magnifiedBox = box;
+    overlay.magnifiedPaperColor = self.previewPaperColor;
     [overlay setNeedsDisplay:YES];
 }
 

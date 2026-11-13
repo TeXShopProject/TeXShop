@@ -26,6 +26,10 @@
 #import <Cocoa/Cocoa.h>
 #import "TSDocument.h"
 
+// After a window is split or unsplit, its split toolbar buttons show what a click
+// does next (TSSplitToggleCue.h).
+void TSSplitToggleItemsFollowSplit(void);
+
 @interface TSDocument (ToolbarSupport)
 
 - (void) setupToolbar;
