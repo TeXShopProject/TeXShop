@@ -5,8 +5,8 @@
 dictionaries of syntax coloring: commands, comments, the marker and the three
 kinds of brackets, index, footnote, the seven expl3 colors, the five XML colors,
 the fullwidth highlight, the active line, and the brace and content highlights.
-Every bundled theme, the reserve copies of Lite and Dark, and two made-up themes
-that lack the newer keys are applied in a light and a dark window. The color
+Every bundled theme, the reserve copies of Lite and Dark, and made-up themes
+that lack the newer keys, the basic syntax colors or every key are applied in a light and a dark window. The color
 space, components and alpha of every color are compared with
 Tests/Fixtures/SyntaxColorSchemeGolden.txt.
 
@@ -120,6 +120,7 @@ static NSString *Describe(NSColor *color)
 static void Print(NSString *label, NSDictionary *attributes)
 {
     if (!attributes) { printf("  %s nil\n", label.UTF8String); return; }
+    if (!attributes.count) { printf("  %s empty\n", label.UTF8String); return; }
     for (NSString *key in [attributes.allKeys sortedArrayUsingSelector:@selector(compare:)])
         printf("  %s %s %s\n", label.UTF8String, key.UTF8String, Describe(attributes[key]).UTF8String);
 }
@@ -177,6 +178,12 @@ three = dict(lite)
 three['EditorHighlightZenkakuSymbolBackground'] = [0.2, 0.4, 0.6]
 three.pop('EditorHighlightZenkakuSymbol', None)
 themes['made-up-three-values'] = three
+# Without the basic syntax colors, or with nothing at all.
+bare = {key: value for key, value in lite.items() if key not in ('SyntaxComment', 'SyntaxCommand', 'SyntaxMarker', 'SyntaxMarkerParen',
+                                                               'SyntaxMarkerCurly', 'SyntaxMarkerSquare', 'FootnoteColor',
+                                                               'EditorHighlightBraces', 'EditorHighlightContent')}
+themes['made-up-no-syntax-colors'] = bare
+themes['made-up-empty'] = {}
 
 with tempfile.TemporaryDirectory(prefix='texshop-syntax-scheme-golden-') as tmp:
     tmp = Path(tmp)
