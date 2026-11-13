@@ -13,8 +13,9 @@ import subprocess
 import sys
 
 MUTATIONS = {
-    # A word of an older release is pushed out (nstextview and started, #25 audit).
-    'word-pushed-out': lambda terms: terms - {'started'},
+    # A word of an older release is pushed out (nstextview and started, #25 audit; started
+    # itself was pushed out by the issue number of the #38 note).
+    'word-pushed-out': lambda terms: terms - {'nstextview'},
     # A new word comes in.
     'word-added': lambda terms: terms | {'else'},
 }
@@ -36,7 +37,9 @@ for line in listing.splitlines():
     elif page == PAGE and line.strip():
         terms.add(line.strip())
 if args.mutation:
-    terms = MUTATIONS[args.mutation](terms)
+    mutated = MUTATIONS[args.mutation](terms)
+    assert mutated != terms, 'mutation changes nothing: ' + args.mutation
+    terms = mutated
 if args.update:
     fixture.write_text(''.join(t + '\n' for t in sorted(terms)), encoding='utf-8')
     print(f'updated {fixture.name}: {len(terms)} words')
