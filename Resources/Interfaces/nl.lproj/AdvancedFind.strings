@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ en $ gelden voor elke regel";
 "AdvancedFind.Cancel" = "Annuleer";
+"AdvancedFind.Cancelled" = "Geannuleerd";
+"AdvancedFind.Cancelling" = "Annuleren…";
 "AdvancedFind.Cheat.Alternation" = "a of b";
 "AdvancedFind.Cheat.Anchors" = "Posities";
 "AdvancedFind.Cheat.AnyCharacter" = "elk teken behalve een regeleinde";
@@ -97,6 +99,8 @@
 "AdvancedFind.Results.Line" = "Regel";
 "AdvancedFind.Results.LiveUpdate" = "Werk automatisch bij";
 "AdvancedFind.Results.Text" = "Gevonden tekst";
+"AdvancedFind.Searching" = "Zoeken…";
+"AdvancedFind.SearchingCount" = "Zoeken… %lu";
 "AdvancedFind.Section.Common" = "Voor beide";
 "AdvancedFind.Section.Regex" = "Reguliere expressie";
 "AdvancedFind.Section.Text" = "Gewoon zoeken";
@@ -105,6 +109,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU ($1)";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit (\\1)";
 "AdvancedFind.SyntaxLabel" = "Syntaxis vervanging:";
+"AdvancedFind.TextChanged" = "De tekst is intussen gewijzigd; er is niets gewijzigd.";
 "AdvancedFind.Title" = "Zoek en vervang";
 "AdvancedFind.Unescapes" = "Interpreteer \\n, \\t en andere escapereeksen in vervanging";
 "AdvancedFind.Unhighlight" = "Verwijder markeringen";
@@ -138,6 +143,7 @@
 "MultipleReplace.RemoveQuestion" = "‘%@’ naar de prullenmand verplaatsen?";
 "MultipleReplace.RemoveRule" = "Verwijder geselecteerde regels";
 "MultipleReplace.RemoveSet" = "Verplaats set naar prullenmand";
+"MultipleReplace.RuleProgress" = "Regel %1$lu van %2$lu";
 "MultipleReplace.Sets" = "Sets";
 "MultipleReplace.ShowInFinder" = "Toon in Finder";
 "MultipleReplace.SkippedRules" = "(regel %@ overgeslagen; zie ⚠︎)";
