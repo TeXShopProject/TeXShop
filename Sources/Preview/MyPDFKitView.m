@@ -43,6 +43,7 @@
 
 
 #import "MyPDFKitView.h"
+#import "TSContentZoom.h"
 #import "TSExternalPDFReload.h"
 #import "TSPreviewHorizontalPosition.h"
 #import "TSPreviewScrollerKeeper.h"
@@ -2134,6 +2135,22 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	[self changeScale: self];
 }
 
+
+// Zoom to Content, or Zoom to Content Width (TSContentZoom.h), with the magnification
+// set as Zoom In and Zoom Out set it.
+- (void)zoomToContentWidthOnly:(BOOL)widthOnly
+{
+	[self cleanupMarquee: YES];
+	TSContentZoom(self, widthOnly, ^CGFloat(CGFloat scale) {
+		// Rounded down, so that the content stays within the view.
+		NSInteger percent = MAX(20, MIN((NSInteger)floor(scale * 100.0 + 1e-6), PDF_MAX_SCALE));
+		scaleMag = percent;
+		[myScale setIntegerValue:percent];
+		[smyScale setIntegerValue:percent];
+		[self changeScale: self];
+		return self.scaleFactor;
+	});
+}
 
 - (void) changeScale: sender
 {

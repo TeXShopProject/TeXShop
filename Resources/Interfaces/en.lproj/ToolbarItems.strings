@@ -292,3 +292,4 @@ tiToolTipHtmlSearch           = "Search";
 "ExperimentZoomOut" = "Zoom Out";
 "ExperimentZoomIn" = "Zoom In";
 "ExperimentZoomToContent" = "Zoom to Content";
+"ExperimentZoomToContentWidth" = "Zoom to Content Width";
