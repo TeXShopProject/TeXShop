@@ -12,6 +12,7 @@
 #import "TSAdvancedFindTextView.h"
 #import "TSAdvancedFindHighlights.h"
 #import "TSAdvancedFindController+MultipleReplace.h"
+#import "AdvancedFindTaskWait.h"
 #import "TSExperimentConsoleController.h"
 #import "TestDocumentFind.h"
 
@@ -250,17 +251,19 @@ static void TestRouting(NSTextView *console, NSTextView *log, NSTextView *experi
                                                        regularExpressionOptions:TSRegexMultipleReplace.defaultRegularExpressionOptions
                                                               replacementSyntax:TSRegexReplacementSyntaxICU];
     NSString *beforeExperiment = [experiment.string copy];
-    Check(![TestShared applyMultipleReplace:set inTextView:console inSelection:NO] && ![TestShared applyMultipleReplace:set inTextView:log inSelection:NO]
-          && ![TestShared applyMultipleReplace:set inTextView:experiment inSelection:NO] && [console.string isEqualToString:before]
+    Check(![TestShared applyMultipleReplace:set inTextView:console inSelection:NO completion:nil]
+          && ![TestShared applyMultipleReplace:set inTextView:log inSelection:NO completion:nil]
+          && ![TestShared applyMultipleReplace:set inTextView:experiment inSelection:NO completion:nil] && !TestShared.runningTask && [console.string isEqualToString:before]
           && [log.string isEqualToString:@"Overfull Overfull"] && [experiment.string isEqualToString:beforeExperiment],
           @"a multiple replacement is refused in the console, the log and the Experiment output");
     // Replace All in the Experiment source works as in a document, and so does a multiple replacement.
     source.string = @"Overfull Overfull";
-    Check([TestShared applyMultipleReplace:set inTextView:source inSelection:NO] && [source.string isEqualToString:@"X X"],
-          @"a multiple replacement in the Experiment source");
+    // Both run as background tasks.
+    Check([TestShared applyMultipleReplace:set inTextView:source inSelection:NO completion:nil] && TSTestWaitForTask(TestShared, 60)
+          && [source.string isEqualToString:@"X X"], @"a multiple replacement in the Experiment source");
     source.string = @"Overfull Overfull";
     [source performFindPanelAction:Item(@selector(performFindPanelAction:), NSFindPanelActionReplaceAll)];
-    Check([source.string isEqualToString:@"X X"], @"Replace All in the Experiment source");
+    Check(TSTestWaitForTask(TestShared, 60) && [source.string isEqualToString:@"X X"] && source.isEditable, @"Replace All in the Experiment source");
     Check(textViewFinds == 0, @"none of it reaches NSTextView's own find");
     // Back to the find bar without a restart.
     [defaults setInteger:1 forKey:@"FindMethod"];
