@@ -11,6 +11,7 @@
 #import "TSAdvancedFindPanelController+Private.h"
 #import "TSAdvancedFindTextView.h"
 #import "TSAdvancedFindHighlights.h"
+#import "TSAdvancedFindController+MultipleReplace.h"
 #import "TSExperimentConsoleController.h"
 #import "TestDocumentFind.h"
 
@@ -242,7 +243,21 @@ static void TestRouting(NSTextView *console, NSTextView *log, NSTextView *experi
     console.editable = NO;
     Check([log.string isEqualToString:@"Overfull Overfull"] && [console.string isEqualToString:before] && beeps == 2,
           @"the log and the editable console refuse Replace All with a beep");
-    // Replace All in the Experiment source works as in a document.
+    // A multiple replacement (from its window or the menu) is refused in all three as well.
+    TSRegexReplacementRule *rule = [[TSRegexReplacementRule alloc] initWithFindString:@"Overfull" replaceString:@"X" usesRegularExpression:NO
+                                                                          ignoresCase:NO enabled:YES note:nil];
+    TSRegexMultipleReplace *set = [[TSRegexMultipleReplace alloc] initWithRules:@[rule] textualOptions:TSRegexMultipleReplace.defaultTextualOptions
+                                                       regularExpressionOptions:TSRegexMultipleReplace.defaultRegularExpressionOptions
+                                                              replacementSyntax:TSRegexReplacementSyntaxICU];
+    NSString *beforeExperiment = [experiment.string copy];
+    Check(![TestShared applyMultipleReplace:set inTextView:console inSelection:NO] && ![TestShared applyMultipleReplace:set inTextView:log inSelection:NO]
+          && ![TestShared applyMultipleReplace:set inTextView:experiment inSelection:NO] && [console.string isEqualToString:before]
+          && [log.string isEqualToString:@"Overfull Overfull"] && [experiment.string isEqualToString:beforeExperiment],
+          @"a multiple replacement is refused in the console, the log and the Experiment output");
+    // Replace All in the Experiment source works as in a document, and so does a multiple replacement.
+    source.string = @"Overfull Overfull";
+    Check([TestShared applyMultipleReplace:set inTextView:source inSelection:NO] && [source.string isEqualToString:@"X X"],
+          @"a multiple replacement in the Experiment source");
     source.string = @"Overfull Overfull";
     [source performFindPanelAction:Item(@selector(performFindPanelAction:), NSFindPanelActionReplaceAll)];
     Check([source.string isEqualToString:@"X X"], @"Replace All in the Experiment source");

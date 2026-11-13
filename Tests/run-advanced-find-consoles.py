@@ -30,7 +30,7 @@ MUTATIONS = {
         '    if ((self = [super initWithFrame:frame textContainer:container]))\n        [TSAdvancedFindLayoutManager installInTextView:self];',
         '    self = [super initWithFrame:frame textContainer:container];'),
     'the text views route whatever the find method': ('TSAdvancedFindTextView.m',
-        '    if ([SUD integerForKey:FindMethodKey] != TSFindMethodAdvancedPanel)\n        return nil;\n', ''),
+        '    if ([defaults integerForKey:TSFindMethodKey] != TSFindMethodAdvancedPanel)\n        return nil;\n', ''),
     'the text views validate the find menu themselves': ('TSAdvancedFindTextView.m',
         '    if (controller && (item.action == @selector(performFindPanelAction:) || item.action == @selector(performTextFinderAction:)))\n        return [controller validateFindMenuItem:item inTextView:self];',
         '    if (controller && item.action == @selector(performFindPanelAction:))\n        return [controller validateFindMenuItem:item inTextView:self];'),
@@ -82,7 +82,7 @@ DOCUMENT = r'''
 #import "TSAdvancedFindPanelController.h"
 #import "TSAdvancedFindHighlights.h"
 #define SUD [NSUserDefaults standardUserDefaults]
-extern NSString *FindMethodKey;
+static NSString *FindMethodKey = @"FindMethod";
 static NSString *IncrementalSearchKey = @"IncrementalSearch";
 static NSDictionary *TSSettingsLaunchValues(void) { return @{}; }
 @implementation TestExperimentConsole
@@ -141,7 +141,7 @@ def build(tmp, sources):
     keys = dict(re.findall(r'^NSString \*(\w+Key)\s*=\s*(@"[^"]*");', globals_m, re.M))
     marker_keys = '\n'.join(f'NSString *{k} = {keys[k]};' for k in [
         'showSpaceCharacterKey', 'showFullwidthSpaceCharacterKey', 'showTabCharacterKey', 'showNewLineCharacterKey',
-        'SpaceCharacterKindKey', 'FullwidthSpaceCharacterKindKey', 'TabCharacterKindKey', 'NewLineCharacterKindKey', 'FindMethodKey', 'ConvertLFKey'])
+        'SpaceCharacterKindKey', 'FullwidthSpaceCharacterKindKey', 'TabCharacterKindKey', 'NewLineCharacterKindKey'])
     (tmp / 'keys.m').write_text('#import <Cocoa/Cocoa.h>\n' + marker_keys + '\nNSColor *InvisibleColor;\nBOOL atLeastMonterey = YES, atLeastSonoma = YES;\n')
     controller = (sources / 'TSExperimentConsoleController.m').read_text().replace('#import "TSEncodingSupport.h"', '').replace('#import "globals.h"', '')
     # TestAppKitIsolation.h defines a class; the probe's own file includes it.

@@ -3,17 +3,21 @@
 #import "TSAdvancedFindHighlights.h"
 #import "TSAdvancedFindPanelController.h"
 #import "TSFindInterface.h"
-#import "globals.h"
+
+// FindMethodKey and ConvertLFKey of globals.m: the Find sources are built without the rest of TeXShop in the tests.
+static NSString *const TSFindMethodKey = @"FindMethod";
+static NSString *const TSConvertLFKey = @"ConvertLF";
 
 TSAdvancedFindController *_Nullable TSAdvancedFindControllerForFindMethod(void)
 {
-    if ([SUD integerForKey:FindMethodKey] != TSFindMethodAdvancedPanel)
+    NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
+    if ([defaults integerForKey:TSFindMethodKey] != TSFindMethodAdvancedPanel)
         return nil;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         // The text of a document has LF line endings unless ConvertLF is off; then its own line endings are kept.
         TSAdvancedFindController.sharedController.lineEndingHandler = ^NSString *(NSTextView *textView) {
-            return [SUD boolForKey:ConvertLFKey] ? @"\n" : nil;
+            return [NSUserDefaults.standardUserDefaults boolForKey:TSConvertLFKey] ? @"\n" : nil;
         };
         [TSAdvancedFindController trackTargetTextViews];
     });
