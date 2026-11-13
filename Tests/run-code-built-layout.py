@@ -15,7 +15,7 @@ is shown on screen.
 from pathlib import Path
 import argparse, re, subprocess, sys, tempfile
 from source_tree import include_args
-from experiment_console_source import prefix, controller_source
+from experiment_console_source import prefix, controller_source, advanced_find_sources
 root = Path(__file__).resolve().parents[1]
 interfaces = root / 'Resources/Interfaces'
 parser = argparse.ArgumentParser()
@@ -63,7 +63,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-code-built-layout-') as tmp:
     binary = tmp / 'CodeBuiltLayout'
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', '-framework', 'PDFKit', '-framework', 'WebKit', '-framework', 'Quartz',
                     '-I', str(tmp), '-I', str(root / 'Tests'), *include_args(root), str(program),
-                    str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'), '-o', str(binary)], check=True)
+                    str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'),
+                    *advanced_find_sources(root, tmp), '-o', str(binary)], check=True)
     extra = []
     if args.images:
         Path(args.images).mkdir(parents=True, exist_ok=True)

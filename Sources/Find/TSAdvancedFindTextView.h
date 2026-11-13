@@ -8,6 +8,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// The shared controller when the find method (FindMethod) is the Advanced Find panel, otherwise nil: the text view
+/// then finds as it always has (the Apple panel or the find bar). It is read each time, so the setting takes effect
+/// without a restart.
+FOUNDATION_EXPORT TSAdvancedFindController *_Nullable TSAdvancedFindControllerForFindMethod(void);
+
+/// Adopted by the text views whose find menu goes to the Advanced Find panel (TSTextView, TSAdvancedFindTextView):
+/// the panel acts on the last of them that had the focus.
+NS_SWIFT_NAME(AdvancedFindTarget)
+@protocol TSAdvancedFindTarget <NSObject>
+@optional
+/// YES: no replacing, even when the text may be edited (the console and the log, which show TeX's output).
+@property (nonatomic, readonly) BOOL refusesReplacing;
+@end
+
 /// A layout manager that only adds the search highlights over the background, for text views whose layout manager is
 /// not TeXShop's own.
 NS_SWIFT_NAME(AdvancedFindLayoutManager)
@@ -20,24 +34,32 @@ NS_SWIFT_NAME(AdvancedFindLayoutManager)
 
 /// For a text view's -performFindPanelAction: and -performTextFinderAction:: the action of the sender's tag.
 - (void)performFindPanelAction:(id)sender inTextView:(NSTextView *)textView;
-/// For a text view's -validateMenuItem:. NO for a replacing action in a read-only text view (console, log).
+/// For a text view's -validateMenuItem:. NO for a replacing action in a read-only text view (the console, the
+/// Experiment output).
 - (BOOL)validateFindMenuItem:(NSMenuItem *)item inTextView:(NSTextView *)textView;
 
-/// The text view that the panel and the multiple replacement window act on: the main window's first responder.
+/// The text view that the panel and its other windows act on: the focused find target of the key window; else the one
+/// that had the focus last, while its window is shown (the Experiment source and output are panels, which never become
+/// main); else the main window's first responder.
 @property (class, nonatomic, readonly, nullable) NSTextView *targetTextView;
 /// For the tests, which never make a window main: the target instead of the main window's first responder.
 @property (class, nonatomic, weak, nullable) NSTextView *testTargetTextView;
+/// Starts following which find target has the focus. Called when the Find menu or the panel is first used.
++ (void)trackTargetTextViews;
+/// For the tests: what a window that became or stopped being key leaves as the last target.
++ (void)noteKeyWindowChange:(NSWindow *)window;
 
 @end
 
-/// A plain text view that finds with the Advanced Find panel: in TeXShop, the console (the class in its nib), the log
-/// and the Experiment output (made in code). It routes the find menu and draws the highlights; whether it may be
-/// edited is its own setting, and the replacing actions follow it.
+/// A plain text view that finds with the Advanced Find panel: in TeXShop, the console and the log (the class in the
+/// nib), the Experiment output (made in code) and, as its superclass, the Experiment source. It routes the find menu
+/// and draws the highlights. The replacing actions need a text view that may be edited and does not refuse them.
 NS_SWIFT_NAME(AdvancedFindTextView)
-@interface TSAdvancedFindTextView : NSTextView
-/// nil: the text view's own find (the Apple panel or the find bar). In TeXShop it is the shared controller when the
-/// setting is the Advanced Find panel.
-@property (nonatomic, weak, nullable) TSAdvancedFindController *findController;
+@interface TSAdvancedFindTextView : NSTextView <TSAdvancedFindTarget>
+/// TSAdvancedFindControllerForFindMethod(): nil unless the find method is the Advanced Find panel.
+@property (nonatomic, readonly, nullable) TSAdvancedFindController *findController;
+/// Set in the nib for the console and the log. NO: replacing follows -isEditable.
+@property (nonatomic) BOOL refusesReplacing;
 @end
 
 NS_ASSUME_NONNULL_END

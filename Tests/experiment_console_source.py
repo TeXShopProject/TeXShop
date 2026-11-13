@@ -62,3 +62,8 @@ static BOOL behind;
 #define ConsoleBehaviorKey @"ConsoleBehavior"
 #define BringPdfFrontOnTypesetKey @"BringPdfFront"
 '''
+
+
+def advanced_find_sources(root, tmp):
+    """The Experiment output is a TSAdvancedFindTextView: the sources of Sources/Find."""
+    return [str(p) for p in sorted((Path(root) / 'Sources/Find').glob('*.m'))]

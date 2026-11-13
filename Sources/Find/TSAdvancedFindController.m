@@ -3,6 +3,7 @@
 #import "TSAdvancedFindMatchCache.h"
 #import "TSAdvancedFindHighlights.h"
 #import "TSRegexTextFind.h"
+#import "TSAdvancedFindTextView.h"
 
 /// The panel's own strings are in AdvancedFind.strings; the engine's error messages in AdvancedFindEngine.strings.
 NSString *TSAdvancedFindLocalized(NSString *key, NSString *english)
@@ -72,6 +73,12 @@ NSNotificationName const TSAdvancedFindTaskDidChangeNotification = @"TSAdvancedF
 
 #pragma mark Validation
 
+/// The console and the log may be edited, but show TeX's output: nothing is replaced in them.
+static BOOL TSTextViewRefusesReplacing(NSTextView *textView)
+{
+    return [textView respondsToSelector:@selector(refusesReplacing)] && [(id<TSAdvancedFindTarget>)textView refusesReplacing];
+}
+
 - (BOOL)validateAction:(TSAdvancedFindAction)action forTextView:(NSTextView *)textView
 {
     if (self.runningTask) // one task at a time; the text views are read-only meanwhile
@@ -100,7 +107,7 @@ NSNotificationName const TSAdvancedFindTaskDidChangeNotification = @"TSAdvancedF
         case TSAdvancedFindActionReplaceAndFind:
         case TSAdvancedFindActionReplaceAll:
         case TSAdvancedFindActionReplaceAllInSelection:
-            return textView.isEditable;
+            return textView.isEditable && !TSTextViewRefusesReplacing(textView);
     }
     return NO;
 }
