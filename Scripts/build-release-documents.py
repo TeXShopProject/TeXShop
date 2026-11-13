@@ -99,7 +99,7 @@ def markdown(text):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--notes-dir', type=Path, default=ROOT / 'Documentation/Releases')
-    parser.add_argument('--versions', nargs='+', default=['5.60', '5.59'])
+    parser.add_argument('--versions', nargs='+', default=['6.00', '5.59'])
     parser.add_argument('--changes-only', action='store_true', help='Rebuild Changes without regenerating the unchanged About PDF')
     parser.add_argument('--latex', default='pdflatex')
     args = parser.parse_args()

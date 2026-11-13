@@ -31,9 +31,9 @@ class ReleaseDocuments(unittest.TestCase):
         # The web pages and the help page are written by hand; each item of the
         # Markdown notes must appear in each copy of the same language.
         copies = {
-            'Documentation/Releases/5.60.md': ['website/release-notes.html',
+            'Documentation/Releases/6.00.md': ['website/release-notes.html',
                                                'Resources/Interfaces/en.lproj/TeXShopHelp/pgs/whatisnew.htm'],
-            'Documentation/Releases/5.60-ja.md': ['website/release-notes-ja.html'],
+            'Documentation/Releases/6.00-ja.md': ['website/release-notes-ja.html'],
         }
         for notes, pages in copies.items():
             items = [plain_markdown(line[2:]) for line in (ROOT / notes).read_text().splitlines() if line.startswith('- ')]
@@ -75,7 +75,7 @@ class ReleaseDocuments(unittest.TestCase):
             r'From ddd3h in \href{https://github.com/TeXShopProject/TeXShop/pull/1}{PR \#1}.')
 
     def test_lists_close_before_following_paragraph(self):
-        result = documents.markdown('# TeXShop 5.60\n\n- One\n- Two\n\nNext paragraph.')
+        result = documents.markdown('# TeXShop 6.00\n\n- One\n- Two\n\nNext paragraph.')
         self.assertEqual(result.count(r'\begin{itemize}'), 1)
         self.assertEqual(result.count(r'\end{itemize}'), 1)
         self.assertLess(result.index(r'\end{itemize}'), result.index('Next paragraph.'))
