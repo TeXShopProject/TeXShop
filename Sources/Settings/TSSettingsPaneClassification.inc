@@ -117,7 +117,8 @@ static NSMutableArray<NSView *> *TSCatalogGroupPopups;
         if([model[@"unit"] length])[parts addObject:[self label:text(model[@"unit"]) small:YES]];
         if(controls.count>1){((NSButton *)controls[1]).title=text(model[@"button"]);[parts addObject:controls[1]];}
         accessory=parts.count==1?field:[self horizontal:parts spacing:8];
-        if([kind isEqual:@"integer"])[(NSStackView *)accessory setCustomSpacing:2 afterView:field];
+        // 4 points keep the field's focus ring off its stepper.
+        if([kind isEqual:@"integer"])[(NSStackView *)accessory setCustomSpacing:4 afterView:field];
     }else if([kind isEqual:@"font"]){
         controls.firstObject.accessibilityIdentifier=@"settings.user-data";
         ((NSTextField *)controls.firstObject).textColor=NSColor.secondaryLabelColor;
