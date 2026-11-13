@@ -30,7 +30,15 @@
     if (guide) {
         guide.stringValue = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"* #SEL# = selected characters, #INS# = insertion point, #PASTE# = text on the clipboard", @"Key binding editor placeholder guide"), [TSMarkMenu markGuide]];
         guide.cell.wraps = YES; guide.cell.lineBreakMode = NSLineBreakByWordWrapping;
+        // The guide spans the window with the same margin on both sides and
+        // wraps at the window's width as designed, which is also its narrowest.
+        NSSize minimum = window.contentMinSize;
+        minimum.width = MAX(minimum.width, NSWidth(host.bounds));
+        window.contentMinSize = minimum;
         NSRect frame = guide.frame;
+        frame.size.width = NSWidth(host.bounds) - 2 * NSMinX(frame);
+        guide.frame = frame;
+        guide.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
         CGFloat needed = ceil([guide.cell cellSizeForBounds:NSMakeRect(0, 0, NSWidth(frame), CGFLOAT_MAX)].height);
         if (needed > NSHeight(frame)) {
             // Take the extra lines from the bottom of the list above the guide.
@@ -41,6 +49,13 @@
             listFrame.origin.y += extra; listFrame.size.height -= extra;
             list.frame = listFrame;
         }
+    }
+    // The two input fields stand apart by the usual spacing between controls,
+    // leaving room for the focus ring of each.
+    if (newKeyField && newValueField) {
+        NSRect key = newKeyField.frame;
+        CGFloat gap = NSMinX(newValueField.frame) - NSMaxX(key);
+        if (gap < 8) { key.size.width -= 8 - gap; newKeyField.frame = key; }
     }
     if (save && cancel) TSLayoutDialogButtons(host, @[save, cancel], remove ? @[remove] : @[]);
 }

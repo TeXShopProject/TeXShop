@@ -81,6 +81,17 @@ static void Geometry(NSView *v) {
  if([v isKindOfClass:NSMatrix.class]) {NSMatrix *matrix=(id)v;
   for(NSInteger row=0;row<matrix.numberOfRows;row++)for(NSInteger col=0;col<matrix.numberOfColumns;col++)Check([matrix cellAtRow:row column:col].cellSize.width<=NSWidth([matrix cellFrameAtRow:row column:col])+1,@"Matrix title fits");
  }
+ // Labels show their whole text: a single-line label is as wide as its text, a
+ // wrapping one as tall, and neither is drawn over by another control beside it.
+ if([v isKindOfClass:NSTextField.class] && !((NSTextField *)v).editable && ((NSTextField *)v).stringValue.length) {
+  NSTextField *label=(id)v;NSTextFieldCell *cell=[label.cell copy];NSRect b=label.bounds;
+  BOOL wraps=(cell.lineBreakMode==NSLineBreakByWordWrapping||cell.lineBreakMode==NSLineBreakByCharWrapping)&&!cell.usesSingleLineMode;
+  CGFloat need=wraps?[cell cellSizeForBounds:NSMakeRect(0,0,NSWidth(b),CGFLOAT_MAX)].height:cell.cellSize.width,have=wraps?NSHeight(b):NSWidth(b);
+  Check(need<=have+1,[NSString stringWithFormat:@"Label shows its whole text %@ \"%@\": needs %.1f, has %.1f",label.identifier,label.stringValue,need,have]);
+ }
+ {NSMutableArray<NSView *> *shown=[NSMutableArray array];for(NSView *c in v.subviews)if(!c.hidden && [c isKindOfClass:NSControl.class])[shown addObject:c];
+  for(NSUInteger a=0;a<shown.count;a++)for(NSUInteger b=a+1;b<shown.count;b++){NSRect x=NSIntersectionRect([shown[a] alignmentRectForFrame:shown[a].frame],[shown[b] alignmentRectForFrame:shown[b].frame]);
+   Check(NSWidth(x)<=1||NSHeight(x)<=1,[NSString stringWithFormat:@"Controls side by side do not overlap: %@ and %@",shown[a].identifier,shown[b].identifier]);}}
  if([v.identifier hasPrefix:@"row."]) Check(NSHeight(v.frame)>=37.5,@"Minimum row height is 38");
  if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||(ancestor && stack.spacing==4)||([NSStringFromClass(stack.class) isEqual:@"TSSettingsOpacityPresentation"] && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
 }
