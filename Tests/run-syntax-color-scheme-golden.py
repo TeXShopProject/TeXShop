@@ -24,16 +24,19 @@ from production_fragments import method
 ROOT = Path(__file__).resolve().parents[1]
 COLOR = 'Sources/Editor/TSDocument-Color.m'
 SUPPORT = 'Sources/Editor/TSColorSupport.m'
+SCHEME = 'Sources/Syntax/TSSyntaxColorScheme.m'
 GOLDEN = ROOT / 'Tests/Fixtures/SyntaxColorSchemeGolden.txt'
 
 MUTATIONS = {
     # Footnotes fall back to the comment color instead of the command color.
-    'footnote-fallback': (COLOR, 'mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxCommand"];\n    /*',
-                          'mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxComment"];\n    /*'),
+    'footnote-fallback': (SCHEME, 'return [support colorFromDictionary:theme andKey:@"SyntaxCommand"];',
+                          'return [support colorFromDictionary:theme andKey:@"SyntaxComment"];'),
     # The built-in defaults of a dark window are not used.
     'no-dark-defaults': (COLOR, 'withDarkColors = YES;', 'withDarkColors = NO;'),
     # A transparent fullwidth background is added after all.
-    'transparent-fullwidth-background': (COLOR, 'if (myColor && myColor.alphaComponent > 0)', 'if (myColor)'),
+    'transparent-fullwidth-background': (SCHEME, 'if (color && color.alphaComponent > 0)', 'if (color)'),
+    # Without fullwidth colors the document gets an empty dictionary, which still takes the fullwidth branch.
+    'empty-fullwidth': (COLOR, 'fullwidthAttributes.count ? fullwidthAttributes : nil', 'fullwidthAttributes'),
 }
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 group = parser.add_mutually_exclusive_group()
@@ -41,13 +44,15 @@ group.add_argument('--update', action='store_true')
 group.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
 
-text = {path: (ROOT / path).read_text(encoding='latin1') for path in (COLOR, SUPPORT)}
+text = {path: (ROOT / path).read_text(encoding='utf-8' if path == SCHEME else 'latin1') for path in (COLOR, SUPPORT, SCHEME)}
 if args.mutation:
     path, old, new = MUTATIONS[args.mutation]
     assert text[path].count(old) == 1, args.mutation
     text[path] = text[path].replace(old, new)
 
 change_colors = method(text[COLOR], '- (void) changeColorsUsingDictionary: (NSDictionary *)colorDictionary')
+# The colors made by TSSyntaxColorScheme, where the document takes them from.
+scheme = re.sub(r'^#import "TSColorSupport.h"$', '', text[SCHEME], flags=re.M)
 support = '\n'.join(method(text[SUPPORT], s) for s in [
     '- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
     '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
@@ -67,6 +72,7 @@ NSColor *PreviewBackgroundColor, *ReverseSyncColor, *InvisibleColor, *ImageForeg
 + (id)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
 @@SUPPORT@@
 @end
+@@SCHEME@@
 
 // The source window: only its appearance is read.
 @interface FakeAppearance : NSObject
@@ -156,7 +162,7 @@ int main(int argc, const char **argv) { @autoreleasepool {
     return 0;
 } }
 '''
-program = PROGRAM.replace('@@SUPPORT@@', support).replace('@@CHANGE_COLORS@@', change_colors)
+program = PROGRAM.replace('@@SUPPORT@@', support).replace('@@SCHEME@@', scheme).replace('@@CHANGE_COLORS@@', change_colors)
 
 themes = {}
 for folder, prefix in (('Resources/TeXShop/Themes', ''), ('Resources/Themes', 'reserve-')):

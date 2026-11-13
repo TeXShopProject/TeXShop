@@ -24,6 +24,7 @@
 #import "TSDocument.h"
 #import "globals.h"
 #import "TSColorSupport.h"
+#import "TSSyntaxColorScheme.h"
 #import "TSThemeAlpha.h"
 #import "MyPDFKitView.h"
 
@@ -48,9 +49,6 @@
 {
     NSColor *myBackgroundColor;
     NSColor *myTextColor;
-    NSColor *mySyntaxColor;
-    NSColor *mySyntaxColorTemp;
-    NSColor *myEntryColor;
     NSColor *myColor;
     NSArray *myArray;
     NSNumber *myNumber;
@@ -126,217 +124,34 @@
     [outputText setBackgroundColor: myBackgroundColor];
     
     
-    //SYNTAX COLORS
-    
-    // SyntaxComment,   SyntaxCommand,  SyntaxMarker,    SyntaxIndex
-    
-    // TEMPORARY
-    /*
-     float r, g, b;
-     NSColor *color;
-     r = 0.5;
-     g = 0.5;
-     b = 0.5;
-     color = [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0];
-     self.commentXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:color, NSForegroundColorAttributeName, nil];
-     
-     r = 1.0;
-     g = 0.0;
-     b = 0.2;
-     color = [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0];
-     self.tagXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:color, NSForegroundColorAttributeName, nil];
-     
-     r = 0.0;
-     g = 0.3;
-     b = 1.0;
-     color = [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0];
-     self.specialXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:color, NSForegroundColorAttributeName, nil];
-     
-     r = 0.0;
-     g = 1.0;
-     b = 0.0;
-     color = [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0];
-     self.parameterXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:color, NSForegroundColorAttributeName, nil];
-     
-     r = 0.6;
-     g = 0.6;
-     b = 0.2;
-     color = [NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0];
-     self.valueXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:color, NSForegroundColorAttributeName, nil];
-     */
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"XMLComment"];
-    if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"XMLComment"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"XMLComment"];
-    }
-    self.commentXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"XMLTag"];
-    if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"XMLTag"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"XMLTag"];
-    }
-    self.tagXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"XMLSpecial"];
-    if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"XMLSpecial"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"XMLSpecial"];
-    }
-    self.specialXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"XMLParameter"];
-    if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"XMLParameter"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"XMLParameter"];
-    }
-    self.parameterXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"XMLValue"];
-    if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"XMLValue"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"XMLValue"];
-    }
-    self.valueXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    
-    // END OF TEMPORARY
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxComment"];
-    self.commentColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxCommand"];
-    self.commandColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarker"];
-    self.markerColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerParen"];
-    /*
-     if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarker"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarker"];
-    }
-    */
-    // A theme without any marker color uses the built-in default.
-    if (mySyntaxColor == nil)
-        mySyntaxColor = withDarkColors ? [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarkerParen"]
-                                       : [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarkerParen"];
-    self.markerColorParenAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerCurly"];
-    /*
-     if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarker"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarker"];
-    }
-    */
-    // A theme without any marker color uses the built-in default.
-    if (mySyntaxColor == nil)
-        mySyntaxColor = withDarkColors ? [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarkerCurly"]
-                                       : [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarkerCurly"];
-    self.markerColorCurlyAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerSquare"];
-    /*
-     if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarker"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarker"];
-    }
-    */
-    // A theme without any marker color uses the built-in default.
-    if (mySyntaxColor == nil)
-        mySyntaxColor = withDarkColors ? [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"SyntaxMarkerSquare"]
-                                       : [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"SyntaxMarkerSquare"];
-    self.markerColorSquareAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    
-    
-    
-    
-    
-/*
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerParen"];
-    if (mySyntaxColor == nil)
-    {
-        mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarker"];
-        self.markerColorParenAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    }
-    else
-        self.markerColorParenAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerCurly"];
-    if (mySyntaxColor == nil)
-    {
-        mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarker"];
-        self.markerColorParenAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    }
-    else
-        self.markerColorCurlyAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerSquare"];
-    if (mySyntaxColor == nil)
-    {
-        mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarker"];
-        self.markerColorParenAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    }
-    else
-        self.markerColorSquareAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
- */
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxIndex"];
-    if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [NSColor colorWithRed: 1.0 green: 1.0 blue: 0.00 alpha: 1.00];
-        else
-            mySyntaxColor = [NSColor colorWithRed: 1.0 green: 1.0 blue: 0.00 alpha: 1.00];
-    }
-    self.indexColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"FootnoteColor"];
-    if (mySyntaxColor == nil)
-        mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxCommand"];
-    /*
-     {
-     if (withDarkColors)
-     // mySyntaxColor = [NSColor colorWithRed: 0.75 green: 0.75 blue: 0.75 alpha: 1.00];
-     mySyntaxColor = [[TSColorSupport sharedInstance] darkColorWithKey: @"FootnoteColor"];
-     else
-     // mySyntaxColor = [NSColor colorWithRed: 0.35 green: 0.35 blue: 0.35 alpha: 1.00];
-     mySyntaxColor = [[TSColorSupport sharedInstance] liteColorWithKey: @"FootnoteColor"];
-     }
-     */
-    self.footnoteColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-    myEntryColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EntryColor"];
-    if (myEntryColor == nil)
-        myEntryColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"EntryColor"];
-    
-    self.EntryColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys: myEntryColor, NSBackgroundColorAttributeName, nil];
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorHighlightBraces"];
-    highlightBracesColorDict = [NSDictionary dictionaryWithObjectsAndKeys: myColor, NSForegroundColorAttributeName, nil ] ;
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorHighlightContent"];
-    highlightContentColorDict = [NSDictionary dictionaryWithObjectsAndKeys: myColor, NSBackgroundColorAttributeName, nil ];
+    // SYNTAX COLORS
+    TSSyntaxColorScheme *scheme = [[TSSyntaxColorScheme alloc] initWithTheme:colorDictionary dark:withDarkColors];
+    self.commentColorAttribute = [scheme attributesForRole:TSSyntaxRoleComment];
+    self.commandColorAttribute = [scheme attributesForRole:TSSyntaxRoleCommand];
+    self.markerColorAttribute = [scheme attributesForRole:TSSyntaxRoleMarker];
+    self.markerColorParenAttribute = [scheme attributesForRole:TSSyntaxRoleBracketParen];
+    self.markerColorCurlyAttribute = [scheme attributesForRole:TSSyntaxRoleBracketCurly];
+    self.markerColorSquareAttribute = [scheme attributesForRole:TSSyntaxRoleBracketSquare];
+    self.indexColorAttribute = [scheme attributesForRole:TSSyntaxRoleIndex];
+    self.footnoteColorAttribute = [scheme attributesForRole:TSSyntaxRoleFootnote];
+    // Without fullwidth colors, fullwidth characters are colored like other text.
+    NSDictionary *fullwidthAttributes = [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol];
+    self.fullwidthSymbolColorAttribute = fullwidthAttributes.count ? fullwidthAttributes : nil;
+    self.explColorAttribute1 = [scheme attributesForRole:TSSyntaxRoleExplVariable];
+    self.explColorAttribute2 = [scheme attributesForRole:TSSyntaxRoleExplFunction];
+    self.explColorAttribute3 = [scheme attributesForRole:TSSyntaxRoleExplIntenseVariable];
+    self.explColorAttribute4 = [scheme attributesForRole:TSSyntaxRoleExplIntenseFunction];
+    self.explColorAttribute5 = [scheme attributesForRole:TSSyntaxRoleExplMessage];
+    self.explColorAttribute6 = [scheme attributesForRole:TSSyntaxRoleExplKey];
+    self.explColorAttribute7 = [scheme attributesForRole:TSSyntaxRoleExplKeyArgument];
+    self.commentXMLColorAttribute = [scheme attributesForRole:TSSyntaxRoleXMLComment];
+    self.tagXMLColorAttribute = [scheme attributesForRole:TSSyntaxRoleXMLTag];
+    self.specialXMLColorAttribute = [scheme attributesForRole:TSSyntaxRoleXMLSpecial];
+    self.parameterXMLColorAttribute = [scheme attributesForRole:TSSyntaxRoleXMLParameter];
+    self.valueXMLColorAttribute = [scheme attributesForRole:TSSyntaxRoleXMLValue];
+    self.EntryColorAttribute = scheme.activeLineAttributes;
+    highlightBracesColorDict = scheme.braceHighlightAttributes;
+    highlightContentColorDict = scheme.contentHighlightAttributes;
     
     myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorReverseSync"];
     ReverseSyncColor = myColor;
@@ -347,21 +162,6 @@
     
     myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorInvisibleChar"];
     InvisibleColor = myColor;
-    
-    // A theme without these keys, such as one made before they existed, shows
-    // fullwidth characters like other text. A transparent background adds none.
-    NSMutableDictionary *fullwidthAttributes = [NSMutableDictionary dictionary];
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorHighlightZenkakuSymbol"];
-    if (myColor)
-        fullwidthAttributes[NSForegroundColorAttributeName] = myColor;
-    NSArray *fullwidthBackground = colorDictionary[@"EditorHighlightZenkakuSymbolBackground"];
-    if (fullwidthBackground.count >= 4)
-        myColor = [[TSColorSupport sharedInstance] colorAndAlphaFromDictionary:colorDictionary andKey: @"EditorHighlightZenkakuSymbolBackground"];
-    else
-        myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"EditorHighlightZenkakuSymbolBackground"];
-    if (myColor && myColor.alphaComponent > 0)
-        fullwidthAttributes[NSBackgroundColorAttributeName] = myColor;
-    self.fullwidthSymbolColorAttribute = fullwidthAttributes.count ? fullwidthAttributes : nil;
     
     self.pdfKitWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemePreviewAlphaKey);
     textWindow.alphaValue = TSThemeWindowAlpha(colorDictionary, TSThemeSourceAlphaKey);
@@ -379,103 +179,6 @@
     
     
     
-    mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"XMLComment"];
-    if (mySyntaxColor == nil) {
-        if (withDarkColors)
-            mySyntaxColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"XMLComment"];
-        else
-            mySyntaxColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"XMLComment"];
-    }
-    self.commentXMLColorAttribute = [[NSDictionary alloc] initWithObjectsAndKeys:mySyntaxColor, NSForegroundColorAttributeName, nil];
-    
-   // EXPL3 COLORS
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"explVariable"];
-    if (myColor == nil) {
-        if (withDarkColors)
-            myColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"explVariable"];
-        else
-            myColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"explVariable"];
-    }
-    self.explColorAttribute1 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor, NSForegroundColorAttributeName, nil];
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"explFunction"];
-    if (myColor == nil) {
-        if (withDarkColors)
-            myColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"explFunction"];
-        else
-            myColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"explFunction"];
-    }
-    self.explColorAttribute2 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor, NSForegroundColorAttributeName, nil];
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"explIntenseVariable"];
-    if (myColor == nil) {
-        if (withDarkColors)
-            myColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"explIntenseVariable"];
-        else
-            myColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"explIntenseVariable"];
-    }
-    self.explColorAttribute3 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor, NSForegroundColorAttributeName, nil];
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"explIntenseFunction"];
-    if (myColor == nil) {
-        if (withDarkColors)
-            myColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"explIntenseFunction"];
-        else
-            myColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"explIntenseFunction"];
-    }
-    self.explColorAttribute4 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor, NSForegroundColorAttributeName, nil];
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"explmsg"];
-    if (myColor == nil) {
-        if (withDarkColors)
-            myColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"explmsg"];
-        else
-            myColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"explmsg"];
-    }
-    self.explColorAttribute5 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor, NSForegroundColorAttributeName, nil];
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"explmykey"];
-    if (myColor == nil) {
-        if (withDarkColors)
-            myColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"explmykey"];
-        else
-            myColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"explmykey"];
-    }
-    self.explColorAttribute6 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor, NSForegroundColorAttributeName, nil];
-    
-    myColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"explmykeyArgument"];
-    if (myColor == nil) {
-        if (withDarkColors)
-            myColor = [[TSColorSupport sharedInstance] darkColorAndAlphaWithKey: @"explmykeyArgument"];
-        else
-            myColor = [[TSColorSupport sharedInstance] liteColorAndAlphaWithKey: @"explmykeyArgument"];
-    }
-    self.explColorAttribute7 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor, NSForegroundColorAttributeName, nil];
-    
-    
-    
-    
-    /*
-    myColor1 = [[TSColorSupport sharedInstance] colorForKey: @"explVariable" isWindowDark: withDarkColors];
-    self.explColorAttribute1 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor1, NSForegroundColorAttributeName, nil];
-    myColor2 = [[TSColorSupport sharedInstance] colorForKey:  @"explFunction" isWindowDark: withDarkColors];
-    self.explColorAttribute2 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor2, NSForegroundColorAttributeName, nil];
-    myColor3 = [[TSColorSupport sharedInstance] colorForKey:  @"explIntenseVariable" isWindowDark: withDarkColors];
-    self.explColorAttribute3 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor3, NSForegroundColorAttributeName, nil];
-    myColor4 = [[TSColorSupport sharedInstance] colorForKey:  @"explIntenseFunction" isWindowDark: withDarkColors];
-    self.explColorAttribute4 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor4, NSForegroundColorAttributeName,nil];
-    myColor5 = [[TSColorSupport sharedInstance] colorForKey: @"explmsg" isWindowDark: withDarkColors];
-    self.explColorAttribute5 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor5, NSForegroundColorAttributeName,nil];
-    myColor6 = [[TSColorSupport sharedInstance] colorForKey:  @"explmykey" isWindowDark: withDarkColors];
-    self.explColorAttribute6 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor6, NSForegroundColorAttributeName,nil];
-    myColor7 = [[TSColorSupport sharedInstance] colorForKey: @"explmykeyArgument" isWindowDark: withDarkColors];
-    self.explColorAttribute7 = [[NSDictionary alloc] initWithObjectsAndKeys:myColor7, NSForegroundColorAttributeName,nil];
-    */
-    
-    
-    
-   
     [self.myPDFKitView setNeedsDisplay: YES];
     [self.myPDFKitView2 setNeedsDisplay: YES];
 
