@@ -188,7 +188,13 @@ static const NSUInteger TSBeforeLength = 30, TSShownLength = 250;
 - (void)setUpdatesLive:(BOOL)updatesLive
 {
     _updatesLive = updatesLive;
-    if (updatesLive && self.editedSinceSearch)
+    if (!updatesLive) {
+        // Turned off, the list stays as it is: no search waiting for its delay, nor one already running, changes it.
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(update) object:nil];
+        self.searchGeneration++;
+        return;
+    }
+    if (self.editedSinceSearch)
         [self update]; // edits since may have made new matches, not only stale ones
 }
 

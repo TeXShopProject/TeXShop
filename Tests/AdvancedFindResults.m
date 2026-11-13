@@ -245,6 +245,28 @@ static void TestEdits(void)
     RunLoopUntil(^{ return (BOOL)(untouched.items.count == 4); });
     Check(untouched.items.count == 4 && untouched.staleCount == 0, [NSString stringWithFormat:@"the last of quick edits wins: %lu", (unsigned long)untouched.items.count]);
 
+    // Turning live update off keeps the list as it is: a search waiting for its delay, or one already running, does
+    // not change it. Turned on again, it searches the text as it is now.
+    NSTextView *paused = MakeTextView(@"ab ab");
+    TSAdvancedFindResults *pausing = FindAll(paused, @"ab", plain, NO);
+    pausing.liveUpdateDelay = 0.3;
+    pausing.updatesLive = YES;
+    Edit(paused, NSMakeRange(0, 2), @"zz");
+    pausing.updatesLive = NO; // before the delay
+    RunLoopUntil(^{ return NO; });
+    Check(pausing.items.count == 2 && pausing.staleCount == 1, [NSString stringWithFormat:@"live update turned off before its delay: the list stays (%lu, %lu stale)",
+                                                                (unsigned long)pausing.items.count, (unsigned long)pausing.staleCount]);
+    pausing.updatesLive = YES;
+    [pausing update]; // a search on the way
+    pausing.updatesLive = NO;
+    RunLoopUntil(^{ return NO; });
+    Check(pausing.items.count == 2 && pausing.staleCount == 1, [NSString stringWithFormat:@"live update turned off while it searches: the list stays (%lu, %lu stale)",
+                                                                (unsigned long)pausing.items.count, (unsigned long)pausing.staleCount]);
+    pausing.liveUpdateDelay = 0;
+    pausing.updatesLive = YES;
+    RunLoopUntil(^{ return (BOOL)(pausing.items.count == 1); });
+    Check(pausing.items.count == 1 && pausing.staleCount == 0, @"turned on again, the list is searched again");
+
     // A search the text was edited under is dropped: its matches are those of the older text.
     NSTextView *raced = MakeTextView(@"ab ab");
     TSAdvancedFindResults *racing = FindAll(raced, @"ab", plain, NO);
