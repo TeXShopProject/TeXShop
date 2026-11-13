@@ -190,7 +190,13 @@ static void Watch(Preview p) {
     upperMark = TopMark(p.upper); lowerMark = TopMark(p.lower);
     worstBefore = worstAfter = 0; steps = 0;
 }
-static BOOL Kept(Preview p) { return fabs(Off(p.upper, upperMark)) <= 0.5 && fabs(Off(p.lower, lowerMark)) <= 0.5; }
+// PDFKit aligns the pages to half units of the document, which are scaled in the view.
+// The keeper and this test each read their place at such an aligned position, and the
+// keeper keeps its place through moves of less than a point, so at the scale of fitting
+// the width a part may be off by up to a unit times the scale (measured on macOS 14, 15
+// and 26: up to 0.8pt at a scale of 1.35). Such offsets do not add up.
+static CGFloat Slack(PDFView *view) { return fmax(1, view.scaleFactor) + 0.05; }
+static BOOL Kept(Preview p) { return fabs(Off(p.upper, upperMark)) <= Slack(p.upper) && fabs(Off(p.lower, lowerMark)) <= Slack(p.lower); }
 
 // Up to macOS 15, AppKit gives the top part a content inset as large as the change of the
 // window's height while the window is resized, and takes it away afterwards.
@@ -279,10 +285,7 @@ int main(void) { @autoreleasepool {
         for (NSNumber *h in @[@900, @760, @1040, @980])
             SetWindowSize(p.window, 786, h.doubleValue);
         printf("window height%s: %d steps; the text at the tops moved %.2f pt\n", how.UTF8String, steps, worstAfter);
-        // AppKit aligns the scroll position to half units of the document; with the scale of
-        // fitting the width that is up to 0.6pt in the view at a step (macOS 14 and 15). The
-        // steps do not add up: the end is checked to 0.5pt, and the passing inset below.
-        Check(steps >= 4 && worstAfter <= 0.75 && Kept(p) && NSHeight(p.upper.frame) != upperHeight,
+        Check(steps >= 4 && worstAfter <= fmax(Slack(p.upper), Slack(p.lower)) && Kept(p) && NSHeight(p.upper.frame) != upperHeight,
               [@"changing the height of the window keeps the text at the top of both parts" stringByAppendingString:how]);
         RunLoop();
         Check(Kept(p) && p.upper.postsFrameChangedNotifications && p.lower.postsFrameChangedNotifications,
