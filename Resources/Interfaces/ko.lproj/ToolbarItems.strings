@@ -173,6 +173,8 @@ tiLabelBackForthKIT				= "뒤로/앞으로";
 tiPaletteLabelBackForthKIT		= "뒤로/앞으로";
 tiToolTipGoBack				= "뒤로";
 tiToolTipGoForward			= "앞으로";
+tiBack					= "뒤로";
+tiForward				= "앞으로";
 
 tiLabelBackForthKITSplit                = "뒤로/앞으로";
 tiPaletteLabelBackForthKITSplit        = "뒤로/앞으로";

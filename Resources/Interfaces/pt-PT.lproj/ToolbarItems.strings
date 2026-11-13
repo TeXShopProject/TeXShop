@@ -169,13 +169,15 @@ tiLabelSyncMarksKIT				= "Marcas sinc.";
 tiPaletteLabelSyncMarksKIT		= "Marcas de sincronização";
 tiToolTipSyncMarksKIT			= "Mostrar marcas de sincronização";
 
-tiLabelBackForthKIT				= "Anterior/seguinte";
-tiPaletteLabelBackForthKIT		= "Anterior/seguinte";
+tiLabelBackForthKIT				= "Retroceder/Avançar";
+tiPaletteLabelBackForthKIT		= "Retroceder/Avançar";
 tiToolTipGoBack				= "Retroceder";
 tiToolTipGoForward			= "Avançar";
+tiBack					= "Retroceder";
+tiForward				= "Avançar";
 
-tiLabelBackForthKITSplit                = "Anterior/seguinte";
-tiPaletteLabelBackForthKITSplit        = "Anterior/seguinte";
+tiLabelBackForthKITSplit                = "Retroceder/Avançar";
+tiPaletteLabelBackForthKITSplit        = "Retroceder/Avançar";
 
 tiLabelDrawerKIT				= "Gaveta";
 tiPaletteLabelDrawerKIT			= "Gaveta";

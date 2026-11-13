@@ -173,6 +173,8 @@ tiLabelBackForthKIT				= "Voltar/Avançar";
 tiPaletteLabelBackForthKIT		= "Voltar/Avançar";
 tiToolTipGoBack				= "Voltar";
 tiToolTipGoForward			= "Avançar";
+tiBack					= "Voltar";
+tiForward				= "Avançar";
 
 tiLabelBackForthKITSplit                = "Voltar/Avançar";
 tiPaletteLabelBackForthKITSplit        = "Voltar/Avançar";

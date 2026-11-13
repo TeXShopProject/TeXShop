@@ -84,6 +84,8 @@
     tiToolTipAutoComplete = "\U5207\U6362\U6309\U952e\U7ed1\U5b9a";
     tiToolTipGoBack = "返回";
     tiToolTipGoForward = "前进";
+    tiBack = "返回";
+    tiForward = "前进";
     tiToolTipBibTeX = "\U8fd0\U884cBibTeX";
     tiToolTipColorIndex = "为索引命令着色";
     tiToolTipConTeX = "\U8fd0\U884cConTeXt";
