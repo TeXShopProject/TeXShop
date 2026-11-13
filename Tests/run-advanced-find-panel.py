@@ -36,10 +36,10 @@ MUTATIONS = {
         '    return target ? [self.findController validateAction:action forTextView:target] : YES;', '    return YES;'),
     'TSTextView keeps the Find menu': ('TSTextView.m', '\tif (advancedFind)\n\t\t[advancedFind performFindPanelAction:sender inTextView:self];\n\telse\n\t\t[super performFindPanelAction:sender];',
         '\t[super performFindPanelAction:sender];'),
-    'TSTextView routes whatever the find method': ('TSTextView.m', 'if ([SUD integerForKey:FindMethodKey] != TSFindMethodAdvancedPanel)\n\t\treturn nil;', ''),
+    'TSTextView routes whatever the find method': ('TSAdvancedFindTextView.m', '    if ([SUD integerForKey:FindMethodKey] != TSFindMethodAdvancedPanel)\n        return nil;\n', ''),
     'TSTextView validates Find and Replace… itself': ('TSTextView.m', 'if (advancedFind && ([anItem action] == @selector(performFindPanelAction:) || [anItem action] == @selector(performTextFinderAction:)))',
         'if (advancedFind && [anItem action] == @selector(performFindPanelAction:))'),
-    'ConvertLF is ignored': ('TSTextView.m', 'return [SUD boolForKey:ConvertLFKey] ? @"\\n" : nil;', 'return @"\\n";'),
+    'ConvertLF is ignored': ('TSAdvancedFindTextView.m', 'return [SUD boolForKey:ConvertLFKey] ? @"\\n" : nil;', 'return @"\\n";'),
     'Find Selected Text escapes only metacharacters': ('TSAdvancedFindController.m',
         '    if (!extended && !yen)\n        return escaped;', '    return escaped;'),
     'Find Selected Text escapes a literal pattern': ('TSAdvancedFindController.m',
@@ -61,7 +61,7 @@ ROUTING = r'''
 #import "TSAdvancedFindTextView.h"
 #undef SUD
 #define SUD TSIsolatedAppKitDefaults
-static NSString *FindMethodKey = @"FindMethod", *ConvertLFKey = @"ConvertLF";
+NSString *FindMethodKey = @"FindMethod", *ConvertLFKey = @"ConvertLF";
 static BOOL g_canRegisterCommandCompletion = NO;
 static int failures;
 static void Check(BOOL ok, const char *what) { if (!ok) { fprintf(stderr, "FAIL: %s\n", what); failures++; } }
@@ -152,7 +152,7 @@ def build(tmp, sources):
     keys = dict(re.findall(r'^NSString \*(\w+Key)\s*=\s*(@"[^"]*");', globals_m, re.M))
     marker_keys = '\n'.join(f'NSString *{k} = {keys[k]};' for k in [
         'showSpaceCharacterKey', 'showFullwidthSpaceCharacterKey', 'showTabCharacterKey', 'showNewLineCharacterKey',
-        'SpaceCharacterKindKey', 'FullwidthSpaceCharacterKindKey', 'TabCharacterKindKey', 'NewLineCharacterKindKey'])
+        'SpaceCharacterKindKey', 'FullwidthSpaceCharacterKindKey', 'TabCharacterKindKey', 'NewLineCharacterKindKey', 'FindMethodKey', 'ConvertLFKey'])
     (tmp / 'keys.m').write_text('#import <Cocoa/Cocoa.h>\n' + marker_keys + '\nNSColor *InvisibleColor;\nBOOL atLeastMonterey = YES, atLeastSonoma = YES;\n')
     probe = app / 'Contents/MacOS/probe'
     (tmp / 'routing.m').write_text(ROUTING.replace('METHODS', text_view_methods((sources / 'TSTextView.m').read_text(encoding='latin1'))))

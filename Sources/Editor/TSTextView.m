@@ -60,6 +60,10 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 
 // end addition
 
+// The Advanced Find panel acts on the source that had the focus last.
+@interface TSTextView () <TSAdvancedFindTarget>
+@end
+
 @implementation TSTextView
 // added by Terada (- (void)awakeFromNib)
 - (void)awakeFromNib
@@ -2957,16 +2961,7 @@ static BOOL launchBibDeskAndOpenURLs(NSArray *fileURLs)
 // itself is not changed, so the setting takes effect without a restart.
 - (nullable TSAdvancedFindController *)advancedFindController
 {
-	if ([SUD integerForKey:FindMethodKey] != TSFindMethodAdvancedPanel)
-		return nil;
-	static dispatch_once_t once;
-	dispatch_once(&once, ^{
-		// The text of a document has LF line endings unless ConvertLF is off; then its own line endings are kept.
-		TSAdvancedFindController.sharedController.lineEndingHandler = ^NSString *(NSTextView *textView) {
-			return [SUD boolForKey:ConvertLFKey] ? @"\n" : nil;
-		};
-	});
-	return TSAdvancedFindPanelController.sharedPanelController.findController;
+	return TSAdvancedFindControllerForFindMethod();
 }
 
 - (void)performFindPanelAction:(id)sender

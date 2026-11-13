@@ -62,3 +62,10 @@ static BOOL behind;
 #define ConsoleBehaviorKey @"ConsoleBehavior"
 #define BringPdfFrontOnTypesetKey @"BringPdfFront"
 '''
+
+
+def advanced_find_sources(root, tmp):
+    """The Experiment output is a TSAdvancedFindTextView: the sources of Sources/Find and the two keys they read."""
+    keys = Path(tmp) / 'advanced-find-keys.m'
+    keys.write_text('#import <Foundation/Foundation.h>\nNSString *FindMethodKey = @"FindMethod", *ConvertLFKey = @"ConvertLF";\n')
+    return [str(p) for p in sorted((Path(root) / 'Sources/Find').glob('*.m'))] + [str(keys)]
