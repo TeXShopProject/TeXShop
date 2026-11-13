@@ -83,14 +83,14 @@ static BOOL TSSkipOptionalArgument(TSTeXScan *scan, NSUInteger *location)
 // them in the given role. *range becomes the range of the argument (the spelling of the parameters of \footnote
 // then starts there). When an argument is not closed before the end of the range, it is not colored as one, *range
 // is left as it was, and *location is left just after its opening brace or bracket, so that the rest of the text is
-// colored as usual.
-static void TSArgument(TSTeXScan *scan, NSUInteger *location, TSSyntaxRole role, NSRange *range)
+// colored as usual; NO is returned then.
+static BOOL TSArgument(TSTeXScan *scan, NSUInteger *location, TSSyntaxRole role, NSRange *range)
 {
     while ((*location < scan->lineEnd) && (TSCharacter(scan, *location) == '['))
         if (!TSSkipOptionalArgument(scan, location))
-            return;
+            return NO;
     if (!((*location < scan->lineEnd) && (TSCharacter(scan, *location) == '{')))
-        return;
+        return YES;
     NSInteger count = 1;
     TSToken(scan, *location, 1, TSSyntaxRoleMarker);
     (*location)++;
@@ -112,6 +112,7 @@ static void TSArgument(TSTeXScan *scan, NSUInteger *location, TSSyntaxRole role,
     }
     if (notDone)
         *location = start;
+    return !notDone;
 }
 
 // The first arguments of a command whose parameters are not spell checked: the brackets in them are colored, and
@@ -286,16 +287,19 @@ static void TSSkipParametersForSpelling(TSTeXScan *scan, NSRange range, NSUInteg
                 TSNoSpelling(&scan, command);
 
             NSRange colorRange = command;
+            // An argument that is not closed is not one: its parameters are not left out of spell checking, and the
+            // text after its opening brace or bracket is scanned from its first character.
+            BOOL argumentClosed = YES;
             if (options.colorsFootnote &&
                 ([commandString isEqualToString:@"\\footnote"] || [commandString isEqualToString:@"\\autocite"] ||
                  [commandString hasPrefix:@"\\cite"] || [commandString hasPrefix:@"\\Cite"] ||
                  [commandString isEqualToString:@"\\footcite"]))
-                TSArgument(&scan, &location, TSSyntaxRoleFootnote, &colorRange);
+                argumentClosed = TSArgument(&scan, &location, TSSyntaxRoleFootnote, &colorRange);
 
             // The spelling of parameters is left alone after an index entry, which has been colored.
             if (options.colorsIndex && ([commandString isEqualToString:@"\\index"] || [commandString isEqualToString:@"\\esindex"]))
                 TSArgument(&scan, &location, TSSyntaxRoleIndex, &colorRange);
-            else if (options.excludesParametersFromSpelling &&
+            else if (argumentClosed && options.excludesParametersFromSpelling &&
                      (options.excludesParametersOfUnlistedCommands
                       ? ![options.commandsWithCheckedParameters containsObject:commandString]
                       : [options.commandsWithUncheckedParameters containsObject:commandString]))

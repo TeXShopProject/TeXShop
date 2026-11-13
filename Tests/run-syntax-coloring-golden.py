@@ -53,8 +53,11 @@ MUTATIONS = {
     'footnote-spelling-from-command': (SCANNER, 'TSSkipParametersForSpelling(&scan, colorRange, &location);',
                                        'TSSkipParametersForSpelling(&scan, command, &location);'),
     # An unclosed argument of \footnote or \index leaves the rest of the range uncolored, as it did before 2026-11-14.
-    'unclosed-argument-swallows': (SCANNER, '    if (notDone)\n        *location = start;\n}\n\n// The first arguments of a command',
-                                   '}\n\n// The first arguments of a command'),
+    'unclosed-argument-swallows': (SCANNER, '    if (notDone)\n        *location = start;\n    return !notDone;\n}\n\n// The first arguments of a command',
+                                   '    return !notDone;\n}\n\n// The first arguments of a command'),
+    # Parameters are left out of spell checking after an unclosed argument too, skipping the character after it.
+    'spelling-after-unclosed-argument': (SCANNER, 'else if (argumentClosed && options.excludesParametersFromSpelling &&',
+                                         'else if ((argumentClosed || YES) && options.excludesParametersFromSpelling &&'),
     # The fourth letter is read only from six characters on, as before 2026-11-14, so that \msg_ is not a message.
     'fourth-letter-from-six': (SCANNER, 'if (command.length > 4)\n                    fourth', 'if (command.length > 5)\n                    fourth'),
     # The highlighter clears what it colors, taking the colors of other features with it.

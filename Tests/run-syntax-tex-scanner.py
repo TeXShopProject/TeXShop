@@ -30,6 +30,9 @@ elif mutation == 'unclosed-argument-swallows':
 elif mutation == 'stale-fourth-letter':
     sources['TSSyntaxTeXScanner.m'] = sources['TSSyntaxTeXScanner.m'].replace(
         '                first = second = third = fourth = 0;\n', '').replace('if (command.length > 4)\n                    fourth', 'if (command.length > 5)\n                    fourth')
+elif mutation == 'spelling-after-unclosed-argument':
+    sources['TSSyntaxTeXScanner.m'] = sources['TSSyntaxTeXScanner.m'].replace(
+        'else if (argumentClosed && options.excludesParametersFromSpelling &&', 'else if ((argumentClosed || YES) && options.excludesParametersFromSpelling &&')
 elif mutation == 'shares-commands':
     sources['TSSyntaxTeXOptions.m'] = sources['TSSyntaxTeXOptions.m'].replace(
         '_commandsWithUncheckedParameters = [[NSArray alloc] initWithArray:commands copyItems:YES];',
@@ -118,6 +121,32 @@ int main(void) { @autoreleasepool {
           ![open containsString:[NSString stringWithFormat:@":%ld", (long)TSSyntaxRoleIndex]], "an unclosed argument is not colored as one");
     Check([Tokens(notes, @"\\footnote{closed} x\n") containsString:[NSString stringWithFormat:@"closed:%ld", (long)TSSyntaxRoleFootnote]],
           "a closed argument is colored as before");
+    // The command right after an unclosed argument is colored, with or without leaving parameters out of spell
+    // checking (by the list of commands not to check, which has \cite, or by the exceptions, which leave \footnote out).
+    NSArray *openings = @[@"{", @"[", @"[x]{", @"[x]["];
+    for (NSString *commandName in @[@"\\cite", @"\\footnote"])
+        for (NSString *opening in openings)
+            for (int mode = 0; mode < 3; mode++) {
+                TSMutableSyntaxTeXOptions *o = [TSMutableSyntaxTeXOptions new];
+                o.colorsFootnote = YES;
+                o.excludesParametersFromSpelling = mode > 0;
+                o.excludesParametersOfUnlistedCommands = mode == 2;
+                o.commandsWithUncheckedParameters = @[@"\\cite"];
+                o.commandsWithCheckedParameters = @[@"\\emph"];
+                NSString *source = [NSString stringWithFormat:@"%@%@\\ref{x} %% tail\n", commandName, opening];
+                NSString *tokens = Tokens(o, source);
+                if (![tokens containsString:[NSString stringWithFormat:@"\\ref:%ld", (long)TSSyntaxRoleCommand]])
+                    printf("  %s (spelling mode %d): %s\n", source.UTF8String, mode, tokens.UTF8String);
+                Check([tokens containsString:[NSString stringWithFormat:@"\\ref:%ld", (long)TSSyntaxRoleCommand]] &&
+                      [tokens containsString:[NSString stringWithFormat:@"%% tail:%ld", (long)TSSyntaxRoleComment]],
+                      "the command right after an unclosed argument is colored, whatever the spelling options");
+            }
+    // A closed argument still leaves its parameters out of spell checking as before.
+    TSMutableSyntaxTeXOptions *closed = [TSMutableSyntaxTeXOptions new];
+    closed.colorsFootnote = YES; closed.excludesParametersFromSpelling = YES; closed.commandsWithUncheckedParameters = @[@"\\cite"];
+    Check([Tokens(closed, @"\\cite{key} x\n") containsString:[NSString stringWithFormat:@"key:%ld", (long)TSSyntaxRoleFootnote]] &&
+          [Tokens(closed, @"\\cite{key} x\n") containsString:@"!"], "a closed argument is colored and its parameters are left out of spell checking");
+
     // \msg_ (five characters) is a message name; \msgs is not, whatever command came before it.
     NSString *messages = Tokens(expl, @"\\msg_ \\msg_error:nnn \\msgs\n");
     Check([messages hasPrefix:[NSString stringWithFormat:@"\\msg_:%ld \\msg_:%ld! \\msg_error:nnn:%ld \\msg_error:nnn:%ld! \\msgs:%ld",
