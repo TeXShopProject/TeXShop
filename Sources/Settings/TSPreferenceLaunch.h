@@ -5,7 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Whether this launch replaces the whole settings domain with the factory defaults (TSAppDelegate,
 /// -[TSPreferences registerFactoryDefaults]): TSHasBeenUsed is not true or TetexBinPath is missing. The one place that
-/// decides who is a new user; the migrations of earlier users run only where it says NO (plan §5).
+/// decides who is a new user; the migrations of earlier users run only where it says NO.
 FOUNDATION_EXPORT BOOL TSPreferencesNeedFactoryReset(NSUserDefaults *defaults);
 
 /// For a user whose settings were kept (TSPreferencesNeedFactoryReset said NO): `savedSettings` is the persistent

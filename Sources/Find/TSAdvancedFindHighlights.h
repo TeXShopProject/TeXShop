@@ -8,7 +8,7 @@ NS_SWIFT_NAME(AdvancedFindHighlightDrawing)
 @protocol TSAdvancedFindHighlightDrawing <NSObject>
 @end
 
-/// The search highlights of one text storage (plan §6). They are not temporary attributes: the ranges are kept here
+/// The search highlights of one text storage. They are not temporary attributes: the ranges are kept here
 /// and drawn by the layout manager over the background that is already there, so nothing underneath is overwritten
 /// or lost when they are removed. Every view of the storage (a split window) shows them.
 NS_SWIFT_NAME(AdvancedFindHighlights)
