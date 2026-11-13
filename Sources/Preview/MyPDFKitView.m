@@ -2094,6 +2094,7 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 		if (itemPageIndex == newPageIndex)
 		{
 			newlySelectedRow = i;
+			newlySelectedPageIndex = itemPageIndex;
 			break;
 		}
 		if (newlySelectedRow == -1 || itemPageIndex >= newlySelectedPageIndex)
@@ -2107,6 +2108,15 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 	{
 		[_outlineView deselectAll: nil];
 		return;
+	}
+	// An entry that was clicked stays marked while the page belongs to it, also when an
+	// earlier entry, such as its chapter, starts on the same page.
+	NSInteger oldRow = [_outlineView selectedRow];
+	if (oldRow >= 0 && oldRow != newlySelectedRow)
+	{
+		PDFPage *oldPage = [[(PDFOutline *)[_outlineView itemAtRow: oldRow] destination] page];
+		if (oldPage != nil && [[self document] indexForPage: oldPage] == newlySelectedPageIndex)
+			newlySelectedRow = oldRow;
 	}
 	myIndexSet = [NSIndexSet indexSetWithIndex: newlySelectedRow];
 	// [_outlineView selectRow: newlySelectedRow byExtendingSelection: NO]; //this was deprecated, so
