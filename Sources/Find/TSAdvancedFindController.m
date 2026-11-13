@@ -10,6 +10,30 @@ NSString *TSAdvancedFindLocalized(NSString *key, NSString *english)
 }
 #define TSLocalized TSAdvancedFindLocalized
 
+/// A find string that finds `text` as it is with `options`. A regular expression escapes its metacharacters, unless
+/// the pattern is read literally already; with spaces and # comments ignored, the white space and # are written as code
+/// points, and so is ¥ when it stands for a backslash.
+NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions options)
+{
+    if (!(options & TSRegexFindRegularExpression) || (options & TSRegexFindIgnoreMetacharacters))
+        return text;
+    NSString *escaped = [NSRegularExpression escapedPatternForString:text];
+    BOOL extended = (options & TSRegexFindAllowCommentsAndWhitespace) != 0;
+    BOOL yen = (options & TSRegexFindYenIsBackslash) != 0;
+    if (!extended && !yen)
+        return escaped;
+    NSCharacterSet *whitespace = NSCharacterSet.whitespaceAndNewlineCharacterSet;
+    NSMutableString *result = [NSMutableString stringWithCapacity:escaped.length];
+    for (NSUInteger i = 0; i < escaped.length; i++) {
+        unichar c = [escaped characterAtIndex:i];
+        if ((extended && (c == '#' || [whitespace characterIsMember:c])) || (yen && c == 0x00A5))
+            [result appendFormat:@"\\x{%X}", (unsigned)c];
+        else
+            CFStringAppendCharacters((__bridge CFMutableStringRef)result, &c, 1); // one unit: a surrogate stays whole
+    }
+    return result;
+}
+
 @implementation TSAdvancedFindController
 
 + (TSAdvancedFindController *)sharedController
@@ -114,8 +138,7 @@ NSString *TSAdvancedFindLocalized(NSString *key, NSString *english)
         case TSAdvancedFindActionFindSelectedText: {
             // The selection is searched for as it is, whatever the regular expression setting.
             NSString *selected = [textView.string substringWithRange:textView.selectedRange];
-            BOOL regex = (self.settings.options & TSRegexFindRegularExpression) != 0;
-            self.settings.findString = regex ? [NSRegularExpression escapedPatternForString:selected] : selected;
+            self.settings.findString = TSAdvancedFindPatternFindingText(selected, self.settings.options);
             [self stringsChanged];
             return [self findForward:YES inTextView:textView includingSelection:NO];
         }

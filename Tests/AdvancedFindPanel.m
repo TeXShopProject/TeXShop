@@ -204,6 +204,24 @@ static void TestController(void)
     view.selectedRange = NSMakeRange(29, 6); // "second"
     Check([controller performAction:TSAdvancedFindActionFindSelectedText inTextView:view] && [settings.findString isEqualToString:@"second"], @"Find Selected Text");
 
+    // Find Selected Text finds the selection as it is with every regular expression option (first audit, F1)
+    for (NSNumber *flags in @[@(TSRegexFindRegularExpression), @(TSRegexFindRegularExpression | TSRegexFindIgnoreMetacharacters),
+                              @(TSRegexFindRegularExpression | TSRegexFindAllowCommentsAndWhitespace), @0])
+        for (NSString *selected in @[@".*", @"two words", @"#note", @"¥100 $\\x", @"a\tb # c"]) {
+            NSUInteger quiet = 0;
+            TSAdvancedFindController *finder = MakeController([TSMemoryDefaults new], &quiet);
+            finder.settings.options = TSRegexFindDefaultOptions | flags.unsignedIntegerValue;
+            if ([selected hasPrefix:@"¥"] && !(flags.unsignedIntegerValue & TSRegexFindRegularExpression))
+                continue; // without a regular expression, ¥ in the find string stands for a backslash (the option's meaning)
+            if ([selected hasPrefix:@"¥"] && (flags.unsignedIntegerValue & TSRegexFindIgnoreMetacharacters))
+                continue; // a literal pattern cannot escape ¥ either
+            TestDocument *pair = [[TestDocument alloc] initWithText:[NSString stringWithFormat:@"%@ / %@", selected, selected]];
+            pair.upper.selectedRange = NSMakeRange(0, selected.length);
+            BOOL found = [finder performAction:TSAdvancedFindActionFindSelectedText inTextView:pair.upper];
+            Check(found && NSEqualRanges(pair.upper.selectedRange, NSMakeRange(selected.length + 3, selected.length)),
+                  [NSString stringWithFormat:@"Find Selected Text finds “%@” with options %lx (find string “%@”)", selected, flags.unsignedLongValue, finder.settings.findString]);
+        }
+
     // Errors
     settings.findString = @"(";
     before = beeps;

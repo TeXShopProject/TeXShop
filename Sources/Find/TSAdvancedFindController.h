@@ -63,5 +63,7 @@ NS_SWIFT_NAME(AdvancedFindController)
 @end
 
 FOUNDATION_EXPORT NSString *TSAdvancedFindLocalized(NSString *key, NSString *english);
+/// The find string of "Find Selected Text": one that finds `text` as it is with `options`.
+FOUNDATION_EXPORT NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions options) NS_SWIFT_NAME(AdvancedFindPatternFindingText(_:options:));
 
 NS_ASSUME_NONNULL_END
