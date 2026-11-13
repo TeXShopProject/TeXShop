@@ -31,6 +31,11 @@ MUTATIONS = {
                         'stringSize = [labelText sizeWithAttributes:textAttributes];'),
     # The rect stays narrower than a wide bold number.
     'fixed-rect': ('MAX(NSWidth(bounds) - RULER_MARGIN * 2.0, ceil(stringSize.width))', 'NSWidth(bounds) - RULER_MARGIN * 2.0'),
+    # The numbers go back to the proportional label font.
+    'label-font': ('return [NSFont monospacedSystemFontOfSize:size weight:weight];',
+                   'return (weight == NSFontWeightBold) ? [NSFont boldSystemFontOfSize:size] : [NSFont labelFontOfSize:size];'),
+    # Bold numbers come from the regular font by trait conversion, not from the monospaced bold weight.
+    'bold-by-trait': ('(_font == nil) ? [self fontOfWeight:NSFontWeightBold]', '(_font == nil) ? [[NSFontManager sharedFontManager] convertFont:[NSFont labelFontOfSize:[[self font] pointSize]] toHaveTrait:NSBoldFontMask]'),
     # Every drag step posts a selection change.
     'notify-each-step': ('stillSelecting:YES];\n\t\t\t[self showLineSelection:selection];\n\t\t}',
                          'stillSelecting:NO];\n\t\t\t[self showLineSelection:selection];\n\t\t}'),

@@ -248,13 +248,38 @@ int main(void)
         textView.selectedRange = NSMakeRange(0, 0);
         Require("the caret line after typing is regular", InkForLine(StartOf(@"last")) == typedLast);
 
-        // Bold numbers are wider: five digits must not lose their last digit or their first,
+        // The numbers use the system's monospaced font: every digit, regular or bold, is as
+        // wide as any other, so the digits of all numbers line up in both sizes.
+        for (NSInteger size = 0; size <= 1; size++) {
+            [NSUserDefaults.standardUserDefaults setInteger:size forKey:LineNumberSizeKey];
+            NSFont *regular = ruler.font;
+            NSFont *bold = [(NSDictionary *)[ruler performSelector:@selector(selectedLineTextAttributes)] objectForKey:NSFontAttributeName];
+            CGFloat expected = [NSFont systemFontSizeForControlSize:size ? NSControlSizeRegular : NSControlSizeMini];
+            Require("line numbers follow the size setting", regular.pointSize == expected && bold.pointSize == expected);
+            Require("line numbers are monospaced", regular.isFixedPitch && bold.isFixedPitch);
+            Require("bold line numbers are bold", ([[NSFontManager sharedFontManager] traitsOfFont:bold] & NSBoldFontMask) != 0);
+            CGFloat narrow = [@"1111111" sizeWithAttributes:@{NSFontAttributeName: regular}].width;
+            Require("all digits are equally wide", narrow == [@"8888888" sizeWithAttributes:@{NSFontAttributeName: regular}].width
+                    && narrow == [@"1410800" sizeWithAttributes:@{NSFontAttributeName: regular}].width);
+            Require("bold digits are as wide as regular ones", narrow == [@"1111111" sizeWithAttributes:@{NSFontAttributeName: bold}].width
+                    && narrow == [@"8888888" sizeWithAttributes:@{NSFontAttributeName: bold}].width);
+        }
+        [NSUserDefaults.standardUserDefaults removeObjectForKey:LineNumberSizeKey];
+
+        // Bold numbers must keep their last digit and their first, also with a proportional
+        // font given through -setFont:, whose bold digits are wider. Bold numbers must not lose their last digit or their first,
         // with either size of line numbers, and at the four-to-five digit boundary.
         NSMutableString *tenThousand = [NSMutableString string];
         for (int i = 1; i <= 10010; i++) [tenThousand appendFormat:@"%d\n", i];
-        for (NSInteger size = 0; size <= 1; size++) {
-            [NSUserDefaults.standardUserDefaults setInteger:size forKey:LineNumberSizeKey];
+        for (NSInteger size = 0; size <= 2; size++) {
+            [NSUserDefaults.standardUserDefaults setInteger:(size == 2 ? 0 : size) forKey:LineNumberSizeKey];
             Setup(tenThousand, YES, 400);
+            BOOL proportional = (size == 2);
+            if (proportional) {
+                [ruler setFont:[NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeMini]]];
+                [ruler setRuleThickness:[ruler requiredThickness]];
+                [scroll tile];
+            }
             NSUInteger from = StartOf(@"\n9998\n") + 1, to = StartOf(@"\n10008\n") + 1;
             [textView scrollRangeToVisible:NSMakeRange(from, 0)];
             [scroll tile];
@@ -268,8 +293,8 @@ int main(void)
                 char name[160];
                 snprintf(name, sizeof name, "size %ld line %d: bold number keeps its last digit (right %.1f vs %.1f)", (long)size, i, inkRight, plainRight[i]);
                 Require(name, fabs(inkRight - plainRight[i]) <= 1.5);
-                snprintf(name, sizeof name, "size %ld line %d: bold number is wider and inside the ruler (left %.1f vs %.1f)", (long)size, i, inkLeft, plainLeft[i]);
-                Require(name, inkLeft <= plainLeft[i] && inkLeft >= 1.0);
+                snprintf(name, sizeof name, "size %ld line %d: bold number starts where the regular one does, inside the ruler (left %.1f vs %.1f)", (long)size, i, inkLeft, plainLeft[i]);
+                Require(name, (proportional ? inkLeft <= plainLeft[i] : fabs(inkLeft - plainLeft[i]) <= 1.5) && inkLeft >= 1.0);
             }
         }
         [NSUserDefaults.standardUserDefaults removeObjectForKey:LineNumberSizeKey];

@@ -103,22 +103,23 @@
     }
 }
 
+// The system's monospaced font, so that the digits of every number line up, and bold
+// numbers are exactly as wide as regular ones.
+- (NSFont *)fontOfWeight:(NSFontWeight)weight
+{
+    CGFloat size;
+
+    if ([SUD integerForKey: LineNumberSizeKey] == 1)
+        size = [NSFont systemFontSizeForControlSize:NSControlSizeRegular];
+    else
+        size = [NSFont systemFontSizeForControlSize:NSControlSizeMini];
+    return [NSFont monospacedSystemFontOfSize:size weight:weight];
+}
+
 - (NSFont *)font
 {
-    NSInteger lineSize;
-    
-    lineSize = [SUD integerForKey: LineNumberSizeKey];
-        
 	if (_font == nil)
-    {
-        if (lineSize == 0)
-            return [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeMini]];
-        else if (lineSize == 1)
-            return [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeRegular]];
-        else
-            return [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSControlSizeMini]];
-    }
-        
+        return [self fontOfWeight:NSFontWeightRegular];
     return _font;
 }
 
@@ -414,7 +415,8 @@
 
 - (NSDictionary *)selectedLineTextAttributes
 {
-	NSFont	*font = [[NSFontManager sharedFontManager] convertFont:[self font] toHaveTrait:NSBoldFontMask];
+	NSFont	*font = (_font == nil) ? [self fontOfWeight:NSFontWeightBold]
+		: [[NSFontManager sharedFontManager] convertFont:_font toHaveTrait:NSBoldFontMask];
 
 	return [NSDictionary dictionaryWithObjectsAndKeys:
 			font, NSFontAttributeName,
