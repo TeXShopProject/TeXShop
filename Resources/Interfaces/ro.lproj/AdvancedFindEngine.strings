@@ -15,3 +15,32 @@
 /* The settings of a multiple replacement definition are not valid. */
 "The settings of the replacement definition are not valid." = "Configurările definiției de înlocuire nu sunt valide.";
 
+/* Cheat sheet, differences from OgreKit: \d, \w, \s and \b have their Unicode meaning in ICU. */
+"Unicode: also full-width digits, kanji, kana and the full-width space." = "Unicode: inclusiv cifrele de lățime completă, kanji, kana și spațiul de lățime completă.";
+
+/* Cheat sheet, differences from OgreKit. “Always capture” is an option of the OgreKit find panel. */
+"Named groups are numbered too, as with OgreKit's “Always capture” on." = "Și grupurile cu nume sunt numerotate, ca în OgreKit cu „Capturați întotdeauna” activat.";
+
+/* Cheat sheet and find field, differences from OgreKit: a brace by itself is an error in ICU. */
+"ICU needs \\{ and \\} for literal braces (OgreKit did not)." = "ICU necesită \\{ și \\} pentru acolade literale (OgreKit nu).";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "În ICU, \\h este un spațiu orizontal; în OgreKit, o cifră hexazecimală (scrieți [0-9a-fA-F]).";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU." = "ICU: (?m) aplică ^ și $ fiecărei linii. (?m) din OgreKit (. cu întreruperi de linie) e (?s) în ICU.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "În ICU, {n}+ este posesiv; în OgreKit repeta repetiția.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU has no \\K. Write the part before it as a look-behind (?<=…)." = "ICU nu acceptă \\K. Scrieți partea dinainte ca (?<=…).";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU cannot call a group with \\g<name>. Repeat the group's pattern instead." = "ICU nu poate apela un grup cu \\g<nume>. Repetați modelul grupului.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU has no absent operator (?~…)." = "ICU nu are operatorul de absență (?~…).";
+
+/* Cheat sheet, differences from OgreKit: OgreKit's \p{^…} is an error in ICU. */
+"Write \\P{…} in ICU." = "În ICU, scrieți \\P{…}.";

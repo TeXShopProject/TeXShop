@@ -15,3 +15,32 @@
 /* The settings of a multiple replacement definition are not valid. */
 "The settings of the replacement definition are not valid." = "Les réglages de la définition de remplacement ne sont pas valides.";
 
+/* Cheat sheet, differences from OgreKit: \d, \w, \s and \b have their Unicode meaning in ICU. */
+"Unicode: also full-width digits, kanji, kana and the full-width space." = "Unicode : aussi les chiffres et l’espace pleine chasse, les kanji et les kana.";
+
+/* Cheat sheet, differences from OgreKit. “Always capture” is an option of the OgreKit find panel. */
+"Named groups are numbered too, as with OgreKit's “Always capture” on." = "Les groupes nommés sont aussi numérotés, comme avec « Toujours capturer » d’OgreKit.";
+
+/* Cheat sheet and find field, differences from OgreKit: a brace by itself is an error in ICU. */
+"ICU needs \\{ and \\} for literal braces (OgreKit did not)." = "ICU exige \\{ et \\} pour des accolades littérales (pas OgreKit).";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "Dans ICU, \\h est un espace horizontal (OgreKit : chiffre hexa). Chiffres : [0-9a-fA-F].";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU." = "ICU : (?m) applique ^ et $ à chaque ligne. Le (?m) d’OgreKit (. avec sauts de ligne) s’écrit (?s).";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "Dans ICU, {n}+ est possessif ; dans OgreKit, il répétait la répétition.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU has no \\K. Write the part before it as a look-behind (?<=…)." = "ICU n’a pas de \\K. Écrivez ce qui précède en assertion arrière (?<=…).";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU cannot call a group with \\g<name>. Repeat the group's pattern instead." = "ICU ne peut pas appeler un groupe avec \\g<nom>. Répétez plutôt le motif du groupe.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU has no absent operator (?~…)." = "ICU n’a pas d’opérateur d’absence (?~…).";
+
+/* Cheat sheet, differences from OgreKit: OgreKit's \p{^…} is an error in ICU. */
+"Write \\P{…} in ICU." = "Dans ICU, écrivez \\P{…}.";

@@ -204,6 +204,10 @@
     "Figure",
     "Roman",
     "Sans"
+   ],
+   "AdvancedFind.strings": [
+    "Note",
+    "Options…"
    ]
   },
   "it": {
@@ -274,6 +278,9 @@
     "Matrix",
     "Roman",
     "Sans"
+   ],
+   "AdvancedFind.strings": [
+    "Sets"
    ]
   },
   "pt": {
