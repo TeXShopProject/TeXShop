@@ -170,6 +170,7 @@
 "catalog.appearance.2.0.item.1" = "コンソール";
 "catalog.appearance.2.0.item.2" = "ログ";
 "catalog.appearance.2.0.item.3" = "プレビュー";
+"catalog.appearance.2.0.item.3.heading.1" = "ライト表示のページ";
 "group.appearance.3.title" = "ソース";
 "catalog.appearance.3.0.item.0" = "カーソル";
 "catalog.appearance.3.0.item.1" = "背景の点滅";

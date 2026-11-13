@@ -3658,9 +3658,9 @@ You can  remove Themes you no longer use by removing their plist files from the 
 
 Selecting a theme to edit fills the color wells. Choosing Lite Mode or Dark Mode themes saves those selections and updates the corresponding documents immediately.
 
-Finally we explain the actual color choices. At the top of the Theme Panel, the Foreground and Background colors can be set for the Source, Console, and Log Windows, and the Background color can be set for the Preview Window. For each of these except the Log window, transparency can also be set. In color theory, alpha value sets transparency.  Window opacity is set with a slider and a numeric field from 0\% (transparent) to 100\% (opaque). The colors themselves are always opaque, so their color wells offer no opacity.
+Finally we explain the actual color choices. At the top of the Theme Panel, the Foreground and Background colors can be set for the Source, Console, and Log Windows, and the Background color of the pages shown light can be set for the Preview Window, under the heading Light Pages. For each of these except the Log window, transparency can also be set. In color theory, alpha value sets transparency.  Window opacity is set with a slider and a numeric field from 0\% (transparent) to 100\% (opaque). The colors themselves are always opaque, so their color wells offer no opacity.
 
-Why can we set the Background Color of the Preview Window, but not its Foreground Color? That is because pdf files created by TeX have an invisible background color. When such a file is printed, the result is black characters on the actual paper. If the pdf had a background color, then the printer might print a grayish wash over the entire page, which is clearly undesirable. So TeXShop can independently set the background of the Preview Window, and it will appear except when covered by actual letters. Note that when such a document is printed, the background color setting of Preview will be ignored because this information is not in the pdf file.
+Why can we set the Background Color of the Preview Window, but not its Foreground Color? That is because pdf files created by TeX have an invisible background color. When such a file is printed, the result is black characters on the actual paper. If the pdf had a background color, then the printer might print a grayish wash over the entire page, which is clearly undesirable. So TeXShop can independently set the background of the Preview Window, and it will appear except when covered by actual letters. Note that when such a document is printed, the background color setting of Preview will be ignored because this information is not in the pdf file. The color fills the pages only while they are shown light. When the Appearance item in the toolbar of the Preview Window shows them dark, they are not filled, so that they look deep black.
 
 Illustrations are a different matter. Most illustrations set the background color, and thus the background color of Preview will not appear behind illustrations.
 
@@ -7003,6 +7003,8 @@ The background color of the preview window could be changed. This background col
    defaults write TeXShop Pdfbackground_G 0.39
    defaults write TeXShop Pdfbackground_B 0.77
 \end{verbatim}
+It is now set by the Light Pages color of the Preview row in the Themes category of TeXShop Settings; use that instead.
+
 The transparency of the source, preview, and console windows was set by the following items. Here an alpha value of 0.00 is completely transparent and an alpha value of 1.00 is completely opaque. It is now set by the opacity sliders in the Windows group of the Themes category of TeXShop Settings; use those instead.
 \begin{verbatim}
    defaults write TeXShop ConsoleWindowAlpha 0.75

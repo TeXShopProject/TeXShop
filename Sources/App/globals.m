@@ -403,7 +403,6 @@ BOOL g_canRegisterCommandCompletion = NO;
 
 NSColor *InvisibleColor = nil;
 NSColor *ReverseSyncColor = nil;
-NSColor *PreviewBackgroundColor = nil;
 NSDictionary *highlightBracesColorDict; // added by Terada
 NSDictionary *highlightContentColorDict; // added by Terada
 NSColor *ImageForegroundColor = nil;

@@ -344,6 +344,10 @@
 - (void)applyDarkModeInversionFilter;
 - (void)removeDarkModeInversionFilter;
 - (void)updateDarkModeInversion;
+// The paper of pages shown light, from the theme of the window's appearance; nil
+// while pages are shown dark. Read while PDFKit draws pages.
+@property (atomic, strong, readonly) NSColor *previewPaperColor;
+- (void)updatePreviewPaperColor;
 
 // splittingWindow
 - (void)saveLocation;

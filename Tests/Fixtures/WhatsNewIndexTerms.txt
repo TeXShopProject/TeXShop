@@ -57,6 +57,7 @@
 36
 37
 38
+39
 4
 41
 42
@@ -86,12 +87,12 @@
 74
 78
 8
-85
 86
 86a
 89
 9
 a
+a11y
 ability
 aborted
 about
@@ -352,7 +353,6 @@ close
 closed
 closing
 code
-collin's
 color
 colored
 coloring
@@ -507,7 +507,6 @@ determine
 determines
 deutsch
 developer
-developers
 diacritical
 dialog
 dialogs
@@ -621,6 +620,7 @@ esc
 escape
 escaped
 etc
+ethanphil4
 euc
 european
 eventually
