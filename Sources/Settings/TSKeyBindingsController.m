@@ -193,8 +193,13 @@ static NSString *TSKeyBindingInputCharacter(NSString *text)
     [text enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, text.length) options:0 usingBlock:^(id value, NSRange range, BOOL *stop) {
         if ([value isKindOfClass:TSKeyBindingToken.class]) {
             for (NSUInteger i = 0; i < range.length; i++) [output appendString:((TSKeyBindingToken *)value).symbol];
+        } else if (value == nil) {
+            // Text, including an object replacement character without an
+            // attachment, is kept as it is.
+            [output appendString:[string substringWithRange:range]];
         } else {
-            // Attachments from elsewhere have no text in the file.
+            // An attachment from elsewhere has no text in the file; only its
+            // own replacement character is left out.
             NSString *part = [string substringWithRange:range];
             [output appendString:[part stringByReplacingOccurrencesOfString:@"￼" withString:@""]];
         }

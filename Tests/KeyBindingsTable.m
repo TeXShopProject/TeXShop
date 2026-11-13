@@ -66,7 +66,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     NSDictionary *bundled = [NSDictionary dictionaryWithContentsOfFile:@(argv[1])];
     Check(bundled.count > 40, @"The bundled key bindings load");
     NSMutableArray *outputs = [bundled.allValues mutableCopy];
-    [outputs addObjectsFromArray:@[@"\\begin{itemize}\n\t\\item #INS#\n\\end{itemize}", @"\\int_{•‹lower›}^{•‹upper›}", @"#SE", @"##SEL##", @"#PASTE#PASTE#", @"\r\n", @"", @"é😀#INS#"]];
+    [outputs addObjectsFromArray:@[@"\\begin{itemize}\n\t\\item #INS#\n\\end{itemize}", @"\\int_{•‹lower›}^{•‹upper›}", @"#SE", @"##SEL##", @"#PASTE#PASTE#", @"\r\n", @"", @"é😀#INS#", @"A\uFFFCB", @"\uFFFC#SEL#\uFFFC"]];
     BOOL roundTrip = YES;
     for (NSString *output in outputs)
         roundTrip &= [[TSKeyBindingsController outputForDisplayString:[TSKeyBindingsController displayStringForOutput:output font:font]] isEqualToString:output];
@@ -132,6 +132,25 @@ int main(int argc, char **argv) { @autoreleasepool {
     Check(Tokens(editor.textStorage) == 3, @"Pasted symbols and line breaks become tokens");
     EndEditing(window, table);
     Check([SavedBindings()[@"^"] isEqual:@"\\frac{#SEL#}{#INS#}\n"], @"A pasted output is saved as its file text");
+
+    // A character U+FFFC without an attachment is text: it is shown, saved and
+    // copied as it is. Only another application's attachment is left out.
+    [table editColumn:1 row:1 withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    [pasteboard clearContents];
+    [pasteboard setString:@"A\uFFFCB" forType:NSPasteboardTypeString];
+    editor.selectedRange = NSMakeRange(0, editor.string.length);
+    [editor readSelectionFromPasteboard:pasteboard type:NSPasteboardTypeString];
+    EndEditing(window, table);
+    Check([SavedBindings()[@"^"] isEqual:@"A\uFFFCB"], @"A pasted U+FFFC without an attachment is saved");
+    [table editColumn:1 row:1 withEvent:nil select:YES];
+    editor = (NSTextView *)window.firstResponder;
+    Check([editor writeSelectionToPasteboard:pasteboard types:editor.writablePasteboardTypes] && [[pasteboard stringForType:NSPasteboardTypeString] isEqual:@"A\uFFFCB"], @"Copying keeps a U+FFFC without an attachment");
+    EndEditing(window, table);
+    NSMutableAttributedString *foreign = [[NSMutableAttributedString alloc] initWithString:@"x"];
+    [foreign appendAttributedString:[NSAttributedString attributedStringWithAttachment:[NSTextAttachment new]]];
+    [foreign appendAttributedString:[[NSAttributedString alloc] initWithString:@"y\uFFFCz"]];
+    Check([[TSKeyBindingsController outputForDisplayString:foreign] isEqual:@"xy\uFFFCz"], @"Another application's attachment is left out, a plain U+FFFC is kept");
 
     // Insert: the menu, an insertion at the end of the selected row, and a
     // mark with a note leaves the insertion point in the note.
