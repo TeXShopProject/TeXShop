@@ -274,6 +274,7 @@ tiToolTipHtmlSearch           = "Rechercher";
 "ExperimentZoomOut" = "Zoom arrière";
 "ExperimentZoomIn" = "Zoom avant";
 "ExperimentZoomToContent" = "Zoom sur le contenu";
+"ExperimentZoomToContentWidth" = "Zoom sur la largeur du contenu";
 
 "Page Layout" = "Format d’affichage";
 "tiLabelTSPreviewAppearance" = "Apparence";
