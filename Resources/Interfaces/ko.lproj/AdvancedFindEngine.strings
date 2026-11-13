@@ -15,3 +15,32 @@
 /* The settings of a multiple replacement definition are not valid. */
 "The settings of the replacement definition are not valid." = "대치 정의의 설정이 유효하지 않습니다.";
 
+/* Cheat sheet, differences from OgreKit: \d, \w, \s and \b have their Unicode meaning in ICU. */
+"Unicode: also full-width digits, kanji, kana and the full-width space." = "Unicode 기준으로 전각 숫자, 한자, 가나, 전각 공백에도 일치합니다.";
+
+/* Cheat sheet, differences from OgreKit. “Always capture” is an option of the OgreKit find panel. */
+"Named groups are numbered too, as with OgreKit's “Always capture” on." = "이름 있는 그룹에도 번호가 매겨집니다(OgreKit의 ‘항상 캡처’를 켠 것과 같음).";
+
+/* Cheat sheet and find field, differences from OgreKit: a brace by itself is an error in ICU. */
+"ICU needs \\{ and \\} for literal braces (OgreKit did not)." = "ICU에서 중괄호를 문자로 쓰려면 \\{ 및 \\}가 필요합니다(OgreKit에서는 불필요).";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "ICU의 \\h는 수평 공백입니다(OgreKit에서는 16진수 숫자). 16진수 숫자는 [0-9a-fA-F]로 작성하십시오.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU." = "ICU의 (?m)은 ^와 $를 각 줄에 일치시킵니다. OgreKit의 (?m)(.이 줄바꿈에 일치)은 ICU의 (?s)입니다.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "ICU의 {n}+는 소유 수량자입니다(OgreKit에서는 반복을 다시 반복함).";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU has no \\K. Write the part before it as a look-behind (?<=…)." = "ICU에는 \\K가 없습니다. 그 앞부분을 후방 탐색 (?<=…)으로 작성하십시오.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU cannot call a group with \\g<name>. Repeat the group's pattern instead." = "ICU에서는 \\g<이름>으로 그룹을 호출할 수 없습니다. 대신 그룹의 패턴을 다시 작성하십시오.";
+
+/* Cheat sheet and find field, differences from OgreKit. */
+"ICU has no absent operator (?~…)." = "ICU에는 부재 연산자 (?~…)가 없습니다.";
+
+/* Cheat sheet, differences from OgreKit: OgreKit's \p{^…} is an error in ICU. */
+"Write \\P{…} in ICU." = "ICU에서는 \\P{…}로 작성하십시오.";

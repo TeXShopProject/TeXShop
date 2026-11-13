@@ -31,6 +31,7 @@ NSSet<TSPreferenceKey> *TSKnownPreferenceKeys(void)
             @"AdvancedFindHistory",
             @"AdvancedFindHistoryLimit",
             @"AdvancedFindInSelection",
+            @"AdvancedFindLiveUpdate",
             @"AdvancedFindOptions",
             @"AdvancedFindReplaceHistory",
             @"AdvancedFindReplacementSyntax",

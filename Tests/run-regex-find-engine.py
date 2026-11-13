@@ -134,7 +134,8 @@ def check_message_tables():
     import json, re
     keys = set()
     for path in find_dir.glob('*.m'):
-        keys |= set(re.findall(r'NSLocalizedStringFromTable\(@"((?:[^"\\]|\\.)*)", @"AdvancedFindEngine"', path.read_text()))
+        # As the compiler reads them: \\ is one backslash.
+        keys |= {re.sub(r'\\(.)', r'\1', k) for k in re.findall(r'NSLocalizedStringFromTable\(@"((?:[^"\\]|\\.)*)", @"AdvancedFindEngine"', path.read_text(encoding='utf-8'))}
     problems = []
     for table in sorted((root / 'Resources/Interfaces').glob('*.lproj/AdvancedFindEngine.strings')):
         data = json.loads(subprocess.run(['plutil', '-convert', 'json', '-o', '-', str(table)], capture_output=True, check=True).stdout)

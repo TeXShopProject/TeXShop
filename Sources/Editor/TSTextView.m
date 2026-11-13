@@ -248,9 +248,9 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 }
 
 // Edit > Spelling and Grammar > Show Spelling and Grammar (Command-:) opens the
-// panel, and the system then runs its own search at once, without going through
-// -checkSpelling:. Replace that search with the TeX-aware one. Holding Option
-// gives the original behaviour.
+// panel, and the system then runs its own search, without going through
+// -checkSpelling:. Open the panel without that search and run the TeX-aware one.
+// Holding Option gives the original behaviour.
 - (void)showGuessPanel:(id)sender
 {
     if (![self usesTeXAwareSpellChecking] || ([NSEvent modifierFlags] & NSEventModifierFlagOption)) {
@@ -258,7 +258,7 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
         [super showGuessPanel:sender];
         return;
     }
-    [TSSpellSupport showSpellingPanelForTextView:self mask:[self freshSpellMask] openPanel:^{
+    [TSSpellSupport showSpellingPanelForTextView:self mask:[self freshSpellMask] hidePanel:^{
         [super showGuessPanel:sender];
     }];
 }

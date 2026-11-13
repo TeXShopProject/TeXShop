@@ -86,6 +86,8 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     if (!(self = [super initWithWindow:panel]))
         return nil;
     _findController = findController;
+    _showsResults = YES;
+    _resultsHeight = 260;
     [self buildContent];
     [panel center];
     self.windowFrameAutosaveName = @"AdvancedFindPanel"; // "NSWindow Frame AdvancedFindPanel", kept by the profiles
@@ -100,7 +102,9 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     findController.showPanelHandler = ^(BOOL replacing) { [weakSelf showPanelSelectingReplaceField:replacing]; };
     findController.hidePanelHandler = ^{ [weakSelf.window orderOut:nil]; };
     findController.stringsChangedHandler = ^{ [weakSelf loadStrings]; };
+    findController.findAllHandler = ^(TSAdvancedFindResults *results, NSTextView *textView) { [weakSelf showResults:results textView:textView]; };
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:NSApplicationDidBecomeActiveNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
     // After every event, as menu items are: the target may have changed (another window) or become read-only.
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(applicationDidUpdate:) name:NSApplicationDidUpdateNotification object:nil];
     return self;
@@ -169,22 +173,36 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     NSButton *more = [NSButton buttonWithImage:moreImage target:self action:@selector(showOptions:)];
     more.controlSize = NSControlSizeSmall;
     more.toolTip = TSLocalized(@"AdvancedFind.MoreOptions", @"More Options");
-    NSStackView *row = [NSStackView stackViewWithViews:@[self.regexBox, self.ignoreCaseBox, self.inSelectionBox]];
+    // The cheat sheet's "?" right after "Regular expression"
+    self.cheatSheetButton = [NSButton buttonWithTitle:@"" target:self action:@selector(showCheatSheet:)];
+    self.cheatSheetButton.bezelStyle = NSBezelStyleHelpButton;
+    self.cheatSheetButton.controlSize = NSControlSizeMini;
+    self.cheatSheetButton.toolTip = TSLocalized(@"AdvancedFind.CheatSheetTip", @"Show the regular expression reference");
+    self.cheatSheetButton.accessibilityLabel = TSLocalized(@"AdvancedFind.Cheat.Title", @"Regular Expression Reference");
+    NSStackView *regex = [NSStackView stackViewWithViews:@[self.regexBox, self.cheatSheetButton]];
+    regex.spacing = 4;
+    regex.alignment = NSLayoutAttributeCenterY;
+    [regex setHuggingPriority:NSLayoutPriorityDefaultHigh forOrientation:NSLayoutConstraintOrientationHorizontal];
+    NSStackView *row = [NSStackView stackViewWithViews:@[regex, self.ignoreCaseBox, self.inSelectionBox]];
     row.spacing = 16;
     [row addView:more inGravity:NSStackViewGravityTrailing];
     return row;
 }
 
 /// As in CotEditor: the actions on all matches on the left, those on the current match on the right, ending with
-/// previous / next. A button with ▾ has more actions of its kind: Select All and Remove Highlights under Highlight
-/// All, Replace (without finding on) under Replace & Find. Return in the find field is "Next".
+/// previous / next. A button with ▾ has more actions of its kind: Highlight All and Select All under Find All, with
+/// Remove Highlights after them (TeXShop's Find menu has no item for it), Replace (without finding on) under
+/// Replace & Find. Return in the find field is "Next".
 - (NSView *)makeButtonRow
 {
     NSMenu *allMenu = [[NSMenu alloc] initWithTitle:@""];
+    [allMenu addItemWithTitle:TSLocalized(@"AdvancedFind.HighlightAll", @"Highlight All") action:@selector(advancedHighlight:) keyEquivalent:@""].target = self;
     [allMenu addItemWithTitle:TSLocalized(@"AdvancedFind.SelectAll", @"Select All") action:@selector(advancedSelectAll:) keyEquivalent:@""].target = self;
+    [allMenu addItem:NSMenuItem.separatorItem];
     [allMenu addItemWithTitle:TSLocalized(@"AdvancedFind.Unhighlight", @"Remove Highlights") action:@selector(advancedUnhighlight:) keyEquivalent:@""].target = self;
-    NSComboButton *highlightAll = [NSComboButton comboButtonWithTitle:TSLocalized(@"AdvancedFind.HighlightAll", @"Highlight All") menu:allMenu
-                                                               target:self action:@selector(advancedHighlight:)];
+    NSComboButton *findAll = [NSComboButton comboButtonWithTitle:TSLocalized(@"AdvancedFind.FindAll", @"Find All") menu:allMenu
+                                                          target:self action:@selector(advancedFindAll:)];
+    findAll.toolTip = TSLocalized(@"AdvancedFind.FindAllTip", @"Find and list all matches.");
     NSButton *replaceAll = [self button:@"AdvancedFind.ReplaceAll" english:@"Replace All" action:@selector(advancedReplaceAll:)];
     NSMenu *replaceMenu = [[NSMenu alloc] initWithTitle:@""];
     [replaceMenu addItemWithTitle:TSLocalized(@"AdvancedFind.Replace", @"Replace") action:@selector(advancedReplace:) keyEquivalent:@""].target = self;
@@ -199,8 +217,8 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     [previousNext setToolTip:TSLocalized(@"AdvancedFind.Next", @"Next") forSegment:1];
     [previousNext setWidth:36 forSegment:0];
     [previousNext setWidth:36 forSegment:1];
-    self.buttons = @[highlightAll, replaceAll, replace, previousNext];
-    NSStackView *row = [NSStackView stackViewWithViews:@[highlightAll, replaceAll]];
+    self.buttons = @[findAll, replaceAll, replace, previousNext];
+    NSStackView *row = [NSStackView stackViewWithViews:@[findAll, replaceAll]];
     row.spacing = 12;
     for (NSView *view in @[replace, previousNext])
         [row addView:view inGravity:NSStackViewGravityTrailing];
@@ -224,9 +242,14 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     self.status.lineBreakMode = NSLineBreakByTruncatingTail;
     self.status.selectable = YES;
     [self.status setContentCompressionResistancePriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+    self.resultsView = [[TSAdvancedFindResultsView alloc] initWithSettings:self.findController.settings];
+    self.resultsView.hidden = YES;
+    __weak typeof(self) weakSelf = self;
+    self.resultsView.closeHandler = ^{ [weakSelf hideResults]; };
 
     // The two fields take the room the window grows by, in equal shares; the rows below keep their size.
-    NSStackView *content = [NSStackView stackViewWithViews:@[self.findBox, self.replaceBox, options, buttons]];
+    // The list of all matches, when shown, runs from edge to edge and takes the room instead (+Results).
+    NSStackView *content = [NSStackView stackViewWithViews:@[self.findBox, self.replaceBox, options, self.resultsView, buttons]];
     content.orientation = NSUserInterfaceLayoutOrientationVertical;
     content.alignment = NSLayoutAttributeCenterX;
     content.distribution = NSStackViewDistributionFill;
@@ -235,9 +258,10 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     // The options sit close under the fields, as in CotEditor.
     [content setCustomSpacing:5 afterView:self.replaceBox];
     [content setCustomSpacing:20 afterView:options];
-    for (NSView *view in @[self.findBox, self.replaceBox, options, buttons]) {
-        [view.widthAnchor constraintEqualToAnchor:content.widthAnchor constant:-40].active = YES;
-        if (view != self.findBox && view != self.replaceBox)
+    [content setCustomSpacing:0 afterView:self.resultsView]; // the list has its own room above the buttons
+    for (NSView *view in @[self.findBox, self.replaceBox, options, self.resultsView, buttons]) {
+        [view.widthAnchor constraintEqualToAnchor:content.widthAnchor constant:view == self.resultsView ? 0 : -40].active = YES;
+        if (view != self.findBox && view != self.replaceBox && view != self.resultsView)
             [view setContentHuggingPriority:NSLayoutPriorityRequired forOrientation:NSLayoutConstraintOrientationVertical];
     }
     [self.findBox.heightAnchor constraintEqualToAnchor:self.replaceBox.heightAnchor].active = YES;
@@ -295,6 +319,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
     self.wrapBox.state = settings.wraps ? NSControlStateValueOn : NSControlStateValueOff;
     self.inSelectionBox.state = settings.inSelection ? NSControlStateValueOn : NSControlStateValueOff;
     [self validatePattern];
+    [self updateCheatSheet];
 }
 
 - (void)showPanel
@@ -356,6 +381,7 @@ static TSAdvancedFindPanelController *TSSharedPanelController;
 {
     [self updateModeControls];
     [self validatePattern];
+    [self updateCheatSheet];
 }
 
 #pragma mark Text fields
