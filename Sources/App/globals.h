@@ -668,7 +668,6 @@ extern BOOL g_canRegisterCommandCompletion;	/*" This is set to NO while e.g. Com
 
 extern NSColor *InvisibleColor;
 extern NSColor *ReverseSyncColor;
-extern NSColor *PreviewBackgroundColor; /*" The background color for all Preview window PDFKitView pages "*/
 extern NSDictionary *highlightBracesColorDict; // added by Terada
 extern NSDictionary *highlightContentColorDict; // added by Terada
 extern NSColor *ImageForegroundColor;

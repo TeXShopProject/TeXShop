@@ -460,6 +460,7 @@ add(TSSettingsCategoryAppearance, @"settings.0fE-JX-Dl8", @"SettingsCategories",
 add(TSSettingsCategoryAppearance, @"settings.ooP-O9-ggT", @"SettingsCategories", @"catalog.appearance.2.0.column.1", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"settings.GBU-aF-4Dc", @"SettingsCategories", @"catalog.appearance.2.0.column.1", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"settings.hCM-4U-XkM", @"SettingsCategories", @"catalog.appearance.2.0.column.1", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryAppearance, @"settings.hCM-4U-XkM", @"SettingsCategories", @"catalog.appearance.2.0.item.3.heading.1", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"settings.2U5-cN-QJw", @"SettingsCategories", @"catalog.appearance.2.0.column.2", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"settings.c9R-58-ggg", @"SettingsCategories", @"catalog.appearance.2.0.column.2", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryAppearance, @"settings.cnt-Xt-iQF", @"SettingsCategories", @"catalog.appearance.2.0.column.2", TSSettingsSearchWeightChoice);

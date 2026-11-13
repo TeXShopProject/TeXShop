@@ -862,10 +862,6 @@
 	    
 	[self testForIntel];
 	
-	PreviewBackgroundColor = [NSColor colorWithCalibratedRed: [SUD floatForKey:PdfPageBack_RKey]
-										  green: [SUD floatForKey:PdfPageBack_GKey] blue: [SUD floatForKey:PdfPageBack_BKey]
-										  alpha: 1];
-	// [PreviewBackgroundColor retain];
 	[self finishMenuKeyEquivalentsConfigure];
 
 }

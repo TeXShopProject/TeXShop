@@ -170,6 +170,7 @@
 "catalog.appearance.2.0.item.1" = "Konsole";
 "catalog.appearance.2.0.item.2" = "Protokoll";
 "catalog.appearance.2.0.item.3" = "Vorschau";
+"catalog.appearance.2.0.item.3.heading.1" = "Helle Seiten";
 "group.appearance.3.title" = "Quelltext";
 "catalog.appearance.3.0.item.0" = "Eingabe";
 "catalog.appearance.3.0.item.1" = "Aufleuchten";

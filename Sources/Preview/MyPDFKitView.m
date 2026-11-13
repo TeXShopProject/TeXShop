@@ -70,6 +70,10 @@
 
 
 
+@interface MyPDFKitView ()
+@property (atomic, strong, readwrite) NSColor *previewPaperColor;
+@end
+
 @implementation MyPDFKitView : PDFView
 {
     TSExternalPDFPosition secondViewport;
@@ -3623,7 +3627,6 @@ TeXShop supports search through the drawer in the Preview Window using sample co
 	NSAffineTransform   *transform;
     BOOL				redOvals;
 	NSColor				*myColor;
-    NSColor             *myBackgroundColor;
     BOOL                result;
    
 
@@ -3636,7 +3639,10 @@ TeXShop supports search through the drawer in the Preview Window using sample co
         myBackgroundColor = [[TSColorSupport sharedInstance] colorFromDictionary:liteColors andKey: @"PreviewBackground"];
      */
     
-    myBackgroundColor = PreviewBackgroundColor;
+    // The theme's paper of pages shown light. Pages shown dark are left unfilled, as
+    // Koch chose in 5.58, so that the luminosity filter makes them deep black.
+    if ([NSGraphicsContext currentContextDrawingToScreen])
+        TSFillPreviewPaper(NSGraphicsContext.currentContext.CGContext, page, self.displayBox, self.previewPaperColor);
     
 	// boxRect = [page boundsForBox: [self displayBox]];
 	boxRect = [page boundsForBox: kPDFDisplayBoxMediaBox];
@@ -8432,6 +8438,7 @@ else
         [self applyDarkModeInversionFilter];
     else
         [self removeDarkModeInversionFilter];
+    [self updatePreviewPaperColor];
     _updatingPreviewAppearance = NO;
 // changed by Terada (until this line)
 #endif
@@ -8476,6 +8483,20 @@ else
     [self updateDarkModeInversion];
     __weak MyPDFKitView *weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{ [weakSelf updateDarkModeInversion]; });
+}
+
+- (void)updatePreviewPaperColor
+{
+    if (!_pdfViewReady) return;
+    BOOL dark = [[self.effectiveAppearance bestMatchFromAppearancesWithNames:
+        @[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]] isEqualToString:NSAppearanceNameDarkAqua];
+    NSColor *themeColor = [[TSColorSupport sharedInstance] opaqueColorForKey:@"PreviewBackground"
+        fromDictionary:(dark ? darkColors : liteColors) isWindowDark:dark];
+    NSColor *paper = TSPreviewPaperColor([SUD integerForKey:TSPreviewAppearanceModeKey], NSApp.effectiveAppearance, themeColor);
+    NSColor *old = self.previewPaperColor;
+    if (old == paper || [old isEqual:paper]) return;
+    self.previewPaperColor = paper;
+    TSRedrawPreviewPages(self);
 }
 
 - (void)observePreviewAppearance

@@ -305,8 +305,6 @@ Loads the .nib file if necessary, fills all the controls with the values from th
 - (void)refreshRuntimePreferences
 {
     editorCanAddBrackets = [SUD boolForKey:EditorCanAddBracketsKey];
-    PreviewBackgroundColor = [NSColor colorWithCalibratedRed:[SUD floatForKey:PdfPageBack_RKey]
-        green:[SUD floatForKey:PdfPageBack_GKey] blue:[SUD floatForKey:PdfPageBack_BKey] alpha:1];
     [(TSAppDelegate *)NSApp.delegate updateXMLTabs];
     [[[NSApp mainMenu] itemWithTitle:NSLocalizedString(@"Tags", @"")] setHidden:![SUD boolForKey:TagMenuInMenuBarKey]];
 }
