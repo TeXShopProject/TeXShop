@@ -2,7 +2,8 @@
 """Switch the parts of a split preview with the production code in a window that is never
 shown (#25): the parts change places with their size, place, display format, magnification,
 selection, pinned link popup and focus, and switching again gives back the first arrangement.
-The toolbar's page number field shows the page of the active part and moves it (#14)."""
+The toolbar's page number field shows the page of the active part and moves it (#14), and the
+outline in the drawer shows the entry for the page of the active part, also of the second part (#25)."""
 from pathlib import Path
 import argparse
 import subprocess
@@ -30,6 +31,14 @@ MUTATIONS = {
     'page-field-not-followed': ('view', '\tif (activePage)\n\t\t[self displayPageChange:', '\tif (NO)\n\t\t[self displayPageChange:'),
     'single-field-not-shared': ('view', '        scurrentPage = first->scurrentPage;\n', '        ;\n'),
     'second-not-observed': ('window', '        [(MyPDFKitView *)self.myPDFKitView2 notificationSetup];\n', ''),
+    # The drawer's outline (#25).
+    'outline-second-not-forwarded': ('view', '        [firstView showPageInOutline: pageNumber];\n        return;\n', '        return;\n'),
+    'outline-not-on-activation': ('view', '\tif (activePage)\n\t\t[self showPageInOutline:', '\tif (NO)\n\t\t[self showPageInOutline:'),
+    'outline-later-entry': ('view', '\t\tif (itemPageIndex == NSNotFound || itemPageIndex > newPageIndex)\n', '\t\tif (itemPageIndex == NSNotFound || itemPageIndex > newPageIndex + 1)\n'),
+    'outline-first-of-same-page': ('view', 'itemPageIndex >= newlySelectedPageIndex)', 'itemPageIndex > newlySelectedPageIndex)'),
+    'outline-kept-before-first': ('view', '\t\t[_outlineView deselectAll: nil];\n', ''),
+    'outline-click-not-kept': ('view', '\t\t\tnewlySelectedRow = oldRow;\n', '\t\t\t;\n'),
+    'outline-kept-on-other-page': ('view', '[[self document] indexForPage: oldPage] == newlySelectedPageIndex)', '[[self document] indexForPage: oldPage] <= newPageIndex)'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -46,9 +55,14 @@ def last_method(source, signature):
 
 window_methods = [last_method(window_source, s) for s in (
     '- (void) mainSplitPdfKitWindow', '- (void)switchViews;', '- (void)switchSplitParts\n', '- (void) splitPdfKitWindow:',
-    '- (void) goToKitPage: sender')]
+    '- (void) goToKitPage: sender', '- (IBAction) takeDestinationFromOutline: (id) sender')]
 view_methods = [last_method(view_source, s) for s in (
-    '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
+    '- (void)saveLocation\n', '- (void)restoreLocation\n',
+    # The drawer's outline (#25).
+    '- (void) showPageInOutline:', '- (IBAction) takeDestinationFromOutline: (id) sender',
+    '- (NSInteger) outlineView: (NSOutlineView *) outlineView numberOfChildrenOfItem:',
+    '- (id) outlineView: (NSOutlineView *) outlineView child:', '- (BOOL) outlineView: (NSOutlineView *) outlineView isItemExpandable:',
+    '- (id) outlineView: (NSOutlineView *) outlineView objectValueForTableColumn:', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
     '- (BOOL)hasPinnedLinkPreview\n', '- (TSLinkPreviewView *)detachPinnedLinkPreviewWithWindowFrame:',
     '- (void)attachPinnedLinkPreview:', '- (void)keepPinnedLinkPreviewInView\n',
     # What the toolbar, the menus and the search results follow (#25 audit).
@@ -118,6 +132,7 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)splitPdfKitWindow:(id)sender;
 - (void)switchViews;
 - (void)goToKitPage:(id)sender;
+- (IBAction)takeDestinationFromOutline:(id)sender;
 @end
 #define TSPreviewWindow TestWindow
 @interface TestDocument : NSObject
@@ -177,6 +192,8 @@ static NSEventModifierFlags currentFlags(id s, SEL c) { return flags; }
 - (void)usePageField:(NSTextField *)field singleWindowField:(NSTextField *)single {
     currentPage0 = field; scurrentPage = single;
 }
+// As the nib connects it: the drawer's outline only to the first view.
+- (void)useOutlineView:(NSOutlineView *)outlineView { _outlineView = outlineView; }
 - (NSString *)romanStringValue:(NSInteger)n { return @"i"; }
 - (void)previewZoomBoundsChanged:(NSNotification *)notification {}
 - (void)previewLiveMagnify:(NSNotification *)notification {}
@@ -391,6 +408,67 @@ static void checkSame(Preview p, State s, NSString *name) {
     check(t.responder == s.responder && t.active == s.active, describe(name, @"the focus is back"));
 }
 
+// The outline in the drawer (#25), with entries at these pages (zero-based); B and D have
+// children on their own pages.
+static NSString *selectedEntry(NSOutlineView *ov) {
+    return ov.selectedRow < 0 ? @"none" : [(PDFOutline *)[ov itemAtRow:ov.selectedRow] label];
+}
+// The entry for a page: the first one that starts on it, or else the last one before it;
+// an entry already marked stays marked if it starts on the same page as that entry.
+static NSInteger entryPage(NSString *label) {
+    NSDictionary *pages = @{@"A": @1, @"B": @3, @"B.1": @3, @"B.2": @4, @"C": @6, @"D": @8, @"D.1": @8};
+    return pages[label] ? [pages[label] integerValue] : -1;
+}
+static NSString *entryFor(NSInteger pageIndex, NSString *marked) {
+    NSString *entries[] = {@"none", @"A", @"A", @"B", @"B.2", @"B.2", @"C", @"C", @"D", @"D.1"};
+    NSString *entry = entries[MIN(pageIndex, 9)];
+    return entryPage(marked) >= 0 && entryPage(marked) == entryPage(entry) ? marked : entry;
+}
+static PDFOutline *entry(PDFDocument *doc, PDFOutline *parent, NSString *label, NSUInteger pageIndex) {
+    PDFOutline *o = [PDFOutline new];
+    o.label = label;
+    PDFPage *page = [doc pageAtIndex:pageIndex];
+    o.destination = [[PDFDestination alloc] initWithPage:page atPoint:NSMakePoint(0, NSMaxY([page boundsForBox:kPDFDisplayBoxMediaBox]))];
+    [parent insertChild:o atIndex:parent.numberOfChildren];
+    return o;
+}
+static NSOutlineView *attachOutline(Preview p) {
+    PDFDocument *doc = p.upper.document;
+    PDFOutline *root = [PDFOutline new];
+    entry(doc, root, @"A", 1);
+    PDFOutline *b = entry(doc, root, @"B", 3);
+    entry(doc, b, @"B.1", 3); entry(doc, b, @"B.2", 4);
+    entry(doc, root, @"C", 6);
+    PDFOutline *d = entry(doc, root, @"D", 8);
+    entry(doc, d, @"D.1", 8);
+    p.upper.outline = root;
+    // The first view observes its page changes once it shows the PDF, as when the document is opened.
+    [p.upper notificationSetup];
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 200, 300)];
+    NSOutlineView *ov = [[NSOutlineView alloc] initWithFrame:scroll.bounds];
+    NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"label"];
+    [ov addTableColumn:column]; ov.outlineTableColumn = column;
+    ov.dataSource = (id<NSOutlineViewDataSource>)p.upper;
+    ov.target = p.window; ov.action = @selector(takeDestinationFromOutline:);
+    scroll.documentView = ov;
+    [p.window.contentView addSubview:scroll];
+    [p.upper useOutlineView:ov];
+    [ov reloadData];
+    [ov expandItem:b]; [ov expandItem:d];
+    check(ov.numberOfRows == 7, @"outline: all entries are shown");
+    return ov;
+}
+static void scrollToTop(PDFView *v, NSUInteger pageIndex) { [v goToPage:[v.document pageAtIndex:pageIndex]]; }
+// `marked` is the entry that was marked before the active part moved.
+static void checkOutline(Preview p, NSOutlineView *ov, NSString *name, NSString *marked) {
+    PDFView *active = p.window.activeView;
+    NSInteger page = (NSInteger)[active.document indexForPage:active.currentPage];
+    NSString *expected = entryFor(page, marked);
+    check([selectedEntry(ov) isEqualToString:expected],
+          describe(name, [NSString stringWithFormat:@"the outline shows the entry for the page of the active part (%@ for page %ld, %@)",
+                          selectedEntry(ov), (long)page + 1, expected]));
+}
+
 int main(int argc, char **argv) { @autoreleasepool {
     TSInstallAppKitIsolation();
     [NSApplication sharedApplication];
@@ -528,6 +606,69 @@ int main(int argc, char **argv) { @autoreleasepool {
               describe(name, [NSString stringWithFormat:@"a corrected page number moves the second part (page %ld, field %ld)", (long)pageOf(p.lower), (long)p.pageField.integerValue]));
         scrollTo(p.upper, 2, 600); settle(p.window);
         check(p.pageField.integerValue == 4, describe(name, @"scrolling the inactive first part leaves the field"));
+        [p.window close];
+    }
+    for (NSNumber *sideBySide in @[@NO, @YES]) {
+        // The outline in the drawer shows the entry for the page of the active part: also of the
+        // second part, when it scrolls, when the other part becomes active, after an entry was
+        // clicked for the second part, and after switching the parts (#25).
+        NSString *name = sideBySide.boolValue ? @"outline, side by side" : @"outline, top and bottom";
+        Preview p = makePreview(doc, sideBySide.boolValue);
+        NSOutlineView *ov = attachOutline(p);
+        scrollToTop(p.upper, 1); scrollToTop(p.lower, 4); settle(p.window);
+        [p.window makeFirstResponder:p.upper]; settle(p.window);
+        check(pageOf(p.upper) == 2 && pageOf(p.lower) == 5, describe(name, [NSString stringWithFormat:@"the parts show pages 2 and 5 (%ld, %ld)", (long)pageOf(p.upper), (long)pageOf(p.lower)]));
+        checkOutline(p, ov, [name stringByAppendingString:@", first part clicked"], nil);
+        [p.window makeFirstResponder:p.lower]; settle(p.window);
+        check([selectedEntry(ov) isEqualToString:@"B.2"], describe(name, @"clicking the second part shows its entry"));
+        for (NSNumber *page in @[@5, @6, @7, @9, @8, @0, @2, @3]) {
+            NSString *marked = selectedEntry(ov);
+            scrollToTop(p.lower, page.unsignedIntegerValue); settle(p.window);
+            check(pageOf(p.lower) == page.integerValue + 1, describe(name, @"the second part scrolls"));
+            checkOutline(p, ov, [name stringByAppendingFormat:@", second part on page %ld", (long)page.integerValue + 1], marked);
+        }
+        check([selectedEntry(ov) isEqualToString:@"B"], describe(name, @"page 4 marks B"));
+        scrollToTop(p.upper, 6); settle(p.window);
+        check([selectedEntry(ov) isEqualToString:@"B"], describe(name, @"scrolling the inactive first part leaves the outline"));
+        // Clicking an entry for the second part moves it there; the outline keeps following it.
+        [ov selectRowIndexes:[NSIndexSet indexSetWithIndex:4] byExtendingSelection:NO];
+        check([p.window makeFirstResponder:ov] && [selectedEntry(ov) isEqualToString:@"C"], describe(name, @"entry C is clicked"));
+        [NSApp sendAction:ov.action to:ov.target from:ov]; settle(p.window);
+        check(pageOf(p.lower) == 7 && pageOf(p.upper) == 7 && p.window.activeView == p.lower,
+              describe(name, [NSString stringWithFormat:@"the entry moves the second part (%ld), which stays active", (long)pageOf(p.lower)]));
+        scrollToTop(p.lower, 4); settle(p.window);
+        checkOutline(p, ov, [name stringByAppendingString:@", second part scrolled after the click"], @"C");
+        // A clicked section stays marked, also where its chapter starts on the same page.
+        [ov selectRowIndexes:[NSIndexSet indexSetWithIndex:2] byExtendingSelection:NO];
+        check([selectedEntry(ov) isEqualToString:@"B.1"], describe(name, @"entry B.1 is clicked"));
+        [NSApp sendAction:ov.action to:ov.target from:ov]; settle(p.window);
+        check(pageOf(p.lower) == 4 && [selectedEntry(ov) isEqualToString:@"B.1"],
+              describe(name, [NSString stringWithFormat:@"the clicked section stays marked on its page (%@, page %ld)", selectedEntry(ov), (long)pageOf(p.lower)]));
+        scrollToTop(p.lower, 4); settle(p.window);
+        check([selectedEntry(ov) isEqualToString:@"B.2"], describe(name, @"the next section is marked on its page"));
+        scrollToTop(p.lower, 3); settle(p.window);
+        check([selectedEntry(ov) isEqualToString:@"B"], describe(name, @"scrolling back to the chapter's page marks the chapter"));
+        [p.window makeFirstResponder:p.upper]; settle(p.window);
+        check([selectedEntry(ov) isEqualToString:@"C"], describe(name, @"the outline shows the entry of the first part"));
+        NSString *marked = selectedEntry(ov);
+        scrollToTop(p.upper, 2); settle(p.window);
+        checkOutline(p, ov, [name stringByAppendingString:@", first part scrolled"], marked);
+        marked = selectedEntry(ov);
+        [p.window makeFirstResponder:p.lower]; settle(p.window);
+        checkOutline(p, ov, [name stringByAppendingString:@", second part clicked again"], marked);
+        marked = selectedEntry(ov);
+        [p.window switchViews]; settle(p.window);
+        check(p.window.activeView == p.upper, describe(name, @"the active part moves to the top (or left)"));
+        checkOutline(p, ov, [name stringByAppendingString:@", switched"], marked);
+        marked = selectedEntry(ov);
+        [p.window switchViews]; settle(p.window);
+        checkOutline(p, ov, [name stringByAppendingString:@", switched back"], marked);
+        marked = selectedEntry(ov);
+        [p.window splitPdfKitWindow:nil]; settle(p.window);
+        checkOutline(p, ov, [name stringByAppendingString:@", unsplit"], marked);
+        marked = selectedEntry(ov);
+        scrollToTop(p.upper, 5); settle(p.window);
+        checkOutline(p, ov, [name stringByAppendingString:@", unsplit and scrolled"], marked);
         [p.window close];
     }
     printf("PASS: %lu checks\n", (unsigned long)checks);

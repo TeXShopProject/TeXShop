@@ -18,6 +18,7 @@ program=r'''
 #import "TestAppKitIsolation.h"
 #import <PDFKit/PDFKit.h>
 #import "TSExternalPDFReload.h"
+#import "TSPreviewScrollerKeeper.h"
 static BOOL atLeastHighSierra=YES,atLeastMojave=YES;
 #define SUD NSUserDefaults.standardUserDefaults
 #define FlashFixKey @"flash"
@@ -195,5 +196,5 @@ int main(int argc,char**argv){@autoreleasepool{
 with tempfile.TemporaryDirectory(prefix='texshop-recovery-') as directory:
     p=Path(directory);(p/'test.m').write_text(program)
     (p/'home'/'Library'/'Preferences').mkdir(parents=True)
-    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit',*include_args(root),str(p/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),'-o',str(p/'test')],check=True)
+    subprocess.run(['xcrun','clang','-I',str(root/'Tests'),'-fobjc-arc','-framework','Cocoa','-framework','PDFKit',*include_args(root),str(p/'test.m'),str(root/'Sources/Preview/HideView.m'),str(root/'Sources/Preview/TSExternalPDFSnapshot.m'),str(root/'Sources/Preview/TSPreviewScrollerKeeper.m'),'-o',str(p/'test')],check=True)
     subprocess.run([str(p/'test'),*(sys.argv[1:] or [str(p/'good.pdf'),str(p/'bad.pdf')]),str(p/'live.pdf')],env=dict(os.environ,HOME=str(p/'home'),CFFIXED_USER_HOME=str(p/'home')),check=True)

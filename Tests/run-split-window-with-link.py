@@ -6,7 +6,10 @@ a link to another file or text. Choosing it splits an unsplit window as Split Wi
 uses the split window as it is; the part with the link stays where it is, and the other part
 goes to the target of the link, keeping its display format and magnification, with Back and
 Forward, and becomes the active view. A part too small to show anything is first given half
-of the window. It also works when the preview is in the single window."""
+of the window. It also works when the preview is in the single window.
+
+When both parts show a page, PDFKit can ask the part that showed it last for the menu of a
+click on it in the other part. The part under the click then makes the menu."""
 from pathlib import Path
 import argparse
 import subprocess
@@ -27,6 +30,9 @@ MUTATIONS = {
     'small-part-stays': ('window', '    if (otherExtent < whole / 10) {\n', '    if (NO) {\n'),
     'not-active': ('window', '        [otherView becomeActiveView];\n', '        ;\n'),
     'focus-stays': ('window', "! [window makeFirstResponder: otherView]", 'YES'),
+    'menu-of-asked-part': ('view', '    if (part != self)\n        return [part menuForEvent: theEvent];\n', ''),
+    'menu-of-first-part': ('view', '    NSView *hit = [window.contentView.superview hitTest: point];\n',
+                           '    NSView *hit = self.myPDFWindow.myPDFKitView;\n'),
 }
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--mutation', choices=sorted(MUTATIONS))
@@ -45,7 +51,8 @@ window_methods = [last_method(window_source, s) for s in (
     '- (void) mainSplitPdfKitWindow', '- (void) splitPdfKitWindow:', '- (void)showLinkDestination: (PDFDestination *)destination')]
 view_methods = [last_method(view_source, s) for s in (
     # The contextual menu and its new item (#31).
-    '- (NSMenu *)menuForEvent:(NSEvent *)theEvent', '- (PDFDestination *)internalLinkDestinationAtPoint:',
+    '- (MyPDFKitView *)previewPartForMenuEvent:', '- (NSMenu *)menuForEvent:(NSEvent *)theEvent',
+    '- (PDFDestination *)internalLinkDestinationAtPoint:',
     '- (void)splitWindowWithLink: (id)sender',
     # Splitting (#23) and the active view (#25, #14), as in run-preview-switch-views.py.
     '- (void)saveLocation\n', '- (void)restoreLocation\n', '- (NSInteger)index\n', '- (void)moveSplitToCorrectSpot:',
@@ -56,7 +63,7 @@ view_methods = [last_method(view_source, s) for s in (
     '- (BOOL)becomeFirstResponder\n', '- (void)becomeActiveView\n',
     '- (void)awakeFromNib\n', '- (void) showForSecond;', '- (void) displayPageChange:', '- (void) goToKitPageNumber:',
     '- (NSInteger) getModifiedValue:', '- (void) goToKitPage: (id)sender',
-    '- (void) notificationSetup;', '- (void) pageChanged:', '- (void) makePageChanges:')]
+    '- (void) notificationSetup;', '- (void) pageChanged:', '- (void) makePageChanges:', '- (void) showPageInOutline:')]
 fragments = [('complete method: ' + text.split('\n')[0], source, text)
              for source, texts in ((window_source, window_methods), (view_source, view_methods)) for text in texts]
 window_text = '\n'.join(window_methods)
@@ -285,6 +292,13 @@ static NSMenu *menuAt(MyPDFKitView *v, NSUInteger pageIndex, NSPoint pagePoint) 
                                     windowNumber:v.window.windowNumber context:nil eventNumber:0 clickCount:1 pressure:1];
     return [v menuForEvent:event];
 }
+// The menu of a click at a point of a page of a part, asked of another view, as PDFKit can do.
+static NSMenu *menuAskedOf(MyPDFKitView *asked, MyPDFKitView *v, NSUInteger pageIndex, NSPoint pagePoint) {
+    NSPoint inWindow = [v convertPoint:[v convertPoint:pagePoint fromPage:[v.document pageAtIndex:pageIndex]] toView:nil];
+    NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:inWindow modifierFlags:0 timestamp:0
+                                    windowNumber:v.window.windowNumber context:nil eventNumber:0 clickCount:1 pressure:1];
+    return [asked menuForEvent:event];
+}
 static NSMenuItem *linkItem(NSMenu *menu) {
     for (NSMenuItem *item in menu.itemArray)
         if ([item.title isEqualToString:@"Split Window with Link"]) return item;
@@ -448,6 +462,56 @@ int main(int argc, char **argv) { @autoreleasepool {
         [p.window close];
     }
 
+    for (NSNumber *sideBySide in @[@NO, @YES]) {
+        // When both parts show a page, PDFKit can ask the part that showed it last for the menu
+        // of a click on it in the other part. The part under the click makes the menu.
+        NSString *name = sideBySide.boolValue ? @"menu asked of the other part, side by side" : @"menu asked of the other part, top and bottom";
+        Preview p = makePreview(doc, nil);
+        split(p, sideBySide.boolValue);
+        PDFPage *linkPage = [doc pageAtIndex:1];
+        void (^showLink)(MyPDFKitView *) = ^(MyPDFKitView *v) {
+            [v goToRect:NSInsetRect(forward.bounds, -20, -20) onPage:linkPage]; settle(p.window);
+            check(NSPointInRect([v convertPoint:middle(forward) fromPage:linkPage], v.bounds), describe(name, @"the part shows the link"));
+        };
+        showLink(p.upper); showLink(p.lower);
+        NSMenu *menu = menuAskedOf(p.lower, p.upper, 1, middle(forward));
+        NSMenuItem *item = linkItem(menu);
+        check(item && item.target == p.upper && item.representedObject == forward.destination && [menu indexOfItem:item] == 2 &&
+              [[menu itemAtIndex:0].title isEqualToString:@"Sync"],
+              describe(name, @"a click on the link in the first part has the menu of the first part"));
+        menu = menuAskedOf(p.upper, p.lower, 1, middle(forward));
+        item = linkItem(menu);
+        check(item && item.target == p.lower && item.representedObject == forward.destination,
+              describe(name, @"a click on the link in the second part has the menu of the second part"));
+        // Choosing the item there moves the first part, and the second part stays.
+        TSPreviewPanePlace lowerTop = TSPreviewPaneCapture(p.lower);
+        [NSApp sendAction:item.action to:item.target from:item]; settle(p.window);
+        checkAtTarget(p.upper, forward.destination, name);
+        check(near(distanceFromTop(p.lower, lowerTop)) && p.window.activeView == p.upper,
+              describe(name, @"the part with the link stays, and the first part becomes active"));
+        // Uwe Schmock's steps: the second part shows the page again and follows the link there.
+        showLink(p.upper); showLink(p.lower);
+        [p.lower goToDestination:forward.destination]; settle(p.window);
+        menu = menuAskedOf(p.lower, p.upper, 1, middle(forward));
+        item = linkItem(menu);
+        check(item && item.target == p.upper, describe(name, @"after the second part followed the link, the first part still has the item"));
+        TSPreviewPanePlace upperTop = TSPreviewPaneCapture(p.upper);
+        scrollTo(p.lower, 5, 500); settle(p.window);
+        [NSApp sendAction:item.action to:item.target from:item]; settle(p.window);
+        checkAtTarget(p.lower, forward.destination, [name stringByAppendingString:@", again"]);
+        check(near(distanceFromTop(p.upper, upperTop)), describe(name, @"the first part stays again"));
+        // Over the divider, which is in neither part, the menu is made as before.
+        NSSplitView *sv = p.window.pdfKitSplitView;
+        NSRect upperFrame = p.upper.frame;
+        NSPoint dividerPoint = sideBySide.boolValue ? NSMakePoint(NSMaxX(upperFrame) + sv.dividerThickness / 2, NSMidY(upperFrame))
+                                                    : NSMakePoint(NSMidX(upperFrame), NSMaxY(upperFrame) + sv.dividerThickness / 2);
+        NSPoint inWindow = [sv convertPoint:dividerPoint toView:nil];
+        NSEvent *event = [NSEvent mouseEventWithType:NSEventTypeRightMouseDown location:inWindow modifierFlags:0 timestamp:0
+                                        windowNumber:p.window.windowNumber context:nil eventNumber:0 clickCount:1 pressure:1];
+        menu = [p.lower menuForEvent:event];
+        check(menu && !linkItem(menu) && [[menu itemAtIndex:0].title isEqualToString:@"Sync"], describe(name, @"over the divider the menu is made as before"));
+        [p.window close];
+    }
     for (NSNumber *upperHidden in @[@NO, @YES]) {
         // A part dragged out of sight first gets half of the window; the part with the link stays.
         NSString *name = upperHidden.boolValue ? @"first part out of sight" : @"second part out of sight";
@@ -525,7 +589,13 @@ int main(int argc, char **argv) { @autoreleasepool {
             styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskResizable backing:NSBackingStoreBuffered defer:NO];
         single.releasedWhenClosed = NO;
         Preview p = makePreview(doc, single);
-        if (wasSplit.boolValue) split(p, NO);
+        if (wasSplit.boolValue) {
+            split(p, NO);
+            for (MyPDFKitView *v in @[p.upper, p.lower]) [v goToRect:NSInsetRect(forward.bounds, -20, -20) onPage:[doc pageAtIndex:1]];
+            settle(single);
+            NSMenuItem *asked = linkItem(menuAskedOf(p.lower, p.upper, 1, middle(forward)));
+            check(asked && asked.target == p.upper, describe(name, @"a click in the first part has the menu of the first part"));
+        }
         scrollTo(p.upper, 1, 750); settle(single);
         TSPreviewPanePlace top = TSPreviewPaneCapture(p.upper);
         [single makeFirstResponder:p.upper];

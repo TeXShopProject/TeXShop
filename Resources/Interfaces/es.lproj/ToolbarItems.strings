@@ -273,6 +273,7 @@ tiToolTipHtmlSearch           = "Buscar";
 "ExperimentZoomOut" = "Alejar";
 "ExperimentZoomIn" = "Acercar";
 "ExperimentZoomToContent" = "Ajustar al contenido";
+"ExperimentZoomToContentWidth" = "Ajustar al ancho del contenido";
 
 "Page Layout" = "Disposición de página";
 "tiLabelTSPreviewAppearance" = "Aspecto";

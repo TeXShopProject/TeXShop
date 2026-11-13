@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSPreviewSplitDivider.h"
-#import "TSPreviewPanePlace.h"
 
 // The text at the top edge of a part, as a point on a page, and where the part was left.
 @interface TSPreviewSplitAnchor : NSObject
@@ -30,6 +29,25 @@ static NSClipView *TSPartClip(PDFView *view)
 {
     NSClipView *clip = view.documentView.enclosingScrollView.contentView;
     return [clip isKindOfClass:[NSClipView class]] ? clip : nil;
+}
+
+// The top edge of a part, in clip view coordinates. The content insets are left out:
+// up to macOS 26, AppKit gives the top part a content inset as large as the change of
+// the window's height for a moment while the window is resized, and a place noted then
+// was put back that much too low once the inset was gone.
+static CGFloat TSPartTop(NSClipView *clip)
+{
+    return clip.isFlipped ? NSMinY(clip.bounds) : NSMaxY(clip.bounds);
+}
+
+// Whether the scroll position of a part is still where it was left. A move of less than a
+// point is not a scroll by the user: AppKit aligns the position to the pixels of the
+// screen, for instance when the top part gets a content inset for a moment while the
+// window is resized, and reading the text at the top again then let it creep.
+static BOOL TSPartStillAt(NSClipView *clip, NSPoint origin)
+{
+    CGFloat unit = NSHeight(clip.frame) > 0 ? NSHeight(clip.bounds) / NSHeight(clip.frame) : 1;
+    return fabs(clip.bounds.origin.x - origin.x) < unit && fabs(clip.bounds.origin.y - origin.y) < unit;
 }
 
 // Whether a part can follow a change of its height without PDFKit.
@@ -111,14 +129,12 @@ static BOOL TSPartCanResizeQuietly(PDFView *view)
     // reading it back from the scroll position, which may have been limited by the end
     // of the document or by a part without height.
     if (anchor != nil && anchor.page.document == view.document && anchor.scale == view.scaleFactor &&
-        (empty || NSEqualPoints(clip.bounds.origin, anchor.origin)))
+        (empty || TSPartStillAt(clip, anchor.origin)))
         return anchor;
     BOOL wasQuiet = anchor.quiet;
     anchor = nil;
     if (!empty) {
-        NSScrollView *scroll = view.documentView.enclosingScrollView;
-        NSPoint edge = TSPreviewPaneEdge(scroll);
-        NSPoint top = [view convertPoint:NSMakePoint(NSMidX(clip.bounds), edge.y) fromView:clip];
+        NSPoint top = [view convertPoint:NSMakePoint(NSMidX(clip.bounds), TSPartTop(clip)) fromView:clip];
         PDFPage *page = [view pageForPoint:top nearest:YES];
         if (page != nil) {
             anchor = [TSPreviewSplitAnchor new];
@@ -149,7 +165,7 @@ static BOOL TSPartCanResizeQuietly(PDFView *view)
     if (!NSIsEmptyRect(clip.bounds) && anchor.page.document == view.document) {
         NSPoint point = [clip convertPoint:[view convertPoint:anchor.point fromPage:anchor.page] fromView:view];
         NSRect bounds = clip.bounds;
-        bounds.origin.y += point.y - TSPreviewPaneEdge(scroll).y;
+        bounds.origin.y += point.y - TSPartTop(clip);
         NSPoint target = [clip constrainBoundsRect:bounds].origin;
         if (!NSEqualPoints(target, clip.bounds.origin)) {
             [clip scrollToPoint:target];

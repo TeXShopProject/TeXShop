@@ -364,29 +364,45 @@ static NSString *SuggestionAtRow(NSTableView *table, NSInteger row)
     sReplacementStatus.stringValue = @"";
 }
 
+// BEGIN change all accessory
+// The view below the Spelling and Grammar panel: the replacement field, Change All
+// and a line for what Change All reports. The field and the line are returned
+// through the arguments.
+static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NSTextField * __strong *status)
+{
+    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 76)];
+    NSTextField *replacement = [[NSTextField alloc] initWithFrame:NSMakeRect(8, 47, 290, 22)];
+    replacement.placeholderString = NSLocalizedString(@"Replacement for Change All", @"");
+    replacement.autoresizingMask = NSViewWidthSizable;
+    // One line that scrolls, as a search field does, not text that wraps out of sight.
+    replacement.cell.wraps = NO;
+    replacement.cell.scrollable = YES;
+    replacement.usesSingleLineMode = YES;
+    replacement.target = target;
+    replacement.action = @selector(changeAll:);
+    [accessory addSubview:replacement];
+    NSTextField *line = [NSTextField wrappingLabelWithString:@""];
+    line.frame = NSMakeRect(8, 3, 415, 38);
+    line.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
+    line.textColor = NSColor.secondaryLabelColor;
+    line.autoresizingMask = NSViewWidthSizable;
+    [accessory addSubview:line];
+    NSButton *button = [NSButton buttonWithTitle:NSLocalizedString(@"Change All", @"")
+                                        target:target action:@selector(changeAll:)];
+    button.frame = NSMakeRect(307, 45, 116, 26);
+    button.autoresizingMask = NSViewMinXMargin;
+    [accessory addSubview:button];
+    *field = replacement; *status = line;
+    return accessory;
+}
+// END change all accessory
+
 // The replacement field remains a documented accessoryView and can always be
 // edited manually. Selecting a suggestion only fills it; it does not replace text.
 + (void)installChangeAllButton
 {
     if (sReplacementField) return;
-    NSView *accessory = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 431, 76)];
-    sReplacementField = [[NSTextField alloc] initWithFrame:NSMakeRect(8, 47, 290, 22)];
-    sReplacementField.placeholderString = NSLocalizedString(@"Replacement for Change All", @"");
-    sReplacementField.autoresizingMask = NSViewWidthSizable;
-    sReplacementField.target = self;
-    sReplacementField.action = @selector(changeAll:);
-    [accessory addSubview:sReplacementField];
-    sReplacementStatus = [NSTextField wrappingLabelWithString:@""];
-    sReplacementStatus.frame = NSMakeRect(8, 3, 415, 38);
-    sReplacementStatus.font = [NSFont systemFontOfSize:NSFont.smallSystemFontSize];
-    sReplacementStatus.textColor = NSColor.secondaryLabelColor;
-    sReplacementStatus.autoresizingMask = NSViewWidthSizable;
-    [accessory addSubview:sReplacementStatus];
-    NSButton *button = [NSButton buttonWithTitle:NSLocalizedString(@"Change All", @"")
-                                        target:self action:@selector(changeAll:)];
-    button.frame = NSMakeRect(307, 45, 116, 26);
-    button.autoresizingMask = NSViewMinXMargin;
-    [accessory addSubview:button];
+    NSView *accessory = TSChangeAllAccessory(self, &sReplacementField, &sReplacementStatus);
     [NSSpellChecker sharedSpellChecker].accessoryView = accessory;
     [NSNotificationCenter.defaultCenter addObserver:self
         selector:@selector(spellingSuggestionSelectionDidChange:)
@@ -581,6 +597,36 @@ static NSTextView *FrontTextView(void)
     }];
 }
 
+// BEGIN learned words alert
+// The alert that lists the learned words of a document so that some can be
+// forgotten; the table is returned in table.
+static NSAlert *TSLearnedWordsAlert(NSString *language, id<NSTableViewDataSource> list, NSTableView * __strong *table)
+{
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = NSLocalizedString(@"Forget learned words", @"");
+    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(
+        @"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several.", @""), language];
+
+    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 340, 220)];
+    scroll.hasVerticalScroller = YES;
+    scroll.borderType = NSBezelBorder;
+    NSTableView *wordsTable = [[NSTableView alloc] initWithFrame:scroll.bounds];
+    NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"word"];
+    column.width = 316;
+    [wordsTable addTableColumn:column];
+    wordsTable.headerView = nil;
+    wordsTable.allowsMultipleSelection = YES;
+    wordsTable.dataSource = list;
+    [wordsTable reloadData];
+    scroll.documentView = wordsTable;
+    alert.accessoryView = scroll;
+    [alert addButtonWithTitle:NSLocalizedString(@"Forget Selected", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    *table = wordsTable;
+    return alert;
+}
+// END learned words alert
+
 + (void)showLearnedWords:(NSArray<NSString *> *)words
 {
     NSSpellChecker *checker = [NSSpellChecker sharedSpellChecker];
@@ -595,27 +641,10 @@ static NSTextView *FrontTextView(void)
         return;
     }
 
-    alert.messageText = NSLocalizedString(@"Forget learned words", @"");
-    alert.informativeText = [NSString stringWithFormat:NSLocalizedString(
-        @"These words in this document have been learned for %@. Select the ones to forget. Shift-click or Command-click selects several.", @""), language];
-
     TSLearnedWordsList *list = [[TSLearnedWordsList alloc] init];
     list.words = words;
-    NSScrollView *scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 340, 220)];
-    scroll.hasVerticalScroller = YES;
-    scroll.borderType = NSBezelBorder;
-    NSTableView *table = [[NSTableView alloc] initWithFrame:scroll.bounds];
-    NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:@"word"];
-    column.width = 316;
-    [table addTableColumn:column];
-    table.headerView = nil;
-    table.allowsMultipleSelection = YES;
-    table.dataSource = list;
-    [table reloadData];
-    scroll.documentView = table;
-    alert.accessoryView = scroll;
-    [alert addButtonWithTitle:NSLocalizedString(@"Forget Selected", @"")];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    NSTableView *table = nil;
+    alert = TSLearnedWordsAlert(language, list, &table);
     alert.window.initialFirstResponder = table;
 
     if ([alert runModal] != NSAlertFirstButtonReturn) return;

@@ -651,7 +651,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="691">
-                                <rect key="frame" x="85" y="0.0" width="19" height="27"/>
+                                <rect key="frame" x="87" y="0.0" width="19" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <stepperCell key="cell" continuous="YES" alignment="left" increment="10" minValue="20" maxValue="1000" doubleValue="20" id="3867"/>
                                 <connections>
@@ -904,7 +904,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="364">
-                                <rect key="frame" x="93" y="1" width="19" height="28"/>
+                                <rect key="frame" x="95" y="1" width="19" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <stepperCell key="cell" continuous="YES" alignment="left" increment="10" minValue="20" maxValue="1000" doubleValue="20" id="3848"/>
                             </stepper>
@@ -1153,7 +1153,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XLr-eo-CSt">
-                                <rect key="frame" x="93" y="2" width="19" height="28"/>
+                                <rect key="frame" x="95" y="2" width="19" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <stepperCell key="cell" continuous="YES" alignment="left" increment="10" minValue="20" maxValue="1000" doubleValue="20" id="NvR-2r-n13"/>
                                 <connections>
@@ -1872,7 +1872,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="807">
-                                    <rect key="frame" x="47" y="7" width="43" height="21"/>
+                                    <rect key="frame" x="47" y="7" width="41" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="100" drawsBackground="YES" id="3888">
                                         <font key="font" metaFont="system"/>

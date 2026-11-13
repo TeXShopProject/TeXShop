@@ -273,6 +273,7 @@ tiToolTipHtmlSearch           = "Zoek";
 "ExperimentZoomOut" = "Zoom uit";
 "ExperimentZoomIn" = "Zoom in";
 "ExperimentZoomToContent" = "Zoom naar inhoud";
+"ExperimentZoomToContentWidth" = "Zoom naar inhoudsbreedte";
 
 "Page Layout" = "Pagina-indeling";
 "tiLabelTSPreviewAppearance" = "Weergave";

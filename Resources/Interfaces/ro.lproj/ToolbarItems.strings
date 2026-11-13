@@ -273,6 +273,7 @@ tiToolTipHtmlSearch           = "Căutare";
 "ExperimentZoomOut" = "Zoom înapoi";
 "ExperimentZoomIn" = "Zoom înainte";
 "ExperimentZoomToContent" = "Potrivește la conținut";
+"ExperimentZoomToContentWidth" = "Potrivește la lățimea conținutului";
 
 "Page Layout" = "Dispunerea paginilor";
 "tiLabelTSPreviewAppearance" = "Aspect";

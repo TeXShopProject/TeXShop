@@ -216,6 +216,7 @@
     ExperimentZoomOut = "缩小";
     ExperimentZoomIn = "放大";
     ExperimentZoomToContent = "缩放到内容";
+    ExperimentZoomToContentWidth = "缩放到内容宽度";
 
 "tiLabelAutoCompleteSplit" = "按键绑定";
 "Page Layout" = "页面布局";
