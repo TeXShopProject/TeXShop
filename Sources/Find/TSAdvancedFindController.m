@@ -11,8 +11,8 @@ NSString *TSAdvancedFindLocalized(NSString *key, NSString *english)
 #define TSLocalized TSAdvancedFindLocalized
 
 /// A find string that finds `text` as it is with `options`. A regular expression escapes its metacharacters, unless
-/// the pattern is read literally already; with spaces and # comments ignored, the white space and # are written as code
-/// points, and so is ¥ when it stands for a backslash.
+/// the pattern is read literally already; with spaces and # comments ignored, the white space (with the directional
+/// marks ICU skips as well) and # are written as code points, and so is ¥ when it stands for a backslash.
 NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions options)
 {
     if (!(options & TSRegexFindRegularExpression) || (options & TSRegexFindIgnoreMetacharacters))
@@ -22,7 +22,10 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     BOOL yen = (options & TSRegexFindYenIsBackslash) != 0;
     if (!extended && !yen)
         return escaped;
-    NSCharacterSet *whitespace = NSCharacterSet.whitespaceAndNewlineCharacterSet;
+    // What ICU skips in such a pattern (Pattern_White_Space): Foundation's white space and line breaks, and the
+    // left-to-right and right-to-left marks.
+    NSMutableCharacterSet *whitespace = [NSCharacterSet.whitespaceAndNewlineCharacterSet mutableCopy];
+    [whitespace addCharactersInString:@"\u200E\u200F"];
     NSMutableString *result = [NSMutableString stringWithCapacity:escaped.length];
     for (NSUInteger i = 0; i < escaped.length; i++) {
         unichar c = [escaped characterAtIndex:i];

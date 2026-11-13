@@ -44,6 +44,7 @@ MUTATIONS = {
         '    if (!extended && !yen)\n        return escaped;', '    return escaped;'),
     'Find Selected Text escapes a literal pattern': ('TSAdvancedFindController.m',
         'if (!(options & TSRegexFindRegularExpression) || (options & TSRegexFindIgnoreMetacharacters))', 'if (!(options & TSRegexFindRegularExpression))'),
+    'Find Selected Text leaves the directional marks': ('TSAdvancedFindController.m', '    [whitespace addCharactersInString:@"\\u200E\\u200F"];\n', ''),
     'the line ending is not put into the find string': ('TSAdvancedFindController.m',
         'NSString *findString = lineEnding ? TSRegexStringByReplacingLineEndings(self.settings.findString, lineEnding) : self.settings.findString;',
         'NSString *findString = self.settings.findString;'),

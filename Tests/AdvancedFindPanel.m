@@ -207,7 +207,7 @@ static void TestController(void)
     // Find Selected Text finds the selection as it is with every regular expression option (first audit, F1)
     for (NSNumber *flags in @[@(TSRegexFindRegularExpression), @(TSRegexFindRegularExpression | TSRegexFindIgnoreMetacharacters),
                               @(TSRegexFindRegularExpression | TSRegexFindAllowCommentsAndWhitespace), @0])
-        for (NSString *selected in @[@".*", @"two words", @"#note", @"¥100 $\\x", @"a\tb # c"]) {
+        for (NSString *selected in @[@".*", @"two words", @"#note", @"¥100 $\\x", @"a\tb # c", @"a\u200Eb", @"a\u200Fb"]) {
             NSUInteger quiet = 0;
             TSAdvancedFindController *finder = MakeController([TSMemoryDefaults new], &quiet);
             finder.settings.options = TSRegexFindDefaultOptions | flags.unsignedIntegerValue;
