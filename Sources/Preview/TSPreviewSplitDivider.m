@@ -32,7 +32,7 @@ static NSClipView *TSPartClip(PDFView *view)
 }
 
 // The top edge of a part, in clip view coordinates. The content insets are left out:
-// up to macOS 15, AppKit gives the top part a content inset as large as the change of
+// up to macOS 26, AppKit gives the top part a content inset as large as the change of
 // the window's height for a moment while the window is resized, and a place noted then
 // was put back that much too low once the inset was gone.
 static CGFloat TSPartTop(NSClipView *clip)

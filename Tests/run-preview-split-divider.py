@@ -198,7 +198,7 @@ static void Watch(Preview p) {
 static CGFloat Slack(PDFView *view) { return fmax(1, view.scaleFactor) + 0.05; }
 static BOOL Kept(Preview p) { return fabs(Off(p.upper, upperMark)) <= Slack(p.upper) && fabs(Off(p.lower, lowerMark)) <= Slack(p.lower); }
 
-// Up to macOS 15, AppKit gives the top part a content inset as large as the change of the
+// Up to macOS 26, AppKit gives the top part a content inset as large as the change of the
 // window's height while the window is resized, and takes it away afterwards.
 static NSEdgeInsets (*nativeInsets)(id, SEL);
 static __weak NSScrollView *transientScroll; static CGFloat transientInset;
@@ -350,7 +350,7 @@ int main(void) { @autoreleasepool {
     // The last page cannot scroll past its end: the lower part shows its bottom.
     {
         Preview p = MakePreview(document, NO, YES, NO);
-        // To the end of the document (goToPage: does not move a part offscreen up to macOS 15).
+        // To the end of the document (goToPage: does not move a part offscreen on macOS 14 and 15).
         NSClipView *clip = Clip(p.lower); NSRect end = clip.bounds;
         end.origin.y = clip.isFlipped ? 1e7 : -1e7;
         [clip scrollToPoint:[clip constrainBoundsRect:end].origin];
