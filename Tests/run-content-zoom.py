@@ -79,6 +79,7 @@ program = r'''
 #import <Cocoa/Cocoa.h>
 #import <PDFKit/PDFKit.h>
 #import "TestAppKitIsolation.h"
+#import "TSPreviewScrollerKeeper.h"
 ZOOMHEADER
 #define PDF_MAX_SCALE 2000
 enum { NEW_PDF_ACTUAL_SIZE = 1, NEW_PDF_FIT_TO_NONE = 2, NEW_PDF_FIT_TO_WINDOW = 3 };
@@ -174,10 +175,14 @@ static Preview makePreview(PDFDocument *document, PDFDisplayMode mode) {
         view.displayMode = mode;
         view.displaysPageBreaks = YES;
         view.document = document;
+        // As MyPDFKitView does when it gets a document or a window: the text at the top edge
+        // stays when a scroller comes or goes, also after a zoom.
+        [TSPreviewScrollerKeeper installInView:view];
         view.autoScales = YES;
     }
     p.document.pdfKitView = p.lower; p.document.myPDFKitView = p.upper;
     settle(p.window);
+    for (MyPDFKitView *view in @[p.upper, p.lower]) [TSPreviewScrollerKeeper installInView:view];
     return p;
 }
 static NSClipView *clipOf(PDFView *view) { return view.documentView.enclosingScrollView.contentView; }
@@ -398,7 +403,8 @@ with tempfile.TemporaryDirectory() as temp:
     temp = Path(temp)
     (temp / 'test.m').write_text(program, encoding='utf-8')
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-framework', 'Cocoa', '-framework', 'PDFKit',
-                    '-I', str(root / 'Tests'), *include_args(root), str(temp / 'test.m'), '-o', str(temp / 'test')], check=True)
+                    '-I', str(root / 'Tests'), *include_args(root), str(temp / 'test.m'),
+                    str(root / 'Sources/Preview/TSPreviewScrollerKeeper.m'), '-o', str(temp / 'test')], check=True)
     result = subprocess.run([str(temp / 'test')], capture_output=True, text=True)
     output = result.stdout + result.stderr
     if args.mutation:
