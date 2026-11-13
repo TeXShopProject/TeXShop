@@ -154,7 +154,7 @@ def main():
                         sys.exit(f'FAIL: mutation {name!r} does not apply')
                     (sources / file).write_text(text.replace(old, new))
                     mprobe = build(mtmp, sources)
-                    results = [run(mprobe, 'behavior'), run(mprobe, 'large'), run(mprobe, 'layout')]
+                    results = [run(mprobe, 'behavior'), run(mprobe, 'large'), run(mprobe, 'layout'), run(mprobe, 'layout', 'de'), run(mprobe, 'layout', 'ja')]
                     if all(r.returncode == 0 for r in results):
                         print(f'FAIL: mutation {name!r} was not detected')
                         survivors.append(name)
