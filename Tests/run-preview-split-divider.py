@@ -34,7 +34,7 @@ MUTATIONS = {
         '            view.postsFrameChangedNotifications = NO;\n            anchor.quiet = YES;\n', ''),
     # A part pushed to no height loses its place.
     'empty-part-forgotten': ('TSPreviewSplitDivider.m',
-        '        (empty || NSEqualPoints(clip.bounds.origin, anchor.origin)))', '        !empty && NSEqualPoints(clip.bounds.origin, anchor.origin))'),
+        '        (empty || TSPartStillAt(clip, anchor.origin)))', '        !empty && TSPartStillAt(clip, anchor.origin))'),
     # PDFKit is never told about the size after a drag.
     'never-finished': ('TSPreviewSplitDivider.m',
         '        view.postsFrameChangedNotifications = YES;\n        if (view.superview', '        if (view.superview'),
@@ -43,6 +43,8 @@ MUTATIONS = {
         '    return clip.isFlipped ? NSMinY(clip.bounds) : NSMaxY(clip.bounds);\n',
         '    NSEdgeInsets insets = ((NSScrollView *)clip.superview).contentInsets;\n'
         '    return clip.isFlipped ? NSMinY(clip.bounds) + insets.top : NSMaxY(clip.bounds) - insets.top;\n'),
+    # Any move of the scroll position, also an alignment to the pixels, reads the text at the top again.
+    'exact-origin': ('TSPreviewSplitDivider.m', '        (empty || TSPartStillAt(clip, anchor.origin)))', '        (empty || NSEqualPoints(clip.bounds.origin, anchor.origin)))'),
     # Window resizes are not seen.
     'no-window-resize': ('TSPreviewSplitDivider.m',
         '        if (splitView.delegate == nil)\n            splitView.delegate = self;\n', ''),
@@ -277,7 +279,10 @@ int main(void) { @autoreleasepool {
         for (NSNumber *h in @[@900, @760, @1040, @980])
             SetWindowSize(p.window, 786, h.doubleValue);
         printf("window height%s: %d steps; the text at the tops moved %.2f pt\n", how.UTF8String, steps, worstAfter);
-        Check(steps >= 4 && worstAfter <= 0.5 && Kept(p) && NSHeight(p.upper.frame) != upperHeight,
+        // AppKit aligns the scroll position to half units of the document; with the scale of
+        // fitting the width that is up to 0.6pt in the view at a step (macOS 14 and 15). The
+        // steps do not add up: the end is checked to 0.5pt, and the passing inset below.
+        Check(steps >= 4 && worstAfter <= 0.75 && Kept(p) && NSHeight(p.upper.frame) != upperHeight,
               [@"changing the height of the window keeps the text at the top of both parts" stringByAppendingString:how]);
         RunLoop();
         Check(Kept(p) && p.upper.postsFrameChangedNotifications && p.lower.postsFrameChangedNotifications,
@@ -293,7 +298,7 @@ int main(void) { @autoreleasepool {
         ScrollParts(p.upper, p.lower);
         Watch(p);
         transientScroll = p.upper.documentView.enclosingScrollView;
-        for (NSNumber *h in @[@950, @1000]) {
+        for (NSNumber *h in @[@920, @1080, @960, @1030, @975, @1000]) {
             transientInset = fabs(NSHeight(p.window.frame) - h.doubleValue);
             SetWindowSize(p.window, 820, h.doubleValue);
             transientInset = 0;

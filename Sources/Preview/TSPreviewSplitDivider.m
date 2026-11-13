@@ -40,6 +40,16 @@ static CGFloat TSPartTop(NSClipView *clip)
     return clip.isFlipped ? NSMinY(clip.bounds) : NSMaxY(clip.bounds);
 }
 
+// Whether the scroll position of a part is still where it was left. A move of less than a
+// point is not a scroll by the user: AppKit aligns the position to the pixels of the
+// screen, for instance when the top part gets a content inset for a moment while the
+// window is resized, and reading the text at the top again then let it creep.
+static BOOL TSPartStillAt(NSClipView *clip, NSPoint origin)
+{
+    CGFloat unit = NSHeight(clip.frame) > 0 ? NSHeight(clip.bounds) / NSHeight(clip.frame) : 1;
+    return fabs(clip.bounds.origin.x - origin.x) < unit && fabs(clip.bounds.origin.y - origin.y) < unit;
+}
+
 // Whether a part can follow a change of its height without PDFKit.
 //
 // PDFKit answers every size change of a PDFView by scrolling to the top of its
@@ -119,7 +129,7 @@ static BOOL TSPartCanResizeQuietly(PDFView *view)
     // reading it back from the scroll position, which may have been limited by the end
     // of the document or by a part without height.
     if (anchor != nil && anchor.page.document == view.document && anchor.scale == view.scaleFactor &&
-        (empty || NSEqualPoints(clip.bounds.origin, anchor.origin)))
+        (empty || TSPartStillAt(clip, anchor.origin)))
         return anchor;
     BOOL wasQuiet = anchor.quiet;
     anchor = nil;
