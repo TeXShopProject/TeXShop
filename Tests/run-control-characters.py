@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-control-characters-') as tmp:
     (Path(tmp) / 'MarkerKeys.h').write_text('\n'.join(keys))
     exe = Path(tmp) / 'control-characters'
     subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', tmp, '-I', str(root / 'Tests'), *include_args(root),
-                    str(root / 'Tests/ControlCharacters.m'), str(source_file(root, 'TSLayoutManager.m')), '-o', str(exe)], check=True)
+                    str(root / 'Tests/ControlCharacters.m'), str(source_file(root, 'TSLayoutManager.m')), str(source_file(root, 'TSAdvancedFindHighlights.m')), '-o', str(exe)], check=True)
     result = subprocess.run([str(exe)], capture_output=True, text=True, timeout=60)
     print(result.stdout, end='')
     if result.returncode:

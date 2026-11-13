@@ -21,7 +21,7 @@ assert len(keys) == 8
 KEYS
 set -- "${1:?Specify an output PNG path}"
 source_includes=(); while IFS= read -r d; do source_includes+=(-I "$d"); done < <(find "$root/Sources" -type d)
-xcrun clang -fobjc-arc -framework Cocoa "${source_includes[@]}" -I "$output" "$root/Tests/InvisibleCharacterBaseline.m" "$root/Sources/Editor/TSLayoutManager.m" -o "$output/test"
+xcrun clang -fobjc-arc -framework Cocoa "${source_includes[@]}" -I "$output" "$root/Tests/InvisibleCharacterBaseline.m" "$root/Sources/Editor/TSLayoutManager.m" "$root/Sources/Find/TSAdvancedFindHighlights.m" -o "$output/test"
 # Verify independence from NSString drawing compatibility tied to the minimum OS declaration.
 mkdir -p "$output/Probe.app/Contents/MacOS"
 mv "$output/test" "$output/Probe.app/Contents/MacOS/Probe"

@@ -123,6 +123,7 @@ adjustment
 adjusts
 adobe
 adoc
+advanced
 advantage
 affect
 affected
@@ -647,6 +648,7 @@ explanations
 explicit
 export
 expression
+expressions
 extend
 extended
 extends
@@ -1206,7 +1208,6 @@ now
 nstextinputtraittypedefault
 nstextinputtraittypeno
 nstextinputtraittypeyes
-nstextview
 nsuserkeyequivalents
 number
 numbered
@@ -1675,7 +1676,6 @@ standard
 standardize
 stands
 start
-started
 starting
 starts
 statement
