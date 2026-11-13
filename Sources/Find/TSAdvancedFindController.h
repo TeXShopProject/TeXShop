@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import <Cocoa/Cocoa.h>
 #import "TSAdvancedFindSettings.h"
+#import "TSAdvancedFindResults.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,6 +28,8 @@ typedef NS_ENUM(NSInteger, TSAdvancedFindAction) {
     TSAdvancedFindActionUnhighlight = 103,
     TSAdvancedFindActionFindSelectedText = 104,
     TSAdvancedFindActionJumpToSelection = 105,
+    /// Lists every match, in the selection when "In selection" is on.
+    TSAdvancedFindActionFindAll = 106,
 } NS_SWIFT_NAME(AdvancedFindAction);
 
 /// Carries out find and replace in a text view: selection, undo, highlights and status messages.
@@ -47,6 +50,8 @@ NS_SWIFT_NAME(AdvancedFindController)
 @property (nonatomic, copy) void (^beepHandler)(void);
 /// The line ending of the text view's document, put into the find string and the replaced text; nil keeps them.
 @property (nonatomic, copy, nullable) NSString *_Nullable (^lineEndingHandler)(NSTextView *textView);
+/// Receives the list of a Find All that found something, with the text view it was found in.
+@property (nonatomic, copy, nullable) void (^findAllHandler)(TSAdvancedFindResults *results, NSTextView *textView);
 /// Called after the find or replacement string was taken from a selection.
 @property (nonatomic, copy, nullable) void (^stringsChangedHandler)(void);
 

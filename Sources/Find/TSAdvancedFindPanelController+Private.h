@@ -3,6 +3,7 @@
 #import "TSAdvancedFindPanelController.h"
 #import "TSAdvancedFindOptionsForm.h"
 #import "TSAdvancedFindInputBox.h"
+#import "TSAdvancedFindResultsView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,6 +29,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<NSControl *> *buttons;
 /// The option check boxes of the open popover, enabled or not by the regular expression setting.
 @property (nonatomic, strong, nullable) TSAdvancedFindOptionsForm *optionsForm;
+/// The list of all matches, under the options while shown (+Results).
+@property (nonatomic, strong) TSAdvancedFindResultsView *resultsView;
+/// The height of the list when it was last shown, for the next time.
+@property (nonatomic) CGFloat resultsHeight;
+/// Keeps the fields' height while the list is shown, so the list takes the room the window grows by.
+@property (nonatomic, strong, nullable) NSLayoutConstraint *fieldHeightWhileListing;
+/// Whether a Find All brings the panel to the front with its list (YES); the tests turn it off, to show nothing.
+@property (nonatomic) BOOL showsResults;
 @end
 
 @interface TSAdvancedFindPanelController (PrivateMethods)
@@ -42,10 +51,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateModeControls;
 - (void)optionsDidChange;
 - (void)loadStrings;
+/// The list of all matches (+Results): shown in the panel, which grows downward for it, or closed.
+- (void)showResults:(TSAdvancedFindResults *)results textView:(NSTextView *)textView;
+- (void)hideResults;
+/// The steps of opening and closing the list, run one by one by the tests (+Results).
+- (CGFloat)prepareResultsTransition:(BOOL)shown;
+- (void)setWindowHeight:(CGFloat)height animate:(BOOL)animate;
+- (void)endResultsTransition:(BOOL)shown;
+/// Closes the list first, so the panel's saved frame is that without it.
+- (void)applicationWillTerminate:(NSNotification *)notification;
 /// The text view of the main window, which the panel acts on.
 - (nullable NSTextView *)targetTextView;
 /// The buttons' actions, on the main window's text view.
 - (IBAction)advancedFindNext:(nullable id)sender;
+- (IBAction)advancedFindAll:(nullable id)sender;
 - (IBAction)advancedReplace:(nullable id)sender;
 - (IBAction)advancedReplaceAll:(nullable id)sender;
 - (IBAction)advancedReplaceAndFind:(nullable id)sender;

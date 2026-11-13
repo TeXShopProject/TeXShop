@@ -7,6 +7,8 @@
 "AdvancedFind.DelimitByWhitespace" = "Zoek naar een van de door spaties gescheiden woorden";
 "AdvancedFind.DotMatchesLineSeparators" = ". komt ook overeen met regeleinden";
 "AdvancedFind.Extended" = "Negeer spaties en #-opmerkingen in het patroon";
+"AdvancedFind.FindAll" = "Zoek alles";
+"AdvancedFind.FindAllTip" = "Zoek alle overeenkomsten en toon ze in een lijst.";
 "AdvancedFind.FindHistory" = "Recente zoekopdrachten";
 "AdvancedFind.FindLabel" = "Zoek:";
 "AdvancedFind.Found" = "%lu gevonden";
@@ -36,6 +38,13 @@
 "AdvancedFind.ReplaceHistory" = "Recente vervangingen";
 "AdvancedFind.ReplaceLabel" = "Vervang door:";
 "AdvancedFind.Replaced" = "%lu vervangen";
+"AdvancedFind.Results.Close" = "Sluit lijst";
+"AdvancedFind.Results.Count" = "%2$lu gevonden in ‘%1$@’";
+"AdvancedFind.Results.CountStale" = "%2$lu gevonden in ‘%1$@’ (%3$lu sindsdien gewijzigd)";
+"AdvancedFind.Results.FindString" = "Zoekterm: %@";
+"AdvancedFind.Results.Line" = "Regel";
+"AdvancedFind.Results.LiveUpdate" = "Werk automatisch bij";
+"AdvancedFind.Results.Text" = "Gevonden tekst";
 "AdvancedFind.Section.Common" = "Voor beide";
 "AdvancedFind.Section.Regex" = "Reguliere expressie";
 "AdvancedFind.Section.Text" = "Gewoon zoeken";

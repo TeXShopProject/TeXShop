@@ -19,7 +19,7 @@
 {
     if (!self.window.isVisible && !TSAdvancedFindController.testTargetTextView)
         return;
-    static const TSAdvancedFindAction actions[] = {TSAdvancedFindActionHighlight, TSAdvancedFindActionReplaceAll,
+    static const TSAdvancedFindAction actions[] = {TSAdvancedFindActionFindAll, TSAdvancedFindActionReplaceAll,
                                                    TSAdvancedFindActionReplaceAndFind, TSAdvancedFindActionNext};
     NSArray<NSControl *> *buttons = self.buttons;
     for (NSUInteger index = 0; index < buttons.count && index < sizeof(actions) / sizeof(actions[0]); index++) {
@@ -63,11 +63,13 @@
         return;
     }
     BOOL done = [self.findController performAction:action inTextView:target];
-    if (done && self.findController.settings.closesWhenDone)
+    // Find All keeps the panel: its list is in the panel.
+    if (done && self.findController.settings.closesWhenDone && action != TSAdvancedFindActionFindAll)
         [self.window orderOut:nil];
 }
 
 - (IBAction)advancedFindNext:(id)sender { [self perform:TSAdvancedFindActionNext]; }
+- (IBAction)advancedFindAll:(id)sender { [self perform:TSAdvancedFindActionFindAll]; }
 - (IBAction)advancedFindPrevious:(id)sender { [self perform:TSAdvancedFindActionPrevious]; }
 - (IBAction)advancedReplace:(id)sender { [self perform:TSAdvancedFindActionReplace]; }
 - (IBAction)advancedReplaceAndFind:(id)sender { [self perform:TSAdvancedFindActionReplaceAndFind]; }

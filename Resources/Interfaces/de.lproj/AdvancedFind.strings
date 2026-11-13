@@ -7,6 +7,8 @@
 "AdvancedFind.DelimitByWhitespace" = "Nach einem der durch Leerzeichen getrennten Wörter suchen";
 "AdvancedFind.DotMatchesLineSeparators" = ". erfasst auch Zeilenumbrüche";
 "AdvancedFind.Extended" = "Leerzeichen und #-Kommentare im Muster ignorieren";
+"AdvancedFind.FindAll" = "Alle suchen";
+"AdvancedFind.FindAllTip" = "Alle Treffer suchen und auflisten.";
 "AdvancedFind.FindHistory" = "Letzte Sucheinträge";
 "AdvancedFind.FindLabel" = "Suchen nach:";
 "AdvancedFind.Found" = "%lu gefunden";
@@ -36,6 +38,13 @@
 "AdvancedFind.ReplaceHistory" = "Letzte Ersetzungen";
 "AdvancedFind.ReplaceLabel" = "Ersetzen durch:";
 "AdvancedFind.Replaced" = "%lu ersetzt";
+"AdvancedFind.Results.Close" = "Liste schließen";
+"AdvancedFind.Results.Count" = "%2$lu gefunden in „%1$@“";
+"AdvancedFind.Results.CountStale" = "%2$lu gefunden in „%1$@“ (%3$lu seitdem geändert)";
+"AdvancedFind.Results.FindString" = "Suchbegriff: %@";
+"AdvancedFind.Results.Line" = "Zeile";
+"AdvancedFind.Results.LiveUpdate" = "Automatisch aktualisieren";
+"AdvancedFind.Results.Text" = "Gefundener Text";
 "AdvancedFind.Section.Common" = "Für beide";
 "AdvancedFind.Section.Regex" = "Regulärer Ausdruck";
 "AdvancedFind.Section.Text" = "Textsuche";
