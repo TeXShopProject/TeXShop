@@ -2647,18 +2647,18 @@ While a pinned popup is open, hovering over other links shows no new popups in t
 
 
 
-\subsection{The Magnifying Glass at High Magnification}
-\label{Too_Much_Magnification}
- 
- One user liked to increase the default magnification significantly in the Preview Window, and in addition use the magnifying glass for extremely close inspection of fine details. This caused TeXShop to run out of memory and crash. For a while TeXShop protected itself by refusing to activate the magnifying glass when the Preview magnification was above 250.
- 
-To understand the problem, it is useful to know how the magnifying glass worked. When a user asks for the glass, TeXShop glues an extra view on top of the Preview window's content, but this view is transparent so the user does not notice that it is there. Then TeXShop created an offscreen image of the entire active page being displayed on the screen. Next TeXShop reads the data from this offscreen image which is contained in a small rectangle centered on the mouse location, and draws this data to a larger rectangle in the transparent view. The result is a magnified view of the portion of the screen under the mouse; this magnified image is in the mostly transparent view rather than in the original Preview page.
-
-If the user moves the mouse, TeXShop erases the transparent view and  repeats the procedure with the new mouse location. The magnified image appears to move to a new location, but the uncovered data need not be redrawn.
-
-If the Preview window has a large default magnification, then only a small portion of the window is visible on the screen. But the offscreen image of the active page contained the full page in intricate detail, taking a gigantic amount of memory. Hence the out of memory bug.
-
-Starting with TeXShop 5.60, the glass no longer makes an image of the page. It draws only the small rectangle it shows, directly from the PDF, so it uses little memory and works at any magnification of the Preview window. The limit and the hidden setting that raised it are gone.
+%\subsection{The Magnifying Glass at High Magnification}
+%\label{Too_Much_Magnification}
+%
+% One user liked to increase the default magnification significantly in the Preview Window, and in addition use the magnifying glass for extremely close inspection of fine details. This caused TeXShop to run out of memory and crash. For a while TeXShop protected itself by refusing to activate the magnifying glass when the Preview magnification was above 250.
+%
+%To understand the problem, it is useful to know how the magnifying glass worked. When a user asks for the glass, TeXShop glues an extra view on top of the Preview window's content, but this view is transparent so the user does not notice that it is there. Then TeXShop created an offscreen image of the entire active page being displayed on the screen. Next TeXShop reads the data from this offscreen image which is contained in a small rectangle centered on the mouse location, and draws this data to a larger rectangle in the transparent view. The result is a magnified view of the portion of the screen under the mouse; this magnified image is in the mostly transparent view rather than in the original Preview page.
+%
+%If the user moves the mouse, TeXShop erases the transparent view and  repeats the procedure with the new mouse location. The magnified image appears to move to a new location, but the uncovered data need not be redrawn.
+%
+%If the Preview window has a large default magnification, then only a small portion of the window is visible on the screen. But the offscreen image of the active page contained the full page in intricate detail, taking a gigantic amount of memory. Hence the out of memory bug.
+%
+%Starting with TeXShop 5.60, the glass no longer makes an image of the page. It draws only the small rectangle it shows, directly from the PDF, so it uses little memory and works at any magnification of the Preview window. The limit and the hidden setting that raised it are gone.
 
 \chapter{Printing}
 
