@@ -18,21 +18,38 @@ preferences = source_file(root, 'TSPreferences-Color.m').read_text(encoding='lat
 wells = preferences[preferences.index('- (NSColor *)fullwidthHighlightColorForKey:'):]
 wells = wells[:wells.index('\n}\n') + 3]
 
-block = color[color.index('    // A theme without these keys'):]
-block = block[:block.index('self.fullwidthSymbolColorAttribute = ') ]
-block += 'result = fullwidthAttributes.count ? fullwidthAttributes : nil;\n'
-membership = syntax[syntax.index('static inline BOOL TSIsHighlightedFullwidthCharacter'):]
+# The document takes the fullwidth colors of TSSyntaxColorScheme, and none when it has none.
+scheme_source = source_file(root, 'TSSyntaxColorScheme.m').read_text(encoding='utf-8')
+scheme = scheme_source[scheme_source.index('// Where a role finds its color'):]
+block = color[color.index('    TSSyntaxColorScheme *scheme = [[TSSyntaxColorScheme alloc] initWithTheme:'):]
+block = block[:block.index('\n') + 1]
+rule = color[color.index('    NSDictionary *fullwidthAttributes = [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol];'):]
+rule = rule[:rule.index('self.fullwidthSymbolColorAttribute = ')]
+assert 'self.fullwidthSymbolColorAttribute = fullwidthAttributes.count ? fullwidthAttributes : nil;' in color
+block += rule + 'result = fullwidthAttributes.count ? fullwidthAttributes : nil;\n'
+# The scanner finds the characters; the document asks for them when its scheme has fullwidth colors.
+scanner_header = source_file(root, 'TSSyntaxTeXScanner.h').read_text(encoding='utf-8')
+scanner = source_file(root, 'TSSyntaxTeXScanner.m').read_text(encoding='utf-8')
+membership = scanner_header[scanner_header.index('static inline BOOL TSIsHighlightedFullwidthCharacter'):]
 membership = membership[:membership.index('\n}\n') + 3]
 readers = ''.join(support[support.index(sig):support.index('\n}\n', support.index(sig)) + 3] for sig in
-                  ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:'])
-branch = syntax[syntax.index('else if (self.fullwidthSymbolColorAttribute && TSIsHighlightedFullwidthCharacter(theChar))'):]
-branch = branch[:branch.index('else if ((theChar == \'&\')')]
-assert 'addTemporaryAttributes:self.fullwidthSymbolColorAttribute' in branch
+                  ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
+                   '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:',
+                   '- (NSColor *)darkColorAndAlphaWithKey:'])
+branch = scanner[scanner.index('else if (fullwidth && TSIsHighlightedFullwidthCharacter((unichar)c))'):]
+branch = branch[:branch.index('else if ((c == \'&\')')]
+assert 'TSToken(&scan, location, 1, TSSyntaxRoleFullwidthSymbol);' in branch
+assert 'const BOOL fullwidth = options.marksFullwidthSymbols;' in scanner
+assert 'options.marksFullwidthSymbols = [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;' in syntax
 if mutation == 'fallback-color':
-    block = block.replace('if (myColor)\n        fullwidthAttributes[NSForegroundColorAttributeName] = myColor;',
-                          'fullwidthAttributes[NSForegroundColorAttributeName] = myColor ?: NSColor.redColor;')
+    old = 'if (color)\n        attributes[NSForegroundColorAttributeName] = color;'
+    assert scheme.count(old) == 1
+    scheme = scheme.replace(old, 'attributes[NSForegroundColorAttributeName] = color ?: NSColor.redColor;')
 elif mutation == 'clear-background':
-    block = block.replace('myColor && myColor.alphaComponent > 0', 'myColor')
+    assert scheme.count('color && color.alphaComponent > 0') == 1
+    scheme = scheme.replace('color && color.alphaComponent > 0', 'color')
+elif mutation == 'empty-attributes':
+    block = block.replace('result = fullwidthAttributes.count ? fullwidthAttributes : nil;', 'result = fullwidthAttributes;')
 elif mutation == 'comma':
     membership = membership.replace('c >= 0xFF01 && c <= 0xFF0B', 'c >= 0xFF01 && c <= 0xFF0C')
 elif mutation == 'well-fallback':
@@ -49,6 +66,8 @@ program = r'''
 + (instancetype)sharedInstance { static id shared; if (!shared) shared = [self new]; return shared; }
 READERS
 @end
+#import "TSSyntaxColorScheme.h"
+SCHEME
 MEMBERSHIP
 @interface Wells : NSObject { @public NSMutableDictionary *EditingColors; }
 @end
@@ -57,7 +76,7 @@ WELLS
 @end
 static NSDictionary *Attributes(NSDictionary *colorDictionary)
 {
-    NSColor *myColor; NSDictionary *result;
+    BOOL withDarkColors = NO; NSDictionary *result;
 BLOCK
     return result;
 }
@@ -96,14 +115,15 @@ int main(int argc, char **argv) { @autoreleasepool {
     if (failures) return 1;
     printf("PASS: fullwidth highlight from theme keys only, %d bundled themes\n", argc - 1);
 } return 0; }
-'''.replace('READERS', readers).replace('MEMBERSHIP', membership).replace('BLOCK', block).replace('WELLS', wells)
+'''.replace('READERS', readers).replace('SCHEME', scheme).replace('MEMBERSHIP', membership).replace('BLOCK', block).replace('WELLS', wells)
 themes = sorted((root / 'Resources/TeXShop/Themes').glob('*.plist')) + sorted((root / 'Resources/Themes').glob('*.plist'))
 assert len(themes) >= 11
 bundled = [t.read_bytes() for t in sorted((root / 'Resources/TeXShop/Themes').glob('*.plist'))]
 assert len(bundled) == len(set(bundled)), 'two bundled themes have the same contents'
 with tempfile.TemporaryDirectory(prefix='texshop-fullwidth-') as tmp:
     (Path(tmp) / 'test.m').write_text(program, encoding='utf-8')
-    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', str(Path(tmp) / 'test.m'), '-o', str(Path(tmp) / 'test')], check=True)
+    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Sources/Syntax'),
+                    str(Path(tmp) / 'test.m'), '-o', str(Path(tmp) / 'test')], check=True)
     result = subprocess.run([str(Path(tmp) / 'test'), *map(str, themes)], capture_output=True, text=True)
     print(result.stdout, end='')
     if result.returncode:

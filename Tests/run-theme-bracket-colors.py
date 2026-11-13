@@ -9,7 +9,7 @@ root = Path(__file__).resolve().parents[1]
 from production_fragments import method, verify_embedded
 
 support = (root / 'Sources/Editor/TSColorSupport.m').read_text(encoding='latin-1')
-signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:',
+signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
               '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:',
               '- (NSColor *)liteColorAndAlphaWithKey:', '- (NSColor *)darkColorAndAlphaWithKey:',
               '- (NSColor *)colorForKey: (NSString *)theKey fromDictionary:',
@@ -17,14 +17,20 @@ signatures = ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFro
 methods = [method(support, s) for s in signatures if s in support]
 document_source = (root / 'Sources/Editor/TSDocument-Color.m').read_text(encoding='latin-1')
 document=document_source
-start = document.index('mySyntaxColor = [[TSColorSupport sharedInstance] colorFromDictionary:colorDictionary andKey: @"SyntaxMarkerParen"];')
+# The document makes its colors with TSSyntaxColorScheme, which holds the fallbacks.
+start = document.index('    TSSyntaxColorScheme *scheme = [[TSSyntaxColorScheme alloc] initWithTheme:colorDictionary dark:withDarkColors];')
+end = document.index('\n', start) + 1
+creation = document[start:end]
+start = document.index('    self.markerColorParenAttribute = [scheme attributesForRole:TSSyntaxRoleBracketParen];')
 end = document.index('\n', document.index('self.markerColorSquareAttribute =', start)) + 1
 document = document[start:end]
+scheme_source = (root / 'Sources/Syntax/TSSyntaxColorScheme.m').read_text(encoding='utf-8')
+scheme = scheme_source[scheme_source.index('// Where a role finds its color'):]
 prefs = (root / 'Sources/Settings/TSPreferences-Color.m').read_text(encoding='latin-1')
 helper = method(prefs, '- (NSColor *)editingColorForKey:') if '- (NSColor *)editingColorForKey:' in prefs else ''
 wells = re.search(r'^[ \t]*markerParenColorWell\.color = .*?^[ \t]*markerSquareColorWell\.color = [^\n]*\n', method(prefs, '- (void)FillInColorWells'), re.M | re.S).group(0)
 
-fragments=[('complete method:'+m.split('{')[0],support,m) for m in methods]+[('document bracket assignments',document_source,document),('editing helper',prefs,helper),('editing wells',prefs,wells)]
+fragments=[('complete method:'+m.split('{')[0],support,m) for m in methods]+[('document scheme',document_source,creation),('document bracket assignments',document_source,document),('color scheme',scheme_source,scheme),('editing helper',prefs,helper),('editing wells',prefs,wells)]
 mutation = sys.argv[1] if len(sys.argv) > 1 else ''
 if mutation == 'no-fallback':
     methods = [m.replace('theColorArray = [theDictionary objectForKey: @"SyntaxMarker"];', ';') for m in methods]
@@ -35,7 +41,8 @@ elif mutation == 'wells-read-applied-theme':
     assert 'fromDictionary: EditingColors' in helper
     helper = helper.replace('fromDictionary: EditingColors', 'fromDictionary: (withDarkColors ? darkColors : liteColors)')
 elif mutation == 'no-default':
-    document = document.replace('if (mySyntaxColor == nil)', 'if (0)')
+    assert scheme.count('case TSSyntaxThemeFallbackBuiltIn:\n            return dark ?') == 1
+    scheme = scheme.replace('case TSSyntaxThemeFallbackBuiltIn:\n            return dark ?', 'case TSSyntaxThemeFallbackBuiltIn:\n            return nil;\n            return dark ?')
 elif mutation:
     raise SystemExit('unknown mutation ' + mutation)
 
@@ -55,13 +62,14 @@ METHODS
 @end
 @interface Well : NSObject @property NSColor *color; @end
 @implementation Well @end
+SCHEME
 @interface Document : NSObject
 @property NSDictionary *markerColorParenAttribute, *markerColorCurlyAttribute, *markerColorSquareAttribute;
 @end
 @implementation Document
 - (void)applyDictionary:(NSDictionary *)colorDictionary dark:(BOOL)withDarkColors
 {
-    NSColor *mySyntaxColor;
+CREATION
 DOCUMENT
 }
 @end
@@ -128,7 +136,7 @@ int main(int argc, char **argv) { @autoreleasepool {
     }
     return failures ? 1 : 0;
 } }
-'''.replace('METHODS', '\n'.join(methods)).replace('DOCUMENT', document).replace('HELPER', helper).replace('WELLS', wells)
+'''.replace('METHODS', '\n'.join(methods)).replace('SCHEME', '#import "TSSyntaxColorScheme.h"\n' + scheme).replace('CREATION', creation).replace('DOCUMENT', document).replace('HELPER', helper).replace('WELLS', wells)
 if not mutation:verify_embedded(program,fragments)
 else:
     for label,source,fragment in fragments:assert source.count(fragment)==1,(label,'mutation baseline')
@@ -138,7 +146,7 @@ with tempfile.TemporaryDirectory(prefix='texshop-theme-') as tmp:
     plistlib.dump({'SyntaxMarker': [0.165, 0.63, 0.596, 1.0], 'SyntaxCommand': [0.8, 0.2, 0.2, 1.0]}, legacy.open('wb'))
     themes = [str(legacy)] + [str(p) for p in sorted((root / 'Resources/TeXShop/Themes').glob('*.plist'))]
     (tmp / 'test.m').write_text(program)
-    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', str(tmp / 'test.m'), '-o', str(tmp / 'test')], check=True)
+    subprocess.run(['xcrun', 'clang', '-w', '-fobjc-arc', '-framework', 'Cocoa', '-I', str(root / 'Sources/Syntax'), str(tmp / 'test.m'), '-o', str(tmp / 'test')], check=True)
     r = subprocess.run([str(tmp / 'test')] + themes, capture_output=True, text=True)
     print(r.stdout.strip())
     if mutation:

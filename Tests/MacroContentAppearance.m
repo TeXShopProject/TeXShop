@@ -6,6 +6,17 @@
 #import "TestAppKitIsolation.h"
 #import "TSMacroEditor.h"
 #import "TSColorSupport.h"
+#import "TSSyntaxHighlighter.h"
+#import "TSSyntaxMacroContentScanner.h"
+#import "TSSyntaxTeXScanner.h"
+#import "TSAdvancedFindTextView.h"
+// Only the classes the editor's methods name.
+@interface TSTextView : NSTextView
+@end
+@implementation TSTextView
+@end
+@implementation TSAdvancedFindController
+@end
 #import "globals.h"
 #define REQUIRE(...) do { if (!(__VA_ARGS__)) { fprintf(stderr,"FAIL %d: %s\n",__LINE__,#__VA_ARGS__); exit(1); } } while(0)
 @implementation TSMacroEditor

@@ -35,6 +35,11 @@
 #import "TSDialogButtonLayout.h"
 #import "TSColorSupport.h"
 #import "TSMarkMenu.h"
+#import "TSPreferenceEffects.h"
+#import "TSSyntaxHighlighter.h"
+#import "TSSyntaxMacroContentScanner.h"
+#import "TSSyntaxTeXScanner.h"
+#import "TSAdvancedFindTextView.h"
 
 static void *TSMacroContentAppearanceContext = &TSMacroContentAppearanceContext;
 
@@ -191,8 +196,63 @@ static TSFilterMode savedFilter = kNoFilterMode;
     NSMutableDictionary *typing = [contentTextView.typingAttributes mutableCopy] ?: [NSMutableDictionary dictionary];
     typing[NSForegroundColorAttributeName] = text;
     contentTextView.typingAttributes = typing;
+    [self updateContentHighlightingWithTheme:theme dark:dark];
 }
 // END content appearance
+// BEGIN content text view
+// The contents: a TextKit 1 text system for syntax coloring, whose layout manager
+// also draws the highlights of the Advanced Find panel, and plain text, so that
+// what is pasted keeps no colors or fonts of its own and the Font panel changes
+// the font of all the contents. Only the text is saved.
+- (NSTextView *)makeContentTextViewWithSize:(NSSize)contentSize
+{
+    NSTextStorage *storage = [[NSTextStorage alloc] init];
+    NSLayoutManager *layout = [[TSAdvancedFindLayoutManager alloc] init];
+    [storage addLayoutManager:layout];
+    NSTextContainer *container = [[NSTextContainer alloc] initWithSize:NSMakeSize(contentSize.width, CGFLOAT_MAX)];
+    [container setWidthTracksTextView:YES];
+    [layout addTextContainer:container];
+    NSTextView *view = [[TSTextView alloc] initWithFrame:NSMakeRect(0, 0, contentSize.width, contentSize.height) textContainer:container];
+    [view setMinSize:NSMakeSize(0, contentSize.height)];
+    [view setMaxSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
+    [view setVerticallyResizable:YES];
+    [view setHorizontallyResizable:NO];
+    [view setAutoresizingMask:NSViewWidthSizable];
+    [view setRichText:NO];
+    return view;
+}
+// END content text view
+// BEGIN content highlighting
+// The contents are colored as the source is: a TeX macro by the rules of the source,
+// an AppleScript macro by its own, each with the placeholders it replaces, in the
+// theme's colors. Syntax coloring off in Settings leaves them plain.
+- (void)updateContentHighlightingWithTheme:(NSDictionary *)theme dark:(BOOL)dark
+{
+    if (contentTextView == nil) return;
+    if (![SUD boolForKey:SyntaxColoringEnabledKey]) {
+        [self.contentHighlighter invalidate];
+        self.contentHighlighter = nil;
+        return;
+    }
+    TSSyntaxColorScheme *scheme = [[TSSyntaxColorScheme alloc] initWithTheme:theme ?: @{} dark:dark];
+    TSMutableSyntaxTeXOptions *options = [TSMutableSyntaxTeXOptions new];
+    options.texCharacter = (unichar)g_texChar;
+    options.colorsExpl3 = [SUD boolForKey:expl3SyntaxColoringKey];
+    options.makesAtLetter = [SUD boolForKey:MakeatletterEnabledKey];
+    options.colorsIndex = [SUD boolForKey:IndexColorStartKey];
+    options.colorsFootnote = [SUD boolForKey:SyntaxColorFootnoteKey];
+    options.marksFullwidthSymbols = [scheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;
+    TSSyntaxMacroContentScanner *scanner = [[TSSyntaxMacroContentScanner alloc] initWithTeXOptions:options];
+    if (self.contentHighlighter.textView != contentTextView) {
+        [self.contentHighlighter invalidate];
+        self.contentHighlighter = [[TSSyntaxHighlighter alloc] initWithTextView:contentTextView scanner:scanner scheme:scheme];
+        [self.contentHighlighter followEdits];
+    } else {
+        self.contentHighlighter.scheme = scheme;
+        self.contentHighlighter.scanner = scanner;
+    }
+}
+// END content highlighting
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == TSMacroContentAppearanceContext) [self applyContentAppearance:nil];
@@ -223,13 +283,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
 		// custom text view
 		NSScrollView *scrollView = [contentTextView enclosingScrollView];
 		NSSize contentSize = [scrollView contentSize];
-		contentTextView = [[TSTextView alloc] initWithFrame:
-						NSMakeRect(0, 0, contentSize.width, contentSize.height)];
-		[contentTextView setAutoresizingMask: NSViewWidthSizable];
-		[[contentTextView textContainer] setWidthTracksTextView:YES];
+		contentTextView = [self makeContentTextViewWithSize:contentSize];
 		[contentTextView setDelegate:self];
 		[contentTextView setAllowsUndo:YES];
-		[contentTextView setRichText:YES];
 		[contentTextView setUsesFontPanel:YES];
         [contentTextView setFontSafely:[self contentFont]];
         [contentTextView setContinuousSpellCheckingEnabled: NO];
@@ -245,6 +301,9 @@ static TSFilterMode savedFilter = kNoFilterMode;
         [scrollView setDocumentView:contentTextView];
         [self applyContentAppearance:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applyContentAppearance:) name:SourceColorChangedNotification object:nil];
+        // Syntax coloring turned on or off, expl3 and \makeatletter.
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applyContentAppearance:) name:DocumentSyntaxColorNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applyContentAppearance:) name:TSPreferenceNeedsRecolorNotification object:nil];
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:TSMacroContentAppearanceContext];
 		// [contentTextView release];
 		// text fields

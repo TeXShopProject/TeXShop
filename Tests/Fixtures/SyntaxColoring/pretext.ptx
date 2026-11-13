@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A PreTeXt sample -->
+<pretext xml:lang="en-US" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <article xml:id="sample">
+    <title>Coloring &amp; <em>XML</em></title>
+    <p>Math <m>x^2 + \alpha</m> and &lt;tag&gt; and &nbsp and a lone &.</p>
+    <me>\int_0^1 f(x)\,dx</me> <!-- inline comment --> after
+    <p attr = "spaced" other='single'>text</p>
+    <!-- a comment
+         over two lines -->
+    <Łtag é="v">wide letters</Łtag>
+    <p>% not a TeX comment in XML? {braces} [sq] (pa) $dollar$</p>
+    <xi:include href="chapter.ptx"/>
+  </article>
+</pretext>

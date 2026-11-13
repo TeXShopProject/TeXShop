@@ -175,6 +175,7 @@ appeared
 appears
 apple
 apple's
+applescript
 apple’s
 application
 applications
@@ -507,7 +508,6 @@ determine
 determines
 deutsch
 developer
-developers
 diacritical
 dialog
 dialogs
@@ -713,6 +713,7 @@ following
 follows
 font
 fonts
+footnote
 for
 foreground
 forget
@@ -880,6 +881,7 @@ increasing
 indefinite
 indented
 independent
+index
 indicate
 indicator
 individual
@@ -1217,7 +1219,6 @@ numberingcorrection
 numbers
 numerals
 numeric
-objects
 obsolete
 occurrences
 occurs

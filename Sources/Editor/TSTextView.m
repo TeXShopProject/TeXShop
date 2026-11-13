@@ -1620,6 +1620,20 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 - (id)initWithFrame:(NSRect)frameRect
 {
 	self = [super initWithFrame: frameRect];
+	[self setUpCompletionAndDragging];
+	return self;
+}
+
+// A view made with its own text system, such as the TextKit 1 contents of the macro editor.
+- (instancetype)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)container
+{
+	self = [super initWithFrame: frameRect textContainer: container];
+	[self setUpCompletionAndDragging];
+	return self;
+}
+
+- (void)setUpCompletionAndDragging
+{
 	[ self registerForDraggedTypes:
 			[NSArray arrayWithObjects: NSStringPboardType, NSFilenamesPboardType, nil] ];
 	self.document = nil;
@@ -1630,9 +1644,6 @@ static const CFAbsoluteTime MAX_WAIT_TIME = 10.0;
 	replaceLocation = NSNotFound; // completion started here
 	completionListLocation = 0; // location to start search in the list
 	textLocation = NSNotFound; // location of insertion point
-
-    
-	return self;
 }
 
 // Adam Maxwell addition
