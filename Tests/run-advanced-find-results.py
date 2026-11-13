@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The Find All list of the Advanced Find panel, stage 4 (Tests/AdvancedFindResults.m): the matches with their lines,
+"""The Find All list of the Advanced Find panel (Tests/AdvancedFindResults.m): the matches with their lines,
 text and group colors, OgreKit's six edit cases and stale rows, typing in TeXShop's text, live update and its scope,
 an 8 MB document, the list in the panel (growing, closing, jumping, quitting, closing the document), and the panel
 with its list in all 12 languages. Nothing is displayed; the defaults stay in memory and the pasteboards are unique.
@@ -163,7 +163,7 @@ def main():
             if survivors:
                 sys.exit(f'FAIL: {len(survivors)} of {len(MUTATIONS)} mutations were not detected')
             print(f'PASS: all {len(MUTATIONS)} mutations detected')
-    print('PASS: Advanced Find panel stage 4, the Find All list')
+    print('PASS: the Find All list of the Advanced Find panel')
 
 
 if __name__ == '__main__':

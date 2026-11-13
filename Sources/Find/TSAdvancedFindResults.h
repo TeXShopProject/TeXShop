@@ -19,7 +19,7 @@ NS_SWIFT_NAME(AdvancedFindResultItem)
 + (instancetype)new NS_UNAVAILABLE;
 @end
 
-/// The matches of a "Find All" in one text storage (plan §4, stage 4). They follow every edit of the text, as
+/// The matches of a "Find All" in one text storage. They follow every edit of the text, as
 /// OgreKit's do: matches after an edit move, a match the edit touched is adjusted and becomes stale.
 /// With `updatesLive`, the search runs again shortly after the edits, with the same pattern and scope.
 NS_SWIFT_NAME(AdvancedFindResults)

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// The Find All list of the Advanced Find panel (plan §4, §7 stage 4): the matches, their lines and text, the edits,
+// The Find All list of the Advanced Find panel: the matches, their lines and text, the edits,
 // live update, a large document, the list in the panel, and its layout and images in every language.
 // Built by Tests/run-advanced-find-results.py; no window is ever shown and the defaults stay in memory.
 #import <Cocoa/Cocoa.h>
@@ -686,7 +686,7 @@ static void TestListLayout(NSString *_Nullable imageDirectory)
     TSAdvancedFindPanelController *panel = [[TSAdvancedFindPanelController alloc] initWithFindController:controller];
     panel.showsResults = NO;
     NSString *language = NSBundle.mainBundle.preferredLocalizations.firstObject ?: @"en";
-    // The text of the lab's images (AdvancedFindLab, LabSampleText), so the two can be compared row by row.
+    // A short LaTeX document with Japanese text.
     TestDocument *document = [[TestDocument alloc] initWithText:@"\\documentclass{jlreq}\n\\usepackage{amsmath}\n\\begin{document}\n\\section{はじめに}\n"
                               "関数 $f(x) = x^2 + 2x + 1$ を考える。①②③ と \\ajMaru{4} は同じ丸数字。\n値は 3.14、2.718、1.414 など。全角の　空白と半角の 空白。\n"
                               "\\begin{align}\n  a_1 &= b_1 + c_1 \\\\\n  a_2 &= b_2 + c_2\n\\end{align}\n"
@@ -696,7 +696,7 @@ static void TestListLayout(NSString *_Nullable imageDirectory)
     settings.replaceString = @"\\\\text$1{$2}$3\\n";
     [panel reloadFromSettings];
     Check([controller performAction:TSAdvancedFindActionFindAll inTextView:document.upper] && panel.resultsView.results.items.count == 6, @"six matches for the images");
-    // One match made stale by an edit, as in the lab's image
+    // One match made stale by an edit
     NSRange align = [document.storage.string rangeOfString:@"\\end{align}"];
     [document.storage replaceCharactersInRange:NSMakeRange(align.location + 6, 0) withString:@"ed"];
     NSView *content = panel.window.contentView;

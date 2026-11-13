@@ -356,8 +356,8 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
 #pragma mark Find All
 
 /// Hands the list of every match to `findAllHandler`; nothing is listed when there is no match. As in OgreKit, the
-/// text is not highlighted: that is "Highlight All". The search runs here on the main thread (the background task
-/// with its progress sheet is stage 5; +[TSAdvancedFindResults itemsOfFind:…] is ready to run there).
+/// text is not highlighted: that is "Highlight All". The search runs on the main thread;
+/// +[TSAdvancedFindResults itemsOfFind:…] can run on another queue as well.
 - (BOOL)findAllInTextView:(NSTextView *)textView
 {
     TSRegexTextFind *find = [self textFindForTextView:textView inSelection:self.settings.inSelection quiet:NO];

@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, TSAdvancedFindAction) {
     TSAdvancedFindActionUnhighlight = 103,
     TSAdvancedFindActionFindSelectedText = 104,
     TSAdvancedFindActionJumpToSelection = 105,
-    /// Lists every match (plan §4, stage 4), in the selection when "In selection" is on.
+    /// Lists every match, in the selection when "In selection" is on.
     TSAdvancedFindActionFindAll = 106,
 } NS_SWIFT_NAME(AdvancedFindAction);
 
