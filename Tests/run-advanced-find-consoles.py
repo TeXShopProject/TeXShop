@@ -54,6 +54,8 @@ MUTATIONS = {
     'leaving the panel keeps the Experiment output\'s highlights': ('TSDocument.m',
         'NSTextView *views[] = {textView1, outputText, self.logTextView, scrapTextView, self.experimentConsole.outputText};',
         'NSTextView *views[] = {textView1, outputText, self.logTextView, scrapTextView};'),
+    'the console and the log take replacing': ('TSAdvancedFindController.m',
+        '            return textView.isEditable && !TSTextViewRefusesReplacing(textView);', '            return textView.isEditable;'),
     'the Experiment source finds with NSTextView': ('ScrapTextView.h', '@interface ScrapTextView : TSAdvancedFindTextView', '@interface ScrapTextView : NSTextView'),
 }
 
@@ -108,6 +110,8 @@ def check_sources(sources):
             (target,) = re.findall(r'<outlet property="%s" destination="([^"]+)"' % outlet, text)
             if not re.search(r'<textView [^>]*id="%s"[^>]*customClass="TSAdvancedFindTextView"' % re.escape(target), text):
                 problems.append(f'{nib}: the {outlet} of designable.nib is not a TSAdvancedFindTextView')
+            if not re.search(r'<textView [^>]*id="%s"[^>]*>(?:(?!</textView>).)*keyPath="refusesReplacing" value="YES"' % re.escape(target), text, re.S):
+                problems.append(f'{nib}: the {outlet} of designable.nib does not refuse replacing')
         if b'TSAdvancedFindTextView' not in (root / 'Resources/Interfaces' / f'{nib}.lproj/TSDocument.nib/keyedobjects.nib').read_bytes():
             problems.append(f'{nib}: the compiled nib has no TSAdvancedFindTextView')
     return problems
@@ -192,7 +196,7 @@ def main():
         problems = check_sources(sources)
         if problems:
             sys.exit('FAIL: ' + '; '.join(problems))
-        print('PASS: ScrapTextView finds as a TSAdvancedFindTextView; the console and the log of all 12 nibs are TSAdvancedFindTextViews')
+        print('PASS: ScrapTextView finds as a TSAdvancedFindTextView; the console and the log of all 12 nibs are TSAdvancedFindTextViews that refuse replacing')
         probe = build(tmp, sources)
         result = run(probe, 'behavior', nibs())
         print(result.stdout + failures(result.stderr), end='\n')

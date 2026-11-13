@@ -73,7 +73,9 @@ static NSTextView *_Nullable TSFocusedTarget(NSWindow *_Nullable window)
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         void (^note)(NSNotification *) = ^(NSNotification *notification) {
-            [TSAdvancedFindController noteKeyWindowChange:notification.object];
+            NSWindow *window = notification.object;
+            if ([window isKindOfClass:[NSWindow class]])
+                [TSAdvancedFindController noteKeyWindowChange:window];
         };
         NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
         [center addObserverForName:NSWindowDidBecomeKeyNotification object:nil queue:nil usingBlock:note];

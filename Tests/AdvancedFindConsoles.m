@@ -167,6 +167,8 @@ static void TestNibs(NSArray<NSString *> *paths)
               [NSString stringWithFormat:@"%@: they get the layout manager that draws the highlights, in place of the old one", language]);
         Check(!console.isRichText && log.isRichText && log.usesRuler && console.enclosingScrollView.documentView == console,
               [NSString stringWithFormat:@"%@: the nib's settings are kept", language]);
+        Check([(TSAdvancedFindTextView *)console refusesReplacing] && [(TSAdvancedFindTextView *)log refusesReplacing] && log.isEditable,
+              [NSString stringWithFormat:@"%@: the console and the log refuse replacing; the log may still be edited", language]);
         Check(!console.window.isVisible && !log.window.isVisible, [NSString stringWithFormat:@"%@: nothing is shown", language]);
     }
 }
@@ -181,7 +183,8 @@ static NSTextView *MakeConsole(NSString *nibPath)
     return console;
 }
 
-static void TestRouting(NSTextView *console, NSTextView *log, NSTextView *experiment)
+/// `source`: an editable TSAdvancedFindTextView that does not refuse replacing, as the Experiment source.
+static void TestRouting(NSTextView *console, NSTextView *log, NSTextView *experiment, NSTextView *source)
 {
     TestShared.settings.findString = @"Overfull";
     TestShared.settings.replaceString = @"X";
@@ -205,17 +208,18 @@ static void TestRouting(NSTextView *console, NSTextView *log, NSTextView *experi
     textViewFinds = 0;
     for (NSTextView *view in @[console, log, experiment])
         Check([(TSAdvancedFindTextView *)view findController] == TestShared, @"with the Advanced Find panel, the shared controller");
-    // The menu: finding everywhere, replacing only where the text may be edited (the log is editable in TeXShop).
+    // The menu: finding everywhere; replacing neither in the read-only console and Experiment output, nor in the log,
+    // which may be edited but shows TeX's output; replacing in the Experiment source.
     for (size_t i = 0; i < sizeof finding / sizeof finding[0]; i++)
-        for (NSTextView *view in @[console, experiment])
+        for (NSTextView *view in @[console, experiment, log])
             Check([view validateMenuItem:Item(@selector(performFindPanelAction:), finding[i])] && [view validateMenuItem:Item(@selector(performTextFinderAction:), finding[i])],
                   [NSString stringWithFormat:@"the read-only console and Experiment output take the find action %ld", (long)finding[i]]);
     for (size_t i = 0; i < sizeof replacing / sizeof replacing[0]; i++) {
-        for (NSTextView *view in @[console, experiment])
+        for (NSTextView *view in @[console, experiment, log])
             Check(![view validateMenuItem:Item(@selector(performFindPanelAction:), replacing[i])] && ![view validateMenuItem:Item(@selector(performTextFinderAction:), replacing[i])],
-                  [NSString stringWithFormat:@"the read-only console and Experiment output gray the replacing action %ld", (long)replacing[i]]);
-        Check([log validateMenuItem:Item(@selector(performFindPanelAction:), replacing[i])],
-              [NSString stringWithFormat:@"the editable log takes the replacing action %ld", (long)replacing[i]]);
+                  [NSString stringWithFormat:@"the console, the Experiment output and the log gray the replacing action %ld", (long)replacing[i]]);
+        Check([source validateMenuItem:Item(@selector(performFindPanelAction:), replacing[i])],
+              [NSString stringWithFormat:@"the Experiment source takes the replacing action %ld", (long)replacing[i]]);
     }
     // ⌘G finds in the console; replacing is refused with one beep each, and nothing changes.
     console.selectedRange = NSMakeRange(0, 0);
@@ -229,11 +233,19 @@ static void TestRouting(NSTextView *console, NSTextView *log, NSTextView *experi
     experiment.selectedRange = NSMakeRange(0, 0);
     [experiment performTextFinderAction:Item(@selector(performTextFinderAction:), NSTextFinderActionNextMatch)];
     Check(NSEqualRanges(experiment.selectedRange, RangesOf(@"Overfull", experiment.string).firstObject.rangeValue), @"Find Next in the Experiment output");
-    // Replace All in the log, which may be edited, works as in a document and is undone in one step.
-    log.allowsUndo = YES;
+    // The log refuses Replace All too; the console before the first typesetting, still editable, as well.
     log.string = @"Overfull Overfull";
+    beeps = 0;
     [log performFindPanelAction:Item(@selector(performFindPanelAction:), NSFindPanelActionReplaceAll)];
-    Check([log.string isEqualToString:@"X X"], @"Replace All in the editable log");
+    console.editable = YES;
+    [console performFindPanelAction:Item(@selector(performFindPanelAction:), NSFindPanelActionReplaceAll)];
+    console.editable = NO;
+    Check([log.string isEqualToString:@"Overfull Overfull"] && [console.string isEqualToString:before] && beeps == 2,
+          @"the log and the editable console refuse Replace All with a beep");
+    // Replace All in the Experiment source works as in a document.
+    source.string = @"Overfull Overfull";
+    [source performFindPanelAction:Item(@selector(performFindPanelAction:), NSFindPanelActionReplaceAll)];
+    Check([source.string isEqualToString:@"X X"], @"Replace All in the Experiment source");
     Check(textViewFinds == 0, @"none of it reaches NSTextView's own find");
     // Back to the find bar without a restart.
     [defaults setInteger:1 forKey:@"FindMethod"];
@@ -352,7 +364,7 @@ static void TestPanelTarget(TSExperimentConsoleController *experimentController,
 
 #pragma mark Buttons
 
-static void TestButtons(NSTextView *console, NSTextView *log)
+static void TestButtons(NSTextView *console, NSTextView *log, NSTextView *source)
 {
     TSAdvancedFindPanelController *panel = TSAdvancedFindPanelController.sharedPanelController;
     NSArray<NSControl *> *buttons = panel.buttons; // Highlight All ▾, Replace All, Replace & Find ▾, ‹ ›
@@ -366,8 +378,12 @@ static void TestButtons(NSTextView *console, NSTextView *log)
           @"under ▾, Replace is gray in the console, Select All is not");
     TSAdvancedFindController.testTargetTextView = log;
     [panel updateButtons];
+    Check(buttons[0].enabled && !buttons[1].enabled && !buttons[2].enabled && buttons[3].enabled && ![validator validateMenuItem:replaceMenu.itemArray[0]],
+          @"acting on the log, which may be edited, the replacing buttons are gray too");
+    TSAdvancedFindController.testTargetTextView = source;
+    [panel updateButtons];
     Check(buttons[0].enabled && buttons[1].enabled && buttons[2].enabled && buttons[3].enabled && [validator validateMenuItem:replaceMenu.itemArray[0]],
-          @"acting on the editable log, everything");
+          @"acting on the Experiment source, everything");
     TSAdvancedFindController.testTargetTextView = nil;
     Check(!panel.window.isVisible, @"the panel is not shown");
 }
@@ -542,14 +558,16 @@ int main(int argc, const char *argv[])
             NSTextView *console = MakeConsole(nibs.firstObject);
             NSTextView *log = LoadDocumentNib(nibs.firstObject).logTextView;
             log.string = SampleLog(3);
-            TestRouting(console, log, experiment);
+            TSAdvancedFindTextView *source = [[TSAdvancedFindTextView alloc] initWithFrame:NSMakeRect(0, 0, 300, 100)];
+            source.allowsUndo = YES;
+            TestRouting(console, log, experiment, source);
             log.string = SampleLog(3);
             TestHighlights(console, @"console", ^(NSString *text) { [console.textStorage appendAttributedString:[[NSAttributedString alloc] initWithString:text]]; });
             TestHighlights(experiment, @"Experiment output", ^(NSString *text) { [experimentController appendText:text]; });
             console.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
             TestHighlights(console, @"console (dark)", ^(NSString *text) { [console.textStorage appendAttributedString:[[NSAttributedString alloc] initWithString:text]]; });
             TestHighlights(log, @"log", ^(NSString *text) { [log.textStorage appendAttributedString:[[NSAttributedString alloc] initWithString:text]]; });
-            TestButtons(console, log);
+            TestButtons(console, log, source);
             TestPanelTarget(experimentController, log);
             TestLeavingThePanel(console, log, experiment);
         } else if ([mode isEqualToString:@"images"]) {

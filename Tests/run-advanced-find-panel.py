@@ -28,7 +28,7 @@ MUTATIONS = {
         '\t[TSAdvancedFindHighlights drawInLayoutManager:self forGlyphRange:glyphsToShow atPoint:origin];\n', ''),
     'replacements are not registered for undo': ('TSAdvancedFindController.m',
         '    if (![textView shouldChangeTextInRanges:ranges replacementStrings:strings])\n        return NO;\n', ''),
-    'read-only text views take replacing': ('TSAdvancedFindController.m', '            return textView.isEditable;', '            return YES;'),
+    'read-only text views take replacing': ('TSAdvancedFindController.m', '            return textView.isEditable && !TSTextViewRefusesReplacing(textView);', '            return YES;'),
     'Find and Replace… is not routed': ('TSAdvancedFindController.m', '        case TSAdvancedFindActionShowReplacePanel:\n            if', '            if'),
     'the panel\'s field keeps the Find menu': ('TSAdvancedFindPanelController.m',
         '    if (controller && (item.action == @selector(performFindPanelAction:)', '    if (NO && (item.action == @selector(performFindPanelAction:)'),

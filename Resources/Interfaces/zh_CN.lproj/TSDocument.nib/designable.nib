@@ -334,6 +334,9 @@
                                     <size key="minSize" width="504" height="352"/>
                                     <size key="maxSize" width="516" height="10000000"/>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="refusesReplacing" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
                                 </textView>
                             </subviews>
                         </clipView>
@@ -2176,6 +2179,9 @@ DQ
                                     <size key="minSize" width="621" height="484"/>
                                     <size key="maxSize" width="623" height="10000000"/>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="refusesReplacing" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
                                 </textView>
                             </subviews>
                         </clipView>

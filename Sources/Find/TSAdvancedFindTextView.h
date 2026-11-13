@@ -17,6 +17,9 @@ FOUNDATION_EXPORT TSAdvancedFindController *_Nullable TSAdvancedFindControllerFo
 /// the panel acts on the last of them that had the focus.
 NS_SWIFT_NAME(AdvancedFindTarget)
 @protocol TSAdvancedFindTarget <NSObject>
+@optional
+/// YES: no replacing, even when the text may be edited (the console and the log, which show TeX's output).
+@property (nonatomic, readonly) BOOL refusesReplacing;
 @end
 
 /// A layout manager that only adds the search highlights over the background, for text views whose layout manager is
@@ -50,11 +53,13 @@ NS_SWIFT_NAME(AdvancedFindLayoutManager)
 
 /// A plain text view that finds with the Advanced Find panel: in TeXShop, the console and the log (the class in the
 /// nib), the Experiment output (made in code) and, as its superclass, the Experiment source. It routes the find menu
-/// and draws the highlights; whether it may be edited is its own setting, and the replacing actions follow it.
+/// and draws the highlights. The replacing actions need a text view that may be edited and does not refuse them.
 NS_SWIFT_NAME(AdvancedFindTextView)
 @interface TSAdvancedFindTextView : NSTextView <TSAdvancedFindTarget>
 /// TSAdvancedFindControllerForFindMethod(): nil unless the find method is the Advanced Find panel.
 @property (nonatomic, readonly, nullable) TSAdvancedFindController *findController;
+/// Set in the nib for the console and the log. NO: replacing follows -isEditable.
+@property (nonatomic) BOOL refusesReplacing;
 @end
 
 NS_ASSUME_NONNULL_END
