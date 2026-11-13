@@ -87,6 +87,13 @@ static void Geometry(NSView *v) {
  {NSMutableArray<NSView *> *shown=[NSMutableArray array];for(NSView *c in v.subviews)if(!c.hidden && [c isKindOfClass:NSControl.class])[shown addObject:c];
   for(NSUInteger a=0;a<shown.count;a++)for(NSUInteger b=a+1;b<shown.count;b++){NSRect x=NSIntersectionRect([shown[a] alignmentRectForFrame:shown[a].frame],[shown[b] alignmentRectForFrame:shown[b].frame]);
    Check(NSWidth(x)<=1||NSHeight(x)<=1,[NSString stringWithFormat:@"Controls side by side do not overlap: %@ and %@",shown[a].identifier,shown[b].identifier]);}}
+ // An input field's focus ring needs 3 points around its bezel, clear of the other controls beside it.
+ {NSMutableArray<NSView *> *shown=[NSMutableArray array];for(NSView *c in v.subviews)if(!c.hidden && [c isKindOfClass:NSControl.class])[shown addObject:c];
+  for(NSView *f in shown)if([f isKindOfClass:NSTextField.class]&&((NSTextField *)f).editable&&f.focusRingType!=NSFocusRingTypeNone){NSRect ring=NSInsetRect([f alignmentRectForFrame:f.frame],-3,-3);
+   // The stepper attached to its own field stands 2 points from it, as in the nibs;
+   // the ring touches only its edge.
+   for(NSView *o in shown)if(o!=f && ![o.identifier isEqual:[f.identifier stringByAppendingString:@".stepper"]]){NSRect x=NSIntersectionRect(ring,[o alignmentRectForFrame:o.frame]);
+    Check(NSWidth(x)<=0.5||NSHeight(x)<=0.5,[NSString stringWithFormat:@"Focus ring of %@ has room beside %@ (%@)",f.identifier,o.identifier,NSStringFromRect(x)]);}}}
  if([v.identifier hasPrefix:@"row."]) Check(NSHeight(v.frame)>=37.5,@"Minimum row height is 38");
  if([v isKindOfClass:NSStackView.class]) {NSStackView *stack=(id)v;NSView *ancestor=stack;while(ancestor && ![ancestor.identifier isEqual:@"DockIconChoices"])ancestor=ancestor.superview;Check(stack.spacing==0||stack.spacing==8||stack.spacing==18||stack.spacing==12||stack.spacing==14||stack.spacing==2||stack.spacing==6||([stack.identifier isEqual:@"settings.change-note"] && stack.spacing==4)||(ancestor && stack.spacing==4)||([NSStringFromClass(stack.class) isEqual:@"TSSettingsOpacityPresentation"] && stack.spacing==4),[NSString stringWithFormat:@"Compact row and section spacing: %@ %.1f",stack.identifier,stack.spacing]);}
 }
