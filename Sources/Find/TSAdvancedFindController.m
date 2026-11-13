@@ -76,6 +76,7 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
         case TSAdvancedFindActionSelectAll:
         case TSAdvancedFindActionSelectAllInSelection:
         case TSAdvancedFindActionHighlight:
+        case TSAdvancedFindActionFindAll:
         case TSAdvancedFindActionJumpToSelection:
             return textView.isSelectable;
         case TSAdvancedFindActionSetFindString:
@@ -150,6 +151,8 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
         case TSAdvancedFindActionUnhighlight:
             [self removeHighlightsInTextView:textView];
             return YES;
+        case TSAdvancedFindActionFindAll:
+            return [self findAllInTextView:textView];
         case TSAdvancedFindActionJumpToSelection:
             [textView scrollRangeToVisible:textView.selectedRange];
             [textView showFindIndicatorForRange:textView.selectedRange];
@@ -347,6 +350,32 @@ NSString *TSAdvancedFindPatternFindingText(NSString *text, TSRegexFindOptions op
     [textView scrollRangeToVisible:matches.firstObject.rangeValue];
     NSString *format = TSLocalized(@"AdvancedFind.Found", @"%lu found");
     [self report:[NSString stringWithFormat:format, (unsigned long)matches.count] isError:NO];
+    return YES;
+}
+
+#pragma mark Find All
+
+/// Hands the list of every match to `findAllHandler`; nothing is listed when there is no match. As in OgreKit, the
+/// text is not highlighted: that is "Highlight All". The search runs on the main thread;
+/// +[TSAdvancedFindResults itemsOfFind:…] can run on another queue as well.
+- (BOOL)findAllInTextView:(NSTextView *)textView
+{
+    TSRegexTextFind *find = [self textFindForTextView:textView inSelection:self.settings.inSelection quiet:NO];
+    NSTextStorage *storage = textView.textStorage;
+    if (!find || !storage)
+        return NO; // already beeped and reported
+    [self.settings noteFindString];
+    NSArray<TSAdvancedFindResultItem *> *items = [TSAdvancedFindResults itemsOfFind:find cancellation:nil progress:nil] ?: @[];
+    if (items.count == 0) {
+        self.beepHandler();
+        [self report:TSLocalized(@"AdvancedFind.NotFound", @"Not found") isError:NO];
+        return NO;
+    }
+    TSAdvancedFindResults *results = [[TSAdvancedFindResults alloc] initWithTextStorage:storage find:find findString:self.settings.findString items:items];
+    NSString *format = TSLocalized(@"AdvancedFind.Found", @"%lu found");
+    [self report:[NSString stringWithFormat:format, (unsigned long)items.count] isError:NO];
+    if (self.findAllHandler)
+        self.findAllHandler(results, textView);
     return YES;
 }
 

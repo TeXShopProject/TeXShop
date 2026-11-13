@@ -114,6 +114,9 @@ static void settle(NSWindow *w) {
 - (NSInteger)resizeOption { return resizeOption; }
 - (void)setResizeOption:(NSInteger)option { resizeOption = option; }
 - (void)cleanupMarquee:(BOOL)terminate { self.marqueeCleanups++; }
+// Zoom cleans up the marquee and keeps a pinned link popup, in view (#35).
+- (void)cleanupMarqueeKeepingPinnedLinkPreview { self.marqueeCleanups++; }
+- (void)keepPinnedLinkPreviewInView {}
 VIEWMETHODS
 @end
 @implementation TestDocument

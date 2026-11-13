@@ -8,6 +8,8 @@
 "AdvancedFind.DelimitByWhitespace" = "空白で区切った語のどれかを検索";
 "AdvancedFind.DotMatchesLineSeparators" = ". を改行にも一致させる";
 "AdvancedFind.Extended" = "パターンの空白と # コメントを無視";
+"AdvancedFind.FindAll" = "すべて検索";
+"AdvancedFind.FindAllTip" = "すべての一致を検索して一覧にします";
 "AdvancedFind.FindHistory" = "検索履歴";
 "AdvancedFind.FindLabel" = "検索:";
 "AdvancedFind.Found" = "%lu件一致";
@@ -38,6 +40,13 @@
 "AdvancedFind.ReplaceHistory" = "置換履歴";
 "AdvancedFind.ReplaceLabel" = "置換:";
 "AdvancedFind.Replaced" = "%lu件置き換えました";
+"AdvancedFind.Results.Close" = "一覧を閉じる";
+"AdvancedFind.Results.Count" = "“%1$@”で%2$lu件見つかりました";
+"AdvancedFind.Results.CountStale" = "“%1$@”で%2$lu件見つかりました（うち%3$lu件はその後の編集で変わりました）";
+"AdvancedFind.Results.FindString" = "検索文字列: %@";
+"AdvancedFind.Results.Line" = "行";
+"AdvancedFind.Results.LiveUpdate" = "自動更新";
+"AdvancedFind.Results.Text" = "一致したテキスト";
 "AdvancedFind.Section.Common" = "共通";
 "AdvancedFind.Section.Regex" = "正規表現";
 "AdvancedFind.Section.Text" = "通常の検索";

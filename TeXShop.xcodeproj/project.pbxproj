@@ -19,6 +19,9 @@
 		D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		F909CBB2A6D94D6A5696B0C9 /* TSAdvancedFindPanelController+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		1895D6CEBE4D7B48C7EF5492 /* TSAdvancedFindPanelController+Results.m in Sources */ = {isa = PBXBuildFile; fileRef = 41B52FCFCFDDAFFAA4549511 /* TSAdvancedFindPanelController+Results.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		C87CF08715A6CC2BD4D75FC2 /* TSAdvancedFindResults.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F95C110DB3998509E8EE01F /* TSAdvancedFindResults.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
+		6CAD22D2940E41528C2B376B /* TSAdvancedFindResultsView.m in Sources */ = {isa = PBXBuildFile; fileRef = C797C937301893B2449D5004 /* TSAdvancedFindResultsView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		1515E934D4D5C57D578A0B70 /* TSAdvancedFindPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		CA2B36C2CA1477FDBB2CF755 /* TSAdvancedFindSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
 		E7D37A94A8A25460D369D60C /* TSAdvancedFindTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C81BD7E5D80BF55BE94E34 /* TSAdvancedFindTextView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=nullability-completeness -Werror=unguarded-availability-new"; }; };
@@ -418,6 +421,11 @@
 		DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Actions.m"; sourceTree = "<group>"; };
 		27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+History.m"; sourceTree = "<group>"; };
 		0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Options.m"; sourceTree = "<group>"; };
+		41B52FCFCFDDAFFAA4549511 /* TSAdvancedFindPanelController+Results.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TSAdvancedFindPanelController+Results.m"; sourceTree = "<group>"; };
+		A1AA8C04CAF0B6DA6DCAEC4E /* TSAdvancedFindResults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindResults.h; sourceTree = "<group>"; };
+		2F95C110DB3998509E8EE01F /* TSAdvancedFindResults.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindResults.m; sourceTree = "<group>"; };
+		569D7D77C416E27B3DB38FB9 /* TSAdvancedFindResultsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindResultsView.h; sourceTree = "<group>"; };
+		C797C937301893B2449D5004 /* TSAdvancedFindResultsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindResultsView.m; sourceTree = "<group>"; };
 		D39F26F1E3FD4FC8AF0F8847 /* TSAdvancedFindPanelController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TSAdvancedFindPanelController+Private.h"; sourceTree = "<group>"; };
 		452157E5DF6449194BF0E926 /* TSAdvancedFindPanelController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSAdvancedFindPanelController.h; sourceTree = "<group>"; };
 		9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSAdvancedFindPanelController.m; sourceTree = "<group>"; };
@@ -1734,9 +1742,14 @@
 				DB29034FA28C8124507DFF25 /* TSAdvancedFindPanelController+Actions.m */,
 				27C43187D643C8B79289AB25 /* TSAdvancedFindPanelController+History.m */,
 				0967693A34326EE9E6FBA327 /* TSAdvancedFindPanelController+Options.m */,
+				41B52FCFCFDDAFFAA4549511 /* TSAdvancedFindPanelController+Results.m */,
 				D39F26F1E3FD4FC8AF0F8847 /* TSAdvancedFindPanelController+Private.h */,
 				452157E5DF6449194BF0E926 /* TSAdvancedFindPanelController.h */,
 				9FCF2A3181BB2E666FF3BE52 /* TSAdvancedFindPanelController.m */,
+				A1AA8C04CAF0B6DA6DCAEC4E /* TSAdvancedFindResults.h */,
+				2F95C110DB3998509E8EE01F /* TSAdvancedFindResults.m */,
+				569D7D77C416E27B3DB38FB9 /* TSAdvancedFindResultsView.h */,
+				C797C937301893B2449D5004 /* TSAdvancedFindResultsView.m */,
 				06EAF730931230D8B0E2F3BB /* TSAdvancedFindSettings.h */,
 				80D87B64004DCACC0F91003B /* TSAdvancedFindSettings.m */,
 				129E025F1EB924880C4110F7 /* TSAdvancedFindTextView.h */,
@@ -2015,7 +2028,10 @@
 				D50CE16F90F64FDBE3758709 /* TSAdvancedFindPanelController+Actions.m in Sources */,
 				15DF76C178AFF47DC3F19EA6 /* TSAdvancedFindPanelController+History.m in Sources */,
 				F909CBB2A6D94D6A5696B0C9 /* TSAdvancedFindPanelController+Options.m in Sources */,
+				1895D6CEBE4D7B48C7EF5492 /* TSAdvancedFindPanelController+Results.m in Sources */,
 				1515E934D4D5C57D578A0B70 /* TSAdvancedFindPanelController.m in Sources */,
+				C87CF08715A6CC2BD4D75FC2 /* TSAdvancedFindResults.m in Sources */,
+				6CAD22D2940E41528C2B376B /* TSAdvancedFindResultsView.m in Sources */,
 				CA2B36C2CA1477FDBB2CF755 /* TSAdvancedFindSettings.m in Sources */,
 				E7D37A94A8A25460D369D60C /* TSAdvancedFindTextView.m in Sources */,
 				18ED0114B6072AE86BC14850 /* TSPreferenceLaunch.m in Sources */,

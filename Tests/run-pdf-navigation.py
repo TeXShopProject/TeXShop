@@ -48,6 +48,9 @@ static void CountedRestore(PDFView *view, TSExternalPDFPosition position) {
 @end
 @implementation NavigationView
 -(void)cleanupMarquee:(BOOL)b {}
+-(void)cleanupMarqueeKeepingPinnedLinkPreview {}
+-(void)keepPinnedLinkPreviewInView {}
+-(void)closePinnedLinkPreview {}
 METHODS
 @end
 // PDFKit may identify either member of a visible spread as currentPage.

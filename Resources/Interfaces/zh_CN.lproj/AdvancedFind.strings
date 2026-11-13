@@ -8,6 +8,8 @@
 "AdvancedFind.DelimitByWhitespace" = "查找以空格分隔的任一词";
 "AdvancedFind.DotMatchesLineSeparators" = ". 也匹配换行符";
 "AdvancedFind.Extended" = "忽略模式中的空格和 # 注释";
+"AdvancedFind.FindAll" = "全部查找";
+"AdvancedFind.FindAllTip" = "查找并列出所有匹配项。";
 "AdvancedFind.FindHistory" = "最近搜索";
 "AdvancedFind.FindLabel" = "查找：";
 "AdvancedFind.Found" = "找到 %lu个";
@@ -38,6 +40,13 @@
 "AdvancedFind.ReplaceHistory" = "最近替换";
 "AdvancedFind.ReplaceLabel" = "替换成：";
 "AdvancedFind.Replaced" = "已替换 %lu个";
+"AdvancedFind.Results.Close" = "关闭列表";
+"AdvancedFind.Results.Count" = "在“%1$@”中找到%2$lu个";
+"AdvancedFind.Results.CountStale" = "在“%1$@”中找到%2$lu个（其中%3$lu个已更改）";
+"AdvancedFind.Results.FindString" = "查找字符串：%@";
+"AdvancedFind.Results.Line" = "行";
+"AdvancedFind.Results.LiveUpdate" = "实时更新";
+"AdvancedFind.Results.Text" = "匹配的文本";
 "AdvancedFind.Section.Common" = "两者通用";
 "AdvancedFind.Section.Regex" = "正则表达式";
 "AdvancedFind.Section.Text" = "文本查找";

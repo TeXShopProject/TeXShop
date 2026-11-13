@@ -8,6 +8,8 @@
 "AdvancedFind.DelimitByWhitespace" = "공백으로 구분된 단어 중 하나 찾기";
 "AdvancedFind.DotMatchesLineSeparators" = ".이 줄바꿈에도 일치";
 "AdvancedFind.Extended" = "패턴의 공백 및 # 주석 무시";
+"AdvancedFind.FindAll" = "모두 찾기";
+"AdvancedFind.FindAllTip" = "모든 일치 항목을 찾아 목록으로 표시합니다.";
 "AdvancedFind.FindHistory" = "최근 검색";
 "AdvancedFind.FindLabel" = "찾기:";
 "AdvancedFind.Found" = "%lu개 찾음";
@@ -38,6 +40,13 @@
 "AdvancedFind.ReplaceHistory" = "최근 대치";
 "AdvancedFind.ReplaceLabel" = "대치할 단어:";
 "AdvancedFind.Replaced" = "%lu개 대치됨";
+"AdvancedFind.Results.Close" = "목록 닫기";
+"AdvancedFind.Results.Count" = "‘%1$@’에서 %2$lu개 찾음";
+"AdvancedFind.Results.CountStale" = "‘%1$@’에서 %2$lu개 찾음 (그중 %3$lu개 변경됨)";
+"AdvancedFind.Results.FindString" = "찾을 문자열: %@";
+"AdvancedFind.Results.Line" = "줄";
+"AdvancedFind.Results.LiveUpdate" = "실시간 업데이트";
+"AdvancedFind.Results.Text" = "일치하는 텍스트";
 "AdvancedFind.Section.Common" = "공통";
 "AdvancedFind.Section.Regex" = "정규 표현식";
 "AdvancedFind.Section.Text" = "텍스트 검색";

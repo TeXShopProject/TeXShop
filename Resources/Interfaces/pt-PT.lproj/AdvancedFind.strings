@@ -8,6 +8,8 @@
 "AdvancedFind.DelimitByWhitespace" = "Procurar qualquer uma das palavras separadas por espaços";
 "AdvancedFind.DotMatchesLineSeparators" = ". corresponde a quebras de linha";
 "AdvancedFind.Extended" = "Ignorar espaços e comentários # no padrão";
+"AdvancedFind.FindAll" = "Procurar tudo";
+"AdvancedFind.FindAllTip" = "Procurar e listar todas as correspondências.";
 "AdvancedFind.FindHistory" = "Últimas pesquisas";
 "AdvancedFind.FindLabel" = "Procurar:";
 "AdvancedFind.Found" = "Correspondências: %lu";
@@ -38,6 +40,13 @@
 "AdvancedFind.ReplaceHistory" = "Últimas substituições";
 "AdvancedFind.ReplaceLabel" = "Substituir por:";
 "AdvancedFind.Replaced" = "Substituições: %lu";
+"AdvancedFind.Results.Close" = "Fechar a lista";
+"AdvancedFind.Results.Count" = "Correspondências em “%1$@”: %2$lu";
+"AdvancedFind.Results.CountStale" = "Correspondências em “%1$@”: %2$lu (alteradas entretanto: %3$lu)";
+"AdvancedFind.Results.FindString" = "Texto procurado: %@";
+"AdvancedFind.Results.Line" = "Linha";
+"AdvancedFind.Results.LiveUpdate" = "Atualização automática";
+"AdvancedFind.Results.Text" = "Texto correspondente";
 "AdvancedFind.Section.Common" = "Ambos";
 "AdvancedFind.Section.Regex" = "Expressão regular";
 "AdvancedFind.Section.Text" = "Pesquisa de texto";

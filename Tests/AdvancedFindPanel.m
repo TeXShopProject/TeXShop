@@ -512,15 +512,16 @@ static void TestPanel(NSString *_Nullable imageDirectory)
     TSAdvancedFindSettings *settings = controller.settings;
     NSString *language = NSBundle.mainBundle.preferredLocalizations.firstObject ?: @"en";
 
-    // The parts of the panel
+    // The parts of the panel (Find All and its list: Tests/AdvancedFindResults.m)
     Check(panel.buttons.count == 4 && [panel.buttons[0] isKindOfClass:NSComboButton.class] && [panel.buttons[2] isKindOfClass:NSComboButton.class]
-          && [panel.buttons[3] isKindOfClass:NSSegmentedControl.class], @"Highlight All ▾, Replace All, Replace & Find ▾, previous / next");
+          && [panel.buttons[3] isKindOfClass:NSSegmentedControl.class], @"Find All ▾, Replace All, Replace & Find ▾, previous / next");
     for (NSButton *box in panel.optionBoxes)
         Check(box.controlSize == NSControlSizeSmall, @"the options row is small, as in CotEditor");
-    NSComboButton *highlightAll = (NSComboButton *)panel.buttons[0];
-    Check(highlightAll.action == @selector(advancedHighlight:) && highlightAll.menu.numberOfItems == 2
-          && highlightAll.menu.itemArray[0].action == @selector(advancedSelectAll:) && highlightAll.menu.itemArray[1].action == @selector(advancedUnhighlight:),
-          @"Select All and Remove Highlights under Highlight All");
+    NSComboButton *findAll = (NSComboButton *)panel.buttons[0];
+    Check(findAll.action == @selector(advancedFindAll:) && findAll.menu.numberOfItems == 4
+          && findAll.menu.itemArray[0].action == @selector(advancedHighlight:) && findAll.menu.itemArray[1].action == @selector(advancedSelectAll:)
+          && findAll.menu.itemArray[3].action == @selector(advancedUnhighlight:),
+          @"Highlight All, Select All and Remove Highlights under Find All");
     Check([panel.window.title isEqualToString:L(@"AdvancedFind.Title", @"Find and Replace")], @"the panel's title");
 
     // The panel acts on the target text view; read-only gray-out of the replacing buttons

@@ -37,18 +37,37 @@
 
 // Scroll so the line containing `range` is vertically centred in the visible
 // area, as far as the ends of the document allow.
+//
+// A long text is laid out only where it is needed (non-contiguous layout), and
+// where text that has not been laid out lies is an estimate. Laid out alone,
+// the range is placed among estimates. Once the lines to be shown above it are
+// laid out, it moves, often by more than a screen, while the view keeps its
+// top line, so that it could end up below the visible area (#38). So the text
+// that is to be shown around the range is laid out first, until the range
+// stays where it is, and the view is then scrolled once. About a screen of
+// text is laid out, not the whole text before the range. This also lays out
+// the text below the range, so that the text view is already tall enough to
+// centre it when the text is laid out in full.
 + (void)centerRange:(NSRange)range inTextView:(NSTextView *)tv
 {
     NSScrollView *sv = tv.enclosingScrollView;
     if (!sv) { [tv scrollRangeToVisible:range]; return; }
     NSLayoutManager *lm = tv.layoutManager;
-    // Lay out only as much as is needed to place the range, not the whole text.
-    [lm ensureLayoutForCharacterRange:range];
-    NSRange glyphs = [lm glyphRangeForCharacterRange:range actualCharacterRange:NULL];
-    NSRect r = [lm boundingRectForGlyphRange:glyphs inTextContainer:tv.textContainer];
-    CGFloat midY = NSMidY(r) + tv.textContainerOrigin.y;
+    NSTextContainer *tc = tv.textContainer;
     NSClipView *clip = sv.contentView;
     CGFloat viewH = clip.bounds.size.height;
+    NSRect r = NSZeroRect;
+    for (NSUInteger pass = 0; pass < 8; pass++) {
+        [lm ensureLayoutForCharacterRange:range];
+        NSRange glyphs = [lm glyphRangeForCharacterRange:range actualCharacterRange:NULL];
+        NSRect placed = [lm boundingRectForGlyphRange:glyphs inTextContainer:tc];
+        if (pass > 0 && NSEqualRects(placed, r)) break;
+        r = placed;
+        // The part of the text container that is to be visible.
+        [lm ensureLayoutForBoundingRect:NSMakeRect(0, NSMidY(r) - viewH / 2, tc.size.width, viewH)
+                        inTextContainer:tc];
+    }
+    CGFloat midY = NSMidY(r) + tv.textContainerOrigin.y;
     CGFloat docH = MAX(tv.frame.size.height, NSMaxY(r) + 2 * tv.textContainerOrigin.y);
     CGFloat topY = midY - viewH / 2;
     topY = MAX(0, MIN(topY, MAX(docH - viewH, 0)));
@@ -468,12 +487,21 @@ static NSView *TSChangeAllAccessory(id target, NSTextField * __strong *field, NS
     return word;
 }
 
-+ (void)showSpellingPanelForTextView:(NSTextView *)tv mask:(TSSpellMask *)mask openPanel:(void (^)(void))openPanel
++ (void)showSpellingPanelForTextView:(NSTextView *)tv mask:(TSSpellMask *)mask hidePanel:(void (^)(void))hidePanel
 {
-    NSRange before = tv.selectedRange;
+    NSPanel *panel = [NSSpellChecker sharedSpellChecker].spellingPanel;
+    // While the panel is shown, the menu item reads Hide Spelling and Grammar.
+    if (panel.isVisible) {
+        hidePanel();
+        return;
+    }
+    // The panel is shown here, not by the text view's own showGuessPanel:. That
+    // one also starts the system's search, which does not know the rules, and
+    // in a long text, or when grammar is checked too, carries on after it has
+    // returned. It would then select its own finding in place of the one below,
+    // and show it in the panel.
     [self installChangeAllButton];
-    openPanel();                        // shows the panel; the system also selects "its" first misspelling
-    tv.selectedRange = before;          // undo that markup-blind search
+    [panel orderFront:nil];
     NSString *word = [self findNextMisspellingInTextView:tv mask:mask];
 
     // Do not schedule another search with a captured mask: the document or

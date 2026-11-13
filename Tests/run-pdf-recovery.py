@@ -86,6 +86,7 @@ WINDOW_METHODS
     BOOL drawMark,secondNeedsInitialization;
     NSRect secondVisibleRect,secondFullRect;
     TSExternalPDFPosition secondViewport;
+    NSView *pinnedLinkPreview;
 }
 @property BOOL firstTime,oldUsed,doScroll,skipLinks,globalLongTerm;
 @property NSInteger handlingLink,timerNumber,stringAlignment;

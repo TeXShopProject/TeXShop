@@ -8,6 +8,8 @@
 "AdvancedFind.DelimitByWhitespace" = "Găsiți oricare dintre cuvintele separate prin spații";
 "AdvancedFind.DotMatchesLineSeparators" = ". se potrivește cu întreruperile de linie";
 "AdvancedFind.Extended" = "Ignorați spațiile și comentariile # din model";
+"AdvancedFind.FindAll" = "Găsiți tot";
+"AdvancedFind.FindAllTip" = "Găsiți toate potrivirile și afișați-le într-o listă.";
 "AdvancedFind.FindHistory" = "Căutări recente";
 "AdvancedFind.FindLabel" = "Găsiți:";
 "AdvancedFind.Found" = "Potriviri: %lu";
@@ -38,6 +40,13 @@
 "AdvancedFind.ReplaceHistory" = "Înlocuiri recente";
 "AdvancedFind.ReplaceLabel" = "Înlocuiți cu:";
 "AdvancedFind.Replaced" = "Înlocuiri: %lu";
+"AdvancedFind.Results.Close" = "Închideți lista";
+"AdvancedFind.Results.Count" = "Potriviri în „%1$@”: %2$lu";
+"AdvancedFind.Results.CountStale" = "Potriviri în „%1$@”: %2$lu (modificate ulterior: %3$lu)";
+"AdvancedFind.Results.FindString" = "Șirul căutat: %@";
+"AdvancedFind.Results.Line" = "Linie";
+"AdvancedFind.Results.LiveUpdate" = "Actualizare automată";
+"AdvancedFind.Results.Text" = "Text potrivit";
 "AdvancedFind.Section.Common" = "Ambele";
 "AdvancedFind.Section.Regex" = "Expresie regulată";
 "AdvancedFind.Section.Text" = "Căutare de text";
