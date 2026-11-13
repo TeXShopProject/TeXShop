@@ -2,6 +2,7 @@
 source, and the stubs it needs (encoding filters copied from their source,
 theme colors and preferences)."""
 from pathlib import Path
+from source_tree import advanced_find_syntax_sources
 
 
 def cut(text, start, end):
@@ -65,5 +66,8 @@ static BOOL behind;
 
 
 def advanced_find_sources(root, tmp):
-    """The Experiment output is a TSAdvancedFindTextView: the sources of Sources/Find."""
-    return [str(p) for p in sorted((Path(root) / 'Sources/Find').glob('*.m'))]
+    """The Experiment output is a TSAdvancedFindTextView: the sources of Sources/Find, with what the panel's fields need
+    of the shared syntax coloring. The tests that use this define their own TSColorSupport (see prefix), so the
+    stand-in for it is left out."""
+    syntax = [str(p) for p in advanced_find_syntax_sources(root) if p.name != 'TSColorSupportStub.m']
+    return [str(p) for p in sorted((Path(root) / 'Sources/Find').glob('*.m'))] + syntax

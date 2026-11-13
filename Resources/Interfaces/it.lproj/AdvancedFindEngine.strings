@@ -28,7 +28,7 @@
 "In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "In ICU \\h è uno spazio orizzontale (OgreKit: cifra esadecimale). Cifre: [0-9a-fA-F].";
 
 /* Cheat sheet and find field, differences from OgreKit. */
-"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU." = "ICU: (?m) applica ^ e $ a ogni riga. Il (?m) di OgreKit (. con gli a capo) in ICU è (?s).";
+"In ICU (?m) makes ^ and $ match at each line; OgreKit’s (?m), where . matches line breaks, is (?s)." = "ICU: (?m) applica ^ e $ a ogni riga. Il (?m) di OgreKit (. con gli a capo) in ICU è (?s).";
 
 /* Cheat sheet and find field, differences from OgreKit. */
 "In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "In ICU {n}+ è possessivo; in OgreKit ripeteva la ripetizione.";

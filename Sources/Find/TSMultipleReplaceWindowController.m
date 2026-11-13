@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSMultipleReplaceWindowController.h"
+#import "TSAdvancedFindFieldScanners.h"
 #import "TSAdvancedFindTextView.h"
 #import "TSAdvancedFindController+MultipleReplace.h"
 #import "TSAdvancedFindOptionsForm.h"
@@ -20,6 +21,23 @@
 /// Kept while its view is shown: the check boxes target it.
 @property (nonatomic, strong, nullable) TSAdvancedFindOptionsForm *optionsForm;
 @end
+
+/// A rule's find or replacement text colored as the find panel's fields are: only for an enabled regular expression rule.
+static NSAttributedString *_Nullable TSMultipleReplaceColoredField(NSString *string, TSRegexReplacementRule *rule, TSMultipleReplaceRuleField field,
+                                                                  TSRegexFindOptions options, TSRegexReplacementSyntax syntax,
+                                                                  NSDictionary<NSAttributedStringKey, id> *attributes)
+{
+    if (!rule.usesRegularExpression || !rule.enabled || !(options & TSRegexFindRegularExpression))
+        return nil;
+    id<TSSyntaxScanner> scanner;
+    if (field == TSMultipleReplaceRuleFieldFind)
+        scanner = [[TSAdvancedFindPatternScanner alloc] initWithOptions:options];
+    else {
+        TSRegexFindPattern *pattern = rule.findString.length > 0 ? [[TSRegexFindPattern alloc] initWithFindString:rule.findString options:options error:NULL] : nil;
+        scanner = [[TSAdvancedFindReplacementScanner alloc] initWithSyntax:syntax options:options pattern:pattern];
+    }
+    return TSAdvancedFindColoredString(string, scanner, TSAdvancedFindFieldColorScheme(), attributes);
+}
 
 @implementation TSMultipleReplaceWindowController
 
@@ -44,6 +62,10 @@
     _ruleTable = [TSMultipleReplaceRuleTable new];
     __weak typeof(self) weakSelf = self;
     _ruleTable.setChangedHandler = ^(TSRegexMultipleReplace *set) { [weakSelf saveSet:set]; };
+    _ruleTable.fieldStyler = ^NSAttributedString *_Nullable(NSString *string, TSRegexReplacementRule *rule, TSMultipleReplaceRuleField field,
+                                                            TSRegexFindOptions options, NSDictionary<NSAttributedStringKey, id> *attributes) {
+        return TSMultipleReplaceColoredField(string, rule, field, options, weakSelf.ruleTable.set.replacementSyntax, attributes);
+    };
     [self buildContent];
     [self reloadSets];
     return self;

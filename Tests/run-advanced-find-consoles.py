@@ -16,7 +16,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from source_tree import include_args, source_file
+from source_tree import include_args, source_file, advanced_find_syntax_sources
 from experiment_console_source import prefix as console_prefix
 
 root = Path(__file__).resolve().parents[1]
@@ -154,6 +154,7 @@ def build(tmp, sources):
                     *include_args(root), '-I', str(root / 'Tests'), '-framework', 'Cocoa', '-framework', 'PDFKit', '-framework', 'Quartz',
                     str(root / 'Tests/AdvancedFindConsoles.m'), str(tmp / 'console.m'), str(tmp / 'document.m'), str(tmp / 'keys.m'),
                     str(root / 'Sources/Typesetting/TSExperimentJob.m'), str(root / 'Sources/Typesetting/TSConsoleOutput.m'), *finds,
+                    *(str(p) for p in advanced_find_syntax_sources(root) if p.name != 'TSColorSupportStub.m'),
                     '-o', str(probe)], check=True)
     return probe
 

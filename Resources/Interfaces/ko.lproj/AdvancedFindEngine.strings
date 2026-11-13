@@ -28,7 +28,7 @@
 "In ICU \\h is a horizontal space; in OgreKit it was a hexadecimal digit. For a digit, write [0-9a-fA-F]." = "ICU의 \\h는 수평 공백입니다(OgreKit에서는 16진수 숫자). 16진수 숫자는 [0-9a-fA-F]로 작성하십시오.";
 
 /* Cheat sheet and find field, differences from OgreKit. */
-"In ICU (?m) makes ^ and $ match at each line; in OgreKit it made . match line breaks, which is (?s) in ICU." = "ICU의 (?m)은 ^와 $를 각 줄에 일치시킵니다. OgreKit의 (?m)(.이 줄바꿈에 일치)은 ICU의 (?s)입니다.";
+"In ICU (?m) makes ^ and $ match at each line; OgreKit’s (?m), where . matches line breaks, is (?s)." = "ICU의 (?m)은 ^와 $를 각 줄에 일치시킵니다. OgreKit의 (?m)(.이 줄바꿈에 일치)은 ICU의 (?s)입니다.";
 
 /* Cheat sheet and find field, differences from OgreKit. */
 "In ICU {n}+ is possessive; in OgreKit it repeated the repetition." = "ICU의 {n}+는 소유 수량자입니다(OgreKit에서는 반복을 다시 반복함).";

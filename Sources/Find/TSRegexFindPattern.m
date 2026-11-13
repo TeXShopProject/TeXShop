@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSRegexFindPattern.h"
+#import "TSRegexPatternLexer.h"
 
 static NSString *const TSYenSign = @"¥";
 
@@ -263,20 +264,6 @@ static inline BOOL TSIsQuickCharacter(unichar c)
     return result;
 }
 
-/// Names of `(?<name>...)` groups that are not escaped. ICU names are ASCII letters and digits.
-+ (NSArray<NSString *> *)groupNamesInPattern:(NSString *)pattern
-{
-    static NSRegularExpression *nameRegex;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        nameRegex = [NSRegularExpression regularExpressionWithPattern:@"(?<!\\\\)(?:\\\\\\\\)*\\(\\?<([A-Za-z][A-Za-z0-9]*)>" options:0 error:NULL];
-    });
-    NSMutableArray<NSString *> *names = [NSMutableArray array];
-    for (NSTextCheckingResult *match in [nameRegex matchesInString:pattern options:0 range:NSMakeRange(0, pattern.length)])
-        [names addObject:[pattern substringWithRange:[match rangeAtIndex:1]]];
-    return names;
-}
-
 - (nullable instancetype)initWithFindString:(NSString *)findString options:(TSRegexFindOptions)options error:(NSError **)error
 {
     if (!(self = [super init]))
@@ -298,7 +285,8 @@ static inline BOOL TSIsQuickCharacter(unichar c)
             return nil;
         }
         // A pattern read literally has no groups, whatever it looks like.
-        _captureGroupNames = (options & TSRegexFindIgnoreMetacharacters) ? @[] : [TSRegexFindPattern groupNamesInPattern:normalized];
+        // From the lexer: not a (?<name> inside a class, a comment or \Q…\E, nor any with the pattern read literally.
+        _captureGroupNames = [[TSRegexPatternLexer alloc] initWithString:normalized options:options].groupNames;
         _words = @[];
         _quickWords = @[];
     } else {
