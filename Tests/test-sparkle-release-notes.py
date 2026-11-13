@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Validate release-note packaging without signing, networking, or a real app."""
 import importlib.util
+import plistlib
+import sys
+from unittest import mock
 from pathlib import Path
 import tempfile
 import unittest
@@ -102,6 +105,65 @@ class PrereleaseTest(unittest.TestCase):
     def test_channel_matches_the_application(self):
         source = (ROOT / 'Sources/App/TSSparkleController.m').read_text(encoding='utf-8')
         self.assertIn(f'TSSparklePrereleaseChannel = @"{release.PRERELEASE_CHANNEL}";', source)
+
+
+class MainFeedTest(unittest.TestCase):
+    """Run main() end to end with the signing, notarization and archive tools replaced."""
+
+    def prepare(self, short, build):
+        self.root = Path(self.enterContext(tempfile.TemporaryDirectory()))
+        (self.root / 'website').mkdir()
+        (self.root / 'website/appcast.xml').write_text(
+            '<?xml version="1.0" encoding="utf-8"?><rss xmlns:sparkle="%s" version="2.0"><channel>'
+            '<item><title>TeXShop 5.59</title><sparkle:version>5.59</sparkle:version>'
+            '<sparkle:shortVersionString>5.59</sparkle:shortVersionString></item></channel></rss>' % release.SPARKLE,
+            encoding='utf-8')
+        notes = self.root / 'Documentation/Releases'
+        notes.mkdir(parents=True)
+        for suffix in ['', '-ja']:
+            (notes / f'5.60{suffix}.md').write_text('# TeXShop 5.60\n\n- Notes\n', encoding='utf-8')
+        (self.root / 'beta.md').write_text('## Changes since Beta 10\n', encoding='utf-8')
+        app = self.root / 'TeXShop.app/Contents'
+        app.mkdir(parents=True)
+        (app / 'Info.plist').write_bytes(plistlib.dumps({
+            'CFBundleShortVersionString': short, 'CFBundleVersion': build, 'LSMinimumSystemVersion': '14.6',
+            'SUFeedURL': release.FEED, 'SUPublicEDKey': release.KEY}))
+        return self.root / 'TeXShop.app'
+
+    def fake_run(self, *args):
+        tool = Path(str(args[0])).name
+        if tool == 'generate_keys':
+            return release.KEY
+        if tool == 'ditto':
+            Path(str(args[-1])).write_bytes(b'archive')
+        if tool == 'sign_update' and '-p' in args:
+            return 'TEST_SIGNATURE_NOT_FOR_PUBLICATION'
+        return ''
+
+    def feed(self, short, build, *options):
+        app = self.prepare(short, build)
+        options = [str(self.root / 'beta.md') if option == 'BETA_NOTES' else option for option in options]
+        out = self.root / 'staging'
+        with mock.patch.object(release, 'ROOT', self.root), mock.patch.object(release, 'run', self.fake_run), \
+                mock.patch.object(sys, 'argv', ['prepare', str(app), str(out), '--tools', '/nonexistent', *options]), \
+                mock.patch('builtins.print'):
+            release.main()
+        return ET.parse(out / 'appcast.xml').getroot().find('channel').find('item')
+
+    def test_release_urls_use_the_release_tag(self):
+        item = self.feed('5.60', '5.60')
+        self.assertEqual(item.find('enclosure').get('url'),
+                         'https://github.com/TeXShopProject/TeXShop/releases/download/v.5.60/TeXShop-5.60.zip')
+        self.assertIsNone(item.find(f'{{{release.SPARKLE}}}channel'))
+
+    def test_beta_urls_use_the_beta_tag(self):
+        item = self.feed('5.60 beta-11', '5.60b11', '--prerelease', 'BETA_NOTES')
+        self.assertEqual(item.find('enclosure').get('url'),
+                         'https://github.com/TeXShopProject/TeXShop/releases/download/v.5.60-beta.11/TeXShop-5.60-beta-11.zip')
+        self.assertEqual(item.findtext(f'{{{release.SPARKLE}}}fullReleaseNotesLink'),
+                         'https://github.com/TeXShopProject/TeXShop/releases/tag/v.5.60-beta.11')
+        self.assertEqual(item.findtext(f'{{{release.SPARKLE}}}channel'), 'prerelease')
+        self.assertEqual(item.findtext('description'), '## Changes since Beta 10')
 
 
 if __name__ == '__main__':

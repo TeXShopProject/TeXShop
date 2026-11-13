@@ -143,11 +143,11 @@ def main():
     signature = run(args.tools / 'sign_update', '--account', 'TeXShopProject', '-p', archive)
     run(args.tools / 'sign_update', '--account', 'TeXShopProject', '--verify', archive, signature)
     item = ET.Element('item')
-    for tag, value in [('title', f'TeXShop {version}'), ('pubDate', format_datetime(datetime.now(timezone.utc))),
+    for element, value in [('title', f'TeXShop {version}'), ('pubDate', format_datetime(datetime.now(timezone.utc))),
                        (f'{{{SPARKLE}}}version', info['CFBundleVersion']),
                        (f'{{{SPARKLE}}}shortVersionString', version),
                        (f'{{{SPARKLE}}}minimumSystemVersion', info['LSMinimumSystemVersion'])]:
-        ET.SubElement(item, tag).text = value
+        ET.SubElement(item, element).text = value
     if args.prerelease:
         append_prerelease(item, notes, tag)
     else:
