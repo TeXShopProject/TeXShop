@@ -23,6 +23,10 @@ if mutation == 'copy-shares-values':
         '    return (id)self;')
 elif mutation == 'yen-ignored':
     sources['TSSyntaxTeXScanner.m'] = sources['TSSyntaxTeXScanner.m'].replace('else if (c == texCharacter) {', "else if (c == '\\\\' && texCharacter) {")
+elif mutation == 'shares-commands':
+    sources['TSSyntaxTeXOptions.m'] = sources['TSSyntaxTeXOptions.m'].replace(
+        '_commandsWithUncheckedParameters = [[NSArray alloc] initWithArray:commands copyItems:YES];',
+        '_commandsWithUncheckedParameters = [commands copy];')
 elif mutation:
     sys.exit('unknown mutation ' + mutation)
 
@@ -74,6 +78,26 @@ int main(void) { @autoreleasepool {
     TSSyntaxTeXScanner *scanner = [[TSSyntaxTeXScanner alloc] initWithOptions:changed];
     changed.texCharacter = '\\';
     Check(scanner.options.texCharacter == 0x00A5, "the scanner keeps its own copy of the options");
+
+    // A mutable command name changed after the options are made changes nothing in them or in the scanner.
+    NSMutableString *name = [@"\\foo" mutableCopy];
+    TSMutableSyntaxTeXOptions *spelling = [TSMutableSyntaxTeXOptions new];
+    spelling.excludesParametersFromSpelling = YES;
+    spelling.commandsWithUncheckedParameters = @[name];
+    TSSyntaxTeXScanner *spellingScanner = [[TSSyntaxTeXScanner alloc] initWithOptions:spelling];
+    TSSyntaxTeXOptions *snapshot = [spelling copy];
+    TSMutableSyntaxTeXOptions *edited = [spelling mutableCopy];
+    [name setString:@"\\bar"];
+    __block NSRange skipped = NSMakeRange(NSNotFound, 0);
+    NSString *body = @"\\foo{body} \\bar{body}";
+    [spellingScanner enumerateTokensInString:body range:NSMakeRange(0, body.length) usingBlock:^(NSRange range, TSSyntaxRole role, TSSyntaxTokenFlags flags) {
+        if (role == TSSyntaxRoleNone && skipped.location == NSNotFound) skipped = range;
+    }];
+    Check(skipped.location == 0, "the scanner keeps the command it was given");
+    for (TSSyntaxTeXOptions *o in @[spelling, snapshot, edited])
+        Check([o.commandsWithUncheckedParameters isEqual:@[@"\\foo"]], "options and their copies keep the command they were given");
+    Check(![spelling.commandsWithUncheckedParameters.firstObject isKindOfClass:NSMutableString.class] ||
+          spelling.commandsWithUncheckedParameters.firstObject != name, "the options hold their own copy of the name");
 
     NSString *text = @"first line\nsecond line\nthird";
     NSRange lines = [scanner lineAlignedRangeForEditedRange:NSMakeRange(14, 2) inString:text];

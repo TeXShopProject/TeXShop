@@ -29,6 +29,17 @@
     return self;
 }
 
+// The lists keep copies of the commands too, so that a mutable string passed in cannot change them afterwards.
+- (void)setCommandsWithCheckedParameters:(NSArray<NSString *> *)commands
+{
+    _commandsWithCheckedParameters = [[NSArray alloc] initWithArray:commands copyItems:YES];
+}
+
+- (void)setCommandsWithUncheckedParameters:(NSArray<NSString *> *)commands
+{
+    _commandsWithUncheckedParameters = [[NSArray alloc] initWithArray:commands copyItems:YES];
+}
+
 - (void)copyValuesTo:(TSSyntaxTeXOptions *)copy
 {
     copy.texCharacter = self.texCharacter;
