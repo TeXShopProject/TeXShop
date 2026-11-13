@@ -27,15 +27,20 @@ rule = color[color.index('    NSDictionary *fullwidthAttributes = [scheme attrib
 rule = rule[:rule.index('self.fullwidthSymbolColorAttribute = ')]
 assert 'self.fullwidthSymbolColorAttribute = fullwidthAttributes.count ? fullwidthAttributes : nil;' in color
 block += rule + 'result = fullwidthAttributes.count ? fullwidthAttributes : nil;\n'
-membership = syntax[syntax.index('static inline BOOL TSIsHighlightedFullwidthCharacter'):]
+# The scanner finds the characters; the document asks for them when its scheme has fullwidth colors.
+scanner_header = source_file(root, 'TSSyntaxTeXScanner.h').read_text(encoding='utf-8')
+scanner = source_file(root, 'TSSyntaxTeXScanner.m').read_text(encoding='utf-8')
+membership = scanner_header[scanner_header.index('static inline BOOL TSIsHighlightedFullwidthCharacter'):]
 membership = membership[:membership.index('\n}\n') + 3]
 readers = ''.join(support[support.index(sig):support.index('\n}\n', support.index(sig)) + 3] for sig in
                   ['- (NSArray *) colorArrayFromDictionary:', '- (NSColor *) colorFromDictionary:', '- (NSColor *) colorAndAlphaFromDictionary:',
                    '- (NSColor *)liteColorWithKey:', '- (NSColor *)darkColorWithKey:', '- (NSColor *)liteColorAndAlphaWithKey:',
                    '- (NSColor *)darkColorAndAlphaWithKey:'])
-branch = syntax[syntax.index('else if (self.fullwidthSymbolColorAttribute && TSIsHighlightedFullwidthCharacter(theChar))'):]
-branch = branch[:branch.index('else if ((theChar == \'&\')')]
-assert 'addTemporaryAttributes:self.fullwidthSymbolColorAttribute' in branch
+branch = scanner[scanner.index('else if (fullwidth && TSIsHighlightedFullwidthCharacter((unichar)c))'):]
+branch = branch[:branch.index('else if ((c == \'&\')')]
+assert 'TSToken(&scan, location, 1, TSSyntaxRoleFullwidthSymbol);' in branch
+assert 'const BOOL fullwidth = options.marksFullwidthSymbols;' in scanner
+assert 'options.marksFullwidthSymbols = [self.syntaxColorScheme attributesForRole:TSSyntaxRoleFullwidthSymbol].count > 0;' in syntax
 if mutation == 'fallback-color':
     old = 'if (color)\n        attributes[NSForegroundColorAttributeName] = color;'
     assert scheme.count(old) == 1

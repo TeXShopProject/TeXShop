@@ -110,6 +110,8 @@ marker_keys = '\n'.join(f'NSString *{k} = {keys[k]};' for k in [
 
 program = r'''
 #import <Cocoa/Cocoa.h>
+#import "TSSyntaxTeXScanner.h"
+#import "TSSyntaxHighlighter.h"
 #import <objc/runtime.h>
 #import "TestAppKitIsolation.h"
 #import "TSSourceFormatRanges.h"
@@ -207,6 +209,7 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
     *indexColorAttribute, *markerColorAttribute, *markerColorCurlyAttribute, *markerColorParenAttribute,
     *markerColorSquareAttribute, *regularColorAttribute;
 @property BOOL blockCursor, fileIsXML, syntaxColor, syntaxcolorEntry, useExplColor, coloringWaitsForMarkedText;
+@property (readonly) TSSyntaxColorScheme *syntaxColorScheme;
 @property (strong) NSTextStorage *textStorage;
 @property (strong) NSTextView *textView;
 @property (strong) NSScrollView *logScrollView;
@@ -225,9 +228,6 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 - (void)removeCurrentLineColor:(NSTextView *)aTextView;
 - (void)viewFrameDidChange:(NSNotification *)notification;
 - (void)viewBoundsDidChange:(NSNotification *)notification;
-- (void)syntaxColorXML:(NSUInteger *)location from:(NSUInteger)lineStart to:(NSUInteger)lineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager;
-- (void)syntaxColorLimitedXML:(NSUInteger *)location and:(NSUInteger)lineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager;
-- (void)syntaxColorXMLCommentsfrom:(NSUInteger)aLineStart to:(NSUInteger)aLineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager;
 - (void)observeExperimentSource;
 - (void)syncExperimentSourceDisplay;
 - (void)applyExperimentTextLayout;
@@ -270,18 +270,36 @@ static NSMutableArray<NSString *> *indicators, *flashSelections;
 @@TAB_STOPS@@
 @@BRACE_SEARCH@@
 
+// The document's colors by role, as -changeColorsUsingDictionary: makes them, from the
+// attributes the test gives the document; XML is shown in XMLColor.
+static NSColor *XMLColor;
+static TSSyntaxColorScheme *SchemeOf(TSDocument *doc)
+{
+    NSDictionary *names = @{
+        @(TSSyntaxRoleCommand): @"commandColorAttribute", @(TSSyntaxRoleComment): @"commentColorAttribute",
+        @(TSSyntaxRoleMarker): @"markerColorAttribute", @(TSSyntaxRoleBracketParen): @"markerColorParenAttribute",
+        @(TSSyntaxRoleBracketCurly): @"markerColorCurlyAttribute", @(TSSyntaxRoleBracketSquare): @"markerColorSquareAttribute",
+        @(TSSyntaxRoleIndex): @"indexColorAttribute", @(TSSyntaxRoleFootnote): @"footnoteColorAttribute",
+        @(TSSyntaxRoleFullwidthSymbol): @"fullwidthSymbolColorAttribute",
+        @(TSSyntaxRoleExplVariable): @"explColorAttribute1", @(TSSyntaxRoleExplFunction): @"explColorAttribute2",
+        @(TSSyntaxRoleExplIntenseVariable): @"explColorAttribute3", @(TSSyntaxRoleExplIntenseFunction): @"explColorAttribute4",
+        @(TSSyntaxRoleExplMessage): @"explColorAttribute5", @(TSSyntaxRoleExplKey): @"explColorAttribute6",
+        @(TSSyntaxRoleExplKeyArgument): @"explColorAttribute7"};
+    NSMutableDictionary *roles = [NSMutableDictionary dictionary];
+    for (NSNumber *role in names) {
+        NSDictionary *attributes = [doc valueForKey:names[role]];
+        if (attributes) roles[role] = attributes;
+    }
+    for (NSNumber *role in @[@(TSSyntaxRoleXMLComment), @(TSSyntaxRoleXMLTag), @(TSSyntaxRoleXMLSpecial), @(TSSyntaxRoleXMLParameter), @(TSSyntaxRoleXMLValue)])
+        roles[role] = @{NSForegroundColorAttributeName: XMLColor};
+    return [[TSSyntaxColorScheme alloc] initWithAttributes:roles activeLineAttributes:doc.EntryColorAttribute ?: @{}
+                                  braceHighlightAttributes:@{} contentHighlightAttributes:@{}];
+}
 @implementation TSDocument
 @synthesize textView = textView;
+- (TSSyntaxColorScheme *)syntaxColorScheme { return SchemeOf(self); }
 - (IBAction)doUpdate:(id)sender {}
 - (void)setupTags {}
-static NSColor *XMLColor;
-- (void)syntaxColorXML:(NSUInteger *)location from:(NSUInteger)lineStart to:(NSUInteger)lineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager
-{
-    [layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName: XMLColor} forCharacterRange:NSMakeRange(*location, 1)];
-    (*location)++;
-}
-- (void)syntaxColorLimitedXML:(NSUInteger *)location and:(NSUInteger)lineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager { (*location)++; }
-- (void)syntaxColorXMLCommentsfrom:(NSUInteger)aLineStart to:(NSUInteger)aLineEnd using:(NSString *)textString with:(NSLayoutManager *)layoutManager {}
 @@DOCUMENT_METHODS@@
 @@TOGGLE_XML@@
 @end
@@ -633,7 +651,8 @@ with tempfile.TemporaryDirectory(prefix='texshop-marked-text-coloring-') as tmp:
     (tmp / 'probe.m').write_text(program, encoding='latin1')
     (tmp / 'keys.m').write_text('#import <Cocoa/Cocoa.h>\n' + marker_keys + '\nNSColor *InvisibleColor;\nBOOL atLeastMonterey = YES, atLeastSonoma = YES;\n', encoding='latin1')
     sources = [tmp / 'probe.m', tmp / 'keys.m', source_file(root, 'TSLayoutManager.m'), source_file(root, 'NoodleLineNumberView.m'),
-               source_file(root, 'NoodleLineNumberMarker.m'), source_file(root, 'NSText-Extras.m')]
+               source_file(root, 'NoodleLineNumberMarker.m'), source_file(root, 'NSText-Extras.m'),
+               *sorted((root / 'Sources/Syntax').glob('*.m'))]
     subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', '-framework', 'Cocoa', *include_args(root),
                     '-I', str(root / 'Tests'), *map(str, sources), '-o', str(tmp / 'probe')], check=True)
     result = subprocess.run([str(tmp / 'probe')], capture_output=True, text=True, timeout=120)

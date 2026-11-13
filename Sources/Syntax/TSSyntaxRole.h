@@ -8,8 +8,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, TSSyntaxRole) {
+    /// No color: a range that only carries flags, such as text left out of spell checking.
+    TSSyntaxRoleNone = -1,
     // TeX
-    TSSyntaxRoleCommand,
+    TSSyntaxRoleCommand = 0,
     TSSyntaxRoleComment,
     TSSyntaxRoleMarker,                 // $ &
     TSSyntaxRoleBracketParen,

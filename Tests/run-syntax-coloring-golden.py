@@ -13,8 +13,8 @@ marks and the paragraph alignment. Each case is compared with
 Tests/Fixtures/SyntaxColoringGolden.txt: in full for the small samples with the
 plain settings, and by a SHA-256 of the same record otherwise.
 
-The production category TSDocument (SyntaxHighlighting) and the XML coloring of
-TSDocument (XML) are compiled unchanged onto a small TSDocument stand-in. Text
+The production category TSDocument (SyntaxHighlighting) is compiled unchanged onto
+a small TSDocument stand-in, with the shared parts in Sources/Syntax. Text
 views use TextKit 1 and are never put in a window shown on screen. Preferences
 stay in memory.
 
@@ -26,26 +26,31 @@ stay in memory.
 from pathlib import Path
 import argparse, hashlib, json, re, subprocess, sys, tempfile, time
 from source_tree import include_args, source_file
-from production_fragments import method
 
 ROOT = Path(__file__).resolve().parents[1]
 SYNTAX = 'Sources/Editor/TSDocument-Syntax.m'
-XML = 'Sources/Document/TSDocument-XML.m'
+SCANNER = 'Sources/Syntax/TSSyntaxTeXScanner.m'
+XML = 'Sources/Syntax/TSSyntaxXMLScanning.m'
 DELEGATE = 'Sources/App/TSAppDelegate.m'
 FIXTURES = ROOT / 'Tests/Fixtures/SyntaxColoring'
 GOLDEN = ROOT / 'Tests/Fixtures/SyntaxColoringGolden.txt'
 
 MUTATIONS = {
     # A square bracket colored like a curly brace.
-    'square-as-curly': (SYNTAX, '[layoutManager addTemporaryAttributes:self.markerColorSquareAttribute forCharacterRange:colorRange];',
-                        '[layoutManager addTemporaryAttributes:self.markerColorCurlyAttribute forCharacterRange:colorRange];'),
+    'square-as-curly': (SCANNER, 'TSToken(&scan, location, 1, TSSyntaxRoleBracketSquare);', 'TSToken(&scan, location, 1, TSSyntaxRoleBracketCurly);'),
     # The minus sign no longer highlighted as a fullwidth character.
-    'no-minus-sign': (SYNTAX, ' || c == 0x2212;', ';'),
+    'no-minus-sign': ('Sources/Syntax/TSSyntaxTeXScanner.h', ' || c == 0x2212;', ';'),
     # The character after a command whose parameters are not spell checked is scanned again.
-    'rescan-after-parameters': (SYNTAX, 'spellLocation = location++;', 'spellLocation = location;'),
+    'rescan-after-parameters': (SCANNER, 'spellLocation = (*location)++;', 'spellLocation = (*location);'),
     # An XML comment one character shorter.
-    'xml-comment-short': (XML, 'colorRange.length = search1Range.location - colorRange.location + 3;\n            [layoutManager',
-                          'colorRange.length = search1Range.location - colorRange.location + 2;\n            [layoutManager'),
+    'xml-comment-short': (XML, 'colorRange.length = search1Range.location - colorRange.location + 3;\n            TSXMLToken',
+                          'colorRange.length = search1Range.location - colorRange.location + 2;\n            TSXMLToken'),
+    # The spelling of the parameters of \footnote starts at the command, not at its argument.
+    'footnote-spelling-from-command': (SCANNER, 'TSSkipParametersForSpelling(&scan, colorRange, &location);',
+                                       'TSSkipParametersForSpelling(&scan, command, &location);'),
+    # The highlighter clears what it colors, taking the colors of other features with it.
+    'highlighter-clears': ('Sources/Syntax/TSSyntaxHighlighter.m', '    TSSyntaxColorScheme *scheme = self.scheme;',
+                           '    [layoutManager removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:range];\n    TSSyntaxColorScheme *scheme = self.scheme;'),
 }
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -56,22 +61,21 @@ group.add_argument('--benchmark', action='store_true')
 group.add_argument('--mutation', choices=sorted(MUTATIONS))
 args = parser.parse_args()
 
-text = {path: (ROOT / path).read_text(encoding='latin1') for path in (SYNTAX, XML, DELEGATE)}
+text = {path: (ROOT / path).read_text(encoding='latin1') for path in (SYNTAX, DELEGATE)}
+# The shared parts of syntax coloring, compiled as they are, or with the mutation.
+syntax_parts = {p.relative_to(ROOT).as_posix(): p.read_text(encoding='utf-8') for p in sorted((ROOT / 'Sources/Syntax').iterdir())
+                if p.suffix in ('.h', '.m')}
 if args.mutation:
     path, old, new = MUTATIONS[args.mutation]
-    assert text[path].count(old) == 1, args.mutation
-    text[path] = text[path].replace(old, new)
+    source = text if path in text else syntax_parts
+    assert source[path].count(old) == 1, args.mutation
+    source[path] = source[path].replace(old, new)
 
 
 def strip_imports(source):
     return re.sub(r'^#import .*$', '', source, flags=re.M)
 
 
-xml_methods = '\n'.join(method(text[XML], s) for s in [
-    '- (BOOL) isValidLetter: (char) c',
-    '- (void) syntaxColorXMLCommentsfrom: (NSUInteger) aLineStart',
-    '- (void) syntaxColorXML: (NSUInteger *)location',
-    '- (void) syntaxColorLimitedXML: (NSUInteger *)location'])
 # The built-in lists of commands whose parameters are or are not spell checked.
 spell_lists = '\n'.join(re.search(r'^\s*%s = \[\[NSArray alloc\] initWithObjects:.*?nil\];' % name, text[DELEGATE], re.M | re.S).group(0)
                         for name in ('commandsToSpellCheck', 'commandsNotToSpellCheck'))
@@ -82,7 +86,13 @@ defines = '\n'.join(f'#define {k} {v}' for k, v in sorted(keys.items()))
 PROGRAM = r'''
 #import <Cocoa/Cocoa.h>
 #import "TestAppKitIsolation.h"
+#import "TSSyntaxColorScheme.h"
 #define SUD TSIsolatedAppKitDefaults
+// The scheme is made from the colors below, not from a theme.
+@interface TSColorSupport : NSObject
+@end
+@implementation TSColorSupport
+@end
 @@DEFINES@@
 #define MOJAVEORHIGHER
 BOOL atLeastMojave = YES;
@@ -125,6 +135,7 @@ static void LoadSpellLists(void) {
     *markerColorSquareAttribute, *regularColorAttribute, *commentXMLColorAttribute, *tagXMLColorAttribute,
     *specialXMLColorAttribute, *parameterXMLColorAttribute, *valueXMLColorAttribute;
 @property BOOL blockCursor, fileIsXML, syntaxColor, syntaxcolorEntry, useExplColor, coloringWaitsForMarkedText;
+@property (strong) TSSyntaxColorScheme *syntaxColorScheme;
 @property (strong) NSTextStorage *textStorage;
 @property (strong) NSTextView *textView;
 - (void)colorizeText:(NSTextView *)aTextView range:(NSRange)range;
@@ -142,7 +153,6 @@ static void LoadSpellLists(void) {
 - (BOOL)indexColorState { return indexColor; }
 - (void)colorizeExperimentSource { if (experimentShown) [self colorizeVisibleAreaInTextView:scrapTextView]; }
 - (void)refreshExperimentCurrentLine {}
-@@XML_METHODS@@
 @end
 
 @@SYNTAX@@
@@ -190,6 +200,21 @@ static void SetUpColors(TSDocument *doc, NSString *fullwidth)
         doc.fullwidthSymbolColorAttribute = @{NSForegroundColorAttributeName: fullwidthForeground};
     else
         doc.fullwidthSymbolColorAttribute = nil;
+    // The same colors by role, as -changeColorsUsingDictionary: makes them.
+    NSDictionary *roles = @{
+        @(TSSyntaxRoleCommand): doc.commandColorAttribute, @(TSSyntaxRoleComment): doc.commentColorAttribute,
+        @(TSSyntaxRoleMarker): doc.markerColorAttribute, @(TSSyntaxRoleBracketParen): doc.markerColorParenAttribute,
+        @(TSSyntaxRoleBracketCurly): doc.markerColorCurlyAttribute, @(TSSyntaxRoleBracketSquare): doc.markerColorSquareAttribute,
+        @(TSSyntaxRoleIndex): doc.indexColorAttribute, @(TSSyntaxRoleFootnote): doc.footnoteColorAttribute,
+        @(TSSyntaxRoleFullwidthSymbol): doc.fullwidthSymbolColorAttribute ?: @{},
+        @(TSSyntaxRoleExplVariable): doc.explColorAttribute1, @(TSSyntaxRoleExplFunction): doc.explColorAttribute2,
+        @(TSSyntaxRoleExplIntenseVariable): doc.explColorAttribute3, @(TSSyntaxRoleExplIntenseFunction): doc.explColorAttribute4,
+        @(TSSyntaxRoleExplMessage): doc.explColorAttribute5, @(TSSyntaxRoleExplKey): doc.explColorAttribute6,
+        @(TSSyntaxRoleExplKeyArgument): doc.explColorAttribute7, @(TSSyntaxRoleXMLComment): doc.commentXMLColorAttribute,
+        @(TSSyntaxRoleXMLTag): doc.tagXMLColorAttribute, @(TSSyntaxRoleXMLSpecial): doc.specialXMLColorAttribute,
+        @(TSSyntaxRoleXMLParameter): doc.parameterXMLColorAttribute, @(TSSyntaxRoleXMLValue): doc.valueXMLColorAttribute};
+    doc.syntaxColorScheme = [[TSSyntaxColorScheme alloc] initWithAttributes:roles activeLineAttributes:doc.EntryColorAttribute
+                                                    braceHighlightAttributes:@{} contentHighlightAttributes:@{}];
 }
 
 // TextKit 1, as in the source window: the text storage, its layout managers and the views.
@@ -488,7 +513,8 @@ int main(int argc, const char **argv) { @autoreleasepool {
 '''
 
 program = (PROGRAM.replace('@@DEFINES@@', defines).replace('@@SPELL_LISTS@@', spell_lists)
-           .replace('@@XML_METHODS@@', xml_methods).replace('@@SYNTAX@@', strip_imports(text[SYNTAX])))
+           .replace('@@SYNTAX@@', strip_imports(text[SYNTAX]).replace('\n\n@implementation TSDocument (SyntaxHighlighting)',
+               '\n#import "TSSyntaxTeXScanner.h"\n#import "TSSyntaxHighlighter.h"\n\n@implementation TSDocument (SyntaxHighlighting)', 1)))
 
 # The samples.
 samples = {p.name: p.read_text(encoding='utf-8') for p in sorted(FIXTURES.iterdir()) if p.suffix in ('.tex', '.ptx')}
@@ -556,11 +582,17 @@ def run(payload):
     with tempfile.TemporaryDirectory(prefix='texshop-syntax-golden-') as tmp:
         tmp = Path(tmp)
         (tmp / 'probe.m').write_text(program, encoding='utf-8')
+        # The shared parts in a folder of their own, so that the mutated copies are the ones included.
+        parts = tmp / 'Syntax'
+        parts.mkdir()
+        for path, source in syntax_parts.items():
+            (parts / Path(path).name).write_text(source, encoding='utf-8')
         (tmp / 'input.json').write_text(json.dumps(payload), encoding='utf-8')
         # Timed as a release build is optimized.
         optimization = ['-Os'] if 'benchmark' in payload else []
-        subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', *optimization, '-framework', 'Cocoa', *include_args(ROOT), '-I', str(ROOT / 'Tests'),
-                        str(tmp / 'probe.m'), '-o', str(tmp / 'probe')], check=True)
+        subprocess.run(['xcrun', 'clang', '-fobjc-arc', '-w', *optimization, '-framework', 'Cocoa', '-I', str(parts),
+                        *include_args(ROOT), '-I', str(ROOT / 'Tests'),
+                        str(tmp / 'probe.m'), *map(str, sorted(parts.glob('*.m'))), '-o', str(tmp / 'probe')], check=True)
         result = subprocess.run([str(tmp / 'probe'), str(tmp / 'input.json'), str(tmp / 'output.json')],
                                 capture_output=True, text=True, timeout=600)
         output = json.loads((tmp / 'output.json').read_text(encoding='utf-8')) if (tmp / 'output.json').exists() else {}

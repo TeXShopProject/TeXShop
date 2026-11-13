@@ -100,6 +100,7 @@ NSColor *PreviewBackgroundColor, *ReverseSyncColor, *InvisibleColor, *ImageForeg
     *indexColorAttribute, *markerColorAttribute, *markerColorCurlyAttribute, *markerColorParenAttribute,
     *markerColorSquareAttribute, *commentXMLColorAttribute, *tagXMLColorAttribute,
     *specialXMLColorAttribute, *parameterXMLColorAttribute, *valueXMLColorAttribute;
+@property (strong) TSSyntaxColorScheme *syntaxColorScheme;
 @property (strong) NSTextView *logTextView;
 @property (strong) FakeWindow *logWindow, *pdfKitWindow;
 @property (strong) NSView *myPDFKitView, *myPDFKitView2;

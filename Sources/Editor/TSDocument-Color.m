@@ -126,6 +126,7 @@
     
     // SYNTAX COLORS
     TSSyntaxColorScheme *scheme = [[TSSyntaxColorScheme alloc] initWithTheme:colorDictionary dark:withDarkColors];
+    self.syntaxColorScheme = scheme;
     self.commentColorAttribute = [scheme attributesForRole:TSSyntaxRoleComment];
     self.commandColorAttribute = [scheme attributesForRole:TSSyntaxRoleCommand];
     self.markerColorAttribute = [scheme attributesForRole:TSSyntaxRoleMarker];
