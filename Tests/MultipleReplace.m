@@ -3,6 +3,7 @@
 // the window's layout in every language and its images. Built by Tests/run-multiple-replace.py; nothing is shown and
 // the defaults stay in memory.
 #import "TestAppKitIsolation.h"
+#import "AdvancedFindTaskWait.h"
 #import "TSAdvancedFindController+MultipleReplace.h"
 #import "TSMultipleReplaceMenu.h"
 #import "TSAdvancedFindTextView.h"
@@ -65,7 +66,9 @@ static TSRegexMultipleReplaceResult *Apply(TSAdvancedFindController *controller,
     NSUndoManager *undo = view.undoManager;
     undo.groupsByEvent = NO;
     [undo beginUndoGrouping];
-    TSRegexMultipleReplaceResult *result = [controller applyMultipleReplace:set inTextView:view inSelection:inSelection];
+    __block TSRegexMultipleReplaceResult *result = nil;
+    [controller applyMultipleReplace:set inTextView:view inSelection:inSelection completion:^(TSRegexMultipleReplaceResult *done) { result = done; }];
+    TSTestWaitForTask(controller, 60);
     [undo endUndoGrouping];
     return result;
 }
@@ -183,7 +186,7 @@ static void TestApplying(void)
     Check(problems.count == 2 && problems[@0] && problems[@1], @"an empty find string and an invalid pattern are problems; plain text and disabled rules are not");
     view.editable = NO;
     beeps = 0;
-    Check([controller applyMultipleReplace:Set(@[Rule(@"x", @"y", NO, YES)]) inTextView:view inSelection:NO] == nil && beeps == 1
+    Check(![controller applyMultipleReplace:Set(@[Rule(@"x", @"y", NO, YES)]) inTextView:view inSelection:NO completion:nil] && beeps == 1
           && [view.string isEqualToString:@"x1 y2 x3"], @"a read-only text view takes no multiple replacement");
 }
 
@@ -274,7 +277,7 @@ static void TestWindow(NSURL *directory)
     NSTextView *view = MakeView(@"cat cat");
     view.undoManager.groupsByEvent = NO;
     [view.undoManager beginUndoGrouping]; // one group for the window's runs; they are not undone here
-    Check([window replaceAllInTextView:view] && [view.string isEqualToString:@"dog dog"], @"replace all runs the shown set");
+    Check([window replaceAllInTextView:view] && TSTestWaitForTask(controller, 60) && [view.string isEqualToString:@"dog dog"], @"replace all runs the shown set");
     Check([window.ruleTable.counts isEqualToArray:@[@2, @0]], @"the table shows the counts");
     Check([window.statusField.stringValue containsString:@"2"], @"the status reports the result");
     [window selectSetNamed:@"B"];
@@ -283,6 +286,7 @@ static void TestWindow(NSURL *directory)
     window.inSelection = YES;
     view.selectedRange = NSMakeRange(0, 3);
     [window replaceAllInTextView:view];
+    TSTestWaitForTask(controller, 60);
     Check([view.string isEqualToString:@"bird dog"], @"in selection");
     [view.undoManager endUndoGrouping];
     [window.ruleTable replaceRuleAtIndex:0 withRule:Rule(@"dog", @"fish", NO, YES)];
@@ -415,6 +419,7 @@ static void TestMenu(void)
     NSMenuItem *pets = [sets.submenu itemAtIndex:1];
     Check([menu validateMenuItem:pets], @"a set can be applied to an editable text view");
     [menu applySet:pets];
+    TSTestWaitForTask(menu.findController, 60);
     Check([view.string isEqualToString:@"dog and dog"], @"choosing a set applies it to the whole text");
     [view.undoManager undo];
     Check([view.string isEqualToString:@"cat and cat"], @"in one undo step");

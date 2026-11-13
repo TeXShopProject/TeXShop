@@ -2,6 +2,8 @@
 
 "AdvancedFind.AnchorsMatchLines" = "^ 및 $가 각 줄의 시작과 끝에 일치";
 "AdvancedFind.Cancel" = "취소";
+"AdvancedFind.Cancelled" = "취소됨";
+"AdvancedFind.Cancelling" = "취소 중…";
 "AdvancedFind.Cheat.Alternation" = "a 또는 b";
 "AdvancedFind.Cheat.Anchors" = "위치";
 "AdvancedFind.Cheat.AnyCharacter" = "줄바꿈을 제외한 문자 1개";
@@ -97,6 +99,8 @@
 "AdvancedFind.Results.Line" = "줄";
 "AdvancedFind.Results.LiveUpdate" = "실시간 업데이트";
 "AdvancedFind.Results.Text" = "일치하는 텍스트";
+"AdvancedFind.Searching" = "검색 중…";
+"AdvancedFind.SearchingCount" = "검색 중… %lu";
 "AdvancedFind.Section.Common" = "공통";
 "AdvancedFind.Section.Regex" = "정규 표현식";
 "AdvancedFind.Section.Text" = "텍스트 검색";
@@ -105,6 +109,7 @@
 "AdvancedFind.Syntax.ICU" = "ICU ($1)";
 "AdvancedFind.Syntax.OgreKit" = "OgreKit (\\1)";
 "AdvancedFind.SyntaxLabel" = "대치 구문:";
+"AdvancedFind.TextChanged" = "그 사이 텍스트가 변경되어 아무것도 변경하지 않았습니다.";
 "AdvancedFind.Title" = "찾기 및 대치";
 "AdvancedFind.Unescapes" = "대치 문자열의 \\n, \\t 등 이스케이프 문자 해석";
 "AdvancedFind.Unhighlight" = "하이라이트 제거";
@@ -138,6 +143,7 @@
 "MultipleReplace.RemoveQuestion" = "‘%@’을(를) 휴지통으로 이동하겠습니까?";
 "MultipleReplace.RemoveRule" = "선택한 규칙 제거";
 "MultipleReplace.RemoveSet" = "세트를 휴지통으로 이동";
+"MultipleReplace.RuleProgress" = "규칙 %2$lu개 중 %1$lu번째";
 "MultipleReplace.Sets" = "세트";
 "MultipleReplace.ShowInFinder" = "Finder에서 보기";
 "MultipleReplace.SkippedRules" = "(규칙 %@ 건너뜀, ⚠︎ 참조)";

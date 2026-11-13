@@ -498,7 +498,7 @@ Use Back and Forward to revisit categories. Command-left bracket and Command-rig
 
 General contains Settings Profile, the Dock icon choices and the link to Comment Lines and Hidden Settings. The profile confirmation describes its reset scope and selected engine path. Editor contains the source font; Console contains its own font. Themes contains theme selections and the theme editor. Theme colors are grouped by their purpose. Creating a theme asks for its name; replacing an existing theme asks for confirmation with that name.
 
-A small note with a yellow warning symbol under a changed setting explains consequences that may otherwise be surprising: the spell-checking method, the zoom for new PDFs when a preview is open, and the default encoding when a source window is open. The note clears when the value returns to the value at opening, another category is selected, or Settings closes. Auto Save shows a restart note while its saved value differs from the startup value. Switching between the standard Find Panel and Find Bar updates open source, console and log views immediately. Switching to or from OgreKit requires restarting TeXShop.
+A small note with a yellow warning symbol under a changed setting explains consequences that may otherwise be surprising: the spell-checking method, the zoom for new PDFs when a preview is open, and the default encoding when a source window is open. The note clears when the value returns to the value at opening, another category is selected, or Settings closes. Auto Save shows a restart note while its saved value differs from the startup value. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel takes effect immediately. Switching to or from OgreKit requires restarting TeXShop.
 
 The zoom setting in Preview controls newly opened PDFs. Source and console font settings apply to open and future windows.
 
@@ -564,7 +564,7 @@ I do not recommend the other choice, but try it if you wish.
 
 {\bf Find interface}
 
-TeXShop provides three different Find Panels. Select each and try it. Switching between the Apple Find Panel and Apple Find Bar takes effect immediately in open source, console and log views. Switching to or from the OgreKit Find Panel requires restarting TeXShop. The Apple Find Panel was the original choice in TeXShop twenty years ago. It is very basic. The Apple Find Bar is the newer method by Apple, used in Safari, Xcode, and many other official Apple programs. It looks very minimal, but a close inspection shows that it has unexpected features. The OgreKit Find Panel is an open source project from Isao Sonobe in Japan. It is  full featured and supports Regular Expressions. This is the panel that most users ultimately adopt. It is not the default choice when you first use TeXShop because the OgreKit Panel does not work well in the Chinese localization.
+TeXShop provides four ways to find and replace text. Select each and try it. Switching among the Apple Find Panel, the Apple Find Bar and the Advanced Find Panel takes effect immediately. Switching to or from the OgreKit Find Panel requires restarting TeXShop. The Apple Find Panel was the original choice in TeXShop twenty years ago. It is very basic. The Apple Find Bar is the newer method by Apple, used in Safari, Xcode, and many other official Apple programs. It looks very minimal, but a close inspection shows that it has unexpected features. The Advanced Find Panel supports regular expressions, lists all matches, and replaces with several pairs of strings at once; it is described in \cref{AdvancedFind}. It is the choice of new users. Users of earlier versions who never chose a method keep the Apple Find Bar. Applying a settings profile does not change the method. The OgreKit Find Panel is an open source project from Isao Sonobe in Japan. It is full featured and supports Regular Expressions. It remains available as a legacy choice.
 
 {\bf Line Number Size}
 
@@ -2380,6 +2380,56 @@ which delete the • and select the note that follows it. A mark with a note loo
 Each of the first four items has a keyboard shortcut. The Schulz document explains how these items can simplify entry of new command completion elements using the editor.
 
 The creation of the existing Command Completion list was the joint work of several people. A few users have created their own versions of the file, and thus their own systematic ways to remember and name command abbreviations. Some of these are in $\sim$/Library/TeXShop/CommandCompletion.
+
+\section{The Advanced Find Panel}\label{AdvancedFind}
+
+The Advanced Find Panel is chosen in TeXShop Settings, in the Editor category under Find Panel. New users start with it. It supports regular expressions, lists all matches, and replaces with sets of find and replace pairs.
+
+\subsection{Finding and Replacing}
+
+The usual commands in the Find submenu of the Edit menu work with the panel. Find (command-F) opens it with the find field selected, and Find and Replace with the replacement field selected. Find Next (command-G), Find Previous (shift-command-G) and Use Selection for Find (command-E) act on the source window, also while the panel is in front.
+
+The find and replacement fields grow when the panel is made larger. In a field, RETURN finds the next match and TAB moves to the other field; option-RETURN and option-TAB insert a line break and a tab. The icon at the left of a field shows the recent strings of that field, and Clear Recent Searches or Clear Recent Replacements removes them. The position of the current match, for example ``3 of 12'', appears at the right of the find field.
+
+Below the fields are Regular expression, Ignore case and In selection. The button with three dots shows more options:
+\begin{itemize}
+\item Wrap around, Start the next search at the top, and Close the panel after finding.
+\item Options for text search, used when Regular expression is off: whole words only, any of the words separated by spaces, ignoring diacritical marks, and ignoring the difference between full-width and half-width characters.
+\item Options for regular expressions: treating the find pattern literally, letting \verb|.| match line breaks, letting \verb|^| and \verb|$| match at each line (on by default), counting only Unix line breaks as line ends, ignoring spaces and \verb|#| comments in the pattern, Unicode word boundaries, and ignoring empty matches.
+\item The replacement syntax, and whether \verb|\n|, \verb|\t| and other escapes in the replacement are read.
+\item Treat \textyen\ as \textbackslash, on by default, for both kinds of search.
+\end{itemize}
+
+The buttons at the bottom are Find All, Replace All, Replace \& Find, and the arrows for the previous and next match. Find All lists every match in the panel; its menu also offers Highlight All, Select All and Remove Highlights. Replace All replaces every match, or every match in the selection when In selection is on, and is undone with a single Undo. Replace \& Find replaces the selected match and finds the next one; its menu offers Replace alone.
+
+The list of Find All shows the line number and the text of each match, with the groups of a regular expression in color. Clicking a row selects the match in the source; double-clicking also brings the source window to the front. When the text is edited, rows whose match was changed turn gray, and the count says how many changed. With Live Update on, the list is made again shortly after each edit. The arrow at the top of the list closes it.
+
+Highlights are drawn over the colors and backgrounds the source already has, and follow edits. They appear in both parts of a split window.
+
+\subsection{Regular Expressions}
+
+The panel uses the regular expressions of ICU, which Apple's own programs use, rather than the Onigmo expressions of OgreKit. Most expressions are written the same way. The differences that matter most:
+\begin{itemize}
+\item A brace that is not part of a repetition must be written \verb|\{| or \verb|\}|. For example, search for \verb|\\section\{| rather than \verb|\\section{|.
+\item \verb|\d|, \verb|\w|, \verb|\s| and \verb|\b| include full-width digits, kanji, kana and full-width spaces.
+\item \verb|\h|, \verb|\K|, \verb|\g<name>| and \verb|(?m)| do not mean what they mean in OgreKit.
+\end{itemize}
+
+The replacement can be written in two ways, chosen among the options. In the ICU syntax, the default, \verb|$0| is the whole match and \verb|$1|, \verb|$2|, \ldots\ are the groups, as in CotEditor; \verb|\$| is a dollar sign. A \TeX\ formula such as \verb|$x$| is therefore written \verb|\$x\$| in a replacement. In the OgreKit syntax, \verb|\0| or \verb|\&| is the whole match, \verb|\1|, \verb|\2|, \ldots\ are the groups, \verb|\g<name>| is a named group, and \verb|$| is an ordinary character. In both, a backslash in the replacement is written twice: \verb|\\section| gives \verb|\section|.
+
+For example, to change \verb|\section{Intro}| into \verb|\section*{Intro}|, turn on Regular expression, search for \verb|\\section\{([^}]*)\}| and replace with \verb|\\section*{$1}|. To find characters that are not ASCII, search for \verb|[^[:ascii:]]|.
+
+\subsection{Multiple Replace}
+
+Multiple Replace applies a list of find and replace pairs, called rules, in order. Edit Multiple Replace in the Find submenu opens a window with the saved sets on the left and the rules of the selected set on the right. Each rule has its own find and replacement strings, its own choice of Regular expression and Ignore case, and a note; it can be turned off without removing it. Rules are added and removed with the buttons below the table, and reordered by dragging. Options gives the other options of the set, including its replacement syntax. A rule that cannot be used, such as one with an empty or invalid find string, shows a warning sign in its Count column before anything is replaced; holding the pointer over it explains why. Such rules are skipped.
+
+Replace All applies the rules of the set to the whole text, or to the selection when In selection is on, and is undone with a single Undo; the Count column shows how many replacements each rule made. Highlight marks what the rules find. Every change in the window is saved at once.
+
+The Multiple Replace submenu of the Find submenu lists the sets; choosing one applies it to the whole text of the front source window.
+
+Each set is a file in \verb|~/Library/TeXShop/MultipleReplace|. The file is a replacement definition in the JSON format of CotEditor, with the extension \verb|.json|. The menu with three dots below the list of sets duplicates, imports and exports sets, and shows the folder in the Finder. Import reads replacement definitions of CotEditor (\verb|.cotrpl| or \verb|.json|) and tab-separated text, with one rule per line.
+
+Edit Multiple Replace has no keyboard shortcut; one can be assigned in TeXShop Settings, Keyboard.
 
 \chapter{Automatic Saving; Finding Documents on Disk}
 
