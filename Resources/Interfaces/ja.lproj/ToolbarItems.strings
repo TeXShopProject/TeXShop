@@ -174,6 +174,8 @@ tiLabelBackForthKIT				= "戻る／進む";
 tiPaletteLabelBackForthKIT		= "戻る／進む";
 tiToolTipGoBack				= "戻る";
 tiToolTipGoForward			= "進む";
+tiBack					= "戻る";
+tiForward				= "進む";
 
 tiLabelBackForthKITSplit                = "戻る／進む";
 tiPaletteLabelBackForthKITSplit        = "戻る／進む";

@@ -177,6 +177,8 @@ tiLabelBackForthKIT				= "Back/Forward";
 tiPaletteLabelBackForthKIT		= "Back/Forward";
 tiToolTipGoBack				= "Go Back";
 tiToolTipGoForward			= "Go Forward";
+tiBack					= "Back";
+tiForward				= "Forward";
 
 tiLabelBackForthKITSplit          = "Back/Forward";
 tiPaletteLabelBackForthKITSplit   = "Back/Forward";
