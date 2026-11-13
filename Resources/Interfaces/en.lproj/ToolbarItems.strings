@@ -99,11 +99,11 @@ tiToolTipAutoComplete			= "Toggle key bindings";
 
 tiLabelSplit				= "Split Source";
 tiPaletteLabelSplit			= "Split Source";
-tiToolTipSplit				= "Toggle source split";
+tiToolTipSplit				= "Toggle source split; Option-click to split vertically";
 
 tiLabelSplitKIT				= "Split Preview";
 tiPaletteLabelSplitKIT		= "Split Preview";
-tiToolTipSplitKIT			= "Toggle preview split";
+tiToolTipSplitKIT			= "Toggle preview split; Option-click to split vertically";
 
 tiLabelMacros				= "Macros";
 tiPaletteLabelMacros		= "Macros";
