@@ -19,6 +19,8 @@ NS_SWIFT_NAME(AdvancedFindSettings)
 /// The next search starts at the top of the text, then this turns itself off (OgreKit's "Origin: Top").
 @property (nonatomic) BOOL startsFromTop;
 @property (nonatomic) BOOL closesWhenDone;
+/// "Live Update" of the Find All list: the list searches again shortly after each edit.
+@property (nonatomic) BOOL updatesResultsLive;
 @property (nonatomic, readonly) NSUInteger historyLimit;
 @property (nonatomic, readonly, copy) NSArray<NSString *> *findHistory;
 @property (nonatomic, readonly, copy) NSArray<NSString *> *replaceHistory;

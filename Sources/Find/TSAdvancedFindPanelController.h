@@ -22,7 +22,7 @@ NS_SWIFT_NAME(AdvancedFindPanelController)
 /// Shows the panel with the find field selected, or the replacement field (Find and Replace…).
 - (void)showPanelSelectingReplaceField:(BOOL)replacing;
 - (void)showPanel;
-/// The buttons under the options: Highlight All (▾ Select All, Remove Highlights), Replace All,
+/// The buttons under the options: Find All (▾ Highlight All, Select All, Remove Highlights), Replace All,
 /// Replace & Find (▾ Replace), Previous / Next.
 @property (nonatomic, readonly) NSArray<NSControl *> *buttons;
 
