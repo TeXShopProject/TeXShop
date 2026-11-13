@@ -26,6 +26,11 @@ MUTATIONS = {
     'bold-stays': ('return (([ranges count] == 1) && NSEqualRanges([[ranges firstObject] rangeValue], _lineSelection));', 'return YES;'),
     # The ruler is not redrawn when the selection changes otherwise.
     'no-redisplay': ('\t\t_hasLineSelection = NO;\n\t\t[self setNeedsDisplay:YES];', '\t\t_hasLineSelection = NO;'),
+    # Bold numbers are placed by their regular width.
+    'measure-regular': ('stringSize = [labelText sizeWithAttributes:currentTextAttributes];',
+                        'stringSize = [labelText sizeWithAttributes:textAttributes];'),
+    # The rect stays narrower than a wide bold number.
+    'fixed-rect': ('MAX(NSWidth(bounds) - RULER_MARGIN * 2.0, ceil(stringSize.width))', 'NSWidth(bounds) - RULER_MARGIN * 2.0'),
     # Every drag step posts a selection change.
     'notify-each-step': ('stillSelecting:YES];\n\t\t\t[self showLineSelection:selection];\n\t\t}',
                          'stillSelecting:NO];\n\t\t\t[self showLineSelection:selection];\n\t\t}'),

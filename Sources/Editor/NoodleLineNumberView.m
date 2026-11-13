@@ -562,8 +562,6 @@
                     // Line numbers are internally stored starting at 0
                     labelText = [NSString stringWithFormat:@"%jd", (intmax_t)line + 1];
                     
-                    stringSize = [labelText sizeWithAttributes:textAttributes];
-
 					if (marker == nil)
 					{
 						currentTextAttributes = textAttributes;
@@ -574,12 +572,16 @@
 					{
 						currentTextAttributes = [self markerTextAttributes];
 					}
-					
+
+                    // Measure in the font it is drawn in: bold digits are wider, and a rect
+                    // narrower than the string would drop its last digit.
+                    stringSize = [labelText sizeWithAttributes:currentTextAttributes];
+
                     // Draw string flush right, centered vertically within the line
                     [labelText drawInRect:
                        NSMakeRect(NSWidth(bounds) - stringSize.width - RULER_MARGIN,
                                   ypos + (NSHeight(rects[0]) - stringSize.height) / 2.0,
-                                  NSWidth(bounds) - RULER_MARGIN * 2.0, NSHeight(rects[0]))
+                                  MAX(NSWidth(bounds) - RULER_MARGIN * 2.0, ceil(stringSize.width)), NSHeight(rects[0]))
                            withAttributes:currentTextAttributes];
                 }
             }

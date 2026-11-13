@@ -117,6 +117,9 @@ static NSValue *P(NSUInteger index) { return [NSValue valueWithPoint:RulerPointF
 
 // The ink of the ruler's numbers in the band of the line fragment holding a character,
 // drawn offscreen in the light appearance.
+static NSUInteger InkForLine(NSUInteger index);
+static CGFloat inkLeft, inkRight;   // the inked columns of the last InkForLine band, in points
+
 static NSUInteger InkForLine(NSUInteger index)
 {
     ruler.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
@@ -130,12 +133,18 @@ static NSUInteger InkForLine(NSUInteger index)
     CGFloat scale = rep.pixelsHigh / NSHeight(bounds);
     CGFloat top = ruler.isFlipped ? NSMinY(inRuler) : NSHeight(bounds) - NSMaxY(inRuler);
     NSUInteger ink = 0;
+    NSInteger left = NSIntegerMax, right = -1;
     for (NSInteger y = (NSInteger)floor(top * scale); y < (NSInteger)ceil((top + NSHeight(inRuler)) * scale); y++)
         for (NSInteger x = 0; x < rep.pixelsWide; x++) {
             if (y < 0 || y >= rep.pixelsHigh) continue;
             NSColor *c = [[rep colorAtX:x y:y] colorUsingColorSpace:NSColorSpace.genericGrayColorSpace];
-            ink += (NSUInteger)lround((1.0 - c.whiteComponent) * c.alphaComponent * 255.0);
+            NSUInteger dot = (NSUInteger)lround((1.0 - c.whiteComponent) * c.alphaComponent * 255.0);
+            // The divider at the right edge is not a digit.
+            if (dot > 60 && x < rep.pixelsWide - 2 * scale) { left = MIN(left, x); right = MAX(right, x); }
+            ink += dot;
         }
+    inkLeft = left / scale;
+    inkRight = (right + 1) / scale;
     return ink;
 }
 static NSRange LineOf(NSUInteger index) { return [textView.string lineRangeForRange:NSMakeRange(index, 0)]; }
@@ -238,6 +247,32 @@ int main(void)
         NSUInteger typedLast = InkForLine(StartOf(@"last"));
         textView.selectedRange = NSMakeRange(0, 0);
         Require("the caret line after typing is regular", InkForLine(StartOf(@"last")) == typedLast);
+
+        // Bold numbers are wider: five digits must not lose their last digit or their first,
+        // with either size of line numbers, and at the four-to-five digit boundary.
+        NSMutableString *tenThousand = [NSMutableString string];
+        for (int i = 1; i <= 10010; i++) [tenThousand appendFormat:@"%d\n", i];
+        for (NSInteger size = 0; size <= 1; size++) {
+            [NSUserDefaults.standardUserDefaults setInteger:size forKey:LineNumberSizeKey];
+            Setup(tenThousand, YES, 400);
+            NSUInteger from = StartOf(@"\n9998\n") + 1, to = StartOf(@"\n10008\n") + 1;
+            [textView scrollRangeToVisible:NSMakeRange(from, 0)];
+            [scroll tile];
+            NSUInteger lines[] = { from, StartOf(@"\n9999\n") + 1, StartOf(@"\n10000\n") + 1, StartOf(@"\n10004\n") + 1, to };
+            CGFloat plainLeft[5], plainRight[5];
+            textView.selectedRange = NSMakeRange(0, 0);
+            for (int i = 0; i < 5; i++) { InkForLine(lines[i]); plainLeft[i] = inkLeft; plainRight[i] = inkRight; }
+            Gesture(@[P(from), P(to)], 0);
+            for (int i = 0; i < 5; i++) {
+                InkForLine(lines[i]);
+                char name[160];
+                snprintf(name, sizeof name, "size %ld line %d: bold number keeps its last digit (right %.1f vs %.1f)", (long)size, i, inkRight, plainRight[i]);
+                Require(name, fabs(inkRight - plainRight[i]) <= 1.5);
+                snprintf(name, sizeof name, "size %ld line %d: bold number is wider and inside the ruler (left %.1f vs %.1f)", (long)size, i, inkLeft, plainLeft[i]);
+                Require(name, inkLeft <= plainLeft[i] && inkLeft >= 1.0);
+            }
+        }
+        [NSUserDefaults.standardUserDefaults removeObjectForKey:LineNumberSizeKey];
 
         // Text without a final line ending: below the text is the last line.
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
