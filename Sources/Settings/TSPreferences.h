@@ -28,7 +28,7 @@
 #import <AppKit/AppKit.h>
 #import "TSSettingsCategory.h"
 
-@class TSAutoCompletionListEditor, TSKeyBindingsController, HelpDocuments;
+@class TSKeyBindingsController, HelpDocuments;
 @class TSSettingsChangeNotes;
 @interface TSPreferences : NSObject
 {
@@ -243,11 +243,9 @@
 @property (strong) TSSettingsChangeNotes *settingsChangeNotes;
 @property NSUInteger themeOperationGeneration;
 @property (strong) NSButton *legacySpellCheckButton;
-@property (strong) TSAutoCompletionListEditor *keyBindingEditor;
 @property (strong) TSKeyBindingsController *keyBindings;
 @property (strong) HelpDocuments *settingsHelpDocuments;
 - (IBAction)displayCommentLines:(id)sender;
-- (IBAction)editKeyBindings:(id)sender;
 - (IBAction)legacySpellCheckPressed:(NSButton *)sender;
 - (void)updateSettingsDependenciesFromDefaults:(NSUserDefaults *)defaults;
 @property (retain) NSFont		*documentFont;			/*" used to track the font that the user has selected for the document window "*/

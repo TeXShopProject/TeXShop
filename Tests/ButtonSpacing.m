@@ -11,7 +11,6 @@
 @interface NSButtonCell (Private) - (NSInteger)_buttonType; @end
 #import "TSDialogButtonLayout.h"
 #import "TSMarkMenu.h"
-#import "TSAutoCompletionListEditor.h"
 // Older nibs set outlets directly on instance variables of these names.
 @interface SpacingOwner : NSObject { @public id linePanel, projectPanel, extensionPanel; }
 @property (strong) NSMutableDictionary *outlets;
@@ -25,23 +24,10 @@
 - (IBAction)didTapCancelButton:(id)sender {}
 - (IBAction)itemChosen:(id)sender {}
 @end
-@implementation TSAutoCompletionListEditor
-#include "EditorLayout.inc"
-- (void)setValue:(id)v forUndefinedKey:(NSString *)k {}
-// Older nibs connect an action only when the owner responds to it.
-- (IBAction)savePressed:(id)sender {}
-- (IBAction)cancelPressed:(id)sender {}
-- (IBAction)removePressed:(id)sender {}
-- (IBAction)addPressed:(id)sender {}
-- (IBAction)openAutoCompletionListEditor:(id)sender {}
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)t { return 0; }
-- (id)tableView:(NSTableView *)t objectValueForTableColumn:(NSTableColumn *)c row:(NSInteger)r { return nil; }
-@end
 // The layout the application applies after loading each nib.
 static void ApplyProductionLayout(NSString *name, id owner, NSArray *objects) {
     NSArray<NSWindow *> *windows = [objects filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id o, NSDictionary *b) { return [o isKindOfClass:NSWindow.class]; }]];
-    if ([name isEqual:@"AutoCompletionListEditor.nib"]) [(TSAutoCompletionListEditor *)owner layoutEditorWindow];
-    else if ([name isEqual:@"TSDocument.nib"]) {
+    if ([name isEqual:@"TSDocument.nib"]) {
         SpacingOwner *document = owner;
         if (!document->linePanel || !document->projectPanel || !document->extensionPanel) { printf("ERROR TSDocument.nib panels are not connected\n"); exit(2); }
         for (NSWindow *panel in @[document->linePanel, document->projectPanel, document->extensionPanel]) TSLayoutDialogButtonRow(panel);
@@ -123,7 +109,7 @@ int main(int argc, char **argv) { @autoreleasepool {
         NSString *name = label.lastPathComponent;
         NSNib *nib = [[NSNib alloc] initWithNibData:[NSData dataWithContentsOfFile:path] bundle:nil];
         NSArray *objects = nil;
-        id owner = [name isEqual:@"AutoCompletionListEditor.nib"] ? [TSAutoCompletionListEditor new] : [SpacingOwner new];
+        id owner = [SpacingOwner new];
         if (![nib instantiateWithOwner:owner topLevelObjects:&objects]) { printf("ERROR %s cannot load\n", label.UTF8String); return 2; }
         ApplyProductionLayout(name, owner, objects);
         NSMutableArray<NSArray *> *views = [NSMutableArray array];

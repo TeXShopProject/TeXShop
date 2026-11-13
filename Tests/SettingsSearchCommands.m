@@ -7,7 +7,7 @@ static void Check(BOOL value,NSString *message){if(!value){fprintf(stderr,"FAIL:
 static void IgnoreOutlet(id receiver,SEL selector,id value,NSString *key) {}
 int main(int argc,char **argv){@autoreleasepool{
  TSInstallAppKitIsolation();[NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyProhibited];
- for(NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSAutoCompletionListEditor",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]){
+ for(NSString *name in @[@"HelpDocuments",@"TSAppDelegate",@"TSDocumentController",@"TSMacroEditor",@"TSMacroMenuController",@"TSMovie",@"TSPreferences",@"TSSparkleController",@"TSStationery",@"TextFinder"]){
   Class c=objc_allocateClassPair(NSObject.class,name.UTF8String,0);class_addMethod(c,@selector(setValue:forUndefinedKey:),(IMP)IgnoreOutlet,"v@:@@");objc_registerClassPair(c);
  }
  NSArray *objects=nil;NSNib *nib=[[NSNib alloc]initWithNibData:[NSData dataWithContentsOfFile:@(argv[1])] bundle:nil];Check([nib instantiateWithOwner:NSApp topLevelObjects:&objects],@"Compiled menu loads");
