@@ -70,6 +70,7 @@
 "MultipleReplace.EditMenu" = "Modifier les remplacements multiples…";
 "MultipleReplace.Export" = "Exporter…";
 "MultipleReplace.Import" = "Importer…";
+"MultipleReplace.Imported" = "Importé";
 "MultipleReplace.MoveToTrash" = "Placer dans la Corbeille";
 "MultipleReplace.NameTaken" = "Un jeu nommé « %@ » existe déjà.";
 "MultipleReplace.NotText" = "« %@ » n’est pas du texte UTF-8.";

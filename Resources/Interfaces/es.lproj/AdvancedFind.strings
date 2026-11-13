@@ -70,6 +70,7 @@
 "MultipleReplace.EditMenu" = "Editar reemplazo múltiple…";
 "MultipleReplace.Export" = "Exportar…";
 "MultipleReplace.Import" = "Importar…";
+"MultipleReplace.Imported" = "Importado";
 "MultipleReplace.MoveToTrash" = "Trasladar a la papelera";
 "MultipleReplace.NameTaken" = "Ya existe un conjunto llamado “%@”.";
 "MultipleReplace.NotText" = "“%@” no es texto UTF-8.";

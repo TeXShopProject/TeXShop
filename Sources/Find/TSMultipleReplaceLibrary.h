@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(MultipleReplaceLibrary)
 @interface TSMultipleReplaceLibrary : NSObject
 
-/// "cotrpl", so that CotEditor and TeXShop open each other's sets. Defined here only (TSMultipleReplaceFileExtension).
+/// "json": the content is CotEditor's replacement definition. Defined in one place (TSMultipleReplaceFileExtension).
 @property (class, nonatomic, readonly) NSString *fileExtension;
 @property (nonatomic, readonly, copy) NSURL *directory;
 /// Removed sets go to the Trash (the default); the self test removes them for good.
@@ -31,8 +31,8 @@ NS_SWIFT_NAME(MultipleReplaceLibrary)
 /// YES for a name that can be a file name here: not empty, no slash or colon, not starting with a dot.
 + (BOOL)isValidName:(NSString *)name;
 
-/// Reads a replacement definition (.cotrpl or .json) or tab-separated text (any other extension) and saves it
-/// under the file's name. Returns the name it was saved under.
+/// Reads a replacement definition (.json, or CotEditor's .cotrpl) or tab-separated text (any other extension) and
+/// saves it under the file's name, or "Imported" when that cannot be a name. Returns the name it was saved under.
 - (nullable NSString *)importFileAtURL:(NSURL *)url error:(NSError **)error;
 - (BOOL)exportSetNamed:(NSString *)name toURL:(NSURL *)url error:(NSError **)error;
 

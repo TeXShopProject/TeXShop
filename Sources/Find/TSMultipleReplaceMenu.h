@@ -12,8 +12,8 @@ NS_SWIFT_NAME(MultipleReplaceMenu)
 
 /// The application's: the shared find controller and the sets in `directory`, made by +installInMainMenu:directory:.
 @property (class, nonatomic, readonly, nullable) TSMultipleReplaceMenu *sharedMenu;
-/// Adds the items to the Find submenu of `mainMenu` (the submenu of Find…). Does nothing when there is no such
-/// submenu or the items are there already.
+/// Adds the items to the Find submenu of `mainMenu` (the submenu of Find…, AppKit's or OgreKit's). Does nothing when
+/// there is no such submenu or the items are there already.
 + (void)installInMainMenu:(NSMenu *)mainMenu directory:(NSURL *)directory;
 
 - (instancetype)initWithFindController:(TSAdvancedFindController *)findController library:(TSMultipleReplaceLibrary *)library NS_DESIGNATED_INITIALIZER;
@@ -25,7 +25,8 @@ NS_SWIFT_NAME(MultipleReplaceMenu)
 /// Made when it is first needed.
 @property (nonatomic, readonly) TSMultipleReplaceWindowController *windowController;
 
-/// Adds "Edit Multiple Replace…" and "Multiple Replace" ▸ to `findMenu` after Jump to Selection (or at the end).
+/// Adds "Edit Multiple Replace…" and "Multiple Replace" ▸ to `findMenu` after Jump to Selection, or at the end
+/// (OgreKit's Find submenu has no Jump to Selection).
 - (void)addItemsToMenu:(NSMenu *)findMenu;
 
 - (IBAction)showMultipleReplace:(nullable id)sender;

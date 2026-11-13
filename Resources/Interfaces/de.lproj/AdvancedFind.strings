@@ -70,6 +70,7 @@
 "MultipleReplace.EditMenu" = "Mehrfach ersetzen bearbeiten …";
 "MultipleReplace.Export" = "Exportieren …";
 "MultipleReplace.Import" = "Importieren …";
+"MultipleReplace.Imported" = "Importierter Regelsatz";
 "MultipleReplace.MoveToTrash" = "In den Papierkorb legen";
 "MultipleReplace.NameTaken" = "Ein Regelsatz namens „%@“ existiert bereits.";
 "MultipleReplace.NotText" = "„%@“ ist kein UTF-8-Text.";

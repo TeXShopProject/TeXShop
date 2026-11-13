@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #import "TSMultipleReplaceLibrary.h"
 
-/// The extension of a set's file, in one place.
-static NSString *const TSMultipleReplaceFileExtension = @"cotrpl";
+/// The extension of a set's file, in one place: the content is CotEditor's replacement definition.
+static NSString *const TSMultipleReplaceFileExtension = @"json";
+/// CotEditor's own extension for the same content, read when a file is imported.
+static NSString *const TSCotEditorFileExtension = @"cotrpl";
 
 static NSError *TSLibraryError(NSString *key, NSString *english, NSString *name)
 {
@@ -123,7 +125,7 @@ static NSError *TSLibraryError(NSString *key, NSString *english, NSString *name)
         return nil;
     NSString *extension = url.pathExtension.lowercaseString;
     TSRegexMultipleReplace *set = nil;
-    if ([extension isEqualToString:TSMultipleReplaceLibrary.fileExtension] || [extension isEqualToString:@"json"])
+    if ([extension isEqualToString:TSMultipleReplaceFileExtension] || [extension isEqualToString:TSCotEditorFileExtension])
         set = [[TSRegexMultipleReplace alloc] initWithJSONData:data error:error];
     else {
         NSString *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -137,7 +139,8 @@ static NSError *TSLibraryError(NSString *key, NSString *english, NSString *name)
     if (!set)
         return nil;
     NSString *base = url.URLByDeletingPathExtension.lastPathComponent;
-    NSString *name = [self availableNameForName:[TSMultipleReplaceLibrary isValidName:base] ? base : @"Imported"];
+    NSString *fallback = [NSBundle.mainBundle localizedStringForKey:@"MultipleReplace.Imported" value:@"Imported" table:@"AdvancedFind"];
+    NSString *name = [self availableNameForName:[TSMultipleReplaceLibrary isValidName:base] ? base : fallback];
     return [self saveSet:set named:name error:error] ? name : nil;
 }
 

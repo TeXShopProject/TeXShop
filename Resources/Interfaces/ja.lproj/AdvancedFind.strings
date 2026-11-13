@@ -70,6 +70,7 @@
 "MultipleReplace.EditMenu" = "複数置換を編集…";
 "MultipleReplace.Export" = "書き出す…";
 "MultipleReplace.Import" = "読み込む…";
+"MultipleReplace.Imported" = "読み込んだ組";
 "MultipleReplace.MoveToTrash" = "ゴミ箱に入れる";
 "MultipleReplace.NameTaken" = "「%@」という組はすでにあります。";
 "MultipleReplace.NotText" = "「%@」はUTF-8のテキストではありません。";

@@ -70,6 +70,7 @@
 "MultipleReplace.EditMenu" = "Editați înlocuirea multiplă…";
 "MultipleReplace.Export" = "Exportați…";
 "MultipleReplace.Import" = "Importați…";
+"MultipleReplace.Imported" = "Importat";
 "MultipleReplace.MoveToTrash" = "Mutați în Coș";
 "MultipleReplace.NameTaken" = "Există deja un set numit „%@”.";
 "MultipleReplace.NotText" = "„%@” nu este text UTF-8.";

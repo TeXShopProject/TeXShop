@@ -75,7 +75,7 @@ static void TestLibrary(NSURL *directory)
     TSMultipleReplaceLibrary *library = [[TSMultipleReplaceLibrary alloc] initWithDirectory:directory];
     library.usesTrash = NO;
     Check(library.setNames.count == 0 && ![NSFileManager.defaultManager fileExistsAtPath:directory.path], @"no folder and no set at first; nothing is written");
-    Check([TSMultipleReplaceLibrary.fileExtension isEqualToString:@"cotrpl"], @"sets are CotEditor replacement definitions");
+    Check([TSMultipleReplaceLibrary.fileExtension isEqualToString:@"json"], @"sets are CotEditor replacement definitions in .json files");
     // A set reads back the same: rules, both kinds of options and the replacement syntax.
     TSRegexReplacementRule *noted = [[TSRegexReplacementRule alloc] initWithFindString:@"(\\w+)\t¥" replaceString:@"\\1\n" usesRegularExpression:YES
                                                                              ignoresCase:YES enabled:NO note:@"メモ"];
@@ -88,13 +88,15 @@ static void TestLibrary(NSURL *directory)
     Check([loaded.rules isEqualToArray:full.rules] && loaded.textualOptions == full.textualOptions
           && loaded.regularExpressionOptions == full.regularExpressionOptions && loaded.replacementSyntax == TSRegexReplacementSyntaxOgreKit,
           @"a saved set reads back the same: rules, options and replacement syntax");
-    Check([[NSFileManager.defaultManager contentsOfDirectoryAtPath:directory.path error:NULL] isEqualToArray:@[@"Round trip.cotrpl"]], @"one file per set, named after the set");
+    Check([[NSFileManager.defaultManager contentsOfDirectoryAtPath:directory.path error:NULL] isEqualToArray:@[@"Round trip.json"]], @"one file per set, named after the set");
     Check([library removeSetNamed:@"Round trip" error:NULL] && library.setNames.count == 0, @"remove a set");
     // A broken file in the folder: listed, but reading it gives an error instead of a set.
-    [@"{ not json" writeToURL:[directory URLByAppendingPathComponent:@"Broken.cotrpl"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    [@"{ not json" writeToURL:[directory URLByAppendingPathComponent:@"Broken.json"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    [full.JSONData writeToURL:[directory URLByAppendingPathComponent:@"CotEditor.cotrpl"] atomically:YES];
     [@"ignored" writeToURL:[directory URLByAppendingPathComponent:@"notes.txt"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     NSError *brokenError = nil;
-    Check([library.setNames isEqualToArray:@[@"Broken"]] && ![library setNamed:@"Broken" error:&brokenError] && brokenError, @"a broken set is listed and reports an error; other files are not sets");
+    Check([library.setNames isEqualToArray:@[@"Broken"]] && ![library setNamed:@"Broken" error:&brokenError] && brokenError, @"a broken set is listed and reports an error; other files, a .cotrpl among them, are not sets of the folder");
+    [NSFileManager.defaultManager removeItemAtURL:[directory URLByAppendingPathComponent:@"CotEditor.cotrpl"] error:NULL];
     [library removeSetNamed:@"Broken" error:NULL];
 
     TSRegexMultipleReplace *set = Set(@[Rule(@"a", @"b", NO, YES)]);
@@ -121,6 +123,17 @@ static void TestLibrary(NSURL *directory)
     Check([library exportSetNamed:@"pairs" toURL:exported error:NULL], @"export a set");
     NSString *again = [library importFileAtURL:exported error:NULL];
     Check([again isEqualToString:@"pairs 2"] && [[library setNamed:@"pairs 2" error:NULL].rules isEqualToArray:[library setNamed:@"pairs" error:NULL].rules], @"import an exported definition under a new name");
+    // CotEditor's .cotrpl and a .json are read as definitions; a file whose name cannot be a set's gets a fallback name.
+    NSURL *cotrpl = [directory.URLByDeletingLastPathComponent URLByAppendingPathComponent:@"From CotEditor.cotrpl"];
+    [full.JSONData writeToURL:cotrpl atomically:YES];
+    Check([[library importFileAtURL:cotrpl error:NULL] isEqualToString:@"From CotEditor"]
+          && [[library setNamed:@"From CotEditor" error:NULL].rules isEqualToArray:full.rules], @"import CotEditor's .cotrpl as a definition");
+    NSURL *badName = [directory.URLByDeletingLastPathComponent URLByAppendingPathComponent:@" lead.json"];
+    [full.JSONData writeToURL:badName atomically:YES];
+    NSString *fallback = TSAdvancedFindLocalized(@"MultipleReplace.Imported", @"Imported");
+    Check(![fallback isEqualToString:@"MultipleReplace.Imported"] && [[library importFileAtURL:badName error:NULL] isEqualToString:fallback]
+          && [[library importFileAtURL:badName error:NULL] isEqualToString:[fallback stringByAppendingString:@" 2"]],
+          @"a file whose name cannot be a set's is imported under the localized fallback name, then with a number");
     NSURL *broken = [directory.URLByDeletingLastPathComponent URLByAppendingPathComponent:@"broken.cotrpl"];
     [@"{\"replacements\": 3}" writeToURL:broken atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     error = nil;
@@ -316,7 +329,7 @@ static void TestWindow(NSURL *directory)
     Check(replaceButton.enabled, @"and not for an editable one");
     TSAdvancedFindController.testTargetTextView = nil;
     // A broken set: the error is shown, the table is empty, nothing is overwritten.
-    NSURL *brokenURL = [directory URLByAppendingPathComponent:@"C broken.cotrpl"];
+    NSURL *brokenURL = [directory URLByAppendingPathComponent:@"C broken.json"];
     [@"{\"replacements\": 3}" writeToURL:brokenURL atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     [window reloadSets];
     [window selectSetNamed:@"C broken"];
@@ -342,6 +355,29 @@ static void TestEmptyWindow(void)
     [window addSet:nil];
     Check(window.selectedSetName.length > 0 && library.setNames.count == 1 && window.ruleTable.tableView.numberOfRows == 1, @"a new set has one empty rule and is saved");
     [NSFileManager.defaultManager removeItemAtURL:directory.URLByDeletingLastPathComponent error:NULL];
+}
+
+/// The Find submenu as OgreKit makes it at launch when the find method is OgreKit: its own items, without
+/// performFindPanelAction: and without Jump to Selection. The items join it at the end, once.
+static void TestOgreKitMenu(void)
+{
+    NSMenu *main = [[NSMenu alloc] initWithTitle:@"Main"];
+    NSMenuItem *editItem = [main addItemWithTitle:@"Edit" action:NULL keyEquivalent:@""];
+    NSMenu *edit = [[NSMenu alloc] initWithTitle:@"Edit"];
+    editItem.submenu = edit;
+    [edit addItemWithTitle:@"Copy" action:@selector(copy:) keyEquivalent:@"c"];
+    NSMenuItem *findItem = [edit addItemWithTitle:@"Find" action:NULL keyEquivalent:@""];
+    NSMenu *find = [[NSMenu alloc] initWithTitle:@"Find"];
+    findItem.submenu = find;
+    [find addItemWithTitle:@"Find…" action:NSSelectorFromString(@"showFindPanel:") keyEquivalent:@"f"];
+    [find addItemWithTitle:@"Find Next" action:NSSelectorFromString(@"findNext:") keyEquivalent:@"g"];
+    [find addItemWithTitle:@"Use Selection for Find" action:NSSelectorFromString(@"useSelectionForFind:") keyEquivalent:@"e"];
+    NSURL *directory = TemporaryLibraryDirectory();
+    [TSMultipleReplaceMenu installInMainMenu:main directory:directory];
+    [TSMultipleReplaceMenu installInMainMenu:main directory:directory];
+    Check(find.numberOfItems == 6 && [find itemAtIndex:3].separatorItem && [find itemAtIndex:4].action == @selector(showMultipleReplace:)
+          && [find itemAtIndex:5].submenu && [[find itemAtIndex:0].title isEqualToString:@"Find…"] && edit.numberOfItems == 2,
+          @"OgreKit's Find submenu gets the items at its end, once, and keeps its own");
 }
 
 /// The Find submenu's items, in a menu like TeXShop's.
@@ -574,6 +610,7 @@ int main(int argc, const char *argv[])
             TestWindow(windowDirectory);
             [NSFileManager.defaultManager removeItemAtURL:windowDirectory.URLByDeletingLastPathComponent error:NULL];
             TestEmptyWindow();
+            TestOgreKitMenu();
             TestMenu();
         } else {
             TestLayout(images);

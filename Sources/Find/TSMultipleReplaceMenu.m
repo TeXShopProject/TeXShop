@@ -8,11 +8,13 @@
 static NSString *const TSShowMultipleReplaceIdentifier = @"TSShortcut.showMultipleReplace:.0";
 static TSMultipleReplaceMenu *TSSharedMultipleReplaceMenu;
 
-/// The submenu that holds Find… (tag 1 of performFindPanelAction:), searched through the whole menu.
+/// The submenu that holds Find…, searched through the whole menu: AppKit's (tag 1 of performFindPanelAction:), or
+/// OgreKit's (showFindPanel:), which replaces it at launch when the find method is OgreKit.
 static NSMenu *_Nullable TSFindSubmenu(NSMenu *menu)
 {
     for (NSMenuItem *item in menu.itemArray) {
-        if (item.action == @selector(performFindPanelAction:) && item.tag == NSFindPanelActionShowFindPanel)
+        if ((item.action == @selector(performFindPanelAction:) && item.tag == NSFindPanelActionShowFindPanel)
+            || item.action == NSSelectorFromString(@"showFindPanel:"))
             return menu;
         NSMenu *found = item.submenu ? TSFindSubmenu((NSMenu *_Nonnull)item.submenu) : nil;
         if (found)

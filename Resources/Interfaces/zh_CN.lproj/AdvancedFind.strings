@@ -70,6 +70,7 @@
 "MultipleReplace.EditMenu" = "编辑批量替换…";
 "MultipleReplace.Export" = "导出…";
 "MultipleReplace.Import" = "导入…";
+"MultipleReplace.Imported" = "导入的规则集";
 "MultipleReplace.MoveToTrash" = "移到废纸篓";
 "MultipleReplace.NameTaken" = "名为“%@”的规则集已存在。";
 "MultipleReplace.NotText" = "“%@”不是UTF-8文本。";

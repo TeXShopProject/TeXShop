@@ -229,7 +229,9 @@
     // Multiple Replace joins the Find submenu after that, and before the shortcuts are read from the menu.
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *directory = [[TeXShopPath stringByStandardizingPath] stringByAppendingPathComponent:@"MultipleReplace"];
-        [TSMultipleReplaceMenu installInMainMenu:NSApp.mainMenu directory:[NSURL fileURLWithPath:directory isDirectory:YES]];
+        NSMenu *mainMenu = NSApp.mainMenu;
+        if (mainMenu)
+            [TSMultipleReplaceMenu installInMainMenu:mainMenu directory:[NSURL fileURLWithPath:directory isDirectory:YES]];
     });
     [[TSKeyboardShortcuts sharedController] startAfterLaunchWithConfiguration:^(TSKeyboardShortcuts *shortcuts) {
         shortcuts.showSettings = ^{ [[TSPreferences sharedInstance] showKeyboardSettings:nil]; };

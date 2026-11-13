@@ -70,6 +70,7 @@
 "MultipleReplace.EditMenu" = "일괄 대치 편집…";
 "MultipleReplace.Export" = "내보내기…";
 "MultipleReplace.Import" = "가져오기…";
+"MultipleReplace.Imported" = "가져온 세트";
 "MultipleReplace.MoveToTrash" = "휴지통으로 이동";
 "MultipleReplace.NameTaken" = "이름이 ‘%@’인 세트가 이미 있습니다.";
 "MultipleReplace.NotText" = "‘%@’은(는) UTF-8 텍스트가 아닙니다.";

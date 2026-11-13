@@ -33,6 +33,10 @@ MUTATIONS = {
     'a dropped row is not moved back by the rows above it': ('TSMultipleReplaceRuleTable.m',
         '(NSUInteger)row - [indexes countOfIndexesInRange:NSMakeRange(0, (NSUInteger)row)];', 'MIN((NSUInteger)row, rules.count - indexes.count);'),
     'problems are not marked': ('TSMultipleReplaceRuleTable.m', '    NSError *problem = self.problems[@(row)];', '    NSError *problem = nil;'),
+    'OgreKit\'s Find submenu is not found': ('TSMultipleReplaceMenu.m', '            || item.action == NSSelectorFromString(@"showFindPanel:"))', ')'),
+    'the fallback name is not localized': ('TSMultipleReplaceLibrary.m', 'localizedStringForKey:@"MultipleReplace.Imported" value:@"Imported"', 'localizedStringForKey:@"MultipleReplace.Imported.Missing" value:@"MultipleReplace.Imported"'),
+    'sets are saved as .cotrpl': ('TSMultipleReplaceLibrary.m', 'TSMultipleReplaceFileExtension = @"json";', 'TSMultipleReplaceFileExtension = @"cotrpl";'),
+    '.cotrpl is read as tab-separated text': ('TSMultipleReplaceLibrary.m', ' || [extension isEqualToString:TSCotEditorFileExtension])', ')'),
     'the menu is added twice': ('TSMultipleReplaceMenu.m', '        if ([item.identifier isEqualToString:TSShowMultipleReplaceIdentifier])\n            return;\n', ''),
     'the sets menu ignores a read-only target': ('TSMultipleReplaceMenu.m',
         '        return target && [self.findController validateAction:TSAdvancedFindActionReplaceAll forTextView:(NSTextView *_Nonnull)target];',
@@ -80,6 +84,19 @@ def copy_sources(tmp):
     return sources
 
 
+def check_launch_order(delegate, shortcuts):
+    """The items join the Find submenu on the main queue after the launch notification, where OgreKit replaces the
+    submenu, and before the shortcuts are read from the menu, which is queued after them."""
+    start = delegate.index('- (void)applicationDidFinishLaunching:')
+    body = delegate[start:delegate.index('\n}\n', start)]
+    install = body.find('[TSMultipleReplaceMenu installInMainMenu:')
+    queued = body.rfind('dispatch_async(dispatch_get_main_queue()', 0, install) if install >= 0 else -1
+    reading = body.find('startAfterLaunchWithConfiguration:')
+    method = shortcuts[shortcuts.index('- (void)startAfterLaunchWithConfiguration:'):]
+    method = method[:method.index('\n}\n')]
+    return 0 <= queued < install < reading and 'dispatch_async(dispatch_get_main_queue()' in method
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image', type=Path)
@@ -88,6 +105,14 @@ def main():
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix='texshop-multiple-replace-') as tmp:
         tmp = Path(tmp)
+        delegate = (root / 'Sources/App/TSAppDelegate.m').read_text(encoding='latin1')
+        shortcuts = (root / 'Sources/Shortcuts/TSKeyboardShortcuts.m').read_text(encoding='latin1')
+        if not check_launch_order(delegate, shortcuts):
+            sys.exit('FAIL: the Multiple Replace items join the Find submenu after OgreKit and before the shortcuts are read')
+        moved = delegate.replace('    dispatch_async(dispatch_get_main_queue(), ^{\n        NSString *directory', '    if (1) {\n        NSString *directory', 1)
+        if moved == delegate or check_launch_order(moved, shortcuts):
+            sys.exit('FAIL: the launch order check does not notice an install that is not queued')
+        print('PASS: launch order (after OgreKit, before the shortcuts are read)')
         probe = build(tmp, copy_sources(tmp))
         result = run(probe, 'behavior')
         print(result.stdout + result.stderr, end='')

@@ -70,6 +70,7 @@
 "MultipleReplace.EditMenu" = "Wijzig meervoudige vervanging…";
 "MultipleReplace.Export" = "Exporteer…";
 "MultipleReplace.Import" = "Importeer…";
+"MultipleReplace.Imported" = "Geïmporteerd";
 "MultipleReplace.MoveToTrash" = "Verplaats naar prullenmand";
 "MultipleReplace.NameTaken" = "Er bestaat al een set met de naam ‘%@’.";
 "MultipleReplace.NotText" = "‘%@’ is geen UTF-8-tekst.";
