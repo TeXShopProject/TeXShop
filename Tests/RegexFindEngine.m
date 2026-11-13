@@ -658,6 +658,9 @@ int main(void)
             TSRegexMultipleReplaceResult *cancelled = [set(unused, T, R, TSRegexReplacementSyntaxICU) applyToString:abs selectedRanges:whole inSelection:NO lineEnding:nil
                 cancellation:^BOOL { polls++; return YES; } progress:^(NSUInteger index, NSUInteger count, double fraction) { reports++; }];
             Check(!cancelled && polls > 0 && reports == 0, [NSString stringWithFormat:@"a multiple replacement of rules not used is cancelled (%lu rules)", (unsigned long)unused.count]);
+            __block NSUInteger highlightAsks = 0;
+            Check(![set(unused, T, R, TSRegexReplacementSyntaxICU) matchRangesInString:abs selectedRanges:whole inSelection:NO lineEnding:nil cancellation:^BOOL { highlightAsks++; return YES; }]
+                  && highlightAsks > 0, [NSString stringWithFormat:@"highlights of rules not used are cancelled (%lu rules)", (unsigned long)unused.count]);
         }
 
         // Every regular expression option of a file is used and written again; comparison options the panel does not
