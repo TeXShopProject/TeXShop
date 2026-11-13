@@ -274,9 +274,11 @@ add(TSSettingsCategoryConsole, @"row.catalog.console.1.0", @"SettingsCategories"
 add(TSSettingsCategoryConsole, @"row.catalog.console.1.1", @"SettingsCategories", @"catalog.console.1.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"heading.group.bindings", @"SettingsCategories", @"group.bindings.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategories", @"catalog.keyboard.0.0.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.0", @"SettingsCategories", @"catalog.keyboard.0.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"SettingsCategories", @"catalog.keyboard.0.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"heading.group.completion", @"SettingsCategories", @"group.completion.title", TSSettingsSearchWeightHeading);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.title", TSSettingsSearchWeightLabel);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsCategories", @"catalog.keyboard.1.0.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.1", @"SettingsCategories", @"catalog.keyboard.1.1.title", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.1", @"SettingsCategories", @"catalog.keyboard.1.1.note", TSSettingsSearchWeightDescription);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.2", @"SettingsCategories", @"catalog.keyboard.1.2.title", TSSettingsSearchWeightLabel);
@@ -324,7 +326,12 @@ add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"
 add(TSSettingsCategoryGeneral, @"row.catalog.general.1.2", @"SettingsSource", @"ypQ-Gc-HUa.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsSource", @"927.title", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.0", @"SettingsSource", @"928.title", TSSettingsSearchWeightChoice);
-add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Edit Key Bindings…", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Input Character", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Output String", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Selected Text", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Insertion Point", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Clipboard Text", TSSettingsSearchWeightChoice);
+add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.0.1", @"Localizable", @"Mark with Note", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"row.catalog.keyboard.1.2", @"Localizable", @"Edit Command Completion…", TSSettingsSearchWeightChoice);
 add(TSSettingsCategoryKeyboard, @"shortcut.edit", @"Localizable", @"Change…", TSSettingsSearchWeightLabel);
 add(TSSettingsCategoryKeyboard, @"shortcut.columns", @"Localizable", @"Command", TSSettingsSearchWeightLabel);

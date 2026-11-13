@@ -343,3 +343,23 @@
 "Deletes the previous • and selects its note, if it has one." = "前の • を消し、メモがあればそれを選びます。";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = マーク、•‹メモ› = メモ付きマーク。「%@」→「%@」で移動できます。";
 "Marks" = "マーク";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "入力文字";
+"Output String" = "出力文字列";
+"Selected Text" = "選択中の文字列";
+"Insertion Point" = "出力後のカーソル位置";
+"Clipboard Text" = "クリップボードの文字列";
+"Mark" = "マーク";
+"Mark with Note" = "メモ付きマーク";
+"note" = "メモ";
+"Insert" = "挿入";
+"Add" = "追加";
+"Delete" = "削除";
+"Symbols" = "記号";
+"Display" = "表示";
+"Symbol" = "記号";
+"Add Key Binding" = "キーバインドの追加";
+"Change Key Binding" = "キーバインドの変更";
+"Delete Key Binding" = "キーバインドの削除";
+"Move Key Binding" = "キーバインドの移動";

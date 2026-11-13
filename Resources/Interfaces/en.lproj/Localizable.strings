@@ -331,3 +331,23 @@
 "Deletes the previous • and selects its note, if it has one." = "Deletes the previous • and selects its note, if it has one.";
 "• = mark, •‹note› = mark with a note; %@ › %@ moves between them." = "• = mark, •‹note› = mark with a note; %@ › %@ moves between them.";
 "Marks" = "Marks";
+
+/* Settings › Keyboard › Key Bindings */
+"Input Character" = "Input Character";
+"Output String" = "Output String";
+"Selected Text" = "Selected Text";
+"Insertion Point" = "Insertion Point";
+"Clipboard Text" = "Clipboard Text";
+"Mark" = "Mark";
+"Mark with Note" = "Mark with Note";
+"note" = "note";
+"Insert" = "Insert";
+"Add" = "Add";
+"Delete" = "Delete";
+"Symbols" = "Symbols";
+"Display" = "Display";
+"Symbol" = "Symbol";
+"Add Key Binding" = "Add Key Binding";
+"Change Key Binding" = "Change Key Binding";
+"Delete Key Binding" = "Delete Key Binding";
+"Move Key Binding" = "Move Key Binding";

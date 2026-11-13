@@ -28,7 +28,7 @@
 #import <AppKit/AppKit.h>
 #import "TSSettingsCategory.h"
 
-@class TSAutoCompletionListEditor, HelpDocuments;
+@class TSAutoCompletionListEditor, TSKeyBindingsController, HelpDocuments;
 @class TSSettingsChangeNotes;
 @interface TSPreferences : NSObject
 {
@@ -244,6 +244,7 @@
 @property NSUInteger themeOperationGeneration;
 @property (strong) NSButton *legacySpellCheckButton;
 @property (strong) TSAutoCompletionListEditor *keyBindingEditor;
+@property (strong) TSKeyBindingsController *keyBindings;
 @property (strong) HelpDocuments *settingsHelpDocuments;
 - (IBAction)displayCommentLines:(id)sender;
 - (IBAction)editKeyBindings:(id)sender;

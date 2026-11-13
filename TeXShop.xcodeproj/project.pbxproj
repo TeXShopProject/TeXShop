@@ -248,6 +248,7 @@
 		E18300000000000000000001 = {isa = PBXBuildFile; fileRef = E18200000000000000000110; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000002 = {isa = PBXBuildFile; fileRef = E18200000000000000000210; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000003 = {isa = PBXBuildFile; fileRef = E18200000000000000000310; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
+		E18300000000000000000005 = {isa = PBXBuildFile; fileRef = E18200000000000000000510; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		E18300000000000000000004 = {isa = PBXBuildFile; fileRef = E18200000000000000000410; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		F5BAC2E9ED1431D54CC853B8 = {isa = PBXBuildFile; fileRef = 9E2B2A2E258A950674839CF0; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
 		0E1D12D0E21A008917374A1E = {isa = PBXBuildFile; fileRef = 83392E91D403FD331C9F5227; settings = {COMPILER_FLAGS = "-fobjc-arc -Wnullability-completeness -Wnullable-to-nonnull-conversion -Wunguarded-availability-new -Werror=unguarded-availability-new"; }; };
@@ -862,6 +863,8 @@
 		E18200000000000000000210 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsStateStore.m; sourceTree = "<group>"; };
 		E18200000000000000000300 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsSidebarRow.h; sourceTree = "<group>"; };
 		E18200000000000000000310 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsSidebarRow.m; sourceTree = "<group>"; };
+		E18200000000000000000500 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSKeyBindingsController.h; sourceTree = "<group>"; };
+		E18200000000000000000510 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSKeyBindingsController.m; sourceTree = "<group>"; };
 		E18200000000000000000400 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSettingsContentView.h; sourceTree = "<group>"; };
 		E18200000000000000000410 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TSSettingsContentView.m; sourceTree = "<group>"; };
 		9BEADA65F9CB4B3EC9B86C51 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPrefConsoleController.h; sourceTree = "<group>"; };
@@ -1302,6 +1305,8 @@
 				E3B000000000000000000002 /* TSSettingsSearch.m */,
 				E18200000000000000000300 /* TSSettingsSidebarRow.h */,
 				E18200000000000000000310 /* TSSettingsSidebarRow.m */,
+				E18200000000000000000500 /* TSKeyBindingsController.h */,
+				E18200000000000000000510 /* TSKeyBindingsController.m */,
 				E18200000000000000000200 /* TSSettingsStateStore.h */,
 				E18200000000000000000210 /* TSSettingsStateStore.m */,
 				E18000000000000000000004 /* TSSettingsWindowController.h */,
@@ -1906,6 +1911,7 @@
 				E18300000000000000000002,
 				E18300000000000000000003,
 				E18300000000000000000004,
+				E18300000000000000000005,
 				E18100000000000000000001,
 				E3B000000000000000000001,
 				7A9051C11D9E4EA1A5210013,
