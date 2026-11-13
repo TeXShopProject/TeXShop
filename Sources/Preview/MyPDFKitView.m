@@ -1985,10 +1985,6 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 
 - (void) makePageChanges: (NSInteger) pageNumber
 {
-	NSInteger		numRows, i, newlySelectedRow;
-	NSUInteger	    newPageIndex;
-	NSIndexSet		*myIndexSet;
-    PDFOutline      *outlineItem;
     // NSInteger       newValue;
     // NSString        *romanStringValue;
     
@@ -2026,6 +2022,26 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
     [currentPage1 display];
  */
     
+    [self showPageInOutline: pageNumber];
+}
+
+// Selects the entry of the drawer's outline for the page.
+- (void) showPageInOutline: (NSInteger) pageNumber
+{
+	NSInteger		numRows, i, newlySelectedRow;
+	NSUInteger	    newPageIndex, newlySelectedPageIndex;
+	NSIndexSet		*myIndexSet;
+    PDFOutline      *outlineItem;
+    
+    // Only the first view of the Preview window is connected to the drawer, so the second
+    // part of a split window shows its page there through the first view (#25).
+    MyPDFKitView *firstView = (MyPDFKitView *)self.myPDFWindow.myPDFKitView;
+    if (_outlineView == nil && firstView != self && [firstView isKindOfClass: [MyPDFKitView class]])
+    {
+        [firstView showPageInOutline: pageNumber];
+        return;
+    }
+    
  	// Skip out if there is no outline.
 //	if ([[self document] outlineRoot] == NULL)
 //		return;
@@ -2054,8 +2070,11 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
  	// What is the new page number (zero-based).
     newPageIndex = pageNumber;
 
-	// Walk outline view looking for best firstpage number match.
+	// Walk outline view looking for best firstpage number match: the first entry that starts
+	// on the page, or else the last entry that starts before it, so a page between two entries
+	// belongs to the earlier one. No entry is selected for a page before the first one (#25).
 	newlySelectedRow = -1;
+	newlySelectedPageIndex = 0;
 	numRows = [_outlineView numberOfRows];
     if (numRows <= 0)
         return;
@@ -2066,28 +2085,35 @@ if ((atLeastHighSierra) && (! atLeastMojave) && (self.myDocument.pdfKitWindow.wi
 		// Get the destination of the given row....
         // THE FOLLOWING CRASHES TEXSHOP
 		outlineItem = (PDFOutline *)[_outlineView itemAtRow: i];
- 
-		if ([[self document] indexForPage: [[outlineItem destination] page]] == newPageIndex)
+		PDFPage *itemPage = [[outlineItem destination] page];
+		if (itemPage == nil)
+			continue;
+		NSUInteger itemPageIndex = [[self document] indexForPage: itemPage];
+		if (itemPageIndex == NSNotFound || itemPageIndex > newPageIndex)
+			continue;
+		if (itemPageIndex == newPageIndex)
 		{
 			newlySelectedRow = i;
-			myIndexSet = [NSIndexSet indexSetWithIndex: i];
-			// [_outlineView selectRow: newlySelectedRow byExtendingSelection: NO]; //this was deprecated, so
-			[_outlineView selectRowIndexes: myIndexSet byExtendingSelection: NO];
 			break;
 		}
-		else if ([[self document] indexForPage: [[outlineItem destination] page]] > newPageIndex)
+		if (newlySelectedRow == -1 || itemPageIndex >= newlySelectedPageIndex)
 		{
-			newlySelectedRow = i - 1;
-			myIndexSet = [NSIndexSet indexSetWithIndex: i];
-			// [_outlineView selectRow: newlySelectedRow byExtendingSelection: NO]; //this was deprecated, so
-			[_outlineView selectRowIndexes: myIndexSet byExtendingSelection: NO];
-			break;
+			newlySelectedRow = i;
+			newlySelectedPageIndex = itemPageIndex;
 		}
 	}
 
+	if (newlySelectedRow == -1)
+	{
+		[_outlineView deselectAll: nil];
+		return;
+	}
+	myIndexSet = [NSIndexSet indexSetWithIndex: newlySelectedRow];
+	// [_outlineView selectRow: newlySelectedRow byExtendingSelection: NO]; //this was deprecated, so
+	[_outlineView selectRowIndexes: myIndexSet byExtendingSelection: NO];
+
 	// Auto-scroll.
-	if (newlySelectedRow != -1)
-		[_outlineView scrollRowToVisible: newlySelectedRow];
+	[_outlineView scrollRowToVisible: newlySelectedRow];
     
 }
 
@@ -8220,6 +8246,10 @@ else
 	((TSPreviewWindow *)self.myPDFWindow).activeView = self;
 	[self fixStuff];
 	[self resetSearchDelegate];
+	// The drawer's outline shows the page of the active part (#25).
+	PDFPage *activePage = [self currentPage];
+	if (activePage)
+		[self showPageInOutline: [[self document] indexForPage: activePage]];
     [self.myDocument updatePreviewLayoutControls];
 }
 
